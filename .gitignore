@@ -1,0 +1,8 @@
+#ignore emacs temporary files
+*~
+
+#ignore Desktop Services Store
+*.DS_Store
+
+#ignore the build directory
+build/
