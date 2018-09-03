@@ -1,7 +1,7 @@
 # sequoia
 
 The aim of this library is to provide highly-customizable mathematical concepts.
-It is very much a work in progress and is still very rough around the edges.
+It is very much a work in progress and is rough around the edges.
 However, certain things are working.
 
 In particular, it is possible to create constexpr graphs.
@@ -55,7 +55,7 @@ using edge = g_type::edge_init_type;
 
 constexpr g_type g{{edge{0,1,0,1.4}}, {edge{0,1,0,1.4}}};
 
-Though in a raw state, this library is heavily tested: there are currently >64k checks performed in the unit/performance tests.
+Though in a raw state, this library is heavily tested: there are currently >123k checks performed in the unit/performance tests.
 
 In addition to providing static graphs, dynamic graphs are supported within the same framework. Beyond being able to specify the edge/node weights and whether a graph is (un)directed, clients may also choose a policy for the manner in which the weights are stored, for example via a data pool.
 
