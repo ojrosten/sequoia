@@ -24,6 +24,15 @@ namespace sequoia
       }
 
       {
+        graph_test_helper<null_weight, int> helper{"Unweighted, int"};
+        helper.run_individual_test<graph_flavour::undirected_embedded, generic_edge_insertions>(*this);
+        helper.run_individual_test<graph_flavour::undirected_embedded, generic_weighted_edge_insertions>(*this);
+        
+        helper.run_individual_test<graph_flavour::directed_embedded, generic_edge_insertions>(*this);
+        helper.run_individual_test<graph_flavour::directed_embedded, generic_weighted_edge_insertions>(*this);
+      }
+
+      {
         graph_test_helper<int, int> helper{"int, int"};
         helper.run_individual_test<graph_flavour::undirected_embedded, generic_edge_insertions>(*this);
         helper.run_individual_test<graph_flavour::directed_embedded, generic_edge_insertions>(*this);
@@ -185,6 +194,65 @@ namespace sequoia
           g,
           edges{{edge{1,0,1}, edge{0,1,0}}, {edge{0,1,1}, edge{1,0,0}, edge{1,inverted_constant<true>{},3}, edge{1,inverted_constant<true>{},2}, edge{1,inverted_constant<true>{},6}, edge{1,1,7}, edge{1,inverted_constant<true>{},4}, edge{1,1,5}}}, {{}, {}},
           LINE(""));
+      }
+    }
+
+    template
+    <
+      maths::graph_flavour GraphFlavour,
+      class NodeWeight,
+      class EdgeWeight,
+      bool ThrowOnError,
+      template <class> class NodeWeightStorage,
+      template <class> class EdgeWeightStorage,
+      template <class, class, bool, template<class...> class> class EdgeStoragePolicy
+    >
+    void generic_weighted_edge_insertions
+    <
+      GraphFlavour,
+      NodeWeight,
+      EdgeWeight,
+      ThrowOnError,
+      NodeWeightStorage,
+      EdgeWeightStorage,
+      EdgeStoragePolicy
+    >::execute_operations()
+    {
+      using namespace maths;
+
+      using edge = embedded_edge<EdgeWeight, data_sharing::independent, utilities::protective_wrapper<EdgeWeight>>;
+      using edges = std::vector<std::vector<edge>>;
+        
+      graph_t g{};
+
+      g.add_node();
+      g.add_node();
+
+      g.insert_join(g.cbegin_edges(0), g.cbegin_edges(1), 5);
+      // X----5----X
+
+      if constexpr(GraphFlavour == graph_flavour::undirected_embedded)
+      {
+        check_graph(g, edges{{edge{0,1,0,5}}, {edge{0,1,0,5}}}, {{}, {}}, LINE(""));
+      }
+      else
+      {
+        check_graph(g, edges{{edge{0,1,0,5}}, {edge{0,1,0,5}}}, {{}, {}}, LINE(""));
+      }
+
+      g.insert_join(g.cend_edges(1), 0, 6);
+      //
+      //           6
+      //          /<\
+      // X----5---\X/
+
+      if constexpr(GraphFlavour == graph_flavour::undirected_embedded)
+      {
+        check_graph(g, edges{{edge{0,1,1,5}}, {edge{1,1,2,6}, edge{0,1,0,5}, edge{1,1,0,6}}}, {{}, {}}, LINE(""));
+      }
+      else
+      {
+        check_graph(g, edges{{edge{0,1,1,5}}, {edge{1,inverted_constant<true>{},2,6}, edge{0,1,0,5}, edge{1,inverted_constant<true>{},0,6}}}, {{}, {}}, LINE(""));
       }
     }
   }
