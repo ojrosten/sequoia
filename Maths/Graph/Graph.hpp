@@ -143,6 +143,16 @@ namespace sequoia
         *this = std::move(tmp);
       }
 
+      void reserve_nodes(const std::size_t size)
+      {
+        if constexpr(!std::is_empty_v<node_weight_type>)
+        {
+          this->reserve_nodes(size);
+        }
+        
+        m_Edges.reserve_partitions(size);
+      }
+
       constexpr edge_iterator begin_edges(const std::size_t node)
       {
         if constexpr (throwOnRangeError) if(node >= order()) throw std::out_of_range("Node index out of range!");

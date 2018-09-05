@@ -330,7 +330,7 @@ namespace sequoia
       {
         if constexpr(ThrowOnRangeError)
         {
-          if(!m_Buckets.size()) throw std::runtime_error("bucketed_storage: no partitions into which to insert");
+          if(!m_Buckets.size()) throw std::out_of_range("bucketed_storage: no partitions into which to insert");
         }
         
         const auto host{pos.partition_index()};
@@ -345,7 +345,7 @@ namespace sequoia
       {
         if constexpr(ThrowOnRangeError)
         {
-          if(!m_Buckets.size()) throw std::runtime_error("bucketed_storage: no partitions into which to insert");
+          if(!m_Buckets.size()) throw std::out_of_range("bucketed_storage: no partitions into which to insert");
         }
         
         const auto host{pos.partition_index()};

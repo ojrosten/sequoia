@@ -680,24 +680,39 @@ namespace sequoia
        using namespace data_structures;
        
        contiguous_storage<int> s{};
-       check_equality<std::size_t>(0, s.capacity());
-       check_equality<std::size_t>(0, s.num_partitions_capacity());
+       check_equality<std::size_t>(0, s.capacity(), LINE(""));
+       check_equality<std::size_t>(0, s.num_partitions_capacity(), LINE(""));
 
        s.reserve(4);
-       check_equality<std::size_t>(4, s.capacity());
-       check_equality<std::size_t>(0, s.num_partitions_capacity());
+       check_equality<std::size_t>(4, s.capacity(), LINE(""));
+       check_equality<std::size_t>(0, s.num_partitions_capacity(), LINE(""));
 
        s.reserve_partitions(8);
-       check_equality<std::size_t>(4, s.capacity());
-       check_equality<std::size_t>(8, s.num_partitions_capacity());
+       check_equality<std::size_t>(4, s.capacity(), LINE(""));
+       check_equality<std::size_t>(8, s.num_partitions_capacity(), LINE(""));
 
        s.shrink_to_fit();
-       check_equality<std::size_t>(0, s.capacity());
-       check_equality<std::size_t>(0, s.num_partitions_capacity());
+       check_equality<std::size_t>(0, s.capacity(), LINE(""));
+       check_equality<std::size_t>(0, s.num_partitions_capacity(), LINE(""));
      }
 
      void test_partitioned_data::test_bucketed_capacity()
      {
+       using namespace data_structures;
+       
+       bucketed_storage<int> s{};
+
+       check_equality<std::size_t>(0, s.num_partitions_capacity(), LINE(""));
+       check_exception_thrown<std::out_of_range>([&s](){ s.capacity(0); }, LINE(""));
+
+       s.reserve_partitions(4);
+       check_equality<std::size_t>(4, s.num_partitions_capacity(), LINE(""));
+       check_exception_thrown<std::out_of_range>([&s](){ s.capacity(0); }, LINE(""));
+
+       s.shrink_num_partitions_to_fit();
+       check_equality<std::size_t>(0, s.num_partitions_capacity(), LINE(""));
+       check_exception_thrown<std::out_of_range>([&s](){ s.capacity(0); }, LINE(""));
+
      }
   }
 }
