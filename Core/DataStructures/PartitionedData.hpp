@@ -160,7 +160,7 @@ namespace sequoia
     
     //===================================Storage using buckets===================================//
     
-    template<class T, class SharingPolicy=data_sharing::shared<T>, bool ThrowOnRangeError=true, template<class...> class Storage=std::vector>
+    template<class T, class SharingPolicy=data_sharing::independent<T>, bool ThrowOnRangeError=true, template<class...> class Storage=std::vector>
     class bucketed_storage
     {
     public:
@@ -266,9 +266,43 @@ namespace sequoia
         m_Buckets[partition].reserve(size);
       }
 
+      std::size_t capacity(const std::size_t partition) const
+      {
+        if constexpr(ThrowOnRangeError) check_range(partition);
+
+        return m_Buckets[partition].capacity();
+      }
+
       void reserve_partitions(const std::size_t numPartitions)
       {
         m_Buckets.reserve(numPartitions);
+      }
+
+      std::size_t num_partitions_capacity() const noexcept
+      {
+
+        return m_Buckets.capacity();
+      }
+
+      void shrink_num_partitions_to_fit()
+      {
+        m_Buckets.shrink_to_fit();
+      }
+
+      void shrink_to_fit(const std::size_t partition)
+      {
+        if constexpr(ThrowOnRangeError) check_range(partition);
+
+        m_Buckets[partition].shrink_to_fit;
+      }
+      
+      void shrink_to_fit()
+      {
+        m_Buckets.shrink_to_fit();
+        for(auto& b : m_Buckets)
+        {
+          b.shrink_to_fit();
+        }
       }
 
       void clear() noexcept
@@ -497,7 +531,7 @@ namespace sequoia
 
     //===================================Contiguous storage===================================//
     
-    template<class T, class SharingPolicy=data_sharing::shared<T>, bool ThrowOnRangeError=true, template<class...> class Storage=std::vector>
+    template<class T, class SharingPolicy=data_sharing::independent<T>, bool ThrowOnRangeError=true, template<class...> class Storage=std::vector>
     class contiguous_storage_base
     {
     private:
@@ -668,17 +702,30 @@ namespace sequoia
         return deleted;
       }
 
-      void reserve(const index_type partition, const index_type size)
+      void reserve(const index_type size)
       {
-        if constexpr(ThrowOnRangeError) check_range(partition);
+        m_Storage.reserve(size);
+      }
 
-        const auto dist{static_cast<index_type>(distance(cbegin_partition(partition), cend_partition(partition)))};
-        if(size > dist) m_Storage.reserve(m_Storage.size() + size - dist);
+      index_type capacity() const noexcept
+      {
+        return m_Storage.capacity();
       }
 
       void reserve_partitions(const index_type numPartitions)
       {
         m_Partitions.reserve(numPartitions);
+      }
+
+      index_type num_partitions_capacity() const noexcept
+      {
+        return m_Partitions.capacity();
+      }
+
+      void shrink_to_fit()
+      {
+        m_Partitions.shrink_to_fit();
+        m_Storage.shrink_to_fit();
       }
 
       void clear() noexcept
@@ -1009,7 +1056,7 @@ namespace sequoia
       
     };
 
-    template<class T, class SharingPolicy=data_sharing::shared<T>, bool ThrowOnRangeError=true, template<class...> class Storage=std::vector>
+    template<class T, class SharingPolicy=data_sharing::independent<T>, bool ThrowOnRangeError=true, template<class...> class Storage=std::vector>
     class contiguous_storage : public contiguous_storage_base<T, SharingPolicy, ThrowOnRangeError, Storage>
     {
     public:
@@ -1020,7 +1067,11 @@ namespace sequoia
       using contiguous_storage_base<T, SharingPolicy, ThrowOnRangeError, Storage>::delete_slot;
 
       using contiguous_storage_base<T, SharingPolicy, ThrowOnRangeError, Storage>::reserve;
+      using contiguous_storage_base<T, SharingPolicy, ThrowOnRangeError, Storage>::capacity;
       using contiguous_storage_base<T, SharingPolicy, ThrowOnRangeError, Storage>::reserve_partitions;
+      using contiguous_storage_base<T, SharingPolicy, ThrowOnRangeError, Storage>::num_partitions_capacity;
+      using contiguous_storage_base<T, SharingPolicy, ThrowOnRangeError, Storage>::shrink_to_fit;
+      
       using contiguous_storage_base<T, SharingPolicy, ThrowOnRangeError, Storage>::clear;
       using contiguous_storage_base<T, SharingPolicy, ThrowOnRangeError, Storage>::push_back_to_partition;
       using contiguous_storage_base<T, SharingPolicy, ThrowOnRangeError, Storage>::insert_to_partition;
