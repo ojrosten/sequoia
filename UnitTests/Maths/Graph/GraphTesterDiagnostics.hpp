@@ -41,24 +41,20 @@ namespace sequoia::unit_testing
     {
       using namespace maths;
 
-      using Edge = edge<EdgeWeight, utilities::protective_wrapper<EdgeWeight>>;
-      using Edges = std::vector<std::vector<Edge>>;
-        
-      using NP_Edge = embedded_edge<EdgeWeight, data_sharing::independent, utilities::protective_wrapper<EdgeWeight>>;
-      using NP_Edges = std::vector<std::vector<NP_Edge>>;
-      using NodeWeights = std::vector<typename GGraph::node_weight_type>;
+      using Edge = edge<EdgeWeight, utilities::protective_wrapper<EdgeWeight>>;     
+      using E_Edge = embedded_edge<EdgeWeight, data_sharing::independent, utilities::protective_wrapper<EdgeWeight>>;
 
       GGraph network{};
 
       if constexpr (mutual_info(GraphFlavour))
       {
-        check_graph(network, NP_Edges{{}}, NodeWeights{}, LINE("Check false positive: empty graph versus single node"));
-        check_graph(network, NP_Edges{{NP_Edge{0,0,0}, NP_Edge{0,0,1}}}, NodeWeights{}, LINE("Check false positive: empty graph versus single node with loop"));
+        check_graph(network, {{}}, {}, LINE("Check false positive: empty graph versus single node"));
+        check_graph(network, {{E_Edge{0,0,0}, E_Edge{0,0,1}}}, {}, LINE("Check false positive: empty graph versus single node with loop"));
       }
       else
       {
-        check_graph(network, Edges{{}}, NodeWeights{}, LINE("Check false positive: empty graph versus single node"));
-        check_graph(network, Edges{{Edge{0,0}}}, NodeWeights{}, LINE("Check false positive: empty graph versus single node with loop"));        
+        check_graph(network, {{}}, {}, LINE("Check false positive: empty graph versus single node"));
+        check_graph(network, {{Edge{0,0}}}, {}, LINE("Check false positive: empty graph versus single node with loop"));        
       }
     }
   };

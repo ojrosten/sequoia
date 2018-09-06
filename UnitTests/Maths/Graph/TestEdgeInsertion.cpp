@@ -62,8 +62,7 @@ namespace sequoia
     {
       using namespace maths;
 
-       using edge = embedded_edge<EdgeWeight, data_sharing::independent, utilities::protective_wrapper<EdgeWeight>>;
-       using edges = std::vector<std::vector<edge>>;
+      using edge = embedded_edge<EdgeWeight, data_sharing::independent, utilities::protective_wrapper<EdgeWeight>>;
         
       graph_t g{};
 
@@ -75,7 +74,7 @@ namespace sequoia
 
       //   X
       g.add_node();
-      check_graph(g, edges{{}}, {{}}, LINE(""));
+      check_graph(g, {{}}, {{}}, LINE(""));
 
       g.insert_join(g.cbegin_edges(0), 0);
       //  /<\
@@ -84,11 +83,11 @@ namespace sequoia
       
       if constexpr(GraphFlavour == graph_flavour::undirected_embedded)
       {
-        check_graph(g, edges{{edge{0,0,1}, edge{0,0,0}}}, {{}}, LINE(""));
+        check_graph(g, {{edge{0,0,1}, edge{0,0,0}}}, {{}}, LINE(""));
       }
       else
       {
-        check_graph(g, edges{{edge{0,inverted_constant<true>{},1}, edge{0,inverted_constant<true>{},0}}}, {{}}, LINE(""));
+        check_graph(g, {{edge{0,inverted_constant<true>{},1}, edge{0,inverted_constant<true>{},0}}}, {{}}, LINE(""));
       }
 
       g.insert_join(g.cbegin_edges(0) + 1, 3);
@@ -99,11 +98,11 @@ namespace sequoia
 
       if constexpr(GraphFlavour == graph_flavour::undirected_embedded)
       {
-        check_graph(g, edges{{edge{0,0,2}, edge{0,0,3}, edge{0,0,0}, edge{0,0,1}}}, {{}}, LINE(""));
+        check_graph(g, {{edge{0,0,2}, edge{0,0,3}, edge{0,0,0}, edge{0,0,1}}}, {{}}, LINE(""));
       }
       else
       {
-        check_graph(g, edges{{edge{0,inverted_constant<true>{},2}, edge{0,0,3}, edge{0,inverted_constant<true>{},0}, edge{0,0,1}}}, {{}}, LINE(""));
+        check_graph(g, {{edge{0,inverted_constant<true>{},2}, edge{0,0,3}, edge{0,inverted_constant<true>{},0}, edge{0,0,1}}}, {{}}, LINE(""));
       }
 
       g.insert_join(g.cbegin_edges(0), g.cbegin_edges(0));
@@ -120,14 +119,14 @@ namespace sequoia
       {
         check_graph(
           g,
-          edges{{edge{0,0,1}, edge{0,0,0}, edge{0,0,4}, edge{0,0,5}, edge{0,0,2}, edge{0,0,3}}}, {{}},
+          {{edge{0,0,1}, edge{0,0,0}, edge{0,0,4}, edge{0,0,5}, edge{0,0,2}, edge{0,0,3}}}, {{}},
           LINE(""));
       }
       else
       {
         check_graph(
           g,
-          edges{{edge{0,inverted_constant<true>{},1}, edge{0,inverted_constant<true>{},0}, edge{0,inverted_constant<true>{},4}, edge{0,0,5}, edge{0,inverted_constant<true>{},2}, edge{0,0,3}}}, {{}},
+          {{edge{0,inverted_constant<true>{},1}, edge{0,inverted_constant<true>{},0}, edge{0,inverted_constant<true>{},4}, edge{0,0,5}, edge{0,inverted_constant<true>{},2}, edge{0,0,3}}}, {{}},
           LINE(""));
       }
 
@@ -142,14 +141,14 @@ namespace sequoia
       {
         check_graph(
           g,
-          edges{{}, {edge{1,1,1}, edge{1,1,0}, edge{1,1,4}, edge{1,1,5}, edge{1,1,2}, edge{1,1,3}}}, {{}, {}},
+          {{}, {edge{1,1,1}, edge{1,1,0}, edge{1,1,4}, edge{1,1,5}, edge{1,1,2}, edge{1,1,3}}}, {{}, {}},
           LINE(""));
       }
       else
       {
         check_graph(
           g,
-          edges{{}, {edge{1,inverted_constant<true>{},1}, edge{1,inverted_constant<true>{},0}, edge{1,inverted_constant<true>{},4}, edge{1,1,5}, edge{1,inverted_constant<true>{},2}, edge{1,1,3}}}, {{}, {}},
+          {{}, {edge{1,inverted_constant<true>{},1}, edge{1,inverted_constant<true>{},0}, edge{1,inverted_constant<true>{},4}, edge{1,1,5}, edge{1,inverted_constant<true>{},2}, edge{1,1,3}}}, {{}, {}},
           LINE(""));
       }
 
@@ -163,14 +162,14 @@ namespace sequoia
       {
         check_graph(
           g,
-          edges{{edge{0,1,0}}, {edge{0,1,0}, edge{1,1,2}, edge{1,1,1}, edge{1,1,5}, edge{1,1,6}, edge{1,1,3}, edge{1,1,4}}}, {{}, {}},
+          {{edge{0,1,0}}, {edge{0,1,0}, edge{1,1,2}, edge{1,1,1}, edge{1,1,5}, edge{1,1,6}, edge{1,1,3}, edge{1,1,4}}}, {{}, {}},
           LINE(""));
       }
       else
       {
         check_graph(
           g,
-          edges{{edge{0,1,0}}, {edge{0,1,0}, edge{1,inverted_constant<true>{},2}, edge{1,inverted_constant<true>{},1}, edge{1,inverted_constant<true>{},5}, edge{1,1,6}, edge{1,inverted_constant<true>{},3}, edge{1,1,4}}}, {{}, {}},
+          {{edge{0,1,0}}, {edge{0,1,0}, edge{1,inverted_constant<true>{},2}, edge{1,inverted_constant<true>{},1}, edge{1,inverted_constant<true>{},5}, edge{1,1,6}, edge{1,inverted_constant<true>{},3}, edge{1,1,4}}}, {{}, {}},
           LINE(""));
       }
 
@@ -185,14 +184,14 @@ namespace sequoia
       {
         check_graph(
           g,
-          edges{{edge{0,1,1}, edge{0,1,0}}, {edge{0,1,1}, edge{0,1,0}, edge{1,1,3}, edge{1,1,2}, edge{1,1,6}, edge{1,1,7}, edge{1,1,4}, edge{1,1,5}}}, {{}, {}},
+          {{edge{0,1,1}, edge{0,1,0}}, {edge{0,1,1}, edge{0,1,0}, edge{1,1,3}, edge{1,1,2}, edge{1,1,6}, edge{1,1,7}, edge{1,1,4}, edge{1,1,5}}}, {{}, {}},
           LINE(""));
       }
       else
       {
         check_graph(
           g,
-          edges{{edge{1,0,1}, edge{0,1,0}}, {edge{0,1,1}, edge{1,0,0}, edge{1,inverted_constant<true>{},3}, edge{1,inverted_constant<true>{},2}, edge{1,inverted_constant<true>{},6}, edge{1,1,7}, edge{1,inverted_constant<true>{},4}, edge{1,1,5}}}, {{}, {}},
+          {{edge{1,0,1}, edge{0,1,0}}, {edge{0,1,1}, edge{1,0,0}, edge{1,inverted_constant<true>{},3}, edge{1,inverted_constant<true>{},2}, edge{1,inverted_constant<true>{},6}, edge{1,1,7}, edge{1,inverted_constant<true>{},4}, edge{1,1,5}}}, {{}, {}},
           LINE(""));
       }
     }
@@ -221,7 +220,6 @@ namespace sequoia
       using namespace maths;
 
       using edge = embedded_edge<EdgeWeight, data_sharing::independent, utilities::protective_wrapper<EdgeWeight>>;
-      using edges = std::vector<std::vector<edge>>;
         
       graph_t g{};
 
@@ -233,11 +231,11 @@ namespace sequoia
 
       if constexpr(GraphFlavour == graph_flavour::undirected_embedded)
       {
-        check_graph(g, edges{{edge{0,1,0,5}}, {edge{0,1,0,5}}}, {{}, {}}, LINE(""));
+        check_graph(g, {{edge{0,1,0,5}}, {edge{0,1,0,5}}}, {{}, {}}, LINE(""));
       }
       else
       {
-        check_graph(g, edges{{edge{0,1,0,5}}, {edge{0,1,0,5}}}, {{}, {}}, LINE(""));
+        check_graph(g, {{edge{0,1,0,5}}, {edge{0,1,0,5}}}, {{}, {}}, LINE(""));
       }
 
       g.insert_join(g.cend_edges(1), 0, 6);
@@ -248,11 +246,11 @@ namespace sequoia
 
       if constexpr(GraphFlavour == graph_flavour::undirected_embedded)
       {
-        check_graph(g, edges{{edge{0,1,1,5}}, {edge{1,1,2,6}, edge{0,1,0,5}, edge{1,1,0,6}}}, {{}, {}}, LINE(""));
+        check_graph(g, {{edge{0,1,1,5}}, {edge{1,1,2,6}, edge{0,1,0,5}, edge{1,1,0,6}}}, {{}, {}}, LINE(""));
       }
       else
       {
-        check_graph(g, edges{{edge{0,1,1,5}}, {edge{1,inverted_constant<true>{},2,6}, edge{0,1,0,5}, edge{1,inverted_constant<true>{},0,6}}}, {{}, {}}, LINE(""));
+        check_graph(g, {{edge{0,1,1,5}}, {edge{1,inverted_constant<true>{},2,6}, edge{0,1,0,5}, edge{1,inverted_constant<true>{},0,6}}}, {{}, {}}, LINE(""));
       }
     }
   }
