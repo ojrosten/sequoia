@@ -710,9 +710,19 @@ namespace sequoia
        check_exception_thrown<std::out_of_range>([&s](){ s.capacity(0); }, LINE(""));
 
        s.shrink_num_partitions_to_fit();
-       check_equality<std::size_t>(0, s.num_partitions_capacity(), LINE(""));
+       check_equality<std::size_t>(0, s.num_partitions_capacity(), LINE("May fail if shrink to fit impl does not reduce capacity"));
        check_exception_thrown<std::out_of_range>([&s](){ s.capacity(0); }, LINE(""));
 
+       s.add_slot();
+       check_equality<std::size_t>(0, s.capacity(0), LINE(""));
+       check_exception_thrown<std::out_of_range>([&s](){ s.capacity(1); }, LINE(""));
+
+       s.reserve(0, 4);
+       check_equality<std::size_t>(4, s.capacity(0), LINE(""));
+       
+       s.shrink_to_fit(0);
+       check_equality<std::size_t>(0, s.capacity(0), LINE("May fail if shrink to fit impl does not reduce capacity"));
+       check_exception_thrown<std::out_of_range>([&s](){ s.shrink_to_fit(1); }, LINE(""));
      }
   }
 }
