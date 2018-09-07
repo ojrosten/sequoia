@@ -22,8 +22,15 @@ namespace sequoia
 
       test_static_storage();
 
-      test_contiguous_capacity();
-      test_bucketed_capacity();
+      test_contiguous_capacity<int, independent<int>, true>();
+      test_contiguous_capacity<int, shared<int>, true>();
+      test_contiguous_capacity<int, independent<int>, false>();
+      test_contiguous_capacity<int, shared<int>, false>();
+      
+      test_bucketed_capacity<int, independent<int>, true>();
+      test_bucketed_capacity<int, shared<int>, true>();
+      test_bucketed_capacity<int, independent<int>, false>();
+      test_bucketed_capacity<int, shared<int>, false>();
     }
 
 
@@ -675,54 +682,56 @@ namespace sequoia
       check_equality<typename T::second_type>(SharingPolicy::get(v[0]).first, iter->second);
     }
 
-     void test_partitioned_data::test_contiguous_capacity()
-     {
-       using namespace data_structures;
+    template<class T, class SharingPolicy, bool ThrowOnRangeError>
+    void test_partitioned_data::test_contiguous_capacity()
+    {
+      using namespace data_structures;
        
-       contiguous_storage<int> s{};
-       check_equality<std::size_t>(0, s.capacity(), LINE(""));
-       check_equality<std::size_t>(0, s.num_partitions_capacity(), LINE(""));
+      contiguous_storage<T, SharingPolicy, ThrowOnRangeError> s{};
+      check_equality<std::size_t>(0, s.capacity(), LINE(""));
+      check_equality<std::size_t>(0, s.num_partitions_capacity(), LINE(""));
 
-       s.reserve(4);
-       check_equality<std::size_t>(4, s.capacity(), LINE(""));
-       check_equality<std::size_t>(0, s.num_partitions_capacity(), LINE(""));
+      s.reserve(4);
+      check_equality<std::size_t>(4, s.capacity(), LINE(""));
+      check_equality<std::size_t>(0, s.num_partitions_capacity(), LINE(""));
 
-       s.reserve_partitions(8);
-       check_equality<std::size_t>(4, s.capacity(), LINE(""));
-       check_equality<std::size_t>(8, s.num_partitions_capacity(), LINE(""));
+      s.reserve_partitions(8);
+      check_equality<std::size_t>(4, s.capacity(), LINE(""));
+      check_equality<std::size_t>(8, s.num_partitions_capacity(), LINE(""));
 
-       s.shrink_to_fit();
-       check_equality<std::size_t>(0, s.capacity(), LINE(""));
-       check_equality<std::size_t>(0, s.num_partitions_capacity(), LINE(""));
-     }
+      s.shrink_to_fit();
+      check_equality<std::size_t>(0, s.capacity(), LINE(""));
+      check_equality<std::size_t>(0, s.num_partitions_capacity(), LINE(""));
+    }
 
-     void test_partitioned_data::test_bucketed_capacity()
-     {
-       using namespace data_structures;
+    template<class T, class SharingPolicy, bool ThrowOnRangeError>
+    void test_partitioned_data::test_bucketed_capacity()
+    {
+      using namespace data_structures;
        
-       bucketed_storage<int> s{};
+      bucketed_storage<T, SharingPolicy, ThrowOnRangeError> s{};
 
-       check_equality<std::size_t>(0, s.num_partitions_capacity(), LINE(""));
-       check_exception_thrown<std::out_of_range>([&s](){ s.capacity(0); }, LINE(""));
+      check_equality<std::size_t>(0, s.num_partitions_capacity(), LINE(""));
+      if constexpr(ThrowOnRangeError) check_exception_thrown<std::out_of_range>([&s](){ s.capacity(0); }, LINE(""));
 
-       s.reserve_partitions(4);
-       check_equality<std::size_t>(4, s.num_partitions_capacity(), LINE(""));
-       check_exception_thrown<std::out_of_range>([&s](){ s.capacity(0); }, LINE(""));
+      s.reserve_partitions(4);
+      check_equality<std::size_t>(4, s.num_partitions_capacity(), LINE(""));
+      if constexpr(ThrowOnRangeError) check_exception_thrown<std::out_of_range>([&s](){ s.capacity(0); }, LINE(""));
 
-       s.shrink_num_partitions_to_fit();
-       check_equality<std::size_t>(0, s.num_partitions_capacity(), LINE("May fail if shrink to fit impl does not reduce capacity"));
-       check_exception_thrown<std::out_of_range>([&s](){ s.capacity(0); }, LINE(""));
+      s.shrink_num_partitions_to_fit();
+      check_equality<std::size_t>(0, s.num_partitions_capacity(), LINE("May fail if shrink to fit impl does not reduce capacity"));
+      if constexpr(ThrowOnRangeError) check_exception_thrown<std::out_of_range>([&s](){ s.capacity(0); }, LINE(""));
 
-       s.add_slot();
-       check_equality<std::size_t>(0, s.capacity(0), LINE(""));
-       check_exception_thrown<std::out_of_range>([&s](){ s.capacity(1); }, LINE(""));
+      s.add_slot();
+      check_equality<std::size_t>(0, s.capacity(0), LINE(""));
+      if constexpr(ThrowOnRangeError) check_exception_thrown<std::out_of_range>([&s](){ s.capacity(1); }, LINE(""));
 
-       s.reserve(0, 4);
-       check_equality<std::size_t>(4, s.capacity(0), LINE(""));
+      s.reserve(0, 4);
+      check_equality<std::size_t>(4, s.capacity(0), LINE(""));
        
-       s.shrink_to_fit(0);
-       check_equality<std::size_t>(0, s.capacity(0), LINE("May fail if shrink to fit impl does not reduce capacity"));
-       check_exception_thrown<std::out_of_range>([&s](){ s.shrink_to_fit(1); }, LINE(""));
-     }
+      s.shrink_to_fit(0);
+      check_equality<std::size_t>(0, s.capacity(0), LINE("May fail if shrink to fit impl does not reduce capacity"));
+      if constexpr(ThrowOnRangeError) check_exception_thrown<std::out_of_range>([&s](){ s.shrink_to_fit(1); }, LINE(""));
+    }
   }
 }

@@ -80,8 +80,10 @@ namespace sequoia
 
       void test_static_storage();
 
+      template<class T, class SharingPolicy, bool ThrowOnRangeError>
       void test_contiguous_capacity();
 
+      template<class T, class SharingPolicy, bool ThrowOnRangeError>
       void test_bucketed_capacity();
       
       template<template<class...> class C, class SharingPolicy, template<class> class ReferencePolicy, class Arg>
@@ -89,7 +91,7 @@ namespace sequoia
 
       template<template<class...> class C, class SharingPolicy, template<class> class ReferencePolicy, class Arg>
       void test_generic_iterator_deref(const Arg& v);
-
+      
       template<template<class> class SharingPolicy> void test_iterators();
     };
   }
