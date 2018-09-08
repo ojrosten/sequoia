@@ -591,8 +591,8 @@ namespace sequoia
 
       {
         std::vector<typename SharingPolicy<int>::handle_type> vec{SharingPolicy<int>::make(1), SharingPolicy<int>::make(2), SharingPolicy<int>::make(3)};
-        test_generic_iterator_properties<std::vector, SharingPolicy<int>, mutable_reference>(vec);
-        test_generic_iterator_properties<std::vector, SharingPolicy<int>, const_reference>(vec);
+        test_generic_iterator_properties<std::vector, SharingPolicy<int>, partition_impl::mutable_reference>(vec);
+        test_generic_iterator_properties<std::vector, SharingPolicy<int>, partition_impl::const_reference>(vec);
       }
 
       {
@@ -600,8 +600,8 @@ namespace sequoia
 
         std::vector<typename SharingPolicy<data>::handle_type> vec{SharingPolicy<data>::make(true, 1.0)};
 
-        test_generic_iterator_deref<std::vector, SharingPolicy<std::pair<bool, double>>, mutable_reference>(vec);
-        test_generic_iterator_deref<std::vector, SharingPolicy<std::pair<bool, double>>, const_reference>(vec);
+        test_generic_iterator_deref<std::vector, SharingPolicy<std::pair<bool, double>>, partition_impl::mutable_reference>(vec);
+        test_generic_iterator_deref<std::vector, SharingPolicy<std::pair<bool, double>>, partition_impl::const_reference>(vec);
       }
     }
 
@@ -613,7 +613,7 @@ namespace sequoia
 
       auto vec(v);
 
-      using p_i_t = utilities::iterator<typename partition_iterator_helper<C, SharingPolicy, ReferencePolicy, false>::iterator, partition_impl::dereference_policy<SharingPolicy, ReferencePolicy>, partition_impl::partition_index_policy<false, std::size_t>>;
+      using p_i_t = utilities::iterator<typename partition_impl::partition_iterator_generator<C, SharingPolicy, ReferencePolicy, false>::iterator, partition_impl::dereference_policy<SharingPolicy, ReferencePolicy>, partition_impl::partition_index_policy<false, std::size_t>>;
 
       p_i_t iter(vec.begin(), 4u);
 
@@ -674,7 +674,7 @@ namespace sequoia
       using T = typename SharingPolicy::elementary_type;
 
       auto vec(v);
-      using p_i_t = utilities::iterator<typename partition_iterator_helper<C, SharingPolicy, ReferencePolicy, false>::iterator, partition_impl::dereference_policy<SharingPolicy, ReferencePolicy>, partition_impl::partition_index_policy<false, std::size_t>>;
+      using p_i_t = utilities::iterator<typename partition_impl::partition_iterator_generator<C, SharingPolicy, ReferencePolicy, false>::iterator, partition_impl::dereference_policy<SharingPolicy, ReferencePolicy>, partition_impl::partition_index_policy<false, std::size_t>>;
 
       p_i_t iter(vec.begin(), 0u);
 

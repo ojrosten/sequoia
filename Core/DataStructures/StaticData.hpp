@@ -37,7 +37,7 @@ namespace sequoia
     template<class C, bool b=std::is_base_of<static_data_base, C>::value> struct storage_helper
     {
       using storage_type = C;
-      using auxiliary_storage_type = std::vector<std::size_t>;
+      using auxiliary_storage_type = std::vector<typename storage_type::size_type>;
     };
 
     template<class C> struct storage_helper<C, true>

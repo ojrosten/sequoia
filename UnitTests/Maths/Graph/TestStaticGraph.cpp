@@ -86,8 +86,8 @@ namespace sequoia::unit_testing
       // Think about alignment for non-empty T...
       if constexpr (std::is_empty_v<NodeWeight> && std::is_empty_v<EdgeWeight>)
         check_equality(4*sizeof(char), sizeof(g_type), LINE("2 bytes for each half edge and 2 for the partition data"));
-      using edge = typename g_type::edge_init_type;
-      check_exception_thrown<std::logic_error>([](){ g_type{{edge{-1}}, {edge{-1}}}; }, LINE("Negative target index"));
+
+      static_assert(std::is_same_v<typename g_type::edge_index_type, unsigned char>);
     }
 
     {
@@ -146,9 +146,6 @@ namespace sequoia::unit_testing
     {
       using g_type = static_embedded_graph<directed_flavour::undirected, 2, 1, NodeWeight, EdgeWeight, true, char>;
       checker.template check_2_1<g_type>();
-
-      using edge = typename g_type::edge_init_type;
-      check_exception_thrown<std::logic_error>([](){ g_type{{edge{1,-1}}, {edge{0,-1}}}; }, LINE("Negative complementary index"));
     }
 
     {
@@ -202,9 +199,6 @@ namespace sequoia::unit_testing
      {
        using g_type = static_graph<directed_flavour::directed, 2, 1, NodeWeight, EdgeWeight, true, char>;
        checker.template check_2_1<g_type>();
-
-       using edge = typename g_type::edge_init_type;
-       check_exception_thrown<std::logic_error>([](){ g_type{{edge{-1}}, {}}; }, LINE("Negative target index"));
      }
 
      {
@@ -253,9 +247,6 @@ namespace sequoia::unit_testing
     {
       using g_type = static_embedded_graph<directed_flavour::directed, 2, 1, NodeWeight, EdgeWeight, true, char>;
       checker.template check_2_1<g_type>();
-
-      using edge = typename g_type::edge_init_type;
-      check_exception_thrown<std::logic_error>([](){ g_type{{edge{0,1,-1}}, {edge{0,1,-1}}}; }, LINE("Negative complementary index"));
     }
 
     {

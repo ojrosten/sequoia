@@ -15,63 +15,62 @@ namespace sequoia
 {
   namespace data_structures
   {
-    template<class T> struct const_reference
+    namespace partition_impl
     {
-      using type      = const T;
-      using reference = const T&;
-      using pointer   = const T*;
-    };
+      template<class T> struct const_reference
+      {
+        using type      = const T;
+        using reference = const T&;
+        using pointer   = const T*;
+      };
 
-    template <class T> struct mutable_reference
-    {
-      using type      = T;
-      using reference = T&;
-      using pointer   = T*;
-    };
+      template <class T> struct mutable_reference
+      {
+        using type      = T;
+        using reference = T&;
+        using pointer   = T*;
+      };
 
-    template<template<class...> class C, class SharingPolicy> struct storage_type_generator
-    {
-      using held_type = typename SharingPolicy::handle_type;
-      using container_type = C<held_type>;
-      using helper = storage_helper<container_type>;
-      using storage_type = typename helper::storage_type;
-      using auxiliary_storage_type = typename helper::auxiliary_storage_type;
-      using static_type = typename std::is_base_of<static_data_base, C<held_type>>::type;
-    };
+      template<template<class...> class C, class SharingPolicy> struct storage_type_generator
+      {
+        using held_type = typename SharingPolicy::handle_type;
+        using container_type = C<held_type>;
+        using helper = storage_helper<container_type>;
+        using storage_type = typename helper::storage_type;
+        using auxiliary_storage_type = typename helper::auxiliary_storage_type;
+        using static_type = typename std::is_base_of<static_data_base, C<held_type>>::type;
+      };
     
-    template<template<class...> class C, class SharingPolicy, template<class> class ReferencePolicy, bool Reversed>
-    struct partition_iterator_helper
-    {
-      using iterator = typename storage_type_generator<C, SharingPolicy>::storage_type::iterator;
-    };
+      template<template<class...> class C, class SharingPolicy, template<class> class ReferencePolicy, bool Reversed>
+      struct partition_iterator_generator
+      {
+        using iterator = typename storage_type_generator<C, SharingPolicy>::storage_type::iterator;
+      };
 
-    template<template<class...> class C, class SharingPolicy>
-    struct partition_iterator_helper<C, SharingPolicy, mutable_reference, true>
-    {
-      using iterator = typename storage_type_generator<C, SharingPolicy>::storage_type::reverse_iterator;
-    };
+      template<template<class...> class C, class SharingPolicy>
+      struct partition_iterator_generator<C, SharingPolicy, mutable_reference, true>
+      {
+        using iterator = typename storage_type_generator<C, SharingPolicy>::storage_type::reverse_iterator;
+      };
     
-    template<template<class...> class C, class SharingPolicy>
-    struct partition_iterator_helper<C, SharingPolicy, const_reference, false>
-    {
-      using iterator = typename storage_type_generator<C, SharingPolicy>::storage_type::const_iterator;
-    };
+      template<template<class...> class C, class SharingPolicy>
+      struct partition_iterator_generator<C, SharingPolicy, const_reference, false>
+      {
+        using iterator = typename storage_type_generator<C, SharingPolicy>::storage_type::const_iterator;
+      };
 
     template<template<class...> class C, class SharingPolicy>
-    struct partition_iterator_helper<C, SharingPolicy, const_reference, true>
+    struct partition_iterator_generator<C, SharingPolicy, const_reference, true>
     {
       using iterator = typename storage_type_generator<C, SharingPolicy>::storage_type::const_reverse_iterator;
     };
-
-    namespace partition_impl
-    {
       template<bool Reversed, class IndexType>
       class partition_index_policy
       {
       public:
         using index_type = IndexType;
 
-        constexpr static index_type npos{std::numeric_limits<index_type>::max()};
+        constexpr static auto npos{std::numeric_limits<index_type>::max()};
         
         constexpr static bool reversed() { return Reversed; }
 
@@ -110,16 +109,16 @@ namespace sequoia
     //===================================A Custom Iterator===================================//
 
     template<template<class...> class C, class SharingPolicy, class IndexType>
-    using partition_iterator = utilities::iterator<typename partition_iterator_helper<C, SharingPolicy, mutable_reference, false>::iterator, partition_impl::dereference_policy<SharingPolicy, mutable_reference>, partition_impl::partition_index_policy<false, IndexType>>;
+    using partition_iterator = utilities::iterator<typename partition_impl::partition_iterator_generator<C, SharingPolicy, partition_impl::mutable_reference, false>::iterator, partition_impl::dereference_policy<SharingPolicy, partition_impl::mutable_reference>, partition_impl::partition_index_policy<false, IndexType>>;
 
     template<template<class...> class C, class SharingPolicy, class IndexType>
-    using const_partition_iterator = utilities::iterator<typename partition_iterator_helper<C, SharingPolicy, const_reference, false>::iterator, partition_impl::dereference_policy<SharingPolicy, const_reference>, partition_impl::partition_index_policy<false, IndexType>>;
+    using const_partition_iterator = utilities::iterator<typename partition_impl::partition_iterator_generator<C, SharingPolicy, partition_impl::const_reference, false>::iterator, partition_impl::dereference_policy<SharingPolicy, partition_impl::const_reference>, partition_impl::partition_index_policy<false, IndexType>>;
 
     template<template<class...> class C, class SharingPolicy, class IndexType>
-    using reverse_partition_iterator = utilities::iterator<typename partition_iterator_helper<C, SharingPolicy, mutable_reference, true>::iterator, partition_impl::dereference_policy<SharingPolicy, mutable_reference>, partition_impl::partition_index_policy<true, IndexType>>;
+    using reverse_partition_iterator = utilities::iterator<typename partition_impl::partition_iterator_generator<C, SharingPolicy, partition_impl::mutable_reference, true>::iterator, partition_impl::dereference_policy<SharingPolicy, partition_impl::mutable_reference>, partition_impl::partition_index_policy<true, IndexType>>;
 
     template<template<class...> class C, class SharingPolicy, class IndexType>
-    using const_reverse_partition_iterator = utilities::iterator<typename partition_iterator_helper<C, SharingPolicy, const_reference, true>::iterator, partition_impl::dereference_policy<SharingPolicy, const_reference>, partition_impl::partition_index_policy<true, IndexType>>;
+    using const_reverse_partition_iterator = utilities::iterator<typename partition_impl::partition_iterator_generator<C, SharingPolicy, partition_impl::const_reference, true>::iterator, partition_impl::dereference_policy<SharingPolicy, partition_impl::const_reference>, partition_impl::partition_index_policy<true, IndexType>>;
 
     //============================= Helper classes for copy constructor ===================================//
 
@@ -531,10 +530,12 @@ namespace sequoia
     class contiguous_storage_base
     {
     private:
-      using AuxiliaryType  = typename storage_type_generator<Storage, SharingPolicy>::auxiliary_storage_type;
+      using AuxiliaryType = typename partition_impl::storage_type_generator<Storage, SharingPolicy>::auxiliary_storage_type;      
+      using StorageType   = typename partition_impl::storage_type_generator<Storage, SharingPolicy>::storage_type; 
     public:
       using value_type          = T;
       using sharing_policy_type = SharingPolicy;
+      using size_type           = std::common_type_t<typename AuxiliaryType::size_type, typename StorageType::size_type>;
       using index_type          = typename AuxiliaryType::value_type;
 
       using partition_iterator               = partition_iterator<Storage, SharingPolicy, index_type>;
@@ -563,9 +564,9 @@ namespace sequoia
         return *this;
       }
 
-      constexpr std::size_t size() const noexcept { return m_Storage.size(); }
+      constexpr auto size() const noexcept { return m_Storage.size(); }
 
-      constexpr std::size_t num_partitions() const noexcept { return m_Partitions.size(); }
+      constexpr auto num_partitions() const noexcept { return m_Partitions.size(); }
 
       template<class UnaryPred>
       partition_iterator find_in_partition_if(const index_type partitionIndex, UnaryPred pred)
@@ -659,7 +660,7 @@ namespace sequoia
         m_Partitions.push_back(m_Storage.size());
       }
 
-      std::size_t insert_slot(const std::size_t pos)
+      size_type insert_slot(const size_t pos)
       {
         index_type partition{pos};
         if(pos < num_partitions())
@@ -689,7 +690,7 @@ namespace sequoia
             m_Storage.erase(m_Storage.begin() + offset, m_Storage.begin() + m_Partitions[n]);
           }
           m_Partitions.erase(m_Partitions.begin() + n);
-          for(std::size_t i=n; i < m_Partitions.size(); ++i)
+          for(size_type i{n}; i < m_Partitions.size(); ++i)
           {
             m_Partitions[i]-=deleted;
           }
@@ -698,7 +699,7 @@ namespace sequoia
         return deleted;
       }
 
-      void reserve(const index_type size)
+      void reserve(const size_type size)
       {
         m_Storage.reserve(size);
       }
@@ -708,7 +709,7 @@ namespace sequoia
         return m_Storage.capacity();
       }
 
-      void reserve_partitions(const index_type numPartitions)
+      void reserve_partitions(const size_type numPartitions)
       {
         m_Partitions.reserve(numPartitions);
       }
@@ -752,7 +753,7 @@ namespace sequoia
           insertIter = m_Storage.insert(m_Storage.begin() + m_Partitions[index], *(iter.base_iterator()));
         }
 
-        for(std::size_t i=index; i < m_Partitions.size(); ++i)
+        for(size_type i{index}; i < m_Partitions.size(); ++i)
         {
           ++m_Partitions[i];
         }
@@ -795,14 +796,14 @@ namespace sequoia
         return partition_iterator(iter, host);
       }
 
-      partition_iterator delete_from_partition(const index_type index, const std::size_t pos)
+      partition_iterator delete_from_partition(const index_type index, const size_type pos)
       {
         auto next = end_partition(index).base_iterator();
         auto iter = begin_partition(index);
-        if(iter != end_partition(num_partitions() - 1) && pos < static_cast<std::size_t>(distance(iter, end_partition(index))))
+        if(iter != end_partition(num_partitions() - 1) && pos < static_cast<size_type>(distance(iter, end_partition(index))))
         {
           next = m_Storage.erase((iter + pos).base_iterator());
-          for(std::size_t i=index; i < m_Partitions.size(); ++i)
+          for(size_type i{index}; i < m_Partitions.size(); ++i)
           {
             m_Partitions[i]-=1;
           }
@@ -815,7 +816,7 @@ namespace sequoia
       {
         const auto next = m_Storage.erase(iter.base_iterator());
         const auto index = iter.partition_index();
-        for(std::size_t i=index; i < m_Partitions.size(); ++i)
+        for(size_type i{index}; i < m_Partitions.size(); ++i)
         {
           m_Partitions[i]-=1;
         }
@@ -834,7 +835,7 @@ namespace sequoia
             iter = partition_iterator(m_Storage.erase(iter.base_iterator()), partitionIndex);
             ++deleted;
 
-            for(std::size_t i=partitionIndex; i < m_Partitions.size(); ++i)
+            for(size_type i{partitionIndex}; i < m_Partitions.size(); ++i)
             {
               --m_Partitions[i];
             }
@@ -849,10 +850,9 @@ namespace sequoia
       }
 
     private:
-      using held_type      = typename storage_type_generator<Storage, SharingPolicy>::held_type;
-      using container_type = typename storage_type_generator<Storage, SharingPolicy>::container_type;
-      using StorageType    = typename storage_type_generator<Storage, SharingPolicy>::storage_type;      
-      using StaticType     = typename storage_type_generator<Storage, SharingPolicy>::static_type;
+      using held_type      = typename partition_impl::storage_type_generator<Storage, SharingPolicy>::held_type;
+      using container_type = typename partition_impl::storage_type_generator<Storage, SharingPolicy>::container_type;     
+      using StaticType     = typename partition_impl::storage_type_generator<Storage, SharingPolicy>::static_type;
       constexpr static index_type npos{partition_iterator::npos};
       
       StorageType m_Storage;
@@ -872,7 +872,7 @@ namespace sequoia
       }
 
       template<class PartitionSizes>
-      constexpr static held_type make_element(std::size_t i, std::initializer_list<std::initializer_list<T>> list, const PartitionSizes& partitionSizes)
+      constexpr static held_type make_element(size_type i, std::initializer_list<std::initializer_list<T>> list, const PartitionSizes& partitionSizes)
       {
         index_type partition{}, index{};        
         while(!partitionSizes[partition]) ++partition;
@@ -895,13 +895,13 @@ namespace sequoia
         return SharingPolicy::make(*((list.begin() + partition)->begin() + index));
       }
 
-      template<class PartitionSizes, std::size_t... Inds>
-      constexpr static StorageType make_array(std::integer_sequence<std::size_t, Inds...>, std::initializer_list<std::initializer_list<T>> list, const PartitionSizes& partitionSizes)
+      template<class PartitionSizes, size_type... Inds>
+      constexpr static StorageType make_array(std::integer_sequence<size_type, Inds...>, std::initializer_list<std::initializer_list<T>> list, const PartitionSizes& partitionSizes)
       {
         if(list.size() != container_type::num_partitions())
           throw std::logic_error("Overall initializer list of wrong size");
 
-        std::size_t total{};
+        size_type total{};
         for(auto l : list) total += l.size();
         
         if(total != container_type::num_elements())
@@ -917,30 +917,30 @@ namespace sequoia
         }
       }
 
-      constexpr static index_type get_size(const std::size_t i, std::initializer_list<std::initializer_list<T>> list)
+      constexpr static index_type get_size(const size_type i, std::initializer_list<std::initializer_list<T>> list)
       {
         return index_type((list.begin() + i)->size());
       }
 
-      template<std::size_t... Inds>
+      template<size_type... Inds>
       constexpr static std::array<index_type, sizeof...(Inds)>
-      make_size_array(std::integer_sequence<std::size_t, Inds...>, std::initializer_list<std::initializer_list<T>> list)
+      make_size_array(std::integer_sequence<size_type, Inds...>, std::initializer_list<std::initializer_list<T>> list)
       {
         return { get_size(Inds, list)... };
       }
 
-      template<std::size_t... Inds>
+      template<size_type... Inds>
       constexpr static std::array<index_type, sizeof...(Inds)>
-      make_separator_array(std::integer_sequence<std::size_t, Inds...>, std::initializer_list<std::initializer_list<T>> list)
+      make_separator_array(std::integer_sequence<size_type, Inds...>, std::initializer_list<std::initializer_list<T>> list)
       {
         const auto sizeArray = make_size_array(std::make_index_sequence<container_type::num_partitions()>{}, list);
         return { get_separator_element(Inds, sizeArray)... };
       }
 
-      template<std::size_t N> constexpr static index_type get_separator_element(const std::size_t i, const std::array<index_type, N>& sizeArray)
+      template<size_type N> constexpr static index_type get_separator_element(const size_type i, const std::array<index_type, N>& sizeArray)
       {
         index_type sep{};
-        for(std::size_t j{}; j<=i; ++j)
+        for(size_type j{}; j<=i; ++j)
           sep += sizeArray[j];
 
         return sep;
@@ -965,7 +965,7 @@ namespace sequoia
         }
       }
 
-      void check_range(const std::size_t index) const
+      void check_range(const size_type index) const
       {
         if(index >= m_Partitions.size())
         {
@@ -973,7 +973,7 @@ namespace sequoia
         }
       }
 
-      void check_range(const std::size_t index, const index_type pos) const
+      void check_range(const size_type index, const index_type pos) const
       {
         check_range(index);
         const index_type maxPos{index ? m_Partitions[index] - m_Partitions[index - 1] : m_Partitions[index]};
@@ -1003,7 +1003,7 @@ namespace sequoia
           iter = m_Storage.insert(m_Storage.begin() + m_Partitions[index], SharingPolicy::make(std::forward<Args>(args)...));
         }
 
-        for(std::size_t i=index; i < m_Partitions.size(); ++i)
+        for(size_type i{index}; i < m_Partitions.size(); ++i)
         {
           ++m_Partitions[i];
         }
@@ -1077,14 +1077,14 @@ namespace sequoia
 
     template<class T, std::size_t Npartitions, std::size_t Nelements, bool ThrowOnRangeError=true, class IndexType=std::size_t>
     class static_contiguous_storage
-      : public contiguous_storage_base<T, data_sharing::independent<T>, ThrowOnRangeError, static_contiguous_data<Npartitions,Nelements,IndexType>::template data>
+      : public contiguous_storage_base<T, data_sharing::independent<T>, ThrowOnRangeError, static_contiguous_data<Npartitions,Nelements,std::make_unsigned_t<IndexType>>::template data>
     {
     public:
       using contiguous_storage_base<
         T,
         data_sharing::independent<T>,
         ThrowOnRangeError,
-        static_contiguous_data<Npartitions,Nelements,IndexType>::template data
+        static_contiguous_data<Npartitions,Nelements,std::make_unsigned_t<IndexType>>::template data
       >::contiguous_storage_base;
     };
     
@@ -1101,9 +1101,14 @@ namespace sequoia
     bool operator==(const FirstStorageType<T, FirstSharingPolicy, FirstThrowPolicy, FirstStoragePolicy>& first,
                     const SecondStorageType<T, SecondSharingPolicy, SecondThrowPolicy, SecondStoragePolicy>& second) noexcept
     {
+      using size_type = std::common_type_t<
+        typename FirstStorageType<T, FirstSharingPolicy, FirstThrowPolicy, FirstStoragePolicy>::size_type,
+        typename SecondStorageType<T, SecondSharingPolicy, SecondThrowPolicy, SecondStoragePolicy>::size_type
+        >;
+      
       if(first.num_partitions() != second.num_partitions()) return false;
 
-      for(std::size_t i{}; i < first.num_partitions(); ++i)
+      for(size_type i{}; i < first.num_partitions(); ++i)
       {
         if(distance(first.cbegin_partition(i), first.cend_partition(i))
           != distance(second.cbegin_partition(i), second.cend_partition(i)))

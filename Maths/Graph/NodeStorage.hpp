@@ -34,13 +34,14 @@ namespace sequoia
       public:        
         using weight_type = typename WeightProxy::value_type;
         using weight_proxy_type = WeightProxy;
+        using size_type = typename Storage::size_type;
 
         using const_iterator = utilities::iterator<typename Storage::const_iterator, proxy_dereference_policy<typename Storage::const_iterator>, utilities::null_data_policy>;
         using const_reverse_iterator = utilities::iterator<typename Storage::const_reverse_iterator, proxy_dereference_policy<typename Storage::const_reverse_iterator>, utilities::null_data_policy>;
 
         constexpr node_storage() {}
 
-        constexpr node_storage(const std::size_t n) : node_storage(StaticType{}, n) {}
+        constexpr node_storage(const size_type n) : node_storage(StaticType{}, n) {}
 
         constexpr node_storage(std::initializer_list<weight_type> weights) : node_storage{StaticType{}, weights} {}
         
@@ -80,10 +81,10 @@ namespace sequoia
           return !(lhs == rhs);
         }
       protected:
-        constexpr node_storage(std::true_type, const std::size_t n)
+        constexpr node_storage(std::true_type, const size_type n)
           : m_NodeWeights{make_default_array(std::make_index_sequence<Container<WeightProxy>::num_elements()>{})} {}
         
-        constexpr node_storage(std::false_type, const std::size_t n) : m_NodeWeights(n) {}
+        constexpr node_storage(std::false_type, const size_type n) : m_NodeWeights(n) {}
         
         constexpr node_storage(const node_storage& in) = default;
       
@@ -95,7 +96,7 @@ namespace sequoia
  
         constexpr node_storage& operator=(node_storage&&) noexcept = default;
       
-        void reserve_nodes(const std::size_t newCapacity)
+        void reserve_nodes(const size_type newCapacity)
         {
           m_NodeWeights.reserve(newCapacity);
         }
