@@ -156,6 +156,49 @@ namespace sequoia
         m_Edges.reserve_partitions(size);
       }
 
+      size_type node_capacity() const noexcept
+      {
+        return m_Edges.num_partitions_capacity();
+      }
+
+      template<class T=edge_storage_type>
+      std::enable_if_t<graph_impl::has_reservable_partitions_v<T>>
+      reserve_edges(const edge_index_type partition, const edge_index_type size)
+      {
+        m_Edges.reserve(partition, size);
+      }
+
+      template<class T=edge_storage_type>
+      std::enable_if_t<!graph_impl::has_reservable_partitions_v<T>>
+      reserve_edges(const edge_index_type size)
+      {
+        m_Edges.reserve(size);
+      }
+
+      template<class T=edge_storage_type>
+      std::enable_if_t<graph_impl::has_reservable_partitions_v<T>>
+      edges_capacity(const edge_index_type partition) const
+      {
+        return m_Edges.capacity(partition);
+      }
+
+      template<class T=edge_storage_type>
+      std::enable_if_t<graph_impl::has_reservable_partitions_v<T>>
+      edges_capacity() const noexcept
+      {
+        return m_Edges.capacity();
+      }
+      
+      void shrink_to_fit()
+      {
+        if constexpr(!std::is_empty_v<node_weight_type>)
+        {
+          this->shrink_to_fit();
+        }
+
+        m_Edges.shrink_to_fit();
+      }
+
       constexpr edge_iterator begin_edges(const edge_index_type node)
       {
         if constexpr (throwOnRangeError) if(node >= order()) throw std::out_of_range("Node index out of range!");
@@ -614,20 +657,6 @@ namespace sequoia
             sequoia::sort(begin_edges(ehost), begin_edges(ehost) + distance(cbegin_edges(ehost), end), comp);
           }
         }
-      }
-
-      template<class T=edge_storage_type>
-      std::enable_if_t<graph_impl::has_reservable_partitions_v<T>>
-      reserve_edges(const edge_index_type partition, const edge_index_type size)
-      {
-        m_Edges.reserve(partition, size);
-      }
-
-      template<class T=edge_storage_type>
-      std::enable_if_t<!graph_impl::has_reservable_partitions_v<T>>
-      reserve_edges(const edge_index_type size)
-      {
-        m_Edges.reserve(size);
       }
       
     private:
@@ -1332,6 +1361,10 @@ namespace sequoia
       using primitive::clear;
 
       using primitive::reserve_edges;
+      using primitive::edges_capacity;
+      using primitive::reserve_nodes;
+      using primitive::node_capacity;
+      using primitive::shrink_to_fit;
       
       constexpr static graph_flavour flavour{GraphFlavour};
     protected:
