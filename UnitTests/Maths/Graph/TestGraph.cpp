@@ -480,6 +480,11 @@ namespace sequoia::unit_testing
     using Edge = maths::edge<EdgeWeight, utilities::protective_wrapper<EdgeWeight>>;
     using E_Edge = maths::embedded_edge<EdgeWeight, data_sharing::independent, utilities::protective_wrapper<EdgeWeight>>;
 
+    graph.reserve_nodes(4);
+    check_equality<std::size_t>(4, graph.node_capacity(), LINE(""));
+    graph.shrink_to_fit();
+    check_equality<std::size_t>(0, graph.node_capacity(), LINE("May fail if stl implementation doesn't actually shrink to fit!"));
+
     // NULL
     check_exception_thrown<std::out_of_range>([&graph](){ graph.delete_node(0); }, LINE("No nodes to delete"));
     check_exception_thrown<std::out_of_range>([&graph](){ graph.delete_edge(graph.cbegin_edges(0)); }, LINE("No edges to delete"));

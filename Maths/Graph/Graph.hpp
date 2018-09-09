@@ -150,14 +150,14 @@ namespace sequoia
       {
         if constexpr(!std::is_empty_v<node_weight_type>)
         {
-          this->reserve_nodes(size);
+          Nodes::reserve_nodes(size);
         }
         
         m_Edges.reserve_partitions(size);
       }
 
       size_type node_capacity() const noexcept
-      {
+      {        
         return m_Edges.num_partitions_capacity();
       }
 
@@ -193,7 +193,7 @@ namespace sequoia
       {
         if constexpr(!std::is_empty_v<node_weight_type>)
         {
-          this->shrink_to_fit();
+          Nodes::shrink_to_fit();
         }
 
         m_Edges.shrink_to_fit();

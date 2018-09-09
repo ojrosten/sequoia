@@ -100,6 +100,16 @@ namespace sequoia
         {
           m_NodeWeights.reserve(newCapacity);
         }
+
+        void node_capacity() const noexcept
+        {
+          return m_NodeWeights.capacity();
+        }
+
+        void shrink_to_fit()
+        {
+          m_NodeWeights.shrink_to_fit();
+        }
         
         template<class... Args>
         void add_node(Args&&... args)
