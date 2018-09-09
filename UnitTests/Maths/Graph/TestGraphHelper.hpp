@@ -445,10 +445,10 @@ namespace sequoia
         using flavour = maths::graph_flavour;
         try
         {
-          run_graph_tests<flavour::undirected, TemplateTestClass>();
-          run_graph_tests<flavour::undirected_embedded, TemplateTestClass>();
-          run_graph_tests<flavour::directed, TemplateTestClass>();
-          run_graph_tests<flavour::directed_embedded, TemplateTestClass>();
+          run_graph_type_tests<flavour::undirected, TemplateTestClass>();
+          run_graph_type_tests<flavour::undirected_embedded, TemplateTestClass>();
+          run_graph_type_tests<flavour::directed, TemplateTestClass>();
+          run_graph_type_tests<flavour::directed_embedded, TemplateTestClass>();
           
           finish(unitTest);
         }
@@ -479,7 +479,7 @@ namespace sequoia
       {
         try
         {
-          run_graph_tests<GraphFlavour, TemplateTestClass>();
+          run_graph_type_tests<GraphFlavour, TemplateTestClass>();
           
           finish(unitTest);
         }
@@ -499,7 +499,59 @@ namespace sequoia
         unitTest.merge(m_Summary);   
         m_Summary.clear();
       }
+
+      template
+      <
+        maths::graph_flavour GraphType,
+        template <class, class, bool, template<class...> class> class EdgeStorage,
+        template
+        <
+          maths::graph_flavour,
+          class,
+          class,
+          bool,
+          template <class> class,
+          template <class> class,
+          template <class, class, bool, template<class...> class> class
+        >
+        class TemplateTestClass
+      >
+      void run_graph_tests()
+      {
+        using namespace data_sharing;
+        
+        TemplateTestClass<GraphType, NodeWeight, EdgeWeight, true, unpooled, unpooled, EdgeStorage> test0;        
+        TemplateTestClass<GraphType, NodeWeight, EdgeWeight, true, data_pool, unpooled, EdgeStorage> test1;        
+        TemplateTestClass<GraphType, NodeWeight, EdgeWeight, true, data_pool, data_pool, EdgeStorage> test2;
+
+        run_graph_test(test0);
+        run_graph_test(test1);
+        run_graph_test(test2);
+      }
       
+      template
+      <
+        maths::graph_flavour GraphType,
+        template
+        <
+          maths::graph_flavour,
+          class,
+          class,
+          bool,
+          template <class> class,
+          template <class> class,
+          template <class, class, bool, template<class...> class> class
+        >
+        class TemplateTestClass
+      >
+      void run_graph_type_tests()
+      {
+        using namespace data_structures;
+        
+        run_graph_tests<GraphType, contiguous_storage, TemplateTestClass>();
+        run_graph_tests<GraphType, bucketed_storage, TemplateTestClass>();
+      }
+
       template
       <
         maths::graph_flavour GraphType,
