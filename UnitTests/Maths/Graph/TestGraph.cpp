@@ -6,12 +6,16 @@ namespace sequoia::unit_testing
   {
     using std::complex;
     using namespace maths;
+    using namespace data_structures;
 
     struct null_weight {};
       
     {
       graph_test_helper<null_weight, null_weight> helper{"Unweighted"};
+      
       helper.run_tests<generic_graph_operations>(*this);
+      helper.run_storage_tests<contiguous_storage, graph_contiguous_capacity>(*this);
+      //helper.run_storage_tests<bucketed_storage, graph_bucketed_capacity>(*this);
     }
       
     {
@@ -452,6 +456,59 @@ namespace sequoia::unit_testing
       check_graph(network2, {{Edge(0,0)}}, {}, LINE(""));
       check_graph(network, {{Edge(0,1)}, {}, {Edge(2,3)}, {}}, {}, LINE("Check swapped di-component graph"));
     }
+  }
+
+  // Capacity
+
+  template
+  <
+    maths::graph_flavour GraphFlavour,
+    class NodeWeight,
+    class EdgeWeight,
+    bool ThrowOnError,
+    template <class> class NodeWeightStorage,
+    template <class> class EdgeWeightStorage,
+    template <class, class, bool, template<class...> class> class EdgeStoragePolicy
+  >
+  void graph_contiguous_capacity<
+      GraphFlavour,
+      NodeWeight,
+      EdgeWeight,
+      ThrowOnError,
+      NodeWeightStorage,
+      EdgeWeightStorage,
+      EdgeStoragePolicy
+  >::execute_operations()
+  {
+    graph_t g{};
+    g.reserve_edges(4);
+
+    //check_exception_thrown<std::out_of_range>([&g](){ g.reserve_edges(0, 4);}, LINE(""));
+  }
+
+   template
+  <
+    maths::graph_flavour GraphFlavour,
+    class NodeWeight,
+    class EdgeWeight,
+    bool ThrowOnError,
+    template <class> class NodeWeightStorage,
+    template <class> class EdgeWeightStorage,
+    template <class, class, bool, template<class...> class> class EdgeStoragePolicy
+  >
+  void graph_bucketed_capacity<
+      GraphFlavour,
+      NodeWeight,
+      EdgeWeight,
+      ThrowOnError,
+      NodeWeightStorage,
+      EdgeWeightStorage,
+      EdgeStoragePolicy
+  >::execute_operations()
+  {
+    graph_t g{};
+
+    check_exception_thrown<std::out_of_range>([&g](){ g.reserve_edges(0, 4);}, LINE(""));
   }
 
   // Generic Weighted

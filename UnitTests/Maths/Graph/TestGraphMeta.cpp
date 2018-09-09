@@ -3,7 +3,100 @@
 #include <complex>
 
 namespace sequoia::unit_testing
-{
+{   
+  void test_graph_meta::run_tests()
+  {
+    using namespace maths;
+
+    test_method_detectors();
+    test_weight_makers();
+    
+    test_undirected<graph_flavour::undirected, partial_edge>();
+    test_undirected<graph_flavour::undirected_embedded, embedded_partial_edge>();
+    test_directed();
+    test_directed_embedded();        
+  }
+
+  void test_graph_meta::test_method_detectors()
+  {
+    
+  }
+
+  void test_graph_meta::test_weight_makers()
+  {
+    using namespace maths;
+
+    using namespace graph_impl;
+    using namespace data_sharing;
+    
+
+    {
+      weight_maker<unpooled<int>, unpooled<int>> maker;
+      auto nproxy = maker.make_node_weight(2);
+      check_equality<int>(2, nproxy.get());
+
+      auto eproxy = maker.make_edge_weight(3);
+      check_equality<int>(3, eproxy.get());
+    }
+
+    {
+      weight_maker<unpooled<int>, unpooled<float>> maker;
+      auto nproxy = maker.make_node_weight(2);
+      check_equality<int>(2, nproxy.get());
+
+      auto eproxy = maker.make_edge_weight(3.0f);
+      check_equality<float>(3.0f, eproxy.get());
+    }
+
+    {
+      weight_maker<unpooled<int>, data_pool<int>> maker;
+      auto nproxy = maker.make_node_weight(2);
+      check_equality<int>(2, nproxy.get());
+
+      auto eproxy = maker.make_edge_weight(3);
+      check_equality<int>(3, eproxy.get());
+    }
+
+    {
+      weight_maker<data_pool<int>, unpooled<int>> maker;
+      auto nproxy = maker.make_node_weight(2);
+      check_equality<int>(2, nproxy.get());
+
+      auto eproxy = maker.make_edge_weight(3);
+      check_equality<int>(3, eproxy.get());
+    }
+
+    {
+      weight_maker<data_pool<int>, data_pool<int>> maker;
+      auto nproxy = maker.make_node_weight(2);
+      check_equality<int>(2, nproxy.get());
+
+      auto eproxy = maker.make_edge_weight(3);
+      check_equality<int>(3, eproxy.get());
+    }
+
+    {
+      weight_maker<data_pool<int>, data_pool<float>> maker;
+      auto nproxy = maker.make_node_weight(2);
+      check_equality<int>(2, nproxy.get());
+
+      auto eproxy = maker.make_edge_weight(3.0f);
+      check_equality<float>(3.0f, eproxy.get());
+    }
+
+    {
+      weight_maker<unpooled<double>, unpooled<int>> maker;
+      auto proxy = maker.make_edge_weight(2);
+      check_equality<int>(2, proxy.get());
+    }
+
+    {
+      weight_maker<data_pool<double>, data_pool<int>> maker;
+      auto proxy = maker.make_edge_weight(2);
+      check_equality<int>(2, proxy.get());
+    }
+  }
+  
   template<maths::graph_flavour GraphFlavour, class EdgeWeight, template<class> class EdgeWeightStorage, template<class, template<class> class, class, class> class EdgeType>
   void test_graph_meta::test_undirected_unshared()
   {
@@ -128,84 +221,5 @@ namespace sequoia::unit_testing
 
     test_directed_embedded_impl<std::tuple<double,double,double>, data_sharing::unpooled>();
     test_directed_embedded_impl<std::tuple<double,double,double>, data_sharing::data_pool>();
-  }
-  
-  void test_graph_meta::run_tests()
-  {
-    using namespace maths;
-    test_undirected<graph_flavour::undirected, partial_edge>();
-    test_undirected<graph_flavour::undirected_embedded, embedded_partial_edge>();
-    test_directed();
-    test_directed_embedded();
-    
-    using namespace graph_impl;
-    using namespace data_sharing;
-    
-
-    {
-      weight_maker<unpooled<int>, unpooled<int>> maker;
-      auto nproxy = maker.make_node_weight(2);
-      check_equality<int>(2, nproxy.get());
-
-      auto eproxy = maker.make_edge_weight(3);
-      check_equality<int>(3, eproxy.get());
-    }
-
-    {
-      weight_maker<unpooled<int>, unpooled<float>> maker;
-      auto nproxy = maker.make_node_weight(2);
-      check_equality<int>(2, nproxy.get());
-
-      auto eproxy = maker.make_edge_weight(3.0f);
-      check_equality<float>(3.0f, eproxy.get());
-    }
-
-    {
-      weight_maker<unpooled<int>, data_pool<int>> maker;
-      auto nproxy = maker.make_node_weight(2);
-      check_equality<int>(2, nproxy.get());
-
-      auto eproxy = maker.make_edge_weight(3);
-      check_equality<int>(3, eproxy.get());
-    }
-
-    {
-      weight_maker<data_pool<int>, unpooled<int>> maker;
-      auto nproxy = maker.make_node_weight(2);
-      check_equality<int>(2, nproxy.get());
-
-      auto eproxy = maker.make_edge_weight(3);
-      check_equality<int>(3, eproxy.get());
-    }
-
-    {
-      weight_maker<data_pool<int>, data_pool<int>> maker;
-      auto nproxy = maker.make_node_weight(2);
-      check_equality<int>(2, nproxy.get());
-
-      auto eproxy = maker.make_edge_weight(3);
-      check_equality<int>(3, eproxy.get());
-    }
-
-    {
-      weight_maker<data_pool<int>, data_pool<float>> maker;
-      auto nproxy = maker.make_node_weight(2);
-      check_equality<int>(2, nproxy.get());
-
-      auto eproxy = maker.make_edge_weight(3.0f);
-      check_equality<float>(3.0f, eproxy.get());
-    }
-
-    {
-      weight_maker<unpooled<double>, unpooled<int>> maker;
-      auto proxy = maker.make_edge_weight(2);
-      check_equality<int>(2, proxy.get());
-    }
-
-    {
-      weight_maker<data_pool<double>, data_pool<int>> maker;
-      auto proxy = maker.make_edge_weight(2);
-      check_equality<int>(2, proxy.get());
-    }
-  }
+  }  
 }

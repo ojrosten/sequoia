@@ -445,10 +445,10 @@ namespace sequoia
         using flavour = maths::graph_flavour;
         try
         {
-          run_graph_type_tests<flavour::undirected, TemplateTestClass>();
-          run_graph_type_tests<flavour::undirected_embedded, TemplateTestClass>();
-          run_graph_type_tests<flavour::directed, TemplateTestClass>();
-          run_graph_type_tests<flavour::directed_embedded, TemplateTestClass>();
+          run_graph_flavour_tests<flavour::undirected, TemplateTestClass>();
+          run_graph_flavour_tests<flavour::undirected_embedded, TemplateTestClass>();
+          run_graph_flavour_tests<flavour::directed, TemplateTestClass>();
+          run_graph_flavour_tests<flavour::directed_embedded, TemplateTestClass>();
           
           finish(unitTest);
         }
@@ -458,7 +458,42 @@ namespace sequoia
           throw;
         }
       }
-
+      
+      template
+      <
+        template <class, class, bool, template<class...> class> class EdgeStorage,
+        template
+        <
+          maths::graph_flavour,
+          class,
+          class,
+          bool,
+          template <class> class,
+          template <class> class,
+          template <class, class, bool, template<class...> class> class
+        >
+        class TemplateTestClass,
+        class Test
+      >
+      void run_storage_tests(Test& unitTest)
+      {        
+        using flavour = maths::graph_flavour;
+        try
+        {
+          run_graph_storage_tests<flavour::undirected,          EdgeStorage, TemplateTestClass>();
+          run_graph_storage_tests<flavour::undirected_embedded, EdgeStorage, TemplateTestClass>();
+          run_graph_storage_tests<flavour::directed,            EdgeStorage, TemplateTestClass>();
+          run_graph_storage_tests<flavour::directed_embedded,   EdgeStorage, TemplateTestClass>();
+          
+          finish(unitTest);
+        }
+        catch(...)
+        {
+          finish(unitTest);
+          throw;
+        }
+      }
+      
       template
       <
         maths::graph_flavour GraphFlavour,
@@ -479,7 +514,7 @@ namespace sequoia
       {
         try
         {
-          run_graph_type_tests<GraphFlavour, TemplateTestClass>();
+          run_graph_flavour_tests<GraphFlavour, TemplateTestClass>();
           
           finish(unitTest);
         }
@@ -489,6 +524,8 @@ namespace sequoia
           throw;
         }
       }
+
+      
     private:
       std::string m_Name;
       log_summary m_Summary{};
@@ -516,7 +553,7 @@ namespace sequoia
         >
         class TemplateTestClass
       >
-      void run_graph_tests()
+      void run_graph_storage_tests()
       {
         using namespace data_sharing;
         
@@ -544,12 +581,12 @@ namespace sequoia
         >
         class TemplateTestClass
       >
-      void run_graph_type_tests()
+      void run_graph_flavour_tests()
       {
         using namespace data_structures;
         
-        run_graph_tests<GraphType, contiguous_storage, TemplateTestClass>();
-        run_graph_tests<GraphType, bucketed_storage, TemplateTestClass>();
+        run_graph_storage_tests<GraphType, contiguous_storage, TemplateTestClass>();
+        run_graph_storage_tests<GraphType, bucketed_storage, TemplateTestClass>();
       }
 
       template

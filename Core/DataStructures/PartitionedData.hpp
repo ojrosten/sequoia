@@ -258,14 +258,14 @@ namespace sequoia
 
       size_type num_partitions() const noexcept { return m_Buckets.size(); }
 
-      void reserve(const size_type partition, const size_type size)
+      void reserve_partition(const size_type partition, const size_type size)
       {
         if constexpr(ThrowOnRangeError) check_range(partition);
 
         m_Buckets[partition].reserve(size);
       }
 
-      size_type capacity(const size_type partition) const
+      size_type partition_capacity(const size_type partition) const
       {
         if constexpr(ThrowOnRangeError) check_range(partition);
 

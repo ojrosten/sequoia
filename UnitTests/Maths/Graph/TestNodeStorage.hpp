@@ -14,12 +14,16 @@ namespace sequoia
       using unit_test::unit_test;
 
     private:
+      using unit_test::check_equality;
+      
       template<class WeightProxy, template<class...> class Container, bool ThrowOnRangeError>
       class node_storage_tester : public maths::graph_impl::node_storage<WeightProxy, Container, ThrowOnRangeError>
       {
       public:
         using maths::graph_impl::node_storage<WeightProxy, Container, ThrowOnRangeError>::node_storage;
-        using maths::graph_impl::node_storage<WeightProxy, Container, ThrowOnRangeError>::reserve_nodes;
+        using maths::graph_impl::node_storage<WeightProxy, Container, ThrowOnRangeError>::reserve;
+        using maths::graph_impl::node_storage<WeightProxy, Container, ThrowOnRangeError>::capacity;
+        using maths::graph_impl::node_storage<WeightProxy, Container, ThrowOnRangeError>::shrink_to_fit;
         using maths::graph_impl::node_storage<WeightProxy, Container, ThrowOnRangeError>::add_node;
         using maths::graph_impl::node_storage<WeightProxy, Container, ThrowOnRangeError>::insert_node;
         using maths::graph_impl::node_storage<WeightProxy, Container, ThrowOnRangeError>::erase_node;

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GraphHelper.hpp"
+#include "GraphDetails.hpp"
 #include "NodeStorage.hpp"
 #include "Algorithms.hpp"
 
@@ -150,14 +150,19 @@ namespace sequoia
       {
         if constexpr(!std::is_empty_v<node_weight_type>)
         {
-          Nodes::reserve_nodes(size);
+          Nodes::reserve(size);
         }
         
         m_Edges.reserve_partitions(size);
       }
 
       size_type node_capacity() const noexcept
-      {        
+      {
+        if constexpr(!std::is_empty_v<node_weight_type>)
+        {
+          return std::min(m_Edges.num_partitions_capacity(), Nodes::capacity());
+        }
+       
         return m_Edges.num_partitions_capacity();
       }
 
@@ -165,7 +170,7 @@ namespace sequoia
       std::enable_if_t<graph_impl::has_reservable_partitions_v<T>>
       reserve_edges(const edge_index_type partition, const edge_index_type size)
       {
-        m_Edges.reserve(partition, size);
+        m_Edges.reserve_partition(partition, size);
       }
 
       template<class T=edge_storage_type>
@@ -179,7 +184,7 @@ namespace sequoia
       std::enable_if_t<graph_impl::has_reservable_partitions_v<T>>
       edges_capacity(const edge_index_type partition) const
       {
-        return m_Edges.capacity(partition);
+        return m_Edges.partition_capacity(partition);
       }
 
       template<class T=edge_storage_type>

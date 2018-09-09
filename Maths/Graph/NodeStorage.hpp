@@ -96,12 +96,12 @@ namespace sequoia
  
         constexpr node_storage& operator=(node_storage&&) noexcept = default;
       
-        void reserve_nodes(const size_type newCapacity)
+        void reserve(const size_type newCapacity)
         {
           m_NodeWeights.reserve(newCapacity);
         }
 
-        void node_capacity() const noexcept
+        size_type capacity() const noexcept
         {
           return m_NodeWeights.capacity();
         }
