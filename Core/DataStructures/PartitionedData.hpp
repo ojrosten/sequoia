@@ -104,6 +104,43 @@ namespace sequoia
         using reference       = typename ReferencePolicy<elementary_type>::reference;
         using pointer         = typename ReferencePolicy<elementary_type>::pointer;
       };
+
+      //============================= Helper classes for copy constructor ===================================//
+
+      template<class T> class data_duplicator
+      {
+      };
+    
+      template<class T> class data_duplicator<data_sharing::independent<T>>
+      {
+      public:
+        constexpr T duplicate(const T& in) const { return T{in}; }
+      private:
+      };
+
+      template<class T> class data_duplicator<data_sharing::shared<T>>
+      {
+      public:
+        using handle_type = typename data_sharing::shared<T>::handle_type;
+
+        handle_type duplicate(const handle_type in)
+        {
+          handle_type ptr{};
+          auto found = m_ProcessedPointers.find(in);
+          if(found == m_ProcessedPointers.end())
+            {
+              ptr = data_sharing::shared<T>::make(*in);
+              m_ProcessedPointers.insert(make_pair(in, ptr));
+            }
+          else
+            {
+              ptr = found->second;
+            }
+          return ptr;
+        }
+      private:
+        std::map<handle_type, handle_type> m_ProcessedPointers;
+      };
     }
 
     //===================================A Custom Iterator===================================//
@@ -119,43 +156,7 @@ namespace sequoia
 
     template<template<class...> class C, class SharingPolicy, class IndexType>
     using const_reverse_partition_iterator = utilities::iterator<typename partition_impl::partition_iterator_generator<C, SharingPolicy, partition_impl::const_reference, true>::iterator, partition_impl::dereference_policy<SharingPolicy, partition_impl::const_reference>, partition_impl::partition_index_policy<true, IndexType>>;
-
-    //============================= Helper classes for copy constructor ===================================//
-
-    template<class T> class data_duplicator
-    {
-    };
     
-    template<class T> class data_duplicator<data_sharing::independent<T>>
-    {
-    public:
-      constexpr T duplicate(const T& in) const { return T{in}; }
-    private:
-    };
-
-    template<class T> class data_duplicator<data_sharing::shared<T>>
-    {
-    public:
-      using handle_type = typename data_sharing::shared<T>::handle_type;
-
-      handle_type duplicate(const handle_type in)
-      {
-        handle_type ptr{};
-        auto found = m_ProcessedPointers.find(in);
-        if(found == m_ProcessedPointers.end())
-        {
-          ptr = data_sharing::shared<T>::make(*in);
-          m_ProcessedPointers.insert(make_pair(in, ptr));
-        }
-        else
-        {
-          ptr = found->second;
-        }
-        return ptr;
-      }
-    private:
-      std::map<handle_type, handle_type> m_ProcessedPointers;
-    };
     
     //===================================Storage using buckets===================================//
     
@@ -192,7 +193,7 @@ namespace sequoia
 
       bucketed_storage(const bucketed_storage& in)
       {
-        data_duplicator<SharingPolicy> duplicator;
+        partition_impl::data_duplicator<SharingPolicy> duplicator;
         for(const auto& bucket : in.m_Buckets)
         {
           add_slot();
@@ -860,7 +861,7 @@ namespace sequoia
 
       constexpr contiguous_storage_base(std::false_type, const contiguous_storage_base& in) : m_Partitions{in.m_Partitions}
       {
-        data_duplicator<SharingPolicy> duplicator;
+        partition_impl::data_duplicator<SharingPolicy> duplicator;
         for(const auto& elt : in.m_Storage)
         {
           m_Storage.push_back(duplicator.duplicate(elt));
