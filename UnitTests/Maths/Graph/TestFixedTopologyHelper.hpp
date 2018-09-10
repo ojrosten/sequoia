@@ -67,16 +67,16 @@ namespace sequoia
       void check_2_4(const Graph& g)
       {
         using edge = typename Graph::edge_init_type;
-        using Edges = std::vector<std::vector<edge>>;
+        
         using NodeWeight = typename Graph::node_weight_type;
 
         if constexpr(std::is_empty_v<NodeWeight>)            
         {
-          this->template check_graph(g, Edges{{edge{1,1}, edge{1,2}, edge{1,5}, edge{0,9}, edge{0, 9}}, {edge{0, 1}, edge{0,2}, edge{0,5}}}, {NodeWeight{}, NodeWeight{}}, LINE(""));
+          this->template check_graph(g, {{edge{1,1}, edge{1,2}, edge{1,5}, edge{0,9}, edge{0, 9}}, {edge{0, 1}, edge{0,2}, edge{0,5}}}, {NodeWeight{}, NodeWeight{}}, LINE(""));
         }
         else
         {
-          this->template check_graph(g, Edges{{edge{1,1}, edge{1,2}, edge{1,5}, edge{0,9}, edge{0, 9}}, {edge{0, 1}, edge{0,2}, edge{0,5}}}, {NodeWeight{2}, NodeWeight{-3}}, LINE(""));
+          this->template check_graph(g, {{edge{1,1}, edge{1,2}, edge{1,5}, edge{0,9}, edge{0, 9}}, {edge{0, 1}, edge{0,2}, edge{0,5}}}, {NodeWeight{2}, NodeWeight{-3}}, LINE(""));
         }
       }
     };
@@ -149,13 +149,13 @@ namespace sequoia
       void check_3_10(const Graph& g)
       {
         using edge = typename Graph::edge_init_type;
-        using Edges = std::vector<std::vector<edge>>;
+        
         using NodeWeight = typename Graph::node_weight_type;
 
         if constexpr(std::is_empty_v<NodeWeight>)            
         {
           this->template check_graph(g,
-            Edges{
+            {
               {edge{1,1}, edge{1,0}, edge{0, -2}, edge{1,3}},
               {edge{2,8}, edge{0,9}, edge{1,6}},
               {edge{1, 7}, edge{2, -3}, edge{2, 42}}
@@ -164,7 +164,7 @@ namespace sequoia
         else
         {
           this->template check_graph(g,
-            Edges{
+            {
               {edge{1,1}, edge{1,0}, edge{0, -2}, edge{1,3}},
               {edge{2,8}, edge{0,9}, edge{1,6}},
               {edge{1, 7}, edge{2, -3}, edge{2, 42}}
@@ -228,16 +228,16 @@ namespace sequoia
       void check_2_2(const Graph& g)
       {
         using edge = typename Graph::edge_init_type;
-        using Edges = std::vector<std::vector<edge>>;
+        
         using NodeWeight = typename Graph::node_weight_type;
 
         if constexpr(std::is_empty_v<NodeWeight>)            
         {
-          this->template check_graph(g, Edges{{}, {edge{1,2,3}, edge{1,3,-2}, edge{1,0,3}, edge{1,1,-2}}}, {NodeWeight{}, NodeWeight{}}, LINE(""));
+          this->template check_graph(g, {{}, {edge{1,2,3}, edge{1,3,-2}, edge{1,0,3}, edge{1,1,-2}}}, {NodeWeight{}, NodeWeight{}}, LINE(""));
         }
         else
         {
-          this->template check_graph(g, Edges{{}, {edge{1,2,3}, edge{1,3,-2}, edge{1,0,3}, edge{1,1,-2}}}, {NodeWeight{2}, NodeWeight{-3}}, LINE(""));          
+          this->template check_graph(g, {{}, {edge{1,2,3}, edge{1,3,-2}, edge{1,0,3}, edge{1,1,-2}}}, {NodeWeight{2}, NodeWeight{-3}}, LINE(""));          
         }
       }
     };
@@ -300,16 +300,16 @@ namespace sequoia
       void check_2_2(const Graph& g)
       {
         using edge = typename Graph::edge_init_type;
-        using Edges = std::vector<std::vector<edge>>;
+        
         using NodeWeight = typename Graph::node_weight_type;
 
         if constexpr(std::is_empty_v<NodeWeight>)            
         {
-          this->template check_graph(g, Edges{{edge{0,inverted_constant<true>{},2,3}, edge{0,0,3,6}, edge{0,inverted_constant<true>{},0,3}, edge{0,0,1,6}}, {}}, {NodeWeight{}, NodeWeight{}}, LINE(""));
+          this->template check_graph(g, {{edge{0,inverted_constant<true>{},2,3}, edge{0,0,3,6}, edge{0,inverted_constant<true>{},0,3}, edge{0,0,1,6}}, {}}, {NodeWeight{}, NodeWeight{}}, LINE(""));
         }
         else
         {
-          this->template check_graph(g, Edges{{edge{0,inverted_constant<true>{},2,3}, edge{0,0,3,6}, edge{0,inverted_constant<true>{},0,3}, edge{0,0,1,6}}, {}}, {NodeWeight{2}, NodeWeight{-3}}, LINE(""));
+          this->template check_graph(g, {{edge{0,inverted_constant<true>{},2,3}, edge{0,0,3,6}, edge{0,inverted_constant<true>{},0,3}, edge{0,0,1,6}}, {}}, {NodeWeight{2}, NodeWeight{-3}}, LINE(""));
         }
       }
     };

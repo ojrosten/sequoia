@@ -1,6 +1,6 @@
 #pragma once
 
-#include "GraphHelper.hpp"
+#include "GraphDetails.hpp"
 #include "NodeStorage.hpp"
 #include "Algorithms.hpp"
 
@@ -33,7 +33,7 @@ namespace sequoia
     >
     class graph_primitive : private WeightMaker, public Nodes
     {
-    private:
+    protected:
       using edge_storage_type = typename EdgeTraits::edge_storage_type;
     public:
 
@@ -42,6 +42,9 @@ namespace sequoia
       using edge_weight_type = typename edge_type::weight_type;
       using edge_index_type  = typename edge_type::index_type;
       using edge_init_type   = typename EdgeTraits::edge_init_type;
+      using size_type        = typename graph_impl::size_type_generator<edge_storage_type, Nodes>::size_type;
+
+      static_assert(std::is_unsigned_v<edge_index_type>);
       
       using const_edge_iterator = typename edge_storage_type::const_partition_iterator;
       using const_reverse_edge_iterator = typename edge_storage_type::const_reverse_partition_iterator;
@@ -82,38 +85,38 @@ namespace sequoia
         return *this;
       }
 
-      constexpr std::size_t order() const noexcept { return m_Edges.num_partitions(); }
+      constexpr size_type order() const noexcept { return m_Edges.num_partitions(); }
 
-      constexpr std::size_t size()  const noexcept
+      constexpr size_type size()  const noexcept
       {
-        auto size = m_Edges.size();
+        auto size{m_Edges.size()};
         if constexpr (EdgeTraits::mutual_info_v) return size /= 2;
 
         return size;
       }
     
-      constexpr const_edge_iterator cbegin_edges(const std::size_t node) const
+      constexpr const_edge_iterator cbegin_edges(const edge_index_type node) const
       {
         if constexpr (throwOnRangeError) if(node >= order()) throw std::out_of_range("Node index out of range!");
         
         return m_Edges.cbegin_partition(node);
       }
 
-      constexpr const_edge_iterator cend_edges(const std::size_t node) const
+      constexpr const_edge_iterator cend_edges(const edge_index_type node) const
       {
         if constexpr (throwOnRangeError) if(node >= order()) throw std::out_of_range("Node index out of range!");
 
         return m_Edges.cend_partition(node);
       }
 
-      constexpr const_reverse_edge_iterator crbegin_edges(const std::size_t node) const
+      constexpr const_reverse_edge_iterator crbegin_edges(const edge_index_type node) const
       {
         if constexpr (throwOnRangeError) if(node >= order()) throw std::out_of_range("Node index out of range!");
 
         return m_Edges.crbegin_partition(node);
       }
 
-      constexpr const_reverse_edge_iterator crend_edges(const std::size_t node) const
+      constexpr const_reverse_edge_iterator crend_edges(const edge_index_type node) const
       {
         if constexpr (throwOnRangeError) if(node >= order()) throw std::out_of_range("Node index out of range!");
 
@@ -143,14 +146,72 @@ namespace sequoia
         *this = std::move(tmp);
       }
 
-      constexpr edge_iterator begin_edges(const std::size_t node)
+      void reserve_nodes(const size_type size)
+      {
+        if constexpr(!std::is_empty_v<node_weight_type>)
+        {
+          Nodes::reserve(size);
+        }
+        
+        m_Edges.reserve_partitions(size);
+      }
+
+      size_type node_capacity() const noexcept
+      {
+        if constexpr(!std::is_empty_v<node_weight_type>)
+        {
+          return std::min(m_Edges.num_partitions_capacity(), Nodes::capacity());
+        }
+       
+        return m_Edges.num_partitions_capacity();
+      }
+
+      template<class T=edge_storage_type>
+      std::enable_if_t<graph_impl::has_reservable_partitions_v<T>>
+      reserve_edges(const edge_index_type partition, const edge_index_type size)
+      {
+        m_Edges.reserve_partition(partition, size);
+      }
+
+      template<class T=edge_storage_type>
+      std::enable_if_t<!graph_impl::has_reservable_partitions_v<T>>
+      reserve_edges(const edge_index_type size)
+      {
+        m_Edges.reserve(size);
+      }
+
+      template<class T=edge_storage_type>
+      std::enable_if_t<graph_impl::has_reservable_partitions_v<T>, size_type>
+      edges_capacity(const edge_index_type partition) const
+      {
+        return m_Edges.partition_capacity(partition);
+      }
+
+      template<class T=edge_storage_type>
+      std::enable_if_t<!graph_impl::has_reservable_partitions_v<T>, size_type>
+      edges_capacity() const noexcept
+      {
+        return m_Edges.capacity();
+      }
+      
+      void shrink_to_fit()
+      {
+        if constexpr(!std::is_empty_v<node_weight_type>)
+        {
+          Nodes::shrink_to_fit();
+        }
+
+        m_Edges.shrink_to_fit();
+      }
+
+      constexpr edge_iterator begin_edges(const edge_index_type node)
       {
         if constexpr (throwOnRangeError) if(node >= order()) throw std::out_of_range("Node index out of range!");
         
         return m_Edges.begin_partition(node);
       }
 
-      constexpr edge_iterator end_edges(const std::size_t node)
+      constexpr edge_iterator end_edges(const edge_index_type node)
       {
         if constexpr (throwOnRangeError) if(node >= order()) throw std::out_of_range("Node index out of range!");
 
@@ -158,7 +219,7 @@ namespace sequoia
       }
       
       template<class... Args>
-      std::size_t add_node(Args&&... args)
+      size_type add_node(Args&&... args)
       {
         m_Edges.add_slot();
         if constexpr (!emptyNodes) Nodes::add_node(WeightMaker::make_node_weight(std::forward<Args>(args)...));
@@ -166,7 +227,7 @@ namespace sequoia
       }
 
       template<class... Args>
-      std::size_t insert_node(const std::size_t pos, Args&&... args)
+      size_type insert_node(const size_type pos, Args&&... args)
       {        
         const auto node = (pos < order()) ? pos : (order() - 1);
         if constexpr (!emptyNodes) Nodes::insert_node(this->cbegin_node_weights() + pos, WeightMaker::make_node_weight(std::forward<Args>(args)...));
@@ -178,13 +239,13 @@ namespace sequoia
         return node;
       }
 
-      void delete_node(const std::size_t node)
+      void delete_node(const size_type node)
       {
         if constexpr (throwOnRangeError) if(node >= order()) throw std::out_of_range("Cannot delete node: index out of range");
 
         if constexpr (EdgeTraits::mutual_info_v)
         {
-          std::set<std::size_t> partitionsToVisit;
+          std::set<size_type> partitionsToVisit;
           for(auto citer{m_Edges.cbegin_partition(node)}; citer != m_Edges.cend_partition(node); ++citer)
           {            
             const auto target{citer->target_node()};
@@ -228,7 +289,7 @@ namespace sequoia
         }
         else
         {
-          for(std::size_t i{}; i < m_Edges.num_partitions(); ++i)
+          for(size_type i{}; i < m_Edges.num_partitions(); ++i)
           {
             if(i == node) continue;
             m_Edges.delete_from_partition_if(i, [node](const edge_type& e) {
@@ -294,7 +355,7 @@ namespace sequoia
       }
 
       template<class... Args>
-      void join(const std::size_t node1, const std::size_t node2, Args&&... args)
+      void join(const edge_index_type node1, const edge_index_type node2, Args&&... args)
       {        
         if constexpr (std::is_empty_v<edge_weight_type>)
           static_assert(sizeof...(args) == 0, "Makes no sense to supply arguments for an empty weight!");
@@ -602,6 +663,7 @@ namespace sequoia
           }
         }
       }
+      
     private:
       using bitset = std::vector<bool>;
       static constexpr bool throwOnRangeError{edge_storage_type::throw_on_range_error()};
@@ -664,9 +726,8 @@ namespace sequoia
           {
             const auto& edge{*edgeIter};
             const auto target{edge.target_node()};
-            if((target >= edges.size()) || (target < edge_index_type{})) throw std::logic_error("Target index out of range");
-
-                        
+            if(target >= edges.size()) throw std::logic_error("Target index out of range");
+                   
             const auto compIndex{edge.complementary_index()};
 
             bool doProcess{true};
@@ -678,7 +739,7 @@ namespace sequoia
             if(doProcess)
             {
               auto targetEdgesIter = edges.begin() + target;  
-              if((compIndex >= targetEdgesIter->size()) || (compIndex < edge_index_type{}))
+              if(compIndex >= targetEdgesIter->size())
                 throw std::logic_error("Complementary index out of range");
                
               if((target == currentNodeIndex) && (compIndex == std::distance(nodeEdges.begin(), edgeIter)))
@@ -712,13 +773,13 @@ namespace sequoia
             if constexpr(directed(directedness))
             {               
               const auto host{edge.host_node()};
-              if((host >= edges.size()) || (host < edge_index_type{})) throw std::logic_error("Host index out of range");
+              if(host >= edges.size()) throw std::logic_error("Host index out of range");
               if((host != currentNodeIndex) && (target != currentNodeIndex)) throw std::logic_error("At least one of host and target must match current node");
               
               if((edge.target_node() == currentNodeIndex) && (edge.host_node() != edge.target_node()))
               {  
                 auto hostEdgesIter = edges.begin() + host;
-                if((compIndex >= hostEdgesIter->size()) || (compIndex < edge_index_type{})) throw std::logic_error("Complementary index out of range");
+                if(compIndex >= hostEdgesIter->size()) throw std::logic_error("Complementary index out of range");
                 
                 const auto& hostEdge = *(hostEdgesIter->begin() + compIndex);
                 if(hostEdge.target_node() != currentNodeIndex)
@@ -734,7 +795,7 @@ namespace sequoia
                 if(target == currentNodeIndex) other = edge.host_node();
               }
               
-              const auto pos{static_cast<std::size_t>(std::distance(nodeEdges.begin(), edgeIter))};
+              const auto pos{static_cast<edge_index_type>(std::distance(nodeEdges.begin(), edgeIter))};
               if(!EdgeTraits::shared_edge_v || (other > currentNodeIndex) || ((other == currentNodeIndex) && (compIndex > pos)))
               {
                 m_Edges.push_back_to_partition(currentNodeIndex, make_edge(currentNodeIndex, edge));
@@ -764,7 +825,7 @@ namespace sequoia
       {
         constexpr bool sortWeights{!std::is_empty_v<edge_weight_type> && utilities::is_orderable_v<edge_weight_type>};
         constexpr bool clusterEdges{!std::is_empty_v<edge_weight_type> && !utilities::is_orderable_v<edge_weight_type>};
-        for(std::size_t i{}; i< orderedEdges.num_partitions(); ++i)
+        for(size_type i{}; i< orderedEdges.num_partitions(); ++i)
         {
           sequoia::sort(orderedEdges.begin_partition(i), orderedEdges.end_partition(i), [](const auto& e1, const auto& e2){
             if constexpr (!sortWeights)
@@ -797,7 +858,7 @@ namespace sequoia
         // TO DO: use a more efficient search for orderable weights
 
            
-        for(std::size_t i{}; i<orderedEdges.num_partitions(); ++i)
+        for(size_type i{}; i<orderedEdges.num_partitions(); ++i)
         {
           if constexpr(!direct_edge_init()) m_Edges.add_slot();
           
@@ -837,7 +898,7 @@ namespace sequoia
                   }
                   else
                   {                    
-                    const auto compIndex{static_cast<std::size_t>(distance(orderedEdges.cbegin_partition(i), lowerIter-1))};
+                    const auto compIndex{static_cast<edge_index_type>(distance(orderedEdges.cbegin_partition(i), lowerIter-1))};
                     m_Edges.push_back_to_partition(i, cbegin_edges(i) + compIndex);
                   }
                 }
@@ -949,7 +1010,7 @@ namespace sequoia
       }
 
       template<class EdgeInitializer>
-      edge_type make_edge(const std::size_t host, const EdgeInitializer& edgeInit)
+      edge_type make_edge(const edge_index_type host, const EdgeInitializer& edgeInit)
       {
         if constexpr(directed(directedness))
         {
@@ -1003,8 +1064,8 @@ namespace sequoia
 
       graph_primitive(std::false_type, const graph_primitive& in) : graph_primitive(std::bool_constant<protectiveProxy>{}, static_cast<const Nodes&>(in))
       {
-        std::map<const edge_weight_type*, std::pair<std::size_t, std::size_t>> weightMap;
-        for(std::size_t i{}; i<in.order(); ++i)
+        std::map<const edge_weight_type*, std::pair<edge_index_type, edge_index_type>> weightMap;
+        for(size_type i{}; i<in.order(); ++i)
         {
           m_Edges.add_slot();
           for(auto inIter = in.cbegin_edges(i); inIter != in.cend_edges(i); ++inIter)
@@ -1015,7 +1076,7 @@ namespace sequoia
             {
               auto appender = [this, &in, inIter, i, &weightMap](const auto& e){
                 m_Edges.push_back_to_partition(i, e);
-                const std::pair<std::size_t, std::size_t> indices{i, static_cast<std::size_t>(distance(in.cbegin_edges(i), inIter))};
+                const std::pair<edge_index_type, edge_index_type> indices{i, static_cast<edge_index_type>(distance(in.cbegin_edges(i), inIter))};
                 weightMap.emplace(&inIter->weight(), indices);
               };
               
@@ -1226,10 +1287,10 @@ namespace sequoia
       }
 
       template<class Pred, class Modifier>
-      void fix_edge_data(const std::size_t node, Pred pred, Modifier modifier)
+      void fix_edge_data(const edge_index_type node, Pred pred, Modifier modifier)
       {
         std::set<edge_type*> doneEdges;
-        for(std::size_t i{}; i < m_Edges.num_partitions(); ++i)
+        for(size_type i{}; i < m_Edges.num_partitions(); ++i)
         {
           for(auto iter = m_Edges.begin_partition(i); iter != m_Edges.end_partition(i); ++iter)
           {
@@ -1303,6 +1364,12 @@ namespace sequoia
       using primitive::delete_edge;
 
       using primitive::clear;
+
+      using primitive::reserve_edges;
+      using primitive::edges_capacity;
+      using primitive::reserve_nodes;
+      using primitive::node_capacity;
+      using primitive::shrink_to_fit;
       
       constexpr static graph_flavour flavour{GraphFlavour};
     protected:
@@ -1420,7 +1487,7 @@ namespace sequoia
       graph_primitive<
         Directedness,
         graph_impl::static_node_storage<utilities::protective_wrapper<NodeWeight>, Order, ThrowOnRangeError>,
-        typename graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected, Order, Size, EdgeWeight, ThrowOnRangeError, EdgeIndexType>, 
+        typename graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected, Order, Size, EdgeWeight, ThrowOnRangeError, std::make_unsigned_t<EdgeIndexType>>, 
         typename graph_impl::weight_maker<data_sharing::unpooled<NodeWeight>, data_sharing::unpooled<EdgeWeight>>
       >
     {
@@ -1429,7 +1496,7 @@ namespace sequoia
         graph_primitive<
           Directedness,
           graph_impl::static_node_storage<utilities::protective_wrapper<NodeWeight>, Order, ThrowOnRangeError>,
-          typename graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected, Order, Size, EdgeWeight, ThrowOnRangeError, EdgeIndexType>, 
+          typename graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected, Order, Size, EdgeWeight, ThrowOnRangeError, std::make_unsigned_t<EdgeIndexType>>, 
           typename graph_impl::weight_maker<data_sharing::unpooled<NodeWeight>, data_sharing::unpooled<EdgeWeight>>
         >;
       
@@ -1439,7 +1506,7 @@ namespace sequoia
       using graph_primitive<
           Directedness,
           graph_impl::static_node_storage<utilities::protective_wrapper<NodeWeight>, Order, ThrowOnRangeError>,
-      typename graph_impl::static_edge_traits<flavour, Order, Size, EdgeWeight, ThrowOnRangeError, EdgeIndexType>, 
+          typename graph_impl::static_edge_traits<flavour, Order, Size, EdgeWeight, ThrowOnRangeError, std::make_unsigned_t<EdgeIndexType>>, 
           typename graph_impl::weight_maker<data_sharing::unpooled<NodeWeight>, data_sharing::unpooled<EdgeWeight>>
       >::graph_primitive;
 
@@ -1462,7 +1529,7 @@ namespace sequoia
       graph_primitive<
         Directedness,
         graph_impl::static_node_storage<utilities::protective_wrapper<NodeWeight>, Order, ThrowOnRangeError>,
-        typename graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded, Order, Size, EdgeWeight, ThrowOnRangeError, EdgeIndexType>, 
+        typename graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded, Order, Size, EdgeWeight, ThrowOnRangeError, std::make_unsigned_t<EdgeIndexType>>, 
         typename graph_impl::weight_maker<data_sharing::unpooled<NodeWeight>, data_sharing::unpooled<EdgeWeight>>
       >
     {
@@ -1471,7 +1538,7 @@ namespace sequoia
         graph_primitive<
           Directedness,
           graph_impl::static_node_storage<utilities::protective_wrapper<NodeWeight>, Order, ThrowOnRangeError>,
-          typename graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded, Order, Size, EdgeWeight, ThrowOnRangeError, EdgeIndexType>, 
+          typename graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded, Order, Size, EdgeWeight, ThrowOnRangeError, std::make_unsigned_t<EdgeIndexType>>, 
           typename graph_impl::weight_maker<data_sharing::unpooled<NodeWeight>, data_sharing::unpooled<EdgeWeight>>
         >;
       
@@ -1481,7 +1548,7 @@ namespace sequoia
       using graph_primitive<
           Directedness,
           graph_impl::static_node_storage<utilities::protective_wrapper<NodeWeight>, Order, ThrowOnRangeError>,
-      typename graph_impl::static_edge_traits<flavour, Order, Size, EdgeWeight, ThrowOnRangeError, EdgeIndexType>, 
+          typename graph_impl::static_edge_traits<flavour, Order, Size, EdgeWeight, ThrowOnRangeError, std::make_unsigned_t<EdgeIndexType>>, 
           typename graph_impl::weight_maker<data_sharing::unpooled<NodeWeight>, data_sharing::unpooled<EdgeWeight>>
       >::graph_primitive;
 

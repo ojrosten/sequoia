@@ -236,18 +236,18 @@ namespace sequoia
       using checker<Logger>::check;
       using checker<Logger>::check_exception_thrown;
       
-      template<class G, class E> bool
-      check_graph(const G& graph, const std::vector<std::vector<E>>& answers, const std::vector<typename G::node_weight_type>& nodeWeights, const std::string& failureMessage="")
+      template<class G, class E=typename G::edge_init_type> bool
+      check_graph(const G& graph, const std::initializer_list<std::initializer_list<E>>& edges, const std::initializer_list<typename G::node_weight_type>& nodeWeights, const std::string& failureMessage="")
       {
         using Edge = typename G::edge_type;
         using RefEdge = E;
-        constexpr bool nullNodeWeight{std::is_empty_v<typename std::vector<typename G::node_weight_type>::value_type>};
-        constexpr bool nullEdgeWeight{std::is_empty_v<typename std::vector<typename G::edge_weight_type>::value_type>};
+        constexpr bool nullNodeWeight{std::is_empty_v<typename G::node_weight_type>};
+        constexpr bool nullEdgeWeight{std::is_empty_v<typename G::edge_weight_type>};
 
         auto r{checker<Logger>::make_sentinel(failureMessage)};
         
         const auto numFailures = failures();
-        const auto numNodes = answers.size();
+        const auto numNodes = edges.size();
         double nEdges{};
         if(check_equality(numNodes, graph.order(), "Graph order wrong"))
         {
@@ -255,16 +255,17 @@ namespace sequoia
           {
             check_equality(nodeWeights.size(), numNodes, "Number of node weights wrong");
           }
-        
-          for(std::size_t i{}; i<numNodes; ++i)
+
+          for(auto edgesIter{edges.begin()}; edgesIter != edges.end(); ++edgesIter)
           {
+            const auto i{std::distance(edges.begin(), edgesIter)};
             const std::string partStr{std::to_string(i)};
 
             const std::string nodeMessage{"Node weight wrong for node " + partStr};
             if constexpr(!nullNodeWeight)
             {
               if(i < nodeWeights.size())
-                check_equality(nodeWeights[i], *(graph.cbegin_node_weights()+i), nodeMessage);
+                check_equality(*(nodeWeights.begin() + i), *(graph.cbegin_node_weights()+i), nodeMessage);
             }
 
             auto beginEdges = graph.cbegin_edges(i);
@@ -272,14 +273,15 @@ namespace sequoia
             auto rbeginEdges = graph.crbegin_edges(i);
             auto rendEdges = graph.crend_edges(i);
 
-            const std::size_t nNodeEdges{static_cast<std::size_t>(distance(beginEdges, endEdges))};
-            const std::size_t nrNodeEdges{static_cast<std::size_t>(distance(rbeginEdges, rendEdges))};
+            const auto nNodeEdges{static_cast<std::size_t>(distance(beginEdges, endEdges))};
+            const auto nrNodeEdges{static_cast<std::size_t>(distance(rbeginEdges, rendEdges))};
 
-            if(check_equality(answers[i].size(), nNodeEdges, "Number of edges for partition " + partStr + " wrong")
-               && check_equality(answers[i].size(), nrNodeEdges, "Number of edges for reversed partition " + partStr + " wrong")
+            const auto nodeEdges{*edgesIter};
+            if(check_equality(nodeEdges.size(), nNodeEdges, "Number of edges for partition " + partStr + " wrong")
+               && check_equality(nodeEdges.size(), nrNodeEdges, "Number of edges for reversed partition " + partStr + " wrong")
                )
             {
-              auto ansIter = answers[i].begin();
+              auto ansIter = nodeEdges.begin();
               auto redge = rendEdges;
               for(auto edge = beginEdges; edge != endEdges; ++edge, ++ansIter)
               {
@@ -443,10 +445,10 @@ namespace sequoia
         using flavour = maths::graph_flavour;
         try
         {
-          run_graph_tests<flavour::undirected, TemplateTestClass>();
-          run_graph_tests<flavour::undirected_embedded, TemplateTestClass>();
-          run_graph_tests<flavour::directed, TemplateTestClass>();
-          run_graph_tests<flavour::directed_embedded, TemplateTestClass>();
+          run_graph_flavour_tests<flavour::undirected, TemplateTestClass>();
+          run_graph_flavour_tests<flavour::undirected_embedded, TemplateTestClass>();
+          run_graph_flavour_tests<flavour::directed, TemplateTestClass>();
+          run_graph_flavour_tests<flavour::directed_embedded, TemplateTestClass>();
           
           finish(unitTest);
         }
@@ -456,7 +458,42 @@ namespace sequoia
           throw;
         }
       }
-
+      
+      template
+      <
+        template <class, class, bool, template<class...> class> class EdgeStorage,
+        template
+        <
+          maths::graph_flavour,
+          class,
+          class,
+          bool,
+          template <class> class,
+          template <class> class,
+          template <class, class, bool, template<class...> class> class
+        >
+        class TemplateTestClass,
+        class Test
+      >
+      void run_storage_tests(Test& unitTest)
+      {        
+        using flavour = maths::graph_flavour;
+        try
+        {
+          run_graph_storage_tests<flavour::undirected,          EdgeStorage, TemplateTestClass>();
+          run_graph_storage_tests<flavour::undirected_embedded, EdgeStorage, TemplateTestClass>();
+          run_graph_storage_tests<flavour::directed,            EdgeStorage, TemplateTestClass>();
+          run_graph_storage_tests<flavour::directed_embedded,   EdgeStorage, TemplateTestClass>();
+          
+          finish(unitTest);
+        }
+        catch(...)
+        {
+          finish(unitTest);
+          throw;
+        }
+      }
+      
       template
       <
         maths::graph_flavour GraphFlavour,
@@ -477,7 +514,7 @@ namespace sequoia
       {
         try
         {
-          run_graph_tests<GraphFlavour, TemplateTestClass>();
+          run_graph_flavour_tests<GraphFlavour, TemplateTestClass>();
           
           finish(unitTest);
         }
@@ -487,6 +524,8 @@ namespace sequoia
           throw;
         }
       }
+
+      
     private:
       std::string m_Name;
       log_summary m_Summary{};
@@ -497,7 +536,59 @@ namespace sequoia
         unitTest.merge(m_Summary);   
         m_Summary.clear();
       }
+
+      template
+      <
+        maths::graph_flavour GraphType,
+        template <class, class, bool, template<class...> class> class EdgeStorage,
+        template
+        <
+          maths::graph_flavour,
+          class,
+          class,
+          bool,
+          template <class> class,
+          template <class> class,
+          template <class, class, bool, template<class...> class> class
+        >
+        class TemplateTestClass
+      >
+      void run_graph_storage_tests()
+      {
+        using namespace data_sharing;
+        
+        TemplateTestClass<GraphType, NodeWeight, EdgeWeight, true, unpooled, unpooled, EdgeStorage> test0;        
+        TemplateTestClass<GraphType, NodeWeight, EdgeWeight, true, data_pool, unpooled, EdgeStorage> test1;        
+        TemplateTestClass<GraphType, NodeWeight, EdgeWeight, true, data_pool, data_pool, EdgeStorage> test2;
+
+        run_graph_test(test0);
+        run_graph_test(test1);
+        run_graph_test(test2);
+      }
       
+      template
+      <
+        maths::graph_flavour GraphType,
+        template
+        <
+          maths::graph_flavour,
+          class,
+          class,
+          bool,
+          template <class> class,
+          template <class> class,
+          template <class, class, bool, template<class...> class> class
+        >
+        class TemplateTestClass
+      >
+      void run_graph_flavour_tests()
+      {
+        using namespace data_structures;
+        
+        run_graph_storage_tests<GraphType, contiguous_storage, TemplateTestClass>();
+        run_graph_storage_tests<GraphType, bucketed_storage, TemplateTestClass>();
+      }
+
       template
       <
         maths::graph_flavour GraphType,
@@ -567,8 +658,8 @@ namespace sequoia
         return m_Checker.template check_exception_thrown<E>(std::forward<Fn>(function), description);
       }
 
-      template<class G, class E>
-      bool check_graph(const G& graph, const std::vector<std::vector<E>>& edges, const std::vector<typename G::node_weight_type>& nodeWeights, const std::string& failureMessage="")
+      template<class G, class E=typename G::edge_init_type>
+      bool check_graph(const G& graph, const std::initializer_list<std::initializer_list<E>>& edges, const std::initializer_list<typename G::node_weight_type>& nodeWeights, const std::string& failureMessage="")
       {
         return m_Checker.template check_graph(graph, edges, nodeWeights, failureMessage);
       }

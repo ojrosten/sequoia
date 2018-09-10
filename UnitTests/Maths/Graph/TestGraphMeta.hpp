@@ -12,6 +12,10 @@ namespace sequoia::unit_testing
   private:
     void run_tests() override;
 
+    void test_method_detectors();
+
+    void test_weight_makers();
+
     template<
       maths::graph_flavour GraphFlavour,
       template<class, template<class> class, class, class> class EdgeType
@@ -21,7 +25,6 @@ namespace sequoia::unit_testing
     void test_directed();
     
     void test_directed_embedded();
-
         
     template<
       maths::graph_flavour GraphFlavour,

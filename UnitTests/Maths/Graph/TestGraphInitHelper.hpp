@@ -91,31 +91,24 @@ namespace sequoia
     private:
       template<class Graph>
       void check_0_0(const Graph& g)
-      {
-        using edge = typename Graph::edge_init_type;
-        using Edges = std::vector<std::vector<edge>>;
-        
-        this->template check_graph(g, Edges{}, {}, LINE(""));
+      {        
+        this->template check_graph(g, {}, {}, LINE(""));
       }
 
       template<class Graph>
       void check_1_0(const Graph& g)
-      {
-        using edge = typename Graph::edge_init_type;
-        using Edges = std::vector<std::vector<edge>>;
+      {        
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, Edges{{}}, {NodeWeight{}}, LINE(""));
+        this->template check_graph(g, {{}}, {NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
       void check_2_0(const Graph& g)
-      {
-        using edge = typename Graph::edge_init_type;
-        using Edges = std::vector<std::vector<edge>>;
+      {        
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, Edges{{}, {}}, {NodeWeight{}, NodeWeight{}}, LINE(""));
+        this->template check_graph(g, {{}, {}}, {NodeWeight{}, NodeWeight{}}, LINE(""));
       }
     };
     
@@ -558,135 +551,134 @@ namespace sequoia
       void check_1_1(const Graph& g)
       {
         using edge = typename Graph::edge_init_type;
-        using Edges = std::vector<std::vector<edge>>;
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, Edges{{edge{0}, edge{0}}}, {NodeWeight{}}, LINE(""));
+        this->template check_graph(g, {{edge{0}, edge{0}}}, {NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
       void check_1_1w(const Graph& g)
       {
         using edge = typename Graph::edge_init_type;
-        using Edges = std::vector<std::vector<edge>>;
+        
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, Edges{{edge{0, -2}, edge{0, -2}}}, {NodeWeight{}}, LINE(""));
+        this->template check_graph(g, {{edge{0, -2}, edge{0, -2}}}, {NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
       void check_1_2(const Graph& g)
       {
         using edge = typename Graph::edge_init_type;
-        using Edges = std::vector<std::vector<edge>>;
+        
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, Edges{{edge{0}, edge{0}, edge{0}, edge{0}}}, {NodeWeight{}}, LINE(""));
+        this->template check_graph(g, {{edge{0}, edge{0}, edge{0}, edge{0}}}, {NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
       void check_1_2w(const Graph& g, const Graph& g2)
       {
         using edge = typename Graph::edge_init_type;
-        using Edges = std::vector<std::vector<edge>>;
+        
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, Edges{{edge{0, 0}, edge{0, 0}, edge{0, 1}, edge{0, 1}}}, {NodeWeight{}}, LINE(""));
-        this->template check_graph(g2, Edges{{edge{0, -1}, edge{0, -1}, edge{0, -1}, edge{0, -1}}}, {NodeWeight{}}, LINE(""));
+        this->template check_graph(g, {{edge{0, 0}, edge{0, 0}, edge{0, 1}, edge{0, 1}}}, {NodeWeight{}}, LINE(""));
+        this->template check_graph(g2, {{edge{0, -1}, edge{0, -1}, edge{0, -1}, edge{0, -1}}}, {NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
       void check_2_1(const Graph& g)
       {
         using edge = typename Graph::edge_init_type;
-        using Edges = std::vector<std::vector<edge>>;
+        
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, Edges{{edge{1}}, {edge{0}}}, {NodeWeight{}, NodeWeight{}}, LINE(""));
+        this->template check_graph(g, {{edge{1}}, {edge{0}}}, {NodeWeight{}, NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
       void check_2_1w(const Graph& g)
       {
         using edge = typename Graph::edge_init_type;
-        using Edges = std::vector<std::vector<edge>>;
+        
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, Edges{{edge{1,-5}}, {edge{0,-5}}}, {NodeWeight{}, NodeWeight{}}, LINE(""));
+        this->template check_graph(g, {{edge{1,-5}}, {edge{0,-5}}}, {NodeWeight{}, NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
       void check_3_2(const Graph& g, const Graph& g2)
       {
         using edge = typename Graph::edge_init_type;
-        using Edges = std::vector<std::vector<edge>>;
+        
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, Edges{{edge{1}}, {edge{0}, edge{2}}, {edge{1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
-        this->template check_graph(g2, Edges{{edge{1}}, {edge{0}, edge{2}}, {edge{1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));       
+        this->template check_graph(g, {{edge{1}}, {edge{0}, edge{2}}, {edge{1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+        this->template check_graph(g2, {{edge{1}}, {edge{0}, edge{2}}, {edge{1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));       
       }
 
       template<class Graph>
       void check_3_2w(const Graph& g, const Graph& g2)
       {
         using edge = typename Graph::edge_init_type;
-        using Edges = std::vector<std::vector<edge>>;
+        
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, Edges{{edge{1,1}}, {edge{0,1}, edge{2,8}}, {edge{1,8}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
-        this->template check_graph(g2, Edges{{edge{1,2}}, {edge{0,2}, edge{2,-2}}, {edge{1,-2}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));       
+        this->template check_graph(g, {{edge{1,1}}, {edge{0,1}, edge{2,8}}, {edge{1,8}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+        this->template check_graph(g2, {{edge{1,2}}, {edge{0,2}, edge{2,-2}}, {edge{1,-2}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));       
       }
 
       template<class Graph>
       void check_3_3(const Graph& g, const Graph& g2)
       {
         using edge = typename Graph::edge_init_type;
-        using Edges = std::vector<std::vector<edge>>;
+        
         using NodeWeight = typename Graph::node_weight_type;
         
-        this->template check_graph(g, Edges{{edge{1}}, {edge{0}, edge{1}, edge{1}, edge{2}}, {edge{1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
-        this->template check_graph(g2, Edges{{edge{1}}, {edge{0}, edge{1}, edge{1}, edge{2}}, {edge{1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+        this->template check_graph(g, {{edge{1}}, {edge{0}, edge{1}, edge{1}, edge{2}}, {edge{1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+        this->template check_graph(g2, {{edge{1}}, {edge{0}, edge{1}, edge{1}, edge{2}}, {edge{1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
       void check_3_3w(const Graph& g, const Graph& g2)
       {
         using edge = typename Graph::edge_init_type;
-        using Edges = std::vector<std::vector<edge>>;
+        
         using NodeWeight = typename Graph::node_weight_type;
         
-        this->template check_graph(g,  Edges{{edge{1,-2}}, {edge{0,-2}, edge{1,-2}, edge{1,-2}, edge{2,-2}}, {edge{1,-2}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
-        this->template check_graph(g2, Edges{{edge{1,-2}}, {edge{0,-2}, edge{1,3}, edge{1,3}, edge{2,4}}, {edge{1,4}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+        this->template check_graph(g,  {{edge{1,-2}}, {edge{0,-2}, edge{1,-2}, edge{1,-2}, edge{2,-2}}, {edge{1,-2}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+        this->template check_graph(g2, {{edge{1,-2}}, {edge{0,-2}, edge{1,3}, edge{1,3}, edge{2,4}}, {edge{1,4}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
       void check_3_3_equilateral(const Graph& g)
       {
         using edge = typename Graph::edge_init_type;
-        using Edges = std::vector<std::vector<edge>>;
+        
         using NodeWeight = typename Graph::node_weight_type;
         
-        this->template check_graph(g, Edges{{edge{1}, edge{2}}, {edge{0}, edge{2}}, {edge{0}, edge{1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+        this->template check_graph(g, {{edge{1}, edge{2}}, {edge{0}, edge{2}}, {edge{0}, edge{1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
       void check_3_3w_equilateral(const Graph& g)
       {
         using edge = typename Graph::edge_init_type;
-        using Edges = std::vector<std::vector<edge>>;
+        
         using NodeWeight = typename Graph::node_weight_type;
         
-        this->template check_graph(g, Edges{{edge{1,2}, edge{2,7}}, {edge{0,2}, edge{2,0}}, {edge{0,7}, edge{1,0}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+        this->template check_graph(g, {{edge{1,2}, edge{2,7}}, {edge{0,2}, edge{2,0}}, {edge{0,7}, edge{1,0}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
       void check_3_4(const Graph& g)
       {
         using edge = typename Graph::edge_init_type;
-        using Edges = std::vector<std::vector<edge>>;
+        
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, Edges{{edge{1}, edge{1}, edge{2}}, {edge{0}, edge{0}, edge{2}}, {edge{0}, edge{1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+        this->template check_graph(g, {{edge{1}, edge{1}, edge{2}}, {edge{0}, edge{0}, edge{2}}, {edge{0}, edge{1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
@@ -694,17 +686,17 @@ namespace sequoia
       {
         using edge = typename Graph::edge_init_type;
         using edge_weight_type = typename edge::weight_type;
-        using Edges = std::vector<std::vector<edge>>;
+        
         using NodeWeight = typename Graph::node_weight_type;
 
         if constexpr (!utilities::is_orderable_v<edge_weight_type>)
         {
           // Ordering of weights looks to be a consequence of heap sort not being stable!
-          this->template check_graph(g, Edges{{edge{1,1}, edge{1,0}, edge{2,1}}, {edge{0,0}, edge{0,1}, edge{2,1}}, {edge{0,1}, edge{1,1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+          this->template check_graph(g, {{edge{1,1}, edge{1,0}, edge{2,1}}, {edge{0,0}, edge{0,1}, edge{2,1}}, {edge{0,1}, edge{1,1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
         }
         else
         {
-          this->template check_graph(g, Edges{{edge{1,0}, edge{1,1}, edge{2,1}}, {edge{0,0}, edge{0,1}, edge{2,1}}, {edge{0,1}, edge{1,1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+          this->template check_graph(g, {{edge{1,0}, edge{1,1}, edge{2,1}}, {edge{0,0}, edge{0,1}, edge{2,1}}, {edge{0,1}, edge{1,1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
         }
       }
     };
@@ -1046,10 +1038,10 @@ namespace sequoia
       {
         
         using edge = typename Graph::edge_init_type;
-        using Edges = std::vector<std::vector<edge>>;
+        
         using NodeWeight = typename Graph::node_weight_type;
         
-        this->template check_graph(g, Edges{{edge{0,1}, edge{0,0}}}, {NodeWeight{}}, LINE(""));
+        this->template check_graph(g, {{edge{0,1}, edge{0,0}}}, {NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
@@ -1057,10 +1049,10 @@ namespace sequoia
       {
         
         using edge = typename Graph::edge_init_type;
-        using Edges = std::vector<std::vector<edge>>;
+        
         using NodeWeight = typename Graph::node_weight_type;
         
-        this->template check_graph(g, Edges{{edge{0,1, -1}, edge{0,0, -1}}}, {NodeWeight{}}, LINE(""));
+        this->template check_graph(g, {{edge{0,1, -1}, edge{0,0, -1}}}, {NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
@@ -1068,10 +1060,10 @@ namespace sequoia
       {
         
         using edge = typename Graph::edge_init_type;
-        using Edges = std::vector<std::vector<edge>>;
+        
         using NodeWeight = typename Graph::node_weight_type;
         
-        this->template check_graph(g, Edges{{edge{0,2}, edge{0,3}, edge{0,0}, edge{0,1}}}, {NodeWeight{}}, LINE(""));        
+        this->template check_graph(g, {{edge{0,2}, edge{0,3}, edge{0,0}, edge{0,1}}}, {NodeWeight{}}, LINE(""));        
       }
 
       template<class Graph>
@@ -1079,10 +1071,10 @@ namespace sequoia
       {
         
         using edge = typename Graph::edge_init_type;
-        using Edges = std::vector<std::vector<edge>>;
+        
         using NodeWeight = typename Graph::node_weight_type;
         
-        this->template check_graph(g, Edges{{edge{1,0}}, {edge{0,0}}}, {NodeWeight{}, NodeWeight{}});
+        this->template check_graph(g, {{edge{1,0}}, {edge{0,0}}}, {NodeWeight{}, NodeWeight{}});
       }
 
       template<class Graph>
@@ -1090,10 +1082,10 @@ namespace sequoia
       {
         
         using edge = typename Graph::edge_init_type;
-        using Edges = std::vector<std::vector<edge>>;
+        
         using NodeWeight = typename Graph::node_weight_type;
         
-        this->template check_graph(g, Edges{{edge{1,0,-3}}, {edge{0,0,-3}}}, {NodeWeight{}, NodeWeight{}});
+        this->template check_graph(g, {{edge{1,0,-3}}, {edge{0,0,-3}}}, {NodeWeight{}, NodeWeight{}});
       }
 
       template<class Graph>
@@ -1101,32 +1093,32 @@ namespace sequoia
       {
         
         using edge = typename Graph::edge_init_type;
-        using Edges = std::vector<std::vector<edge>>;
+        
         using NodeWeight = typename Graph::node_weight_type;
       
-        this->template check_graph(g, Edges{{edge{1,0}}, {edge{0,0}, edge{2,0}}, {edge{1,1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
-        this->template check_graph(g2, Edges{{edge{1,1}}, {edge{2,0}, edge{0,0}}, {edge{1,0}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+        this->template check_graph(g, {{edge{1,0}}, {edge{0,0}, edge{2,0}}, {edge{1,1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+        this->template check_graph(g2, {{edge{1,1}}, {edge{2,0}, edge{0,0}}, {edge{1,0}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
       void check_3_3(const Graph& g, const Graph& g2)
       {       
         using edge = typename Graph::edge_init_type;
-        using Edges = std::vector<std::vector<edge>>;
+        
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, Edges{{edge{1,1}}, {edge{1,2}, edge{0,0}, edge{1,0}, edge{2,0}}, {edge{1,3}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
-        this->template check_graph(g2, Edges{{edge{1,3}}, {edge{2,0}, edge{1,2}, edge{1,1}, edge{0,0}}, {edge{1,0}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+        this->template check_graph(g, {{edge{1,1}}, {edge{1,2}, edge{0,0}, edge{1,0}, edge{2,0}}, {edge{1,3}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+        this->template check_graph(g2, {{edge{1,3}}, {edge{2,0}, edge{1,2}, edge{1,1}, edge{0,0}}, {edge{1,0}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
       void check_3_3_equilateral(const Graph& g)
       {
         using edge = typename Graph::edge_init_type;
-        using Edges = std::vector<std::vector<edge>>;
+        
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, Edges{{edge{2,1}, edge{1,1}}, {edge{2,0}, edge{0,1}}, {edge{1,0}, edge{0,0}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+        this->template check_graph(g, {{edge{2,1}, edge{1,1}}, {edge{2,0}, edge{0,1}}, {edge{1,0}, edge{0,0}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
       }
     };
 
@@ -1373,61 +1365,61 @@ namespace sequoia
       void check_1_1(const Graph& g)
       {
         using edge = typename Graph::edge_init_type;
-        using Edges = std::vector<std::vector<edge>>;
+        
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, Edges{{edge{0}}}, {NodeWeight{}}, LINE(""));
+        this->template check_graph(g, {{edge{0}}}, {NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
       void check_1_1w(const Graph& g)
       {
         using edge = typename Graph::edge_init_type;
-        using Edges = std::vector<std::vector<edge>>;
+        
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, Edges{{edge{0,10}}}, {NodeWeight{}}, LINE(""));
+        this->template check_graph(g, {{edge{0,10}}}, {NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
       void check_1_2(const Graph& g)
       {
         using edge = typename Graph::edge_init_type;
-        using Edges = std::vector<std::vector<edge>>;
+        
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, Edges{{edge{0}, edge{0}}}, {NodeWeight{}}, LINE(""));
+        this->template check_graph(g, {{edge{0}, edge{0}}}, {NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
       void check_2_1(const Graph& g)
       {
         using edge = typename Graph::edge_init_type;
-        using Edges = std::vector<std::vector<edge>>;
+        
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, Edges{{edge{1}}, {}}, {NodeWeight{}, NodeWeight{}}, LINE(""));
+        this->template check_graph(g, {{edge{1}}, {}}, {NodeWeight{}, NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
       void check_3_2(const Graph& g, const Graph& g2)
       {
         using edge = typename Graph::edge_init_type;
-        using Edges = std::vector<std::vector<edge>>;
+        
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, Edges{{edge{1}}, {}, {edge{1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
-        this->template check_graph(g2, Edges{{}, {edge{2}, edge{0}}, {}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+        this->template check_graph(g, {{edge{1}}, {}, {edge{1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+        this->template check_graph(g2, {{}, {edge{2}, edge{0}}, {}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
       void check_4_2(const Graph& g)
       {
         using edge = typename Graph::edge_init_type;
-        using Edges = std::vector<std::vector<edge>>;
+        
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, Edges{{}, {}, {edge{2}, edge{3}}, {}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+        this->template check_graph(g, {{}, {}, {edge{2}, edge{3}}, {}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
       }
     };
 
@@ -1632,11 +1624,11 @@ namespace sequoia
       {
         using maths::inverted_constant;
         using edge = typename Graph::edge_init_type;
-        using Edges = std::vector<std::vector<edge>>;
+        
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, Edges{{edge{0,0,1}, edge{0,0,0}}}, {NodeWeight{}}, LINE(""));
-        this->template check_graph(g2, Edges{{edge{0,inverted_constant<true>{},1}, edge{0,inverted_constant<true>{},0}}}, {NodeWeight{}}, LINE(""));
+        this->template check_graph(g, {{edge{0,0,1}, edge{0,0,0}}}, {NodeWeight{}}, LINE(""));
+        this->template check_graph(g2, {{edge{0,inverted_constant<true>{},1}, edge{0,inverted_constant<true>{},0}}}, {NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
@@ -1644,32 +1636,32 @@ namespace sequoia
       {
         using maths::inverted_constant;
         using edge = typename Graph::edge_init_type;
-        using Edges = std::vector<std::vector<edge>>;
+        
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, Edges{{edge{0,0,1,9}, edge{0,0,0,9}}}, {NodeWeight{}}, LINE(""));
-        this->template check_graph(g2, Edges{{edge{0,inverted_constant<true>{},1,-7}, edge{0,inverted_constant<true>{},0,-7}}}, {NodeWeight{}}, LINE(""));
+        this->template check_graph(g, {{edge{0,0,1,9}, edge{0,0,0,9}}}, {NodeWeight{}}, LINE(""));
+        this->template check_graph(g2, {{edge{0,inverted_constant<true>{},1,-7}, edge{0,inverted_constant<true>{},0,-7}}}, {NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
       void check_2_1(const Graph& g, const Graph& g2)
       {
         using edge = typename Graph::edge_init_type;
-        using Edges = std::vector<std::vector<edge>>;
+        
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, Edges{{edge{0,1,0}}, {edge{0,1,0}}}, {NodeWeight{}, NodeWeight{}}, LINE(""));
-        this->template check_graph(g2, Edges{{edge{1,0,0}}, {edge{1,0,0}}}, {NodeWeight{}, NodeWeight{}}, LINE(""));
+        this->template check_graph(g, {{edge{0,1,0}}, {edge{0,1,0}}}, {NodeWeight{}, NodeWeight{}}, LINE(""));
+        this->template check_graph(g2, {{edge{1,0,0}}, {edge{1,0,0}}}, {NodeWeight{}, NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
       void check_3_1(const Graph& g)
       {
         using edge = typename Graph::edge_init_type;
-        using Edges = std::vector<std::vector<edge>>;
+        
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, Edges{{}, {edge{1,1,1}, edge{1,1,0}}, {}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+        this->template check_graph(g, {{}, {edge{1,1,1}, edge{1,1,0}}, {}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
       }
     };
   }

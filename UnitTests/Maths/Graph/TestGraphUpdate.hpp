@@ -1,7 +1,7 @@
 #pragma once
 
 #include "GraphAlgorithms.hpp"
-#include "GraphHelper.hpp"
+#include "GraphDetails.hpp"
 #include "ThreadingModels.hpp"
 
 #include "TestGraphHelper.hpp"

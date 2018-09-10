@@ -24,7 +24,13 @@ namespace sequoia
       storage store{};
       check_storage(store, std::vector<double>{}, LINE(""));
 
-      store.reserve_nodes(4ul);
+      check_equality<std::size_t>(0, store.capacity(), LINE(""));
+      store.reserve(4ul);
+      check_equality<std::size_t>(4, store.capacity(), LINE(""));
+      store.shrink_to_fit();
+      check_equality<std::size_t>(0, store.capacity(), LINE("Check may fail if stl implementation doesn't shrink to fit!"));
+      
+      
 
       store.add_node(2.4);
       // 2.4
