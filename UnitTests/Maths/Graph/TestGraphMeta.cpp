@@ -3,7 +3,7 @@
 #include <complex>
 
 namespace sequoia::unit_testing
-{   
+{  
   void test_graph_meta::run_tests()
   {
     using namespace maths;
@@ -19,14 +19,17 @@ namespace sequoia::unit_testing
 
   void test_graph_meta::test_method_detectors()
   {
-    
+    using namespace maths::graph_impl;
+
+    using namespace data_structures;
+
+    static_assert(has_reservable_partitions_v<bucketed_storage<int>>);
+    static_assert(!has_reservable_partitions_v<contiguous_storage<int>>);
   }
 
   void test_graph_meta::test_weight_makers()
   {
-    using namespace maths;
-
-    using namespace graph_impl;
+    using namespace maths::graph_impl;
     using namespace data_sharing;
     
 

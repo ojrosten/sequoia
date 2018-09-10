@@ -450,7 +450,7 @@ namespace sequoia
       {};
 
       template<class T>
-      struct has_reservable_partitions<T, std::void_t<decltype(T::reserve_partition)>> : std::true_type
+      struct has_reservable_partitions<T, std::void_t<decltype(std::declval<T>().reserve_partition(0, 0))>> : std::true_type
       {};
 
       template<class T> constexpr bool has_reservable_partitions_v{has_reservable_partitions<T>::value};

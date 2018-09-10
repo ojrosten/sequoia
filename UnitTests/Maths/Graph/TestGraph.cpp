@@ -15,12 +15,16 @@ namespace sequoia::unit_testing
       
       helper.run_tests<generic_graph_operations>(*this);
       helper.run_storage_tests<contiguous_storage, graph_contiguous_capacity>(*this);
-      //helper.run_storage_tests<bucketed_storage, graph_bucketed_capacity>(*this);
+      helper.run_storage_tests<bucketed_storage, graph_bucketed_capacity>(*this);
     }
       
     {
       graph_test_helper<complex<double>, int>  helper{"Weighted (complex<double>,int)"};
+      
       helper.run_tests<generic_weighted_graph_tests>(*this);
+
+      helper.run_storage_tests<contiguous_storage, graph_contiguous_capacity>(*this);
+      helper.run_storage_tests<bucketed_storage, graph_bucketed_capacity>(*this);
     }
 
     {
@@ -481,9 +485,19 @@ namespace sequoia::unit_testing
   >::execute_operations()
   {
     graph_t g{};
-    g.reserve_edges(4);
 
-    //check_exception_thrown<std::out_of_range>([&g](){ g.reserve_edges(0, 4);}, LINE(""));
+    check_equality<std::size_t>(0, g.edges_capacity(), LINE(""));
+    check_equality<std::size_t>(0, g.node_capacity());
+
+    g.reserve_edges(4);
+    check_equality<std::size_t>(4, g.edges_capacity(), LINE(""));
+
+    g.reserve_nodes(4);
+    check_equality<std::size_t>(4, g.node_capacity());
+
+    g.shrink_to_fit();
+    check_equality<std::size_t>(0, g.edges_capacity(), LINE("May fail if stl implementation doesn't actually shrink to fit!"));
+    check_equality<std::size_t>(0, g.node_capacity(), LINE("May fail if stl implementation doesn't actually shrink to fit!"));    
   }
 
    template
@@ -509,6 +523,21 @@ namespace sequoia::unit_testing
     graph_t g{};
 
     check_exception_thrown<std::out_of_range>([&g](){ g.reserve_edges(0, 4);}, LINE(""));
+    check_exception_thrown<std::out_of_range>([&g](){ g.edges_capacity(0);}, LINE(""));
+    check_equality<std::size_t>(0, g.node_capacity());
+
+    g.add_node();
+    check_equality<std::size_t>(0, g.edges_capacity(0), LINE(""));
+    check_equality<std::size_t>(1, g.node_capacity(), LINE(""));
+    g.reserve_edges(0, 4);
+    check_equality<std::size_t>(4, g.edges_capacity(0), LINE(""));
+
+    g.reserve_nodes(4);
+    check_equality<std::size_t>(4, g.node_capacity());
+
+    g.shrink_to_fit();
+    check_equality<std::size_t>(0, g.edges_capacity(0), LINE("May fail if stl implementation doesn't actually shrink to fit!"));
+    check_equality<std::size_t>(1, g.node_capacity(), LINE("May fail if stl implementation doesn't actually shrink to fit!"));
   }
 
   // Generic Weighted
