@@ -34,7 +34,7 @@ namespace sequoia
       template<template<class...> class C, class SharingPolicy> struct storage_type_generator
       {
         using held_type = typename SharingPolicy::handle_type;
-        using container_type = C<held_type>; // Not allocator aware!
+        using container_type = C<held_type>;
         using helper = storage_helper<container_type>;
         using storage_type = typename helper::storage_type;
         using auxiliary_storage_type = typename helper::auxiliary_storage_type;
@@ -144,8 +144,6 @@ namespace sequoia
     }
 
     //===================================A Custom Iterator===================================//
-
-    // Not allocator aware!
     
     template<template<class...> class C, class SharingPolicy, class IndexType>
     using partition_iterator = utilities::iterator<typename partition_impl::partition_iterator_generator<C, SharingPolicy, partition_impl::mutable_reference, false>::iterator, partition_impl::dereference_policy<SharingPolicy, partition_impl::mutable_reference>, partition_impl::partition_index_policy<false, IndexType>>;
@@ -165,26 +163,24 @@ namespace sequoia
     template<class Storage> struct bucketed_storage_traits
     {
       constexpr static bool throw_on_range_error{true};
-
-      template<class T>     using allocator_type          = std::allocator<T>;
-      template<class... Ts> using underlying_storage_type = std::vector<Ts...>; 
+      
+      template<class T> using underlying_storage_type = std::vector<T, std::allocator<T>>; 
     };
     
     template<class T, class SharingPolicy=data_sharing::independent<T>>
     class bucketed_storage
     {
     private:      
-      template<class... Ts> using bucket_template = typename bucketed_storage_traits<bucketed_storage>::template underlying_storage_type<Ts...>;
+      template<class S> using bucket_template = typename bucketed_storage_traits<bucketed_storage>::template underlying_storage_type<S>;
         
       using held_type      = typename SharingPolicy::handle_type;
-      using allocator_type = typename bucketed_storage_traits<bucketed_storage>::template allocator_type<held_type>;
-      using bucket_type    = bucket_template<held_type, allocator_type>;
+      using bucket_type    = bucket_template<held_type>;
       using storage_type   = typename bucketed_storage_traits<bucketed_storage>::template underlying_storage_type<bucket_type>;
     public:
       using value_type = T;
       using size_type = typename bucket_type::size_type;
       using sharing_policy_type = SharingPolicy;
-      using partition_iterator = partition_iterator<bucket_template, SharingPolicy, size_type>; // Not allocator aware!
+      using partition_iterator = partition_iterator<bucket_template, SharingPolicy, size_type>;
       using const_partition_iterator = const_partition_iterator<bucket_template, SharingPolicy, size_type>;
       using reverse_partition_iterator = reverse_partition_iterator<bucket_template, SharingPolicy, size_type>;
       using const_reverse_partition_iterator = const_reverse_partition_iterator<bucket_template, SharingPolicy, size_type>;
@@ -559,16 +555,17 @@ namespace sequoia
 
     //===================================Contiguous storage===================================//
 
+    // Probably don't want traits for base class? Since then how does one override differently for different derived classes?
     template<class Storage> struct contiguous_storage_base_traits
     {
       constexpr static bool throw_on_range_error{true};
     };
     
-    template<class T, class SharingPolicy=data_sharing::independent<T>, template<class...> class Storage=std::vector>
+    template<class T, class SharingPolicy, template<class...> class Storage>
     class contiguous_storage_base
     {
     private:      
-      using AuxiliaryType = typename partition_impl::storage_type_generator<Storage, SharingPolicy>::auxiliary_storage_type;      
+      using AuxiliaryType = typename partition_impl::storage_type_generator<Storage, SharingPolicy>::auxiliary_storage_type;  
       using StorageType   = typename partition_impl::storage_type_generator<Storage, SharingPolicy>::storage_type; 
     public:
       using value_type          = T;
