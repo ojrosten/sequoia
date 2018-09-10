@@ -554,14 +554,8 @@ namespace sequoia
     };
 
     //===================================Contiguous storage===================================//
-
-    // Probably don't want traits for base class? Since then how does one override differently for different derived classes?
-    template<class Storage> struct contiguous_storage_base_traits
-    {
-      constexpr static bool throw_on_range_error{true};
-    };
     
-    template<class T, class SharingPolicy, template<class...> class Storage>
+    template<class T, class SharingPolicy, template<class...> class Storage, class ExceptionTraits>
     class contiguous_storage_base
     {
     private:      
@@ -578,7 +572,7 @@ namespace sequoia
       using reverse_partition_iterator       = reverse_partition_iterator<Storage, SharingPolicy, index_type>;
       using const_reverse_partition_iterator = const_reverse_partition_iterator<Storage, SharingPolicy, index_type>;
 
-      constexpr static bool throw_on_range_error{contiguous_storage_base_traits<contiguous_storage_base>::throw_on_range_error};
+      constexpr static bool throw_on_range_error{ExceptionTraits::throw_on_range_error};
       
       contiguous_storage_base() {}
 
@@ -1104,42 +1098,74 @@ namespace sequoia
       
     };
 
-    template<class T, class SharingPolicy=data_sharing::independent<T>> struct contiguous_storage_traits
-    { 
+    template<class Storage> struct contiguous_storage_traits
+    {
+      constexpr static bool throw_on_range_error{true};
       template<class S> using underlying_storage_type = std::vector<S, std::allocator<S>>; 
     };
 
     template<class T, class SharingPolicy=data_sharing::independent<T>>
-    class contiguous_storage : public contiguous_storage_base<T, SharingPolicy, contiguous_storage_traits<T, SharingPolicy>::template underlying_storage_type>
+    class contiguous_storage :
+      public contiguous_storage_base<
+        T,
+        SharingPolicy,
+        contiguous_storage_traits<contiguous_storage<T, SharingPolicy>>::template underlying_storage_type,
+        contiguous_storage_traits<contiguous_storage<T, SharingPolicy>>
+      >
     {
+    private:
+      using base_t =
+        contiguous_storage_base<
+          T,
+          SharingPolicy,
+          contiguous_storage_traits<contiguous_storage<T, SharingPolicy>>::template underlying_storage_type,
+          contiguous_storage_traits<contiguous_storage<T, SharingPolicy>>
+      >;
     public:
-      using contiguous_storage_base<T, SharingPolicy, contiguous_storage_traits<T, SharingPolicy>::template underlying_storage_type>::contiguous_storage_base;
+      using contiguous_storage_base<
+        T,
+        SharingPolicy,
+        contiguous_storage_traits<contiguous_storage<T, SharingPolicy>>::template underlying_storage_type,
+        contiguous_storage_traits<contiguous_storage<T, SharingPolicy>>
+      >::contiguous_storage_base;
 
-      using contiguous_storage_base<T, SharingPolicy, contiguous_storage_traits<T, SharingPolicy>::template underlying_storage_type>::add_slot;
-      using contiguous_storage_base<T, SharingPolicy, contiguous_storage_traits<T, SharingPolicy>::template underlying_storage_type>::insert_slot;
-      using contiguous_storage_base<T, SharingPolicy, contiguous_storage_traits<T, SharingPolicy>::template underlying_storage_type>::delete_slot;
+      using base_t::add_slot;
+      using base_t::insert_slot;
+      using base_t::delete_slot;
 
-      using contiguous_storage_base<T, SharingPolicy, contiguous_storage_traits<T, SharingPolicy>::template underlying_storage_type>::reserve;
-      using contiguous_storage_base<T, SharingPolicy, contiguous_storage_traits<T, SharingPolicy>::template underlying_storage_type>::capacity;
-      using contiguous_storage_base<T, SharingPolicy, contiguous_storage_traits<T, SharingPolicy>::template underlying_storage_type>::reserve_partitions;
-      using contiguous_storage_base<T, SharingPolicy, contiguous_storage_traits<T, SharingPolicy>::template underlying_storage_type>::num_partitions_capacity;
-      using contiguous_storage_base<T, SharingPolicy, contiguous_storage_traits<T, SharingPolicy>::template underlying_storage_type>::shrink_to_fit;
+      using base_t::reserve;
+      using base_t::capacity;
+      using base_t::reserve_partitions;
+      using base_t::num_partitions_capacity;
+      using base_t::shrink_to_fit;
       
-      using contiguous_storage_base<T, SharingPolicy, contiguous_storage_traits<T, SharingPolicy>::template underlying_storage_type>::clear;
-      using contiguous_storage_base<T, SharingPolicy, contiguous_storage_traits<T, SharingPolicy>::template underlying_storage_type>::push_back_to_partition;
-      using contiguous_storage_base<T, SharingPolicy, contiguous_storage_traits<T, SharingPolicy>::template underlying_storage_type>::insert_to_partition;
-      using contiguous_storage_base<T, SharingPolicy, contiguous_storage_traits<T, SharingPolicy>::template underlying_storage_type>::delete_from_partition;
-      using contiguous_storage_base<T, SharingPolicy, contiguous_storage_traits<T, SharingPolicy>::template underlying_storage_type>::delete_from_partition_if;
+      using base_t::clear;
+      using base_t::push_back_to_partition;
+      using base_t::insert_to_partition;
+      using base_t::delete_from_partition;
+      using base_t::delete_from_partition_if;
+    };
+
+    template<class Storage> struct static_contiguous_storage_traits
+    {
+      constexpr static bool throw_on_range_error{true};
     };
 
     template<class T, std::size_t Npartitions, std::size_t Nelements, class IndexType=std::size_t>
-    class static_contiguous_storage : public contiguous_storage_base<T, data_sharing::independent<T>, static_contiguous_data<Npartitions,Nelements,std::make_unsigned_t<IndexType>>::template data>
+    class static_contiguous_storage :
+      public contiguous_storage_base<
+        T,
+        data_sharing::independent<T>,
+        static_contiguous_data<Npartitions,Nelements,std::make_unsigned_t<IndexType>>::template data,
+        static_contiguous_storage_traits<static_contiguous_storage<T, Npartitions, Nelements, IndexType>>
+      >
     {
     public:
       using contiguous_storage_base<
         T,
         data_sharing::independent<T>,
-        static_contiguous_data<Npartitions,Nelements,std::make_unsigned_t<IndexType>>::template data
+        static_contiguous_data<Npartitions,Nelements,std::make_unsigned_t<IndexType>>::template data,
+        static_contiguous_storage_traits<static_contiguous_storage<T, Npartitions, Nelements, IndexType>>
       >::contiguous_storage_base;
     };
     
