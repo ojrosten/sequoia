@@ -34,11 +34,11 @@ namespace sequoia
     }
 
 
-    template<template<class, class, bool, template<class...> class> class Storage, class T>
+    template<template<class...> class Storage, class T>
     void test_partitioned_data::test_init_lists(std::initializer_list<std::initializer_list<T>> list)
     {
       using namespace data_structures;
-      Storage<T,data_sharing::shared<T>,true,std::vector> s{list};
+      Storage<T,data_sharing::shared<T>> s{list};
       check_partitions(s, list);
     }
 
@@ -229,15 +229,13 @@ namespace sequoia
       auto storage1 = test_generic_storage<bucketed_storage<int>>();
       auto storage2 = test_generic_storage<contiguous_storage<int>>();
 
-      check(storage1 == storage2);
-      check(storage2 == storage1);
-      check(!(storage1 != storage2));
-      check(!(storage2 != storage1));
+      check(isomorphic(storage1, storage2));
+      check(isomorphic(storage2, storage1));
 
       auto storage3 = test_generic_storage<bucketed_storage<int, independent<int>>>();
       auto storage4 = test_generic_storage<contiguous_storage<int, independent<int>>>();
 
-      check(storage3 == storage4);
+      check(isomorphic(storage3, storage4));
     }
 
     template <class Storage>
@@ -570,7 +568,7 @@ namespace sequoia
 
       check_partitions(storage2, answers_type{{-5, -2, 7}, {4, 6, -2}});
 
-      swap(storage, storage2);
+      std::swap(storage, storage2);
 
       check_partitions(storage2, answers_type{{-5, -2}, {4, 6, -2}});
       check_partitions(storage, answers_type{{-5, -2, 7}, {4, 6, -2}});
@@ -687,7 +685,7 @@ namespace sequoia
     {
       using namespace data_structures;
        
-      contiguous_storage<T, SharingPolicy, ThrowOnRangeError> s{};
+      contiguous_storage<T, SharingPolicy> s{};
       check_equality<std::size_t>(0, s.capacity(), LINE(""));
       check_equality<std::size_t>(0, s.num_partitions_capacity(), LINE(""));
 
@@ -709,7 +707,7 @@ namespace sequoia
     {
       using namespace data_structures;
        
-      bucketed_storage<T, SharingPolicy, ThrowOnRangeError> s{};
+      bucketed_storage<T, SharingPolicy> s{};
 
       check_equality<std::size_t>(0, s.num_partitions_capacity(), LINE(""));
       if constexpr(ThrowOnRangeError) check_exception_thrown<std::out_of_range>([&s](){ s.partition_capacity(0); }, LINE(""));
