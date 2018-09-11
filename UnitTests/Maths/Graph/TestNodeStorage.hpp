@@ -16,26 +16,26 @@ namespace sequoia
     private:
       using unit_test::check_equality;
       
-      template<class WeightProxy, template<class...> class Container, bool ThrowOnRangeError>
-      class node_storage_tester : public maths::graph_impl::node_storage<WeightProxy, Container, ThrowOnRangeError>
+      template<class WeightProxy>
+      class node_storage_tester : public maths::graph_impl::node_storage<WeightProxy>
       {
       public:
-        using maths::graph_impl::node_storage<WeightProxy, Container, ThrowOnRangeError>::node_storage;
-        using maths::graph_impl::node_storage<WeightProxy, Container, ThrowOnRangeError>::reserve;
-        using maths::graph_impl::node_storage<WeightProxy, Container, ThrowOnRangeError>::capacity;
-        using maths::graph_impl::node_storage<WeightProxy, Container, ThrowOnRangeError>::shrink_to_fit;
-        using maths::graph_impl::node_storage<WeightProxy, Container, ThrowOnRangeError>::add_node;
-        using maths::graph_impl::node_storage<WeightProxy, Container, ThrowOnRangeError>::insert_node;
-        using maths::graph_impl::node_storage<WeightProxy, Container, ThrowOnRangeError>::erase_node;
-        using maths::graph_impl::node_storage<WeightProxy, Container, ThrowOnRangeError>::erase_nodes;
-        using maths::graph_impl::node_storage<WeightProxy, Container, ThrowOnRangeError>::clear;
+        using maths::graph_impl::node_storage<WeightProxy>::node_storage;
+        using maths::graph_impl::node_storage<WeightProxy>::reserve;
+        using maths::graph_impl::node_storage<WeightProxy>::capacity;
+        using maths::graph_impl::node_storage<WeightProxy>::shrink_to_fit;
+        using maths::graph_impl::node_storage<WeightProxy>::add_node;
+        using maths::graph_impl::node_storage<WeightProxy>::insert_node;
+        using maths::graph_impl::node_storage<WeightProxy>::erase_node;
+        using maths::graph_impl::node_storage<WeightProxy>::erase_nodes;
+        using maths::graph_impl::node_storage<WeightProxy>::clear;
       };
 
-      template<class WeightProxy, std::size_t N, bool ThrowOnRangeError>
-      class static_node_storage_tester : public maths::graph_impl::static_node_storage<WeightProxy, N, ThrowOnRangeError>
+      template<class WeightProxy, std::size_t N>
+      class static_node_storage_tester : public maths::graph_impl::static_node_storage<WeightProxy, N>
       {
       public:
-        using maths::graph_impl::static_node_storage<WeightProxy, N, ThrowOnRangeError>::static_node_storage;
+        using maths::graph_impl::static_node_storage<WeightProxy, N>::static_node_storage;
       };
 
       template<class Storage>

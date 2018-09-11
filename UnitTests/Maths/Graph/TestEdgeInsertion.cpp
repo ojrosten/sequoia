@@ -44,20 +44,18 @@ namespace sequoia
       maths::graph_flavour GraphFlavour,
       class NodeWeight,
       class EdgeWeight,
-      bool ThrowOnError,
       template <class> class NodeWeightStorage,
       template <class> class EdgeWeightStorage,
-      template <class, class, bool, template<class...> class> class EdgeStoragePolicy
+      template <class, template<class> class> class EdgeStorageTraits
     >
     void generic_edge_insertions
     <
       GraphFlavour,
       NodeWeight,
       EdgeWeight,
-      ThrowOnError,
       NodeWeightStorage,
       EdgeWeightStorage,
-      EdgeStoragePolicy
+      EdgeStorageTraits
     >::execute_operations()
     {
       using namespace maths;
@@ -65,6 +63,7 @@ namespace sequoia
       using edge = embedded_edge<EdgeWeight, data_sharing::independent, utilities::protective_wrapper<EdgeWeight>>;
         
       graph_t g{};
+      constexpr bool ThrowOnError{graph_t::throw_on_range_error};
 
       if constexpr(ThrowOnError)
       {
@@ -201,20 +200,18 @@ namespace sequoia
       maths::graph_flavour GraphFlavour,
       class NodeWeight,
       class EdgeWeight,
-      bool ThrowOnError,
       template <class> class NodeWeightStorage,
       template <class> class EdgeWeightStorage,
-      template <class, class, bool, template<class...> class> class EdgeStoragePolicy
+      template <class, template<class> class> class EdgeStorageTraits
     >
     void generic_weighted_edge_insertions
     <
       GraphFlavour,
       NodeWeight,
       EdgeWeight,
-      ThrowOnError,
       NodeWeightStorage,
       EdgeWeightStorage,
-      EdgeStoragePolicy
+      EdgeStorageTraits
     >::execute_operations()
     {
       using namespace maths;

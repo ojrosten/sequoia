@@ -80,7 +80,7 @@ namespace sequoia::unit_testing
     }
     
     {
-      using g_type = static_graph<directed_flavour::undirected, 2, 1, NodeWeight, EdgeWeight, true, char>;
+      using g_type = static_graph<directed_flavour::undirected, 2, 1, NodeWeight, EdgeWeight, char>;
       checker.template check_2_1<g_type>();
       
       // Think about alignment for non-empty T...
@@ -144,7 +144,7 @@ namespace sequoia::unit_testing
     }
 
     {
-      using g_type = static_embedded_graph<directed_flavour::undirected, 2, 1, NodeWeight, EdgeWeight, true, char>;
+      using g_type = static_embedded_graph<directed_flavour::undirected, 2, 1, NodeWeight, EdgeWeight, char>;
       checker.template check_2_1<g_type>();
     }
 
@@ -197,7 +197,7 @@ namespace sequoia::unit_testing
      }
 
      {
-       using g_type = static_graph<directed_flavour::directed, 2, 1, NodeWeight, EdgeWeight, true, char>;
+       using g_type = static_graph<directed_flavour::directed, 2, 1, NodeWeight, EdgeWeight, char>;
        checker.template check_2_1<g_type>();
      }
 
@@ -245,7 +245,7 @@ namespace sequoia::unit_testing
     }
 
     {
-      using g_type = static_embedded_graph<directed_flavour::directed, 2, 1, NodeWeight, EdgeWeight, true, char>;
+      using g_type = static_embedded_graph<directed_flavour::directed, 2, 1, NodeWeight, EdgeWeight, char>;
       checker.template check_2_1<g_type>();
     }
 

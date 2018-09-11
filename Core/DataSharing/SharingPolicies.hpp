@@ -1,5 +1,10 @@
 #pragma once
 
+#include "StaticData.hpp"
+
+#include <map>
+#include <memory>
+
 namespace sequoia
 {
   namespace data_sharing

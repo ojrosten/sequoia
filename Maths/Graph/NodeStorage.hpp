@@ -25,19 +25,34 @@ namespace sequoia
 
         static constexpr reference get(proxy_reference ref) noexcept { return ref.get(); }
       };
+
+      template<class WeightProxy, bool=std::is_empty_v<typename WeightProxy::value_type>>
+      struct node_storage_traits
+      {
+        constexpr static bool throw_on_range_error{true};
+        template<class S> using underlying_storage_type = std::vector<S, std::allocator<S>>;
+      };
+
+      template<class WeightProxy>
+      struct node_storage_traits<WeightProxy, true>
+      {
+      };
                                   
-      template<class WeightProxy, template<class...> class Container, bool ThrowOnRangeError, bool=std::is_empty_v<typename WeightProxy::value_type>>
+      template<class WeightProxy, class Traits=node_storage_traits<WeightProxy>, bool=std::is_empty_v<typename WeightProxy::value_type>>
       class node_storage
       {
       private:
+        template<class S> using Container = typename Traits::template underlying_storage_type<S>;
         using Storage = typename data_structures::storage_helper<Container<WeightProxy>>::storage_type;
       public:        
-        using weight_type = typename WeightProxy::value_type;
+        using weight_type       = typename WeightProxy::value_type;
         using weight_proxy_type = WeightProxy;
-        using size_type = typename Storage::size_type;
+        using size_type         = typename Storage::size_type;
 
         using const_iterator = utilities::iterator<typename Storage::const_iterator, proxy_dereference_policy<typename Storage::const_iterator>, utilities::null_data_policy>;
         using const_reverse_iterator = utilities::iterator<typename Storage::const_reverse_iterator, proxy_dereference_policy<typename Storage::const_reverse_iterator>, utilities::null_data_policy>;
+
+        constexpr static bool throw_on_range_error{Traits::throw_on_range_error};
 
         constexpr node_storage() {}
 
@@ -56,7 +71,7 @@ namespace sequoia
         template<class Arg, class... Args>
         constexpr void node_weight(const_iterator pos, Arg&& arg, Args&&... args)
         {
-          if constexpr (ThrowOnRangeError) if(pos == cend_node_weights()) throw std::out_of_range("node_storage::node_weight - index out of range!\n");
+          if constexpr (throw_on_range_error) if(pos == cend_node_weights()) throw std::out_of_range("node_storage::node_weight - index out of range!\n");
 
           const auto index{distance(cbegin_node_weights(), pos)};
           m_NodeWeights[index].set(std::forward<Arg>(arg), std::forward<Args>(args)...);
@@ -65,7 +80,7 @@ namespace sequoia
         template<class Fn>
         constexpr void mutate_node_weight(const_iterator pos, Fn fn)
         {
-          if constexpr (ThrowOnRangeError) if(pos == cend_node_weights()) throw std::out_of_range("node_storage::node_weight - index out of range!\n");
+          if constexpr (throw_on_range_error) if(pos == cend_node_weights()) throw std::out_of_range("node_storage::node_weight - index out of range!\n");
 
           const auto index{distance(cbegin_node_weights(), pos)};
           m_NodeWeights[index].mutate(fn);
@@ -127,7 +142,7 @@ namespace sequoia
 
         const_iterator erase_node(const_iterator pos)
         {
-          if constexpr (ThrowOnRangeError)
+          if constexpr (throw_on_range_error)
           {
             if(pos == cend_node_weights()) throw std::out_of_range("Attempting to delete a node which does not exist");
           }
@@ -137,7 +152,7 @@ namespace sequoia
 
         const_iterator erase_nodes(const_iterator first, const_iterator last)
         {
-          if constexpr (ThrowOnRangeError)
+          if constexpr (throw_on_range_error)
           {
             if(first > last) throw std::out_of_range("Attempting to delete a range of nodes with first > last");
           }
@@ -194,8 +209,8 @@ namespace sequoia
         }
       };
 
-      template<class WeightProxy, template<class...> class Container, bool ThrowOnRangeError>
-      class node_storage<WeightProxy, Container, ThrowOnRangeError, true>
+      template<class WeightProxy, class Traits>
+      class node_storage<WeightProxy, Traits, true>
       {
       public:
         using weight_proxy_type = WeightProxy;
@@ -217,14 +232,27 @@ namespace sequoia
         ~node_storage() = default;
       };
 
-      template<class WeightProxy, std::size_t N, bool ThrowOnRangeError, bool=std::is_empty_v<typename WeightProxy::value_type>>
-      class static_node_storage : public node_storage<WeightProxy, data_structures::static_contiguous_data<1,N>::template data, ThrowOnRangeError>
+
+      template<class WeightProxy, std::size_t N, bool=std::is_empty_v<typename WeightProxy::value_type>>
+      struct static_node_storage_traits
       {
-        using node_storage<WeightProxy, data_structures::static_contiguous_data<1,N>::template data, ThrowOnRangeError>::node_storage;
+        constexpr static bool throw_on_range_error{true};
+        template<class S> using underlying_storage_type = typename data_structures::static_contiguous_data<1,N>::template data<S>;
       };
 
-      template<class WeightProxy, std::size_t N, bool ThrowOnRangeError>
-      class static_node_storage<WeightProxy, N, ThrowOnRangeError, true>
+      template<class WeightProxy, std::size_t N>
+      struct static_node_storage_traits<WeightProxy, N, true>
+      {
+      };
+      
+      template<class WeightProxy, std::size_t N, bool=std::is_empty_v<typename WeightProxy::value_type>>
+      class static_node_storage : public node_storage<WeightProxy, static_node_storage_traits<WeightProxy, N>>
+      {
+        using node_storage<WeightProxy, static_node_storage_traits<WeightProxy, N>>::node_storage;
+      };
+
+      template<class WeightProxy, std::size_t N>
+      class static_node_storage<WeightProxy, N, true>
       {
       public:
         using weight_proxy_type = WeightProxy;

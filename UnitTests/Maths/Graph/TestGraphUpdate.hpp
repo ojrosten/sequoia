@@ -100,13 +100,12 @@ namespace sequoia
       maths::graph_flavour GraphFlavour,
       class NodeWeight,
       class EdgeWeight,
-      bool ThrowOnError,
       template <class> class NodeWeightStorage,
       template <class> class EdgeWeightStorage,
-      template <class, class, bool, template<class...> class> class EdgeStoragePolicy
+      template <class, template<class> class> class EdgeStorageTraits
     >
     class test_update
-      : public graph_operations<GraphFlavour, NodeWeight, EdgeWeight, ThrowOnError, NodeWeightStorage, EdgeWeightStorage, EdgeStoragePolicy>
+      : public graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStorageTraits>
     {
     private:
       using GGraph =
@@ -115,10 +114,9 @@ namespace sequoia
           GraphFlavour,
           NodeWeight,
           EdgeWeight,
-          ThrowOnError,
           NodeWeightStorage,
           EdgeWeightStorage,
-          EdgeStoragePolicy
+          EdgeStorageTraits
         >::graph_type;
 
       using flavour = maths::graph_flavour;
@@ -588,13 +586,12 @@ namespace sequoia
       maths::graph_flavour GraphFlavour,
       class NodeWeight,
       class EdgeWeight,
-      bool ThrowOnError,
       template <class> class NodeWeightStorage,
       template <class> class EdgeWeightStorage,
-      template <class, class, bool, template<class...> class> class EdgeStoragePolicy
+      template <class, template<class> class> class EdgeStorageTraits
     >
     class test_BF_update
-      : public graph_operations<GraphFlavour, NodeWeight, EdgeWeight, ThrowOnError, NodeWeightStorage, EdgeWeightStorage, EdgeStoragePolicy>
+      : public graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStorageTraits>
     {
     private:
       using UndirectedType = std::bool_constant<maths::undirected(GraphFlavour)>;
@@ -604,10 +601,9 @@ namespace sequoia
           GraphFlavour,
           NodeWeight,
           EdgeWeight,
-          ThrowOnError,
           NodeWeightStorage,
           EdgeWeightStorage,
-          EdgeStoragePolicy
+          EdgeStorageTraits
         >::graph_type;
 
       using checker<unit_test_logger<test_mode::standard>>::check_equality;

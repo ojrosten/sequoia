@@ -1,113 +1,18 @@
 #pragma once
 
-#include "StaticData.hpp"
+#include "PartitionedDataDetails.hpp"
 #include "Utilities.hpp"
 #include "Iterator.hpp"
 
-#include <map>
-#include <memory>
 #include <limits>
 #include <string>
-
-#include "SharingPolicies.hpp"
 
 namespace sequoia
 {
   namespace data_structures
   {
-    namespace partition_impl
-    {
-      template<class T> struct const_reference
-      {
-        using type      = const T;
-        using reference = const T&;
-        using pointer   = const T*;
-      };
-
-      template <class T> struct mutable_reference
-      {
-        using type      = T;
-        using reference = T&;
-        using pointer   = T*;
-      };
-
-      template<template<class...> class C, class SharingPolicy> struct storage_type_generator
-      {
-        using held_type = typename SharingPolicy::handle_type;
-        using container_type = C<held_type>;
-        using helper = storage_helper<container_type>;
-        using storage_type = typename helper::storage_type;
-        using auxiliary_storage_type = typename helper::auxiliary_storage_type;
-        using static_type = typename std::is_base_of<static_data_base, C<held_type>>::type;
-      };
-    
-      template<template<class...> class C, class SharingPolicy, template<class> class ReferencePolicy, bool Reversed>
-      struct partition_iterator_generator
-      {
-        using iterator = typename storage_type_generator<C, SharingPolicy>::storage_type::iterator;
-      };
-
-      template<template<class...> class C, class SharingPolicy>
-      struct partition_iterator_generator<C, SharingPolicy, mutable_reference, true>
-      {
-        using iterator = typename storage_type_generator<C, SharingPolicy>::storage_type::reverse_iterator;
-      };
-    
-      template<template<class...> class C, class SharingPolicy>
-      struct partition_iterator_generator<C, SharingPolicy, const_reference, false>
-      {
-        using iterator = typename storage_type_generator<C, SharingPolicy>::storage_type::const_iterator;
-      };
-
-    template<template<class...> class C, class SharingPolicy>
-    struct partition_iterator_generator<C, SharingPolicy, const_reference, true>
-    {
-      using iterator = typename storage_type_generator<C, SharingPolicy>::storage_type::const_reverse_iterator;
-    };
-      template<bool Reversed, class IndexType>
-      class partition_index_policy
-      {
-      public:
-        using index_type = IndexType;
-
-        constexpr static auto npos{std::numeric_limits<index_type>::max()};
-        
-        constexpr static bool reversed() { return Reversed; }
-
-        friend constexpr bool operator==(const partition_index_policy& lhs, const partition_index_policy& rhs)
-        {
-          return lhs.m_Partition == rhs.m_Partition;
-        }
-
-        friend constexpr bool operator!=(const partition_index_policy& lhs, const partition_index_policy& rhs)
-        {
-          return !(lhs == rhs);
-        }
-
-        constexpr IndexType partition_index() const noexcept { return m_Partition; }
-      protected:        
-        constexpr partition_index_policy(const index_type n) : m_Partition{n} {}        
-        ~partition_index_policy() = default;
-        
-        constexpr partition_index_policy(const partition_index_policy&)                = default;
-        constexpr partition_index_policy(partition_index_policy&&) noexcept            = default;
-        constexpr partition_index_policy& operator=(const partition_index_policy&)     = default;
-        constexpr partition_index_policy& operator=(partition_index_policy&&) noexcept = default;
-      private:
-        IndexType m_Partition;
-      };
-
-      template<class SharingPolicy, template<class> class ReferencePolicy>
-      struct dereference_policy : public SharingPolicy
-      {
-        using elementary_type = typename SharingPolicy::elementary_type;
-        using reference       = typename ReferencePolicy<elementary_type>::reference;
-        using pointer         = typename ReferencePolicy<elementary_type>::pointer;
-      };
-    }
-
     //===================================A Custom Iterator===================================//
-
+    
     template<template<class...> class C, class SharingPolicy, class IndexType>
     using partition_iterator = utilities::iterator<typename partition_impl::partition_iterator_generator<C, SharingPolicy, partition_impl::mutable_reference, false>::iterator, partition_impl::dereference_policy<SharingPolicy, partition_impl::mutable_reference>, partition_impl::partition_index_policy<false, IndexType>>;
 
@@ -119,61 +24,38 @@ namespace sequoia
 
     template<template<class...> class C, class SharingPolicy, class IndexType>
     using const_reverse_partition_iterator = utilities::iterator<typename partition_impl::partition_iterator_generator<C, SharingPolicy, partition_impl::const_reference, true>::iterator, partition_impl::dereference_policy<SharingPolicy, partition_impl::const_reference>, partition_impl::partition_index_policy<true, IndexType>>;
-
-    //============================= Helper classes for copy constructor ===================================//
-
-    template<class T> class data_duplicator
-    {
-    };
     
-    template<class T> class data_duplicator<data_sharing::independent<T>>
-    {
-    public:
-      constexpr T duplicate(const T& in) const { return T{in}; }
-    private:
-    };
-
-    template<class T> class data_duplicator<data_sharing::shared<T>>
-    {
-    public:
-      using handle_type = typename data_sharing::shared<T>::handle_type;
-
-      handle_type duplicate(const handle_type in)
-      {
-        handle_type ptr{};
-        auto found = m_ProcessedPointers.find(in);
-        if(found == m_ProcessedPointers.end())
-        {
-          ptr = data_sharing::shared<T>::make(*in);
-          m_ProcessedPointers.insert(make_pair(in, ptr));
-        }
-        else
-        {
-          ptr = found->second;
-        }
-        return ptr;
-      }
-    private:
-      std::map<handle_type, handle_type> m_ProcessedPointers;
-    };
     
     //===================================Storage using buckets===================================//
+
+    template<class T, class SharingPolicy> struct bucketed_storage_traits
+    {
+      constexpr static bool throw_on_range_error{true};
+
+      template<class S> using buckets_type           = std::vector<S, std::allocator<S>>; 
+      template<class S> using individual_bucket_type = std::vector<S, std::allocator<S>>; 
+    };
     
-    template<class T, class SharingPolicy=data_sharing::independent<T>, bool ThrowOnRangeError=true, template<class...> class Storage=std::vector>
+    template<class T, class SharingPolicy=data_sharing::independent<T>, class Traits=bucketed_storage_traits<T, SharingPolicy>>
     class bucketed_storage
     {
-    private:      
-      using held_type = typename SharingPolicy::handle_type;
+    private:
+      template<class S> using buckets_template           = typename Traits::template buckets_type<S>;
+      template<class S> using individual_bucket_template = typename Traits::template individual_bucket_type<S>;
+        
+      using held_type      = typename SharingPolicy::handle_type;
+      using bucket_type    = individual_bucket_template<held_type>;
+      using storage_type   = buckets_template<bucket_type>;
     public:
       using value_type = T;
-      using size_type = typename Storage<value_type>::size_type;
+      using size_type = typename bucket_type::size_type;
       using sharing_policy_type = SharingPolicy;
-      using partition_iterator = partition_iterator<Storage, SharingPolicy, size_type>;
-      using const_partition_iterator = const_partition_iterator<Storage, SharingPolicy, size_type>;
-      using reverse_partition_iterator = reverse_partition_iterator<Storage, SharingPolicy, size_type>;
-      using const_reverse_partition_iterator = const_reverse_partition_iterator<Storage, SharingPolicy, size_type>;
+      using partition_iterator = partition_iterator<individual_bucket_template, SharingPolicy, size_type>;
+      using const_partition_iterator = const_partition_iterator<individual_bucket_template, SharingPolicy, size_type>;
+      using reverse_partition_iterator = reverse_partition_iterator<individual_bucket_template, SharingPolicy, size_type>;
+      using const_reverse_partition_iterator = const_reverse_partition_iterator<individual_bucket_template, SharingPolicy, size_type>;
 
-      constexpr static bool throw_on_range_error() { return ThrowOnRangeError; }
+      constexpr static bool throw_on_range_error{Traits::throw_on_range_error};
       
       bucketed_storage() {}
 
@@ -192,7 +74,7 @@ namespace sequoia
 
       bucketed_storage(const bucketed_storage& in)
       {
-        data_duplicator<SharingPolicy> duplicator;
+        partition_impl::data_duplicator<SharingPolicy> duplicator;
         for(const auto& bucket : in.m_Buckets)
         {
           add_slot();
@@ -260,14 +142,14 @@ namespace sequoia
 
       void reserve_partition(const size_type partition, const size_type size)
       {
-        if constexpr(ThrowOnRangeError) check_range(partition);
+        if constexpr(throw_on_range_error) check_range(partition);
 
         m_Buckets[partition].reserve(size);
       }
 
       size_type partition_capacity(const size_type partition) const
       {
-        if constexpr(ThrowOnRangeError) check_range(partition);
+        if constexpr(throw_on_range_error) check_range(partition);
 
         return m_Buckets[partition].capacity();
       }
@@ -290,7 +172,7 @@ namespace sequoia
 
       void shrink_to_fit(const size_type partition)
       {
-        if constexpr(ThrowOnRangeError) check_range(partition);
+        if constexpr(throw_on_range_error) check_range(partition);
 
         m_Buckets[partition].shrink_to_fit();
       }
@@ -309,14 +191,14 @@ namespace sequoia
       template<class... Args>
       void push_back_to_partition(const size_type index, Args&&... args)
       {
-        if constexpr(ThrowOnRangeError) check_range(index);
+        if constexpr(throw_on_range_error) check_range(index);
 
         m_Buckets[index].push_back(SharingPolicy::make(std::forward<Args>(args)...));
       }
 
       void push_back_to_partition(const size_type index, const_partition_iterator iter)
       {
-        if constexpr(ThrowOnRangeError) check_range(index);
+        if constexpr(throw_on_range_error) check_range(index);
 
         m_Buckets[index].push_back(*(iter.base_iterator()));
       }
@@ -324,7 +206,7 @@ namespace sequoia
       template<class... Args>
       partition_iterator insert_to_partition(const_partition_iterator pos, Args&&... args)
       {
-        if constexpr(ThrowOnRangeError)
+        if constexpr(throw_on_range_error)
         {
           if(!m_Buckets.size()) throw std::out_of_range("bucketed_storage: no partitions into which to insert");
         }
@@ -339,7 +221,7 @@ namespace sequoia
       template<class... Args>
       partition_iterator insert_to_partition(const_partition_iterator pos, const_partition_iterator setFromIter)
       {
-        if constexpr(ThrowOnRangeError)
+        if constexpr(throw_on_range_error)
         {
           if(!m_Buckets.size()) throw std::out_of_range("bucketed_storage: no partitions into which to insert");
         }
@@ -417,25 +299,25 @@ namespace sequoia
 
       partition_iterator begin_partition(const size_type i)
       {
-        if constexpr(ThrowOnRangeError) if(m_Buckets.empty()) throw std::out_of_range("bucketed_storage::begin_partition: no buckets!\n");
+        if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range("bucketed_storage::begin_partition: no buckets!\n");
         return (i < m_Buckets.size()) ? partition_iterator(m_Buckets[i].begin(), i) : partition_iterator(m_Buckets.back().end(), npos);
       }
 
       partition_iterator end_partition(const size_type i)
       {
-        if constexpr(ThrowOnRangeError) if(m_Buckets.empty()) throw std::out_of_range("bucketed_storage::end_partition: no buckets!\n");
+        if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range("bucketed_storage::end_partition: no buckets!\n");
         return (i < m_Buckets.size()) ? partition_iterator(m_Buckets[i].end(), i) : partition_iterator(m_Buckets.back().end(), npos);
       }
 
       const_partition_iterator begin_partition(const size_type i) const
       {
-        if constexpr(ThrowOnRangeError) if(m_Buckets.empty()) throw std::out_of_range("bucketed_storage::begin_partition: no buckets!\n");
+        if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range("bucketed_storage::begin_partition: no buckets!\n");
         return (i < m_Buckets.size()) ? const_partition_iterator(m_Buckets[i].cbegin(), i) : const_partition_iterator(m_Buckets.back().cend(), npos);
       }
 
       const_partition_iterator end_partition(const size_type i) const
       {
-        if constexpr(ThrowOnRangeError) if(m_Buckets.empty()) throw std::out_of_range("bucketed_storage::end_partition: no buckets!\n");
+        if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range("bucketed_storage::end_partition: no buckets!\n");
         return (i < m_Buckets.size()) ? const_partition_iterator(m_Buckets[i].cend(), i) : const_partition_iterator(m_Buckets.back().cend(), npos);
       }
 
@@ -447,20 +329,20 @@ namespace sequoia
 
       reverse_partition_iterator rend_partition(const size_type i)
       {
-        if constexpr(ThrowOnRangeError) if(m_Buckets.empty()) throw std::out_of_range("bucketed_storage::end_partition: no buckets!\n");
+        if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range("bucketed_storage::end_partition: no buckets!\n");
         return (i < m_Buckets.size()) ? reverse_partition_iterator(m_Buckets[i].rend(), i) : reverse_partition_iterator(m_Buckets.front().rend(), npos);
       }
 
       const_reverse_partition_iterator rbegin_partition(const size_type i) const
       {
-        if constexpr(ThrowOnRangeError) if(m_Buckets.empty()) throw std::out_of_range("bucketed_storage::begin_partition: no buckets!\n");
+        if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range("bucketed_storage::begin_partition: no buckets!\n");
         return (i < m_Buckets.size()) ? const_reverse_partition_iterator(m_Buckets[i].crbegin(), i) : const_reverse_partition_iterator(m_Buckets.front().crend(), npos);
 
       }
 
       const_reverse_partition_iterator rend_partition(const size_type i) const
       {
-        if constexpr(ThrowOnRangeError) if(m_Buckets.empty()) throw std::out_of_range("bucketed_storage::end_partition: no buckets!\n");
+        if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range("bucketed_storage::end_partition: no buckets!\n");
         return (i < m_Buckets.size()) ? const_reverse_partition_iterator(m_Buckets[i].crend(), i) : const_reverse_partition_iterator(m_Buckets.front().crend(), npos);
       }
 
@@ -486,10 +368,27 @@ namespace sequoia
       
       const_partition_iterator operator[](const size_type i) const { return cbegin_partition(i); }
       partition_iterator operator[](const size_type i) { return begin_partition(i); }
+
+      friend bool operator==(const bucketed_storage& lhs, const bucketed_storage& rhs)
+      {
+        if constexpr(std::is_same_v<SharingPolicy, data_sharing::independent<T>>)
+        {
+          return lhs.m_Buckets == rhs.m_Buckets;
+        }
+        else
+        {
+          return isomorphic(lhs, rhs);
+        }        
+      }
+
+      friend bool operator!=(const bucketed_storage& lhs, const bucketed_storage& rhs)
+      {
+        return !(lhs == rhs);
+      }
     private:
       constexpr static auto npos{partition_iterator::npos};
 
-      Storage<Storage<held_type>> m_Buckets;
+      storage_type m_Buckets;
 
       void check_range(const size_type index) const
       {
@@ -511,7 +410,7 @@ namespace sequoia
 
       partition_iterator insert_directly_to_partition(const size_type index, const size_type pos, const held_type& toAdd)
       {
-        if constexpr(ThrowOnRangeError)
+        if constexpr(throw_on_range_error)
         {
           check_range(index);
           check_range(pos);
@@ -526,11 +425,12 @@ namespace sequoia
 
     //===================================Contiguous storage===================================//
     
-    template<class T, class SharingPolicy=data_sharing::independent<T>, bool ThrowOnRangeError=true, template<class...> class Storage=std::vector>
+    template<class T, class SharingPolicy, class Traits>
     class contiguous_storage_base
     {
     private:
-      using AuxiliaryType = typename partition_impl::storage_type_generator<Storage, SharingPolicy>::auxiliary_storage_type;      
+      template<class S> using Storage = typename Traits::template underlying_storage_type<S>;
+      using AuxiliaryType = typename partition_impl::storage_type_generator<Storage, SharingPolicy>::auxiliary_storage_type;  
       using StorageType   = typename partition_impl::storage_type_generator<Storage, SharingPolicy>::storage_type; 
     public:
       using value_type          = T;
@@ -543,7 +443,7 @@ namespace sequoia
       using reverse_partition_iterator       = reverse_partition_iterator<Storage, SharingPolicy, index_type>;
       using const_reverse_partition_iterator = const_reverse_partition_iterator<Storage, SharingPolicy, index_type>;
 
-      constexpr static bool throw_on_range_error() { return ThrowOnRangeError; }
+      constexpr static bool throw_on_range_error{Traits::throw_on_range_error};
       
       contiguous_storage_base() {}
 
@@ -734,14 +634,14 @@ namespace sequoia
       template<class... Args>
       void push_back_to_partition(const index_type index, Args&&... args)
       {
-        if constexpr(ThrowOnRangeError) check_range(index);
+        if constexpr(throw_on_range_error) check_range(index);
         insert(index, std::forward<Args>(args)...);
       }
 
       // Unify this with insert method
       void push_back_to_partition(const index_type index, const_partition_iterator iter)
       {
-        if constexpr(ThrowOnRangeError) check_range(index);
+        if constexpr(throw_on_range_error) check_range(index);
         auto insertIter = m_Storage.end();
         if(index == m_Partitions.size() - 1)
         {
@@ -762,7 +662,7 @@ namespace sequoia
       template<class... Args>
       partition_iterator insert_to_partition(const_partition_iterator pos, Args&&... args)
       {
-        if constexpr(ThrowOnRangeError)
+        if constexpr(throw_on_range_error)
         {
           if(!m_Partitions.size()) throw std::out_of_range("contiguous_storage: no partitions into which to insert");
         }
@@ -780,7 +680,7 @@ namespace sequoia
 
       partition_iterator insert_to_partition(const_partition_iterator pos, const_partition_iterator setFromIter)
       {
-        if constexpr(ThrowOnRangeError)
+        if constexpr(throw_on_range_error)
         {
           if(!m_Partitions.size()) throw std::out_of_range("contiguous_storage: no partitions into which to insert");
         }
@@ -849,6 +749,23 @@ namespace sequoia
         return deleted;
       }
 
+      friend constexpr bool operator==(const contiguous_storage_base& lhs, const contiguous_storage_base& rhs)
+      {
+        if constexpr(std::is_same_v<SharingPolicy, data_sharing::independent<T>>)
+        {
+          return (lhs.m_Storage == rhs.m_Storage) && (lhs.m_Partitions == rhs.m_Partitions);
+        }
+        else
+        {
+          return isomorphic(lhs, rhs);
+        }        
+      }
+
+      friend bool operator!=(const contiguous_storage_base lhs, const contiguous_storage_base& rhs)
+      {
+        return !(lhs == rhs);
+      }
+
     private:
       using held_type      = typename partition_impl::storage_type_generator<Storage, SharingPolicy>::held_type;
       using container_type = typename partition_impl::storage_type_generator<Storage, SharingPolicy>::container_type;     
@@ -860,7 +777,7 @@ namespace sequoia
 
       constexpr contiguous_storage_base(std::false_type, const contiguous_storage_base& in) : m_Partitions{in.m_Partitions}
       {
-        data_duplicator<SharingPolicy> duplicator;
+        partition_impl::data_duplicator<SharingPolicy> duplicator;
         for(const auto& elt : in.m_Storage)
         {
           m_Storage.push_back(duplicator.duplicate(elt));
@@ -1013,7 +930,7 @@ namespace sequoia
 
       partition_iterator insert_directly_to_partition(const index_type index, const index_type pos, const held_type& toAdd)
       {
-        if constexpr(ThrowOnRangeError) check_range(index, pos);
+        if constexpr(throw_on_range_error) check_range(index, pos);
 
         auto iter = m_Storage.begin();
         const index_type offset{(index > index_type{}) ? m_Partitions[index - 1] + pos : pos};
@@ -1052,73 +969,80 @@ namespace sequoia
       
     };
 
-    template<class T, class SharingPolicy=data_sharing::independent<T>, bool ThrowOnRangeError=true, template<class...> class Storage=std::vector>
-    class contiguous_storage : public contiguous_storage_base<T, SharingPolicy, ThrowOnRangeError, Storage>
+    template<class T, class SharingPolicy> struct contiguous_storage_traits
     {
-    public:
-      using contiguous_storage_base<T, SharingPolicy, ThrowOnRangeError, Storage>::contiguous_storage_base;
-
-      using contiguous_storage_base<T, SharingPolicy, ThrowOnRangeError, Storage>::add_slot;
-      using contiguous_storage_base<T, SharingPolicy, ThrowOnRangeError, Storage>::insert_slot;
-      using contiguous_storage_base<T, SharingPolicy, ThrowOnRangeError, Storage>::delete_slot;
-
-      using contiguous_storage_base<T, SharingPolicy, ThrowOnRangeError, Storage>::reserve;
-      using contiguous_storage_base<T, SharingPolicy, ThrowOnRangeError, Storage>::capacity;
-      using contiguous_storage_base<T, SharingPolicy, ThrowOnRangeError, Storage>::reserve_partitions;
-      using contiguous_storage_base<T, SharingPolicy, ThrowOnRangeError, Storage>::num_partitions_capacity;
-      using contiguous_storage_base<T, SharingPolicy, ThrowOnRangeError, Storage>::shrink_to_fit;
-      
-      using contiguous_storage_base<T, SharingPolicy, ThrowOnRangeError, Storage>::clear;
-      using contiguous_storage_base<T, SharingPolicy, ThrowOnRangeError, Storage>::push_back_to_partition;
-      using contiguous_storage_base<T, SharingPolicy, ThrowOnRangeError, Storage>::insert_to_partition;
-      using contiguous_storage_base<T, SharingPolicy, ThrowOnRangeError, Storage>::delete_from_partition;
-      using contiguous_storage_base<T, SharingPolicy, ThrowOnRangeError, Storage>::delete_from_partition_if;
+      constexpr static bool throw_on_range_error{true};
+      template<class S> using underlying_storage_type = std::vector<S, std::allocator<S>>; 
     };
 
-    template<class T, std::size_t Npartitions, std::size_t Nelements, bool ThrowOnRangeError=true, class IndexType=std::size_t>
-    class static_contiguous_storage
-      : public contiguous_storage_base<T, data_sharing::independent<T>, ThrowOnRangeError, static_contiguous_data<Npartitions,Nelements,std::make_unsigned_t<IndexType>>::template data>
+    template<class T, class SharingPolicy=data_sharing::independent<T>, class Traits=contiguous_storage_traits<T, SharingPolicy>>
+    class contiguous_storage : public contiguous_storage_base<T, SharingPolicy, Traits>
+    {
+    private:
+      using base_t = contiguous_storage_base<T, SharingPolicy, Traits>;
+    public:
+      using contiguous_storage_base<T, SharingPolicy, Traits>::contiguous_storage_base;
+
+      using base_t::add_slot;
+      using base_t::insert_slot;
+      using base_t::delete_slot;
+
+      using base_t::reserve;
+      using base_t::capacity;
+      using base_t::reserve_partitions;
+      using base_t::num_partitions_capacity;
+      using base_t::shrink_to_fit;
+      
+      using base_t::clear;
+      using base_t::push_back_to_partition;
+      using base_t::insert_to_partition;
+      using base_t::delete_from_partition;
+      using base_t::delete_from_partition_if;
+    };
+
+    template<class T, std::size_t Npartitions, std::size_t Nelements, class IndexType> struct static_contiguous_storage_traits
+    {
+      constexpr static bool throw_on_range_error{true};
+      template<class S> using underlying_storage_type = typename static_contiguous_data<Npartitions,Nelements,std::make_unsigned_t<IndexType>>::template data<S>; 
+    };
+
+    template<class T, std::size_t Npartitions, std::size_t Nelements, class IndexType=std::size_t>
+    class static_contiguous_storage :
+      public contiguous_storage_base<T, data_sharing::independent<T>, static_contiguous_storage_traits<T, Npartitions, Nelements,IndexType>>
     {
     public:
       using contiguous_storage_base<
         T,
         data_sharing::independent<T>,
-        ThrowOnRangeError,
-        static_contiguous_data<Npartitions,Nelements,std::make_unsigned_t<IndexType>>::template data
+        static_contiguous_storage_traits<T, Npartitions, Nelements,IndexType>
       >::contiguous_storage_base;
     };
     
 
     template
     <
-      class T,
-      class FirstSharingPolicy, class SecondSharingPolicy,
-      template<class...> class FirstStoragePolicy, template<class...> class SecondStoragePolicy,
-      bool FirstThrowPolicy, bool SecondThrowPolicy,
-      template<class, class, bool, template<class...> class> class FirstStorageType,
-      template<class, class, bool, template<class...> class> class SecondStorageType
+      class Storage1, class Storage2
     >
-    bool operator==(const FirstStorageType<T, FirstSharingPolicy, FirstThrowPolicy, FirstStoragePolicy>& first,
-                    const SecondStorageType<T, SecondSharingPolicy, SecondThrowPolicy, SecondStoragePolicy>& second) noexcept
+    constexpr bool isomorphic(const Storage1& lhs, const Storage2& rhs) noexcept
     {
       using size_type = std::common_type_t<
-        typename FirstStorageType<T, FirstSharingPolicy, FirstThrowPolicy, FirstStoragePolicy>::size_type,
-        typename SecondStorageType<T, SecondSharingPolicy, SecondThrowPolicy, SecondStoragePolicy>::size_type
-        >;
+        typename Storage1::size_type,
+        typename Storage2::size_type
+      >;
       
-      if(first.num_partitions() != second.num_partitions()) return false;
+      if(lhs.num_partitions() != rhs.num_partitions()) return false;
 
-      for(size_type i{}; i < first.num_partitions(); ++i)
+      for(size_type i{}; i < lhs.num_partitions(); ++i)
       {
-        if(distance(first.cbegin_partition(i), first.cend_partition(i))
-          != distance(second.cbegin_partition(i), second.cend_partition(i)))
+        if(distance(lhs.cbegin_partition(i), lhs.cend_partition(i))
+          != distance(rhs.cbegin_partition(i), rhs.cend_partition(i)))
         {
           return false;
         }
 
-        auto iter1 = first.cbegin_partition(i);
-        auto iter2 = second.cbegin_partition(i);
-        for(; iter1 != first.cend_partition(i); ++iter1, ++iter2)
+        auto iter1{lhs.cbegin_partition(i)};
+        auto iter2{rhs.cbegin_partition(i)};
+        for(; iter1 != lhs.cend_partition(i); ++iter1, ++iter2)
         {
           if(*iter1 != *iter2) return false;
         }
@@ -1126,20 +1050,5 @@ namespace sequoia
 
       return true;
     }
-
-    template
-    <
-      class T,
-      class FirstSharingPolicy, class SecondSharingPolicy,
-      template<class...> class FirstStoragePolicy, template<class...> class SecondStoragePolicy,
-      bool FirstThrowPolicy, bool SecondThrowPolicy,
-      template<class, class, bool, template<class...> class> class FirstStorageType,
-      template<class, class, bool, template<class...> class> class SecondStorageType
-    >
-    bool operator!=(FirstStorageType<T, FirstSharingPolicy, FirstThrowPolicy, FirstStoragePolicy>& first,
-                    SecondStorageType<T, SecondSharingPolicy, SecondThrowPolicy, SecondStoragePolicy>& second) noexcept
-   {
-     return !(first == second);
-   }
   }
 }

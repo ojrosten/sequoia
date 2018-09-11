@@ -18,18 +18,17 @@ namespace sequoia::unit_testing
     maths::graph_flavour GraphFlavour,
     class NodeWeight,
     class EdgeWeight,
-    bool ThrowOnError,
     template <class> class NodeWeightStorage,
     template <class> class EdgeWeightStorage,
-    template <class, class, bool, template<class...> class> class EdgeStoragePolicy
+    template <class, template<class> class> class EdgeStorageTraits
   >
   class generic_graph_false_positives
-    : public graph_operations<GraphFlavour, NodeWeight, EdgeWeight, ThrowOnError, NodeWeightStorage, EdgeWeightStorage, EdgeStoragePolicy, unit_test_logger<test_mode::false_positive>>
+    : public graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStorageTraits, unit_test_logger<test_mode::false_positive>>
   {
   public:
       
   private:
-    using base_t = graph_operations<GraphFlavour, NodeWeight, EdgeWeight, ThrowOnError, NodeWeightStorage, EdgeWeightStorage, EdgeStoragePolicy>;
+    using base_t = graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStorageTraits>;
       
     using GGraph = typename base_t::graph_type;
 

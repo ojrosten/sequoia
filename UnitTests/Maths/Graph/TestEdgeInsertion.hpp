@@ -22,18 +22,17 @@ namespace sequoia
       maths::graph_flavour GraphFlavour,
       class NodeWeight,
       class EdgeWeight,
-      bool ThrowOnError,
       template <class> class NodeWeightStorage,
       template <class> class EdgeWeightStorage,
-      template <class, class, bool, template<class...> class> class EdgeStoragePolicy
+      template <class, template<class> class> class EdgeStorageTraits
     >
     class generic_edge_insertions
-      : public graph_operations<GraphFlavour, NodeWeight, EdgeWeight, ThrowOnError, NodeWeightStorage, EdgeWeightStorage, EdgeStoragePolicy>
+      : public graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStorageTraits>
     {
     public:
       
     private:
-      using base_t = graph_operations<GraphFlavour, NodeWeight, EdgeWeight, ThrowOnError, NodeWeightStorage, EdgeWeightStorage, EdgeStoragePolicy>;
+      using base_t = graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStorageTraits>;
       
       using graph_t = typename base_t::graph_type;
 
@@ -49,18 +48,17 @@ namespace sequoia
       maths::graph_flavour GraphFlavour,
       class NodeWeight,
       class EdgeWeight,
-      bool ThrowOnError,
       template <class> class NodeWeightStorage,
       template <class> class EdgeWeightStorage,
-      template <class, class, bool, template<class...> class> class EdgeStoragePolicy
+      template <class, template<class> class> class EdgeStorageTraits
     >
     class generic_weighted_edge_insertions
-      : public graph_operations<GraphFlavour, NodeWeight, EdgeWeight, ThrowOnError, NodeWeightStorage, EdgeWeightStorage, EdgeStoragePolicy>
+      : public graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStorageTraits>
     {
     public:
       
     private:
-      using base_t = graph_operations<GraphFlavour, NodeWeight, EdgeWeight, ThrowOnError, NodeWeightStorage, EdgeWeightStorage, EdgeStoragePolicy>;
+      using base_t = graph_operations<GraphFlavour, NodeWeight, EdgeWeight,  NodeWeightStorage, EdgeWeightStorage, EdgeStorageTraits>;
       
       using graph_t = typename base_t::graph_type;
 

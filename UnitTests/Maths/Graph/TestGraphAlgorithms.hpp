@@ -117,17 +117,16 @@ namespace sequoia
       maths::graph_flavour GraphFlavour,
       class NodeWeight,
       class EdgeWeight,
-      bool ThrowOnError,
       template <class> class NodeWeightStorage,
       template <class> class EdgeWeightStorage,
-      template <class, class, bool, template<class...> class> class EdgeStoragePolicy
+      template <class, template<class> class> class EdgeStorageTraits
     >
     class tracker_test
-      : public graph_operations<GraphFlavour, NodeWeight, EdgeWeight, ThrowOnError, NodeWeightStorage, EdgeWeightStorage, EdgeStoragePolicy>
+      : public graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStorageTraits>
     {
     private:
       using Connectivity = typename
-        graph_operations<GraphFlavour, NodeWeight, EdgeWeight, ThrowOnError, NodeWeightStorage, EdgeWeightStorage, EdgeStoragePolicy>::graph_type;
+        graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStorageTraits>::graph_type;
 
       using edge_results = std::vector<std::pair<std::size_t, std::size_t>>;
 
@@ -570,13 +569,12 @@ namespace sequoia
       maths::graph_flavour GraphFlavour,
       class NodeWeight,
       class EdgeWeight,
-      bool ThrowOnError,
       template <class> class NodeWeightStorage,
       template <class> class EdgeWeightStorage,
-      template <class, class, bool, template<class...> class> class EdgeStoragePolicy
+      template <class, template<class> class> class EdgeStorageTraits
     >
     class test_priority_traversal :
-      public graph_operations<GraphFlavour, NodeWeight, EdgeWeight, ThrowOnError, NodeWeightStorage, EdgeWeightStorage, EdgeStoragePolicy>
+      public graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStorageTraits>
     {
     private:
       using UndirectedType = std::bool_constant<maths::undirected(GraphFlavour)>;
@@ -586,10 +584,9 @@ namespace sequoia
           GraphFlavour,
           NodeWeight,
           EdgeWeight,
-          ThrowOnError,
           NodeWeightStorage,
           EdgeWeightStorage,
-          EdgeStoragePolicy
+          EdgeStorageTraits
         >::graph_type;
 
       using graph_checker<unit_test_logger<test_mode::standard>>::check_equality;      
@@ -653,13 +650,12 @@ namespace sequoia
       maths::graph_flavour GraphFlavour,
       class NodeWeight,
       class EdgeWeight,
-      bool ThrowOnError,
       template <class> class NodeWeightStorage,
       template <class> class EdgeWeightStorage,
-      template <class, class, bool, template<class...> class> class EdgeStoragePolicy
+      template <class, template<class> class> class EdgeStorageTraits
     >
     class test_weighted_BFS_tasks
-      : public graph_operations<GraphFlavour, NodeWeight, EdgeWeight, ThrowOnError, NodeWeightStorage, EdgeWeightStorage, EdgeStoragePolicy>
+      : public graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStorageTraits>
     {
     private:
       using UndirectedType = std::bool_constant<maths::undirected(GraphFlavour)>;
@@ -669,10 +665,9 @@ namespace sequoia
           GraphFlavour,
           NodeWeight,
           EdgeWeight,
-          ThrowOnError,
           NodeWeightStorage,
           EdgeWeightStorage,
-          EdgeStoragePolicy
+          EdgeStorageTraits
         >::graph_type;
 
       using graph_checker<unit_test_logger<test_mode::standard>>::check_equality;      
@@ -722,7 +717,7 @@ namespace sequoia
         const std::string prefix{to_string(GraphFlavour) + "; "
           + template_class_to_string<NodeWeightStorage>::str() + "; "
           + template_class_to_string<EdgeWeightStorage>::str() + "; "
-          + StorageClassToString<EdgeStoragePolicy>::str()};
+          + StorageTraitsToString<EdgeStorageTraits>::str()};
 
         this->failure_message_prefix(prefix);
 

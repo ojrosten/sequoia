@@ -110,7 +110,7 @@ namespace sequoia::unit_testing
     static_assert(!big_proxy<EdgeWeight, EdgeWeightStorage>());
     static_assert(!shared_edge_weight_v<false, GraphFlavour, EdgeWeight, EdgeWeightStorage>);
       
-    using gen_t = edge_traits<GraphFlavour, EdgeWeight, true, EdgeWeightStorage, contiguous_storage, std::size_t>;
+    using gen_t = edge_traits<GraphFlavour, EdgeWeight, EdgeWeightStorage, contiguous_edge_storage_traits, std::size_t>;
     using edge_t = typename gen_t::edge_type;
     using proxy = typename EdgeWeightStorage<EdgeWeight>::proxy;
     static_assert(std::is_same_v<edge_t, EdgeType<EdgeWeight, sharing<false>::template policy, proxy, std::size_t>>, "");
@@ -126,7 +126,7 @@ namespace sequoia::unit_testing
     static_assert(big_proxy<EdgeWeight, EdgeWeightStorage>());
     static_assert(shared_edge_weight_v<false, GraphFlavour, EdgeWeight, EdgeWeightStorage>);
       
-    using gen_t = edge_traits<GraphFlavour, EdgeWeight, true, EdgeWeightStorage, contiguous_storage, std::size_t>;
+    using gen_t = edge_traits<GraphFlavour, EdgeWeight, EdgeWeightStorage, contiguous_edge_storage_traits, std::size_t>;
     using edge_t = typename gen_t::edge_type;
     using proxy = typename EdgeWeightStorage<EdgeWeight>::proxy;
     static_assert(std::is_same_v<edge_t, EdgeType<EdgeWeight, sharing<true>::template policy, proxy, std::size_t>>, "");
@@ -174,7 +174,7 @@ namespace sequoia::unit_testing
     using namespace data_structures;
     using namespace data_sharing;
 
-    using gen_t = edge_traits<graph_flavour::directed, EdgeWeight, true, EdgeWeightStorage, contiguous_storage, std::size_t>;
+    using gen_t = edge_traits<graph_flavour::directed, EdgeWeight, EdgeWeightStorage, contiguous_edge_storage_traits, std::size_t>;
     using edge_t = typename gen_t::edge_type;
     using proxy = typename EdgeWeightStorage<EdgeWeight>::proxy;
     static_assert(std::is_same_v<edge_t, partial_edge<EdgeWeight, sharing<false>::template policy, proxy>>, "");
@@ -191,7 +191,7 @@ namespace sequoia::unit_testing
     using namespace data_structures;
     using namespace data_sharing;
 
-    using gen_t = edge_traits<graph_flavour::directed_embedded, EdgeWeight, true, EdgeWeightStorage, contiguous_storage, std::size_t>;
+    using gen_t = edge_traits<graph_flavour::directed_embedded, EdgeWeight, EdgeWeightStorage, contiguous_edge_storage_traits, std::size_t>;
     using edge_t = typename gen_t::edge_type;
     using proxy = typename EdgeWeightStorage<EdgeWeight>::proxy;
     static_assert(std::is_same_v<edge_t, edge<EdgeWeight, proxy>>, "");
