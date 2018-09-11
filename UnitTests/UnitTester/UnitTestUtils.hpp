@@ -90,21 +90,21 @@ namespace sequoia
         std::reference_wrapper<unit_test_logger> m_Logger;
       };       
       
-      void log_failure(const std::string& message)
+      void log_failure(std::string message)
       {
         ++m_Failures;
-        if constexpr (Mode != test_mode::false_positive) m_Messages += (message + '\n');
+        if constexpr (Mode != test_mode::false_positive) m_Messages += (std::move(message) + '\n');
       }
 
-      void log_critical_failure(const std::string& message)
+      void log_critical_failure(std::string message)
       {
         ++m_CriticalFailures;
-        m_Messages += (message + '\n');
+        m_Messages += (std::move(message) + '\n');
       }
 
-      void post_message(const std::string& message)
+      void post_message(std::string message)
       {
-        m_Messages += message;
+        m_Messages += std::move(message);
       }
 
       std::size_t failures() const noexcept { return m_Failures; }      
@@ -115,12 +115,12 @@ namespace sequoia
       std::string failure_message_prefix() const { return m_FailureMessagePrefix; }
       void failure_message_prefix(std::string_view prefix) { m_FailureMessagePrefix = prefix; }
 
-      std::string failure_description(const std::string& description) const
+      std::string failure_description(std::string_view description) const
       {
         const std::string prefix{failure_message_prefix()};
         std::string message{prefix.empty() ? failure_message_preface() : "\n\t[" + prefix + "] " + failure_message_preface()};
         
-        if(!description.empty()) message += (" (" + description + ")");
+        if(!description.empty()) message += (" (" + std::string{description} + ")");
 
         return message;
       }
@@ -132,7 +132,8 @@ namespace sequoia
       void exceptions_detected_by_sentinel(const int n) { m_ExceptionsInFlight = n; }
       int exceptions_detected_by_sentinel() const noexcept { return m_ExceptionsInFlight; }
     private:
-      std::string m_Messages,
+      std::string
+        m_Messages,
         m_FailureMessagePrefix,
         m_CurrentMessage;
 
@@ -148,10 +149,10 @@ namespace sequoia
 
       void reset_failures() noexcept { m_Failures = 0u; }
 
-      void log_diagnostic_failure(const std::string& message)
+      void log_diagnostic_failure(std::string message)
       {
         ++m_DiagnosticFailures;
-        m_Messages += (message + '\n');
+        m_Messages += (std::move(message) + '\n');
       }
 
       void current_message(std::string_view message)
@@ -807,14 +808,14 @@ namespace sequoia
       static std::string str();
     };
 
-    inline std::string report_line(const int line, const std::string_view message)
+    inline std::string report_line(std::string file, const int line, const std::string_view message)
     {
-      std::string s = "Line " + std::to_string(line);
+      std::string s{std::move(file) + ", Line " + std::to_string(line)};
       if(!message.empty()) (s += ": ") += message;
 
       return s;
     }
 
-    #define LINE(message) report_line(__LINE__, message)
+#define LINE(message) report_line(__FILE__, __LINE__, message)
   }
 }
