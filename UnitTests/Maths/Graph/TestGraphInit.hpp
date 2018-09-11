@@ -69,7 +69,7 @@ namespace sequoia
       
       void execute_operations() override
       {
-        typename checker_selector<GraphFlavour>::template init_checker<decltype(*this)> checker{*this};
+        typename checker_selector<GraphFlavour>::template init_checker<test_initialization> checker{*this};
         checker.template check_all<GGraph>();
       }
     };
