@@ -100,13 +100,12 @@ namespace sequoia
       maths::graph_flavour GraphFlavour,
       class NodeWeight,
       class EdgeWeight,
-      bool ThrowOnError,
       template <class> class NodeWeightStorage,
       template <class> class EdgeWeightStorage,
-      template <class, class, bool, template<class...> class> class EdgeStoragePolicy
+      template <class...> class EdgeStoragePolicy
     >
     class test_update
-      : public graph_operations<GraphFlavour, NodeWeight, EdgeWeight, ThrowOnError, NodeWeightStorage, EdgeWeightStorage, EdgeStoragePolicy>
+      : public graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStoragePolicy>
     {
     private:
       using GGraph =
@@ -115,7 +114,6 @@ namespace sequoia
           GraphFlavour,
           NodeWeight,
           EdgeWeight,
-          ThrowOnError,
           NodeWeightStorage,
           EdgeWeightStorage,
           EdgeStoragePolicy
@@ -588,13 +586,12 @@ namespace sequoia
       maths::graph_flavour GraphFlavour,
       class NodeWeight,
       class EdgeWeight,
-      bool ThrowOnError,
       template <class> class NodeWeightStorage,
       template <class> class EdgeWeightStorage,
-      template <class, class, bool, template<class...> class> class EdgeStoragePolicy
+      template <class...> class EdgeStoragePolicy
     >
     class test_BF_update
-      : public graph_operations<GraphFlavour, NodeWeight, EdgeWeight, ThrowOnError, NodeWeightStorage, EdgeWeightStorage, EdgeStoragePolicy>
+      : public graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStoragePolicy>
     {
     private:
       using UndirectedType = std::bool_constant<maths::undirected(GraphFlavour)>;
@@ -604,7 +601,6 @@ namespace sequoia
           GraphFlavour,
           NodeWeight,
           EdgeWeight,
-          ThrowOnError,
           NodeWeightStorage,
           EdgeWeightStorage,
           EdgeStoragePolicy

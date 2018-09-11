@@ -19,7 +19,7 @@ namespace sequoia
     {
       using namespace maths::graph_impl;
 
-      using storage = node_storage_tester<utilities::protective_wrapper<double>, std::vector, true>;
+      using storage = node_storage_tester<utilities::protective_wrapper<double>>;
 
       storage store{};
       check_storage(store, std::vector<double>{}, LINE(""));
@@ -109,7 +109,7 @@ namespace sequoia
     {
       using namespace maths::graph_impl;
 
-      constexpr static_node_storage_tester<utilities::protective_wrapper<int>, 4, true>
+      constexpr static_node_storage_tester<utilities::protective_wrapper<int>, 4>
         store{4, 4, 7, 9};
 
       check_storage(store, std::vector<int>{4, 4, 7, 9}, LINE(""));

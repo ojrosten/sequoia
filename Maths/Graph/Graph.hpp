@@ -16,9 +16,10 @@ namespace sequoia
 
   namespace data_structures
   {
-    template <class, class, bool, template<class...> class> class bucketed_storage;
-    template <class, class, bool, template<class...> class> class contiguous_storage;
-    template <class, std::size_t, std::size_t, bool, class> class static_contiguous_storage;
+    template <class, class, class> class bucketed_storage;
+    template <class, class, class> class contiguous_storage;
+    template <class, class> struct contiguous_storage_traits;
+    template <class, std::size_t, std::size_t, class> class static_contiguous_storage;
     class static_data_base;
   }
 
@@ -51,7 +52,8 @@ namespace sequoia
     
       constexpr static auto npos{std::numeric_limits<edge_index_type>::max()};
       constexpr static directed_flavour directedness{Directedness};
-      constexpr static bool store_incident_edges_v{EdgeTraits::mutual_info_v};
+      constexpr static bool store_incident_edges_v{EdgeTraits::mutual_info_v};      
+      constexpr static bool throw_on_range_error{edge_storage_type::throw_on_range_error};
       
       constexpr graph_primitive() noexcept {}
       
@@ -97,28 +99,28 @@ namespace sequoia
     
       constexpr const_edge_iterator cbegin_edges(const edge_index_type node) const
       {
-        if constexpr (throwOnRangeError) if(node >= order()) throw std::out_of_range("Node index out of range!");
+        if constexpr (throw_on_range_error) if(node >= order()) throw std::out_of_range("Node index out of range!");
         
         return m_Edges.cbegin_partition(node);
       }
 
       constexpr const_edge_iterator cend_edges(const edge_index_type node) const
       {
-        if constexpr (throwOnRangeError) if(node >= order()) throw std::out_of_range("Node index out of range!");
+        if constexpr (throw_on_range_error) if(node >= order()) throw std::out_of_range("Node index out of range!");
 
         return m_Edges.cend_partition(node);
       }
 
       constexpr const_reverse_edge_iterator crbegin_edges(const edge_index_type node) const
       {
-        if constexpr (throwOnRangeError) if(node >= order()) throw std::out_of_range("Node index out of range!");
+        if constexpr (throw_on_range_error) if(node >= order()) throw std::out_of_range("Node index out of range!");
 
         return m_Edges.crbegin_partition(node);
       }
 
       constexpr const_reverse_edge_iterator crend_edges(const edge_index_type node) const
       {
-        if constexpr (throwOnRangeError) if(node >= order()) throw std::out_of_range("Node index out of range!");
+        if constexpr (throw_on_range_error) if(node >= order()) throw std::out_of_range("Node index out of range!");
 
         return m_Edges.crend_partition(node);
       }
@@ -206,14 +208,14 @@ namespace sequoia
 
       constexpr edge_iterator begin_edges(const edge_index_type node)
       {
-        if constexpr (throwOnRangeError) if(node >= order()) throw std::out_of_range("Node index out of range!");
+        if constexpr (throw_on_range_error) if(node >= order()) throw std::out_of_range("Node index out of range!");
         
         return m_Edges.begin_partition(node);
       }
 
       constexpr edge_iterator end_edges(const edge_index_type node)
       {
-        if constexpr (throwOnRangeError) if(node >= order()) throw std::out_of_range("Node index out of range!");
+        if constexpr (throw_on_range_error) if(node >= order()) throw std::out_of_range("Node index out of range!");
 
         return m_Edges.end_partition(node);
       }
@@ -241,7 +243,7 @@ namespace sequoia
 
       void delete_node(const size_type node)
       {
-        if constexpr (throwOnRangeError) if(node >= order()) throw std::out_of_range("Cannot delete node: index out of range");
+        if constexpr (throw_on_range_error) if(node >= order()) throw std::out_of_range("Cannot delete node: index out of range");
 
         if constexpr (EdgeTraits::mutual_info_v)
         {
@@ -360,7 +362,7 @@ namespace sequoia
         if constexpr (std::is_empty_v<edge_weight_type>)
           static_assert(sizeof...(args) == 0, "Makes no sense to supply arguments for an empty weight!");
         
-        if constexpr (throwOnRangeError) if(node1 >= order() || node2 >= order()) throw std::out_of_range("Graph::join - index out of range");
+        if constexpr (throw_on_range_error) if(node1 >= order() || node2 >= order()) throw std::out_of_range("Graph::join - index out of range");
 
         if constexpr(std::is_empty_v<edge_weight_type>)
         {
@@ -665,8 +667,6 @@ namespace sequoia
       }
       
     private:
-      using bitset = std::vector<bool>;
-      static constexpr bool throwOnRangeError{edge_storage_type::throw_on_range_error()};
       static constexpr bool emptyNodes{std::is_empty_v<typename Nodes::weight_type>};
       static constexpr bool protectiveProxy{std::is_same_v<typename Nodes::weight_proxy_type, utilities::protective_wrapper<typename Nodes::weight_type>>};
 
@@ -811,7 +811,9 @@ namespace sequoia
 
       constexpr void check_consistency(std::false_type, std::initializer_list<std::initializer_list<edge_init_type>> edges)
       {
-        data_structures::contiguous_storage<edge_init_type, data_sharing::independent<edge_init_type>, true, std::vector> edgesForChecking{edges};
+        using namespace data_structures;
+        using traits_t = contiguous_storage_traits<edge_init_type, data_sharing::independent<edge_init_type>>;
+        contiguous_storage<edge_init_type, data_sharing::independent<edge_init_type>, traits_t> edgesForChecking{edges};
         check_consistency(edgesForChecking);
       }
 
@@ -1318,17 +1320,16 @@ namespace sequoia
       graph_flavour GraphFlavour,
       class NodeWeight,
       class EdgeWeight,
-      bool ThrowOnRangeError=true,
       template <class> class NodeWeightStorage=data_sharing::unpooled,
       template <class> class EdgeWeightStorage=data_sharing::unpooled,
-      template <class, class, bool, template<class...> class> class EdgeStoragePolicy=data_structures::bucketed_storage
+      template <class...> class EdgeStoragePolicy=data_structures::bucketed_storage
     >
     class graph_base : public
       graph_primitive
       <
         to_directedness(GraphFlavour),
-        graph_impl::node_storage<typename NodeWeightStorage<NodeWeight>::proxy, std::vector, ThrowOnRangeError>,
-        typename graph_impl::edge_traits<GraphFlavour, EdgeWeight, ThrowOnRangeError, EdgeWeightStorage, EdgeStoragePolicy, std::size_t>,
+        graph_impl::node_storage<typename NodeWeightStorage<NodeWeight>::proxy>,
+        typename graph_impl::edge_traits<GraphFlavour, EdgeWeight, EdgeWeightStorage, EdgeStoragePolicy, std::size_t>,
         typename graph_impl::weight_maker<NodeWeightStorage<NodeWeight>, EdgeWeightStorage<EdgeWeight>>
       >
     {
@@ -1336,15 +1337,15 @@ namespace sequoia
       using primitive =
         graph_primitive<
           to_directedness(GraphFlavour),
-          graph_impl::node_storage<typename NodeWeightStorage<NodeWeight>::proxy, std::vector, ThrowOnRangeError>,
-          typename graph_impl::edge_traits<GraphFlavour, EdgeWeight, ThrowOnRangeError, EdgeWeightStorage, EdgeStoragePolicy, std::size_t>,
+          graph_impl::node_storage<typename NodeWeightStorage<NodeWeight>::proxy>,
+          typename graph_impl::edge_traits<GraphFlavour, EdgeWeight, EdgeWeightStorage, EdgeStoragePolicy, std::size_t>,
           typename graph_impl::weight_maker<NodeWeightStorage<NodeWeight>, EdgeWeightStorage<EdgeWeight>>
       >;
     public:
       using graph_primitive<
           to_directedness(GraphFlavour),
-          graph_impl::node_storage<typename NodeWeightStorage<NodeWeight>::proxy, std::vector, ThrowOnRangeError>,
-          typename graph_impl::edge_traits<GraphFlavour, EdgeWeight, ThrowOnRangeError, EdgeWeightStorage, EdgeStoragePolicy, std::size_t>,
+          graph_impl::node_storage<typename NodeWeightStorage<NodeWeight>::proxy>,
+          typename graph_impl::edge_traits<GraphFlavour, EdgeWeight, EdgeWeightStorage, EdgeStoragePolicy, std::size_t>,
           typename graph_impl::weight_maker<NodeWeightStorage<NodeWeight>, EdgeWeightStorage<EdgeWeight>>
       >::graph_primitive;
 
@@ -1381,10 +1382,9 @@ namespace sequoia
       directed_flavour Directedness,
       class NodeWeight,
       class EdgeWeight,
-      bool ThrowOnRangeError=true,
       template <class> class NodeWeightStorage=data_sharing::unpooled,
       template <class> class EdgeWeightStorage=data_sharing::unpooled,
-      template <class, class, bool, template<class...> class> class EdgeStoragePolicy=data_structures::bucketed_storage
+      template <class...> class EdgeStoragePolicy=data_structures::bucketed_storage
     >
     class graph : public
       graph_base
@@ -1392,7 +1392,6 @@ namespace sequoia
         (Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected,
         NodeWeight,
         EdgeWeight,
-        ThrowOnRangeError,
         NodeWeightStorage,
         EdgeWeightStorage,
         EdgeStoragePolicy
@@ -1404,7 +1403,6 @@ namespace sequoia
           (Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected,
           NodeWeight,
           EdgeWeight,
-          ThrowOnRangeError,
           NodeWeightStorage,
           EdgeWeightStorage,
           EdgeStoragePolicy
@@ -1415,7 +1413,6 @@ namespace sequoia
         (Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected,
         NodeWeight,
         EdgeWeight,
-        ThrowOnRangeError,
         NodeWeightStorage,
         EdgeWeightStorage,
         EdgeStoragePolicy
@@ -1429,10 +1426,9 @@ namespace sequoia
       directed_flavour Directedness,
       class NodeWeight,
       class EdgeWeight,
-      bool ThrowOnRangeError=true,
       template <class> class NodeWeightStorage=data_sharing::unpooled,
       template <class> class EdgeWeightStorage=data_sharing::unpooled,
-      template <class, class, bool, template<class...> class> class EdgeStoragePolicy=data_structures::bucketed_storage
+      template <class...> class EdgeStoragePolicy=data_structures::bucketed_storage
     >
     class embedded_graph : public
       graph_base
@@ -1440,7 +1436,6 @@ namespace sequoia
        (Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded,
         NodeWeight,
         EdgeWeight,
-        ThrowOnRangeError,
         NodeWeightStorage,
         EdgeWeightStorage,
         EdgeStoragePolicy
@@ -1457,7 +1452,6 @@ namespace sequoia
        (Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded,
         NodeWeight,
         EdgeWeight,
-        ThrowOnRangeError,
         NodeWeightStorage,
         EdgeWeightStorage,
         EdgeStoragePolicy
@@ -1466,8 +1460,8 @@ namespace sequoia
       using graph_primitive
       <
         Directedness,
-        graph_impl::node_storage<typename NodeWeightStorage<NodeWeight>::proxy, std::vector, ThrowOnRangeError>,
-        typename graph_impl::edge_traits<to_graph_flavour(), EdgeWeight, ThrowOnRangeError, EdgeWeightStorage, EdgeStoragePolicy, std::size_t>,
+        graph_impl::node_storage<typename NodeWeightStorage<NodeWeight>::proxy>,
+        typename graph_impl::edge_traits<to_graph_flavour(), EdgeWeight, EdgeWeightStorage, EdgeStoragePolicy, std::size_t>,
         typename graph_impl::weight_maker<NodeWeightStorage<NodeWeight>, EdgeWeightStorage<EdgeWeight>>
       >::insert_join;
     };
@@ -1480,14 +1474,13 @@ namespace sequoia
       std::size_t Size,
       class NodeWeight,
       class EdgeWeight,
-      bool ThrowOnRangeError = true,
       class EdgeIndexType = std::size_t
     >
     class static_graph : public
       graph_primitive<
         Directedness,
-        graph_impl::static_node_storage<utilities::protective_wrapper<NodeWeight>, Order, ThrowOnRangeError>,
-        typename graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected, Order, Size, EdgeWeight, ThrowOnRangeError, std::make_unsigned_t<EdgeIndexType>>, 
+        graph_impl::static_node_storage<utilities::protective_wrapper<NodeWeight>, Order>,
+        typename graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected, Order, Size, EdgeWeight, std::make_unsigned_t<EdgeIndexType>>, 
         typename graph_impl::weight_maker<data_sharing::unpooled<NodeWeight>, data_sharing::unpooled<EdgeWeight>>
       >
     {
@@ -1495,8 +1488,8 @@ namespace sequoia
       using primitive =
         graph_primitive<
           Directedness,
-          graph_impl::static_node_storage<utilities::protective_wrapper<NodeWeight>, Order, ThrowOnRangeError>,
-          typename graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected, Order, Size, EdgeWeight, ThrowOnRangeError, std::make_unsigned_t<EdgeIndexType>>, 
+          graph_impl::static_node_storage<utilities::protective_wrapper<NodeWeight>, Order>,
+          typename graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected, Order, Size, EdgeWeight, std::make_unsigned_t<EdgeIndexType>>, 
           typename graph_impl::weight_maker<data_sharing::unpooled<NodeWeight>, data_sharing::unpooled<EdgeWeight>>
         >;
       
@@ -1505,8 +1498,8 @@ namespace sequoia
       
       using graph_primitive<
           Directedness,
-          graph_impl::static_node_storage<utilities::protective_wrapper<NodeWeight>, Order, ThrowOnRangeError>,
-          typename graph_impl::static_edge_traits<flavour, Order, Size, EdgeWeight, ThrowOnRangeError, std::make_unsigned_t<EdgeIndexType>>, 
+          graph_impl::static_node_storage<utilities::protective_wrapper<NodeWeight>, Order>,
+          typename graph_impl::static_edge_traits<flavour, Order, Size, EdgeWeight, std::make_unsigned_t<EdgeIndexType>>, 
           typename graph_impl::weight_maker<data_sharing::unpooled<NodeWeight>, data_sharing::unpooled<EdgeWeight>>
       >::graph_primitive;
 
@@ -1522,14 +1515,13 @@ namespace sequoia
       std::size_t Size,
       class NodeWeight,
       class EdgeWeight,
-      bool ThrowOnRangeError = true,
       class EdgeIndexType = std::size_t
     >
     class static_embedded_graph : public
       graph_primitive<
         Directedness,
-        graph_impl::static_node_storage<utilities::protective_wrapper<NodeWeight>, Order, ThrowOnRangeError>,
-        typename graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded, Order, Size, EdgeWeight, ThrowOnRangeError, std::make_unsigned_t<EdgeIndexType>>, 
+        graph_impl::static_node_storage<utilities::protective_wrapper<NodeWeight>, Order>,
+        typename graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded, Order, Size, EdgeWeight, std::make_unsigned_t<EdgeIndexType>>, 
         typename graph_impl::weight_maker<data_sharing::unpooled<NodeWeight>, data_sharing::unpooled<EdgeWeight>>
       >
     {
@@ -1537,8 +1529,8 @@ namespace sequoia
       using primitive =
         graph_primitive<
           Directedness,
-          graph_impl::static_node_storage<utilities::protective_wrapper<NodeWeight>, Order, ThrowOnRangeError>,
-          typename graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded, Order, Size, EdgeWeight, ThrowOnRangeError, std::make_unsigned_t<EdgeIndexType>>, 
+          graph_impl::static_node_storage<utilities::protective_wrapper<NodeWeight>, Order>,
+          typename graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded, Order, Size, EdgeWeight, std::make_unsigned_t<EdgeIndexType>>, 
           typename graph_impl::weight_maker<data_sharing::unpooled<NodeWeight>, data_sharing::unpooled<EdgeWeight>>
         >;
       
@@ -1547,8 +1539,8 @@ namespace sequoia
       
       using graph_primitive<
           Directedness,
-          graph_impl::static_node_storage<utilities::protective_wrapper<NodeWeight>, Order, ThrowOnRangeError>,
-          typename graph_impl::static_edge_traits<flavour, Order, Size, EdgeWeight, ThrowOnRangeError, std::make_unsigned_t<EdgeIndexType>>, 
+          graph_impl::static_node_storage<utilities::protective_wrapper<NodeWeight>, Order>,
+          typename graph_impl::static_edge_traits<flavour, Order, Size, EdgeWeight, std::make_unsigned_t<EdgeIndexType>>, 
           typename graph_impl::weight_maker<data_sharing::unpooled<NodeWeight>, data_sharing::unpooled<EdgeWeight>>
       >::graph_primitive;
 
