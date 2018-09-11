@@ -28,20 +28,20 @@ namespace sequoia
     
     //===================================Storage using buckets===================================//
 
-    template<class Storage> struct bucketed_storage_traits
+    template<class T, class SharingPolicy> struct bucketed_storage_traits
     {
       constexpr static bool throw_on_range_error{true};
 
-      template<class T> using buckets_type           = std::vector<T, std::allocator<T>>; 
-      template<class T> using individual_bucket_type = std::vector<T, std::allocator<T>>; 
+      template<class S> using buckets_type           = std::vector<S, std::allocator<S>>; 
+      template<class S> using individual_bucket_type = std::vector<S, std::allocator<S>>; 
     };
     
-    template<class T, class SharingPolicy=data_sharing::independent<T>>
+    template<class T, class SharingPolicy=data_sharing::independent<T>, class Traits=bucketed_storage_traits<T, SharingPolicy>>
     class bucketed_storage
     {
-    private:      
-      template<class S> using individual_bucket_template = typename bucketed_storage_traits<bucketed_storage>::template individual_bucket_type<S>;
-      template<class S> using buckets_template           = typename bucketed_storage_traits<bucketed_storage>::template buckets_type<S>;
+    private:
+      template<class S> using buckets_template           = typename Traits::template buckets_type<S>;
+      template<class S> using individual_bucket_template = typename Traits::template individual_bucket_type<S>;
         
       using held_type      = typename SharingPolicy::handle_type;
       using bucket_type    = individual_bucket_template<held_type>;
@@ -55,7 +55,7 @@ namespace sequoia
       using reverse_partition_iterator = reverse_partition_iterator<individual_bucket_template, SharingPolicy, size_type>;
       using const_reverse_partition_iterator = const_reverse_partition_iterator<individual_bucket_template, SharingPolicy, size_type>;
 
-      constexpr static bool throw_on_range_error{bucketed_storage_traits<bucketed_storage>::throw_on_range_error};
+      constexpr static bool throw_on_range_error{Traits::throw_on_range_error};
       
       bucketed_storage() {}
 
