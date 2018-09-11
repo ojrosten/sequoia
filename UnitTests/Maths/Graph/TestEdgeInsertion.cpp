@@ -46,7 +46,7 @@ namespace sequoia
       class EdgeWeight,
       template <class> class NodeWeightStorage,
       template <class> class EdgeWeightStorage,
-      template <class...> class EdgeStoragePolicy
+      template <class, template<class> class> class EdgeStorageTraits
     >
     void generic_edge_insertions
     <
@@ -55,7 +55,7 @@ namespace sequoia
       EdgeWeight,
       NodeWeightStorage,
       EdgeWeightStorage,
-      EdgeStoragePolicy
+      EdgeStorageTraits
     >::execute_operations()
     {
       using namespace maths;
@@ -202,7 +202,7 @@ namespace sequoia
       class EdgeWeight,
       template <class> class NodeWeightStorage,
       template <class> class EdgeWeightStorage,
-      template <class...> class EdgeStoragePolicy
+      template <class, template<class> class> class EdgeStorageTraits
     >
     void generic_weighted_edge_insertions
     <
@@ -211,7 +211,7 @@ namespace sequoia
       EdgeWeight,
       NodeWeightStorage,
       EdgeWeightStorage,
-      EdgeStoragePolicy
+      EdgeStorageTraits
     >::execute_operations()
     {
       using namespace maths;

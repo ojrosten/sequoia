@@ -49,10 +49,10 @@ namespace sequoia
       class EdgeWeight,
       template <class> class NodeWeightStorage,
       template <class> class EdgeWeightStorage,
-      template <class...> class EdgeStoragePolicy
+      template<class, template<class> class> class EdgeStorageTraits
     >
     class test_initialization
-      : public graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStoragePolicy>
+      : public graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStorageTraits>
     {
     public:      
       using graph_checker<unit_test_logger<test_mode::standard>>::check_exception_thrown;
@@ -61,7 +61,7 @@ namespace sequoia
 
     private:
       using GGraph = typename
-        graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStoragePolicy>::graph_type;
+        graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStorageTraits>::graph_type;
 
       using node_weight_type = typename GGraph::node_weight_type;
       using NodeWeights = std::vector<node_weight_type>;

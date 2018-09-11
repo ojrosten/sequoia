@@ -14,8 +14,8 @@ namespace sequoia::unit_testing
       graph_test_helper<null_weight, null_weight> helper{"Unweighted"};
       
       helper.run_tests<generic_graph_operations>(*this);
-      helper.run_storage_tests<contiguous_storage, graph_contiguous_capacity>(*this);
-      helper.run_storage_tests<bucketed_storage, graph_bucketed_capacity>(*this);
+      helper.run_storage_tests<contiguous_edge_storage_traits, graph_contiguous_capacity>(*this);
+      helper.run_storage_tests<bucketed_edge_storage_traits, graph_bucketed_capacity>(*this);
     }
       
     {
@@ -23,8 +23,8 @@ namespace sequoia::unit_testing
       
       helper.run_tests<generic_weighted_graph_tests>(*this);
 
-      helper.run_storage_tests<contiguous_storage, graph_contiguous_capacity>(*this);
-      helper.run_storage_tests<bucketed_storage, graph_bucketed_capacity>(*this);
+      helper.run_storage_tests<contiguous_edge_storage_traits, graph_contiguous_capacity>(*this);
+      helper.run_storage_tests<bucketed_edge_storage_traits, graph_bucketed_capacity>(*this);
     }
 
     {
@@ -50,19 +50,17 @@ namespace sequoia::unit_testing
     maths::graph_flavour GraphFlavour,
     class NodeWeight,
     class EdgeWeight,
-    bool ThrowOnError,
     template <class> class NodeWeightStorage,
     template <class> class EdgeWeightStorage,
-    template <class, class, bool, template<class...> class> class EdgeStoragePolicy
+    template <class, template<class> class> class EdgeStorageTraits
   >
   void generic_graph_operations<
       GraphFlavour,
       NodeWeight,
       EdgeWeight,
-      ThrowOnError,
       NodeWeightStorage,
       EdgeWeightStorage,
-      EdgeStoragePolicy
+      EdgeStorageTraits
   >::execute_operations()
   {
     using namespace maths;
@@ -469,19 +467,17 @@ namespace sequoia::unit_testing
     maths::graph_flavour GraphFlavour,
     class NodeWeight,
     class EdgeWeight,
-    bool ThrowOnError,
     template <class> class NodeWeightStorage,
     template <class> class EdgeWeightStorage,
-    template <class, class, bool, template<class...> class> class EdgeStoragePolicy
+    template <class, template<class> class> class EdgeStorageTraits
   >
   void graph_contiguous_capacity<
       GraphFlavour,
       NodeWeight,
       EdgeWeight,
-      ThrowOnError,
       NodeWeightStorage,
       EdgeWeightStorage,
-      EdgeStoragePolicy
+      EdgeStorageTraits
   >::execute_operations()
   {
     graph_t g{};
@@ -505,19 +501,17 @@ namespace sequoia::unit_testing
     maths::graph_flavour GraphFlavour,
     class NodeWeight,
     class EdgeWeight,
-    bool ThrowOnError,
     template <class> class NodeWeightStorage,
     template <class> class EdgeWeightStorage,
-    template <class, class, bool, template<class...> class> class EdgeStoragePolicy
+    template <class, template<class> class> class EdgeStorageTraits
   >
   void graph_bucketed_capacity<
       GraphFlavour,
       NodeWeight,
       EdgeWeight,
-      ThrowOnError,
       NodeWeightStorage,
       EdgeWeightStorage,
-      EdgeStoragePolicy
+      EdgeStorageTraits
   >::execute_operations()
   {
     graph_t g{};
@@ -547,19 +541,17 @@ namespace sequoia::unit_testing
     maths::graph_flavour GraphFlavour,
     class NodeWeight,
     class EdgeWeight,
-    bool ThrowOnError,
     template <class> class NodeWeightStorage,
     template <class> class EdgeWeightStorage,
-    template <class, class, bool, template<class...> class> class EdgeStoragePolicy
+    template <class, template<class> class> class EdgeStorageTraits
   >
   void generic_weighted_graph_tests<
       GraphFlavour,
       NodeWeight,
       EdgeWeight,
-      ThrowOnError,
       NodeWeightStorage,
       EdgeWeightStorage,
-      EdgeStoragePolicy
+      EdgeStorageTraits
   >::test_basic_operations()
   {
     GGraph graph;
@@ -940,19 +932,17 @@ namespace sequoia::unit_testing
     maths::graph_flavour GraphFlavour,
     class NodeWeight,
     class EdgeWeight,
-    bool ThrowOnError,
     template <class> class NodeWeightStorage,
     template <class> class EdgeWeightStorage,
-    template <class, class, bool, template<class...> class> class EdgeStoragePolicy
+    template <class, template<class> class> class EdgeStorageTraits
   >
   void test_copy_move<
       GraphFlavour,
       NodeWeight,
       EdgeWeight,
-      ThrowOnError,
       NodeWeightStorage,
       EdgeWeightStorage,
-      EdgeStoragePolicy
+      EdgeStorageTraits
   >::execute_operations()
   {
     const std::vector<int> specialWeight{5, -6};

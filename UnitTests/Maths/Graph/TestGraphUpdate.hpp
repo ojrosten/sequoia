@@ -102,10 +102,10 @@ namespace sequoia
       class EdgeWeight,
       template <class> class NodeWeightStorage,
       template <class> class EdgeWeightStorage,
-      template <class...> class EdgeStoragePolicy
+      template <class, template<class> class> class EdgeStorageTraits
     >
     class test_update
-      : public graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStoragePolicy>
+      : public graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStorageTraits>
     {
     private:
       using GGraph =
@@ -116,7 +116,7 @@ namespace sequoia
           EdgeWeight,
           NodeWeightStorage,
           EdgeWeightStorage,
-          EdgeStoragePolicy
+          EdgeStorageTraits
         >::graph_type;
 
       using flavour = maths::graph_flavour;
@@ -588,10 +588,10 @@ namespace sequoia
       class EdgeWeight,
       template <class> class NodeWeightStorage,
       template <class> class EdgeWeightStorage,
-      template <class...> class EdgeStoragePolicy
+      template <class, template<class> class> class EdgeStorageTraits
     >
     class test_BF_update
-      : public graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStoragePolicy>
+      : public graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStorageTraits>
     {
     private:
       using UndirectedType = std::bool_constant<maths::undirected(GraphFlavour)>;
@@ -603,7 +603,7 @@ namespace sequoia
           EdgeWeight,
           NodeWeightStorage,
           EdgeWeightStorage,
-          EdgeStoragePolicy
+          EdgeStorageTraits
         >::graph_type;
 
       using checker<unit_test_logger<test_mode::standard>>::check_equality;

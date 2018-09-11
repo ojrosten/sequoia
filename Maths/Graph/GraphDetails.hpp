@@ -242,14 +242,15 @@ namespace sequoia
         graph_flavour GraphFlavour,
         class EdgeWeight,
         template <class> class EdgeWeightStorage,
-        template <class...> class EdgeStoragePolicy,
+        template<class, template<class> class> class EdgeStorageTraits,
         class IndexType
       >
       struct edge_traits : public edge_type_generator<GraphFlavour, EdgeWeight, EdgeWeightStorage, IndexType, false>
       {
         using edge_type = typename edge_type_generator<GraphFlavour, EdgeWeight, EdgeWeightStorage, IndexType, false>::edge_type;
         using edge_storage_sharing_policy =  data_sharing::independent<edge_type>;
-        using edge_storage_type = EdgeStoragePolicy<edge_type, edge_storage_sharing_policy>;
+        using edge_storage_traits = typename EdgeStorageTraits<EdgeWeight, EdgeWeightStorage>::template traits_type<edge_type, edge_storage_sharing_policy>;
+        using edge_storage_type = typename EdgeStorageTraits<EdgeWeight, EdgeWeightStorage>::template storage_type<edge_type, edge_storage_sharing_policy, edge_storage_traits>;
 
         constexpr static bool shared_edge_v{};
         constexpr static bool mutual_info_v{true};
@@ -259,7 +260,7 @@ namespace sequoia
       <
         class EdgeWeight,
         template <class> class EdgeWeightStorage,
-        template <class...> class EdgeStoragePolicy,
+        template<class, template<class> class> class EdgeStorageTraits,
         class IndexType
       >
       struct edge_traits
@@ -267,13 +268,14 @@ namespace sequoia
         graph_flavour::directed,
         EdgeWeight,
         EdgeWeightStorage,
-        EdgeStoragePolicy,
+        EdgeStorageTraits,
         IndexType 
         > : public edge_type_generator<graph_flavour::directed, EdgeWeight, EdgeWeightStorage, IndexType, false>
       {
         using edge_type = typename edge_type_generator<graph_flavour::directed, EdgeWeight, EdgeWeightStorage, IndexType, false>::edge_type;        
         using edge_storage_sharing_policy =  data_sharing::independent<edge_type>;
-        using edge_storage_type = EdgeStoragePolicy<edge_type, edge_storage_sharing_policy>;
+        using edge_storage_traits = typename EdgeStorageTraits<EdgeWeight, EdgeWeightStorage>::template traits_type<edge_type, edge_storage_sharing_policy>;
+        using edge_storage_type = typename EdgeStorageTraits<EdgeWeight, EdgeWeightStorage>::template storage_type<edge_type, edge_storage_sharing_policy, edge_storage_traits>;
 
         constexpr static bool shared_edge_v{};
         constexpr static bool mutual_info_v{};
@@ -283,7 +285,7 @@ namespace sequoia
       <
         class EdgeWeight,
         template <class> class EdgeWeightStorage,
-        template <class...> class EdgeStoragePolicy,
+        template<class, template<class> class> class EdgeStorageTraits,
         class IndexType
       >
       struct edge_traits
@@ -291,13 +293,14 @@ namespace sequoia
         graph_flavour::directed_embedded,
         EdgeWeight,
         EdgeWeightStorage,
-        EdgeStoragePolicy,
+        EdgeStorageTraits,
         IndexType
         > : public edge_type_generator<graph_flavour::directed_embedded, EdgeWeight, EdgeWeightStorage, IndexType, false>
       {
         using edge_type = typename edge_type_generator<graph_flavour::directed_embedded, EdgeWeight, EdgeWeightStorage, IndexType, false>::edge_type;        
         using edge_storage_sharing_policy =  data_sharing::shared<edge_type>;
-        using edge_storage_type = EdgeStoragePolicy<edge_type, edge_storage_sharing_policy>;
+        using edge_storage_traits = typename EdgeStorageTraits<EdgeWeight, EdgeWeightStorage>::template traits_type<edge_type, edge_storage_sharing_policy>;
+        using edge_storage_type = typename EdgeStorageTraits<EdgeWeight, EdgeWeightStorage>::template storage_type<edge_type, edge_storage_sharing_policy, edge_storage_traits>;
 
         constexpr static bool shared_edge_v{true};
         constexpr static bool mutual_info_v{true};

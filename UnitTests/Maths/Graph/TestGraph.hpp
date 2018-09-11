@@ -25,15 +25,15 @@ namespace sequoia
       class EdgeWeight,
       template <class> class NodeWeightStorage,
       template <class> class EdgeWeightStorage,
-      template <class...> class EdgeStoragePolicy
+      template <class, template<class> class> class EdgeStorageTraits
     >
     class generic_graph_operations
-      : public graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStoragePolicy>
+      : public graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStorageTraits>
     {
     public:
       
     private:
-      using base_t = graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStoragePolicy>;
+      using base_t = graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStorageTraits>;
       
       using GGraph = typename base_t::graph_type;
 
@@ -51,15 +51,15 @@ namespace sequoia
       class EdgeWeight,
       template <class> class NodeWeightStorage,
       template <class> class EdgeWeightStorage,
-      template <class...> class EdgeStoragePolicy
+      template <class, template<class> class> class EdgeStorageTraits
     >
     class generic_weighted_graph_tests
-      : public graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStoragePolicy>
+      : public graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStorageTraits>
     {
     public:
     private:
       using GGraph = typename
-        graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStoragePolicy>::graph_type;
+        graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStorageTraits>::graph_type;
 
       using graph_checker<unit_test_logger<test_mode::standard>>::check_equality;      
       using graph_checker<unit_test_logger<test_mode::standard>>::check_exception_thrown;
@@ -263,15 +263,15 @@ namespace sequoia
       class EdgeWeight,
       template <class> class NodeWeightStorage,
       template <class> class EdgeWeightStorage,
-      template <class...> class EdgeStoragePolicy
+      template <class, template<class> class> class EdgeStorageTraits
     >
     class graph_contiguous_capacity
-      : public graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStoragePolicy>
+      : public graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStorageTraits>
     {
     public:
       
     private:
-      using base_t = graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStoragePolicy>;
+      using base_t = graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStorageTraits>;
       
       using graph_t = typename base_t::graph_type;
 
@@ -289,15 +289,15 @@ namespace sequoia
       class EdgeWeight,
       template <class> class NodeWeightStorage,
       template <class> class EdgeWeightStorage,
-      template <class...> class EdgeStoragePolicy
+      template <class, template<class> class> class EdgeStorageTraits
     >
     class graph_bucketed_capacity
-      : public graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStoragePolicy>
+      : public graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStorageTraits>
     {
     public:
       
     private:
-      using base_t = graph_operations<GraphFlavour, NodeWeight, EdgeWeight, odeWeightStorage, EdgeWeightStorage, EdgeStoragePolicy>;
+      using base_t = graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStorageTraits>;
       
       using graph_t = typename base_t::graph_type;
 
@@ -316,16 +316,16 @@ namespace sequoia
       class EdgeWeight,
       template <class> class NodeWeightStorage,
       template <class> class EdgeWeightStorage,
-      template <class...> class EdgeStoragePolicy
+      template <class, template<class> class> class EdgeStorageTraits
     >
     class more_generic_weighted_graph_tests
-      : public graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStoragePolicy>
+      : public graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStorageTraits>
     {
     public:
 
     private:
       using GGraph = typename
-        graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStoragePolicy>::graph_type;
+        graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStorageTraits>::graph_type;
 
       using graph_checker<unit_test_logger<test_mode::standard>>::check_equality;      
       using graph_checker<unit_test_logger<test_mode::standard>>::check_exception_thrown;
@@ -443,14 +443,14 @@ namespace sequoia
       class EdgeWeight,
       template <class> class NodeWeightStorage,
       template <class> class EdgeWeightStorage,
-      template <class...> class EdgeStoragePolicy
+      template <class, template<class> class> class EdgeStorageTraits
     >
     class test_copy_move
-      : public graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStoragePolicy>
+      : public graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStorageTraits>
     {
     private:
       using GGraph = typename
-        graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStoragePolicy>::graph_type;
+        graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStorageTraits>::graph_type;
       
       using Edge = maths::edge<EdgeWeight, utilities::protective_wrapper<EdgeWeight>>;
       using Edges = std::vector<std::vector<Edge>>;
