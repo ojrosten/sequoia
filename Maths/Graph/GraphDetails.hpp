@@ -65,37 +65,37 @@ namespace sequoia
 
       // Edge Weight Wrapper
 
-      template<class EdgeWeight, template <class> class EdgeWeightStorage, bool=std::is_empty_v<EdgeWeight>>
+      template<class EdgeWeight, template <class> class EdgeWeightPooling, bool=std::is_empty_v<EdgeWeight>>
       struct edge_weight_wrapper
       {
-        using proxy = typename EdgeWeightStorage<EdgeWeight>::proxy;
+        using proxy = typename EdgeWeightPooling<EdgeWeight>::proxy;
       };
 
 
-      template<class EdgeWeight, template <class> class EdgeWeightStorage>
-      struct edge_weight_wrapper<EdgeWeight, EdgeWeightStorage, true>
+      template<class EdgeWeight, template <class> class EdgeWeightPooling>
+      struct edge_weight_wrapper<EdgeWeight, EdgeWeightPooling, true>
       {
         using proxy = typename utilities::protective_wrapper<EdgeWeight>;
       };
       
       // Edge Weight Sharing
 
-      template<class EdgeWeight, template <class> class EdgeWeightStorage>
+      template<class EdgeWeight, template <class> class EdgeWeightPooling>
       constexpr bool big_proxy() noexcept
       {        
         // 2 * sizeof(proxy) > 2 * sizeof(proxy*) + sizeof(proxy)
-        return sizeof(typename edge_weight_wrapper<EdgeWeight, EdgeWeightStorage>::proxy)
-          > 2*sizeof(typename edge_weight_wrapper<EdgeWeight,EdgeWeightStorage>::proxy*);
+        return sizeof(typename edge_weight_wrapper<EdgeWeight, EdgeWeightPooling>::proxy)
+          > 2*sizeof(typename edge_weight_wrapper<EdgeWeight,EdgeWeightPooling>::proxy*);
       }
       
-      template<bool Static, graph_flavour GraphFlavour, class EdgeWeight, template <class> class EdgeWeightStorage>
+      template<bool Static, graph_flavour GraphFlavour, class EdgeWeight, template <class> class EdgeWeightPooling>
       struct shared_edge_weight
-        : public std::bool_constant<!Static && undirected(GraphFlavour) && big_proxy<EdgeWeight, EdgeWeightStorage>()>
+        : public std::bool_constant<!Static && undirected(GraphFlavour) && big_proxy<EdgeWeight, EdgeWeightPooling>()>
       {
       };
 
-      template<bool Static, graph_flavour GraphFlavour, class EdgeWeight, template <class> class EdgeWeightStorage>
-      constexpr bool shared_edge_weight_v{shared_edge_weight<Static, GraphFlavour, EdgeWeight, EdgeWeightStorage>::value};
+      template<bool Static, graph_flavour GraphFlavour, class EdgeWeight, template <class> class EdgeWeightPooling>
+      constexpr bool shared_edge_weight_v{shared_edge_weight<Static, GraphFlavour, EdgeWeight, EdgeWeightPooling>::value};
 
       // Edge Sharing
       
@@ -158,15 +158,15 @@ namespace sequoia
       <
         graph_flavour GraphFlavour,
         class EdgeWeight,
-        template <class> class EdgeWeightStorage,
+        template <class> class EdgeWeightPooling,
         class IndexType,
         bool Static
       >
       struct edge_type_generator
       {        
-        constexpr static bool shared_weight_v{shared_edge_weight<Static, GraphFlavour, EdgeWeight, EdgeWeightStorage>::value};
+        constexpr static bool shared_weight_v{shared_edge_weight<Static, GraphFlavour, EdgeWeight, EdgeWeightPooling>::value};
         
-        using edge_weight_proxy = typename edge_weight_wrapper<EdgeWeight, EdgeWeightStorage>::proxy;
+        using edge_weight_proxy = typename edge_weight_wrapper<EdgeWeight, EdgeWeightPooling>::proxy;
         using edge_type = partial_edge<EdgeWeight, sharing<shared_weight_v>::template policy, edge_weight_proxy, IndexType>;
         using edge_init_type = typename edge_init_type_generator<edge_type, GraphFlavour>::edge_init_type;
         
@@ -177,21 +177,21 @@ namespace sequoia
       template
       <
         class EdgeWeight,
-        template <class> class EdgeWeightStorage,
+        template <class> class EdgeWeightPooling,
         class IndexType,
         bool Static
       >
       struct edge_type_generator<
         graph_flavour::undirected_embedded,
         EdgeWeight,
-        EdgeWeightStorage,
+        EdgeWeightPooling,
         IndexType,
         Static
       >
       {        
-        constexpr static bool shared_weight_v{shared_edge_weight<Static, graph_flavour::undirected_embedded, EdgeWeight, EdgeWeightStorage>::value};
+        constexpr static bool shared_weight_v{shared_edge_weight<Static, graph_flavour::undirected_embedded, EdgeWeight, EdgeWeightPooling>::value};
         
-        using edge_weight_proxy = typename edge_weight_wrapper<EdgeWeight, EdgeWeightStorage>::proxy;
+        using edge_weight_proxy = typename edge_weight_wrapper<EdgeWeight, EdgeWeightPooling>::proxy;
         using edge_type = embedded_partial_edge<EdgeWeight, sharing<shared_weight_v>::template policy, edge_weight_proxy, IndexType>;
         using edge_init_type = typename edge_init_type_generator<edge_type, graph_flavour::undirected_embedded>::edge_init_type;
 
@@ -202,14 +202,14 @@ namespace sequoia
       template
       <
         class EdgeWeight,
-        template <class> class EdgeWeightStorage,
+        template <class> class EdgeWeightPooling,
         class IndexType
       >
-      struct edge_type_generator<graph_flavour::directed_embedded, EdgeWeight, EdgeWeightStorage, IndexType, false>
+      struct edge_type_generator<graph_flavour::directed_embedded, EdgeWeight, EdgeWeightPooling, IndexType, false>
       {
         constexpr static bool shared_weight_v{};
 
-        using edge_weight_proxy = typename edge_weight_wrapper<EdgeWeight, EdgeWeightStorage>::proxy;
+        using edge_weight_proxy = typename edge_weight_wrapper<EdgeWeight, EdgeWeightPooling>::proxy;
         using edge_type = edge<EdgeWeight, edge_weight_proxy, IndexType>;
         using edge_init_type = typename edge_init_type_generator<edge_type, graph_flavour::directed_embedded>::edge_init_type;
         
@@ -220,10 +220,10 @@ namespace sequoia
       template
       <
         class EdgeWeight,        
-        template <class> class EdgeWeightStorage,
+        template <class> class EdgeWeightPooling,
         class IndexType
       >
-      struct edge_type_generator<graph_flavour::directed_embedded, EdgeWeight, EdgeWeightStorage, IndexType, true>
+      struct edge_type_generator<graph_flavour::directed_embedded, EdgeWeight, EdgeWeightPooling, IndexType, true>
       {
         constexpr static bool shared_weight_v{};
         
@@ -241,16 +241,16 @@ namespace sequoia
       <        
         graph_flavour GraphFlavour,
         class EdgeWeight,
-        template <class> class EdgeWeightStorage,
+        template <class> class EdgeWeightPooling,
         template<class, template<class> class> class EdgeStorageTraits,
         class IndexType
       >
-      struct edge_traits : public edge_type_generator<GraphFlavour, EdgeWeight, EdgeWeightStorage, IndexType, false>
+      struct edge_traits : public edge_type_generator<GraphFlavour, EdgeWeight, EdgeWeightPooling, IndexType, false>
       {
-        using edge_type = typename edge_type_generator<GraphFlavour, EdgeWeight, EdgeWeightStorage, IndexType, false>::edge_type;
+        using edge_type = typename edge_type_generator<GraphFlavour, EdgeWeight, EdgeWeightPooling, IndexType, false>::edge_type;
         using edge_storage_sharing_policy =  data_sharing::independent<edge_type>;
-        using edge_storage_traits = typename EdgeStorageTraits<EdgeWeight, EdgeWeightStorage>::template traits_type<edge_type, edge_storage_sharing_policy>;
-        using edge_storage_type = typename EdgeStorageTraits<EdgeWeight, EdgeWeightStorage>::template storage_type<edge_type, edge_storage_sharing_policy, edge_storage_traits>;
+        using edge_storage_traits = typename EdgeStorageTraits<EdgeWeight, EdgeWeightPooling>::template traits_type<edge_type, edge_storage_sharing_policy>;
+        using edge_storage_type = typename EdgeStorageTraits<EdgeWeight, EdgeWeightPooling>::template storage_type<edge_type, edge_storage_sharing_policy, edge_storage_traits>;
 
         constexpr static bool shared_edge_v{};
         constexpr static bool mutual_info_v{true};
@@ -259,7 +259,7 @@ namespace sequoia
       template
       <
         class EdgeWeight,
-        template <class> class EdgeWeightStorage,
+        template <class> class EdgeWeightPooling,
         template<class, template<class> class> class EdgeStorageTraits,
         class IndexType
       >
@@ -267,15 +267,15 @@ namespace sequoia
       <        
         graph_flavour::directed,
         EdgeWeight,
-        EdgeWeightStorage,
+        EdgeWeightPooling,
         EdgeStorageTraits,
         IndexType 
-        > : public edge_type_generator<graph_flavour::directed, EdgeWeight, EdgeWeightStorage, IndexType, false>
+        > : public edge_type_generator<graph_flavour::directed, EdgeWeight, EdgeWeightPooling, IndexType, false>
       {
-        using edge_type = typename edge_type_generator<graph_flavour::directed, EdgeWeight, EdgeWeightStorage, IndexType, false>::edge_type;        
+        using edge_type = typename edge_type_generator<graph_flavour::directed, EdgeWeight, EdgeWeightPooling, IndexType, false>::edge_type;        
         using edge_storage_sharing_policy =  data_sharing::independent<edge_type>;
-        using edge_storage_traits = typename EdgeStorageTraits<EdgeWeight, EdgeWeightStorage>::template traits_type<edge_type, edge_storage_sharing_policy>;
-        using edge_storage_type = typename EdgeStorageTraits<EdgeWeight, EdgeWeightStorage>::template storage_type<edge_type, edge_storage_sharing_policy, edge_storage_traits>;
+        using edge_storage_traits = typename EdgeStorageTraits<EdgeWeight, EdgeWeightPooling>::template traits_type<edge_type, edge_storage_sharing_policy>;
+        using edge_storage_type = typename EdgeStorageTraits<EdgeWeight, EdgeWeightPooling>::template storage_type<edge_type, edge_storage_sharing_policy, edge_storage_traits>;
 
         constexpr static bool shared_edge_v{};
         constexpr static bool mutual_info_v{};
@@ -284,7 +284,7 @@ namespace sequoia
       template
       <
         class EdgeWeight,
-        template <class> class EdgeWeightStorage,
+        template <class> class EdgeWeightPooling,
         template<class, template<class> class> class EdgeStorageTraits,
         class IndexType
       >
@@ -292,15 +292,15 @@ namespace sequoia
       <        
         graph_flavour::directed_embedded,
         EdgeWeight,
-        EdgeWeightStorage,
+        EdgeWeightPooling,
         EdgeStorageTraits,
         IndexType
-        > : public edge_type_generator<graph_flavour::directed_embedded, EdgeWeight, EdgeWeightStorage, IndexType, false>
+        > : public edge_type_generator<graph_flavour::directed_embedded, EdgeWeight, EdgeWeightPooling, IndexType, false>
       {
-        using edge_type = typename edge_type_generator<graph_flavour::directed_embedded, EdgeWeight, EdgeWeightStorage, IndexType, false>::edge_type;        
+        using edge_type = typename edge_type_generator<graph_flavour::directed_embedded, EdgeWeight, EdgeWeightPooling, IndexType, false>::edge_type;        
         using edge_storage_sharing_policy =  data_sharing::shared<edge_type>;
-        using edge_storage_traits = typename EdgeStorageTraits<EdgeWeight, EdgeWeightStorage>::template traits_type<edge_type, edge_storage_sharing_policy>;
-        using edge_storage_type = typename EdgeStorageTraits<EdgeWeight, EdgeWeightStorage>::template storage_type<edge_type, edge_storage_sharing_policy, edge_storage_traits>;
+        using edge_storage_traits = typename EdgeStorageTraits<EdgeWeight, EdgeWeightPooling>::template traits_type<edge_type, edge_storage_sharing_policy>;
+        using edge_storage_type = typename EdgeStorageTraits<EdgeWeight, EdgeWeightPooling>::template storage_type<edge_type, edge_storage_sharing_policy, edge_storage_traits>;
 
         constexpr static bool shared_edge_v{true};
         constexpr static bool mutual_info_v{true};
@@ -330,98 +330,98 @@ namespace sequoia
       
       template
       <
-        class NodeWeightStorage,
-        class EdgeWeightStorage,
-        bool=std::is_empty_v<NodeWeightStorage>,
-        bool=std::is_empty_v<EdgeWeightStorage>,
-        bool=std::is_same_v<NodeWeightStorage, EdgeWeightStorage>
+        class NodeWeightPooling,
+        class EdgeWeightPooling,
+        bool=std::is_empty_v<NodeWeightPooling>,
+        bool=std::is_empty_v<EdgeWeightPooling>,
+        bool=std::is_same_v<NodeWeightPooling, EdgeWeightPooling>
       >
       class weight_maker;
       
 
       template
       <
-        class NodeWeightStorage,
-        class EdgeWeightStorage,
+        class NodeWeightPooling,
+        class EdgeWeightPooling,
         bool Same
       >
-      class weight_maker<NodeWeightStorage, EdgeWeightStorage, true, true, Same>
+      class weight_maker<NodeWeightPooling, EdgeWeightPooling, true, true, Same>
       {
       public:
-        using node_weight_proxy = typename NodeWeightStorage::proxy;
-        using edge_weight_proxy = typename EdgeWeightStorage::proxy;
+        using node_weight_proxy = typename NodeWeightPooling::proxy;
+        using edge_weight_proxy = typename EdgeWeightPooling::proxy;
 
         template<class... Args>
-        constexpr static node_weight_proxy make_node_weight(Args&&... args) { return NodeWeightStorage::make(std::forward<Args>(args)...); }
+        constexpr static node_weight_proxy make_node_weight(Args&&... args) { return NodeWeightPooling::make(std::forward<Args>(args)...); }
 
         template<class... Args>
-        constexpr static edge_weight_proxy make_edge_weight(Args&&... args) { return EdgeWeightStorage::make(std::forward<Args>(args)...); }
+        constexpr static edge_weight_proxy make_edge_weight(Args&&... args) { return EdgeWeightPooling::make(std::forward<Args>(args)...); }
       };
 
-      template<class NodeWeightStorage, class EdgeWeightStorage>
-      class weight_maker<NodeWeightStorage, EdgeWeightStorage, true, false, false>
+      template<class NodeWeightPooling, class EdgeWeightPooling>
+      class weight_maker<NodeWeightPooling, EdgeWeightPooling, true, false, false>
       {
       public:
-        using node_weight_proxy = typename NodeWeightStorage::proxy;
-        using edge_weight_proxy = typename EdgeWeightStorage::proxy;
+        using node_weight_proxy = typename NodeWeightPooling::proxy;
+        using edge_weight_proxy = typename EdgeWeightPooling::proxy;
 
         template<class... Args>
-        constexpr static node_weight_proxy make_node_weight(Args&&... args) { return NodeWeightStorage::make(std::forward<Args>(args)...); }
+        constexpr static node_weight_proxy make_node_weight(Args&&... args) { return NodeWeightPooling::make(std::forward<Args>(args)...); }
 
         template<class... Args>
-        edge_weight_proxy make_edge_weight(Args&&... args) { return m_EdgeWeightStorage.make(std::forward<Args>(args)...); }
+        edge_weight_proxy make_edge_weight(Args&&... args) { return m_EdgeWeightPooling.make(std::forward<Args>(args)...); }
       private: 
-        EdgeWeightStorage m_EdgeWeightStorage;
+        EdgeWeightPooling m_EdgeWeightPooling;
       };
 
-      template<class NodeWeightStorage, class EdgeWeightStorage>
-      class weight_maker<NodeWeightStorage, EdgeWeightStorage, false, true, false>
+      template<class NodeWeightPooling, class EdgeWeightPooling>
+      class weight_maker<NodeWeightPooling, EdgeWeightPooling, false, true, false>
       {
       public:
-        using node_weight_proxy = typename NodeWeightStorage::proxy;
-        using edge_weight_proxy = typename EdgeWeightStorage::proxy;
+        using node_weight_proxy = typename NodeWeightPooling::proxy;
+        using edge_weight_proxy = typename EdgeWeightPooling::proxy;
 
         template<class... Args>
-        node_weight_proxy make_node_weight(Args&&... args) { return m_NodeWeightStorage.make(std::forward<Args>(args)...); }
+        node_weight_proxy make_node_weight(Args&&... args) { return m_NodeWeightPooling.make(std::forward<Args>(args)...); }
        
         template<class... Args>
-        constexpr static edge_weight_proxy make_edge_weight(Args&&... args) { return EdgeWeightStorage::make(std::forward<Args>(args)...); }
+        constexpr static edge_weight_proxy make_edge_weight(Args&&... args) { return EdgeWeightPooling::make(std::forward<Args>(args)...); }
         
       private: 
-        NodeWeightStorage m_NodeWeightStorage;
+        NodeWeightPooling m_NodeWeightPooling;
       };
 
-      template<class NodeWeightStorage, class EdgeWeightStorage>
-      class weight_maker<NodeWeightStorage, EdgeWeightStorage, false, false, false>
+      template<class NodeWeightPooling, class EdgeWeightPooling>
+      class weight_maker<NodeWeightPooling, EdgeWeightPooling, false, false, false>
       {
       public:
-        using node_weight_proxy = typename NodeWeightStorage::proxy;
-        using edge_weight_proxy = typename EdgeWeightStorage::proxy;
+        using node_weight_proxy = typename NodeWeightPooling::proxy;
+        using edge_weight_proxy = typename EdgeWeightPooling::proxy;
 
         template<class... Args>
-        node_weight_proxy make_node_weight(Args&&... args) { return m_NodeWeightStorage.make(std::forward<Args>(args)...); }
+        node_weight_proxy make_node_weight(Args&&... args) { return m_NodeWeightPooling.make(std::forward<Args>(args)...); }
 
         template<class... Args>
-        edge_weight_proxy make_edge_weight(Args&&... args) { return m_EdgeWeightStorage.make(std::forward<Args>(args)...); }
+        edge_weight_proxy make_edge_weight(Args&&... args) { return m_EdgeWeightPooling.make(std::forward<Args>(args)...); }
       private:
-        NodeWeightStorage m_NodeWeightStorage;
-        EdgeWeightStorage m_EdgeWeightStorage;
+        NodeWeightPooling m_NodeWeightPooling;
+        EdgeWeightPooling m_EdgeWeightPooling;
       };
 
-      template<class NodeWeightStorage, class EdgeWeightStorage>
-      class weight_maker<NodeWeightStorage, EdgeWeightStorage, false, false, true>
+      template<class NodeWeightPooling, class EdgeWeightPooling>
+      class weight_maker<NodeWeightPooling, EdgeWeightPooling, false, false, true>
       {
       public:
-        using node_weight_proxy = typename NodeWeightStorage::proxy;
-        using edge_weight_proxy = typename EdgeWeightStorage::proxy;
+        using node_weight_proxy = typename NodeWeightPooling::proxy;
+        using edge_weight_proxy = typename EdgeWeightPooling::proxy;
 
         template<class... Args>
-        node_weight_proxy make_node_weight(Args&&... args) { return m_NodeWeightStorage.make(std::forward<Args>(args)...); }
+        node_weight_proxy make_node_weight(Args&&... args) { return m_NodeWeightPooling.make(std::forward<Args>(args)...); }
 
         template<class... Args>
-        edge_weight_proxy make_edge_weight(Args&&... args) { return m_NodeWeightStorage.make(std::forward<Args>(args)...); }
+        edge_weight_proxy make_edge_weight(Args&&... args) { return m_NodeWeightPooling.make(std::forward<Args>(args)...); }
       private:
-        NodeWeightStorage m_NodeWeightStorage;
+        NodeWeightPooling m_NodeWeightPooling;
       };
 
       // size_type generator
