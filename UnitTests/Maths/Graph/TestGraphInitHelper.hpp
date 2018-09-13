@@ -42,7 +42,7 @@ namespace sequoia
         {
           // Remove restriction in C++20
           if constexpr(!is_static_graph_v<Graph>)
-            this->template check_exception_thrown<std::logic_error>([](){ Graph{{NodeWeight{}}, {{},{}}}; }, LINE("Mismatched nodes and edges"));
+                        this->template check_exception_thrown<std::logic_error>([](){ Graph{{{},{}}, {NodeWeight{}}}; }, LINE("Mismatched nodes and edges"));
           
           if constexpr(is_static_graph_v<Graph>)
           {
@@ -55,7 +55,7 @@ namespace sequoia
           }
           else
           {
-            const Graph g{{NodeWeight{}}, {{}}};
+            const Graph g{{{}}, {NodeWeight{}}};
             check_1_0(g); 
           }
         }        
@@ -69,7 +69,7 @@ namespace sequoia
         {
           // Remove restriction in C++20
           if constexpr(!is_static_graph_v<Graph>)
-                        this->template check_exception_thrown<std::logic_error>([](){ Graph{{NodeWeight{}, NodeWeight{}}, {{}}}; }, LINE("Mismatched nodes and edges"));
+                        this->template check_exception_thrown<std::logic_error>([](){ Graph{{{}}, {NodeWeight{}, NodeWeight{}}}; }, LINE("Mismatched nodes and edges"));
           
           if constexpr(is_static_graph_v<Graph>)
           {
@@ -82,7 +82,7 @@ namespace sequoia
           }
           else
           {
-            const Graph g{{NodeWeight{}, NodeWeight{}}, {{},{}}};
+            const Graph g{{{},{}}, {NodeWeight{}, NodeWeight{}}};
             check_2_0(g); 
           }
         }        
@@ -217,33 +217,33 @@ namespace sequoia
         using node_weight = typename Graph::node_weight_type;        
         if constexpr(!std::is_empty_v<node_weight>)
         {
-          this->template check_exception_thrown<std::logic_error>([](){ Graph{{node_weight{}}, {{edge{0}, edge{0}}, {}}}; }, LINE("Mismatch between node and edge init"));
+          this->template check_exception_thrown<std::logic_error>([](){ Graph{{{edge{0}, edge{0}}, {}}, {node_weight{}}}; }, LINE("Mismatch between node and edge init"));
 
-          this->template check_exception_thrown<std::logic_error>([](){ Graph{{node_weight{}, node_weight{}}, {{edge{0}, edge{0}}}}; }, LINE("Mismatch between node and edge init"));
+          this->template check_exception_thrown<std::logic_error>([](){ Graph{{{edge{0}, edge{0}}}, {node_weight{}, node_weight{}}}; }, LINE("Mismatch between node and edge init"));
           
           if constexpr(is_static_graph_v<Graph>)
           {
             {
-              constexpr Graph g{{node_weight{}}, {{edge{0}, edge{0}}}};
+              constexpr Graph g{{{edge{0}, edge{0}}}, {node_weight{}}};
               check_1_1(g);
             }
 
             if constexpr(!std::is_empty_v<edge_weight>)
             {
-              constexpr Graph g{{node_weight{}}, {{edge{0, -2}, edge{0, -2}}}};
+              constexpr Graph g{{{edge{0, -2}, edge{0, -2}}}, {node_weight{}}};
               check_1_1w(g);
             }
           }
           else
           {
             {
-              const Graph g{{node_weight{}}, {{edge{0}, edge{0}}}};
+              const Graph g{{{edge{0}, edge{0}}}, {node_weight{}}};
               check_1_1(g);
             }
 
             if constexpr(!std::is_empty_v<edge_weight>)
             {
-              const Graph g{{node_weight{}}, {{edge{0, -2}, edge{0, -2}}}};
+              const Graph g{{{edge{0, -2}, edge{0, -2}}}, {node_weight{}}};
               check_1_1w(g);
             }          
           }
@@ -812,33 +812,33 @@ namespace sequoia
         if constexpr(!std::is_empty_v<node_weight>)
         {
 
-          this->template check_exception_thrown<std::logic_error>([](){ Graph{{node_weight{}}, {{edge{0,1}, edge{0,0}}, {}}}; }, LINE("Mismatch between node and edge init"));
+          this->template check_exception_thrown<std::logic_error>([](){ Graph{{{edge{0,1}, edge{0,0}}, {}}, {node_weight{}}}; }, LINE("Mismatch between node and edge init"));
 
-          this->template check_exception_thrown<std::logic_error>([](){ Graph{{node_weight{}, node_weight{}}, {{edge{0,1}, edge{0,0}}}}; }, LINE("Mismatch between node and edge init"));
+          this->template check_exception_thrown<std::logic_error>([](){ Graph{{{edge{0,1}, edge{0,0}}}, {node_weight{}, node_weight{}}}; }, LINE("Mismatch between node and edge init"));
           
           if constexpr(is_static_graph_v<Graph>)
           {
             {
-              constexpr Graph g{{node_weight{}}, {{edge{0,1}, edge{0,0}}}};
+              constexpr Graph g{{{edge{0,1}, edge{0,0}}}, {node_weight{}}};
               check_1_1(g);
             }
           
             if constexpr(!std::is_empty_v<edge_weight>)
             {
-              constexpr Graph g{{node_weight{}}, {{edge{0,1,-1}, edge{0,0,-1}}}};
+              constexpr Graph g{{{edge{0,1,-1}, edge{0,0,-1}}}, {node_weight{}}};
               check_1_1w(g);
             }
           }
           else
           {
             {
-              const Graph g{{node_weight{}}, {{edge{0,1}, edge{0,0}}}};
+              const Graph g{{{edge{0,1}, edge{0,0}}}, {node_weight{}}};
               check_1_1(g);
             }
 
             if constexpr(!std::is_empty_v<edge_weight>)
             {
-              const Graph g{{node_weight{}}, {{edge{0,1,-1}, edge{0,0,-1}}}};
+              const Graph g{{{edge{0,1,-1}, edge{0,0,-1}}}, {node_weight{}}};
               check_1_1w(g);
             }
           }
@@ -1220,33 +1220,33 @@ namespace sequoia
         using node_weight = typename Graph::node_weight_type;
         if constexpr(!std::is_empty_v<node_weight>)
         {
-          this->template check_exception_thrown<std::logic_error>([](){ Graph{{node_weight{}}, {{edge{0}}, {}}}; }, LINE("Mismatch between node and edge init"));
+          this->template check_exception_thrown<std::logic_error>([](){ Graph{{{edge{0}}, {}}, {node_weight{}}}; }, LINE("Mismatch between node and edge init"));
 
-          this->template check_exception_thrown<std::logic_error>([](){ Graph{{node_weight{}, node_weight{}}, {{edge{0}}}}; }, LINE("Mismatch between node and edge init"));
+          this->template check_exception_thrown<std::logic_error>([](){ Graph{{{edge{0}}}, {node_weight{}, node_weight{}}}; }, LINE("Mismatch between node and edge init"));
           
           if constexpr(is_static_graph_v<Graph>)
           {
             {
-              constexpr Graph g{{node_weight{}}, {{edge{0}}}};
+              constexpr Graph g{{{edge{0}}}, {node_weight{}}};
               check_1_1(g);
             }
 
             if constexpr(!std::is_empty_v<edge_weight>)
             {
-              constexpr Graph g{{node_weight{}}, {{edge{0,10}}}};
+              constexpr Graph g{{{edge{0,10}}}, {node_weight{}}};
               check_1_1w(g);
             }
           }
           else
           {
             {
-              const Graph g{{node_weight{}}, {{edge{0}}}};
+              const Graph g{{{edge{0}}}, {node_weight{}}};
               check_1_1(g);
             }
 
             if constexpr(!std::is_empty_v<edge_weight>)
             {
-              const Graph g{{node_weight{}}, {{edge{0,10}}}};
+              const Graph g{{{edge{0,10}}}, {node_weight{}}};
               check_1_1w(g);
             }
           }
@@ -1528,24 +1528,24 @@ namespace sequoia
         using node_weight = typename Graph::node_weight_type;
         if constexpr(!std::is_empty_v<node_weight>)
         {
-          this->template check_exception_thrown<std::logic_error>([](){ Graph{{node_weight{}}, {{edge{0,0,1}, edge{0,0,0}}, {}}}; }, LINE("Mismatch between node and edge init"));
+          this->template check_exception_thrown<std::logic_error>([](){ Graph{{{edge{0,0,1}, edge{0,0,0}}, {}}, {node_weight{}}}; }, LINE("Mismatch between node and edge init"));
 
-          this->template check_exception_thrown<std::logic_error>([](){ Graph{{node_weight{}, node_weight{}}, {{edge{0,0,1}, edge{0,0,0}}}}; }, LINE("Mismatch between node and edge init"));
+          this->template check_exception_thrown<std::logic_error>([](){ Graph{{{edge{0,0,1}, edge{0,0,0}}}, {node_weight{}, node_weight{}}}; }, LINE("Mismatch between node and edge init"));
           
           if constexpr(is_static_graph_v<Graph>)
           {
             {
               constexpr Graph
-                g{{node_weight{}}, {{edge{0,0,1}, edge{0,0,0}}}},
-                g2{{node_weight{}}, {{edge{0,inverted_constant<true>{},1}, edge{0,inverted_constant<true>{},0}}}};
+                g{{{edge{0,0,1}, edge{0,0,0}}}, {node_weight{}}},
+                g2{{{edge{0,inverted_constant<true>{},1}, edge{0,inverted_constant<true>{},0}}}, {node_weight{}}};
               check_1_1(g, g2);
             }
 
             if constexpr(!std::is_empty_v<edge_weight>)
             {
               constexpr Graph
-                g{{node_weight{}}, {{edge{0,0,1,9}, edge{0,0,0,9}}}},
-                g2{{node_weight{}}, {{edge{0,inverted_constant<true>{},1,-7}, edge{0,inverted_constant<true>{},0,-7}}}};
+                g{{{edge{0,0,1,9}, edge{0,0,0,9}}}, {node_weight{}}},
+                g2{{{edge{0,inverted_constant<true>{},1,-7}, edge{0,inverted_constant<true>{},0,-7}}}, {node_weight{}}};
               check_1_1w(g, g2);
             }
           }
@@ -1553,16 +1553,16 @@ namespace sequoia
           {
             {
               const Graph
-                g{{node_weight{}}, {{edge{0,0,1}, edge{0,0,0}}}},
-                g2{{node_weight{}}, {{edge{0,inverted_constant<true>{},1}, edge{0,inverted_constant<true>{},0}}}};
+                g{{{edge{0,0,1}, edge{0,0,0}}}, {node_weight{}}},
+                g2{{{edge{0,inverted_constant<true>{},1}, edge{0,inverted_constant<true>{},0}}}, {node_weight{}}};
               check_1_1(g, g2);
             }
 
             if constexpr(!std::is_empty_v<edge_weight>)
             {
               const Graph
-                g{{node_weight{}}, {{edge{0,0,1,9}, edge{0,0,0,9}}}},
-                g2{{node_weight{}}, {{edge{0,inverted_constant<true>{},1,-7}, edge{0,inverted_constant<true>{},0,-7}}}};
+                g{{{edge{0,0,1,9}, edge{0,0,0,9}}}, {node_weight{}}},
+                g2{{{edge{0,inverted_constant<true>{},1,-7}, edge{0,inverted_constant<true>{},0,-7}}}, {node_weight{}}};
               check_1_1w(g, g2);
             }
           }

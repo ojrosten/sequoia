@@ -14,12 +14,12 @@ namespace sequoia
       }
 
       {
-        graph_test_helper<int, null_weight> helper;
+        graph_test_helper<null_weight, int> helper;
         helper.run_tests<test_weighted_BFS_tasks>(*this);
       }
       
       {
-        graph_test_helper<int, null_weight> helper;
+        graph_test_helper<null_weight, int> helper;
         helper.run_tests<test_priority_traversal>(*this);
       }
     }

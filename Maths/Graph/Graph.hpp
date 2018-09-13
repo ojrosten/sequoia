@@ -28,9 +28,9 @@ namespace sequoia
   {
     template
     <      
-      directed_flavour Directedness,
-      class Nodes,
+      directed_flavour Directedness,     
       class EdgeTraits,
+      class Nodes,
       class WeightMaker
     >
     class graph_primitive : private WeightMaker, public Nodes
@@ -65,7 +65,7 @@ namespace sequoia
       }
 
       template<class N=node_weight_type, class=std::enable_if_t<!std::is_empty_v<N>>>
-      constexpr graph_primitive(std::initializer_list<N> nodeWeights, std::initializer_list<std::initializer_list<edge_init_type>> edges)
+      constexpr graph_primitive(std::initializer_list<std::initializer_list<edge_init_type>> edges, std::initializer_list<N> nodeWeights)
         : graph_primitive(direct_edge_init(), direct_node_init(), edges, nodeWeights)
       {
         if(nodeWeights.size() != edges.size())
@@ -1315,52 +1315,65 @@ namespace sequoia
       }
     };
 
-    template<class EdgeWeight, template <class> class EdgeWeightStorage>
+    template<class EdgeWeight, template <class> class EdgeWeightPooling>
     struct contiguous_edge_storage_traits
     {
       template <class T, class Sharing, class Traits> using storage_type = data_structures::contiguous_storage<T, Sharing, Traits>;
       template <class T, class Sharing> using traits_type = data_structures::contiguous_storage_traits<T, Sharing>;
     };
 
-    template<class EdgeWeight, template <class> class EdgeWeightStorage>
+    template<class EdgeWeight, template <class> class EdgeWeightPooling>
     struct bucketed_edge_storage_traits
     {
       template <class T, class Sharing, class Traits> using storage_type = data_structures::bucketed_storage<T, Sharing, Traits>;
       template <class T, class Sharing> using traits_type = data_structures::bucketed_storage_traits<T, Sharing>;
     };
+
+    template<class NodeWeight, template <class> class NodeWeightPooling, bool=std::is_empty_v<NodeWeight>>
+    struct node_weight_storage_traits
+    {
+      constexpr static bool throw_on_range_error{true};
+      template<class S> using underlying_storage_type = std::vector<S, std::allocator<S>>;
+    };
+
+    template<class NodeWeight, template <class> class NodeWeightPooling>
+    struct node_weight_storage_traits<NodeWeight, NodeWeightPooling, true>
+    {
+    };
     
     template
     <
-      graph_flavour GraphFlavour,
-      class NodeWeight,
+      graph_flavour GraphFlavour,      
       class EdgeWeight,
-      template <class> class NodeWeightStorage,
-      template <class> class EdgeWeightStorage,
-      template<class, template<class> class> class EdgeStorageTraits
+      class NodeWeight,      
+      template <class> class EdgeWeightPooling,
+      template <class> class NodeWeightPooling,
+      template<class, template<class> class> class EdgeStorageTraits,
+      template<class, template<class> class, bool> class NodeWeightStorageTraits
     >
     class graph_base : public
       graph_primitive
       <
-        to_directedness(GraphFlavour),
-        graph_impl::node_storage<typename NodeWeightStorage<NodeWeight>::proxy>,
-        typename graph_impl::edge_traits<GraphFlavour, EdgeWeight, EdgeWeightStorage, EdgeStorageTraits, std::size_t>,
-        typename graph_impl::weight_maker<NodeWeightStorage<NodeWeight>, EdgeWeightStorage<EdgeWeight>>
+        to_directedness(GraphFlavour),      
+        typename graph_impl::edge_traits<GraphFlavour, EdgeWeight, EdgeWeightPooling, EdgeStorageTraits, std::size_t>,
+        graph_impl::node_storage<typename NodeWeightPooling<NodeWeight>::proxy, node_weight_storage_traits<NodeWeight, NodeWeightPooling>>,
+        typename graph_impl::weight_maker<NodeWeightPooling<NodeWeight>, EdgeWeightPooling<EdgeWeight>>
       >
     {
     private:
       using primitive =
         graph_primitive<
-          to_directedness(GraphFlavour),
-          graph_impl::node_storage<typename NodeWeightStorage<NodeWeight>::proxy>,
-          typename graph_impl::edge_traits<GraphFlavour, EdgeWeight, EdgeWeightStorage, EdgeStorageTraits, std::size_t>,
-          typename graph_impl::weight_maker<NodeWeightStorage<NodeWeight>, EdgeWeightStorage<EdgeWeight>>
+          to_directedness(GraphFlavour),      
+          typename graph_impl::edge_traits<GraphFlavour, EdgeWeight, EdgeWeightPooling, EdgeStorageTraits, std::size_t>,
+          graph_impl::node_storage<typename NodeWeightPooling<NodeWeight>::proxy, node_weight_storage_traits<NodeWeight, NodeWeightPooling>>,
+          typename graph_impl::weight_maker<NodeWeightPooling<NodeWeight>, EdgeWeightPooling<EdgeWeight>>
       >;
     public:
       using graph_primitive<
-          to_directedness(GraphFlavour),
-          graph_impl::node_storage<typename NodeWeightStorage<NodeWeight>::proxy>,
-          typename graph_impl::edge_traits<GraphFlavour, EdgeWeight, EdgeWeightStorage, EdgeStorageTraits, std::size_t>,
-          typename graph_impl::weight_maker<NodeWeightStorage<NodeWeight>, EdgeWeightStorage<EdgeWeight>>
+          to_directedness(GraphFlavour),     
+          typename graph_impl::edge_traits<GraphFlavour, EdgeWeight, EdgeWeightPooling, EdgeStorageTraits, std::size_t>,
+          graph_impl::node_storage<typename NodeWeightPooling<NodeWeight>::proxy, node_weight_storage_traits<NodeWeight, NodeWeightPooling>>,
+          typename graph_impl::weight_maker<NodeWeightPooling<NodeWeight>, EdgeWeightPooling<EdgeWeight>>
       >::graph_primitive;
 
       graph_base(const graph_base&)            = default;
@@ -1393,43 +1406,47 @@ namespace sequoia
 
     template
     <
-      directed_flavour Directedness,
-      class NodeWeight,
+      directed_flavour Directedness,      
       class EdgeWeight,
-      template <class> class NodeWeightStorage=data_sharing::unpooled,
-      template <class> class EdgeWeightStorage=data_sharing::unpooled,
-      template<class, template<class> class> class EdgeStorageTraits = bucketed_edge_storage_traits
+      class NodeWeight,      
+      template <class> class EdgeWeightPooling=data_sharing::unpooled,
+      template <class> class NodeWeightPooling=data_sharing::unpooled,
+      template<class, template<class> class> class EdgeStorageTraits = bucketed_edge_storage_traits,
+      template<class, template<class> class, bool> class NodeWeightStorageTraits = node_weight_storage_traits
     >
     class graph : public
       graph_base
       <
-        (Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected,
-        NodeWeight,
+        (Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected,      
         EdgeWeight,
-        NodeWeightStorage,
-        EdgeWeightStorage,
-        EdgeStorageTraits
+        NodeWeight,      
+        EdgeWeightPooling,
+        NodeWeightPooling,
+        EdgeStorageTraits,
+        NodeWeightStorageTraits    
       >
     {
     private:
       using base =
         graph_base<
-          (Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected,
-          NodeWeight,
+          (Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected,      
           EdgeWeight,
-          NodeWeightStorage,
-          EdgeWeightStorage,
-          EdgeStorageTraits
+          NodeWeight,     
+          EdgeWeightPooling,
+          NodeWeightPooling,
+          EdgeStorageTraits,
+          NodeWeightStorageTraits
         >;
     public:
       using graph_base
       <
-        (Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected,
-        NodeWeight,
+        (Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected,      
         EdgeWeight,
-        NodeWeightStorage,
-        EdgeWeightStorage,
-        EdgeStorageTraits
+        NodeWeight, 
+        EdgeWeightPooling,
+        NodeWeightPooling,
+        EdgeStorageTraits,
+        NodeWeightStorageTraits
       >::graph_base;
 
       using base::sort_edges;
@@ -1437,22 +1454,24 @@ namespace sequoia
 
     template
     <
-      directed_flavour Directedness,
-      class NodeWeight,
+      directed_flavour Directedness,      
       class EdgeWeight,
-      template <class> class NodeWeightStorage=data_sharing::unpooled,
-      template <class> class EdgeWeightStorage=data_sharing::unpooled,
-      template<class, template<class> class> class EdgeStorageTraits=bucketed_edge_storage_traits
+      class NodeWeight,      
+      template <class> class EdgeWeightPooling=data_sharing::unpooled,
+      template <class> class NodeWeightPooling=data_sharing::unpooled,
+      template<class, template<class> class> class EdgeStorageTraits=bucketed_edge_storage_traits,
+      template<class, template<class> class, bool> class NodeWeightStorageTraits=node_weight_storage_traits
     >
     class embedded_graph : public
       graph_base
       <
-       (Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded,
-        NodeWeight,
+       (Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded,      
         EdgeWeight,
-        NodeWeightStorage,
-        EdgeWeightStorage,
-        EdgeStorageTraits
+        NodeWeight,     
+        EdgeWeightPooling,
+        NodeWeightPooling,
+        EdgeStorageTraits,
+        NodeWeightStorageTraits
       >
     {
     private:
@@ -1463,38 +1482,44 @@ namespace sequoia
     public:
       using graph_base
       <
-       (Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded,
-        NodeWeight,
+       (Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded,      
         EdgeWeight,
-        NodeWeightStorage,
-        EdgeWeightStorage,
-        EdgeStorageTraits
+        NodeWeight,      
+        EdgeWeightPooling,
+        NodeWeightPooling,
+        EdgeStorageTraits,
+        NodeWeightStorageTraits
       >::graph_base;
       
       using graph_primitive
       <
-        Directedness,
-        graph_impl::node_storage<typename NodeWeightStorage<NodeWeight>::proxy>,
-        typename graph_impl::edge_traits<to_graph_flavour(), EdgeWeight, EdgeWeightStorage, EdgeStorageTraits, std::size_t>,
-        typename graph_impl::weight_maker<NodeWeightStorage<NodeWeight>, EdgeWeightStorage<EdgeWeight>>
+        Directedness,        
+        typename graph_impl::edge_traits<to_graph_flavour(), EdgeWeight, EdgeWeightPooling, EdgeStorageTraits, std::size_t>,
+        graph_impl::node_storage<typename NodeWeightPooling<NodeWeight>::proxy, node_weight_storage_traits<NodeWeight, NodeWeightPooling>>,
+        typename graph_impl::weight_maker<NodeWeightPooling<NodeWeight>, EdgeWeightPooling<EdgeWeight>>
       >::insert_join;
     };
 
+    template<std::size_t Size, std::size_t Order, class EdgeWeight, class NodeWeight>
+    struct static_graph_traits
+    {
+      using edge_index_type = typename graph_impl::static_edge_index_type_generator<Size, Order, false>::index_type;
+    };
     
     template
     <
-      directed_flavour Directedness,
-      std::size_t Order,
+      directed_flavour Directedness,      
       std::size_t Size,
-      class NodeWeight,
+      std::size_t Order,      
       class EdgeWeight,
-      class EdgeIndexType = std::size_t
+      class NodeWeight,
+      class Traits = static_graph_traits<Size, Order, EdgeWeight, NodeWeight>
     >
     class static_graph : public
       graph_primitive<
         Directedness,
+      typename graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected, Order, Size, EdgeWeight, typename static_graph_traits<Size, Order, EdgeWeight, NodeWeight>::edge_index_type>,  
         graph_impl::static_node_storage<utilities::protective_wrapper<NodeWeight>, Order>,
-        typename graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected, Order, Size, EdgeWeight, std::make_unsigned_t<EdgeIndexType>>, 
         typename graph_impl::weight_maker<data_sharing::unpooled<NodeWeight>, data_sharing::unpooled<EdgeWeight>>
       >
     {
@@ -1502,18 +1527,20 @@ namespace sequoia
       using primitive =
         graph_primitive<
           Directedness,
+          typename graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected, Order, Size, EdgeWeight, typename static_graph_traits<Size, Order, EdgeWeight, NodeWeight>::edge_index_type>,      
           graph_impl::static_node_storage<utilities::protective_wrapper<NodeWeight>, Order>,
-          typename graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected, Order, Size, EdgeWeight, std::make_unsigned_t<EdgeIndexType>>, 
           typename graph_impl::weight_maker<data_sharing::unpooled<NodeWeight>, data_sharing::unpooled<EdgeWeight>>
         >;
       
     public:
       constexpr static graph_flavour flavour{(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected};
+
+      using edge_index_type = typename static_graph_traits<Size, Order, EdgeWeight, NodeWeight>::edge_index_type;
       
       using graph_primitive<
           Directedness,
+          typename graph_impl::static_edge_traits<flavour, Order, Size, EdgeWeight, edge_index_type>,        
           graph_impl::static_node_storage<utilities::protective_wrapper<NodeWeight>, Order>,
-          typename graph_impl::static_edge_traits<flavour, Order, Size, EdgeWeight, std::make_unsigned_t<EdgeIndexType>>, 
           typename graph_impl::weight_maker<data_sharing::unpooled<NodeWeight>, data_sharing::unpooled<EdgeWeight>>
       >::graph_primitive;
 
@@ -1522,20 +1549,26 @@ namespace sequoia
       using primitive::sort_edges;      
     };
 
+    template<std::size_t Size, std::size_t Order, class EdgeWeight, class NodeWeight>
+    struct static_embedded_graph_traits
+    {
+      using edge_index_type = typename graph_impl::static_edge_index_type_generator<Size, Order, false>::index_type;
+    };
+
     template
     <
-      directed_flavour Directedness,
-      std::size_t Order,
+      directed_flavour Directedness,      
       std::size_t Size,
-      class NodeWeight,
+      std::size_t Order,      
       class EdgeWeight,
-      class EdgeIndexType = std::size_t
+      class NodeWeight,
+      class Traits = static_embedded_graph_traits<Size, Order, EdgeWeight, NodeWeight>
     >
     class static_embedded_graph : public
       graph_primitive<
         Directedness,
+      typename graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded, Order, Size, EdgeWeight, typename static_embedded_graph_traits<Size, Order, EdgeWeight, NodeWeight>::edge_index_type>,      
         graph_impl::static_node_storage<utilities::protective_wrapper<NodeWeight>, Order>,
-        typename graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded, Order, Size, EdgeWeight, std::make_unsigned_t<EdgeIndexType>>, 
         typename graph_impl::weight_maker<data_sharing::unpooled<NodeWeight>, data_sharing::unpooled<EdgeWeight>>
       >
     {
@@ -1543,18 +1576,20 @@ namespace sequoia
       using primitive =
         graph_primitive<
           Directedness,
+          typename graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded, Order, Size, EdgeWeight, typename static_embedded_graph_traits<Size, Order, EdgeWeight, NodeWeight>::edge_index_type>, 
           graph_impl::static_node_storage<utilities::protective_wrapper<NodeWeight>, Order>,
-          typename graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded, Order, Size, EdgeWeight, std::make_unsigned_t<EdgeIndexType>>, 
           typename graph_impl::weight_maker<data_sharing::unpooled<NodeWeight>, data_sharing::unpooled<EdgeWeight>>
         >;
       
     public:
       constexpr static graph_flavour flavour{(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded};
+
+      using edge_index_type = typename static_embedded_graph_traits<Size, Order, EdgeWeight, NodeWeight>::edge_index_type;
       
       using graph_primitive<
           Directedness,
+          typename graph_impl::static_edge_traits<flavour, Order, Size, EdgeWeight, edge_index_type>,        
           graph_impl::static_node_storage<utilities::protective_wrapper<NodeWeight>, Order>,
-          typename graph_impl::static_edge_traits<flavour, Order, Size, EdgeWeight, std::make_unsigned_t<EdgeIndexType>>, 
           typename graph_impl::weight_maker<data_sharing::unpooled<NodeWeight>, data_sharing::unpooled<EdgeWeight>>
       >::graph_primitive;
 

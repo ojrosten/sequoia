@@ -6,7 +6,7 @@ namespace sequoia
   {
     void test_graph_update::run_tests()
     {
-      graph_test_helper<std::vector<int>, std::vector<double>> helper;
+      graph_test_helper<std::vector<double>, std::vector<int>> helper;
       helper.run_tests<test_BF_update>(*this);
 
       graph_test_helper<size_t, size_t> helper2;

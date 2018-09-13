@@ -45,14 +45,15 @@ namespace sequoia
     template
     <
       maths::graph_flavour GraphFlavour,
-      class NodeWeight,
       class EdgeWeight,
-      template <class> class NodeWeightStorage,
-      template <class> class EdgeWeightStorage,
-      template <class, template<class> class> class EdgeStorageTraits
+      class NodeWeight,      
+      template <class> class EdgeWeightPooling,
+      template <class> class NodeWeightPooling,
+      template <class, template<class> class> class EdgeStorageTraits,
+      template <class, template<class> class, bool> class NodeWeightStorageTraits
     >
     class generic_fixed_topology_tests
-      : public graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStorageTraits>
+      : public graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>
     {
     public:
       using graph_checker<unit_test_logger<test_mode::standard>>::check_equality;      
@@ -60,7 +61,7 @@ namespace sequoia
 
     private:
       using GGraph = typename
-        graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStorageTraits>::graph_type;
+        graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>::graph_type;
 
       using node_weight_type = typename GGraph::node_weight_type;
       using NodeWeights = std::vector<node_weight_type>;

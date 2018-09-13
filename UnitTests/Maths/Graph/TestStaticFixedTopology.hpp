@@ -14,10 +14,10 @@ namespace sequoia
     private:
       void run_tests() override;
 
-      template<class NodeWeight, class EdgeWeight> void test_undirected();
-      template<class NodeWeight, class EdgeWeight> void test_embedded_undirected();
-      template<class NodeWeight, class EdgeWeight> void test_directed();
-      template<class NodeWeight, class EdgeWeight> void test_embedded_directed();
+      template<class EdgeWeight, class NodeWeight> void test_undirected();
+      template<class EdgeWeight, class NodeWeight> void test_embedded_undirected();
+      template<class EdgeWeight, class NodeWeight> void test_directed();
+      template<class EdgeWeight, class NodeWeight> void test_embedded_directed();
     };
   }
 }

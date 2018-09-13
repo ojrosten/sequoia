@@ -15,20 +15,26 @@ namespace sequoia
 
     private:
       using unit_test::check_equality;
+
+      struct node_storage_traits
+      {
+        constexpr static bool throw_on_range_error{true};
+        template<class S> using underlying_storage_type = std::vector<S, std::allocator<S>>;
+      };
       
       template<class WeightProxy>
-      class node_storage_tester : public maths::graph_impl::node_storage<WeightProxy>
+      class node_storage_tester : public maths::graph_impl::node_storage<WeightProxy, node_storage_traits>
       {
       public:
-        using maths::graph_impl::node_storage<WeightProxy>::node_storage;
-        using maths::graph_impl::node_storage<WeightProxy>::reserve;
-        using maths::graph_impl::node_storage<WeightProxy>::capacity;
-        using maths::graph_impl::node_storage<WeightProxy>::shrink_to_fit;
-        using maths::graph_impl::node_storage<WeightProxy>::add_node;
-        using maths::graph_impl::node_storage<WeightProxy>::insert_node;
-        using maths::graph_impl::node_storage<WeightProxy>::erase_node;
-        using maths::graph_impl::node_storage<WeightProxy>::erase_nodes;
-        using maths::graph_impl::node_storage<WeightProxy>::clear;
+        using maths::graph_impl::node_storage<WeightProxy, node_storage_traits>::node_storage;
+        using maths::graph_impl::node_storage<WeightProxy, node_storage_traits>::reserve;
+        using maths::graph_impl::node_storage<WeightProxy, node_storage_traits>::capacity;
+        using maths::graph_impl::node_storage<WeightProxy, node_storage_traits>::shrink_to_fit;
+        using maths::graph_impl::node_storage<WeightProxy, node_storage_traits>::add_node;
+        using maths::graph_impl::node_storage<WeightProxy, node_storage_traits>::insert_node;
+        using maths::graph_impl::node_storage<WeightProxy, node_storage_traits>::erase_node;
+        using maths::graph_impl::node_storage<WeightProxy, node_storage_traits>::erase_nodes;
+        using maths::graph_impl::node_storage<WeightProxy, node_storage_traits>::clear;
       };
 
       template<class WeightProxy, std::size_t N>

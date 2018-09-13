@@ -15,20 +15,21 @@ namespace sequoia::unit_testing
 
   template
   <
-    maths::graph_flavour GraphFlavour,
-    class NodeWeight,
+    maths::graph_flavour GraphFlavour,    
     class EdgeWeight,
-    template <class> class NodeWeightStorage,
-    template <class> class EdgeWeightStorage,
-    template <class, template<class> class> class EdgeStorageTraits
+    class NodeWeight,    
+    template <class> class EdgeWeightPooling,
+    template <class> class NodeWeightPooling,
+    template <class, template<class> class> class EdgeStorageTraits,
+    template <class, template<class> class, bool> class NodeWeightStorageTraits
   >
   class generic_graph_false_positives
-    : public graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStorageTraits, unit_test_logger<test_mode::false_positive>>
+    : public graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits, unit_test_logger<test_mode::false_positive>>
   {
   public:
       
   private:
-    using base_t = graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStorageTraits>;
+    using base_t = graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>;
       
     using GGraph = typename base_t::graph_type;
 

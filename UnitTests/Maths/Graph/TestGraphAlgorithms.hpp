@@ -84,7 +84,7 @@ namespace sequoia
       {
         using namespace maths;
 
-        using graph_type = embedded_graph<directed_flavour::undirected, int, null_weight>;
+        using graph_type = embedded_graph<directed_flavour::undirected, null_weight, int>;
         graph_type graph;
 
         graph.add_node(3);
@@ -115,18 +115,19 @@ namespace sequoia
     template
     <
       maths::graph_flavour GraphFlavour,
-      class NodeWeight,
       class EdgeWeight,
-      template <class> class NodeWeightStorage,
-      template <class> class EdgeWeightStorage,
-      template <class, template<class> class> class EdgeStorageTraits
+      class NodeWeight,      
+      template <class> class EdgeWeightPooling,
+      template <class> class NodeWeightPooling,
+      template <class, template<class> class> class EdgeStorageTraits,
+      template <class, template<class> class, bool> class NodeWeightStorageTraits
     >
     class tracker_test
-      : public graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStorageTraits>
+      : public graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>
     {
     private:
       using Connectivity = typename
-        graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStorageTraits>::graph_type;
+        graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>::graph_type;
 
       using edge_results = std::vector<std::pair<std::size_t, std::size_t>>;
 
@@ -567,14 +568,15 @@ namespace sequoia
     template
     <
       maths::graph_flavour GraphFlavour,
-      class NodeWeight,
       class EdgeWeight,
-      template <class> class NodeWeightStorage,
-      template <class> class EdgeWeightStorage,
-      template <class, template<class> class> class EdgeStorageTraits
+      class NodeWeight,      
+      template <class> class EdgeWeightPooling,
+      template <class> class NodeWeightPooling,
+      template <class, template<class> class> class EdgeStorageTraits,
+      template <class, template<class> class, bool> class NodeWeightStorageTraits
     >
     class test_priority_traversal :
-      public graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStorageTraits>
+      public graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>
     {
     private:
       using UndirectedType = std::bool_constant<maths::undirected(GraphFlavour)>;
@@ -582,11 +584,12 @@ namespace sequoia
         graph_operations
         <
           GraphFlavour,
-          NodeWeight,
           EdgeWeight,
-          NodeWeightStorage,
-          EdgeWeightStorage,
-          EdgeStorageTraits
+          NodeWeight,
+          EdgeWeightPooling,
+          NodeWeightPooling,
+          EdgeStorageTraits,
+          NodeWeightStorageTraits
         >::graph_type;
 
       using graph_checker<unit_test_logger<test_mode::standard>>::check_equality;      
@@ -648,14 +651,15 @@ namespace sequoia
     template
     <
       maths::graph_flavour GraphFlavour,
-      class NodeWeight,
       class EdgeWeight,
-      template <class> class NodeWeightStorage,
-      template <class> class EdgeWeightStorage,
-      template <class, template<class> class> class EdgeStorageTraits
+      class NodeWeight,      
+      template <class> class EdgeWeightPooling,
+      template <class> class NodeWeightPooling,
+      template <class, template<class> class> class EdgeStorageTraits,
+      template <class, template<class> class, bool> class NodeWeightStorageTraits
     >
     class test_weighted_BFS_tasks
-      : public graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStorageTraits>
+      : public graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>
     {
     private:
       using UndirectedType = std::bool_constant<maths::undirected(GraphFlavour)>;
@@ -663,11 +667,12 @@ namespace sequoia
         graph_operations
         <
           GraphFlavour,
-          NodeWeight,
           EdgeWeight,
-          NodeWeightStorage,
-          EdgeWeightStorage,
-          EdgeStorageTraits
+          NodeWeight,
+          EdgeWeightPooling,
+          NodeWeightPooling,
+          EdgeStorageTraits,
+          NodeWeightStorageTraits
         >::graph_type;
 
       using graph_checker<unit_test_logger<test_mode::standard>>::check_equality;      
@@ -715,9 +720,10 @@ namespace sequoia
       void testNodeAndFirstEdgeTraversal()
       {
         const std::string prefix{to_string(GraphFlavour) + "; "
-          + template_class_to_string<NodeWeightStorage>::str() + "; "
-          + template_class_to_string<EdgeWeightStorage>::str() + "; "
-          + StorageTraitsToString<EdgeStorageTraits>::str()};
+          + template_class_to_string<NodeWeightPooling>::str() + "; "
+          + template_class_to_string<EdgeWeightPooling>::str() + "; "
+          + storage_traits_to_string<EdgeStorageTraits>::str() + "; "
+          + node_weight_storage_traits_to_string<NodeWeightStorageTraits>::str()};
 
         this->failure_message_prefix(prefix);
 

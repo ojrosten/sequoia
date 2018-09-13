@@ -9,7 +9,7 @@
 namespace sequoia
 {
   namespace maths
-  {
+  {    
     namespace graph_impl
     {
       //===================================Storage for the list of nodes===================================//
@@ -25,20 +25,8 @@ namespace sequoia
 
         static constexpr reference get(proxy_reference ref) noexcept { return ref.get(); }
       };
-
-      template<class WeightProxy, bool=std::is_empty_v<typename WeightProxy::value_type>>
-      struct node_storage_traits
-      {
-        constexpr static bool throw_on_range_error{true};
-        template<class S> using underlying_storage_type = std::vector<S, std::allocator<S>>;
-      };
-
-      template<class WeightProxy>
-      struct node_storage_traits<WeightProxy, true>
-      {
-      };
                                   
-      template<class WeightProxy, class Traits=node_storage_traits<WeightProxy>, bool=std::is_empty_v<typename WeightProxy::value_type>>
+      template<class WeightProxy, class Traits, bool=std::is_empty_v<typename WeightProxy::value_type>>
       class node_storage
       {
       private:
