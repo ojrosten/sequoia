@@ -437,9 +437,7 @@ namespace sequoia
       {
         using size_type = std::common_type_t<typename EdgeStorage::size_type, typename NodeStorage::size_type>;
       };
-        
-               
-      
+                           
       // Determine dynamic reservartion type etc
 
       template<class T, class = std::void_t<>>
@@ -452,8 +450,56 @@ namespace sequoia
 
       template<class T> constexpr bool has_reservable_partitions_v{has_reservable_partitions<T>::value};
 
+      // IndexType for Static Graphs
 
+      enum class index_type { u_char, u_short, u_int, u_long};
 
+      template
+      <
+        std::size_t Size,
+        std::size_t Order,
+        bool Embedded
+      >
+      constexpr index_type to_index_max() noexcept
+      {
+        if constexpr((Order < 255) && (!Embedded || (Size < 255))) return index_type::u_char;
+        else if constexpr((Order < 65535) && (!Embedded || (Size < 65535))) return index_type::u_short;
+        else return index_type::u_long;        
+      }
+
+      template
+      <                          
+        std::size_t Size,
+        std::size_t Order,
+        bool Embedded,
+        index_type=to_index_max<Size, Order, Embedded>()
+      >
+      struct static_edge_index_type_generator
+      {
+        using index_type = std::size_t;
+      };      
+
+      template
+      <                          
+        std::size_t Size,
+        std::size_t Order,
+        bool Embedded             
+      >
+      struct static_edge_index_type_generator<Size, Order, Embedded, index_type::u_char>
+      {
+        using index_type = unsigned char;
+      };
+
+      template
+      <                          
+        std::size_t Size,
+        std::size_t Order,
+        bool Embedded             
+      >
+      struct static_edge_index_type_generator<Size, Order, Embedded, index_type::u_short>
+      {
+        using index_type = unsigned short;
+      };
 
       // Move this to a different impl file!
       

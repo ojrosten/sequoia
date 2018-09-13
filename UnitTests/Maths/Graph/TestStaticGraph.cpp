@@ -77,19 +77,14 @@ namespace sequoia::unit_testing
     {
       using g_type = static_graph<directed_flavour::undirected, 1, 2, EdgeWeight, NodeWeight>;
       checker.template check_2_1<g_type>();
-    }
-    
-    {
-      using g_type = static_graph<directed_flavour::undirected, 1, 2, EdgeWeight, NodeWeight, char>;
-      checker.template check_2_1<g_type>();
-      
+
       // Think about alignment for non-empty T...
       if constexpr (std::is_empty_v<NodeWeight> && std::is_empty_v<EdgeWeight>)
         check_equality(4*sizeof(char), sizeof(g_type), LINE("2 bytes for each half edge and 2 for the partition data"));
 
       static_assert(std::is_same_v<typename g_type::edge_index_type, unsigned char>);
     }
-
+    
     {
       using g_type = static_graph<directed_flavour::undirected, 2, 3, EdgeWeight, NodeWeight>;
       checker.template check_3_2<g_type>();
@@ -144,11 +139,6 @@ namespace sequoia::unit_testing
     }
 
     {
-      using g_type = static_embedded_graph<directed_flavour::undirected, 1, 2, EdgeWeight, NodeWeight, char>;
-      checker.template check_2_1<g_type>();
-    }
-
-    {
       using g_type = static_embedded_graph<directed_flavour::undirected, 2, 3, EdgeWeight, NodeWeight>;
       checker.template check_3_2<g_type>();
     }
@@ -197,11 +187,6 @@ namespace sequoia::unit_testing
      }
 
      {
-       using g_type = static_graph<directed_flavour::directed, 1, 2, EdgeWeight, NodeWeight, char>;
-       checker.template check_2_1<g_type>();
-     }
-
-     {
        using g_type = static_graph<directed_flavour::directed, 2, 3, EdgeWeight, NodeWeight>;
        checker.template check_3_2<g_type>();
      }
@@ -243,12 +228,7 @@ namespace sequoia::unit_testing
       using g_type = static_embedded_graph<directed_flavour::directed, 1, 2, EdgeWeight, NodeWeight>;
       checker.template check_2_1<g_type>();
     }
-
-    {
-      using g_type = static_embedded_graph<directed_flavour::directed, 1, 2, EdgeWeight, NodeWeight, char>;
-      checker.template check_2_1<g_type>();
-    }
-
+    
     {
       using g_type = static_embedded_graph<directed_flavour::directed, 1, 3, EdgeWeight, NodeWeight>;
       checker.template check_3_1<g_type>();
