@@ -101,17 +101,24 @@ namespace sequoia
       static std::string str() { return "DATA POOL"; }
     };
 
-    template<template <class, template<class> class> class T> struct StorageTraitsToString;
+    template<template <class, template<class> class> class T> struct storage_traits_to_string;
 
-    template<> struct StorageTraitsToString<maths::bucketed_edge_storage_traits>
+    template<> struct storage_traits_to_string<maths::bucketed_edge_storage_traits>
     {
       static std::string str() { return "BUCKETED STORAGE"; }
     };
 
-    template<> struct StorageTraitsToString<maths::contiguous_edge_storage_traits>
+    template<> struct storage_traits_to_string<maths::contiguous_edge_storage_traits>
     {
       static std::string str() { return "CONTIGUOUS STORAGE"; }
-    };    
+    };
+
+    template<template <class, template<class> class, bool> class T> struct node_weight_storage_traits_to_string;
+    
+    template<> struct node_weight_storage_traits_to_string<maths::node_weight_storage_traits>
+    {
+      static std::string str() { return "NODE WEIGHT STORAGE TRAITS"; }
+    };
 
     inline constexpr bool mutual_info(const maths::graph_flavour flavour) noexcept
     {
@@ -195,31 +202,33 @@ namespace sequoia
     
     template
     <
-      maths::graph_flavour GraphFlavour,
-      class NodeWeight,
+      maths::graph_flavour GraphFlavour,      
       class EdgeWeight,
+      class NodeWeight,      
+      template <class> class EdgeWeightPooling,
       template <class> class NodeWeightStorage,
-      template <class> class EdgeWeightStorage,
       template<class, template<class> class> class EdgeStorageTraits,
+      template<class, template<class> class, bool> class NodeWeightStorageTraits,
       bool=embedded(GraphFlavour)
     >
     struct graph_type_generator
     {
-      using graph_type = maths::graph<maths::to_directedness(GraphFlavour), NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStorageTraits>;
+      using graph_type = maths::graph<maths::to_directedness(GraphFlavour), EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightStorage, EdgeStorageTraits, NodeWeightStorageTraits>;
     };
 
     template
     <
-      maths::graph_flavour GraphFlavour,
-      class NodeWeight,
+      maths::graph_flavour GraphFlavour,     
       class EdgeWeight,
-      template <class> class NodeWeightStorage,
-      template <class> class EdgeWeightStorage,
-      template<class, template<class> class> class EdgeStorageTraits
+      class NodeWeight,      
+      template <class> class EdgeWeightPooling,
+      template <class> class NodeWeightPooling,
+      template<class, template<class> class> class EdgeStorageTraits,
+      template<class, template<class> class, bool> class NodeWeightStorageTraits
     >
-    struct graph_type_generator<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStorageTraits, true>
+    struct graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits, true>
     {
-      using graph_type = maths::embedded_graph<maths::to_directedness(GraphFlavour), NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStorageTraits>;
+      using graph_type = maths::embedded_graph<maths::to_directedness(GraphFlavour), EdgeWeight, NodeWeight, NodeWeightPooling, EdgeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>;
     };
 
     template<class Logger>
@@ -377,29 +386,28 @@ namespace sequoia
 
     template
     <
-      maths::graph_flavour GraphFlavour,
-      class NodeWeight,
+      maths::graph_flavour GraphFlavour,      
       class EdgeWeight,
-      template <class> class NodeWeightStorage,
-      template <class> class EdgeWeightStorage,
+      class NodeWeight,      
+      template <class> class EdgeWeightPooling,
+      template <class> class NodeWeightPooling,
       template<class, template<class> class> class EdgeStorageTraits,
+      template<class, template<class> class, bool> class NodeWeightStorageTraits,
       class Logger=unit_test_logger<test_mode::standard>
     >
     class graph_operations : protected graph_checker<Logger>
     {
     public:
-      using graph_type = typename graph_type_generator<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightStorage, EdgeWeightStorage, EdgeStorageTraits>::graph_type;      
+      using graph_type = typename graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>::graph_type;      
       
       log_summary run(const std::string& helpername)
-      {
-        constexpr bool throwOnRangeError{graph_type::throw_on_range_error};
-        
+      {        
         const std::string prefix{
-            to_string(GraphFlavour) + "; "
-          + bool_to_string<throwOnRangeError>::str() + "; "
-          + template_class_to_string<NodeWeightStorage>::str() + "; "
-          + template_class_to_string<EdgeWeightStorage>::str() + "; "
-          + StorageTraitsToString<EdgeStorageTraits>::str() + "; "
+            to_string(GraphFlavour) + "; "           
+          + template_class_to_string<EdgeWeightPooling>::str() + "; "
+          + template_class_to_string<NodeWeightPooling>::str() + "; "
+          + storage_traits_to_string<EdgeStorageTraits>::str() + "; "
+          + node_weight_storage_traits_to_string<NodeWeightStorageTraits>::str() + "; " 
           + helpername};
 
         this->failure_message_prefix(prefix);
@@ -418,7 +426,7 @@ namespace sequoia
 
     };
 
-    template <class NodeWeight, class EdgeWeight>
+    template <class EdgeWeight, class NodeWeight>
     class graph_test_helper
     {
     public:
@@ -433,7 +441,8 @@ namespace sequoia
           class,
           template <class> class,
           template <class> class,
-          template <class, template<class> class> class
+          template <class, template<class> class> class,
+          template <class, template<class> class, bool> class
         >
         class TemplateTestClass,
         class Test
@@ -467,7 +476,8 @@ namespace sequoia
           class,
           template <class> class,
           template <class> class,
-          template <class, template<class> class> class
+          template <class, template<class> class> class,
+          template <class, template<class> class, bool> class
         >
         class TemplateTestClass,
         class Test
@@ -501,7 +511,8 @@ namespace sequoia
           class,
           template <class> class,
           template <class> class,
-          template <class, template<class> class> class
+          template <class, template<class> class> class,
+          template <class, template<class> class, bool> class
         >
         class TemplateTestClass,
         class Test
@@ -544,7 +555,8 @@ namespace sequoia
           class,
           template <class> class,
           template <class> class,
-          template <class, template<class> class> class
+          template <class, template<class> class> class,
+          template <class, template<class> class, bool> class
         >
         class TemplateTestClass
       >
@@ -552,13 +564,15 @@ namespace sequoia
       {
         using namespace data_sharing;
         
-        TemplateTestClass<GraphType, NodeWeight, EdgeWeight, unpooled, unpooled, EdgeStorage> test0;        
-        TemplateTestClass<GraphType, NodeWeight, EdgeWeight, data_pool, unpooled, EdgeStorage> test1;        
-        TemplateTestClass<GraphType, NodeWeight, EdgeWeight, data_pool, data_pool, EdgeStorage> test2;
+        TemplateTestClass<GraphType, EdgeWeight, NodeWeight, unpooled, unpooled, EdgeStorage, maths::node_weight_storage_traits> test0;        
+        TemplateTestClass<GraphType, EdgeWeight, NodeWeight, unpooled, data_pool, EdgeStorage, maths::node_weight_storage_traits> test1;
+        TemplateTestClass<GraphType, EdgeWeight, NodeWeight, data_pool, unpooled, EdgeStorage, maths::node_weight_storage_traits> test2;
+        TemplateTestClass<GraphType, EdgeWeight, NodeWeight, data_pool, data_pool, EdgeStorage, maths::node_weight_storage_traits> test3;
 
         run_graph_test(test0);
         run_graph_test(test1);
         run_graph_test(test2);
+        run_graph_test(test3);
       }
       
       template
@@ -571,7 +585,8 @@ namespace sequoia
           class,
           template <class> class,
           template <class> class,
-          template <class, template<class> class> class
+          template <class, template<class> class> class,
+          template <class, template<class> class, bool> class
         >
         class TemplateTestClass
       >

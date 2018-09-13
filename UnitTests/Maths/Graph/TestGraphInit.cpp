@@ -16,22 +16,22 @@ namespace sequoia
       }
 
       {
-        graph_test_helper<null_weight, int> helper{"Unweighted, int"};
+        graph_test_helper<int, null_weight> helper{"int, unweighted"};
         helper.run_tests<test_initialization>(*this);
       }
 
       {
-        graph_test_helper<null_weight, unsortable> helper{"Unweighted, unsortable"};
+        graph_test_helper<unsortable, null_weight> helper{"unsortable, unweighted"};
         helper.run_tests<test_initialization>(*this);
       }
 
       {
-        graph_test_helper<null_weight, big_unsortable> helper{"Unweighted, big unsortable"};
+        graph_test_helper<big_unsortable, null_weight> helper{"big unsortable, unweighted"};
         helper.run_tests<test_initialization>(*this);
       }
 
       {
-        graph_test_helper<int, null_weight> helper{"int, Unweighted"};
+        graph_test_helper<null_weight, int> helper{"unweighted, int"};
         helper.run_tests<test_initialization>(*this);
       }
 
@@ -41,12 +41,12 @@ namespace sequoia
       }
 
       {
-        graph_test_helper<int, unsortable> helper{"int, unsortable"};
+        graph_test_helper<unsortable, int> helper{"unsortable, int"};
         helper.run_tests<test_initialization>(*this);
       }
 
       {
-        graph_test_helper<int, big_unsortable> helper{"int, big unsortable"};
+        graph_test_helper<big_unsortable, int> helper{"big unsortable, int"};
         helper.run_tests<test_initialization>(*this);
       }
     }

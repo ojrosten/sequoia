@@ -50,37 +50,37 @@ namespace sequoia::unit_testing
     undirected_init_checker<test_static_graph> checker{*this};
     
     {
-      using g_type = static_graph<directed_flavour::undirected, 0, 0, NodeWeight, EdgeWeight>;
+      using g_type = static_graph<directed_flavour::undirected, 0, 0, EdgeWeight, NodeWeight>;
       checker.template check_0_0<g_type>();
     }
 
     {
-      using g_type = static_graph<directed_flavour::undirected, 1, 0, NodeWeight, EdgeWeight>;
+      using g_type = static_graph<directed_flavour::undirected, 0, 1, EdgeWeight, NodeWeight>;
       checker.template check_1_0<g_type>();
     }
     
     {
-      using g_type = static_graph<directed_flavour::undirected, 1, 1, NodeWeight, EdgeWeight>;
+      using g_type = static_graph<directed_flavour::undirected, 1, 1, EdgeWeight, NodeWeight>;
       checker.template check_1_1<g_type>();
     }
 
     {
-      using g_type = static_graph<directed_flavour::undirected, 1, 2, NodeWeight, EdgeWeight>;
+      using g_type = static_graph<directed_flavour::undirected, 2, 1, EdgeWeight, NodeWeight>;
       checker.template check_1_2<g_type>();
     }
 
     {
-      using g_type = static_graph<directed_flavour::undirected, 2, 0, NodeWeight, EdgeWeight>;
+      using g_type = static_graph<directed_flavour::undirected, 0, 2, EdgeWeight, NodeWeight>;
       checker.template check_1_0<g_type>();
     }
 
     {
-      using g_type = static_graph<directed_flavour::undirected, 2, 1, NodeWeight, EdgeWeight>;
+      using g_type = static_graph<directed_flavour::undirected, 1, 2, EdgeWeight, NodeWeight>;
       checker.template check_2_1<g_type>();
     }
     
     {
-      using g_type = static_graph<directed_flavour::undirected, 2, 1, NodeWeight, EdgeWeight, char>;
+      using g_type = static_graph<directed_flavour::undirected, 1, 2, EdgeWeight, NodeWeight, char>;
       checker.template check_2_1<g_type>();
       
       // Think about alignment for non-empty T...
@@ -91,17 +91,17 @@ namespace sequoia::unit_testing
     }
 
     {
-      using g_type = static_graph<directed_flavour::undirected, 3, 2, NodeWeight, EdgeWeight>;
+      using g_type = static_graph<directed_flavour::undirected, 2, 3, EdgeWeight, NodeWeight>;
       checker.template check_3_2<g_type>();
     }
 
     {
-      using g_type = static_graph<directed_flavour::undirected, 3, 3, NodeWeight, EdgeWeight>;
+      using g_type = static_graph<directed_flavour::undirected, 3, 3, EdgeWeight, NodeWeight>;
       checker.template check_3_3<g_type>();
     }
 
     {
-      using g_type = static_graph<directed_flavour::undirected, 3, 4, NodeWeight, EdgeWeight>;
+      using g_type = static_graph<directed_flavour::undirected, 4, 3, EdgeWeight, NodeWeight>;
       checker.template check_3_4<g_type>();
     }
   }
@@ -114,47 +114,47 @@ namespace sequoia::unit_testing
     undirected_embedded_init_checker<test_static_graph> checker{*this};
     
     {
-      using g_type = static_embedded_graph<directed_flavour::undirected, 0, 0, NodeWeight, EdgeWeight>;
+      using g_type = static_embedded_graph<directed_flavour::undirected, 0, 0, EdgeWeight, NodeWeight>;
       checker.template check_0_0<g_type>();
     }
 
     {
-      using g_type = static_embedded_graph<directed_flavour::undirected, 1, 0, NodeWeight, EdgeWeight>;
+      using g_type = static_embedded_graph<directed_flavour::undirected, 0, 1, EdgeWeight, NodeWeight>;
       checker.template check_1_0<g_type>();
     }
     
     {      
-      using g_type = static_embedded_graph<directed_flavour::undirected, 1, 1, NodeWeight, EdgeWeight>;      
+      using g_type = static_embedded_graph<directed_flavour::undirected, 1, 1, EdgeWeight, NodeWeight>;      
       checker.template check_1_1<g_type>();
     }
 
     {
-      using g_type = static_embedded_graph<directed_flavour::undirected, 1, 2, NodeWeight, EdgeWeight>;
+      using g_type = static_embedded_graph<directed_flavour::undirected, 2, 1, EdgeWeight, NodeWeight>;
       checker.template check_1_2<g_type>();      
     }
 
     {
-      using g_type = static_embedded_graph<directed_flavour::undirected, 2, 0, NodeWeight, EdgeWeight>;
+      using g_type = static_embedded_graph<directed_flavour::undirected, 0, 2, EdgeWeight, NodeWeight>;
       checker.template check_2_0<g_type>();
     }
     
     {
-      using g_type = static_embedded_graph<directed_flavour::undirected, 2, 1, NodeWeight, EdgeWeight>;
+      using g_type = static_embedded_graph<directed_flavour::undirected, 1, 2, EdgeWeight, NodeWeight>;
       checker.template check_2_1<g_type>();
     }
 
     {
-      using g_type = static_embedded_graph<directed_flavour::undirected, 2, 1, NodeWeight, EdgeWeight, char>;
+      using g_type = static_embedded_graph<directed_flavour::undirected, 1, 2, EdgeWeight, NodeWeight, char>;
       checker.template check_2_1<g_type>();
     }
 
     {
-      using g_type = static_embedded_graph<directed_flavour::undirected, 3, 2, NodeWeight, EdgeWeight>;
+      using g_type = static_embedded_graph<directed_flavour::undirected, 2, 3, EdgeWeight, NodeWeight>;
       checker.template check_3_2<g_type>();
     }
     
     {
-      using g_type = static_embedded_graph<directed_flavour::undirected, 3, 3, NodeWeight, EdgeWeight>;
+      using g_type = static_embedded_graph<directed_flavour::undirected, 3, 3, EdgeWeight, NodeWeight>;
       checker.template check_3_3<g_type>();
     }
   }
@@ -167,47 +167,47 @@ namespace sequoia::unit_testing
      directed_init_checker<test_static_graph> checker{*this};
 
      {
-       using g_type = static_graph<directed_flavour::directed, 0, 0, NodeWeight, EdgeWeight>;
+       using g_type = static_graph<directed_flavour::directed, 0, 0, EdgeWeight, NodeWeight>;
        checker.template check_0_0<g_type>();
      }
 
      {
-       using g_type = static_graph<directed_flavour::directed, 1, 0, NodeWeight, EdgeWeight>;
+       using g_type = static_graph<directed_flavour::directed, 0, 1, EdgeWeight, NodeWeight>;
        checker.template check_1_0<g_type>();
      }
      
      {
-       using g_type = static_graph<directed_flavour::directed, 1, 1, NodeWeight, EdgeWeight>;
+       using g_type = static_graph<directed_flavour::directed, 1, 1, EdgeWeight, NodeWeight>;
        checker.template check_1_1<g_type>();
      }
 
      {
-       using g_type = static_graph<directed_flavour::directed, 1, 2, NodeWeight, EdgeWeight>;
+       using g_type = static_graph<directed_flavour::directed, 2, 1, EdgeWeight, NodeWeight>;
        checker.template check_1_2<g_type>();
      }
 
      {
-       using g_type = static_graph<directed_flavour::undirected, 2, 0, NodeWeight, EdgeWeight>;
+       using g_type = static_graph<directed_flavour::undirected, 0, 2, EdgeWeight, NodeWeight>;
        checker.template check_2_0<g_type>();
      }
      
      {
-       using g_type = static_graph<directed_flavour::directed, 2, 1, NodeWeight, EdgeWeight>;
+       using g_type = static_graph<directed_flavour::directed, 1, 2, EdgeWeight, NodeWeight>;
        checker.template check_2_1<g_type>();
      }
 
      {
-       using g_type = static_graph<directed_flavour::directed, 2, 1, NodeWeight, EdgeWeight, char>;
+       using g_type = static_graph<directed_flavour::directed, 1, 2, EdgeWeight, NodeWeight, char>;
        checker.template check_2_1<g_type>();
      }
 
      {
-       using g_type = static_graph<directed_flavour::directed, 3, 2, NodeWeight, EdgeWeight>;
+       using g_type = static_graph<directed_flavour::directed, 2, 3, EdgeWeight, NodeWeight>;
        checker.template check_3_2<g_type>();
      }
 
      {
-       using g_type = static_graph<directed_flavour::directed, 4, 2, NodeWeight, EdgeWeight>;
+       using g_type = static_graph<directed_flavour::directed, 2, 4, EdgeWeight, NodeWeight>;
        checker.template check_4_2<g_type>();
      }
   }
@@ -220,37 +220,37 @@ namespace sequoia::unit_testing
     directed_embedded_init_checker<test_static_graph> checker{*this};
 
     {
-      using g_type = static_embedded_graph<directed_flavour::directed, 0, 0, NodeWeight, EdgeWeight>;
+      using g_type = static_embedded_graph<directed_flavour::directed, 0, 0, EdgeWeight, NodeWeight>;
       checker.template check_0_0<g_type>();
     }
 
     {
-      using g_type = static_embedded_graph<directed_flavour::directed, 1, 0, NodeWeight, EdgeWeight>;
+      using g_type = static_embedded_graph<directed_flavour::directed, 0, 1, EdgeWeight, NodeWeight>;
       checker.template check_1_0<g_type>();
     }
     
     {
-      using g_type = static_embedded_graph<directed_flavour::directed, 1, 1, NodeWeight, EdgeWeight>;
+      using g_type = static_embedded_graph<directed_flavour::directed, 1, 1, EdgeWeight, NodeWeight>;
       checker.template check_1_1<g_type>();
     }
 
     {
-      using g_type = static_embedded_graph<directed_flavour::directed, 2, 0, NodeWeight, EdgeWeight>;
+      using g_type = static_embedded_graph<directed_flavour::directed, 0, 2, EdgeWeight, NodeWeight>;
       checker.template check_2_0<g_type>();
     }
     
     {
-      using g_type = static_embedded_graph<directed_flavour::directed, 2, 1, NodeWeight, EdgeWeight>;
+      using g_type = static_embedded_graph<directed_flavour::directed, 1, 2, EdgeWeight, NodeWeight>;
       checker.template check_2_1<g_type>();
     }
 
     {
-      using g_type = static_embedded_graph<directed_flavour::directed, 2, 1, NodeWeight, EdgeWeight, char>;
+      using g_type = static_embedded_graph<directed_flavour::directed, 1, 2, EdgeWeight, NodeWeight, char>;
       checker.template check_2_1<g_type>();
     }
 
     {
-      using g_type = static_embedded_graph<directed_flavour::directed, 3, 1, NodeWeight, EdgeWeight>;
+      using g_type = static_embedded_graph<directed_flavour::directed, 1, 3, EdgeWeight, NodeWeight>;
       checker.template check_3_1<g_type>();
     }
   }

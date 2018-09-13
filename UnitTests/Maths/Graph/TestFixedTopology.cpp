@@ -9,7 +9,7 @@ namespace sequoia
       using namespace maths;
 
       {
-        graph_test_helper<null_weight, int> helper{"Unweighted, int"};
+        graph_test_helper<int, null_weight> helper{"int, unweighted"};
         helper.run_tests<generic_fixed_topology_tests>(*this);
       }
 
