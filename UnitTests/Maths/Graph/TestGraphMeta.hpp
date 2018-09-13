@@ -53,6 +53,8 @@ namespace sequoia::unit_testing
       template<class> class EdgeWeightStorage
     >
     void test_directed_embedded_impl();
+
+    void test_static_edge_index_generator();
   };
 
   template<class T> struct wrapper
