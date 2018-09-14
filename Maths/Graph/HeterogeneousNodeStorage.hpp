@@ -46,6 +46,16 @@ namespace sequoia::maths::graph_impl
     {
       return !(lhs == rhs);
     }
+  protected:
+    constexpr heterogeneous_node_storage(const heterogeneous_node_storage& in) = default;
+      
+    constexpr heterogeneous_node_storage(heterogeneous_node_storage&&) noexcept = default;
+        
+    ~heterogeneous_node_storage() = default;
+    
+    constexpr heterogeneous_node_storage& operator=(const heterogeneous_node_storage& in) = default;
+ 
+    constexpr heterogeneous_node_storage& operator=(heterogeneous_node_storage&&) noexcept = default;
   private:
     std::tuple<Ts...> m_Weights;
   };
