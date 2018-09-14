@@ -2,7 +2,7 @@
 
 #include "UnitTestUtils.hpp"
 
-#include "NodeStorage.hpp"
+#include "StaticNodeStorage.hpp"
 
 namespace sequoia
 {

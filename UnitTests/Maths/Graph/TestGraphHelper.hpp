@@ -7,7 +7,7 @@
 #include "ProtectiveWrapper.hpp"
 #include "PartitionedData.hpp"
 #include "DataPool.hpp"
-#include "Graph.hpp"
+#include "GraphImpl.hpp"
 #include "GraphAlgorithms.hpp"
 
 namespace sequoia
