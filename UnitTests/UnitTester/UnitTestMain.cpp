@@ -3,6 +3,7 @@
 
 #include "TestDataPool.hpp"
 
+#include "GraphTesterDiagnostics.hpp"
 #include "TestEdges.hpp"
 #include "TestNodeStorage.hpp"
 #include "TestHeterogeneousNodeStorage.hpp"
@@ -11,11 +12,12 @@
 #include "TestGraphInit.hpp"
 #include "TestFixedTopology.hpp"
 #include "TestStaticFixedTopology.hpp"
-#include "TestGraphAlgorithms.hpp"
-#include "TestGraphUpdate.hpp"
 #include "TestGraphMeta.hpp"
 #include "TestEdgeInsertion.hpp"
-#include "GraphTesterDiagnostics.hpp"
+
+#include "TestGraphTraversals.hpp"
+#include "TestGraphUpdate.hpp"
+#include "TestSubgraph.hpp"
 
 #include "TestThreadingModels.hpp"
 
@@ -132,14 +134,9 @@ int main(int argc, char** argv)
   runner.add_test_family(
     test_family{
       "Graph Algorithms",
-      test_graph_algorithms{"Unit Test"}
-    }
-  );
-
-  runner.add_test_family(
-    test_family{
-      "Graph Update",
-      test_graph_update{"Unit Test"}
+      test_graph_traversals{"Traversals"},
+      test_graph_update{"Updates"},
+      test_subgraph{"Subgraph"}
     }
   );
 

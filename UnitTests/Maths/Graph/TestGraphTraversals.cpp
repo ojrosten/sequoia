@@ -1,10 +1,10 @@
-#include "TestGraphAlgorithms.hpp"
+#include "TestGraphTraversals.hpp"
 
 namespace sequoia
 {
   namespace unit_testing
   {
-    void test_graph_algorithms::run_tests()
+    void test_graph_traversals::run_tests()
     {
       test_PRS_helpers();
 
