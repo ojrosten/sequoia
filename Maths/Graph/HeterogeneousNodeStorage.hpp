@@ -3,11 +3,18 @@
 #include "NodeStorage.hpp"
 
 namespace sequoia::maths::graph_impl
-{  
+{
+  
+  struct heterogeneous {};
+  struct null_proxy {};
+  
   template<class... Ts>
   class heterogeneous_node_storage
   {
-  public:    
+  public:
+    using weight_type = heterogeneous;
+    using weight_proxy_type = null_proxy;
+    
     template<class... Args>
     constexpr explicit heterogeneous_node_storage(Args&&... args) : m_Weights{std::forward<Args>(args)...}
     {

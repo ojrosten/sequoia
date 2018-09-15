@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Graph.hpp"
+#include "DynamicGraph.hpp"
+// #include "Graph.hpp" 
 #include "GraphAlgorithmDetails.hpp"
 #include "ThreadingModels.hpp"
 

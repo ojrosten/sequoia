@@ -6,7 +6,7 @@
 #include <tuple>
 
 namespace sequoia::maths
-{
+{  
   template<std::size_t Size, std::size_t Order, class EdgeWeight>
   struct heterogeneous_graph_traits
   {
@@ -33,7 +33,6 @@ namespace sequoia::maths
           typename heterogeneous_graph_traits<Size, Order, EdgeWeight>::edge_index_type
         >,  
       graph_impl::heterogeneous_node_storage<NodeWeights...>,
-    // Slightly dodgy!
       typename graph_impl::weight_maker<data_sharing::unpooled<EdgeWeight>, data_sharing::unpooled<EdgeWeight>>
     >
   {
@@ -51,7 +50,7 @@ namespace sequoia::maths
         graph_impl::heterogeneous_node_storage<NodeWeights...>,
         typename graph_impl::weight_maker<data_sharing::unpooled<EdgeWeight>, data_sharing::unpooled<EdgeWeight>>
       >;
-      
+
   public:
     constexpr static graph_flavour flavour{(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected};
 

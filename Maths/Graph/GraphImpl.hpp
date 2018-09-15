@@ -680,7 +680,10 @@ namespace sequoia
 
       static constexpr auto direct_node_init() noexcept
       {
-        return std::bool_constant<emptyNodes || std::is_same_v<typename Nodes::weight_proxy_type, utilities::protective_wrapper<node_weight_type>>>{};
+        return std::bool_constant<
+             emptyNodes
+          || std::is_same_v<typename Nodes::weight_proxy_type, utilities::protective_wrapper<node_weight_type>>
+        >{};
       }
 
       constexpr void check_consistency(std::initializer_list<std::initializer_list<edge_init_type>> edges)

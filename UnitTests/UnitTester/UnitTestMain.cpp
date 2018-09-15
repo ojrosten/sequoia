@@ -9,6 +9,7 @@
 #include "TestHeterogeneousNodeStorage.hpp"
 #include "TestGraph.hpp"
 #include "TestStaticGraph.hpp"
+#include "TestHeterogeneousStaticGraph.hpp"
 #include "TestGraphInit.hpp"
 #include "TestFixedTopology.hpp"
 #include "TestStaticFixedTopology.hpp"
@@ -124,6 +125,7 @@ int main(int argc, char** argv)
       test_graph_meta("Meta Tests"),
       test_graph_init("Initialization Tests"),        
       test_static_graph{"Static Graphs"},
+      test_heterogeneous_static_graph{"Heterogeneous Static Graphs"},
       test_graph{"Basic Tests"},
       test_fixed_topology{"Fixed Topology"},
       test_static_fixed_topology{"Static Fixed Topology"},
