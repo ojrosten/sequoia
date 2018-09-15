@@ -13,14 +13,20 @@ namespace sequoia::unit_testing
 
   private:
     using unit_test::check_equality;
-
+    
     void run_tests() override;
-
+    
     template<class... Ts>
     class storage_tester : public maths::graph_impl::heterogeneous_node_storage<Ts...>
     {
     public:
-      using maths::graph_impl::heterogeneous_node_storage<Ts...>::heterogeneous_node_storage;
+      template<class... Args>
+      constexpr explicit storage_tester(Args&&... args)
+        : maths::graph_impl::heterogeneous_node_storage<Ts...>(std::forward<Args>(args)...)
+      {
+      }
     };
+    
+    constexpr static auto make_storage() -> storage_tester<float, int>;  
   };
 }

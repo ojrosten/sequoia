@@ -19,13 +19,13 @@ namespace sequoia::maths::graph_impl
     }
 
     template<std::size_t I>
-    constexpr const auto& node_weight() noexcept
+    constexpr const auto& node_weight() const noexcept
     {
       return std::get<I>(m_Weights);
     }
 
     template<class T>
-    constexpr const auto& node_weight() noexcept
+    constexpr const auto& node_weight() const noexcept
     {
       return std::get<T>(m_Weights);
     }
