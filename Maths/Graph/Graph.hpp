@@ -2,4 +2,4 @@
 
 #include "DynamicGraph.hpp"
 #include "StaticGraph.hpp"
-#include "HeterogeneousGraph.hpp"
+#include "HeterogeneousStaticGraph.hpp"
