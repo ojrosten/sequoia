@@ -1,8 +1,6 @@
 #pragma once
 
-#include "TestGraphHelper.hpp"
-
-#include <complex>
+#include "DynamicGraphTestingUtils.hpp"
 
 namespace sequoia
 {

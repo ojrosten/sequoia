@@ -1,5 +1,7 @@
 #include "TestGraph.hpp"
 
+#include <complex>
+
 namespace sequoia::unit_testing
 {
   void test_graph::run_tests()

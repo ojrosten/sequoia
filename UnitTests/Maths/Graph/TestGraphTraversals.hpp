@@ -1,10 +1,9 @@
 #pragma once
 
-#include "GraphAlgorithms.hpp"
-#include "ThreadingModels.hpp"
-
 #include "GraphTraversalTestingUtils.hpp"
-#include "TestPartitionedDataHelper.hpp"
+#include "DynamicGraphTestingUtils.hpp"
+
+#include "ThreadingModels.hpp"
 
 #include <functional>
 

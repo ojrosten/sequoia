@@ -1,6 +1,7 @@
 #pragma once
 
-#include "TestGraphHelper.hpp"
+#include "GraphTestingUtils.hpp"
+#include "GraphAlgorithms.hpp"
 
 namespace sequoia::unit_testing
 {
@@ -66,5 +67,5 @@ namespace sequoia::unit_testing
   template<> struct type_to_string<Traverser<PRS>>
   {
     static std::string str() { return "PRS"; }
-  };
+  };  
 }
