@@ -19,9 +19,15 @@ namespace sequoia::maths::graph_impl
     }
 
     template<std::size_t I>
-    constexpr const auto& get() noexcept
+    constexpr const auto& node_weight() noexcept
     {
       return std::get<I>(m_Weights);
+    }
+
+    template<class T>
+    constexpr const auto& node_weight() noexcept
+    {
+      return std::get<T>(m_Weights);
     }
 
     template<std::size_t I, class Arg, class... Args>
@@ -31,10 +37,22 @@ namespace sequoia::maths::graph_impl
       std::get<I>(m_Weights) = T{std::forward<Arg>(arg), std::forward<Args>(args)...};
     }
 
+    template<class T, class Arg, class... Args>
+    constexpr void node_weight(Arg&& arg, Args&&... args)
+    {
+      std::get<T>(m_Weights) = T{std::forward<Arg>(arg), std::forward<Args>(args)...};
+    }
+    
     template<std::size_t I, class Fn>
     constexpr void mutate_node_weight(Fn fn)
     {
       fn(std::get<I>(m_Weights));
+    }
+
+    template<class T, class Fn>
+    constexpr void mutate_node_weight(Fn fn)
+    {
+      fn(std::get<T>(m_Weights));
     }
 
     friend constexpr bool operator==(const heterogeneous_node_storage& lhs, const heterogeneous_node_storage& rhs) noexcept

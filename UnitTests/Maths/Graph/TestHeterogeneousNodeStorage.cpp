@@ -1,11 +1,9 @@
 #include "TestHeterogeneousNodeStorage.hpp"
 
-#include "HeterogeneousNodeStorage.hpp"
-
-namespace test_heterogeneous_node_storage::sequoia::unit_testing
+namespace sequoia::unit_testing
 {
-  void run_tests()
+  void test_heterogeneous_node_storage::run_tests()
   {
-
+    storage_tester<int, double> s{3, 0.8};
   }
 }

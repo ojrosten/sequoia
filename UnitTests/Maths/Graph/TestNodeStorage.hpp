@@ -15,6 +15,13 @@ namespace sequoia
 
     private:
       using unit_test::check_equality;
+      
+      void run_tests() override;
+
+      struct null_weight{};
+
+      void test_dynamic_node_storage();
+      void test_static_node_storage();
 
       struct node_storage_traits
       {
@@ -76,13 +83,6 @@ namespace sequoia
 
         return passed;
       }
-      
-      void run_tests();
-
-      struct null_weight{};
-
-      void test_dynamic_node_storage();
-      void test_static_node_storage();
     };
   }
 }
