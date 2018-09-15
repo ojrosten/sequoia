@@ -111,7 +111,7 @@ int main(int argc, char** argv)
     test_family{
       "Node Storage",
       test_node_storage{"Dynamic and Static"},
-      test_node_storage{"Heterogeneuous"}
+      test_heterogeneous_node_storage{"Heterogeneuous"}
     }
   );
 
