@@ -35,12 +35,13 @@ namespace sequoia
     >
     class graph_primitive : private WeightMaker, public Nodes
     {
+    private:      
+      using node_weight_type = typename Nodes::weight_type;      
     protected:
       using edge_storage_type = typename EdgeTraits::edge_storage_type;
     public:
 
       using edge_type        = typename EdgeTraits::edge_type;
-      using node_weight_type = typename Nodes::weight_type;      
       using edge_weight_type = typename edge_type::weight_type;
       using edge_index_type  = typename edge_type::index_type;
       using edge_init_type   = typename EdgeTraits::edge_init_type;

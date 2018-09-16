@@ -43,6 +43,7 @@ namespace sequoia::maths
   public:
     constexpr static graph_flavour flavour{(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected};
 
+    using node_weight_type = NodeWeight;
     using edge_index_type = typename Traits::edge_index_type;
       
     using
@@ -96,6 +97,7 @@ namespace sequoia::maths
   public:
     constexpr static graph_flavour flavour{(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded};
 
+    using node_weight_type =  NodeWeight;
     using edge_index_type = typename Traits::edge_index_type;
       
     using graph_primitive

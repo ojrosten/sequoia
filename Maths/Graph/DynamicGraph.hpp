@@ -62,6 +62,8 @@ namespace sequoia::maths
       >;
     
   public:
+    using node_weight_type = NodeWeight;
+    
     using
       graph_primitive
       <
@@ -134,6 +136,8 @@ namespace sequoia::maths
          NodeWeightStorageTraits
       >;
   public:
+    using node_weight_type = NodeWeight;
+    
     using
       graph_base
       <
@@ -177,6 +181,8 @@ namespace sequoia::maths
         return (Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded;
       }
     public:
+      using node_weight_type = NodeWeight;
+      
       using
         graph_base
         <
