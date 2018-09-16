@@ -115,43 +115,60 @@ namespace sequoia
       using checker<Logger>::check_equality;
       using checker<Logger>::check;
       using checker<Logger>::check_exception_thrown;
+
+      template<class G, class... NodeWeights, class E=typename G::edge_init_type>
+      bool check_graph(const G& graph, const std::initializer_list<std::initializer_list<E>>& edges, const std::tuple<NodeWeights...>& nodeWeights, std::string_view failureMessage="")
+      {
+        check_equality(nodeWeights, graph.all_node_weights());
+        
+        return check_graph_edges(graph, edges, failureMessage);
+      }
+
+      template<class G, class E=typename G::edge_init_type>
+      bool check_graph(const G& graph, std::initializer_list<std::initializer_list<E>> edges, std::initializer_list<typename G::node_weight_type> nodeWeights, std::string_view failureMessage="")
+      {
+        constexpr bool nullNodeWeight{std::is_empty_v<typename G::node_weight_type>};
+          
+        if constexpr(!nullNodeWeight)       
+        {
+          if(check_equality(nodeWeights.size(), static_cast<std::size_t>(distance(graph.cbegin_node_weights(), graph.cend_node_weights())), "Number of nodes wrong"))
+          {
+            for(auto iter{graph.cbegin_node_weights()}; iter != graph.cend_node_weights(); ++iter)
+            {
+              const auto i{distance(graph.cbegin_node_weights(), iter)};
+              const std::string nodeMessage{"Node weight wrong for node " + std::to_string(i)};
+              check_equality(*(nodeWeights.begin() + i), *(graph.cbegin_node_weights()+i), nodeMessage);
+            }
+          }
+        }
+
+        return check_graph_edges(graph, edges, failureMessage); 
+      }
       
-      template<class G, class E=typename G::edge_init_type> bool
-      check_graph(const G& graph, const std::initializer_list<std::initializer_list<E>>& edges, const std::initializer_list<typename G::node_weight_type>& nodeWeights, const std::string& failureMessage="")
+    private:
+      template<class G, class E=typename G::edge_init_type>
+      bool check_graph_edges(const G& graph, std::initializer_list<std::initializer_list<E>> edges, std::string_view failureMessage="")
       {
         using Edge = typename G::edge_type;
         using RefEdge = E;
-        constexpr bool nullNodeWeight{std::is_empty_v<typename G::node_weight_type>};
         constexpr bool nullEdgeWeight{std::is_empty_v<typename G::edge_weight_type>};
 
         auto r{checker<Logger>::make_sentinel(failureMessage)};
         
-        const auto numFailures = failures();
-        const auto numNodes = edges.size();
+        const auto numFailures{failures()};
+        const auto numNodes{edges.size()};
         double nEdges{};
         if(check_equality(numNodes, graph.order(), "Graph order wrong"))
         {
-          if(!nullNodeWeight && check_equality(nodeWeights.size(), numNodes, "Number of node weights wrong"))
-          {
-            check_equality(nodeWeights.size(), numNodes, "Number of node weights wrong");
-          }
-
           for(auto edgesIter{edges.begin()}; edgesIter != edges.end(); ++edgesIter)
           {
             const auto i{std::distance(edges.begin(), edgesIter)};
             const std::string partStr{std::to_string(i)};
 
-            const std::string nodeMessage{"Node weight wrong for node " + partStr};
-            if constexpr(!nullNodeWeight)
-            {
-              if(i < nodeWeights.size())
-                check_equality(*(nodeWeights.begin() + i), *(graph.cbegin_node_weights()+i), nodeMessage);
-            }
-
-            auto beginEdges = graph.cbegin_edges(i);
-            auto endEdges = graph.cend_edges(i);
-            auto rbeginEdges = graph.crbegin_edges(i);
-            auto rendEdges = graph.crend_edges(i);
+            auto beginEdges{graph.cbegin_edges(i)};
+            auto endEdges{graph.cend_edges(i)};
+            auto rbeginEdges{graph.crbegin_edges(i)};
+            auto rendEdges{graph.crend_edges(i)};
 
             const auto nNodeEdges{static_cast<std::size_t>(distance(beginEdges, endEdges))};
             const auto nrNodeEdges{static_cast<std::size_t>(distance(rbeginEdges, rendEdges))};
@@ -161,16 +178,16 @@ namespace sequoia
                && check_equality(nodeEdges.size(), nrNodeEdges, "Number of edges for reversed partition " + partStr + " wrong")
                )
             {
-              auto ansIter = nodeEdges.begin();
-              auto redge = rendEdges;
-              for(auto edge = beginEdges; edge != endEdges; ++edge, ++ansIter)
+              auto ansIter{nodeEdges.begin()};
+              auto redge{rendEdges};
+              for(auto edge{beginEdges}; edge != endEdges; ++edge, ++ansIter)
               {
                 --redge;
                 check(*edge == *redge, "Disagreement between forward and reverse itereators");
-                auto dist = distance(beginEdges, edge);
+                auto dist{distance(beginEdges, edge)};
                 const std::string message{" wrong for partition " + partStr + ", edge " + to_string(dist)};
             
-                const auto target = [edge=*ansIter](const std::size_t node){
+                const auto target{[edge=*ansIter](const std::size_t node){
                   if constexpr (   (G::flavour != maths::graph_flavour::directed_embedded)
                               && (E::flavour != maths::edge_flavour::partial)
                               && (E::flavour != maths::edge_flavour::partial_embedded)
@@ -182,7 +199,8 @@ namespace sequoia
                   {
                     return edge.target_node();
                   } 
-                }(i);
+                }(i)};
+                
                 check_equality(target, edge->target_node(), "target_node" + message);
 
                 if constexpr ((Edge::flavour == maths::edge_flavour::partial_embedded)
@@ -215,7 +233,7 @@ namespace sequoia
         const bool passed{(falsePosMode && (failures() != numFailures)) || (!falsePosMode && (failures() == numFailures))};
         if(!passed && !failureMessage.empty())
         {
-          post_message('\t' + failureMessage + '\n');
+          post_message('\t' + std::string{failureMessage} + '\n');
         }
       
         return passed;

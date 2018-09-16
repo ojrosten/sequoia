@@ -37,6 +37,11 @@ namespace sequoia::maths::graph_impl
       return std::get<T>(m_Weights);
     }
 
+    constexpr const auto& all_node_weights() const noexcept
+    {
+      return m_Weights;
+    }
+
     template<std::size_t I, class Arg, class... Args>
     constexpr void node_weight(Arg&& arg, Args&&... args)
     {
