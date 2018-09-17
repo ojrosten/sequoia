@@ -4,17 +4,12 @@
 
 namespace sequoia::maths::graph_impl
 {
-  
-  struct heterogeneous {};
-  struct null_proxy {};
+  struct heterogeneous_tag;
   
   template<class... Ts>
   class heterogeneous_node_storage
   {
-  public:
-    using weight_type = heterogeneous;
-    using weight_proxy_type = null_proxy;
-    
+  public:    
     template<class... Args>
     constexpr explicit heterogeneous_node_storage(Args&&... args) : m_Weights{std::forward<Args>(args)...}
     {
@@ -76,7 +71,12 @@ namespace sequoia::maths::graph_impl
     {
       return !(lhs == rhs);
     }
-  protected:
+  protected:    
+    struct null_proxy_tag {};
+    
+    using weight_type = heterogeneous_tag;
+    using weight_proxy_type = null_proxy_tag;
+    
     constexpr heterogeneous_node_storage(const heterogeneous_node_storage& in) = default;
       
     constexpr heterogeneous_node_storage(heterogeneous_node_storage&&) noexcept = default;

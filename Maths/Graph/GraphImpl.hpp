@@ -65,7 +65,7 @@ namespace sequoia
         static_assert(std::is_empty_v<node_weight_type> || std::is_default_constructible_v<node_weight_type>);
       }
 
-      template<class N=node_weight_type, class=std::enable_if_t<!std::is_empty_v<N>>>
+      template<class N=node_weight_type, class=std::enable_if_t<!std::is_empty_v<N> && !std::is_same_v<N, graph_impl::heterogeneous_tag>>>
       constexpr graph_primitive(std::initializer_list<std::initializer_list<edge_init_type>> edges, std::initializer_list<N> nodeWeights)
         : graph_primitive(direct_edge_init(), direct_node_init(), edges, nodeWeights)
       {
@@ -73,6 +73,12 @@ namespace sequoia
           throw std::logic_error("Node weight initializer and edges top-level initializer must be of same size");
       }
 
+      template<class... NodeWeights, class N=node_weight_type, class=std::enable_if_t<std::is_same_v<N, graph_impl::heterogeneous_tag>>>
+      constexpr graph_primitive(std::initializer_list<std::initializer_list<edge_init_type>> edges, NodeWeights&&... nodeWeights)
+        : graph_primitive(direct_edge_init(), direct_node_init(), edges, std::forward<NodeWeights>(nodeWeights)...)
+      {
+      }
+      
       constexpr graph_primitive(const graph_primitive& in)
         : graph_primitive(std::bool_constant<direct_edge_init().value
                           || (EdgeTraits::shared_edge_v && std::is_same_v<typename edge_type::weight_proxy_type, utilities::protective_wrapper<edge_weight_type>>)>{}, in)
@@ -679,12 +685,20 @@ namespace sequoia
         return std::bool_constant<std::is_same_v<edge_type, edge_init_type>>{};
       }
 
+      enum class node_init_type{homog_direct, homog_indirect, hetero};
+
+      using homog_direct_init_type   = std::integral_constant<node_init_type, node_init_type::homog_direct>;
+      using homog_indirect_init_type = std::integral_constant<node_init_type, node_init_type::homog_indirect>;
+      using hetero_init_type         = std::integral_constant<node_init_type, node_init_type::hetero>;
+      
       static constexpr auto direct_node_init() noexcept
       {
-        return std::bool_constant<
-             emptyNodes
-          || std::is_same_v<typename Nodes::weight_proxy_type, utilities::protective_wrapper<node_weight_type>>
-        >{};
+        if constexpr(std::is_same_v<node_weight_type, graph_impl::heterogeneous_tag>)
+          return hetero_init_type{};
+        else if constexpr(emptyNodes || std::is_same_v<typename Nodes::weight_proxy_type, utilities::protective_wrapper<node_weight_type>>)
+          return homog_direct_init_type{};
+        else
+          return homog_indirect_init_type{};
       }
 
       constexpr void check_consistency(std::initializer_list<std::initializer_list<edge_init_type>> edges)
@@ -956,13 +970,24 @@ namespace sequoia
           }
         }
       }
-      
-      constexpr graph_primitive(std::true_type, std::true_type, std::initializer_list<std::initializer_list<edge_init_type>> edges, std::initializer_list<node_weight_type> nodeWeights)
-        : Nodes{nodeWeights}, m_Edges{edges}
+
+      template<class N=node_weight_type, class=std::enable_if_t<!std::is_same_v<N, graph_impl::heterogeneous_tag>>>
+      constexpr graph_primitive(std::true_type, homog_direct_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges, std::initializer_list<node_weight_type> nodeWeights)
+        : Nodes{nodeWeights}
+        , m_Edges{edges}
       {
       }
 
-      constexpr graph_primitive(std::true_type, std::false_type, std::initializer_list<std::initializer_list<edge_init_type>> edges, std::initializer_list<node_weight_type> nodeWeights)
+      template<class... NodeWeights, class N=node_weight_type, class=std::enable_if_t<std::is_same_v<N, graph_impl::heterogeneous_tag>>>
+      constexpr graph_primitive(std::true_type, hetero_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges, NodeWeights&&... nodeWeights)
+        : Nodes{std::forward<NodeWeights>(nodeWeights)...}
+        , m_Edges{edges}
+      {
+
+      }
+
+      template<class N=node_weight_type, class=std::enable_if_t<!std::is_same_v<N, graph_impl::heterogeneous_tag>>>
+      constexpr graph_primitive(std::true_type, homog_indirect_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges, std::initializer_list<node_weight_type> nodeWeights)
         : m_Edges{edges}
       {
         for(const auto& w : nodeWeights)
@@ -971,13 +996,22 @@ namespace sequoia
         }
       }
 
-      constexpr graph_primitive(std::false_type, std::true_type, std::initializer_list<std::initializer_list<edge_init_type>> edges, std::initializer_list<node_weight_type> nodeWeights)
+      template<class N=node_weight_type, class=std::enable_if_t<!std::is_same_v<N, graph_impl::heterogeneous_tag>>>
+      constexpr graph_primitive(std::false_type, homog_direct_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges, std::initializer_list<node_weight_type> nodeWeights)
         : Nodes{nodeWeights}
       {
         check_consistency(edges);
       }
 
-      constexpr graph_primitive(std::false_type, std::false_type, std::initializer_list<std::initializer_list<edge_init_type>> edges, std::initializer_list<node_weight_type> nodeWeights)
+      template<class... NodeWeights, class N=node_weight_type, class=std::enable_if_t<std::is_same_v<N, graph_impl::heterogeneous_tag>>>
+      constexpr graph_primitive(std::false_type, hetero_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges, NodeWeights&&... nodeWeights)
+        : Nodes{std::forward<NodeWeights>(nodeWeights)...}
+      {
+        check_consistency(edges);
+      }
+
+      template<class N=node_weight_type, class=std::enable_if_t<!std::is_same_v<N, graph_impl::heterogeneous_tag>>>
+      constexpr graph_primitive(std::false_type, homog_indirect_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges, std::initializer_list<node_weight_type> nodeWeights)
       {
         check_consistency(edges);
         for(const auto& w : nodeWeights)
@@ -986,14 +1020,24 @@ namespace sequoia
         }
       }
 
-      constexpr graph_primitive(std::true_type, std::true_type, std::initializer_list<std::initializer_list<edge_init_type>> edges)
+      template<class N=node_weight_type, class=std::enable_if_t<!std::is_same_v<N, graph_impl::heterogeneous_tag>>>
+      constexpr graph_primitive(std::true_type, homog_direct_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges)
         : Nodes(edges.size())
         , m_Edges{edges}
       {      
         check_consistency(edges);
       }
-      
-      constexpr graph_primitive(std::true_type, std::false_type, std::initializer_list<std::initializer_list<edge_init_type>> edges)
+
+      template<class N=node_weight_type, class=std::enable_if_t<std::is_same_v<N, graph_impl::heterogeneous_tag>>>
+      constexpr graph_primitive(std::true_type, hetero_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges)
+        : Nodes{}
+        , m_Edges{edges}
+      {      
+        check_consistency(edges);
+      }
+
+      template<class N=node_weight_type, class=std::enable_if_t<!std::is_same_v<N, graph_impl::heterogeneous_tag>>>
+      constexpr graph_primitive(std::true_type, homog_indirect_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges)
         : m_Edges{edges}
       {        
         check_consistency(edges);
@@ -1002,13 +1046,22 @@ namespace sequoia
           Nodes::add_node(WeightMaker::make_node_weight(node_weight_type{}));
       }
       
-      graph_primitive(std::false_type, std::true_type, std::initializer_list<std::initializer_list<edge_init_type>> edges)
+      template<class N=node_weight_type, class=std::enable_if_t<!std::is_same_v<N, graph_impl::heterogeneous_tag>>>
+      graph_primitive(std::false_type, homog_direct_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges)
         : Nodes(edges.size())
       {
         check_consistency(edges);
       }
 
-      graph_primitive(std::false_type, std::false_type, std::initializer_list<std::initializer_list<edge_init_type>> edges)
+      template<class N=node_weight_type, class=std::enable_if_t<std::is_same_v<N, graph_impl::heterogeneous_tag>>>
+      graph_primitive(std::false_type, hetero_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges)
+        : Nodes{}
+      {
+        check_consistency(edges);
+      }
+
+      template<class N=node_weight_type, class=std::enable_if_t<!std::is_same_v<N, graph_impl::heterogeneous_tag>>>
+      graph_primitive(std::false_type, homog_indirect_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges)
       {        
         check_consistency(edges);
         

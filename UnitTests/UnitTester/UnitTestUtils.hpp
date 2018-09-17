@@ -310,6 +310,17 @@ namespace sequoia
 
     namespace impl
     {
+      inline std::string concat_messages(std::string_view s1, std::string_view s2)
+      {
+        std::string mess{!s1.empty() ? s1 : s2};
+        if(!s1.empty() && !s2.empty())
+        {
+          mess += (" " + std::string{s2});
+        }
+        
+        return mess;
+      }
+      
       template<class T, class = void> struct container_detector : std::false_type
       {
       };
@@ -366,7 +377,8 @@ namespace sequoia
       check_tuple_elements(Logger& logger, const std::tuple<T...>& reference, const std::tuple<T...>& actual, const std::string& description="")
       {
         using S = std::decay_t<decltype(std::get<I>(reference))>;
-        equality_checker<S>::check(logger, std::get<I>(reference), std::get<I>(actual), description);
+        const std::string message{"Tuple elements differ for " + std::to_string(I) + "th element"};
+        equality_checker<S>::check(logger, std::get<I>(reference), std::get<I>(actual), concat_messages(description, message));
         check_tuple_elements<Logger, I+1, T...>(logger, reference, actual, description);
       }
 
@@ -374,7 +386,7 @@ namespace sequoia
       bool check_equality(Logger& logger, const std::tuple<T...>& reference, const std::tuple<T...>& actual, const std::string& description="")
       {
         typename Logger::sentinel r{logger, description};
-        const bool equal{impl::check(logger, reference == actual)};
+        const bool equal{impl::check(logger, reference == actual, description)};
         if(!equal)
         {
           check_tuple_elements(logger, reference, actual, description);

@@ -38,7 +38,9 @@ namespace sequoia
     }
 
     namespace graph_impl
-    {      
+    {
+      struct heterogeneous_tag {};
+      
       constexpr std::size_t num_static_edges(const graph_flavour flavour, const std::size_t size) noexcept
       {
         return (flavour != graph_flavour::directed) ? 2*size : size;
