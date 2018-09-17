@@ -13,6 +13,7 @@ namespace sequoia::unit_testing
     void run_tests() override;
     
     constexpr static auto make_undirected_graph();
+    constexpr static auto make_directed_graph();
 
     void test_generic_undirected();
     void test_generic_embedded_undirected();

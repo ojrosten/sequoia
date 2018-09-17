@@ -52,6 +52,8 @@ namespace sequoia::maths
       >;
 
   public:
+    static_assert(sizeof...(NodeWeights) == Order);
+    
     constexpr static graph_flavour flavour{(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected};
 
     using edge_index_type = typename heterogeneous_graph_traits<Size, Order, EdgeWeight>::edge_index_type;
