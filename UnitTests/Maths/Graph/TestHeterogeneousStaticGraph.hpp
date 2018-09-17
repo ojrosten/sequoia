@@ -19,5 +19,10 @@ namespace sequoia::unit_testing
     void test_generic_embedded_undirected();
     void test_generic_directed();
     void test_generic_embedded_directed();
+
+    struct function_object
+    {
+      int operator()(int i) const noexcept { return i*=2;}
+    };
   };
 }

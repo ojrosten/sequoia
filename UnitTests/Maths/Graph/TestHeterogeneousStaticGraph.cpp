@@ -68,6 +68,13 @@ namespace sequoia::unit_testing
       using edge = typename decltype(g)::edge_init_type;
       check_graph(g, {{edge{1, -0.3f}}, {edge{0, -0.3f}}, {}}, std::tuple<float, int, double>{9.9f, -6, 11.2}, LINE(""));
     }
+
+    {
+      using graph_t = heterogeneous_static_graph<directed_flavour::undirected, 1, 1, float, function_object>;
+      using edge = typename graph_t::edge_init_type;
+      
+      constexpr graph_t g{ {{edge{0, 0.2f}, edge{0, 0.2f}}}, function_object{}};
+    }
   }
 
   void test_heterogeneous_static_graph::test_generic_embedded_undirected()
