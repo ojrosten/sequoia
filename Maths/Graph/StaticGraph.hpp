@@ -63,7 +63,7 @@ namespace sequoia::maths
   template<std::size_t Size, std::size_t Order, class EdgeWeight, class NodeWeight>
   struct static_embedded_graph_traits
   {
-    using edge_index_type = typename graph_impl::static_edge_index_type_generator<Size, Order, false>::index_type;
+    using edge_index_type = typename graph_impl::static_edge_index_type_generator<Size, Order, true>::index_type;
   };
 
   template
