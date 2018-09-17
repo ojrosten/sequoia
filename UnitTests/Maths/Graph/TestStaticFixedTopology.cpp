@@ -1,5 +1,7 @@
 #include "TestStaticFixedTopology.hpp"
+
 #include "TestFixedTopologyHelper.hpp"
+#include "StaticGraph.hpp"
 
 namespace sequoia::unit_testing
 {

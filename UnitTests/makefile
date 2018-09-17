@@ -16,7 +16,7 @@ CFLAGS := -Wall -std=c++1z -O0 -ferror-limit=1 \
           $(patsubst %,-I%, $(LIBSUBDIRS))
 EXE := $(UTBUILDDIR)/UnitTest.exe
 
-UTSRCS := $(shell find . -name '*.cpp' ! -name TestUnitTesterMain.cpp)
+UTSRCS := $(shell find . -name '*.cpp')
 UTOBJS := $(addprefix $(UTBUILDDIR)/, $(UTSRCS:%.cpp=%.o))
 UTDEPS := $(addprefix $(UTBUILDDIR)/, $(UTSRCS:%.cpp=%.d))
 

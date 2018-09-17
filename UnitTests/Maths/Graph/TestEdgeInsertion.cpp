@@ -1,5 +1,7 @@
 #include "TestEdgeInsertion.hpp"
 
+#include <complex>
+
 namespace sequoia
 {
   namespace unit_testing

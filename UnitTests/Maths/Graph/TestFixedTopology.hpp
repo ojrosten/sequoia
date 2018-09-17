@@ -2,6 +2,8 @@
 
 #include "TestFixedTopologyHelper.hpp"
 
+#include "DynamicGraphTestingUtils.hpp"
+
 namespace sequoia
 {
   namespace unit_testing

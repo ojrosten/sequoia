@@ -1,6 +1,6 @@
 #pragma once
 
-#include "TestGraphHelper.hpp"
+#include "GraphTestingUtils.hpp"
 
 namespace sequoia::unit_testing
 {

@@ -1,5 +1,7 @@
 #include "TestStaticGraph.hpp"
+
 #include "TestGraphInitHelper.hpp"
+#include "StaticGraph.hpp"
 
 namespace sequoia::unit_testing
 {  

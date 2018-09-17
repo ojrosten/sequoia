@@ -1,10 +1,9 @@
 #pragma once
 
-#include "GraphAlgorithms.hpp"
-#include "ThreadingModels.hpp"
+#include "GraphTraversalTestingUtils.hpp"
+#include "DynamicGraphTestingUtils.hpp"
 
-#include "TestGraphHelper.hpp"
-#include "TestPartitionedDataHelper.hpp"
+#include "ThreadingModels.hpp"
 
 #include <functional>
 
@@ -70,7 +69,7 @@ namespace sequoia
       clear(fn...);
     }
 
-    class test_graph_algorithms : public graph_unit_test
+    class test_graph_traversals : public graph_unit_test
     {
     public:
       using graph_unit_test::graph_unit_test;

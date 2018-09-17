@@ -1,6 +1,6 @@
 #include "TestGraphMeta.hpp"
 
-#include <complex>
+#include "DynamicGraph.hpp"
 
 namespace sequoia::unit_testing
 {  

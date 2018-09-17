@@ -3,18 +3,22 @@
 
 #include "TestDataPool.hpp"
 
+#include "GraphTesterDiagnostics.hpp"
 #include "TestEdges.hpp"
 #include "TestNodeStorage.hpp"
+#include "TestHeterogeneousNodeStorage.hpp"
 #include "TestGraph.hpp"
 #include "TestStaticGraph.hpp"
+#include "TestHeterogeneousStaticGraph.hpp"
 #include "TestGraphInit.hpp"
 #include "TestFixedTopology.hpp"
 #include "TestStaticFixedTopology.hpp"
-#include "TestGraphAlgorithms.hpp"
-#include "TestGraphUpdate.hpp"
 #include "TestGraphMeta.hpp"
 #include "TestEdgeInsertion.hpp"
-#include "GraphTesterDiagnostics.hpp"
+
+#include "TestGraphTraversals.hpp"
+#include "TestGraphUpdate.hpp"
+#include "TestSubgraph.hpp"
 
 #include "TestThreadingModels.hpp"
 
@@ -109,7 +113,8 @@ int main(int argc, char** argv)
   runner.add_test_family(
     test_family{
       "Node Storage",
-      test_node_storage{"Unit Test"}
+      test_node_storage{"Dynamic and Static"},
+      test_heterogeneous_node_storage{"Heterogeneuous"}
     }
   );
 
@@ -120,24 +125,20 @@ int main(int argc, char** argv)
       test_graph_meta("Meta Tests"),
       test_graph_init("Initialization Tests"),        
       test_static_graph{"Static Graphs"},
+      test_heterogeneous_static_graph{"Heterogeneous Static Graphs"},
       test_graph{"Basic Tests"},
-      test_fixed_topology("Fixed Topology"),
-      test_static_fixed_topology("Static Fixed Topology"),
-      test_edge_insertion("Edge Insertions")  
+      test_fixed_topology{"Fixed Topology"},
+      test_static_fixed_topology{"Static Fixed Topology"},
+      test_edge_insertion{"Edge Insertions"}  
     }
   );
 
   runner.add_test_family(
     test_family{
       "Graph Algorithms",
-      test_graph_algorithms{"Unit Test"}
-    }
-  );
-
-  runner.add_test_family(
-    test_family{
-      "Graph Update",
-      test_graph_update{"Unit Test"}
+      test_graph_traversals{"Traversals"},
+      test_graph_update{"Updates"},
+      test_subgraph{"Subgraph"}
     }
   );
 
