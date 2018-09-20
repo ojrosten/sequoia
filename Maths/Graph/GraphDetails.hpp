@@ -271,14 +271,14 @@ namespace sequoia
       // Dynamic Edge Traits
 
       template<bool>
-      struct shared_edge_to_policy
+      struct shared_edge_v_to_policy
       {
         template<class EdgeType>
         using edge_storage_sharing_policy = data_sharing::independent<EdgeType>;
       };
 
       template<>
-      struct shared_edge_to_policy<true>
+      struct shared_edge_v_to_policy<true>
       {
         template<class EdgeType>
         using edge_storage_sharing_policy = data_sharing::shared<EdgeType>;
