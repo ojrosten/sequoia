@@ -1,11 +1,12 @@
 #pragma once
 
 #include "GraphImpl.hpp"
+#include "StaticGraphImpl.hpp"
 
 #include "StaticNodeStorage.hpp"
 
 namespace sequoia::maths
-{
+{  
   template<std::size_t Size, std::size_t Order, class EdgeWeight, class NodeWeight>
   struct static_graph_traits
   {

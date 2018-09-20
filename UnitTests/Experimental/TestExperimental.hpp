@@ -28,39 +28,41 @@ namespace sequoia
 
       template<class T> struct component {};
 
-      template<class T, class C> struct thing {};
+      //template<class T, class C> struct thing {};
       
-      template<class T, template<class> class C> struct thing2 {};      
+      //template<class T, template<class> class C> struct thing2 {};      
 
       template<class T> using alias = component<T>;
 
       template<class T>
-      struct wrapper
+      class wrapper
       {
+        T& m_Ref; // Behaves with reference_wrapper
+        //std::reference_wrapper<T> m_Ref;
+      public:
         wrapper(T& ref) : m_Ref{ref} {}
         
-        wrapper(const wrapper&)            noexcept = default;
+        wrapper(const wrapper&)            = default;
         wrapper(wrapper&&)                 noexcept = default;
-        wrapper& operator=(const wrapper&) noexcept(false){} // required to reveal bug; removing false fixes compilation
+        wrapper& operator=(const wrapper&) noexcept(false){} // required to reveal bug; 
+        //removing false fixes compilation
         wrapper& operator=(wrapper&&)      noexcept = default;
 
-        private:
-          T& m_Ref; // Behaves with reference_wrapper
       };
 
       template<class T, class W>
-      class thing3
+      class thing
       {
-      public:
-        thing3(T& ref) : m_Member{ref} {}
-
-        thing3(const thing3&) noexcept = default;
-        thing3(thing3&&)      noexcept = default;
-
-        thing3& operator=(const thing3&)               = default;
-        constexpr thing3& operator=(thing3&&) noexcept = default;
       private:
         W m_Member{};
+      public:
+        thing(T& ref) : m_Member{ref} {}
+
+        thing(const thing&) = default;
+        thing(thing&&)      = default;
+
+        thing& operator=(const thing&)     = default;
+        thing& operator=(thing&&) noexcept = default;
       };
       
       static constexpr double divby10(double x)

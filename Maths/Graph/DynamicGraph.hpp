@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GraphImpl.hpp"
+#include "DynamicGraphImpl.hpp"
 
 #include "NodeStorage.hpp"
 
@@ -46,7 +47,7 @@ namespace sequoia::maths
     graph_primitive
     <
       to_directedness(GraphFlavour),      
-      typename graph_impl::edge_traits<GraphFlavour, EdgeWeight, EdgeWeightPooling, EdgeStorageTraits, std::size_t>,
+      typename graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeWeightPooling, EdgeStorageTraits, std::size_t>,
       graph_impl::node_storage<typename NodeWeightPooling<NodeWeight>::proxy, node_weight_storage_traits<NodeWeight, NodeWeightPooling>>,
       typename graph_impl::weight_maker<NodeWeightPooling<NodeWeight>, EdgeWeightPooling<EdgeWeight>>
     >
@@ -56,7 +57,7 @@ namespace sequoia::maths
       graph_primitive
       <
         to_directedness(GraphFlavour),      
-        typename graph_impl::edge_traits<GraphFlavour, EdgeWeight, EdgeWeightPooling, EdgeStorageTraits, std::size_t>,
+        typename graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeWeightPooling, EdgeStorageTraits, std::size_t>,
         graph_impl::node_storage<typename NodeWeightPooling<NodeWeight>::proxy, node_weight_storage_traits<NodeWeight, NodeWeightPooling>>,
         typename graph_impl::weight_maker<NodeWeightPooling<NodeWeight>, EdgeWeightPooling<EdgeWeight>>
       >;
@@ -68,7 +69,7 @@ namespace sequoia::maths
       graph_primitive
       <
         to_directedness(GraphFlavour),     
-        typename graph_impl::edge_traits<GraphFlavour, EdgeWeight, EdgeWeightPooling, EdgeStorageTraits, std::size_t>,
+        typename graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeWeightPooling, EdgeStorageTraits, std::size_t>,
         graph_impl::node_storage<typename NodeWeightPooling<NodeWeight>::proxy, node_weight_storage_traits<NodeWeight, NodeWeightPooling>>,
         typename graph_impl::weight_maker<NodeWeightPooling<NodeWeight>, EdgeWeightPooling<EdgeWeight>>
       >::graph_primitive;
@@ -199,7 +200,7 @@ namespace sequoia::maths
         graph_primitive
         <
           Directedness,        
-          typename graph_impl::edge_traits<to_graph_flavour(), EdgeWeight, EdgeWeightPooling, EdgeStorageTraits, std::size_t>,
+          typename graph_impl::dynamic_edge_traits<to_graph_flavour(), EdgeWeight, EdgeWeightPooling, EdgeStorageTraits, std::size_t>,
           graph_impl::node_storage<typename NodeWeightPooling<NodeWeight>::proxy, node_weight_storage_traits<NodeWeight, NodeWeightPooling>>,
           typename graph_impl::weight_maker<NodeWeightPooling<NodeWeight>, EdgeWeightPooling<EdgeWeight>>
         >::insert_join;
