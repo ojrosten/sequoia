@@ -435,7 +435,6 @@ namespace sequoia
         } 
       }      
 
-      // TO DO!
       template<class... Args>
       std::pair<const_edge_iterator, const_edge_iterator>
       insert_join(const_edge_iterator citer1, const_edge_iterator citer2, Args&&... args)
@@ -451,6 +450,12 @@ namespace sequoia
           citer2 = m_Edges.insert_to_partition(cbegin_edges(node2) + pos2, citer1);
         }
         else if constexpr(edge_type::flavour == edge_flavour::partial_embedded)
+        {
+          increment_comp_indices(begin_edges(node2) + pos2, end_edges(node2), 1);
+          const auto pos1{static_cast<edge_index_type>(distance(cbegin_edges(node1), citer1))};
+          citer2 = m_Edges.insert_to_partition(cbegin_edges(node2) + pos2, node1, pos1, *citer1);
+        }
+        else if constexpr(edge_type::flavour == edge_flavour::full_embedded)
         {
           increment_comp_indices(begin_edges(node2) + pos2, end_edges(node2), 1);
           const auto pos1{static_cast<edge_index_type>(distance(cbegin_edges(node1), citer1))};
@@ -1087,35 +1092,36 @@ namespace sequoia
       template<class EdgeInitializer>
       edge_type make_edge(const edge_index_type host, const EdgeInitializer& edgeInit)
       {
+        // Note that this method will only be called if edge_init_type != edge_type
+        // TO DO: better static consistency checking
         if constexpr(directed(directedness))
         {
-          // TO DO!
-          // Directed edges only have comp indices if the edges aren't shared
-          // in which case (edge_init_type == edge_type) and this method is
-          // never called.  ----> NO LONGER TRUE
           using inv_t = inverted_constant<true>;
-          if constexpr(std::is_empty_v<edge_weight_type>)
+          if constexpr(EdgeTraits::shared_edge_v)
           {
-            if((edgeInit.target_node() == host) && edgeInit.inverted())
-              return edge_type{host, inv_t{}};
+            if constexpr(std::is_empty_v<edge_weight_type>)
+            {
+              if((edgeInit.target_node() == host) && edgeInit.inverted())
+                return edge_type{host, inv_t{}};
+              else
+                return edge_type{host, edgeInit.target_node()};
+            }
             else
-              return edge_type{host, edgeInit.target_node()};
-          }
-          else
-          {
-            if((edgeInit.target_node() == edgeInit.host_node()) && edgeInit.inverted())
+            {
+              if((edgeInit.target_node() == edgeInit.host_node()) && edgeInit.inverted())
               return edge_type{host, inv_t{}, WeightMaker::make_edge_weight(edgeInit.weight())};
             else
               return edge_type{host, edgeInit.target_node(), WeightMaker::make_edge_weight(edgeInit.weight())};
+            }
+          }
+          else if constexpr(EdgeTraits::init_complementary_data_v)
+          {
+            return edge_type{host, edgeInit.target_node(), edgeInit.complementary_index(), WeightMaker::make_edge_weight(edgeInit.weight())};
           }
         }
         else
         {
-          if constexpr(std::is_empty_v<edge_weight_type>)
-          {
-            return edge_type{edgeInit.target_node()};
-          }
-          else if constexpr(EdgeTraits::init_complementary_data_v && !EdgeTraits::shared_weight_v)
+          if constexpr(EdgeTraits::init_complementary_data_v)
           {
             return edge_type{edgeInit.target_node(), edgeInit.complementary_index(), WeightMaker::make_edge_weight(edgeInit.weight())};
           }
