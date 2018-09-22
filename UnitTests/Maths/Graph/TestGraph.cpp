@@ -54,7 +54,7 @@ namespace sequoia::unit_testing
     class NodeWeight,      
     template <class> class EdgeWeightPooling,
     template <class> class NodeWeightPooling,
-    template <class, template<class> class> class EdgeStorageTraits,
+    template <maths::graph_flavour, class, template<class> class> class EdgeStorageTraits,
     template <class, template<class> class, bool> class NodeWeightStorageTraits
   >
   void generic_graph_operations<
@@ -473,7 +473,7 @@ namespace sequoia::unit_testing
     class NodeWeight,      
     template <class> class EdgeWeightPooling,
     template <class> class NodeWeightPooling,
-    template <class, template<class> class> class EdgeStorageTraits,
+    template <maths::graph_flavour, class, template<class> class> class EdgeStorageTraits,
     template <class, template<class> class, bool> class NodeWeightStorageTraits
   >
   void graph_contiguous_capacity<
@@ -509,7 +509,7 @@ namespace sequoia::unit_testing
     class NodeWeight,      
     template <class> class EdgeWeightPooling,
     template <class> class NodeWeightPooling,
-    template <class, template<class> class> class EdgeStorageTraits,
+     template <maths::graph_flavour, class, template<class> class> class EdgeStorageTraits,
     template <class, template<class> class, bool> class NodeWeightStorageTraits
   >
   void graph_bucketed_capacity<
@@ -551,7 +551,7 @@ namespace sequoia::unit_testing
     class NodeWeight,      
     template <class> class EdgeWeightPooling,
     template <class> class NodeWeightPooling,
-    template <class, template<class> class> class EdgeStorageTraits,
+    template <maths::graph_flavour, class, template<class> class> class EdgeStorageTraits,
     template <class, template<class> class, bool> class NodeWeightStorageTraits
   >
   void generic_weighted_graph_tests<
@@ -944,7 +944,7 @@ namespace sequoia::unit_testing
     class NodeWeight,      
     template <class> class EdgeWeightPooling,
     template <class> class NodeWeightPooling,
-    template <class, template<class> class> class EdgeStorageTraits,
+    template <maths::graph_flavour, class, template<class> class> class EdgeStorageTraits,
     template <class, template<class> class, bool> class NodeWeightStorageTraits
   >
   void test_copy_move<

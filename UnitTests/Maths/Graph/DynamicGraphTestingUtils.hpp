@@ -15,7 +15,7 @@ namespace sequoia::unit_testing
     static std::string str() { return "DATA POOL"; }
   };
 
-  template<template <class, template<class> class> class T> struct storage_traits_to_string;
+  template<template <maths::graph_flavour, class, template<class> class> class> struct storage_traits_to_string;
 
   template<> struct storage_traits_to_string<maths::bucketed_edge_storage_traits>
   {
@@ -41,7 +41,7 @@ namespace sequoia::unit_testing
     class NodeWeight,      
     template <class> class EdgeWeightPooling,
     template <class> class NodeWeightStorage,
-    template<class, template<class> class> class EdgeStorageTraits,
+    template<maths::graph_flavour, class, template<class> class> class EdgeStorageTraits,
     template<class, template<class> class, bool> class NodeWeightStorageTraits,
     bool=embedded(GraphFlavour)
   >
@@ -57,7 +57,7 @@ namespace sequoia::unit_testing
     class NodeWeight,      
     template <class> class EdgeWeightPooling,
     template <class> class NodeWeightPooling,
-    template<class, template<class> class> class EdgeStorageTraits,
+    template<maths::graph_flavour, class, template<class> class> class EdgeStorageTraits,
     template<class, template<class> class, bool> class NodeWeightStorageTraits
   >
   struct graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits, true>
@@ -72,7 +72,7 @@ namespace sequoia::unit_testing
     class NodeWeight,      
     template <class> class EdgeWeightPooling,
     template <class> class NodeWeightPooling,
-    template<class, template<class> class> class EdgeStorageTraits,
+    template<maths::graph_flavour, class, template<class> class> class EdgeStorageTraits,
     template<class, template<class> class, bool> class NodeWeightStorageTraits,
     class Logger=unit_test_logger<test_mode::standard>
   >
@@ -121,7 +121,7 @@ namespace sequoia::unit_testing
         class,
         template <class> class,
         template <class> class,
-        template <class, template<class> class> class,
+        template <maths::graph_flavour, class, template<class> class> class,
         template <class, template<class> class, bool> class
       >
       class TemplateTestClass,
@@ -148,7 +148,7 @@ namespace sequoia::unit_testing
       
     template
     <
-      template <class, template<class> class> class EdgeStorage,
+      template <maths::graph_flavour, class, template<class> class> class EdgeStorage,
       template
       <
         maths::graph_flavour,
@@ -156,7 +156,7 @@ namespace sequoia::unit_testing
         class,
         template <class> class,
         template <class> class,
-        template <class, template<class> class> class,
+        template <maths::graph_flavour, class, template<class> class> class,
         template <class, template<class> class, bool> class
       >
         class TemplateTestClass,
@@ -191,7 +191,7 @@ namespace sequoia::unit_testing
         class,
         template <class> class,
         template <class> class,
-        template <class, template<class> class> class,
+        template <maths::graph_flavour, class, template<class> class> class,
         template <class, template<class> class, bool> class
       >
       class TemplateTestClass,
@@ -226,7 +226,7 @@ namespace sequoia::unit_testing
     template
     <
       maths::graph_flavour GraphType,
-      template <class, template<class> class> class EdgeStorage,
+      template <maths::graph_flavour, class, template<class> class> class EdgeStorage,
       template
       <
         maths::graph_flavour,
@@ -234,7 +234,7 @@ namespace sequoia::unit_testing
         class,
         template <class> class,
         template <class> class,
-        template <class, template<class> class> class,
+        template <maths::graph_flavour, class, template<class> class> class,
         template <class, template<class> class, bool> class
       >
       class TemplateTestClass
@@ -264,7 +264,7 @@ namespace sequoia::unit_testing
         class,
         template <class> class,
         template <class> class,
-        template <class, template<class> class> class,
+        template <maths::graph_flavour, class, template<class> class> class,
         template <class, template<class> class, bool> class
       >
       class TemplateTestClass
