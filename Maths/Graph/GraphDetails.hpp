@@ -36,6 +36,8 @@ namespace sequoia
     {
       return ((gf == graph_flavour::directed) || (gf == graph_flavour::directed_embedded)) ? directed_flavour::directed : directed_flavour::undirected;
     }
+    
+    enum class edge_sharing_preference {agnostic, shared_edge, shared_weight, independent};
 
     namespace graph_impl
     {
@@ -60,7 +62,6 @@ namespace sequoia
         template<class W> using policy = data_sharing::independent<W>;
       };
 
-
       // Edge Weight Wrapper
 
       template<class EdgeWeight, template <class> class EdgeWeightPooling, bool=std::is_empty_v<EdgeWeight>>
@@ -75,10 +76,8 @@ namespace sequoia
       {
         using proxy = typename utilities::protective_wrapper<EdgeWeight>;
       };
-
-       // Edge (Weight) Sharing      
-
-      enum class sharing_preference {agnostic, shared_edge, shared_weight, independent};
+      
+      // Edge (Weight) Sharing      
        
       template<class EdgeWeight, template <class> class EdgeWeightPooling>
       constexpr bool big_proxy() noexcept
@@ -98,7 +97,7 @@ namespace sequoia
       template
       <
         graph_flavour GraphFlavour,
-        sharing_preference SharingPreference,
+        edge_sharing_preference SharingPreference,
         class EdgeWeight,
         template <class> class EdgeWeightPooling
       >
@@ -110,18 +109,18 @@ namespace sequoia
            && (big_proxy<EdgeWeight, EdgeWeightPooling>() || !copy_constructible_proxy<EdgeWeight, EdgeWeightPooling>())
         };
       public:
-        static_assert((GraphFlavour != graph_flavour::directed) || (SharingPreference != sharing_preference::shared_weight), "A directed graph without embedding cannot have shared weights");
+        static_assert((GraphFlavour != graph_flavour::directed) || (SharingPreference != edge_sharing_preference::shared_weight), "A directed graph without embedding cannot have shared weights");
 
-        static_assert((SharingPreference != sharing_preference::shared_edge) || (GraphFlavour == graph_flavour::directed_embedded), "Edges may only be shared for directed, embedded graphs");
+        static_assert((SharingPreference != edge_sharing_preference::shared_edge) || (GraphFlavour == graph_flavour::directed_embedded), "Edges may only be shared for directed, embedded graphs");
         
         constexpr static bool shared_edge_v{
           (GraphFlavour == graph_flavour::directed_embedded)
-          && ((SharingPreference == sharing_preference::shared_edge) || (SharingPreference == sharing_preference::agnostic))
+          && ((SharingPreference == edge_sharing_preference::shared_edge) || (SharingPreference == edge_sharing_preference::agnostic))
         };
 
         constexpr static bool shared_weight_v{
-               SharingPreference == sharing_preference::shared_weight
-          || ((SharingPreference == sharing_preference::agnostic) && default_weight_sharing)
+               SharingPreference == edge_sharing_preference::shared_weight
+          || ((SharingPreference == edge_sharing_preference::agnostic) && default_weight_sharing)
         };
       };
       
@@ -179,7 +178,7 @@ namespace sequoia
         class EdgeWeight,
         template <class> class EdgeWeightPooling,
         class IndexType,
-        sharing_preference SharingPreference,
+        edge_sharing_preference SharingPreference,
         bool SharedEdge=sharing_traits<GraphFlavour, SharingPreference, EdgeWeight, EdgeWeightPooling>::shared_edge_v
       >
       struct edge_type_generator
@@ -201,7 +200,7 @@ namespace sequoia
         class EdgeWeight,
         template <class> class EdgeWeightPooling,
         class IndexType,
-        sharing_preference SharingPreference,
+        edge_sharing_preference SharingPreference,
         bool SharedEdge
       >
       struct edge_type_generator<
@@ -230,7 +229,7 @@ namespace sequoia
         class EdgeWeight,
         template <class> class EdgeWeightPooling,
         class IndexType,
-        sharing_preference SharingPreference
+        edge_sharing_preference SharingPreference
       >
       struct edge_type_generator<graph_flavour::directed_embedded, EdgeWeight, EdgeWeightPooling, IndexType, SharingPreference, true>
       {
@@ -252,7 +251,7 @@ namespace sequoia
         class EdgeWeight,        
         template <class> class EdgeWeightPooling,
         class IndexType,
-        sharing_preference SharingPreference
+        edge_sharing_preference SharingPreference
       >
       struct edge_type_generator<graph_flavour::directed_embedded, EdgeWeight, EdgeWeightPooling, IndexType, SharingPreference, false>
       {

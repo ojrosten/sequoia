@@ -12,9 +12,9 @@ namespace sequoia::maths::graph_impl
     template<class, template<class> class> class EdgeStorageTraits,
     class IndexType
   >
-  struct dynamic_edge_traits : public edge_type_generator<GraphFlavour, EdgeWeight, EdgeWeightPooling, IndexType, sharing_preference::agnostic>
+  struct dynamic_edge_traits : public edge_type_generator<GraphFlavour, EdgeWeight, EdgeWeightPooling, IndexType, edge_sharing_preference::agnostic>
   {
-    using edge_type_gen = edge_type_generator<GraphFlavour, EdgeWeight, EdgeWeightPooling, IndexType, sharing_preference::agnostic>;        
+    using edge_type_gen = edge_type_generator<GraphFlavour, EdgeWeight, EdgeWeightPooling, IndexType, edge_sharing_preference::agnostic>;        
     using edge_type = typename edge_type_gen::edge_type;
     constexpr static bool shared_edge_v{edge_type_gen::shared_edge_v};
         

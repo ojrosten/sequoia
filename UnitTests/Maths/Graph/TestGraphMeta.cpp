@@ -129,7 +129,7 @@ namespace sequoia::unit_testing
     using namespace data_structures;
     
     static_assert(!big_proxy<EdgeWeight, EdgeWeightStorage>());
-    static_assert(!sharing_traits<GraphFlavour, sharing_preference::independent, EdgeWeight, EdgeWeightStorage>::shared_weight_v);
+    static_assert(!sharing_traits<GraphFlavour, edge_sharing_preference::independent, EdgeWeight, EdgeWeightStorage>::shared_weight_v);
       
     using gen_t = dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeWeightStorage, contiguous_edge_storage_traits, std::size_t>;
     using edge_t = typename gen_t::edge_type;
@@ -145,7 +145,7 @@ namespace sequoia::unit_testing
     using namespace data_structures;
     
     static_assert(big_proxy<EdgeWeight, EdgeWeightStorage>());
-    static_assert(sharing_traits<GraphFlavour, sharing_preference::agnostic, EdgeWeight, EdgeWeightStorage>::shared_weight_v);
+    static_assert(sharing_traits<GraphFlavour, edge_sharing_preference::agnostic, EdgeWeight, EdgeWeightStorage>::shared_weight_v);
       
     using gen_t = dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeWeightStorage, contiguous_edge_storage_traits, std::size_t>;
     using edge_t = typename gen_t::edge_type;
