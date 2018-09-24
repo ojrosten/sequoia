@@ -130,20 +130,12 @@ namespace sequoia::unit_testing
     void run_tests(Test& unitTest)
     {        
       using flavour = maths::graph_flavour;
-      try
-      {
-        run_graph_flavour_tests<flavour::undirected, TemplateTestClass>();
-        run_graph_flavour_tests<flavour::undirected_embedded, TemplateTestClass>();
-        run_graph_flavour_tests<flavour::directed, TemplateTestClass>();
-        run_graph_flavour_tests<flavour::directed_embedded, TemplateTestClass>();
-          
-        finish(unitTest);
-      }
-      catch(...)
-      {
-        finish(unitTest);
-        throw;
-      }
+      sentry<Test> s{unitTest, m_Summary};
+      
+      run_graph_flavour_tests<flavour::undirected, TemplateTestClass>();
+      run_graph_flavour_tests<flavour::undirected_embedded, TemplateTestClass>();
+      run_graph_flavour_tests<flavour::directed, TemplateTestClass>();
+      run_graph_flavour_tests<flavour::directed_embedded, TemplateTestClass>();
     }
       
     template
@@ -165,20 +157,12 @@ namespace sequoia::unit_testing
     void run_storage_tests(Test& unitTest)
     {        
       using flavour = maths::graph_flavour;
-      try
-      {
-        run_graph_storage_tests<flavour::undirected,          EdgeStorage, TemplateTestClass>();
-        run_graph_storage_tests<flavour::undirected_embedded, EdgeStorage, TemplateTestClass>();
-        run_graph_storage_tests<flavour::directed,            EdgeStorage, TemplateTestClass>();
-        run_graph_storage_tests<flavour::directed_embedded,   EdgeStorage, TemplateTestClass>();
-          
-        finish(unitTest);
-      }
-      catch(...)
-      {
-        finish(unitTest);
-        throw;
-      }
+      sentry<Test> s{unitTest, m_Summary};
+      
+      run_graph_storage_tests<flavour::undirected,          EdgeStorage, TemplateTestClass>();
+      run_graph_storage_tests<flavour::undirected_embedded, EdgeStorage, TemplateTestClass>();
+      run_graph_storage_tests<flavour::directed,            EdgeStorage, TemplateTestClass>();
+      run_graph_storage_tests<flavour::directed_embedded,   EdgeStorage, TemplateTestClass>();          
     }
       
     template
@@ -199,22 +183,28 @@ namespace sequoia::unit_testing
     >
     void run_individual_test(Test& unitTest)
     {
-      try
-      {
-        run_graph_flavour_tests<GraphFlavour, TemplateTestClass>();
-          
-        finish(unitTest);
-      }
-      catch(...)
-      {
-        finish(unitTest);
-        throw;
-      }
+      sentry<Test> s{unitTest, m_Summary};
+      run_graph_flavour_tests<GraphFlavour, TemplateTestClass>();
     }
       
   private:
     std::string m_Name;
     log_summary m_Summary{};
+
+    template<class Test>
+    class sentry
+    {
+    public:
+      sentry(Test& unitTest, log_summary& summary) : m_UnitTest{unitTest},  m_Summary{summary} {}
+      ~sentry()
+      {
+        m_UnitTest.merge(m_Summary);   
+        m_Summary.clear();
+      }
+    private:
+      Test& m_UnitTest;
+      log_summary& m_Summary;
+    };
 
     template<class Test>
     void finish(Test& unitTest)
