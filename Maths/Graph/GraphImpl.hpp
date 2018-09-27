@@ -254,7 +254,7 @@ namespace sequoia
         if constexpr (throw_on_range_error) if(node >= order()) throw std::out_of_range("Cannot delete node: index out of range");
 
         if constexpr (EdgeTraits::mutual_info_v)
-        {
+        {          
           std::set<size_type> partitionsToVisit;
           for(auto citer{m_Edges.cbegin_partition(node)}; citer != m_Edges.cend_partition(node); ++citer)
           {            
@@ -429,9 +429,17 @@ namespace sequoia
             m_Edges.push_back_to_partition(node2, node1, compIndex, *crbegin_edges(node1));
           }
         }
-        else if constexpr(EdgeTraits::shared_edge_v)
+        else
         {
-          m_Edges.push_back_to_partition(node2, --cend_edges(node1));
+          if constexpr(edge_type::flavour == edge_flavour::full)
+          {
+            m_Edges.push_back_to_partition(node2, --cend_edges(node1));
+          }
+          else if constexpr(edge_type::flavour == edge_flavour::full_embedded)
+          {
+            const edge_index_type compIndex(distance(cbegin_edges(node1), cend_edges(node1)) -1);
+            m_Edges.push_back_to_partition(node2, compIndex, *crbegin_edges(node1));
+          }
         } 
       }      
 
@@ -459,7 +467,7 @@ namespace sequoia
         {
           increment_comp_indices(begin_edges(node2) + pos2, end_edges(node2), 1);
           const auto pos1{static_cast<edge_index_type>(distance(cbegin_edges(node1), citer1))};
-          citer2 = m_Edges.insert_to_partition(cbegin_edges(node2) + pos2, node1, pos1, *citer1);
+          citer2 = m_Edges.insert_to_partition(pos1, *citer1);
         }
 
         return {citer1, citer2};
@@ -1200,7 +1208,7 @@ namespace sequoia
               }
               else if constexpr(edge_type::flavour == edge_flavour::full_embedded)
               {
-                m_Edges.push_back_to_partition(i, i, indices.first, indices.second, *(cbegin_edges(indices.first)+indices.second));
+                m_Edges.push_back_to_partition(i, indices.second, *(cbegin_edges(indices.first)+indices.second));
               }
             }
           }
@@ -1400,9 +1408,10 @@ namespace sequoia
               const auto target = iter->target_node();
               if(pred(target, node)) iter->target_node(modifier(target));
 
-              if constexpr(EdgeTraits::shared_edge_v)
+              //if constexpr(directed(directedness) && EdgeTraits::mutual_info_v)
+              if constexpr((edge_type::flavour == edge_flavour::full) || (edge_type::flavour == edge_flavour::full_embedded))
               {
-                const auto host{iter->host_node()};
+                const auto host{iter->host_node()};                
                 if(pred(host, node)) iter->host_node(modifier(host));
               }
 

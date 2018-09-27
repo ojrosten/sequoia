@@ -5,6 +5,24 @@
 
 namespace sequoia::unit_testing
 {
+  template<maths::graph_flavour GraphFlavour, class EdgeWeight, template <class> class EdgeWeightPooling>
+  struct independent_contiguous_edge_storage_traits
+  {
+    template <class T, class Sharing, class Traits> using storage_type = data_structures::contiguous_storage<T, Sharing, Traits>;
+    template <class T, class Sharing> using traits_type = data_structures::contiguous_storage_traits<T, Sharing>;
+
+    constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::independent};
+  };
+
+  template<maths::graph_flavour GraphFlavour, class EdgeWeight, template <class> class EdgeWeightPooling>
+  struct independent_bucketed_edge_storage_traits
+  {
+    template <class T, class Sharing, class Traits> using storage_type = data_structures::bucketed_storage<T, Sharing, Traits>;
+    template <class T, class Sharing> using traits_type = data_structures::bucketed_storage_traits<T, Sharing>;
+
+    constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::independent};
+  };
+  
   template<> struct template_class_to_string<data_sharing::unpooled>
   {
     static std::string str() { return "UNPOOLED"; }
@@ -25,6 +43,16 @@ namespace sequoia::unit_testing
   template<> struct storage_traits_to_string<maths::contiguous_edge_storage_traits>
   {
     static std::string str() { return "CONTIGUOUS STORAGE"; }
+  };
+
+  template<> struct storage_traits_to_string<independent_bucketed_edge_storage_traits>
+  {
+    static std::string str() { return "INDEPENDENT BUCKETED STORAGE"; }
+  };
+
+  template<> struct storage_traits_to_string<independent_contiguous_edge_storage_traits>
+  {
+    static std::string str() { return "INDEPENDENT CONTIGUOUS STORAGE"; }
   };
 
   template<template <class, template<class> class, bool> class T> struct node_weight_storage_traits_to_string;
@@ -106,6 +134,7 @@ namespace sequoia::unit_testing
     virtual void execute_operations() = 0;
   };
 
+  
   template <class EdgeWeight, class NodeWeight>
   class graph_test_helper
   {
@@ -136,6 +165,9 @@ namespace sequoia::unit_testing
       run_graph_flavour_tests<flavour::undirected_embedded, TemplateTestClass>();
       run_graph_flavour_tests<flavour::directed, TemplateTestClass>();
       run_graph_flavour_tests<flavour::directed_embedded, TemplateTestClass>();
+
+      graph_storage_tests_impl<flavour::directed_embedded, independent_contiguous_edge_storage_traits, TemplateTestClass>();
+      graph_storage_tests_impl<flavour::directed_embedded, independent_bucketed_edge_storage_traits, TemplateTestClass>();
     }
       
     template
@@ -151,18 +183,18 @@ namespace sequoia::unit_testing
         template <maths::graph_flavour, class, template<class> class> class,
         template <class, template<class> class, bool> class
       >
-        class TemplateTestClass,
-        class Test
+      class TemplateTestClass,
+      class Test
     >
     void run_storage_tests(Test& unitTest)
     {        
       using flavour = maths::graph_flavour;
       sentry<Test> s{unitTest, m_Summary};
       
-      run_graph_storage_tests<flavour::undirected,          EdgeStorage, TemplateTestClass>();
-      run_graph_storage_tests<flavour::undirected_embedded, EdgeStorage, TemplateTestClass>();
-      run_graph_storage_tests<flavour::directed,            EdgeStorage, TemplateTestClass>();
-      run_graph_storage_tests<flavour::directed_embedded,   EdgeStorage, TemplateTestClass>();          
+      graph_storage_tests_impl<flavour::undirected,          EdgeStorage, TemplateTestClass>();
+      graph_storage_tests_impl<flavour::undirected_embedded, EdgeStorage, TemplateTestClass>();
+      graph_storage_tests_impl<flavour::directed,            EdgeStorage, TemplateTestClass>();
+      graph_storage_tests_impl<flavour::directed_embedded,   EdgeStorage, TemplateTestClass>();          
     }
       
     template
@@ -229,7 +261,7 @@ namespace sequoia::unit_testing
       >
       class TemplateTestClass
     >
-    void run_graph_storage_tests()
+    void graph_storage_tests_impl()
     {
       using namespace data_sharing;
         
@@ -263,8 +295,8 @@ namespace sequoia::unit_testing
     {
       using namespace data_structures;
         
-      run_graph_storage_tests<GraphType, maths::contiguous_edge_storage_traits, TemplateTestClass>();
-      run_graph_storage_tests<GraphType, maths::bucketed_edge_storage_traits, TemplateTestClass>();
+      graph_storage_tests_impl<GraphType, maths::contiguous_edge_storage_traits, TemplateTestClass>();
+      graph_storage_tests_impl<GraphType, maths::bucketed_edge_storage_traits, TemplateTestClass>();
     }
 
     template<class Test>

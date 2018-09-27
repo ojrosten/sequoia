@@ -1,4 +1,4 @@
-BUILDDIR := ../build
+BUILDDIR := ../build/native
 LIBDIRS := ../Core ../Maths ../Experimental ../Algorithms
 UTBUILDDIR := $(BUILDDIR)/UnitTests
 

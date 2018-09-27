@@ -399,6 +399,12 @@ namespace sequoia
       {
         if(node == npos) throw std::runtime_error("Cannot initialize full edge using max value of index");
       }
+
+      constexpr embedded_edge(const index_type auxIndex, const embedded_edge& in)
+        : decorated_edge_base<Weight, WeightSharingPolicy, WeightProxy, IndexType>{in.target_node(), auxIndex, in}
+        , m_HostIndex{in.m_HostIndex}
+      {
+      }
       
       constexpr embedded_edge(const embedded_edge& in)             = default;
       constexpr embedded_edge(embedded_edge&& in)                  = default;
@@ -408,8 +414,8 @@ namespace sequoia
       constexpr index_type complementary_index() const noexcept { return this->auxiliary_index(); }
       constexpr void complementary_index(const index_type auxIndex) noexcept { return this->auxiliary_index(auxIndex); }
 
-      constexpr index_type host_node() const noexcept { return m_HostIndex < npos ? m_HostIndex : this->target_node(); }
-      constexpr void host_node(const index_type host) noexcept { return this->auxiliary_index(host); }
+      constexpr index_type host_node() const noexcept { return !inverted() ? m_HostIndex : this->target_node(); }
+      constexpr void host_node(const index_type host) noexcept { if(!inverted()) m_HostIndex = host; }
 
       constexpr bool inverted() const noexcept { return m_HostIndex == npos; }
     private:
