@@ -1,4 +1,0 @@
-
-	[Directed Embedded; UNPOOLED; UNPOOLED; INDEPENDENT CONTIGUOUS STORAGE; NODE WEIGHT STORAGE TRAITS; unweighted] 
-	Error -- check number 258:  (complementary_index wrong for partition 2, edge 0)
-	3 differs from 1

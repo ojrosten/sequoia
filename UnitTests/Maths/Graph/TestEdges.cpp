@@ -327,6 +327,9 @@ namespace sequoia
         check_embedded_edge(10, 11, 0, 5.2, e);
         check_embedded_edge(10, 11, 0, -1.2, e2);
         check(e != e2);
+
+        e.host_node(9);
+        check_embedded_edge(9, 11, 0, 5.2, e);        
       }
     }
      

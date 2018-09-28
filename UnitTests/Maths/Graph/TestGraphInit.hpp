@@ -63,7 +63,7 @@ namespace sequoia
 
     private:
       using GGraph = typename
-        graph_operations<GraphFlavour, NodeWeight, EdgeWeight, NodeWeightPooling, EdgeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>::graph_type;
+        graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>::graph_type;
 
       using node_weight_type = typename GGraph::node_weight_type;
       using NodeWeights = std::vector<node_weight_type>;
