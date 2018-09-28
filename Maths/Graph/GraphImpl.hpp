@@ -1362,9 +1362,23 @@ namespace sequoia
         const auto start{first};
         while(first != last)
         {
-          const auto host{first.partition_index()}, target{first->target_node()}, compIndex{first->complementary_index()};
-          const auto edgeIter{m_Edges.begin_partition(target) + compIndex};
-          if(host != target)
+          const auto host{first.partition_index()}, compIndex{first->complementary_index()};
+          const auto other{[first](const auto n){
+              const auto target{first->target_node()};
+              if constexpr(edge_type::flavour == edge_flavour::full_embedded)
+              {
+                return n == target ? first->host_node() : target;
+              }
+              else
+              {
+                return target;
+              }
+            }(host)
+          };
+
+          
+          const auto edgeIter{m_Edges.begin_partition(other) + compIndex};
+          if(host != other)
           {
             edgeIter->complementary_index(fn(edgeIter->complementary_index()));
           }

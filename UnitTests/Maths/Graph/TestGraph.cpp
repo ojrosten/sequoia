@@ -18,7 +18,7 @@ namespace sequoia::unit_testing
       helper.run_tests<generic_graph_operations>(*this);
       helper.run_storage_tests<contiguous_edge_storage_traits, graph_contiguous_capacity>(*this);
       helper.run_storage_tests<bucketed_edge_storage_traits, graph_bucketed_capacity>(*this);
-    }/*
+    }
       
     {
       graph_test_helper<int, complex<double>>  helper{"int, complex<double>"};
@@ -42,7 +42,7 @@ namespace sequoia::unit_testing
     {
       graph_test_helper<std::vector<int>, std::vector<int>>  helper{"Weighted (vector<int>, vector<int>)"};
       helper.run_tests<test_copy_move>(*this);
-      }*/
+    }
   }
 
   // Generic Graph Operations
@@ -223,6 +223,17 @@ namespace sequoia::unit_testing
     }
 
     network.delete_edge(network.cbegin_edges(2));
+    //    0------1     2
+    
+    if constexpr (mutual_info(GraphFlavour))
+    {
+      check_graph(network, {{E_Edge(0,1,0)}, {E_Edge(0,1,0)}, {}}, {}, LINE(""));
+    }
+    else
+    {
+      check_graph(network, {{}, {Edge(1,0)}, {Edge(2,1)}}, {}, LINE(""));
+    }
+
     network.join(1,1);
     network.join(2,1);
 
