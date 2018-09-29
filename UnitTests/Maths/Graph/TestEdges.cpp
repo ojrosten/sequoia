@@ -159,7 +159,7 @@ namespace sequoia
       check_equality<size_t>(2, e2.host_node());
       check_equality<size_t>(1, e2.target_node());
 
-      edge_t e3{4, inverted_constant<false>{}}, e4{5, inverted_constant<true>{}};
+      edge_t e3{4, inversion_constant<false>{}}, e4{5, inversion_constant<true>{}};
       check_equality<size_t>(4, e3.host_node());
       check_equality<size_t>(4, e3.target_node());
 
@@ -304,11 +304,11 @@ namespace sequoia
         check_embedded_edge(3, 4, 1, 4.2, e2);
         check(e == e2);
 
-        constexpr edge e3{4, inverted_constant<true>{}, 1, 1.1};
+        constexpr edge e3{4, inversion_constant<true>{}, 1, 1.1};
         check_embedded_edge(4, 4, 1, 1.1, e3);
         check(e3.inverted(), LINE(""));
 
-        constexpr edge e4{5, inverted_constant<false>{}, 2, -3.1};
+        constexpr edge e4{5, inversion_constant<false>{}, 2, -3.1};
         check_embedded_edge(5, 5, 2, -3.1, e4);
         check(!e4.inverted());
       }

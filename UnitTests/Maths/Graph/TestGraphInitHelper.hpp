@@ -1479,7 +1479,7 @@ namespace sequoia
       template<class Graph>
       void check_1_1()
       {
-        using maths::inverted_constant;
+        using maths::inversion_constant;
         using edge = typename Graph::edge_init_type;
 
         this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1,0,1}, edge{0,0,0}}}; }, LINE("Partial index out of range"));
@@ -1495,7 +1495,7 @@ namespace sequoia
           {
             constexpr Graph
               g{{edge{0,0,1}, edge{0,0,0}}},
-              g2{{edge{0,inverted_constant<true>{},1}, edge{0,inverted_constant<true>{},0}}};
+              g2{{edge{0,inversion_constant<true>{},1}, edge{0,inversion_constant<true>{},0}}};
             check_1_1(g, g2);
           }
 
@@ -1503,7 +1503,7 @@ namespace sequoia
           {
             constexpr Graph
               g{{edge{0,0,1,9}, edge{0,0,0,9}}},
-              g2{{edge{0,inverted_constant<true>{},1,-7}, edge{0,inverted_constant<true>{},0,-7}}};
+              g2{{edge{0,inversion_constant<true>{},1,-7}, edge{0,inversion_constant<true>{},0,-7}}};
             check_1_1w(g, g2);
           }
         }
@@ -1512,7 +1512,7 @@ namespace sequoia
           {
             const Graph
               g{{edge{0,0,1}, edge{0,0,0}}},
-              g2{{edge{0,inverted_constant<true>{},1}, edge{0,inverted_constant<true>{},0}}};
+              g2{{edge{0,inversion_constant<true>{},1}, edge{0,inversion_constant<true>{},0}}};
             check_1_1(g, g2);
           }
 
@@ -1520,7 +1520,7 @@ namespace sequoia
           {
             const Graph
               g{{edge{0,0,1,9}, edge{0,0,0,9}}},
-              g2{{edge{0,inverted_constant<true>{},1,-7}, edge{0,inverted_constant<true>{},0,-7}}};
+              g2{{edge{0,inversion_constant<true>{},1,-7}, edge{0,inversion_constant<true>{},0,-7}}};
             check_1_1w(g, g2);
           }
         }
@@ -1537,7 +1537,7 @@ namespace sequoia
             {
               constexpr Graph
                 g{{{edge{0,0,1}, edge{0,0,0}}}, {node_weight{}}},
-                g2{{{edge{0,inverted_constant<true>{},1}, edge{0,inverted_constant<true>{},0}}}, {node_weight{}}};
+                g2{{{edge{0,inversion_constant<true>{},1}, edge{0,inversion_constant<true>{},0}}}, {node_weight{}}};
               check_1_1(g, g2);
             }
 
@@ -1545,7 +1545,7 @@ namespace sequoia
             {
               constexpr Graph
                 g{{{edge{0,0,1,9}, edge{0,0,0,9}}}, {node_weight{}}},
-                g2{{{edge{0,inverted_constant<true>{},1,-7}, edge{0,inverted_constant<true>{},0,-7}}}, {node_weight{}}};
+                g2{{{edge{0,inversion_constant<true>{},1,-7}, edge{0,inversion_constant<true>{},0,-7}}}, {node_weight{}}};
               check_1_1w(g, g2);
             }
           }
@@ -1554,7 +1554,7 @@ namespace sequoia
             {
               const Graph
                 g{{{edge{0,0,1}, edge{0,0,0}}}, {node_weight{}}},
-                g2{{{edge{0,inverted_constant<true>{},1}, edge{0,inverted_constant<true>{},0}}}, {node_weight{}}};
+                g2{{{edge{0,inversion_constant<true>{},1}, edge{0,inversion_constant<true>{},0}}}, {node_weight{}}};
               check_1_1(g, g2);
             }
 
@@ -1562,7 +1562,7 @@ namespace sequoia
             {
               const Graph
                 g{{{edge{0,0,1,9}, edge{0,0,0,9}}}, {node_weight{}}},
-                g2{{{edge{0,inverted_constant<true>{},1,-7}, edge{0,inverted_constant<true>{},0,-7}}}, {node_weight{}}};
+                g2{{{edge{0,inversion_constant<true>{},1,-7}, edge{0,inversion_constant<true>{},0,-7}}}, {node_weight{}}};
               check_1_1w(g, g2);
             }
           }
@@ -1622,25 +1622,25 @@ namespace sequoia
       template<class Graph>
       void check_1_1(const Graph& g, const Graph& g2)
       {
-        using maths::inverted_constant;
+        using maths::inversion_constant;
         using edge = typename Graph::edge_init_type;
         
         using NodeWeight = typename Graph::node_weight_type;
 
         this->template check_graph(g, {{edge{0,0,1}, edge{0,0,0}}}, {NodeWeight{}}, LINE(""));
-        this->template check_graph(g2, {{edge{0,inverted_constant<true>{},1}, edge{0,inverted_constant<true>{},0}}}, {NodeWeight{}}, LINE(""));
+        this->template check_graph(g2, {{edge{0,inversion_constant<true>{},1}, edge{0,inversion_constant<true>{},0}}}, {NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
       void check_1_1w(const Graph& g, const Graph& g2)
       {
-        using maths::inverted_constant;
+        using maths::inversion_constant;
         using edge = typename Graph::edge_init_type;
         
         using NodeWeight = typename Graph::node_weight_type;
 
         this->template check_graph(g, {{edge{0,0,1,9}, edge{0,0,0,9}}}, {NodeWeight{}}, LINE(""));
-        this->template check_graph(g2, {{edge{0,inverted_constant<true>{},1,-7}, edge{0,inverted_constant<true>{},0,-7}}}, {NodeWeight{}}, LINE(""));
+        this->template check_graph(g2, {{edge{0,inversion_constant<true>{},1,-7}, edge{0,inversion_constant<true>{},0,-7}}}, {NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>

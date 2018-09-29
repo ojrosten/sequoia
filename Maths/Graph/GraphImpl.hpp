@@ -1104,7 +1104,7 @@ namespace sequoia
         // TO DO: better static consistency checking
         if constexpr(directed(directedness))
         {
-          using inv_t = inverted_constant<true>;
+          using inv_t = inversion_constant<true>;
           if constexpr(EdgeTraits::shared_edge_v)
           {
             if constexpr(std::is_empty_v<edge_weight_type>)
@@ -1316,7 +1316,7 @@ namespace sequoia
           {
             if((node1 == node2) && (pos2 <= pos1))
             {
-              citer1 = m_Edges.insert_to_partition(citer1, node1, inverted_constant<true>{});
+              citer1 = m_Edges.insert_to_partition(citer1, node1, inversion_constant<true>{});
             }
             else
             {
@@ -1340,7 +1340,7 @@ namespace sequoia
           {
             if((node1 == node2) && (pos2 <= pos1))
             {
-              citer1 = m_Edges.insert_to_partition(citer1, node1, inverted_constant<true>{}, this->make_edge_weight(std::forward<Args>(args)...));
+              citer1 = m_Edges.insert_to_partition(citer1, node1, inversion_constant<true>{}, this->make_edge_weight(std::forward<Args>(args)...));
             }
             else
             {

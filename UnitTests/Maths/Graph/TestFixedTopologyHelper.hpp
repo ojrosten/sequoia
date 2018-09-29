@@ -270,7 +270,7 @@ namespace sequoia
       }
     private:
       
-      template<bool B> using inverted_constant = maths::inverted_constant<B>;
+      template<bool B> using inversion_constant = maths::inversion_constant<B>;
       
       template<class Graph>
       constexpr static Graph make_2_2()
@@ -281,7 +281,7 @@ namespace sequoia
         //    /  /\  \
         //    \ / /  /
         //        x      x
-        Graph g{{edge{0,inverted_constant<true>{},2,3}, edge{0,0,3,4}, edge{0,inverted_constant<true>{},0,3}, edge{0,0,1,4}}, {}};
+        Graph g{{edge{0,inversion_constant<true>{},2,3}, edge{0,0,3,4}, edge{0,inversion_constant<true>{},0,3}, edge{0,0,1,4}}, {}};
 
         g.set_edge_weight(g.cbegin_edges(0) + 3, 8);
         g.mutate_edge_weight(g.cbegin_edges(0) + 3, [](auto& w) { w -= 2; });
@@ -305,11 +305,11 @@ namespace sequoia
 
         if constexpr(std::is_empty_v<NodeWeight>)            
         {
-          this->template check_graph(g, {{edge{0,inverted_constant<true>{},2,3}, edge{0,0,3,6}, edge{0,inverted_constant<true>{},0,3}, edge{0,0,1,6}}, {}}, {NodeWeight{}, NodeWeight{}}, LINE(""));
+          this->template check_graph(g, {{edge{0,inversion_constant<true>{},2,3}, edge{0,0,3,6}, edge{0,inversion_constant<true>{},0,3}, edge{0,0,1,6}}, {}}, {NodeWeight{}, NodeWeight{}}, LINE(""));
         }
         else
         {
-          this->template check_graph(g, {{edge{0,inverted_constant<true>{},2,3}, edge{0,0,3,6}, edge{0,inverted_constant<true>{},0,3}, edge{0,0,1,6}}, {}}, {NodeWeight{2}, NodeWeight{-3}}, LINE(""));
+          this->template check_graph(g, {{edge{0,inversion_constant<true>{},2,3}, edge{0,0,3,6}, edge{0,inversion_constant<true>{},0,3}, edge{0,0,1,6}}, {}}, {NodeWeight{2}, NodeWeight{-3}}, LINE(""));
         }
       }
     };
