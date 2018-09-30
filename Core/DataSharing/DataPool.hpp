@@ -25,6 +25,8 @@ namespace sequoia
     template<class T> class data_pool
     {
     public:
+      static_assert(!std::is_empty_v<T>, "Makes no sense to pool an empty weight!");
+      
       class handle
       {
       friend class data_pool;

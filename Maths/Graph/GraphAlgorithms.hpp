@@ -360,7 +360,7 @@ namespace sequoia::maths
   template<class G, class Pred>
   G sub_graph(const G& g, Pred nodePred)
   {
-    G subGraph(g);
+    G subGraph{g};
 
     std::size_t pos{};
     while(pos < subGraph.order())

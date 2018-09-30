@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GraphImpl.hpp"
+#include "StaticGraphImpl.hpp"
 #include "HeterogeneousNodeStorage.hpp"
 
 #include <tuple>

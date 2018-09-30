@@ -305,9 +305,9 @@ namespace sequoia
 
     //===================================Full Edge===================================//
     
-    template<bool Inverted> struct inverted_constant : public std::bool_constant<Inverted> {};
+    template<bool Inverted> struct inversion_constant : public std::bool_constant<Inverted> {};
 
-    template<bool Inverted> constexpr bool inverted_v{inverted_constant<Inverted>::value};
+    template<bool Inverted> constexpr bool inversion_v{inversion_constant<Inverted>::value};
 
     template
     <
@@ -339,7 +339,7 @@ namespace sequoia
         bool Inverted,
         class... Args
       >
-      constexpr edge(const index_type node, const inverted_constant<Inverted> inverted, Args&&... args)
+      constexpr edge(const index_type node, const inversion_constant<Inverted> inverted, Args&&... args)
         : decorated_edge_base<Weight, data_sharing::independent, WeightProxy, IndexType>{
             node, inverted.value ? npos : node, std::forward<Args>(args)...
           }
@@ -393,11 +393,17 @@ namespace sequoia
         bool Inverted,
         class... Args
       >
-      constexpr embedded_edge(const index_type node, const inverted_constant<Inverted> inverted, const index_type auxIndex, Args&&... args)
+      constexpr embedded_edge(const index_type node, const inversion_constant<Inverted> inverted, const index_type auxIndex, Args&&... args)
         : decorated_edge_base<Weight, WeightSharingPolicy, WeightProxy, IndexType>{node, auxIndex, std::forward<Args>(args)...}
         , m_HostIndex{inverted.value ? npos : node}
       {
         if(node == npos) throw std::runtime_error("Cannot initialize full edge using max value of index");
+      }
+
+      constexpr embedded_edge(const index_type auxIndex, const embedded_edge& in)
+        : decorated_edge_base<Weight, WeightSharingPolicy, WeightProxy, IndexType>{in.target_node(), auxIndex, in}
+        , m_HostIndex{in.m_HostIndex}
+      {
       }
       
       constexpr embedded_edge(const embedded_edge& in)             = default;
@@ -408,8 +414,12 @@ namespace sequoia
       constexpr index_type complementary_index() const noexcept { return this->auxiliary_index(); }
       constexpr void complementary_index(const index_type auxIndex) noexcept { return this->auxiliary_index(auxIndex); }
 
-      constexpr index_type host_node() const noexcept { return m_HostIndex < npos ? m_HostIndex : this->target_node(); }
-      constexpr void host_node(const index_type host) noexcept { return this->auxiliary_index(host); }
+      constexpr index_type host_node() const noexcept { return !inverted() ? m_HostIndex : this->target_node(); }
+      constexpr void host_node(const index_type host) noexcept
+      {
+        if(!inverted()) m_HostIndex = host;
+        else            this->target_node(host);
+      }
 
       constexpr bool inverted() const noexcept { return m_HostIndex == npos; }
     private:

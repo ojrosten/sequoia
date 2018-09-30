@@ -105,12 +105,12 @@ namespace sequoia
       std::cout << "tiniest " << std::numeric_limits<float>::denorm_min() << '\n';
       */
 
-      static_assert(std::is_same_v<thing<int, component<int>>, thing<int, alias<int>>>);
+      //static_assert(std::is_same_v<thing<int, component<int>>, thing<int, alias<int>>>);
       //static_assert(std::is_same_v<thing2<int, component>, thing2<int, alias>>);
 
-      int x{5};
-      wrapper<int> w{x}; // fine
-      //thing3<int, wrapper<int>> foo{x}; // fails due to exception spec of move assignment operator not matching the calculated one
+      //int x{5};
+      //wrapper<int> w{x}; // fine
+      //thing<int, wrapper<int>> foo{x}; // fails due to exception spec of move assignment operator not matching the calculated one
 
       
     }

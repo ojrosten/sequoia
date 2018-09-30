@@ -118,7 +118,7 @@ namespace sequoia
       class NodeWeight,      
       template <class> class EdgeWeightPooling,
       template <class> class NodeWeightPooling,
-      template <class, template<class> class> class EdgeStorageTraits,
+      template <maths::graph_flavour, class, template<class> class> class EdgeStorageTraits,
       template <class, template<class> class, bool> class NodeWeightStorageTraits
     >
     class tracker_test
@@ -571,7 +571,7 @@ namespace sequoia
       class NodeWeight,      
       template <class> class EdgeWeightPooling,
       template <class> class NodeWeightPooling,
-      template <class, template<class> class> class EdgeStorageTraits,
+      template <maths::graph_flavour, class, template<class> class> class EdgeStorageTraits,
       template <class, template<class> class, bool> class NodeWeightStorageTraits
     >
     class test_priority_traversal :
@@ -654,7 +654,7 @@ namespace sequoia
       class NodeWeight,      
       template <class> class EdgeWeightPooling,
       template <class> class NodeWeightPooling,
-      template <class, template<class> class> class EdgeStorageTraits,
+      template <maths::graph_flavour, class, template<class> class> class EdgeStorageTraits,
       template <class, template<class> class, bool> class NodeWeightStorageTraits
     >
     class test_weighted_BFS_tasks

@@ -54,7 +54,7 @@ namespace sequoia::unit_testing
     class NodeWeight,      
     template <class> class EdgeWeightPooling,
     template <class> class NodeWeightPooling,
-    template <class, template<class> class> class EdgeStorageTraits,
+    template <maths::graph_flavour, class, template<class> class> class EdgeStorageTraits,
     template <class, template<class> class, bool> class NodeWeightStorageTraits
   >
   void generic_graph_operations<
@@ -144,7 +144,7 @@ namespace sequoia::unit_testing
     {
       check_graph(network, {{Edge(0,1)}, {}, {}}, {}, LINE(""));
     }
-         
+    
     network.delete_edge(network.cbegin_edges(0));
     //    0    1
     //
@@ -223,6 +223,17 @@ namespace sequoia::unit_testing
     }
 
     network.delete_edge(network.cbegin_edges(2));
+    //    0------1     2
+    
+    if constexpr (mutual_info(GraphFlavour))
+    {
+      check_graph(network, {{E_Edge(0,1,0)}, {E_Edge(0,1,0)}, {}}, {}, LINE(""));
+    }
+    else
+    {
+      check_graph(network, {{}, {Edge(1,0)}, {}}, {}, LINE(""));
+    }
+
     network.join(1,1);
     network.join(2,1);
 
@@ -473,7 +484,7 @@ namespace sequoia::unit_testing
     class NodeWeight,      
     template <class> class EdgeWeightPooling,
     template <class> class NodeWeightPooling,
-    template <class, template<class> class> class EdgeStorageTraits,
+    template <maths::graph_flavour, class, template<class> class> class EdgeStorageTraits,
     template <class, template<class> class, bool> class NodeWeightStorageTraits
   >
   void graph_contiguous_capacity<
@@ -509,7 +520,7 @@ namespace sequoia::unit_testing
     class NodeWeight,      
     template <class> class EdgeWeightPooling,
     template <class> class NodeWeightPooling,
-    template <class, template<class> class> class EdgeStorageTraits,
+     template <maths::graph_flavour, class, template<class> class> class EdgeStorageTraits,
     template <class, template<class> class, bool> class NodeWeightStorageTraits
   >
   void graph_bucketed_capacity<
@@ -551,7 +562,7 @@ namespace sequoia::unit_testing
     class NodeWeight,      
     template <class> class EdgeWeightPooling,
     template <class> class NodeWeightPooling,
-    template <class, template<class> class> class EdgeStorageTraits,
+    template <maths::graph_flavour, class, template<class> class> class EdgeStorageTraits,
     template <class, template<class> class, bool> class NodeWeightStorageTraits
   >
   void generic_weighted_graph_tests<
@@ -827,11 +838,11 @@ namespace sequoia::unit_testing
 
     if constexpr(!mutual_info(GraphFlavour))
     {
-      check_graph(graph, {{Edge(0,0,-4), Edge(0,1,6), Edge(0,1,6)}, {Edge(1,0,7)}}, {{1.1,-4.3}, {0,0}});
+      check_graph(graph, {{Edge(0,0,-4), Edge(0,1,6), Edge(0,1,6)}, {Edge(1,0,7)}}, {{1.1,-4.3}, {0,0}}, LINE(""));
     }
     else
     {
-      check_graph(graph, {{Edge(0,0,-4), Edge(0,0,-4), Edge(0,1,6), Edge(1,0,6), Edge(0,1,8)}, {Edge(0,1,6), Edge(1,0,6), Edge(0,1,8)}}, {{1.1,-4.3}, {0,0}});
+      check_graph(graph, {{Edge(0,0,-4), Edge(0,0,-4), Edge(0,1,6), Edge(1,0,6), Edge(0,1,8)}, {Edge(0,1,6), Edge(1,0,6), Edge(0,1,8)}}, {{1.1,-4.3}, {0,0}}, LINE(""));
     }
 
     graph.set_edge_weight(graph.cbegin_edges(0) + (mutual_info(GraphFlavour) ?  3 : 2), 10);
@@ -844,15 +855,15 @@ namespace sequoia::unit_testing
 
     if constexpr(GraphFlavour == maths::graph_flavour::directed)
     {
-      check_graph(graph, {{Edge(0,0,-4), Edge(0,1,6), Edge(0,1,10)}, {Edge(1,0,7)}}, {{1.1,-4.3}, {0,0}});
+      check_graph(graph, {{Edge(0,0,-4), Edge(0,1,6), Edge(0,1,10)}, {Edge(1,0,7)}}, {{1.1,-4.3}, {0,0}}, LINE(""));
     }
     else if constexpr(GraphFlavour == maths::graph_flavour::undirected)
     {
-      check_graph(graph, {{Edge(0,0,-4), Edge(0,0,-4), Edge(0,1,6), Edge(1,0,10), Edge(0,1,8)}, {Edge(0,1,10), Edge(1,0,6), Edge(0,1,8)}}, {{1.1,-4.3}, {0,0}});
+      check_graph(graph, {{Edge(0,0,-4), Edge(0,0,-4), Edge(0,1,6), Edge(1,0,10), Edge(0,1,8)}, {Edge(0,1,10), Edge(1,0,6), Edge(0,1,8)}}, {{1.1,-4.3}, {0,0}}, LINE(""));
     }
     else
     {
-      check_graph(graph, {{Edge(0,0,-4), Edge(0,0,-4), Edge(0,1,6), Edge(1,0,10), Edge(0,1,8)}, {Edge(0,1,6), Edge(1,0,10), Edge(0,1,8)}}, {{1.1,-4.3}, {0,0}});
+      check_graph(graph, {{Edge(0,0,-4), Edge(0,0,-4), Edge(0,1,6), Edge(1,0,10), Edge(0,1,8)}, {Edge(0,1,6), Edge(1,0,10), Edge(0,1,8)}}, {{1.1,-4.3}, {0,0}}, LINE(""));
     }
 
     graph.mutate_edge_weight(graph.cbegin_edges(0) + (mutual_info(GraphFlavour) ?  4 : 1), [](auto& val){ val = 10; });
@@ -865,15 +876,15 @@ namespace sequoia::unit_testing
 
     if constexpr(GraphFlavour == maths::graph_flavour::directed)
     {
-      check_graph(graph, {{Edge(0,0,-4), Edge(0,1,10), Edge(0,1,10)}, {Edge(1,0,7)}}, {{1.1,-4.3}, {0,0}});
+      check_graph(graph, {{Edge(0,0,-4), Edge(0,1,10), Edge(0,1,10)}, {Edge(1,0,7)}}, {{1.1,-4.3}, {0,0}}, LINE(""));
     }
     else if constexpr(GraphFlavour == maths::graph_flavour::undirected)
     {
-      check_graph(graph, {{Edge(0,0,-4), Edge(0,0,-4), Edge(0,1,6), Edge(1,0,10), Edge(0,1,10)}, {Edge(0,1,10), Edge(1,0,6), Edge(0,1,10)}}, {{1.1,-4.3}, {0,0}});
+      check_graph(graph, {{Edge(0,0,-4), Edge(0,0,-4), Edge(0,1,6), Edge(1,0,10), Edge(0,1,10)}, {Edge(0,1,10), Edge(1,0,6), Edge(0,1,10)}}, {{1.1,-4.3}, {0,0}}, LINE(""));
     }
     else
     {
-      check_graph(graph, {{Edge(0,0,-4), Edge(0,0,-4), Edge(0,1,6), Edge(1,0,10), Edge(0,1,10)}, {Edge(0,1,6), Edge(1,0,10), Edge(0,1,10)}}, {{1.1,-4.3}, {0,0}});
+      check_graph(graph, {{Edge(0,0,-4), Edge(0,0,-4), Edge(0,1,6), Edge(1,0,10), Edge(0,1,10)}, {Edge(0,1,6), Edge(1,0,10), Edge(0,1,10)}}, {{1.1,-4.3}, {0,0}}, LINE(""));
     }
 
     graph.mutate_edge_weight(graph.cbegin_edges(0) + (mutual_info(GraphFlavour) ?  4 : 2), [](auto& val){ val = 7; });
@@ -886,15 +897,15 @@ namespace sequoia::unit_testing
 
     if constexpr(GraphFlavour == maths::graph_flavour::directed)
     {
-      check_graph(graph, {{Edge(0,0,-4), Edge(0,1,10), Edge(0,1,7)}, {Edge(1,0,7)}}, {{1.1,-4.3}, {0,0}});
+      check_graph(graph, {{Edge(0,0,-4), Edge(0,1,10), Edge(0,1,7)}, {Edge(1,0,7)}}, {{1.1,-4.3}, {0,0}}, LINE(""));
     }
     else if constexpr(GraphFlavour == maths::graph_flavour::undirected)
     {
-      check_graph(graph, {{Edge(0,0,-4), Edge(0,0,-4), Edge(0,1,6), Edge(1,0,10), Edge(0,1,7)}, {Edge(0,1,7), Edge(1,0,6), Edge(0,1,10)}}, {{1.1,-4.3}, {0,0}});
+      check_graph(graph, {{Edge(0,0,-4), Edge(0,0,-4), Edge(0,1,6), Edge(1,0,10), Edge(0,1,7)}, {Edge(0,1,7), Edge(1,0,6), Edge(0,1,10)}}, {{1.1,-4.3}, {0,0}}, LINE(""));
     }
     else
     {
-      check_graph(graph, {{Edge(0,0,-4), Edge(0,0,-4), Edge(0,1,6), Edge(1,0,10), Edge(0,1,7)}, {Edge(0,1,6), Edge(1,0,10), Edge(0,1,7)}}, {{1.1,-4.3}, {0,0}});
+      check_graph(graph, {{Edge(0,0,-4), Edge(0,0,-4), Edge(0,1,6), Edge(1,0,10), Edge(0,1,7)}, {Edge(0,1,6), Edge(1,0,10), Edge(0,1,7)}}, {{1.1,-4.3}, {0,0}}, LINE(""));
     }
         
     graph.delete_node(0);
@@ -944,7 +955,7 @@ namespace sequoia::unit_testing
     class NodeWeight,      
     template <class> class EdgeWeightPooling,
     template <class> class NodeWeightPooling,
-    template <class, template<class> class> class EdgeStorageTraits,
+    template <maths::graph_flavour, class, template<class> class> class EdgeStorageTraits,
     template <class, template<class> class, bool> class NodeWeightStorageTraits
   >
   void test_copy_move<

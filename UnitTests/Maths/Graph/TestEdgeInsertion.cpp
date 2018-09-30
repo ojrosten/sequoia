@@ -48,7 +48,7 @@ namespace sequoia
       class NodeWeight,      
       template <class> class EdgeWeightPooling,
       template <class> class NodeWeightPooling,
-      template <class, template<class> class> class EdgeStorageTraits,
+      template <maths::graph_flavour, class, template<class> class> class EdgeStorageTraits,
       template <class, template<class> class, bool> class NodeWeightStorageTraits
     >
     void generic_edge_insertions
@@ -90,7 +90,7 @@ namespace sequoia
       }
       else
       {
-        check_graph(g, {{edge{0,inverted_constant<true>{},1}, edge{0,inverted_constant<true>{},0}}}, {{}}, LINE(""));
+        check_graph(g, {{edge{0,inversion_constant<true>{},1}, edge{0,inversion_constant<true>{},0}}}, {{}}, LINE(""));
       }
 
       g.insert_join(g.cbegin_edges(0) + 1, 3);
@@ -105,7 +105,7 @@ namespace sequoia
       }
       else
       {
-        check_graph(g, {{edge{0,inverted_constant<true>{},2}, edge{0,0,3}, edge{0,inverted_constant<true>{},0}, edge{0,0,1}}}, {{}}, LINE(""));
+        check_graph(g, {{edge{0,inversion_constant<true>{},2}, edge{0,0,3}, edge{0,inversion_constant<true>{},0}, edge{0,0,1}}}, {{}}, LINE(""));
       }
 
       g.insert_join(g.cbegin_edges(0), g.cbegin_edges(0));
@@ -129,7 +129,7 @@ namespace sequoia
       {
         check_graph(
           g,
-          {{edge{0,inverted_constant<true>{},1}, edge{0,inverted_constant<true>{},0}, edge{0,inverted_constant<true>{},4}, edge{0,0,5}, edge{0,inverted_constant<true>{},2}, edge{0,0,3}}}, {{}},
+          {{edge{0,inversion_constant<true>{},1}, edge{0,inversion_constant<true>{},0}, edge{0,inversion_constant<true>{},4}, edge{0,0,5}, edge{0,inversion_constant<true>{},2}, edge{0,0,3}}}, {{}},
           LINE(""));
       }
 
@@ -151,7 +151,7 @@ namespace sequoia
       {
         check_graph(
           g,
-          {{}, {edge{1,inverted_constant<true>{},1}, edge{1,inverted_constant<true>{},0}, edge{1,inverted_constant<true>{},4}, edge{1,1,5}, edge{1,inverted_constant<true>{},2}, edge{1,1,3}}}, {{}, {}},
+          {{}, {edge{1,inversion_constant<true>{},1}, edge{1,inversion_constant<true>{},0}, edge{1,inversion_constant<true>{},4}, edge{1,1,5}, edge{1,inversion_constant<true>{},2}, edge{1,1,3}}}, {{}, {}},
           LINE(""));
       }
 
@@ -172,7 +172,7 @@ namespace sequoia
       {
         check_graph(
           g,
-          {{edge{0,1,0}}, {edge{0,1,0}, edge{1,inverted_constant<true>{},2}, edge{1,inverted_constant<true>{},1}, edge{1,inverted_constant<true>{},5}, edge{1,1,6}, edge{1,inverted_constant<true>{},3}, edge{1,1,4}}}, {{}, {}},
+          {{edge{0,1,0}}, {edge{0,1,0}, edge{1,inversion_constant<true>{},2}, edge{1,inversion_constant<true>{},1}, edge{1,inversion_constant<true>{},5}, edge{1,1,6}, edge{1,inversion_constant<true>{},3}, edge{1,1,4}}}, {{}, {}},
           LINE(""));
       }
 
@@ -194,7 +194,7 @@ namespace sequoia
       {
         check_graph(
           g,
-          {{edge{1,0,1}, edge{0,1,0}}, {edge{0,1,1}, edge{1,0,0}, edge{1,inverted_constant<true>{},3}, edge{1,inverted_constant<true>{},2}, edge{1,inverted_constant<true>{},6}, edge{1,1,7}, edge{1,inverted_constant<true>{},4}, edge{1,1,5}}}, {{}, {}},
+          {{edge{1,0,1}, edge{0,1,0}}, {edge{0,1,1}, edge{1,0,0}, edge{1,inversion_constant<true>{},3}, edge{1,inversion_constant<true>{},2}, edge{1,inversion_constant<true>{},6}, edge{1,1,7}, edge{1,inversion_constant<true>{},4}, edge{1,1,5}}}, {{}, {}},
           LINE(""));
       }
     }
@@ -206,8 +206,8 @@ namespace sequoia
       class NodeWeight,      
       template <class> class EdgeWeightPooling,
       template <class> class NodeWeightPooling,
-      template <class, template<class> class> class EdgeStorageTraits,
-       template <class, template<class> class, bool> class NodeWeightStorageTraits
+      template <maths::graph_flavour, class, template<class> class> class EdgeStorageTraits,
+      template <class, template<class> class, bool> class NodeWeightStorageTraits
     >
     void generic_weighted_edge_insertions
     <
@@ -253,7 +253,7 @@ namespace sequoia
       }
       else
       {
-        check_graph(g, {{edge{0,1,1,5}}, {edge{1,inverted_constant<true>{},2,6}, edge{0,1,0,5}, edge{1,inverted_constant<true>{},0,6}}}, {{}, {}}, LINE(""));
+        check_graph(g, {{edge{0,1,1,5}}, {edge{1,inversion_constant<true>{},2,6}, edge{0,1,0,5}, edge{1,inversion_constant<true>{},0,6}}}, {{}, {}}, LINE(""));
       }
     }
   }

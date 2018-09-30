@@ -3,9 +3,9 @@
 #include "Sample.hpp"
 #include "Utilities.hpp"
 
-#include <ostream>
-#include <sstream>
 #include <iostream>
+#include <sstream>
+#include <fstream>
 #include <chrono>
 #include <random>
 #include <future>
@@ -94,12 +94,14 @@ namespace sequoia
       {
         ++m_Failures;
         if constexpr (Mode != test_mode::false_positive) m_Messages += (std::move(message) + '\n');
+        if(std::ofstream of{m_RecoveryFile}) of << m_Messages;
       }
 
       void log_critical_failure(std::string message)
       {
         ++m_CriticalFailures;
         m_Messages += (std::move(message) + '\n');
+        if(std::ofstream of{m_RecoveryFile}) of << m_Messages;
       }
 
       void post_message(std::string message)
@@ -137,6 +139,9 @@ namespace sequoia
         m_FailureMessagePrefix,
         m_CurrentMessage;
 
+      // TO DO: use std::filesystem once supported!
+      std::string m_RecoveryFile{"../output/Recovery.txt"};
+
       int m_ExceptionsInFlight{};
       
       std::size_t m_Failures{}, m_Checks{}, m_Depth{}, m_DiagnosticFailures{}, m_CriticalFailures{};
@@ -158,6 +163,7 @@ namespace sequoia
       void current_message(std::string_view message)
       {
         m_CurrentMessage = message;
+        if(std::ofstream of{m_RecoveryFile}) of << m_CurrentMessage;            
       }
 
       static std::string prefix()
