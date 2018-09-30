@@ -1139,10 +1139,15 @@ namespace sequoia
           static_assert(!std::is_empty_v<edge_weight_type>);
           using inv_t = inversion_constant<true>;
           if(edgeInit.inverted())
-            return edge_type{host, inv_t{}, edgeInit.complementary_index(), WeightMaker::make_edge_weight(edgeInit.weight())};
+          {
+            return edge_type{edgeInit.host_node(), inv_t{}, edgeInit.complementary_index(), WeightMaker::make_edge_weight(edgeInit.weight())};
+          }
           else
-            return edge_type{host, edgeInit.target_node(), edgeInit.complementary_index(), WeightMaker::make_edge_weight(edgeInit.weight())};
-        }        
+          {
+            
+            return edge_type{edgeInit.host_node(), edgeInit.target_node(), edgeInit.complementary_index(), WeightMaker::make_edge_weight(edgeInit.weight())};
+          }
+        }
       }
             
       constexpr graph_primitive(std::true_type, const Nodes& in) : Nodes{in}
