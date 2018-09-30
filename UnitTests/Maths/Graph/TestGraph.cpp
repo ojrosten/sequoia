@@ -231,7 +231,7 @@ namespace sequoia::unit_testing
     }
     else
     {
-      check_graph(network, {{}, {Edge(1,0)}, {Edge(2,1)}}, {}, LINE(""));
+      check_graph(network, {{}, {Edge(1,0)}, {}}, {}, LINE(""));
     }
 
     network.join(1,1);

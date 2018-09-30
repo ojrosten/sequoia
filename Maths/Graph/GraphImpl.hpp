@@ -734,7 +734,6 @@ namespace sequoia
         }
       }
       
-
       constexpr void check_consistency(std::initializer_list<std::initializer_list<edge_init_type>> edges)
       {
         if constexpr (EdgeTraits::init_complementary_data_v)
@@ -1106,44 +1105,44 @@ namespace sequoia
       template<class EdgeInitializer>
       edge_type make_edge(const edge_index_type host, const EdgeInitializer& edgeInit)
       {
-        // Note that this method will only be called if edge_init_type != edge_type
-        // TO DO: better static consistency checking
-        if constexpr(directed(directedness))
+        static_assert(!std::is_same_v<edge_type, edge_init_type>, "Logic error!");
+        if constexpr(edge_type::flavour == edge_flavour::partial)
+        {
+          static_assert(!std::is_empty_v<edge_weight_type>);
+          return edge_type{edgeInit.target_node(), WeightMaker::make_edge_weight(edgeInit.weight())};
+        }
+        else if constexpr(edge_type::flavour == edge_flavour::partial_embedded)
+        {
+          static_assert(!std::is_empty_v<edge_weight_type>);
+          return edge_type{edgeInit.target_node(), edgeInit.complementary_index(), WeightMaker::make_edge_weight(edgeInit.weight())};
+        }
+        else if constexpr(edge_type::flavour == edge_flavour::full)
         {
           using inv_t = inversion_constant<true>;
-          if constexpr(EdgeTraits::shared_edge_v)
+          if constexpr(std::is_empty_v<edge_weight_type>)
           {
-            if constexpr(std::is_empty_v<edge_weight_type>)
-            {
-              if((edgeInit.target_node() == host) && edgeInit.inverted())
-                return edge_type{host, inv_t{}};
-              else
-                return edge_type{host, edgeInit.target_node()};
-            }
+            if(edgeInit.inverted())
+              return edge_type{host, inv_t{}};
             else
-            {
-              if((edgeInit.target_node() == edgeInit.host_node()) && edgeInit.inverted())
-              return edge_type{host, inv_t{}, WeightMaker::make_edge_weight(edgeInit.weight())};
-            else
-              return edge_type{host, edgeInit.target_node(), WeightMaker::make_edge_weight(edgeInit.weight())};
-            }
-          }
-          else if constexpr(EdgeTraits::init_complementary_data_v)
-          {
-            return edge_type{host, edgeInit.target_node(), edgeInit.complementary_index(), WeightMaker::make_edge_weight(edgeInit.weight())};
-          }
-        }
-        else
-        {
-          if constexpr(EdgeTraits::init_complementary_data_v)
-          {
-            return edge_type{edgeInit.target_node(), edgeInit.complementary_index(), WeightMaker::make_edge_weight(edgeInit.weight())};
+              return edge_type{host, edgeInit.target_node()};
           }
           else
           {
-            return edge_type{edgeInit.target_node(), WeightMaker::make_edge_weight(edgeInit.weight())};
+            if(edgeInit.inverted())
+              return edge_type{host, inv_t{}, WeightMaker::make_edge_weight(edgeInit.weight())};
+            else
+              return edge_type{host, edgeInit.target_node(), WeightMaker::make_edge_weight(edgeInit.weight())};
           }
         }
+        else if constexpr(edge_type::flavour == edge_flavour::full_embedded)
+        {
+          static_assert(!std::is_empty_v<edge_weight_type>);
+          using inv_t = inversion_constant<true>;
+          if(edgeInit.inverted())
+            return edge_type{host, inv_t{}, edgeInit.complementary_index(), WeightMaker::make_edge_weight(edgeInit.weight())};
+          else
+            return edge_type{host, edgeInit.target_node(), edgeInit.complementary_index(), WeightMaker::make_edge_weight(edgeInit.weight())};
+        }        
       }
             
       constexpr graph_primitive(std::true_type, const Nodes& in) : Nodes{in}
@@ -1188,13 +1187,31 @@ namespace sequoia
               }
               else if constexpr(edge_type::flavour == edge_flavour::full)
               {
-                const edge_type e{inIter->host_node(), inIter->target_node(), WeightMaker::make_edge_weight(inIter->weight())};
-                appender(e);
+                if(inIter->inverted())
+                {                  
+                  using inv_t = inversion_constant<true>;
+                  const edge_type e{inIter->host_node(), inv_t{}, WeightMaker::make_edge_weight(inIter->weight())};
+                  appender(e);
+                }
+                else
+                {
+                  const edge_type e{inIter->host_node(), inIter->target_node(), WeightMaker::make_edge_weight(inIter->weight())};
+                  appender(e);
+                }
               }
               else if constexpr(edge_type::flavour == edge_flavour::full_embedded)
               {
-                const edge_type e{inIter->host_node(), inIter->target_node(), inIter->complementary_index(), WeightMaker::make_edge_weight(inIter->weight())};
-                appender(e);
+                if(inIter->inverted())
+                {
+                  using inv_t = inversion_constant<true>;
+                  const edge_type e{inIter->host_node(), inv_t{}, inIter->complementary_index(), WeightMaker::make_edge_weight(inIter->weight())};
+                  appender(e);
+                }
+                else
+                {
+                  const edge_type e{inIter->host_node(), inIter->target_node(), inIter->complementary_index(), WeightMaker::make_edge_weight(inIter->weight())};
+                  appender(e);
+                }
               }
             }
             else
@@ -1429,7 +1446,6 @@ namespace sequoia
               const auto target = iter->target_node();
               if(pred(target, node)) iter->target_node(modifier(target));
 
-              //if constexpr(directed(directedness) && EdgeTraits::mutual_info_v)
               if constexpr((edge_type::flavour == edge_flavour::full) || (edge_type::flavour == edge_flavour::full_embedded))
               {
                 const auto host{iter->host_node()};                
