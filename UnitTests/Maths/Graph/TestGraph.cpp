@@ -838,11 +838,11 @@ namespace sequoia::unit_testing
 
     if constexpr(!mutual_info(GraphFlavour))
     {
-      check_graph(graph, {{Edge(0,0,-4), Edge(0,1,6), Edge(0,1,6)}, {Edge(1,0,7)}}, {{1.1,-4.3}, {0,0}});
+      check_graph(graph, {{Edge(0,0,-4), Edge(0,1,6), Edge(0,1,6)}, {Edge(1,0,7)}}, {{1.1,-4.3}, {0,0}}, LINE(""));
     }
     else
     {
-      check_graph(graph, {{Edge(0,0,-4), Edge(0,0,-4), Edge(0,1,6), Edge(1,0,6), Edge(0,1,8)}, {Edge(0,1,6), Edge(1,0,6), Edge(0,1,8)}}, {{1.1,-4.3}, {0,0}});
+      check_graph(graph, {{Edge(0,0,-4), Edge(0,0,-4), Edge(0,1,6), Edge(1,0,6), Edge(0,1,8)}, {Edge(0,1,6), Edge(1,0,6), Edge(0,1,8)}}, {{1.1,-4.3}, {0,0}}, LINE(""));
     }
 
     graph.set_edge_weight(graph.cbegin_edges(0) + (mutual_info(GraphFlavour) ?  3 : 2), 10);
@@ -855,15 +855,15 @@ namespace sequoia::unit_testing
 
     if constexpr(GraphFlavour == maths::graph_flavour::directed)
     {
-      check_graph(graph, {{Edge(0,0,-4), Edge(0,1,6), Edge(0,1,10)}, {Edge(1,0,7)}}, {{1.1,-4.3}, {0,0}});
+      check_graph(graph, {{Edge(0,0,-4), Edge(0,1,6), Edge(0,1,10)}, {Edge(1,0,7)}}, {{1.1,-4.3}, {0,0}}, LINE(""));
     }
     else if constexpr(GraphFlavour == maths::graph_flavour::undirected)
     {
-      check_graph(graph, {{Edge(0,0,-4), Edge(0,0,-4), Edge(0,1,6), Edge(1,0,10), Edge(0,1,8)}, {Edge(0,1,10), Edge(1,0,6), Edge(0,1,8)}}, {{1.1,-4.3}, {0,0}});
+      check_graph(graph, {{Edge(0,0,-4), Edge(0,0,-4), Edge(0,1,6), Edge(1,0,10), Edge(0,1,8)}, {Edge(0,1,10), Edge(1,0,6), Edge(0,1,8)}}, {{1.1,-4.3}, {0,0}}, LINE(""));
     }
     else
     {
-      check_graph(graph, {{Edge(0,0,-4), Edge(0,0,-4), Edge(0,1,6), Edge(1,0,10), Edge(0,1,8)}, {Edge(0,1,6), Edge(1,0,10), Edge(0,1,8)}}, {{1.1,-4.3}, {0,0}});
+      check_graph(graph, {{Edge(0,0,-4), Edge(0,0,-4), Edge(0,1,6), Edge(1,0,10), Edge(0,1,8)}, {Edge(0,1,6), Edge(1,0,10), Edge(0,1,8)}}, {{1.1,-4.3}, {0,0}}, LINE(""));
     }
 
     graph.mutate_edge_weight(graph.cbegin_edges(0) + (mutual_info(GraphFlavour) ?  4 : 1), [](auto& val){ val = 10; });
@@ -876,15 +876,15 @@ namespace sequoia::unit_testing
 
     if constexpr(GraphFlavour == maths::graph_flavour::directed)
     {
-      check_graph(graph, {{Edge(0,0,-4), Edge(0,1,10), Edge(0,1,10)}, {Edge(1,0,7)}}, {{1.1,-4.3}, {0,0}});
+      check_graph(graph, {{Edge(0,0,-4), Edge(0,1,10), Edge(0,1,10)}, {Edge(1,0,7)}}, {{1.1,-4.3}, {0,0}}, LINE(""));
     }
     else if constexpr(GraphFlavour == maths::graph_flavour::undirected)
     {
-      check_graph(graph, {{Edge(0,0,-4), Edge(0,0,-4), Edge(0,1,6), Edge(1,0,10), Edge(0,1,10)}, {Edge(0,1,10), Edge(1,0,6), Edge(0,1,10)}}, {{1.1,-4.3}, {0,0}});
+      check_graph(graph, {{Edge(0,0,-4), Edge(0,0,-4), Edge(0,1,6), Edge(1,0,10), Edge(0,1,10)}, {Edge(0,1,10), Edge(1,0,6), Edge(0,1,10)}}, {{1.1,-4.3}, {0,0}}, LINE(""));
     }
     else
     {
-      check_graph(graph, {{Edge(0,0,-4), Edge(0,0,-4), Edge(0,1,6), Edge(1,0,10), Edge(0,1,10)}, {Edge(0,1,6), Edge(1,0,10), Edge(0,1,10)}}, {{1.1,-4.3}, {0,0}});
+      check_graph(graph, {{Edge(0,0,-4), Edge(0,0,-4), Edge(0,1,6), Edge(1,0,10), Edge(0,1,10)}, {Edge(0,1,6), Edge(1,0,10), Edge(0,1,10)}}, {{1.1,-4.3}, {0,0}}, LINE(""));
     }
 
     graph.mutate_edge_weight(graph.cbegin_edges(0) + (mutual_info(GraphFlavour) ?  4 : 2), [](auto& val){ val = 7; });
@@ -897,15 +897,15 @@ namespace sequoia::unit_testing
 
     if constexpr(GraphFlavour == maths::graph_flavour::directed)
     {
-      check_graph(graph, {{Edge(0,0,-4), Edge(0,1,10), Edge(0,1,7)}, {Edge(1,0,7)}}, {{1.1,-4.3}, {0,0}});
+      check_graph(graph, {{Edge(0,0,-4), Edge(0,1,10), Edge(0,1,7)}, {Edge(1,0,7)}}, {{1.1,-4.3}, {0,0}}, LINE(""));
     }
     else if constexpr(GraphFlavour == maths::graph_flavour::undirected)
     {
-      check_graph(graph, {{Edge(0,0,-4), Edge(0,0,-4), Edge(0,1,6), Edge(1,0,10), Edge(0,1,7)}, {Edge(0,1,7), Edge(1,0,6), Edge(0,1,10)}}, {{1.1,-4.3}, {0,0}});
+      check_graph(graph, {{Edge(0,0,-4), Edge(0,0,-4), Edge(0,1,6), Edge(1,0,10), Edge(0,1,7)}, {Edge(0,1,7), Edge(1,0,6), Edge(0,1,10)}}, {{1.1,-4.3}, {0,0}}, LINE(""));
     }
     else
     {
-      check_graph(graph, {{Edge(0,0,-4), Edge(0,0,-4), Edge(0,1,6), Edge(1,0,10), Edge(0,1,7)}, {Edge(0,1,6), Edge(1,0,10), Edge(0,1,7)}}, {{1.1,-4.3}, {0,0}});
+      check_graph(graph, {{Edge(0,0,-4), Edge(0,0,-4), Edge(0,1,6), Edge(1,0,10), Edge(0,1,7)}, {Edge(0,1,6), Edge(1,0,10), Edge(0,1,7)}}, {{1.1,-4.3}, {0,0}}, LINE(""));
     }
         
     graph.delete_node(0);

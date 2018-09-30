@@ -513,54 +513,44 @@ namespace sequoia
         if constexpr (EdgeTraits::mutual_info_v)
         {          
           const auto host{citer.partition_index()};
-          const auto other{[&edge=*citer](const auto& host){
-              if constexpr (directed(directedness))
-              {
-                const auto target{edge.target_node()};
-                return target == host ? edge.host_node() : target;
-              }
-              else
-              {
-                return edge.target_node();
-              }
-            }(host)};
+          const auto partner{partner_index(citer)};
 
-          if(host != other)
+          if(host != partner)
           {                        
             if constexpr (embeddedEdge)
             {
-              const auto otherLocalIndex{citer->complementary_index()};
+              const auto partnerLocalIndex{citer->complementary_index()};
               const auto dist{distance(m_Edges.cbegin_partition(host), citer)};
               decrement_comp_indices(m_Edges.begin_partition(host) + dist + 1, m_Edges.end_partition(host), 1);
               m_Edges.delete_from_partition(citer);             
-              decrement_comp_indices(m_Edges.begin_partition(other) + otherLocalIndex + 1, m_Edges.end_partition(other), 1);
-              m_Edges.delete_from_partition(other, otherLocalIndex);
+              decrement_comp_indices(m_Edges.begin_partition(partner) + partnerLocalIndex + 1, m_Edges.end_partition(partner), 1);
+              m_Edges.delete_from_partition(partner, partnerLocalIndex);
             }
             else
             {
-              const auto otherDist{[this, other](const auto host, const auto citer){
+              const auto partnerDist{[this, partner](const auto host, const auto citer){
                   if constexpr (directed(directedness))
                   {
                     const auto pEdge{&*citer};
-                    for(auto oiter = cbegin_edges(other); oiter != cend_edges(other); ++oiter)
+                    for(auto oiter = cbegin_edges(partner); oiter != cend_edges(partner); ++oiter)
                     {
-                      if(&*oiter == pEdge) return distance(cbegin_edges(other), oiter);
+                      if(&*oiter == pEdge) return distance(cbegin_edges(partner), oiter);
                     }
                   }              
                   else
                   {
-                    for(auto oiter{cbegin_edges(other)}; oiter != cend_edges(other); ++oiter)
+                    for(auto oiter{cbegin_edges(partner)}; oiter != cend_edges(partner); ++oiter)
                     {
                       if(oiter->target_node() == host)
                       {
                         if constexpr(std::is_empty_v<edge_weight_type>)
                         {
-                          return distance(cbegin_edges(other), oiter);
+                          return distance(cbegin_edges(partner), oiter);
                         }
                         else
                         {
                           if(citer->weight() == oiter->weight())
-                            return distance(cbegin_edges(other), oiter);
+                            return distance(cbegin_edges(partner), oiter);
                         }
                       }
                     }
@@ -570,7 +560,7 @@ namespace sequoia
                 }(host, citer)};
                             
               m_Edges.delete_from_partition(citer);              
-              m_Edges.delete_from_partition(cbegin_edges(other) + otherDist);
+              m_Edges.delete_from_partition(cbegin_edges(partner) + partnerDist);
             }
           }
           else
@@ -729,6 +719,22 @@ namespace sequoia
           return homog_indirect_init_type{};
       }
 
+      static constexpr auto partner_index(const_edge_iterator citer)
+      {
+        const auto& edge{*citer};
+        const auto target{edge.target_node()};
+        if constexpr (directed(directedness))
+        {
+          const auto host{citer.partition_index()};
+          return target == host ? edge.host_node() : target;
+        }
+        else
+        {
+          return target;
+        }
+      }
+      
+
       constexpr void check_consistency(std::initializer_list<std::initializer_list<edge_init_type>> edges)
       {
         if constexpr (EdgeTraits::init_complementary_data_v)
@@ -836,20 +842,20 @@ namespace sequoia
             
             if constexpr(!direct_edge_init())
             {
-              auto other{target};
+              auto partner{target};
               if constexpr(directed(directedness))
               {
-                if(target == currentNodeIndex) other = edge.host_node();
+                if(target == currentNodeIndex) partner = edge.host_node();
               }
               
               const auto pos{static_cast<edge_index_type>(std::distance(nodeEdges.begin(), edgeIter))};
-              if(!EdgeTraits::shared_edge_v || (other > currentNodeIndex) || ((other == currentNodeIndex) && (compIndex > pos)))
+              if(!EdgeTraits::shared_edge_v || (partner > currentNodeIndex) || ((partner == currentNodeIndex) && (compIndex > pos)))
               {
                 m_Edges.push_back_to_partition(currentNodeIndex, make_edge(currentNodeIndex, edge));
               }
               else
               {
-                m_Edges.push_back_to_partition(currentNodeIndex, cbegin_edges(other) + compIndex);
+                m_Edges.push_back_to_partition(currentNodeIndex, cbegin_edges(partner) + compIndex);
               }
             }
           }
@@ -1245,39 +1251,40 @@ namespace sequoia
 
       template<class Setter>
       constexpr const_edge_iterator manipulate_partner_edge_weight(const_edge_iterator citer, Setter setter)
-      {
-        const auto target{citer->target_node()};
+      {        
+        const auto partner{partner_index(citer)};
+        
         if constexpr(embeddedEdge)
         {          
           const auto comp{citer->complementary_index()};
-          setter(m_Edges.begin_partition(target) + comp);
-          return m_Edges.cbegin_partition(target) + comp;
+          setter(m_Edges.begin_partition(partner) + comp);
+          return m_Edges.cbegin_partition(partner) + comp;
         }
         else
         {
           const auto host{citer.partition_index()};
-          if(host == target)
+          if(host == partner)
           {
-            for(auto iter{m_Edges.begin_partition(target)}; iter != m_Edges.end_partition(target); ++iter)
+            for(auto iter{m_Edges.begin_partition(partner)}; iter != m_Edges.end_partition(partner); ++iter)
             {
-              if(distance(m_Edges.begin_partition(target), iter) == distance(cbegin_edges(target), citer))
+              if(distance(m_Edges.begin_partition(partner), iter) == distance(cbegin_edges(partner), citer))
                 continue;
               
               if(*iter == *citer)
               {
                 setter(iter);
-                return cbegin_edges(target) + distance(m_Edges.begin_partition(target), iter);
+                return cbegin_edges(partner) + distance(m_Edges.begin_partition(partner), iter);
               }
             }
           }
           else
           {
-            for(auto iter{m_Edges.begin_partition(target)}; iter != m_Edges.end_partition(target); ++iter)
+            for(auto iter{m_Edges.begin_partition(partner)}; iter != m_Edges.end_partition(partner); ++iter)
             {
               if((iter->target_node() == host) && (iter->weight() == citer->weight()))
               {
                 setter(iter);
-                return cbegin_edges(target) + distance(m_Edges.begin_partition(target), iter);
+                return cbegin_edges(partner) + distance(m_Edges.begin_partition(partner), iter);
               }
             }
           }          
