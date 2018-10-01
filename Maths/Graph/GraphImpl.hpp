@@ -1439,25 +1439,35 @@ namespace sequoia
       }
 
       template<class Pred, class Modifier>
-      void fix_edge_data(const edge_index_type node, Pred pred, Modifier modifier)
+      constexpr void fix_edge_data(const edge_index_type node, Pred pred, Modifier modifier) noexcept
       {
-        std::set<edge_type*> doneEdges;
         for(size_type i{}; i < m_Edges.num_partitions(); ++i)
         {
           for(auto iter{m_Edges.begin_partition(i)}; iter != m_Edges.end_partition(i); ++iter)
-          {
-            if(doneEdges.find(&(*iter)) == doneEdges.end())
+          {            
+            const auto target{iter->target_node()};
+            if constexpr(EdgeTraits::shared_edge_v)
             {
-              const auto target = iter->target_node();
+              const auto host{iter->host_node()}, currentNode{iter.partition_index()};
+              
+              if(pred(target, node))
+              {
+                if(const auto newTarget{modifier(target)}; newTarget == currentNode) iter->target_node(newTarget);
+              }
+              if(pred(host, node))
+              {
+                if(const auto newHost{modifier(host)}; newHost == currentNode) iter->host_node(newHost);
+              }
+            }
+            else
+            {
               if(pred(target, node)) iter->target_node(modifier(target));
 
-              if constexpr((edge_type::flavour == edge_flavour::full) || (edge_type::flavour == edge_flavour::full_embedded))
+              if constexpr(edge_type::flavour == edge_flavour::full_embedded)
               {
                 const auto host{iter->host_node()};                
                 if(pred(host, node)) iter->host_node(modifier(host));
               }
-
-              doneEdges.insert(&(*iter));
             }
           }
         }
