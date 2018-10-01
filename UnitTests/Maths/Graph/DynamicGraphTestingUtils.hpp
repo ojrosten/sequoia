@@ -22,6 +22,24 @@ namespace sequoia::unit_testing
 
     constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::independent};
   };
+
+  template<maths::graph_flavour GraphFlavour, class EdgeWeight, template <class> class EdgeWeightPooling>
+  struct shared_weight_contiguous_edge_storage_traits
+  {
+    template <class T, class Sharing, class Traits> using storage_type = data_structures::contiguous_storage<T, Sharing, Traits>;
+    template <class T, class Sharing> using traits_type = data_structures::contiguous_storage_traits<T, Sharing>;
+
+    constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::shared_weight};
+  };
+
+  template<maths::graph_flavour GraphFlavour, class EdgeWeight, template <class> class EdgeWeightPooling>
+  struct shared_weight_bucketed_edge_storage_traits
+  {
+    template <class T, class Sharing, class Traits> using storage_type = data_structures::bucketed_storage<T, Sharing, Traits>;
+    template <class T, class Sharing> using traits_type = data_structures::bucketed_storage_traits<T, Sharing>;
+
+    constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::shared_weight};
+  };
   
   template<> struct template_class_to_string<data_sharing::unpooled>
   {
@@ -53,6 +71,16 @@ namespace sequoia::unit_testing
   template<> struct storage_traits_to_string<independent_contiguous_edge_storage_traits>
   {
     static std::string str() { return "INDEPENDENT CONTIGUOUS STORAGE"; }
+  };
+
+  template<> struct storage_traits_to_string<shared_weight_bucketed_edge_storage_traits>
+  {
+    static std::string str() { return "SHARED WEIGHT BUCKETED STORAGE"; }
+  };
+
+  template<> struct storage_traits_to_string<shared_weight_contiguous_edge_storage_traits>
+  {
+    static std::string str() { return "SHARED WEIGHT CONTIGUOUS STORAGE"; }
   };
 
   template<template <class, template<class> class, bool> class T> struct node_weight_storage_traits_to_string;
