@@ -338,8 +338,29 @@ namespace sequoia
 
         if constexpr (!EdgeTraits::shared_weight_v && !EdgeTraits::shared_edge_v && EdgeTraits::mutual_info_v)
         {
-          auto partnerIter{set_partner_edge_weight(citer, std::forward<Arg>(arg), std::forward<Args>(args)...)};
-          set_host_edge_weight(citer, partnerIter->weight());          
+          // Temporary hack while waiting for constexpr destructors (p0784)
+          if constexpr(EdgeTraits::weight_setting_exception_guarantee)
+          {
+            auto partnerSetter{
+              [this](const_edge_iterator citer, auto&&... args){
+                return this->set_partner_edge_weight(citer, std::forward<decltype(args)>(args)...);
+              }
+            };
+
+            auto hostSetter{
+              [this](const_edge_iterator citer, const_edge_iterator partnerIter){
+                this->set_host_edge_weight(citer, partnerIter->weight());
+              }
+            };
+
+            weight_sentinel sentinel(*this, citer, partnerSetter, hostSetter,
+                                     std::forward<Arg>(arg), std::forward<Args>(args)...);
+          }
+          else
+          {
+            auto partnerIter{set_partner_edge_weight(citer, std::forward<Arg>(arg), std::forward<Args>(args)...)};
+            set_host_edge_weight(citer, partnerIter->weight());
+          }
         }
         else
         {
@@ -698,6 +719,38 @@ namespace sequoia
 
       edge_storage_type m_Edges;
 
+      class weight_sentinel
+      {
+      public:
+        template<class Fn1, class Fn2, class... Args1>
+        constexpr weight_sentinel(graph_primitive& primitive, const_edge_iterator citer, Fn1 fn1, Fn2 fn2, Args1&&... args1)
+          : m_Primitive{primitive}
+          , m_citer{citer}
+          , m_OldEdgeWeight{citer->weight()}
+        {
+          auto partnerIter{fn1(citer, std::forward<Args1>(args1)...)};
+          m_PartiallyComplete = true;
+          
+          fn2(citer, partnerIter);
+          m_PartiallyComplete = false;
+        }
+
+        // Hopefully can be restored in C++20; requires p0784:
+        // constexpr
+        ~weight_sentinel()
+        {
+          if(m_PartiallyComplete)
+          {
+            m_Primitive.to_edge_iterator(m_citer)->weight(std::move(m_OldEdgeWeight));
+          }
+        }
+      private:
+        graph_primitive& m_Primitive;
+        bool m_PartiallyComplete{};        
+        const_edge_iterator m_citer;
+        edge_weight_type m_OldEdgeWeight;
+      };
+
       static constexpr auto direct_edge_init() noexcept
       {
         return std::bool_constant<std::is_same_v<edge_type, edge_init_type>>{};
@@ -894,7 +947,7 @@ namespace sequoia
 
           if constexpr(clusterEdges)
           {
-            auto lowerIter = orderedEdges.begin_partition(i), upperIter = orderedEdges.begin_partition(i);
+            auto lowerIter{orderedEdges.begin_partition(i)}, upperIter{orderedEdges.begin_partition(i)};
             while(lowerIter != orderedEdges.end_partition(i))
             {
               while((upperIter != orderedEdges.end_partition(i)) && (lowerIter->target_node() == upperIter->target_node()))
@@ -916,20 +969,23 @@ namespace sequoia
         {
           if constexpr(!direct_edge_init()) m_Edges.add_slot();
           
-          auto lowerIter = orderedEdges.cbegin_partition(i), upperIter = orderedEdges.cbegin_partition(i);
+          auto lowerIter{orderedEdges.cbegin_partition(i)}, upperIter{orderedEdges.cbegin_partition(i)};
           while(lowerIter != orderedEdges.cend_partition(i))
           {
-            auto target = lowerIter->target_node();
-            if((target >= orderedEdges.num_partitions()) || (target < edge_index_type{})) throw std::logic_error("Target index out of range");
+            const auto target{lowerIter->target_node()};
+            if((target >= orderedEdges.num_partitions()) || (target < edge_index_type{}))
+              throw std::logic_error("Target index out of range");
+            
             {
-              auto comparer =[&edge=*lowerIter](const auto uIter){
-                if constexpr (std::is_empty_v<edge_weight_type>)
-                {
-                  return uIter->target_node() == edge.target_node();
-                }
-                else
-                {                   
-                  return (uIter->target_node() == edge.target_node()) && (uIter->weight() == edge.weight());
+              auto comparer{[&edge=*lowerIter](const auto uIter){
+                  if constexpr (std::is_empty_v<edge_weight_type>)
+                  {
+                    return uIter->target_node() == edge.target_node();
+                  }
+                  else
+                  {                   
+                    return (uIter->target_node() == edge.target_node()) && (uIter->weight() == edge.weight());
+                  }
                 }
               };
 
@@ -960,22 +1016,23 @@ namespace sequoia
             }
             else
             {
-              auto comparer = [i](const auto targetIter, const auto& e){
-                if constexpr (std::is_empty_v<edge_weight_type>)
-                {
-                  return targetIter->target_node() != i;
-                }
-                else
-                {
-                  return targetIter->target_node() == i ? targetIter->weight() != e.weight() : true;
+              auto comparer{[i](const auto targetIter, const auto& e){
+                  if constexpr (std::is_empty_v<edge_weight_type>)
+                  {
+                    return targetIter->target_node() != i;
+                  }
+                  else
+                  {
+                    return targetIter->target_node() == i ? targetIter->weight() != e.weight() : true;
+                  }
                 }
               };               
                
-              auto targetEdgesIter = orderedEdges.cbegin_partition(target);
+              auto targetEdgesIter{orderedEdges.cbegin_partition(target)};
               while((targetEdgesIter != orderedEdges.cend_partition(target)) && comparer(targetEdgesIter, *lowerIter))
                 ++targetEdgesIter;               
                
-              auto upperTargetEdgesIter = targetEdgesIter;
+              auto upperTargetEdgesIter{targetEdgesIter};
               while((upperTargetEdgesIter != orderedEdges.cend_partition(target)) && !comparer(upperTargetEdgesIter, *lowerIter))
                 ++upperTargetEdgesIter;
 
@@ -1249,14 +1306,17 @@ namespace sequoia
         m_Edges = in.m_Edges;
       }
 
-      
-      template<class Setter, class... Args>
-      constexpr void manipulate_host_edge_weight(const_edge_iterator citer, Setter setter)
+      constexpr auto to_edge_iterator(const_edge_iterator citer)
       {
         const auto host{citer.partition_index()};
         const auto dist{distance(cbegin_edges(host), citer)};
-        const auto iter{m_Edges.begin_partition(host) + dist};
-        setter(iter);
+        return m_Edges.begin_partition(host) + dist;
+      }
+      
+      template<class Setter, class... Args>
+      constexpr void manipulate_host_edge_weight(const_edge_iterator citer, Setter setter)
+      {        
+        setter(to_edge_iterator(citer));
       }
 
       template<class Fn>
