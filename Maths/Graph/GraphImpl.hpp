@@ -1446,7 +1446,7 @@ namespace sequoia
         return citer1;
       }
 
-      template<class Iter, class Fn> constexpr void modify_comp_indices(Iter first, Iter last, Fn fn)
+      template<class Iter, class Fn> constexpr void modify_comp_indices(Iter first, Iter last, Fn fn) noexcept
       {
         const auto start{first};
         while(first != last)
@@ -1488,12 +1488,12 @@ namespace sequoia
         }
       }
 
-      template<class Iter> constexpr void decrement_comp_indices(Iter first, Iter last, const edge_index_type num)
+      template<class Iter> constexpr void decrement_comp_indices(Iter first, Iter last, const edge_index_type num) noexcept
       {
         modify_comp_indices(first, last, [num](const auto compIndex) { return compIndex - num; }); 
       }
       
-      template<class Iter> constexpr void increment_comp_indices(Iter first, Iter last, const edge_index_type num)
+      template<class Iter> constexpr void increment_comp_indices(Iter first, Iter last, const edge_index_type num) noexcept
       {
         modify_comp_indices(first, last, [num](const auto compIndex) { return compIndex + num; }); 
       }
