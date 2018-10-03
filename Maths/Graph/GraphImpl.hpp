@@ -254,8 +254,8 @@ namespace sequoia
         if constexpr (throw_on_range_error) if(node >= order()) throw std::out_of_range("Cannot delete node: index out of range");
 
         if constexpr (EdgeTraits::mutual_info_v)
-        {          
-          std::set<size_type> partitionsToVisit;
+        {
+          std::set<size_type> partitionsToVisit{};
           for(auto citer{m_Edges.cbegin_partition(node)}; citer != m_Edges.cend_partition(node); ++citer)
           {            
             const auto target{citer->target_node()};
