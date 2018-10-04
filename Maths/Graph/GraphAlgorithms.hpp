@@ -367,7 +367,7 @@ namespace sequoia::maths
     {
       if(!nodePred(*(subGraph.cbegin_node_weights() + pos)))
       {
-        subGraph.delete_node(pos);
+        subGraph.erase_node(pos);
       }
       else
       {

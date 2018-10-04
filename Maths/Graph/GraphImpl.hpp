@@ -249,9 +249,9 @@ namespace sequoia
         return node;
       }
 
-      void delete_node(const size_type node)
+      void erase_node(const size_type node)
       {
-        if constexpr (throw_on_range_error) if(node >= order()) throw std::out_of_range("Cannot delete node: index out of range");
+        if constexpr (throw_on_range_error) if(node >= order()) throw std::out_of_range("Cannot erase node: index out of range");
 
         if constexpr (EdgeTraits::mutual_info_v)
         {
@@ -288,11 +288,11 @@ namespace sequoia
                 if(fn(*iter)) decrement_comp_indices(iter+1,  m_Edges.end_partition(partition), 1);
               }
             }
-            m_Edges.delete_from_partition_if(partition, fn);
+            m_Edges.erase_from_partition_if(partition, fn);
           }
 
           if constexpr (!emptyNodes) Nodes::erase_node(this->cbegin_node_weights() + node);
-          m_Edges.delete_slot(node);
+          m_Edges.erase_slot(node);
           fix_edge_data(node,
                       [](const auto targetNode, const auto node) { return targetNode > node; },
                       [](const auto index) { return index - 1; });
@@ -302,13 +302,13 @@ namespace sequoia
           for(size_type i{}; i < m_Edges.num_partitions(); ++i)
           {
             if(i == node) continue;
-            m_Edges.delete_from_partition_if(i, [node](const edge_type& e) {
+            m_Edges.erase_from_partition_if(i, [node](const edge_type& e) {
                 return (e.target_node() == node);
             });
           }
 
           if constexpr (!emptyNodes) Nodes::erase_node(this->cbegin_node_weights() + node);
-          m_Edges.delete_slot(node);
+          m_Edges.erase_slot(node);
           fix_edge_data(node,
                       [](const auto targetNode, const auto node) { return targetNode > node; },
                       [](const auto index) { return index - 1; });
@@ -477,7 +477,7 @@ namespace sequoia
         auto recovery{[&edges=m_Edges,citer1](){
               // Needs to decrement!
               // And again for embedded!
-              edges.delete_from_partition(citer1); }
+              edges.erase_from_partition(citer1); }
         };
         using recovery_t = decltype(recovery);
           
@@ -569,7 +569,7 @@ namespace sequoia
         }
       }
 
-      void delete_edge(const_edge_iterator citer)
+      void erase_edge(const_edge_iterator citer)
       {              
         if constexpr (EdgeTraits::mutual_info_v)
         {          
@@ -583,9 +583,9 @@ namespace sequoia
               const auto partnerLocalIndex{citer->complementary_index()};
               const auto dist{distance(m_Edges.cbegin_partition(host), citer)};
               decrement_comp_indices(m_Edges.begin_partition(host) + dist + 1, m_Edges.end_partition(host), 1);
-              m_Edges.delete_from_partition(citer);             
+              m_Edges.erase_from_partition(citer);             
               decrement_comp_indices(m_Edges.begin_partition(partner) + partnerLocalIndex + 1, m_Edges.end_partition(partner), 1);
-              m_Edges.delete_from_partition(partner, partnerLocalIndex);
+              m_Edges.erase_from_partition(partner, partnerLocalIndex);
             }
             else
             {
@@ -620,8 +620,8 @@ namespace sequoia
                   throw std::logic_error("Deletion of undirected edge: partner not found");
                 }(host, citer)};
                             
-              m_Edges.delete_from_partition(citer);              
-              m_Edges.delete_from_partition(cbegin_edges(partner) + partnerDist);
+              m_Edges.erase_from_partition(citer);              
+              m_Edges.erase_from_partition(cbegin_edges(partner) + partnerDist);
             }
           }
           else
@@ -633,28 +633,28 @@ namespace sequoia
               if(dist == 1)
               {                
                 decrement_comp_indices(m_Edges.begin_partition(host) + hostLocalIndex + 1, m_Edges.end_partition(host), 2);
-                const auto next{m_Edges.delete_from_partition(citer)};
-                m_Edges.delete_from_partition(next);
+                const auto next{m_Edges.erase_from_partition(citer)};
+                m_Edges.erase_from_partition(next);
               }
               else if(dist == -1)
               {
                 decrement_comp_indices(m_Edges.begin_partition(host) + hostLocalIndex + 2, m_Edges.end_partition(host), 2);
-                const auto next{m_Edges.delete_from_partition(citer-1)};
-                m_Edges.delete_from_partition(next);
+                const auto next{m_Edges.erase_from_partition(citer-1)};
+                m_Edges.erase_from_partition(next);
               }
               else
               {                
-                const auto deleteFirstIndex{(hostLocalIndex > dist) ? hostLocalIndex : dist};
-                const auto deleteSecondIndex{(hostLocalIndex > dist) ? dist : hostLocalIndex};
+                const auto eraseFirstIndex{(hostLocalIndex > dist) ? hostLocalIndex : dist};
+                const auto eraseSecondIndex{(hostLocalIndex > dist) ? dist : hostLocalIndex};
 
-                const auto firstIter{m_Edges.begin_partition(host) + deleteFirstIndex};
-                const auto secondIter{m_Edges.begin_partition(host) + deleteSecondIndex};
+                const auto firstIter{m_Edges.begin_partition(host) + eraseFirstIndex};
+                const auto secondIter{m_Edges.begin_partition(host) + eraseSecondIndex};
 
                 decrement_comp_indices(firstIter + 1, m_Edges.end_partition(host), 2);                
                 decrement_comp_indices(secondIter + 1, firstIter, 1);
                 
-                m_Edges.delete_from_partition(host, deleteFirstIndex);
-                m_Edges.delete_from_partition(host, deleteSecondIndex);
+                m_Edges.erase_from_partition(host, eraseFirstIndex);
+                m_Edges.erase_from_partition(host, eraseSecondIndex);
               }
             }
             else if constexpr (EdgeTraits::shared_edge_v)
@@ -670,13 +670,13 @@ namespace sequoia
               
               if(distance(hiter, citer) > 0)
               {
-                m_Edges.delete_from_partition(citer);
-                m_Edges.delete_from_partition(hiter);
+                m_Edges.erase_from_partition(citer);
+                m_Edges.erase_from_partition(hiter);
               }
               else
               {
-                m_Edges.delete_from_partition(hiter);
-                m_Edges.delete_from_partition(citer);
+                m_Edges.erase_from_partition(hiter);
+                m_Edges.erase_from_partition(citer);
               }
             }
             else
@@ -702,19 +702,19 @@ namespace sequoia
                   {
                     if(distance(cbegin_edges(host), ci) < dist) --dist;
                   
-                    m_Edges.delete_from_partition(ci);
+                    m_Edges.erase_from_partition(ci);
                     break;
                   }
                 }
               }              
 
-              m_Edges.delete_from_partition(cbegin_edges(host) + dist);                 
+              m_Edges.erase_from_partition(cbegin_edges(host) + dist);                 
             }           
           }   
         }
         else
         {
-          m_Edges.delete_from_partition(citer);
+          m_Edges.erase_from_partition(citer);
         }
       }
 

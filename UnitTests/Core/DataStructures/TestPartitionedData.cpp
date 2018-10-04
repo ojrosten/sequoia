@@ -259,7 +259,7 @@ namespace sequoia
       check_equality<std::size_t>(0, storage.size());
 
       check_equality<std::size_t>(0, storage.num_partitions());
-      check_equality<std::size_t>(0, storage.delete_slot(0));
+      check_equality<std::size_t>(0, storage.erase_slot(0));
 
       storage.add_slot();
       check_equality<std::size_t>(1, storage.num_partitions());
@@ -267,8 +267,8 @@ namespace sequoia
 
       check_exception_thrown<std::out_of_range>([&storage]() { storage.push_back_to_partition(1, 7); }, "Only one partition available so cannot push back to the second");
 
-      check_equality<std::size_t>(0, storage.delete_slot(1));
-      check_equality<std::size_t>(0, storage.delete_slot(0));
+      check_equality<std::size_t>(0, storage.erase_slot(1));
+      check_equality<std::size_t>(0, storage.erase_slot(0));
       check_equality<std::size_t>(0, storage.num_partitions());
 
 
@@ -346,17 +346,17 @@ namespace sequoia
 
       check_partitions(storage, answers_type{{12, 13, 3, -8}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}});
 
-      storage.delete_from_partition(0, 0);
+      storage.erase_from_partition(0, 0);
       // [13, 3, -8][4][1, 2, 8, 9,-3, 7, 5][]
 
       check_partitions(storage, answers_type{{13, 3, -8}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}});
 
-      storage.delete_from_partition(0, 2);
+      storage.erase_from_partition(0, 2);
       // [13, 3][4][1, 2, 8, 9,-3, 7, 5][]
 
       check_partitions(storage, answers_type{{13, 3}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}});
 
-      storage.delete_from_partition(storage.cbegin_partition(0));
+      storage.erase_from_partition(storage.cbegin_partition(0));
       // [3][4][1, 2, 8, 9,-3, 7, 5][]
 
       check_partitions(storage, answers_type{{3}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}});
@@ -373,8 +373,8 @@ namespace sequoia
 
       check_partitions(storage, answers_type{{3}, {4}, {-2, 1, 2, 8, 9, -3, 7, 5}, {-4, -2, -4}});
 
-      check_equality<std::size_t>(3, storage.delete_slot(3));
-      check_equality<std::size_t>(8, storage.delete_slot(2));
+      check_equality<std::size_t>(3, storage.erase_slot(3));
+      check_equality<std::size_t>(8, storage.erase_slot(2));
       // [3][4]
 
       check_partitions(storage, answers_type{{3}, {4}});
@@ -423,12 +423,12 @@ namespace sequoia
 
       check_partitions(storage, answers_type{{2, 1, 2}, {3}, {7,1}, {4}});
 
-      check_equality<std::size_t>(2, storage.delete_slot(2));
+      check_equality<std::size_t>(2, storage.erase_slot(2));
       // [2,1,2][3][4]
 
       check_partitions(storage, answers_type{{2,1,2}, {3}, {4}});
 
-      check_equality<std::size_t>(3, storage.delete_slot(0));
+      check_equality<std::size_t>(3, storage.erase_slot(0));
       // [3][4]
 
       check_partitions(storage, answers_type{{3}, {4}});
@@ -467,12 +467,12 @@ namespace sequoia
 
       check_partitions(storage, answers_type{{3, -5}, {4, -5}, {8, 9}});
 
-      check_equality<std::size_t>(2, storage.delete_slot(1));
+      check_equality<std::size_t>(2, storage.erase_slot(1));
       // [3,-5][8,9]
 
       check_partitions(storage, answers_type{{3, -5}, {8, 9}});
 
-      check_equality<std::size_t>(2, storage.delete_slot(0));
+      check_equality<std::size_t>(2, storage.erase_slot(0));
       // [8,9]
 
       check_partitions(storage, answers_type{{8, 9}});
@@ -488,7 +488,7 @@ namespace sequoia
         auto iter = storage.begin_partition(0);
         iter++;
         *iter = -5;
-        auto next = storage.delete_from_partition(0, 0);
+        auto next = storage.erase_from_partition(0, 0);
         check_equality<std::size_t>(-5, *next);
       }
       // [-5][4,-5]
@@ -497,7 +497,7 @@ namespace sequoia
 
 
       {
-        auto next = storage.delete_from_partition(0, 2);
+        auto next = storage.erase_from_partition(0, 2);
         check(next == storage.end_partition(0));
       }
       // [-5][4,-5]
@@ -505,7 +505,7 @@ namespace sequoia
       check_partitions(storage, answers_type{{-5}, {4, -5}});
 
       {
-        auto next = storage.delete_from_partition(1, 1);
+        auto next = storage.erase_from_partition(1, 1);
         check(next == storage.end_partition(1));
       }
       // [-5][4]
@@ -528,7 +528,7 @@ namespace sequoia
       check(found != storage.end_partition(0));
       check_equality<std::size_t>(6, *found);
 
-      storage.delete_from_partition_if(0, [](const int& elt) { return elt == 6; });
+      storage.erase_from_partition_if(0, [](const int& elt) { return elt == 6; });
       // [-5,-2][4,6,-2]
 
       check_partitions(storage, answers_type{{-5, -2}, {4, 6, -2}});
@@ -545,7 +545,7 @@ namespace sequoia
 
       check_partitions(storage, answers_type{{-5, -2}, {4, 6, -2, 7, 7}});
 
-      check_equality<std::size_t>(2, storage.delete_from_partition_if(1, [](const int& elt) { return elt == 7; }));
+      check_equality<std::size_t>(2, storage.erase_from_partition_if(1, [](const int& elt) { return elt == 7; }));
       // [-5,-2][4,6,-2]
 
       check_partitions(storage, answers_type{{-5, -2}, {4, 6, -2}});

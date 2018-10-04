@@ -131,7 +131,7 @@ namespace sequoia::unit_testing
       check_graph(network, {{Edge(0,1), Edge(0,3)}, {Edge(1,2)}, {}, {}}, {}, LINE(""));
     }
 
-    network.delete_node(0);
+    network.erase_node(0);
     //    0----1
     //
     //    2
@@ -145,7 +145,7 @@ namespace sequoia::unit_testing
       check_graph(network, {{Edge(0,1)}, {}, {}}, {}, LINE(""));
     }
     
-    network.delete_edge(network.cbegin_edges(0));
+    network.erase_edge(network.cbegin_edges(0));
     //    0    1
     //
     //    2
@@ -168,7 +168,7 @@ namespace sequoia::unit_testing
       check_graph(network, {{Edge(0,1)}, {Edge(1,1), Edge(1,0)}, {}}, {}, LINE(""));
     }
 
-    network.delete_edge(mutual_info(GraphFlavour) ? ++network.cbegin_edges(0) : network.cbegin_edges(0));
+    network.erase_edge(mutual_info(GraphFlavour) ? ++network.cbegin_edges(0) : network.cbegin_edges(0));
     //    0------1
     //           /\
     //    2      \/
@@ -210,7 +210,7 @@ namespace sequoia::unit_testing
       check_graph(network, {{}, {Edge(1,1), Edge(1,0)}, {Edge(2,1)}}, {}, LINE(""));
     }
           
-    network.delete_edge(mutual_info(GraphFlavour) ? ++network.cbegin_edges(1) : network.cbegin_edges(1));
+    network.erase_edge(mutual_info(GraphFlavour) ? ++network.cbegin_edges(1) : network.cbegin_edges(1));
     //    0------1------2
  
     if constexpr (mutual_info(GraphFlavour))
@@ -222,7 +222,7 @@ namespace sequoia::unit_testing
       check_graph(network, {{}, {Edge(1,0)}, {Edge(2,1)}}, {}, LINE("Check deletion of tadpole"));
     }
 
-    network.delete_edge(network.cbegin_edges(2));
+    network.erase_edge(network.cbegin_edges(2));
     //    0------1     2
     
     if constexpr (mutual_info(GraphFlavour))
@@ -250,7 +250,7 @@ namespace sequoia::unit_testing
       check_graph(network, {{}, {Edge(1,0), Edge(1,1)}, {Edge(2,1)}}, {}, LINE(""));
     }
 
-    network.delete_edge(mutual_info(GraphFlavour) ? network.cbegin_edges(1)+2 : network.cbegin_edges(1)+1);
+    network.erase_edge(mutual_info(GraphFlavour) ? network.cbegin_edges(1)+2 : network.cbegin_edges(1)+1);
     //    0------1------2
  
     if constexpr (mutual_info(GraphFlavour))
@@ -262,8 +262,8 @@ namespace sequoia::unit_testing
       check_graph(network, {{}, {Edge(1,0)}, {Edge(2,1)}}, {}, LINE("Check deletion of tadpole"));
     }
         
-    network.delete_edge(network.cbegin_edges(1));
-    network.delete_edge(network.cbegin_edges(2));
+    network.erase_edge(network.cbegin_edges(1));
+    network.erase_edge(network.cbegin_edges(2));
     network.join(1,1);
     //    0      1
     //           /\
@@ -278,7 +278,7 @@ namespace sequoia::unit_testing
       check_graph(network, {{}, {Edge(1,1)}, {}}, {}, LINE(""));
     }
  
-    network.delete_edge(network.cbegin_edges(1));
+    network.erase_edge(network.cbegin_edges(1));
     //    0    1
     //
     //    2
@@ -309,7 +309,7 @@ namespace sequoia::unit_testing
       check_graph(network, {{Edge(0,1), Edge(0,1), Edge(0,2), Edge(0,2)}, {Edge(1,2)}, {Edge(2,1)}}, {}, LINE(""));
     }
 
-    mutual_info(GraphFlavour) ? network.delete_edge(network.cbegin_edges(2)+2) : network.delete_edge(network.cbegin_edges(2));
+    mutual_info(GraphFlavour) ? network.erase_edge(network.cbegin_edges(2)+2) : network.erase_edge(network.cbegin_edges(2));
 
     //    0=====1
     //    ||  /
@@ -329,7 +329,7 @@ namespace sequoia::unit_testing
       check_graph(network, {{Edge(0,1), Edge(0,1), Edge(0,2), Edge(0,2)}, {Edge(1,2)}, {}}, {}, LINE(""));
     }
 
-    network.delete_node(0);
+    network.erase_node(0);
     //  0----1
 
     if constexpr (mutual_info(GraphFlavour))
@@ -355,7 +355,7 @@ namespace sequoia::unit_testing
       check_graph(network, {{Edge(0,1), Edge(0,0)}, {}}, {}, LINE(""));
     }
           
-    network.delete_edge(++network.cbegin_edges(0));
+    network.erase_edge(++network.cbegin_edges(0));
     //  0----1
 
     if constexpr (mutual_info(GraphFlavour))
@@ -367,12 +367,12 @@ namespace sequoia::unit_testing
       check_graph(network, {{Edge(0,1)}, {}}, {}, LINE(""));
     }
 
-    network.delete_node(0);
+    network.erase_node(0);
     // 0
 
     check_graph(network, {{}}, {}, LINE(""));
 
-    network.delete_node(0);
+    network.erase_node(0);
     //
 
     check_graph(network, {}, {});
@@ -426,8 +426,8 @@ namespace sequoia::unit_testing
       check_graph(network, {{Edge(0,2)}, {}, {Edge(2,2)}}, {}, LINE(""));
     }
 
-    network.delete_node(1);
-    network.delete_node(0);
+    network.erase_node(1);
+    network.erase_node(0);
     // /\
     // \/
     // 0
@@ -585,8 +585,8 @@ namespace sequoia::unit_testing
     check_equality<std::size_t>(0, graph.node_capacity(), LINE("May fail if stl implementation doesn't actually shrink to fit!"));
 
     // NULL
-    check_exception_thrown<std::out_of_range>([&graph](){ graph.delete_node(0); }, LINE("No nodes to delete"));
-    check_exception_thrown<std::out_of_range>([&graph](){ graph.delete_edge(graph.cbegin_edges(0)); }, LINE("No edges to delete"));
+    check_exception_thrown<std::out_of_range>([&graph](){ graph.erase_node(0); }, LINE("No nodes to erase"));
+    check_exception_thrown<std::out_of_range>([&graph](){ graph.erase_edge(graph.cbegin_edges(0)); }, LINE("No edges to erase"));
     check_exception_thrown<std::out_of_range>([&graph](){ graph.node_weight(graph.cend_node_weights(), 1.0); }, LINE("No nodes to set weight"));
     check_exception_thrown<std::out_of_range>([&graph](){ graph.set_edge_weight(graph.cbegin_edges(0), 1); }, LINE("No edges to set weight"));
     auto getEdgeFn = [&graph]() { get_edge(graph, 0, 0, 0); };
@@ -602,7 +602,7 @@ namespace sequoia::unit_testing
     check_exception_thrown<std::out_of_range>([&graph](){ graph.node_weight(graph.cend_node_weights(), 0.0); }, LINE("Throw if node out of range"));
     check_exception_thrown<std::out_of_range>(getEdgeFn, LINE("Throw if edge out of range"));
 
-    graph.delete_node(0);
+    graph.erase_node(0);
     //    NULL
 
     check_graph(graph, {}, {}, LINE(""));
@@ -660,7 +660,7 @@ namespace sequoia::unit_testing
       check_graph(graph, {{Edge(0,0,-4)}}, {{1.1,-4.3}}, LINE(""));
     }        
 
-    graph.delete_edge(graph.cbegin_edges(0));
+    graph.erase_edge(graph.cbegin_edges(0));
     //  (1.1-i4.3)
 
     check_graph(graph, {{}}, {{1.1,-4.3}});
@@ -811,7 +811,7 @@ namespace sequoia::unit_testing
       check_graph(graph, {{Edge(0,0,1), Edge(0,0,-4), Edge(0,1,6), Edge(0,1,8)}, {Edge(1,0,7)}}, {{1.1,-4.3}, {0,0}}, LINE(""));
     }
         
-    graph.delete_edge(graph.cbegin_edges(0));
+    graph.erase_edge(graph.cbegin_edges(0));
     //            8
     //           /--\
     //          / 6  \
@@ -908,7 +908,7 @@ namespace sequoia::unit_testing
       check_graph(graph, {{Edge(0,0,-4), Edge(0,0,-4), Edge(0,1,6), Edge(1,0,10), Edge(0,1,7)}, {Edge(0,1,6), Edge(1,0,10), Edge(0,1,7)}}, {{1.1,-4.3}, {0,0}}, LINE(""));
     }
         
-    graph.delete_node(0);
+    graph.erase_node(0);
     //  (0)
 
     check_graph(graph, {{}}, {{0}});

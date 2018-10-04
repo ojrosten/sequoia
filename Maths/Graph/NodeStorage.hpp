@@ -131,7 +131,7 @@ namespace sequoia
         {
           if constexpr (throw_on_range_error)
           {
-            if(pos == cend_node_weights()) throw std::out_of_range("Attempting to delete a node which does not exist");
+            if(pos == cend_node_weights()) throw std::out_of_range("Attempting to erase a node which does not exist");
           }
 
           return const_iterator{m_NodeWeights.erase(pos.base_iterator())};
@@ -141,7 +141,7 @@ namespace sequoia
         {
           if constexpr (throw_on_range_error)
           {
-            if(first > last) throw std::out_of_range("Attempting to delete a range of nodes with first > last");
+            if(first > last) throw std::out_of_range("Attempting to erase a range of nodes with first > last");
           }
 
           return const_iterator{m_NodeWeights.erase(first.base_iterator(), last.base_iterator())};
