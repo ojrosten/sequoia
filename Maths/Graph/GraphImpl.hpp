@@ -480,70 +480,29 @@ namespace sequoia
       insert_join(const_edge_iterator citer1, const_edge_iterator citer2, Args&&... args)
       {        
         const auto node1{citer1.partition_index()}, node2{citer2.partition_index()};
-        const auto pos2{static_cast<edge_index_type>(distance(cbegin_edges(node2), citer2))};
-        if(node1 == node2) return insert_join(citer1, pos2, std::forward<Args>(args)...);
+        const auto dist2{static_cast<edge_index_type>(distance(cbegin_edges(node2), citer2))};
+        if(node1 == node2) return insert_join(citer1, dist2, std::forward<Args>(args)...);
 
-        citer1 = insert_single_join(citer1, node2, pos2, std::forward<Args>(args)...);
-          
-        auto recovery{[&edges=m_Edges,citer1](){
-              // Needs to decrement!
-              // And again for embedded!
-              edges.erase_from_partition(citer1); }
-        };
-        using recovery_t = decltype(recovery);
+        citer1 = insert_single_join(citer1, node2, dist2, std::forward<Args>(args)...);
+        citer2 = cbegin_edges(node2) + dist2;
+        const auto dist1{static_cast<edge_index_type>(distance(cbegin_edges(node1), citer1))};
           
         if constexpr(EdgeTraits::shared_edge_v)
         {
-          
-          auto inserter{[&edges=m_Edges, pos=cbegin_edges(node2) + pos2, citer1](){
-              return edges.insert_to_partition(pos, citer1);
-            }
-          };
-          
-          join_sentinel<recovery_t> s{inserter, recovery};
-          return {citer1, s.get()};
+          citer2 = m_Edges.insert_to_partition(citer2, citer1);
         }
         else if constexpr(edge_type::flavour == edge_flavour::partial_embedded)
-        {          
-          auto inserter{
-            [
-              this,
-              citer2=cbegin_edges(node2) + pos2,
-              node1,
-              node2,
-              citer1              
-            ]() mutable {
-              const auto pos1{static_cast<edge_index_type>(distance(cbegin_edges(node1), citer1))};
-              citer2 = m_Edges.insert_to_partition(citer2, node1, pos1, *citer1);
-              increment_comp_indices(++to_edge_iterator(citer2), end_edges(node2), 1);
-              return citer2;
-            }
-          };
-          
-          join_sentinel<recovery_t> s{inserter, recovery};
-          return {citer1, s.get()};
+        {
+          citer2 = m_Edges.insert_to_partition(citer2, node1, dist1, *citer1);
+          increment_comp_indices(++to_edge_iterator(citer2), end_edges(node2), 1);
         }
         else if constexpr(edge_type::flavour == edge_flavour::full_embedded)
         {
-          auto inserter{
-            [
-               this,
-               citer2=cbegin_edges(node2) + pos2,
-               node1,
-               node2,
-               citer1
-            ]() mutable {
-              const auto pos1{static_cast<edge_index_type>(distance(cbegin_edges(node1), citer1))};
-              citer2 = m_Edges.insert_to_partition(citer2, *citer1);
-              increment_comp_indices(++to_edge_iterator(citer2), end_edges(node2), 1);
-              return citer2;
-            }
-          };
-          
-          join_sentinel<recovery_t> s{inserter, recovery};
-          return {citer1, s.get()};
+          citer2 = m_Edges.insert_to_partition(citer2, *citer1);
+          increment_comp_indices(++to_edge_iterator(citer2), end_edges(node2), 1);
         }
-
+        
+        citer1 = cbegin_edges(node1) + dist1;
         return {citer1, citer2};
       }
 
@@ -775,28 +734,6 @@ namespace sequoia
       };
 
       edge_storage_type m_Edges;
-
-      
-      template<class Recovery>
-      class join_sentinel
-      {        
-      public:
-        template<class Inserter> constexpr join_sentinel(Inserter fn, Recovery rFn) : m_Recovery{std::move(rFn)}, ci{fn()}
-        {
-          m_Complete = true;
-        }
-                
-        ~join_sentinel()
-        {
-          if(!m_Complete) m_Recovery();
-        }
-
-        constexpr const_edge_iterator get() const { return ci; } 
-      private:
-        Recovery m_Recovery;
-        const_edge_iterator ci;
-        bool m_Complete{};
-      };
       
       class weight_sentinel
       {
