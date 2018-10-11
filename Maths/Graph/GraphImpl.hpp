@@ -231,6 +231,8 @@ namespace sequoia
       template<class... Args>
       size_type add_node(Args&&... args)
       {
+        reserve_nodes(order() + 1);
+        
         m_Edges.add_slot();
         if constexpr (!emptyNodes) Nodes::add_node(WeightMaker::make_node_weight(std::forward<Args>(args)...));
         return (order()-1);
@@ -238,7 +240,9 @@ namespace sequoia
 
       template<class... Args>
       size_type insert_node(const size_type pos, Args&&... args)
-      {        
+      {
+        reserve_nodes(order() + 1);
+        
         const auto node = (pos < order()) ? pos : (order() - 1);
         if constexpr (!emptyNodes) Nodes::insert_node(this->cbegin_node_weights() + pos, WeightMaker::make_node_weight(std::forward<Args>(args)...));
         m_Edges.insert_slot(node);
@@ -349,8 +353,7 @@ namespace sequoia
 
         if constexpr (!EdgeTraits::shared_weight_v && !EdgeTraits::shared_edge_v && EdgeTraits::mutual_info_v)
         {
-          // Temporary hack while waiting for constexpr destructors (p0784)
-          if constexpr(EdgeTraits::weight_setting_exception_guarantee)
+          if constexpr(EdgeTraits::weight_setting_exception_guarantee_v)
           {
             auto partnerSetter{
               [this](const_edge_iterator citer, auto&&... args){
@@ -394,9 +397,31 @@ namespace sequoia
         mutate_edge_weight(m_Edges.cbegin_partition(host) + distance(criter, m_Edges.crend_partition(host)) - 1, fn);
       }
 
+      void reserve_for_join(const edge_index_type node1, const edge_index_type node2)
+      {
+        if constexpr (graph_impl::has_reservable_partitions_v<edge_storage_type>)
+        {
+          if(node1 == node2)
+          {
+            reserve_edges(node1, distance(cbegin_edges(node1), cend_edges(node1)) + 2);
+          }
+          else
+          {
+            reserve_edges(node1, distance(cbegin_edges(node1), cend_edges(node1)) + 1);
+            reserve_edges(node2, distance(cbegin_edges(node2), cend_edges(node2)) + 2);
+          }
+        }
+        else
+        {
+          reserve_edges(size() + 2);
+        }        
+      }
+      
       template<class... Args>
       void join(const edge_index_type node1, const edge_index_type node2, Args&&... args)
-      {        
+      {
+        reserve_for_join(node1, node2);
+        
         if constexpr (std::is_empty_v<edge_weight_type>)
           static_assert(sizeof...(args) == 0, "Makes no sense to supply arguments for an empty weight!");
         
@@ -479,13 +504,16 @@ namespace sequoia
       std::pair<const_edge_iterator, const_edge_iterator>
       insert_join(const_edge_iterator citer1, const_edge_iterator citer2, Args&&... args)
       {        
-        const auto node1{citer1.partition_index()}, node2{citer2.partition_index()};
+        const auto node1{citer1.partition_index()}, node2{citer2.partition_index()};               
         const auto dist2{static_cast<edge_index_type>(distance(cbegin_edges(node2), citer2))};
         if(node1 == node2) return insert_join(citer1, dist2, std::forward<Args>(args)...);
-
+        
+        const auto dist1{static_cast<edge_index_type>(distance(cbegin_edges(node1), citer1))};      
+        reserve_for_join(node1, node2);
+        
+        citer1 = cbegin_edges(node1) + dist1;
         citer1 = insert_single_join(citer1, node2, dist2, std::forward<Args>(args)...);
         citer2 = cbegin_edges(node2) + dist2;
-        const auto dist1{static_cast<edge_index_type>(distance(cbegin_edges(node1), citer1))};
           
         if constexpr(EdgeTraits::shared_edge_v)
         {
@@ -509,9 +537,11 @@ namespace sequoia
       template<class... Args>
       std::pair<const_edge_iterator, const_edge_iterator>
       insert_join(const_edge_iterator citer1, const edge_index_type pos2, Args&&... args)
-      {
+      {        
         const auto node{citer1.partition_index()};
-        citer1 = insert_single_join(citer1, node, pos2, std::forward<Args>(args)...);
+        const auto dist1{distance(cbegin_edges(node), citer1)};
+        reserve_for_join(node, node);
+        citer1 = insert_single_join(cbegin_edges(node) + dist1, node, pos2, std::forward<Args>(args)...);
 
         auto pos1{static_cast<edge_index_type>(distance(cbegin_edges(node), citer1))};
         if(pos2 <= pos1) ++pos1;

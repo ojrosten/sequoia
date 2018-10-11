@@ -41,7 +41,6 @@ namespace sequoia::maths::graph_impl
 
     constexpr static bool mutual_info_v{GraphFlavour != graph_flavour::directed};
 
-    // Temporary, while C++ waits for constexpr destructors!
-    constexpr static bool weight_setting_exception_guarantee{true};
+    constexpr static bool weight_setting_exception_guarantee_v{true};
   };     
 }
