@@ -80,8 +80,7 @@ namespace sequoia
       }
       
       constexpr graph_primitive(const graph_primitive& in)
-        : graph_primitive(std::bool_constant<direct_edge_init().value
-                          || (EdgeTraits::shared_edge_v && std::is_same_v<typename edge_type::weight_proxy_type, utilities::protective_wrapper<edge_weight_type>>)>{}, in)
+        : graph_primitive(direct_edge_copy(), direct_node_copy(), in)
       {}
 
       constexpr graph_primitive(graph_primitive&& in) noexcept = default;
@@ -756,8 +755,11 @@ namespace sequoia
       
     private:
       static constexpr bool emptyNodes{std::is_empty_v<typename Nodes::weight_type>};
-      static constexpr bool protectiveProxy{
+      static constexpr bool protectiveNodeWeightProxy{
         std::is_same_v<typename Nodes::weight_proxy_type, utilities::protective_wrapper<typename Nodes::weight_type>>
+      };
+      static constexpr bool protectiveEdgeWeightProxy{
+        std::is_same_v<typename edge_type::weight_proxy_type, utilities::protective_wrapper<edge_weight_type>>
       };
       static constexpr bool embeddedEdge{
         (edge_type::flavour == edge_flavour::partial_embedded) || (edge_type::flavour == edge_flavour::full_embedded)
@@ -797,16 +799,45 @@ namespace sequoia
         edge_weight_type m_OldEdgeWeight;
       };
 
+      template<bool Direct>
+      struct edge_init_constant : std::bool_constant<Direct>
+      {
+      };
+
+      using direct_edge_init_type   = edge_init_constant<true>;
+      using indirect_edge_init_type = edge_init_constant<false>;
+
       static constexpr auto direct_edge_init() noexcept
       {
-        return std::bool_constant<std::is_same_v<edge_type, edge_init_type>>{};
+        return edge_init_constant<std::is_same_v<edge_type, edge_init_type>>{};
+      }
+      
+      static constexpr bool direct_edge_init_v{std::is_same_v<decltype(direct_edge_init()), direct_edge_init_type>};
+
+      template<bool Direct>
+      struct edge_copy_constant : std::bool_constant<Direct>
+      {
+      };
+
+      using direct_edge_copy_type   = edge_copy_constant<true>;
+      using indirect_edge_copy_type = edge_copy_constant<false>;
+
+      static constexpr auto direct_edge_copy() noexcept
+      {
+        return edge_copy_constant<direct_edge_init_v || (EdgeTraits::shared_edge_v && protectiveEdgeWeightProxy)>{};
       }
 
-      enum class node_init_type{homog_direct, homog_indirect, hetero};
+      
+      enum class node_init_flavour{homog_direct, homog_indirect, hetero};
 
-      using homog_direct_init_type   = std::integral_constant<node_init_type, node_init_type::homog_direct>;
-      using homog_indirect_init_type = std::integral_constant<node_init_type, node_init_type::homog_indirect>;
-      using hetero_init_type         = std::integral_constant<node_init_type, node_init_type::hetero>;
+      template<node_init_flavour F>
+      struct node_init_constant : std::integral_constant<node_init_flavour, F>
+      {
+      };
+
+      using homog_direct_init_type   = node_init_constant<node_init_flavour::homog_direct>;
+      using homog_indirect_init_type = node_init_constant<node_init_flavour::homog_indirect>;
+      using hetero_init_type         = node_init_constant<node_init_flavour::hetero>;
       
       static constexpr auto direct_node_init() noexcept
       {
@@ -816,6 +847,19 @@ namespace sequoia
           return homog_direct_init_type{};
         else
           return homog_indirect_init_type{};
+      }
+
+      template<bool Direct>
+      struct node_copy_constant : std::bool_constant<Direct>
+      {
+      };
+
+      using direct_node_copy_type   = node_copy_constant<true>;
+      using indirect_node_copy_type = node_copy_constant<false>;
+
+      static constexpr auto direct_node_copy() noexcept
+      {
+        return node_copy_constant<protectiveNodeWeightProxy>{};
       }
 
       static constexpr auto partner_index(const_edge_iterator citer)
@@ -960,7 +1004,7 @@ namespace sequoia
         }
       }
 
-      constexpr void check_consistency(std::false_type, std::initializer_list<std::initializer_list<edge_init_type>> edges)
+      constexpr void check_consistency(indirect_edge_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges)
       {
         using namespace data_structures;
         using traits_t = contiguous_storage_traits<edge_init_type, data_sharing::independent<edge_init_type>>;
@@ -968,7 +1012,7 @@ namespace sequoia
         check_consistency(edgesForChecking);
       }
 
-      constexpr void check_consistency(std::true_type, std::initializer_list<std::initializer_list<edge_init_type>> edges)
+      constexpr void check_consistency(direct_edge_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges)
       {
         check_consistency(m_Edges);
       }
@@ -1013,7 +1057,7 @@ namespace sequoia
            
         for(size_type i{}; i<orderedEdges.num_partitions(); ++i)
         {
-          if constexpr(!direct_edge_init()) m_Edges.add_slot();
+          if constexpr(!direct_edge_init_v) m_Edges.add_slot();
           
           auto lowerIter{orderedEdges.cbegin_partition(i)}, upperIter{orderedEdges.cbegin_partition(i)};
           while(lowerIter != orderedEdges.cend_partition(i))
@@ -1157,7 +1201,7 @@ namespace sequoia
       }
 
       template<class N=node_weight_type, class=std::enable_if_t<!std::is_same_v<N, graph_impl::heterogeneous_tag>>>
-      constexpr graph_primitive(std::true_type, homog_direct_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges)
+      constexpr graph_primitive(direct_edge_init_type, homog_direct_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges)
         : Nodes(edges.size())
         , m_Edges{edges}
       {      
@@ -1165,7 +1209,7 @@ namespace sequoia
       }
 
       template<class N=node_weight_type, class=std::enable_if_t<std::is_same_v<N, graph_impl::heterogeneous_tag>>>
-      constexpr graph_primitive(std::true_type, hetero_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges)
+      constexpr graph_primitive(direct_edge_init_type, hetero_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges)
         : Nodes{}
         , m_Edges{edges}
       {      
@@ -1173,7 +1217,7 @@ namespace sequoia
       }
 
       template<class N=node_weight_type, class=std::enable_if_t<!std::is_same_v<N, graph_impl::heterogeneous_tag>>>
-      constexpr graph_primitive(std::true_type, homog_indirect_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges)
+      constexpr graph_primitive(direct_edge_init_type, homog_indirect_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges)
         : m_Edges{edges}
       {        
         check_consistency(edges);
@@ -1183,21 +1227,21 @@ namespace sequoia
       }
       
       template<class N=node_weight_type, class=std::enable_if_t<!std::is_same_v<N, graph_impl::heterogeneous_tag>>>
-      graph_primitive(std::false_type, homog_direct_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges)
+      graph_primitive(indirect_edge_init_type, homog_direct_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges)
         : Nodes(edges.size())
       {
         check_consistency(edges);
       }
 
       template<class N=node_weight_type, class=std::enable_if_t<std::is_same_v<N, graph_impl::heterogeneous_tag>>>
-      graph_primitive(std::false_type, hetero_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges)
+      graph_primitive(indirect_edge_init_type, hetero_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges)
         : Nodes{}
       {
         check_consistency(edges);
       }
 
       template<class N=node_weight_type, class=std::enable_if_t<!std::is_same_v<N, graph_impl::heterogeneous_tag>>>
-      graph_primitive(std::false_type, homog_indirect_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges)
+      graph_primitive(indirect_edge_init_type, homog_indirect_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges)
       {        
         check_consistency(edges);
         
@@ -1252,20 +1296,39 @@ namespace sequoia
           }
         }
       }
-            
-      constexpr graph_primitive(std::true_type, const Nodes& in) : Nodes{in}
-      {
-      }
 
-      constexpr graph_primitive(std::false_type, const Nodes& in)
+      void copy_node_weights(const Nodes& in)
       {
-        for(auto citer=in.cbegin_node_weights(); citer != in.cend_node_weights(); ++citer)
+        for(auto citer{in.cbegin_node_weights()}; citer != in.cend_node_weights(); ++citer)
         {
           Nodes::add_node(WeightMaker::make_node_weight(*citer));
         }
       }
+            
+      constexpr graph_primitive(direct_edge_copy_type, direct_node_copy_type, const graph_primitive& in)
+        : Nodes{in}, m_Edges{in.m_Edges}
+      {
+      }
 
-      graph_primitive(std::false_type, const graph_primitive& in) : graph_primitive{std::bool_constant<protectiveProxy>{}, static_cast<const Nodes&>(in)}
+      constexpr graph_primitive(indirect_edge_copy_type, direct_node_copy_type, const graph_primitive& in)
+        : Nodes{in}
+      {
+        copy_edges(in);
+      }
+
+      constexpr graph_primitive(direct_edge_copy_type, indirect_node_copy_type, const graph_primitive& in)
+        : m_Edges{in.m_Edges}
+      {
+        copy_node_weights(in);
+      }
+
+      constexpr graph_primitive(indirect_edge_copy_type, indirect_node_copy_type, const graph_primitive& in)
+      {
+        copy_edges(in);
+        copy_node_weights(in);
+      }
+
+      void copy_edges(const graph_primitive& in)
       {
         std::map<const edge_weight_type*, std::pair<edge_index_type, edge_index_type>> weightMap;
         for(size_type i{}; i<in.order(); ++i)
@@ -1345,14 +1408,7 @@ namespace sequoia
           }
         }
       }
-
-      constexpr graph_primitive(std::true_type, const graph_primitive& in)
-        : graph_primitive{std::bool_constant<protectiveProxy>{}, static_cast<const Nodes&>(in)}
-      {
-        // TO DO: tidy up; can't put directly after delegating constructor!
-        m_Edges = in.m_Edges;
-      }
-
+      
       constexpr auto to_edge_iterator(const_edge_iterator citer)
       {
         const auto host{citer.partition_index()};
