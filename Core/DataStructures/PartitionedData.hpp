@@ -211,11 +211,10 @@ namespace sequoia
           if(!m_Buckets.size()) throw std::out_of_range("bucketed_storage: no partitions into which to insert");
         }
         
-        const auto host{pos.partition_index()};
-        const auto index{static_cast<size_type>(distance(cbegin_partition(host), pos))};        
+        const auto host{pos.partition_index()};        
         auto iter{m_Buckets[host].insert(pos.base_iterator(), SharingPolicy::make(std::forward<Args>(args)...))};
 
-        return partition_iterator{iter, index};
+        return partition_iterator{iter, host};
       }
 
       template<class... Args>
@@ -226,11 +225,10 @@ namespace sequoia
           if(!m_Buckets.size()) throw std::out_of_range("bucketed_storage: no partitions into which to insert");
         }
         
-        const auto host{pos.partition_index()};
-        const auto index{static_cast<size_type>(distance(cbegin_partition(host), pos))};        
+        const auto host{pos.partition_index()};     
         auto iter{m_Buckets[host].insert(pos.base_iterator(), *(setFromIter.base_iterator()))};
 
-        return partition_iterator{iter, index};
+        return partition_iterator{iter, host};
       }
 
       partition_iterator erase_from_partition(const size_type index, const size_type pos)
