@@ -32,27 +32,11 @@ namespace sequoia
       sort_partial_edge();
 
       cluster_basic_type();
-    }
 
-    void test_algorithms::sort_partial_edge()
-    {
-      struct null_weight{};
-      using edge = maths::partial_edge<null_weight, data_sharing::independent, utilities::protective_wrapper<null_weight>>;
-      constexpr std::array<edge, 3> a{edge{1}, edge{2}, edge{0}};
-      constexpr auto b = sort(a, [](const edge& lhs, const edge& rhs) { return lhs.target_node() < rhs.target_node();});
-
-      for(std::size_t i{}; i<3; ++i)
-        check_equality(i, b[i].target_node(), LINE("Check array of partial edges, element " + std::to_string(i)));
-    }
-    
-    void test_algorithms::sort_protective_wrapper()
-    {
-      using wrapper = utilities::protective_wrapper<int>;
-      constexpr std::array<wrapper, 4> a{wrapper{3}, wrapper{2}, wrapper{4}, wrapper{1}};
-      constexpr auto b = sort(a);
-      for(int i{0}; i<4; ++i)
-        check_equality(i+1, b[i].get(), LINE("Check array of wrapped ints, element " + std::to_string(i)));
-    }    
+      lower_bound_basic_type();
+      lower_bound_protective_wrapper();
+      lower_bound_partial_edge();
+    }  
     
     void test_algorithms::sort_basic_type()
     {
@@ -101,6 +85,26 @@ namespace sequoia
       }
     }
 
+    void test_algorithms::sort_protective_wrapper()
+    {
+      using wrapper = utilities::protective_wrapper<int>;
+      constexpr std::array<wrapper, 4> a{wrapper{3}, wrapper{2}, wrapper{4}, wrapper{1}};
+      constexpr auto b = sort(a);
+      for(int i{}; i<4; ++i)
+        check_equality(i+1, b[i].get(), LINE("Check array of wrapped ints, element " + std::to_string(i)));
+    }  
+
+    void test_algorithms::sort_partial_edge()
+    {
+      struct null_weight{};
+      using edge = maths::partial_edge<null_weight, data_sharing::independent, utilities::protective_wrapper<null_weight>>;
+      constexpr std::array<edge, 3> a{edge{1}, edge{2}, edge{0}};
+      constexpr auto b = sort(a, [](const edge& lhs, const edge& rhs) { return lhs.target_node() < rhs.target_node();});
+
+      for(std::size_t i{}; i<3; ++i)
+        check_equality(i, b[i].target_node(), LINE("Check array of partial edges, element " + std::to_string(i)));
+    }    
+
     void test_algorithms::cluster_basic_type()
     {
       {
@@ -108,6 +112,146 @@ namespace sequoia
         constexpr auto b = cluster(a);
         check_equality({1,1,1,1,3,2,2,2,2}, b, LINE("Cluster 9 digits"));
       }
+    }
+
+    void test_algorithms::lower_bound_basic_type()
+    {
+      {
+        constexpr std::array<int, 0> a{};
+        auto i{lower_bound(a.begin(), a.end(), 1, [](int a, int b){ return a <b;})};
+        check(i == a.end(), LINE(""));
+      }
+      
+      {
+        constexpr std::array<int, 1> a{2};
+        constexpr auto i{*lower_bound(a.begin(), a.end(), 1)};
+        check_equality(2, i, LINE(""));
+
+        constexpr auto j{*lower_bound(a.begin(), a.end(), 2)};
+        check_equality(2, j, LINE(""));
+
+        auto iter{lower_bound(a.begin(), a.end(), 3)};
+        check(iter == a.end(), LINE(""));
+      }
+
+      {
+        constexpr std::array<int, 2> a{1,2};
+        constexpr auto i{*lower_bound(a.begin(), a.end(), 0)};
+        check_equality(1, i, LINE(""));
+        
+        constexpr auto j{*lower_bound(a.begin(), a.end(), 1)};
+        check_equality(1, j, LINE(""));
+
+        constexpr auto k{*lower_bound(a.begin(), a.end(), 2)};
+        check_equality(2, k, LINE(""));
+
+        auto iter{lower_bound(a.begin(), a.end(), 3)};
+        check(iter == a.end(), LINE(""));
+      }
+
+      {
+        constexpr std::array<int, 2> a{1,1};
+        constexpr auto i{*lower_bound(a.begin(), a.end(), 0)};
+        check_equality(1, i, LINE(""));
+        
+        auto iter{lower_bound(a.begin(), a.end(), 1)};
+        check(iter == a.begin(), LINE(""));
+        check_equality(1, *iter, LINE(""));
+
+        iter = lower_bound(a.begin(), a.end(), 2);
+        check(iter == a.end(), LINE(""));
+      }
+
+      
+
+      {
+        constexpr std::array<int, 3> a{1,2,3};
+        constexpr auto i{*lower_bound(a.begin(), a.end(), 0)};
+        check_equality(1, i, LINE(""));
+        
+        constexpr auto j{*lower_bound(a.begin(), a.end(), 1)};
+        check_equality(1, j, LINE(""));
+
+        constexpr auto k{*lower_bound(a.begin(), a.end(), 2)};
+        check_equality(2, k, LINE(""));
+
+        constexpr auto l{*lower_bound(a.begin(), a.end(), 3)};
+        check_equality(3, l, LINE(""));
+
+        auto iter{lower_bound(a.begin(), a.end(), 4)};
+        check(iter == a.end(), LINE(""));
+      }
+
+      {
+        constexpr std::array<int, 3> a{1,1,2};
+        constexpr auto i{*lower_bound(a.begin(), a.end(), 0)};
+        check_equality(1, i, LINE(""));
+        
+        auto iter{lower_bound(a.begin(), a.end(), 1)};
+        check(iter == a.begin(), LINE(""));
+        check_equality(1, *iter, LINE(""));
+
+        constexpr auto k{*lower_bound(a.begin(), a.end(), 2)};
+        check_equality(2, k, LINE(""));
+
+        iter = lower_bound(a.begin(), a.end(), 3);
+        check(iter == a.end(), LINE(""));
+      }
+
+      {
+        constexpr std::array<int, 3> a{1,2,2};
+        constexpr auto i{*lower_bound(a.begin(), a.end(), 0)};
+        check_equality(1, i, LINE(""));
+        
+        constexpr auto j{*lower_bound(a.begin(), a.end(), 1)};
+        check_equality(1, j, LINE(""));
+
+        auto iter{lower_bound(a.begin(), a.end(), 2)};
+        check(iter == a.begin()+1, LINE(""));
+        check_equality(2, *iter, LINE(""));
+
+        iter = lower_bound(a.begin(), a.end(), 3);
+        check(iter == a.end(), LINE(""));
+      }
+
+      {
+        constexpr std::array<int, 4> a{1,1,2,2};
+        auto iter{lower_bound(a.begin(), a.end(), 1)};
+        check(iter == a.begin(), LINE(""));
+        check_equality(1, *iter, LINE(""));
+
+        iter = lower_bound(a.begin(), a.end(), 2);
+        check(iter == a.begin()+2, LINE(""));
+        check_equality(2, *iter, LINE(""));
+      }
+
+      {
+        constexpr std::array<int, 5> a{0,1,2,4,5};
+        constexpr auto i{*lower_bound(a.begin(), a.end(), 3)};
+        check_equality(4, i, LINE(""));
+      }
+    }
+
+    void test_algorithms::lower_bound_protective_wrapper()
+    {
+      using wrapper = utilities::protective_wrapper<int>;
+      constexpr std::array<wrapper, 3> a{wrapper{-1}, wrapper{-1}, wrapper{1}};
+      constexpr auto w{*lower_bound(a.begin(), a.end(), wrapper{})};
+      check_equality(1, w.get(), LINE(""));
+        
+    }
+
+    void test_algorithms::lower_bound_partial_edge()
+    {
+      struct null_weight{};
+      using edge = maths::partial_edge<null_weight, data_sharing::independent, utilities::protective_wrapper<null_weight>>;
+      constexpr std::array<edge, 3> a{edge{0}, edge{2}, edge{3}};
+      constexpr auto e{*lower_bound(a.begin(), a.end(), edge{1}, [](const edge& lhs, const edge& rhs) {
+            return lhs.target_node() < rhs.target_node();
+          })
+      };
+
+      check_equality<std::size_t>(2, e.target_node());
     }
   }
 }
