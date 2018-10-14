@@ -145,4 +145,22 @@ namespace sequoia
 
     return end;
   }
+
+  template<class FwdIter, class T, class Comparer=std::less<std::decay_t<decltype(*FwdIter())>>>
+  constexpr FwdIter upper_bound(FwdIter begin, FwdIter end, const T& val, Comparer comp = Comparer{})
+  {
+    auto notComp{
+      [comp](const auto& lhs, const auto& rhs){
+        return !comp(rhs, lhs);
+      }
+    };
+
+    return sequoia::lower_bound(begin, end, val, notComp);
+  }
+
+  template<class FwdIter, class T, class Comparer=std::less<std::decay_t<decltype(*FwdIter())>>>
+  constexpr std::pair<FwdIter, FwdIter> equal_range(FwdIter begin, FwdIter end, const T& val, Comparer comp = Comparer{})
+  {
+    return {sequoia::lower_bound(begin, end, val, comp), sequoia::upper_bound(begin, end, val, comp)};
+  }
 }

@@ -36,6 +36,8 @@ namespace sequoia
       lower_bound_basic_type();
       lower_bound_protective_wrapper();
       lower_bound_partial_edge();
+
+      upper_bound_basic_type();
     }  
     
     void test_algorithms::sort_basic_type()
@@ -252,6 +254,92 @@ namespace sequoia
       };
 
       check_equality<std::size_t>(2, e.target_node());
+    }
+
+    void test_algorithms::upper_bound_basic_type()
+    {
+      {
+        constexpr std::array<int, 0> a{};
+        auto i{upper_bound(a.begin(), a.end(), 1, [](int a, int b){ return a <b;})};
+        check(i == a.end(), LINE(""));
+      }
+
+      {
+        constexpr std::array<int, 1> a{2};
+        constexpr auto i{*upper_bound(a.begin(), a.end(), 1)};
+        check_equality(2, i, LINE(""));
+
+        auto iter{upper_bound(a.begin(), a.end(), 2)};
+        check(iter == a.end(), LINE(""));
+      }
+
+      {
+        constexpr std::array<int, 2> a{1,2};
+        constexpr auto i{*upper_bound(a.begin(), a.end(), 0)};
+        check_equality(1, i, LINE(""));
+        
+        constexpr auto j{*upper_bound(a.begin(), a.end(), 1)};
+        check_equality(2, j, LINE(""));
+
+        auto iter{upper_bound(a.begin(), a.end(), 2)};
+        check(iter == a.end(), LINE(""));
+      }
+
+      {
+        constexpr std::array<int, 2> a{1,1};
+        constexpr auto i{*upper_bound(a.begin(), a.end(), 0)};
+        check_equality(1, i, LINE(""));
+        
+        auto iter{upper_bound(a.begin(), a.end(), 1)};
+        check(iter == a.end(), LINE(""));
+      }
+
+      {
+        constexpr std::array<int, 3> a{1,1,2};
+        auto iter{upper_bound(a.begin(), a.end(), 0)};
+        check(iter == a.begin(), LINE(""));
+        
+        check_equality(1, *iter, LINE(""));
+        
+        iter = upper_bound(a.begin(), a.end(), 1);
+        check_equality(2, *iter, LINE(""));
+
+        iter = upper_bound(a.begin(), a.end(), 2);
+        check(iter == a.end(), LINE(""));
+      }
+
+      {
+        constexpr std::array<int, 3> a{1,2,2};
+        constexpr auto i{*upper_bound(a.begin(), a.end(), 0)};
+        check_equality(1, i, LINE(""));
+
+        auto iter{upper_bound(a.begin(), a.end(), 1)};
+        check(iter == a.begin()+1, LINE(""));
+        check_equality(2, *iter, LINE(""));
+
+        iter = upper_bound(a.begin(), a.end(), 2);
+        check(iter == a.end(), LINE(""));
+      }
+
+      {
+        constexpr std::array<int, 4> a{1,1,2,2};
+        auto iter{upper_bound(a.begin(), a.end(), 0)};
+        check(iter == a.begin(), LINE(""));
+        check_equality(1, *iter, LINE(""));
+        
+        iter = upper_bound(a.begin(), a.end(), 1);
+        check(iter == a.begin() + 2, LINE(""));
+        check_equality(2, *iter, LINE(""));
+
+        iter = upper_bound(a.begin(), a.end(), 2);
+        check(iter == a.end(), LINE(""));
+      }
+      
+      {
+        constexpr std::array<int, 5> a{0,1,2,4,5};
+        constexpr auto i{*upper_bound(a.begin(), a.end(), 4)};
+        check_equality(5, i, LINE(""));
+      }
     }
   }
 }
