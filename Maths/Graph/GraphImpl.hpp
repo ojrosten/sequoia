@@ -1022,9 +1022,9 @@ namespace sequoia
       {
         constexpr bool sortWeights{!std::is_empty_v<edge_weight_type> && utilities::is_orderable_v<edge_weight_type>};
         constexpr bool clusterEdges{!std::is_empty_v<edge_weight_type> && !utilities::is_orderable_v<edge_weight_type>};
-        for(size_type i{}; i< orderedEdges.num_partitions(); ++i)
-        {
-          sequoia::sort(orderedEdges.begin_partition(i), orderedEdges.end_partition(i), [](const auto& e1, const auto& e2){
+
+        auto edgeComparer{
+          [](const auto& e1, const auto& e2){
             if constexpr (!sortWeights)
             {
               return e1.target_node() < e2.target_node();
@@ -1033,7 +1033,12 @@ namespace sequoia
             {
               return (e1.target_node() == e2.target_node()) ? e1.weight() < e2.weight() : e1.target_node() < e2.target_node();
             }
-          });
+          }
+        };
+        
+        for(size_type i{}; i< orderedEdges.num_partitions(); ++i)
+        {
+          sequoia::sort(orderedEdges.begin_partition(i), orderedEdges.end_partition(i), edgeComparer);
 
           if constexpr(clusterEdges)
           {
@@ -1052,8 +1057,6 @@ namespace sequoia
           }
         }
 
-        // TO DO: use a more efficient search for orderable weights
-
            
         for(size_type i{}; i<orderedEdges.num_partitions(); ++i)
         {
@@ -1063,26 +1066,21 @@ namespace sequoia
           while(lowerIter != orderedEdges.cend_partition(i))
           {
             const auto target{lowerIter->target_node()};
-            if((target >= orderedEdges.num_partitions()) || (target < edge_index_type{}))
+            if(target >= orderedEdges.num_partitions())
               throw std::logic_error("Target index out of range");
-            
-            {
-              auto comparer{[&edge=*lowerIter](const auto uIter){
-                  if constexpr (std::is_empty_v<edge_weight_type>)
-                  {
-                    return uIter->target_node() == edge.target_node();
-                  }
-                  else
-                  {                   
-                    return (uIter->target_node() == edge.target_node()) && (uIter->weight() == edge.weight());
-                  }
-                }
-              };
 
-              while((upperIter != orderedEdges.cend_partition(i)) && comparer(upperIter))
-                ++upperIter;
+            upperIter = sequoia::upper_bound(lowerIter, orderedEdges.cend_partition(i), *lowerIter, edgeComparer);
+            if constexpr(clusterEdges)
+            {
+              if(distance(lowerIter, upperIter) > 1)
+              {
+                auto testIter{upperIter - 1};                
+                while(*testIter != *lowerIter) --testIter;
+              
+                upperIter = testIter + 1;
+              }
             }
-               
+
             const auto count{distance(lowerIter, upperIter)};
 
             if(target == i)
@@ -1092,7 +1090,7 @@ namespace sequoia
               {
                 for(; lowerIter != upperIter; ++lowerIter)
                 {
-                  if(!(distance(lowerIter, upperIter) % 2) || ~EdgeTraits::shared_edge_v)
+                  if(!(distance(lowerIter, upperIter) % 2) || !EdgeTraits::shared_weight_v)
                   {
                     m_Edges.push_back_to_partition(i, make_edge(i, *lowerIter));
                   }
@@ -1106,41 +1104,49 @@ namespace sequoia
             }
             else
             {
-              auto comparer{[i](const auto targetIter, const auto& e){
-                  if constexpr (std::is_empty_v<edge_weight_type>)
-                  {
-                    return targetIter->target_node() != i;
-                  }
-                  else
-                  {
-                    return targetIter->target_node() == i ? targetIter->weight() != e.weight() : true;
-                  }
+              const auto comparisonEdge{
+                [lowerIter,i](){
+                  auto compEdge{*lowerIter};
+                  compEdge.target_node(i);
+                  return compEdge;
+                }()
+              };
+
+              auto range{
+                sequoia::equal_range(orderedEdges.cbegin_partition(target), orderedEdges.cend_partition(target), comparisonEdge, edgeComparer)
+              };
+
+              if(range.first == range.second)
+                throw std::logic_error("Reciprocated partial edge does not exist");
+
+              if constexpr(clusterEdges)
+              {
+                while((range.first->weight() != lowerIter->weight()) && (range.first != range.second)) ++range.first;
+                
+                if(distance(range.first, range.second) > 1)
+                {
+                  auto testIter{range.second - 1};                
+                  while(*testIter != *range.first) --testIter;
+              
+                  range.second = testIter + 1;
                 }
-              };               
-               
-              auto targetEdgesIter{orderedEdges.cbegin_partition(target)};
-              while((targetEdgesIter != orderedEdges.cend_partition(target)) && comparer(targetEdgesIter, *lowerIter))
-                ++targetEdgesIter;               
-               
-              auto upperTargetEdgesIter{targetEdgesIter};
-              while((upperTargetEdgesIter != orderedEdges.cend_partition(target)) && !comparer(upperTargetEdgesIter, *lowerIter))
-                ++upperTargetEdgesIter;
+              }
 
-              if(distance(targetEdgesIter, upperTargetEdgesIter) != count)
+              if(distance(range.first, range.second) != count)
                 throw std::logic_error("Reciprocated target indices do not match");
-
+              
               if constexpr(!direct_edge_init())
               {                
                 for(; lowerIter != upperIter; ++lowerIter)
                 {
-                  if((i < target) || !EdgeTraits::shared_edge_v)
+                  if((i < target) || !EdgeTraits::shared_weight_v)
                   {
                     m_Edges.push_back_to_partition(i, make_edge(i, *lowerIter));
                   }
                   else
                   {
-                    const auto compIndex{static_cast<size_t>(distance(orderedEdges.cbegin_partition(target), upperTargetEdgesIter + distance(upperIter, lowerIter)))};
-                    m_Edges.push_back_to_partition(i, cbegin_edges(i) + compIndex);
+                    const auto compIndex{static_cast<size_t>(distance(orderedEdges.cbegin_partition(target), range.second + distance(upperIter, lowerIter)))};
+                    m_Edges.push_back_to_partition(i, cbegin_edges(target) + compIndex);
                   }
                 }
               }
@@ -1152,14 +1158,14 @@ namespace sequoia
       }
 
       template<class N=node_weight_type, class=std::enable_if_t<!std::is_same_v<N, graph_impl::heterogeneous_tag>>>
-      constexpr graph_primitive(std::true_type, homog_direct_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges, std::initializer_list<node_weight_type> nodeWeights)
+      constexpr graph_primitive(direct_edge_init_type, homog_direct_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges, std::initializer_list<node_weight_type> nodeWeights)
         : Nodes{nodeWeights}
         , m_Edges{edges}
       {
       }
 
       template<class... NodeWeights, class N=node_weight_type, class=std::enable_if_t<std::is_same_v<N, graph_impl::heterogeneous_tag>>>
-      constexpr graph_primitive(std::true_type, hetero_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges, NodeWeights&&... nodeWeights)
+      constexpr graph_primitive(direct_edge_init_type, hetero_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges, NodeWeights&&... nodeWeights)
         : Nodes{std::forward<NodeWeights>(nodeWeights)...}
         , m_Edges{edges}
       {
@@ -1167,7 +1173,7 @@ namespace sequoia
       }
 
       template<class N=node_weight_type, class=std::enable_if_t<!std::is_same_v<N, graph_impl::heterogeneous_tag>>>
-      constexpr graph_primitive(std::true_type, homog_indirect_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges, std::initializer_list<node_weight_type> nodeWeights)
+      constexpr graph_primitive(direct_edge_init_type, homog_indirect_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges, std::initializer_list<node_weight_type> nodeWeights)
         : m_Edges{edges}
       {
         for(const auto& w : nodeWeights)
@@ -1177,21 +1183,21 @@ namespace sequoia
       }
 
       template<class N=node_weight_type, class=std::enable_if_t<!std::is_same_v<N, graph_impl::heterogeneous_tag>>>
-      constexpr graph_primitive(std::false_type, homog_direct_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges, std::initializer_list<node_weight_type> nodeWeights)
+      constexpr graph_primitive(indirect_edge_init_type, homog_direct_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges, std::initializer_list<node_weight_type> nodeWeights)
         : Nodes{nodeWeights}
       {
         check_consistency(edges);
       }
 
       template<class... NodeWeights, class N=node_weight_type, class=std::enable_if_t<std::is_same_v<N, graph_impl::heterogeneous_tag>>>
-      constexpr graph_primitive(std::false_type, hetero_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges, NodeWeights&&... nodeWeights)
+      constexpr graph_primitive(indirect_edge_init_type, hetero_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges, NodeWeights&&... nodeWeights)
         : Nodes{std::forward<NodeWeights>(nodeWeights)...}
       {
         check_consistency(edges);
       }
 
       template<class N=node_weight_type, class=std::enable_if_t<!std::is_same_v<N, graph_impl::heterogeneous_tag>>>
-      constexpr graph_primitive(std::false_type, homog_indirect_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges, std::initializer_list<node_weight_type> nodeWeights)
+      constexpr graph_primitive(indirect_edge_init_type, homog_indirect_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges, std::initializer_list<node_weight_type> nodeWeights)
       {
         check_consistency(edges);
         for(const auto& w : nodeWeights)
