@@ -1017,6 +1017,19 @@ namespace sequoia
         check_consistency(m_Edges);
       }
 
+      template<class FwdIter> constexpr static FwdIter find_cluster_end(FwdIter begin, FwdIter end)
+      {
+        if(distance(begin, end) > 1)
+        {
+          auto testIter{end - 1};                
+          while(*testIter != *begin) --testIter;
+              
+          end = testIter + 1;
+        }
+
+        return end;
+      }
+      
       template<class Edges>
       constexpr void check_consistency(Edges& orderedEdges)
       {
@@ -1072,13 +1085,7 @@ namespace sequoia
             upperIter = sequoia::upper_bound(lowerIter, orderedEdges.cend_partition(i), *lowerIter, edgeComparer);
             if constexpr(clusterEdges)
             {
-              if(distance(lowerIter, upperIter) > 1)
-              {
-                auto testIter{upperIter - 1};                
-                while(*testIter != *lowerIter) --testIter;
-              
-                upperIter = testIter + 1;
-              }
+              upperIter = find_cluster_end(lowerIter, upperIter);
             }
 
             const auto count{distance(lowerIter, upperIter)};
@@ -1122,14 +1129,8 @@ namespace sequoia
               if constexpr(clusterEdges)
               {
                 while((range.first->weight() != lowerIter->weight()) && (range.first != range.second)) ++range.first;
-                
-                if(distance(range.first, range.second) > 1)
-                {
-                  auto testIter{range.second - 1};                
-                  while(*testIter != *range.first) --testIter;
-              
-                  range.second = testIter + 1;
-                }
+
+                range.second = find_cluster_end(range.first, range.second);
               }
 
               if(distance(range.first, range.second) != count)
