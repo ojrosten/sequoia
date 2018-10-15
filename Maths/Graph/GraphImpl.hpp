@@ -877,11 +877,11 @@ namespace sequoia
         }
       }
       
-      constexpr void check_consistency(std::initializer_list<std::initializer_list<edge_init_type>> edges)
+      constexpr void process_edges(std::initializer_list<std::initializer_list<edge_init_type>> edges)
       {
         if constexpr (EdgeTraits::init_complementary_data_v)
         {
-          check_consistency_complementary(edges);
+          process_complementary_edges(edges);
         }
         else if constexpr (directed(directedness))
         {
@@ -905,11 +905,11 @@ namespace sequoia
         }
         else
         {
-          check_consistency(direct_edge_init(), edges);          
+          process_edges(direct_edge_init(), edges);          
         }
       }
 
-      constexpr void check_consistency_complementary(std::initializer_list<std::initializer_list<edge_init_type>> edges)
+      constexpr void process_complementary_edges(std::initializer_list<std::initializer_list<edge_init_type>> edges)
       {
         for(auto nodeEdgesIter{edges.begin()}; nodeEdgesIter != edges.end(); ++nodeEdgesIter)
         {
@@ -1004,17 +1004,17 @@ namespace sequoia
         }
       }
 
-      constexpr void check_consistency(indirect_edge_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges)
+      constexpr void process_edges(indirect_edge_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges)
       {
         using namespace data_structures;
         using traits_t = contiguous_storage_traits<edge_init_type, data_sharing::independent<edge_init_type>>;
         contiguous_storage<edge_init_type, data_sharing::independent<edge_init_type>, traits_t> edgesForChecking{edges};
-        check_consistency(edgesForChecking);
+        process_edges(edgesForChecking);
       }
 
-      constexpr void check_consistency(direct_edge_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges)
+      constexpr void process_edges(direct_edge_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges)
       {
-        check_consistency(m_Edges);
+        process_edges(m_Edges);
       }
 
       template<class FwdIter> constexpr static FwdIter find_cluster_end(FwdIter begin, FwdIter end)
@@ -1031,7 +1031,7 @@ namespace sequoia
       }
       
       template<class Edges>
-      constexpr void check_consistency(Edges& orderedEdges)
+      constexpr void process_edges(Edges& orderedEdges)
       {
         constexpr bool sortWeights{!std::is_empty_v<edge_weight_type> && utilities::is_orderable_v<edge_weight_type>};
         constexpr bool clusterEdges{!std::is_empty_v<edge_weight_type> && !utilities::is_orderable_v<edge_weight_type>};
@@ -1187,20 +1187,20 @@ namespace sequoia
       constexpr graph_primitive(indirect_edge_init_type, homog_direct_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges, std::initializer_list<node_weight_type> nodeWeights)
         : Nodes{nodeWeights}
       {
-        check_consistency(edges);
+        process_edges(edges);
       }
 
       template<class... NodeWeights, class N=node_weight_type, class=std::enable_if_t<std::is_same_v<N, graph_impl::heterogeneous_tag>>>
       constexpr graph_primitive(indirect_edge_init_type, hetero_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges, NodeWeights&&... nodeWeights)
         : Nodes{std::forward<NodeWeights>(nodeWeights)...}
       {
-        check_consistency(edges);
+        process_edges(edges);
       }
 
       template<class N=node_weight_type, class=std::enable_if_t<!std::is_same_v<N, graph_impl::heterogeneous_tag>>>
       constexpr graph_primitive(indirect_edge_init_type, homog_indirect_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges, std::initializer_list<node_weight_type> nodeWeights)
       {
-        check_consistency(edges);
+        process_edges(edges);
         for(const auto& w : nodeWeights)
         {
           Nodes::add_node(WeightMaker::make_node_weight(w));
@@ -1212,7 +1212,7 @@ namespace sequoia
         : Nodes(edges.size())
         , m_Edges{edges}
       {      
-        check_consistency(edges);
+        process_edges(edges);
       }
 
       template<class N=node_weight_type, class=std::enable_if_t<std::is_same_v<N, graph_impl::heterogeneous_tag>>>
@@ -1220,14 +1220,14 @@ namespace sequoia
         : Nodes{}
         , m_Edges{edges}
       {      
-        check_consistency(edges);
+        process_edges(edges);
       }
 
       template<class N=node_weight_type, class=std::enable_if_t<!std::is_same_v<N, graph_impl::heterogeneous_tag>>>
       constexpr graph_primitive(direct_edge_init_type, homog_indirect_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges)
         : m_Edges{edges}
       {        
-        check_consistency(edges);
+        process_edges(edges);
         
         for(int i{}; i<edges.size(); ++i)
           Nodes::add_node(WeightMaker::make_node_weight(node_weight_type{}));
@@ -1237,20 +1237,20 @@ namespace sequoia
       graph_primitive(indirect_edge_init_type, homog_direct_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges)
         : Nodes(edges.size())
       {
-        check_consistency(edges);
+        process_edges(edges);
       }
 
       template<class N=node_weight_type, class=std::enable_if_t<std::is_same_v<N, graph_impl::heterogeneous_tag>>>
       graph_primitive(indirect_edge_init_type, hetero_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges)
         : Nodes{}
       {
-        check_consistency(edges);
+        process_edges(edges);
       }
 
       template<class N=node_weight_type, class=std::enable_if_t<!std::is_same_v<N, graph_impl::heterogeneous_tag>>>
       graph_primitive(indirect_edge_init_type, homog_indirect_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges)
       {        
-        check_consistency(edges);
+        process_edges(edges);
         
         for(int i{}; i<edges.size(); ++i)
             Nodes::add_node(WeightMaker::make_node_weight(node_weight_type{}));        
