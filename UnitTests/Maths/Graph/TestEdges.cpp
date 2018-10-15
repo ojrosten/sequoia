@@ -32,48 +32,54 @@ namespace sequoia
       using namespace data_sharing;
 
       partial_edge<int, shared, utilities::protective_wrapper<int>> edgeSharedWeight(1, 4);
-      check_edge(1, 4, edgeSharedWeight);
+      check_edge(1, 4, edgeSharedWeight, LINE(""));
 
       edgeSharedWeight.weight(-1);
-      check_edge(1, -1, edgeSharedWeight);
+      check_edge(1, -1, edgeSharedWeight, LINE(""));
+
+      edgeSharedWeight.target_node(2);
+      check_edge(2, -1, edgeSharedWeight, LINE(""));
 
       partial_edge<int, shared, utilities::protective_wrapper<int>> edgeSharedWeight2(5, edgeSharedWeight);
-      check_edge(5, -1, edgeSharedWeight2);
+      check_edge(5, -1, edgeSharedWeight2, LINE(""));
+
+      edgeSharedWeight.target_node(1);
+      check_edge(1, -1, edgeSharedWeight, LINE(""));
       
       edgeSharedWeight2.weight(-3);
       check_edge(1, -3, edgeSharedWeight, "implicit change of shared weight");
       check_edge(5, -3, edgeSharedWeight2, "explicit change of shared weight");
       std::swap(edgeSharedWeight, edgeSharedWeight2);
-      check_edge(5, -3, edgeSharedWeight);
-      check_edge(1, -3, edgeSharedWeight2);
+      check_edge(5, -3, edgeSharedWeight, LINE(""));
+      check_edge(1, -3, edgeSharedWeight2, LINE(""));
 
       partial_edge<int, shared, utilities::protective_wrapper<int>> edgeSharedWeight3(2, 8);
-      check_edge(2, 8, edgeSharedWeight3);
+      check_edge(2, 8, edgeSharedWeight3, LINE(""));
 
       std::swap(edgeSharedWeight, edgeSharedWeight3);
-      check_edge(2, 8, edgeSharedWeight);
-      check_edge(1, -3, edgeSharedWeight2);
-      check_edge(5, -3, edgeSharedWeight3);
+      check_edge(2, 8, edgeSharedWeight, LINE(""));
+      check_edge(1, -3, edgeSharedWeight2, LINE(""));
+      check_edge(5, -3, edgeSharedWeight3, LINE(""));
 
       edgeSharedWeight.weight(9);
-      check_edge(2, 9, edgeSharedWeight);
-      check_edge(1, -3, edgeSharedWeight2);
-      check_edge(5, -3, edgeSharedWeight3);
+      check_edge(2, 9, edgeSharedWeight, LINE(""));
+      check_edge(1, -3, edgeSharedWeight2, LINE(""));
+      check_edge(5, -3, edgeSharedWeight3, LINE(""));
 
       edgeSharedWeight2.weight(4);
-      check_edge(2, 9, edgeSharedWeight);
-      check_edge(1, 4, edgeSharedWeight2);
-      check_edge(5, 4, edgeSharedWeight3);
+      check_edge(2, 9, edgeSharedWeight, LINE(""));
+      check_edge(1, 4, edgeSharedWeight2, LINE(""));
+      check_edge(5, 4, edgeSharedWeight3, LINE(""));
 
       edgeSharedWeight3.weight(-4);
-      check_edge(2, 9, edgeSharedWeight);
-      check_edge(1, -4, edgeSharedWeight2);
-      check_edge(5, -4, edgeSharedWeight3);
+      check_edge(2, 9, edgeSharedWeight, LINE(""));
+      check_edge(1, -4, edgeSharedWeight2, LINE(""));
+      check_edge(5, -4, edgeSharedWeight3, LINE(""));
 
       partial_edge<int, shared, utilities::protective_wrapper<int>> edgeSharedWeight4{edgeSharedWeight};
-      check_edge(2, 9, edgeSharedWeight);
-      check_edge(1, -4, edgeSharedWeight2);
-      check_edge(5, -4, edgeSharedWeight3);
+      check_edge(2, 9, edgeSharedWeight, LINE(""));
+      check_edge(1, -4, edgeSharedWeight2, LINE(""));
+      check_edge(5, -4, edgeSharedWeight3, LINE(""));
       check_edge(2, 9, edgeSharedWeight4);
 
       check(edgeSharedWeight == edgeSharedWeight4);
@@ -84,41 +90,44 @@ namespace sequoia
       check(!(edgeSharedWeight2.weight() < edgeSharedWeight3.weight()));
 
       edgeSharedWeight.weight(10);
-      check_edge(2, 10, edgeSharedWeight);
-      check_edge(1, -4, edgeSharedWeight2);
-      check_edge(5, -4, edgeSharedWeight3);
-      check_edge(2, 9, edgeSharedWeight4);
+      check_edge(2, 10, edgeSharedWeight, LINE(""));
+      check_edge(1, -4, edgeSharedWeight2, LINE(""));
+      check_edge(5, -4, edgeSharedWeight3, LINE(""));
+      check_edge(2, 9, edgeSharedWeight4, LINE(""));
 
       edgeSharedWeight4 = edgeSharedWeight;
-      check_edge(2, 10, edgeSharedWeight);
-      check_edge(1, -4, edgeSharedWeight2);
-      check_edge(5, -4, edgeSharedWeight3);
-      check_edge(2, 10, edgeSharedWeight4);
+      check_edge(2, 10, edgeSharedWeight, LINE(""));
+      check_edge(1, -4, edgeSharedWeight2, LINE(""));
+      check_edge(5, -4, edgeSharedWeight3, LINE(""));
+      check_edge(2, 10, edgeSharedWeight4, LINE(""));
  
       edgeSharedWeight4.weight(11);
-      check_edge(2, 10, edgeSharedWeight);
-      check_edge(1, -4, edgeSharedWeight2);
-      check_edge(5, -4, edgeSharedWeight3);
-      check_edge(2, 11, edgeSharedWeight4);
+      check_edge(2, 10, edgeSharedWeight, LINE(""));
+      check_edge(1, -4, edgeSharedWeight2, LINE(""));
+      check_edge(5, -4, edgeSharedWeight3, LINE(""));
+      check_edge(2, 11, edgeSharedWeight4, LINE(""));
    
       // Test independent weights
       
       partial_edge<int, independent, utilities::protective_wrapper<int>> edge(2, 7);
-      check_edge(2, 7, edge);
+      check_edge(2, 7, edge, LINE(""));
+
+      edge.target_node(3);
+      check_edge(3, 7, edge, LINE(""));
 
       edge.weight(-5);
-      check_edge(2, -5, edge);
+      check_edge(3, -5, edge, LINE(""));
 
       partial_edge<int, independent, utilities::protective_wrapper<int>> edge2(5, edge);
-      check_edge(5, -5, edge2);
+      check_edge(5, -5, edge2, LINE(""));
 
       edge2.weight(4);
-      check_edge(2, -5, edge);
-      check_edge(5, 4, edge2);
+      check_edge(3, -5, edge, LINE(""));
+      check_edge(5, 4, edge2, LINE(""));
 
       std::swap(edge, edge2);
-      check_edge(2, -5, edge2);
-      check_edge(5, 4, edge);
+      check_edge(3, -5, edge2, LINE(""));
+      check_edge(5, 4, edge, LINE(""));
 
       struct null_weight{};
       using edge_t = partial_edge<null_weight, independent, utilities::protective_wrapper<null_weight>>;
@@ -139,35 +148,41 @@ namespace sequoia
       edge_t  
         e1(2, 3),
         e2(4, 6);
-
-      check_equality<size_t>(2, e1.host_node());
-      check_equality<size_t>(3, e1.target_node());
-      check(!e1.inverted());
-
-      check_equality<size_t>(4, e2.host_node());
-      check_equality<size_t>(6, e2.target_node());
+      
+      check_edge(2, 3, false, e1, LINE(""));
+      check_edge(4, 6, false, e2, LINE(""));
 
       std::swap(e1, e2);
 
-      check_equality<size_t>(2, e2.host_node());
-      check_equality<size_t>(3, e2.target_node());
-
-      check_equality<size_t>(4, e1.host_node());
-      check_equality<size_t>(6, e1.target_node());
+      check_edge(2, 3, false, e2, LINE(""));
+      check_edge(4, 6, false, e1, LINE(""));
 
       e2.target_node(1);
-      check_equality<size_t>(2, e2.host_node());
-      check_equality<size_t>(1, e2.target_node());
+      check_edge(2, 1, false, e2, LINE(""));
+
+      e2.host_node(3);
+      check_edge(3, 1, false, e2, LINE(""));
+
+      e2.target_node(2);
+      check_edge(3, 2, false, e2, LINE(""));
 
       edge_t e3{4, inversion_constant<false>{}}, e4{5, inversion_constant<true>{}};
-      check_equality<size_t>(4, e3.host_node());
-      check_equality<size_t>(4, e3.target_node());
+      check_edge(4, 4, false, e3, LINE(""));
+      check_edge(5, 5, true, e4, LINE(""));
 
-      check_equality<size_t>(5, e4.host_node());
-      check_equality<size_t>(5, e4.target_node());
+      std::swap(e3, e4);
+      check_edge(4, 4, false, e4, LINE(""));
+      check_edge(5, 5, true, e3, LINE(""));
 
-      check(!e3.inverted(), LINE(""));
-      check(e4.inverted(), LINE(""));
+      e4.host_node(10);
+      check_edge(10, 4, false, e4, LINE(""));
+
+      // Changing host / target node for inverted edge implicitly changes host
+      e3.target_node(9);
+      check_edge(9, 9, true, e3, LINE(""));
+
+      e3.host_node(5);
+      check_edge(5, 5, true, e3, LINE(""));
     }
 
     void test_edges::test_weighted_edge_lVal(const double val)
