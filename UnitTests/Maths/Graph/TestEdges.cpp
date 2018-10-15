@@ -13,9 +13,7 @@ namespace sequoia
   {
     void test_edges::run_tests()
     {
-      test_partial_edge();
-      test_weighted_edge_lVal(5.2);
-      
+      test_partial_edge();      
       test_embedded_partial_edge();
       
       test_plain_edge();      
@@ -121,7 +119,8 @@ namespace sequoia
       partial_edge<int, independent, utilities::protective_wrapper<int>> edge2(5, edge);
       check_edge(5, -5, edge2, LINE(""));
 
-      edge2.weight(4);
+      constexpr int x{4};
+      edge2.weight(x);
       check_edge(3, -5, edge, LINE(""));
       check_edge(5, 4, edge2, LINE(""));
 
@@ -185,17 +184,6 @@ namespace sequoia
       check_edge(5, 5, true, e3, LINE(""));
     }
 
-    void test_edges::test_weighted_edge_lVal(const double val)
-    {
-      using namespace maths;
-
-      edge<double, utilities::protective_wrapper<double>> e1{4, 6, 32.1};
-      check_equality<double>(32.1, e1.weight());
-
-      e1.weight(val);
-      check_equality<double>(val, e1.weight());
-    }
-
     void test_edges::test_weighted_edge()
     {
       using namespace maths;
@@ -236,9 +224,6 @@ namespace sequoia
         edge<double, utilities::protective_wrapper<double>> e3(e2);
 
         check(e3 == e2);
-
-        double lval{45.1};
-        test_weighted_edge_lVal(lval);
       }
 
       {

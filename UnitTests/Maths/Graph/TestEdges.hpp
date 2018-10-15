@@ -23,7 +23,6 @@ namespace sequoia
       void test_partial_edge();      
       void test_plain_edge();
       void test_weighted_edge();
-      void test_weighted_edge_lVal(const double val);
       void test_embedded_partial_edge();
       void test_embedded_edge();
       
