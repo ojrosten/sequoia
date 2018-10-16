@@ -13,7 +13,9 @@ namespace sequoia
   {
     void test_edges::run_tests()
     {
-      test_partial_edge();      
+      test_plain_partial_edge();
+      test_partial_edge_shared_weight();
+      test_partial_edge_independent_weight(); 
       test_embedded_partial_edge();
       
       test_plain_edge();      
@@ -23,91 +25,167 @@ namespace sequoia
       
       test_edge_conversions();
     }
-    
-    void test_edges::test_partial_edge()
+
+    void test_edges::test_plain_partial_edge()
     {
       using namespace maths;
       using namespace data_sharing;
 
-      partial_edge<int, shared, utilities::protective_wrapper<int>> edgeSharedWeight(1, 4);
-      check_edge(1, 4, edgeSharedWeight, LINE(""));
-
-      edgeSharedWeight.weight(-1);
-      check_edge(1, -1, edgeSharedWeight, LINE(""));
-
-      edgeSharedWeight.target_node(2);
-      check_edge(2, -1, edgeSharedWeight, LINE(""));
-
-      partial_edge<int, shared, utilities::protective_wrapper<int>> edgeSharedWeight2(5, edgeSharedWeight);
-      check_edge(5, -1, edgeSharedWeight2, LINE(""));
-
-      edgeSharedWeight.target_node(1);
-      check_edge(1, -1, edgeSharedWeight, LINE(""));
+      struct null_weight{};
+      using edge_t = partial_edge<null_weight, independent, utilities::protective_wrapper<null_weight>>;
+      static_assert(sizeof(std::size_t) == sizeof(edge_t));
       
-      edgeSharedWeight2.weight(-3);
-      check_edge(1, -3, edgeSharedWeight, "implicit change of shared weight");
-      check_edge(5, -3, edgeSharedWeight2, "explicit change of shared weight");
-      std::swap(edgeSharedWeight, edgeSharedWeight2);
-      check_edge(5, -3, edgeSharedWeight, LINE(""));
-      check_edge(1, -3, edgeSharedWeight2, LINE(""));
+      using compact_edge_t = partial_edge<null_weight, independent, utilities::protective_wrapper<null_weight>, unsigned char>;
+      static_assert(sizeof(unsigned char) == sizeof(compact_edge_t));
 
-      partial_edge<int, shared, utilities::protective_wrapper<int>> edgeSharedWeight3(2, 8);
-      check_edge(2, 8, edgeSharedWeight3, LINE(""));
+      edge_t e1{0};
+      check_edge(0, e1, LINE("Construction"));
 
-      std::swap(edgeSharedWeight, edgeSharedWeight3);
-      check_edge(2, 8, edgeSharedWeight, LINE(""));
-      check_edge(1, -3, edgeSharedWeight2, LINE(""));
-      check_edge(5, -3, edgeSharedWeight3, LINE(""));
+      e1.target_node(1);
+      check_edge(1, e1, LINE("Change target node"));
 
-      edgeSharedWeight.weight(9);
-      check_edge(2, 9, edgeSharedWeight, LINE(""));
-      check_edge(1, -3, edgeSharedWeight2, LINE(""));
-      check_edge(5, -3, edgeSharedWeight3, LINE(""));
+      edge_t e2{e1};
+      check_edge(1, e1, LINE(""));
+      check_edge(1, e2, LINE("Copy construction"));
 
-      edgeSharedWeight2.weight(4);
-      check_edge(2, 9, edgeSharedWeight, LINE(""));
-      check_edge(1, 4, edgeSharedWeight2, LINE(""));
-      check_edge(5, 4, edgeSharedWeight3, LINE(""));
+      check(e1 == e2, LINE("Equality"));
 
-      edgeSharedWeight3.weight(-4);
-      check_edge(2, 9, edgeSharedWeight, LINE(""));
-      check_edge(1, -4, edgeSharedWeight2, LINE(""));
-      check_edge(5, -4, edgeSharedWeight3, LINE(""));
+      e2.target_node(0);
+      check_edge(1, e1, LINE(""));
+      check_edge(0, e2, LINE(""));
 
-      partial_edge<int, shared, utilities::protective_wrapper<int>> edgeSharedWeight4{edgeSharedWeight};
-      check_edge(2, 9, edgeSharedWeight, LINE(""));
-      check_edge(1, -4, edgeSharedWeight2, LINE(""));
-      check_edge(5, -4, edgeSharedWeight3, LINE(""));
-      check_edge(2, 9, edgeSharedWeight4);
+      check(e1 != e2, LINE("Inequality"));
 
-      check(edgeSharedWeight == edgeSharedWeight4);
-      check(edgeSharedWeight2 != edgeSharedWeight4);
-      check(edgeSharedWeight.weight() > edgeSharedWeight2.weight());
-      check(edgeSharedWeight2.weight() < edgeSharedWeight.weight());
-      check(!(edgeSharedWeight2.weight() > edgeSharedWeight3.weight()));
-      check(!(edgeSharedWeight2.weight() < edgeSharedWeight3.weight()));
+      e1 = e2;
+      check_edge(0, e1, LINE("Assigment"));
+      check_edge(0, e2, LINE(""));
 
-      edgeSharedWeight.weight(10);
-      check_edge(2, 10, edgeSharedWeight, LINE(""));
-      check_edge(1, -4, edgeSharedWeight2, LINE(""));
-      check_edge(5, -4, edgeSharedWeight3, LINE(""));
-      check_edge(2, 9, edgeSharedWeight4, LINE(""));
+      e2 = [](){ return edge_t{3}; }();
+      check_edge(3, e2, LINE("Move assignment"));
 
-      edgeSharedWeight4 = edgeSharedWeight;
-      check_edge(2, 10, edgeSharedWeight, LINE(""));
-      check_edge(1, -4, edgeSharedWeight2, LINE(""));
-      check_edge(5, -4, edgeSharedWeight3, LINE(""));
-      check_edge(2, 10, edgeSharedWeight4, LINE(""));
+      auto e3{[](){ return edge_t{4}; }()};
+      check_edge(4, e3, LINE("Move construction"));
+
+      std::swap(e3, e2);
+      check_edge(3, e3, LINE("Swap"));
+      check_edge(4, e2, LINE("Swap"));
+    }
+    
+    void test_edges::test_partial_edge_shared_weight()
+    {
+      using namespace maths;
+      using namespace data_sharing;
+
+      using edge_t = partial_edge<int, shared, utilities::protective_wrapper<int>>;
+
+      edge_t edge{1, 4};
+      check_edge(1, 4, edge, LINE("Construction"));
+
+      edge.weight(-1);
+      check_edge(1, -1, edge, LINE("Set weight"));
+
+      edge.target_node(2);
+      check_edge(2, -1, edge, LINE("Change target node"));
+
+      edge_t edge2{5, edge};
+      check_edge(5, -1, edge2, LINE("Construction with shared weight"));
+
+      check(edge != edge2, LINE("Inequality"));
+
+      edge.target_node(1);
+      check_edge(1, -1, edge, LINE(""));
+      
+      edge2.weight(-3);
+      check_edge(1, -3, edge, "Implicit change of shared weight");
+      check_edge(5, -3, edge2, "Explicit change of shared weight");
+      std::swap(edge, edge2);
+      check_edge(5, -3, edge, LINE("Swap edges with shared weight"));
+      check_edge(1, -3, edge2, LINE("Swap edges with shared weight"));
+
+      edge_t edge3(2, 8);
+      check_edge(2, 8, edge3, LINE(""));
+
+      std::swap(edge, edge3);
+      check_edge(2, 8, edge, LINE("Swap edge with one of an edge sharing pair"));
+      check_edge(1, -3, edge2, LINE("Swap edge with one of an edge sharing pair"));
+      check_edge(5, -3, edge3, LINE("Swap edge with one of an edge sharing pair"));
+
+      edge.mutate_weight([](int& a) { ++a; });
+      check_edge(2, 9, edge, LINE("Mutate weight of edge which previously but no longer shares its weight"));
+      check_edge(1, -3, edge2, LINE(""));
+      check_edge(5, -3, edge3, LINE(""));
+
+      edge2.weight(4);
+      check_edge(2, 9, edge, LINE(""));
+      check_edge(1, 4, edge2, LINE("Set weight which is now shared with a different weight"));
+      check_edge(5, 4, edge3, LINE("Set weight which is now shared with a different weight"));
+
+      edge3.mutate_weight([](int& a) { a = -a;});
+      check_edge(2, 9, edge, LINE(""));
+      check_edge(1, -4, edge2, LINE("Mutate shared weight"));
+      check_edge(5, -4, edge3, LINE("Mutate shared weight"));
+
+      edge_t edge4{edge};
+      check_edge(2, 9, edge, LINE("Copy construction"));
+      check_edge(1, -4, edge2, LINE(""));
+      check_edge(5, -4, edge3, LINE(""));
+      check_edge(2, 9, edge4);
+
+      check(edge == edge4, LINE("Equality"));
+
+      check(edge.weight() > edge2.weight(), LINE("operator>"));
+      check(edge2.weight() < edge.weight(),  LINE("operator<"));
+
+      edge.weight(10);
+      check_edge(2, 10, edge, LINE(""));
+      check_edge(1, -4, edge2, LINE(""));
+      check_edge(5, -4, edge3, LINE(""));
+      check_edge(2, 9, edge4, LINE(""));
+
+      edge4 = edge;
+      check_edge(2, 10, edge, LINE(""));
+      check_edge(1, -4, edge2, LINE(""));
+      check_edge(5, -4, edge3, LINE(""));
+      check_edge(2, 10, edge4, LINE("Assigment"));
  
-      edgeSharedWeight4.weight(11);
-      check_edge(2, 10, edgeSharedWeight, LINE(""));
-      check_edge(1, -4, edgeSharedWeight2, LINE(""));
-      check_edge(5, -4, edgeSharedWeight3, LINE(""));
-      check_edge(2, 11, edgeSharedWeight4, LINE(""));
-   
-      // Test independent weights
-      
-      partial_edge<int, independent, utilities::protective_wrapper<int>> edge(2, 7);
+      edge4.weight(11);
+      check_edge(2, 10, edge, LINE(""));
+      check_edge(1, -4, edge2, LINE(""));
+      check_edge(5, -4, edge3, LINE(""));
+      check_edge(2, 11, edge4, LINE("Weight changed following assigment"));
+
+      edge4 = edge;
+      check_edge(2, 10, edge, LINE(""));
+      check_edge(1, -4, edge2, LINE(""));
+      check_edge(5, -4, edge3, LINE(""));
+      check_edge(2, 10, edge4, LINE(""));
+
+      check(edge4 == edge, LINE(""));
+
+      edge4 = [](){ return edge_t{3,6}; }();
+      check_edge(3, 6, edge4, LINE("Move assignment"));
+
+      edge2 = edge4;
+      check_edge(2, 10, edge, LINE(""));
+      check_edge(3, 6, edge2, LINE("Assignment to edge with shared weight"));
+      check_edge(5, -4, edge3, LINE(""));
+      check_edge(3, 6, edge4, LINE(""));
+
+      edge2.weight(5);
+      check_edge(2, 10, edge, LINE(""));
+      check_edge(3, 5, edge2, LINE("Setting of weight which was previously shared"));
+      check_edge(5, -4, edge3, LINE(""));
+      check_edge(3, 6, edge4, LINE(""));
+    }
+
+    void test_edges::test_partial_edge_independent_weight()
+    {
+      using namespace maths;
+      using namespace data_sharing;
+
+      using edge_t = partial_edge<int, independent, utilities::protective_wrapper<int>>;
+
+      edge_t edge(2, 7);
       check_edge(2, 7, edge, LINE(""));
 
       edge.target_node(3);
@@ -116,8 +194,10 @@ namespace sequoia
       edge.weight(-5);
       check_edge(3, -5, edge, LINE(""));
 
-      partial_edge<int, independent, utilities::protective_wrapper<int>> edge2(5, edge);
+      edge_t edge2(5, edge);
       check_edge(5, -5, edge2, LINE(""));
+
+      check(edge != edge2, LINE(""));
 
       constexpr int x{4};
       edge2.weight(x);
@@ -126,14 +206,7 @@ namespace sequoia
 
       std::swap(edge, edge2);
       check_edge(3, -5, edge2, LINE(""));
-      check_edge(5, 4, edge, LINE(""));
-
-      struct null_weight{};
-      using edge_t = partial_edge<null_weight, independent, utilities::protective_wrapper<null_weight>>;
-      check_equality(sizeof(std::size_t), sizeof(edge_t), "Plain edge should be size of a single index");
-
-      using compact_edge_t = partial_edge<null_weight, independent, utilities::protective_wrapper<null_weight>, char>;
-      check_equality(sizeof(char), sizeof(compact_edge_t), "Compact plain edge should be size of a char");
+      check_edge(5, 4, edge, LINE(""));      
     }
 
     void test_edges::test_plain_edge()
@@ -150,6 +223,7 @@ namespace sequoia
       
       check_edge(2, 3, false, e1, LINE(""));
       check_edge(4, 6, false, e2, LINE(""));
+      check(e1 != e2);
 
       std::swap(e1, e2);
 
@@ -180,8 +254,14 @@ namespace sequoia
       e3.target_node(9);
       check_edge(9, 9, true, e3, LINE(""));
 
-      e3.host_node(5);
-      check_edge(5, 5, true, e3, LINE(""));
+      e3.host_node(4);
+      check_edge(4, 4, true, e3, LINE(""));
+
+      check(e3 != e4, LINE(""));
+
+      auto e5{e3}, e6{e4};
+      check_edge(4, 4, true, e5, LINE("Copy construction for inverted edge"));
+      check_edge(10, 4, false , e6, LINE("Copy construction for non-inverted edge"));
     }
 
     void test_edges::test_weighted_edge()

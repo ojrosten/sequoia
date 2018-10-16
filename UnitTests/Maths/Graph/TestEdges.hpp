@@ -20,10 +20,13 @@ namespace sequoia
     private:
       void run_tests();
 
-      void test_partial_edge();      
-      void test_plain_edge();
-      void test_weighted_edge();
+      void test_plain_partial_edge();
+      void test_partial_edge_shared_weight();
+      void test_partial_edge_independent_weight();
       void test_embedded_partial_edge();
+      
+      void test_plain_edge();     
+      void test_weighted_edge();      
       void test_embedded_edge();
       
       
