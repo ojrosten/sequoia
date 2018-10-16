@@ -184,29 +184,45 @@ namespace sequoia
       using namespace data_sharing;
 
       using edge_t = partial_edge<int, independent, utilities::protective_wrapper<int>>;
+      static_assert(2 * sizeof(std::size_t) == sizeof(edge_t));
 
       edge_t edge(2, 7);
-      check_edge(2, 7, edge, LINE(""));
+      check_edge(2, 7, edge, LINE("Construction"));
 
       edge.target_node(3);
-      check_edge(3, 7, edge, LINE(""));
+      check_edge(3, 7, edge, LINE("Change target node"));
 
       edge.weight(-5);
-      check_edge(3, -5, edge, LINE(""));
+      check_edge(3, -5, edge, LINE("Set weight"));
 
       edge_t edge2(5, edge);
-      check_edge(5, -5, edge2, LINE(""));
+      check_edge(5, -5, edge2, LINE("Construction with independent weight"));
 
       check(edge != edge2, LINE(""));
 
+      edge.mutate_weight([](int& a) { a *= 2;} );
+      check_edge(3, -10, edge, LINE("Mutate weight"));
+      check_edge(5, -5, edge2, LINE(""));
+
       constexpr int x{4};
       edge2.weight(x);
-      check_edge(3, -5, edge, LINE(""));
+      check_edge(3, -10, edge, LINE("Set weight from an l-val"));
       check_edge(5, 4, edge2, LINE(""));
 
       std::swap(edge, edge2);
-      check_edge(3, -5, edge2, LINE(""));
-      check_edge(5, 4, edge, LINE(""));      
+      check_edge(3, -10, edge2, LINE("Swap"));
+      check_edge(5, 4, edge, LINE("Swap"));
+
+      edge = edge2;
+      
+      check_edge(3, -10, edge, LINE("Assignment"));
+      check_edge(3, -10, edge2, LINE(""));
+
+      edge2 = [](){ return edge_t{5,7};}();
+      check_edge(5, 7, edge2, LINE("Move assigment"));
+
+      auto edge3{[](){ return edge_t{0,1};}()};
+      check_edge(0, 1, edge3, LINE("Move construction"));
     }
 
     void test_edges::test_plain_edge()
