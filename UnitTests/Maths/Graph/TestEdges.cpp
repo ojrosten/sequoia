@@ -217,13 +217,41 @@ namespace sequoia
       
       check_edge(3, -10, edge, LINE("Assignment"));
       check_edge(3, -10, edge2, LINE(""));
+      check(edge == edge2, LINE("Equality"));
 
       edge2 = [](){ return edge_t{5,7};}();
       check_edge(5, 7, edge2, LINE("Move assigment"));
-
+      check(edge != edge2, LINE("Inequality"));
+      
       auto edge3{[](){ return edge_t{0,1};}()};
       check_edge(0, 1, edge3, LINE("Move construction"));
     }
+
+    void test_edges::test_embedded_partial_edge()
+    {
+      using namespace maths;
+      using namespace data_sharing;
+
+      using edge_t = embedded_partial_edge<double, independent, utilities::protective_wrapper<double>>;
+      static_assert(2*sizeof(std::size_t) + sizeof(double) == sizeof(edge_t));
+      
+      constexpr edge_t edge1{1, 2, 5.0};
+      check_embedded_edge(1, 2, 5.0, edge1);
+
+      constexpr edge_t edge2{3, 7, edge1};
+      check_embedded_edge(3, 7, 5.0, edge2);
+
+      check(edge1 != edge2);
+
+      auto edge3 = edge2;
+      check_embedded_edge(3, 7, 5.0, edge3);
+      check(edge2 == edge3);
+
+      edge3.weight(6.5);
+      check_embedded_edge(3, 7, 6.5, edge3);
+      check(edge3 != edge2);
+    }
+
 
     void test_edges::test_plain_edge()
     {
@@ -278,7 +306,7 @@ namespace sequoia
       auto e5{e3}, e6{e4};
       check_edge(4, 4, true, e5, LINE("Copy construction for inverted edge"));
       check_edge(10, 4, false , e6, LINE("Copy construction for non-inverted edge"));
-    }
+    }    
 
     void test_edges::test_weighted_edge()
     {
@@ -356,31 +384,6 @@ namespace sequoia
 
         check(e1.weight() == e2.weight());
       }
-    }
-
-    void test_edges::test_embedded_partial_edge()
-    {
-      using namespace maths;
-      using namespace data_sharing;
-
-      using npedge = embedded_partial_edge<double, independent, utilities::protective_wrapper<double>>;
-      check_equality(2*sizeof(std::size_t) + sizeof(double), sizeof(npedge), "NP edge holding a double should be size of double plus twice size_t");
-      
-      constexpr npedge edge1{1, 2, 5.0};
-      check_embedded_edge(1, 2, 5.0, edge1);
-
-      constexpr npedge edge2{3, 7, edge1};
-      check_embedded_edge(3, 7, 5.0, edge2);
-
-      check(edge1 != edge2);
-
-      auto edge3 = edge2;
-      check_embedded_edge(3, 7, 5.0, edge3);
-      check(edge2 == edge3);
-
-      edge3.weight(6.5);
-      check_embedded_edge(3, 7, 6.5, edge3);
-      check(edge3 != edge2);
     }
 
     void test_edges::test_embedded_edge()
