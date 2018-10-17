@@ -653,7 +653,7 @@ namespace sequoia
         return unit_testing::check_range(m_Logger, refBegin, refEnd, resBegin, resEnd, description);
       }
 
-      template<class F, class S, std::size_t N=4>
+      template<class F, class S>
       auto check_relative_performance(F fast, S slow, const double factor, const bool oneSided, const std::string& description="", const std::size_t trials=5, const double num_sds=3)
         -> performance_results<decltype(fast())>
       {

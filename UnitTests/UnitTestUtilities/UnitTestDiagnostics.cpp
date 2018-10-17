@@ -121,7 +121,7 @@ namespace sequoia
       auto fast = [wait]() { return wait(1); };
       using fast_t = decltype(fast);
 
-      check_relative_performance<fast_t, fast_t, 10>(fast, fast, 1.0, false, LINE("Two-sided Performance Test with equal durations which should pass"));
+      check_relative_performance<fast_t, fast_t>(fast, fast, 1.0, false, LINE("Two-sided Performance Test with equal durations which should pass"));
       check_relative_performance(fast, [wait]() { return wait(2); }, 2.0, false, LINE("Two-sided Performance Test which should pass"), 10);
       check_relative_performance(fast, [wait]() { return wait(4); }, 2.0, true, LINE("One-sided Performance Test with equal durations which should pass"));
     }
