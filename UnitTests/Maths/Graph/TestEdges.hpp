@@ -2,7 +2,7 @@
 
 #include "UnitTestUtils.hpp"
 
-#include "TestEdgeHelper.hpp"
+//#include "TestEdgeHelper.hpp"
 
 #include "Utilities.hpp"
 
@@ -28,9 +28,6 @@ namespace sequoia
       void test_plain_edge();     
       void test_weighted_edge();      
       void test_embedded_edge();
-      
-      
-      void test_edge_conversions();
 
       template<class E, class=std::enable_if_t<!std::is_empty_v<typename E::weight_type>>>
       bool check_edge(const std::size_t target, const typename E::weight_type& weight, const E& edge, const std::string& message="")

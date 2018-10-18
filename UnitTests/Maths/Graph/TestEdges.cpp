@@ -22,8 +22,6 @@ namespace sequoia
       test_weighted_edge();
       
       test_embedded_edge();
-      
-      test_edge_conversions();
     }
 
     void test_edges::test_plain_partial_edge()
@@ -429,60 +427,6 @@ namespace sequoia
 
         e.host_node(9);
         check_embedded_edge(9, 11, 0, 5.2, e);        
-      }
-    }
-     
-    void test_edges::test_edge_conversions()
-    {
-      using namespace maths;
-      using namespace data_sharing;
-      
-      {
-        partial_edge<double, shared, utilities::protective_wrapper<double>> partialEdgeShared{5, 1.3};
-        auto fullEdge = edge_converter<partial_edge<double, shared, utilities::protective_wrapper<double>>, edge<double, utilities::protective_wrapper<double>>>::convert(partialEdgeShared, 3);
-
-        check_equality<size_t>(3, fullEdge.host_node());
-        check_equality<size_t>(5, fullEdge.target_node());
-        check_equality<double>(1.3, fullEdge.weight());
-
-        fullEdge.weight(-2.2);
-        partialEdgeShared = edge_converter<edge<double, utilities::protective_wrapper<double>>, partial_edge<double, shared, utilities::protective_wrapper<double>>>::convert(fullEdge, 5);
-
-        check_equality<size_t>(3, partialEdgeShared.target_node());
-        check_equality<double>(-2.2, partialEdgeShared.weight());
-
-        fullEdge.weight(1.7);
-        partialEdgeShared = edge_converter<edge<double, utilities::protective_wrapper<double>>, partial_edge<double, shared, utilities::protective_wrapper<double>>>::convert(fullEdge, 3);
-      
-        check_equality<size_t>(5, partialEdgeShared.target_node());
-        check_equality<double>(1.7, partialEdgeShared.weight());
-
-        fullEdge.weight(9.0);
-        partialEdgeShared = edge_converter<edge<double, utilities::protective_wrapper<double>>, partial_edge<double, shared, utilities::protective_wrapper<double>>>::convert(fullEdge, 2);
-      
-        check_equality<size_t>(2, partialEdgeShared.target_node());
-        check_equality<double>(9.0, partialEdgeShared.weight());
-      }
-
-      {
-        constexpr partial_edge<int, independent, utilities::protective_wrapper<int>> partialEdgeUnshared{0, -5};
-        constexpr auto fullEdge = edge_converter<partial_edge<int, independent, utilities::protective_wrapper<int>>, edge<int, utilities::protective_wrapper<int>>>::convert(partialEdgeUnshared, 9);
-
-        check_equality<size_t>(9, fullEdge.host_node());
-        check_equality<size_t>(0, fullEdge.target_node());
-        check_equality<int>(-5, fullEdge.weight());
-
-        constexpr auto partialEdgeU2 = edge_converter<edge<int, utilities::protective_wrapper<int>>, partial_edge<int, independent, utilities::protective_wrapper<int>>>::convert(fullEdge, 0);
-        check_equality<size_t>(9, partialEdgeU2.target_node());
-        check_equality<int>(-5, partialEdgeU2.weight());
-
-        constexpr auto partialEdgeU3 = edge_converter<edge<int, utilities::protective_wrapper<int>>, partial_edge<int, independent, utilities::protective_wrapper<int>>>::convert(fullEdge, 9);
-        check_equality<size_t>(0, partialEdgeU3.target_node());
-        check_equality<int>(-5, partialEdgeU3.weight());
-
-        constexpr auto partialEdgeU4 = edge_converter<edge<int, utilities::protective_wrapper<int>>, partial_edge<int, independent, utilities::protective_wrapper<int>>>::convert(fullEdge, 100);
-        check_equality<size_t>(100, partialEdgeU4.target_node());
-        check_equality<int>(-5, partialEdgeU4.weight());
       }
     }
   }
