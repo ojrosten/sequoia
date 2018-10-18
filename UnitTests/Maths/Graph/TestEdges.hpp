@@ -2,12 +2,6 @@
 
 #include "UnitTestUtils.hpp"
 
-//#include "TestEdgeHelper.hpp"
-
-#include "Utilities.hpp"
-
-#include <initializer_list>
-
 namespace sequoia
 {
   namespace unit_testing

@@ -312,10 +312,12 @@ namespace sequoia
       {
         return (n==1) ? " " + s : " " + s + "s";
       }
-    };
+    };   
 
+    template<class T> struct equality_checker;
+    
     namespace impl
-    {
+    {      
       inline std::string concat_messages(std::string_view s1, std::string_view s2)
       {
         std::string mess{!s1.empty() ? s1 : s2};
@@ -334,10 +336,32 @@ namespace sequoia
       template<class T> struct container_detector<T, std::void_t<decltype(std::declval<T>().cbegin())>> : std::true_type
       {
       };
-      
-      template<class T, bool=container_detector<T>::value> struct equality_checker;
-      
-      template<class Logger, class T> bool check_equality(Logger& logger, const T reference, const T actual, const std::string& description="")
+
+      template<class T> constexpr bool container_detector_v{container_detector<T>::value};
+
+      template<class Logger, std::size_t I = 0, class... T>
+      std::enable_if_t<I == sizeof...(T), void>
+      check_tuple_elements(Logger& logger, const std::tuple<T...>& reference, const std::tuple<T...>& actual, const std::string& description="")
+      {}
+
+      template<class Logger, std::size_t I = 0, class... T>
+      std::enable_if_t<I < sizeof...(T), void>
+      check_tuple_elements(Logger& logger, const std::tuple<T...>& reference, const std::tuple<T...>& actual, const std::string& description="")
+      {
+        using S = std::decay_t<decltype(std::get<I>(reference))>;
+        const std::string message{"Tuple elements differ for " + std::to_string(I) + "th element"};
+        equality_checker<S>::check(logger, std::get<I>(reference), std::get<I>(actual), concat_messages(description, message));
+        check_tuple_elements<Logger, I+1, T...>(logger, reference, actual, description);
+      }       
+    }
+
+
+    template<class T>
+    struct equality_checker
+    {
+      template<class Logger, class S=T>
+      static std::enable_if_t<!impl::container_detector_v<S>, bool>
+      check(Logger& logger, const T& reference, const T& actual, const std::string& description="")
       {      
         typename Logger::sentinel r{logger, description};
         r.log_check();
@@ -354,13 +378,37 @@ namespace sequoia
         return equal;
       }
 
-      template<class Logger> bool check(Logger& logger, const bool value, const std::string& description="")
+      template<class Logger, class S=T>
+      static std::enable_if_t<impl::container_detector_v<S>, bool>
+      check(Logger& logger, const T& reference, const T& actual, const std::string& description="")
       {
-        return impl::check_equality(logger, true, value, description);
-      }
-      
-      template<class Logger, class T, class S>
-      bool check_equality(Logger& logger, const std::pair<T,S>& reference, const std::pair<T,S>& actual, const std::string& description="")
+        typename Logger::sentinel r{logger, description};
+        const bool equal{equality_checker<bool>::check(logger, true, reference == actual)};
+        if(!equal)
+        {
+          if(equality_checker<bool>::check(logger, reference.size(), actual.size(), description + "container size wrong"))
+          {
+            if constexpr (!diagnostic(Logger::mode))
+            {
+              const std::string message{"\nContainers both of size " + std::to_string(reference.size()) +  "; checking elements"};
+              logger.post_message(message);
+            }
+          
+            for(auto refIter{std::begin(reference)}, actIter{std::begin(actual)}; refIter != std::end(reference); ++refIter, ++actIter)
+            {
+              const std::string dist{std::to_string(std::distance(std::begin(reference), refIter))};
+              equality_checker<typename T::value_type>::check(logger, *refIter, *actIter, description +  "element " + dist);
+            }
+          }
+        }
+        return equal;
+      }      
+    };
+
+    template<class T, class S>
+    struct equality_checker<std::pair<T,S>>
+    {
+      template<class Logger> static bool check(Logger& logger, const std::pair<T,S>& reference, const std::pair<T,S>& actual, const std::string& description="")
       {
         typename Logger::sentinel r{logger, description};
         r.log_check();
@@ -372,87 +420,35 @@ namespace sequoia
         }
         return equal;
       }
+    };
 
-      template<class Logger, std::size_t I = 0, class... T>
-      std::enable_if_t<I == sizeof...(T), void>
-      check_tuple_elements(Logger& logger, const std::tuple<T...>& reference, const std::tuple<T...>& actual, const std::string& description="")
-      {}
-
-      template<class Logger, std::size_t I = 0, class... T>
-      std::enable_if_t<I < sizeof...(T), void>
-      check_tuple_elements(Logger& logger, const std::tuple<T...>& reference, const std::tuple<T...>& actual, const std::string& description="")
-      {
-        using S = std::decay_t<decltype(std::get<I>(reference))>;
-        const std::string message{"Tuple elements differ for " + std::to_string(I) + "th element"};
-        equality_checker<S>::check(logger, std::get<I>(reference), std::get<I>(actual), concat_messages(description, message));
-        check_tuple_elements<Logger, I+1, T...>(logger, reference, actual, description);
-      }
-
-      template<class Logger, class... T>
-      bool check_equality(Logger& logger, const std::tuple<T...>& reference, const std::tuple<T...>& actual, const std::string& description="")
-      {
-        typename Logger::sentinel r{logger, description};
-        const bool equal{impl::check(logger, reference == actual, description)};
-        if(!equal)
-        {
-          check_tuple_elements(logger, reference, actual, description);
-        }
-        return equal;
-      }
-      
-      template<class Logger, class T>
-      bool check_container(Logger& logger, const T& reference, const T& actual, const std::string& description="")
-      {
-        typename Logger::sentinel r{logger, description};
-        const bool equal{impl::check(logger, reference == actual)};
-        if(!equal)
-        {
-          if(impl::check_equality(logger, reference.size(), actual.size(), description + "container size wrong"))
-          {
-            if constexpr (!diagnostic(Logger::mode))
-            {
-              const std::string message{"\nContainers both of size " + std::to_string(reference.size()) +  "; checking elements"};
-              logger.post_message(message);
-            }
-          
-            for(auto refIter = std::begin(reference), actIter = std::begin(actual); refIter != std::end(reference); ++refIter, ++actIter)
-            {
-              const std::string dist{std::to_string(std::distance(std::begin(reference), refIter))};
-              equality_checker<typename T::value_type>::check(logger, *refIter, *actIter, description +  "element " + dist);
-            }
-          }
-        }
-        return equal;
-      }
-
-      template<class T> struct equality_checker<T, false>
-      {
-        template<class Logger> static bool check(Logger& logger, const T reference, const T value, const std::string& description="")
-        {
-          return impl::check_equality(logger, reference, value, description);
-        }
-      };
-
-      template<class T> struct equality_checker<T, true>
-      {
-        template<class Logger> static bool check(Logger& logger, const T reference, const T value, const std::string& description="")
-        {
-          return impl::check_container(logger, reference, value, description);
-        }
-      };
-       
-    }
-
-    template<class Logger, class T> bool check_equality(Logger& logger, const T reference, const T value, const std::string& description="")
+    template<class... T>
+    struct equality_checker<std::tuple<T...>>
     {
-      return impl::equality_checker<T>::check(logger, reference, value, description);
+      template<class Logger> static bool check(Logger& logger, const std::tuple<T...>& reference, const std::tuple<T...>& actual, const std::string& description="")
+      {
+        typename Logger::sentinel r{logger, description};
+        const bool equal{equality_checker<bool>::check(logger, true, reference == actual, description)};
+        if(!equal)
+        {
+          impl::check_tuple_elements(logger, reference, actual, description);
+        }
+        return equal;
+      }
+    };
+
+    
+
+    template<class Logger, class T> bool check_equality(Logger& logger, const T& reference, const T& value, const std::string& description="")
+    {
+      return equality_checker<T>::check(logger, reference, value, description);
     }
 
     template<class Logger, class T>
     bool check_equality_within_tolerance(Logger& logger, const T reference, const T value, const T tol, const std::string& description="")
     {
       typename Logger::sentinel r{logger, description};
-      const bool equal{impl::check(logger, (value > reference - tol) && (value < reference + tol))};
+      const bool equal{equality_checker<bool>::check(logger, true, (value > reference - tol) && (value < reference + tol))};
       if(!equal)
       {
         const std::string message{
@@ -672,10 +668,10 @@ namespace sequoia
         return log_summary{prefix, m_Logger};
       }
     protected:
-      checker(checker&&)            = default;
+      checker(checker&&)            = default;      
+      ~checker()                    = default;
+      
       checker& operator=(checker&&) = default;
-
-      ~checker() = default;
 
       void log_critical_failure(const std::string& message) { m_Logger.log_critical_failure(message); }
       void log_failure(const std::string& message) { m_Logger.log_failure(message); }

@@ -1,5 +1,7 @@
 #include "TestEdges.hpp"
-#include "Edge.hpp"
+
+#include "EdgeTestingUtilities.hpp"
+
 #include "SharingPolicies.hpp"
 #include "ProtectiveWrapper.hpp"
 
