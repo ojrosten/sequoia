@@ -39,11 +39,20 @@ namespace sequoia
       static_assert(sizeof(unsigned char) == sizeof(compact_edge_t));
 
       edge_t e1{0};
-      check_edge(0, e1, LINE("Construction"));
+      check_equality<std::size_t>(0, e1.target_node(), LINE("Construction"));
+      
+      //check_edge(0, e1, LINE("Construction"));
 
       e1.target_node(1);
       check_edge(1, e1, LINE("Change target node"));
 
+      edge_t f{3};
+      check_equality<std::size_t>(3, f.target_node(), LINE(""));
+      
+      check_standard_semantics(e1, f, LINE(""));
+
+
+      
       edge_t e2{e1};
       check_edge(1, e1, LINE(""));
       check_edge(1, e2, LINE("Copy construction"));

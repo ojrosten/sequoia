@@ -5,13 +5,13 @@
 namespace sequoia
 {
   namespace unit_testing
-  {
+  {    
     class test_edges : public unit_test
     {
     public:
       using unit_test::unit_test;
 
-    private:
+    private:     
       void run_tests();
 
       void test_plain_partial_edge();

@@ -444,6 +444,11 @@ namespace sequoia
       return equality_checker<T>::check(logger, reference, value, description);
     }
 
+    template<class Logger> bool check(Logger& logger, const bool value, const std::string& description="")
+    {
+      return check_equality(logger, true, value, description);
+    }
+
     template<class Logger, class T>
     bool check_equality_within_tolerance(Logger& logger, const T reference, const T value, const T tol, const std::string& description="")
     {
@@ -513,6 +518,27 @@ namespace sequoia
       }
       
       return equal;
+    }
+
+    template<class Logger, class T>
+    void check_standard_semantics(Logger& logger, const T& x, const T& y, const std::string& description="")
+    {
+      typename Logger::sentinel s{logger, description};
+    
+      auto z{x};
+      check_equality(logger, x, z, impl::concat_messages(description, "Copy constructor incorrect"));
+      check_equality(logger, true, z == x, impl::concat_messages(description, "Equality operator incorrect"));
+
+      z = y;
+      check_equality(logger, y, z, impl::concat_messages(description, "Copy assignment incorrect"));
+      check(logger, z != x, impl::concat_messages(description, "Inequality operator incorrect"));
+
+      auto w{std::move(z)};
+      check_equality(logger, y, w, impl::concat_messages(description, "Move constructor incorrect"));
+
+      z = [x](){ return x;}();
+      check_equality(logger, x, z, impl::concat_messages(description, "Move assignment incorrect"));
+    
     }
     
     template<class R> struct performance_results
@@ -634,7 +660,7 @@ namespace sequoia
 
       bool check(const bool value, const std::string& description="")
       {
-        return unit_testing::check_equality(m_Logger, true, value, description);
+        return unit_testing::check(m_Logger, value, description);
       }
 
       template<class E, class Fn>
@@ -686,6 +712,13 @@ namespace sequoia
       typename Logger::sentinel make_sentinel(std::string_view message)
       {
         return {m_Logger, message};
+      }
+
+      
+      template<class T>
+      void check_standard_semantics(const T& x, const T& y, const std::string& description="")
+      {
+        unit_testing::check_standard_semantics(m_Logger, x, y, description);        
       }
     private:
       Logger m_Logger;      
