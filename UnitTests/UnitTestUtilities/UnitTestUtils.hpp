@@ -524,21 +524,27 @@ namespace sequoia
     void check_standard_semantics(Logger& logger, const T& x, const T& y, const std::string& description="")
     {
       typename Logger::sentinel s{logger, description};
-    
+
+      check(logger, x == x, impl::concat_messages(description, "Equality consistency"));
+      check(logger, x != y, impl::concat_messages(description, "Precondition - for check the standard semantics, x and y are assumed to be different"));
+      
       auto z{x};
-      check_equality(logger, x, z, impl::concat_messages(description, "Copy constructor incorrect"));
-      check_equality(logger, true, z == x, impl::concat_messages(description, "Equality operator incorrect"));
+      check_equality(logger, x, z, impl::concat_messages(description, "Copy constructor"));
+      check_equality(logger, true, z == x, impl::concat_messages(description, "Equality operator"));
 
       z = y;
-      check_equality(logger, y, z, impl::concat_messages(description, "Copy assignment incorrect"));
-      check(logger, z != x, impl::concat_messages(description, "Inequality operator incorrect"));
+      check_equality(logger, y, z, impl::concat_messages(description, "Copy assignment"));
+      check(logger, z != x, impl::concat_messages(description, "Inequality operator"));
 
       auto w{std::move(z)};
-      check_equality(logger, y, w, impl::concat_messages(description, "Move constructor incorrect"));
+      check_equality(logger, y, w, impl::concat_messages(description, "Move constructor"));
 
       z = [x](){ return x;}();
-      check_equality(logger, x, z, impl::concat_messages(description, "Move assignment incorrect"));
-    
+      check_equality(logger, x, z, impl::concat_messages(description, "Move assignment"));      
+
+      std::swap(w,z);
+      check_equality(logger, x, w, impl::concat_messages(description, "Swap"));
+      check_equality(logger, y, z, impl::concat_messages(description, "Swap"));
     }
     
     template<class R> struct performance_results
