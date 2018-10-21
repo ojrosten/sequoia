@@ -155,7 +155,7 @@ namespace sequoia
       using namespace maths;
       using namespace data_sharing;     
       
-      using edge_t = embedded_partial_edge<null_weight, independent, utilities::protective_wrapper<double>>;
+      using edge_t = embedded_partial_edge<null_weight, independent, utilities::protective_wrapper<null_weight>>;
       static_assert(2*sizeof(std::size_t) == sizeof(edge_t));
 
       edge_t e1{0, 4};
@@ -330,7 +330,32 @@ namespace sequoia
       using namespace maths;
       using namespace data_sharing;
 
-      // TO DO
+      using edge_t = embedded_edge<null_weight, independent, utilities::protective_wrapper<null_weight>>;
+      check_equality(3*sizeof(std::size_t), sizeof(edge_t));
+
+      edge_t e{3, 4, 1};
+      check_embedded_edge(3, 4, 1, false, e, LINE("Construction"));
+
+      e.host_node(4);
+      check_equality(edge_t{4, 4, 1}, e, LINE("Change host"));
+
+      e.target_node(5);
+      check_equality(edge_t{4, 5, 1}, e, LINE("Change target"));
+
+      e.complementary_index(0);
+      check_equality(edge_t{4, 5, 0}, e, LINE("Change complementary index"));
+
+      edge_t e1{7, inversion_constant<true>{}, 9};
+      check_embedded_edge(7, 7, 9, true, e1, LINE("Construction"));
+
+      e1.host_node(6);
+      check_equality(edge_t{6, inversion_constant<true>{}, 9}, e1, LINE("Change host"));
+
+      e1.target_node(8);
+      check_equality(edge_t{8, inversion_constant<true>{}, 9}, e1, LINE("Induced change to host"));
+
+      check_standard_semantics(e, e1, LINE("Standard semantics"));
+
     }
     
     void test_edges::test_embedded_edge_indep_weight()
@@ -338,21 +363,38 @@ namespace sequoia
       using namespace maths;
       using namespace data_sharing;
 
-      {
-        using edge_t = embedded_edge<double, independent, utilities::protective_wrapper<double>>;
-        check_equality(3*sizeof(std::size_t) + sizeof(double), sizeof(edge_t), "Embedded Edge holding a double should be size of double plus thrice size_t");
+      using edge_t = embedded_edge<double, independent, utilities::protective_wrapper<double>>;
+      check_equality(3*sizeof(std::size_t) + sizeof(double), sizeof(edge_t));
 
-        constexpr edge_t e{3, 4, 1, 4.2};
-        check_embedded_edge(3, 4, 1, false, 4.2, e);
+      constexpr edge_t e{3, 4, 1, 4.2};
+      check_embedded_edge(3, 4, 1, false, 4.2, e);
 
-        edge_t e2{4, inversion_constant<true>{}, 1, 1.1};
-        check_embedded_edge(4, 4, 1, true, 1.1, e2);
+      edge_t e2{4, inversion_constant<true>{}, 1, 1.1};
+      check_embedded_edge(4, 4, 1, true, 1.1, e2);
 
-        check_standard_semantics(e, e2, LINE("Standard semantics"));
-      }
+      e2.host_node(8);
+      check_equality(edge_t{8, inversion_constant<true>{}, 1, 1.1}, e2, LINE("Change host"));
 
-      {
-        using edge_t = embedded_edge<double, shared, utilities::protective_wrapper<double>>;
+      e2.target_node(7);
+      check_equality(edge_t{7, inversion_constant<true>{}, 1, 1.1}, e2, LINE("Induced change host"));
+
+      e2.complementary_index(4);
+      check_equality(edge_t{7, inversion_constant<true>{}, 4, 1.1}, e2, LINE("Change complementary index"));
+
+      e2.weight(-2.5);
+      check_equality(edge_t{7, inversion_constant<true>{}, 4, -2.5}, e2, LINE("Change weight"));
+
+
+      check_standard_semantics(e, e2, LINE("Standard semantics"));
+
+    }
+
+    void test_edges::test_embedded_edge_shared_weight()
+    {
+      using namespace maths;
+      using namespace data_sharing;
+
+      using edge_t = embedded_edge<double, shared, utilities::protective_wrapper<double>>;
 
         edge_t e{10, 11, 0, -1.2};
         check_embedded_edge(10, 11, 0, false, -1.2, e, LINE("Construction"));
@@ -375,15 +417,16 @@ namespace sequoia
         e2.host_node(5);
         check_equality(edge_t{5, inversion_constant<true>{}, 4, 0.0}, e2, LINE("Change host node, inducing change in target"));
         check_standard_semantics(e, e2, LINE("Standard semantics"));
-      }
-    }
 
-    void test_edges::test_embedded_edge_shared_weight()
-    {
-      using namespace maths;
-      using namespace data_sharing;
+        edge_t e3{8, inversion_constant<false>{}, 3, e};
+        check_embedded_edge(8, 8, 3, false, 5.2, e3, LINE("Construction"));
 
-      // TO DO
+        e3.weight(0.0);
+        check_equality(edge_t{9, 0, 3, 0.0}, e, LINE("Induced change to shared weight"));
+        check_equality(edge_t{8, 8, 3, 0.0}, e3, LINE("Change to shared weight"));
+
+        check_standard_semantics(e, e3, LINE("Standard semantics"));
+        check_standard_semantics(e3, e2, LINE("Standard semantics"));
     }
   }
 }
