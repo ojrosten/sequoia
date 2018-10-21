@@ -15,15 +15,20 @@ namespace sequoia
   {
     void test_edges::run_tests()
     {
-      test_plain_partial_edge();
+      test_plain_partial_edge();      
+      test_partial_edge_indep_weight(); 
       test_partial_edge_shared_weight();
-      test_partial_edge_independent_weight(); 
+
+      test_plain_embedded_partial_edge();
       test_embedded_partial_edge_indep_weight();
+      test_embedded_partial_edge_shared_weight();
       
       test_plain_edge();      
       test_weighted_edge();
-      
-      test_embedded_edge();
+
+      test_plain_embedded_edge();
+      test_embedded_edge_indep_weight();
+      test_embedded_edge_shared_weight();      
     }
 
     void test_edges::test_plain_partial_edge()
@@ -118,7 +123,7 @@ namespace sequoia
       check_equality(edge_t{5, -4}, edge3, LINE("Mutate shared weight"));
     }
 
-    void test_edges::test_partial_edge_independent_weight()
+    void test_edges::test_partial_edge_indep_weight()
     {
       using namespace maths;
       using namespace data_sharing;
@@ -146,6 +151,14 @@ namespace sequoia
       check_standard_semantics(edge, edge2, LINE("Standard semantics"));
     }
 
+    void test_edges::test_plain_embedded_partial_edge()
+    {
+      using namespace maths;
+      using namespace data_sharing;
+
+      // TO DO
+    }
+    
     void test_edges::test_embedded_partial_edge_indep_weight()
     {
       using namespace maths;
@@ -161,6 +174,14 @@ namespace sequoia
       check_embedded_edge(3, 7, 5.0, edge2, LINE("Construction with independent weight"));
 
       check_standard_semantics(edge1, edge2, LINE("Standard semantics"));    
+    }
+
+    void test_edges::test_embedded_partial_edge_shared_weight()
+    {
+      using namespace maths;
+      using namespace data_sharing;
+
+      // TO DO
     }
 
 
@@ -264,7 +285,15 @@ namespace sequoia
       }
     }
 
-    void test_edges::test_embedded_edge()
+    void test_edges::test_plain_embedded_edge()
+    {
+      using namespace maths;
+      using namespace data_sharing;
+
+      // TO DO
+    }
+    
+    void test_edges::test_embedded_edge_indep_weight()
     {
       using namespace maths;
       using namespace data_sharing;
@@ -307,6 +336,14 @@ namespace sequoia
         check_equality(edge_t{5, inversion_constant<true>{}, 4, 0.0}, e2, LINE("Change host node, inducing change in target"));
         check_standard_semantics(e, e2, LINE("Standard semantics"));
       }
+    }
+
+    void test_edges::test_embedded_edge_shared_weight()
+    {
+      using namespace maths;
+      using namespace data_sharing;
+
+      // TO DO
     }
   }
 }

@@ -15,13 +15,19 @@ namespace sequoia
       void run_tests();
 
       void test_plain_partial_edge();
+      void test_partial_edge_indep_weight();
       void test_partial_edge_shared_weight();
-      void test_partial_edge_independent_weight();
+
+      void test_plain_embedded_partial_edge();
       void test_embedded_partial_edge_indep_weight();
+      void test_embedded_partial_edge_shared_weight();
       
       void test_plain_edge();     
-      void test_weighted_edge();      
-      void test_embedded_edge();
+      void test_weighted_edge();
+
+      void test_plain_embedded_edge();
+      void test_embedded_edge_indep_weight();
+      void test_embedded_edge_shared_weight();
 
       template<class E, class=std::enable_if_t<!std::is_empty_v<typename E::weight_type>>>
       bool check_edge(const std::size_t target, const typename E::weight_type& weight, const E& edge, const std::string& message="")
