@@ -526,6 +526,7 @@ namespace sequoia
       typename Logger::sentinel s{logger, description};
 
       check(logger, x == x, impl::concat_messages(description, "Equality consistency"));
+      check(logger, !(x != x), impl::concat_messages(description, "Inequality consistency"));
       check(logger, x != y, impl::concat_messages(description, "Precondition - for check the standard semantics, x and y are assumed to be different"));
       
       auto z{x};

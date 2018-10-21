@@ -17,7 +17,7 @@ namespace sequoia::unit_testing
     
       if constexpr (!std::is_empty_v<typename Edge::weight_type>)
       {
-        if(!check_equality(reference.weight, actual.weight(), impl::concat_messages(description, "Weight incorrect"))) equal = false;
+        if(!check_equality(logger, reference.weight(), actual.weight(), impl::concat_messages(description, "Weight incorrect"))) equal = false;
       }
 
       return equal;
@@ -26,15 +26,21 @@ namespace sequoia::unit_testing
     template<class Logger, class Edge>
     bool check_complementary(Logger& logger, const Edge& reference, const Edge& actual, const std::string& description)
     {
-      return check_equality(logger, reference.complementary_index(), actual.complementary_index()),
-        impl::concat_messages(description, "Complementary index incorrect");
+      return check_equality(logger, reference.complementary_index(), actual.complementary_index(),
+                            impl::concat_messages(description, "Complementary index incorrect"));
     }
   
     template<class Logger, class Edge>
     bool check_host(Logger& logger, const Edge& reference, const Edge& actual, const std::string& description)
     {
-      return check_equality(logger, reference.host_node(), actual.host_node()),
-        impl::concat_messages(description, "Host node incorrect");
+      bool equal{true};
+      if(!check_equality(logger, reference.host_node(), actual.host_node(),
+                         impl::concat_messages(description, "Host node incorrect"))) equal = false;
+
+      if(!check_equality(logger, reference.inverted(), actual.inverted(),
+                         impl::concat_messages(description, "Inversion flag incorrect"))) equal = false; 
+
+      return equal;
     }
   }
   

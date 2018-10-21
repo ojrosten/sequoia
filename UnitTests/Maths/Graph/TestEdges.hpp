@@ -17,7 +17,7 @@ namespace sequoia
       void test_plain_partial_edge();
       void test_partial_edge_shared_weight();
       void test_partial_edge_independent_weight();
-      void test_embedded_partial_edge();
+      void test_embedded_partial_edge_indep_weight();
       
       void test_plain_edge();     
       void test_weighted_edge();      
@@ -78,20 +78,22 @@ namespace sequoia
       }
 
       template<class E, class=std::enable_if_t<!std::is_empty_v<typename E::weight_type>>>
-      bool check_embedded_edge(const std::size_t host, const std::size_t target, const std::size_t targetPosIndex, const typename E::weight_type& weight, const E& edge, const std::string& message="")
+      bool check_embedded_edge(const std::size_t host, const std::size_t target, const std::size_t targetPosIndex, const bool inverted, const typename E::weight_type& weight, const E& edge, const std::string& message="")
       {
         bool passed{check_embedded_edge(target, targetPosIndex, weight, edge, message)};
         if(!check_equality(host, edge.host_node(), "Host node incorrect " + message)) passed = false;
-        
+        if(check(edge.inverted() == inverted, "Inverted flag incorrect " + message)) passed = false;
+
         return passed;
       }
 
       template<class E, class=std::enable_if_t<std::is_empty_v<typename E::weight_type>>>
-      bool check_embedded_edge(const std::size_t host, const std::size_t target, const std::size_t targetPosIndex, const E& edge, const std::string& message="")
+      bool check_embedded_edge(const std::size_t host, const std::size_t target, const std::size_t targetPosIndex, const bool inverted, const E& edge, const std::string& message="")
       {
         bool passed{check_embedded_edge(target, targetPosIndex, edge, message)};
         if(!check_equality(host, edge.host_node(), "Host node incorrect " + message)) passed = false;
-        
+        if(check(edge.inverted() == inverted, "Inverted flag incorrect " + message)) passed = false;
+                
         return passed;
       }
     };
