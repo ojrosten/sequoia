@@ -11,7 +11,9 @@ namespace sequoia
     public:
       using unit_test::unit_test;
 
-    private:     
+    private:      
+      struct null_weight{};
+      
       void run_tests();
 
       void test_plain_partial_edge();

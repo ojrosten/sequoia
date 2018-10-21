@@ -36,7 +36,6 @@ namespace sequoia
       using namespace maths;
       using namespace data_sharing;
 
-      struct null_weight{};
       using edge_t = partial_edge<null_weight, independent, utilities::protective_wrapper<null_weight>>;
       static_assert(sizeof(std::size_t) == sizeof(edge_t));
       
@@ -154,9 +153,24 @@ namespace sequoia
     void test_edges::test_plain_embedded_partial_edge()
     {
       using namespace maths;
-      using namespace data_sharing;
+      using namespace data_sharing;     
+      
+      using edge_t = embedded_partial_edge<null_weight, independent, utilities::protective_wrapper<double>>;
+      static_assert(2*sizeof(std::size_t) == sizeof(edge_t));
 
-      // TO DO
+      edge_t e1{0, 4};
+      check_embedded_edge(0, 4, e1, LINE("Construction"));
+
+      e1.target_node(1);
+      check_equality(edge_t{1, 4}, e1, LINE("Change target"));
+
+      e1.complementary_index(5);
+      check_equality(edge_t{1, 5}, e1, LINE("Change complementary index"));
+
+      edge_t e2{10, 10};
+      check_embedded_edge(10, 10, e2, LINE("Construction"));
+
+      check_standard_semantics(e1, e2, LINE("Standard semantics"));
     }
     
     void test_edges::test_embedded_partial_edge_indep_weight()
@@ -170,10 +184,19 @@ namespace sequoia
       constexpr edge_t edge1{1, 2, 5.0};
       check_embedded_edge(1, 2, 5.0, edge1, LINE("Construction"));
 
-      constexpr edge_t edge2{3, 7, edge1};
+      edge_t edge2{3, 7, edge1};
       check_embedded_edge(3, 7, 5.0, edge2, LINE("Construction with independent weight"));
 
-      check_standard_semantics(edge1, edge2, LINE("Standard semantics"));    
+      edge2.target_node(13);
+      check_equality(edge_t{13, 7, 5.0}, edge2, LINE("Change target node"));
+
+      edge2.complementary_index(2);
+      check_equality(edge_t{13, 2, 5.0}, edge2, LINE("Change complementary index"));
+
+      edge2.weight(5.6);
+      check_equality(edge_t{13, 2, 5.6}, edge2, LINE("Change weight"));
+
+      check_standard_semantics(edge1, edge2, LINE("Standard semantics")); 
     }
 
     void test_edges::test_embedded_partial_edge_shared_weight()
@@ -181,14 +204,31 @@ namespace sequoia
       using namespace maths;
       using namespace data_sharing;
 
-      // TO DO
+      using edge_t = embedded_partial_edge<double, shared, utilities::protective_wrapper<double>>;
+      
+      edge_t edge1{1, 2, 5.0};
+      check_embedded_edge(1, 2, 5.0, edge1, LINE("Construction"));
+
+      edge_t edge2{3, 7, edge1};
+      check_embedded_edge(3, 7, 5.0, edge2, LINE("Construction with shared weight"));
+
+      edge2.target_node(13);
+      check_equality(edge_t{13, 7, 5.0}, edge2, LINE("Change target node"));
+
+      edge2.complementary_index(2);
+      check_equality(edge_t{13, 2, 5.0}, edge2, LINE("Change complementary index"));
+
+      edge2.weight(5.6);
+      check_equality(edge_t{13, 2, 5.6}, edge2, LINE("Change weight"));
+      check_equality(edge_t{1, 2, 5.6}, edge1, LINE("Induced change in shared weight"));
+
+      check_standard_semantics(edge1, edge2, LINE("Standard semantics"));
     }
 
 
     void test_edges::test_plain_edge()
     {
       using namespace maths;
-      struct null_weight{};
 
       using edge_t = edge<null_weight, utilities::protective_wrapper<null_weight>>;
       check_equality(2*sizeof(std::size_t), sizeof(edge_t), "Full edge with null weight should be twice size of size_t");
