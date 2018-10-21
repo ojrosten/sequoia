@@ -158,6 +158,10 @@ namespace sequoia
       using edge_t = embedded_partial_edge<null_weight, independent, utilities::protective_wrapper<null_weight>>;
       static_assert(2*sizeof(std::size_t) == sizeof(edge_t));
 
+      using compact_edge_t
+        = embedded_partial_edge<null_weight, independent, utilities::protective_wrapper<null_weight>, unsigned char>;
+      static_assert(2*sizeof(unsigned char) == sizeof(compact_edge_t));
+
       edge_t e1{0, 4};
       check_embedded_edge(0, 4, e1, LINE("Construction"));
 
@@ -231,7 +235,10 @@ namespace sequoia
       using namespace maths;
 
       using edge_t = edge<null_weight, utilities::protective_wrapper<null_weight>>;
-      check_equality(2*sizeof(std::size_t), sizeof(edge_t), "Full edge with null weight should be twice size of size_t");
+      static_assert(2*sizeof(std::size_t) == sizeof(edge_t));
+
+      using compact_edge_t = edge<null_weight, utilities::protective_wrapper<null_weight>, unsigned char>;
+      static_assert(2 * sizeof(unsigned char) == sizeof(compact_edge_t));
       
       edge_t  
         e1(2, 3),
@@ -332,6 +339,9 @@ namespace sequoia
 
       using edge_t = embedded_edge<null_weight, independent, utilities::protective_wrapper<null_weight>>;
       check_equality(3*sizeof(std::size_t), sizeof(edge_t));
+
+      using compact_edge_t = embedded_edge<null_weight, independent, utilities::protective_wrapper<null_weight>, unsigned char>;
+      static_assert(3*sizeof(unsigned char) == sizeof(compact_edge_t));
 
       edge_t e{3, 4, 1};
       check_embedded_edge(3, 4, 1, false, e, LINE("Construction"));
