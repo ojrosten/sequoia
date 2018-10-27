@@ -8,8 +8,18 @@ namespace sequoia
   {
     void false_positive_diagnostics::run_tests()
     {
-      check(false, LINE(""));
+      
+      basic_tests();
+      test_container_checks();
+      test_relative_performance();
+      test_mixed();
+      test_standard_semantics();
+    }
 
+    void false_positive_diagnostics::basic_tests()
+    {
+      check(false, LINE(""));
+      
       check_equality(5, 4, LINE(""));
       check_equality(6.5, 5.6, LINE(""));
 
@@ -25,10 +35,6 @@ namespace sequoia
 
       check_exception_thrown<std::runtime_error>([](){}, LINE("Exception expected but nothing thrown"));
       check_exception_thrown<std::runtime_error>([](){ throw std::logic_error("Error"); }, LINE("Exception thrown but of wrong type"));
- 
-      test_container_checks();
-      test_relative_performance();
-      test_mixed();
     }
 
     void false_positive_diagnostics::test_container_checks()
@@ -77,9 +83,29 @@ namespace sequoia
         check_equality(a, b, LINE(""));
       }
     }
-    
+
+    void false_positive_diagnostics::test_standard_semantics()
+    {
+      check_standard_semantics(broken_equality{1}, broken_equality{2}, LINE(""));
+      check_standard_semantics(broken_inequality{1}, broken_inequality{2}, LINE(""));
+      check_standard_semantics(broken_copy{1}, broken_copy{2}, LINE(""));
+      check_standard_semantics(broken_move{1}, broken_move{2}, LINE(""));
+      check_standard_semantics(broken_copy_assignment{1}, broken_copy_assignment{2}, LINE(""));
+      check_standard_semantics(broken_move_assignment{1}, broken_move_assignment{2}, LINE(""));
+
+      check_standard_semantics(perfectly_normal_beast{1}, perfectly_normal_beast{1}, LINE(""));
+    }
 
     void false_negative_diagnostics::run_tests()
+    {
+      basic_tests();
+      test_container_checks();
+      test_relative_performance();
+      test_mixed();
+      test_standard_semantics();
+    }
+
+    void false_negative_diagnostics::basic_tests()
     {
       check(true, LINE(""));
 
@@ -95,9 +121,7 @@ namespace sequoia
 
       check_exception_thrown<std::runtime_error>([](){ throw std::runtime_error("Error");}, LINE(""));
 
-      test_container_checks();
-      test_relative_performance();
-      test_mixed();
+      
     }
 
     void false_negative_diagnostics::test_container_checks()
@@ -138,6 +162,11 @@ namespace sequoia
 
       check_equality(a, b, LINE(""));
 
+    }
+
+    void false_negative_diagnostics::test_standard_semantics()
+    {
+      check_standard_semantics(perfectly_normal_beast{1}, perfectly_normal_beast{2}, LINE(""));
     }
   }
 }

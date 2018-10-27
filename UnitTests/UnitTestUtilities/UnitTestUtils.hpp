@@ -525,9 +525,11 @@ namespace sequoia
     {
       typename Logger::sentinel s{logger, description};
 
-      check(logger, x == x, impl::concat_messages(description, "Equality consistency"));
-      check(logger, !(x != x), impl::concat_messages(description, "Inequality consistency"));
-      check(logger, x != y, impl::concat_messages(description, "Precondition - for check the standard semantics, x and y are assumed to be different"));
+      if(!check(logger, x == x, impl::concat_messages(description, "Equality operator is inconsist"))) return;
+      if(!check(logger, !(x != x), impl::concat_messages(description, "Inequality operator is inconsistent"))) return;
+
+      // TO DO: contract in C++20
+      if(!check(logger, x != y, impl::concat_messages(description, "Precondition - for check the standard semantics, x and y are assumed to be different"))) return;
       
       auto z{x};
       check_equality(logger, x, z, impl::concat_messages(description, "Copy constructor"));
