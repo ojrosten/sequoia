@@ -3,6 +3,7 @@
 
 #include "TestDataPool.hpp"
 
+#include "EdgeTestingDiagnostics.hpp"
 #include "GraphTesterDiagnostics.hpp"
 #include "TestEdges.hpp"
 #include "TestNodeStorage.hpp"
@@ -106,6 +107,8 @@ int main(int argc, char** argv)
   runner.add_test_family(
     test_family{
       "Edges",
+      test_edge_false_positives{"Edge false positive diagnostics"},
+      test_edge_false_negatives{"Edge false negative diagnositics"},
       test_edges{"Unit Test"}
     }
   );
