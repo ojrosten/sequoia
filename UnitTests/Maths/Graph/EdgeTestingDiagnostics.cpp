@@ -147,6 +147,8 @@ namespace sequoia::unit_testing
     check_equality(edge_t{1,8}, edge_t{0,8}, LINE("Differing hosts, identical targets"));
 
     check_equality(edge_t{0,1}, edge_t{1,0}, LINE("Differing hosts and targets"));
+
+    check_equality(edge_t{0, inversion_constant<true>{}}, edge_t{0, inversion_constant<false>{}}, LINE("Differing inversion flag"));
   }
   
   void test_edge_false_positives::test_weighted_edge()
@@ -159,7 +161,8 @@ namespace sequoia::unit_testing
     check_equality(edge_t{0,0,0.0}, edge_t{0,1,0.0}, LINE("Differing targets, identical hosts and weight"));
     check_equality(edge_t{0,10,0.0}, edge_t{1,10,0.0}, LINE("Differing targets, identical host and weights"));
     check_equality(edge_t{0,20,5.0}, edge_t{1,20,5.0}, LINE("Differing targets, identical host and weights"));
-
+    check_equality(edge_t{0, inversion_constant<true>{}, 0.0}, edge_t{0, inversion_constant<false>{}, 0.0}, LINE("Differing inversion flag"));
+    
     check_equality(edge_t{0,0,0.0}, edge_t{0,1,0.0}, LINE("Differing hosts, identical targets and weights"));
     check_equality(edge_t{3,0,0.0}, edge_t{3,1,0.0}, LINE("Differing hosts, identical targets and weights"));
     check_equality(edge_t{4,0,-7.0}, edge_t{4,1,-7.0}, LINE("Differing hosts, identical targets and weights"));
@@ -185,6 +188,7 @@ namespace sequoia::unit_testing
     check_equality(edge_t{0,0,0},  edge_t{0,1,0},  LINE("Differing targets, identical hosts and complementary indices"));
     check_equality(edge_t{0,10,0}, edge_t{1,10,0}, LINE("Differing targets, identical host and complementary indices"));
     check_equality(edge_t{0,0,20}, edge_t{1,0,20}, LINE("Differing targets, identical host and complementary indices"));
+    check_equality(edge_t{0, inversion_constant<true>{}, 0}, edge_t{0, inversion_constant<false>{}, 0}, LINE("Differing inversion flag"));
 
     check_equality(edge_t{0,0,0}, edge_t{0,1,0}, LINE("Differing hosts, identical targets and complementary indices"));
     check_equality(edge_t{3,0,0}, edge_t{3,1,0}, LINE("Differing hosts, identical targets and complementary indices"));
@@ -212,6 +216,8 @@ namespace sequoia::unit_testing
     check_equality(edge_t{1,0,0,0.0}, edge_t{0,0,0,0.0}, LINE("Differing hosts, identical targets, complementary indices and weights"));
     check_equality(edge_t{0,0,0,0.0}, edge_t{0,0,1,0.0}, LINE("Differing complementary indices, identical hosts, targets and weights"));
     check_equality(edge_t{0,0,0,0.0}, edge_t{0,0,0,1.0}, LINE("Differing weights, identical hosts, targets, complementary indices"));
+    check_equality(edge_t{0, inversion_constant<true>{}, 0, 0.0}, edge_t{0, inversion_constant<false>{}, 0, 0.0}, LINE("Differing inversion flag"));
+
   }
   
   void test_edge_false_positives::test_embedded_edge_shared_weight()
@@ -225,5 +231,6 @@ namespace sequoia::unit_testing
     check_equality(edge_t{1,0,0,0.0}, edge_t{0,0,0,0.0}, LINE("Differing hosts, identical targets, complementary indices and weights"));
     check_equality(edge_t{0,0,0,0.0}, edge_t{0,0,1,0.0}, LINE("Differing complementary indices, identical hosts, targets and weights"));
     check_equality(edge_t{0,0,0,0.0}, edge_t{0,0,0,1.0}, LINE("Differing weights, identical hosts, targets, complementary indices"));
+    check_equality(edge_t{0, inversion_constant<true>{}, 0, 0.0}, edge_t{0, inversion_constant<false>{}, 0, 0.0}, LINE("Differing inversion flag"));
   }
 }
