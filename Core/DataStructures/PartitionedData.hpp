@@ -126,16 +126,16 @@ namespace sequoia
         return partition;
       }
 
-      size_type delete_slot(const size_type n)
+      size_type erase_slot(const size_type n)
       {
-        size_type deleted{};
+        size_type erased{};
         if(n < m_Buckets.size())
         {
-          deleted = m_Buckets[n].size();
+          erased = m_Buckets[n].size();
           m_Buckets.erase(m_Buckets.begin() + n);
         }
 
-        return deleted;
+        return erased;
       }
 
       size_type num_partitions() const noexcept { return m_Buckets.size(); }
@@ -211,11 +211,10 @@ namespace sequoia
           if(!m_Buckets.size()) throw std::out_of_range("bucketed_storage: no partitions into which to insert");
         }
         
-        const auto host{pos.partition_index()};
-        const auto index{static_cast<size_type>(distance(cbegin_partition(host), pos))};        
+        const auto host{pos.partition_index()};        
         auto iter{m_Buckets[host].insert(pos.base_iterator(), SharingPolicy::make(std::forward<Args>(args)...))};
 
-        return partition_iterator{iter, index};
+        return partition_iterator{iter, host};
       }
 
       template<class... Args>
@@ -226,14 +225,13 @@ namespace sequoia
           if(!m_Buckets.size()) throw std::out_of_range("bucketed_storage: no partitions into which to insert");
         }
         
-        const auto host{pos.partition_index()};
-        const auto index{static_cast<size_type>(distance(cbegin_partition(host), pos))};        
+        const auto host{pos.partition_index()};     
         auto iter{m_Buckets[host].insert(pos.base_iterator(), *(setFromIter.base_iterator()))};
 
-        return partition_iterator{iter, index};
+        return partition_iterator{iter, host};
       }
 
-      partition_iterator delete_from_partition(const size_type index, const size_type pos)
+      partition_iterator erase_from_partition(const size_type index, const size_type pos)
       {
         auto iter = begin_partition(index);
         auto next = end_partition(index).base_iterator();
@@ -245,7 +243,7 @@ namespace sequoia
         return partition_iterator{next, index};
       }
 
-      partition_iterator delete_from_partition(const_partition_iterator iter)
+      partition_iterator erase_from_partition(const_partition_iterator iter)
       {
         const auto partition = iter.partition_index();
         const auto next = m_Buckets[partition].erase(iter.base_iterator());
@@ -253,16 +251,16 @@ namespace sequoia
       }
 
       template<class UnaryPred>
-      size_type delete_from_partition_if(const size_type partitionIndex, UnaryPred pred)
+      size_type erase_from_partition_if(const size_type partitionIndex, UnaryPred pred)
       {
-        size_type deleted{};
+        size_type erased{};
         auto iter = begin_partition(partitionIndex);
         while(iter != end_partition(partitionIndex))
         {
           if(pred(*iter))
           {
             iter = partition_iterator(m_Buckets[partitionIndex].erase(iter.base_iterator()), partitionIndex);
-            ++deleted;
+            ++erased;
           }
           else
           {
@@ -270,7 +268,7 @@ namespace sequoia
           }
         }
 
-        return deleted;
+        return erased;
       }
 
       template<class UnaryPred>
@@ -578,25 +576,25 @@ namespace sequoia
         return partition;
       }
 
-      index_type delete_slot(const index_type n)
+      index_type erase_slot(const index_type n)
       {
-        index_type deleted{};
+        index_type erased{};
         if(n < m_Partitions.size())
         {
           const index_type offset{(n > 0) ? m_Partitions[n - 1] : index_type{}};
           if(m_Partitions[n] > 0)
           {
-            deleted = m_Partitions[n] - offset;
+            erased = m_Partitions[n] - offset;
             m_Storage.erase(m_Storage.begin() + offset, m_Storage.begin() + m_Partitions[n]);
           }
           m_Partitions.erase(m_Partitions.begin() + n);
           for(size_type i{n}; i < m_Partitions.size(); ++i)
           {
-            m_Partitions[i]-=deleted;
+            m_Partitions[i]-=erased;
           }
         }
 
-        return deleted;
+        return erased;
       }
 
       void reserve(const size_type size)
@@ -696,7 +694,7 @@ namespace sequoia
         return partition_iterator(iter, host);
       }
 
-      partition_iterator delete_from_partition(const index_type index, const size_type pos)
+      partition_iterator erase_from_partition(const index_type index, const size_type pos)
       {
         auto next = end_partition(index).base_iterator();
         auto iter = begin_partition(index);
@@ -712,7 +710,7 @@ namespace sequoia
         return partition_iterator(next, index);
       }
 
-      partition_iterator delete_from_partition(const_partition_iterator iter)
+      partition_iterator erase_from_partition(const_partition_iterator iter)
       {
         const auto next = m_Storage.erase(iter.base_iterator());
         const auto index = iter.partition_index();
@@ -724,16 +722,16 @@ namespace sequoia
       }
 
       template<class UnaryPred>
-      index_type delete_from_partition_if(const index_type partitionIndex, UnaryPred pred)
+      index_type erase_from_partition_if(const index_type partitionIndex, UnaryPred pred)
       {
-        index_type deleted{};
+        index_type erased{};
         auto iter = begin_partition(partitionIndex);
         while(iter != end_partition(partitionIndex))
         {
           if(pred(*iter))
           {
             iter = partition_iterator(m_Storage.erase(iter.base_iterator()), partitionIndex);
-            ++deleted;
+            ++erased;
 
             for(size_type i{partitionIndex}; i < m_Partitions.size(); ++i)
             {
@@ -746,7 +744,7 @@ namespace sequoia
           }
         }
 
-        return deleted;
+        return erased;
       }
 
       friend constexpr bool operator==(const contiguous_storage_base& lhs, const contiguous_storage_base& rhs)
@@ -985,7 +983,7 @@ namespace sequoia
 
       using base_t::add_slot;
       using base_t::insert_slot;
-      using base_t::delete_slot;
+      using base_t::erase_slot;
 
       using base_t::reserve;
       using base_t::capacity;
@@ -996,8 +994,8 @@ namespace sequoia
       using base_t::clear;
       using base_t::push_back_to_partition;
       using base_t::insert_to_partition;
-      using base_t::delete_from_partition;
-      using base_t::delete_from_partition_if;
+      using base_t::erase_from_partition;
+      using base_t::erase_from_partition_if;
     };
 
     template<class T, std::size_t Npartitions, std::size_t Nelements, class IndexType> struct static_contiguous_storage_traits

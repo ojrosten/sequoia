@@ -1,0 +1,33 @@
+#pragma once
+
+#include "EdgeTestingUtilities.hpp"
+
+namespace sequoia::unit_testing
+{
+  class test_edge_false_positives : public false_positive_test
+  {
+  public:
+    using false_positive_test::false_positive_test;
+    
+    void run_tests() override;
+    
+  private:
+    struct null_weight{};
+    
+    void test_plain_partial_edge();
+    void test_partial_edge_indep_weight();
+    void test_partial_edge_shared_weight();
+
+    void test_plain_embedded_partial_edge();
+    void test_embedded_partial_edge_indep_weight();
+    void test_embedded_partial_edge_shared_weight();
+      
+    void test_plain_edge();     
+    void test_weighted_edge();
+
+    void test_plain_embedded_edge();
+    void test_embedded_edge_indep_weight();
+    void test_embedded_edge_shared_weight();
+  };
+
+}

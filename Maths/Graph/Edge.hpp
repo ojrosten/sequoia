@@ -352,8 +352,16 @@ namespace sequoia
       constexpr edge& operator=(const edge& in)  = default;
       constexpr edge& operator=(edge&&)          = default;
 
-      constexpr index_type host_node() const noexcept { return this->auxiliary_index() < npos ? this->auxiliary_index() : this->target_node(); }
-      constexpr void host_node(const index_type host) noexcept { return this->auxiliary_index(host); }
+      constexpr index_type host_node() const noexcept
+      {
+        return this->auxiliary_index() < npos ? this->auxiliary_index() : this->target_node();
+      }
+      
+      constexpr void host_node(const index_type host) noexcept
+      {
+        if(!inverted()) this->auxiliary_index(host);
+        else            this->target_node(host);
+      }
 
       constexpr bool inverted() const noexcept { return this->auxiliary_index() == npos; }
     private:

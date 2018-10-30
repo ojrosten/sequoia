@@ -236,7 +236,7 @@ namespace sequoia
         }
 
 
-        graph.delete_edge(graph.cbegin_edges(0));
+        graph.erase_edge(graph.cbegin_edges(0));
         //   4---------2
         //    (-7.9, 0)
         
@@ -250,7 +250,7 @@ namespace sequoia
         }
 
 
-        graph.delete_edge(graph.cbegin_edges(0));
+        graph.erase_edge(graph.cbegin_edges(0));
         //   4         2
 
         check_graph(graph, {{}, {}},  {4,2});

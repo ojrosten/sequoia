@@ -19,5 +19,6 @@ namespace sequoia::maths::graph_impl
 
     constexpr static bool shared_edge_v{};       
     constexpr static bool mutual_info_v{GraphFlavour != graph_flavour::directed};
+    constexpr static bool weight_setting_exception_guarantee_v{};
   };
 }

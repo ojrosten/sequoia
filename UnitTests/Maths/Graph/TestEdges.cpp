@@ -1,5 +1,7 @@
 #include "TestEdges.hpp"
-#include "Edge.hpp"
+
+#include "EdgeTestingUtilities.hpp"
+
 #include "SharingPolicies.hpp"
 #include "ProtectiveWrapper.hpp"
 
@@ -13,378 +15,428 @@ namespace sequoia
   {
     void test_edges::run_tests()
     {
-      test_partial_edge();
-      test_weighted_edge_lVal(5.2);
-      
-      test_embedded_partial_edge();
+      test_plain_partial_edge();      
+      test_partial_edge_indep_weight(); 
+      test_partial_edge_shared_weight();
+
+      test_plain_embedded_partial_edge();
+      test_embedded_partial_edge_indep_weight();
+      test_embedded_partial_edge_shared_weight();
       
       test_plain_edge();      
       test_weighted_edge();
-      
-      test_embedded_edge();
-      
-      test_edge_conversions();
+
+      test_plain_embedded_edge();
+      test_embedded_edge_indep_weight();
+      test_embedded_edge_shared_weight();      
     }
-    
-    void test_edges::test_partial_edge()
+
+    void test_edges::test_plain_partial_edge()
     {
       using namespace maths;
       using namespace data_sharing;
 
-      partial_edge<int, shared, utilities::protective_wrapper<int>> edgeSharedWeight(1, 4);
-      check_edge(1, 4, edgeSharedWeight);
-
-      edgeSharedWeight.weight(-1);
-      check_edge(1, -1, edgeSharedWeight);
-
-      partial_edge<int, shared, utilities::protective_wrapper<int>> edgeSharedWeight2(5, edgeSharedWeight);
-      check_edge(5, -1, edgeSharedWeight2);
+      using edge_t = partial_edge<null_weight, independent, utilities::protective_wrapper<null_weight>>;
+      static_assert(sizeof(std::size_t) == sizeof(edge_t));
       
-      edgeSharedWeight2.weight(-3);
-      check_edge(1, -3, edgeSharedWeight, "implicit change of shared weight");
-      check_edge(5, -3, edgeSharedWeight2, "explicit change of shared weight");
-      std::swap(edgeSharedWeight, edgeSharedWeight2);
-      check_edge(5, -3, edgeSharedWeight);
-      check_edge(1, -3, edgeSharedWeight2);
+      using compact_edge_t = partial_edge<null_weight, independent, utilities::protective_wrapper<null_weight>, unsigned char>;
+      static_assert(sizeof(unsigned char) == sizeof(compact_edge_t));
 
-      partial_edge<int, shared, utilities::protective_wrapper<int>> edgeSharedWeight3(2, 8);
-      check_edge(2, 8, edgeSharedWeight3);
+      edge_t e1{0};
+      check_equality(edge_t{0}, e1, LINE("Construction"));
 
-      std::swap(edgeSharedWeight, edgeSharedWeight3);
-      check_edge(2, 8, edgeSharedWeight);
-      check_edge(1, -3, edgeSharedWeight2);
-      check_edge(5, -3, edgeSharedWeight3);
+      e1.target_node(1);
+      check_equality(edge_t{1}, e1, LINE("Changing target node"));
+  
+      edge_t e2{3};
+      check_equality(edge_t{3}, e2, LINE(""));
+      
+      check_standard_semantics(e1, e2, LINE("Standard semantics"));
+    }
+    
+    void test_edges::test_partial_edge_shared_weight()
+    {
+      using namespace maths;
+      using namespace data_sharing;
 
-      edgeSharedWeight.weight(9);
-      check_edge(2, 9, edgeSharedWeight);
-      check_edge(1, -3, edgeSharedWeight2);
-      check_edge(5, -3, edgeSharedWeight3);
+      using edge_t = partial_edge<int, shared, utilities::protective_wrapper<int>>;
 
-      edgeSharedWeight2.weight(4);
-      check_edge(2, 9, edgeSharedWeight);
-      check_edge(1, 4, edgeSharedWeight2);
-      check_edge(5, 4, edgeSharedWeight3);
+      edge_t edge{1, 4};
+      check_equality(edge_t{1, 4}, edge, LINE("Construction"));
 
-      edgeSharedWeight3.weight(-4);
-      check_edge(2, 9, edgeSharedWeight);
-      check_edge(1, -4, edgeSharedWeight2);
-      check_edge(5, -4, edgeSharedWeight3);
+      edge.weight(5);
+      check_equality(edge_t{1, 5}, edge, LINE("Set weight"));
 
-      partial_edge<int, shared, utilities::protective_wrapper<int>> edgeSharedWeight4{edgeSharedWeight};
-      check_edge(2, 9, edgeSharedWeight);
-      check_edge(1, -4, edgeSharedWeight2);
-      check_edge(5, -4, edgeSharedWeight3);
-      check_edge(2, 9, edgeSharedWeight4);
+      edge.mutate_weight([](auto& i){ i -= 6;});
+      check_equality(edge_t{1, -1}, edge, LINE("Manipulate weight"));
 
-      check(edgeSharedWeight == edgeSharedWeight4);
-      check(edgeSharedWeight2 != edgeSharedWeight4);
-      check(edgeSharedWeight.weight() > edgeSharedWeight2.weight());
-      check(edgeSharedWeight2.weight() < edgeSharedWeight.weight());
-      check(!(edgeSharedWeight2.weight() > edgeSharedWeight3.weight()));
-      check(!(edgeSharedWeight2.weight() < edgeSharedWeight3.weight()));
+      edge.target_node(2);
+      check_equality(edge_t{2, -1}, edge, LINE("Change target node"));
 
-      edgeSharedWeight.weight(10);
-      check_edge(2, 10, edgeSharedWeight);
-      check_edge(1, -4, edgeSharedWeight2);
-      check_edge(5, -4, edgeSharedWeight3);
-      check_edge(2, 9, edgeSharedWeight4);
+      edge_t edge1{2,-7};
+      check_equality(edge_t{2, -7}, edge1, LINE("Construction"));
 
-      edgeSharedWeight4 = edgeSharedWeight;
-      check_edge(2, 10, edgeSharedWeight);
-      check_edge(1, -4, edgeSharedWeight2);
-      check_edge(5, -4, edgeSharedWeight3);
-      check_edge(2, 10, edgeSharedWeight4);
+      check_standard_semantics(edge, edge1, LINE("Standard Semantics"));      
+
+      edge_t edge2{6, edge};
+      check_equality(edge_t{6, -1}, edge2, LINE("Construction with shared weight"));
+
+      edge.target_node(1);
+      check_equality(edge_t{1, -1}, edge, LINE("Change target node of edge with shared weight"));
+      check_equality(edge_t{6, -1}, edge2, LINE(""));
+
+      edge2.target_node(5);
+      check_equality(edge_t{1, -1}, edge, LINE("Change target node of edge with shared weight"));
+      check_equality(edge_t{5, -1}, edge2, LINE(""));      
+      
+      edge2.weight(-3);
+      check_equality(edge_t{1, -3}, edge, "Implicit change of shared weight");
+      check_equality(edge_t{5, -3}, edge2, "Explicit change of shared weight");
+
+      check_standard_semantics(edge, edge2, LINE("Standard semantics with shared weight"));
+
+      edge_t edge3(2, 8);
+      check_equality(edge_t{2, 8}, edge3, LINE(""));
+
+      check_standard_semantics(edge, edge2, LINE("Standard semantics with one having a shared weight"));
  
-      edgeSharedWeight4.weight(11);
-      check_edge(2, 10, edgeSharedWeight);
-      check_edge(1, -4, edgeSharedWeight2);
-      check_edge(5, -4, edgeSharedWeight3);
-      check_edge(2, 11, edgeSharedWeight4);
-   
-      // Test independent weights
-      
-      partial_edge<int, independent, utilities::protective_wrapper<int>> edge(2, 7);
-      check_edge(2, 7, edge);
+      std::swap(edge, edge2);
+      std::swap(edge, edge3);
+      check_equality(edge_t{2, 8}, edge, LINE("Swap edge with one of an edge sharing pair"));
+      check_equality(edge_t{1, -3}, edge2, LINE("Swap edge with one of an edge sharing pair"));
+      check_equality(edge_t{5, -3}, edge3, LINE("Swap edge with one of an edge sharing pair"));
 
-      edge.weight(-5);
-      check_edge(2, -5, edge);
-
-      partial_edge<int, independent, utilities::protective_wrapper<int>> edge2(5, edge);
-      check_edge(5, -5, edge2);
+      edge.mutate_weight([](int& a) { ++a; });
+      check_equality(edge_t{2, 9}, edge, LINE("Mutate weight of edge which previously but no longer shares its weight"));
+      check_equality(edge_t{1, -3}, edge2, LINE(""));
+      check_equality(edge_t{5, -3}, edge3, LINE(""));
 
       edge2.weight(4);
-      check_edge(2, -5, edge);
-      check_edge(5, 4, edge2);
+      check_equality(edge_t{2, 9}, edge, LINE(""));
+      check_equality(edge_t{1, 4}, edge2, LINE("Set weight which is now shared with a different weight"));
+      check_equality(edge_t{5, 4}, edge3, LINE("Set weight which is now shared with a different weight"));
 
-      std::swap(edge, edge2);
-      check_edge(2, -5, edge2);
-      check_edge(5, 4, edge);
-
-      struct null_weight{};
-      using edge_t = partial_edge<null_weight, independent, utilities::protective_wrapper<null_weight>>;
-      check_equality(sizeof(std::size_t), sizeof(edge_t), "Plain edge should be size of a single index");
-
-      using compact_edge_t = partial_edge<null_weight, independent, utilities::protective_wrapper<null_weight>, char>;
-      check_equality(sizeof(char), sizeof(compact_edge_t), "Compact plain edge should be size of a char");
+      edge3.mutate_weight([](int& a) { a = -a;});
+      check_equality(edge_t{2, 9}, edge, LINE(""));
+      check_equality(edge_t{1, -4}, edge2, LINE("Mutate shared weight"));
+      check_equality(edge_t{5, -4}, edge3, LINE("Mutate shared weight"));
     }
+
+    void test_edges::test_partial_edge_indep_weight()
+    {
+      using namespace maths;
+      using namespace data_sharing;
+
+      using edge_t = partial_edge<int, independent, utilities::protective_wrapper<int>>;
+      static_assert(2 * sizeof(std::size_t) == sizeof(edge_t));
+
+      edge_t edge{2, 7};
+      check_equality(edge_t{2, 7}, edge, LINE("Construction"));
+
+      edge.target_node(3);
+      check_equality(edge_t{3, 7}, edge, LINE("Change target node"));
+
+      edge.weight(-5);
+      check_equality(edge_t{3, -5}, edge, LINE("Set weight"));
+
+      edge_t edge2(5, edge);
+      check_equality(edge_t{5, -5}, edge2, LINE("Construction with independent weight"));
+      check_equality(edge_t{3, -5}, edge, LINE(""));
+
+      edge.mutate_weight([](int& a) { a *= 2;} );
+      check_equality(edge_t{3, -10}, edge, LINE("Mutate weight"));
+      check_equality(edge_t{5, -5}, edge2, LINE(""));
+
+      check_standard_semantics(edge, edge2, LINE("Standard semantics"));
+    }
+
+    void test_edges::test_plain_embedded_partial_edge()
+    {
+      using namespace maths;
+      using namespace data_sharing;     
+      
+      using edge_t = embedded_partial_edge<null_weight, independent, utilities::protective_wrapper<null_weight>>;
+      static_assert(2*sizeof(std::size_t) == sizeof(edge_t));
+
+      using compact_edge_t
+        = embedded_partial_edge<null_weight, independent, utilities::protective_wrapper<null_weight>, unsigned char>;
+      static_assert(2*sizeof(unsigned char) == sizeof(compact_edge_t));
+
+      edge_t e1{0, 4};
+      check_equality(edge_t{0, 4}, e1, LINE("Construction"));
+
+      e1.target_node(1);
+      check_equality(edge_t{1, 4}, e1, LINE("Change target"));
+
+      e1.complementary_index(5);
+      check_equality(edge_t{1, 5}, e1, LINE("Change complementary index"));
+
+      edge_t e2{10, 10};
+      check_equality(edge_t{10, 10}, e2, LINE("Construction"));
+
+      check_standard_semantics(e1, e2, LINE("Standard semantics"));
+    }
+    
+    void test_edges::test_embedded_partial_edge_indep_weight()
+    {
+      using namespace maths;
+      using namespace data_sharing;
+
+      using edge_t = embedded_partial_edge<double, independent, utilities::protective_wrapper<double>>;
+      static_assert(2*sizeof(std::size_t) + sizeof(double) == sizeof(edge_t));
+      
+      constexpr edge_t edge1{1, 2, 5.0};
+      check_equality(edge_t{1, 2, 5.0}, edge1, LINE("Construction"));
+
+      edge_t edge2{3, 7, edge1};
+      check_equality(edge_t{3, 7, 5.0}, edge2, LINE("Construction with independent weight"));
+
+      edge2.target_node(13);
+      check_equality(edge_t{13, 7, 5.0}, edge2, LINE("Change target node"));
+
+      edge2.complementary_index(2);
+      check_equality(edge_t{13, 2, 5.0}, edge2, LINE("Change complementary index"));
+
+      edge2.weight(5.6);
+      check_equality(edge_t{13, 2, 5.6}, edge2, LINE("Change weight"));
+
+      check_standard_semantics(edge1, edge2, LINE("Standard semantics")); 
+    }
+
+    void test_edges::test_embedded_partial_edge_shared_weight()
+    {
+      using namespace maths;
+      using namespace data_sharing;
+
+      using edge_t = embedded_partial_edge<double, shared, utilities::protective_wrapper<double>>;
+      
+      edge_t edge1{1, 2, 5.0};
+      check_equality(edge_t{1, 2, 5.0}, edge1, LINE("Construction"));
+
+      edge_t edge2{3, 7, edge1};
+      check_equality(edge_t{3, 7, 5.0}, edge2, LINE("Construction with shared weight"));
+
+      edge2.target_node(13);
+      check_equality(edge_t{13, 7, 5.0}, edge2, LINE("Change target node"));
+
+      edge2.complementary_index(2);
+      check_equality(edge_t{13, 2, 5.0}, edge2, LINE("Change complementary index"));
+
+      edge2.weight(5.6);
+      check_equality(edge_t{13, 2, 5.6}, edge2, LINE("Change weight"));
+      check_equality(edge_t{1, 2, 5.6}, edge1, LINE("Induced change in shared weight"));
+
+      check_standard_semantics(edge1, edge2, LINE("Standard semantics"));
+    }
+
 
     void test_edges::test_plain_edge()
     {
       using namespace maths;
-      struct null_weight{};
 
       using edge_t = edge<null_weight, utilities::protective_wrapper<null_weight>>;
-      check_equality(2*sizeof(std::size_t), sizeof(edge_t), "Full edge with null weight should be twice size of size_t");
+      static_assert(2*sizeof(std::size_t) == sizeof(edge_t));
+
+      using compact_edge_t = edge<null_weight, utilities::protective_wrapper<null_weight>, unsigned char>;
+      static_assert(2 * sizeof(unsigned char) == sizeof(compact_edge_t));
       
       edge_t  
         e1(2, 3),
         e2(4, 6);
-
-      check_equality<size_t>(2, e1.host_node());
-      check_equality<size_t>(3, e1.target_node());
-      check(!e1.inverted());
-
-      check_equality<size_t>(4, e2.host_node());
-      check_equality<size_t>(6, e2.target_node());
-
-      std::swap(e1, e2);
-
-      check_equality<size_t>(2, e2.host_node());
-      check_equality<size_t>(3, e2.target_node());
-
-      check_equality<size_t>(4, e1.host_node());
-      check_equality<size_t>(6, e1.target_node());
+      
+      check_equality(edge_t{2, 3}, e1, LINE("Construction"));
+      check_equality(edge_t{4, 6}, e2, LINE("Construction"));
 
       e2.target_node(1);
-      check_equality<size_t>(2, e2.host_node());
-      check_equality<size_t>(1, e2.target_node());
+      check_equality(edge_t{4, 1}, e2, LINE("Change target"));
 
+      e2.host_node(3);
+      check_equality(edge_t{3, 1}, e2, LINE("Change host"));      
+      
+      check_standard_semantics(e1, e2, LINE("Standard semantics"));
+      
       edge_t e3{4, inversion_constant<false>{}}, e4{5, inversion_constant<true>{}};
-      check_equality<size_t>(4, e3.host_node());
-      check_equality<size_t>(4, e3.target_node());
+      check_equality(edge_t{4, inversion_constant<false>{}}, e3, LINE("Construction"));
+      check_equality(edge_t{5, inversion_constant<true>{}}, e4, LINE("Construction inverted edge"));
 
-      check_equality<size_t>(5, e4.host_node());
-      check_equality<size_t>(5, e4.target_node());
+      check_standard_semantics(e3, e4, LINE("Standard semantics"));
 
-      check(!e3.inverted(), LINE(""));
-      check(e4.inverted(), LINE(""));
-    }
+      // Changing host / target node for inverted edge implicitly changes host
+      e4.target_node(9);
+      check_equality(edge_t{9, inversion_constant<true>{}}, e4, LINE(""));
 
-    void test_edges::test_weighted_edge_lVal(const double val)
-    {
-      using namespace maths;
-
-      edge<double, utilities::protective_wrapper<double>> e1{4, 6, 32.1};
-      check_equality<double>(32.1, e1.weight());
-
-      e1.weight(val);
-      check_equality<double>(val, e1.weight());
-    }
+      e4.host_node(4);
+      check_equality(edge_t{4, inversion_constant<true>{}}, e4, LINE(""));
+    }    
 
     void test_edges::test_weighted_edge()
     {
       using namespace maths;
 
       {
-        edge<double, utilities::protective_wrapper<double>>
+        using edge_t = edge<double, utilities::protective_wrapper<double>>;
+        static_assert(sizeof(edge_t) == sizeof(double) + 2*sizeof(std::size_t));
+
+        edge_t
           e1(0, 1, 1.2),
           e2(1, 0, -3.1);
 
-        check_equality<size_t>(0, e1.host_node());
-        check_equality<size_t>(1, e1.target_node());
-        check_equality<double>(1.2, e1.weight());
-
-        check_equality<size_t>(1, e2.host_node());
-        check_equality<size_t>(0, e2.target_node());
-        check_equality<double>(-3.1, e2.weight());
-
-        e1.weight(2.3);
-        check_equality<double>(2.3, e1.weight());
-
-        check(e1.weight() > e2.weight());
-        check(e2.weight() < e1.weight());
-
-        std::swap(e1, e2);
-
-        check_equality<size_t>(0, e2.host_node());
-        check_equality<size_t>(1, e2.target_node());
-        check_equality<double>(2.3, e2.weight());
-
-        check_equality<size_t>(1, e1.host_node());
-        check_equality<size_t>(0, e1.target_node());
-        check_equality<double>(-3.1, e1.weight());
-
-        check(e1 != e2);
-        check(e1.weight() < e2.weight());
-        check(e2.weight() > e1.weight());
+        check_equality(edge_t{0, 1, 1.2}, e1, LINE("Construction"));
+        check_equality(edge_t{1, 0, -3.1}, e2, LINE("Construction"));
         
-        edge<double, utilities::protective_wrapper<double>> e3(e2);
+        e1.weight(2.3);
+        check_equality(edge_t{0, 1, 2.3}, e1, LINE("Change weight"));
 
-        check(e3 == e2);
+        e1.target_node(10);
+        check_equality(edge_t{0, 10, 2.3}, e1, LINE("Change target"));
 
-        double lval{45.1};
-        test_weighted_edge_lVal(lval);
+        e1.host_node(5);
+        check_equality(edge_t{5, 10, 2.3}, e1, LINE("Change target"));
+
+        check_standard_semantics(e1, e2, LINE("Standard semantics"));
       }
 
       {
         using std::complex;
+        using edge_t = edge<complex<float>, utilities::protective_wrapper<complex<float>>>;
+        static_assert(sizeof(edge_t) == sizeof(std::complex<float>) + 2*sizeof(std::size_t));
+      
+        edge_t
+          e1(3, inversion_constant<true>{}, 1.2f),
+          e2(4, inversion_constant<false>{}, -1.3f, -1.4f);
 
-        edge<complex<float>, utilities::protective_wrapper<complex<float>>>
-          e1(3, 2, 1.2f),
-          e2(4, 5, -1.3f, -1.4f);
+        check_equality(edge_t{3, inversion_constant<true>{}, 1.2f}, e1, LINE("Construction"));
+        check_equality(edge_t{4, inversion_constant<false>{}, -1.3f, -1.4f}, e2, LINE("Construction"));
 
-        swap(e1, e2);
-
-        check_equality(complex<float>(-1.3f, -1.4f), e1.weight());
-        check_equality(complex<float>(1.2f, 0), e2.weight());
+        check_standard_semantics(e1, e2, LINE(""));
       }
 
       {
         using std::vector;
+        using edge_t = edge<vector<int>, utilities::protective_wrapper<vector<int>>>;
 
-        edge<vector<int>, utilities::protective_wrapper<vector<int>>>
+        edge_t
           e1(0, 0, 5, 1),
           e2(1, 1);
 
-        check_equality(vector<int>{5, 1}, e1.weight());
-        check(e2.weight().empty());
-        e1.weight(vector<int>{3, 2});
-
-        swap(e1, e2);
-        check_equality(vector<int>{3, 2}, e2.weight());
-        check(e1.weight().empty());
-
-        check(e1 != e2);
+        check_equality(edge_t{0, 0, 5, 1}, e1, LINE("Construction"));
+        check_equality(edge_t{1,1}, e2, LINE("Construction"));
 
         e1.weight(vector<int>{3, 2});
+        check_equality(edge_t{0, 0, vector<int>{3, 2}}, e1, LINE("Change weight"));
 
-        check(e1.weight() == e2.weight());
+        e1.host_node(2);
+        check_equality(edge_t{2, 0, vector<int>{3, 2}}, e1, LINE("Change host, no induced change in target"));
+        
+        check_standard_semantics(e1, e2, LINE("Standard semantics"));
       }
     }
 
-    void test_edges::test_embedded_partial_edge()
+    void test_edges::test_plain_embedded_edge()
     {
       using namespace maths;
       using namespace data_sharing;
 
-      using npedge = embedded_partial_edge<double, independent, utilities::protective_wrapper<double>>;
-      check_equality(2*sizeof(std::size_t) + sizeof(double), sizeof(npedge), "NP edge holding a double should be size of double plus twice size_t");
-      
-      constexpr npedge edge1{1, 2, 5.0};
-      check_embedded_edge(1, 2, 5.0, edge1);
+      using edge_t = embedded_edge<null_weight, independent, utilities::protective_wrapper<null_weight>>;
+      check_equality(3*sizeof(std::size_t), sizeof(edge_t));
 
-      constexpr npedge edge2{3, 7, edge1};
-      check_embedded_edge(3, 7, 5.0, edge2);
+      using compact_edge_t = embedded_edge<null_weight, independent, utilities::protective_wrapper<null_weight>, unsigned char>;
+      static_assert(3*sizeof(unsigned char) == sizeof(compact_edge_t));
 
-      check(edge1 != edge2);
+      edge_t e{3, 4, 1};
+      check_equality(edge_t{3, 4, 1}, e, LINE("Construction"));
 
-      auto edge3 = edge2;
-      check_embedded_edge(3, 7, 5.0, edge3);
-      check(edge2 == edge3);
+      e.host_node(4);
+      check_equality(edge_t{4, 4, 1}, e, LINE("Change host"));
 
-      edge3.weight(6.5);
-      check_embedded_edge(3, 7, 6.5, edge3);
-      check(edge3 != edge2);
+      e.target_node(5);
+      check_equality(edge_t{4, 5, 1}, e, LINE("Change target"));
+
+      e.complementary_index(0);
+      check_equality(edge_t{4, 5, 0}, e, LINE("Change complementary index"));
+
+      edge_t e1{7, inversion_constant<true>{}, 9};
+      check_equality(edge_t{7, inversion_constant<true>{}, 9}, e1, LINE("Construction"));
+
+      e1.host_node(6);
+      check_equality(edge_t{6, inversion_constant<true>{}, 9}, e1, LINE("Change host"));
+
+      e1.target_node(8);
+      check_equality(edge_t{8, inversion_constant<true>{}, 9}, e1, LINE("Induced change to host"));
+
+      check_standard_semantics(e, e1, LINE("Standard semantics"));
+
     }
-
-    void test_edges::test_embedded_edge()
+    
+    void test_edges::test_embedded_edge_indep_weight()
     {
       using namespace maths;
       using namespace data_sharing;
 
-      {
-        using edge = embedded_edge<double, independent, utilities::protective_wrapper<double>>;
-        check_equality(3*sizeof(std::size_t) + sizeof(double), sizeof(edge), "Non-planar Edge holding a double should be size of double plus thrice size_t");
+      using edge_t = embedded_edge<double, independent, utilities::protective_wrapper<double>>;
+      check_equality(3*sizeof(std::size_t) + sizeof(double), sizeof(edge_t));
 
-        constexpr edge e{3, 4, 1, 4.2};
-        check_embedded_edge(3, 4, 1, 4.2, e);
-        check(!e.inverted());
+      constexpr edge_t e{3, 4, 1, 4.2};
+      check_equality(edge_t{3, 4, 1, 4.2}, e);
 
-        constexpr edge e2{e};
-        check_embedded_edge(3, 4, 1, 4.2, e2);
-        check(e == e2);
+      edge_t e2{4, inversion_constant<true>{}, 1, 1.1};
+      check_equality(edge_t{4, inversion_constant<true>{}, 1, 1.1}, e2);
 
-        constexpr edge e3{4, inversion_constant<true>{}, 1, 1.1};
-        check_embedded_edge(4, 4, 1, 1.1, e3);
-        check(e3.inverted(), LINE(""));
+      e2.host_node(8);
+      check_equality(edge_t{8, inversion_constant<true>{}, 1, 1.1}, e2, LINE("Change host"));
 
-        constexpr edge e4{5, inversion_constant<false>{}, 2, -3.1};
-        check_embedded_edge(5, 5, 2, -3.1, e4);
-        check(!e4.inverted());
-      }
+      e2.target_node(7);
+      check_equality(edge_t{7, inversion_constant<true>{}, 1, 1.1}, e2, LINE("Induced change host"));
 
-      {
-        using edge = embedded_edge<double, shared, utilities::protective_wrapper<double>>;
+      e2.complementary_index(4);
+      check_equality(edge_t{7, inversion_constant<true>{}, 4, 1.1}, e2, LINE("Change complementary index"));
 
-        edge e{10, 11, 0, -1.2};
-        check_embedded_edge(10, 11, 0, -1.2, e);
+      e2.weight(-2.5);
+      check_equality(edge_t{7, inversion_constant<true>{}, 4, -2.5}, e2, LINE("Change weight"));
 
-        auto e2 = e;
-        check_embedded_edge(10, 11, 0, -1.2, e2);
-        check(e == e2);
 
-        e.weight(5.2);
-        check_embedded_edge(10, 11, 0, 5.2, e);
-        check_embedded_edge(10, 11, 0, -1.2, e2);
-        check(e != e2);
+      check_standard_semantics(e, e2, LINE("Standard semantics"));
+
+    }
+
+    void test_edges::test_embedded_edge_shared_weight()
+    {
+      using namespace maths;
+      using namespace data_sharing;
+
+      using edge_t = embedded_edge<double, shared, utilities::protective_wrapper<double>>;
+
+        edge_t e{10, 11, 0, -1.2};
+        check_equality(edge_t{10, 11, 0, -1.2}, e, LINE("Construction"));
 
         e.host_node(9);
-        check_embedded_edge(9, 11, 0, 5.2, e);        
-      }
-    }
-     
-    void test_edges::test_edge_conversions()
-    {
-      using namespace maths;
-      using namespace data_sharing;
-      
-      {
-        partial_edge<double, shared, utilities::protective_wrapper<double>> partialEdgeShared{5, 1.3};
-        auto fullEdge = edge_converter<partial_edge<double, shared, utilities::protective_wrapper<double>>, edge<double, utilities::protective_wrapper<double>>>::convert(partialEdgeShared, 3);
+        check_equality(edge_t{9, 11, 0, -1.2}, e, LINE("Change host node"));
 
-        check_equality<size_t>(3, fullEdge.host_node());
-        check_equality<size_t>(5, fullEdge.target_node());
-        check_equality<double>(1.3, fullEdge.weight());
+        e.weight(5.2);
+        check_equality(edge_t{9, 11, 0, 5.2}, e, LINE("Change weight"));
 
-        fullEdge.weight(-2.2);
-        partialEdgeShared = edge_converter<edge<double, utilities::protective_wrapper<double>>, partial_edge<double, shared, utilities::protective_wrapper<double>>>::convert(fullEdge, 5);
+        e.complementary_index(3);
+        check_equality(edge_t{9, 11, 3, 5.2}, e, LINE("Change complementary index"));
 
-        check_equality<size_t>(3, partialEdgeShared.target_node());
-        check_equality<double>(-2.2, partialEdgeShared.weight());
+        e.target_node(0);
+        check_equality(edge_t{9, 0, 3, 5.2}, e, LINE("Change target node"));
 
-        fullEdge.weight(1.7);
-        partialEdgeShared = edge_converter<edge<double, utilities::protective_wrapper<double>>, partial_edge<double, shared, utilities::protective_wrapper<double>>>::convert(fullEdge, 3);
-      
-        check_equality<size_t>(5, partialEdgeShared.target_node());
-        check_equality<double>(1.7, partialEdgeShared.weight());
+        edge_t e2{6, inversion_constant<true>{}, 4, 0.0};
+        check_equality(edge_t{6, inversion_constant<true>{}, 4, 0.0}, e2, LINE("Construction"));
 
-        fullEdge.weight(9.0);
-        partialEdgeShared = edge_converter<edge<double, utilities::protective_wrapper<double>>, partial_edge<double, shared, utilities::protective_wrapper<double>>>::convert(fullEdge, 2);
-      
-        check_equality<size_t>(2, partialEdgeShared.target_node());
-        check_equality<double>(9.0, partialEdgeShared.weight());
-      }
+        e2.host_node(5);
+        check_equality(edge_t{5, inversion_constant<true>{}, 4, 0.0}, e2, LINE("Change host node, inducing change in target"));
+        check_standard_semantics(e, e2, LINE("Standard semantics"));
 
-      {
-        constexpr partial_edge<int, independent, utilities::protective_wrapper<int>> partialEdgeUnshared{0, -5};
-        constexpr auto fullEdge = edge_converter<partial_edge<int, independent, utilities::protective_wrapper<int>>, edge<int, utilities::protective_wrapper<int>>>::convert(partialEdgeUnshared, 9);
+        edge_t e3{8, inversion_constant<false>{}, 3, e};
+        check_equality(edge_t{8, 8, 3, 5.2}, e3, LINE("Construction"));
 
-        check_equality<size_t>(9, fullEdge.host_node());
-        check_equality<size_t>(0, fullEdge.target_node());
-        check_equality<int>(-5, fullEdge.weight());
+        e3.weight(0.0);
+        check_equality(edge_t{9, 0, 3, 0.0}, e, LINE("Induced change to shared weight"));
+        check_equality(edge_t{8, 8, 3, 0.0}, e3, LINE("Change to shared weight"));
 
-        constexpr auto partialEdgeU2 = edge_converter<edge<int, utilities::protective_wrapper<int>>, partial_edge<int, independent, utilities::protective_wrapper<int>>>::convert(fullEdge, 0);
-        check_equality<size_t>(9, partialEdgeU2.target_node());
-        check_equality<int>(-5, partialEdgeU2.weight());
-
-        constexpr auto partialEdgeU3 = edge_converter<edge<int, utilities::protective_wrapper<int>>, partial_edge<int, independent, utilities::protective_wrapper<int>>>::convert(fullEdge, 9);
-        check_equality<size_t>(0, partialEdgeU3.target_node());
-        check_equality<int>(-5, partialEdgeU3.weight());
-
-        constexpr auto partialEdgeU4 = edge_converter<edge<int, utilities::protective_wrapper<int>>, partial_edge<int, independent, utilities::protective_wrapper<int>>>::convert(fullEdge, 100);
-        check_equality<size_t>(100, partialEdgeU4.target_node());
-        check_equality<int>(-5, partialEdgeU4.weight());
-      }
+        check_standard_semantics(e, e3, LINE("Standard semantics"));
+        check_standard_semantics(e3, e2, LINE("Standard semantics"));
     }
   }
 }
