@@ -14,7 +14,7 @@ namespace sequoia
     private:      
       struct null_weight{};
       
-      void run_tests();
+      void run_tests() override;
 
       void test_plain_partial_edge();
       void test_partial_edge_indep_weight();

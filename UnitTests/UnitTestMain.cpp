@@ -108,7 +108,6 @@ int main(int argc, char** argv)
     test_family{
       "Edges",
       test_edge_false_positives{"Edge false positive diagnostics"},
-      test_edge_false_negatives{"Edge false negative diagnositics"},
       test_edges{"Unit Test"}
     }
   );

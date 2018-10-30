@@ -12,24 +12,22 @@ namespace sequoia::unit_testing
     void run_tests() override;
     
   private:
-    void test_partial_edge();
-    void test_embedded_partial_edge();
-    void test_edge();
-    void test_embedded_edge();
-  };
-
-  class test_edge_false_negatives : public false_negative_test
-  {
-  public:
-    using false_negative_test::false_negative_test;
+    struct null_weight{};
     
-    void run_tests() override;
+    void test_plain_partial_edge();
+    void test_partial_edge_indep_weight();
+    void test_partial_edge_shared_weight();
 
-  private:
-    void test_partial_edge();
-    void test_embedded_partial_edge();
-    void test_edge();
-    void test_embedded_edge();
+    void test_plain_embedded_partial_edge();
+    void test_embedded_partial_edge_indep_weight();
+    void test_embedded_partial_edge_shared_weight();
+      
+    void test_plain_edge();     
+    void test_weighted_edge();
+
+    void test_plain_embedded_edge();
+    void test_embedded_edge_indep_weight();
+    void test_embedded_edge_shared_weight();
   };
 
 }
