@@ -645,7 +645,7 @@ namespace sequoia
     
     //=======================================================================================//
     // Graph (tree) created and searched using bfs; at each vertex,
-    // a (silly) task is performed 
+    // a task is performed 
 
     template
     <
@@ -734,9 +734,10 @@ namespace sequoia
         for(int i=0; i < 2; ++i)
         {
           const bool early{i == 0};
-          auto nullFn  = [&graph, upper, early](){ return task<concurrency::serial<int>>(graph, upper, early); };
-          auto asyncFn = [&graph, upper, early](){ return task<concurrency::asynchronous<int>>(graph, upper, early); };
-          auto poolFn  = [&graph, upper, early](){ return task<concurrency::thread_pool<int, std::deque>>(graph, upper, early, 4u); };
+          using microseconds = std::chrono::microseconds;
+          auto nullFn  = [&graph, upper, early](){ return task<concurrency::serial<int>>(graph, upper, early, microseconds{}); };
+          auto asyncFn = [&graph, upper, early](){ return task<concurrency::asynchronous<int>>(graph, upper, early, microseconds{}); };
+          auto poolFn  = [&graph, upper, early](){ return task<concurrency::thread_pool<int, std::deque>>(graph, upper, early, microseconds{}, 4u); };
           std::vector<int>
             answers0 = nullFn(),
             answers1 = asyncFn(),
@@ -781,15 +782,32 @@ namespace sequoia
         //================================ Now check performance =========================//
 
         {
-          upper = static_cast<int>(1e5);
-          auto nullFn = [&graph, upper]() { return task<concurrency::serial<int>>(graph, upper, true); };
-          auto asyncFn = [&graph, upper](){ return task<concurrency::asynchronous<int>>(graph, upper, true); };
-          auto poolFn = [&graph, upper](){ return task<concurrency::thread_pool<int, std::deque>>(graph, upper, true, 4u); };
+          upper = 10;
+
+          const auto pause{std::chrono::microseconds(500)};
+          
+          auto nullFn{
+            [&graph, upper, pause]() {
+              return task<concurrency::serial<int>>(graph, upper, true, pause);
+            }
+          };
+          
+          auto asyncFn{
+            [&graph, upper, pause](){
+              return task<concurrency::asynchronous<int>>(graph, upper, true, pause);
+            }
+          };
+          
+          auto poolFn{
+            [&graph, upper, pause](){
+              return task<concurrency::thread_pool<int, std::deque>>(graph, upper, true, pause, 4u);
+            }
+          };
 
           auto answers = node_task_answers(upper);
 
-          auto futures = check_relative_performance(asyncFn, nullFn, 1.65, true, "Null versus async check");
-          auto futures2 = check_relative_performance(poolFn, nullFn, 1.55, true, "Null versus pool check");
+          auto futures = check_relative_performance(asyncFn, nullFn, 2, true, "Null versus async check");
+          auto futures2 = check_relative_performance(poolFn, nullFn, 2, true, "Null versus pool check");
 
           for(auto&& fut : futures.fast_futures)
           {
@@ -812,16 +830,13 @@ namespace sequoia
       }
 
       template<class ProcessingModel, class... Args>
-        static std::vector<int> task(GGraph& graph, const int upper, const bool early, Args&&... args)
+      static std::vector<int> task(GGraph& graph, const int upper, const bool early, const std::chrono::microseconds pause, Args&&... args)
       {
 
-        auto fn = [upper](const std::size_t index)
-        {
-          int sum = 0;
-          for(int i=1; i <= upper + static_cast<int>(index); ++i)
-            sum += i;
-
-          return sum;
+        auto fn = [upper, pause](const std::size_t index) {
+          std::this_thread::sleep_for(pause);
+          const auto n{upper + static_cast<int>(index)};
+          return n * (n + 1) /2;
         };
 
         using maths::null_functor;
@@ -841,13 +856,9 @@ namespace sequoia
       template<class ProcessingModel, class... Args>
       static std::vector<int> EFTTask(GGraph& graph, const int upper, Args&&... args)
       {
-        auto fn = [upper](auto edgeIter)
-        {
-          int sum = 0;
-          for(int i=1; i <= upper - static_cast<int>(edgeIter.partition_index()); ++i)
-            sum += i;
-
-          return sum;
+        auto fn = [upper](auto edgeIter) {
+          const auto n{upper - static_cast<int>(edgeIter.partition_index())};
+          return n*(n+1)/2;
         };
 
         using maths::null_functor;
@@ -864,13 +875,9 @@ namespace sequoia
       template<class ProcessingModel, class... Args>
       static std::vector<int> ESTTask(GGraph& graph, const int upper, Args&&... args)
       {
-        auto fn = [upper](auto edgeIter)
-        {
-          int sum = 0;
-          for(int i=1; i <= upper - static_cast<int>(edgeIter.partition_index()); ++i)
-            sum += i;
-
-          return sum;
+        auto fn = [upper](auto edgeIter) {
+          const auto n{upper - static_cast<int>(edgeIter.partition_index())};
+          return n*(n+1)/2;
         };
 
         using maths::null_functor;
