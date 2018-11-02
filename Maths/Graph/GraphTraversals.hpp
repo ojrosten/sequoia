@@ -127,6 +127,37 @@ namespace sequoia::maths::graph_impl
   private:
     bool m_Matched{true};
   };
+
+  template<class G, class = void> struct static_graph_detector : std::true_type
+  {
+  };
+
+  template<class G> struct static_graph_detector<G, std::void_t<decltype(std::declval<G>().add_node())>> : std::false_type
+  {
+  };
+
+  template<class G> constexpr bool static_graph_detector_v{static_graph_detector<G>::value};
+
+  
+  template<class G, bool=static_graph_detector_v<G>>
+  struct traversal_traits
+  {
+    using bitset = std::vector<bool>;
+    static bitset make_bitset(const G& g)
+    {
+      return bitset(g.order(), false);
+    }
+  };
+
+  template<class G>
+  struct traversal_traits<G, true>
+  {
+    using bitset = std::array<bool, G::order()>;
+    constexpr static bitset make_bitset(const G& g)
+    {
+      return bitset{};
+    }
+  };
   
   
   template<class G>
@@ -141,7 +172,7 @@ namespace sequoia::maths::graph_impl
       class ESTF,    
       class TaskProcessingModel
     >
-    auto traverse(const G& graph, const bool findDisconnectedPieces,
+    constexpr auto traverse(const G& graph, const bool findDisconnectedPieces,
                  const std::size_t start,
                  NFBE&& nodeFunctorBeforeEdges,
                  NFAE&& nodeFunctorAfterEdges,
@@ -153,8 +184,9 @@ namespace sequoia::maths::graph_impl
 
       if(start < graph.order())
       {
-        std::vector<bool> discovered(graph.order(), false),
-                          processed(graph.order(), false);
+        auto discovered{traversal_traits<G>::make_bitset(graph)};
+        auto processed{traversal_traits<G>::make_bitset(graph)};
+
         std::size_t numDiscovered{};
 
         do
