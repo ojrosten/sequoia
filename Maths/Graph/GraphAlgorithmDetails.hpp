@@ -16,7 +16,18 @@ namespace sequoia::maths::graph_impl
     template<class G> static auto begin(const G& graph, const std::size_t nodeIndex) { return graph.crbegin_edges(nodeIndex); }
     template<class G> static auto end(const G& graph, const std::size_t nodeIndex) { return graph.crend_edges(nodeIndex); }
   };
-      
+
+  template<class G, class = void> struct static_graph_detector : std::true_type
+  {
+  };
+
+  template<class G> struct static_graph_detector<G, std::void_t<decltype(std::declval<G>().add_node())>> : std::false_type
+  {
+  };
+
+  template<class G> constexpr bool static_graph_detector_v{static_graph_detector<G>::value};
+
+  
   template<class Q> struct traversal_traits_base
   {
     static constexpr bool uses_forward_iterator() { return true; }
@@ -36,17 +47,40 @@ namespace sequoia::maths::graph_impl
     static auto get_container_element(const std::queue<std::size_t>& q) { return q.front(); }
   };
 
-  template<class Q> struct TraversalTraits : public traversal_traits_base<Q>
+  
+  template<class G, class Q, bool=static_graph_detector_v<G>> struct traversal_traits : public traversal_traits_base<Q>
   {
-    template<class G> static auto begin(const G& graph, const std::size_t nodeIndex)
+    static auto begin(const G& graph, const std::size_t nodeIndex)
     {
       return iterator_getter<traversal_traits_base<Q>::uses_forward_iterator()>::begin(graph, nodeIndex);
     }
-    template<class G> static auto end(const G& graph, const std::size_t nodeIndex)
+    
+    static auto end(const G& graph, const std::size_t nodeIndex)
     {
       return iterator_getter<traversal_traits_base<Q>::uses_forward_iterator()>::end(graph, nodeIndex);
     }
+
+    using bitset = std::vector<bool>;
+    static bitset make_bitset(const G& g)
+    {
+      return bitset(g.order(), false);
+    }
   };
+
+  template<class G, class Q>
+  struct traversal_traits<G, Q, true>
+  {
+    // TO DO
+    
+    using bitset = std::array<bool, G::order()>;
+    constexpr static bitset make_bitset(const G& g)
+    {
+      return bitset{};
+    }
+  };
+  
+
+  
       
   template<class G, class Compare>
   class node_comparer

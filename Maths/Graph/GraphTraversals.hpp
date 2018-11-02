@@ -127,38 +127,6 @@ namespace sequoia::maths::graph_impl
   private:
     bool m_Matched{true};
   };
-
-  template<class G, class = void> struct static_graph_detector : std::true_type
-  {
-  };
-
-  template<class G> struct static_graph_detector<G, std::void_t<decltype(std::declval<G>().add_node())>> : std::false_type
-  {
-  };
-
-  template<class G> constexpr bool static_graph_detector_v{static_graph_detector<G>::value};
-
-  
-  template<class G, bool=static_graph_detector_v<G>>
-  struct traversal_traits
-  {
-    using bitset = std::vector<bool>;
-    static bitset make_bitset(const G& g)
-    {
-      return bitset(g.order(), false);
-    }
-  };
-
-  template<class G>
-  struct traversal_traits<G, true>
-  {
-    using bitset = std::array<bool, G::order()>;
-    constexpr static bitset make_bitset(const G& g)
-    {
-      return bitset{};
-    }
-  };
-  
   
   template<class G>
   class traversal_helper : private loop_processor<G>
@@ -184,8 +152,8 @@ namespace sequoia::maths::graph_impl
 
       if(start < graph.order())
       {
-        auto discovered{traversal_traits<G>::make_bitset(graph)};
-        auto processed{traversal_traits<G>::make_bitset(graph)};
+        auto discovered{traversal_traits<G, Q>::make_bitset(graph)};
+        auto processed{traversal_traits<G, Q>::make_bitset(graph)};
 
         std::size_t numDiscovered{};
 
@@ -213,7 +181,7 @@ namespace sequoia::maths::graph_impl
 
           while(!nodeIndexQueue.empty())
           {
-            const std::size_t nodeIndex{TraversalTraits<container_type>::get_container_element(nodeIndexQueue)};
+            const std::size_t nodeIndex{traversal_traits<G, container_type>::get_container_element(nodeIndexQueue)};
 
             nodeIndexQueue.pop();
 
@@ -221,7 +189,7 @@ namespace sequoia::maths::graph_impl
 
             constexpr bool embedded{(G::flavour == graph_flavour::directed_embedded) || (G::flavour == graph_flavour::undirected_embedded)};            
             this->reset();
-            for(auto iter{TraversalTraits<container_type>::begin(graph, nodeIndex)}; iter != TraversalTraits<container_type>::end(graph, nodeIndex); ++iter)
+            for(auto iter{traversal_traits<G, container_type>::begin(graph, nodeIndex)}; iter != traversal_traits<G, container_type>::end(graph, nodeIndex); ++iter)
             {
               const auto nextNode{iter->target_node()}; 
               
@@ -239,7 +207,7 @@ namespace sequoia::maths::graph_impl
                 {
                   if(loop)
                   {
-                    const bool loopMatched{this->loop_matched(TraversalTraits<container_type>::begin(graph, nodeIndex), iter)};
+                    const bool loopMatched{this->loop_matched(traversal_traits<G, container_type>::begin(graph, nodeIndex), iter)};
                     if((iter->inverted() && !loopMatched) || (!iter->inverted() && loopMatched)) continue;
                   }
                   else
@@ -251,7 +219,7 @@ namespace sequoia::maths::graph_impl
                 }
                 else
                 {
-                  const bool loopMatched{loop && this->loop_matched(TraversalTraits<container_type>::begin(graph, nodeIndex), iter)};
+                  const bool loopMatched{loop && this->loop_matched(traversal_traits<G, container_type>::begin(graph, nodeIndex), iter)};
                   const bool secondTraversal{((discovered[nextNode] && processed[nextNode]) || loopMatched)};
                   if(secondTraversal) edge_functor_processor<ESTF>::process(taskProcessingModel, std::forward<ESTF>(edgeSecondTraversalFunctor), iter);
                   else                edge_functor_processor<EFTF>::process(taskProcessingModel, std::forward<EFTF>(edgeFirstTraversalFunctor), iter);
