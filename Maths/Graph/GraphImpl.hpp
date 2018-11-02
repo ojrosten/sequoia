@@ -54,7 +54,6 @@ namespace sequoia
     
       constexpr static auto npos{std::numeric_limits<edge_index_type>::max()};
       constexpr static directed_flavour directedness{Directedness};
-      constexpr static bool store_incident_edges_v{EdgeTraits::mutual_info_v};      
       constexpr static bool throw_on_range_error{edge_storage_type::throw_on_range_error};
       
       constexpr graph_primitive() noexcept {}
