@@ -2,7 +2,7 @@
 
 #include "DynamicGraphTestingUtils.hpp"
 
-#include "GraphAlgorithms.hpp"
+#include "GraphTraversals.hpp"
 #include "ThreadingModels.hpp"
 
 #include <functional>
