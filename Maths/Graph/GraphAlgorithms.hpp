@@ -74,109 +74,179 @@ namespace sequoia::maths::graph_impl
     template<class ProcessingModel, class... Args>
     static void process(ProcessingModel& model, null_functor edgeFunctor, Args... args) {}
   };
+
+  template<class G, class = void> struct comp_index_detector : std::false_type
+  {
+  };
+
+  template<class G> struct comp_index_detector<G, std::void_t<decltype(std::declval<typename G::edge_type>().complementary_index())>> : std::true_type
+  {
+  };
+
+  template<class G> constexpr bool comp_index_detector_v{comp_index_detector<G>::value};
+
+  template<class G, maths::graph_flavour GraphFlavour=G::flavour> class loop_processor
+  {
+  public:
+    template<class Iter>
+    constexpr static bool loop_matched(Iter begin, Iter current)
+    {
+      if constexpr (comp_index_detector_v<G>)
+      {
+        return (current->complementary_index() < distance(begin, current));
+      }
+      else
+      {
+        for(auto i{begin}; i != current; ++i)
+        {
+          if(&(*i) == &(*current)) return true;
+        }
+
+        return false;
+      }
+    }
+
+    constexpr void reset() noexcept {}
+  };
+
+  template<class G>
+  class loop_processor<G, maths::graph_flavour::undirected>
+  {
+  public:
+    template<class Iter>
+    constexpr bool loop_matched(Iter begin, Iter current) noexcept
+    {
+      m_Matched = !m_Matched;
+      return m_Matched;
+    }
+
+    constexpr void reset() noexcept
+    {
+      m_Matched = true;
+    }
+  private:
+    bool m_Matched{true};
+  };
   
-  template
-  <    
-    class Q,
-    class G,
-    class NFBE,
-    class NFAE,
-    class EFTF,
-    class ESTF,    
-    class TaskProcessingModel
-  >
-  auto basic_traversal(const G& graph, const bool findDisconnectedPieces,
+  
+  template<class G>
+  class traversal_helper : private loop_processor<G>
+  {
+  public:
+    template<
+      class Q,
+      class NFBE,
+      class NFAE,
+      class EFTF,
+      class ESTF,    
+      class TaskProcessingModel
+    >
+    auto traverse(const G& graph, const bool findDisconnectedPieces,
                  const std::size_t start,
                  NFBE&& nodeFunctorBeforeEdges,
                  NFAE&& nodeFunctorAfterEdges,
                  EFTF&& edgeFirstTraversalFunctor,
                  ESTF&& edgeSecondTraversalFunctor,
                  TaskProcessingModel&& taskProcessingModel)
-  {
-    static_assert(!directed(G::directedness) || std::is_same<std::decay_t<ESTF>, null_functor>::value, "For a directed graph, edges are traversed only once: the edgeSecondTraversalFunctor is ignored and so should be the null_functor");
-
-    if(start < graph.order())
     {
-      std::vector<bool> discovered(graph.order(), false),
-                        processed(graph.order(), false);
-      std::size_t numDiscovered{};
+      static_assert(!directed(G::directedness) || std::is_same<std::decay_t<ESTF>, null_functor>::value, "For a directed graph, edges are traversed only once: the edgeSecondTraversalFunctor is ignored and so should be the null_functor");
 
-      do
+      if(start < graph.order())
       {
-        // Probably want to replace
-        // findDisconnectedPieces and start
-        // with a seeding policy.
-        std::size_t restart{start};
-        if(discovered[start])
+        std::vector<bool> discovered(graph.order(), false),
+                          processed(graph.order(), false);
+        std::size_t numDiscovered{};
+
+        do
         {
-          restart = 0;
-          for(; restart < graph.order(); ++restart)
+          // Probably want to replace
+          // findDisconnectedPieces and start
+          // with a seeding policy.
+          std::size_t restart{start};
+          if(discovered[start])
           {
-            if(!discovered[restart]) break;
-          }
-        }
-
-        using namespace graph_impl;
-        auto nodeIndexQueue = queue_constructor<G, Q>::make(graph);
-        using container_type = decltype(nodeIndexQueue);
-        nodeIndexQueue.push(restart);
-        discovered[restart] = true;
-        ++numDiscovered;
-
-        while(!nodeIndexQueue.empty())
-        {
-          const std::size_t nodeIndex{TraversalTraits<container_type>::get_container_element(nodeIndexQueue)};
-
-          nodeIndexQueue.pop();
-
-          node_functor_processor<NFBE>::process(taskProcessingModel, std::forward<NFBE>(nodeFunctorBeforeEdges), nodeIndex);
-             
-          bool loopMatched{true};
-          for(auto iter = TraversalTraits<container_type>::begin(graph, nodeIndex); iter != TraversalTraits<container_type>::end(graph, nodeIndex); ++iter)
-          {               
-            // Needs fixing for embedded
-               
-            const auto loop = [iter](const std::size_t currentNodeIndex){
-              if constexpr (directed(G::directedness) && G::store_incident_edges_v)
-                return iter->target_node() == iter->host_node();
-              else
-                return iter->target_node() == currentNodeIndex;
-            }(nodeIndex);
-               
-            if(loop)
+            restart = 0;
+            for(; restart < graph.order(); ++restart)
             {
-              loopMatched = !loopMatched;
-              if constexpr (directed(G::directedness) && G::store_incident_edges_v)
+              if(!discovered[restart]) break;
+            }
+          }
+
+          using namespace graph_impl;
+          auto nodeIndexQueue{queue_constructor<G, Q>::make(graph)};
+          using container_type = decltype(nodeIndexQueue);
+          nodeIndexQueue.push(restart);
+          discovered[restart] = true;
+          ++numDiscovered;
+
+          while(!nodeIndexQueue.empty())
+          {
+            const std::size_t nodeIndex{TraversalTraits<container_type>::get_container_element(nodeIndexQueue)};
+
+            nodeIndexQueue.pop();
+
+            node_functor_processor<NFBE>::process(taskProcessingModel, std::forward<NFBE>(nodeFunctorBeforeEdges), nodeIndex);
+
+            constexpr bool embedded{(G::flavour == graph_flavour::directed_embedded) || (G::flavour == graph_flavour::undirected_embedded)};            
+            this->reset();
+            for(auto iter{TraversalTraits<container_type>::begin(graph, nodeIndex)}; iter != TraversalTraits<container_type>::end(graph, nodeIndex); ++iter)
+            {
+              const auto nextNode{iter->target_node()}; 
+              
+              if constexpr(G::flavour != maths::graph_flavour::directed)
               {
-                if(loopMatched) continue;
+                const bool loop{[iter](const std::size_t currentNodeIndex){
+                    if constexpr (directed(G::directedness) && embedded)
+                      return iter->target_node() == iter->host_node();
+                    else
+                      return iter->target_node() == currentNodeIndex;
+                  }(nodeIndex)
+                };
+
+                if constexpr(G::flavour == graph_flavour::directed_embedded)
+                {
+                  if(loop)
+                  {
+                    const bool loopMatched{this->loop_matched(TraversalTraits<container_type>::begin(graph, nodeIndex), iter)};
+                    if((iter->inverted() && !loopMatched) || (!iter->inverted() && loopMatched)) continue;
+                  }
+                  else
+                  {
+                    if(iter->host_node() != nodeIndex) continue;
+                  }
+
+                  edge_functor_processor<EFTF>::process(taskProcessingModel, std::forward<EFTF>(edgeFirstTraversalFunctor), iter);
+                }
+                else
+                {
+                  const bool loopMatched{loop && this->loop_matched(TraversalTraits<container_type>::begin(graph, nodeIndex), iter)};
+                  const bool secondTraversal{((discovered[nextNode] && processed[nextNode]) || loopMatched)};
+                  if(secondTraversal) edge_functor_processor<ESTF>::process(taskProcessingModel, std::forward<ESTF>(edgeSecondTraversalFunctor), iter);
+                  else                edge_functor_processor<EFTF>::process(taskProcessingModel, std::forward<EFTF>(edgeFirstTraversalFunctor), iter);
+                }  
+              }
+              else
+              {
+                edge_functor_processor<EFTF>::process(taskProcessingModel, std::forward<EFTF>(edgeFirstTraversalFunctor), iter);
+              }
+              
+              if(!discovered[nextNode])
+              {
+                nodeIndexQueue.push(nextNode);
+                discovered[nextNode] = true;
+                ++numDiscovered;
               }
             }
-            else if constexpr (directed(G::directedness) && G::store_incident_edges_v)
-            {
-              if(iter->host_node() != nodeIndex) continue;
-            }
-               
-            const auto nextNode = iter->target_node();               
-            const bool secondTraversal{!directed(G::directedness) && ((discovered[nextNode] && processed[nextNode]) || (loop && loopMatched))};
-            if(secondTraversal) edge_functor_processor<ESTF>::process(taskProcessingModel, std::forward<ESTF>(edgeSecondTraversalFunctor), iter);
-            else                edge_functor_processor<EFTF>::process(taskProcessingModel, std::forward<EFTF>(edgeFirstTraversalFunctor), iter);
-
-            if(!discovered[nextNode])
-            {
-              nodeIndexQueue.push(nextNode);
-              discovered[nextNode] = true;
-              ++numDiscovered;
-            }
+            
+            node_functor_processor<NFAE>::process(taskProcessingModel, std::forward<NFAE>(nodeFunctorAfterEdges), nodeIndex);
+            processed[nodeIndex] = true;
           }
-          node_functor_processor<NFAE>::process(taskProcessingModel, std::forward<NFAE>(nodeFunctorAfterEdges), nodeIndex);
+        } while(findDisconnectedPieces && (numDiscovered != graph.order()));
+      }
 
-          processed[nodeIndex] = true;
-        }
-      } while(findDisconnectedPieces && (numDiscovered != graph.order()));
+      return taskProcessingModel.get();
     }
-
-    return taskProcessingModel.get();
-  }
+  };
 }
 
 namespace sequoia::maths
@@ -199,7 +269,7 @@ namespace sequoia::maths
                  ESTF&& edgeSecondTraversalFunctor = null_functor{},
                  TaskProcessingModel&& taskProcessingModel = TaskProcessingModel{})
   {
-    return graph_impl::basic_traversal<std::queue<std::size_t>>(
+    return graph_impl::traversal_helper<G>{}.template traverse<std::queue<std::size_t>>(
              graph,
              findDisconnectedPieces,
              start,
@@ -227,7 +297,7 @@ namespace sequoia::maths
                  EFTF&& edgeFirstTraversalFunctor  = null_functor{},
                  TaskProcessingModel&& taskProcessingModel = TaskProcessingModel{})
   {
-    return graph_impl::basic_traversal<std::queue<std::size_t>>(
+    return graph_impl::traversal_helper<G>{}.template traverse<std::queue<std::size_t>>(
              graph,
              findDisconnectedPieces,
              start,
@@ -257,7 +327,7 @@ namespace sequoia::maths
                  ESTF&& edgeSecondTraversalFunctor = null_functor{},
                  TaskProcessingModel&& taskProcessingModel = TaskProcessingModel{})
   {
-    return graph_impl::basic_traversal<std::stack<std::size_t>>(
+    return graph_impl::traversal_helper<G>{}.template traverse<std::stack<std::size_t>>(
              graph,
              findDisconnectedPieces,
              start,
@@ -285,7 +355,7 @@ namespace sequoia::maths
                  EFTF&& edgeFirstTraversalFunctor  = null_functor{},
                  TaskProcessingModel&& taskProcessingModel = TaskProcessingModel{})
   {
-    return graph_impl::basic_traversal<std::stack<std::size_t>>(
+    return graph_impl::traversal_helper<G>{}.template traverse<std::stack<std::size_t>>(
              graph,
              findDisconnectedPieces,
              start,
@@ -316,7 +386,7 @@ namespace sequoia::maths
                  ESTF&& edgeSecondTraversalFunctor = null_functor{},
                  TaskProcessingModel&& taskProcessingModel = TaskProcessingModel{})
   {
-    return graph_impl::basic_traversal<std::priority_queue<std::size_t, std::vector<std::size_t>, QCompare>>(
+    return graph_impl::traversal_helper<G>{}.template traverse<std::priority_queue<std::size_t, std::vector<std::size_t>, QCompare>>(
              graph,
              findDisconnectedPieces,
              start,
@@ -345,7 +415,7 @@ namespace sequoia::maths
                  EFTF&& edgeFirstTraversalFunctor  = null_functor{},
                  TaskProcessingModel&& taskProcessingModel = TaskProcessingModel{})
   {
-    return graph_impl::basic_traversal<std::priority_queue<std::size_t, std::vector<std::size_t>, QCompare>>(
+    return graph_impl::traversal_helper<G>{}.template traverse<std::priority_queue<std::size_t, std::vector<std::size_t>, QCompare>>(
              graph,
              findDisconnectedPieces,
              start,
