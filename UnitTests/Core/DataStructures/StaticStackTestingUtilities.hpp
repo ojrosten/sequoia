@@ -6,6 +6,13 @@
 
 namespace sequoia::unit_testing
 {
+  /*template<class Stream, class T, std::size_t MaxDepth>
+  Stream& operator<<(Stream& s, const data_structures::static_stack<T, MaxDepth>& stack)
+  {
+    return s;
+  }
+  */
+  
   template<class T, std::size_t MaxDepth>
   struct equality_checker<data_structures::static_stack<T, MaxDepth>>
   {
