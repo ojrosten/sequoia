@@ -1,7 +1,9 @@
 #include "TestProtectiveWrapper.hpp"
 #include "TestPartitionedData.hpp"
+#include "TestStaticStack.hpp"
 
 #include "TestDataPool.hpp"
+
 
 #include "EdgeTestingDiagnostics.hpp"
 #include "GraphTesterDiagnostics.hpp"
@@ -80,6 +82,13 @@ int main(int argc, char** argv)
     test_family{
       "Partitioned Data",
       test_partitioned_data{"Unit Test"}
+    }
+  );
+
+  runner.add_test_family(
+    test_family{
+      "Static Stack",
+      test_static_stack{"Unit Test"}
     }
   );
 
