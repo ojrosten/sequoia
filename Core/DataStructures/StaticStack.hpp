@@ -19,7 +19,7 @@ namespace sequoia::data_structures
 
     constexpr const T& top() const noexcept
     {
-      return m_Stack[m_End - 1].value();
+      return m_Stack[m_End - 1];
     }
 
     constexpr void pop() const noexcept
