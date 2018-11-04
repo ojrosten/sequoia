@@ -22,7 +22,7 @@ namespace sequoia::data_structures
       return m_Stack[m_End - 1];
     }
 
-    constexpr void pop() const noexcept
+    constexpr void pop() noexcept
     {
       --m_End;
     }

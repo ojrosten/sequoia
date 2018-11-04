@@ -11,5 +11,11 @@ namespace sequoia::unit_testing
     t.push(1);
 
     check_equality(s, t, "Empty stack versus populated stack");
+
+    s.push(2);
+    check_equality(s, t, "Differing elements");
+
+    s.pop();
+    check_equality(s, t, "Empty stack versus populated stack");
   }
 }

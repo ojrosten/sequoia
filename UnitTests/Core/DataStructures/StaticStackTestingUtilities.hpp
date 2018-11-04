@@ -16,8 +16,12 @@ namespace sequoia::unit_testing
       bool equal{check_equality(logger, reference.empty(), actual.empty(), impl::concat_messages(description, "Inconsistent emptiness"))};
       if(!reference.empty() && !actual.empty())
       {
-        if(!check_equality(logger, reference.top(), actual.top(), impl::concat_messages(description, "Inconsistent top element"))) equal = false;
+        if(!check_equality(logger, reference.top(), actual.top(), impl::concat_messages(description, "Inconsistent top element")))
+          equal = false;
       }
+
+      if(check_equality(logger, reference == actual, true, impl::concat_messages(description, "Hidden state")))
+        equal = false;
 
       return equal;
     }
