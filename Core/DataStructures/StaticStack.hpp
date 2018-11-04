@@ -1,10 +1,13 @@
 #pragma once
 
+#include <array>
+
 namespace sequoia::data_structures
 {
   template<class T, std::size_t MaxDepth>
   class static_stack
   {
+  public:
     constexpr void push(const T& val)
     {
       if(m_End == MaxDepth)
@@ -19,7 +22,7 @@ namespace sequoia::data_structures
       return m_Stack[m_End - 1].value();
     }
 
-    void pop() const noexcept
+    constexpr void pop() const noexcept
     {
       --m_End;
     }
@@ -27,6 +30,16 @@ namespace sequoia::data_structures
     constexpr bool empty() const noexcept
     {
       return m_End == 0u;
+    }
+
+    friend constexpr bool operator==(const static_stack& lhs, const static_stack& rhs) noexcept
+    {
+      return (lhs.m_End == rhs.m_End) && (lhs.m_Stack == rhs.m_Stack);
+    }
+
+    friend constexpr bool operator!=(const static_stack& lhs, const static_stack& rhs) noexcept
+    {
+      return !(lhs == rhs);
     }
   private:
     std::array<T, MaxDepth> m_Stack{};
