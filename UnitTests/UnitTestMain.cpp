@@ -1,6 +1,7 @@
 #include "TestProtectiveWrapper.hpp"
 #include "TestPartitionedData.hpp"
 #include "TestStaticStack.hpp"
+#include "StaticStackTestingDiagnostics.hpp"
 
 #include "TestDataPool.hpp"
 
@@ -88,6 +89,7 @@ int main(int argc, char** argv)
   runner.add_test_family(
     test_family{
       "Static Stack",
+      test_static_stack_false_positives{"Static stack false positive diagnostics"},
       test_static_stack{"Unit Test"}
     }
   );
