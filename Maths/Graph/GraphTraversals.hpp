@@ -17,7 +17,7 @@ namespace sequoia::maths::graph_impl
   struct node_functor_processor
   {
     template<class ProcessingModel, class... Args>
-    static void process(ProcessingModel& model, NodeFunctor&& nodeFunctor, Args... args)
+    constexpr static void process(ProcessingModel& model, NodeFunctor&& nodeFunctor, Args... args)
     {
       model.push(std::forward<NodeFunctor>(nodeFunctor), args...);
     }
@@ -27,28 +27,28 @@ namespace sequoia::maths::graph_impl
   struct node_functor_processor<null_functor>
   {
     template<class ProcessingModel, class... Args>
-    static void process(ProcessingModel& model, null_functor nodeFunctor, Args... args) {}
+    constexpr static void process(ProcessingModel& model, null_functor nodeFunctor, Args... args) {}
   };
 
   template<>
   struct node_functor_processor<null_functor&>
   {
     template<class ProcessingModel, class... Args>
-    static void process(ProcessingModel& model, null_functor nodeFunctor, Args... args) {}
+    constexpr static void process(ProcessingModel& model, null_functor nodeFunctor, Args... args) {}
   };
 
   template<>
   struct node_functor_processor<const null_functor&>
   {
     template<class ProcessingModel, class... Args>
-    static void process(ProcessingModel& model, null_functor nodeFunctor, Args... args) {}
+    constexpr static void process(ProcessingModel& model, null_functor nodeFunctor, Args... args) {}
   };
 
   template<class EdgeFunctor>
   struct edge_functor_processor
   {
     template<class ProcessingModel, class... Args>
-    static void process(ProcessingModel& model, EdgeFunctor&& edgeFunctor, Args... args)
+    constexpr static void process(ProcessingModel& model, EdgeFunctor&& edgeFunctor, Args... args)
     {
       model.push(std::forward<EdgeFunctor>(edgeFunctor), args...);
     }
@@ -65,14 +65,14 @@ namespace sequoia::maths::graph_impl
   struct edge_functor_processor<null_functor&>
   {
     template<class ProcessingModel, class... Args>
-    static void process(ProcessingModel& model, null_functor edgeFunctor, Args... args) {}
+    constexpr static void process(ProcessingModel& model, null_functor edgeFunctor, Args... args) {}
   };
 
   template<>
   struct edge_functor_processor<const null_functor&>
   {
     template<class ProcessingModel, class... Args>
-    static void process(ProcessingModel& model, null_functor edgeFunctor, Args... args) {}
+    constexpr static void process(ProcessingModel& model, null_functor edgeFunctor, Args... args) {}
   };
 
   template<class G, class = void> struct comp_index_detector : std::false_type
@@ -141,7 +141,7 @@ namespace sequoia::maths::graph_impl
       class TaskProcessingModel
     >
     constexpr auto traverse(const G& graph, const bool findDisconnectedPieces,
-                 const std::size_t start,
+                 std::size_t start,
                  NFBE&& nodeFunctorBeforeEdges,
                  NFAE&& nodeFunctorAfterEdges,
                  EFTF&& edgeFirstTraversalFunctor,
@@ -155,28 +155,19 @@ namespace sequoia::maths::graph_impl
         auto discovered{traversal_traits<G, Q>::make_bitset(graph)};
         auto processed{traversal_traits<G, Q>::make_bitset(graph)};
 
-        std::size_t numDiscovered{};
+        std::size_t numDiscovered{}, restart{};
+
+        using namespace graph_impl;
+        auto nodeIndexQueue{queue_constructor<G, Q>::make(graph)};
+        using container_type = decltype(nodeIndexQueue);
 
         do
         {
-          // Probably want to replace
-          // findDisconnectedPieces and start
-          // with a seeding policy.
-          std::size_t restart{start};
-          if(discovered[start])
-          {
-            restart = 0;
-            for(; restart < graph.order(); ++restart)
-            {
-              if(!discovered[restart]) break;
-            }
-          }
+          while(discovered[restart]) ++restart;
 
-          using namespace graph_impl;
-          auto nodeIndexQueue{queue_constructor<G, Q>::make(graph)};
-          using container_type = decltype(nodeIndexQueue);
-          nodeIndexQueue.push(restart);
-          discovered[restart] = true;
+          const std::size_t startNode{numDiscovered ? restart : start};
+          nodeIndexQueue.push(startNode);
+          discovered[startNode] = true;
           ++numDiscovered;
 
           while(!nodeIndexQueue.empty())
@@ -240,7 +231,7 @@ namespace sequoia::maths::graph_impl
             
             node_functor_processor<NFAE>::process(taskProcessingModel, std::forward<NFAE>(nodeFunctorAfterEdges), nodeIndex);
             processed[nodeIndex] = true;
-          }
+          }          
         } while(findDisconnectedPieces && (numDiscovered != graph.order()));
       }
 
@@ -261,7 +252,7 @@ namespace sequoia::maths
     class ESTF = null_functor,
     class = std::enable_if_t<G::directedness != directed_flavour::directed>
   >
-  auto breadth_first_search(const G& graph, const bool findDisconnectedPieces = true,
+  constexpr auto breadth_first_search(const G& graph, const bool findDisconnectedPieces = true,
                  const std::size_t start = 0,
                  NFBE&& nodeFunctorBeforeEdges     = null_functor{},
                  NFAE&& nodeFunctorAfterEdges      = null_functor{},
@@ -290,7 +281,7 @@ namespace sequoia::maths
     class EFTF = null_functor,
     class = std::enable_if_t<G::directedness == directed_flavour::directed>
   >
-  auto breadth_first_search(const G& graph, const bool findDisconnectedPieces = true,
+  constexpr auto breadth_first_search(const G& graph, const bool findDisconnectedPieces = true,
                  const std::size_t start = 0,
                  NFBE&& nodeFunctorBeforeEdges     = null_functor{},
                  NFAE&& nodeFunctorAfterEdges      = null_functor{},
@@ -319,7 +310,7 @@ namespace sequoia::maths
     class ESTF = null_functor,
     class = std::enable_if_t<G::directedness != directed_flavour::directed>
   >
-  auto depth_first_search(const G& graph, const bool findDisconnectedPieces = true,
+  constexpr auto depth_first_search(const G& graph, const bool findDisconnectedPieces = true,
                  const std::size_t start = 0,
                  NFBE&& nodeFunctorBeforeEdges     = null_functor{},
                  NFAE&& nodeFunctorAfterEdges      = null_functor{},
@@ -348,7 +339,7 @@ namespace sequoia::maths
     class EFTF = null_functor,
     class = std::enable_if_t<G::directedness == directed_flavour::directed>
   >
-  auto depth_first_search(const G& graph, const bool findDisconnectedPieces = true,
+  constexpr auto depth_first_search(const G& graph, const bool findDisconnectedPieces = true,
                  const std::size_t start = 0,
                  NFBE&& nodeFunctorBeforeEdges     = null_functor{},
                  NFAE&& nodeFunctorAfterEdges      = null_functor{},
@@ -378,7 +369,7 @@ namespace sequoia::maths
     class QCompare = graph_impl::node_comparer<G, std::less<typename G::node_weight_type>>,
     class = std::enable_if_t<G::directedness != directed_flavour::directed>
   >
-  auto priority_search(const G& graph, const bool findDisconnectedPieces = true,
+  constexpr auto priority_search(const G& graph, const bool findDisconnectedPieces = true,
                  const std::size_t start = 0,
                  NFBE&& nodeFunctorBeforeEdges     = null_functor{},
                  NFAE&& nodeFunctorAfterEdges      = null_functor{},
@@ -408,7 +399,7 @@ namespace sequoia::maths
     class QCompare = graph_impl::node_comparer<G, std::less<typename G::node_weight_type>>,
     class = std::enable_if_t<G::directedness == directed_flavour::directed>
   >
-  auto priority_search(const G& graph, const bool findDisconnectedPieces = true,
+  constexpr auto priority_search(const G& graph, const bool findDisconnectedPieces = true,
                  const std::size_t start = 0,
                  NFBE&& nodeFunctorBeforeEdges     = null_functor{},
                  NFAE&& nodeFunctorAfterEdges      = null_functor{},

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "StaticStack.hpp"
+
 #include <queue>
 #include <stack>
 
@@ -7,14 +9,14 @@ namespace sequoia::maths::graph_impl
 {
   template<bool Forward> struct iterator_getter
   {
-    template<class G> static auto begin(const G& graph, const std::size_t nodeIndex) { return graph.cbegin_edges(nodeIndex); }
-    template<class G> static auto end(const G& graph, const std::size_t nodeIndex) { return graph.cend_edges(nodeIndex); }
+    template<class G> constexpr static auto begin(const G& graph, const std::size_t nodeIndex) { return graph.cbegin_edges(nodeIndex); }
+    template<class G> constexpr static auto end(const G& graph, const std::size_t nodeIndex) { return graph.cend_edges(nodeIndex); }
   };
 
   template<> struct iterator_getter<false>
   {
-    template<class G> static auto begin(const G& graph, const std::size_t nodeIndex) { return graph.crbegin_edges(nodeIndex); }
-    template<class G> static auto end(const G& graph, const std::size_t nodeIndex) { return graph.crend_edges(nodeIndex); }
+    template<class G> constexpr static auto begin(const G& graph, const std::size_t nodeIndex) { return graph.crbegin_edges(nodeIndex); }
+    template<class G> constexpr static auto end(const G& graph, const std::size_t nodeIndex) { return graph.crend_edges(nodeIndex); }
   };
 
   template<class G, class = void> struct static_graph_detector : std::true_type
@@ -30,22 +32,36 @@ namespace sequoia::maths::graph_impl
   
   template<class Q> struct traversal_traits_base
   {
-    static constexpr bool uses_forward_iterator() { return true; }
-    static auto get_container_element(const Q& q) { return q.top(); }
+    constexpr static bool uses_forward_iterator() { return true; }
+    constexpr static auto get_container_element(const Q& q) { return q.top(); }
   };
 
   template<> struct traversal_traits_base<std::stack<std::size_t>>
   {
-    static constexpr bool uses_forward_iterator() { return false; }
-    static auto get_container_element(const std::stack<std::size_t>& s) { return s.top(); }
+    constexpr static bool uses_forward_iterator() { return false; }
+    constexpr static auto get_container_element(const std::stack<std::size_t>& s) { return s.top(); }
   };
 
 
   template<> struct traversal_traits_base<std::queue<std::size_t>>
   {
-    static constexpr bool uses_forward_iterator() { return true; }
-    static auto get_container_element(const std::queue<std::size_t>& q) { return q.front(); }
+    constexpr static bool uses_forward_iterator() { return true; }
+    constexpr static auto get_container_element(const std::queue<std::size_t>& q) { return q.front(); }
   };
+
+  template<std::size_t MaxDepth> struct traversal_traits_base<data_structures::static_stack<std::size_t, MaxDepth>>
+  {
+    constexpr static bool uses_forward_iterator() { return false; }
+    constexpr static auto get_container_element(const std::stack<std::size_t>& s) { return s.top(); }
+  };
+
+  /*
+  template<> struct traversal_traits_base<data_structures::static_queue<std::size_t>>
+  {
+    constexpr static bool uses_forward_iterator() { return true; }
+    constexpr static auto get_container_element(const std::queue<std::size_t>& q) { return q.front(); }
+  };
+  */
 
   
   template<class G, class Q, bool=static_graph_detector_v<G>> struct traversal_traits : public traversal_traits_base<Q>
@@ -70,7 +86,15 @@ namespace sequoia::maths::graph_impl
   template<class G, class Q>
   struct traversal_traits<G, Q, true>
   {
-    // TO DO
+    constexpr static auto begin(const G& graph, const std::size_t nodeIndex)
+    {
+      return iterator_getter<traversal_traits_base<Q>::uses_forward_iterator()>::begin(graph, nodeIndex);
+    }
+    
+    constexpr static auto end(const G& graph, const std::size_t nodeIndex)
+    {
+      return iterator_getter<traversal_traits_base<Q>::uses_forward_iterator()>::end(graph, nodeIndex);
+    }
     
     using bitset = std::array<bool, G::order()>;
     constexpr static bitset make_bitset(const G& g)
@@ -78,8 +102,6 @@ namespace sequoia::maths::graph_impl
       return bitset{};
     }
   };
-  
-
   
       
   template<class G, class Compare>
@@ -121,5 +143,11 @@ namespace sequoia::maths::graph_impl
   struct queue_constructor<G, std::queue<std::size_t, Container>>
   {
     static auto make(const G& g) { return std::queue<std::size_t, Container>{}; }
+  };
+  
+  template <class G>
+  struct queue_constructor<G, data_structures::static_stack<std::size_t, G::order()>>
+  {
+    constexpr static auto make(const G& g) { return data_structures::static_stack<std::size_t, G::order()>{}; }
   };
 }
