@@ -177,8 +177,7 @@ namespace sequoia::maths::graph_impl
             nodeIndexQueue.pop();
 
             node_functor_processor<NFBE>::process(taskProcessingModel, std::forward<NFBE>(nodeFunctorBeforeEdges), nodeIndex);
-
-            constexpr bool embedded{(G::flavour == graph_flavour::directed_embedded) || (G::flavour == graph_flavour::undirected_embedded)};            
+          
             this->reset();
             for(auto iter{traversal_traits<G, container_type>::begin(graph, nodeIndex)}; iter != traversal_traits<G, container_type>::end(graph, nodeIndex); ++iter)
             {
@@ -187,7 +186,7 @@ namespace sequoia::maths::graph_impl
               if constexpr(G::flavour != maths::graph_flavour::directed)
               {
                 const bool loop{[iter](const std::size_t currentNodeIndex){
-                    if constexpr (directed(G::directedness) && embedded)
+                    if constexpr (G::flavour == graph_flavour::directed_embedded)
                       return iter->target_node() == iter->host_node();
                     else
                       return iter->target_node() == currentNodeIndex;
