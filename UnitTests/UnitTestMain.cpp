@@ -21,6 +21,7 @@
 #include "TestEdgeInsertion.hpp"
 
 #include "TestGraphTraversals.hpp"
+#include "TestStaticGraphTraversals.hpp"
 #include "TestGraphUpdate.hpp"
 #include "TestSubgraph.hpp"
 
@@ -150,6 +151,7 @@ int main(int argc, char** argv)
     test_family{
       "Graph Algorithms",
       test_graph_traversals{"Traversals"},
+      test_static_graph_traversals{"Static Graph Traversals"},
       test_graph_update{"Updates"},
       test_subgraph{"Subgraph"}
     }
