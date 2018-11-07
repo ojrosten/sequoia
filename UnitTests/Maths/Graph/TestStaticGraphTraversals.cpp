@@ -1,6 +1,5 @@
 #include "TestStaticGraphTraversals.hpp"
 
-#include "StaticGraph.hpp"
 #include "GraphTraversals.hpp"
 
 namespace sequoia::unit_testing
@@ -10,14 +9,14 @@ namespace sequoia::unit_testing
     using namespace maths;
     using namespace data_structures;
 
-    static_stack<std::size_t, 2> ordering{};
-
     using g_type = static_graph<directed_flavour::directed, 1, 2, null_weight, null_weight>;
     using edge = typename g_type::edge_init_type;
 
+    std::array<std::size_t, 2> ordering{};
+    std::size_t index{};
     auto lateNodeFn{
-      [&ordering](const auto nodeIndex){
-        ordering.push(nodeIndex);
+      [&ordering, &index](const auto nodeIndex){
+        ordering[index++] = nodeIndex;
       }
     };
     
@@ -31,6 +30,7 @@ namespace sequoia::unit_testing
   void test_static_graph_traversals::run_tests()
   {
     constexpr auto ordering{topological_sort()};
-    check(!ordering.empty(), LINE(""));
+    check_equality<std::size_t>(0, ordering[0], LINE(""));
+    check_equality<std::size_t>(1, ordering[1], LINE(""));
   }
 }
