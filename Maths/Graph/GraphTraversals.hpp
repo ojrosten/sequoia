@@ -58,7 +58,7 @@ namespace sequoia::maths::graph_impl
   struct edge_functor_processor<null_functor>
   {
     template<class ProcessingModel, class... Args>
-    static void process(ProcessingModel& model, null_functor edgeFunctor, Args... args) {}
+    constexpr static void process(ProcessingModel& model, null_functor edgeFunctor, Args... args) {}
   };
 
   template<>
@@ -127,6 +127,19 @@ namespace sequoia::maths::graph_impl
   private:
     bool m_Matched{true};
   };
+
+  template<class G, bool=static_graph_detector_v<G>>
+  struct stack_selector
+  {
+    using stack_type = data_structures::static_stack<std::size_t, G::order()>;
+  };
+
+  template<class G>
+  struct stack_selector<G, false>
+  {
+    using stack_type = std::stack<std::size_t>;
+  };
+  
   
   template<class G>
   class traversal_helper : private loop_processor<G>
@@ -345,7 +358,8 @@ namespace sequoia::maths
                  EFTF&& edgeFirstTraversalFunctor  = null_functor{},
                  TaskProcessingModel&& taskProcessingModel = TaskProcessingModel{})
   {
-    return graph_impl::traversal_helper<G>{}.template traverse<std::stack<std::size_t>>(
+    using stack_type = typename graph_impl::stack_selector<G>::stack_type;
+    return graph_impl::traversal_helper<G>{}.template traverse<stack_type>(
              graph,
              findDisconnectedPieces,
              start,

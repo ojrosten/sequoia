@@ -11,5 +11,7 @@ namespace sequoia::unit_testing
 
   private:
     void run_tests() override;
+
+    constexpr static auto topological_sort();
   };
 }

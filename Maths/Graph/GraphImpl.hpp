@@ -92,41 +92,31 @@ namespace sequoia
         swap(tmp);
         return *this;
       }
-
-      constexpr size_type order() const noexcept { return m_Edges.num_partitions(); }
-
-      constexpr size_type size()  const noexcept
-      {
-        auto size{m_Edges.size()};
-        if constexpr (EdgeTraits::mutual_info_v) return size /= 2;
-
-        return size;
-      }
     
       constexpr const_edge_iterator cbegin_edges(const edge_index_type node) const
       {
-        if constexpr (throw_on_range_error) if(node >= order()) throw std::out_of_range("Node index out of range!");
+        if constexpr (throw_on_range_error) if(node >= order_impl()) throw std::out_of_range("Node index out of range!");
         
         return m_Edges.cbegin_partition(node);
       }
 
       constexpr const_edge_iterator cend_edges(const edge_index_type node) const
       {
-        if constexpr (throw_on_range_error) if(node >= order()) throw std::out_of_range("Node index out of range!");
+        if constexpr (throw_on_range_error) if(node >= order_impl()) throw std::out_of_range("Node index out of range!");
 
         return m_Edges.cend_partition(node);
       }
 
       constexpr const_reverse_edge_iterator crbegin_edges(const edge_index_type node) const
       {
-        if constexpr (throw_on_range_error) if(node >= order()) throw std::out_of_range("Node index out of range!");
+        if constexpr (throw_on_range_error) if(node >= order_impl()) throw std::out_of_range("Node index out of range!");
 
         return m_Edges.crbegin_partition(node);
       }
 
       constexpr const_reverse_edge_iterator crend_edges(const edge_index_type node) const
       {
-        if constexpr (throw_on_range_error) if(node >= order()) throw std::out_of_range("Node index out of range!");
+        if constexpr (throw_on_range_error) if(node >= order_impl()) throw std::out_of_range("Node index out of range!");
 
         return m_Edges.crend_partition(node);
       }
@@ -152,6 +142,16 @@ namespace sequoia
         auto tmp = std::move(rhs);
         rhs = std::move(*this);
         *this = std::move(tmp);
+      }
+
+      constexpr size_type order_impl() const noexcept { return m_Edges.num_partitions(); }
+
+      constexpr size_type size_impl()  const noexcept
+      {
+        auto size{m_Edges.size()};
+        if constexpr (EdgeTraits::mutual_info_v) return size /= 2;
+
+        return size;
       }
 
       void reserve_nodes(const size_type size)
@@ -214,14 +214,14 @@ namespace sequoia
 
       constexpr edge_iterator begin_edges(const edge_index_type node)
       {
-        if constexpr (throw_on_range_error) if(node >= order()) throw std::out_of_range("Node index out of range!");
+        if constexpr (throw_on_range_error) if(node >= order_impl()) throw std::out_of_range("Node index out of range!");
         
         return m_Edges.begin_partition(node);
       }
 
       constexpr edge_iterator end_edges(const edge_index_type node)
       {
-        if constexpr (throw_on_range_error) if(node >= order()) throw std::out_of_range("Node index out of range!");
+        if constexpr (throw_on_range_error) if(node >= order_impl()) throw std::out_of_range("Node index out of range!");
 
         return m_Edges.end_partition(node);
       }
@@ -229,19 +229,19 @@ namespace sequoia
       template<class... Args>
       size_type add_node(Args&&... args)
       {
-        reserve_nodes(order() + 1);
+        reserve_nodes(order_impl() + 1);
         
         m_Edges.add_slot();
         if constexpr (!emptyNodes) Nodes::add_node(WeightMaker::make_node_weight(std::forward<Args>(args)...));
-        return (order()-1);
+        return (order_impl()-1);
       }
 
       template<class... Args>
       size_type insert_node(const size_type pos, Args&&... args)
       {
-        reserve_nodes(order() + 1);
+        reserve_nodes(order_impl() + 1);
         
-        const auto node = (pos < order()) ? pos : (order() - 1);
+        const auto node = (pos < order_impl()) ? pos : (order_impl() - 1);
         if constexpr (!emptyNodes) Nodes::insert_node(this->cbegin_node_weights() + pos, WeightMaker::make_node_weight(std::forward<Args>(args)...));
         m_Edges.insert_slot(node);
         fix_edge_data(node,
@@ -253,7 +253,7 @@ namespace sequoia
 
       void erase_node(const size_type node)
       {
-        if constexpr (throw_on_range_error) if(node >= order()) throw std::out_of_range("Cannot erase node: index out of range");
+        if constexpr (throw_on_range_error) if(node >= order_impl()) throw std::out_of_range("Cannot erase node: index out of range");
 
         if constexpr (EdgeTraits::mutual_info_v)
         {
@@ -411,7 +411,7 @@ namespace sequoia
         }
         else
         {
-          reserve_edges(size() + 2);
+          reserve_edges(size_impl() + 2);
         }        
       }
       
@@ -423,7 +423,7 @@ namespace sequoia
         if constexpr (std::is_empty_v<edge_weight_type>)
           static_assert(sizeof...(args) == 0, "Makes no sense to supply arguments for an empty weight!");
         
-        if constexpr (throw_on_range_error) if(node1 >= order() || node2 >= order()) throw std::out_of_range("Graph::join - index out of range");
+        if constexpr (throw_on_range_error) if(node1 >= order_impl() || node2 >= order_impl()) throw std::out_of_range("Graph::join - index out of range");
 
         if constexpr(std::is_empty_v<edge_weight_type>)
         {
@@ -1337,7 +1337,7 @@ namespace sequoia
       void copy_edges(const graph_primitive& in)
       {
         std::map<const edge_weight_type*, std::pair<edge_index_type, edge_index_type>> weightMap;
-        for(size_type i{}; i<in.order(); ++i)
+        for(size_type i{}; i<in.order_impl(); ++i)
         {
           m_Edges.add_slot();
           for(auto inIter{in.cbegin_edges(i)}; inIter != in.cend_edges(i); ++inIter)

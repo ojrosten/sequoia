@@ -52,7 +52,7 @@ namespace sequoia::maths::graph_impl
   template<std::size_t MaxDepth> struct traversal_traits_base<data_structures::static_stack<std::size_t, MaxDepth>>
   {
     constexpr static bool uses_forward_iterator() { return false; }
-    constexpr static auto get_container_element(const std::stack<std::size_t>& s) { return s.top(); }
+    constexpr static auto get_container_element(const data_structures::static_stack<std::size_t, MaxDepth>& s) { return s.top(); }
   };
 
   /*
@@ -84,7 +84,7 @@ namespace sequoia::maths::graph_impl
   };
 
   template<class G, class Q>
-  struct traversal_traits<G, Q, true>
+  struct traversal_traits<G, Q, true> : public traversal_traits_base<Q>
   {
     constexpr static auto begin(const G& graph, const std::size_t nodeIndex)
     {

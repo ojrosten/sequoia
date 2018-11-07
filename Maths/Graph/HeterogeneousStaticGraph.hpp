@@ -57,6 +57,10 @@ namespace sequoia::maths
     
     constexpr static graph_flavour flavour{(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected};
 
+    constexpr static std::size_t order() noexcept { return Order; }
+
+    constexpr static std::size_t size() noexcept { return Size; }
+
     using edge_index_type = typename heterogeneous_graph_traits<Size, Order, EdgeWeight>::edge_index_type;
       
     using
@@ -126,6 +130,10 @@ namespace sequoia::maths
     static_assert(sizeof...(NodeWeights) == Order);
     
     constexpr static graph_flavour flavour{(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded};
+
+    constexpr static std::size_t order() noexcept { return Order; }
+
+    constexpr static std::size_t size() noexcept { return Size; }
 
     using edge_index_type = typename heterogeneous_embedded_graph_traits<Size, Order, EdgeWeight>::edge_index_type;
       
