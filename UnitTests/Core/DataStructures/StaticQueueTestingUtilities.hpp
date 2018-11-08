@@ -10,28 +10,20 @@ namespace sequoia::unit_testing
   struct equality_checker<data_structures::static_queue<T, MaxPushes>>
   {
     template<class Logger>
-    static bool check(Logger& logger, const data_structures::static_queue<T, MaxPushes>& reference, const data_structures::static_queue<T, MaxPushes>& actual, const std::string& description="")
+    static void check(Logger& logger, const data_structures::static_queue<T, MaxPushes>& reference, const data_structures::static_queue<T, MaxPushes>& actual, const std::string& description="")
     {
-      typename Logger::sentinel s{logger, description};
-      bool equal{
-        check_equality(logger, reference.empty(), actual.empty(), impl::concat_messages(description, "Inconsistent emptiness"))};
+      check_equality(logger, reference.empty(), actual.empty(), impl::concat_messages(description, "Inconsistent emptiness"));
 
-      if(check_equality(logger, reference.size(), actual.size(), impl::concat_messages(description, "Inconsistent size")))
-      {
-        if(!reference.empty() && !actual.empty())
-        {
-          if(!check_equality(logger, reference.front(), actual.front(), impl::concat_messages(description, "Inconsistent front element")))
-            equal = false;
-
-          if(!check_equality(logger, reference.back(), actual.back(), impl::concat_messages(description, "Inconsistent back element")))
-            equal = false;
-        }
-
-        if(!check_equality(logger, reference == actual, true, impl::concat_messages(description, "Hidden state")))
-          equal = false;
-      }
+      check_equality(logger, reference.size(), actual.size(), impl::concat_messages(description, "Inconsistent size"));
       
-      return equal;
+      if(!reference.empty() && !actual.empty())
+      {
+        check_equality(logger, reference.front(), actual.front(), impl::concat_messages(description, "Inconsistent front element"));
+
+        check_equality(logger, reference.back(), actual.back(), impl::concat_messages(description, "Inconsistent back element"));
+      }
+
+      check_equality(logger, reference == actual, true, impl::concat_messages(description, "Hidden state"));
     }
   };
 }
