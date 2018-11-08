@@ -13,15 +13,26 @@ namespace sequoia::unit_testing
     static bool check(Logger& logger, const data_structures::static_stack<T, MaxDepth>& reference, const data_structures::static_stack<T, MaxDepth>& actual, const std::string& description="")
     {
       typename Logger::sentinel s{logger, description};
-      bool equal{check_equality(logger, reference.empty(), actual.empty(), impl::concat_messages(description, "Inconsistent emptiness"))};
-      if(!reference.empty() && !actual.empty())
+      bool equal{
+        check_equality(logger, reference.empty(), actual.empty(), impl::concat_messages(description, "Inconsistent emptiness"))};
+
+      if(check_equality(logger, reference.size(), actual.size(),
+                        impl::concat_messages(description, "Inconsistent size")))
       {
-        if(!check_equality(logger, reference.top(), actual.top(), impl::concat_messages(description, "Inconsistent top element")))
+      
+        if(!reference.empty() && !actual.empty())
+        {
+          if(!check_equality(logger, reference.top(), actual.top(), impl::concat_messages(description, "Inconsistent top element")))
+            equal = false;
+        }
+
+        if(!check_equality(logger, reference == actual, true, impl::concat_messages(description, "Hidden state")))
           equal = false;
       }
-
-      if(check_equality(logger, reference == actual, true, impl::concat_messages(description, "Hidden state")))
+      else
+      {
         equal = false;
+      }
 
       return equal;
     }
