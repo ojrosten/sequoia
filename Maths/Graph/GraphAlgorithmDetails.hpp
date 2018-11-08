@@ -1,6 +1,8 @@
 #pragma once
 
 #include "StaticStack.hpp"
+#include "StaticQueue.hpp"
+#include "StaticPriorityQueue.hpp"
 
 #include <queue>
 #include <stack>
@@ -35,11 +37,16 @@ namespace sequoia::maths::graph_impl
 
   template<class G> constexpr bool static_graph_detector_v{static_graph_detector<G>::value};
 
+
+  template<class Q> struct traversal_traits_base;
   
-  template<class Q> struct traversal_traits_base
+  template<class Container, class Compare> struct traversal_traits_base<std::priority_queue<std::size_t, Container, Compare>>
   {
     constexpr static bool uses_forward_iterator() { return true; }
-    constexpr static auto get_container_element(const Q& q) { return q.top(); }
+    constexpr static auto get_container_element(const std::priority_queue<std::size_t, Container, Compare>& q)
+    {
+      return q.top();
+    }
   };
 
   template<> struct traversal_traits_base<std::stack<std::size_t>>
@@ -55,19 +62,25 @@ namespace sequoia::maths::graph_impl
     constexpr static auto get_container_element(const std::queue<std::size_t>& q) { return q.front(); }
   };
 
-  template<std::size_t MaxDepth> struct traversal_traits_base<data_structures::static_stack<std::size_t, MaxDepth>>
+  template<std::size_t MaxPushes, class Compare> struct traversal_traits_base<data_structures::static_priority_queue<std::size_t, MaxPushes, Compare>>
+  {
+    constexpr static bool uses_forward_iterator() { return true; }
+    constexpr static auto get_container_element(const data_structures::static_priority_queue<std::size_t, MaxPushes, Compare>& q) { return q.top(); }
+  };
+
+  template<std::size_t MaxDepth>
+  struct traversal_traits_base<data_structures::static_stack<std::size_t, MaxDepth>>
   {
     constexpr static bool uses_forward_iterator() { return false; }
     constexpr static auto get_container_element(const data_structures::static_stack<std::size_t, MaxDepth>& s) { return s.top(); }
   };
 
-  /*
-  template<> struct traversal_traits_base<data_structures::static_queue<std::size_t>>
+  template<std::size_t MaxPushes>
+  struct traversal_traits_base<data_structures::static_queue<std::size_t, MaxPushes>>
   {
     constexpr static bool uses_forward_iterator() { return true; }
-    constexpr static auto get_container_element(const std::queue<std::size_t>& q) { return q.front(); }
+    constexpr static auto get_container_element(const data_structures::static_queue<std::size_t, MaxPushes>& q) { return q.front(); }
   };
-  */
 
   
   template<class G, class Q, bool=static_graph_detector_v<G>> struct traversal_traits : public traversal_traits_base<Q>
@@ -156,6 +169,19 @@ namespace sequoia::maths::graph_impl
   {
     constexpr static auto make(const G& g) { return data_structures::static_stack<std::size_t, G::order()>{}; }
   };
+
+  template <class G>
+  struct queue_constructor<G, data_structures::static_queue<std::size_t, G::order()>>
+  {
+    constexpr static auto make(const G& g) { return data_structures::static_queue<std::size_t, G::order()>{}; }
+  };
+
+  template <class G>
+  struct queue_constructor<G, data_structures::static_priority_queue<std::size_t, G::order()>>
+  {
+    constexpr static auto make(const G& g) { return data_structures::static_priority_queue<std::size_t, G::order()>{}; }
+  };
+  
 
   template<class NodeFunctor>
   struct node_functor_processor
@@ -282,6 +308,30 @@ namespace sequoia::maths::graph_impl
   struct stack_selector<G, false>
   {
     using stack_type = std::stack<std::size_t>;
+  };
+
+  template<class G, bool=static_graph_detector_v<G>>
+  struct queue_selector
+  {
+    using queue_type = data_structures::static_queue<std::size_t, G::order()>;
+  };
+
+  template<class G>
+  struct queue_selector<G, false>
+  {
+    using queue_type = std::queue<std::size_t>;
+  };
+
+  template<class G, class Compare, bool=static_graph_detector_v<G>>
+  struct priority_queue_selector
+  {
+    using queue_type = data_structures::static_priority_queue<std::size_t, G::order(), Compare>;
+  };
+
+  template<class G, class Compare>
+  struct priority_queue_selector<G, Compare, false>
+  {
+    using queue_type = std::priority_queue<std::size_t, std::vector<size_t>, Compare>;
   };
   
   

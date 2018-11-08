@@ -24,7 +24,8 @@ namespace sequoia::maths
                  ESTF&& edgeSecondTraversalFunctor = null_functor{},
                  TaskProcessingModel&& taskProcessingModel = TaskProcessingModel{})
   {
-    return graph_impl::traversal_helper<G>{}.template traverse<std::queue<std::size_t>>(
+    using queue_type = typename graph_impl::queue_selector<G>::queue_type;
+    return graph_impl::traversal_helper<G>{}.template traverse<queue_type>(
              graph,
              findDisconnectedPieces,
              start,
@@ -52,7 +53,8 @@ namespace sequoia::maths
                  EFTF&& edgeFirstTraversalFunctor  = null_functor{},
                  TaskProcessingModel&& taskProcessingModel = TaskProcessingModel{})
   {
-    return graph_impl::traversal_helper<G>{}.template traverse<std::queue<std::size_t>>(
+    using queue_type = typename graph_impl::queue_selector<G>::queue_type;
+    return graph_impl::traversal_helper<G>{}.template traverse<queue_type>(
              graph,
              findDisconnectedPieces,
              start,
@@ -82,7 +84,8 @@ namespace sequoia::maths
                  ESTF&& edgeSecondTraversalFunctor = null_functor{},
                  TaskProcessingModel&& taskProcessingModel = TaskProcessingModel{})
   {
-    return graph_impl::traversal_helper<G>{}.template traverse<std::stack<std::size_t>>(
+    using stack_type = typename graph_impl::stack_selector<G>::stack_type;
+    return graph_impl::traversal_helper<G>{}.template traverse<stack_type>(
              graph,
              findDisconnectedPieces,
              start,
@@ -142,7 +145,8 @@ namespace sequoia::maths
                  ESTF&& edgeSecondTraversalFunctor = null_functor{},
                  TaskProcessingModel&& taskProcessingModel = TaskProcessingModel{})
   {
-    return graph_impl::traversal_helper<G>{}.template traverse<std::priority_queue<std::size_t, std::vector<std::size_t>, QCompare>>(
+    using queue_type = typename graph_impl::priority_queue_selector<G, QCompare>::queue_type;
+    return graph_impl::traversal_helper<G>{}.template traverse<queue_type>(
              graph,
              findDisconnectedPieces,
              start,
@@ -171,7 +175,8 @@ namespace sequoia::maths
                  EFTF&& edgeFirstTraversalFunctor  = null_functor{},
                  TaskProcessingModel&& taskProcessingModel = TaskProcessingModel{})
   {
-    return graph_impl::traversal_helper<G>{}.template traverse<std::priority_queue<std::size_t, std::vector<std::size_t>, QCompare>>(
+    using queue_type = typename graph_impl::priority_queue_selector<G, QCompare>::queue_type;
+    return graph_impl::traversal_helper<G>{}.template traverse<queue_type>(
              graph,
              findDisconnectedPieces,
              start,

@@ -3,10 +3,11 @@
 #include "Algorithms.hpp"
 
 #include <array>
+#include <functional>
 
 namespace sequoia::data_structures
 {
-  template<class T, std::size_t MaxDepth>
+  template<class T, std::size_t MaxDepth, class Compare=std::less<T>>
   class static_priority_queue
   {
   public:
@@ -18,7 +19,7 @@ namespace sequoia::data_structures
       m_Q[m_End] = val;
       ++m_End;
 
-      bubble_up(m_Q.begin() + m_Begin, m_Q.begin() + m_End - 1);
+      bubble_up(m_Q.begin() + m_Begin, m_Q.begin() + m_End - 1, Compare{});
     }
 
     constexpr const T& top() const noexcept
@@ -29,7 +30,7 @@ namespace sequoia::data_structures
     constexpr void pop() noexcept
     {
       ++m_Begin;
-      sequoia::make_heap(m_Q.begin() + m_Begin, m_Q.begin() + m_End);
+      sequoia::make_heap(m_Q.begin() + m_Begin, m_Q.begin() + m_End, Compare{});
     }
 
     constexpr bool empty() const noexcept
