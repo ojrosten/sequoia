@@ -2,8 +2,10 @@
 #include "TestPartitionedData.hpp"
 #include "TestStaticStack.hpp"
 #include "TestStaticQueue.hpp"
+#include "TestStaticPriorityQueue.hpp"
 #include "StaticStackTestingDiagnostics.hpp"
 #include "StaticQueueTestingDiagnostics.hpp"
+#include "StaticPriorityQueueTestingDiagnostics.hpp"
 
 #include "TestDataPool.hpp"
 
@@ -102,6 +104,14 @@ int main(int argc, char** argv)
       "Static Queue",
       test_static_queue_false_positives{"Static queue false positive diagnostics"},
       test_static_queue{"Unit Test"}
+    }
+  );
+
+  runner.add_test_family(
+    test_family{
+      "Static Priority Queue",
+      test_static_priority_queue_false_positives{"Static priority queue false positive diagnostics"},
+      test_static_priority_queue{"Unit Test"}
     }
   );
 
