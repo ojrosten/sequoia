@@ -57,6 +57,42 @@ namespace sequoia::unit_testing
     return edgeData;
   }
 
+  constexpr auto test_static_graph_traversals::priority_search()
+  {
+    using namespace maths;
+    using g_type = static_graph<directed_flavour::undirected, 3, 4, null_weight, int>;
+    using edge_t = typename g_type::edge_init_type;
+
+    // 6  4  2
+    //  \ | /
+    //   \|/
+    //    0
+    
+    constexpr g_type g{
+      {
+        {edge_t{1}, edge_t{2}, edge_t{3}},
+        {edge_t{0}},
+        {edge_t{0}},
+        {edge_t{0}}
+      },
+      {
+        0, 6, 2, 8
+      }
+    };
+
+    std::array<int, 4> orderedNodeWeights{};
+    std::size_t index{};
+    auto nodeEarlyFn{
+      [&orderedNodeWeights, &index, &g](const auto node) {
+        orderedNodeWeights[index++] = *(g.cbegin_node_weights() + node);
+      }
+    };
+    
+    maths::priority_search(g, true, 0, nodeEarlyFn);
+
+    return orderedNodeWeights;
+  }
+
   
   void test_static_graph_traversals::run_tests()
   {
@@ -70,6 +106,14 @@ namespace sequoia::unit_testing
       constexpr auto data{bfs()};
       check_equality<std::size_t>(3, data[0], LINE(""));
       check_equality<std::size_t>(0, data[1], LINE(""));
+    }
+
+    {
+      constexpr auto weights{priority_search()};
+      check_equality<std::size_t>(0, weights[0], LINE(""));
+      check_equality<std::size_t>(8, weights[1], LINE(""));
+      check_equality<std::size_t>(6, weights[2], LINE(""));
+      check_equality<std::size_t>(2, weights[3], LINE(""));
     }
   }
 }

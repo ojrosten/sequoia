@@ -15,5 +15,7 @@ namespace sequoia::unit_testing
     constexpr static auto topological_sort();
 
     constexpr static auto bfs();
+
+    constexpr static auto priority_search();
   };
 }

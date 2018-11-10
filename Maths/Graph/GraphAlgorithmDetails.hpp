@@ -129,12 +129,12 @@ namespace sequoia::maths::graph_impl
   public:
     using compare_type = Compare;
 
-    node_comparer(const G& g) : m_Graph(g) {}
-    node_comparer(const node_comparer& in) : m_Graph(in.m_Graph) {};
+    constexpr node_comparer(const G& g) : m_Graph(g) {}
+    constexpr node_comparer(const node_comparer&) = default; 
 
-    bool operator()(const std::size_t index1, const std::size_t index2)
+    constexpr bool operator()(const std::size_t index1, const std::size_t index2)
     {
-      Compare comparer;
+      Compare comparer{};
       return comparer(*(m_Graph.cbegin_node_weights() + index1), *(m_Graph.cbegin_node_weights() + index2));
     }
   private:
@@ -155,31 +155,46 @@ namespace sequoia::maths::graph_impl
   template <class G, class Container>
   struct queue_constructor<G, std::stack<std::size_t, Container>>
   {
-    static auto make(const G& g) { return std::stack<std::size_t, Container>{}; }
+    static auto make(const G& g)
+    {
+      return std::stack<std::size_t, Container>{};
+    }
   };
 
   template <class G, class Container>
   struct queue_constructor<G, std::queue<std::size_t, Container>>
   {
-    static auto make(const G& g) { return std::queue<std::size_t, Container>{}; }
+    static auto make(const G& g)
+    {
+      return std::queue<std::size_t, Container>{};
+    }
   };
   
   template <class G>
   struct queue_constructor<G, data_structures::static_stack<std::size_t, G::order()>>
   {
-    constexpr static auto make(const G& g) { return data_structures::static_stack<std::size_t, G::order()>{}; }
+    constexpr static auto make(const G& g)
+    {
+      return data_structures::static_stack<std::size_t, G::order()>{};
+    }
   };
 
   template <class G>
   struct queue_constructor<G, data_structures::static_queue<std::size_t, G::order()>>
   {
-    constexpr static auto make(const G& g) { return data_structures::static_queue<std::size_t, G::order()>{}; }
+    constexpr static auto make(const G& g)
+    {
+      return data_structures::static_queue<std::size_t, G::order()>{};
+    }
   };
 
-  template <class G>
-  struct queue_constructor<G, data_structures::static_priority_queue<std::size_t, G::order()>>
+  template <class G, class Comparer>
+  struct queue_constructor<G, data_structures::static_priority_queue<std::size_t, G::order(), Comparer>>
   {
-    constexpr static auto make(const G& g) { return data_structures::static_priority_queue<std::size_t, G::order()>{}; }
+    constexpr static auto make(const G& g)
+    {
+      return data_structures::static_priority_queue<std::size_t, G::order(), Comparer>{Comparer{g}};
+    }
   };
   
 

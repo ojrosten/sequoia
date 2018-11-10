@@ -8,9 +8,21 @@
 namespace sequoia::data_structures
 {
   template<class T, std::size_t MaxDepth, class Compare=std::less<T>>
-  class static_priority_queue
+  class static_priority_queue : private Compare
   {
   public:
+    constexpr static_priority_queue() = default;
+
+    constexpr explicit static_priority_queue(const Compare& compare) : Compare{compare} {}
+
+    constexpr static_priority_queue(const static_priority_queue&)     = default;
+    constexpr static_priority_queue(static_priority_queue&&) noexcept = default;
+
+    ~static_priority_queue() = default;
+
+    constexpr static_priority_queue& operator=(const static_priority_queue&)     = default;
+    constexpr static_priority_queue& operator=(static_priority_queue&&) noexcept = default;
+    
     constexpr void push(const T& val)
     {
       if(m_End == MaxDepth)
@@ -19,7 +31,7 @@ namespace sequoia::data_structures
       m_Q[m_End] = val;
       ++m_End;
 
-      bubble_up(m_Q.begin() + m_Begin, m_Q.begin() + m_End - 1, Compare{});
+      bubble_up(m_Q.begin() + m_Begin, m_Q.begin() + m_End - 1, static_cast<Compare&>(*this));
     }
 
     constexpr const T& top() const noexcept
@@ -30,7 +42,7 @@ namespace sequoia::data_structures
     constexpr void pop() noexcept
     {
       ++m_Begin;
-      sequoia::make_heap(m_Q.begin() + m_Begin, m_Q.begin() + m_End, Compare{});
+      sequoia::make_heap(m_Q.begin() + m_Begin, m_Q.begin() + m_End, static_cast<Compare&>(*this));
     }
 
     constexpr bool empty() const noexcept
