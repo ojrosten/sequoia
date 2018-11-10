@@ -13,5 +13,7 @@ namespace sequoia::unit_testing
     void run_tests() override;
 
     constexpr static auto topological_sort();
+
+    constexpr static auto bfs();
   };
 }
