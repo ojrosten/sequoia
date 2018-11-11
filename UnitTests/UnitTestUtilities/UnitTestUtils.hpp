@@ -363,8 +363,8 @@ namespace sequoia
       static std::enable_if_t<!impl::container_detector_v<S>, bool>
       check(Logger& logger, const T& reference, const T& actual, const std::string& description="")
       {      
-        typename Logger::sentinel r{logger, description};
-        r.log_check();
+        typename Logger::sentinel s{logger, description};
+        s.log_check();
         const bool equal{reference == actual};
         if(!equal)
         {
@@ -441,7 +441,11 @@ namespace sequoia
 
     template<class Logger, class T> bool check_equality(Logger& logger, const T& reference, const T& value, const std::string& description="")
     {
-      return equality_checker<T>::check(logger, reference, value, description);
+      typename Logger::sentinel s{logger, description};
+      const auto priorFailures{logger.failures()};
+      equality_checker<T>::check(logger, reference, value, description);
+      
+      return logger.failures() == priorFailures;
     }
 
     template<class Logger> bool check(Logger& logger, const bool value, const std::string& description="")

@@ -44,6 +44,10 @@ namespace sequoia::maths
   public:
     constexpr static graph_flavour flavour{(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected};
 
+    constexpr static std::size_t order() noexcept { return Order; }
+
+    constexpr static std::size_t size() noexcept { return Size; }
+
     using node_weight_type = NodeWeight;
     using edge_index_type = typename Traits::edge_index_type;
       
@@ -97,6 +101,10 @@ namespace sequoia::maths
       
   public:
     constexpr static graph_flavour flavour{(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded};
+
+    constexpr static std::size_t order() noexcept { return Order; }
+
+    constexpr static std::size_t size() noexcept { return Size; }
 
     using node_weight_type =  NodeWeight;
     using edge_index_type = typename Traits::edge_index_type;

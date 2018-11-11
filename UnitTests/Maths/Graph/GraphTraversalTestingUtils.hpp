@@ -1,7 +1,7 @@
 #pragma once
 
 #include "GraphTestingUtils.hpp"
-#include "GraphAlgorithms.hpp"
+#include "GraphTraversals.hpp"
 
 namespace sequoia::unit_testing
 {

@@ -21,8 +21,6 @@ namespace sequoia
     public:
       using return_type = R;
 
-      serial() {}
-
       template<class Fn, class... Args> void push(Fn&& fn, Args... args)
       {
         static_assert(std::is_same<R, std::result_of_t<Fn(Args...)>>::value, "Function return type inconsistent!");
@@ -39,15 +37,13 @@ namespace sequoia
     public:
       using return_type = void;
 
-      serial() {}
-
-      template<class Fn, class... Args> void push(Fn&& fn, Args... args)
+      template<class Fn, class... Args> constexpr void push(Fn&& fn, Args... args)
       {
         static_assert(std::is_same<void, typename std::result_of_t<Fn(Args...)>>::value, "Fn must return void!");
         fn(args...);
       }
 
-      void get() {}
+      constexpr void get() const noexcept {}
     };
 
     //==================================Asynchronous Processing==================================// 

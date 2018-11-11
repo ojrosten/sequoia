@@ -4,6 +4,13 @@
 
 namespace sequoia
 {
+  template<class Iter> constexpr void iter_swap(Iter a, Iter b)
+  {
+    auto tmp{std::move(*a)};
+    *a = std::move(*b);
+    *b = std::move(tmp);
+  }
+  
   template<class FwdIter, class Comparer=std::less<std::decay_t<decltype(*FwdIter())>>>
   constexpr void bubble_up(FwdIter begin, FwdIter current, Comparer comp = Comparer{})
   {
@@ -11,20 +18,11 @@ namespace sequoia
 
     using namespace std;
     auto parent{begin + (distance(begin, current) - 1) / 2};
-    if(comp(*current, *parent))
+    if(comp(*parent, *current))
     {
-      auto tmp{std::move(*parent)};
-      *parent = std::move(*current);
-      *current = std::move(tmp);
+      iter_swap(parent, current);
       bubble_up(begin, parent, comp);
     }
-  }
-
-  template<class Iter> constexpr void swap_contents(Iter a, Iter b)
-  {
-    auto tmp{std::move(*a)};
-    *a = std::move(*b);
-    *b = std::move(tmp);
   }
   
   template<class FwdIter, class Comparer=std::less<std::decay_t<decltype(*FwdIter())>>>
@@ -38,17 +36,17 @@ namespace sequoia
       auto rightChild{begin + 2*(distance(begin, current) + 1)};
       auto leftChild{rightChild - 1};
 
-      auto dominantChild{comp(*leftChild, *rightChild) ? leftChild : rightChild};
-      if(comp(*dominantChild, *current))
+      auto dominantChild{comp(*rightChild, *leftChild) ? leftChild : rightChild};
+      if(comp(*current, *dominantChild))
       {
-        swap_contents(dominantChild, current);
+        iter_swap(dominantChild, current);
         bubble_down(begin, dominantChild, end, comp);
       }
     }
     else if(2*distance(begin, current) + 1 < distance(begin, end))
     {
       auto leftChild{begin + 2*distance(begin, current) + 1};
-      if(comp(*leftChild, *current)) swap_contents(leftChild, current);
+      if(comp(*current, *leftChild)) iter_swap(leftChild, current);
     }
   }
 
@@ -71,22 +69,17 @@ namespace sequoia
   {
     using namespace std;
     if(distance(begin, end) <= 1) return;
-
-    auto inverseComp{[comp](const auto a, const auto b){
-      return !comp(a,b);      
-      }
-    };
     
-    sequoia::make_heap(begin, end, inverseComp);
+    sequoia::make_heap(begin, end, comp);
     while(end != begin)
     {
-      swap_contents(begin, end-1);
-      bubble_down(begin, begin, end-1, inverseComp);
+      iter_swap(begin, end-1);
+      bubble_down(begin, begin, end-1, comp);
       --end;
     }
   }
 
-  template<class FwdIter> constexpr void rotate(FwdIter begin, FwdIter end)
+  /*template<class FwdIter> constexpr void rotate(FwdIter begin, FwdIter end)
   {
     using namespace std;
     if(distance(begin, end) > 1)
@@ -100,7 +93,7 @@ namespace sequoia
       }
       *end = last;
     }
-  }
+    }*/
 
   template<class FwdIter, class Comparer=std::equal_to<std::decay_t<decltype(*FwdIter())>>>
   constexpr void cluster(FwdIter begin, FwdIter end, Comparer comp = Comparer{})
@@ -116,7 +109,7 @@ namespace sequoia
     {
       if(comp(*current, *begin))
       {
-        swap_contents(endOfCluster, current);
+        iter_swap(endOfCluster, current);
         ++endOfCluster;
       }
       
