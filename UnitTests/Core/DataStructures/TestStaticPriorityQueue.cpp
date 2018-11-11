@@ -26,11 +26,13 @@ namespace sequoia::unit_testing
   {
     using namespace data_structures;
 
-    static_priority_queue<int, 2> s{};
+    static_priority_queue<int, 4> s{};
 
-    s.push(10);
+    s.push(0);
     s.pop();
-    s.push(11);
+    s.push(6);
+    s.push(2);
+    s.push(8);
 
     return s;
   }
@@ -40,11 +42,14 @@ namespace sequoia::unit_testing
     using namespace data_structures;
     
     constexpr auto s{make_static_priority_queue()};
+    check_equality(s.top(), 8, LINE(""));
 
-    static_priority_queue<int, 2> t{};
-    t.push(11);
-    
-    check(s != t, LINE("constexpr priority_queue remembers its history"));
+    auto t{s};
+    check_equality(t.top(), 8, LINE(""));
+    t.pop();
+    check_equality(t.top(), 6, LINE(""));
+    t.pop();
+    check_equality(t.top(), 2, LINE(""));
   }
 
 

@@ -691,8 +691,7 @@ namespace sequoia
 
         if constexpr (!utilities::is_orderable_v<edge_weight_type>)
         {
-          // Ordering of weights looks to be a consequence of heap sort not being stable!
-          this->template check_graph(g, {{edge{1,1}, edge{1,0}, edge{2,1}}, {edge{0,0}, edge{0,1}, edge{2,1}}, {edge{0,1}, edge{1,1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+          this->template check_graph(g, {{edge{1,0}, edge{1,1}, edge{2,1}}, {edge{0,1}, edge{0,0}, edge{2,1}}, {edge{0,1}, edge{1,1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
         }
         else
         {
