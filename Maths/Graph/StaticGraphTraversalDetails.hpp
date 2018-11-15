@@ -8,10 +8,10 @@ namespace sequoia::maths::graph_impl
 {
   template<class Q> struct traversal_traits_base;
   
-  template<std::size_t MaxPushes, class Compare> struct traversal_traits_base<data_structures::static_priority_queue<std::size_t, MaxPushes, Compare>>
+  template<std::size_t MaxDepth, class Compare> struct traversal_traits_base<data_structures::static_priority_queue<std::size_t, MaxDepth, Compare>>
   {
     constexpr static bool uses_forward_iterator() { return true; }
-    constexpr static auto get_container_element(const data_structures::static_priority_queue<std::size_t, MaxPushes, Compare>& q)
+    constexpr static auto get_container_element(const data_structures::static_priority_queue<std::size_t, MaxDepth, Compare>& q)
     {
       return q.top();
     }
@@ -27,11 +27,11 @@ namespace sequoia::maths::graph_impl
     }
   };
 
-  template<std::size_t MaxPushes>
-  struct traversal_traits_base<data_structures::static_queue<std::size_t, MaxPushes>>
+  template<std::size_t MaxDepth>
+  struct traversal_traits_base<data_structures::static_queue<std::size_t, MaxDepth>>
   {
     constexpr static bool uses_forward_iterator() { return true; }
-    constexpr static auto get_container_element(const data_structures::static_queue<std::size_t, MaxPushes>& q)
+    constexpr static auto get_container_element(const data_structures::static_queue<std::size_t, MaxDepth>& q)
     {
       return q.front();
     }
