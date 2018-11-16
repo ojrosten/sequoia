@@ -64,6 +64,10 @@ namespace sequoia::unit_testing
       
       check_standard_semantics(s, t, LINE("Standard Semantics"));
 
+      check_exception_thrown<std::logic_error>([&t]() { t.push(1); }, LINE("Trying to push three elements to queue of depth 2"));
+      check_exception_thrown<std::logic_error>([]() { static_priority_queue<int, 2>{1, 2, 3}; }, LINE("Can't construct queue of depth 2 with 3 elements"));
+
+
       t.pop();
       check_equality(3, t.top(), LINE(""));
       check_equality<std::size_t>(1, t.size(), LINE(""));

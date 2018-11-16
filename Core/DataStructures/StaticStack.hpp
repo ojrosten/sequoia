@@ -1,6 +1,6 @@
 #pragma once
 
-#include <array>
+#include "ArrayUtilities.hpp"
 
 namespace sequoia::data_structures
 {
@@ -8,6 +8,19 @@ namespace sequoia::data_structures
   class static_stack
   {
   public:
+    constexpr static_stack(std::initializer_list<T> l)
+      : m_Stack{utilities::to_array<MaxDepth>(l)}
+      , m_End{l.size()}
+    {
+    }
+
+    constexpr static_stack(const static_stack&)    = default;
+    constexpr static_stack(static_stack&) noexcept = default;
+    ~static_stack() = default;
+
+    constexpr static_stack& operator=(const static_stack&)    = default;
+    constexpr static_stack& operator=(static_stack&) noexcept = default;
+    
     constexpr void push(const T& val)
     {
       if(m_End == MaxDepth)

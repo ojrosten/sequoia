@@ -11,9 +11,11 @@ namespace sequoia::unit_testing
   private:
     void run_tests() override;
 
+    void check_depth_0();
     void check_depth_1();
-    void check_constexpr_stack();
+    void check_depth_2();
+    
 
-    constexpr static auto make_static_stack();
+    constexpr static auto make_static_stack_2();
   };
 }
