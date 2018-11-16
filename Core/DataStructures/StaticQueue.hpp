@@ -1,7 +1,6 @@
 #pragma once
 
-#include <array>
-#include <utility>
+#include "ArrayUtilities.hpp"
 
 namespace sequoia::data_structures
 {
@@ -10,7 +9,7 @@ namespace sequoia::data_structures
   {
   public:
     constexpr static_queue(std::initializer_list<T> l)
-      : m_Queue{make_array(l, std::make_index_sequence<MaxDepth>{})}
+    : m_Queue{utilities::to_array<MaxDepth>(l)}
       , m_Front{l.size() ? 0 : MaxDepth}
       , m_Back{l.size() ? l.size() - 1 : MaxDepth}
     {
@@ -108,16 +107,5 @@ namespace sequoia::data_structures
     std::array<T, MaxDepth> m_Queue{};
 
     std::size_t m_Front{MaxDepth}, m_Back{MaxDepth};
-
-    template<std::size_t... I> static constexpr std::array<T, MaxDepth>
-    make_array(std::initializer_list<T> l, std::index_sequence<I...>)
-    {
-      return std::array<T, MaxDepth>{ make_element(l, I)...};
-    }
-
-    static constexpr T make_element(std::initializer_list<T> l, const std::size_t i)
-    {
-      return (i < l.size()) ?  *(l.begin() + i) : T{};
-    }
   };
 }
