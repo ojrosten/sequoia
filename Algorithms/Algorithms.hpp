@@ -156,4 +156,18 @@ namespace sequoia
   {
     return {sequoia::lower_bound(begin, end, val, comp), sequoia::upper_bound(begin, end, val, comp)};
   }
+
+  template<class InputIt1, class InputIt2>
+  constexpr bool equal(InputIt1 first1, InputIt2 last1, InputIt2 first2, InputIt2 last2)
+  {
+    using namespace std;
+    if(distance(first1, last1) != distance(first2, last2)) return false;
+
+    for(; first1 != last1; ++first1, ++first2)
+      {
+        if(*first1 != *first2) return false;
+      }
+
+    return true;
+  }
 }

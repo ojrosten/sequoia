@@ -29,9 +29,10 @@ namespace sequoia::unit_testing
   void test_static_stack::check_depth_1()
   {
     using namespace data_structures;
+    using stack_t = static_stack<int, 1>;
 
-    constexpr static_stack<int, 1> s{1};
-    static_stack<int, 1> t{};
+    constexpr stack_t s{1};
+    stack_t t{};
     t.push(2);
 
     check_standard_semantics(s, t, LINE("Standard Semantics"));
@@ -40,12 +41,10 @@ namespace sequoia::unit_testing
     check_exception_thrown<std::logic_error>([]() { static_stack<int, 1>{1, 2}; }, LINE("Can't construct stack of depth 1 with 2 elements"));
 
     t.pop();
-    check_equality<std::size_t>(0, t.size(), LINE(""));
-    check(t.empty(), LINE(""));
+    check_equality(stack_t{}, t, LINE(""));
     
     t.push(1);
-    check_equality<std::size_t>(1, t.size(), LINE(""));
-    check(!t.empty(), LINE(""));
+    check_equality(stack_t{1}, t, LINE(""));
   }
 
   constexpr auto test_static_stack::make_static_stack_2()
@@ -65,21 +64,17 @@ namespace sequoia::unit_testing
   void test_static_stack::check_depth_2()
   {
     using namespace data_structures;
-
-    constexpr static_stack<int, 2> s{make_static_stack_2()};
+    using stack_t = static_stack<int, 2>;
+    
+    constexpr stack_t s{make_static_stack_2()};
     auto t{s};
 
-    check_equality(12, t.top(), LINE(""));
-    check_equality<std::size_t>(2, t.size(), LINE(""));
-    check(!t.empty(), LINE(""));
+    check_equality(stack_t{11, 12}, t, LINE(""));
 
     t.pop();
-    check_equality(11, t.top(), LINE(""));
-    check_equality<std::size_t>(1, t.size(), LINE(""));
-    check(!t.empty(), LINE(""));
+    check_equality(stack_t{11}, t, LINE(""));
 
     t.pop();
-    check_equality<std::size_t>(0, t.size(), LINE(""));
-    check(t.empty(), LINE(""));
+    check_equality(stack_t{}, t, LINE(""));
   }
 }

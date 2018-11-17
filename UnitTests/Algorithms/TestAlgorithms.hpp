@@ -27,6 +27,8 @@ namespace sequoia
       void upper_bound_basic_type();
 
       void equal_range_basic_type();
+
+      void equality();
     };
   }
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ArrayUtilities.hpp"
+#include "Algorithms.hpp"
 
 namespace sequoia::data_structures
 {
@@ -52,7 +53,8 @@ namespace sequoia::data_structures
 
     friend constexpr bool operator==(const static_stack& lhs, const static_stack& rhs) noexcept
     {
-      return (lhs.m_End == rhs.m_End) && (lhs.m_Stack == rhs.m_Stack);
+      return (lhs.m_End == rhs.m_End)
+        && sequoia::equal(lhs.m_Stack.begin(), lhs.m_Stack.begin() + lhs.m_End, rhs.m_Stack.begin(), rhs.m_Stack.begin() + rhs.m_End);
     }
 
     friend constexpr bool operator!=(const static_stack& lhs, const static_stack& rhs) noexcept
