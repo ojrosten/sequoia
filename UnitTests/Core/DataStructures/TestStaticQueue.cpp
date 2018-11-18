@@ -75,35 +75,22 @@ namespace sequoia::unit_testing
     
     a.push(5);
     a.push(7);
-    check_equality(5, a.front(), LINE(""));
-    check_equality(7, a.back(), LINE(""));
-    check_equality<std::size_t>(2, a.size(), LINE(""));
-    check(!a.empty(), LINE(""));
-
+    check_equality(static_queue<int, 2>{5, 7}, a, LINE(""));
+    
     check_exception_thrown<std::logic_error>([&a]() { a.push(0); }, LINE("Trying to push 3 elements to a queue of depth 2"));
     
     a.pop();
-    check_equality(7, a.front(), LINE(""));
-    check_equality(7, a.back(), LINE(""));
-    check_equality<std::size_t>(1, a.size(), LINE(""));
-    check(!a.empty(), LINE(""));
+    check_equality(static_queue<int, 2>{7}, a, LINE(""));
 
     a.push(4);
-    check_equality(7, a.front(), LINE(""));
-    check_equality(4, a.back(), LINE(""));
-    check_equality<std::size_t>(2, a.size(), LINE(""));
-    check(!a.empty(), LINE(""));
+    check_equality(static_queue<int, 2>{7, 4}, a, LINE(""));
 
     check_exception_thrown<std::logic_error>([&a]() { a.push(0); }, LINE("Trying to push 3 elements to a queue of depth 2"));
 
     a.pop();
-    check_equality(4, a.front(), LINE(""));
-    check_equality(4, a.back(), LINE(""));
-    check_equality<std::size_t>(1, a.size(), LINE(""));
-    check(!a.empty(), LINE(""));
+    check_equality(static_queue<int, 2>{4}, a, LINE(""));
 
     a.pop();
-    check_equality<std::size_t>(0, a.size(), LINE(""));
-    check(a.empty(), LINE(""));
+    check_equality(static_queue<int, 2>{}, a, LINE(""));
   }
 }

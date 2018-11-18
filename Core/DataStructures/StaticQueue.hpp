@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ArrayUtilities.hpp"
+#include "Algorithms.hpp"
 
 namespace sequoia::data_structures
 {
@@ -94,7 +95,26 @@ namespace sequoia::data_structures
 
     friend constexpr bool operator==(const static_queue& lhs, const static_queue& rhs) noexcept
     {
-      return (lhs.m_Front == rhs.m_Front) && (lhs.m_Back == rhs.m_Back) && (lhs.m_Queue == rhs.m_Queue);
+      if constexpr(MaxDepth > 0)
+      {   
+        const auto sz{lhs.size()};
+        if(sz != rhs.size()) return false;
+
+        for(std::size_t i{}, l{lhs.m_Front}, r{rhs.m_Front}; i<sz; ++i)
+        {
+
+          if(lhs.m_Queue[l] != rhs.m_Queue[r]) return false;
+        
+          l = (l+1) % MaxDepth;
+          r = (r+1) % MaxDepth;
+        }
+
+        return true;
+      }
+      else
+      {
+        return true;
+      }
     }
 
     friend constexpr bool operator!=(const static_queue& lhs, const static_queue& rhs) noexcept
