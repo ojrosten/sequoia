@@ -40,8 +40,7 @@ namespace sequoia::data_structures
       if(m_End == MaxDepth)
         throw std::logic_error("Attempting to exceed max priority_queue depth");
       
-      m_Q[m_End] = val;
-      ++m_End;
+      m_Q[m_End++] = val;
 
       bubble_up(m_Q.begin(), m_Q.begin() + m_End - 1, static_cast<Compare&>(*this));
     }
@@ -70,7 +69,7 @@ namespace sequoia::data_structures
 
     friend constexpr bool operator==(const static_priority_queue& lhs, const static_priority_queue& rhs) noexcept
     {
-      return (lhs.m_End == rhs.m_End) && (lhs.m_Q == rhs.m_Q);
+      return (lhs.m_End == rhs.m_End) && sequoia::equal(lhs.m_Q.begin(), lhs.m_Q.begin() + lhs.m_End, rhs.m_Q.begin(), rhs.m_Q.begin() + rhs.m_End);
     }
 
     friend constexpr bool operator!=(const static_priority_queue& lhs, const static_priority_queue& rhs) noexcept
