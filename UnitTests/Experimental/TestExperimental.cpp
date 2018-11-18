@@ -110,9 +110,7 @@ namespace sequoia
 
       //int x{5};
       //wrapper<int> w{x}; // fine
-      //thing<int, wrapper<int>> foo{x}; // fails due to exception spec of move assignment operator not matching the calculated one
-
-      
+      //thing<int, wrapper<int>> foo{x}; // fails due to exception spec of move assignment operator not matching the calculated one            
     }
   }
 }

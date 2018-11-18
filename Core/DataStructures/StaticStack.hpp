@@ -1,6 +1,7 @@
 #pragma once
 
-#include <array>
+#include "ArrayUtilities.hpp"
+#include "Algorithms.hpp"
 
 namespace sequoia::data_structures
 {
@@ -8,6 +9,19 @@ namespace sequoia::data_structures
   class static_stack
   {
   public:
+    constexpr static_stack(std::initializer_list<T> l)
+      : m_Stack{utilities::to_array<MaxDepth>(l)}
+      , m_End{l.size()}
+    {
+    }
+
+    constexpr static_stack(const static_stack&)    = default;
+    constexpr static_stack(static_stack&) noexcept = default;
+    ~static_stack() = default;
+
+    constexpr static_stack& operator=(const static_stack&)    = default;
+    constexpr static_stack& operator=(static_stack&) noexcept = default;
+    
     constexpr void push(const T& val)
     {
       if(m_End == MaxDepth)
@@ -39,7 +53,8 @@ namespace sequoia::data_structures
 
     friend constexpr bool operator==(const static_stack& lhs, const static_stack& rhs) noexcept
     {
-      return (lhs.m_End == rhs.m_End) && (lhs.m_Stack == rhs.m_Stack);
+      return (lhs.m_End == rhs.m_End)
+        && sequoia::equal(lhs.m_Stack.begin(), lhs.m_Stack.begin() + lhs.m_End, rhs.m_Stack.begin(), rhs.m_Stack.begin() + rhs.m_End);
     }
 
     friend constexpr bool operator!=(const static_stack& lhs, const static_stack& rhs) noexcept

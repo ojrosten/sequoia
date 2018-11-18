@@ -40,6 +40,8 @@ namespace sequoia
       upper_bound_basic_type();
 
       equal_range_basic_type();
+
+      equality();
     }  
     
     void test_algorithms::sort_basic_type()
@@ -363,6 +365,18 @@ namespace sequoia
         check(iters.first == a.begin());
         check(iters.second == a.end());
       }
+    }
+
+    void test_algorithms::equality()
+    {
+      constexpr std::array<int, 2> a{1,2};
+      constexpr std::array<int, 3> b{1,2, 3};
+
+      constexpr bool f{equal(a.begin(), a.end(), b.begin(), b.end())};
+      check(!f, LINE(""));
+      
+      constexpr bool t{equal(a.begin(), a.end(), b.begin(), b.end() - 1)};
+      check(t, LINE(""));
     }
   }
 }

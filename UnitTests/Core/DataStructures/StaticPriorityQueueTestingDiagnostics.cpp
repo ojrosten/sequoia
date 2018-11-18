@@ -5,7 +5,8 @@ namespace sequoia::unit_testing
 {
   void test_static_priority_queue_false_positives::run_tests()
   {
-    check_depth_1(); 
+    check_depth_1();
+    check_depth_2();
   }
 
   void test_static_priority_queue_false_positives::check_depth_1()
@@ -22,5 +23,13 @@ namespace sequoia::unit_testing
 
     s.pop();
     check_equality(s, t, LINE("Empty queue versus populated queue"));
+  }
+
+  void test_static_priority_queue_false_positives::check_depth_2()
+  {
+    using namespace data_structures;
+
+    static_priority_queue<int, 2> s{1, 2}, t{1};
+    check_equality(s, t, LINE("Two element queue versus one element queue"));
   }
 }

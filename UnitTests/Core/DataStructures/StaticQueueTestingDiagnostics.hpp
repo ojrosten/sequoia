@@ -12,6 +12,7 @@ namespace sequoia::unit_testing
   private:    
     void run_tests() override;
 
-    void check_depth_1();    
+    void check_depth_0(); 
+    void check_depth_1();   
   };
 }

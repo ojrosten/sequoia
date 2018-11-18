@@ -24,6 +24,7 @@ namespace sequoia::unit_testing
       }
 
       check_equality(logger, reference == actual, true, impl::concat_messages(description, "Hidden state"));
+      check_equality(logger, actual == reference, true, impl::concat_messages(description, "Hidden state, symmetry of operator=="));
     }
   };
 }

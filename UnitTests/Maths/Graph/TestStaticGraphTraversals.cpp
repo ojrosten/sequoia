@@ -1,6 +1,7 @@
 #include "TestStaticGraphTraversals.hpp"
 
-#include "GraphTraversals.hpp"
+#include "StaticGraph.hpp"
+#include "StaticGraphTraversals.hpp"
 
 namespace sequoia::unit_testing
 {

@@ -1,50 +1,120 @@
 #pragma once
 
-#include <array>
+#include "ArrayUtilities.hpp"
+#include "Algorithms.hpp"
 
 namespace sequoia::data_structures
 {
-  template<class T, std::size_t MaxPushes>
+  template<class T, std::size_t MaxDepth>
   class static_queue
   {
   public:
+    constexpr static_queue(std::initializer_list<T> l)
+      : m_Queue{utilities::to_array<MaxDepth>(l)}
+      , m_Front{l.size() ? 0 : MaxDepth}
+      , m_Back{l.size() ? l.size() - 1 : MaxDepth}
+    {
+    }
+
+    constexpr static_queue(const static_queue&)    = default;
+    constexpr static_queue(static_queue&) noexcept = default;
+    ~static_queue() = default;
+
+    constexpr static_queue& operator=(const static_queue&)    = default;
+    constexpr static_queue& operator=(static_queue&) noexcept = default;
+    
     constexpr void push(const T& val)
     {
-      if(m_End == MaxPushes)
-        throw std::logic_error("Attempting to exceed max queue depth");
-      
-      m_Queue[m_End] = val;
-      ++m_End;
+      if constexpr(MaxDepth > 0)
+      {   
+        if(size() == MaxDepth)
+        {
+          throw std::logic_error("Attempting to exceed maximum queue depth");
+        }
+        else if(m_Front == MaxDepth)
+        {
+          m_Front = 0;
+          m_Back  = 0;
+        }
+        else 
+        {
+          m_Back = (m_Back + 1) % MaxDepth;
+        }
+
+        m_Queue[m_Back] = val;
+      }
+      else
+      {
+        throw std::logic_error("Attempting to exceed maximum queue depth");
+      }
     }
 
     constexpr const T& back() const noexcept
     {
-      return m_Queue[m_End - 1];
+      return m_Queue[m_Back];
     }
 
     constexpr const T& front() const noexcept
     {
-      return m_Queue[m_Begin];
+      return m_Queue[m_Front];
     }
 
     constexpr void pop() noexcept
     {
-      ++m_Begin;
+      if(m_Front == m_Back)
+      {
+        m_Front = MaxDepth;
+        m_Back = MaxDepth;
+      }
+      else
+      {
+        m_Front = (m_Front + 1) % MaxDepth;
+      }
     }
 
     constexpr bool empty() const noexcept
     {
-      return m_Begin == m_End;
+      return m_Front == MaxDepth;
     }
 
     constexpr std::size_t size() const noexcept
     {
-      return m_End - m_Begin;
+      if(empty())
+      {
+        return {};
+      }
+      else if(m_Front <= m_Back)
+      {
+        return m_Back + 1 - m_Front;
+      }
+      else
+      {
+        return MaxDepth + 1 - (m_Front - m_Back);
+      }
     }
 
     friend constexpr bool operator==(const static_queue& lhs, const static_queue& rhs) noexcept
     {
-      return (lhs.m_Begin == rhs.m_Begin) && (lhs.m_End == rhs.m_End) && (lhs.m_Queue == rhs.m_Queue);
+      if constexpr(MaxDepth > 0)
+      {   
+        const auto sz{lhs.size()};
+        if(sz != rhs.size()) return false;
+
+        for(std::size_t i{}, l{lhs.m_Front}, r{rhs.m_Front}; i<sz; ++i)
+        {
+
+          if(lhs.m_Queue[l] != rhs.m_Queue[r]) return false;
+        
+          l = (l+1) % MaxDepth;
+          r = (r+1) % MaxDepth;
+        }
+
+        return true;
+      }
+      else
+      {
+        return true;
+      }
     }
 
     friend constexpr bool operator!=(const static_queue& lhs, const static_queue& rhs) noexcept
@@ -52,8 +122,8 @@ namespace sequoia::data_structures
       return !(lhs == rhs);
     }
   private:
-    std::array<T, MaxPushes> m_Queue{};
+    std::array<T, MaxDepth> m_Queue{};
 
-    std::size_t m_Begin{}, m_End{};
+    std::size_t m_Front{MaxDepth}, m_Back{MaxDepth};
   };
 }
