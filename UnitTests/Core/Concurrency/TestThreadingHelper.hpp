@@ -36,7 +36,7 @@ namespace sequoia
 	m_Data.push_back(x);
       }
 
-      const auto& get_data() { return m_Data; }
+      const auto& get_data() const { return m_Data; }
     private:
       std::vector<int> m_Data;
     };

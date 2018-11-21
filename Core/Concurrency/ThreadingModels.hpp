@@ -21,13 +21,14 @@ namespace sequoia
     public:
       using return_type = R;
 
-      template<class Fn, class... Args> void push(Fn&& fn, Args... args)
+      template<class Fn, class... Args> void push(Fn&& fn, Args&&... args)
       {
-        static_assert(std::is_same<R, std::result_of_t<Fn(Args...)>>::value, "Function return type inconsistent!");
-        m_Results.push_back(std::forward<Fn>(fn)(args...));
+        static_assert(std::is_convertible_v<R, std::invoke_result_t<std::decay_t<Fn>, std::decay_t<Args>...>>,
+                      "Function return type inconsistent!");
+        m_Results.push_back(fn(std::forward<Args>(args)...));
       }
 
-      auto get() const { return m_Results; }
+      const auto& get() const noexcept{ return m_Results; }
     private:
       std::vector<R> m_Results;
     };
@@ -37,10 +38,9 @@ namespace sequoia
     public:
       using return_type = void;
 
-      template<class Fn, class... Args> constexpr void push(Fn&& fn, Args... args)
+      template<class Fn, class... Args> constexpr void push(Fn&& fn, Args&&... args)
       {
-        static_assert(std::is_same<void, typename std::result_of_t<Fn(Args...)>>::value, "Fn must return void!");
-        fn(args...);
+        fn(std::forward<Args>(args)...);
       }
 
       constexpr void get() const noexcept {}
@@ -53,23 +53,34 @@ namespace sequoia
     {
     public:
       using return_type = R;
-      asynchronous() {}
+      
+      asynchronous() = default;
+      asynchronous(const asynchronous&)     = delete;
+      asynchronous(asynchronous&&) noexcept = default;
+      ~asynchronous() = default;
+
+      asynchronous& operator=(const asynchronous&)     = delete;
+      asynchronous& operator=(asynchronous&&) noexcept = default;
 
       template<class Fn, class... Args>
-      void push(Fn&& fn, Args... args)
+      void push(Fn&& fn, Args&&... args)
       {
-        m_Futures.emplace_back(std::async(std::launch::async | std::launch::deferred, std::forward<Fn>(fn), args...));
+        m_Futures.emplace_back(std::async(std::launch::async | std::launch::deferred, std::forward<Fn>(fn), std::forward<Args>(args)...));
       }
 
       auto get()
       {
-        utilities::ReturnValues<R> values;
-        for(auto&& fut : m_Futures)
+        if constexpr(std::is_same_v<R, void>)
         {
-          values.emplace_back(fut);
+          std::for_each(m_Futures.begin(), m_Futures.end(), [](std::future<R>& fut) { fut.get(); });
         }
-
-        return values.get();
+        else
+        {
+          std::vector<R> values;
+          values.reserve(m_Futures.size());
+          std::transform(m_Futures.begin(), m_Futures.end(), std::back_inserter(values), [](std::future<R>& fut) { return fut.get(); });
+          return values;
+        }
       }
     private:
       std::vector<std::future<R>> m_Futures;
@@ -100,9 +111,9 @@ namespace sequoia
                 {
                   std::unique_lock<std::mutex> lock(m_Mutex);
                   if(m_Queue.empty())
-                    m_CV.wait(lock, [this](){ return (!m_Queue.empty() || m_Execution != CONTINUE); });
+                    m_CV.wait(lock, [this](){ return (!m_Queue.empty() || m_Status != status::running); });
 
-                  if(m_Execution == TERMINATE) break;
+                  if(m_Status == status::terminated) break;
 
                   if(!m_Queue.empty())
                   {
@@ -111,13 +122,13 @@ namespace sequoia
                   }
                 }
 
-                if(m_Execution != TERMINATE)
+                if(m_Status != status::terminated)
                 {
                   if(task.valid())
                   {
                     task();
                   }
-                  else if(m_Execution == FINISH)
+                  else if(m_Status == status::finished)
                   {
                     break;
                   }
@@ -132,10 +143,10 @@ namespace sequoia
             m_Threads.emplace_back(std::thread(loop));
           }
         }
-        catch(std::system_error& e)
+        catch(std::system_error&)
         {
           if(m_Threads.empty())
-            throw e;
+            throw;
 
           // else do nothing
         }
@@ -149,23 +160,28 @@ namespace sequoia
         static_assert(std::is_same<R, std::decay_t<std::result_of_t<Fn(Args...)>>>::value, "Function return type inconsistent!");
 
         std::unique_lock<std::mutex> lck(m_Mutex);
-        if(m_Execution == CONTINUE)
+        if(m_Status == status::running)
         {
           try
           {
             {
-              Task task(std::bind(std::forward<Fn>(fn), args...));
+              //            Task task(std::bind(std::forward<Fn>(fn), args...));
+              Task task{[=]() { return fn(args...);}};
+
+              // This bit must be linearly synchronized
               m_Futures.emplace_back(task.get_future());
+
+              // This bit can be distributed
               m_Queue.push(std::move(task));
             }
             m_CV.notify_one();
           }
-          catch(const std::exception& e)
+          catch(...)
           {
             std::unique_lock<std::mutex> lck(m_Mutex);
-            m_Execution = TERMINATE;
+            m_Status = status::terminated;
             join();
-            throw e;
+            throw;
           }
         }
       }
@@ -174,7 +190,7 @@ namespace sequoia
       {
         {
           std::unique_lock<std::mutex> lck(m_Mutex);
-          if(m_Execution == CONTINUE) m_Execution = FINISH;
+          if(m_Status == status::running) m_Status = status::finished;
         }
 
         m_CV.notify_all();
@@ -199,16 +215,14 @@ namespace sequoia
       using Task = std::packaged_task<R()>;
 
       std::queue<Task, Q<Task, std::allocator<Task>>> m_Queue;
+      std::vector<std::future<R>> m_Futures;
+
       std::vector<std::thread> m_Threads;
       std::mutex m_Mutex;
       std::condition_variable m_CV;
 
-      std::vector<std::future<R>> m_Futures;
-
-      std::string m_ExceptionMessage;
-
-      enum Execution : char { CONTINUE, FINISH, TERMINATE };
-      Execution m_Execution{CONTINUE};
+      enum class status { running, finished, terminated };
+      status m_Status{status::running};
     };
   }
 }
