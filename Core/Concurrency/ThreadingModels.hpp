@@ -10,100 +10,107 @@
 
 #include "Utilities.hpp"
 
-namespace sequoia
+namespace sequoia::concurrency
 {
-  namespace concurrency
+  namespace impl
   {
-    //===================================Null Threading Model===================================//
-
-    template<class R=void>  class serial
-    {
-    public:
-      using return_type = R;
-
-      template<class Fn, class... Args> void push(Fn&& fn, Args&&... args)
-      {
-        static_assert(std::is_convertible_v<R, std::invoke_result_t<std::decay_t<Fn>, std::decay_t<Args>...>>,
-                      "Function return type inconsistent!");
-        m_Results.push_back(fn(std::forward<Args>(args)...));
-      }
-
-      const auto& get() const noexcept{ return m_Results; }
-    private:
-      std::vector<R> m_Results;
-    };
-
-    template<> class serial<void>
-    {
-    public:
-      using return_type = void;
-
-      template<class Fn, class... Args> constexpr void push(Fn&& fn, Args&&... args)
-      {
-        fn(std::forward<Args>(args)...);
-      }
-
-      constexpr void get() const noexcept {}
-    };
-
-    //==================================Asynchronous Processing==================================// 
-
     template<class R>
-    class asynchronous
+    auto get_results(std::vector<std::future<R>>& futures)
     {
-    public:
-      using return_type = R;
+      if constexpr(std::is_same_v<R, void>)
+      {
+        std::for_each(futures.begin(), futures.end(), [](std::future<R>& fut) { fut.get(); });
+      }
+      else
+      {
+        std::vector<R> values;
+        values.reserve(futures.size());
+        std::transform(futures.begin(), futures.end(), std::back_inserter(values), [](std::future<R>& fut) { return fut.get(); });
+        return values;
+      }
+    }
+  }
+  
+  //===================================Null Threading Model===================================//
+
+  template<class R=void>  class serial
+  {
+  public:
+    using return_type = R;
+
+    template<class Fn, class... Args> void push(Fn&& fn, Args&&... args)
+    {
+      static_assert(std::is_convertible_v<R, std::invoke_result_t<std::decay_t<Fn>, std::decay_t<Args>...>>,
+                    "Function return type inconsistent!");
+      m_Results.push_back(fn(std::forward<Args>(args)...));
+    }
+
+    const auto& get() const noexcept{ return m_Results; }
+  private:
+    std::vector<R> m_Results;
+  };
+
+  template<> class serial<void>
+  {
+  public:
+    using return_type = void;
+
+    template<class Fn, class... Args> constexpr void push(Fn&& fn, Args&&... args)
+    {
+      fn(std::forward<Args>(args)...);
+    }
+
+    constexpr void get() const noexcept {}
+  };
+
+  //==================================Asynchronous Processing==================================// 
+
+  template<class R>
+  class asynchronous
+  {
+  public:
+    using return_type = R;
       
-      asynchronous() = default;
-      asynchronous(const asynchronous&)     = delete;
-      asynchronous(asynchronous&&) noexcept = default;
-      ~asynchronous() = default;
+    asynchronous() = default;
+    asynchronous(const asynchronous&)     = delete;
+    asynchronous(asynchronous&&) noexcept = default;
+    ~asynchronous() = default;
 
-      asynchronous& operator=(const asynchronous&)     = delete;
-      asynchronous& operator=(asynchronous&&) noexcept = default;
+    asynchronous& operator=(const asynchronous&)     = delete;
+    asynchronous& operator=(asynchronous&&) noexcept = default;
 
-      template<class Fn, class... Args>
-      void push(Fn&& fn, Args&&... args)
-      {
-        m_Futures.emplace_back(std::async(std::launch::async | std::launch::deferred, std::forward<Fn>(fn), std::forward<Args>(args)...));
-      }
-
-      auto get()
-      {
-        if constexpr(std::is_same_v<R, void>)
-        {
-          std::for_each(m_Futures.begin(), m_Futures.end(), [](std::future<R>& fut) { fut.get(); });
-        }
-        else
-        {
-          std::vector<R> values;
-          values.reserve(m_Futures.size());
-          std::transform(m_Futures.begin(), m_Futures.end(), std::back_inserter(values), [](std::future<R>& fut) { return fut.get(); });
-          return values;
-        }
-      }
-    private:
-      std::vector<std::future<R>> m_Futures;
-    };
-
-    //=======================================Thread Pool========================================//
-
-    template<class R, template<class, class> class Q>
-    class thread_pool
+    template<class Fn, class... Args>
+    void push(Fn&& fn, Args&&... args)
     {
-    public:
-      using return_type = R;
+      m_Futures.emplace_back(std::async(std::launch::async | std::launch::deferred, std::forward<Fn>(fn), std::forward<Args>(args)...));
+    }
 
-      thread_pool(const std::size_t numThreads)
+    auto get()
+    {
+      return impl::get_results(m_Futures);
+    }
+  private:
+    std::vector<std::future<R>> m_Futures;
+  };
+
+  //=======================================Thread Pool========================================//
+
+  template<class R, template<class, class> class Q>
+  class thread_pool
+  {
+  public:
+    using return_type = R;
+
+    thread_pool(const std::size_t numThreads)
+    {
+      if(!numThreads)
+        throw std::out_of_range("Cannot initialize thread pool with zero threads!");
+
+      try
       {
-        if(!numThreads)
-          throw std::out_of_range("Cannot initialize thread pool with zero threads!");
-
-        try
+        for(std::size_t i = 0; i < numThreads; ++i)
         {
-          for(std::size_t i = 0; i < numThreads; ++i)
-          {
-            auto loop = [this]()
+          auto loop = [this]()
             {
               for(;;)
               {
@@ -140,89 +147,81 @@ namespace sequoia
               }
             };
 
-            m_Threads.emplace_back(std::thread(loop));
-          }
-        }
-        catch(std::system_error&)
-        {
-          if(m_Threads.empty())
-            throw;
-
-          // else do nothing
+          m_Threads.emplace_back(std::thread(loop));
         }
       }
-
-      thread_pool(const thread_pool&) = delete;
-
-      template<class Fn, class... Args>
-      void push(Fn&& fn, Args... args)
+      catch(std::system_error&)
       {
-        static_assert(std::is_same<R, std::decay_t<std::result_of_t<Fn(Args...)>>>::value, "Function return type inconsistent!");
+        if(m_Threads.empty())
+          throw;
 
-        std::unique_lock<std::mutex> lck(m_Mutex);
-        if(m_Status == status::running)
-        {
-          try
-          {
-            {
-              //            Task task(std::bind(std::forward<Fn>(fn), args...));
-              Task task{[=]() { return fn(args...);}};
-
-              // This bit must be linearly synchronized
-              m_Futures.emplace_back(task.get_future());
-
-              // This bit can be distributed
-              m_Queue.push(std::move(task));
-            }
-            m_CV.notify_one();
-          }
-          catch(...)
-          {
-            std::unique_lock<std::mutex> lck(m_Mutex);
-            m_Status = status::terminated;
-            join();
-            throw;
-          }
-        }
+        // else do nothing
       }
+    }
 
-      void join()
+    thread_pool(const thread_pool&) = delete;
+
+    template<class Fn, class... Args>
+    void push(Fn&& fn, Args&&... args)
+    {
+      static_assert(std::is_convertible_v<R, std::invoke_result_t<std::decay_t<Fn>, std::decay_t<Args>...>>,
+                    "Function return type inconsistent!");
+        
+      std::unique_lock<std::mutex> lck(m_Mutex);
+      if(m_Status == status::running)
       {
+        try
+        {
+          Task task{[=]() { return fn(args...);}};
+
+          // This bit must be linearly synchronized
+          m_Futures.emplace_back(task.get_future());
+
+          // This bit can be distributed
+          m_Queue.push(std::move(task));
+              
+          m_CV.notify_one();
+        }
+        catch(...)
         {
           std::unique_lock<std::mutex> lck(m_Mutex);
-          if(m_Status == status::running) m_Status = status::finished;
-        }
-
-        m_CV.notify_all();
-        for(auto&& worker : m_Threads)
-        {
-          worker.join();
+          m_Status = status::terminated;
+          join();
+          throw;
         }
       }
+    }
 
-      auto get()
+    void join()
+    {
       {
-        join();
-        utilities::ReturnValues<R> values;
-        for(auto&& fut : m_Futures)
-        {
-          values.emplace_back(fut);
-        }
-
-        return values.get();
+        std::unique_lock<std::mutex> lck(m_Mutex);
+        if(m_Status == status::running) m_Status = status::finished;
       }
-    private:
-      using Task = std::packaged_task<R()>;
 
-      std::queue<Task, Q<Task, std::allocator<Task>>> m_Queue;
-      std::vector<std::future<R>> m_Futures;
+      m_CV.notify_all();
+      for(auto&& worker : m_Threads)
+      {
+        worker.join();
+      }
+    }
 
-      std::vector<std::thread> m_Threads;
-      std::mutex m_Mutex;
-      std::condition_variable m_CV;
+    auto get()
+    {
+      join();
+      return impl::get_results(m_Futures);
+    }
+  private:
+    using Task = std::packaged_task<R()>;
 
-      enum class status { running, finished, terminated };
-      status m_Status{status::running};
-    };
-  }
+    std::queue<Task, Q<Task, std::allocator<Task>>> m_Queue;
+    std::vector<std::future<R>> m_Futures;
+
+    std::vector<std::thread> m_Threads;
+    std::mutex m_Mutex;
+    std::condition_variable m_CV;
+
+    enum class status { running, finished, terminated };
+    status m_Status{status::running};
+  };
 }
