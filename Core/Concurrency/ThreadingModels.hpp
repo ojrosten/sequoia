@@ -159,7 +159,13 @@ namespace sequoia::concurrency
       }
     }
 
-    thread_pool(const thread_pool&) = delete;
+    thread_pool(const thread_pool&)= delete;
+    thread_pool(thread_pool&&)     = delete;
+
+    ~thread_pool() = default;
+    
+    thread_pool& operator=(const thread_pool&) = delete;
+    thread_pool& operator=(thread_pool&&)      = delete;
 
     template<class Fn, class... Args>
     void push(Fn&& fn, Args&&... args)
