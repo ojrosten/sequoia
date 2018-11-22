@@ -8,7 +8,7 @@
 
 namespace sequoia::unit_testing
 {
-  template<class R, class Task=std::packaged_task<R()>, class Q=std::queue<Task>>
+  template<class R, class Locking=std::try_to_lock_t, class Task=std::packaged_task<R()>, class Q=std::queue<Task>>
   class task_queue
   {
   public:
@@ -21,22 +21,21 @@ namespace sequoia::unit_testing
     task_queue& operator=(const task_queue&) = delete;
     task_queue& operator=(task_queue&&)      = delete;
     
-    template<class Fn, class... Args, class Locking=std::try_to_lock_t>
-    bool push(Fn&& fn, Args... args, Locking locking=Locking{})
+    template<class Fn, class... Args>
+    bool push(Fn&& fn, Args... args)
     {
-      std::unique_lock<std::mutex> lock{m_Mutex, locking};
+      std::unique_lock<std::mutex> lock{m_Mutex, Locking{}};
       if(!lock) return false;
 
-      m_Q.emplace_back([=]() { return fn(args...); });
+      m_Q.emplace([=]() { return fn(args...); });
       m_CV.notify_one();
       
       return true;
     }
 
-    template<class Locking=std::try_to_lock_t>
-    Task&& pop(Locking locking=Locking{})
+    Task pop()
     {
-      std::unique_lock<std::mutex> lock{m_Mutex, locking};
+      std::unique_lock<std::mutex> lock{m_Mutex, Locking{}};
       if(!lock || m_Q.empty()) return Task{};
 
       auto task{std::move(m_Q.front())};
@@ -54,6 +53,9 @@ namespace sequoia::unit_testing
   
   void test_experimental::run_tests()
   {      
-        
+    task_queue<int> q{};
+
+    q.push([](int x){ return x;}, 1);
+    auto t{q.pop()};
   }
 }
