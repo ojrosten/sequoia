@@ -116,7 +116,7 @@ namespace sequoia::concurrency
               {
                 Task task;
                 {
-                  std::unique_lock<std::mutex> lock(m_Mutex);
+                  std::unique_lock<std::mutex> lock{m_Mutex};
                   if(m_Queue.empty())
                     m_CV.wait(lock, [this](){ return (!m_Queue.empty() || m_Status != status::running); });
 
@@ -173,7 +173,7 @@ namespace sequoia::concurrency
       static_assert(std::is_convertible_v<R, std::invoke_result_t<std::decay_t<Fn>, std::decay_t<Args>...>>,
                     "Function return type inconsistent!");
         
-      std::unique_lock<std::mutex> lck(m_Mutex);
+      std::unique_lock<std::mutex> lock{m_Mutex};
       if(m_Status == status::running)
       {
         try
@@ -190,7 +190,7 @@ namespace sequoia::concurrency
         }
         catch(...)
         {
-          std::unique_lock<std::mutex> lck(m_Mutex);
+          std::unique_lock<std::mutex> lock{m_Mutex};
           m_Status = status::terminated;
           join();
           throw;
@@ -201,7 +201,7 @@ namespace sequoia::concurrency
     void join()
     {
       {
-        std::unique_lock<std::mutex> lck(m_Mutex);
+        std::unique_lock<std::mutex> lock{m_Mutex};
         if(m_Status == status::running) m_Status = status::finished;
       }
 
