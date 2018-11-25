@@ -7,6 +7,7 @@
 #include <mutex>
 #include <condition_variable>
 #include <future>
+#include <chrono>
 
 namespace sequoia
 {
@@ -130,20 +131,24 @@ namespace sequoia
 
         for(std::size_t q{}; q<numThreads; ++q)
         {
-          auto loop{[this]() {
+          auto loop{[this, q]() {
               while(true)
               {
                 task_t task{};
-                for(std::size_t i{}; i<m_Threads.size(); ++i)
+                const auto N{m_Threads.size()};
+                for(std::size_t i{}; i<N; ++i)
                 {
-                  task = m_Queues.pop(std::try_to_lock);
+                  task = m_Queues[(q+i) % N].pop(std::try_to_lock);
                   if(task.valid()) break;
                 }
 
                 if(!task.valid())
-                  task = m_Queues.pop();
+                  task = m_Queues[q].pop();
 
-                if(task.valid()) task();
+                if(task.valid())
+                  task();
+                else
+                  break;
               }
             }
           };
@@ -215,6 +220,23 @@ namespace sequoia
       using unit_test::unit_test;
     private:
       void run_tests();
+
+      void waiting_task(const std::chrono::milliseconds millisecs);
+
+      template<class ThreadModel, class... Args>
+      void waiting_task(const std::size_t nTasks, const std::chrono::milliseconds millisecs, Args&&... args);
+    };
+
+    class Wait
+    {
+      std::chrono::milliseconds m_Wait;
+    public:      
+      Wait(const std::chrono::milliseconds millisecs) : m_Wait{millisecs} {}
+      
+      void operator()() const
+      {
+        std::this_thread::sleep_for(m_Wait);
+      }
     };
   }
 }

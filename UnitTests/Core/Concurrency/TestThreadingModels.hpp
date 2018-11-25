@@ -18,7 +18,7 @@ namespace sequoia
       using unit_test::unit_test;
 
     private:
-      void run_tests();
+      void run_tests() override;
 
       void void_return_type_tests();
       void return_value_tests();
