@@ -88,6 +88,7 @@ namespace sequoia::data_structures::partition_impl
   struct dereference_policy : public SharingPolicy
   {
     using elementary_type = typename SharingPolicy::elementary_type;
+    using value_type      = elementary_type;
     using reference       = typename ReferencePolicy<elementary_type>::reference;
     using pointer         = typename ReferencePolicy<elementary_type>::pointer;
   };

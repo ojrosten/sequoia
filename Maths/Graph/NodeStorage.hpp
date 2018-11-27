@@ -21,6 +21,7 @@ namespace sequoia
 
         using reference = decltype(std::declval<proxy_reference>().get());
         using pointer = std::add_pointer_t<reference>;
+        using value_type = std::remove_cv_t<reference>;
 
         static constexpr reference get(proxy_reference ref) noexcept { return ref.get(); }
       };

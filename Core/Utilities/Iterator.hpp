@@ -9,6 +9,7 @@ namespace sequoia
     template<class Iterator>
     struct identity_dereference_policy
     {
+      using value_type = typename std::iterator_traits<Iterator>::value_type;
       using reference = typename std::iterator_traits<Iterator>::reference;
       using pointer = typename std::iterator_traits<Iterator>::pointer;
 
@@ -46,8 +47,8 @@ namespace sequoia
       using base_iterator_type    = Iterator;
       
       using iterator_category = typename std::iterator_traits<Iterator>::iterator_category;
-      using value_type        = typename std::iterator_traits<Iterator>::value_type;
-      using difference_type   = typename std::iterator_traits<Iterator>::difference_type;
+      using difference_type   = typename std::iterator_traits<Iterator>::difference_type;      
+      using value_type        = typename DereferencePolicy::value_type;
       using pointer           = typename DereferencePolicy::pointer;
       using reference         = typename DereferencePolicy::reference;
 
