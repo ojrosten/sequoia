@@ -75,24 +75,5 @@ namespace sequoia
     {};
 
     template<class T> constexpr bool is_orderable_v{is_orderable<T>::value};
-    
-    template<class R>
-    class ReturnValues
-    {
-    public:
-      template<class F>
-      void emplace_back(F&& fut) { m_Values.emplace_back(std::forward<F>(fut).get()); }
-      auto get() const { return m_Values; }
-    private:
-      std::vector<R> m_Values;
-    };
-
-    template<>
-    class ReturnValues<void>
-    {
-    public:
-      template<class F> void emplace_back(F&& fut) { fut.get(); }
-      void get() const {}
-    };
   }
 }
