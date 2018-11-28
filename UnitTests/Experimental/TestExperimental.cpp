@@ -1,5 +1,7 @@
 #include "TestExperimental.hpp"
 
+#include "ThreadingModels.hpp"
+
 namespace sequoia::unit_testing
 {
   
@@ -25,7 +27,40 @@ namespace sequoia::unit_testing
 
   void test_experimental::waiting_task(const std::chrono::milliseconds millisecs)
   {
-    waiting_task<experimental::thread_pool<void>>(2u, millisecs, 2u);
+    using namespace concurrency;
+
+    {
+      auto threadPoolFn_2{[this, millisecs](){
+          waiting_task<experimental::thread_pool<void>>(2u, millisecs, 2u);
+        }
+      };
+
+      auto nullThreadFn{[this, millisecs]() { waiting_task<serial<void>>(2u, millisecs); }};
+
+      check_relative_performance(threadPoolFn_2, nullThreadFn, 1.9, true, "Two Waiting tasks; pool_2/null");
+    }
+
+    {
+      auto threadPoolFn_2{[this, millisecs](){
+          waiting_task<experimental::thread_pool<void>>(4u, millisecs, 2u);
+        }
+      };
+
+      auto nullThreadFn{[this, millisecs]() { waiting_task<serial<void>>(4u, millisecs); }};
+
+      check_relative_performance(threadPoolFn_2, nullThreadFn, 1.9, true, "Four Waiting tasks; pool_2/null");
+    }
+
+    {
+      auto threadPoolFn_4{[this, millisecs](){
+          waiting_task<experimental::thread_pool<void>>(4u, millisecs, 4u);
+        }
+      };
+
+      auto nullThreadFn{[this, millisecs]() { waiting_task<serial<void>>(4u, millisecs); }};
+
+      check_relative_performance(threadPoolFn_4, nullThreadFn, 3.75, true, "Four Waiting tasks; pool_4/null");
+    }
   }
 
   template<class ThreadModel, class... Args>
@@ -38,6 +73,6 @@ namespace sequoia::unit_testing
       model.push(Wait{millisecs});
     }
 
-    model.join();
+    model.get();
   }
 }

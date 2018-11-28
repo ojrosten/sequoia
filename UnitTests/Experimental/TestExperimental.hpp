@@ -119,7 +119,7 @@ namespace sequoia
       };
     }
 
-    template<class R>
+    template<class R, bool Speculative=true>
     class thread_pool : private impl::future_store<R>
     {
     public:
@@ -135,20 +135,29 @@ namespace sequoia
               while(true)
               {
                 task_t task{};
-                const auto N{m_Threads.size()};
-                for(std::size_t i{}; i<N; ++i)
-                {
-                  task = m_Queues[(q+i) % N].pop(std::try_to_lock);
-                  if(task.valid()) break;
-                }
 
-                if(!task.valid())
+                if constexpr(Speculative)
+                {
+                  const auto N{m_Threads.size()};
+                  for(std::size_t i{}; i<N; ++i)
+                  {
+                    task = m_Queues[(q+i) % N].pop(std::try_to_lock);
+                    if(task.valid()) break;
+                  }
+
+                  if(!task.valid())
+                    task = m_Queues[q].pop();
+                }
+                else
+                {
                   task = m_Queues[q].pop();
+                }
 
                 if(task.valid())
                   task();
                 else
                   break;
+                
               }
             }
           };
@@ -176,23 +185,30 @@ namespace sequoia
 
         task_t task{[=](){ fn(args...); }};
         if constexpr(!std::is_void_v<R>) this->stash(task->get_future());
-
-        const auto qIndex{m_QueueIndex++};
-
+        
+        const auto qIndex{m_QueueIndex++};        
         const auto N{m_Threads.size()};
-        for(std::size_t i{}; i < N * m_PushCycles; ++i)
-        {
-          if(m_Queues[(qIndex + i) % N].push(std::move(task), std::try_to_lock)) return;          
+          
+        if constexpr(Speculative)
+        {     
+          for(std::size_t i{}; i < N * m_PushCycles; ++i)
+          {
+            if(m_Queues[(qIndex + i) % N].push(std::move(task), std::try_to_lock)) return;          
+          }
         }
 
-        m_Queues[qIndex].push(std::move(task));
+        m_Queues[qIndex % N].push(std::move(task));
       }
 
-      auto join()
+      void join()
       {
         join_all();
+        joined = true;        
+      }
 
-        joined = true;
+      auto get()
+      {
+        join();
         if constexpr(!std::is_void_v<R>) return this->acquire();
       }
     private:
