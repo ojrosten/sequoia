@@ -90,9 +90,9 @@ namespace sequoia
 
       constexpr base_iterator_type base_iterator() const noexcept { return m_BaseIterator; }
 
-      constexpr reference operator*() const { return DereferencePolicy::get(*m_BaseIterator); }
+      constexpr decltype(auto) operator*() const { return DereferencePolicy::get(*m_BaseIterator); }
 
-      constexpr reference operator[](const difference_type n) const { return DereferencePolicy::get(m_BaseIterator[n]); }
+      constexpr decltype(auto) operator[](const difference_type n) const { return DereferencePolicy::get(m_BaseIterator[n]); }
 
       constexpr pointer operator->() const { return &DereferencePolicy::get(*m_BaseIterator); }
 
