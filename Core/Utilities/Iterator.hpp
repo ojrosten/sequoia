@@ -132,8 +132,7 @@ namespace sequoia
 
       friend constexpr bool operator==(const iterator& lhs, const iterator& rhs) noexcept
       {
-        return static_cast<const AuxiliaryDataPolicy&>(lhs) == static_cast<const AuxiliaryDataPolicy&>(rhs)
-          && (lhs.m_BaseIterator == rhs.m_BaseIterator);
+        return lhs.m_BaseIterator == rhs.m_BaseIterator;
       }
 
       friend constexpr bool operator!=(const iterator& lhs, const iterator& rhs) noexcept
@@ -143,22 +142,22 @@ namespace sequoia
 
       friend constexpr bool operator>(const iterator& lhs, const iterator& rhs) noexcept
       {
-        return (lhs.m_BaseIterator > rhs.m_BaseIterator);
+        return lhs.m_BaseIterator > rhs.m_BaseIterator;
       }
 
       friend constexpr bool operator<(const iterator& lhs, const iterator& rhs) noexcept
       {
-        return (lhs.m_BaseIterator < rhs.m_BaseIterator);
+        return lhs.m_BaseIterator < rhs.m_BaseIterator;
       }
 
       friend constexpr bool operator<=(const iterator& lhs, const iterator& rhs) noexcept
       {
-        return (lhs.m_BaseIterator <= rhs.m_BaseIterator);
+        return lhs.m_BaseIterator <= rhs.m_BaseIterator;
       }
 
       friend constexpr bool operator>=(const iterator& lhs, const iterator& rhs) noexcept
       {
-        return (lhs.m_BaseIterator >= rhs.m_BaseIterator);
+        return lhs.m_BaseIterator >= rhs.m_BaseIterator;
       }
 
       friend constexpr auto distance(iterator lhs, iterator rhs)
