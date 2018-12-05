@@ -30,37 +30,81 @@ namespace sequoia::unit_testing
     using namespace concurrency;
 
     {
-      auto threadPoolFn_2{[this, millisecs](){
+      auto threadPoolFn{[this, millisecs](){
           waiting_task<experimental::thread_pool<void>>(2u, millisecs, 2u);
+        }
+      };
+
+      auto threadPoolMonoChannelFn{[this, millisecs](){
+          waiting_task<experimental::thread_pool<void, false>>(2u, millisecs, 2u);
         }
       };
 
       auto nullThreadFn{[this, millisecs]() { waiting_task<serial<void>>(2u, millisecs); }};
 
-      check_relative_performance(threadPoolFn_2, nullThreadFn, 1.9, true, "Two Waiting tasks; pool_2/null");
+      check_relative_performance(threadPoolFn, nullThreadFn, 1.9, true, LINE("Two Waiting tasks; pool_2/null"));
+
+      check_relative_performance(threadPoolMonoChannelFn, nullThreadFn, 1.9, true, LINE("Two Waiting tasks; pool_2M/null"));
     }
 
     {
-      auto threadPoolFn_2{[this, millisecs](){
+      auto threadPoolFn{[this, millisecs](){
           waiting_task<experimental::thread_pool<void>>(4u, millisecs, 2u);
         }
       };
 
       auto nullThreadFn{[this, millisecs]() { waiting_task<serial<void>>(4u, millisecs); }};
 
-      check_relative_performance(threadPoolFn_2, nullThreadFn, 1.9, true, "Four Waiting tasks; pool_2/null");
+      check_relative_performance(threadPoolFn, nullThreadFn, 1.9, true, "Four Waiting tasks; pool_2/null");
     }
 
     {
-      auto threadPoolFn_4{[this, millisecs](){
+      auto threadPoolFn{[this, millisecs](){
           waiting_task<experimental::thread_pool<void>>(4u, millisecs, 4u);
         }
       };
 
       auto nullThreadFn{[this, millisecs]() { waiting_task<serial<void>>(4u, millisecs); }};
 
-      check_relative_performance(threadPoolFn_4, nullThreadFn, 3.75, true, "Four Waiting tasks; pool_4/null");
+      check_relative_performance(threadPoolFn, nullThreadFn, 3.75, true, "Four Waiting tasks; pool_4/null");
     }
+
+    {
+      auto threadPoolFn{[this, millisecs](){
+          waiting_task<experimental::thread_pool<void>>(12u, millisecs, 3u);
+        }
+      };
+
+      auto nullThreadFn{[this, millisecs]() { waiting_task<serial<void>>(12u, millisecs); }};
+
+      check_relative_performance(threadPoolFn, nullThreadFn, 2.9, true, "12 Waiting tasks; pool_3/null");
+    }
+
+    /*
+    {
+      auto threadPoolFn{[this, millisecs](){
+          waiting_task<experimental::thread_pool<void>>(1000u, millisecs, 4u);
+        }
+      };
+
+      auto nullThreadFn{[this, millisecs]() { waiting_task<serial<void>>(1000u, millisecs); }};
+
+      check_relative_performance(threadPoolFn, nullThreadFn, 3.9, true, "1000 Waiting tasks; pool_3/null");
+    }
+
+
+
+    {
+      auto threadPoolFn{[this, millisecs](){
+          waiting_task<experimental::thread_pool<void, false>>(1000u, millisecs, 4u);
+        }
+      };
+
+      auto nullThreadFn{[this, millisecs]() { waiting_task<serial<void>>(1000u, millisecs); }};
+
+      check_relative_performance(threadPoolFn, nullThreadFn, 3.9, true, "1000 Waiting tasks; pool_3/null Single");
+    }
+    */
   }
 
   template<class ThreadModel, class... Args>

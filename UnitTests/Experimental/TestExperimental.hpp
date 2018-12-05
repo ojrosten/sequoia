@@ -117,55 +117,42 @@ namespace sequoia
       class future_store<void>
       {        
       };
+
+      template<class R, bool MultiChannel> struct queue_details
+      {
+        using Q_t = task_queue<R>;
+        using task_t = typename Q_t::task_t;
+        using queue_type = std::vector<Q_t>;
+
+        std::size_t m_PushCycles;
+      };
+
+      template<class R> struct queue_details<R, false>
+      {
+        using Q_t = task_queue<R>;
+        using task_t = typename Q_t::task_t;
+        using queue_type = Q_t;
+      };
     }
 
-    template<class R, bool Speculative=true>
-    class thread_pool : private impl::future_store<R>
+    template<class R, bool MultiChannel=true>
+    class thread_pool : private impl::future_store<R>, private impl::queue_details<R, MultiChannel>
     {
     public:
-      thread_pool(const std::size_t numThreads, const std::size_t pushCycles = 46)
-        : m_Queues(numThreads)
-        , m_PushCycles{pushCycles}
+      template<bool B=MultiChannel, class=std::enable_if_t<!B>>
+      explicit thread_pool(const std::size_t numThreads)        
       {
-        m_Threads.reserve(numThreads);
-
-        for(std::size_t q{}; q<numThreads; ++q)
-        {
-          auto loop{[this, q]() {
-              while(true)
-              {
-                task_t task{};
-
-                if constexpr(Speculative)
-                {
-                  const auto N{m_Threads.size()};
-                  for(std::size_t i{}; i<N; ++i)
-                  {
-                    task = m_Queues[(q+i) % N].pop(std::try_to_lock);
-                    if(task.valid()) break;
-                  }
-
-                  if(!task.valid())
-                    task = m_Queues[q].pop();
-                }
-                else
-                {
-                  task = m_Queues[q].pop();
-                }
-
-                if(task.valid())
-                  task();
-                else
-                  break;
-                
-              }
-            }
-          };
-
-          m_Threads.emplace_back(loop);
-        }
+        make_pool(numThreads);
       }
 
+      template<bool B=MultiChannel, class=std::enable_if_t<B>>
+      thread_pool(const std::size_t numThreads, const std::size_t pushCycles = 46)
+        : impl::queue_details<R, MultiChannel>{pushCycles}
+        , m_Queues(numThreads)
+      {
+        make_pool(numThreads);
+      }
+      
       thread_pool(const thread_pool&)= delete;
       thread_pool(thread_pool&&)     = delete;
 
@@ -185,19 +172,28 @@ namespace sequoia
 
         task_t task{[=](){ fn(args...); }};
         if constexpr(!std::is_void_v<R>) this->stash(task->get_future());
-        
-        const auto qIndex{m_QueueIndex++};        
-        const auto N{m_Threads.size()};
-          
-        if constexpr(Speculative)
-        {     
-          for(std::size_t i{}; i < N * m_PushCycles; ++i)
-          {
-            if(m_Queues[(qIndex + i) % N].push(std::move(task), std::try_to_lock)) return;          
-          }
-        }
 
-        m_Queues[qIndex % N].push(std::move(task));
+                  
+        if constexpr(MultiChannel)
+        {
+          const auto qIndex{m_QueueIndex++};        
+          const auto N{m_Threads.size()};
+
+          if(qIndex >= N)
+          {
+            for(std::size_t i{}; i < N * this->m_PushCycles; ++i)
+            {
+              if(m_Queues[(qIndex + i) % N].push(std::move(task), std::try_to_lock))
+                return;
+            }
+          }
+
+          m_Queues[qIndex % N].push(std::move(task));
+        }
+        else
+        {
+          m_Queues.push(std::move(task));
+        }
       }
 
       void join()
@@ -212,17 +208,72 @@ namespace sequoia
         if constexpr(!std::is_void_v<R>) return this->acquire();
       }
     private:
-      using Q_t = task_queue<R>;
-      using task_t = typename Q_t::task_t;
-      std::vector<Q_t> m_Queues;
+      using task_t   = typename impl::queue_details<R, MultiChannel>::task_t;
+      using Queues_t = typename impl::queue_details<R, MultiChannel>::queue_type;
+      
+      Queues_t m_Queues;
       std::vector<std::thread> m_Threads;
       bool joined{};
 
-      std::size_t m_QueueIndex{}, m_PushCycles{46};
+      std::size_t m_QueueIndex{};
+
+      void make_pool(const std::size_t numThreads)
+      {
+        m_Threads.reserve(numThreads);
+
+        for(std::size_t q{}; q<numThreads; ++q)
+        {
+          auto loop{[=]() {
+              if constexpr(MultiChannel)
+              {
+                task_t task{m_Queues[q].pop()};
+                if(task.valid())
+                  task();
+                else
+                  return;
+              }
+              
+              while(true)
+              {
+                task_t task{};
+
+                if constexpr(MultiChannel)
+                {
+                  const auto N{m_Threads.size()};
+                  for(std::size_t i{}; i<N; ++i)
+                  {
+                    task = m_Queues[(q+i) % N].pop(std::try_to_lock);
+                    if(task.valid()) break;
+                  }
+
+                  if(!task.valid())
+                    task = m_Queues[q].pop();
+                }
+                else
+                {
+                  task = m_Queues.pop();
+                }
+
+                if(task.valid())
+                  task();
+                else
+                  break;
+                
+              }
+            }
+          };
+
+          m_Threads.emplace_back(loop);
+        }
+      }
 
       void join_all()
       {
-        for(auto& q : m_Queues) q.finish();
+        if constexpr(MultiChannel)
+          for(auto& q : m_Queues) q.finish();
+        else
+          m_Queues.finish();
+               
         for(auto& t : m_Threads) t.join();
       }
     };
