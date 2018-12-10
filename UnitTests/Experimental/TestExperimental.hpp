@@ -102,7 +102,7 @@ namespace sequoia
       public:
         void stash(std::future<R>&& f)
         {
-          m_Futures.push_back(f);
+          m_Futures.push_back(std::move(f));
         }
 
         std::vector<std::future<R>> acquire()
@@ -170,8 +170,8 @@ namespace sequoia
         static_assert(std::is_convertible_v<R, std::invoke_result_t<std::decay_t<Fn>, std::decay_t<Args>...>>,
                     "Function return type inconsistent!");
 
-        task_t task{[=](){ fn(args...); }};
-        if constexpr(!std::is_void_v<R>) this->stash(task->get_future());
+        task_t task{[=](){ return fn(args...); }};
+        if constexpr(!std::is_void_v<R>) this->stash(task.get_future());
 
                   
         if constexpr(MultiChannel)
@@ -205,7 +205,14 @@ namespace sequoia
       auto get()
       {
         join();
-        if constexpr(!std::is_void_v<R>) return this->acquire();
+        if constexpr(!std::is_void_v<R>)
+        {
+          auto futures{this->acquire()};
+          std::vector<R> values;
+          values.reserve(futures.size());
+          std::transform(futures.begin(), futures.end(), std::back_inserter(values), [](std::future<R>& fut) { return fut.get(); });
+          return values;
+        }
       }
     private:
       using task_t   = typename impl::queue_details<R, MultiChannel>::task_t;
@@ -289,9 +296,14 @@ namespace sequoia
       void run_tests();
 
       void waiting_task(const std::chrono::milliseconds millisecs);
+      void waiting_task_return(const std::chrono::milliseconds millisecs);
 
       template<class ThreadModel, class... Args>
       void waiting_task(const std::size_t nTasks, const std::chrono::milliseconds millisecs, Args&&... args);
+
+      template<class ThreadModel, class... Args>
+      std::vector<int> waiting_task_return(const std::size_t nTasks, const std::chrono::milliseconds millisecs, Args&&... args);
+
     };
 
     class Wait

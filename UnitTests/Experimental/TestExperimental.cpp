@@ -23,6 +23,7 @@ namespace sequoia::unit_testing
     q.finish();
 
     test_experimental::waiting_task(std::chrono::milliseconds{10});
+    test_experimental::waiting_task_return(std::chrono::milliseconds{10});
   }
 
   void test_experimental::waiting_task(const std::chrono::milliseconds millisecs)
@@ -35,16 +36,18 @@ namespace sequoia::unit_testing
         }
       };
 
-      auto threadPoolMonoChannelFn{[this, millisecs](){
+      auto threadPoolMonoFn{[this, millisecs](){
           waiting_task<experimental::thread_pool<void, false>>(2u, millisecs, 2u);
         }
       };
 
       auto nullThreadFn{[this, millisecs]() { waiting_task<serial<void>>(2u, millisecs); }};
 
-      check_relative_performance(threadPoolFn, nullThreadFn, 1.9, true, LINE("Two Waiting tasks; pool_2/null"));
+      auto asyncFn{[this, millisecs]() { waiting_task<asynchronous<void>>(2u, millisecs); }};
 
-      check_relative_performance(threadPoolMonoChannelFn, nullThreadFn, 1.9, true, LINE("Two Waiting tasks; pool_2M/null"));
+      check_relative_performance(threadPoolFn, nullThreadFn, 1.9, true, LINE("Two Waiting tasks; pool_2/null"));
+      check_relative_performance(threadPoolMonoFn, nullThreadFn, 1.9, true, LINE("Two Waiting tasks; pool_2M/null"));
+      check_relative_performance(asyncFn, nullThreadFn, 1.9, true, LINE("Two Waiting tasks; async/null"));
     }
 
     {
@@ -53,9 +56,15 @@ namespace sequoia::unit_testing
         }
       };
 
+      auto threadPoolMonoFn{[this, millisecs](){
+          waiting_task<experimental::thread_pool<void, false>>(4u, millisecs, 2u);
+        }
+      };
+
       auto nullThreadFn{[this, millisecs]() { waiting_task<serial<void>>(4u, millisecs); }};
 
-      check_relative_performance(threadPoolFn, nullThreadFn, 1.9, true, "Four Waiting tasks; pool_2/null");
+      check_relative_performance(threadPoolFn, nullThreadFn, 1.9, true, LINE("Four Waiting tasks; pool_2/null"));
+      check_relative_performance(threadPoolMonoFn, nullThreadFn, 1.9, true, LINE("Four Waiting tasks; pool_2M/null"));
     }
 
     {
@@ -64,47 +73,41 @@ namespace sequoia::unit_testing
         }
       };
 
+       auto threadPoolMonoFn{[this, millisecs](){
+           waiting_task<experimental::thread_pool<void, false>>(4u, millisecs, 4u);
+        }
+      };
+
       auto nullThreadFn{[this, millisecs]() { waiting_task<serial<void>>(4u, millisecs); }};
 
-      check_relative_performance(threadPoolFn, nullThreadFn, 3.75, true, "Four Waiting tasks; pool_4/null");
+      check_relative_performance(threadPoolFn, nullThreadFn, 3.9, true, LINE("Four Waiting tasks; pool_4/null"));
+      check_relative_performance(threadPoolMonoFn, nullThreadFn, 3.9, true, LINE("Four Waiting tasks; pool_4M/null"));
     }
+  }
+
+  void test_experimental::waiting_task_return(const std::chrono::milliseconds millisecs)
+  {
+    using namespace concurrency;
 
     {
       auto threadPoolFn{[this, millisecs](){
-          waiting_task<experimental::thread_pool<void>>(12u, millisecs, 3u);
+          waiting_task_return<experimental::thread_pool<int>>(2u, millisecs, 2u);
         }
       };
 
-      auto nullThreadFn{[this, millisecs]() { waiting_task<serial<void>>(12u, millisecs); }};
-
-      check_relative_performance(threadPoolFn, nullThreadFn, 2.9, true, "12 Waiting tasks; pool_3/null");
-    }
-
-    /*
-    {
-      auto threadPoolFn{[this, millisecs](){
-          waiting_task<experimental::thread_pool<void>>(1000u, millisecs, 4u);
+      auto threadPoolMonoFn{[this, millisecs](){
+          waiting_task_return<experimental::thread_pool<int, false>>(2u, millisecs, 2u);
         }
       };
 
-      auto nullThreadFn{[this, millisecs]() { waiting_task<serial<void>>(1000u, millisecs); }};
+      auto nullThreadFn{[this, millisecs]() { waiting_task_return<serial<int>>(2u, millisecs); }};
 
-      check_relative_performance(threadPoolFn, nullThreadFn, 3.9, true, "1000 Waiting tasks; pool_3/null");
+      auto asyncFn{[this, millisecs]() { waiting_task_return<asynchronous<int>>(2u, millisecs); }};
+
+      check_relative_performance(threadPoolFn, nullThreadFn, 1.9, true, LINE("Two Waiting tasks; pool_2/null"));
+      check_relative_performance(threadPoolMonoFn, nullThreadFn, 1.9, true, LINE("Two Waiting tasks; pool_2M/null"));
+      check_relative_performance(asyncFn, nullThreadFn, 1.9, true, LINE("Two Waiting tasks; async/null"));
     }
-
-
-
-    {
-      auto threadPoolFn{[this, millisecs](){
-          waiting_task<experimental::thread_pool<void, false>>(1000u, millisecs, 4u);
-        }
-      };
-
-      auto nullThreadFn{[this, millisecs]() { waiting_task<serial<void>>(1000u, millisecs); }};
-
-      check_relative_performance(threadPoolFn, nullThreadFn, 3.9, true, "1000 Waiting tasks; pool_3/null Single");
-    }
-    */
   }
 
   template<class ThreadModel, class... Args>
@@ -112,11 +115,28 @@ namespace sequoia::unit_testing
   {
     ThreadModel model{std::forward<Args>(args)...};
     
-    for(std::size_t i{}; i < nTasks; ++i)
+    for(int i{}; i < nTasks; ++i)
     {
       model.push(Wait{millisecs});
     }
 
     model.get();
+  }
+
+  template<class ThreadModel, class... Args>
+  std::vector<int> test_experimental::waiting_task_return(const std::size_t nTasks, const std::chrono::milliseconds millisecs, Args&&... args)
+  {
+    ThreadModel model{std::forward<Args>(args)...};
+    
+    for(int i{}; i < nTasks; ++i)
+    {
+      model.push([millisecs, i]() {
+          Wait{millisecs};
+          return i;
+        }
+      );
+    }
+
+    return model.get();
   }
 }
