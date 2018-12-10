@@ -131,7 +131,8 @@ namespace sequoia::unit_testing
     for(int i{}; i < nTasks; ++i)
     {
       model.push([millisecs, i]() {
-          Wait{millisecs};
+          Wait wait{millisecs};
+          wait();
           return i;
         }
       );
