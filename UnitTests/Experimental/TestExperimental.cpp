@@ -91,22 +91,51 @@ namespace sequoia::unit_testing
 
     {
       auto threadPoolFn{[this, millisecs](){
-          waiting_task_return<experimental::thread_pool<int>>(2u, millisecs, 2u);
+          return waiting_task_return<experimental::thread_pool<int>>(2u, millisecs, 2u);
         }
       };
 
       auto threadPoolMonoFn{[this, millisecs](){
-          waiting_task_return<experimental::thread_pool<int, false>>(2u, millisecs, 2u);
+          return waiting_task_return<experimental::thread_pool<int, false>>(2u, millisecs, 2u);
         }
       };
 
-      auto nullThreadFn{[this, millisecs]() { waiting_task_return<serial<int>>(2u, millisecs); }};
+      auto nullThreadFn{[this, millisecs]() { return waiting_task_return<serial<int>>(2u, millisecs); }};
 
-      auto asyncFn{[this, millisecs]() { waiting_task_return<asynchronous<int>>(2u, millisecs); }};
+      auto asyncFn{[this, millisecs]() { return waiting_task_return<asynchronous<int>>(2u, millisecs); }};
 
-      check_relative_performance(threadPoolFn, nullThreadFn, 1.9, true, LINE("Two Waiting tasks; pool_2/null"));
-      check_relative_performance(threadPoolMonoFn, nullThreadFn, 1.9, true, LINE("Two Waiting tasks; pool_2M/null"));
-      check_relative_performance(asyncFn, nullThreadFn, 1.9, true, LINE("Two Waiting tasks; async/null"));
+      auto futures{check_relative_performance(threadPoolFn, nullThreadFn, 1.9, true, LINE("Two Waiting tasks; pool_2/null"))};
+      check_return_values(std::move(futures), LINE("pool_2"));
+
+          
+      futures = check_relative_performance(threadPoolMonoFn, nullThreadFn, 1.9, true, LINE("Two Waiting tasks; pool_2M/null"));
+      check_return_values(std::move(futures), LINE("pool_2M"));
+
+      futures = check_relative_performance(asyncFn, nullThreadFn, 1.9, true, LINE("Two Waiting tasks; async/null"));
+      check_return_values(std::move(futures), LINE("async"));
+    }
+  }
+
+  void test_experimental::check_return_values(performance_results<std::vector<int>>&& futures, std::string_view message)
+  {
+    for(auto& f : futures.fast_futures)
+    {
+      auto results{f.get()};
+      if(check_equality(2ul, results.size(), LINE(message)))
+      {
+        check_equality(0, results[0], LINE(message));
+        check_equality(1, results[1], LINE(message));
+      }
+    }
+
+    for(auto& f : futures.slow_futures)
+    {
+      auto results{f.get()};
+      if(check_equality(2ul, results.size(), LINE(message)))
+      {
+        check_equality(0, results[0], LINE(message));
+        check_equality(1, results[1], LINE(message));
+      }
     }
   }
 

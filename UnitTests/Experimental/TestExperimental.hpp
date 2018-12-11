@@ -304,6 +304,8 @@ namespace sequoia
       template<class ThreadModel, class... Args>
       std::vector<int> waiting_task_return(const std::size_t nTasks, const std::chrono::milliseconds millisecs, Args&&... args);
 
+      void check_return_values(performance_results<std::vector<int>>&& futures, std::string_view message);        
+
     };
 
     class Wait
