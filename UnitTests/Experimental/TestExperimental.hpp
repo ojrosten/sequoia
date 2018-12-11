@@ -295,8 +295,8 @@ namespace sequoia
     private:
       void run_tests();
 
-      void waiting_task(const std::chrono::milliseconds millisecs);
-      void waiting_task_return(const std::chrono::milliseconds millisecs);
+      void test_waiting_task(const std::chrono::milliseconds millisecs);
+      void test_waiting_task_return(const std::chrono::milliseconds millisecs);
 
       template<class ThreadModel, class... Args>
       void waiting_task(const std::size_t nTasks, const std::chrono::milliseconds millisecs, Args&&... args);
@@ -306,6 +306,8 @@ namespace sequoia
 
       void check_return_values(performance_results<std::vector<int>>&& futures, std::string_view message);        
 
+      template<class ThreadModel, class Exception, class... Args>
+      void test_exceptions(std::string_view message, Args&&... args);
     };
 
     class Wait

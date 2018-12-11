@@ -22,11 +22,16 @@ namespace sequoia::unit_testing
 
     q.finish();
 
-    test_experimental::waiting_task(std::chrono::milliseconds{10});
-    test_experimental::waiting_task_return(std::chrono::milliseconds{10});
+    using namespace concurrency;
+
+    test_waiting_task(std::chrono::milliseconds{10});
+    test_waiting_task_return(std::chrono::milliseconds{10});
+    test_exceptions<experimental::thread_pool<void>, std::runtime_error>(LINE("pool_2"), 2u);
+    test_exceptions<experimental::thread_pool<void, false>, std::runtime_error>(LINE("pool_2M"), 2u);
+    test_exceptions<asynchronous<void>, std::runtime_error>(LINE("async"));
   }
 
-  void test_experimental::waiting_task(const std::chrono::milliseconds millisecs)
+  void test_experimental::test_waiting_task(const std::chrono::milliseconds millisecs)
   {
     using namespace concurrency;
 
@@ -85,7 +90,7 @@ namespace sequoia::unit_testing
     }
   }
 
-  void test_experimental::waiting_task_return(const std::chrono::milliseconds millisecs)
+  void test_experimental::test_waiting_task_return(const std::chrono::milliseconds millisecs)
   {
     using namespace concurrency;
 
@@ -168,5 +173,15 @@ namespace sequoia::unit_testing
     }
 
     return model.get();
+  }
+
+  template<class ThreadModel, class Exception, class... Args>
+  void test_experimental::test_exceptions(std::string_view message, Args&&... args)
+  {
+    ThreadModel threadModel{std::forward<Args>(args)...};;
+
+    threadModel.push([]() { throw Exception{"Error!"}; });
+
+    check_exception_thrown<Exception>([&threadModel]() { threadModel.get(); }, std::string{message});
   }
 }
