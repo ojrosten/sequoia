@@ -134,6 +134,8 @@ namespace sequoia
     class thread_pool : private impl::queue_details<R, MultiChannel>
     {
     public:
+      using return_type = R;
+      
       template<bool B=MultiChannel, class=std::enable_if_t<!B>>
       explicit thread_pool(const std::size_t numThreads)        
       {
