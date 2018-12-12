@@ -93,30 +93,25 @@ namespace sequoia
         return std::move(task);
       }
     };
-
+    
     namespace impl
     {
+      
       template<class R>
-      class future_store
+      auto get_results(std::vector<std::future<R>>& futures)
       {
-      public:
-        void stash(std::future<R>&& f)
+        if constexpr(std::is_same_v<R, void>)
+          {
+            std::for_each(futures.begin(), futures.end(), [](std::future<R>& fut) { fut.get(); });
+          }
+        else
         {
-          m_Futures.push_back(std::move(f));
+          std::vector<R> values;
+          values.reserve(futures.size());
+          std::transform(futures.begin(), futures.end(), std::back_inserter(values), [](std::future<R>& fut) { return fut.get(); });
+          return values;
         }
-
-        std::vector<std::future<R>> acquire()
-        {
-          return std::move(m_Futures);
-        }
-      private:
-        std::vector<std::future<R>> m_Futures;
-      };
-
-      template<>
-      class future_store<void>
-      {        
-      };
+      }
 
       template<class R, bool MultiChannel> struct queue_details
       {
@@ -136,7 +131,7 @@ namespace sequoia
     }
 
     template<class R, bool MultiChannel=true>
-    class thread_pool : private impl::future_store<R>, private impl::queue_details<R, MultiChannel>
+    class thread_pool : private impl::queue_details<R, MultiChannel>
     {
     public:
       template<bool B=MultiChannel, class=std::enable_if_t<!B>>
@@ -171,7 +166,7 @@ namespace sequoia
                     "Function return type inconsistent!");
 
         task_t task{[=](){ return fn(args...); }};
-        if constexpr(!std::is_void_v<R>) this->stash(task.get_future());
+        m_Futures.push_back(task.get_future());
 
                   
         if constexpr(MultiChannel)
@@ -205,14 +200,7 @@ namespace sequoia
       auto get()
       {
         join();
-        if constexpr(!std::is_void_v<R>)
-        {
-          auto futures{this->acquire()};
-          std::vector<R> values;
-          values.reserve(futures.size());
-          std::transform(futures.begin(), futures.end(), std::back_inserter(values), [](std::future<R>& fut) { return fut.get(); });
-          return values;
-        }
+        return impl::get_results(m_Futures);
       }
     private:
       using task_t   = typename impl::queue_details<R, MultiChannel>::task_t;
@@ -220,6 +208,7 @@ namespace sequoia
       
       Queues_t m_Queues;
       std::vector<std::thread> m_Threads;
+      std::vector<std::future<R>> m_Futures;
       bool joined{};
 
       std::size_t m_QueueIndex{};
