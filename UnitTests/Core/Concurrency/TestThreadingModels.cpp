@@ -1,180 +1,252 @@
 #include "TestThreadingModels.hpp"
 #include "ThreadingModels.hpp"
 
-namespace sequoia
+namespace sequoia::unit_testing
 {
-  namespace unit_testing
+  void test_threading_models::run_tests()
   {
-    void test_threading_models::run_tests()
+    using namespace concurrency;
+
+    test_task_queue();
+
+    test_waiting_task(std::chrono::milliseconds{10});
+    test_waiting_task_return(std::chrono::milliseconds{10});
+    
+    test_exceptions<thread_pool<void>, std::runtime_error>(LINE("pool_2"), 2u);
+    test_exceptions<thread_pool<void, false>, std::runtime_error>(LINE("pool_2M"), 2u);
+    test_exceptions<asynchronous<void>, std::runtime_error>(LINE("async"));
+
+    test_exceptions<thread_pool<int>, std::runtime_error>(LINE("pool_2"), 2u);
+    test_exceptions<thread_pool<int, false>, std::runtime_error>(LINE("pool_2M"), 2u);
+    test_exceptions<asynchronous<int>, std::runtime_error>(LINE("async"));
+
+    // Both the thread pool and asynchronous processing models
+    // ultimately take copies of the functor, so ony for
+    // serial does a modifiable functor make sense
+    //update_vector_tests<thread_pool<void, std::deque>>();
+    //update_vector_tests<asynchronous<void>>();
+  
+    test_functor_update<serial<void>>();
+  }
+
+  void test_threading_models::test_task_queue()
+  {
+    using namespace concurrency;
+
     {
-      void_return_type_tests();
-      return_value_tests();
-      functor_update_tests();
-    }
+      using q_t = task_queue<void>;
+      using task_t = q_t::task_t;
 
-    void test_threading_models::functor_update_tests()
-    {
-      using namespace concurrency;
+      q_t q{};
 
-      update_vector_tests<serial<void>>();
+      int a{};
+      q.push(task_t{[&a](){ a+= 1; }}, std::try_to_lock);
+      auto t{q.pop(std::try_to_lock)};
 
-      // Both the thread pool and asynchronous processing models
-      // ultimately take copies of the functor, so ony for
-      // serial does a modifiable functor make sense
-      //update_vector_tests<thread_pool<void, std::deque>>();
-      //update_vector_tests<asynchronous<void>>();
+      t();
+      check_equality(1, a, LINE(""));
+      
+      q.push(task_t{[&a](){ a+= 2; }});
+      t = q.pop();
+
+      t();
+      check_equality(3, a, LINE(""));
+
+      q.finish();
     }
     
-    void test_threading_models::void_return_type_tests()
     {
-      using namespace concurrency;
+      using q_t = task_queue<int>;
+      using task_t = q_t::task_t;
 
-      {
-        auto nullThreadFn   = [this]() { testWaitingTask<serial<void>, 2>(); };
-        auto threadPoolFn_2 = [this]() { testWaitingTask<thread_pool<void, std::deque>, 2>(2u); };
-        auto asyncFn        = [this]() { testWaitingTask<asynchronous<void>, 2>(); };
-        check_relative_performance(threadPoolFn_2, nullThreadFn, 1.9, true, "Two Waiting tasks; pool_2/null");
-        check_relative_performance(asyncFn, nullThreadFn, 1.9, true, "Two Waiting tasks; async/null");
-      }
+      q_t q{};
 
-      {
-        auto nullThreadFn   = [this]() { testWaitingTask<serial<void>, 4>(); };
-        auto threadPoolFn_2 = [this]() { testWaitingTask<thread_pool<void, std::deque>, 4>(2u); };
-        auto asyncFn        = [this]() { testWaitingTask<asynchronous<void>, 4>(); };
-        check_relative_performance(threadPoolFn_2, nullThreadFn, 1.9, true, "Four Waiting tasks; pool_2/null");
-        check_relative_performance(asyncFn, nullThreadFn, 1.9, true, "Four Waiting tasks; async/null");
-      }
+      q.push(task_t{[](){ return 1;}}, std::try_to_lock);
+      auto t{q.pop(std::try_to_lock)};
 
-      {
-        auto nullThreadFn   = [this]() { testWaitingTask<serial<void>, 4>(); };
-        auto threadPoolFn_4 = [this]() { testWaitingTask<thread_pool<void, std::deque>, 4>(4u); };
-        check_relative_performance(threadPoolFn_4, nullThreadFn, 3.75, true, "Four Waiting tasks; pool_4/null");
-      }
-    }
-
-    void test_threading_models::return_value_tests()
-    {
-      using namespace concurrency;
+      auto fut{t.get_future()};
+      t();
       
-      {
-        const size_t upper{static_cast<size_t>(1e7)};
+      check_equality(1, fut.get(), LINE(""));
+      
+      q.push(task_t{[](){ return 2;}});
+      t = q.pop();
 
-        TriangularNumbers
-          sillyTask(upper),
-          sillyTask2(upper + 1);
+      fut = t.get_future();
+      t();
+      
+      check_equality(2, fut.get(), LINE(""));
 
-        auto nullThreadFn = [this, sillyTask, sillyTask2]()
-        { return test_lval_task<serial<size_t>>(sillyTask, sillyTask2); };
-        auto threadPoolFn_2 = [this, sillyTask, sillyTask2]()
-          { return test_lval_task<thread_pool<size_t, std::deque>>(sillyTask, sillyTask2, 2u); };
-        auto asyncFn = [this, sillyTask, sillyTask2]()
-        { return test_lval_task<asynchronous<size_t>>(sillyTask, sillyTask2); };
-
-        auto futures = check_relative_performance(threadPoolFn_2, nullThreadFn, 1.4, true, "Two silly lval tasks; pool_2/null");
-        for(auto&& fut : futures.fast_futures)
-        {
-          auto results = fut.get();
-          check_equality<size_t>(2, results.size());
-          if(results.size() == 2)
-          {
-            auto iter = results.cbegin();
-            check_equality<size_t>(upper*(upper + 1) / 2, *iter++);
-            check_equality<size_t>((upper + 1)*(upper + 2) / 2, *iter);
-          }
-        }
-        for(auto&& fut : futures.slow_futures)
-        {
-          auto results = fut.get();
-          check_equality<size_t>(2, results.size());
-          if(results.size() == 2)
-          {
-            auto iter = results.cbegin();
-            check_equality<size_t>(upper*(upper + 1) / 2, *iter++);
-            check_equality<size_t>((upper + 1)*(upper + 2) / 2, *iter);
-          }
-        }
-
-        futures = check_relative_performance(asyncFn, nullThreadFn, 1.4, true, "Two silly lval tasks; async/null");
-        for(auto&& fut : futures.fast_futures)
-        {
-          auto results = fut.get();
-          check_equality<size_t>(2, results.size());
-          if(results.size() == 2)
-          {
-            auto iter = results.cbegin();
-            check_equality<size_t>(upper*(upper + 1) / 2, *iter++);
-            check_equality<size_t>((upper + 1)*(upper + 2) / 2, *iter);
-          }
-        }
-        for(auto&& fut : futures.slow_futures)
-        {
-          auto results = fut.get();
-          check_equality<size_t>(2, results.size());
-          if(results.size() == 2)
-          {
-            auto iter = results.cbegin();
-            check_equality<size_t>(upper*(upper + 1) / 2, *iter++);
-            check_equality<size_t>((upper + 1)*(upper + 2) / 2, *iter);
-          }
-        }
-      }
-
-      {
-        const size_t upper  = static_cast<size_t>(1e7);
-        auto nullThreadFn   = [this]() { return test_rval_task<serial<size_t>, 2>(upper); };
-        auto threadPoolFn_2 = [this]() { return test_rval_task<thread_pool<size_t, std::deque>, 2>(upper, 2u); };
-        auto asyncFn        = [this]() { return test_rval_task<asynchronous<size_t>, 2>(upper); };
-
-        auto futures = check_relative_performance(threadPoolFn_2, nullThreadFn, 1.4, true, "Two silly rval tasks; pool_2/null");
-        for(auto&& fut : futures.fast_futures)
-        {
-          auto results = fut.get();
-          check_equality<size_t>(2, results.size());
-          if(results.size() == 2)
-          {
-            auto iter = results.cbegin();
-            check_equality<size_t>(upper*(upper + 1) / 2, *iter++, "test thread_pool_2 rval first task");
-            check_equality<size_t>(upper*(upper - 1) / 2, *iter, "test thread_pool_2 rval second task");
-          }
-        }
-        for(auto&& fut : futures.slow_futures)
-        {
-          auto results = fut.get();
-          check_equality<size_t>(2, results.size());
-          if(results.size() == 2)
-          {
-            auto iter = results.cbegin();
-            check_equality<size_t>(upper*(upper + 1) / 2, *iter++);
-            check_equality<size_t>(upper*(upper - 1) / 2, *iter);
-          }
-        }
-        futures = check_relative_performance(asyncFn, nullThreadFn, 1.4, true, "Two silly rval tasks; async/null");
-        for(auto&& fut : futures.fast_futures)
-        {
-          auto results = fut.get();
-          check_equality<size_t>(2, results.size());
-          if(results.size() == 2)
-          {
-            auto iter = results.cbegin();
-            check_equality<size_t>(upper*(upper + 1) / 2, *iter++);
-            check_equality<size_t>(upper*(upper - 1) / 2, *iter);
-          }
-        }
-        for(auto&& fut : futures.slow_futures)
-        {
-          auto results = fut.get();
-          check_equality<size_t>(2, results.size());
-          if(results.size() == 2)
-          {
-            auto iter = results.cbegin();
-            check_equality<size_t>(upper*(upper + 1) / 2, *iter++);
-            check_equality<size_t>(upper*(upper - 1) / 2, *iter);
-          }
-        }
-      }
-
-      test_exceptions<thread_pool<void, std::deque>, std::runtime_error>(2u);
-      test_exceptions<asynchronous<void>, std::runtime_error>();
+      q.finish();
     }
   }
+
+  void test_threading_models::test_waiting_task(const std::chrono::milliseconds millisecs)
+  {
+    using namespace concurrency;
+
+    {
+      auto threadPoolFn{[this, millisecs](){
+          waiting_task<thread_pool<void>>(2u, millisecs, 2u);
+        }
+      };
+
+      auto threadPoolMonoFn{[this, millisecs](){
+          waiting_task<thread_pool<void, false>>(2u, millisecs, 2u);
+        }
+      };
+
+      auto nullThreadFn{[this, millisecs]() { waiting_task<serial<void>>(2u, millisecs); }};
+
+      auto asyncFn{[this, millisecs]() { waiting_task<asynchronous<void>>(2u, millisecs); }};
+
+      check_relative_performance(threadPoolFn, nullThreadFn, 1.9, true, LINE("Two Waiting tasks; pool_2/null"));
+      check_relative_performance(threadPoolMonoFn, nullThreadFn, 1.9, true, LINE("Two Waiting tasks; pool_2M/null"));
+      check_relative_performance(asyncFn, nullThreadFn, 1.9, true, LINE("Two Waiting tasks; async/null"));
+    }
+
+    {
+      auto threadPoolFn{[this, millisecs](){
+          waiting_task<thread_pool<void>>(4u, millisecs, 2u);
+        }
+      };
+
+      auto threadPoolMonoFn{[this, millisecs](){
+          waiting_task<thread_pool<void, false>>(4u, millisecs, 2u);
+        }
+      };
+
+      auto nullThreadFn{[this, millisecs]() { waiting_task<serial<void>>(4u, millisecs); }};
+
+      check_relative_performance(threadPoolFn, nullThreadFn, 1.9, true, LINE("Four Waiting tasks; pool_2/null"));
+      check_relative_performance(threadPoolMonoFn, nullThreadFn, 1.9, true, LINE("Four Waiting tasks; pool_2M/null"));
+    }
+
+    {
+      auto threadPoolFn{[this, millisecs](){
+          waiting_task<thread_pool<void>>(4u, millisecs, 4u);
+        }
+      };
+
+       auto threadPoolMonoFn{[this, millisecs](){
+           waiting_task<thread_pool<void, false>>(4u, millisecs, 4u);
+        }
+      };
+
+      auto nullThreadFn{[this, millisecs]() { waiting_task<serial<void>>(4u, millisecs); }};
+
+      check_relative_performance(threadPoolFn, nullThreadFn, 3.9, true, LINE("Four Waiting tasks; pool_4/null"));
+      check_relative_performance(threadPoolMonoFn, nullThreadFn, 3.9, true, LINE("Four Waiting tasks; pool_4M/null"));
+    }
+  }
+
+  void test_threading_models::test_waiting_task_return(const std::chrono::milliseconds millisecs)
+  {
+    using namespace concurrency;
+
+    {
+      auto threadPoolFn{[this, millisecs](){
+          return waiting_task_return<thread_pool<int>>(2u, millisecs, 2u);
+        }
+      };
+
+      auto threadPoolMonoFn{[this, millisecs](){
+          return waiting_task_return<thread_pool<int, false>>(2u, millisecs, 2u);
+        }
+      };
+
+      auto nullThreadFn{[this, millisecs]() { return waiting_task_return<serial<int>>(2u, millisecs); }};
+
+      auto asyncFn{[this, millisecs]() { return waiting_task_return<asynchronous<int>>(2u, millisecs); }};
+
+      auto futures{check_relative_performance(threadPoolFn, nullThreadFn, 1.9, true, LINE("Two Waiting tasks; pool_2/null"))};
+      check_return_values(std::move(futures), LINE("pool_2"));
+
+          
+      futures = check_relative_performance(threadPoolMonoFn, nullThreadFn, 1.9, true, LINE("Two Waiting tasks; pool_2M/null"));
+      check_return_values(std::move(futures), LINE("pool_2M"));
+
+      futures = check_relative_performance(asyncFn, nullThreadFn, 1.9, true, LINE("Two Waiting tasks; async/null"));
+      check_return_values(std::move(futures), LINE("async"));
+    }
+  }
+
+  void test_threading_models::check_return_values(performance_results<std::vector<int>>&& futures, std::string_view message)
+  {
+    for(auto& f : futures.fast_futures)
+    {
+      auto results{f.get()};
+      if(check_equality(2ul, results.size(), LINE(message)))
+      {
+        check_equality(0, results[0], LINE(message));
+        check_equality(1, results[1], LINE(message));
+      }
+    }
+
+    for(auto& f : futures.slow_futures)
+    {
+      auto results{f.get()};
+      if(check_equality(2ul, results.size(), LINE(message)))
+      {
+        check_equality(0, results[0], LINE(message));
+        check_equality(1, results[1], LINE(message));
+      }
+    }
+  }
+
+  template<class ThreadModel, class... Args>
+  void test_threading_models::waiting_task(const std::size_t nTasks, const std::chrono::milliseconds millisecs, Args&&... args)
+  {
+    ThreadModel model{std::forward<Args>(args)...};
+    
+    for(int i{}; i < nTasks; ++i)
+    {
+      model.push(Wait{millisecs});
+    }
+
+    model.get();
+  }
+
+  template<class ThreadModel, class... Args>
+  std::vector<int> test_threading_models::waiting_task_return(const std::size_t nTasks, const std::chrono::milliseconds millisecs, Args&&... args)
+  {
+    ThreadModel model{std::forward<Args>(args)...};
+    
+    for(int i{}; i < nTasks; ++i)
+    {
+      model.push([millisecs, i]() {
+          Wait wait{millisecs};
+          wait();
+          return i;
+        }
+      );
+    }
+
+    return model.get();
+  }
+
+  template<class ThreadModel, class Exception, class... Args>
+  void test_threading_models::test_exceptions(std::string_view message, Args&&... args)
+  {
+    ThreadModel threadModel{std::forward<Args>(args)...};;
+    using R = typename ThreadModel::return_type;
+    
+    threadModel.push([]() -> R { throw Exception{"Error!"}; });
+
+    check_exception_thrown<Exception>([&threadModel]() { threadModel.get(); }, std::string{message});
+  }
+
+  template<class Model>
+  void test_threading_models::test_functor_update()
+  {
+    Model threadModel;
+
+    UpdatableFunctor functor;
+
+    threadModel.push(functor, 0);
+
+    threadModel.get();
+	
+    check_equality(std::vector<int>{0}, functor.get_data());
+  }    
 }

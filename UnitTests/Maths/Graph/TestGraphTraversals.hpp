@@ -699,7 +699,7 @@ namespace sequoia
 
           auto nullFn  = [&graph, upper](){ return ESTTask<concurrency::serial<int>>(graph, upper); };
           auto asyncFn = [&graph, upper](){ return ESTTask<concurrency::asynchronous<int>>(graph, upper); };
-          auto poolFn  = [&graph, upper](){ return ESTTask<concurrency::thread_pool<int, std::deque>>(graph, upper, 4u); };
+          auto poolFn  = [&graph, upper](){ return ESTTask<concurrency::thread_pool<int>>(graph, upper, 4u); };
 
           std::vector<int> answers0 = nullFn(),
                            answers1 = asyncFn(),
@@ -737,7 +737,7 @@ namespace sequoia
           using microseconds = std::chrono::microseconds;
           auto nullFn  = [&graph, upper, early](){ return task<concurrency::serial<int>>(graph, upper, early, microseconds{}); };
           auto asyncFn = [&graph, upper, early](){ return task<concurrency::asynchronous<int>>(graph, upper, early, microseconds{}); };
-          auto poolFn  = [&graph, upper, early](){ return task<concurrency::thread_pool<int, std::deque>>(graph, upper, early, microseconds{}, 4u); };
+          auto poolFn  = [&graph, upper, early](){ return task<concurrency::thread_pool<int>>(graph, upper, early, microseconds{}, 4u); };
           std::vector<int>
             answers0 = nullFn(),
             answers1 = asyncFn(),
@@ -761,7 +761,7 @@ namespace sequoia
           
           auto nullFn  = [&graph, upper](){ return EFTTask<concurrency::serial<int>>(graph, upper); };
           auto asyncFn = [&graph, upper](){ return EFTTask<concurrency::asynchronous<int>>(graph, upper); };
-          auto poolFn  = [&graph, upper](){ return EFTTask<concurrency::thread_pool<int, std::deque>>(graph, upper, 4u); };
+          auto poolFn  = [&graph, upper](){ return EFTTask<concurrency::thread_pool<int>>(graph, upper, 4u); };
 
           std::vector<int> answers0 = nullFn(),
                            answers1 = asyncFn(),
@@ -800,7 +800,7 @@ namespace sequoia
           
           auto poolFn{
             [&graph, upper, pause](){
-              return task<concurrency::thread_pool<int, std::deque>>(graph, upper, true, pause, 4u);
+              return task<concurrency::thread_pool<int>>(graph, upper, true, pause, 4u);
             }
           };
 
