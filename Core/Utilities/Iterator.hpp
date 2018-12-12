@@ -90,9 +90,9 @@ namespace sequoia
 
       constexpr base_iterator_type base_iterator() const noexcept { return m_BaseIterator; }
 
-      constexpr reference operator*() const { return DereferencePolicy::get(*m_BaseIterator); }
+      constexpr decltype(auto) operator*() const { return DereferencePolicy::get(*m_BaseIterator); }
 
-      constexpr reference operator[](const difference_type n) const { return DereferencePolicy::get(m_BaseIterator[n]); }
+      constexpr decltype(auto) operator[](const difference_type n) const { return DereferencePolicy::get(m_BaseIterator[n]); }
 
       constexpr pointer operator->() const { return &DereferencePolicy::get(*m_BaseIterator); }
 
@@ -132,8 +132,7 @@ namespace sequoia
 
       friend constexpr bool operator==(const iterator& lhs, const iterator& rhs) noexcept
       {
-        return static_cast<const AuxiliaryDataPolicy&>(lhs) == static_cast<const AuxiliaryDataPolicy&>(rhs)
-          && (lhs.m_BaseIterator == rhs.m_BaseIterator);
+        return lhs.m_BaseIterator == rhs.m_BaseIterator;
       }
 
       friend constexpr bool operator!=(const iterator& lhs, const iterator& rhs) noexcept
@@ -143,22 +142,22 @@ namespace sequoia
 
       friend constexpr bool operator>(const iterator& lhs, const iterator& rhs) noexcept
       {
-        return (lhs.m_BaseIterator > rhs.m_BaseIterator);
+        return lhs.m_BaseIterator > rhs.m_BaseIterator;
       }
 
       friend constexpr bool operator<(const iterator& lhs, const iterator& rhs) noexcept
       {
-        return (lhs.m_BaseIterator < rhs.m_BaseIterator);
+        return lhs.m_BaseIterator < rhs.m_BaseIterator;
       }
 
       friend constexpr bool operator<=(const iterator& lhs, const iterator& rhs) noexcept
       {
-        return (lhs.m_BaseIterator <= rhs.m_BaseIterator);
+        return lhs.m_BaseIterator <= rhs.m_BaseIterator;
       }
 
       friend constexpr bool operator>=(const iterator& lhs, const iterator& rhs) noexcept
       {
-        return (lhs.m_BaseIterator >= rhs.m_BaseIterator);
+        return lhs.m_BaseIterator >= rhs.m_BaseIterator;
       }
 
       friend constexpr auto distance(iterator lhs, iterator rhs)

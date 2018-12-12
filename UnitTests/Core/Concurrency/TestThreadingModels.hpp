@@ -1,102 +1,57 @@
 #pragma once
 
 #include "UnitTestUtils.hpp"
-#include "TestThreadingHelper.hpp"
 
-#include <thread>
-#include <limits>
-
-#include <iostream>
-
-namespace sequoia
+namespace sequoia::unit_testing
 {
-  namespace unit_testing
+  class test_threading_models : public unit_test
+  {      
+  public:
+    using unit_test::unit_test;
+  private:
+    void run_tests();
+
+    void test_task_queue();
+
+    void test_waiting_task(const std::chrono::milliseconds millisecs);
+    void test_waiting_task_return(const std::chrono::milliseconds millisecs);
+
+    template<class ThreadModel, class... Args>
+    void waiting_task(const std::size_t nTasks, const std::chrono::milliseconds millisecs, Args&&... args);
+
+    template<class ThreadModel, class... Args>
+    std::vector<int> waiting_task_return(const std::size_t nTasks, const std::chrono::milliseconds millisecs, Args&&... args);
+
+    void check_return_values(performance_results<std::vector<int>>&& futures, std::string_view message);        
+
+    template<class ThreadModel, class Exception, class... Args>
+    void test_exceptions(std::string_view message, Args&&... args);
+
+    template<class Model> void test_functor_update();
+  };
+
+  class Wait
   {
-    class test_threading_models : public unit_test
+    std::chrono::milliseconds m_Wait;
+  public:      
+    Wait(const std::chrono::milliseconds millisecs) : m_Wait{millisecs} {}
+      
+    void operator()() const
     {
-    public:
-      using unit_test::unit_test;
+      std::this_thread::sleep_for(m_Wait);
+    }
+  };
 
-    private:
-      void run_tests() override;
+  class UpdatableFunctor
+  {
+  public:
+    void operator()(const int x)
+    {
+      m_Data.push_back(x);
+    }
 
-      void void_return_type_tests();
-      void return_value_tests();
-      void functor_update_tests();
-
-      template<class Model>
-      void update_vector_tests()
-      {
-	Model threadModel;
-
-	UpdatableFunctor functor;
-
-	threadModel.push(functor, 0);
-
-	threadModel.get();
-	
-	check_equality(std::vector<int>{0}, functor.get_data());
-      }
-
-      template<class Model, const std::size_t nTasks, class... Args>
-      void testWaitingTask(Args&&... args)
-      {
-        Model threadModel{std::forward<Args>(args)...};
-
-        Wait waiter;
-        auto wait = [waiter]() { waiter(10); };
-
-        for(std::size_t i=0; i < nTasks; ++i)
-        {
-          threadModel.push(wait);
-        }
-
-        threadModel.get();
-      }
-
-      template<class Model, class... Args>
-      auto test_lval_task(TriangularNumbers sillyTask, TriangularNumbers sillyTask2, Args&&... args)
-      {
-        Model threadModel{std::forward<Args>(args)...};;
-
-        threadModel.push(sillyTask);
-        threadModel.push(sillyTask2);
-        return threadModel.get();
-      }
-
-      template<class Model, std::size_t nTasks, class... Args>
-      auto test_rval_task(const std::size_t upper, Args&&... args)
-      {
-        Model threadModel{std::forward<Args>(args)...};;
-
-        for(std::size_t i=0; i < nTasks; ++i)
-        {
-          threadModel.push(TriangularNumbers(upper - i));
-        }
-
-        return threadModel.get();
-      }
-
-      template<class Model, class Exception, class... Args>
-      void test_exceptions(Args&&... args)
-      {
-        Model threadModel{std::forward<Args>(args)...};;
-
-        threadModel.push([]() { throw std::runtime_error("Error!"); });
-
-        check_exception_thrown<Exception>([&threadModel]() { threadModel.get(); });
-      }
-
-      struct Wait
-      {
-        void operator()(const std::size_t millisecs) const
-        {
-          if(millisecs > 0)
-          {
-            std::this_thread::sleep_for(std::chrono::milliseconds(millisecs));
-          }
-        }
-      };
-    };
-  }
+    const auto& get_data() const { return m_Data; }
+  private:
+    std::vector<int> m_Data;
+  };  
 }
