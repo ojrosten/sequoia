@@ -286,6 +286,8 @@ namespace sequoia
     private:
       void run_tests();
 
+      void test_task_queue();
+
       void test_waiting_task(const std::chrono::milliseconds millisecs);
       void test_waiting_task_return(const std::chrono::milliseconds millisecs);
 

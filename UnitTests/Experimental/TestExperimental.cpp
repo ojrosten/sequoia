@@ -9,20 +9,9 @@ namespace sequoia::unit_testing
   {
     using namespace experimental;
 
-    using q_t = task_queue<int>;
-    using task_t = q_t::task_t;
-
-    q_t q{};
-
-    q.push(task_t{[](){ return 1;}}, std::try_to_lock);
-    auto t{q.pop(std::try_to_lock)};
-
-    q.push(task_t{[](){ return 1;}});
-    t = q.pop();
-
-    q.finish();
-
     using namespace concurrency;
+
+    test_task_queue();
 
     test_waiting_task(std::chrono::milliseconds{10});
     test_waiting_task_return(std::chrono::milliseconds{10});
@@ -34,6 +23,58 @@ namespace sequoia::unit_testing
     test_exceptions<experimental::thread_pool<int>, std::runtime_error>(LINE("pool_2"), 2u);
     test_exceptions<experimental::thread_pool<int, false>, std::runtime_error>(LINE("pool_2M"), 2u);
     test_exceptions<asynchronous<int>, std::runtime_error>(LINE("async"));
+  }
+
+  void test_experimental::test_task_queue()
+  {
+    using namespace experimental;
+
+    {
+      using q_t = task_queue<void>;
+      using task_t = q_t::task_t;
+
+      q_t q{};
+
+      int a{};
+      q.push(task_t{[&a](){ a+= 1; }}, std::try_to_lock);
+      auto t{q.pop(std::try_to_lock)};
+
+      t();
+      check_equality(1, a, LINE(""));
+      
+      q.push(task_t{[&a](){ a+= 2; }});
+      t = q.pop();
+
+      t();
+      check_equality(3, a, LINE(""));
+
+      q.finish();
+    }
+    
+    {
+      using q_t = task_queue<int>;
+      using task_t = q_t::task_t;
+
+      q_t q{};
+
+      q.push(task_t{[](){ return 1;}}, std::try_to_lock);
+      auto t{q.pop(std::try_to_lock)};
+
+      auto fut{t.get_future()};
+      t();
+      
+      check_equality(1, fut.get(), LINE(""));
+      
+      q.push(task_t{[](){ return 2;}});
+      t = q.pop();
+
+      fut = t.get_future();
+      t();
+      
+      check_equality(2, fut.get(), LINE(""));
+
+      q.finish();
+    }
   }
 
   void test_experimental::test_waiting_task(const std::chrono::milliseconds millisecs)
