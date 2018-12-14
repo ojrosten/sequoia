@@ -10,7 +10,7 @@ namespace sequoia::unit_testing
   struct equality_checker<data_structures::static_priority_queue<T, MaxDepth, Compare>>
   {
     template<class Logger>
-    static void check(Logger& logger, const data_structures::static_priority_queue<T, MaxDepth, Compare>& reference, const data_structures::static_priority_queue<T, MaxDepth, Compare>& actual, const std::string& description="")
+    static void check(Logger& logger, const data_structures::static_priority_queue<T, MaxDepth, Compare>& reference, const data_structures::static_priority_queue<T, MaxDepth, Compare>& actual, std::string_view description="")
     {
       check_equality(logger, reference.empty(), actual.empty(), impl::concat_messages(description, "Inconsistent emptiness"));
       check_equality(logger, reference.size(), actual.size(), impl::concat_messages(description, "Inconsistent size"));
