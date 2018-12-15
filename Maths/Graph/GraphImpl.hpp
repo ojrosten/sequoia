@@ -9,11 +9,6 @@
 
 namespace sequoia
 {
-  namespace concurrency  
-  {
-    template<class> class serial;
-  }
-
   namespace data_structures
   {
     template <class, class, class> class bucketed_storage;

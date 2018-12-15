@@ -16,11 +16,29 @@ namespace sequoia
 {
   namespace unit_testing
   {
+    template<class T, class=std::void_t<>> struct is_serializable : public std::false_type
+    {};
+
+    template<class T> struct is_serializable<T, std::void_t<decltype(std::ostringstream{} << std::declval<T>())>> : public std::true_type
+    {};
+
+    template<class T> constexpr bool is_serializable_v{is_serializable<T>::value};
+    
+    template<class T, class=std::void_t<>> struct string_maker;
+    
+    template<class T> struct string_maker<T, std::enable_if_t<is_serializable_v<T>>>
+    {
+      static std::string make(const T& val)
+      {
+        std::ostringstream os;
+        os << val;
+        return os.str();
+      }
+    };
+    
     template<class T> std::string to_string(const T& value)
     {
-      std::ostringstream os;
-      os << value;
-      return os.str();
+      return string_maker<T>::make(value);
     }
     
     enum class test_mode { standard, false_positive, false_negative };
@@ -360,10 +378,12 @@ namespace sequoia
     template<class T>
     struct equality_checker
     {
+      static_assert(is_serializable_v<T>, "Either specialize string_make or equality_checker");
+       
       template<class Logger, class S=T>
       static std::enable_if_t<!impl::container_detector_v<S>, bool>
       check(Logger& logger, const T& reference, const T& actual, std::string_view description="")
-      {      
+      {        
         typename Logger::sentinel s{logger, description};
         s.log_check();
         const bool equal{reference == actual};
@@ -455,7 +475,7 @@ namespace sequoia
     }
 
     template<class Logger, class T>
-    bool check_equality_within_tolerance(Logger& logger, const T reference, const T value, const T tol, std::string_view description="")
+    bool check_equality_within_tolerance(Logger& logger, const T& reference, const T& value, const T& tol, std::string_view description="")
     {
       typename Logger::sentinel r{logger, description};
       const bool equal{equality_checker<bool>::check(logger, true, (value > reference - tol) && (value < reference + tol))};
