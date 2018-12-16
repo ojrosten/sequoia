@@ -806,8 +806,8 @@ namespace sequoia
 
           auto answers = node_task_answers(upper);
 
-          auto futures = check_relative_performance(asyncFn, nullFn, 2, true, LINE("Null versus async check"));
-          auto futures2 = check_relative_performance(poolFn, nullFn, 2, true, LINE("Null versus pool check"));
+          auto futures = check_relative_performance(asyncFn, nullFn, 2.0, 4.5, LINE("Null versus async check"));
+          auto futures2 = check_relative_performance(poolFn, nullFn, 2.0, 4.5, LINE("Null versus pool check"));
 
           for(auto&& fut : futures.fast_futures)
           {

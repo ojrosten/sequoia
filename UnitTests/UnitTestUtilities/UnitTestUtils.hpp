@@ -16,11 +16,29 @@ namespace sequoia
 {
   namespace unit_testing
   {
+    template<class T, class=std::void_t<>> struct is_serializable : public std::false_type
+    {};
+
+    template<class T> struct is_serializable<T, std::void_t<decltype(std::ostringstream{} << std::declval<T>())>> : public std::true_type
+    {};
+
+    template<class T> constexpr bool is_serializable_v{is_serializable<T>::value};
+    
+    template<class T, class=std::void_t<>> struct string_maker;
+    
+    template<class T> struct string_maker<T, std::enable_if_t<is_serializable_v<T>>>
+    {
+      static std::string make(const T& val)
+      {
+        std::ostringstream os;
+        os << val;
+        return os.str();
+      }
+    };
+    
     template<class T> std::string to_string(const T& value)
     {
-      std::ostringstream os;
-      os << value;
-      return os.str();
+      return string_maker<T>::make(value);
     }
     
     enum class test_mode { standard, false_positive, false_negative };
@@ -73,7 +91,7 @@ namespace sequoia
             }
           }
 
-          if(!logger.depth()) logger.exceptions_detected_by_sentinel(std::uncaught_exception());
+          if(!logger.depth()) logger.exceptions_detected_by_sentinel(std::uncaught_exceptions());
         }
 
         sentinel(const sentinel&) = delete;
@@ -86,33 +104,47 @@ namespace sequoia
         {
           if(!diagnostic(Mode)) m_Logger.get().log_check();
         }
+
+        void log_performance_check()
+        {
+          if(!diagnostic(Mode)) m_Logger.get().log_performance_check();
+        }
       private:
         std::reference_wrapper<unit_test_logger> m_Logger;
       };       
       
-      void log_failure(std::string message)
+      void log_failure(std::string_view message)
       {
         ++m_Failures;
-        if constexpr (Mode != test_mode::false_positive) m_Messages += (std::move(message) + '\n');
+        if constexpr (Mode != test_mode::false_positive) m_Messages += (std::string{message} + '\n');
         if(std::ofstream of{m_RecoveryFile}) of << m_Messages;
       }
 
-      void log_critical_failure(std::string message)
+      void log_performance_failure(std::string_view message)
+      {
+        ++m_PerformanceFailures;
+        log_failure(message);
+      }
+
+      void log_critical_failure(std::string_view message)
       {
         ++m_CriticalFailures;
-        m_Messages += (std::move(message) + '\n');
+        m_Messages += (std::string{message} + '\n');
         if(std::ofstream of{m_RecoveryFile}) of << m_Messages;
       }
 
-      void post_message(std::string message)
+      void post_message(std::string_view message)
       {
-        m_Messages += std::move(message);
+        m_Messages += std::string{message};
       }
 
-      std::size_t failures() const noexcept { return m_Failures; }      
-      std::size_t checks() const noexcept { return m_Checks; }      
+      std::size_t failures() const noexcept { return m_Failures; }
+      std::size_t performance_failures() const noexcept { return m_PerformanceFailures; }     
       std::size_t diagnostic_failures() const noexcept { return m_DiagnosticFailures; }
       std::size_t critical_failures() const noexcept { return m_CriticalFailures; }
+      
+      std::size_t checks() const noexcept { return m_Checks; }
+      std::size_t performance_checks() const noexcept { return m_PerformanceChecks; } 
 
       std::string failure_message_prefix() const { return m_FailureMessagePrefix; }
       void failure_message_prefix(std::string_view prefix) { m_FailureMessagePrefix = prefix; }
@@ -144,13 +176,26 @@ namespace sequoia
 
       int m_ExceptionsInFlight{};
       
-      std::size_t m_Failures{}, m_Checks{}, m_Depth{}, m_DiagnosticFailures{}, m_CriticalFailures{};
+      std::size_t
+        m_Failures{},
+        m_PerformanceFailures{},
+        m_Checks{},
+        m_PerformanceChecks{},
+        m_Depth{},
+        m_DiagnosticFailures{},
+        m_CriticalFailures{};
       
       std::size_t depth() const noexcept { return m_Depth; }
       void increment_depth() noexcept { ++m_Depth; }
       void decrement_depth() noexcept { --m_Depth; }
 
       void log_check() noexcept { ++m_Checks; }
+
+      void log_performance_check() noexcept
+      {
+        log_check();
+        ++m_PerformanceChecks;
+      }
 
       void reset_failures() noexcept { m_Failures = 0u; }
 
@@ -200,16 +245,18 @@ namespace sequoia
         switch(Mode)
         {
         case test_mode::standard:
-          m_StandardFailures = logger.failures();          
-          m_Checks = logger.checks();
+          m_StandardFailures    = logger.failures() - logger.performance_failures();
+          m_PerformanceFailures = logger.performance_failures();
+          m_Checks              = logger.checks() - logger.performance_checks();
+          m_PerformanceChecks   = logger.performance_checks();
           break;
         case test_mode::false_negative:
           m_FalseNegativeFailures = logger.diagnostic_failures();
-          m_FalseNegativeChecks = logger.checks();
+          m_FalseNegativeChecks   = logger.checks();
           break;
         case test_mode::false_positive:
            m_FalsePositiveFailures = logger.diagnostic_failures();
-           m_FalsePositiveChecks = logger.checks();
+           m_FalsePositiveChecks   = logger.checks();
           break;
         }
 
@@ -221,40 +268,42 @@ namespace sequoia
         log_summary clean{""};
         std::swap(*this, clean);
       }
-      
+
       std::size_t checks() const noexcept { return m_Checks; }
+      std::size_t performance_checks() const noexcept { return m_PerformanceChecks; }
       std::size_t false_negative_checks() const noexcept { return m_FalseNegativeChecks; }
       std::size_t false_positive_checks() const noexcept { return m_FalsePositiveChecks; }
       
       std::size_t standard_failures() const noexcept { return m_StandardFailures; }
+      std::size_t performance_failures() const noexcept { return m_PerformanceFailures; }
       std::size_t false_negative_failures() const noexcept { return m_FalseNegativeFailures; }
       std::size_t false_positive_failures() const noexcept { return m_FalsePositiveFailures; }
       std::size_t critical_failures() const noexcept { return m_CriticalFailures; }
 
-      int exceptions_detected_by_sentinel() const noexcept { return m_ExceptionsInFlight ; }
-      
       std::string message() const noexcept
       {
         return m_Prefix + summary() + m_Message;
       }
-
+      
       std::string current_message() const
       {
         return m_Prefix.empty() ?  m_CurrentMessage : '[' + m_Prefix + "]\n\t" + m_CurrentMessage;
       }
-
+      
       log_summary& operator+=(const log_summary& rhs)
       {
         m_Message               += rhs.m_Message;
-        m_Checks                += rhs.checks();
-        m_FalseNegativeChecks   += rhs.false_negative_checks();
-        m_FalsePositiveChecks   += rhs.false_positive_checks();
-        m_StandardFailures      += rhs.standard_failures();
-        m_FalseNegativeFailures += rhs.false_negative_failures();
-        m_FalsePositiveFailures += rhs.false_positive_failures();
-        m_CriticalFailures      += rhs.critical_failures();
-        m_ExceptionsInFlight    += rhs.exceptions_detected_by_sentinel();
-
+        m_Checks                += rhs.m_Checks;
+        m_PerformanceChecks     += rhs.m_PerformanceChecks;
+        m_FalseNegativeChecks   += rhs.m_FalseNegativeChecks;
+        m_FalsePositiveChecks   += rhs.m_FalsePositiveChecks;
+        m_StandardFailures      += rhs.m_StandardFailures;
+        m_PerformanceFailures   += rhs.m_PerformanceFailures;
+        m_FalseNegativeFailures += rhs.m_FalseNegativeFailures;
+        m_FalsePositiveFailures += rhs.m_FalsePositiveFailures;
+        m_CriticalFailures      += rhs.m_CriticalFailures;
+        m_ExceptionsInFlight    += rhs.m_ExceptionsInFlight;
+        
         m_CurrentMessage         = rhs.m_CurrentMessage;
 
         if(m_Prefix.empty()) m_Prefix = rhs.prefix();
@@ -273,10 +322,13 @@ namespace sequoia
       }
     private:
       std::string m_Prefix, m_Message, m_CurrentMessage;
-      std::size_t m_Checks{},        
+      std::size_t
+           m_Checks{},
+           m_PerformanceChecks{},
            m_FalseNegativeChecks{},
            m_FalsePositiveChecks{},
            m_StandardFailures{},
+           m_PerformanceFailures{},
            m_FalseNegativeFailures{},
            m_FalsePositiveFailures{},
            m_CriticalFailures{};
@@ -286,9 +338,10 @@ namespace sequoia
       std::string summary() const
       {
         std::string mess{};
-        mess += summarize(checks(), standard_failures(), "");
-        mess += summarize(false_negative_checks(), false_negative_failures(), "False negative ");
-        mess += summarize(false_positive_checks(), false_positive_failures(), "False positive ");
+        mess += summarize(m_Checks, m_StandardFailures, "");
+        mess += summarize(m_PerformanceChecks, m_PerformanceFailures, "Performance ");
+        mess += summarize(m_FalseNegativeChecks, m_FalseNegativeFailures, "False negative ");
+        mess += summarize(m_FalsePositiveChecks, m_FalsePositiveFailures, "False positive ");
         if(m_CriticalFailures)
         {
           using namespace std::string_literals;
@@ -297,19 +350,20 @@ namespace sequoia
         return mess;
       }
 
-      static std::string summarize(const std::size_t checks, const std::size_t failures, const std::string& prefix)
+      static std::string summarize(const std::size_t checks, const std::size_t failures, std::string_view prefix)
       {
         std::string m{};
         if(checks)
         {
-          m = ("\t" + std::to_string(checks) + pluralize(checks, prefix + "Check") + " done\n");
-          m += ("\t" + std::to_string(failures) + pluralize(failures, prefix + "Failure") + "\n");
+          m = ("\t" + std::to_string(checks) + pluralize(checks, std::string{prefix} + "Check") + " done\n");
+          m += ("\t" + std::to_string(failures) + pluralize(failures, std::string{prefix} + "Failure") + "\n");
         }
         return m;
       }
 
-      static std::string pluralize(const std::size_t n, const std::string& s)
+      static std::string pluralize(const std::size_t n, std::string_view sv)
       {
+        const std::string s{sv};
         return (n==1) ? " " + s : " " + s + "s";
       }
     };   
@@ -341,12 +395,12 @@ namespace sequoia
 
       template<class Logger, std::size_t I = 0, class... T>
       std::enable_if_t<I == sizeof...(T), void>
-      check_tuple_elements(Logger& logger, const std::tuple<T...>& reference, const std::tuple<T...>& actual, const std::string& description="")
+      check_tuple_elements(Logger& logger, const std::tuple<T...>& reference, const std::tuple<T...>& actual, std::string_view description="")
       {}
 
       template<class Logger, std::size_t I = 0, class... T>
       std::enable_if_t<I < sizeof...(T), void>
-      check_tuple_elements(Logger& logger, const std::tuple<T...>& reference, const std::tuple<T...>& actual, const std::string& description="")
+      check_tuple_elements(Logger& logger, const std::tuple<T...>& reference, const std::tuple<T...>& actual, std::string_view description="")
       {
         using S = std::decay_t<decltype(std::get<I>(reference))>;
         const std::string message{"Tuple elements differ for " + std::to_string(I) + "th element"};
@@ -359,10 +413,12 @@ namespace sequoia
     template<class T>
     struct equality_checker
     {
+      static_assert(is_serializable_v<T>, "Either specialize string_make or equality_checker");
+       
       template<class Logger, class S=T>
       static std::enable_if_t<!impl::container_detector_v<S>, bool>
-      check(Logger& logger, const T& reference, const T& actual, const std::string& description="")
-      {      
+      check(Logger& logger, const T& reference, const T& actual, std::string_view description="")
+      {        
         typename Logger::sentinel s{logger, description};
         s.log_check();
         const bool equal{reference == actual};
@@ -380,13 +436,13 @@ namespace sequoia
 
       template<class Logger, class S=T>
       static std::enable_if_t<impl::container_detector_v<S>, bool>
-      check(Logger& logger, const T& reference, const T& actual, const std::string& description="")
+      check(Logger& logger, const T& reference, const T& actual, std::string_view description="")
       {
         typename Logger::sentinel r{logger, description};
         const bool equal{equality_checker<bool>::check(logger, true, reference == actual)};
         if(!equal)
         {
-          if(equality_checker<bool>::check(logger, reference.size(), actual.size(), description + "container size wrong"))
+          if(equality_checker<bool>::check(logger, reference.size(), actual.size(), std::string{description} + "container size wrong"))
           {
             if constexpr (!diagnostic(Logger::mode))
             {
@@ -397,7 +453,7 @@ namespace sequoia
             for(auto refIter{std::begin(reference)}, actIter{std::begin(actual)}; refIter != std::end(reference); ++refIter, ++actIter)
             {
               const std::string dist{std::to_string(std::distance(std::begin(reference), refIter))};
-              equality_checker<typename T::value_type>::check(logger, *refIter, *actIter, description +  "element " + dist);
+              equality_checker<typename T::value_type>::check(logger, *refIter, *actIter, std::string{description} +  "element " + dist);
             }
           }
         }
@@ -408,7 +464,7 @@ namespace sequoia
     template<class T, class S>
     struct equality_checker<std::pair<T,S>>
     {
-      template<class Logger> static bool check(Logger& logger, const std::pair<T,S>& reference, const std::pair<T,S>& actual, const std::string& description="")
+      template<class Logger> static bool check(Logger& logger, const std::pair<T,S>& reference, const std::pair<T,S>& actual, std::string_view description="")
       {
         typename Logger::sentinel r{logger, description};
         r.log_check();
@@ -425,7 +481,7 @@ namespace sequoia
     template<class... T>
     struct equality_checker<std::tuple<T...>>
     {
-      template<class Logger> static bool check(Logger& logger, const std::tuple<T...>& reference, const std::tuple<T...>& actual, const std::string& description="")
+      template<class Logger> static bool check(Logger& logger, const std::tuple<T...>& reference, const std::tuple<T...>& actual, std::string_view description="")
       {
         typename Logger::sentinel r{logger, description};
         const bool equal{equality_checker<bool>::check(logger, true, reference == actual, description)};
@@ -439,7 +495,7 @@ namespace sequoia
 
     
 
-    template<class Logger, class T> bool check_equality(Logger& logger, const T& reference, const T& value, const std::string& description="")
+    template<class Logger, class T> bool check_equality(Logger& logger, const T& reference, const T& value, std::string_view description="")
     {
       typename Logger::sentinel s{logger, description};
       const auto priorFailures{logger.failures()};
@@ -448,13 +504,13 @@ namespace sequoia
       return logger.failures() == priorFailures;
     }
 
-    template<class Logger> bool check(Logger& logger, const bool value, const std::string& description="")
+    template<class Logger> bool check(Logger& logger, const bool value, std::string_view description="")
     {
       return check_equality(logger, true, value, description);
     }
 
     template<class Logger, class T>
-    bool check_equality_within_tolerance(Logger& logger, const T reference, const T value, const T tol, const std::string& description="")
+    bool check_equality_within_tolerance(Logger& logger, const T& reference, const T& value, const T& tol, std::string_view description="")
     {
       typename Logger::sentinel r{logger, description};
       const bool equal{equality_checker<bool>::check(logger, true, (value > reference - tol) && (value < reference + tol))};
@@ -471,7 +527,7 @@ namespace sequoia
     }
 
     template<class Logger, class E, class Fn>
-    bool check_exception_thrown(Logger& logger, Fn&& function, const std::string& description="")
+    bool check_exception_thrown(Logger& logger, Fn&& function, std::string_view description="")
     {
       typename Logger::sentinel r{logger, description};
       r.log_check();
@@ -503,17 +559,17 @@ namespace sequoia
     }
 
     template<class Logger, class RefIter, class ResultIter>
-    bool check_range(Logger& logger, RefIter refBegin, RefIter refEnd, ResultIter resBegin, ResultIter resEnd, const std::string& description="")
+    bool check_range(Logger& logger, RefIter refBegin, RefIter refEnd, ResultIter resBegin, ResultIter resEnd, std::string_view description="")
     {
       typename Logger::sentinel r{logger, description};
       bool equal{true};
       const auto refSize = std::distance(refBegin, refEnd);
-      if(check_equality(logger, refSize, std::distance(resBegin, resEnd), description + " container size wrong"))
+      if(check_equality(logger, refSize, std::distance(resBegin, resEnd), std::string{description} + " container size wrong"))
       {        
         for(auto refIter = refBegin, resIter = resBegin; refIter != refEnd; ++refIter, ++resIter)
         {
           const std::string dist{std::to_string(std::distance(refBegin, refIter))};
-          if(!check_equality(logger, *refIter, *resIter, description +  "element " + dist)) equal = false;
+          if(!check_equality(logger, *refIter, *resIter, std::string{description} +  "element " + dist)) equal = false;
         }
       }
       else
@@ -525,7 +581,7 @@ namespace sequoia
     }
 
     template<class Logger, class T>
-    void check_standard_semantics(Logger& logger, const T& x, const T& y, const std::string& description="")
+    void check_standard_semantics(Logger& logger, const T& x, const T& y, std::string_view description="")
     {
       typename Logger::sentinel s{logger, description};
 
@@ -561,19 +617,23 @@ namespace sequoia
     };
 
     template<class Logger, class F, class S>
-    auto check_relative_performance(Logger& logger, F fast, S slow, const double factor, const bool oneSided, const std::size_t trials, const double num_sds, const bool reportSuccess, const std::string& description) -> performance_results<decltype(fast())>
-    {
-      using R = decltype(fast());
-      static_assert(std::is_same<R, decltype(slow())>::value, "Fast/Slow invokables must have same return value");
+    auto check_relative_performance(Logger& logger, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials, const double num_sds, const bool reportSuccess, std::string_view description) -> performance_results<std::invoke_result_t<F>>
+    {      
+      using R = std::invoke_result_t<F>;
+      static_assert(std::is_same_v<R, std::invoke_result_t<S>>, "Fast/Slow invokables must have same return value");
+      
+      // Replace with contracts in 2020
+      if((minSpeedUp <= 1) || (maxSpeedUp <= 1))
+        throw std::logic_error("Relative performance test requires speed-up factors > 1!");
+
+      if(minSpeedUp > maxSpeedUp)
+        throw std::logic_error("maxSpeedUp must be >= minSpeedUp");      
 
       typename Logger::sentinel r{logger, description};
-      r.log_check();
+      r.log_performance_check();
       
-      performance_results<R> results;
-
-      if(factor < 0.0)
-        throw std::runtime_error("Relative performance test requires a positive definite comparison factor!");
-
+      performance_results<R> results;      
+      
       using namespace std::chrono;
       using namespace statistics;
 
@@ -607,20 +667,20 @@ namespace sequoia
       }
 
       using namespace statistics::bias;
-      if((factor == 1.0f) || (fastData.mean() + fastData.template sample_standard_deviation<gaussian_approx_modifier>()
-                               < slowData.mean() - slowData.template sample_standard_deviation<gaussian_approx_modifier>()))
+      if(  fastData.mean() + fastData.template sample_standard_deviation<gaussian_approx_modifier>()
+         < slowData.mean() - slowData.template sample_standard_deviation<gaussian_approx_modifier>())
       {
         const auto fastSD = fastData.template sample_standard_deviation<gaussian_approx_modifier>();
         const auto slowSD = slowData.template sample_standard_deviation<gaussian_approx_modifier>();
         if(fastSD >= slowSD)
         {
-          results.passed = factor*fastData.mean() < (slowData.mean() + num_sds*slowSD)
-            && (oneSided || (factor*fastData.mean() > (slowData.mean() - num_sds*slowSD)));
+          results.passed = (minSpeedUp*fastData.mean() <= (slowData.mean() + num_sds*slowSD))
+                        && (maxSpeedUp*fastData.mean() >= (slowData.mean() - num_sds*slowSD));
         }
         else
         {
-          results.passed = ( oneSided || (slowData.mean() / factor < (fastData.mean() + num_sds*fastSD)) )
-            && slowData.mean() / factor >(fastData.mean() - num_sds*fastSD);
+          results.passed = (slowData.mean() / maxSpeedUp <= (fastData.mean() + num_sds*fastSD))
+                        && (slowData.mean() / minSpeedUp >= (fastData.mean() - num_sds*fastSD));
         }
       }
 
@@ -632,8 +692,8 @@ namespace sequoia
         error << " +- " << num_sds << " * " << fastData.template sample_standard_deviation<gaussian_approx_modifier>();
         error << "\n\tSlow Task duration: " << slowData.mean() << "s";
         error << " +- " << num_sds << " * " << slowData.template sample_standard_deviation<gaussian_approx_modifier>();
-        error << " (" << slowData.mean() / fastData.mean() << "; " << factor << ")";
-        logger.log_failure(error.str());
+        error << " [" << slowData.mean() / fastData.mean() << "; (" << minSpeedUp << ", " << maxSpeedUp << ")]";
+        logger.log_performance_failure(error.str());
       }
       else if(reportSuccess)
       {
@@ -641,7 +701,8 @@ namespace sequoia
         message << "\n\tFast Task duration: " << fastData.mean() << "s";
         message << " +- " << num_sds << " * " << fastData.template sample_standard_deviation<gaussian_approx_modifier>();
         message << "\n\tSlow Task duration: " << slowData.mean() << "s";
-        message << " +- " << num_sds << " * " << slowData.template sample_standard_deviation<gaussian_approx_modifier>();;
+        message << " +- " << num_sds << " * " << slowData.template sample_standard_deviation<gaussian_approx_modifier>();
+        message << " [" << slowData.mean() / fastData.mean() << "; (" << minSpeedUp << ", " << maxSpeedUp << ")]";
         logger.post_message(message.str());
       }
 
@@ -660,39 +721,40 @@ namespace sequoia
       checker(const checker&)            = delete;
       checker& operator=(const checker&) = delete;
 
-      template<class T> bool check_equality(const T& reference, const T& value, const std::string& description="")
+      template<class T> bool check_equality(const T& reference, const T& value, std::string_view description="")
       {
         return unit_testing::check_equality(m_Logger, reference, value, description);
       }
 
       template<class T>
-      bool check_equality_within_tolerance(const T reference, const T value, const T tol, const std::string& description="")
+      bool check_equality_within_tolerance(const T reference, const T value, const T tol, std::string_view description="")
       {
         return unit_testing::check_equality_within_tolerance(m_Logger, reference, value, tol, description);
       }
 
-      bool check(const bool value, const std::string& description="")
+      bool check(const bool value, std::string_view description="")
       {
         return unit_testing::check(m_Logger, value, description);
       }
 
       template<class E, class Fn>
-      bool check_exception_thrown(Fn&& function, const std::string& description="")
+      bool check_exception_thrown(Fn&& function, std::string_view description="")
       {
         return unit_testing::check_exception_thrown<Logger, E, Fn>(m_Logger, std::forward<Fn>(function), description);
       }
 
       template<class RefIter, class ResultIter>
-      bool check_range(RefIter refBegin, RefIter refEnd, ResultIter resBegin, ResultIter resEnd, const std::string& description="")
+      bool check_range(RefIter refBegin, RefIter refEnd, ResultIter resBegin, ResultIter resEnd, std::string_view description="")
       {
         return unit_testing::check_range(m_Logger, refBegin, refEnd, resBegin, resEnd, description);
       }
 
       template<class F, class S>
-      auto check_relative_performance(F fast, S slow, const double factor, const bool oneSided, const std::string& description="", const std::size_t trials=5, const double num_sds=3)
+      auto check_relative_performance(F fast, S slow, const double minSpeedUp, const double maxSpeedUp, std::string_view description="", const std::size_t trials=5, const double num_sds=3)
         -> performance_results<decltype(fast())>
       {
-        return unit_testing::check_relative_performance(m_Logger, fast, slow, factor, oneSided, trials, num_sds, false, description);
+        constexpr bool verboseIfPassed{Logger::mode == test_mode::false_positive};
+        return unit_testing::check_relative_performance(m_Logger, fast, slow, minSpeedUp, maxSpeedUp, trials, num_sds, verboseIfPassed, description);
       }
 
       template<class Stream>
@@ -702,7 +764,7 @@ namespace sequoia
         return os;
       }
 
-      log_summary summary(const std::string& prefix) const
+      log_summary summary(std::string_view prefix) const
       {
         return log_summary{prefix, m_Logger};
       }
@@ -712,13 +774,13 @@ namespace sequoia
       
       checker& operator=(checker&&) = default;
 
-      void log_critical_failure(const std::string& message) { m_Logger.log_critical_failure(message); }
-      void log_failure(const std::string& message) { m_Logger.log_failure(message); }
+      void log_critical_failure(std::string_view message) { m_Logger.log_critical_failure(message); }
+      void log_failure(std::string_view message) { m_Logger.log_failure(message); }
       std::size_t checks() const noexcept { return m_Logger.checks(); }
       std::size_t failures() const noexcept { return m_Logger.failures(); }
       void failure_message_prefix(std::string_view prefix) { m_Logger.failure_message_prefix(prefix); }
       std::string failure_message_prefix() const { return m_Logger.failure_message_prefix(); }
-      void post_message(const std::string& message) { m_Logger.post_message(message); }
+      void post_message(std::string_view message) { m_Logger.post_message(message); }
       std::string current_message() const { return m_Logger.current_message(); }
       int exceptions_detected_by_sentinel() const noexcept { return m_Logger.exceptions_detected_by_sentinel(); }
 
@@ -729,7 +791,7 @@ namespace sequoia
 
       
       template<class T>
-      void check_standard_semantics(const T& x, const T& y, const std::string& description="")
+      void check_standard_semantics(const T& x, const T& y, std::string_view description="")
       {
         unit_testing::check_standard_semantics(m_Logger, x, y, description);        
       }

@@ -130,8 +130,9 @@ namespace sequoia
 
       std::cout <<  "-----Grand Totals-----\n";
       std::cout << "Standard Checks: " << summary.checks() << ";\t\t " << "Failures: " << summary.standard_failures() << "\n";
-      std::cout << "False Negative Checks: " << summary.false_negative_checks() << ";\t " << "Failures: " << summary.false_negative_failures() << "\n";
-      std::cout << "False Positive Checks: " << summary.false_positive_checks() << ";\t " << "Failures: " << summary.false_positive_failures() << "\n";
+      std::cout << "Performance Checks: " << summary.performance_checks() << ";\t\t\t " << "Failures: " << summary.performance_failures() << "\n";
+      std::cout << "False Negative Checks: " << summary.false_negative_checks() << ";\t\t " << "Failures: " << summary.false_negative_failures() << "\n";
+      std::cout << "False Positive Checks: " << summary.false_positive_checks() << ";\t\t " << "Failures: " << summary.false_positive_failures() << "\n";
       if(summary.critical_failures()) std::cout << "\nCritical Failures: " << summary.critical_failures() << "\n";
     }
   }
