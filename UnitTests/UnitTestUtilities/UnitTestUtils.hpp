@@ -582,19 +582,23 @@ namespace sequoia
     };
 
     template<class Logger, class F, class S>
-    auto check_relative_performance(Logger& logger, F fast, S slow, const double factor, const bool oneSided, const std::size_t trials, const double num_sds, const bool reportSuccess, std::string_view description) -> performance_results<decltype(fast())>
-    {
-      using R = decltype(fast());
-      static_assert(std::is_same<R, decltype(slow())>::value, "Fast/Slow invokables must have same return value");
+    auto check_relative_performance(Logger& logger, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials, const double num_sds, const bool reportSuccess, std::string_view description) -> performance_results<std::invoke_result_t<F>>
+    {      
+      using R = std::invoke_result_t<F>;
+      static_assert(std::is_same_v<R, std::invoke_result_t<S>>, "Fast/Slow invokables must have same return value");
+      
+      // Replace with contracts in 2020
+      if((minSpeedUp <= 1) || (maxSpeedUp <= 1))
+        throw std::logic_error("Relative performance test requires speed-up factors > 1!");
+
+      if(minSpeedUp > maxSpeedUp)
+        throw std::logic_error("maxSpeedUp must be >= minSpeedUp");      
 
       typename Logger::sentinel r{logger, description};
       r.log_check();
       
-      performance_results<R> results;
-
-      if(factor < 0.0)
-        throw std::runtime_error("Relative performance test requires a positive definite comparison factor!");
-
+      performance_results<R> results;      
+      
       using namespace std::chrono;
       using namespace statistics;
 
@@ -628,20 +632,20 @@ namespace sequoia
       }
 
       using namespace statistics::bias;
-      if((factor == 1.0f) || (fastData.mean() + fastData.template sample_standard_deviation<gaussian_approx_modifier>()
-                               < slowData.mean() - slowData.template sample_standard_deviation<gaussian_approx_modifier>()))
+      if(  fastData.mean() + fastData.template sample_standard_deviation<gaussian_approx_modifier>()
+         < slowData.mean() - slowData.template sample_standard_deviation<gaussian_approx_modifier>())
       {
         const auto fastSD = fastData.template sample_standard_deviation<gaussian_approx_modifier>();
         const auto slowSD = slowData.template sample_standard_deviation<gaussian_approx_modifier>();
         if(fastSD >= slowSD)
         {
-          results.passed = factor*fastData.mean() < (slowData.mean() + num_sds*slowSD)
-            && (oneSided || (factor*fastData.mean() > (slowData.mean() - num_sds*slowSD)));
+          results.passed = (minSpeedUp*fastData.mean() <= (slowData.mean() + num_sds*slowSD))
+                        && (maxSpeedUp*fastData.mean() >= (slowData.mean() - num_sds*slowSD));
         }
         else
         {
-          results.passed = ( oneSided || (slowData.mean() / factor < (fastData.mean() + num_sds*fastSD)) )
-            && slowData.mean() / factor >(fastData.mean() - num_sds*fastSD);
+          results.passed = (slowData.mean() / maxSpeedUp <= (fastData.mean() + num_sds*fastSD))
+                        && (slowData.mean() / minSpeedUp >= (fastData.mean() - num_sds*fastSD));
         }
       }
 
@@ -653,7 +657,7 @@ namespace sequoia
         error << " +- " << num_sds << " * " << fastData.template sample_standard_deviation<gaussian_approx_modifier>();
         error << "\n\tSlow Task duration: " << slowData.mean() << "s";
         error << " +- " << num_sds << " * " << slowData.template sample_standard_deviation<gaussian_approx_modifier>();
-        error << " (" << slowData.mean() / fastData.mean() << "; " << factor << ")";
+        error << " [" << slowData.mean() / fastData.mean() << "; (" << minSpeedUp << ", " << maxSpeedUp << ")]";
         logger.log_failure(error.str());
       }
       else if(reportSuccess)
@@ -662,7 +666,8 @@ namespace sequoia
         message << "\n\tFast Task duration: " << fastData.mean() << "s";
         message << " +- " << num_sds << " * " << fastData.template sample_standard_deviation<gaussian_approx_modifier>();
         message << "\n\tSlow Task duration: " << slowData.mean() << "s";
-        message << " +- " << num_sds << " * " << slowData.template sample_standard_deviation<gaussian_approx_modifier>();;
+        message << " +- " << num_sds << " * " << slowData.template sample_standard_deviation<gaussian_approx_modifier>();
+        message << " [" << slowData.mean() / fastData.mean() << "; (" << minSpeedUp << ", " << maxSpeedUp << ")]";
         logger.post_message(message.str());
       }
 
@@ -710,10 +715,11 @@ namespace sequoia
       }
 
       template<class F, class S>
-      auto check_relative_performance(F fast, S slow, const double factor, const bool oneSided, std::string_view description="", const std::size_t trials=5, const double num_sds=3)
+      auto check_relative_performance(F fast, S slow, const double minSpeedUp, const double maxSpeedUp, std::string_view description="", const std::size_t trials=5, const double num_sds=3)
         -> performance_results<decltype(fast())>
       {
-        return unit_testing::check_relative_performance(m_Logger, fast, slow, factor, oneSided, trials, num_sds, false, description);
+        constexpr bool verboseIfPassed{Logger::mode == test_mode::false_positive};
+        return unit_testing::check_relative_performance(m_Logger, fast, slow, minSpeedUp, maxSpeedUp, trials, num_sds, verboseIfPassed, description);
       }
 
       template<class Stream>

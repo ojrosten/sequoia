@@ -55,13 +55,14 @@ namespace sequoia
 
     void false_positive_diagnostics::test_relative_performance()
     {
-      auto wait = [](const size_t millisecs) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(millisecs));
+      auto wait{[](const size_t millisecs) {
+          std::this_thread::sleep_for(std::chrono::milliseconds(millisecs));
+        }
       };
 
-      check_relative_performance([wait]() { return wait(1); }, [wait]() { return wait(1); }, 2.0, false, LINE("Two-sided Performance Test with equal durations which should fail"));
-      check_relative_performance([wait]() { return wait(1); }, [wait]() { return wait(4); }, 2.0, false, LINE("Two-sided Performance Test with equal durations which should fail"));
-      check_relative_performance([wait]() { return wait(1); }, [wait]() { return wait(1); }, 2.0, true, LINE("One-sided Performance Test with equal durations which should fail"));
+      check_relative_performance([wait]() { return wait(1); }, [wait]() { return wait(1); }, 2.0, 2.0, LINE("Performance Test for which fast task is too slow"));
+      check_relative_performance([wait]() { return wait(1); }, [wait]() { return wait(1); }, 2.0, 3.0, LINE("Performance Test for which fast task is too slow"));
+      check_relative_performance([wait]() { return wait(1); }, [wait]() { return wait(4); }, 2.0, 2.5, LINE("Performance Test for which fast task is too fast"));      
     }
 
     void false_positive_diagnostics::test_mixed()
@@ -138,16 +139,18 @@ namespace sequoia
     void false_negative_diagnostics::test_relative_performance()
     {
       
-      auto wait = [](const size_t millisecs) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(millisecs));
+      auto wait{[](const size_t millisecs) {
+          std::this_thread::sleep_for(std::chrono::milliseconds(millisecs));
+        }
       };
 
-      auto fast = [wait]() { return wait(1); };
-      using fast_t = decltype(fast);
+      auto fast{[wait]() {
+          return wait(1);
+        }
+      };      
 
-      check_relative_performance<fast_t, fast_t>(fast, fast, 1.0, false, LINE("Two-sided Performance Test with equal durations which should pass"));
-      check_relative_performance(fast, [wait]() { return wait(2); }, 2.0, false, LINE("Two-sided Performance Test which should pass"), 10);
-      check_relative_performance(fast, [wait]() { return wait(4); }, 2.0, true, LINE("One-sided Performance Test with equal durations which should pass"));
+      check_relative_performance(fast, [wait]() { return wait(2); }, 1.9, 2.1, LINE("Performance Test which should pass"), 5);
+      check_relative_performance(fast, [wait]() { return wait(4); }, 3.9, 4.1, LINE("Performance Test which should pass"));
     }
 
     void false_negative_diagnostics::test_mixed()
