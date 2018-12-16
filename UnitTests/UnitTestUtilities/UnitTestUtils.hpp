@@ -104,6 +104,11 @@ namespace sequoia
         {
           if(!diagnostic(Mode)) m_Logger.get().log_check();
         }
+
+        void log_performance_check()
+        {
+          if(!diagnostic(Mode)) m_Logger.get().log_performance_check();
+        }
       private:
         std::reference_wrapper<unit_test_logger> m_Logger;
       };       
@@ -113,6 +118,12 @@ namespace sequoia
         ++m_Failures;
         if constexpr (Mode != test_mode::false_positive) m_Messages += (std::string{message} + '\n');
         if(std::ofstream of{m_RecoveryFile}) of << m_Messages;
+      }
+
+      void log_performance_failure(std::string_view message)
+      {
+        ++m_PerformanceFailures;
+        log_failure(message);
       }
 
       void log_critical_failure(std::string_view message)
@@ -127,10 +138,13 @@ namespace sequoia
         m_Messages += std::string{message};
       }
 
-      std::size_t failures() const noexcept { return m_Failures; }      
-      std::size_t checks() const noexcept { return m_Checks; }      
+      std::size_t failures() const noexcept { return m_Failures; }
+      std::size_t performance_failures() const noexcept { return m_PerformanceFailures; }     
       std::size_t diagnostic_failures() const noexcept { return m_DiagnosticFailures; }
       std::size_t critical_failures() const noexcept { return m_CriticalFailures; }
+      
+      std::size_t checks() const noexcept { return m_Checks; }
+      std::size_t performance_checks() const noexcept { return m_PerformanceChecks; } 
 
       std::string failure_message_prefix() const { return m_FailureMessagePrefix; }
       void failure_message_prefix(std::string_view prefix) { m_FailureMessagePrefix = prefix; }
@@ -162,13 +176,26 @@ namespace sequoia
 
       int m_ExceptionsInFlight{};
       
-      std::size_t m_Failures{}, m_Checks{}, m_Depth{}, m_DiagnosticFailures{}, m_CriticalFailures{};
+      std::size_t
+        m_Failures{},
+        m_PerformanceFailures{},
+        m_Checks{},
+        m_PerformanceChecks{},
+        m_Depth{},
+        m_DiagnosticFailures{},
+        m_CriticalFailures{};
       
       std::size_t depth() const noexcept { return m_Depth; }
       void increment_depth() noexcept { ++m_Depth; }
       void decrement_depth() noexcept { --m_Depth; }
 
       void log_check() noexcept { ++m_Checks; }
+
+      void log_performance_check() noexcept
+      {
+        log_check();
+        ++m_PerformanceChecks;
+      }
 
       void reset_failures() noexcept { m_Failures = 0u; }
 
@@ -218,16 +245,18 @@ namespace sequoia
         switch(Mode)
         {
         case test_mode::standard:
-          m_StandardFailures = logger.failures();          
-          m_Checks = logger.checks();
+          m_StandardFailures    = logger.failures() - logger.performance_failures();
+          m_PerformanceFailures = logger.performance_failures();
+          m_Checks              = logger.checks() - logger.performance_checks();
+          m_PerformanceChecks   = logger.performance_checks();
           break;
         case test_mode::false_negative:
           m_FalseNegativeFailures = logger.diagnostic_failures();
-          m_FalseNegativeChecks = logger.checks();
+          m_FalseNegativeChecks   = logger.checks();
           break;
         case test_mode::false_positive:
            m_FalsePositiveFailures = logger.diagnostic_failures();
-           m_FalsePositiveChecks = logger.checks();
+           m_FalsePositiveChecks   = logger.checks();
           break;
         }
 
@@ -239,40 +268,42 @@ namespace sequoia
         log_summary clean{""};
         std::swap(*this, clean);
       }
-      
+
       std::size_t checks() const noexcept { return m_Checks; }
+      std::size_t performance_checks() const noexcept { return m_PerformanceChecks; }
       std::size_t false_negative_checks() const noexcept { return m_FalseNegativeChecks; }
       std::size_t false_positive_checks() const noexcept { return m_FalsePositiveChecks; }
       
       std::size_t standard_failures() const noexcept { return m_StandardFailures; }
+      std::size_t performance_failures() const noexcept { return m_PerformanceFailures; }
       std::size_t false_negative_failures() const noexcept { return m_FalseNegativeFailures; }
       std::size_t false_positive_failures() const noexcept { return m_FalsePositiveFailures; }
       std::size_t critical_failures() const noexcept { return m_CriticalFailures; }
 
-      int exceptions_detected_by_sentinel() const noexcept { return m_ExceptionsInFlight ; }
-      
       std::string message() const noexcept
       {
         return m_Prefix + summary() + m_Message;
       }
-
+      
       std::string current_message() const
       {
         return m_Prefix.empty() ?  m_CurrentMessage : '[' + m_Prefix + "]\n\t" + m_CurrentMessage;
       }
-
+      
       log_summary& operator+=(const log_summary& rhs)
       {
         m_Message               += rhs.m_Message;
-        m_Checks                += rhs.checks();
-        m_FalseNegativeChecks   += rhs.false_negative_checks();
-        m_FalsePositiveChecks   += rhs.false_positive_checks();
-        m_StandardFailures      += rhs.standard_failures();
-        m_FalseNegativeFailures += rhs.false_negative_failures();
-        m_FalsePositiveFailures += rhs.false_positive_failures();
-        m_CriticalFailures      += rhs.critical_failures();
-        m_ExceptionsInFlight    += rhs.exceptions_detected_by_sentinel();
-
+        m_Checks                += rhs.m_Checks;
+        m_PerformanceChecks     += rhs.m_PerformanceChecks;
+        m_FalseNegativeChecks   += rhs.m_FalseNegativeChecks;
+        m_FalsePositiveChecks   += rhs.m_FalsePositiveChecks;
+        m_StandardFailures      += rhs.m_StandardFailures;
+        m_PerformanceFailures   += rhs.m_PerformanceFailures;
+        m_FalseNegativeFailures += rhs.m_FalseNegativeFailures;
+        m_FalsePositiveFailures += rhs.m_FalsePositiveFailures;
+        m_CriticalFailures      += rhs.m_CriticalFailures;
+        m_ExceptionsInFlight    += rhs.m_ExceptionsInFlight;
+        
         m_CurrentMessage         = rhs.m_CurrentMessage;
 
         if(m_Prefix.empty()) m_Prefix = rhs.prefix();
@@ -291,10 +322,13 @@ namespace sequoia
       }
     private:
       std::string m_Prefix, m_Message, m_CurrentMessage;
-      std::size_t m_Checks{},        
+      std::size_t
+           m_Checks{},
+           m_PerformanceChecks{},
            m_FalseNegativeChecks{},
            m_FalsePositiveChecks{},
            m_StandardFailures{},
+           m_PerformanceFailures{},
            m_FalseNegativeFailures{},
            m_FalsePositiveFailures{},
            m_CriticalFailures{};
@@ -304,9 +338,10 @@ namespace sequoia
       std::string summary() const
       {
         std::string mess{};
-        mess += summarize(checks(), standard_failures(), "");
-        mess += summarize(false_negative_checks(), false_negative_failures(), "False negative ");
-        mess += summarize(false_positive_checks(), false_positive_failures(), "False positive ");
+        mess += summarize(m_Checks, m_StandardFailures, "");
+        mess += summarize(m_PerformanceChecks, m_PerformanceFailures, "Performance ");
+        mess += summarize(m_FalseNegativeChecks, m_FalseNegativeFailures, "False negative ");
+        mess += summarize(m_FalsePositiveChecks, m_FalsePositiveFailures, "False positive ");
         if(m_CriticalFailures)
         {
           using namespace std::string_literals;
@@ -595,7 +630,7 @@ namespace sequoia
         throw std::logic_error("maxSpeedUp must be >= minSpeedUp");      
 
       typename Logger::sentinel r{logger, description};
-      r.log_check();
+      r.log_performance_check();
       
       performance_results<R> results;      
       
@@ -658,7 +693,7 @@ namespace sequoia
         error << "\n\tSlow Task duration: " << slowData.mean() << "s";
         error << " +- " << num_sds << " * " << slowData.template sample_standard_deviation<gaussian_approx_modifier>();
         error << " [" << slowData.mean() / fastData.mean() << "; (" << minSpeedUp << ", " << maxSpeedUp << ")]";
-        logger.log_failure(error.str());
+        logger.log_performance_failure(error.str());
       }
       else if(reportSuccess)
       {
