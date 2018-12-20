@@ -21,6 +21,9 @@ namespace sequoia
       std::vector<test_family> m_Families;
       std::set<std::string> m_SpecificCases{};
       bool m_Asynchronous{};
+
+      template<class Iter> static void align(Iter begin, Iter end, std::string_view suffix);
+      template<class Iter> static void align_right(Iter begin, Iter end);
     };
   }
 }

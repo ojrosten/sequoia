@@ -1,5 +1,7 @@
 #include "UnitTestRunner.hpp"
 
+#include <array>
+
 namespace sequoia
 {
   namespace unit_testing
@@ -47,7 +49,7 @@ namespace sequoia
           }
           else
           {
-            std::cout << "Warning: -test requires precisely one argument, but " << argList.size() << " were provided\n";
+            std::cout << "Warning: 'test' requires precisely one argument, but " << argList.size() << " were provided\n";
           }
         }
       );
@@ -97,6 +99,40 @@ namespace sequoia
       if(accept) m_Families.emplace_back(std::move(f));
     }
 
+    template<class Iter>
+    void unit_test_runner::align(Iter begin, Iter end, std::string_view suffix)
+    {
+       auto maxIter{std::max_element(begin, end, [](const std::string& lhs, const std::string& rhs) {
+            return lhs.size() < rhs.size();
+        })
+      };
+
+      const auto maxChars{maxIter->size()};
+
+      for(; begin != end; ++begin)
+      {
+        auto& s{*begin};
+        s += std::string(maxChars - s.size(), ' ') += std::string{suffix};
+      }
+    }
+
+    template<class Iter>
+    void unit_test_runner::align_right(Iter begin, Iter end)
+    {
+       auto maxIter{std::max_element(begin, end, [](const std::string& lhs, const std::string& rhs) {
+            return lhs.size() < rhs.size();
+        })
+      };
+
+      const auto maxChars{maxIter->size()};
+
+      for(; begin != end; ++begin)
+      {
+        auto& s{*begin};
+        s = std::string(maxChars - s.size(), ' ') + s;
+      }
+    }
+    
     void unit_test_runner::execute()
     {
       std::cout << "Running unit tests...\n";
@@ -129,10 +165,48 @@ namespace sequoia
       }
 
       std::cout <<  "-----Grand Totals-----\n";
-      std::cout << "Standard Checks: " << summary.checks() << ";\t\t " << "Failures: " << summary.standard_failures() << "\n";
-      std::cout << "Performance Checks: " << summary.performance_checks() << ";\t\t\t " << "Failures: " << summary.performance_failures() << "\n";
-      std::cout << "False Negative Checks: " << summary.false_negative_checks() << ";\t\t " << "Failures: " << summary.false_negative_failures() << "\n";
-      std::cout << "False Positive Checks: " << summary.false_positive_checks() << ";\t\t " << "Failures: " << summary.false_positive_failures() << "\n";
+      std::array<std::string, 4> summaries{
+        std::string{"Standard Checks:"},
+        std::string{"Performance Checks:"},
+        std::string{"False Negative Checks:"},
+        std::string{"False Positive Checks:"}
+      };
+
+      align(summaries.begin(), summaries.end(), "  ");
+
+      std::array<std::string, 4> checks{
+        std::to_string(summary.checks()),
+        std::to_string(summary.performance_checks()),
+        std::to_string(summary.false_negative_checks()),
+        std::to_string(summary.false_positive_checks())
+      };
+
+      align_right(checks.begin(), checks.end());
+
+      for(int i{}; i<4; ++i)
+      {
+        summaries[i] += checks[i] += ";    Failures: ";
+      }
+
+      std::array<std::string, 4> failures{
+        std::to_string(summary.standard_failures()),
+        std::to_string(summary.performance_failures()),
+        std::to_string(summary.false_negative_failures()),
+        std::to_string(summary.false_positive_failures())
+      };
+
+      align_right(failures.begin(), failures.end());
+
+      for(int i{}; i<4; ++i)
+      {
+        summaries[i] += failures[i];
+      }
+
+      for(const auto& s : summaries)
+      {
+        std::cout << s << '\n';
+      }
+
       if(summary.critical_failures()) std::cout << "\nCritical Failures: " << summary.critical_failures() << "\n";
     }
   }

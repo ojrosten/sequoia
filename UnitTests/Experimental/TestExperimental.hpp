@@ -10,5 +10,8 @@ namespace sequoia::unit_testing
     using unit_test::unit_test;
   private:
     void run_tests();
+
+    template<class A>
+    constexpr static A rotate(const A& a, const int pos);
   };
 }
