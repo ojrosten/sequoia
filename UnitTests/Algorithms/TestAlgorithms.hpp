@@ -29,6 +29,8 @@ namespace sequoia
       void equal_range_basic_type();
 
       void equality();
+
+      void test_rotate();
     };
   }
 }
