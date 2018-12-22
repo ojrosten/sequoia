@@ -271,30 +271,6 @@ namespace sequoia
         return erased;
       }
 
-      template<class UnaryPred>
-      partition_iterator find_in_partition_if(const size_type partitionIndex, UnaryPred pred)
-      {
-        auto found = end_partition(partitionIndex);
-        for(auto iter = begin_partition(partitionIndex); iter != end_partition(partitionIndex); ++iter)
-        {
-          if(pred(*iter)) return(iter);
-        }
-
-        return found;
-      }
-
-      template<class UnaryPred>
-      const_partition_iterator find_in_partition_if(const size_type partitionIndex, UnaryPred pred) const
-      {
-          auto found = cend_partition(partitionIndex);
-          for(auto iter = cbegin_partition(partitionIndex); iter != cend_partition(partitionIndex); ++iter)
-          {
-              if(pred(*iter)) return(iter);
-          }
-
-          return found;
-      }
-
       partition_iterator begin_partition(const size_type i)
       {
         if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range("bucketed_storage::begin_partition: no buckets!\n");
@@ -465,30 +441,6 @@ namespace sequoia
       constexpr auto size() const noexcept { return m_Storage.size(); }
 
       constexpr auto num_partitions() const noexcept { return m_Partitions.size(); }
-
-      template<class UnaryPred>
-      partition_iterator find_in_partition_if(const index_type partitionIndex, UnaryPred pred)
-      {
-        auto found = end_partition(partitionIndex);
-        for(auto iter = begin_partition(partitionIndex); iter != end_partition(partitionIndex); ++iter)
-        {
-          if(pred(*iter)) return(iter);
-        }
-
-        return found;
-      }
-
-      template<class UnaryPred>
-      const_partition_iterator find_in_partition_if(const index_type partitionIndex, UnaryPred pred) const
-      {
-          auto found = cend_partition(partitionIndex);
-          for(auto iter = cbegin_partition(partitionIndex); iter != cend_partition(partitionIndex); ++iter)
-          {
-              if(pred(*iter)) return(iter);
-          }
-
-          return found;
-      }
       
       constexpr partition_iterator begin_partition(const index_type i) noexcept
       {

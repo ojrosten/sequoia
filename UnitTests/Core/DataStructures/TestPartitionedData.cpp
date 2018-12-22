@@ -524,18 +524,23 @@ namespace sequoia
 
       check_partitions(storage, answers_type{{-5, 6, -2}, {4, 6, -2}});
 
-      auto found = storage.find_in_partition_if(0, [](const int& elt) { return elt == 6; });
-      check(found != storage.end_partition(0));
-      check_equality<std::size_t>(6, *found);
+      auto found{std::find_if(storage.begin_partition(0), storage.end_partition(0),
+        [](const int& elt) { return elt == 6; }
+      )};
+      
+      if(check(found != storage.end_partition(0)))
+        check_equality<std::size_t>(6, *found);
 
       storage.erase_from_partition_if(0, [](const int& elt) { return elt == 6; });
       // [-5,-2][4,6,-2]
 
       check_partitions(storage, answers_type{{-5, -2}, {4, 6, -2}});
-
-      auto finder =  [](const int& elt) { return elt == 7; };
-      auto found2 = storage.find_in_partition_if(0, finder);
-      check(found2 == storage.end_partition(0));
+      
+      auto found2{std::find_if(storage.cbegin_partition(0), storage.cend_partition(0),
+        [](const int& elt) { return elt == 6; })
+      };
+      
+      check(found2 == storage.cend_partition(0));
       check_equality<std::size_t>(5, storage.size());
 
       storage.push_back_to_partition(1, 7);
