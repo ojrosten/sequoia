@@ -4,11 +4,16 @@
 
 namespace sequoia
 {
+  template<class T> constexpr void swap(T& a, T&b)
+  {
+    auto tmp{std::move(a)};
+    a = std::move(b);
+    b = std::move(tmp);
+  }
+  
   template<class Iter> constexpr void iter_swap(Iter a, Iter b)
   {
-    auto tmp{std::move(*a)};
-    *a = std::move(*b);
-    *b = std::move(tmp);
+    sequoia::swap(*a, *b);
   }
   
   template<class FwdIter, class Comparer=std::less<std::decay_t<decltype(*FwdIter())>>>
@@ -101,9 +106,9 @@ namespace sequoia
     }
 
     if(distToEnd > distFromBegin)
-      rotate(unswapped, next(unswapped, dist), last);
+      sequoia::rotate(unswapped, next(unswapped, dist), last);
     else if(distToEnd < distFromBegin)
-      rotate(unswapped, last - dist, last);
+      sequoia::rotate(unswapped, last - dist, last);
 
     return retIter;
   }

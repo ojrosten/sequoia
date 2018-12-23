@@ -100,7 +100,7 @@ namespace sequoia
     }
 
     template<class Iter>
-    void unit_test_runner::align(Iter begin, Iter end, std::string_view suffix)
+    void unit_test_runner::pad_right(Iter begin, Iter end, std::string_view suffix)
     {
        auto maxIter{std::max_element(begin, end, [](const std::string& lhs, const std::string& rhs) {
             return lhs.size() < rhs.size();
@@ -117,7 +117,7 @@ namespace sequoia
     }
 
     template<class Iter>
-    void unit_test_runner::align_right(Iter begin, Iter end)
+    void unit_test_runner::pad_left(Iter begin, Iter end)
     {
        auto maxIter{std::max_element(begin, end, [](const std::string& lhs, const std::string& rhs) {
             return lhs.size() < rhs.size();
@@ -172,7 +172,7 @@ namespace sequoia
         std::string{"False Positive Checks:"}
       };
 
-      align(summaries.begin(), summaries.end(), "  ");
+      pad_right(summaries.begin(), summaries.end(), "  ");
 
       std::array<std::string, 4> checks{
         std::to_string(summary.checks()),
@@ -181,7 +181,7 @@ namespace sequoia
         std::to_string(summary.false_positive_checks())
       };
 
-      align_right(checks.begin(), checks.end());
+      pad_left(checks.begin(), checks.end());
 
       for(int i{}; i<4; ++i)
       {
@@ -195,7 +195,7 @@ namespace sequoia
         std::to_string(summary.false_positive_failures())
       };
 
-      align_right(failures.begin(), failures.end());
+      pad_left(failures.begin(), failures.end());
 
       for(int i{}; i<4; ++i)
       {

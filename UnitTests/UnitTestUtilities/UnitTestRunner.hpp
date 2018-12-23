@@ -22,8 +22,8 @@ namespace sequoia
       std::set<std::string> m_SpecificCases{};
       bool m_Asynchronous{};
 
-      template<class Iter> static void align(Iter begin, Iter end, std::string_view suffix);
-      template<class Iter> static void align_right(Iter begin, Iter end);
+      template<class Iter> static void pad_right(Iter begin, Iter end, std::string_view suffix);
+      template<class Iter> static void pad_left(Iter begin, Iter end);
     };
   }
 }

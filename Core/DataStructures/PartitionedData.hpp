@@ -3,6 +3,7 @@
 #include "PartitionedDataDetails.hpp"
 #include "Utilities.hpp"
 #include "Iterator.hpp"
+#include "Algorithms.hpp"
 
 #include <limits>
 #include <string>
@@ -102,6 +103,18 @@ namespace sequoia
         for(const auto& bucket : m_Buckets) size += bucket.size();
 
         return size;
+      }
+
+      void swap_partitions(const size_type i, const size_type j)
+      {
+        if((i < num_partitions()) && (j < num_partitions()))
+        {
+          std::swap(m_Buckets[i], m_Buckets[j]);
+        }
+        else if constexpr(throw_on_range_error)
+        {
+          throw std::out_of_range("bucketed_storage::swap_partitions - index out of range");
+        }        
       }
 
       void add_slot()
@@ -440,7 +453,7 @@ namespace sequoia
 
       constexpr auto size() const noexcept { return m_Storage.size(); }
 
-      constexpr auto num_partitions() const noexcept { return m_Partitions.size(); }
+      constexpr auto num_partitions() const noexcept { return m_Partitions.size(); }      
       
       constexpr partition_iterator begin_partition(const index_type i) noexcept
       {
@@ -504,6 +517,47 @@ namespace sequoia
 
       constexpr const_partition_iterator operator[](const index_type i) const { return cbegin_partition(i); }
       partition_iterator operator[](const index_type i) { return begin_partition(i); }
+
+      constexpr void swap_partitions(size_type i, size_type j)
+      {
+        if((i < num_partitions()) && (j < num_partitions()))
+        {
+          if(i != j)
+          {           
+            if(i > j) sequoia::swap(i, j);
+
+            const auto len_i{distance(begin_partition(i), end_partition(i))};
+            const auto len_j{distance(begin_partition(j), end_partition(j))};
+
+            auto begin_i{begin_partition(i).base_iterator()}, begin_j{begin_partition(j).base_iterator()};
+            auto end_i{end_partition(i).base_iterator()}, end_j{end_partition(j).base_iterator()};
+            for(auto iter_i{begin_i}, iter_j{begin_j}; (iter_i != end_i) && (iter_j != end_j); ++iter_i, ++iter_j)
+            {
+              sequoia::iter_swap(iter_i, iter_j);
+            }
+
+            if(len_i > len_j)
+            {
+              sequoia::rotate(begin_i + len_j, begin_i + len_i, end_j);
+            }
+            else if(len_j > len_i)
+            {
+              sequoia::rotate(begin_i, begin_j + len_j - len_i, end_j);
+            }
+
+            for(auto iter{m_Partitions.begin() + i}; iter != m_Partitions.begin() + j; ++iter)
+            {
+              auto& partitionBound{*iter};
+              partitionBound = partitionBound + len_j - len_i;
+            }
+                  
+          }
+        }
+        else if constexpr(throw_on_range_error)
+        {
+          throw std::out_of_range("contiguous_storage::swap_partitions - index out of range");
+        }        
+      }
     protected:
       void add_slot()
       {

@@ -243,7 +243,8 @@ namespace sequoia
     {
       using namespace data_structures;
       using namespace data_sharing;
-      using answers_type = std::vector<std::vector<typename Storage::value_type>>;
+      using value_type = typename Storage::value_type;
+      using answers_type = std::vector<std::vector<value_type>>;
 
       constexpr bool sharedData{std::is_same<typename Storage::sharing_policy_type, shared<typename Storage::value_type>>::value};
 
@@ -254,37 +255,59 @@ namespace sequoia
 
       // Null
 
-      check_exception_thrown<std::out_of_range>([&storage]() { storage.push_back_to_partition(0, 8); }, "No partition available to push back to");
-      check_exception_thrown<std::out_of_range>([&storage]() { storage.insert_to_partition(storage.cbegin_partition(0), 1); }, "No partition available to insert into");
+      check_exception_thrown<std::out_of_range>([&storage]() { storage.push_back_to_partition(0, 8); }, LINE("No partition available to push back to"));
+      check_exception_thrown<std::out_of_range>([&storage]() { storage.insert_to_partition(storage.cbegin_partition(0), 1); }, LINE("No partition available to insert into"));
+
+      
+      check_exception_thrown<std::out_of_range>([&storage]() {
+          storage.swap_partitions(0,0);
+        }, LINE("No partitions to swap")
+      );
+      
       check_equality<std::size_t>(0, storage.size());
 
       check_equality<std::size_t>(0, storage.num_partitions());
       check_equality<std::size_t>(0, storage.erase_slot(0));
 
       storage.add_slot();
-      check_equality<std::size_t>(1, storage.num_partitions());
+      check_partitions(storage, answers_type{{}});
       // []
 
-      check_exception_thrown<std::out_of_range>([&storage]() { storage.push_back_to_partition(1, 7); }, "Only one partition available so cannot push back to the second");
 
-      check_equality<std::size_t>(0, storage.erase_slot(1));
-      check_equality<std::size_t>(0, storage.erase_slot(0));
-      check_equality<std::size_t>(0, storage.num_partitions());
+      check_exception_thrown<std::out_of_range>([&storage]() { storage.push_back_to_partition(1, 7); }, LINE("Only one partition available so cannot push back to the second"));
 
+      check_exception_thrown<std::out_of_range>([&storage]() {
+          storage.swap_partitions(0,1);
+        }, LINE("No partitions to swap")
+      );
 
+      storage.swap_partitions(0,0);
+      check_partitions(storage, answers_type{{}});
+            
+      check_equality<std::size_t>(0, storage.erase_slot(1), LINE(""));
+      check_equality<std::size_t>(0, storage.erase_slot(0), LINE(""));
+      check_partitions(storage, answers_type{});
       // Null
 
       storage.add_slot();
       storage.add_slot();
-      check_equality<std::size_t>(2, storage.num_partitions());
+      check_partitions(storage, answers_type{{}, {}});
       // [][]
-
+      
+      storage.swap_partitions(0,1);
+      check_partitions(storage, answers_type{{}, {}});
+      
       storage.push_back_to_partition(0, 2);
-      check_equality<std::size_t>(1, storage.size());
-      check_equality<int>(2, storage[0][0]);
+      check_partitions(storage, answers_type{{2}, {}});
       // [2][]
 
+      storage.swap_partitions(0,1);
+      check_partitions(storage, answers_type{{}, {2}});
+      // [][2]
+
+      storage.swap_partitions(0,1);
       check_partitions(storage, answers_type{{2}, {}});
+      // [2][]
 
       auto iter = storage.begin_partition(0);
       check_equality<int>(2, *iter);
