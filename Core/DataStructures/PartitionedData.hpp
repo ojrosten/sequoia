@@ -542,7 +542,7 @@ namespace sequoia
             }
             else if(len_j > len_i)
             {
-              sequoia::rotate(begin_i, begin_j + len_j - len_i, end_j);
+              sequoia::rotate(begin_i + len_i, begin_j + len_j - len_i - 1, end_j);
             }
 
             for(auto iter{m_Partitions.begin() + i}; iter != m_Partitions.begin() + j; ++iter)

@@ -348,7 +348,7 @@ namespace sequoia
 
       check_partitions(storage, answers_type{{3}, {4}, {2, 9, -3}});
 
-      /*storage.swap_partitions(0,2);
+      storage.swap_partitions(0,2);
       // [2, 9,-3][4][3]
 
       check_partitions(storage, answers_type{{2, 9, -3}, {4}, {3}});
@@ -357,7 +357,6 @@ namespace sequoia
       // [3][4][2, 9,-3]
 
       check_partitions(storage, answers_type{{3}, {4}, {2, 9, -3}});
-      */
 
       storage.insert_to_partition(storage.cbegin_partition(2) + 1, 8);
       // [3][4][2, 8, 9,-3]
