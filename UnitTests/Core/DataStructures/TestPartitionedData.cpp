@@ -254,6 +254,7 @@ namespace sequoia
       Storage storage;
 
       // Null
+      check_partitions(storage, answers_type{});
 
       check_exception_thrown<std::out_of_range>([&storage]() { storage.push_back_to_partition(0, 8); }, LINE("No partition available to push back to"));
       check_exception_thrown<std::out_of_range>([&storage]() { storage.insert_to_partition(storage.cbegin_partition(0), 1); }, LINE("No partition available to insert into"));
@@ -264,15 +265,12 @@ namespace sequoia
         }, LINE("No partitions to swap")
       );
       
-      check_equality<std::size_t>(0, storage.size());
-
-      check_equality<std::size_t>(0, storage.num_partitions());
       check_equality<std::size_t>(0, storage.erase_slot(0));
+      check_partitions(storage, answers_type{});
 
       storage.add_slot();
       check_partitions(storage, answers_type{{}});
       // []
-
 
       check_exception_thrown<std::out_of_range>([&storage]() { storage.push_back_to_partition(1, 7); }, LINE("Only one partition available so cannot push back to the second"));
 
@@ -280,7 +278,7 @@ namespace sequoia
           storage.swap_partitions(0,1);
         }, LINE("No partitions to swap")
       );
-
+      
       storage.swap_partitions(0,0);
       check_partitions(storage, answers_type{{}});
             
@@ -309,6 +307,14 @@ namespace sequoia
       check_partitions(storage, answers_type{{2}, {}});
       // [2][]
 
+      storage.swap_partitions(1,0);
+      check_partitions(storage, answers_type{{}, {2}});
+      // [][2]
+
+      storage.swap_partitions(1,0);
+      check_partitions(storage, answers_type{{2}, {}});
+      // [2][]
+
       auto iter = storage.begin_partition(0);
       check_equality<int>(2, *iter);
       *iter = 3;
@@ -321,6 +327,15 @@ namespace sequoia
 
       check_partitions(storage, answers_type{{3}, {4}});
 
+      storage.swap_partitions(1,0);
+      check_partitions(storage, answers_type{{4}, {3}});
+      // [4][3]
+
+      storage.swap_partitions(0,1);
+      check_partitions(storage, answers_type{{3}, {4}});
+      // [3]4]
+      
+
       storage.add_slot();
       storage.push_back_to_partition(2, 9);
       storage.push_back_to_partition(2, -3);
@@ -332,6 +347,17 @@ namespace sequoia
       // [3][4][2, 9,-3]
 
       check_partitions(storage, answers_type{{3}, {4}, {2, 9, -3}});
+
+      /*storage.swap_partitions(0,2);
+      // [2, 9,-3][4][3]
+
+      check_partitions(storage, answers_type{{2, 9, -3}, {4}, {3}});
+
+      storage.swap_partitions(2,0);
+      // [3][4][2, 9,-3]
+
+      check_partitions(storage, answers_type{{3}, {4}, {2, 9, -3}});
+      */
 
       storage.insert_to_partition(storage.cbegin_partition(2) + 1, 8);
       // [3][4][2, 8, 9,-3]
