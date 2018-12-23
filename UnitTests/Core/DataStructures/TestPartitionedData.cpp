@@ -343,6 +343,16 @@ namespace sequoia
 
       check_partitions(storage, answers_type{{3}, {4}, {9, -3}});
 
+      storage.swap_partitions(1,2);
+      // [3][9,-3][4]
+      
+      check_partitions(storage, answers_type{{3}, {9, -3}, {4}});
+
+      storage.swap_partitions(2,1);
+      // [3][4][9,-3]
+
+      check_partitions(storage, answers_type{{3}, {4}, {9, -3}});
+
       storage.insert_to_partition(storage.cbegin_partition(2), 2);
       // [3][4][2, 9,-3]
 
