@@ -4,11 +4,16 @@
 
 namespace sequoia
 {
+  template<class T> constexpr void swap(T& a, T&b)
+  {
+    auto tmp{std::move(a)};
+    a = std::move(b);
+    b = std::move(tmp);
+  }
+  
   template<class Iter> constexpr void iter_swap(Iter a, Iter b)
   {
-    auto tmp{std::move(*a)};
-    *a = std::move(*b);
-    *b = std::move(tmp);
+    sequoia::swap(*a, *b);
   }
   
   template<class FwdIter, class Comparer=std::less<std::decay_t<decltype(*FwdIter())>>>
@@ -79,21 +84,34 @@ namespace sequoia
     }
   }
 
-  /*template<class FwdIter> constexpr void rotate(FwdIter begin, FwdIter end)
+  template< class ForwardIt >
+  constexpr ForwardIt rotate(ForwardIt first, ForwardIt n_first, ForwardIt last)
   {
+    if(first == n_first) return last;
+    if(last == n_first) return first;
+
     using namespace std;
-    if(distance(begin, end) > 1)
+
+    const auto distToEnd{distance(n_first, last)};
+    const auto distFromBegin{distance(first, n_first)};
+    const auto retIter{next(first, distToEnd)};
+    
+    const auto dist{min(distToEnd, distFromBegin)};
+
+    const auto unswapped{next(first, dist)};
+
+    while(first != unswapped)
     {
-      --end;
-      auto last{*end};
-      while(end != begin)
-      {
-        *end = std::move(*(end-1));
-        --end;
-      }
-      *end = last;
+      iter_swap(first++, n_first++);
     }
-    }*/
+
+    if(distToEnd > distFromBegin)
+      sequoia::rotate(unswapped, next(unswapped, dist), last);
+    else if(distToEnd < distFromBegin)
+      sequoia::rotate(unswapped, last - dist, last);
+
+    return retIter;
+  }
 
   template<class FwdIter, class Comparer=std::equal_to<std::decay_t<decltype(*FwdIter())>>>
   constexpr void cluster(FwdIter begin, FwdIter end, Comparer comp = Comparer{})

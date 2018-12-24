@@ -25,6 +25,14 @@ namespace sequoia
       return a;
     }
 
+    template<class A>
+    constexpr A rotate(A a, const int pos)
+    {
+      sequoia::rotate(a.begin(), a.begin() + pos, a.end());
+
+      return a;
+    }
+
     void test_algorithms::run_tests()
     {
       sort_basic_type();
@@ -42,6 +50,8 @@ namespace sequoia
       equal_range_basic_type();
 
       equality();
+
+      test_rotate();
     }  
     
     void test_algorithms::sort_basic_type()
@@ -377,6 +387,125 @@ namespace sequoia
       
       constexpr bool t{equal(a.begin(), a.end(), b.begin(), b.end() - 1)};
       check(t, LINE(""));
+    }
+
+    void test_algorithms::test_rotate()
+    {
+      {
+        std::array<int, 0> a{};
+
+        auto i{sequoia::rotate(a.begin(), a.begin(), a.end())};
+
+        check_equality(i, a.end(), LINE(""));
+      }
+
+      {
+        std::array<int, 1> a{1};
+
+        auto i{sequoia::rotate(a.begin(), a.begin(), a.end())};
+        check_equality(i, a.end(), LINE(""));
+
+        i = sequoia::rotate(a.begin(), a.end(), a.end());
+        check_equality(i, a.begin(), LINE(""));
+      }
+
+      {
+        using array_t = std::array<int, 2>;
+        array_t a{1, 2};
+
+        auto i{sequoia::rotate(a.begin(), a.begin(), a.end())};
+        check_equality(i, a.end(), LINE(""));
+        check_equality(a, array_t{1,2}, LINE(""));
+
+        i = sequoia::rotate(a.begin(), a.begin() + 1, a.end());
+        check_equality(i, a.begin() + 1, LINE(""));
+        check_equality(a, array_t{2, 1}, LINE(""));
+
+        i = sequoia::rotate(a.begin(), a.begin() + 2, a.end());
+        check_equality(i, a.begin(), LINE(""));
+        check_equality(a, array_t{2, 1}, LINE(""));
+      }
+
+      {
+        using array_t = std::array<int, 3>;
+        array_t a{1, 2, 3};
+
+        auto i{sequoia::rotate(a.begin(), a.begin(), a.end())};
+        check_equality(i, a.end(), LINE(""));
+        check_equality(a, array_t{1,2,3}, LINE(""));
+
+        i = sequoia::rotate(a.begin(), a.begin() + 1, a.end());
+        check_equality(i, a.begin() + 2, LINE(""));
+        check_equality(a, array_t{2, 3, 1}, LINE(""));
+
+        i = sequoia::rotate(a.begin(), a.begin() + 2, a.end());
+        check_equality(i, a.begin() + 1, LINE(""));
+        check_equality(a, array_t{1, 2, 3}, LINE(""));
+
+        i = sequoia::rotate(a.begin(), a.begin() + 3, a.end());
+        check_equality(i, a.begin(), LINE(""));
+        check_equality(a, array_t{1, 2, 3}, LINE(""));
+      }
+
+      {
+        using array_t = std::array<int, 4>;
+        array_t a{1, 2, 3, 4};
+
+        auto i{sequoia::rotate(a.begin(), a.begin(), a.end())};
+        check_equality(i, a.end(), LINE(""));
+        check_equality(a, array_t{1,2,3,4}, LINE(""));
+
+        i = sequoia::rotate(a.begin(), a.begin() + 1, a.end());
+        check_equality(i, a.begin() + 3, LINE(""));
+        check_equality(a, array_t{2, 3, 4, 1}, LINE(""));
+
+        i = sequoia::rotate(a.begin(), a.begin() + 2, a.end());
+        check_equality(i, a.begin() + 2, LINE(""));
+        check_equality(a, array_t{4, 1, 2, 3}, LINE(""));
+
+        i = sequoia::rotate(a.begin(), a.begin() + 3, a.end());
+        check_equality(i, a.begin() + 1, LINE(""));
+        check_equality(a, array_t{3, 4, 1, 2}, LINE(""));
+
+        i = sequoia::rotate(a.begin(), a.begin() + 4, a.end());
+        check_equality(i, a.begin(), LINE(""));
+        check_equality(a, array_t{3, 4, 1, 2}, LINE(""));
+      }
+
+      {
+        using array_t = std::array<int, 5>;
+        array_t a{1, 2, 3, 4, 5};
+
+        auto i{sequoia::rotate(a.begin(), a.begin(), a.end())};
+        check_equality(i, a.end(), LINE(""));
+        check_equality(a, array_t{1,2,3,4,5}, LINE(""));
+
+        i = sequoia::rotate(a.begin(), a.begin() + 1, a.end());
+        check_equality(i, a.begin() + 4, LINE(""));
+        check_equality(a, array_t{2, 3, 4, 5, 1}, LINE(""));
+
+        i = sequoia::rotate(a.begin(), a.begin() + 2, a.end());
+        check_equality(i, a.begin() + 3, LINE(""));
+        check_equality(a, array_t{4, 5, 1, 2, 3}, LINE(""));
+
+        i = sequoia::rotate(a.begin(), a.begin() + 3, a.end());
+        check_equality(i, a.begin() + 2, LINE(""));
+        check_equality(a, array_t{2, 3, 4, 5, 1}, LINE(""));
+
+        i = sequoia::rotate(a.begin(), a.begin() + 4, a.end());
+        check_equality(i, a.begin() + 1, LINE(""));
+        check_equality(a, array_t{1, 2, 3, 4, 5}, LINE(""));
+
+        i = sequoia::rotate(a.begin(), a.begin() + 5, a.end());
+        check_equality(i, a.begin(), LINE(""));
+        check_equality(a, array_t{1, 2, 3, 4, 5}, LINE(""));
+      }
+
+      {
+        using array_t = std::array<int, 6>;
+        constexpr auto a{rotate(array_t{6,5,4,3,2,1}, 4)};
+        check_equality(array_t{2,1,6,5,4,3}, a, LINE(""));
+      }
     }
   }
 }
