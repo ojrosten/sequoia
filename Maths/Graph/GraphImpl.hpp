@@ -183,6 +183,24 @@ namespace sequoia
         const auto host{criter.partition_index()};
         mutate_edge_weight(m_Edges.cbegin_partition(host) + distance(criter, m_Edges.crend_partition(host)) - 1, fn);
       }
+
+      constexpr void swap_nodes(const size_type i, const size_type j)
+      {
+        if constexpr(!std::is_empty_v<node_weight_type>)
+        {
+          this->swap_nodes(i, j);
+        }
+        m_Edges.swap_partitions(i, j);
+
+        for(size_type n{}; n<order_impl(); ++n)
+        {
+          for(auto iter{begin_edges(n)}; iter != end_edges(n); ++iter)
+          {
+            if(iter->target_node() == i) iter->target_node(j);
+            else if(iter->target_node() == j) iter->target_node(i);
+          }
+        }
+      }
       
       //===============================equality (not isomorphism) operators================================//
       

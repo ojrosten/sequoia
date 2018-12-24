@@ -75,6 +75,8 @@ namespace sequoia::unit_testing
 
     check_exception_thrown<std::out_of_range>([&network]() { network.cbegin_edges(0); }, LINE("cbegin_edges throws for empty graph"));
     check_exception_thrown<std::out_of_range>([&network]() { network.cend_edges(0); }, LINE("cend_edges throws for empty graph"));
+
+    check_exception_thrown<std::out_of_range>([&network]() { network.swap_nodes(0,0); }, LINE("swapping nodes throws for empty graph"));
           
     check_equality<std::size_t>(0,network.add_node(), LINE("Index of added node is 0"));
     //    0
