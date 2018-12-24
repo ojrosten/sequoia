@@ -81,18 +81,47 @@ namespace sequoia::unit_testing
     check_equality<std::size_t>(0,network.add_node(), LINE("Index of added node is 0"));
     //    0
 
-    check_graph(network, {{}}, {}, LINE("Graph is empty"));
+    check_graph(network, {{}}, {}, LINE(""));
 
     check_exception_thrown<std::out_of_range>([&network](){ get_edge(network, 0, 0, 0); },  LINE("For network with no edges, trying to obtain a reference to one throws an exception"));
 
     check_exception_thrown<std::out_of_range>([&network]() { network.join(0, 1); }, LINE("Unable to join zeroth node to non-existant first node"));
+
+    check_exception_thrown<std::out_of_range>([&network]() { network.swap_nodes(0,1); }, LINE("Index out of range for swapping nodes"));
+    
     check_equality<std::size_t>(1, network.add_node(), LINE("Index of added node is 1"));
     //    0    1
 
-    check_graph(network, {{}, {}}, {}, LINE("Graph is empty"));
+    check_graph(network, {{}, {}}, {}, LINE(""));
 
+    network.swap_nodes(0,1);
+    
+    check_graph(network, {{}, {}}, {}, LINE(""));
+    
     network.join(0, 1);
     //    0----1
+
+    if constexpr (mutual_info(GraphFlavour))
+    {
+      check_graph(network, {{E_Edge{0,1,0}}, {E_Edge{0,1,0}}}, {}, LINE(""));
+    }
+    else
+    {
+      check_graph(network, {{Edge{0,1}}, {}}, {}, LINE(""));
+    }
+
+    network.swap_nodes(0,1);
+
+    if constexpr (mutual_info(GraphFlavour))
+    {
+      check_graph(network, {{E_Edge{1,0,0}}, {E_Edge{1,0,0}}}, {}, LINE(""));
+    }
+    else
+    {
+      check_graph(network, {{}, {Edge{0,1}}}, {}, LINE(""));
+    }
+    
+    network.swap_nodes(1,0);
 
     if constexpr (mutual_info(GraphFlavour))
     {

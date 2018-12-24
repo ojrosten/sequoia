@@ -184,20 +184,48 @@ namespace sequoia
         mutate_edge_weight(m_Edges.cbegin_partition(host) + distance(criter, m_Edges.crend_partition(host)) - 1, fn);
       }
 
-      constexpr void swap_nodes(const size_type i, const size_type j)
+      constexpr void swap_nodes(size_type i, size_type j)
       {
         if constexpr(!std::is_empty_v<node_weight_type>)
         {
           this->swap_nodes(i, j);
         }
+        
         m_Edges.swap_partitions(i, j);
-
-        for(size_type n{}; n<order_impl(); ++n)
+        
+        if constexpr (EdgeTraits::shared_edge_v)
         {
-          for(auto iter{begin_edges(n)}; iter != end_edges(n); ++iter)
+          for(auto iter{begin_edges(i)}; iter != end_edges(i); ++iter)
+          {
+            if((iter->host_node() != j) && (iter->target_node() != j))
+            {
+              if(iter->target_node() == i) iter->target_node(j);
+              else if(iter->target_node() == j) iter->target_node(i);
+            }
+          }
+
+          for(auto iter{begin_edges(j)}; iter != end_edges(j); ++iter)
           {
             if(iter->target_node() == i) iter->target_node(j);
             else if(iter->target_node() == j) iter->target_node(i);
+          }
+        }
+        else
+        {
+          for(size_type n{}; n<order_impl(); ++n)
+          {
+          
+            for(auto iter{begin_edges(n)}; iter != end_edges(n); ++iter)
+            {
+              if constexpr (EdgeTraits::mutual_info_v && directed(directedness))
+              {
+                if(iter->host_node() == i) iter->host_node(j);
+                else if(iter->host_node() == j) iter->host_node(i);
+              }
+
+              if(iter->target_node() == i) iter->target_node(j);
+              else if(iter->target_node() == j) iter->target_node(i);
+            }
           }
         }
       }
