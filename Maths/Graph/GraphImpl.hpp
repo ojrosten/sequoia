@@ -115,6 +115,74 @@ namespace sequoia
 
         return m_Edges.crend_partition(node);
       }
+
+      
+      template<class Fn>
+      constexpr void mutate_edge_weight(const_edge_iterator citer, Fn fn)
+      {
+        static_assert(!std::is_empty_v<edge_weight_type>, "Cannot mutate an empty weight!");
+
+        if constexpr (!EdgeTraits::shared_weight_v && !EdgeTraits::shared_edge_v && EdgeTraits::mutual_info_v)
+        {
+          mutate_partner_edge_weight(citer, fn);
+          mutate_host_edge_weight(citer, fn);          
+        }
+        else
+        {
+          mutate_host_edge_weight(citer, fn);
+        }
+      }
+
+      template<class Arg, class... Args>
+      constexpr void set_edge_weight(const_edge_iterator citer, Arg&& arg, Args&&... args)
+      {
+        static_assert(!std::is_empty_v<edge_weight_type>, "Cannot set an empty weight!");
+
+        if constexpr (!EdgeTraits::shared_weight_v && !EdgeTraits::shared_edge_v && EdgeTraits::mutual_info_v)
+        {
+          if constexpr(EdgeTraits::weight_setting_exception_guarantee_v)
+          {
+            auto partnerSetter{
+              [this](const_edge_iterator citer, auto&&... args){
+                return this->set_partner_edge_weight(citer, std::forward<decltype(args)>(args)...);
+              }
+            };
+
+            auto hostSetter{
+              [this](const_edge_iterator citer, const_edge_iterator partnerIter){
+                this->set_host_edge_weight(citer, partnerIter->weight());
+              }
+            };
+
+            weight_sentinel sentinel{*this, citer, partnerSetter, hostSetter,
+                                            std::forward<Arg>(arg), std::forward<Args>(args)...};
+          }
+          else
+          {
+            auto partnerIter{set_partner_edge_weight(citer, std::forward<Arg>(arg), std::forward<Args>(args)...)};
+            set_host_edge_weight(citer, partnerIter->weight());
+          }
+        }
+        else
+        {
+          set_host_edge_weight(citer, std::forward<Arg>(arg), std::forward<Args>(args)...);
+        }
+      }
+
+      template<class Arg, class... Args>
+      constexpr void set_edge_weight(const_reverse_edge_iterator criter, Arg&& arg, Args&&... args)
+      {
+        const auto host{criter.partition_index()};
+        set_edge_weight(m_Edges.cbegin_partition(host) + distance(criter, m_Edges.crend_partition(host)) - 1, std::forward<Arg>(arg), std::forward<Args>(args)...);
+      }
+
+      
+      template<class Fn>
+      constexpr void mutate_edge_weight(const_reverse_edge_iterator criter, Fn fn)
+      {
+        const auto host{criter.partition_index()};
+        mutate_edge_weight(m_Edges.cbegin_partition(host) + distance(criter, m_Edges.crend_partition(host)) - 1, fn);
+      }
       
       //===============================equality (not isomorphism) operators================================//
       
@@ -321,73 +389,6 @@ namespace sequoia
                       [](const auto targetNode, const auto node) { return targetNode > node; },
                       [](const auto index) { return index - 1; });
         }
-      }
-
-      template<class Fn>
-      constexpr void mutate_edge_weight(const_edge_iterator citer, Fn fn)
-      {
-        static_assert(!std::is_empty_v<edge_weight_type>, "Cannot mutate an empty weight!");
-
-        if constexpr (!EdgeTraits::shared_weight_v && !EdgeTraits::shared_edge_v && EdgeTraits::mutual_info_v)
-        {
-          mutate_partner_edge_weight(citer, fn);
-          mutate_host_edge_weight(citer, fn);          
-        }
-        else
-        {
-          mutate_host_edge_weight(citer, fn);
-        }
-      }
-
-      template<class Arg, class... Args>
-      constexpr void set_edge_weight(const_edge_iterator citer, Arg&& arg, Args&&... args)
-      {
-        static_assert(!std::is_empty_v<edge_weight_type>, "Cannot set an empty weight!");
-
-        if constexpr (!EdgeTraits::shared_weight_v && !EdgeTraits::shared_edge_v && EdgeTraits::mutual_info_v)
-        {
-          if constexpr(EdgeTraits::weight_setting_exception_guarantee_v)
-          {
-            auto partnerSetter{
-              [this](const_edge_iterator citer, auto&&... args){
-                return this->set_partner_edge_weight(citer, std::forward<decltype(args)>(args)...);
-              }
-            };
-
-            auto hostSetter{
-              [this](const_edge_iterator citer, const_edge_iterator partnerIter){
-                this->set_host_edge_weight(citer, partnerIter->weight());
-              }
-            };
-
-            weight_sentinel sentinel{*this, citer, partnerSetter, hostSetter,
-                                            std::forward<Arg>(arg), std::forward<Args>(args)...};
-          }
-          else
-          {
-            auto partnerIter{set_partner_edge_weight(citer, std::forward<Arg>(arg), std::forward<Args>(args)...)};
-            set_host_edge_weight(citer, partnerIter->weight());
-          }
-        }
-        else
-        {
-          set_host_edge_weight(citer, std::forward<Arg>(arg), std::forward<Args>(args)...);
-        }
-      }
-
-      template<class Arg, class... Args>
-      constexpr void set_edge_weight(const_reverse_edge_iterator criter, Arg&& arg, Args&&... args)
-      {
-        const auto host{criter.partition_index()};
-        set_edge_weight(m_Edges.cbegin_partition(host) + distance(criter, m_Edges.crend_partition(host)) - 1, std::forward<Arg>(arg), std::forward<Args>(args)...);
-      }
-
-      
-      template<class Fn>
-      constexpr void mutate_edge_weight(const_reverse_edge_iterator criter, Fn fn)
-      {
-        const auto host{criter.partition_index()};
-        mutate_edge_weight(m_Edges.cbegin_partition(host) + distance(criter, m_Edges.crend_partition(host)) - 1, fn);
       }
 
       void reserve_for_join(const edge_index_type node1, const edge_index_type node2)

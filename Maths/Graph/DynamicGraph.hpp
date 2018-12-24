@@ -99,9 +99,6 @@ namespace sequoia::maths
     using primitive::insert_node;
     using primitive::erase_node;
 
-    using primitive::set_edge_weight;
-    using primitive::mutate_edge_weight;
-
     using primitive::join;      
     using primitive::erase_edge;
 
