@@ -394,6 +394,28 @@ namespace sequoia
 
       check_partitions(storage, answers_type{{12, 3}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}});
 
+      storage.swap_partitions(2, 1);
+      // [12, 3][1, 2, 8, 9,-3, 7, 5][4][]
+
+      check_partitions(storage, answers_type{{12, 3}, {1, 2, 8, 9, -3, 7, 5}, {4}, {}});
+
+      storage.swap_partitions(0,1);
+      // [1, 2, 8, 9,-3, 7, 5][12, 3][4][]
+
+      check_partitions(storage, answers_type{{1, 2, 8, 9, -3, 7, 5}, {12, 3}, {4}, {}});
+
+      storage.swap_partitions(1,0);
+
+      // [12, 3][1, 2, 8, 9,-3, 7, 5][4][]
+
+      check_partitions(storage, answers_type{{12, 3}, {1, 2, 8, 9, -3, 7, 5}, {4}, {}});
+
+      storage.swap_partitions(1,2);
+
+      // [12, 3][4][1, 2, 8, 9,-3, 7, 5][]
+
+      check_partitions(storage, answers_type{{12, 3}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}});
+      
       storage.insert_to_partition(storage.begin_partition(0) + 1, 13);
       // [12, 13, 3][4][1, 2, 8, 9,-3, 7, 5][]
 

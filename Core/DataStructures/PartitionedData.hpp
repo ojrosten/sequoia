@@ -542,16 +542,17 @@ namespace sequoia
             }
             else if(len_j > len_i)
             {
-              const decltype(len_j) shift{j == i + 1 ? 0 : 1};
-              sequoia::rotate(begin_i + len_i, begin_j + len_j - len_i - shift, end_j);
+              sequoia::rotate(begin_i + len_i, begin_j + len_i, end_j);
             }
 
-            for(auto iter{m_Partitions.begin() + i}; iter != m_Partitions.begin() + j; ++iter)
+            if(len_i != len_j)
             {
-              auto& partitionBound{*iter};
-              partitionBound = partitionBound + len_j - len_i;
-            }
-                  
+              for(auto iter{m_Partitions.begin() + i}; iter != m_Partitions.begin() + j; ++iter)
+              {
+                auto& partitionBound{*iter};
+                partitionBound = partitionBound + len_j - len_i;
+              }
+            }     
           }
         }
         else if constexpr(throw_on_range_error)
