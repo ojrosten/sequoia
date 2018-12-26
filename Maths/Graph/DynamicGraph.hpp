@@ -95,6 +95,8 @@ namespace sequoia::maths
     graph_base& operator=(const graph_base&) = default;
     graph_base& operator=(graph_base&&)      = default;
 
+    using primitive::swap_nodes;
+    
     using primitive::add_node;
     using primitive::insert_node;
     using primitive::erase_node;

@@ -182,6 +182,39 @@ namespace sequoia
       {
         const auto host{criter.partition_index()};
         mutate_edge_weight(m_Edges.cbegin_partition(host) + distance(criter, m_Edges.crend_partition(host)) - 1, fn);
+      }      
+      
+      //===============================equality (not isomorphism) operators================================//
+      
+      friend constexpr bool operator==(const graph_primitive& first, const graph_primitive& second)
+      {
+        return (static_cast<Nodes&>(first) == static_cast<Nodes&>(second)) && (first.m_Edges == second.m_Edges);
+      }
+
+      friend constexpr bool operator!=(const graph_primitive& first, const graph_primitive& second)
+      {
+        return !(first == second);
+      }
+    protected:
+      using edge_iterator = typename edge_storage_type::partition_iterator;
+      
+      ~graph_primitive() = default;
+      
+      constexpr void swap(graph_primitive& rhs) noexcept
+      {
+        auto tmp = std::move(rhs);
+        rhs = std::move(*this);
+        *this = std::move(tmp);
+      }
+
+      constexpr size_type order_impl() const noexcept { return m_Edges.num_partitions(); }
+
+      constexpr size_type size_impl()  const noexcept
+      {
+        auto size{m_Edges.size()};
+        if constexpr (EdgeTraits::mutual_info_v) return size /= 2;
+
+        return size;
       }
 
       constexpr void swap_nodes(size_type i, size_type j)
@@ -230,39 +263,6 @@ namespace sequoia
         }
       }
       
-      //===============================equality (not isomorphism) operators================================//
-      
-      friend constexpr bool operator==(const graph_primitive& first, const graph_primitive& second)
-      {
-        return (static_cast<Nodes&>(first) == static_cast<Nodes&>(second)) && (first.m_Edges == second.m_Edges);
-      }
-
-      friend constexpr bool operator!=(const graph_primitive& first, const graph_primitive& second)
-      {
-        return !(first == second);
-      }
-    protected:
-      using edge_iterator = typename edge_storage_type::partition_iterator;
-      
-      ~graph_primitive() = default;
-      
-      constexpr void swap(graph_primitive& rhs) noexcept
-      {
-        auto tmp = std::move(rhs);
-        rhs = std::move(*this);
-        *this = std::move(tmp);
-      }
-
-      constexpr size_type order_impl() const noexcept { return m_Edges.num_partitions(); }
-
-      constexpr size_type size_impl()  const noexcept
-      {
-        auto size{m_Edges.size()};
-        if constexpr (EdgeTraits::mutual_info_v) return size /= 2;
-
-        return size;
-      }
-
       void reserve_nodes(const size_type size)
       {
         if constexpr(!std::is_empty_v<node_weight_type>)
