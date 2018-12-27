@@ -892,6 +892,28 @@ namespace sequoia::unit_testing
       check_graph(graph, {{Edge(0,0,1), Edge(0,0,-4), Edge(0,1,6)}, {}}, {{1.1,-4.3}, {0,0}}, LINE(""));
     }
 
+    graph.swap_nodes(0,1);
+
+    if constexpr(mutual_info(GraphFlavour))
+    {
+      check_graph(graph, {{Edge(1,0,6)}, {Edge(1,1,1), Edge(1,1,1), Edge(1,1,-4), Edge(1,1,-4), Edge(1,0,6)}}, {{0,0}, {1.1,-4.3}}, LINE(""));
+    }
+    else
+    {
+      check_graph(graph, {{}, {Edge(1,1,1), Edge(1,1,-4), Edge(1,0,6)}}, {{0,0}, {1.1,-4.3}}, LINE(""));
+    }
+
+    graph.swap_nodes(1,0);
+
+    if constexpr(mutual_info(GraphFlavour))
+    {
+      check_graph(graph, {{Edge(0,0,1), Edge(0,0,1), Edge(0,0,-4), Edge(0,0,-4), Edge(0,1,6)}, {Edge(0,1,6)}}, {{1.1,-4.3}, {0,0}}, LINE(""));
+    }
+    else
+    {
+      check_graph(graph, {{Edge(0,0,1), Edge(0,0,-4), Edge(0,1,6)}, {}}, {{1.1,-4.3}, {0,0}}, LINE(""));
+    }
+
     graph.set_edge_weight(--graph.cend_edges(0), 7);
     //   /\1
     //   \/  7

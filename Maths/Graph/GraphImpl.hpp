@@ -221,7 +221,7 @@ namespace sequoia
       {
         if constexpr(!std::is_empty_v<node_weight_type>)
         {
-          this->swap_nodes(i, j);
+          Nodes::swap_nodes(i, j);
         }
                 
         if constexpr (EdgeTraits::shared_edge_v)
