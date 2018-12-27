@@ -158,6 +158,29 @@ namespace sequoia::unit_testing
     }
     
     network.swap_nodes(1,2);
+     //    0----1----2
+
+    if constexpr (mutual_info(GraphFlavour))
+    {
+      check_graph(network, {{E_Edge{0,1,0}}, {E_Edge{0,1,0}, E_Edge{1,2,0}}, {E_Edge{1,2,1}}}, {}, LINE(""));
+    }
+    else
+    {
+      check_graph(network, {{Edge{0,1}}, {Edge{1,2}}, {}}, {}, LINE(""));
+    }
+
+    network.swap_nodes(0,2);
+
+    if constexpr (mutual_info(GraphFlavour))
+    {
+      check_graph(network, {{E_Edge{1,0,1}}, {E_Edge{2,1,0}, E_Edge{1,0,0}}, {E_Edge{2,1,0}}}, {}, LINE(""));
+    }
+    else
+    {
+      check_graph(network, {{}, {Edge{1,0}}, {Edge{2,1}}}, {}, LINE(""));
+    }
+
+    network.swap_nodes(0,2);
 
     if constexpr (mutual_info(GraphFlavour))
     {
@@ -197,6 +220,28 @@ namespace sequoia::unit_testing
     {
       check_graph(network, {{Edge(0,1)}, {}, {}}, {}, LINE(""));
     }
+
+    network.swap_nodes(0,2);
+
+    if constexpr (mutual_info(GraphFlavour))
+    {
+      check_graph(network, {{}, {E_Edge{2,1,0}}, {E_Edge{2,1,0}}}, {}, LINE(""));
+    }
+    else
+    {
+      check_graph(network, {{}, {}, {Edge{2,1}}}, {}, LINE(""));
+    }
+    
+    network.swap_nodes(2,0);
+
+    if constexpr (mutual_info(GraphFlavour))
+    {
+      check_graph(network, {{E_Edge(0,1,0)}, {E_Edge(0,1,0)}, {}}, {}, LINE(""));
+    }
+    else
+    {
+      check_graph(network, {{Edge(0,1)}, {}, {}}, {}, LINE(""));
+    }
     
     network.erase_edge(network.cbegin_edges(0));
     //    0    1
@@ -211,6 +256,54 @@ namespace sequoia::unit_testing
     //    0======1
     //           /\
     //    2      \/
+
+    if constexpr (mutual_info(GraphFlavour))
+    {
+      check_graph(network, {{E_Edge(0,1,0), E_Edge(1,0,3)}, {E_Edge(0,1,0), E_Edge(1,1,2), E_Edge(1,1,1), E_Edge(1,0,1)}, {}}, {}, LINE(""));
+    }
+    else
+    {
+      check_graph(network, {{Edge(0,1)}, {Edge(1,1), Edge(1,0)}, {}}, {}, LINE(""));
+    }
+
+    network.swap_nodes(1,0);
+
+    if constexpr (mutual_info(GraphFlavour))
+    {
+      check_graph(network, {{E_Edge(1,0,0), E_Edge(0,0,2), E_Edge(0,0,1), E_Edge(0,1,1)}, {E_Edge(1,0,0), E_Edge(0,1,3)}, {}}, {}, LINE(""));
+    }
+    else
+    {
+      check_graph(network, {{Edge(0,0), Edge(0,1)}, {Edge(1,0)}, {}}, {}, LINE(""));
+    }
+
+    network.swap_nodes(0,1);
+
+    if constexpr (mutual_info(GraphFlavour))
+    {
+      check_graph(network, {{E_Edge(0,1,0), E_Edge(1,0,3)}, {E_Edge(0,1,0), E_Edge(1,1,2), E_Edge(1,1,1), E_Edge(1,0,1)}, {}}, {}, LINE(""));
+    }
+    else
+    {
+      check_graph(network, {{Edge(0,1)}, {Edge(1,1), Edge(1,0)}, {}}, {}, LINE(""));
+    }
+
+    //    0======1
+    //           /\
+    //    2      \/
+
+    network.swap_nodes(0,2);
+
+    if constexpr (mutual_info(GraphFlavour))
+    {
+      check_graph(network, {{}, {E_Edge(2,1,0), E_Edge(1,1,2), E_Edge(1,1,1), E_Edge(1,2,1)}, {E_Edge(2,1,0), E_Edge(1,2,3)}}, {}, LINE(""));
+    }
+    else
+    {
+      check_graph(network, {{}, {Edge(1,1), Edge(1,2)}, {Edge(2,1)}}, {}, LINE(""));
+    }
+
+    network.swap_nodes(2,0);
 
     if constexpr (mutual_info(GraphFlavour))
     {
