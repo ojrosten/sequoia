@@ -2,6 +2,7 @@
 
 #include "Iterator.hpp"
 #include "StaticData.hpp"
+#include "Algorithms.hpp"
 
 #include <type_traits>
 
@@ -98,7 +99,19 @@ namespace sequoia
         constexpr node_storage& operator=(const node_storage& in) = default;
  
         constexpr node_storage& operator=(node_storage&&) noexcept = default;
-      
+
+        constexpr void swap_nodes(const size_type i, const size_type j)
+        {
+          if((i < size()) && (j < size()))
+          {
+            sequoia::swap(m_NodeWeights[i], m_NodeWeights[j]);
+          }
+          else if constexpr (throw_on_range_error)
+          {
+            throw std::out_of_range("node_storage::swap - index out of range");
+          }
+        }
+        
         void reserve(const size_type newCapacity)
         {
           m_NodeWeights.reserve(newCapacity);
@@ -214,8 +227,6 @@ namespace sequoia
         constexpr node_storage(node_storage&&) noexcept            = default;
         constexpr node_storage& operator=(const node_storage&)     = default;
         constexpr node_storage& operator=(node_storage&&) noexcept = default;
-
-        constexpr void swap_nodes(node_storage&) noexcept {}
         
         ~node_storage() = default;
       };     

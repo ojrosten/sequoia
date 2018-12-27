@@ -41,8 +41,6 @@ namespace sequoia::maths::graph_impl
     constexpr static_node_storage(static_node_storage&&) noexcept            = default;
     constexpr static_node_storage& operator=(const static_node_storage&)     = default;
     constexpr static_node_storage& operator=(static_node_storage&&) noexcept = default;
-
-    void swap_nodes(static_node_storage&) noexcept {}
         
     ~static_node_storage() = default;
   };

@@ -75,22 +75,53 @@ namespace sequoia::unit_testing
 
     check_exception_thrown<std::out_of_range>([&network]() { network.cbegin_edges(0); }, LINE("cbegin_edges throws for empty graph"));
     check_exception_thrown<std::out_of_range>([&network]() { network.cend_edges(0); }, LINE("cend_edges throws for empty graph"));
+
+    check_exception_thrown<std::out_of_range>([&network]() { network.swap_nodes(0,0); }, LINE("swapping nodes throws for empty graph"));
           
     check_equality<std::size_t>(0,network.add_node(), LINE("Index of added node is 0"));
     //    0
 
-    check_graph(network, {{}}, {}, LINE("Graph is empty"));
+    check_graph(network, {{}}, {}, LINE(""));
 
     check_exception_thrown<std::out_of_range>([&network](){ get_edge(network, 0, 0, 0); },  LINE("For network with no edges, trying to obtain a reference to one throws an exception"));
 
     check_exception_thrown<std::out_of_range>([&network]() { network.join(0, 1); }, LINE("Unable to join zeroth node to non-existant first node"));
+
+    check_exception_thrown<std::out_of_range>([&network]() { network.swap_nodes(0,1); }, LINE("Index out of range for swapping nodes"));
+    
     check_equality<std::size_t>(1, network.add_node(), LINE("Index of added node is 1"));
     //    0    1
 
-    check_graph(network, {{}, {}}, {}, LINE("Graph is empty"));
+    check_graph(network, {{}, {}}, {}, LINE(""));
 
+    network.swap_nodes(0,1);
+    
+    check_graph(network, {{}, {}}, {}, LINE(""));
+    
     network.join(0, 1);
     //    0----1
+
+    if constexpr (mutual_info(GraphFlavour))
+    {
+      check_graph(network, {{E_Edge{0,1,0}}, {E_Edge{0,1,0}}}, {}, LINE(""));
+    }
+    else
+    {
+      check_graph(network, {{Edge{0,1}}, {}}, {}, LINE(""));
+    }
+
+    network.swap_nodes(0,1);
+
+    if constexpr (mutual_info(GraphFlavour))
+    {
+      check_graph(network, {{E_Edge{1,0,0}}, {E_Edge{1,0,0}}}, {}, LINE(""));
+    }
+    else
+    {
+      check_graph(network, {{}, {Edge{0,1}}}, {}, LINE(""));
+    }
+    
+    network.swap_nodes(1,0);
 
     if constexpr (mutual_info(GraphFlavour))
     {
@@ -115,6 +146,51 @@ namespace sequoia::unit_testing
       check_graph(network, {{Edge{0,1}}, {Edge{1,2}}, {}}, {}, LINE(""));
     }
 
+    network.swap_nodes(2,1);
+
+    if constexpr (mutual_info(GraphFlavour))
+    {
+      check_graph(network, {{E_Edge{0,2,0}}, {E_Edge{2,1,1}}, {E_Edge{0,2,0}, E_Edge{2,1,0}}}, {}, LINE(""));
+    }
+    else
+    {
+      check_graph(network, {{Edge{0,2}}, {}, {Edge{2,1}}}, {}, LINE(""));
+    }
+    
+    network.swap_nodes(1,2);
+     //    0----1----2
+
+    if constexpr (mutual_info(GraphFlavour))
+    {
+      check_graph(network, {{E_Edge{0,1,0}}, {E_Edge{0,1,0}, E_Edge{1,2,0}}, {E_Edge{1,2,1}}}, {}, LINE(""));
+    }
+    else
+    {
+      check_graph(network, {{Edge{0,1}}, {Edge{1,2}}, {}}, {}, LINE(""));
+    }
+
+    network.swap_nodes(0,2);
+
+    if constexpr (mutual_info(GraphFlavour))
+    {
+      check_graph(network, {{E_Edge{1,0,1}}, {E_Edge{2,1,0}, E_Edge{1,0,0}}, {E_Edge{2,1,0}}}, {}, LINE(""));
+    }
+    else
+    {
+      check_graph(network, {{}, {Edge{1,0}}, {Edge{2,1}}}, {}, LINE(""));
+    }
+
+    network.swap_nodes(0,2);
+
+    if constexpr (mutual_info(GraphFlavour))
+    {
+      check_graph(network, {{E_Edge{0,1,0}}, {E_Edge{0,1,0}, E_Edge{1,2,0}}, {E_Edge{1,2,1}}}, {}, LINE(""));
+    }
+    else
+    {
+      check_graph(network, {{Edge{0,1}}, {Edge{1,2}}, {}}, {}, LINE(""));
+    }
+    
     nodeNum = network.add_node();
     check_equality<std::size_t>(3, nodeNum, LINE("Index of added node is 3"));
     network.join(0, nodeNum);
@@ -144,6 +220,28 @@ namespace sequoia::unit_testing
     {
       check_graph(network, {{Edge(0,1)}, {}, {}}, {}, LINE(""));
     }
+
+    network.swap_nodes(0,2);
+
+    if constexpr (mutual_info(GraphFlavour))
+    {
+      check_graph(network, {{}, {E_Edge{2,1,0}}, {E_Edge{2,1,0}}}, {}, LINE(""));
+    }
+    else
+    {
+      check_graph(network, {{}, {}, {Edge{2,1}}}, {}, LINE(""));
+    }
+    
+    network.swap_nodes(2,0);
+
+    if constexpr (mutual_info(GraphFlavour))
+    {
+      check_graph(network, {{E_Edge(0,1,0)}, {E_Edge(0,1,0)}, {}}, {}, LINE(""));
+    }
+    else
+    {
+      check_graph(network, {{Edge(0,1)}, {}, {}}, {}, LINE(""));
+    }
     
     network.erase_edge(network.cbegin_edges(0));
     //    0    1
@@ -158,6 +256,54 @@ namespace sequoia::unit_testing
     //    0======1
     //           /\
     //    2      \/
+
+    if constexpr (mutual_info(GraphFlavour))
+    {
+      check_graph(network, {{E_Edge(0,1,0), E_Edge(1,0,3)}, {E_Edge(0,1,0), E_Edge(1,1,2), E_Edge(1,1,1), E_Edge(1,0,1)}, {}}, {}, LINE(""));
+    }
+    else
+    {
+      check_graph(network, {{Edge(0,1)}, {Edge(1,1), Edge(1,0)}, {}}, {}, LINE(""));
+    }
+
+    network.swap_nodes(1,0);
+
+    if constexpr (mutual_info(GraphFlavour))
+    {
+      check_graph(network, {{E_Edge(1,0,0), E_Edge(0,0,2), E_Edge(0,0,1), E_Edge(0,1,1)}, {E_Edge(1,0,0), E_Edge(0,1,3)}, {}}, {}, LINE(""));
+    }
+    else
+    {
+      check_graph(network, {{Edge(0,0), Edge(0,1)}, {Edge(1,0)}, {}}, {}, LINE(""));
+    }
+
+    network.swap_nodes(0,1);
+
+    if constexpr (mutual_info(GraphFlavour))
+    {
+      check_graph(network, {{E_Edge(0,1,0), E_Edge(1,0,3)}, {E_Edge(0,1,0), E_Edge(1,1,2), E_Edge(1,1,1), E_Edge(1,0,1)}, {}}, {}, LINE(""));
+    }
+    else
+    {
+      check_graph(network, {{Edge(0,1)}, {Edge(1,1), Edge(1,0)}, {}}, {}, LINE(""));
+    }
+
+    //    0======1
+    //           /\
+    //    2      \/
+
+    network.swap_nodes(0,2);
+
+    if constexpr (mutual_info(GraphFlavour))
+    {
+      check_graph(network, {{}, {E_Edge(2,1,0), E_Edge(1,1,2), E_Edge(1,1,1), E_Edge(1,2,1)}, {E_Edge(2,1,0), E_Edge(1,2,3)}}, {}, LINE(""));
+    }
+    else
+    {
+      check_graph(network, {{}, {Edge(1,1), Edge(1,2)}, {Edge(2,1)}}, {}, LINE(""));
+    }
+
+    network.swap_nodes(2,0);
 
     if constexpr (mutual_info(GraphFlavour))
     {
@@ -737,6 +883,28 @@ namespace sequoia::unit_testing
     //   /\
     //   \/-4
         
+    if constexpr(mutual_info(GraphFlavour))
+    {
+      check_graph(graph, {{Edge(0,0,1), Edge(0,0,1), Edge(0,0,-4), Edge(0,0,-4), Edge(0,1,6)}, {Edge(0,1,6)}}, {{1.1,-4.3}, {0,0}}, LINE(""));
+    }
+    else
+    {
+      check_graph(graph, {{Edge(0,0,1), Edge(0,0,-4), Edge(0,1,6)}, {}}, {{1.1,-4.3}, {0,0}}, LINE(""));
+    }
+
+    graph.swap_nodes(0,1);
+
+    if constexpr(mutual_info(GraphFlavour))
+    {
+      check_graph(graph, {{Edge(1,0,6)}, {Edge(1,1,1), Edge(1,1,1), Edge(1,1,-4), Edge(1,1,-4), Edge(1,0,6)}}, {{0,0}, {1.1,-4.3}}, LINE(""));
+    }
+    else
+    {
+      check_graph(graph, {{}, {Edge(1,1,1), Edge(1,1,-4), Edge(1,0,6)}}, {{0,0}, {1.1,-4.3}}, LINE(""));
+    }
+
+    graph.swap_nodes(1,0);
+
     if constexpr(mutual_info(GraphFlavour))
     {
       check_graph(graph, {{Edge(0,0,1), Edge(0,0,1), Edge(0,0,-4), Edge(0,0,-4), Edge(0,1,6)}, {Edge(0,1,6)}}, {{1.1,-4.3}, {0,0}}, LINE(""));

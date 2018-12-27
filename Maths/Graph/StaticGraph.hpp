@@ -60,8 +60,7 @@ namespace sequoia::maths
         typename graph_impl::weight_maker<data_sharing::unpooled<NodeWeight>, data_sharing::unpooled<EdgeWeight>>
       >::graph_primitive;
 
-    using primitive::set_edge_weight;
-    using primitive::mutate_edge_weight;
+    using primitive::swap_nodes;
     using primitive::sort_edges;      
   };
 
@@ -117,7 +116,6 @@ namespace sequoia::maths
       typename graph_impl::weight_maker<data_sharing::unpooled<NodeWeight>, data_sharing::unpooled<EdgeWeight>>
     >::graph_primitive;
 
-    using primitive::set_edge_weight;
-    using primitive::mutate_edge_weight;
+    using primitive::swap_nodes;
   };
 }

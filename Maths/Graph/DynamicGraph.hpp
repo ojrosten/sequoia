@@ -95,12 +95,11 @@ namespace sequoia::maths
     graph_base& operator=(const graph_base&) = default;
     graph_base& operator=(graph_base&&)      = default;
 
+    using primitive::swap_nodes;
+    
     using primitive::add_node;
     using primitive::insert_node;
     using primitive::erase_node;
-
-    using primitive::set_edge_weight;
-    using primitive::mutate_edge_weight;
 
     using primitive::join;      
     using primitive::erase_edge;
