@@ -223,15 +223,16 @@ namespace sequoia
         {
           this->swap_nodes(i, j);
         }
-        
-        m_Edges.swap_partitions(i, j);
-        
+                
         if constexpr (EdgeTraits::shared_edge_v)
         {
           for(auto iter{begin_edges(i)}; iter != end_edges(i); ++iter)
           {
             if((iter->host_node() != j) && (iter->target_node() != j))
             {
+              if(iter->host_node() == i) iter->host_node(j);
+              else if(iter->host_node() == j) iter->host_node(i);
+              
               if(iter->target_node() == i) iter->target_node(j);
               else if(iter->target_node() == j) iter->target_node(i);
             }
@@ -239,6 +240,9 @@ namespace sequoia
 
           for(auto iter{begin_edges(j)}; iter != end_edges(j); ++iter)
           {
+            if(iter->host_node() == i) iter->host_node(j);
+            else if(iter->host_node() == j) iter->host_node(i);
+            
             if(iter->target_node() == i) iter->target_node(j);
             else if(iter->target_node() == j) iter->target_node(i);
           }
@@ -261,6 +265,8 @@ namespace sequoia
             }
           }
         }
+        
+        m_Edges.swap_partitions(i, j);
       }
       
       void reserve_nodes(const size_type size)

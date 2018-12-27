@@ -146,6 +146,28 @@ namespace sequoia::unit_testing
       check_graph(network, {{Edge{0,1}}, {Edge{1,2}}, {}}, {}, LINE(""));
     }
 
+    network.swap_nodes(2,1);
+
+    if constexpr (mutual_info(GraphFlavour))
+    {
+      check_graph(network, {{E_Edge{0,2,0}}, {E_Edge{2,1,1}}, {E_Edge{0,2,0}, E_Edge{2,1,0}}}, {}, LINE(""));
+    }
+    else
+    {
+      check_graph(network, {{Edge{0,2}}, {}, {Edge{2,1}}}, {}, LINE(""));
+    }
+    
+    network.swap_nodes(1,2);
+
+    if constexpr (mutual_info(GraphFlavour))
+    {
+      check_graph(network, {{E_Edge{0,1,0}}, {E_Edge{0,1,0}, E_Edge{1,2,0}}, {E_Edge{1,2,1}}}, {}, LINE(""));
+    }
+    else
+    {
+      check_graph(network, {{Edge{0,1}}, {Edge{1,2}}, {}}, {}, LINE(""));
+    }
+    
     nodeNum = network.add_node();
     check_equality<std::size_t>(3, nodeNum, LINE("Index of added node is 3"));
     network.join(0, nodeNum);
