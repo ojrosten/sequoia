@@ -29,7 +29,7 @@
 #include "TestGraphUpdate.hpp"
 #include "TestSubgraph.hpp"
 
-#include "TestThreadingModels.hpp"
+#include "TestConcurrencyModels.hpp"
 
 #include "TestSample.hpp"
 
@@ -131,7 +131,7 @@ int main(int argc, char** argv)
 
   runner.add_test_family(
     test_family{
-      "Threading Models",
+      "Concurrency Models",
       test_threading_models{"Unit Test"}
     }
   );
