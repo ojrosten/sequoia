@@ -3,7 +3,7 @@
 #include "GraphTraversalTestingUtils.hpp"
 #include "DynamicGraphTestingUtils.hpp"
 
-#include "ThreadingModels.hpp"
+#include "ConcurrencyModels.hpp"
 
 #include <functional>
 

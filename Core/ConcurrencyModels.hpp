@@ -1,4 +1,17 @@
+////////////////////////////////////////////////////////////////////
+//                 Copyright Oliver Rosten 2018.                  //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
 #pragma once
+
+/*! \file ConcurrencyModels.hpp
+    \brief Classes with a queue-like interface to which tasks can be pushed and results popped, possibly
+           following concurrent execution
+
+ */
 
 #include <queue>
 #include <thread>
@@ -128,7 +141,7 @@ namespace sequoia::concurrency
     };
   }
   
-  //===================================Null Threading Model===================================//
+  //===================================Serial Execution Model===================================//
 
   template<class R=void>  class serial
   {
@@ -160,7 +173,7 @@ namespace sequoia::concurrency
     constexpr void get() const noexcept {}
   };
 
-  //==================================Asynchronous Processing==================================// 
+  //==================================Asynchronous Execution==================================// 
 
   template<class R>
   class asynchronous

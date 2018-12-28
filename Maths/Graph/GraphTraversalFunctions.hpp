@@ -1,7 +1,7 @@
 #pragma once
 
 #include "GraphTraversalDetails.hpp"
-#include "ThreadingModels.hpp"
+#include "ConcurrencyModels.hpp"
 
 namespace sequoia::maths
 {  

@@ -1,4 +1,18 @@
+////////////////////////////////////////////////////////////////////
+//                 Copyright Oliver Rosten 2018.                  //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
 #pragma once
+
+/*! \file Algorithms.hpp
+    \brief A collection of constexpr algorithms.
+
+    These algorithms have been written as they have been required by other
+    parts of the library; many will be retired once C++20 arrives.
+*/
 
 #include <functional>
 
@@ -84,7 +98,7 @@ namespace sequoia
     }
   }
 
-  template< class ForwardIt >
+  template<class ForwardIt>
   constexpr ForwardIt rotate(ForwardIt first, ForwardIt n_first, ForwardIt last)
   {
     if(first == n_first) return last;
