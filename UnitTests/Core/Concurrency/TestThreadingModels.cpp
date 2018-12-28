@@ -40,7 +40,7 @@ namespace sequoia::unit_testing
       q_t q{};
 
       int a{};
-      q.push(task_t{[&a](){ a+= 1; }}, std::try_to_lock);
+      check(q.push(task_t{[&a](){ a+= 1; }}, std::try_to_lock), LINE(""));
       auto t{q.pop(std::try_to_lock)};
 
       t();
@@ -61,7 +61,7 @@ namespace sequoia::unit_testing
 
       q_t q{};
 
-      q.push(task_t{[](){ return 1;}}, std::try_to_lock);
+      check(q.push(task_t{[](){ return 1;}}, std::try_to_lock), LINE(""));
       auto t{q.pop(std::try_to_lock)};
 
       auto fut{t.get_future()};

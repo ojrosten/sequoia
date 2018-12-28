@@ -59,6 +59,7 @@ namespace sequoia::concurrency
       m_CV.notify_one();
     }
 
+    [[nodiscard]]
     bool push(task_t&& task, std::try_to_lock_t t)
     {
       std::unique_lock<std::mutex> lock{m_Mutex, t};
@@ -70,6 +71,7 @@ namespace sequoia::concurrency
       return true;
     }
 
+    [[nodiscard]]
     task_t pop(std::try_to_lock_t t)
     {
       std::unique_lock<std::mutex> lock{m_Mutex, t};
@@ -78,6 +80,7 @@ namespace sequoia::concurrency
       return get();
     }
 
+    [[nodiscard]]
     task_t pop()
     {
       std::unique_lock<std::mutex> lock{m_Mutex};
