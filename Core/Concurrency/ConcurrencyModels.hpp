@@ -25,6 +25,13 @@
 
 namespace sequoia::concurrency
 {
+
+  /*! \class task_queue
+      \brief a task queue designed for use by mutliple threads.
+
+      This class supports both aggressive pushing and popping and also speculative versions which
+      do not necessarily acquire the underlying mutex and may therefore fail.
+   */
   template<class R, class Task=std::packaged_task<R()>, class Q=std::queue<Task>>
   class task_queue
   {
@@ -109,8 +116,8 @@ namespace sequoia::concurrency
 
   namespace impl
   {
-    template<class R>
-    auto get_results(std::vector<std::future<R>>& futures)
+    template<class R> [[nodiscard]]
+    decltype(auto) get_results(std::vector<std::future<R>>& futures)
     {
       if constexpr(std::is_same_v<R, void>)
       {
