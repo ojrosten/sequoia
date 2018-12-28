@@ -50,15 +50,13 @@ namespace sequoia::concurrency
       m_CV.notify_all();
     }
 
-    bool push(task_t&& task)
+    void push(task_t&& task)
     {
       {
         std::unique_lock<std::mutex> lock{m_Mutex};
         m_Q.push(std::move(task));
       }
       m_CV.notify_one();
-
-      return true;
     }
 
     bool push(task_t&& task, std::try_to_lock_t t)
