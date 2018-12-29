@@ -22,6 +22,7 @@ namespace sequoia::utilities
     using reference = typename std::iterator_traits<Iterator>::reference;
     using pointer = typename std::iterator_traits<Iterator>::pointer;
 
+    [[nodiscard]]
     static constexpr reference get(reference ref) noexcept { return ref; }
   };
 
@@ -37,11 +38,13 @@ namespace sequoia::utilities
     constexpr null_data_policy& operator=(null_data_policy&&) noexcept = default;
   };
 
+  [[nodiscard]]
   inline constexpr bool operator==(const null_data_policy& lhs, const null_data_policy& rhs)
   {
     return true;
   }
 
+  [[nodiscard]]
   inline constexpr bool operator!=(const null_data_policy& lhs, const null_data_policy& rhs)
   {
     return !(lhs == rhs);
@@ -50,7 +53,12 @@ namespace sequoia::utilities
   /*! \class iterator
       \brief An iterator with policies controlling dereferncing and auxiliary data.
 
-      The DereferencePolicy allows customisation of the various dereferencing operators. The iterator may
+      The DereferencePolicy allows customisation of the various dereferencing operators. In principle
+      it is therefore possible that deferencing will not return a reference. This is forbidden
+      in the case that the underlying iterator is non-const since the semantics could then
+      be rather confusing. However, for const iterators this is tacitly allowed.
+
+      The iterator may
       also hold extra (auxiliary) data, controlled via the AuxiliaryDataPolicy.
 
    */
@@ -58,7 +66,7 @@ namespace sequoia::utilities
   template<class Iterator, class DereferencePolicy, class AuxiliaryDataPolicy>
   class iterator : public AuxiliaryDataPolicy
   {
-  public:
+  public:    
     using dereference_policy    = DereferencePolicy;
     using auxiliary_data_policy = AuxiliaryDataPolicy;
     using base_iterator_type    = Iterator;
@@ -68,6 +76,8 @@ namespace sequoia::utilities
     using value_type        = typename DereferencePolicy::value_type;
     using pointer           = typename DereferencePolicy::pointer;
     using reference         = typename DereferencePolicy::reference;
+    
+    static_assert(std::is_reference_v<reference> || std::is_const_v<typename std::iterator_traits<Iterator>::reference>);
 
     template<
       class Arg,
@@ -105,10 +115,13 @@ namespace sequoia::utilities
     constexpr iterator& operator=(const iterator&)     = default;
     constexpr iterator& operator=(iterator&&) noexcept = default;
 
+    [[nodiscard]]
     constexpr base_iterator_type base_iterator() const noexcept { return m_BaseIterator; }
 
+    [[nodiscard]]
     constexpr decltype(auto) operator*() const { return DereferencePolicy::get(*m_BaseIterator); }
 
+    [[nodiscard]]
     constexpr decltype(auto) operator[](const difference_type n) const { return DereferencePolicy::get(m_BaseIterator[n]); }
 
     constexpr pointer operator->() const { return &DereferencePolicy::get(*m_BaseIterator); }
