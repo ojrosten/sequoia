@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Sample.hpp"
-#include "Utilities.hpp"
+#include "TypeTraits.hpp"
 
 #include <iostream>
 #include <sstream>

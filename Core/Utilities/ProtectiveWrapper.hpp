@@ -12,7 +12,7 @@
     which must use proxies to underlying data.
  */
 
-#include "Utilities.hpp"
+#include "TypeTraits.hpp"
 
 namespace sequoia::utilities
 {

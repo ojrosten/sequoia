@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Utilities.hpp"
+#include "TypeTraits.hpp"
 #include "Utilities/ProtectiveWrapper.hpp"
 
 namespace sequoia

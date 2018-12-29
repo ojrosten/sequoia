@@ -1,7 +1,7 @@
 #pragma once
 
 #include "PartitionedDataDetails.hpp"
-#include "Utilities.hpp"
+#include "TypeTraits.hpp"
 #include "Iterator.hpp"
 #include "Algorithms.hpp"
 
