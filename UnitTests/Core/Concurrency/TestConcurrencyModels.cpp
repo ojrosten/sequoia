@@ -233,7 +233,7 @@ namespace sequoia::unit_testing
     
     threadModel.push([]() -> R { throw Exception{"Error!"}; });
 
-    check_exception_thrown<Exception>([&threadModel]() { threadModel.get(); }, std::string{message});
+    check_exception_thrown<Exception>([&threadModel]() { return threadModel.get(); }, std::string{message});
   }
 
   template<class Model>

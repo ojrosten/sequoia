@@ -8,8 +8,14 @@
 #pragma once
 
 /*! \file ConcurrencyModels.hpp
-    \brief Classes with a queue-like interface to which tasks can be pushed and results popped, possibly
+    \brief Classes with a queue-like behaviour to which tasks can be pushed and results recovered, possibly
            following concurrent execution
+
+           The three concurrency models serial, asynchronous and thread_pool have a common interface
+           for pushing tasks and recovering results, via the push and get methods. The semantics of
+           get is that it may change the state of the class; for serial execution, any results are
+           moved out of the class, whereas for asynchronous or thread pool models,
+           extraction of data from a future occurs.
 
  */
 
@@ -128,6 +134,8 @@ namespace sequoia::concurrency
         std::vector<R> values;
         values.reserve(futures.size());
         std::transform(futures.begin(), futures.end(), std::back_inserter(values), [](std::future<R>& fut) { return fut.get(); });
+        futures.clear();
+        
         return values;
       }
     }
@@ -151,6 +159,13 @@ namespace sequoia::concurrency
   
   //===================================Serial Execution Model===================================//
 
+  /*! \class serial
+      \brief Tasks may be pushed, upon which they are immediately invoked; results may be 
+      acquired through get.
+   
+      Results are acquired via a handle to the underlying container.
+   */
+  
   template<class R=void>  class serial
   {
   public:
@@ -163,11 +178,18 @@ namespace sequoia::concurrency
       m_Results.push_back(fn(std::forward<Args>(args)...));
     }
 
-    const auto& get() const noexcept{ return m_Results; }
+    [[nodiscard]]
+    auto get() noexcept { return std::move(m_Results); }
   private:
     std::vector<R> m_Results;
   };
 
+  /*! \class serial<void>
+      \brief Tasks may be pushed, upon which they are immediately invoked.
+
+      The dummy get method does nothing but serves to provide a uniform interface.
+   */
+  
   template<> class serial<void>
   {
   public:
@@ -183,6 +205,14 @@ namespace sequoia::concurrency
 
   //==================================Asynchronous Execution==================================// 
 
+  /*! \class asynchronous
+      \brief Tasks may be pushed, upon which they are fed to std::async; results may be 
+      acquired through get.
+   
+      Internally, the class holds a future for each pushed task. The get method extracts the 
+      associated return values of the tasks and, if they are no-void, returns them as a vector.
+   */
+  
   template<class R>
   class asynchronous
   {
@@ -203,7 +233,8 @@ namespace sequoia::concurrency
       m_Futures.emplace_back(std::async(std::launch::async | std::launch::deferred, std::forward<Fn>(fn), std::forward<Args>(args)...));
     }
 
-    auto get()
+    [[nodiscard]]
+    decltype(auto) get()
     {
       return impl::get_results(m_Futures);
     }
@@ -213,21 +244,26 @@ namespace sequoia::concurrency
 
   //=======================================Thread Pool========================================//
 
-  template<class R, bool MultiChannel=true>
-  class thread_pool : private impl::queue_details<R, MultiChannel>
+  /*! \class thread_pool
+      \brief Supports either a single pipeline or a pipeline for each thread, together with task
+      stealing.
+   */
+  
+  template<class R, bool MultiPipeline=true>
+  class thread_pool : private impl::queue_details<R, MultiPipeline>
   {
   public:
     using return_type = R;
       
-    template<bool B=MultiChannel, class=std::enable_if_t<!B>>
+    template<bool B=MultiPipeline, class=std::enable_if_t<!B>>
     explicit thread_pool(const std::size_t numThreads)        
     {
       make_pool(numThreads);
     }
 
-    template<bool B=MultiChannel, class=std::enable_if_t<B>>
+    template<bool B=MultiPipeline, class=std::enable_if_t<B>>
     thread_pool(const std::size_t numThreads, const std::size_t pushCycles = 46)
-      : impl::queue_details<R, MultiChannel>{pushCycles}
+      : impl::queue_details<R, MultiPipeline>{pushCycles}
       , m_Queues(numThreads)
     {
       make_pool(numThreads);
@@ -254,7 +290,7 @@ namespace sequoia::concurrency
       m_Futures.push_back(task.get_future());
 
                   
-      if constexpr(MultiChannel)
+      if constexpr(MultiPipeline)
       {
         const auto qIndex{m_QueueIndex++};        
         const auto N{m_Threads.size()};
@@ -282,14 +318,15 @@ namespace sequoia::concurrency
       joined = true;        
     }
 
-    auto get()
+    [[nodiscard]]
+    decltype(auto) get()
     {
       join();
       return impl::get_results(m_Futures);
     }
   private:
-    using task_t   = typename impl::queue_details<R, MultiChannel>::task_t;
-    using Queues_t = typename impl::queue_details<R, MultiChannel>::queue_type;
+    using task_t   = typename impl::queue_details<R, MultiPipeline>::task_t;
+    using Queues_t = typename impl::queue_details<R, MultiPipeline>::queue_type;
       
     Queues_t m_Queues;
     std::vector<std::thread> m_Threads;
@@ -305,7 +342,7 @@ namespace sequoia::concurrency
       for(std::size_t q{}; q<numThreads; ++q)
       {
         auto loop{[=]() {
-            if constexpr(MultiChannel)
+            if constexpr(MultiPipeline)
             {
               task_t task{m_Queues[q].pop()};
               if(task.valid())
@@ -318,7 +355,7 @@ namespace sequoia::concurrency
             {
               task_t task{};
                 
-              if constexpr(MultiChannel)
+              if constexpr(MultiPipeline)
               {
                 const auto N{m_Threads.size()};
                 for(std::size_t i{}; i<N; ++i)
@@ -350,7 +387,7 @@ namespace sequoia::concurrency
 
     void join_all()
     {
-      if constexpr(MultiChannel)
+      if constexpr(MultiPipeline)
         for(auto& q : m_Queues) q.finish();
       else
         m_Queues.finish();
