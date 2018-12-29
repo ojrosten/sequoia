@@ -76,36 +76,42 @@ namespace sequoia::utilities
   //===================================Comparison operators===================================//
 
   template<class T>
+  [[nodiscard]]
   constexpr bool operator==(const protective_wrapper<T>& lhs, const protective_wrapper<T>& rhs) noexcept
   {
     return lhs.get() == rhs.get();
   }
-
+  
   template<class T>
+  [[nodiscard]]
   constexpr bool operator!=(const protective_wrapper<T>& lhs, const protective_wrapper<T>& rhs) noexcept
   {
     return !(lhs == rhs);
   }
-
+  
   template<class T>
+  [[nodiscard]]
   constexpr bool operator<(const protective_wrapper<T>& lhs, const protective_wrapper<T>& rhs) noexcept
   {
     return lhs.get() < rhs.get();
   }
-
+  
   template<class T>
+  [[nodiscard]]
   constexpr bool operator>(const protective_wrapper<T>& lhs, const protective_wrapper<T>& rhs) noexcept
   {
     return lhs.get() > rhs.get();
   }
 
   template<class T>
+  [[nodiscard]]
   constexpr bool operator>=(const protective_wrapper<T>& lhs, const protective_wrapper<T>& rhs) noexcept
   {
     return !(lhs.get() < rhs.get());
   }
 
   template<class T>
+  [[nodiscard]]
   constexpr bool operator<=(const protective_wrapper<T>& lhs, const protective_wrapper<T>& rhs) noexcept
   {
     return !(lhs.get() > rhs.get());
