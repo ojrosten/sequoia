@@ -1,170 +1,188 @@
+////////////////////////////////////////////////////////////////////
+//                 Copyright Oliver Rosten 2018.                  //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
 #pragma once
+
+/*! \file DataPool.hpp
+    \brief Classes to allow homogenous treatment of pooled/unpooled data.
+
+ */
 
 #include "Utilities/ProtectiveWrapper.hpp"
 
 #include <vector>
 #include <memory>
+#include <algorithm>
 
-namespace sequoia
+namespace sequoia::data_sharing
 {
-  namespace data_sharing
+  template<class T> class unpooled
   {
-    template<class T> class unpooled
-    {
-    public:
-      using proxy = utilities::protective_wrapper<T>;
-      using value_type = T;
+  public:
+    using proxy = utilities::protective_wrapper<T>;
+    using value_type = T;
 
-      template<class... Args> static constexpr proxy make(Args&&... args)
-      {
-        return proxy{std::forward<Args>(args)...};
-      }
-    private:
-    };
-    
-    template<class T> class data_pool
+    template<class... Args>
+    [[nodiscard]]
+    static constexpr proxy make(Args&&... args)
     {
-    public:
-      static_assert(!std::is_empty_v<T>, "Makes no sense to pool an empty weight!");
+      return proxy{std::forward<Args>(args)...};
+    }
+  private:
+  };
+    
+  template<class T> class data_pool
+  {
+  public:
+    static_assert(!std::is_empty_v<T>, "Makes no sense to pool an empty weight!");
       
-      class handle
-      {
+    class handle
+    {
       friend class data_pool;
         
-      public:
-        template<class... Args> handle(data_pool& pool, Args&&... args) : m_pPool{&pool}, m_Data{std::forward<Args>(args)...} {}        
-        
-        const T& get() const { return m_Data; }
+    public:
+      template<class... Args> handle(data_pool& pool, Args&&... args) : m_pPool{&pool}, m_Data{std::forward<Args>(args)...} {}        
 
-        template<class... Args>
-        std::shared_ptr<handle> set(Args&&... args)
-        {
-          return m_pPool->make_handle(std::forward<Args>(args)...);
-        }
+      [[nodiscard]]
+      const T& get() const { return m_Data; }
 
-      private:        
-        data_pool* m_pPool{};
-        T m_Data;
-
-        handle(const handle&) = delete;
-        handle(handle&&) noexcept = default;
-
-        handle& operator=(const handle&) = delete;
-        handle& operator=(handle&&) noexcept = default;
-      };
-      
-      class proxy
+      template<class... Args>
+      std::shared_ptr<handle> set(Args&&... args)
       {
-      public:
-        friend class data_pool;
-        using value_type = T;
-        
-        proxy(const proxy&)     = default;
-        proxy(proxy&&) noexcept = default;
-        proxy& operator=(const proxy& in)
-        {
-          set(in.get());
-          return *this;
-        }
-        proxy& operator=(proxy&&) noexcept = default;
-                                                     
-        const T& get() const noexcept { return m_Handle->get(); }
-
-        template<class... Args>
-        void set(Args&&... args)
-        {
-          m_Handle = m_Handle->set(std::forward<Args>(args)...);
-        }
-
-        template<class Fn>
-        void mutate(Fn&& fn)
-        {
-          auto nascent{m_Handle->get()};
-          fn(nascent);
-          set(nascent);
-        }
-
-        friend bool operator==(const proxy& lhs, const proxy& rhs) noexcept
-        {
-          return lhs.get() == rhs.get();
-        }
-
-        friend bool operator!=(const proxy& lhs, const proxy& rhs) noexcept
-        {
-          return lhs != rhs;
-        }
-      private:
-        std::shared_ptr<handle> m_Handle;
-
-        proxy(const std::shared_ptr<handle>& ptr) : m_Handle{ptr} {}
-      };
-
-      friend class handle;
-      
-      data_pool() {}
-
-      data_pool(const data_pool&) = delete;
-
-      data_pool(data_pool&& in) noexcept : data_pool()
-      {
-        swap(*this, in);
+        return m_pPool->make_handle(std::forward<Args>(args)...);
       }
 
-      data_pool& operator=(const data_pool&) = delete;
+    private:        
+      data_pool* m_pPool{};
+      T m_Data;
 
-      data_pool& operator=(data_pool&& in) noexcept
+      handle(const handle&) = delete;
+      handle(handle&&) noexcept = default;
+
+      handle& operator=(const handle&) = delete;
+      handle& operator=(handle&&) noexcept = default;
+    };
+      
+    class proxy
+    {
+    public:
+      friend class data_pool;
+      using value_type = T;
+        
+      proxy(const proxy&)     = default;
+      proxy(proxy&&) noexcept = default;
+      proxy& operator=(const proxy& in)
       {
-        swap(*this, in);
+        set(in.get());
         return *this;
       }
+      proxy& operator=(proxy&&) noexcept = default;
 
-      friend void swap(data_pool& lhs, data_pool& rhs) noexcept
+      [[nodiscard]]
+      const T& get() const noexcept { return m_Handle->get(); }
+
+      template<class... Args>
+      void set(Args&&... args)
       {
-        std::swap(lhs.m_Data, rhs.m_Data);
-        for(auto& pData : lhs.m_Data) pData->m_pPool = &lhs;
-        for(auto& pData : rhs.m_Data) pData->m_pPool = &rhs;
+        m_Handle = m_Handle->set(std::forward<Args>(args)...);
       }
 
-      // may also want to count number of times items are used
-      std::size_t size() const { return m_Data.size(); }
-
-      template<class... Args> proxy make(Args&&... args)
+      template<class Fn>
+      void mutate(Fn&& fn)
       {
-        const T nascent{std::forward<Args>(args)...};
-        const auto found = std::find_if(m_Data.begin(), m_Data.end(), [&nascent](const auto& pData) { return pData->get() == nascent;});
-        if(found == m_Data.end())
-        {
-          m_Data.emplace_back(std::make_shared<handle>(*this, nascent));
-          return {m_Data.back()};
-        }
-        else
-        {
-          return {*found};
-        }
-      }
-      
-      void tidy()
-      {
-        m_Data.erase(std::remove_if(m_Data.begin(), m_Data.end(), [](const auto& ptr) { ptr.use_count() == 1;}), m_Data.end());
+        auto nascent{m_Handle->get()};
+        fn(nascent);
+        set(nascent);
       }
 
+      [[nodiscard]]
+      friend bool operator==(const proxy& lhs, const proxy& rhs) noexcept
+      {
+        return lhs.get() == rhs.get();
+      }
+
+      [[nodiscard]]
+      friend bool operator!=(const proxy& lhs, const proxy& rhs) noexcept
+      {
+        return lhs != rhs;
+      }
     private:
-      std::vector<std::shared_ptr<handle>> m_Data;
+      std::shared_ptr<handle> m_Handle;
 
-      template<class... Args> std::shared_ptr<handle> make_handle(Args&&... args)
-      {
-        const T nascent{std::forward<Args>(args)...};
-        const auto found = std::find_if(m_Data.begin(), m_Data.end(), [&nascent](const auto& pData) { return pData->get() == nascent;});
-        if(found == m_Data.end())
-        {
-          m_Data.emplace_back(std::make_shared<handle>(*this, nascent));
-          return m_Data.back();
-        }
-        else
-        {
-          return *found;
-        }
-      }
+      proxy(const std::shared_ptr<handle>& ptr) : m_Handle{ptr} {}
     };
-  }
+
+    friend class handle;
+      
+    data_pool() {}
+
+    data_pool(const data_pool&) = delete;
+
+    data_pool(data_pool&& in) noexcept : data_pool()
+    {
+      swap(*this, in);
+    }
+
+    data_pool& operator=(const data_pool&) = delete;
+
+    data_pool& operator=(data_pool&& in) noexcept
+    {
+      swap(*this, in);
+      return *this;
+    }
+
+    friend void swap(data_pool& lhs, data_pool& rhs) noexcept
+    {
+      std::swap(lhs.m_Data, rhs.m_Data);
+      for(auto& pData : lhs.m_Data) pData->m_pPool = &lhs;
+      for(auto& pData : rhs.m_Data) pData->m_pPool = &rhs;
+    }
+
+    // may also want to count number of times items are used
+    [[nodiscard]]
+    std::size_t size() const noexcept { return m_Data.size(); }
+
+    template<class... Args>
+    [[nodiscard]] proxy make(Args&&... args)
+    {
+      const T nascent{std::forward<Args>(args)...};
+      const auto found = std::find_if(m_Data.begin(), m_Data.end(), [&nascent](const auto& pData) { return pData->get() == nascent;});
+      if(found == m_Data.end())
+      {
+        m_Data.emplace_back(std::make_shared<handle>(*this, nascent));
+        return {m_Data.back()};
+      }
+      else
+      {
+        return {*found};
+      }
+    }
+      
+    void tidy()
+    {
+      m_Data.erase(std::remove_if(m_Data.begin(), m_Data.end(), [](const auto& ptr) { ptr.use_count() == 1;}), m_Data.end());
+    }
+
+  private:
+    std::vector<std::shared_ptr<handle>> m_Data;
+
+    template<class... Args> std::shared_ptr<handle> make_handle(Args&&... args)
+    {
+      const T nascent{std::forward<Args>(args)...};
+      const auto found = std::find_if(m_Data.begin(), m_Data.end(), [&nascent](const auto& pData) { return pData->get() == nascent;});
+      if(found == m_Data.end())
+      {
+        m_Data.emplace_back(std::make_shared<handle>(*this, nascent));
+        return m_Data.back();
+      }
+      else
+      {
+        return *found;
+      }
+    }
+  };
 }

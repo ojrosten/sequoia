@@ -35,7 +35,7 @@ namespace sequoia::data_sharing
     static constexpr bool is_shared() noexcept { return true; }
 
     template<class... Args>
-    [[nodiscard]] static auto make(Args&&... args)
+    [[nodiscard]] static handle_type make(Args&&... args)
     {
       return make_shared_braced<T>(std::forward<Args>(args)...);
     }
