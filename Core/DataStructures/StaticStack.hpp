@@ -1,14 +1,31 @@
+////////////////////////////////////////////////////////////////////
+//                 Copyright Oliver Rosten 2018.                  //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
 #pragma once
+
+/*! \file StaticStack.hpp
+    \brief A constexpr stack.
+
+ */
 
 #include "ArrayUtilities.hpp"
 #include "Algorithms.hpp"
 
 namespace sequoia::data_structures
 {
+  /*! \class static_stack
+      \brief A stack suitable for constexpr contexts.
+
+   */
+  
   template<class T, std::size_t MaxDepth>
   class static_stack
   {
-  public:
+  public:    
     constexpr static_stack(std::initializer_list<T> l)
       : m_Stack{utilities::to_array<MaxDepth>(l)}
       , m_End{l.size()}
@@ -31,6 +48,7 @@ namespace sequoia::data_structures
       ++m_End;
     }
 
+    [[nodiscard]]
     constexpr const T& top() const noexcept
     {
       return m_Stack[m_End - 1];
@@ -41,22 +59,26 @@ namespace sequoia::data_structures
       --m_End;
     }
 
+    [[nodiscard]]
     constexpr bool empty() const noexcept
     {
       return m_End == 0u;
     }
 
+    [[nodiscard]]
     constexpr std::size_t size() const noexcept
     {
       return m_End;
     }
 
+    [[nodiscard]]
     friend constexpr bool operator==(const static_stack& lhs, const static_stack& rhs) noexcept
     {
       return (lhs.m_End == rhs.m_End)
         && sequoia::equal(lhs.m_Stack.begin(), lhs.m_Stack.begin() + lhs.m_End, rhs.m_Stack.begin(), rhs.m_Stack.begin() + rhs.m_End);
     }
 
+    [[nodiscard]]
     friend constexpr bool operator!=(const static_stack& lhs, const static_stack& rhs) noexcept
     {
       return !(lhs == rhs);

@@ -1,13 +1,29 @@
+////////////////////////////////////////////////////////////////////
+//                 Copyright Oliver Rosten 2018.                  //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
 #pragma once
+
+/*! \file StaticPriorityQueue.hpp
+    \brief A constexpr prority queue.
+
+ */
 
 #include "Algorithms.hpp"
 #include "ArrayUtilities.hpp"
 
-#include <array>
 #include <functional>
 
 namespace sequoia::data_structures
 {
+  /*! \class static_priority_queue
+      \brief A priority_queue suitable for constexpr contexts.
+
+   */
+  
   template<class T, std::size_t MaxDepth, class Compare=std::less<T>>
   class static_priority_queue : private Compare
   {
@@ -45,6 +61,7 @@ namespace sequoia::data_structures
       bubble_up(m_Q.begin(), m_Q.begin() + m_End - 1, static_cast<Compare&>(*this));
     }
 
+    [[nodiscard]]
     constexpr const T& top() const noexcept
     {
       return *m_Q.begin();
@@ -57,21 +74,25 @@ namespace sequoia::data_structures
       sequoia::make_heap(m_Q.begin(), m_Q.begin() + m_End, static_cast<Compare&>(*this));
     }
 
+    [[nodiscard]]
     constexpr bool empty() const noexcept
     {
       return m_End == 0;
     }
 
+    [[nodiscard]]
     constexpr std::size_t size() const noexcept
     {
       return m_End;
     }
 
+    [[nodiscard]]
     friend constexpr bool operator==(const static_priority_queue& lhs, const static_priority_queue& rhs) noexcept
     {
       return (lhs.m_End == rhs.m_End) && sequoia::equal(lhs.m_Q.begin(), lhs.m_Q.begin() + lhs.m_End, rhs.m_Q.begin(), rhs.m_Q.begin() + rhs.m_End);
     }
 
+    [[nodiscard]]
     friend constexpr bool operator!=(const static_priority_queue& lhs, const static_priority_queue& rhs) noexcept
     {
       return !(lhs == rhs);

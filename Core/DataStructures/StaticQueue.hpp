@@ -1,10 +1,27 @@
+////////////////////////////////////////////////////////////////////
+//                 Copyright Oliver Rosten 2018.                  //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
 #pragma once
+
+/*! \file StaticQueue.hpp
+    \brief A constexpr queue.
+
+ */
 
 #include "ArrayUtilities.hpp"
 #include "Algorithms.hpp"
 
 namespace sequoia::data_structures
 {
+  /*! \class static_queue
+      \brief A queue suitable for constexpr contexts.
+
+   */
+  
   template<class T, std::size_t MaxDepth>
   class static_queue
   {
@@ -49,11 +66,13 @@ namespace sequoia::data_structures
       }
     }
 
+    [[nodiscard]]
     constexpr const T& back() const noexcept
     {
       return m_Queue[m_Back];
     }
 
+    [[nodiscard]]
     constexpr const T& front() const noexcept
     {
       return m_Queue[m_Front];
@@ -72,11 +91,13 @@ namespace sequoia::data_structures
       }
     }
 
+    [[nodiscard]]
     constexpr bool empty() const noexcept
     {
       return m_Front == MaxDepth;
     }
 
+    [[nodiscard]]
     constexpr std::size_t size() const noexcept
     {
       if(empty())
@@ -93,6 +114,7 @@ namespace sequoia::data_structures
       }
     }
 
+    [[nodiscard]]
     friend constexpr bool operator==(const static_queue& lhs, const static_queue& rhs) noexcept
     {
       if constexpr(MaxDepth > 0)
@@ -117,6 +139,7 @@ namespace sequoia::data_structures
       }
     }
 
+    [[nodiscard]]
     friend constexpr bool operator!=(const static_queue& lhs, const static_queue& rhs) noexcept
     {
       return !(lhs == rhs);
