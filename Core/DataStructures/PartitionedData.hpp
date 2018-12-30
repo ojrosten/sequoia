@@ -1,12 +1,23 @@
+////////////////////////////////////////////////////////////////////
+//                 Copyright Oliver Rosten 2018.                  //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
 #pragma once
+
+/*! \file PartitionedData.hpp
+    \brief Classes implementing the concept of a sequence of data which is divided into partitions.
+ */
 
 #include "PartitionedDataDetails.hpp"
 #include "TypeTraits.hpp"
 #include "Iterator.hpp"
 #include "Algorithms.hpp"
 
-#include <limits>
 #include <string>
+#include <numeric>
 
 namespace sequoia
 {
@@ -38,7 +49,7 @@ namespace sequoia
     };
     
     template<class T, class SharingPolicy=data_sharing::independent<T>, class Traits=bucketed_storage_traits<T, SharingPolicy>>
-    class bucketed_storage
+    class [[nodiscard]] bucketed_storage
     {
     private:
       template<class S> using buckets_template           = typename Traits::template buckets_type<S>;
@@ -58,7 +69,7 @@ namespace sequoia
 
       constexpr static bool throw_on_range_error{Traits::throw_on_range_error};
       
-      bucketed_storage() {}
+      bucketed_storage() noexcept {}
 
       bucketed_storage(std::initializer_list<std::initializer_list<T>> list)
       {
@@ -97,14 +108,18 @@ namespace sequoia
         return *this;
       }
 
+      [[nodiscard]]
       size_type size() const
       {
-        size_type size{};
-        for(const auto& bucket : m_Buckets) size += bucket.size();
-
-        return size;
+        return std::accumulate(std::cbegin(m_Buckets), std::cend(m_Buckets), size_type{},
+          [](const size_type& current, const auto& bucket){
+            return current + bucket.size();
+        });
       }
-
+      
+      [[nodiscard]]
+      size_type num_partitions() const noexcept { return m_Buckets.size(); }
+      
       void swap_partitions(const size_type i, const size_type j)
       {
         if((i < num_partitions()) && (j < num_partitions()))
@@ -151,8 +166,6 @@ namespace sequoia
         return erased;
       }
 
-      size_type num_partitions() const noexcept { return m_Buckets.size(); }
-
       void reserve_partition(const size_type partition, const size_type size)
       {
         if constexpr(throw_on_range_error) check_range(partition);
@@ -160,6 +173,7 @@ namespace sequoia
         m_Buckets[partition].reserve(size);
       }
 
+      [[nodiscard]]
       size_type partition_capacity(const size_type partition) const
       {
         if constexpr(throw_on_range_error) check_range(partition);
@@ -172,6 +186,7 @@ namespace sequoia
         m_Buckets.reserve(numPartitions);
       }
 
+      [[nodiscard]]
       size_type num_partitions_capacity() const noexcept
       {
 
@@ -263,6 +278,7 @@ namespace sequoia
         return partition_iterator{next, partition};
       }
 
+      // TO DO: move to namespace
       template<class UnaryPred>
       size_type erase_from_partition_if(const size_type partitionIndex, UnaryPred pred)
       {
@@ -352,11 +368,15 @@ namespace sequoia
       {
         return rend_partition(i);
       }
-      
+
+      [[nodiscard]]
       const_partition_iterator operator[](const size_type i) const { return cbegin_partition(i); }
+
+      [[nodiscard]]
       partition_iterator operator[](const size_type i) { return begin_partition(i); }
 
-      friend bool operator==(const bucketed_storage& lhs, const bucketed_storage& rhs)
+      [[nodiscard]]
+      friend bool operator==(const bucketed_storage& lhs, const bucketed_storage& rhs) noexcept
       {
         if constexpr(std::is_same_v<SharingPolicy, data_sharing::independent<T>>)
         {
@@ -368,7 +388,8 @@ namespace sequoia
         }        
       }
 
-      friend bool operator!=(const bucketed_storage& lhs, const bucketed_storage& rhs)
+      [[nodiscard]]
+      friend bool operator!=(const bucketed_storage& lhs, const bucketed_storage& rhs) noexcept
       {
         return !(lhs == rhs);
       }
@@ -413,7 +434,7 @@ namespace sequoia
     //===================================Contiguous storage===================================//
     
     template<class T, class SharingPolicy, class Traits>
-    class contiguous_storage_base
+    class [[nodiscard]] contiguous_storage_base
     {
     private:
       template<class S> using Storage = typename Traits::template underlying_storage_type<S>;
@@ -432,7 +453,7 @@ namespace sequoia
 
       constexpr static bool throw_on_range_error{Traits::throw_on_range_error};
       
-      contiguous_storage_base() {}
+      contiguous_storage_base() noexcept {}
 
       constexpr contiguous_storage_base(std::initializer_list<std::initializer_list<T>> list) : contiguous_storage_base(StaticType{}, list)
       {}
@@ -451,8 +472,10 @@ namespace sequoia
         return *this;
       }
 
+      [[nodiscard]]
       constexpr auto size() const noexcept { return m_Storage.size(); }
 
+      [[nodiscard]]
       constexpr auto num_partitions() const noexcept { return m_Partitions.size(); }      
       
       constexpr partition_iterator begin_partition(const index_type i) noexcept
@@ -515,8 +538,11 @@ namespace sequoia
         return rend_partition(i);
       }
 
-      constexpr const_partition_iterator operator[](const index_type i) const { return cbegin_partition(i); }
-      partition_iterator operator[](const index_type i) { return begin_partition(i); }
+      [[nodiscard]]
+      constexpr const_partition_iterator operator[](const index_type i) const noexcept { return cbegin_partition(i); }
+
+      [[nodiscard]]
+      partition_iterator operator[](const index_type i) noexcept { return begin_partition(i); }
 
       constexpr void swap_partitions(size_type i, size_type j)
       {
@@ -729,6 +755,7 @@ namespace sequoia
         return partition_iterator{next, iter.partition_index()};
       }
 
+      // TO DO: move to namespace
       template<class UnaryPred>
       index_type erase_from_partition_if(const index_type partitionIndex, UnaryPred pred)
       {

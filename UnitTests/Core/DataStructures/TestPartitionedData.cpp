@@ -795,19 +795,19 @@ namespace sequoia
       bucketed_storage<T, SharingPolicy> s{};
 
       check_equality<std::size_t>(0, s.num_partitions_capacity(), LINE(""));
-      if constexpr(ThrowOnRangeError) check_exception_thrown<std::out_of_range>([&s](){ s.partition_capacity(0); }, LINE(""));
+      if constexpr(ThrowOnRangeError) check_exception_thrown<std::out_of_range>([&s](){ return s.partition_capacity(0); }, LINE(""));
 
       s.reserve_partitions(4);
       check_equality<std::size_t>(4, s.num_partitions_capacity(), LINE(""));
-      if constexpr(ThrowOnRangeError) check_exception_thrown<std::out_of_range>([&s](){ s.partition_capacity(0); }, LINE(""));
+      if constexpr(ThrowOnRangeError) check_exception_thrown<std::out_of_range>([&s](){ return s.partition_capacity(0); }, LINE(""));
 
       s.shrink_num_partitions_to_fit();
       check_equality<std::size_t>(0, s.num_partitions_capacity(), LINE("May fail if shrink to fit impl does not reduce capacity"));
-      if constexpr(ThrowOnRangeError) check_exception_thrown<std::out_of_range>([&s](){ s.partition_capacity(0); }, LINE(""));
+      if constexpr(ThrowOnRangeError) check_exception_thrown<std::out_of_range>([&s](){ return s.partition_capacity(0); }, LINE(""));
 
       s.add_slot();
       check_equality<std::size_t>(0, s.partition_capacity(0), LINE(""));
-      if constexpr(ThrowOnRangeError) check_exception_thrown<std::out_of_range>([&s](){ s.partition_capacity(1); }, LINE(""));
+      if constexpr(ThrowOnRangeError) check_exception_thrown<std::out_of_range>([&s](){ return s.partition_capacity(1); }, LINE(""));
 
       s.reserve_partition(0, 4);
       check_equality<std::size_t>(4, s.partition_capacity(0), LINE(""));
