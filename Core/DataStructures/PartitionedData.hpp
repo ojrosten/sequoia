@@ -750,7 +750,7 @@ namespace sequoia
         const auto index = iter.partition_index();
         for(size_type i{index}; i < m_Partitions.size(); ++i)
         {
-          m_Partitions[i]-=1;
+          --m_Partitions[i];
         }
         return partition_iterator{next, iter.partition_index()};
       }
