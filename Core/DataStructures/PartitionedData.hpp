@@ -1009,7 +1009,7 @@ namespace sequoia
     template<class T, std::size_t Npartitions, std::size_t Nelements, class IndexType> struct static_contiguous_storage_traits
     {
       constexpr static bool throw_on_range_error{true};
-      template<class S> using underlying_storage_type = typename static_contiguous_data<Npartitions,Nelements,std::make_unsigned_t<IndexType>>::template data<S>; 
+      template<class S> using underlying_storage_type = typename impl::static_contiguous_data<Npartitions,Nelements,std::make_unsigned_t<IndexType>>::template data<S>; 
     };
 
     template<class T, std::size_t Npartitions, std::size_t Nelements, class IndexType=std::size_t>

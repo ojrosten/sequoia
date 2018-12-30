@@ -32,7 +32,7 @@ namespace sequoia
       {
       private:
         template<class S> using Container = typename Traits::template underlying_storage_type<S>;
-        using Storage = typename data_structures::storage_helper<Container<WeightProxy>>::storage_type;
+        using Storage = typename data_structures::impl::storage_helper<Container<WeightProxy>>::storage_type;
       public:        
         using weight_type       = typename WeightProxy::value_type;
         using weight_proxy_type = WeightProxy;
@@ -167,7 +167,8 @@ namespace sequoia
         }
       
       private:
-        using StaticType = typename std::is_base_of<data_structures::static_data_base, Container<WeightProxy>>::type;
+        using StaticType = typename data_structures::impl::is_static_data<Container<WeightProxy>>::type;
+         
         using DefaultConstructibleType = typename std::is_default_constructible<weight_type>::type;
       
         Storage m_NodeWeights;

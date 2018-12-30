@@ -25,10 +25,10 @@ namespace sequoia::data_structures::partition_impl
   {
     using held_type = typename SharingPolicy::handle_type;
     using container_type = C<held_type>;
-    using helper = storage_helper<container_type>;
+    using helper = impl::storage_helper<container_type>;
     using storage_type = typename helper::storage_type;
     using auxiliary_storage_type = typename helper::auxiliary_storage_type;
-    using static_type = typename std::is_base_of<static_data_base, C<held_type>>::type;
+    using static_type = typename impl::is_static_data<container_type>::type;
   };
     
   template<template<class...> class C, class SharingPolicy, template<class> class ReferencePolicy, bool Reversed>

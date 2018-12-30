@@ -8,7 +8,7 @@ namespace sequoia::maths::graph_impl
   struct static_node_storage_traits
   {
     constexpr static bool throw_on_range_error{true};
-    template<class S> using underlying_storage_type = typename data_structures::static_contiguous_data<1,N>::template data<S>;
+    template<class S> using underlying_storage_type = typename data_structures::impl::static_contiguous_data<1,N>::template data<S>;
   };
 
   template<class WeightProxy, std::size_t N>
