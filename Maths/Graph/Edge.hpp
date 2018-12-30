@@ -7,7 +7,7 @@ namespace sequoia
 {
   namespace data_sharing
   {
-    template<class> class independent;
+    template<class> struct independent;
   }
   
   namespace maths

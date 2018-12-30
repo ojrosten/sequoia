@@ -6,8 +6,8 @@ namespace sequoia
 {
   namespace data_sharing
   {
-    template <class> class shared;
-    template <class> class independent;
+    template <class> struct shared;
+    template <class> struct independent;
     template <class> class unpooled;
   }
 

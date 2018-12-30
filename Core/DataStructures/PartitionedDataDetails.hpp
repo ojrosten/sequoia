@@ -1,6 +1,9 @@
 #pragma once
 
 #include "SharingPolicies.hpp"
+#include "StaticData.hpp"
+
+#include <map>
 
 namespace sequoia::data_structures::partition_impl
 {
