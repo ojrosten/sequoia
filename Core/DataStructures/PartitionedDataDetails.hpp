@@ -1,4 +1,15 @@
+////////////////////////////////////////////////////////////////////
+//                 Copyright Oliver Rosten 2018.                  //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
 #pragma once
+
+/*! \file PartitionedDataDetails.hpp
+    \brief Metaprogramming components for partitioned data.
+ */
 
 #include "SharingPolicies.hpp"
 #include "StaticData.hpp"
@@ -61,19 +72,23 @@ namespace sequoia::data_structures::partition_impl
     using index_type = IndexType;
 
     constexpr static auto npos{std::numeric_limits<index_type>::max()};
-        
-    constexpr static bool reversed() { return Reversed; }
 
-    friend constexpr bool operator==(const partition_index_policy& lhs, const partition_index_policy& rhs)
+    [[nodiscard]]
+    constexpr static bool reversed() noexcept { return Reversed; }
+
+    [[nodiscard]]
+    friend constexpr bool operator==(const partition_index_policy& lhs, const partition_index_policy& rhs) noexcept
     {
       return lhs.m_Partition == rhs.m_Partition;
     }
 
-    friend constexpr bool operator!=(const partition_index_policy& lhs, const partition_index_policy& rhs)
+    [[nodiscard]]
+    friend constexpr bool operator!=(const partition_index_policy& lhs, const partition_index_policy& rhs) noexcept
     {
       return !(lhs == rhs);
     }
 
+    [[nodiscard]]
     constexpr IndexType partition_index() const noexcept { return m_Partition; }
   protected:        
     constexpr partition_index_policy(const index_type n) : m_Partition{n} {}        
@@ -105,6 +120,7 @@ namespace sequoia::data_structures::partition_impl
   template<class T> class data_duplicator<data_sharing::independent<T>>
   {
   public:
+    [[nodiscard]]
     constexpr T duplicate(const T& in) const { return T{in}; }
   private:
   };
@@ -114,6 +130,7 @@ namespace sequoia::data_structures::partition_impl
   public:
     using handle_type = typename data_sharing::shared<T>::handle_type;
 
+    [[nodiscard]]
     handle_type duplicate(const handle_type in)
     {
       handle_type ptr{};
