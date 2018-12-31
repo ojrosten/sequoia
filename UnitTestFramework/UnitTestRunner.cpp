@@ -10,24 +10,25 @@ namespace sequoia
     {
       using arg_list = std::vector<std::string>;
       std::vector<arg_list> args;
-      for(int i=1; i<argc; ++i)
+      for(int i{1}; i<argc; ++i)
       {
         std::string arg{argv[i]};
         if(!arg.empty())
         {
-          const bool append = [&arg, &args](){
-            if((arg.front() != '-') && !args.empty())
-            {
-              const auto& lastList = args.back();
-              if(lastList.size() == 1)
+          const bool append{[&arg, &args](){
+              if((arg.front() != '-') && !args.empty())
               {
-                const auto& lastString = args.back().front();
-                if(!lastString.empty() && (lastString.front() != '-'))
-                  return true;
+                const auto& lastList = args.back();
+                if(lastList.size() == 1)
+                {
+                  const auto& lastString = args.back().front();
+                  if(!lastString.empty() && (lastString.front() != '-'))
+                    return true;
+                }
               }
-            }
-            return false;
-          }();
+              return false;
+            }()
+          };
                        
           if(append)
           {

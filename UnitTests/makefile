@@ -1,5 +1,5 @@
 BUILDDIR := ../build/native
-LIBDIRS := ../Core ../Maths ../Experimental ../Algorithms
+LIBDIRS := ../Core ../Maths ../Experimental ../Algorithms ../UnitTestFramework
 UTBUILDDIR := $(BUILDDIR)/UnitTests
 
 UTSUBDIRS := $(filter-out ., $(shell find . -type d))
