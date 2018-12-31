@@ -635,7 +635,7 @@ namespace sequoia
       performance_results<R> results;      
       
       using namespace std::chrono;
-      using namespace statistics;
+      using namespace maths::statistics;
 
       sample<double> fastData, slowData;
       std::random_device generator;
@@ -666,7 +666,7 @@ namespace sequoia
         fastFirst ? slowData.add_datum(duration.count()) : fastData.add_datum(duration.count());
       }
 
-      using namespace statistics::bias;
+      using namespace maths::statistics::bias;
       if(  fastData.mean() + fastData.template sample_standard_deviation<gaussian_approx_modifier>()
          < slowData.mean() - slowData.template sample_standard_deviation<gaussian_approx_modifier>())
       {
