@@ -43,7 +43,7 @@ namespace sequoia
       static std::string make(const T& val)
       {
         std::ostringstream os;
-        os << val;
+        os << std::boolalpha << val;
         return os.str();
       }
     };
