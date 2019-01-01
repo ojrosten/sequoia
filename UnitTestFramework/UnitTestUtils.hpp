@@ -104,7 +104,7 @@ namespace sequoia
 
       constexpr static test_mode mode{Mode};
       
-      class sentinel
+      class [[nodiscard]] sentinel
       {
       public:        
         sentinel(unit_test_logger& logger, std::string_view message)
