@@ -8,7 +8,7 @@
 #pragma once
 
 /*! \file UnitTestRunner.hpp
-    \brief Utility for running unit tests from the command line.
+    \brief Helper for running unit tests from the command line.
 */
 
 #include "UnitTestUtils.hpp"
