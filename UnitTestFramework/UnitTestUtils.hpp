@@ -300,12 +300,12 @@ namespace sequoia
     class log_summary
     {
     public:
-      log_summary(std::string_view prefix="") : m_Prefix{prefix}
+      log_summary(std::string_view name="") : m_Name{name}
       {
       }
       
-      template<test_mode Mode> log_summary(std::string_view prefix, const unit_test_logger<Mode>& logger)
-        : m_Prefix{prefix}
+      template<test_mode Mode> log_summary(std::string_view name, const unit_test_logger<Mode>& logger)
+        : m_Name{name}
         , m_Message{logger.messages()}
         , m_CurrentMessage{logger.current_message()}
       {
@@ -366,7 +366,7 @@ namespace sequoia
       [[nodiscard]]
       std::string current_message() const
       {
-        return m_Prefix.empty() ?  m_CurrentMessage : '[' + m_Prefix + "]\n\t" + m_CurrentMessage;
+        return m_Name.empty() ?  m_CurrentMessage : '[' + m_Name + "]\n\t" + m_CurrentMessage;
       }
       
       log_summary& operator+=(const log_summary& rhs)
@@ -385,15 +385,15 @@ namespace sequoia
         
         m_CurrentMessage         = rhs.m_CurrentMessage;
 
-        if(m_Prefix.empty()) m_Prefix = rhs.prefix();
+        if(m_Name.empty()) m_Name = rhs.name();
 
         return *this;
       }
 
       [[nodiscard]]
-      std::string_view prefix() const noexcept { return m_Prefix; }
+      std::string_view name() const noexcept { return m_Name; }
       
-      void prefix(std::string_view p) { m_Prefix = p; }
+      void name(std::string_view p) { m_Name = p; }
 
       enum report_suppression { none=0, absent_checks=1, failure_messages=2};
 
@@ -437,7 +437,7 @@ namespace sequoia
           summaries[i] += failures[i];
         }
 
-        std::string summary{m_Prefix};
+        std::string summary{m_Name};
 
         if(suppression & report_suppression::absent_checks)
         {
@@ -481,7 +481,7 @@ namespace sequoia
         return s;
       }
     private:
-      std::string m_Prefix, m_Message, m_CurrentMessage;
+      std::string m_Name, m_Message, m_CurrentMessage;
       std::size_t
            m_Checks{},
            m_PerformanceChecks{},
@@ -716,7 +716,7 @@ namespace sequoia
     }
 
     template<class Logger, class T>
-    void check_standard_semantics(Logger& logger, const T& x, const T& y, std::string_view description="")
+    void check_regular_semantics(Logger& logger, const T& x, const T& y, std::string_view description="")
     {
       typename Logger::sentinel s{logger, description};
 
@@ -939,9 +939,9 @@ namespace sequoia
 
       
       template<class T>
-      void check_standard_semantics(const T& x, const T& y, std::string_view description="")
+      void check_regular_semantics(const T& x, const T& y, std::string_view description="")
       {
-        unit_testing::check_standard_semantics(m_Logger, x, y, description);        
+        unit_testing::check_regular_semantics(m_Logger, x, y, description);        
       }
     private:
       Logger m_Logger;      

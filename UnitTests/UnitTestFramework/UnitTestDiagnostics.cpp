@@ -87,14 +87,14 @@ namespace sequoia
 
     void false_positive_diagnostics::test_standard_semantics()
     {
-      check_standard_semantics(broken_equality{1}, broken_equality{2}, LINE(""));
-      check_standard_semantics(broken_inequality{1}, broken_inequality{2}, LINE(""));
-      check_standard_semantics(broken_copy{1}, broken_copy{2}, LINE(""));
-      check_standard_semantics(broken_move{1}, broken_move{2}, LINE(""));
-      check_standard_semantics(broken_copy_assignment{1}, broken_copy_assignment{2}, LINE(""));
-      check_standard_semantics(broken_move_assignment{1}, broken_move_assignment{2}, LINE(""));
+      check_regular_semantics(broken_equality{1}, broken_equality{2}, LINE(""));
+      check_regular_semantics(broken_inequality{1}, broken_inequality{2}, LINE(""));
+      check_regular_semantics(broken_copy{1}, broken_copy{2}, LINE(""));
+      check_regular_semantics(broken_move{1}, broken_move{2}, LINE(""));
+      check_regular_semantics(broken_copy_assignment{1}, broken_copy_assignment{2}, LINE(""));
+      check_regular_semantics(broken_move_assignment{1}, broken_move_assignment{2}, LINE(""));
 
-      check_standard_semantics(perfectly_normal_beast{1}, perfectly_normal_beast{1}, LINE(""));
+      check_regular_semantics(perfectly_normal_beast{1}, perfectly_normal_beast{1}, LINE(""));
     }
 
     void false_negative_diagnostics::run_tests()
@@ -169,7 +169,7 @@ namespace sequoia
 
     void false_negative_diagnostics::test_standard_semantics()
     {
-      check_standard_semantics(perfectly_normal_beast{1}, perfectly_normal_beast{2}, LINE(""));
+      check_regular_semantics(perfectly_normal_beast{1}, perfectly_normal_beast{2}, LINE(""));
     }
   }
 }

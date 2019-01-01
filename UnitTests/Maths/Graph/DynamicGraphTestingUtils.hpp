@@ -353,7 +353,7 @@ namespace sequoia::unit_testing
       catch(...)
       {
         m_Summary += test.get_summary();
-        m_Summary.prefix(test.prefix());
+        m_Summary.name(test.prefix());
         throw;
       }
     }

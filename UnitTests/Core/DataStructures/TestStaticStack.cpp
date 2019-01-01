@@ -35,7 +35,7 @@ namespace sequoia::unit_testing
     stack_t t{};
     t.push(2);
 
-    check_standard_semantics(s, t, LINE("Standard Semantics"));
+    check_regular_semantics(s, t, LINE("Standard Semantics"));
 
     check_exception_thrown<std::logic_error>([&t]() { t.push(1); }, LINE("Trying to push two elements to stack of depth 1"));
     check_exception_thrown<std::logic_error>([]() { static_stack<int, 1>{1, 2}; }, LINE("Can't construct stack of depth 1 with 2 elements"));
