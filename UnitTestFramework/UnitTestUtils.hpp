@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file UnitTestUtilities.hpp
+/*! \file UnitTestUtils.hpp
     \brief Utilties for the unit testing framework.
 */
 
