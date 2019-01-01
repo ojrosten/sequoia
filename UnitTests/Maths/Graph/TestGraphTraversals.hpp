@@ -163,7 +163,7 @@ namespace sequoia
         using UndirectedType = std::bool_constant<maths::undirected(GraphFlavour)>;        
         using TraversalType = std::integral_constant<bool, isBFS>;
 
-        auto prefix = this->failure_message_prefix();
+        std::string prefix{this->failure_message_prefix()};
         prefix += "; " + type_to_string<Traverser>::str();
         this->failure_message_prefix(prefix);
 

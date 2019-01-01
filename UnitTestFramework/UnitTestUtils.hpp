@@ -1,4 +1,15 @@
+////////////////////////////////////////////////////////////////////
+//                 Copyright Oliver Rosten 2018.                  //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
 #pragma once
+
+/*! \file UnitTestUtilities.hpp
+    \brief Utilties for the unit testing framework.
+*/
 
 #include "Sample.hpp"
 #include "TypeTraits.hpp"
@@ -11,6 +22,7 @@
 #include <future>
 #include <utility>
 #include <set>
+#include <array>
 
 namespace sequoia
 {
@@ -36,13 +48,46 @@ namespace sequoia
       }
     };
     
-    template<class T> std::string to_string(const T& value)
+    template<class T> [[nodiscard]] std::string to_string(const T& value)
     {
       return string_maker<T>::make(value);
+    }
+
+    template<class Iter> void pad_right(Iter begin, Iter end, std::string_view suffix)
+    {
+       auto maxIter{std::max_element(begin, end, [](const std::string& lhs, const std::string& rhs) {
+            return lhs.size() < rhs.size();
+        })
+      };
+
+      const auto maxChars{maxIter->size()};
+
+      for(; begin != end; ++begin)
+      {
+        auto& s{*begin};
+        s += std::string(maxChars - s.size(), ' ') += std::string{suffix};
+      }
+    }  
+      
+    template<class Iter> void pad_left(Iter begin, Iter end)
+    {
+       auto maxIter{std::max_element(begin, end, [](const std::string& lhs, const std::string& rhs) {
+            return lhs.size() < rhs.size();
+        })
+      };
+
+      const auto maxChars{maxIter->size()};
+
+      for(; begin != end; ++begin)
+      {
+        auto& s{*begin};
+        s = std::string(maxChars - s.size(), ' ') + s;
+      }
     }
     
     enum class test_mode { standard, false_positive, false_negative };
 
+    [[nodiscard]]
     inline constexpr bool diagnostic(const test_mode mode) noexcept { return (mode != test_mode::standard ); }
     
     template<test_mode Mode>
@@ -138,17 +183,30 @@ namespace sequoia
         m_Messages += std::string{message};
       }
 
+      [[nodiscard]]
       std::size_t failures() const noexcept { return m_Failures; }
+
+      [[nodiscard]]
       std::size_t performance_failures() const noexcept { return m_PerformanceFailures; }     
+
+      [[nodiscard]]
       std::size_t diagnostic_failures() const noexcept { return m_DiagnosticFailures; }
+
+      [[nodiscard]]
       std::size_t critical_failures() const noexcept { return m_CriticalFailures; }
-      
+
+      [[nodiscard]]
       std::size_t checks() const noexcept { return m_Checks; }
+
+      [[nodiscard]]
       std::size_t performance_checks() const noexcept { return m_PerformanceChecks; } 
 
-      std::string failure_message_prefix() const { return m_FailureMessagePrefix; }
+      [[nodiscard]]
+      std::string_view failure_message_prefix() const noexcept { return m_FailureMessagePrefix; }
+      
       void failure_message_prefix(std::string_view prefix) { m_FailureMessagePrefix = prefix; }
 
+      [[nodiscard]]
       std::string failure_description(std::string_view description) const
       {
         const std::string prefix{failure_message_prefix()};
@@ -159,11 +217,15 @@ namespace sequoia
         return message;
       }
 
-      std::string messages() const { return m_Messages; }
+      [[nodiscard]]
+      std::string_view messages() const noexcept{ return m_Messages; }
 
-      std::string current_message() const { return m_CurrentMessage; }
+      [[nodiscard]]
+      std::string_view current_message() const noexcept { return m_CurrentMessage; }
 
       void exceptions_detected_by_sentinel(const int n) { m_ExceptionsInFlight = n; }
+
+      [[nodiscard]]
       int exceptions_detected_by_sentinel() const noexcept { return m_ExceptionsInFlight; }
     private:
       std::string
@@ -184,9 +246,12 @@ namespace sequoia
         m_Depth{},
         m_DiagnosticFailures{},
         m_CriticalFailures{};
-      
+
+      [[nodiscard]]
       std::size_t depth() const noexcept { return m_Depth; }
+
       void increment_depth() noexcept { ++m_Depth; }
+
       void decrement_depth() noexcept { --m_Depth; }
 
       void log_check() noexcept { ++m_Checks; }
@@ -211,6 +276,7 @@ namespace sequoia
         if(std::ofstream of{m_RecoveryFile}) of << m_CurrentMessage;            
       }
 
+      [[nodiscard]]
       static std::string prefix()
       {
         switch (Mode)
@@ -224,6 +290,7 @@ namespace sequoia
         }
        }
 
+      [[nodiscard]]
       std::string failure_message_preface() const
       {
         return {"\n\tError -- check number " + std::to_string(checks()) +  ": "};
@@ -269,22 +336,34 @@ namespace sequoia
         std::swap(*this, clean);
       }
 
+      [[nodiscard]]
       std::size_t checks() const noexcept { return m_Checks; }
+
+      [[nodiscard]]
       std::size_t performance_checks() const noexcept { return m_PerformanceChecks; }
+
+      [[nodiscard]]
       std::size_t false_negative_checks() const noexcept { return m_FalseNegativeChecks; }
+
+      [[nodiscard]]
       std::size_t false_positive_checks() const noexcept { return m_FalsePositiveChecks; }
-      
+
+      [[nodiscard]]
       std::size_t standard_failures() const noexcept { return m_StandardFailures; }
+
+      [[nodiscard]]
       std::size_t performance_failures() const noexcept { return m_PerformanceFailures; }
+
+      [[nodiscard]]
       std::size_t false_negative_failures() const noexcept { return m_FalseNegativeFailures; }
+
+      [[nodiscard]]
       std::size_t false_positive_failures() const noexcept { return m_FalsePositiveFailures; }
+
+      [[nodiscard]]
       std::size_t critical_failures() const noexcept { return m_CriticalFailures; }
 
-      std::string message() const noexcept
-      {
-        return m_Prefix + summary() + m_Message;
-      }
-      
+      [[nodiscard]]
       std::string current_message() const
       {
         return m_Prefix.empty() ?  m_CurrentMessage : '[' + m_Prefix + "]\n\t" + m_CurrentMessage;
@@ -311,9 +390,90 @@ namespace sequoia
         return *this;
       }
 
-      std::string prefix() const { return m_Prefix; }
-      void prefix(std::string_view p) { m_Prefix = p; }
+      [[nodiscard]]
+      std::string_view prefix() const noexcept { return m_Prefix; }
       
+      void prefix(std::string_view p) { m_Prefix = p; }
+
+      enum report_suppression { none=0, absent_checks=1, failure_messages=2};
+
+      [[nodiscard]]
+      std::string summarize(std::string_view checkNumsPrefix, const report_suppression suppression ) const
+      {
+        std::array<std::string, 4> summaries{
+          std::string{checkNumsPrefix} + "Standard Checks:",
+          std::string{checkNumsPrefix} + "Performance Checks:",
+          std::string{checkNumsPrefix} + "False Negative Checks:",
+          std::string{checkNumsPrefix} + "False Positive Checks:"
+        };
+
+        pad_right(summaries.begin(), summaries.end(), "  ");
+
+        std::array<std::string, 4> checkNums{
+          std::to_string(checks()),
+          std::to_string(performance_checks()),
+          std::to_string(false_negative_checks()),
+          std::to_string(false_positive_checks())
+        };
+
+        pad_left(checkNums.begin(), checkNums.end());
+
+        for(int i{}; i<4; ++i)
+        {
+          summaries[i] += checkNums[i] += ";    Failures: ";
+        }
+
+        std::array<std::string, 4> failures{
+          std::to_string(standard_failures()),
+          std::to_string(performance_failures()),
+          std::to_string(false_negative_failures()),
+          std::to_string(false_positive_failures())
+        };
+
+        pad_left(failures.begin(), failures.end());
+
+        for(int i{}; i<4; ++i)
+        {
+          summaries[i] += failures[i];
+        }
+
+        std::string summary{m_Prefix};
+
+        if(suppression & report_suppression::absent_checks)
+        {
+          const std::array<std::size_t, 4> numbers{
+            checks(),
+            performance_checks(),
+            false_negative_checks(),
+            false_positive_checks()
+           };
+
+          for(int i{}; i<4; ++i)
+          {
+            
+            if(numbers[i]) summary += summaries[i] += "\n";
+          }
+        }
+        else
+        {
+          std::for_each(std::cbegin(summaries), std::cend(summaries), [&summary](const std::string& s){
+              (summary += s) += "\n";
+            }
+          );
+        }
+
+        if(m_CriticalFailures)
+        {
+          (summary += "Critical Failures:  ") += std::to_string(critical_failures()) += "\n";
+        }
+
+        if(!(suppression & report_suppression::failure_messages))
+          summary += m_Message;
+
+        return summary;
+      }
+
+      [[nodiscard]]
       friend log_summary operator+(const log_summary& lhs, const log_summary& rhs)
       {
         log_summary s{lhs};
@@ -335,32 +495,7 @@ namespace sequoia
 
       int m_ExceptionsInFlight{};
 
-      std::string summary() const
-      {
-        std::string mess{};
-        mess += summarize(m_Checks, m_StandardFailures, "");
-        mess += summarize(m_PerformanceChecks, m_PerformanceFailures, "Performance ");
-        mess += summarize(m_FalseNegativeChecks, m_FalseNegativeFailures, "False negative ");
-        mess += summarize(m_FalsePositiveChecks, m_FalsePositiveFailures, "False positive ");
-        if(m_CriticalFailures)
-        {
-          using namespace std::string_literals;
-          mess += "\n\t"s += std::to_string(m_CriticalFailures) += pluralize(m_CriticalFailures, "Critical Failure") += "\n"s;
-        }
-        return mess;
-      }
-
-      static std::string summarize(const std::size_t checks, const std::size_t failures, std::string_view prefix)
-      {
-        std::string m{};
-        if(checks)
-        {
-          m = ("\t" + std::to_string(checks) + pluralize(checks, std::string{prefix} + "Check") + " done\n");
-          m += ("\t" + std::to_string(failures) + pluralize(failures, std::string{prefix} + "Failure") + "\n");
-        }
-        return m;
-      }
-
+      [[nodiscard]]
       static std::string pluralize(const std::size_t n, std::string_view sv)
       {
         const std::string s{sv};
@@ -775,13 +910,26 @@ namespace sequoia
       checker& operator=(checker&&) = default;
 
       void log_critical_failure(std::string_view message) { m_Logger.log_critical_failure(message); }
+      
       void log_failure(std::string_view message) { m_Logger.log_failure(message); }
+
+      [[nodiscard]]
       std::size_t checks() const noexcept { return m_Logger.checks(); }
+
+      [[nodiscard]]
       std::size_t failures() const noexcept { return m_Logger.failures(); }
+      
       void failure_message_prefix(std::string_view prefix) { m_Logger.failure_message_prefix(prefix); }
-      std::string failure_message_prefix() const { return m_Logger.failure_message_prefix(); }
+
+      [[nodiscard]]
+      std::string_view failure_message_prefix() const noexcept{ return m_Logger.failure_message_prefix(); }
+      
       void post_message(std::string_view message) { m_Logger.post_message(message); }
-      std::string current_message() const { return m_Logger.current_message(); }
+
+      [[nodiscard]]
+      std::string_view current_message() const noexcept{ return m_Logger.current_message(); }
+
+      [[nodiscard]]
       int exceptions_detected_by_sentinel() const noexcept { return m_Logger.exceptions_detected_by_sentinel(); }
 
       typename Logger::sentinel make_sentinel(std::string_view message)
@@ -845,7 +993,7 @@ namespace sequoia
     protected:
       virtual void run_tests() = 0;
 
-      virtual std::string current_message() const { return Checker::failure_message_prefix() + Checker::current_message(); }
+      virtual std::string current_message() const { return std::string{Checker::failure_message_prefix()} + std::string{Checker::current_message()}; }
 
       std::string make_message(std::string_view tag, std::string_view exceptionMessage) const
       {
@@ -894,7 +1042,7 @@ namespace sequoia
         return summary;
       }
       
-      std::string name() { return m_Name; }
+      std::string_view name() const { return m_Name; }
       
     private:
       std::vector<std::unique_ptr<test>> m_Tests{};

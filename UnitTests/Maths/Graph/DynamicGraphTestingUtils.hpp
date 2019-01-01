@@ -156,7 +156,7 @@ namespace sequoia::unit_testing
 
     log_summary get_summary() const { return this->summary(""); }
     
-    std::string prefix() const { return this->failure_message_prefix(); }
+    std::string_view prefix() const noexcept { return this->failure_message_prefix(); }
       
   protected:
     virtual void execute_operations() = 0;

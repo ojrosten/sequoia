@@ -1,6 +1,11 @@
-#include "UnitTestRunner.hpp"
+////////////////////////////////////////////////////////////////////
+//                 Copyright Oliver Rosten 2018.                  //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
 
-#include <array>
+#include "UnitTestRunner.hpp"
 
 namespace sequoia
 {
@@ -93,57 +98,25 @@ namespace sequoia
 
       if(!m_SpecificCases.empty())
       {
-        if(m_SpecificCases.find(f.name()) == m_SpecificCases.end())
+        if(m_SpecificCases.find(std::string{f.name()}) == m_SpecificCases.end())
           accept = false;
       }
       
       if(accept) m_Families.emplace_back(std::move(f));
     }
-
-    template<class Iter>
-    void unit_test_runner::pad_right(Iter begin, Iter end, std::string_view suffix)
-    {
-       auto maxIter{std::max_element(begin, end, [](const std::string& lhs, const std::string& rhs) {
-            return lhs.size() < rhs.size();
-        })
-      };
-
-      const auto maxChars{maxIter->size()};
-
-      for(; begin != end; ++begin)
-      {
-        auto& s{*begin};
-        s += std::string(maxChars - s.size(), ' ') += std::string{suffix};
-      }
-    }
-
-    template<class Iter>
-    void unit_test_runner::pad_left(Iter begin, Iter end)
-    {
-       auto maxIter{std::max_element(begin, end, [](const std::string& lhs, const std::string& rhs) {
-            return lhs.size() < rhs.size();
-        })
-      };
-
-      const auto maxChars{maxIter->size()};
-
-      for(; begin != end; ++begin)
-      {
-        auto& s{*begin};
-        s = std::string(maxChars - s.size(), ' ') + s;
-      }
-    }
     
     void unit_test_runner::execute()
     {
+      using suppression = log_summary::report_suppression;
+      
       std::cout << "Running unit tests...\n";
       log_summary summary{};
       if(!m_Asynchronous)
       {
         for(auto& family : m_Families)
         {
-          const auto s = family.execute();
-          std::cout << s.message();
+          const auto s{family.execute()};
+          std::cout << s.summarize("\t", suppression::absent_checks);
           summary += s;
         }
       }
@@ -158,57 +131,15 @@ namespace sequoia
         );
   
         std::for_each(results.begin(), results.end(), [&summary](auto& res){
-            const auto& s = res.get();
-            std::cout << s.message();
+            const auto& s{res.get()};
+            std::cout << s.summarize("\t", suppression::absent_checks);
             summary += s;
           }
         );
       }
 
       std::cout <<  "-----Grand Totals-----\n";
-      std::array<std::string, 4> summaries{
-        std::string{"Standard Checks:"},
-        std::string{"Performance Checks:"},
-        std::string{"False Negative Checks:"},
-        std::string{"False Positive Checks:"}
-      };
-
-      pad_right(summaries.begin(), summaries.end(), "  ");
-
-      std::array<std::string, 4> checks{
-        std::to_string(summary.checks()),
-        std::to_string(summary.performance_checks()),
-        std::to_string(summary.false_negative_checks()),
-        std::to_string(summary.false_positive_checks())
-      };
-
-      pad_left(checks.begin(), checks.end());
-
-      for(int i{}; i<4; ++i)
-      {
-        summaries[i] += checks[i] += ";    Failures: ";
-      }
-
-      std::array<std::string, 4> failures{
-        std::to_string(summary.standard_failures()),
-        std::to_string(summary.performance_failures()),
-        std::to_string(summary.false_negative_failures()),
-        std::to_string(summary.false_positive_failures())
-      };
-
-      pad_left(failures.begin(), failures.end());
-
-      for(int i{}; i<4; ++i)
-      {
-        summaries[i] += failures[i];
-      }
-
-      for(const auto& s : summaries)
-      {
-        std::cout << s << '\n';
-      }
-
-      if(summary.critical_failures()) std::cout << "\nCritical Failures: " << summary.critical_failures() << "\n";
+      std::cout << summary.summarize("", suppression::failure_messages);      
     }
   }
 }

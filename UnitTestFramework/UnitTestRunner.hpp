@@ -1,4 +1,15 @@
+////////////////////////////////////////////////////////////////////
+//                 Copyright Oliver Rosten 2018.                  //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
 #pragma once
+
+/*! \file UnitTestRunner.hpp
+    \brief Utility for running unit tests from the command line.
+*/
 
 #include "UnitTestUtils.hpp"
 
@@ -19,8 +30,5 @@ namespace sequoia::unit_testing
     std::vector<test_family> m_Families;
     std::set<std::string> m_SpecificCases{};
     bool m_Asynchronous{};
-
-    template<class Iter> static void pad_right(Iter begin, Iter end, std::string_view suffix);
-    template<class Iter> static void pad_left(Iter begin, Iter end);
   };
 }
