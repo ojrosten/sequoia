@@ -8,7 +8,22 @@
 #pragma once
 
 /*! \file Edge.hpp
-    \brief A selection of various graph edge types.
+    \brief Various edge types for us by graphs.
+
+    The fundamental building block of the edge types is the edge_base. This
+    can be thought of as a directed edge with no additional information; as
+    such is 'points', via an index, to a target node.
+
+    All concrete edges
+    inherit from this class but may have additional adornments. Depending on
+    the context, edges may have one or more of the following:
+
+    1. A non-trivial weight;
+
+    2. A record of the 'host' node, from which the edge points to its target;
+
+    3. An index recording the location on the target node into which the edge is
+    embedded.
 */
 
 #include "TypeTraits.hpp"
@@ -21,7 +36,17 @@ namespace sequoia
   }
   
   namespace maths
-  {    
+  {
+    /*! \class edge_base
+        \brief The base class of all edges.
+        
+        This class is designed for inheritance and has protected destructor
+        and assignment operators.
+
+        The private data comprises a single member of IndexType which is the
+        'target node' to which the edge points.
+    */
+    
     template<class IndexType>
     class edge_base
     {   
@@ -45,17 +70,30 @@ namespace sequoia
       IndexType m_Target;
     };
 
-    template<class IndexType> [[nodiscard]]
+    template<class IndexType>
+    [[nodiscard]]
     constexpr bool operator==(const edge_base<IndexType>& lhs, const edge_base<IndexType>& rhs) noexcept
     {
       return (lhs.target_node() == rhs.target_node());
     }
 
-    template<class IndexType> [[nodiscard]]
+    template<class IndexType>
+    [[nodiscard]]
     constexpr bool operator!=(const edge_base<IndexType>& lhs, const edge_base<IndexType>& rhs) noexcept
     {
       return !(lhs == rhs);
     }
+
+    /*! \class weighting
+        \brief A class to store non-trivial edge weights.
+        
+        This class is designed to wrap an edge but in a manner which is flexible
+        enough to support the sharing of weights between edges. The latter is used
+        for undirected graphs where two partial edges representing the pair of
+        links between two vertices may wish to share the common weight, particularly
+        if it is expensive to store twice. The sharing of weights between distinct
+        edges is done at the level of the graph.
+    */
 
     template
     <
@@ -113,6 +151,11 @@ namespace sequoia
       using wrapped_weight = WeightSharingPolicy<WeightProxy>;
       typename wrapped_weight::handle_type m_Weight; 
     };
+
+    /*! \class weighting<Weight, WeightSharingPolicy, WeightProxy, IndexType, true>
+        \brief An empty (base) class for edges without a weight.
+
+     */
 
     template
     <
@@ -172,6 +215,11 @@ namespace sequoia
     
     //===================================Partial Edge Base===================================//
 
+    /*! \class partial_edge_base
+        \brief Combines the edge_base and weighting class
+
+     */
+    
     template
     <
       class Weight,
@@ -234,6 +282,11 @@ namespace sequoia
     
     //===================================Partial Edge===================================//
 
+    /*! \class partial_edge
+        \brief A concrete edge containing a target index and, optionally, a weight
+
+     */
+
     template
     <
       class Weight,
@@ -249,6 +302,11 @@ namespace sequoia
     };
 
     //===================================Decorated Partial Edge Base===================================//
+
+    /*! \class decorated_edge_base
+        \brief A new base class which aggregates a partial_edge_base and an auxiliary index.
+
+     */
     
     template
     <
@@ -308,6 +366,12 @@ namespace sequoia
     
     //===================================Embedded Partial Edge===================================//
 
+    /*! \class embedded_partial_edge
+        \brief Decoration of a partial_edge to record the location on the target node into
+               which the edge is embedded.
+
+     */
+    
     template
     <
       class Weight,
@@ -335,6 +399,11 @@ namespace sequoia
 
     template<bool Inverted> constexpr bool inversion_v{inversion_constant<Inverted>::value};
 
+    /*! \class edge
+        \brief Stores the host node as well as the target node and an optional weight.
+      
+     */
+    
     template
     <
       class Weight,
@@ -398,6 +467,12 @@ namespace sequoia
 
     //===================================Full Embedded Edge===================================//
 
+    /*! \class embedded_edge
+        \brief Decoration of edge to record the location on the target node into
+               which the edge is embedded.
+
+     */
+    
     template
     <
       class Weight,
