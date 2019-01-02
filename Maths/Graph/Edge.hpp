@@ -8,7 +8,7 @@
 #pragma once
 
 /*! \file Edge.hpp
-    \brief Various edge types for us by graphs.
+    \brief Various edge types for use by graphs.
 
     The fundamental building block of the edge types is the edge_base. This
     can be thought of as a directed edge with no additional information; as
