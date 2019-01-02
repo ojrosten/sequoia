@@ -1,6 +1,7 @@
 #include "EdgeTestingDiagnostics.hpp"
 
 #include "SharingPolicies.hpp"
+#include "ProtectiveWrapper.hpp"
 
 namespace sequoia::unit_testing
 {

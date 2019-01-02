@@ -660,19 +660,19 @@ namespace sequoia
 
         check_equality(std::vector<double>{0}, get_edge(graph, 0, 1, 0).weight(), "Zeroth connection from node 0 --> 1 has vector holding single zero");
         undirected(GraphFlavour) ? check_equality(std::vector<double>{1}, get_edge(graph, 0, 1, 1).weight(), "First connection from node 0 --> 1 has vector holding single one")
-                   : check_exception_thrown<std::out_of_range>([&graph](){ get_edge(graph, 0, 1, 1).weight(); }, "Only one connection from node 0 --> 1");
+                   : check_exception_thrown<std::out_of_range>([&graph](){ return get_edge(graph, 0, 1, 1).weight(); }, "Only one connection from node 0 --> 1");
 
         check_equality(std::vector<double>{0}, get_edge(graph, 1, 0, 0).weight(), "Zeroth connection from node 1 --> 0 has vector holding single zero");
         undirected(GraphFlavour) ? check_equality(std::vector<double>{1}, get_edge(graph, 1, 0, 1).weight(), "First connection from node 1 --> 0 has vector holding single one")
-                   : check_exception_thrown<std::out_of_range>([&graph](){ get_edge(graph, 1, 0, 1).weight(); }, "Only one connection from node 1 --> 0");
+                   : check_exception_thrown<std::out_of_range>([&graph](){ return get_edge(graph, 1, 0, 1).weight(); }, "Only one connection from node 1 --> 0");
 
         check_equality(std::vector<double>{0}, get_edge(graph, 1, 2, 0).weight(), "Zeroth connection from node 1 --> 2 has vector holding single zero");
         undirected(GraphFlavour) ? check_equality(std::vector<double>{0}, get_edge(graph, 2, 1, 0).weight(), "Zeroth connection from node 2 --> 1 has vector holding single zero")
-                   : check_exception_thrown<std::out_of_range>([&graph]() {get_edge(graph, 2, 1, 0).weight(); }, "No connections from node 2 --> 1");
+                   : check_exception_thrown<std::out_of_range>([&graph]() { return get_edge(graph, 2, 1, 0).weight(); }, "No connections from node 2 --> 1");
 
         check_equality(std::vector<double>{0}, get_edge(graph, 2, 0, 0).weight(), "Zeroth connection from node 2 --> 0 has vector holding single zero");
         undirected(GraphFlavour) ? check_equality(std::vector<double>{0}, get_edge(graph, 0, 2, 0).weight(), "Zeroth connection from node 0 --> 2 has vector holding single zero")
-                   : check_exception_thrown<std::out_of_range>([&graph]() {get_edge(graph, 0, 2, 0).weight(); }, "No connections from node 0 --> 2");
+                   : check_exception_thrown<std::out_of_range>([&graph]() { return get_edge(graph, 0, 2, 0).weight(); }, "No connections from node 0 --> 2");
 
         check_equality(std::vector<double>{0}, get_edge(graph, 2, 2, 0).weight(), "Zeroth connection from node 2 --> 2 has vector holding single zero");
         undirected(GraphFlavour) ? check_equality(std::vector<double>{0}, get_edge(graph, 2, 2, 1).weight(), "First connection from node 2 --> 2 has vector holding single zero"),

@@ -1,7 +1,17 @@
+////////////////////////////////////////////////////////////////////
+//                 Copyright Oliver Rosten 2018.                  //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
 #pragma once
 
+/*! \file Edge.hpp
+    \brief A selection of various graph edge types.
+*/
+
 #include "TypeTraits.hpp"
-#include "Utilities/ProtectiveWrapper.hpp"
 
 namespace sequoia
 {
@@ -21,7 +31,8 @@ namespace sequoia
       explicit constexpr edge_base(const index_type target) noexcept : m_Target{target} {}      
       constexpr edge_base(const edge_base&) noexcept = default;
       constexpr edge_base(edge_base&&)      noexcept = default;
-      
+
+      [[nodiscard]]
       constexpr IndexType target_node() const noexcept { return m_Target; }
 
       constexpr void target_node(const index_type target) noexcept { m_Target = target; }      
@@ -34,12 +45,14 @@ namespace sequoia
       IndexType m_Target;
     };
 
-    template<class IndexType> constexpr bool operator==(const edge_base<IndexType>& lhs, const edge_base<IndexType>& rhs) noexcept
+    template<class IndexType> [[nodiscard]]
+    constexpr bool operator==(const edge_base<IndexType>& lhs, const edge_base<IndexType>& rhs) noexcept
     {
       return (lhs.target_node() == rhs.target_node());
     }
 
-    template<class IndexType> constexpr bool operator!=(const edge_base<IndexType>& lhs, const edge_base<IndexType>& rhs) noexcept
+    template<class IndexType> [[nodiscard]]
+    constexpr bool operator!=(const edge_base<IndexType>& lhs, const edge_base<IndexType>& rhs) noexcept
     {
       return !(lhs == rhs);
     }
@@ -64,6 +77,7 @@ namespace sequoia
         wrapped_weight::get(m_Weight).set(std::forward<Arg>(arg), std::forward<Args>(args)...);
       }
 
+      [[nodiscard]]
       constexpr const Weight& weight() const noexcept { return wrapped_weight::get(m_Weight).get(); }
 
       template<class Fn>
@@ -113,7 +127,10 @@ namespace sequoia
       using weight_type = Weight;
       using weight_proxy_type = WeightProxy;
 
+      [[nodiscard]]
       friend constexpr bool operator==(const weighting&, const weighting&) noexcept { return true; }
+      
+      [[nodiscard]]
       friend constexpr bool operator!=(const weighting&, const weighting&) noexcept { return false; }
     protected:
       constexpr weighting() = default;      
@@ -134,6 +151,7 @@ namespace sequoia
       class WeightProxy,
       class IndexType
     >
+    [[nodiscard]]
     constexpr bool operator==(const weighting<Weight, WeightSharingPolicy, WeightProxy, IndexType>& lhs, const weighting<Weight, WeightSharingPolicy, WeightProxy, IndexType>& rhs) noexcept
     {
       return lhs.weight() == rhs.weight();
@@ -146,6 +164,7 @@ namespace sequoia
       class WeightProxy,
       class IndexType
     >
+    [[nodiscard]]
     constexpr bool operator!=(const weighting<Weight, WeightSharingPolicy, WeightProxy, IndexType>& lhs, const weighting<Weight, WeightSharingPolicy, WeightProxy, IndexType>& rhs) noexcept
     {
       return !(lhs == rhs);
@@ -195,6 +214,7 @@ namespace sequoia
     //===================================Comparison operators===================================/
 
     template <class Weight, template<class> class WeightSharingPolicy, class WeightProxy, class IndexType>
+    [[nodiscard]]
     constexpr bool operator==(const partial_edge_base<Weight, WeightSharingPolicy, WeightProxy, IndexType>& lhs, const partial_edge_base<Weight, WeightSharingPolicy, WeightProxy, IndexType>& rhs) noexcept
     {
       return (static_cast<const edge_base<IndexType>&>(lhs) == static_cast<const edge_base<IndexType>&>(rhs))
@@ -202,6 +222,7 @@ namespace sequoia
     }
 
     template <class Weight, template<class> class WeightSharingPolicy, class WeightProxy, class IndexType>
+    [[nodiscard]]
     constexpr bool operator!=(const partial_edge_base<Weight, WeightSharingPolicy, WeightProxy, IndexType>& lhs, const partial_edge_base<Weight, WeightSharingPolicy, WeightProxy, IndexType>& rhs) noexcept
     {
       return !(lhs == rhs);
@@ -261,22 +282,26 @@ namespace sequoia
       constexpr decorated_edge_base(decorated_edge_base&& in)                  = default;
       constexpr decorated_edge_base& operator=(const decorated_edge_base& in)  = default;
       constexpr decorated_edge_base& operator=(decorated_edge_base&&)          = default;
-      
+
+      [[nodiscard]]
       friend constexpr bool operator==(const decorated_edge_base& lhs, const decorated_edge_base& rhs) noexcept
       {
         return (static_cast<const partial_edge_base<Weight, WeightSharingPolicy, WeightProxy, IndexType>&>(lhs) == static_cast<const partial_edge_base<Weight, WeightSharingPolicy, WeightProxy, IndexType>&>(rhs))
         && (lhs.auxiliary_index() == rhs.auxiliary_index());
       }
 
+      [[nodiscard]]
       friend constexpr bool operator!=(const decorated_edge_base& lhs, const decorated_edge_base& rhs) noexcept
       {
         return !(lhs == rhs);
       }
     protected:      
       ~decorated_edge_base() = default;
+
+      [[nodiscard]]
+      constexpr index_type auxiliary_index() const noexcept { return m_AuxiliaryIndex; }
       
-      constexpr index_type auxiliary_index() const { return m_AuxiliaryIndex; }
-      constexpr void auxiliary_index(const index_type auxIndex) { m_AuxiliaryIndex = auxIndex; }
+      constexpr void auxiliary_index(const index_type auxIndex) noexcept { m_AuxiliaryIndex = auxIndex; }
     private:
       IndexType m_AuxiliaryIndex;
     };
@@ -299,6 +324,7 @@ namespace sequoia
 
       using decorated_edge_base<Weight, WeightSharingPolicy, WeightProxy, IndexType>::decorated_edge_base;
 
+      [[nodiscard]]
       constexpr index_type complementary_index() const noexcept { return this->auxiliary_index(); }
       constexpr void complementary_index(const index_type index) noexcept { return this->auxiliary_index(index); }
     };
@@ -352,6 +378,7 @@ namespace sequoia
       constexpr edge& operator=(const edge& in)  = default;
       constexpr edge& operator=(edge&&)          = default;
 
+      [[nodiscard]]
       constexpr index_type host_node() const noexcept
       {
         return this->auxiliary_index() < npos ? this->auxiliary_index() : this->target_node();
@@ -363,6 +390,7 @@ namespace sequoia
         else            this->target_node(host);
       }
 
+      [[nodiscard]]
       constexpr bool inverted() const noexcept { return this->auxiliary_index() == npos; }
     private:
       static constexpr auto npos = std::numeric_limits<IndexType>::max();
@@ -419,16 +447,20 @@ namespace sequoia
       constexpr embedded_edge& operator=(const embedded_edge& in)  = default;
       constexpr embedded_edge& operator=(embedded_edge&&)          = default;
 
+      [[nodiscard]]
       constexpr index_type complementary_index() const noexcept { return this->auxiliary_index(); }
       constexpr void complementary_index(const index_type auxIndex) noexcept { return this->auxiliary_index(auxIndex); }
 
+      [[nodiscard]]
       constexpr index_type host_node() const noexcept { return !inverted() ? m_HostIndex : this->target_node(); }
+      
       constexpr void host_node(const index_type host) noexcept
       {
         if(!inverted()) m_HostIndex = host;
         else            this->target_node(host);
       }
 
+      [[nodiscard]]
       constexpr bool inverted() const noexcept { return m_HostIndex == npos; }
     private:
       static constexpr auto npos = std::numeric_limits<IndexType>::max();
@@ -443,6 +475,7 @@ namespace sequoia
       class WeightProxy,
       class IndexType=std::size_t
     >
+    [[nodiscard]]
     constexpr bool operator==(const embedded_edge<Weight, WeightSharingPolicy, WeightProxy, IndexType>& lhs, const embedded_edge<Weight, WeightSharingPolicy, WeightProxy, IndexType>& rhs)
     {
       return (lhs.host_node() == rhs.host_node())
@@ -457,6 +490,7 @@ namespace sequoia
       class WeightProxy,
       class IndexType=std::size_t
     >
+    [[nodiscard]]
     constexpr bool operator!=(const embedded_edge<Weight, WeightSharingPolicy, WeightProxy, IndexType>& lhs, const embedded_edge<Weight, WeightSharingPolicy, WeightProxy, IndexType>& rhs)
     {
       return !(lhs == rhs);
