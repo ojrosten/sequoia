@@ -1,4 +1,16 @@
+////////////////////////////////////////////////////////////////////
+//                 Copyright Oliver Rosten 2018.                  //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
 #pragma once
+
+/*! \file StaticNodeStorage.hpp
+    \brief Classes for node storage that may be used in a constexpr context.
+
+ */
 
 #include "NodeStorage.hpp"
 
@@ -32,9 +44,13 @@ namespace sequoia::maths::graph_impl
     constexpr static_node_storage() = default;
     constexpr static_node_storage(const std::size_t) {}
 
+    [[nodiscard]]
     constexpr friend bool operator==(const static_node_storage& lhs, const static_node_storage& rhs) noexcept { return true;}
+
+    [[nodiscard]]
     constexpr friend bool operator!=(const static_node_storage& lhs, const static_node_storage& rhs) noexcept { return !(lhs == rhs);}
 
+    [[nodiscard]]
     constexpr static std::size_t size() noexcept { return N; }
   protected:
     constexpr static_node_storage(const static_node_storage&)                = default;

@@ -1,4 +1,16 @@
+////////////////////////////////////////////////////////////////////
+//                 Copyright Oliver Rosten 2018.                  //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
 #pragma once
+
+/*! \file HeterogeneousStaticGraph.hpp
+    \brief Traits and classes for static graphs with heterogeneous node weights.
+
+ */
 
 #include "GraphImpl.hpp"
 #include "StaticGraphImpl.hpp"
@@ -22,7 +34,7 @@ namespace sequoia::maths
     class EdgeWeight,
     class... NodeWeights
   >
-  class heterogeneous_static_graph : public
+  class heterogeneous_static_graph final : public
     graph_primitive
     <
       Directedness,
@@ -57,8 +69,10 @@ namespace sequoia::maths
     
     constexpr static graph_flavour flavour{(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected};
 
+    [[nodiscard]]
     constexpr static std::size_t order() noexcept { return Order; }
 
+    [[nodiscard]]
     constexpr static std::size_t size() noexcept { return Size; }
 
     using edge_index_type = typename heterogeneous_graph_traits<Size, Order, EdgeWeight>::edge_index_type;
@@ -96,7 +110,7 @@ namespace sequoia::maths
     class EdgeWeight,
     class... NodeWeights
   >
-  class heterogeneous_embedded_static_graph : public
+  class heterogeneous_embedded_static_graph final : public
     graph_primitive
     <
       Directedness,

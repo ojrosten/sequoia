@@ -1,4 +1,15 @@
+////////////////////////////////////////////////////////////////////
+//                 Copyright Oliver Rosten 2018.                  //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
 #pragma once
+
+/*! \file GraphImpl.hpp
+    \brief Underlying class for the various different graph species.
+ */
 
 #include "GraphDetails.hpp"
 #include "Algorithms.hpp"
@@ -87,7 +98,8 @@ namespace sequoia
         swap(tmp);
         return *this;
       }
-    
+
+      [[nodiscard]]
       constexpr const_edge_iterator cbegin_edges(const edge_index_type node) const
       {
         if constexpr (throw_on_range_error) if(node >= order_impl()) throw std::out_of_range("Node index out of range!");
@@ -95,6 +107,7 @@ namespace sequoia
         return m_Edges.cbegin_partition(node);
       }
 
+      [[nodiscard]]
       constexpr const_edge_iterator cend_edges(const edge_index_type node) const
       {
         if constexpr (throw_on_range_error) if(node >= order_impl()) throw std::out_of_range("Node index out of range!");
@@ -102,6 +115,7 @@ namespace sequoia
         return m_Edges.cend_partition(node);
       }
 
+      [[nodiscard]]
       constexpr const_reverse_edge_iterator crbegin_edges(const edge_index_type node) const
       {
         if constexpr (throw_on_range_error) if(node >= order_impl()) throw std::out_of_range("Node index out of range!");
@@ -109,6 +123,7 @@ namespace sequoia
         return m_Edges.crbegin_partition(node);
       }
 
+      [[nodiscard]]
       constexpr const_reverse_edge_iterator crend_edges(const edge_index_type node) const
       {
         if constexpr (throw_on_range_error) if(node >= order_impl()) throw std::out_of_range("Node index out of range!");
@@ -185,12 +200,14 @@ namespace sequoia
       }      
       
       //===============================equality (not isomorphism) operators================================//
-      
+
+      [[nodiscard]]
       friend constexpr bool operator==(const graph_primitive& first, const graph_primitive& second)
       {
         return (static_cast<Nodes&>(first) == static_cast<Nodes&>(second)) && (first.m_Edges == second.m_Edges);
       }
 
+      [[nodiscard]]
       friend constexpr bool operator!=(const graph_primitive& first, const graph_primitive& second)
       {
         return !(first == second);
@@ -207,8 +224,10 @@ namespace sequoia
         *this = std::move(tmp);
       }
 
+      [[nodiscard]]
       constexpr size_type order_impl() const noexcept { return m_Edges.num_partitions(); }
 
+      [[nodiscard]]
       constexpr size_type size_impl()  const noexcept
       {
         auto size{m_Edges.size()};
@@ -279,6 +298,7 @@ namespace sequoia
         m_Edges.reserve_partitions(size);
       }
 
+      [[nodiscard]]
       size_type node_capacity() const noexcept
       {
         if constexpr(!std::is_empty_v<node_weight_type>)
@@ -304,6 +324,7 @@ namespace sequoia
       }
 
       template<class T=edge_storage_type>
+      [[nodiscard]]
       std::enable_if_t<graph_impl::has_reservable_partitions_v<T>, size_type>
       edges_capacity(const edge_index_type partition) const
       {
@@ -311,6 +332,7 @@ namespace sequoia
       }
 
       template<class T=edge_storage_type>
+      [[nodiscard]]
       std::enable_if_t<!graph_impl::has_reservable_partitions_v<T>, size_type>
       edges_capacity() const noexcept
       {
@@ -327,6 +349,7 @@ namespace sequoia
         m_Edges.shrink_to_fit();
       }
 
+      [[nodiscard]]
       constexpr edge_iterator begin_edges(const edge_index_type node)
       {
         if constexpr (throw_on_range_error) if(node >= order_impl()) throw std::out_of_range("Node index out of range!");
@@ -334,13 +357,14 @@ namespace sequoia
         return m_Edges.begin_partition(node);
       }
 
+      [[nodiscard]]
       constexpr edge_iterator end_edges(const edge_index_type node)
       {
         if constexpr (throw_on_range_error) if(node >= order_impl()) throw std::out_of_range("Node index out of range!");
 
         return m_Edges.end_partition(node);
       }
-      
+
       template<class... Args>
       size_type add_node(Args&&... args)
       {
@@ -814,7 +838,7 @@ namespace sequoia
 
       edge_storage_type m_Edges;
       
-      class weight_sentinel
+      class [[nodiscard]] weight_sentinel 
       {
       public:
         template<class Fn1, class Fn2, class... Args1>
@@ -854,6 +878,7 @@ namespace sequoia
       using direct_edge_init_type   = edge_init_constant<true>;
       using indirect_edge_init_type = edge_init_constant<false>;
 
+      [[nodiscard]]
       static constexpr auto direct_edge_init() noexcept
       {
         return edge_init_constant<std::is_same_v<edge_type, edge_init_type>>{};
@@ -869,6 +894,7 @@ namespace sequoia
       using direct_edge_copy_type   = edge_copy_constant<true>;
       using indirect_edge_copy_type = edge_copy_constant<false>;
 
+      [[nodiscard]]
       static constexpr auto direct_edge_copy() noexcept
       {
         return edge_copy_constant<direct_edge_init_v || (EdgeTraits::shared_edge_v && protectiveEdgeWeightProxy)>{};
@@ -885,7 +911,8 @@ namespace sequoia
       using homog_direct_init_type   = node_init_constant<node_init_flavour::homog_direct>;
       using homog_indirect_init_type = node_init_constant<node_init_flavour::homog_indirect>;
       using hetero_init_type         = node_init_constant<node_init_flavour::hetero>;
-      
+
+      [[nodiscard]]
       static constexpr auto direct_node_init() noexcept
       {
         if constexpr(std::is_same_v<node_weight_type, graph_impl::heterogeneous_tag>)
@@ -904,11 +931,13 @@ namespace sequoia
       using direct_node_copy_type   = node_copy_constant<true>;
       using indirect_node_copy_type = node_copy_constant<false>;
 
+      [[nodiscard]]
       static constexpr auto direct_node_copy() noexcept
       {
         return node_copy_constant<protectiveNodeWeightProxy>{};
       }
 
+      [[nodiscard]]
       static constexpr auto partner_index(const_edge_iterator citer)
       {
         const auto& edge{*citer};
@@ -1304,6 +1333,7 @@ namespace sequoia
       }
 
       template<class EdgeInitializer>
+      [[nodiscard]]
       edge_type make_edge(const edge_index_type host, const EdgeInitializer& edgeInit)
       {
         static_assert(!std::is_same_v<edge_type, edge_init_type>, "Logic error!");
@@ -1462,7 +1492,8 @@ namespace sequoia
           }
         }
       }
-      
+
+      [[nodiscard]]
       constexpr auto to_edge_iterator(const_edge_iterator citer)
       {
         const auto host{citer.partition_index()};

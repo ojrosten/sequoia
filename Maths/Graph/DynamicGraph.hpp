@@ -1,4 +1,16 @@
+////////////////////////////////////////////////////////////////////
+//                 Copyright Oliver Rosten 2018.                  //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
 #pragma once
+
+/*! \file DynamicGraph.hpp
+    \brief Edge & Node storage traits, base class and final classes for dynamic graphs.
+  
+*/
 
 #include "GraphImpl.hpp"
 #include "DynamicGraphImpl.hpp"
@@ -114,8 +126,10 @@ namespace sequoia::maths
       
     constexpr static graph_flavour flavour{GraphFlavour};
 
+    [[nodiscard]]
     constexpr typename primitive::size_type order() const noexcept { return primitive::order_impl(); }
 
+    [[nodiscard]]
     constexpr typename primitive::size_type size() const noexcept { return primitive::size_impl(); }
   protected:
     ~graph_base() = default;
@@ -131,7 +145,7 @@ namespace sequoia::maths
     template<graph_flavour, class, template<class> class> class EdgeStorageTraits = bucketed_edge_storage_traits,
     template<class, template<class> class, bool> class NodeWeightStorageTraits = node_weight_storage_traits
   >
-  class graph : public
+  class graph final : public
     graph_base
     <
       (Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected,      
@@ -183,7 +197,7 @@ namespace sequoia::maths
     template<graph_flavour, class, template<class> class> class EdgeStorageTraits=bucketed_edge_storage_traits,
     template<class, template<class> class, bool> class NodeWeightStorageTraits=node_weight_storage_traits
   >
-  class embedded_graph : public
+  class embedded_graph final : public
     graph_base
     <
       (Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded,      
@@ -196,6 +210,7 @@ namespace sequoia::maths
     >
     {
     private:
+      [[nodiscard]]
       static constexpr graph_flavour to_graph_flavour() noexcept
       {
         return (Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded;

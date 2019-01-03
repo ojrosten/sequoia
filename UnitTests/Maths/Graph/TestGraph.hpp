@@ -312,7 +312,7 @@ namespace sequoia
       {
         check_graph(graph, {}, {}, message);
 
-        check_exception_thrown<std::out_of_range>([&graph](){ graph.cbegin_edges(0); }, "Cannot obtain iterator to edges for empty graph");
+        check_exception_thrown<std::out_of_range>([&graph](){ return graph.cbegin_edges(0); }, "Cannot obtain iterator to edges for empty graph");
       }
 
       void check_test_graph_1(const GGraph& graph, const std::vector<int>& edgeVal, const std::string& message="")

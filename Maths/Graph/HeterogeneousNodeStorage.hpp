@@ -1,10 +1,26 @@
+////////////////////////////////////////////////////////////////////
+//                 Copyright Oliver Rosten 2018.                  //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
 #pragma once
+
+/*! \file HeterogeneousNodeStorage.hpp
+    \brief Node storage for graphs with heterogeneous node weights.
+
+ */
 
 #include "NodeStorage.hpp"
 
 namespace sequoia::maths::graph_impl
 {
   struct heterogeneous_tag;
+
+  /*! class heterogeneous_node_storage
+      \brief Storage for heterogeneous node weights.
+   */
   
   template<class... Ts>
   class heterogeneous_node_storage
@@ -15,23 +31,27 @@ namespace sequoia::maths::graph_impl
     {
     }
 
+    [[nodiscard]]
     constexpr std::size_t size() const noexcept
     {
       return std::tuple_size_v<std::tuple<Ts...>>;
     }
 
     template<std::size_t I>
+    [[nodiscard]]
     constexpr const auto& node_weight() const noexcept
     {
       return std::get<I>(m_Weights);
     }
 
     template<class T>
+    [[nodiscard]]
     constexpr const auto& node_weight() const noexcept
     {
       return std::get<T>(m_Weights);
     }
 
+    [[nodiscard]]
     constexpr const auto& all_node_weights() const noexcept
     {
       return m_Weights;
@@ -62,11 +82,13 @@ namespace sequoia::maths::graph_impl
       fn(std::get<T>(m_Weights));
     }
 
+    [[nodiscard]]
     friend constexpr bool operator==(const heterogeneous_node_storage& lhs, const heterogeneous_node_storage& rhs) noexcept
     {
       return lhs.m_NodeWeights == rhs.m_NodeWeights;
     }
 
+    [[nodiscard]]
     friend constexpr bool operator!=(const heterogeneous_node_storage& lhs, const heterogeneous_node_storage& rhs) noexcept
     {
       return !(lhs == rhs);

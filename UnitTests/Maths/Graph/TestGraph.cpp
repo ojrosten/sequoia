@@ -73,8 +73,8 @@ namespace sequoia::unit_testing
     using Edge = edge<EdgeWeight, utilities::protective_wrapper<EdgeWeight>>;
     using E_Edge = embedded_edge<EdgeWeight, data_sharing::independent, utilities::protective_wrapper<EdgeWeight>>;
 
-    check_exception_thrown<std::out_of_range>([&network]() { network.cbegin_edges(0); }, LINE("cbegin_edges throws for empty graph"));
-    check_exception_thrown<std::out_of_range>([&network]() { network.cend_edges(0); }, LINE("cend_edges throws for empty graph"));
+    check_exception_thrown<std::out_of_range>([&network]() { return network.cbegin_edges(0); }, LINE("cbegin_edges throws for empty graph"));
+    check_exception_thrown<std::out_of_range>([&network]() { return network.cend_edges(0); }, LINE("cend_edges throws for empty graph"));
 
     check_exception_thrown<std::out_of_range>([&network]() { network.swap_nodes(0,0); }, LINE("swapping nodes throws for empty graph"));
           
@@ -682,7 +682,7 @@ namespace sequoia::unit_testing
     graph_t g{};
 
     check_exception_thrown<std::out_of_range>([&g](){ g.reserve_edges(0, 4);}, LINE(""));
-    check_exception_thrown<std::out_of_range>([&g](){ g.edges_capacity(0);}, LINE(""));
+    check_exception_thrown<std::out_of_range>([&g](){ return g.edges_capacity(0);}, LINE(""));
     check_equality<std::size_t>(0, g.node_capacity());
 
     g.add_node();

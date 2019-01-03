@@ -1,4 +1,21 @@
+////////////////////////////////////////////////////////////////////
+//                 Copyright Oliver Rosten 2018.                  //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
 #pragma once
+
+/*! \file NodeStorage.hpp
+    \brief Classes to allow homogeneous treatment of graphs with empty/non-empty node weights.
+
+    These classes are designed to be inherited from publically, in order that graphs may aggregate
+    the interface of the node storage. For empty node weights, the node storage specialization
+    is itself empty, meaning that empty base class optimization will ensure that no space is
+    wasted.
+
+ */
 
 #include "Iterator.hpp"
 #include "StaticData.hpp"
@@ -48,13 +65,20 @@ namespace sequoia
         constexpr node_storage(const size_type n) : node_storage(StaticType{}, n) {}
 
         constexpr node_storage(std::initializer_list<weight_type> weights) : node_storage{StaticType{}, weights} {}
-        
+
+        [[nodiscard]]
         constexpr auto size() const { return m_NodeWeights.size(); }
 
+        [[nodiscard]]
         constexpr const_iterator cbegin_node_weights() const noexcept { return const_iterator{m_NodeWeights.cbegin()}; }
+
+        [[nodiscard]]
         constexpr const_reverse_iterator crbegin_node_weights() const noexcept { return const_reverse_iterator{m_NodeWeights.crbegin()}; }
 
+        [[nodiscard]]
         constexpr const_iterator cend_node_weights() const noexcept { return const_iterator{m_NodeWeights.cend()}; }
+
+        [[nodiscard]]
         constexpr const_reverse_iterator crend_node_weights() const noexcept { return const_reverse_iterator{m_NodeWeights.crend()}; }
 
         template<class Arg, class... Args>
@@ -75,11 +99,13 @@ namespace sequoia
           m_NodeWeights[index].mutate(fn);
         }
 
+        [[nodiscard]]
         friend constexpr bool operator==(const node_storage& lhs, const node_storage& rhs) noexcept
         {
           return lhs.m_NodeWeights == rhs.m_NodeWeights;
         }
 
+        [[nodiscard]]
         friend constexpr bool operator!=(const node_storage& lhs, const node_storage& rhs) noexcept
         {
           return !(lhs == rhs);

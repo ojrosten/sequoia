@@ -1,4 +1,16 @@
+////////////////////////////////////////////////////////////////////
+//                 Copyright Oliver Rosten 2018.                  //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
 #pragma once
+
+/*! \file StaticGraph.hpp
+    \brief Traits and classes for static graphs with homogeneous node weights.
+
+ */
 
 #include "GraphImpl.hpp"
 #include "StaticGraphImpl.hpp"
@@ -22,7 +34,7 @@ namespace sequoia::maths
     class NodeWeight,
     class Traits = static_graph_traits<Size, Order, EdgeWeight, NodeWeight>
   >
-  class static_graph : public
+  class static_graph final : public
     graph_primitive
     <
       Directedness,
@@ -44,8 +56,10 @@ namespace sequoia::maths
   public:
     constexpr static graph_flavour flavour{(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected};
 
+    [[nodiscard]]
     constexpr static std::size_t order() noexcept { return Order; }
 
+    [[nodiscard]]
     constexpr static std::size_t size() noexcept { return Size; }
 
     using node_weight_type = NodeWeight;
@@ -79,7 +93,7 @@ namespace sequoia::maths
     class NodeWeight,
     class Traits = static_embedded_graph_traits<Size, Order, EdgeWeight, NodeWeight>
   >
-  class static_embedded_graph : public
+  class static_embedded_graph final : public
     graph_primitive
     <
       Directedness,
@@ -101,8 +115,10 @@ namespace sequoia::maths
   public:
     constexpr static graph_flavour flavour{(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded};
 
+    [[nodiscard]]
     constexpr static std::size_t order() noexcept { return Order; }
 
+    [[nodiscard]]
     constexpr static std::size_t size() noexcept { return Size; }
 
     using node_weight_type =  NodeWeight;
