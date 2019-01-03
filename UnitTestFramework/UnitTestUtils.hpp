@@ -14,7 +14,6 @@
 #include "Sample.hpp"
 #include "TypeTraits.hpp"
 
-#include <iostream>
 #include <sstream>
 #include <fstream>
 #include <chrono>
@@ -297,6 +296,14 @@ namespace sequoia
       }
     };
 
+    enum class log_verbosity { terse=0, absent_checks=1, failure_messages=2};
+
+    [[nodiscard]]
+    constexpr log_verbosity operator&(log_verbosity lhs, log_verbosity rhs) noexcept
+    {
+      return static_cast<log_verbosity>(static_cast<int>(lhs) & static_cast<int>(rhs));
+    }
+    
     class log_summary
     {
     public:
@@ -385,20 +392,16 @@ namespace sequoia
         
         m_CurrentMessage         = rhs.m_CurrentMessage;
 
-        if(m_Name.empty()) m_Name = rhs.name();
-
         return *this;
       }
 
       [[nodiscard]]
       std::string_view name() const noexcept { return m_Name; }
       
-      void name(std::string_view p) { m_Name = p; }
-
-      enum report_suppression { none=0, absent_checks=1, failure_messages=2};
-
+      void name(std::string_view p) { m_Name = p; }      
+      
       [[nodiscard]]
-      std::string summarize(std::string_view checkNumsPrefix, const report_suppression suppression ) const
+      std::string summarize(std::string_view checkNumsPrefix, const log_verbosity suppression ) const
       {
         std::array<std::string, 4> summaries{
           std::string{checkNumsPrefix} + "Standard Checks:",
@@ -437,9 +440,16 @@ namespace sequoia
           summaries[i] += failures[i];
         }
 
-        std::string summary{m_Name};
+        std::string summary{m_Name.empty() ? "" : m_Name + ":\n"};
 
-        if(suppression & report_suppression::absent_checks)
+        if((suppression & log_verbosity::absent_checks) == log_verbosity::absent_checks)
+        {
+          std::for_each(std::cbegin(summaries), std::cend(summaries), [&summary](const std::string& s){
+              (summary += s) += "\n";
+            }
+          );
+        }
+        else
         {
           const std::array<std::size_t, 4> numbers{
             checks(),
@@ -454,20 +464,13 @@ namespace sequoia
             if(numbers[i]) summary += summaries[i] += "\n";
           }
         }
-        else
-        {
-          std::for_each(std::cbegin(summaries), std::cend(summaries), [&summary](const std::string& s){
-              (summary += s) += "\n";
-            }
-          );
-        }
 
         if(m_CriticalFailures)
         {
           (summary += "Critical Failures:  ") += std::to_string(critical_failures()) += "\n";
         }
 
-        if(!(suppression & report_suppression::failure_messages))
+        if((suppression & log_verbosity::failure_messages) == log_verbosity::failure_messages)
           summary += m_Message;
 
         return summary;
@@ -501,8 +504,8 @@ namespace sequoia
         const std::string s{sv};
         return (n==1) ? " " + s : " " + s + "s";
       }
-    };   
-
+    };
+    
     template<class T> struct equality_checker;
     
     namespace impl
@@ -955,7 +958,7 @@ namespace sequoia
 
       virtual log_summary execute() = 0;
 
-      std::string name() const { return m_Name; }
+      std::string_view name() const noexcept { return m_Name; }
     protected:
       test(const test&) = default;
       test(test&&)      = default;
@@ -988,7 +991,7 @@ namespace sequoia
           Checker::log_critical_failure(make_message("Unknown", ""));
         }
 
-        return Checker::summary("  " + name() + ":\n");
+        return Checker::summary(name());
       }
     protected:
       virtual void run_tests() = 0;
@@ -1031,19 +1034,19 @@ namespace sequoia
         register_tests(std::forward<Tests>(tests)...);
       }
 
-      log_summary execute()
+      std::vector<log_summary> execute()
       {
-        log_summary summary{m_Name + ":\n"};
+        std::vector<log_summary> summaries{};
         for(auto& pTest : m_Tests)
         {
-          summary += pTest->execute();
+          summaries.push_back(pTest->execute());
         }
 
-        return summary;
+        return summaries;
       }
-      
-      std::string_view name() const { return m_Name; }
-      
+
+      [[nodiscard]]
+      std::string_view name() const noexcept { return m_Name; }      
     private:
       std::vector<std::unique_ptr<test>> m_Tests{};
       std::string m_Name;

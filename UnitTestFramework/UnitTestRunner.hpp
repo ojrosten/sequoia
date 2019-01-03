@@ -29,6 +29,8 @@ namespace sequoia::unit_testing
   private:
     std::vector<test_family> m_Families;
     std::set<std::string> m_SpecificCases{};
-    bool m_Asynchronous{};
+    bool m_Asynchronous{}, m_Verbose{};
+
+    log_summary process_family(const std::vector<log_summary>& summaries);
   };
 }

@@ -72,6 +72,20 @@ namespace sequoia
         }
       );
 
+      functionMap.emplace("-v", [this](const arg_list& argList) {
+          if(argList.empty())
+          {
+            m_Verbose = true;
+          }
+          else
+          {
+            std::cout << "Warning: -verbose requires no arguments, but " << argList.size() << " were provided\n";
+          }
+        }
+      );
+
+      
+
       for(const auto& argList : args)
       {
         if(!argList.empty())
@@ -104,42 +118,52 @@ namespace sequoia
       
       if(accept) m_Families.emplace_back(std::move(f));
     }
+
+    log_summary unit_test_runner::process_family(const std::vector<log_summary>& summaries)
+    {
+      log_summary familySummary{};
+      for(const auto& s : summaries)
+      {
+        if(m_Verbose) std::cout << "    " << s.summarize("        ", log_verbosity::failure_messages);
+        familySummary += s;
+      }
+          
+      if(!m_Verbose) std::cout << familySummary.summarize("    ", log_verbosity::failure_messages);
+
+      return familySummary;
+    }
     
     void unit_test_runner::execute()
-    {
-      using suppression = log_summary::report_suppression;
-      
+    {      
       std::cout << "Running unit tests...\n";
       log_summary summary{};
       if(!m_Asynchronous)
       {
         for(auto& family : m_Families)
         {
-          const auto s{family.execute()};
-          std::cout << s.summarize("\t", suppression::absent_checks);
-          summary += s;
+          std::cout << family.name() << ":\n";
+          summary += process_family(family.execute());
         }
       }
       else
       {
         std::cout << "Using asynchronous execution\n";
-        std::vector<std::future<log_summary>> results;
+        std::vector<std::pair<std::string, std::future<std::vector<log_summary>>>> results;
 
-        std::for_each(m_Families.begin(), m_Families.end(),[&results](auto& family){
-            results.emplace_back(std::async([&family](){ return family.execute(); }));
-          }
-        );
-  
-        std::for_each(results.begin(), results.end(), [&summary](auto& res){
-            const auto& s{res.get()};
-            std::cout << s.summarize("\t", suppression::absent_checks);
-            summary += s;
-          }
-        );
+        for(auto& family : m_Families)
+        {
+          results.emplace_back(family.name(), std::async([&family](){ return family.execute(); }));
+        }
+
+        for(auto& res : results)
+        {
+          std::cout << res.first << ":\n";
+          summary += process_family(res.second.get());
+        }        
       }
 
       std::cout <<  "-----Grand Totals-----\n";
-      std::cout << summary.summarize("", suppression::failure_messages);      
+      std::cout << summary.summarize("", log_verbosity::absent_checks);      
     }
   }
 }
