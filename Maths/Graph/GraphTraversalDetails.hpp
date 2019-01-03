@@ -1,4 +1,16 @@
+////////////////////////////////////////////////////////////////////
+//                 Copyright Oliver Rosten 2018.                  //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
 #pragma once
+
+/*! \file GraphTraversalDetails.hpp
+    \brief Meta-programming urilities and underlying function for graph traversals.
+
+ */
 
 namespace sequoia::maths
 {
@@ -10,14 +22,24 @@ namespace sequoia::maths::graph_impl
 {
   template<bool Forward> struct iterator_getter
   {
-    template<class G> constexpr static auto begin(const G& graph, const std::size_t nodeIndex) { return graph.cbegin_edges(nodeIndex); }
-    template<class G> constexpr static auto end(const G& graph, const std::size_t nodeIndex) { return graph.cend_edges(nodeIndex); }
+    template<class G>    
+    [[nodiscard]]
+    constexpr static auto begin(const G& graph, const std::size_t nodeIndex) { return graph.cbegin_edges(nodeIndex); }
+    
+    template<class G>
+    [[nodiscard]]
+    constexpr static auto end(const G& graph, const std::size_t nodeIndex) { return graph.cend_edges(nodeIndex); }
   };
 
   template<> struct iterator_getter<false>
   {
-    template<class G> constexpr static auto begin(const G& graph, const std::size_t nodeIndex) { return graph.crbegin_edges(nodeIndex); }
-    template<class G> constexpr static auto end(const G& graph, const std::size_t nodeIndex) { return graph.crend_edges(nodeIndex); }
+    template<class G>
+    [[nodiscard]]
+    constexpr static auto begin(const G& graph, const std::size_t nodeIndex) { return graph.crbegin_edges(nodeIndex); }
+    
+    template<class G>
+    [[nodiscard]]
+    constexpr static auto end(const G& graph, const std::size_t nodeIndex) { return graph.crend_edges(nodeIndex); }
   };
 
   template<class G, class = void> struct static_graph_detector : std::true_type
@@ -36,17 +58,21 @@ namespace sequoia::maths::graph_impl
   
   template<class G, class Q, bool=static_graph_detector_v<G>> struct traversal_traits : public traversal_traits_base<Q>
   {
+    [[nodiscard]]
     static auto begin(const G& graph, const std::size_t nodeIndex)
     {
       return iterator_getter<traversal_traits_base<Q>::uses_forward_iterator()>::begin(graph, nodeIndex);
     }
-    
+
+    [[nodiscard]]
     static auto end(const G& graph, const std::size_t nodeIndex)
     {
       return iterator_getter<traversal_traits_base<Q>::uses_forward_iterator()>::end(graph, nodeIndex);
     }
 
     using bitset = std::vector<bool>;
+
+    [[nodiscard]]
     static bitset make_bitset(const G& g)
     {
       return bitset(g.order(), false);
@@ -56,17 +82,21 @@ namespace sequoia::maths::graph_impl
   template<class G, class Q>
   struct traversal_traits<G, Q, true> : public traversal_traits_base<Q>
   {
+    [[nodiscard]]
     constexpr static auto begin(const G& graph, const std::size_t nodeIndex)
     {
       return iterator_getter<traversal_traits_base<Q>::uses_forward_iterator()>::begin(graph, nodeIndex);
     }
-    
+
+    [[nodiscard]]
     constexpr static auto end(const G& graph, const std::size_t nodeIndex)
     {
       return iterator_getter<traversal_traits_base<Q>::uses_forward_iterator()>::end(graph, nodeIndex);
     }
     
     using bitset = std::array<bool, G::order()>;
+
+    [[nodiscard]]
     constexpr static bitset make_bitset(const G& g)
     {
       return bitset{};
@@ -83,6 +113,7 @@ namespace sequoia::maths::graph_impl
     constexpr node_comparer(const G& g) : m_Graph(g) {}
     constexpr node_comparer(const node_comparer&) = default; 
 
+    [[nodiscard]]
     constexpr bool operator()(const std::size_t index1, const std::size_t index2)
     {
       Compare comparer{};
@@ -170,6 +201,7 @@ namespace sequoia::maths::graph_impl
   {
   public:
     template<class Iter>
+    [[nodiscard]]
     constexpr static bool loop_matched(Iter begin, Iter current)
     {
       if constexpr (comp_index_detector_v<G>)
@@ -195,6 +227,7 @@ namespace sequoia::maths::graph_impl
   {
   public:
     template<class Iter>
+    [[nodiscard]]
     constexpr bool loop_matched(Iter begin, Iter current) noexcept
     {
       m_Matched = !m_Matched;

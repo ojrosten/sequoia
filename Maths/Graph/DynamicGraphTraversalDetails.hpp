@@ -1,4 +1,16 @@
+////////////////////////////////////////////////////////////////////
+//                 Copyright Oliver Rosten 2018.                  //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
 #pragma once
+
+/*! \file DynamicGraphTraversalDetails.hpp
+    \brief Meta-prorgamming utilities for traversals of dynamic graphs.
+
+ */
 
 #include <queue>
 #include <stack>
@@ -7,7 +19,10 @@ namespace sequoia::maths::graph_impl
 {
   template<class Container, class Compare> struct traversal_traits_base<std::priority_queue<std::size_t, Container, Compare>>
   {
-    constexpr static bool uses_forward_iterator() { return true; }
+    [[nodiscard]]
+    constexpr static bool uses_forward_iterator() noexcept { return true; }
+
+    [[nodiscard]]
     constexpr static auto get_container_element(const std::priority_queue<std::size_t, Container, Compare>& q)
     {
       return q.top();
@@ -16,20 +31,27 @@ namespace sequoia::maths::graph_impl
 
   template<> struct traversal_traits_base<std::stack<std::size_t>>
   {
-    constexpr static bool uses_forward_iterator() { return false; }
+    [[nodiscard]]
+    constexpr static bool uses_forward_iterator() noexcept { return false; }
+
+    [[nodiscard]]
     constexpr static auto get_container_element(const std::stack<std::size_t>& s) { return s.top(); }
   };
 
 
   template<> struct traversal_traits_base<std::queue<std::size_t>>
   {
-    constexpr static bool uses_forward_iterator() { return true; }
+    [[nodiscard]]
+    constexpr static bool uses_forward_iterator() noexcept { return true; }
+
+    [[nodiscard]]
     constexpr static auto get_container_element(const std::queue<std::size_t>& q) { return q.front(); }
   };
 
   template<class G, class Container, class Comparer>
   struct queue_constructor<G, std::priority_queue<std::size_t, Container, Comparer>>
   {
+    [[nodiscard]]
     static auto make(const G& g)
     {
       return std::priority_queue<std::size_t, Container, Comparer>{Comparer{g}};
@@ -39,6 +61,7 @@ namespace sequoia::maths::graph_impl
   template <class G, class Container>
   struct queue_constructor<G, std::stack<std::size_t, Container>>
   {
+    [[nodiscard]]
     static auto make(const G& g)
     {
       return std::stack<std::size_t, Container>{};
@@ -48,6 +71,7 @@ namespace sequoia::maths::graph_impl
   template <class G, class Container>
   struct queue_constructor<G, std::queue<std::size_t, Container>>
   {
+    [[nodiscard]]
     static auto make(const G& g)
     {
       return std::queue<std::size_t, Container>{};

@@ -1,4 +1,16 @@
+////////////////////////////////////////////////////////////////////
+//                 Copyright Oliver Rosten 2018.                  //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
 #pragma once
+
+/*! \file StaticGraphTraversalDetails.hpp
+    \brief Meta-programming utilities for traversals of static graphs.
+
+ */
 
 #include "StaticStack.hpp"
 #include "StaticQueue.hpp"
@@ -10,7 +22,10 @@ namespace sequoia::maths::graph_impl
   
   template<std::size_t MaxDepth, class Compare> struct traversal_traits_base<data_structures::static_priority_queue<std::size_t, MaxDepth, Compare>>
   {
-    constexpr static bool uses_forward_iterator() { return true; }
+    [[nodiscard]]
+    constexpr static bool uses_forward_iterator() noexcept { return true; }
+
+    [[nodiscard]]
     constexpr static auto get_container_element(const data_structures::static_priority_queue<std::size_t, MaxDepth, Compare>& q)
     {
       return q.top();
@@ -20,7 +35,10 @@ namespace sequoia::maths::graph_impl
   template<std::size_t MaxDepth>
   struct traversal_traits_base<data_structures::static_stack<std::size_t, MaxDepth>>
   {
-    constexpr static bool uses_forward_iterator() { return false; }
+    [[nodiscard]]
+    constexpr static bool uses_forward_iterator() noexcept { return false; }
+
+    [[nodiscard]]
     constexpr static auto get_container_element(const data_structures::static_stack<std::size_t, MaxDepth>& s)
     {
       return s.top();
@@ -30,7 +48,10 @@ namespace sequoia::maths::graph_impl
   template<std::size_t MaxDepth>
   struct traversal_traits_base<data_structures::static_queue<std::size_t, MaxDepth>>
   {
-    constexpr static bool uses_forward_iterator() { return true; }
+    [[nodiscard]]
+    constexpr static bool uses_forward_iterator() noexcept { return true; }
+
+    [[nodiscard]]
     constexpr static auto get_container_element(const data_structures::static_queue<std::size_t, MaxDepth>& q)
     {
       return q.front();
@@ -49,6 +70,7 @@ namespace sequoia::maths::graph_impl
   template <class G>
   struct queue_constructor<G, data_structures::static_queue<std::size_t, G::order()>>
   {
+    [[nodiscard]]
     constexpr static auto make(const G& g)
     {
       return data_structures::static_queue<std::size_t, G::order()>{};
@@ -58,6 +80,7 @@ namespace sequoia::maths::graph_impl
   template <class G, class Comparer>
   struct queue_constructor<G, data_structures::static_priority_queue<std::size_t, G::order(), Comparer>>
   {
+    [[nodiscard]]
     constexpr static auto make(const G& g)
     {
       return data_structures::static_priority_queue<std::size_t, G::order(), Comparer>{Comparer{g}};
