@@ -31,7 +31,7 @@
 
 #include "TestConcurrencyModels.hpp"
 
-#include "TestSample.hpp"
+#include "TestStatisticalAlgorithms.hpp"
 
 #include "TestExperimental.hpp"
 
@@ -71,8 +71,8 @@ int main(int argc, char** argv)
   
   runner.add_test_family(
     test_family{
-      "Sample",
-      test_sample{"Unit Test"}
+      "Statistical Algorithms",
+      test_statistical_algorithms{"Unit Test"}
     }
   );
 

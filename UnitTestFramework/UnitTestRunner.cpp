@@ -7,6 +7,9 @@
 
 #include "UnitTestRunner.hpp"
 
+#include <map>
+#include <iostream>
+
 namespace sequoia
 {
   namespace unit_testing

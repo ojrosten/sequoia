@@ -11,7 +11,7 @@
     \brief Utilties for the unit testing framework.
 */
 
-#include "Sample.hpp"
+#include "StatisticalAlgorithms.hpp"
 #include "TypeTraits.hpp"
 
 #include <sstream>
@@ -773,9 +773,9 @@ namespace sequoia
       performance_results<R> results;      
       
       using namespace std::chrono;
-      using namespace maths::statistics;
+      using namespace maths;
 
-      sample<double> fastData, slowData;
+      std::vector<double> fastData, slowData;
       std::random_device generator;
       for(std::size_t i{}; i < trials; ++i)
       {
@@ -794,54 +794,62 @@ namespace sequoia
         end = steady_clock::now();
 
         duration<double> duration = end - start;
-        fastFirst ? fastData.add_datum(duration.count()) : slowData.add_datum(duration.count());
+        fastFirst ? fastData.push_back(duration.count()) : slowData.push_back(duration.count());
 
         start = steady_clock::now();
         fastFirst ? slowTask() : fastTask();
         end = steady_clock::now();
 
         duration = end - start;
-        fastFirst ? slowData.add_datum(duration.count()) : fastData.add_datum(duration.count());
+        fastFirst ? slowData.push_back(duration.count()) : fastData.push_back(duration.count());
       }
 
-      using namespace maths::statistics::bias;
-      if(  fastData.mean() + fastData.template sample_standard_deviation<gaussian_approx_modifier>()
-         < slowData.mean() - slowData.template sample_standard_deviation<gaussian_approx_modifier>())
+      auto compute_stats{
+        [](auto first, auto last) {
+          const auto data{sample_standard_deviation(first, last)};
+          return std::make_pair(data.first.value(), data.second.value());
+        }
+      };
+      
+      const auto [sig_f, m_f]{compute_stats(fastData.cbegin(), fastData.cend())};
+      const auto [sig_s, m_s]{compute_stats(slowData.cbegin(), slowData.cend())};
+
+      using namespace maths::bias;
+      if(m_f + sig_f < m_s - sig_s)
       {
-        const auto fastSD = fastData.template sample_standard_deviation<gaussian_approx_modifier>();
-        const auto slowSD = slowData.template sample_standard_deviation<gaussian_approx_modifier>();
-        if(fastSD >= slowSD)
+        if(sig_f >= sig_s)
         {
-          results.passed = (minSpeedUp*fastData.mean() <= (slowData.mean() + num_sds*slowSD))
-                        && (maxSpeedUp*fastData.mean() >= (slowData.mean() - num_sds*slowSD));
+          results.passed = (minSpeedUp * m_f <= (m_s + num_sds * sig_s))
+                        && (maxSpeedUp * m_f >= (m_s - num_sds * sig_s));
         }
         else
         {
-          results.passed = (slowData.mean() / maxSpeedUp <= (fastData.mean() + num_sds*fastSD))
-                        && (slowData.mean() / minSpeedUp >= (fastData.mean() - num_sds*fastSD));
+          results.passed = (m_s / maxSpeedUp <= (m_f + num_sds * sig_f))
+                        && (m_s / minSpeedUp >= (m_f - num_sds * sig_f));
         }
       }
 
+      auto serializer{
+        [m_f=m_f,sig_f=sig_f,m_s=m_s,sig_s=sig_s,num_sds,minSpeedUp,maxSpeedUp](){
+          std::ostringstream message;
+          message << "\n\tFast Task duration: " << m_f << "s";
+          message << " +- " << num_sds << " * " << sig_f;
+          message << "\n\tSlow Task duration: " << m_s << "s";
+          message << " +- " << num_sds << " * " << sig_s;
+          message << " [" << m_s / m_f << "; (" << minSpeedUp << ", " << maxSpeedUp << ")]";
+
+          return message.str();
+        }
+      };
+
       if(!results.passed)
       {
-        std::ostringstream error;
-        error << logger.failure_description(description);
-        error << "\n\tFast Task duration: " << fastData.mean() << "s";
-        error << " +- " << num_sds << " * " << fastData.template sample_standard_deviation<gaussian_approx_modifier>();
-        error << "\n\tSlow Task duration: " << slowData.mean() << "s";
-        error << " +- " << num_sds << " * " << slowData.template sample_standard_deviation<gaussian_approx_modifier>();
-        error << " [" << slowData.mean() / fastData.mean() << "; (" << minSpeedUp << ", " << maxSpeedUp << ")]";
-        logger.log_performance_failure(error.str());
+        const std::string message{logger.failure_description(description) + serializer()};
+        logger.log_performance_failure(message);
       }
       else if(reportSuccess)
       {
-        std::ostringstream message;
-        message << "\n\tFast Task duration: " << fastData.mean() << "s";
-        message << " +- " << num_sds << " * " << fastData.template sample_standard_deviation<gaussian_approx_modifier>();
-        message << "\n\tSlow Task duration: " << slowData.mean() << "s";
-        message << " +- " << num_sds << " * " << slowData.template sample_standard_deviation<gaussian_approx_modifier>();
-        message << " [" << slowData.mean() / fastData.mean() << "; (" << minSpeedUp << ", " << maxSpeedUp << ")]";
-        logger.post_message(message.str());
+        logger.post_message(serializer());
       }
 
       return results;
