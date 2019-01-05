@@ -45,7 +45,7 @@ namespace sequoia::unit_testing
     class WeightProxy,
     class IndexType
   >
-  struct equality_checker<maths::partial_edge<Weight, WeightSharingPolicy, WeightProxy, IndexType>>
+  struct details_checker<maths::partial_edge<Weight, WeightSharingPolicy, WeightProxy, IndexType>>
   {
     template<class Logger>
     static void check(Logger& logger, const maths::partial_edge<Weight, WeightSharingPolicy, WeightProxy, IndexType>& reference, const maths::partial_edge<Weight, WeightSharingPolicy, WeightProxy, IndexType>& actual, std::string_view description="")
@@ -61,7 +61,7 @@ namespace sequoia::unit_testing
     class WeightProxy,
     class IndexType
   >
-  struct equality_checker<maths::embedded_partial_edge<Weight, WeightSharingPolicy, WeightProxy, IndexType>>
+  struct details_checker<maths::embedded_partial_edge<Weight, WeightSharingPolicy, WeightProxy, IndexType>>
   {
     template<class Logger>
     static void check(Logger& logger, const maths::embedded_partial_edge<Weight, WeightSharingPolicy, WeightProxy, IndexType>& reference, const maths::embedded_partial_edge<Weight, WeightSharingPolicy, WeightProxy, IndexType>& actual, std::string_view description="")
@@ -77,7 +77,7 @@ namespace sequoia::unit_testing
     class WeightProxy,
     class IndexType
   >
-  struct equality_checker<maths::edge<Weight, WeightProxy, IndexType>>
+  struct details_checker<maths::edge<Weight, WeightProxy, IndexType>>
   {
     template<class Logger>
     static void check(Logger& logger, const maths::edge<Weight, WeightProxy, IndexType>& reference, const maths::edge<Weight, WeightProxy, IndexType>& actual, std::string_view description="")
@@ -94,7 +94,7 @@ namespace sequoia::unit_testing
     class WeightProxy,
     class IndexType
   >
-  struct equality_checker<maths::embedded_edge<Weight, WeightSharingPolicy, WeightProxy, IndexType>>
+  struct details_checker<maths::embedded_edge<Weight, WeightSharingPolicy, WeightProxy, IndexType>>
   {
     template<class Logger>
     static void check(Logger& logger, const maths::embedded_edge<Weight, WeightSharingPolicy, WeightProxy, IndexType>& reference, const maths::embedded_edge<Weight, WeightSharingPolicy, WeightProxy, IndexType>& actual, std::string_view description="")

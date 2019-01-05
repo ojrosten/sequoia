@@ -32,7 +32,7 @@ namespace sequoia::utilities
   public:
     using value_type = T;
       
-    template<class... Args, class=std::enable_if_t<!utilities::same_decay_v<protective_wrapper, Args...>>>
+    template<class... Args, class=std::enable_if_t<!same_decay_v<protective_wrapper, Args...>>>
     constexpr explicit protective_wrapper(Args&&... args) : m_Type{std::forward<Args>(args)...} {}
 
     constexpr protective_wrapper(const protective_wrapper&)     = default;

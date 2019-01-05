@@ -507,6 +507,16 @@ namespace sequoia
     };
     
     template<class T> struct equality_checker;
+
+    template<class T> struct details_checker;
+
+    template<class T, class=std::void_t<>> struct has_details_checker : public std::false_type
+    {};
+
+    template<class T> struct has_details_checker<T, std::void_t<decltype(details_checker<T>{})>> : public std::true_type
+    {};
+
+    template<class T> constexpr bool has_details_checker_v{has_details_checker<T>::value};
     
     namespace impl
     {      
@@ -546,7 +556,6 @@ namespace sequoia
         check_tuple_elements<Logger, I+1, T...>(logger, reference, actual, description);
       }       
     }
-
 
     template<class T>
     struct equality_checker
@@ -630,15 +639,44 @@ namespace sequoia
         return equal;
       }
     };
-
     
-
-    template<class Logger, class T> bool check_equality(Logger& logger, const T& reference, const T& value, std::string_view description="")
+    template<class Logger, class T> bool check_equality(Logger& logger, const T& reference, const T& actual, std::string_view description="")
     {
-      typename Logger::sentinel s{logger, description};
+      using sentinel = typename Logger::sentinel;
+
       const auto priorFailures{logger.failures()};
-      equality_checker<T>::check(logger, reference, value, description);
-      
+
+      if constexpr(has_details_checker_v<T>)
+      {
+        if constexpr(is_equal_to_comparable_v<T>)
+        {
+          sentinel s{logger, description};
+          s.log_check();
+          if(!(reference == actual))
+          {
+            logger.log_failure(impl::concat_messages(description, "Equal-to comparison failed"));
+          }
+        }
+
+        if constexpr(is_not_equal_to_comparable_v<T>)
+        {
+          sentinel s{logger, description};
+          s.log_check();
+          if(reference != actual)
+          {
+            logger.log_failure(impl::concat_messages(description, "Spurious not-equal-to comparison"));
+          }
+        }
+
+        sentinel s{logger, description};
+        details_checker<T>::check(logger, reference, actual, description);
+      }
+      else
+      {
+        sentinel s{logger, description};     
+        equality_checker<T>::check(logger, reference, actual, description);
+      }    
+            
       return logger.failures() == priorFailures;
     }
 

@@ -7,7 +7,7 @@
 namespace sequoia::unit_testing
 {  
   template<class T, std::size_t MaxDepth>
-  struct equality_checker<data_structures::static_stack<T, MaxDepth>>
+  struct details_checker<data_structures::static_stack<T, MaxDepth>>
   {
     template<class Logger>
     static void check(Logger& logger, const data_structures::static_stack<T, MaxDepth>& reference, const data_structures::static_stack<T, MaxDepth>& actual, std::string_view description="")

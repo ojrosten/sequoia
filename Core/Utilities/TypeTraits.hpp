@@ -14,7 +14,7 @@
 
  */
 
-namespace sequoia::utilities
+namespace sequoia
 {
   namespace impl
   {
@@ -87,4 +87,24 @@ namespace sequoia::utilities
   {};
 
   template<class T> constexpr bool is_orderable_v{is_orderable<T>::value};
+
+  template<class T, class = std::void_t<>>
+  struct is_equal_to_comparable : std::false_type
+  {};
+
+  template<class T>
+  struct is_equal_to_comparable<T, std::void_t<decltype((std::declval<T>() == std::declval<T>()))>> : std::true_type
+  {};
+
+  template<class T> constexpr bool is_equal_to_comparable_v{is_equal_to_comparable<T>::value};
+
+  template<class T, class = std::void_t<>>
+  struct is_not_equal_to_comparable : std::false_type
+  {};
+
+  template<class T>
+  struct is_not_equal_to_comparable<T, std::void_t<decltype((std::declval<T>() != std::declval<T>()))>> : std::true_type
+  {};
+
+  template<class T> constexpr bool is_not_equal_to_comparable_v{is_not_equal_to_comparable<T>::value};
 }

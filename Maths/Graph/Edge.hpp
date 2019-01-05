@@ -126,7 +126,7 @@ namespace sequoia
     protected:
       ~weighting() = default;
       
-      template<class... Args, class=std::enable_if_t<!utilities::same_decay_v<weighting, Args...> && !utilities::is_base_of_head_v<weighting, Args...>>>
+      template<class... Args, class=std::enable_if_t<!same_decay_v<weighting, Args...> && !is_base_of_head_v<weighting, Args...>>>
       constexpr explicit weighting(Args&&... args) : m_Weight{wrapped_weight::make(std::forward<Args>(args)...)}
       {}
 
@@ -237,7 +237,7 @@ namespace sequoia
       template
       <
         class... Args,
-        class=typename std::enable_if_t<!utilities::same_decay_v<partial_edge_base, Args...> && !utilities::is_base_of_head_v<partial_edge_base, Args...>>
+        class=typename std::enable_if_t<!same_decay_v<partial_edge_base, Args...> && !is_base_of_head_v<partial_edge_base, Args...>>
       >
       constexpr explicit partial_edge_base(const index_type target, Args&&... args)
         : edge_base<IndexType>{target}
@@ -324,7 +324,7 @@ namespace sequoia
       template
       <
         class... Args,
-        class=typename std::enable_if_t<!utilities::same_decay_v<decorated_edge_base, Args...> && !utilities::is_base_of_head_v<decorated_edge_base, Args...>>
+        class=typename std::enable_if_t<!same_decay_v<decorated_edge_base, Args...> && !is_base_of_head_v<decorated_edge_base, Args...>>
       >
       constexpr decorated_edge_base(const index_type target, const index_type auxIndex, Args&&... args)
         : partial_edge_base<Weight, WeightSharingPolicy, WeightProxy, IndexType>{target, std::forward<Args>(args)...}
@@ -421,7 +421,7 @@ namespace sequoia
       template
       <
         class... Args,
-        class=typename std::enable_if_t<!utilities::same_decay_v<edge, Args...> && !utilities::is_base_of_head_v<edge, Args...>>
+        class=typename std::enable_if_t<!same_decay_v<edge, Args...> && !is_base_of_head_v<edge, Args...>>
       >
       constexpr edge(const index_type host, const index_type target, Args&&... args)
         : decorated_edge_base<Weight, data_sharing::independent, WeightProxy, IndexType>{target, host, std::forward<Args>(args)...}
@@ -490,7 +490,7 @@ namespace sequoia
       template
       <
         class... Args,
-        class=typename std::enable_if_t<!utilities::same_decay_v<embedded_edge, Args...> && !utilities::is_base_of_head_v<embedded_edge, Args...>>
+        class=typename std::enable_if_t<!same_decay_v<embedded_edge, Args...> && !is_base_of_head_v<embedded_edge, Args...>>
       >
       constexpr embedded_edge(const index_type host, const index_type target, const index_type auxIndex, Args&&... args)
         : decorated_edge_base<Weight, WeightSharingPolicy, WeightProxy, IndexType>{target, auxIndex, std::forward<Args>(args)...}
@@ -554,6 +554,7 @@ namespace sequoia
     constexpr bool operator==(const embedded_edge<Weight, WeightSharingPolicy, WeightProxy, IndexType>& lhs, const embedded_edge<Weight, WeightSharingPolicy, WeightProxy, IndexType>& rhs)
     {
       return (lhs.host_node() == rhs.host_node())
+        && (lhs.inverted() == rhs.inverted())
         && (static_cast<const decorated_edge_base<Weight, WeightSharingPolicy, WeightProxy, IndexType>&>(lhs) ==
             static_cast<const decorated_edge_base<Weight, WeightSharingPolicy, WeightProxy, IndexType>&>(rhs));
     }

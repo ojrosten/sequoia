@@ -1109,8 +1109,8 @@ namespace sequoia
       template<class Edges>
       constexpr void process_edges(Edges& orderedEdges)
       {
-        constexpr bool sortWeights{!std::is_empty_v<edge_weight_type> && utilities::is_orderable_v<edge_weight_type>};
-        constexpr bool clusterEdges{!std::is_empty_v<edge_weight_type> && !utilities::is_orderable_v<edge_weight_type>};
+        constexpr bool sortWeights{!std::is_empty_v<edge_weight_type> && is_orderable_v<edge_weight_type>};
+        constexpr bool clusterEdges{!std::is_empty_v<edge_weight_type> && !is_orderable_v<edge_weight_type>};
 
         auto edgeComparer{
           [](const auto& e1, const auto& e2){
