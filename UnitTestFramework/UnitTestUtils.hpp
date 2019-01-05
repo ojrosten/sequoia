@@ -776,6 +776,9 @@ namespace sequoia
       using namespace maths;
 
       std::vector<double> fastData, slowData;
+      fastData.reserve(trials);
+      slowData.reserve(trials);
+      
       std::random_device generator;
       for(std::size_t i{}; i < trials; ++i)
       {

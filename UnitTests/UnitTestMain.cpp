@@ -76,6 +76,19 @@ int main(int argc, char** argv)
     }
   );
 
+  runner.add_test_family(
+    test_family{
+      "Protective Wrapper",
+      test_protective_wrapper{"Unit Test"}
+    }
+  );
+
+  runner.add_test_family(
+    test_family{
+      "Iterator",
+      test_iterator{"Unit Test"}
+    }
+  );
 
   runner.add_test_family(
     test_family{
@@ -112,20 +125,6 @@ int main(int argc, char** argv)
       "Static Priority Queue",
       test_static_priority_queue_false_positives{"Static priority queue false positive diagnostics"},
       test_static_priority_queue{"Unit Test"}
-    }
-  );
-
-  runner.add_test_family(
-    test_family{
-      "Protective Wrapper",
-      test_protective_wrapper{"Unit Test"}
-    }
-  );
-
-  runner.add_test_family(
-    test_family{
-      "Iterator",
-      test_iterator{"Unit Test"}
     }
   );
 
