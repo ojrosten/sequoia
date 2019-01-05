@@ -580,7 +580,7 @@ namespace sequoia
         const bool equal{equality_checker<bool>::check(logger, true, reference == actual)};
         if(!equal)
         {
-          if(equality_checker<bool>::check(logger, reference.size(), actual.size(), std::string{description} + "container size wrong"))
+          if(equality_checker<std::size_t>::check(logger, reference.size(), actual.size(), std::string{description} + "container size wrong"))
           {
             if constexpr (!diagnostic(Logger::mode))
             {
