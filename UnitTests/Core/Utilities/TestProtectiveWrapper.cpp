@@ -6,91 +6,81 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "TestProtectiveWrapper.hpp"
-#include "ProtectiveWrapper.hpp"
+#include "ProtectiveWrapperTestingUtilities.hpp"
 
-#include <complex>
-#include <vector>
-
-namespace sequoia
+namespace sequoia::unit_testing
 {
-  namespace unit_testing
+  // a+1, b*2
+  constexpr utilities::protective_wrapper<data> make(int a, double b)
   {
-    void test_protective_wrapper::run_tests()
-    {
-      using namespace utilities;
+    utilities::protective_wrapper<data> d{a, b};
+    d.set(a, b);
+    d.mutate([](auto& e) { e.a+=1; e.b*=2; });
 
-      using std::complex;
+    return d;
+  }
+  
+  void test_protective_wrapper::run_tests()
+  {
+    test_basic_type();
+    test_container_type();
+    test_aggregate_type();   
+  }
 
-      protective_wrapper<double> x(1.0);
-      check_equality<double>(1.0, x.get(), "Value is 1.0");
-      x.set(2.0);
-      check_equality<double>(2.0, x.get(), "Value is 2.0");
-      constexpr protective_wrapper<int> i(10);
-      check_equality<int>(10, i.get(), "Integer value is 10");
+  void test_protective_wrapper::test_basic_type()
+  {
+    using namespace utilities;
 
-      constexpr protective_wrapper<int> j{invert(i)};
-      check_equality<int>(-10, j.get(), "Integer value is -10");
-      
-      protective_wrapper<complex<float>>
-        z(2.0f),
-        w(0.5f, 1.0f);
+    using wrapper = protective_wrapper<int>;
 
-      check_equality<complex<float>>(complex<float>(0.5, 1.0), w.get(), "Value is (0.5,1.0i)");
-      check_equality<complex<float>>(complex<float>(2.0), z.get(), "Value is (2.0, 0i)");
+    wrapper w{};
+    constexpr wrapper v{1};
 
-      check(z != w, "Complex values diffent");
+    check_regular_semantics(w, v, LINE("Regular semantics"));
 
-      swap(z, w);
+    w.set(2);
 
-      check_equality<complex<float>>(complex<float>(2.0), w.get(), "Values swapped so first value is now (2.0, 0i)");
-      check_equality<complex<float>>(complex<float>(0.5, 1.0), z.get(), "Values swapped so second value is now (0.5, 1.0i)");
+    check_equality(wrapper{2}, w, LINE(""));
 
-      w.set(0.5f, 1.0f);
+    w.mutate([](auto& u) { u *=2; });
 
-      check(z == w, "Complex weights now identical");
+    check_equality(wrapper{4}, w, LINE(""));
+  }
+  
+  void test_protective_wrapper::test_container_type()
+  {
+    using namespace utilities;
 
-      complex<float> lval{-1.0f, -2.4f};
-      w.set(lval);
+    using wrapper = protective_wrapper<std::vector<int>>;
 
-      check_equality<complex<float>>(lval, w.get(), "w is now (-1.0, -2.4i)");
+    wrapper w{}, v{1};
 
-      protective_wrapper<complex<float>> u(z);
+    check_regular_semantics(w, v, LINE("Regular semantics"));
 
-      check_equality<complex<float>>(complex<float>(0.5, 1.0), u.get(), "New variable set to (0.5, 1.0i)");
+    w.set(2);
 
-      swap(u, w);
+    check_equality(wrapper{std::vector<int>{2}}, w, LINE(""));
 
-      check_equality<complex<float>>(complex<float>(-1.0f, -2.4f), u.get(), "New variable swapped with old, so value is (-1.0, -2.4i)");
-      check_equality<complex<float>>(complex<float>(0.5f, 1.0f), w.get(), "Old variable swapped with new so value is (0.5, 1.0i)");
+    check_regular_semantics(w, v, LINE("Regular semantics"));
 
-      u = z;
+    v.mutate([](auto& u) { u.push_back(3); });
 
-      check_equality<complex<float>>(complex<float>(0.5, 1.0), u.get(), "variable u set to z");
+    check_equality(wrapper{std::vector<int>{1, 3}}, v, LINE(""));
 
-      u.mutate([](auto& c) { c.imag(2.0); });
-      check_equality<complex<float>>(complex<float>(0.5, 2.0), u.get(), "imaginary part of u set to 2.0");
+    check_regular_semantics(w, v, LINE("Regular semantics"));
+  }
+  
+  void test_protective_wrapper::test_aggregate_type()
+  {
+    using namespace utilities;
 
-      constexpr protective_wrapper<complex<int>> p{10,-5};
-      check_equality(complex<int>(10, -5), p.get(), "p has value (10, -5)");
+    using wrapper = protective_wrapper<data>;
 
-      protective_wrapper<std::vector<double>> a{1.0, 2.0};
-      check_equality(std::vector<double>{1,2}, a.get());
+    wrapper w{};
+    constexpr wrapper v{make(1, 2.0)};
 
-      protective_wrapper<std::vector<double>> b{10.0,4.0};
-      check_equality(std::vector<double>{10,4}, b.get());
+    check_equality(wrapper{2, 4.0}, v, LINE(""));
 
-      swap(a,b);
-
-      check_equality(std::vector<double>{1,2}, b.get());
-      check_equality(std::vector<double>{10,4}, a.get());
-
-      constexpr protective_wrapper<point<double>> pt{-1.0, 1.0};
-      check_equality<double>(-1, pt.get().x());
-      check_equality<double>(1, pt.get().y());
-
-      constexpr protective_wrapper<point<double>> pt2{scale(pt, 2.0)};
-      check_equality<double>(-2, pt2.get().x());
-      check_equality<double>(2, pt2.get().y());
-    }
+    check_regular_semantics(w, v, LINE("Regular semantics"));
   }
 }

@@ -22,29 +22,6 @@ namespace sequoia::unit_testing
     void test_container_type();
 
     void test_aggregate_type();
-
-    struct point
-    {
-      int a;
-      double b;
-
-      friend constexpr bool operator==(const point& lhs, const point& rhs)
-      {
-        return (lhs.a == rhs.a) && (lhs.b == rhs.b);
-      }
-
-      friend constexpr bool operator!=(const point& lhs, const point& rhs)
-      {
-        return !(lhs == rhs);
-      }
-
-      template<class Stream> friend Stream& operator<<(Stream& stream, const point& p)
-      {
-        stream << p.a << p.b;
-
-        return stream;
-      }
-    };
   };
 
 }

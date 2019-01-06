@@ -42,7 +42,7 @@ namespace sequoia::unit_testing
   {
     using namespace utilities;
     
-    protective_wrapper<point> w{}, v{1, 2.0};
+    protective_wrapper<data> w{}, v{1, 2.0};
     check_equality(w, v, LINE(""));
   }
 }
