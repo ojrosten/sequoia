@@ -19,7 +19,7 @@ namespace sequoia::unit_testing
     template<class Logger>
     static void check(Logger& logger, const utilities::protective_wrapper<T, std::is_empty_v<T>>& reference, const utilities::protective_wrapper<T, std::is_empty_v<T>>& actual, std::string_view description="")
     {
-      check(reference.get(), actual.get(), description);
+      check_equality(logger, reference.get(), actual.get(), description);
     }
   };
 }
