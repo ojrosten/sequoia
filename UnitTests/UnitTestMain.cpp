@@ -1,4 +1,6 @@
+#include "ProtectiveWrapperTestingDiagnostics.hpp"
 #include "TestProtectiveWrapper.hpp"
+
 #include "TestPartitionedData.hpp"
 #include "TestStaticStack.hpp"
 #include "TestStaticQueue.hpp"
@@ -43,10 +45,6 @@
 
 #include "UnitTestRunner.hpp"
 
-#include <vector>
-#include <memory>
-#include <iostream>
-
 int main(int argc, char** argv)
 {
   using namespace sequoia;
@@ -79,6 +77,7 @@ int main(int argc, char** argv)
   runner.add_test_family(
     test_family{
       "Protective Wrapper",
+      test_protective_wrapper_false_positives{"False Positive Diagnostics"},
       test_protective_wrapper{"Unit Test"}
     }
   );
