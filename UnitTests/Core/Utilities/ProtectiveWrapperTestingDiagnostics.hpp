@@ -18,6 +18,8 @@ namespace sequoia::unit_testing
     void run_tests() override;
 
     void test_basic_type();
+
+    void test_container_type();
   };
 
 }
