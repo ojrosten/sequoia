@@ -13,6 +13,8 @@
 
 #include "UnitTestUtils.hpp"
 
+#include <map>
+
 namespace sequoia::unit_testing
 {
   class unit_test_runner
@@ -27,10 +29,28 @@ namespace sequoia::unit_testing
 
     void execute();
   private:
+    using arg_list = std::vector<std::string>;
+
+    struct new_files
+    {
+      std::string class_name, directory;
+    };
+
+    const static std::map<std::string, std::size_t> s_ArgCount;
+    
     std::vector<test_family> m_Families;
-    std::set<std::string> m_SpecificCases{};
+    std::map<std::string, std::function<void (const arg_list&)>> m_FunctionMap;
+    std::set<std::string> m_SpecificTests{};
+    std::vector<new_files> m_NewFiles{};
+    
     bool m_Asynchronous{}, m_Verbose{};
 
     log_summary process_family(const std::vector<log_summary>& summaries);
+
+    void build_map();
+
+    void create_files();
+
+    void run_tests();
   };
 }

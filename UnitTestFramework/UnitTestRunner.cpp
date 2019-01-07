@@ -10,134 +10,169 @@
 #include <map>
 #include <iostream>
 
-namespace sequoia
+namespace sequoia::unit_testing
 {
-  namespace unit_testing
+  const std::map<std::string, std::size_t> unit_test_runner::s_ArgCount{
+    {"create", 2}
+  };
+
+  unit_test_runner::unit_test_runner(int argc, char** argv)
   {
-    unit_test_runner::unit_test_runner(int argc, char** argv)
+    build_map();
+    
+    std::vector<arg_list> args;
+    for(int i{1}; i<argc; ++i)
     {
-      using arg_list = std::vector<std::string>;
-      std::vector<arg_list> args;
-      for(int i{1}; i<argc; ++i)
+      std::string arg{argv[i]};
+      if(!arg.empty())
       {
-        std::string arg{argv[i]};
-        if(!arg.empty())
-        {
-          const bool append{[&arg, &args](){
-              if((arg.front() != '-') && !args.empty())
+        const bool append{[&arg, &args](){
+            if((arg.front() != '-') && !args.empty())
+            {
+              const auto& lastList{args.back()};
+              if(!lastList.empty())
               {
-                const auto& lastList = args.back();
-                if(lastList.size() == 1)
+                if(auto found{s_ArgCount.find(lastList.front())}; found != s_ArgCount.end())
                 {
-                  const auto& lastString = args.back().front();
+                  if(lastList.size() <= found->second)
+                    return true;
+                }
+                else if(lastList.size() == 1)
+                {
+                  const auto& lastString{args.back().front()};
                   if(!lastString.empty() && (lastString.front() != '-'))
                     return true;
                 }
               }
-              return false;
-            }()
-          };
+            }
+            return false;
+          }()
+        };
                        
-          if(append)
-          {
-            args.back().push_back(arg);
-          }
-          else
-          {
-            args.push_back(arg_list{{arg}});
-          }
+        if(append)
+        {
+          args.back().push_back(arg);
         }
-      }
-      
-      std::map<std::string, std::function<void (const arg_list&)>> functionMap;
-
-      functionMap.emplace("test", [this](const arg_list& argList) {
-          if(argList.size() == 1)
-          {
-            m_SpecificCases.insert(argList.front());
-          }
-          else
-          {
-            std::cout << "Warning: 'test' requires precisely one argument, but " << argList.size() << " were provided\n";
-          }
-        }
-      );
-
-      functionMap.emplace("-async", [this](const arg_list& argList) {
-          if(argList.empty())
-          {
-            m_Asynchronous = true;
-          }
-          else
-          {
-            std::cout << "Warning: -async requires no arguments, but " << argList.size() << " were provided\n";
-          }
-        }
-      );
-
-      functionMap.emplace("-v", [this](const arg_list& argList) {
-          if(argList.empty())
-          {
-            m_Verbose = true;
-          }
-          else
-          {
-            std::cout << "Warning: -verbose requires no arguments, but " << argList.size() << " were provided\n";
-          }
-        }
-      );
-
-      
-
-      for(const auto& argList : args)
-      {
-        if(!argList.empty())
-        {          
-          const std::string& key{argList.front()};
-          arg_list remainingArgs(argList.size() - 1);
-          std::copy(argList.begin() + 1, argList.end(), remainingArgs.begin());
-          auto found = functionMap.find(key);
-          if(found != functionMap.end())
-          {
-            found->second(remainingArgs);
-          }
-          else
-          {
-            std::cout << "Warning: argument \'" << key << "\' not recognized\n";
-          }
+        else
+        {
+          args.push_back(arg_list{{arg}});
         }
       }
     }
     
-    void unit_test_runner::add_test_family(test_family&& f)
+    for(const auto& argList : args)
     {
-      bool accept{true};
-
-      if(!m_SpecificCases.empty())
-      {
-        if(m_SpecificCases.find(std::string{f.name()}) == m_SpecificCases.end())
-          accept = false;
+      if(!argList.empty())
+      {          
+        const std::string& key{argList.front()};
+        arg_list remainingArgs(argList.size() - 1);
+        std::copy(argList.begin() + 1, argList.end(), remainingArgs.begin());
+        auto found{m_FunctionMap.find(key)};
+        if(found != m_FunctionMap.end())
+        {
+          found->second(remainingArgs);
+        }
+        else
+        {
+          std::cout << "\nWarning: argument \'" << key << "\' not recognized\n\n";
+        }
       }
-      
-      if(accept) m_Families.emplace_back(std::move(f));
     }
+  }
 
-    log_summary unit_test_runner::process_family(const std::vector<log_summary>& summaries)
-    {
-      log_summary familySummary{};
-      for(const auto& s : summaries)
-      {
-        if(m_Verbose) std::cout << "    " << s.summarize("        ", log_verbosity::failure_messages);
-        familySummary += s;
+  void unit_test_runner::build_map()
+  {
+    m_FunctionMap.emplace("test", [this](const arg_list& argList) {          
+        if(argList.size() == 1)
+        {
+          m_SpecificTests.insert(argList.front());
+        }
+        else
+        {
+          std::cout << "\nWarning: 'test' requires precisely one argument [test_name], but " << argList.size() << " was/were provided\n";
+        }
       }
+    );
+
+    m_FunctionMap.emplace("create", [this](const arg_list& argList) {          
+        if(argList.size() == 2)
+        {
+          m_NewFiles.push_back(new_files{argList[0], argList[1]});
+        }
+        else
+        {
+          std::cout << "\nWarning: 'create' requires two arguments [directory, class_name], but " << argList.size() << " was/were provided\n";
+        }
+      }
+    );
+
+    m_FunctionMap.emplace("-async", [this](const arg_list& argList) {
+        if(argList.empty())
+        {
+          m_Asynchronous = true;
+        }
+        else
+        {
+          std::cout << "\nWarning: -async requires no arguments, but " << argList.size() << " were provided\n";
+        }
+      }
+    );
+
+    m_FunctionMap.emplace("-v", [this](const arg_list& argList) {
+        if(argList.empty())
+        {
+          m_Verbose = true;
+        }
+        else
+        {
+          std::cout << "\nWarning: -verbose requires no arguments, but " << argList.size() << " were provided\n";
+        }
+      }
+    );
+  }
+    
+  void unit_test_runner::add_test_family(test_family&& f)
+  {
+    if(m_SpecificTests.empty() || (m_SpecificTests.find(std::string{f.name()}) != m_SpecificTests.end()))
+    {
+      m_Families.emplace_back(std::move(f));
+    }
+  }
+
+  log_summary unit_test_runner::process_family(const std::vector<log_summary>& summaries)
+  {
+    log_summary familySummary{};
+    for(const auto& s : summaries)
+    {
+      if(m_Verbose) std::cout << "    " << s.summarize("        ", log_verbosity::failure_messages);
+      familySummary += s;
+    }
           
-      if(!m_Verbose) std::cout << familySummary.summarize("    ", log_verbosity::failure_messages);
+    if(!m_Verbose) std::cout << familySummary.summarize("    ", log_verbosity::failure_messages);
 
-      return familySummary;
+    return familySummary;
+  }
+
+  
+  void unit_test_runner::execute()
+  {
+    create_files();
+    run_tests();
+  }
+
+  void unit_test_runner::create_files()
+  {
+    if(!m_NewFiles.empty())
+    {
+      std::cout << "Creating files...\n";
+      // TO DO
     }
-    
-    void unit_test_runner::execute()
-    {      
+  }
+  
+  void unit_test_runner::run_tests()
+  {
+    if(!m_Families.empty())
+    {
       std::cout << "Running unit tests...\n";
       log_summary summary{};
       if(!m_Asynchronous)
@@ -166,7 +201,7 @@ namespace sequoia
       }
 
       std::cout <<  "-----Grand Totals-----\n";
-      std::cout << summary.summarize("", log_verbosity::absent_checks);      
+      std::cout << summary.summarize("", log_verbosity::absent_checks);
     }
   }
 }
