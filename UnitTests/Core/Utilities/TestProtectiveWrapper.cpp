@@ -33,6 +33,8 @@ namespace sequoia::unit_testing
 
     using wrapper = protective_wrapper<int>;
 
+    static_assert(sizeof(wrapper) == sizeof(int));
+
     wrapper w{};
     constexpr wrapper v{1};
 
@@ -52,6 +54,8 @@ namespace sequoia::unit_testing
     using namespace utilities;
 
     using wrapper = protective_wrapper<std::vector<int>>;
+
+    static_assert(sizeof(wrapper) == sizeof(std::vector<int>));
 
     wrapper w{}, v{1};
 
@@ -75,6 +79,8 @@ namespace sequoia::unit_testing
     using namespace utilities;
 
     using wrapper = protective_wrapper<data>;
+
+    static_assert(sizeof(wrapper) == sizeof(data));
 
     wrapper w{};
     constexpr wrapper v{make(1, 2.0)};
