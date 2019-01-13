@@ -105,13 +105,13 @@ namespace sequoia::unit_testing
           data.directory = argList[0];
 
           auto& className{argList[1]};
-          if(auto pos{className.find_last_of(':')}; pos != std::string::npos)
+          if(auto pos{className.rfind("::")}; pos != std::string::npos)
           {
-            if(pos < className.length() - 1)
+            if(pos < className.length() - 2)
             {
             
-              data.namespaces = className.substr(0, pos+1);
-              data.class_name = className.substr(pos+1);
+              data.namespaces = className.substr(0, pos+2);
+              data.class_name = className.substr(pos+2);
             }
           }
           else
