@@ -9,6 +9,8 @@
 
 #include <map>
 #include <iostream>
+#include <fstream>
+#include <sstream>
 
 namespace sequoia::unit_testing
 {
@@ -89,7 +91,7 @@ namespace sequoia::unit_testing
         }
         else
         {
-          std::cout << "\nWarning: 'test' requires precisely one argument [test_name], but " << argList.size() << " was/were provided\n";
+          std::cout << "\nWarning: 'test' requires one argument [test_name], but " << argList.size() << " was/were provided\n";
         }
       }
     );
@@ -113,7 +115,7 @@ namespace sequoia::unit_testing
         }
         else
         {
-          std::cout << "\nWarning: -async requires no arguments, but " << argList.size() << " were provided\n";
+          std::cout << "\nWarning: -async requires no arguments, but " << argList.size() << " was/were provided\n";
         }
       }
     );
@@ -125,7 +127,7 @@ namespace sequoia::unit_testing
         }
         else
         {
-          std::cout << "\nWarning: -verbose requires no arguments, but " << argList.size() << " were provided\n";
+          std::cout << "\nWarning: -verbose requires no arguments, but " << argList.size() << " was/were provided\n";
         }
       }
     );
@@ -165,7 +167,33 @@ namespace sequoia::unit_testing
     if(!m_NewFiles.empty())
     {
       std::cout << "Creating files...\n";
-      // TO DO
+
+      for(const auto& [directory,className] : m_NewFiles)
+      {
+        std::string fileText{};
+        if(std::ifstream ifile{"../aux_files/CodeTemplates/MyClassTestingUtilities.hpp"})
+        {
+          std::stringstream buffer{};
+          buffer << ifile.rdbuf();
+          fileText = buffer.str();
+        }
+        else
+        {
+          std::cout << "\nWarning: unable to open Testing Utilities template";
+        }
+        
+        if(!fileText.empty())
+        {
+          if(std::ofstream ofile{directory + "/" + className + "TestingUtilities.hpp"})
+          {
+            ofile << fileText;
+          }
+          else
+          {
+            std::cout << "\nWarning: unable to create new Testing Utilities header";
+          }
+        }
+      }
     }
   }
   
