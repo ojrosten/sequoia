@@ -11,6 +11,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <cctype>
 
 namespace sequoia::unit_testing
 {
@@ -99,7 +100,26 @@ namespace sequoia::unit_testing
     m_FunctionMap.emplace("create", [this](const arg_list& argList) {          
         if(argList.size() == 2)
         {
-          m_NewFiles.push_back(new_files{argList[0], argList[1]});
+          new_files data{};
+
+          data.directory = argList[0];
+
+          auto& className{argList[1]};
+          if(auto pos{className.find_last_of(':')}; pos != std::string::npos)
+          {
+            if(pos < className.length() - 1)
+            {
+            
+              data.namespaces = className.substr(0, pos+1);
+              data.class_name = className.substr(pos+1);
+            }
+          }
+          else
+          {
+            data.class_name = className;
+          }
+          
+          m_NewFiles.push_back(data);
         }
         else
         {
@@ -155,6 +175,32 @@ namespace sequoia::unit_testing
     return familySummary;
   }
 
+  std::string unit_test_runner::to_camel_case(std::string text)
+  {
+    if(!text.empty())
+    {
+      if(std::isalpha(text.front()))
+      {
+        text.front() = std::toupper(text.front());
+      }
+
+      using size_t = std::string::size_type;
+
+      size_t pos{};
+      while((pos = text.find("_", pos)) != std::string::npos)
+      {
+        if((pos < text.length() - 1) && std::isalpha(text[pos + 1]))
+        {
+          text[pos + 1] = std::toupper(text[pos + 1]);         
+          pos += 2;
+        }
+
+        pos += 1;
+      }
+    }
+
+    return text;
+  }
   
   void unit_test_runner::execute()
   {
@@ -168,25 +214,35 @@ namespace sequoia::unit_testing
     {
       std::cout << "Creating files...\n";
 
-      for(const auto& [directory,className] : m_NewFiles)
+      for(const auto& data : m_NewFiles)
       {
-        std::string fileText{};
+        std::string text{};
         if(std::ifstream ifile{"../aux_files/CodeTemplates/MyClassTestingUtilities.hpp"})
         {
           std::stringstream buffer{};
           buffer << ifile.rdbuf();
-          fileText = buffer.str();
+          text = buffer.str();
         }
         else
         {
           std::cout << "\nWarning: unable to open Testing Utilities template";
         }
         
-        if(!fileText.empty())
+        if(!text.empty())
         {
-          if(std::ofstream ofile{directory + "/" + className + "TestingUtilities.hpp"})
+          using size_t = std::string::size_type;
+
+          size_t pos{};
+          while((pos = text.find("MyClass", pos)) != std::string::npos)
           {
-            ofile << fileText;
+            text.replace(pos, 7, data.class_name);
+            pos += data.class_name.length();
+          }
+          
+          if(std::string path{data.directory + "/" + to_camel_case(data.class_name) + "TestingUtilities.hpp"}; std::ofstream ofile{path})
+          {
+            std::cout << "Creating file " << path << '\n';
+            ofile << text;
           }
           else
           {
@@ -199,7 +255,7 @@ namespace sequoia::unit_testing
   
   void unit_test_runner::run_tests()
   {
-    if(!m_Families.empty())
+    if(!m_Families.empty() && (m_NewFiles.empty() || !m_SpecificTests.empty()))
     {
       std::cout << "Running unit tests...\n";
       log_summary summary{};

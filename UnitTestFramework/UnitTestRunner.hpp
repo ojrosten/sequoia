@@ -33,7 +33,7 @@ namespace sequoia::unit_testing
 
     struct new_files
     {
-      std::string class_name, directory;
+      std::string directory, namespaces, class_name, template_args;
     };
 
     const static std::map<std::string, std::size_t> s_ArgCount;
@@ -46,6 +46,8 @@ namespace sequoia::unit_testing
     bool m_Asynchronous{}, m_Verbose{};
 
     log_summary process_family(const std::vector<log_summary>& summaries);
+
+    static std::string to_camel_case(std::string text);
 
     void build_map();
 
