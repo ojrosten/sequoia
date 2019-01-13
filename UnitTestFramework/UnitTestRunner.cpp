@@ -103,21 +103,7 @@ namespace sequoia::unit_testing
           new_files data{};
 
           data.directory = argList[0];
-
-          auto& className{argList[1]};
-          if(auto pos{className.rfind("::")}; pos != std::string::npos)
-          {
-            if(pos < className.length() - 2)
-            {
-            
-              data.namespaces = className.substr(0, pos+2);
-              data.class_name = className.substr(pos+2);
-            }
-          }
-          else
-          {
-            data.class_name = className;
-          }
+          data.class_name = argList[1];         
           
           m_NewFiles.push_back(data);
         }
@@ -238,8 +224,21 @@ namespace sequoia::unit_testing
             text.replace(pos, 7, data.class_name);
             pos += data.class_name.length();
           }
+
+
+          std::string firstName{};
+          if(auto pos{data.class_name.rfind("::")}; pos != std::string::npos)
+          {
+            if(pos < data.class_name.length() - 2)
+            {            
+              firstName = data.class_name.substr(pos+2);
+            }
+          }
+
+          if(firstName.empty()) firstName = data.class_name;
           
-          if(std::string path{data.directory + "/" + to_camel_case(data.class_name) + "TestingUtilities.hpp"}; std::ofstream ofile{path})
+          
+          if(std::string path{data.directory + "/" + to_camel_case(firstName) + "TestingUtilities.hpp"}; std::ofstream ofile{path})
           {
             std::cout << "Creating file " << path << '\n';
             ofile << text;
