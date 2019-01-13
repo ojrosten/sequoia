@@ -33,7 +33,7 @@ namespace sequoia::unit_testing
 
     struct new_files
     {
-      std::string directory, class_name, template_args;
+      std::string directory, class_name;
     };
 
     const static std::map<std::string, std::size_t> s_ArgCount;

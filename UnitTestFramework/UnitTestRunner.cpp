@@ -100,12 +100,7 @@ namespace sequoia::unit_testing
     m_FunctionMap.emplace("create", [this](const arg_list& argList) {          
         if(argList.size() == 2)
         {
-          new_files data{};
-
-          data.directory = argList[0];
-          data.class_name = argList[1];         
-          
-          m_NewFiles.push_back(data);
+          m_NewFiles.push_back(new_files{argList[0], argList[1]});
         }
         else
         {
@@ -235,12 +230,11 @@ namespace sequoia::unit_testing
             }
           }
 
-          if(firstName.empty()) firstName = data.class_name;
-          
+          if(firstName.empty()) firstName = data.class_name;          
           
           if(std::string path{data.directory + "/" + to_camel_case(firstName) + "TestingUtilities.hpp"}; std::ofstream ofile{path})
           {
-            std::cout << "Creating file " << path << '\n';
+            std::cout << "  Creating file " << path << '\n';
             ofile << text;
           }
           else

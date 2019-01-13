@@ -13,10 +13,10 @@
 
 namespace sequoia::unit_testing
 {
-  //template<????>
-  struct details_checker<MyClass/*<????>*/>
+  //template<???>
+  struct details_checker<MyClass/*<???>*/>
   {
-    using type = MyClass/*<????>*/;
+    using type = MyClass/*<???>*/;
     
     template<class Logger>
     static void check(Logger& logger, const type& reference, const type& actual, std::string_view description="")
