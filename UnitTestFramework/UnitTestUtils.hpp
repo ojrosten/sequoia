@@ -173,13 +173,13 @@ namespace sequoia
       void log_critical_failure(std::string_view message)
       {
         ++m_CriticalFailures;
-        m_Messages += (std::string{message} + '\n');
+        m_Messages.append(message) += '\n';
         if(std::ofstream of{m_RecoveryFile}) of << m_Messages;
       }
 
       void post_message(std::string_view message)
       {
-        m_Messages += std::string{message};
+        m_Messages.append(message);
       }
 
       [[nodiscard]]
@@ -211,7 +211,7 @@ namespace sequoia
         const std::string prefix{failure_message_prefix()};
         std::string message{prefix.empty() ? failure_message_preface() : "\n\t[" + prefix + "] " + failure_message_preface()};
         
-        if(!description.empty()) message += (" (" + std::string{description} + ")");
+        if(!description.empty()) message.append(" (").append(description).append(")");
 
         return message;
       }
@@ -263,10 +263,10 @@ namespace sequoia
 
       void reset_failures() noexcept { m_Failures = 0u; }
 
-      void log_diagnostic_failure(std::string message)
+      void log_diagnostic_failure(std::string_view message)
       {
         ++m_DiagnosticFailures;
-        m_Messages += (std::move(message) + '\n');
+        m_Messages.append(message) += '\n';
       }
 
       void current_message(std::string_view message)
@@ -404,10 +404,10 @@ namespace sequoia
       std::string summarize(std::string_view checkNumsPrefix, const log_verbosity suppression ) const
       {
         std::array<std::string, 4> summaries{
-          std::string{checkNumsPrefix} + "Standard Checks:",
-          std::string{checkNumsPrefix} + "Performance Checks:",
-          std::string{checkNumsPrefix} + "False Negative Checks:",
-          std::string{checkNumsPrefix} + "False Positive Checks:"
+          std::string{checkNumsPrefix}.append("Standard Checks:"),
+          std::string{checkNumsPrefix}.append("Performance Checks:"),
+          std::string{checkNumsPrefix}.append("False Negative Checks:"),
+          std::string{checkNumsPrefix}.append("False Positive Checks:")
         };
 
         pad_right(summaries.begin(), summaries.end(), "  ");
@@ -525,7 +525,7 @@ namespace sequoia
         std::string mess{!s1.empty() ? s1 : s2};
         if(!s1.empty() && !s2.empty())
         {
-          mess += (" " + std::string{s2});
+          mess.append(" ").append(s2);
         }
         
         return mess;
@@ -589,7 +589,7 @@ namespace sequoia
         const bool equal{equality_checker<bool>::check(logger, true, reference == actual)};
         if(!equal)
         {
-          if(equality_checker<std::size_t>::check(logger, reference.size(), actual.size(), std::string{description} + "container size wrong"))
+          if(equality_checker<std::size_t>::check(logger, reference.size(), actual.size(), std::string{description}.append("container size wrong")))
           {
             if constexpr (!diagnostic(Logger::mode))
             {
@@ -600,7 +600,7 @@ namespace sequoia
             for(auto refIter{std::begin(reference)}, actIter{std::begin(actual)}; refIter != std::end(reference); ++refIter, ++actIter)
             {
               const std::string dist{std::to_string(std::distance(std::begin(reference), refIter))};
-              equality_checker<typename T::value_type>::check(logger, *refIter, *actIter, std::string{description} +  "element " + dist);
+              equality_checker<typename T::value_type>::check(logger, *refIter, *actIter, std::string{description}.append("element ") += dist);
             }
           }
         }
@@ -740,12 +740,12 @@ namespace sequoia
       typename Logger::sentinel r{logger, description};
       bool equal{true};
       const auto refSize = std::distance(refBegin, refEnd);
-      if(check_equality(logger, refSize, std::distance(resBegin, resEnd), std::string{description} + " container size wrong"))
+      if(check_equality(logger, refSize, std::distance(resBegin, resEnd), std::string{description}.append(" container size wrong")))
       {        
         for(auto refIter = refBegin, resIter = resBegin; refIter != refEnd; ++refIter, ++resIter)
         {
           const std::string dist{std::to_string(std::distance(refBegin, refIter))};
-          if(!check_equality(logger, *refIter, *resIter, std::string{description} +  "element " + dist)) equal = false;
+          if(!check_equality(logger, *refIter, *resIter, std::string{description}.append("element ") += dist)) equal = false;
         }
       }
       else
@@ -1049,7 +1049,7 @@ namespace sequoia
 
       std::string make_message(std::string_view tag, std::string_view exceptionMessage) const
       {
-        std::string mess{"\tError -- " + std::string(tag) + " Exception:" + format(exceptionMessage) + '\n'};
+        auto mess{(std::string{"\tError -- "}.append(tag) += " Exception:") += format(exceptionMessage) += '\n'};
         if(Checker::exceptions_detected_by_sentinel())
         {
           mess += "\tException thrown during last check\n";
@@ -1066,7 +1066,7 @@ namespace sequoia
 
       static std::string format(std::string_view s)
       {
-        return s.empty() ? std::string{s} : '\t' + std::string{s};
+        return s.empty() ? std::string{s} : std::string{'\t'}.append(s);
       }
     };
 
