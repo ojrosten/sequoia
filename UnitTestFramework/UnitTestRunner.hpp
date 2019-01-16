@@ -47,12 +47,17 @@ namespace sequoia::unit_testing
 
     log_summary process_family(const std::vector<log_summary>& summaries);
 
-    static std::string to_camel_case(std::string text);
-
     void build_map();
 
     void create_files();
 
     void run_tests();
+
+    
+    static std::string to_camel_case(std::string text);
+    
+    static std::string warning(std::string_view message);
+
+    static std::string report_arg_num(const std::size_t n);
   };
 }

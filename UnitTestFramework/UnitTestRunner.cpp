@@ -77,7 +77,7 @@ namespace sequoia::unit_testing
         }
         else
         {
-          std::cout << "\nWarning: argument \'" << key << "\' not recognized\n\n";
+          std::cout << (warning("argument \'") += key).append("\' not recognized\n\n");
         }
       }
     }
@@ -92,7 +92,7 @@ namespace sequoia::unit_testing
         }
         else
         {
-          std::cout << "\nWarning: 'test' requires one argument [test_name], but " << argList.size() << " was/were provided\n";
+          std::cout << warning("'test' requires one argument [test_name], but ").append(report_arg_num(argList.size()));
         }
       }
     );
@@ -104,7 +104,7 @@ namespace sequoia::unit_testing
         }
         else
         {
-          std::cout << "\nWarning: 'create' requires two arguments [directory, class_name], but " << argList.size() << " was/were provided\n";
+          std::cout << warning("'create' requires two arguments [directory, class_name], but ").append(report_arg_num(argList.size()));
         }
       }
     );
@@ -116,7 +116,7 @@ namespace sequoia::unit_testing
         }
         else
         {
-          std::cout << "\nWarning: -async requires no arguments, but " << argList.size() << " was/were provided\n";
+          std::cout << warning("-async requires no arguments, but ").append(report_arg_num(argList.size()));
         }
       }
     );
@@ -128,7 +128,7 @@ namespace sequoia::unit_testing
         }
         else
         {
-          std::cout << "\nWarning: -verbose requires no arguments, but " << argList.size() << " was/were provided\n";
+          std::cout << warning("-verbose requires no arguments, but ").append(report_arg_num(argList.size()));
         }
       }
     );
@@ -182,7 +182,17 @@ namespace sequoia::unit_testing
 
     return text;
   }
-  
+
+  std::string unit_test_runner::warning(std::string_view message)
+  {
+    return std::string{"\nWarning: "}.append(message);
+  }
+
+  std::string unit_test_runner::report_arg_num(const std::size_t n)
+  {
+    return (std::to_string(n) += ((n==1) ? " was" : " were")) += " provided\n";
+  }
+                        
   void unit_test_runner::execute()
   {
     create_files();
@@ -206,7 +216,7 @@ namespace sequoia::unit_testing
         }
         else
         {
-          std::cout << "\nWarning: unable to open Testing Utilities template";
+          std::cout << warning("unable to open Testing Utilities template");
         }
         
         if(!text.empty())
@@ -239,7 +249,7 @@ namespace sequoia::unit_testing
           }
           else
           {
-            std::cout << "\nWarning: unable to create new Testing Utilities header";
+            std::cout << warning("unable to create new Testing Utilities header");
           }
         }
       }
