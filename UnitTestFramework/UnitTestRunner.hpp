@@ -51,9 +51,9 @@ namespace sequoia::unit_testing
 
     void build_map();
 
-    void create_files(std::string_view message, const bool overwrite);
+    static void create_files(std::vector<new_file> newFiles, std::string_view message, const bool overwrite);
 
-    void create_file(const new_file& data, std::string_view firstPart, std::string_view secondPart, const bool overwrite);
+    static void create_file(const new_file& data, std::string_view firstPart, std::string_view secondPart, const bool overwrite);
 
     void run_diagnostics();
 

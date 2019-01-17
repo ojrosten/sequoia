@@ -151,10 +151,7 @@ namespace sequoia::unit_testing
 
   void unit_test_runner::run_diagnostics()
   {
-    m_NewFiles.push_back(new_file{"../output/UnitTestCreationDiagnostics", "utilities::iterator"});
-    create_files("Running diagnostics...\n", true);
-    
-    m_NewFiles.clear();
+    create_files({new_file{"../output/UnitTestCreationDiagnostics", "utilities::iterator"}}, "Running diagnostics...\n", true);    
   }
     
   void unit_test_runner::add_test_family(test_family&& f)
@@ -234,17 +231,17 @@ namespace sequoia::unit_testing
                         
   void unit_test_runner::execute()
   {
-    create_files("Creating files...\n", false);
+    create_files(m_NewFiles, "Creating files...\n", false);
     run_tests();
   }
 
-  void unit_test_runner::create_files(std::string_view message, const bool overwrite)
+  void unit_test_runner::create_files(std::vector<new_file> newFiles, std::string_view message, const bool overwrite)
   {
-    if(!m_NewFiles.empty())
+    if(!newFiles.empty())
     {
       std::cout << message;
 
-      for(const auto& data : m_NewFiles)
+      for(const auto& data : newFiles)
       {
         create_file(data, "MyClassTesting", "Utilities.hpp",   overwrite);
         create_file(data, "MyClassTesting", "Diagnostics.hpp", overwrite);
