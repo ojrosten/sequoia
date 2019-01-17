@@ -9,7 +9,7 @@
 
 namespace sequoia::unit_testing
 {
-  class test_MyClass_false_positives : public false_positive_test
+  class test_my_class_false_positives : public false_positive_test
   {
   public:
     using false_positive_test::false_positive_test;    

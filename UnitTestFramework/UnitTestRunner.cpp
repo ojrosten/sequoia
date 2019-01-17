@@ -100,7 +100,17 @@ namespace sequoia::unit_testing
     m_FunctionMap.emplace("create", [this](const arg_list& argList) {          
         if(argList.size() == 2)
         {
-          m_NewFiles.push_back(new_files{argList[0], argList[1]});
+          new_file data{argList[0], argList[1], ""};
+          
+          if(auto pos{data.qualified_class_name.rfind("::")}; pos != std::string::npos)
+          {
+            if(pos < data.qualified_class_name.length() - 2)
+            {            
+              data.class_name = data.qualified_class_name.substr(pos+2);
+            }
+          }
+          
+          m_NewFiles.push_back(data);
         }
         else
         {
@@ -192,6 +202,16 @@ namespace sequoia::unit_testing
   {
     return (std::to_string(n) += ((n==1) ? " was" : " were")) += " provided\n";
   }
+
+  void unit_test_runner::replace_all(std::string& text, std::string_view from, const std::string& to)
+  {
+    std::string::size_type pos{};
+    while((pos = text.find(from, pos)) != std::string::npos)
+    {
+      text.replace(pos, from.length(), to);
+      pos += to.length();
+    }
+  }
                         
   void unit_test_runner::execute()
   {
@@ -207,51 +227,42 @@ namespace sequoia::unit_testing
 
       for(const auto& data : m_NewFiles)
       {
-        std::string text{};
-        if(std::ifstream ifile{"../aux_files/CodeTemplates/MyClassTestingUtilities.hpp"})
-        {
-          std::stringstream buffer{};
-          buffer << ifile.rdbuf();
-          text = buffer.str();
-        }
-        else
-        {
-          std::cout << warning("unable to open Testing Utilities template");
-        }
+        create_file(data, "Utilities.hpp");
+        create_file(data, "Diagnostics.hpp");
+        create_file(data, "Diagnostics.cpp");                
+      }
+    }
+  }
+
+  void unit_test_runner::create_file(const new_file& data, std::string_view partName)
+  {
+    std::string text{};
+    if(auto path{std::string{"../aux_files/UnitTestCodeTemplates/CodeTemplates/MyClassTesting"}.append(partName)};
+       std::ifstream ifile{path})
+    {
+      std::stringstream buffer{};
+      buffer << ifile.rdbuf();
+      text = buffer.str();
+    }
+    else
+    {
+      std::cout << warning("unable to open" ).append(path);
+    }
         
-        if(!text.empty())
-        {
-          using size_t = std::string::size_type;
+    if(!text.empty())
+    {
+      replace_all(text, "::my_class", data.qualified_class_name);
+      replace_all(text, "my_class", data.class_name);
+      replace_all(text, "MyClass", to_camel_case(data.class_name));
 
-          size_t pos{};
-          while((pos = text.find("MyClass", pos)) != std::string::npos)
-          {
-            text.replace(pos, 7, data.class_name);
-            pos += data.class_name.length();
-          }
-
-
-          std::string firstName{};
-          if(auto pos{data.class_name.rfind("::")}; pos != std::string::npos)
-          {
-            if(pos < data.class_name.length() - 2)
-            {            
-              firstName = data.class_name.substr(pos+2);
-            }
-          }
-
-          if(firstName.empty()) firstName = data.class_name;          
-          
-          if(std::string path{data.directory + "/" + to_camel_case(firstName) + "TestingUtilities.hpp"}; std::ofstream ofile{path})
-          {
-            std::cout << "  Creating file " << path << '\n';
-            ofile << text;
-          }
-          else
-          {
-            std::cout << warning("unable to create new Testing Utilities header");
-          }
-        }
+      if(auto path{std::string{data.directory + "/" + to_camel_case(data.class_name)}.append(partName)}; std::ofstream ofile{path})
+      {
+        std::cout << "  Creating file " << path << '\n';
+        ofile << text;
+      }
+      else
+      {
+        std::cout << warning("unable to create file ").append(partName);
       }
     }
   }

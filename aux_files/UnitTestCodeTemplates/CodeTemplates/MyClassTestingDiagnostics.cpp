@@ -5,23 +5,12 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#pragma once
-
-#include "UnitTestUtils.hpp"
-
-//#include "MyType.hpp"
+#include "MyClassTestingDiagnostics.hpp"
 
 namespace sequoia::unit_testing
 {
-  //template<???>
-  struct details_checker<MyClass/*<???>*/>
+  void test_my_class_false_positives::run_tests()
   {
-    using type = MyClass/*<???>*/;
-    
-    template<class Logger>
-    static void check(Logger& logger, const type& reference, const type& actual, std::string_view description="")
-    {
-      // TO DO
-    }
-  };
+    // TO DO
+  }
 }

@@ -31,9 +31,9 @@ namespace sequoia::unit_testing
   private:
     using arg_list = std::vector<std::string>;
 
-    struct new_files
+    struct new_file
     {
-      std::string directory, class_name;
+      std::string directory, qualified_class_name, class_name;
     };
 
     const static std::map<std::string, std::size_t> s_ArgCount;
@@ -41,7 +41,7 @@ namespace sequoia::unit_testing
     std::vector<test_family> m_Families;
     std::map<std::string, std::function<void (const arg_list&)>> m_FunctionMap;
     std::set<std::string> m_SpecificTests{};
-    std::vector<new_files> m_NewFiles{};
+    std::vector<new_file> m_NewFiles{};
     
     bool m_Asynchronous{}, m_Verbose{};
 
@@ -51,6 +51,8 @@ namespace sequoia::unit_testing
 
     void create_files();
 
+    void create_file(const new_file& data, std::string_view partName);
+
     void run_tests();
 
     
@@ -59,5 +61,7 @@ namespace sequoia::unit_testing
     static std::string warning(std::string_view message);
 
     static std::string report_arg_num(const std::size_t n);
+
+    static void replace_all(std::string& text, std::string_view from, const std::string& to);
   };
 }
