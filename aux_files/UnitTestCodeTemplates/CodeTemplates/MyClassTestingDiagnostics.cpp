@@ -9,7 +9,7 @@
 
 namespace sequoia::unit_testing
 {
-  void test_my_class_false_positives::run_tests()
+  void my_class_false_positive_test::run_tests()
   {
     // TO DO
   }

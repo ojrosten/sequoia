@@ -19,8 +19,23 @@ namespace sequoia::unit_testing
     {"create", 2}
   };
 
+  unit_test_runner::new_file::new_file(std::string dir, std::string qualifiedName)
+    : directory{std::move(dir)}
+    , qualified_class_name{std::move(qualifiedName)}
+  {
+          
+    if(auto pos{qualified_class_name.rfind("::")}; pos != std::string::npos)
+    {
+      if(pos < qualified_class_name.length() - 2)
+      {            
+        class_name = qualified_class_name.substr(pos+2);
+      }
+    }
+  }
+
   unit_test_runner::unit_test_runner(int argc, char** argv)
   {
+    run_diagnostics();
     build_map();
     
     std::vector<arg_list> args;
@@ -99,18 +114,8 @@ namespace sequoia::unit_testing
 
     m_FunctionMap.emplace("create", [this](const arg_list& argList) {          
         if(argList.size() == 2)
-        {
-          new_file data{argList[0], argList[1], ""};
-          
-          if(auto pos{data.qualified_class_name.rfind("::")}; pos != std::string::npos)
-          {
-            if(pos < data.qualified_class_name.length() - 2)
-            {            
-              data.class_name = data.qualified_class_name.substr(pos+2);
-            }
-          }
-          
-          m_NewFiles.push_back(data);
+        {          
+          m_NewFiles.push_back(new_file{argList[0], argList[1]});
         }
         else
         {
@@ -142,6 +147,14 @@ namespace sequoia::unit_testing
         }
       }
     );
+  }
+
+  void unit_test_runner::run_diagnostics()
+  {
+    m_NewFiles.push_back(new_file{"../output/UnitTestCreationDiagnostics", "utilities::iterator"});
+    create_files("Running diagnostics...\n", true);
+    
+    m_NewFiles.clear();
   }
     
   void unit_test_runner::add_test_family(test_family&& f)
@@ -212,32 +225,47 @@ namespace sequoia::unit_testing
       pos += to.length();
     }
   }
+
+  bool unit_test_runner::file_exists(const std::string& path)
+  {
+    // use filesystem when available!
+    return static_cast<bool>(std::ifstream{path});    
+  }
                         
   void unit_test_runner::execute()
   {
-    create_files();
+    create_files("Creating files...\n", false);
     run_tests();
   }
 
-  void unit_test_runner::create_files()
+  void unit_test_runner::create_files(std::string_view message, const bool overwrite)
   {
     if(!m_NewFiles.empty())
     {
-      std::cout << "Creating files...\n";
+      std::cout << message;
 
       for(const auto& data : m_NewFiles)
       {
-        create_file(data, "Utilities.hpp");
-        create_file(data, "Diagnostics.hpp");
-        create_file(data, "Diagnostics.cpp");                
+        create_file(data, "MyClassTesting", "Utilities.hpp",   overwrite);
+        create_file(data, "MyClassTesting", "Diagnostics.hpp", overwrite);
+        create_file(data, "MyClassTesting", "Diagnostics.cpp", overwrite);
+        create_file(data, "MyClass",        "Test.hpp",        overwrite);
+        create_file(data, "MyClass",        "Test.cpp",        overwrite);        
       }
     }
   }
 
-  void unit_test_runner::create_file(const new_file& data, std::string_view partName)
+  void unit_test_runner::create_file(const new_file& data, std::string_view firstPart, std::string_view secondPart, const bool overwrite)
   {
+    const auto outputPath{std::string{data.directory + "/" + to_camel_case(data.class_name)}.append(secondPart)};
+    if(!overwrite && file_exists(outputPath))
+    {
+      std::cout << warning(outputPath).append(" already exists, so not created\n");
+      return;
+    }
+    
     std::string text{};
-    if(auto path{std::string{"../aux_files/UnitTestCodeTemplates/CodeTemplates/MyClassTesting"}.append(partName)};
+    if(auto path{std::string{"../aux_files/UnitTestCodeTemplates/CodeTemplates/"}.append(firstPart).append(secondPart)};
        std::ifstream ifile{path})
     {
       std::stringstream buffer{};
@@ -255,14 +283,14 @@ namespace sequoia::unit_testing
       replace_all(text, "my_class", data.class_name);
       replace_all(text, "MyClass", to_camel_case(data.class_name));
 
-      if(auto path{std::string{data.directory + "/" + to_camel_case(data.class_name)}.append(partName)}; std::ofstream ofile{path})
+      if(std::ofstream ofile{outputPath})
       {
-        std::cout << "  Creating file " << path << '\n';
+        std::cout << "  Creating file " << outputPath << '\n';
         ofile << text;
       }
       else
       {
-        std::cout << warning("unable to create file ").append(partName);
+        std::cout << warning("unable to create file ").append(outputPath);
       }
     }
   }

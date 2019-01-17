@@ -33,6 +33,8 @@ namespace sequoia::unit_testing
 
     struct new_file
     {
+      new_file(std::string dir, std::string qualifiedName);
+      
       std::string directory, qualified_class_name, class_name;
     };
 
@@ -49,9 +51,11 @@ namespace sequoia::unit_testing
 
     void build_map();
 
-    void create_files();
+    void create_files(std::string_view message, const bool overwrite);
 
-    void create_file(const new_file& data, std::string_view partName);
+    void create_file(const new_file& data, std::string_view firstPart, std::string_view secondPart, const bool overwrite);
+
+    void run_diagnostics();
 
     void run_tests();
 
@@ -63,5 +67,7 @@ namespace sequoia::unit_testing
     static std::string report_arg_num(const std::size_t n);
 
     static void replace_all(std::string& text, std::string_view from, const std::string& to);
+
+    static bool file_exists(const std::string& path);
   };
 }
