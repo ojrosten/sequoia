@@ -18,6 +18,78 @@ namespace sequoia::unit_testing
   const std::map<std::string, std::size_t> unit_test_runner::s_ArgCount{
     {"create", 2}
   };
+  
+  std::string unit_test_runner::to_camel_case(std::string text)
+  {
+    if(!text.empty())
+    {
+      if(std::isalpha(text.front()))
+      {
+        text.front() = std::toupper(text.front());
+      }
+
+      using size_t = std::string::size_type;
+
+      size_t pos{};
+      while((pos = text.find("_", pos)) != std::string::npos)
+      {
+        if((pos < text.length() - 1) && std::isalpha(text[pos + 1]))
+        {
+          text[pos + 1] = std::toupper(text[pos + 1]);         
+          pos += 2;
+        }
+
+        pos += 1;
+      }
+    }
+
+    return text;
+  }
+
+  std::string unit_test_runner::warning(std::string_view message)
+  {
+    return std::string{"\nWarning: "}.append(message);
+  }
+
+  std::string unit_test_runner::report_arg_num(const std::size_t n)
+  {
+    return (std::to_string(n) += ((n==1) ? " was" : " were")) += " provided\n";
+  }
+
+  void unit_test_runner::replace_all(std::string& text, std::string_view from, const std::string& to)
+  {
+    std::string::size_type pos{};
+    while((pos = text.find(from, pos)) != std::string::npos)
+    {
+      text.replace(pos, from.length(), to);
+      pos += to.length();
+    }
+  }
+
+  bool unit_test_runner::file_exists(const std::string& path)
+  {
+    // use filesystem when available!
+    return static_cast<bool>(std::ifstream{path});    
+  }
+
+  void unit_test_runner::compare_file_contents(const std::string& referenceFile, const std::string& generatedFile)
+  {
+    std::ifstream file1{referenceFile}, file2{generatedFile};
+    if(!file1) warning("unable to open file ").append(referenceFile);
+    if(!file2) warning("unable to open file ").append(generatedFile);
+    
+    if(file1 && file2)
+    {
+      std::stringstream buffer1{}, buffer2{};
+      buffer1 << file1.rdbuf();
+      buffer2 << file2.rdbuf();
+      
+      if(buffer1.str() != buffer2.str())
+        std::cout << warning("Contents of\n  " ).append(generatedFile).append("\n  no longer matches\n  ").append(referenceFile).append("\n");
+      else
+        std::cout << "    passed\n";
+    }
+  }
 
   unit_test_runner::new_file::new_file(std::string dir, std::string qualifiedName)
     : directory{std::move(dir)}
@@ -151,7 +223,9 @@ namespace sequoia::unit_testing
 
   void unit_test_runner::run_diagnostics()
   {
-    create_files({new_file{"../output/UnitTestCreationDiagnostics", "utilities::iterator"}}, "Running diagnostics...\n", true);    
+    create_files({new_file{"../output/UnitTestCreationDiagnostics", "utilities::iterator"}}, "Running unit test creation tool diagnostics...\n", true);
+
+    compare_files("  Comparing files against reference files...\n");
   }
     
   void unit_test_runner::add_test_family(test_family&& f)
@@ -175,60 +249,7 @@ namespace sequoia::unit_testing
 
     return familySummary;
   }
-
-  std::string unit_test_runner::to_camel_case(std::string text)
-  {
-    if(!text.empty())
-    {
-      if(std::isalpha(text.front()))
-      {
-        text.front() = std::toupper(text.front());
-      }
-
-      using size_t = std::string::size_type;
-
-      size_t pos{};
-      while((pos = text.find("_", pos)) != std::string::npos)
-      {
-        if((pos < text.length() - 1) && std::isalpha(text[pos + 1]))
-        {
-          text[pos + 1] = std::toupper(text[pos + 1]);         
-          pos += 2;
-        }
-
-        pos += 1;
-      }
-    }
-
-    return text;
-  }
-
-  std::string unit_test_runner::warning(std::string_view message)
-  {
-    return std::string{"\nWarning: "}.append(message);
-  }
-
-  std::string unit_test_runner::report_arg_num(const std::size_t n)
-  {
-    return (std::to_string(n) += ((n==1) ? " was" : " were")) += " provided\n";
-  }
-
-  void unit_test_runner::replace_all(std::string& text, std::string_view from, const std::string& to)
-  {
-    std::string::size_type pos{};
-    while((pos = text.find(from, pos)) != std::string::npos)
-    {
-      text.replace(pos, from.length(), to);
-      pos += to.length();
-    }
-  }
-
-  bool unit_test_runner::file_exists(const std::string& path)
-  {
-    // use filesystem when available!
-    return static_cast<bool>(std::ifstream{path});    
-  }
-                        
+                       
   void unit_test_runner::execute()
   {
     create_files(m_NewFiles, "Creating files...\n", false);
@@ -243,18 +264,48 @@ namespace sequoia::unit_testing
 
       for(const auto& data : newFiles)
       {
-        create_file(data, "MyClassTesting", "Utilities.hpp",   overwrite);
-        create_file(data, "MyClassTesting", "Diagnostics.hpp", overwrite);
-        create_file(data, "MyClassTesting", "Diagnostics.cpp", overwrite);
-        create_file(data, "MyClass",        "Test.hpp",        overwrite);
-        create_file(data, "MyClass",        "Test.cpp",        overwrite);        
+        create_file(data, "TestingUtilities.hpp",   overwrite);
+        create_file(data, "TestingDiagnostics.hpp", overwrite);
+        create_file(data, "TestingDiagnostics.cpp", overwrite);
+        create_file(data, "Test.hpp",               overwrite);
+        create_file(data, "Test.cpp",               overwrite);        
       }
     }
   }
 
-  void unit_test_runner::create_file(const new_file& data, std::string_view firstPart, std::string_view secondPart, const bool overwrite)
+  void unit_test_runner::compare_files(std::string_view message)
   {
-    const auto outputPath{std::string{data.directory + "/" + to_camel_case(data.class_name)}.append(secondPart)};
+    std::cout << message;
+    
+    compare_file_contents(
+      "../output/UnitTestCreationDiagnostics/IteratorTestingUtilities.hpp",
+      "../aux_files/UnitTestCodeTemplates/ReferenceExamples/IteratorTestingUtilities.hpp"
+    );
+
+    compare_file_contents(
+      "../output/UnitTestCreationDiagnostics/IteratorTestingDiagnostics.hpp",
+      "../aux_files/UnitTestCodeTemplates/ReferenceExamples/IteratorTestingDiagnostics.hpp"
+    );
+
+    compare_file_contents(
+      "../output/UnitTestCreationDiagnostics/IteratorTestingDiagnostics.cpp",
+      "../aux_files/UnitTestCodeTemplates/ReferenceExamples/IteratorTestingDiagnostics.cpp"
+    );
+
+    compare_file_contents(
+      "../output/UnitTestCreationDiagnostics/IteratorTest.hpp",
+      "../aux_files/UnitTestCodeTemplates/ReferenceExamples/IteratorTest.hpp"
+    );
+
+    compare_file_contents(
+      "../output/UnitTestCreationDiagnostics/IteratorTest.cpp",
+      "../aux_files/UnitTestCodeTemplates/ReferenceExamples/IteratorTest.cpp"
+    );
+  }
+
+  void unit_test_runner::create_file(const new_file& data, std::string_view partName, const bool overwrite)
+  {
+    const auto outputPath{std::string{data.directory + "/" + to_camel_case(data.class_name)}.append(partName)};
     if(!overwrite && file_exists(outputPath))
     {
       std::cout << warning(outputPath).append(" already exists, so not created\n");
@@ -262,7 +313,7 @@ namespace sequoia::unit_testing
     }
     
     std::string text{};
-    if(auto path{std::string{"../aux_files/UnitTestCodeTemplates/CodeTemplates/"}.append(firstPart).append(secondPart)};
+    if(auto path{std::string{"../aux_files/UnitTestCodeTemplates/CodeTemplates/MyClass"}.append(partName)};
        std::ifstream ifile{path})
     {
       std::stringstream buffer{};
@@ -271,7 +322,7 @@ namespace sequoia::unit_testing
     }
     else
     {
-      std::cout << warning("unable to open" ).append(path);
+      std::cout << warning("unable to open ").append(path);
     }
         
     if(!text.empty())
@@ -282,7 +333,7 @@ namespace sequoia::unit_testing
 
       if(std::ofstream ofile{outputPath})
       {
-        std::cout << "  Creating file " << outputPath << '\n';
+        std::cout << "    Creating file " << outputPath << '\n';
         ofile << text;
       }
       else

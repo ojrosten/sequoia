@@ -53,7 +53,7 @@ namespace sequoia::unit_testing
 
     static void create_files(std::vector<new_file> newFiles, std::string_view message, const bool overwrite);
 
-    static void create_file(const new_file& data, std::string_view firstPart, std::string_view secondPart, const bool overwrite);
+    static void create_file(const new_file& data, std::string_view partName, const bool overwrite);
 
     void run_diagnostics();
 
@@ -69,5 +69,9 @@ namespace sequoia::unit_testing
     static void replace_all(std::string& text, std::string_view from, const std::string& to);
 
     static bool file_exists(const std::string& path);
+
+    static void compare_files(std::string_view message);
+
+    static void compare_file_contents(const std::string& referenceFile, const std::string& generatedFile);
   };
 }
