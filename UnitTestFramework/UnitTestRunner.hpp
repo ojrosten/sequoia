@@ -31,9 +31,9 @@ namespace sequoia::unit_testing
   private:
     using arg_list = std::vector<std::string>;
 
-    struct new_file
+    struct nascent_test
     {
-      new_file(std::string dir, std::string qualifiedName);
+      nascent_test(std::string dir, std::string qualifiedName);
       
       std::string directory, qualified_class_name, class_name;
     };
@@ -43,9 +43,11 @@ namespace sequoia::unit_testing
     std::vector<test_family> m_Families;
     std::map<std::string, std::function<void (const arg_list&)>> m_FunctionMap;
     std::set<std::string> m_SpecificTests{};
-    std::vector<new_file> m_NewFiles{};
+    std::vector<nascent_test> m_NewFiles{};
     
     bool m_Asynchronous{}, m_Verbose{};
+
+    const static std::array<std::string, 5> st_TestNameStubs;
 
     log_summary process_family(const std::vector<log_summary>& summaries);
 
@@ -69,11 +71,11 @@ namespace sequoia::unit_testing
     template<class Iter>
     static void create_files(Iter beginFiles, Iter endFiles, std::string_view message, const bool overwrite);
 
-    static void create_file(const new_file& data, std::string_view partName, const bool overwrite);
+    static void create_file(const nascent_test& data, std::string_view partName, const bool overwrite);
 
     template<class Iter>
     static void compare_files(Iter beginFiles, Iter endFiles, std::string_view message);
 
-    static void compare_file_contents(const new_file& data, const std::string& partName);
+    static void compare_file_contents(const nascent_test& data, const std::string& partName);
   };
 }

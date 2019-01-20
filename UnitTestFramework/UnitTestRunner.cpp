@@ -46,6 +46,14 @@ namespace sequoia::unit_testing
     return text;
   }
 
+  const std::array<std::string, 5> unit_test_runner::st_TestNameStubs {
+    "TestingUtilities.hpp",
+    "TestingDiagnostics.hpp",
+    "TestingDiagnostics.cpp",
+    "Test.hpp",
+    "Test.cpp"
+  };
+
   std::string unit_test_runner::warning(std::string_view message)
   {
     return std::string{"\nWarning: "}.append(message);
@@ -72,7 +80,7 @@ namespace sequoia::unit_testing
     return static_cast<bool>(std::ifstream{path});    
   }
 
-  void unit_test_runner::compare_file_contents(const new_file& data, const std::string& partName)
+  void unit_test_runner::compare_file_contents(const nascent_test& data, const std::string& partName)
   {
     const auto referenceFile{std::string{"../output/UnitTestCreationDiagnostics/" + to_camel_case(data.class_name)}.append(partName)};
     const auto generatedFile{std::string{"../aux_files/UnitTestCodeTemplates/ReferenceExamples/" + to_camel_case(data.class_name)}.append(partName)};
@@ -94,7 +102,7 @@ namespace sequoia::unit_testing
     }
   }
 
-  unit_test_runner::new_file::new_file(std::string dir, std::string qualifiedName)
+  unit_test_runner::nascent_test::nascent_test(std::string dir, std::string qualifiedName)
     : directory{std::move(dir)}
     , qualified_class_name{std::move(qualifiedName)}
   {
@@ -190,7 +198,7 @@ namespace sequoia::unit_testing
     m_FunctionMap.emplace("create", [this](const arg_list& argList) {          
         if(argList.size() == 2)
         {          
-          m_NewFiles.push_back(new_file{argList[0], argList[1]});
+          m_NewFiles.push_back(nascent_test{argList[0], argList[1]});
         }
         else
         {
@@ -226,7 +234,7 @@ namespace sequoia::unit_testing
 
   void unit_test_runner::run_diagnostics()
   {
-    const std::array<new_file, 1> diagnosticFiles{new_file{"../output/UnitTestCreationDiagnostics", "utilities::iterator"}};
+    const std::array<nascent_test, 1> diagnosticFiles{nascent_test{"../output/UnitTestCreationDiagnostics", "utilities::iterator"}};
     create_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(),  "Running unit test creation tool diagnostics...\n", true);
     compare_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(), "  Comparing files against reference files...\n");
   }
@@ -269,11 +277,10 @@ namespace sequoia::unit_testing
       while(beginFiles != endFiles)
       {
         const auto& data{*beginFiles};
-        create_file(data, "TestingUtilities.hpp",   overwrite);
-        create_file(data, "TestingDiagnostics.hpp", overwrite);
-        create_file(data, "TestingDiagnostics.cpp", overwrite);
-        create_file(data, "Test.hpp",               overwrite);
-        create_file(data, "Test.cpp",               overwrite);
+        for(const auto& stub : st_TestNameStubs)
+        {
+          create_file(data, stub,   overwrite);
+        }
 
         ++beginFiles;
       }
@@ -291,12 +298,11 @@ namespace sequoia::unit_testing
       {
         const auto& data{*beginFiles};
 
-        compare_file_contents(data, "TestingUtilities.hpp");
-        compare_file_contents(data, "TestingDiagnostics.hpp");
-        compare_file_contents(data, "TestingDiagnostics.cpp");
-        compare_file_contents(data, "Test.hpp");
-        compare_file_contents(data, "Test.cpp");
-
+        for(const auto& stub : st_TestNameStubs)
+        {
+          compare_file_contents(data, stub);
+        }
+        
         ++beginFiles;
       }
             
@@ -305,7 +311,7 @@ namespace sequoia::unit_testing
     }
   }
 
-  void unit_test_runner::create_file(const new_file& data, std::string_view partName, const bool overwrite)
+  void unit_test_runner::create_file(const nascent_test& data, std::string_view partName, const bool overwrite)
   {
     const auto outputPath{std::string{data.directory + "/" + to_camel_case(data.class_name)}.append(partName)};
     if(!overwrite && file_exists(outputPath))
