@@ -57,6 +57,8 @@ namespace sequoia::unit_testing
 
     void run_tests();
 
+    enum class file_comparison {failed, same, different};
+
     
     static std::string to_camel_case(std::string text);
     
@@ -73,9 +75,13 @@ namespace sequoia::unit_testing
 
     static void create_file(const nascent_test& data, std::string_view partName, const bool overwrite);
 
+    static auto compare_files(const std::string& referenceFile, const std::string& generatedFile) -> file_comparison;
+
     template<class Iter>
     static void compare_files(Iter beginFiles, Iter endFiles, std::string_view message);
 
-    static void compare_file_contents(const nascent_test& data, const std::string& partName);
+    static void compare_files(const nascent_test& data, const std::string& partName);
+
+    static void false_positive_check(const nascent_test& data);
   };
 }

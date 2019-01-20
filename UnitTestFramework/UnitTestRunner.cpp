@@ -56,7 +56,7 @@ namespace sequoia::unit_testing
 
   std::string unit_test_runner::warning(std::string_view message)
   {
-    return std::string{"\nWarning: "}.append(message);
+    return std::string{"\n  Warning: "}.append(message);
   }
 
   std::string unit_test_runner::report_arg_num(const std::size_t n)
@@ -80,25 +80,63 @@ namespace sequoia::unit_testing
     return static_cast<bool>(std::ifstream{path});    
   }
 
-  void unit_test_runner::compare_file_contents(const nascent_test& data, const std::string& partName)
+  auto unit_test_runner::compare_files(const std::string& referenceFile, const std::string& generatedFile) -> file_comparison
   {
-    const auto referenceFile{std::string{"../output/UnitTestCreationDiagnostics/" + to_camel_case(data.class_name)}.append(partName)};
-    const auto generatedFile{std::string{"../aux_files/UnitTestCodeTemplates/ReferenceExamples/" + to_camel_case(data.class_name)}.append(partName)};
-    
     std::ifstream file1{referenceFile}, file2{generatedFile};
-    if(!file1) warning("unable to open file ").append(referenceFile);
-    if(!file2) warning("unable to open file ").append(generatedFile);
+    if(!file1) warning("unable to open file ").append(referenceFile).append("\n");
+    if(!file2) warning("unable to open file ").append(generatedFile).append("\n");
     
     if(file1 && file2)
     {
       std::stringstream buffer1{}, buffer2{};
       buffer1 << file1.rdbuf();
       buffer2 << file2.rdbuf();
-      
-      if(buffer1.str() != buffer2.str())
-        std::cout << warning("Contents of\n  " ).append(generatedFile).append("\n  no longer matches\n  ").append(referenceFile).append("\n");
-      else
-        std::cout << "    passed\n";
+
+      return (buffer1.str() == buffer2.str()) ? file_comparison::same : file_comparison::different;
+    }
+
+    return file_comparison::failed;
+  }
+
+  void unit_test_runner::compare_files(const nascent_test& data, const std::string& partName)
+  {
+    const auto referenceFile{std::string{"../output/UnitTestCreationDiagnostics/" + to_camel_case(data.class_name)}.append(partName)};
+    const auto generatedFile{std::string{"../aux_files/UnitTestCodeTemplates/ReferenceExamples/" + to_camel_case(data.class_name)}.append(partName)};
+
+    switch(compare_files(referenceFile, generatedFile))
+    {
+    case file_comparison::same:
+      std::cout << "    passed\n";
+      break;
+    case file_comparison::different:
+      std::cout << warning("Contents of\n  " ).append(generatedFile).append("\n  no longer matches\n  ").append(referenceFile).append("\n");
+      break;
+    case file_comparison::failed:
+      std::cout << warning("Unable to perform file comparison\n");
+      break;
+    }
+  }
+
+  void unit_test_runner::false_positive_check(const nascent_test& data)
+  {
+    static_assert(st_TestNameStubs.size() > 1, "Insufficient data for false-positive test");
+
+    std::cout << "  False-positive test for file comparison\n";
+    
+    const auto referenceFile1{std::string{"../output/UnitTestCreationDiagnostics/" + to_camel_case(data.class_name)}.append(st_TestNameStubs[0])};
+    const auto referenceFile2{std::string{"../output/UnitTestCreationDiagnostics/" + to_camel_case(data.class_name)}.append(st_TestNameStubs[1])};
+
+    switch(compare_files(referenceFile1, referenceFile2))
+    {
+    case file_comparison::same:
+      std::cout << warning("Contents of\n  " ).append(referenceFile1).append("\n  spuriously comparing equal to\n  ").append(referenceFile2).append("\n");    
+      break;
+    case file_comparison::different:
+      std::cout << "    passed\n";
+      break;
+    case file_comparison::failed:
+      std::cout << warning("Unable to perform false-positive test\n");
+      break;
     }
   }
 
@@ -237,6 +275,7 @@ namespace sequoia::unit_testing
     const std::array<nascent_test, 1> diagnosticFiles{nascent_test{"../output/UnitTestCreationDiagnostics", "utilities::iterator"}};
     create_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(),  "Running unit test creation tool diagnostics...\n", true);
     compare_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(), "  Comparing files against reference files...\n");
+    false_positive_check(diagnosticFiles.front());
   }
     
   void unit_test_runner::add_test_family(test_family&& f)
@@ -300,14 +339,13 @@ namespace sequoia::unit_testing
 
         for(const auto& stub : st_TestNameStubs)
         {
-          compare_file_contents(data, stub);
+          compare_files(data, stub);
         }
         
         ++beginFiles;
       }
-            
 
-      // TO DO: add false positive test!      
+      static_assert(st_TestNameStubs.size() > 1, "Insufficient data for false-positive test");      
     }
   }
 
