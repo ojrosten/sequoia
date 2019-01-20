@@ -51,10 +51,6 @@ namespace sequoia::unit_testing
 
     void build_map();
 
-    static void create_files(std::vector<new_file> newFiles, std::string_view message, const bool overwrite);
-
-    static void create_file(const new_file& data, std::string_view partName, const bool overwrite);
-
     void run_diagnostics();
 
     void run_tests();
@@ -70,8 +66,14 @@ namespace sequoia::unit_testing
 
     static bool file_exists(const std::string& path);
 
-    static void compare_files(std::string_view message);
+    template<class Iter>
+    static void create_files(Iter beginFiles, Iter endFiles, std::string_view message, const bool overwrite);
 
-    static void compare_file_contents(const std::string& referenceFile, const std::string& generatedFile);
+    static void create_file(const new_file& data, std::string_view partName, const bool overwrite);
+
+    template<class Iter>
+    static void compare_files(Iter beginFiles, Iter endFiles, std::string_view message);
+
+    static void compare_file_contents(const new_file& data, const std::string& partName);
   };
 }

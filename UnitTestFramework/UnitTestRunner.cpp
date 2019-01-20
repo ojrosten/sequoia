@@ -72,8 +72,11 @@ namespace sequoia::unit_testing
     return static_cast<bool>(std::ifstream{path});    
   }
 
-  void unit_test_runner::compare_file_contents(const std::string& referenceFile, const std::string& generatedFile)
+  void unit_test_runner::compare_file_contents(const new_file& data, const std::string& partName)
   {
+    const auto referenceFile{std::string{"../output/UnitTestCreationDiagnostics/" + to_camel_case(data.class_name)}.append(partName)};
+    const auto generatedFile{std::string{"../aux_files/UnitTestCodeTemplates/ReferenceExamples/" + to_camel_case(data.class_name)}.append(partName)};
+    
     std::ifstream file1{referenceFile}, file2{generatedFile};
     if(!file1) warning("unable to open file ").append(referenceFile);
     if(!file2) warning("unable to open file ").append(generatedFile);
@@ -223,9 +226,9 @@ namespace sequoia::unit_testing
 
   void unit_test_runner::run_diagnostics()
   {
-    create_files({new_file{"../output/UnitTestCreationDiagnostics", "utilities::iterator"}}, "Running unit test creation tool diagnostics...\n", true);
-
-    compare_files("  Comparing files against reference files...\n");
+    const std::array<new_file, 1> diagnosticFiles{new_file{"../output/UnitTestCreationDiagnostics", "utilities::iterator"}};
+    create_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(),  "Running unit test creation tool diagnostics...\n", true);
+    compare_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(), "  Comparing files against reference files...\n");
   }
     
   void unit_test_runner::add_test_family(test_family&& f)
@@ -252,55 +255,54 @@ namespace sequoia::unit_testing
                        
   void unit_test_runner::execute()
   {
-    create_files(m_NewFiles, "Creating files...\n", false);
+    create_files(m_NewFiles.cbegin(), m_NewFiles.cend(), "Creating files...\n", false);
     run_tests();
   }
 
-  void unit_test_runner::create_files(std::vector<new_file> newFiles, std::string_view message, const bool overwrite)
-  {
-    if(!newFiles.empty())
+  template<class Iter>
+  void unit_test_runner::create_files(Iter beginFiles, Iter endFiles, std::string_view message, const bool overwrite)
+  {    
+    if(std::distance(beginFiles, endFiles))
     {
       std::cout << message;
 
-      for(const auto& data : newFiles)
+      while(beginFiles != endFiles)
       {
+        const auto& data{*beginFiles};
         create_file(data, "TestingUtilities.hpp",   overwrite);
         create_file(data, "TestingDiagnostics.hpp", overwrite);
         create_file(data, "TestingDiagnostics.cpp", overwrite);
         create_file(data, "Test.hpp",               overwrite);
-        create_file(data, "Test.cpp",               overwrite);        
+        create_file(data, "Test.cpp",               overwrite);
+
+        ++beginFiles;
       }
     }
   }
 
-  void unit_test_runner::compare_files(std::string_view message)
+  template<class Iter>
+  void unit_test_runner::compare_files(Iter beginFiles, Iter endFiles, std::string_view message)
   {
-    std::cout << message;
-    
-    compare_file_contents(
-      "../output/UnitTestCreationDiagnostics/IteratorTestingUtilities.hpp",
-      "../aux_files/UnitTestCodeTemplates/ReferenceExamples/IteratorTestingUtilities.hpp"
-    );
+    if(std::distance(beginFiles, endFiles))
+    {
+      std::cout << message;
 
-    compare_file_contents(
-      "../output/UnitTestCreationDiagnostics/IteratorTestingDiagnostics.hpp",
-      "../aux_files/UnitTestCodeTemplates/ReferenceExamples/IteratorTestingDiagnostics.hpp"
-    );
+      while(beginFiles != endFiles)
+      {
+        const auto& data{*beginFiles};
 
-    compare_file_contents(
-      "../output/UnitTestCreationDiagnostics/IteratorTestingDiagnostics.cpp",
-      "../aux_files/UnitTestCodeTemplates/ReferenceExamples/IteratorTestingDiagnostics.cpp"
-    );
+        compare_file_contents(data, "TestingUtilities.hpp");
+        compare_file_contents(data, "TestingDiagnostics.hpp");
+        compare_file_contents(data, "TestingDiagnostics.cpp");
+        compare_file_contents(data, "Test.hpp");
+        compare_file_contents(data, "Test.cpp");
 
-    compare_file_contents(
-      "../output/UnitTestCreationDiagnostics/IteratorTest.hpp",
-      "../aux_files/UnitTestCodeTemplates/ReferenceExamples/IteratorTest.hpp"
-    );
+        ++beginFiles;
+      }
+            
 
-    compare_file_contents(
-      "../output/UnitTestCreationDiagnostics/IteratorTest.cpp",
-      "../aux_files/UnitTestCodeTemplates/ReferenceExamples/IteratorTest.cpp"
-    );
+      // TO DO: add false positive test!      
+    }
   }
 
   void unit_test_runner::create_file(const new_file& data, std::string_view partName, const bool overwrite)
