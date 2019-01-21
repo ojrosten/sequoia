@@ -1,0 +1,39 @@
+\hypertarget{classsequoia_1_1concurrency_1_1serial}{}\section{sequoia\+::concurrency\+::serial$<$ R $>$ Class Template Reference}
+\label{classsequoia_1_1concurrency_1_1serial}\index{sequoia::concurrency::serial$<$ R $>$@{sequoia::concurrency::serial$<$ R $>$}}
+
+
+Tasks may be pushed, upon which they are immediately invoked; results may be acquired through get.  
+
+
+
+
+{\ttfamily \#include $<$Concurrency\+Models.\+hpp$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsequoia_1_1concurrency_1_1serial_a4780c75d1acc4dd892be0d72888e394e}\label{classsequoia_1_1concurrency_1_1serial_a4780c75d1acc4dd892be0d72888e394e}} 
+using {\bfseries return\+\_\+type} = R
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsequoia_1_1concurrency_1_1serial_a47f629d9427cedc86b5ab874611ba187}\label{classsequoia_1_1concurrency_1_1serial_a47f629d9427cedc86b5ab874611ba187}} 
+{\footnotesize template$<$class Fn , class... Args$>$ }\\void {\bfseries push} (Fn \&\&fn, Args \&\&... args)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1concurrency_1_1serial_ad6730b75f609757953234301b528d2df}\label{classsequoia_1_1concurrency_1_1serial_ad6730b75f609757953234301b528d2df}} 
+auto {\bfseries get} () noexcept
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$class R = void$>$\newline
+class sequoia\+::concurrency\+::serial$<$ R $>$}
+
+Tasks may be pushed, upon which they are immediately invoked; results may be acquired through get. 
+
+Results are acquired via a handle to the underlying container. 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Core/\+Concurrency/\mbox{\hyperlink{_concurrency_models_8hpp}{Concurrency\+Models.\+hpp}}\end{DoxyCompactItemize}

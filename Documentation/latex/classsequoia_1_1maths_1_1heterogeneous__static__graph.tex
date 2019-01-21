@@ -1,0 +1,56 @@
+\hypertarget{classsequoia_1_1maths_1_1heterogeneous__static__graph}{}\section{sequoia\+::maths\+::heterogeneous\+\_\+static\+\_\+graph$<$ Directedness, Size, Order, Edge\+Weight, Node\+Weights $>$ Class Template Reference}
+\label{classsequoia_1_1maths_1_1heterogeneous__static__graph}\index{sequoia::maths::heterogeneous\_static\_graph$<$ Directedness, Size, Order, EdgeWeight, NodeWeights $>$@{sequoia::maths::heterogeneous\_static\_graph$<$ Directedness, Size, Order, EdgeWeight, NodeWeights $>$}}
+Inheritance diagram for sequoia\+::maths\+::heterogeneous\+\_\+static\+\_\+graph$<$ Directedness, Size, Order, Edge\+Weight, Node\+Weights $>$\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=0.322581cm]{classsequoia_1_1maths_1_1heterogeneous__static__graph}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsequoia_1_1maths_1_1heterogeneous__static__graph_af344014ec3a91fddb20ac5a1654fb5fd}\label{classsequoia_1_1maths_1_1heterogeneous__static__graph_af344014ec3a91fddb20ac5a1654fb5fd}} 
+using {\bfseries edge\+\_\+index\+\_\+type} = typename \mbox{\hyperlink{structsequoia_1_1maths_1_1heterogeneous__graph__traits}{heterogeneous\+\_\+graph\+\_\+traits}}$<$ Size, Order, Edge\+Weight $>$\+::edge\+\_\+index\+\_\+type
+\item 
+\mbox{\Hypertarget{classsequoia_1_1maths_1_1heterogeneous__static__graph_a23dbd69f53caf260d49df049bdf762e3}\label{classsequoia_1_1maths_1_1heterogeneous__static__graph_a23dbd69f53caf260d49df049bdf762e3}} 
+using {\bfseries Directedness} = =directed\+\_\+flavour\+::directed) ? graph\+\_\+flavour\+::directed \+:graph\+\_\+flavour\+::undirected, Order, Size, Edge\+Weight, typename \mbox{\hyperlink{structsequoia_1_1maths_1_1heterogeneous__graph__traits}{heterogeneous\+\_\+graph\+\_\+traits}}$<$ Size, Order, Edge\+Weight $>$\+::edge\+\_\+index\+\_\+type $>$, \mbox{\hyperlink{classsequoia_1_1maths_1_1graph__impl_1_1heterogeneous__node__storage}{graph\+\_\+impl\+::heterogeneous\+\_\+node\+\_\+storage}}$<$ Node\+Weights... $>$, typename \mbox{\hyperlink{classsequoia_1_1maths_1_1graph__impl_1_1weight__maker}{graph\+\_\+impl\+::weight\+\_\+maker}}$<$ \mbox{\hyperlink{classsequoia_1_1data__sharing_1_1unpooled}{data\+\_\+sharing\+::unpooled}}$<$ Edge\+Weight $>$, \mbox{\hyperlink{classsequoia_1_1data__sharing_1_1unpooled}{data\+\_\+sharing\+::unpooled}}$<$ Edge\+Weight $>$ $>$ $>$\+::\mbox{\hyperlink{classsequoia_1_1maths_1_1graph__primitive}{graph\+\_\+primitive}}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsequoia_1_1maths_1_1heterogeneous__static__graph_ac0e792491e081f8c8ba162843e051819}\label{classsequoia_1_1maths_1_1heterogeneous__static__graph_ac0e792491e081f8c8ba162843e051819}} 
+{\footnotesize template$<$class Arg , class... Args$>$ }\\constexpr void {\bfseries set\+\_\+edge\+\_\+weight} (const\+\_\+edge\+\_\+iterator citer, Arg \&\&arg, Args \&\&... args)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1maths_1_1heterogeneous__static__graph_a3f16c0921d7fd0d218c36dcd01f1267c}\label{classsequoia_1_1maths_1_1heterogeneous__static__graph_a3f16c0921d7fd0d218c36dcd01f1267c}} 
+{\footnotesize template$<$class Arg , class... Args$>$ }\\constexpr void {\bfseries set\+\_\+edge\+\_\+weight} (const\+\_\+reverse\+\_\+edge\+\_\+iterator criter, Arg \&\&arg, Args \&\&... args)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1maths_1_1heterogeneous__static__graph_abf85f31fdce6725b520b327aade04b8c}\label{classsequoia_1_1maths_1_1heterogeneous__static__graph_abf85f31fdce6725b520b327aade04b8c}} 
+{\footnotesize template$<$class Fn $>$ }\\constexpr void {\bfseries mutate\+\_\+edge\+\_\+weight} (const\+\_\+edge\+\_\+iterator citer, Fn fn)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1maths_1_1heterogeneous__static__graph_addb1de80af85f13d4c81aa8061741b46}\label{classsequoia_1_1maths_1_1heterogeneous__static__graph_addb1de80af85f13d4c81aa8061741b46}} 
+{\footnotesize template$<$class Fn $>$ }\\constexpr void {\bfseries mutate\+\_\+edge\+\_\+weight} (const\+\_\+reverse\+\_\+edge\+\_\+iterator criter, Fn fn)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1maths_1_1heterogeneous__static__graph_abd685fa53183f904e92e1a6b5f6234b2}\label{classsequoia_1_1maths_1_1heterogeneous__static__graph_abd685fa53183f904e92e1a6b5f6234b2}} 
+{\footnotesize template$<$class Comparer $>$ }\\constexpr void {\bfseries sort\+\_\+edges} (const\+\_\+edge\+\_\+iterator begin, const\+\_\+edge\+\_\+iterator end, Comparer comp)
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsequoia_1_1maths_1_1heterogeneous__static__graph_af6000eaed8ce730e96a44b784a099b55}\label{classsequoia_1_1maths_1_1heterogeneous__static__graph_af6000eaed8ce730e96a44b784a099b55}} 
+static constexpr std\+::size\+\_\+t {\bfseries order} () noexcept
+\item 
+\mbox{\Hypertarget{classsequoia_1_1maths_1_1heterogeneous__static__graph_a91240388036af75529cb2d7107dbf794}\label{classsequoia_1_1maths_1_1heterogeneous__static__graph_a91240388036af75529cb2d7107dbf794}} 
+static constexpr std\+::size\+\_\+t {\bfseries size} () noexcept
+\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsequoia_1_1maths_1_1heterogeneous__static__graph_a7ad852899a59e57f1b553f286dacc8e1}\label{classsequoia_1_1maths_1_1heterogeneous__static__graph_a7ad852899a59e57f1b553f286dacc8e1}} 
+static constexpr graph\+\_\+flavour {\bfseries flavour} \{(Directedness == directed\+\_\+flavour\+::directed) ? graph\+\_\+flavour\+::directed \+: graph\+\_\+flavour\+::undirected\}
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Maths/\+Graph/\mbox{\hyperlink{_heterogeneous_static_graph_8hpp}{Heterogeneous\+Static\+Graph.\+hpp}}\end{DoxyCompactItemize}

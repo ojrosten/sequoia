@@ -1,0 +1,28 @@
+\hypertarget{structsequoia_1_1data__structures_1_1partition__impl_1_1storage__type__generator}{}\section{sequoia\+::data\+\_\+structures\+::partition\+\_\+impl\+::storage\+\_\+type\+\_\+generator$<$ C, Sharing\+Policy $>$ Struct Template Reference}
+\label{structsequoia_1_1data__structures_1_1partition__impl_1_1storage__type__generator}\index{sequoia::data\_structures::partition\_impl::storage\_type\_generator$<$ C, SharingPolicy $>$@{sequoia::data\_structures::partition\_impl::storage\_type\_generator$<$ C, SharingPolicy $>$}}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structsequoia_1_1data__structures_1_1partition__impl_1_1storage__type__generator_a595376204eae6e00eae556b8ef49cdaf}\label{structsequoia_1_1data__structures_1_1partition__impl_1_1storage__type__generator_a595376204eae6e00eae556b8ef49cdaf}} 
+using {\bfseries held\+\_\+type} = typename Sharing\+Policy\+::handle\+\_\+type
+\item 
+\mbox{\Hypertarget{structsequoia_1_1data__structures_1_1partition__impl_1_1storage__type__generator_a26a3c744ccbac8cea5b665dbe4ed9d08}\label{structsequoia_1_1data__structures_1_1partition__impl_1_1storage__type__generator_a26a3c744ccbac8cea5b665dbe4ed9d08}} 
+using {\bfseries container\+\_\+type} = C$<$ held\+\_\+type $>$
+\item 
+\mbox{\Hypertarget{structsequoia_1_1data__structures_1_1partition__impl_1_1storage__type__generator_aa5e19162c53c2ca18f7e03a0dd0b3406}\label{structsequoia_1_1data__structures_1_1partition__impl_1_1storage__type__generator_aa5e19162c53c2ca18f7e03a0dd0b3406}} 
+using {\bfseries helper} = \mbox{\hyperlink{structsequoia_1_1data__structures_1_1impl_1_1storage__helper}{impl\+::storage\+\_\+helper}}$<$ container\+\_\+type $>$
+\item 
+\mbox{\Hypertarget{structsequoia_1_1data__structures_1_1partition__impl_1_1storage__type__generator_a13fe4492289d47f0bfba54953db7dd05}\label{structsequoia_1_1data__structures_1_1partition__impl_1_1storage__type__generator_a13fe4492289d47f0bfba54953db7dd05}} 
+using {\bfseries storage\+\_\+type} = typename helper\+::storage\+\_\+type
+\item 
+\mbox{\Hypertarget{structsequoia_1_1data__structures_1_1partition__impl_1_1storage__type__generator_af347fd975c05e10a6d21f390060d6021}\label{structsequoia_1_1data__structures_1_1partition__impl_1_1storage__type__generator_af347fd975c05e10a6d21f390060d6021}} 
+using {\bfseries auxiliary\+\_\+storage\+\_\+type} = typename helper\+::auxiliary\+\_\+storage\+\_\+type
+\item 
+\mbox{\Hypertarget{structsequoia_1_1data__structures_1_1partition__impl_1_1storage__type__generator_a81682604ab208c2447797c86ca4a7a49}\label{structsequoia_1_1data__structures_1_1partition__impl_1_1storage__type__generator_a81682604ab208c2447797c86ca4a7a49}} 
+using {\bfseries static\+\_\+type} = typename \mbox{\hyperlink{structsequoia_1_1data__structures_1_1impl_1_1is__static__data}{impl\+::is\+\_\+static\+\_\+data}}$<$ container\+\_\+type $>$\+::type
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Core/\+Data\+Structures/\mbox{\hyperlink{_partitioned_data_details_8hpp}{Partitioned\+Data\+Details.\+hpp}}\end{DoxyCompactItemize}

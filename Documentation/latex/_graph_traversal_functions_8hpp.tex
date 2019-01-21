@@ -1,0 +1,35 @@
+\hypertarget{_graph_traversal_functions_8hpp}{}\section{Maths/\+Graph/\+Graph\+Traversal\+Functions.hpp File Reference}
+\label{_graph_traversal_functions_8hpp}\index{Maths/Graph/GraphTraversalFunctions.hpp@{Maths/Graph/GraphTraversalFunctions.hpp}}
+
+
+Breadth first, depth first and priority searches.  
+
+
+{\ttfamily \#include \char`\"{}Graph\+Traversal\+Details.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Concurrency\+Models.\+hpp\char`\"{}}\newline
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{_graph_traversal_functions_8hpp_a3ea9f3dfd70336b9bedfdcb3a0e2abbb}\label{_graph_traversal_functions_8hpp_a3ea9f3dfd70336b9bedfdcb3a0e2abbb}} 
+{\footnotesize template$<$class Task\+Processing\+Model  = concurrency\+::serial$<$void$>$, class G  = void, class N\+F\+BE  = null\+\_\+functor, class N\+F\+AE  = null\+\_\+functor, class E\+F\+TF  = null\+\_\+functor, class E\+S\+TF  = null\+\_\+functor, class  = std\+::enable\+\_\+if\+\_\+t$<$\+G\+::directedness != directed\+\_\+flavour\+::directed$>$$>$ }\\constexpr auto {\bfseries sequoia\+::maths\+::breadth\+\_\+first\+\_\+search} (const G \&graph, const bool find\+Disconnected\+Pieces=true, const std\+::size\+\_\+t start=0, N\+F\+BE \&\&node\+Functor\+Before\+Edges=null\+\_\+functor\{\}, N\+F\+AE \&\&node\+Functor\+After\+Edges=null\+\_\+functor\{\}, E\+F\+TF \&\&edge\+First\+Traversal\+Functor=null\+\_\+functor\{\}, E\+S\+TF \&\&edge\+Second\+Traversal\+Functor=null\+\_\+functor\{\}, Task\+Processing\+Model \&\&task\+Processing\+Model=Task\+Processing\+Model\{\})
+\item 
+\mbox{\Hypertarget{_graph_traversal_functions_8hpp_a0c8827742994dbcec63e4ef2e8482b58}\label{_graph_traversal_functions_8hpp_a0c8827742994dbcec63e4ef2e8482b58}} 
+{\footnotesize template$<$class Task\+Processing\+Model  = concurrency\+::serial$<$void$>$, class G  = void, class N\+F\+BE  = null\+\_\+functor, class N\+F\+AE  = null\+\_\+functor, class E\+F\+TF  = null\+\_\+functor, class  = std\+::enable\+\_\+if\+\_\+t$<$\+G\+::directedness == directed\+\_\+flavour\+::directed$>$$>$ }\\constexpr auto {\bfseries sequoia\+::maths\+::breadth\+\_\+first\+\_\+search} (const G \&graph, const bool find\+Disconnected\+Pieces=true, const std\+::size\+\_\+t start=0, N\+F\+BE \&\&node\+Functor\+Before\+Edges=null\+\_\+functor\{\}, N\+F\+AE \&\&node\+Functor\+After\+Edges=null\+\_\+functor\{\}, E\+F\+TF \&\&edge\+First\+Traversal\+Functor=null\+\_\+functor\{\}, Task\+Processing\+Model \&\&task\+Processing\+Model=Task\+Processing\+Model\{\})
+\item 
+\mbox{\Hypertarget{_graph_traversal_functions_8hpp_ac732e0c0a2a6224de2cbe74658e12cdf}\label{_graph_traversal_functions_8hpp_ac732e0c0a2a6224de2cbe74658e12cdf}} 
+{\footnotesize template$<$class Task\+Processing\+Model  = concurrency\+::serial$<$void$>$, class G  = void, class N\+F\+BE  = null\+\_\+functor, class N\+F\+AE  = null\+\_\+functor, class E\+F\+TF  = null\+\_\+functor, class E\+S\+TF  = null\+\_\+functor, class  = std\+::enable\+\_\+if\+\_\+t$<$\+G\+::directedness != directed\+\_\+flavour\+::directed$>$$>$ }\\constexpr auto {\bfseries sequoia\+::maths\+::depth\+\_\+first\+\_\+search} (const G \&graph, const bool find\+Disconnected\+Pieces=true, const std\+::size\+\_\+t start=0, N\+F\+BE \&\&node\+Functor\+Before\+Edges=null\+\_\+functor\{\}, N\+F\+AE \&\&node\+Functor\+After\+Edges=null\+\_\+functor\{\}, E\+F\+TF \&\&edge\+First\+Traversal\+Functor=null\+\_\+functor\{\}, E\+S\+TF \&\&edge\+Second\+Traversal\+Functor=null\+\_\+functor\{\}, Task\+Processing\+Model \&\&task\+Processing\+Model=Task\+Processing\+Model\{\})
+\item 
+\mbox{\Hypertarget{_graph_traversal_functions_8hpp_a2383ecf5901ca67068888578816067b5}\label{_graph_traversal_functions_8hpp_a2383ecf5901ca67068888578816067b5}} 
+{\footnotesize template$<$class Task\+Processing\+Model  = concurrency\+::serial$<$void$>$, class G  = void, class N\+F\+BE  = null\+\_\+functor, class N\+F\+AE  = null\+\_\+functor, class E\+F\+TF  = null\+\_\+functor, class  = std\+::enable\+\_\+if\+\_\+t$<$\+G\+::directedness == directed\+\_\+flavour\+::directed$>$$>$ }\\constexpr auto {\bfseries sequoia\+::maths\+::depth\+\_\+first\+\_\+search} (const G \&graph, const bool find\+Disconnected\+Pieces=true, const std\+::size\+\_\+t start=0, N\+F\+BE \&\&node\+Functor\+Before\+Edges=null\+\_\+functor\{\}, N\+F\+AE \&\&node\+Functor\+After\+Edges=null\+\_\+functor\{\}, E\+F\+TF \&\&edge\+First\+Traversal\+Functor=null\+\_\+functor\{\}, Task\+Processing\+Model \&\&task\+Processing\+Model=Task\+Processing\+Model\{\})
+\item 
+\mbox{\Hypertarget{_graph_traversal_functions_8hpp_a0f65b9a14ef1f2ada6e3e5b825aee999}\label{_graph_traversal_functions_8hpp_a0f65b9a14ef1f2ada6e3e5b825aee999}} 
+{\footnotesize template$<$class Task\+Processing\+Model  = concurrency\+::serial$<$void$>$, class G  = void, class N\+F\+BE  = null\+\_\+functor, class N\+F\+AE  = null\+\_\+functor, class E\+F\+TF  = null\+\_\+functor, class E\+S\+TF  = null\+\_\+functor, class Q\+Compare  = graph\+\_\+impl\+::node\+\_\+comparer$<$\+G, std\+::less$<$typename G\+::node\+\_\+weight\+\_\+type$>$$>$, class  = std\+::enable\+\_\+if\+\_\+t$<$\+G\+::directedness != directed\+\_\+flavour\+::directed$>$$>$ }\\constexpr auto {\bfseries sequoia\+::maths\+::priority\+\_\+search} (const G \&graph, const bool find\+Disconnected\+Pieces=true, const std\+::size\+\_\+t start=0, N\+F\+BE \&\&node\+Functor\+Before\+Edges=null\+\_\+functor\{\}, N\+F\+AE \&\&node\+Functor\+After\+Edges=null\+\_\+functor\{\}, E\+F\+TF \&\&edge\+First\+Traversal\+Functor=null\+\_\+functor\{\}, E\+S\+TF \&\&edge\+Second\+Traversal\+Functor=null\+\_\+functor\{\}, Task\+Processing\+Model \&\&task\+Processing\+Model=Task\+Processing\+Model\{\})
+\item 
+\mbox{\Hypertarget{_graph_traversal_functions_8hpp_a9afcdbbee2d5db09604517590ee7476c}\label{_graph_traversal_functions_8hpp_a9afcdbbee2d5db09604517590ee7476c}} 
+{\footnotesize template$<$class Task\+Processing\+Model  = concurrency\+::serial$<$void$>$, class G  = void, class N\+F\+BE  = null\+\_\+functor, class N\+F\+AE  = null\+\_\+functor, class E\+F\+TF  = null\+\_\+functor, class Q\+Compare  = graph\+\_\+impl\+::node\+\_\+comparer$<$\+G, std\+::less$<$typename G\+::node\+\_\+weight\+\_\+type$>$$>$, class  = std\+::enable\+\_\+if\+\_\+t$<$\+G\+::directedness == directed\+\_\+flavour\+::directed$>$$>$ }\\constexpr auto {\bfseries sequoia\+::maths\+::priority\+\_\+search} (const G \&graph, const bool find\+Disconnected\+Pieces=true, const std\+::size\+\_\+t start=0, N\+F\+BE \&\&node\+Functor\+Before\+Edges=null\+\_\+functor\{\}, N\+F\+AE \&\&node\+Functor\+After\+Edges=null\+\_\+functor\{\}, E\+F\+TF \&\&edge\+First\+Traversal\+Functor=null\+\_\+functor\{\}, Task\+Processing\+Model \&\&task\+Processing\+Model=Task\+Processing\+Model\{\})
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Breadth first, depth first and priority searches. 
+

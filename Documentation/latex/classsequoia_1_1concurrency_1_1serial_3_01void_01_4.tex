@@ -1,0 +1,39 @@
+\hypertarget{classsequoia_1_1concurrency_1_1serial_3_01void_01_4}{}\section{sequoia\+::concurrency\+::serial$<$ void $>$ Class Template Reference}
+\label{classsequoia_1_1concurrency_1_1serial_3_01void_01_4}\index{sequoia::concurrency::serial$<$ void $>$@{sequoia::concurrency::serial$<$ void $>$}}
+
+
+Tasks may be pushed, upon which they are immediately invoked.  
+
+
+
+
+{\ttfamily \#include $<$Concurrency\+Models.\+hpp$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsequoia_1_1concurrency_1_1serial_3_01void_01_4_a94ddda5262faaa8dc20b0782c912a4b3}\label{classsequoia_1_1concurrency_1_1serial_3_01void_01_4_a94ddda5262faaa8dc20b0782c912a4b3}} 
+using {\bfseries return\+\_\+type} = void
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsequoia_1_1concurrency_1_1serial_3_01void_01_4_ad4c37bed1d8c69c8090575111f7ca7a0}\label{classsequoia_1_1concurrency_1_1serial_3_01void_01_4_ad4c37bed1d8c69c8090575111f7ca7a0}} 
+{\footnotesize template$<$class Fn , class... Args$>$ }\\constexpr void {\bfseries push} (Fn \&\&fn, Args \&\&... args)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1concurrency_1_1serial_3_01void_01_4_ab52f653e7803f0d49d1e61b9ae5f9504}\label{classsequoia_1_1concurrency_1_1serial_3_01void_01_4_ab52f653e7803f0d49d1e61b9ae5f9504}} 
+constexpr void {\bfseries get} () const noexcept
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$$>$\newline
+class sequoia\+::concurrency\+::serial$<$ void $>$}
+
+Tasks may be pushed, upon which they are immediately invoked. 
+
+The dummy get method does nothing but serves to provide a uniform interface. 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Core/\+Concurrency/\mbox{\hyperlink{_concurrency_models_8hpp}{Concurrency\+Models.\+hpp}}\end{DoxyCompactItemize}

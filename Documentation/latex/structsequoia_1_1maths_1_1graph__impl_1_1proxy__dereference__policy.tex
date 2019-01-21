@@ -1,0 +1,31 @@
+\hypertarget{structsequoia_1_1maths_1_1graph__impl_1_1proxy__dereference__policy}{}\section{sequoia\+::maths\+::graph\+\_\+impl\+::proxy\+\_\+dereference\+\_\+policy$<$ Iterator $>$ Struct Template Reference}
+\label{structsequoia_1_1maths_1_1graph__impl_1_1proxy__dereference__policy}\index{sequoia::maths::graph\_impl::proxy\_dereference\_policy$<$ Iterator $>$@{sequoia::maths::graph\_impl::proxy\_dereference\_policy$<$ Iterator $>$}}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structsequoia_1_1maths_1_1graph__impl_1_1proxy__dereference__policy_a8ec36db23a5b6d00dbbc08b48a90ab3b}\label{structsequoia_1_1maths_1_1graph__impl_1_1proxy__dereference__policy_a8ec36db23a5b6d00dbbc08b48a90ab3b}} 
+using {\bfseries proxy\+\_\+reference} = typename std\+::iterator\+\_\+traits$<$ Iterator $>$\+::reference
+\item 
+\mbox{\Hypertarget{structsequoia_1_1maths_1_1graph__impl_1_1proxy__dereference__policy_a16bf224a8afb93fd232b48ff0c6a64e4}\label{structsequoia_1_1maths_1_1graph__impl_1_1proxy__dereference__policy_a16bf224a8afb93fd232b48ff0c6a64e4}} 
+using {\bfseries proxy\+\_\+pointer} = typename std\+::iterator\+\_\+traits$<$ Iterator $>$\+::pointer
+\item 
+\mbox{\Hypertarget{structsequoia_1_1maths_1_1graph__impl_1_1proxy__dereference__policy_ab9e564e0eeb01434f593870d931c1d41}\label{structsequoia_1_1maths_1_1graph__impl_1_1proxy__dereference__policy_ab9e564e0eeb01434f593870d931c1d41}} 
+using {\bfseries reference} = decltype(std\+::declval$<$ proxy\+\_\+reference $>$().get())
+\item 
+\mbox{\Hypertarget{structsequoia_1_1maths_1_1graph__impl_1_1proxy__dereference__policy_a0dfcdce6a5454e3e3d46916083bb6d2c}\label{structsequoia_1_1maths_1_1graph__impl_1_1proxy__dereference__policy_a0dfcdce6a5454e3e3d46916083bb6d2c}} 
+using {\bfseries pointer} = std\+::add\+\_\+pointer\+\_\+t$<$ reference $>$
+\item 
+\mbox{\Hypertarget{structsequoia_1_1maths_1_1graph__impl_1_1proxy__dereference__policy_ae34818e773e41ad6d7d8225afc8c38c4}\label{structsequoia_1_1maths_1_1graph__impl_1_1proxy__dereference__policy_ae34818e773e41ad6d7d8225afc8c38c4}} 
+using {\bfseries value\+\_\+type} = std\+::remove\+\_\+cv\+\_\+t$<$ reference $>$
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structsequoia_1_1maths_1_1graph__impl_1_1proxy__dereference__policy_a06f487a92b0c7a4ab0d3f55cb32a6cec}\label{structsequoia_1_1maths_1_1graph__impl_1_1proxy__dereference__policy_a06f487a92b0c7a4ab0d3f55cb32a6cec}} 
+static constexpr reference {\bfseries get} (proxy\+\_\+reference ref) noexcept
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Maths/\+Graph/\mbox{\hyperlink{_node_storage_8hpp}{Node\+Storage.\+hpp}}\end{DoxyCompactItemize}

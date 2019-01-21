@@ -1,0 +1,34 @@
+\hypertarget{structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator}{}\section{sequoia\+::maths\+::graph\+\_\+impl\+::edge\+\_\+type\+\_\+generator$<$ Graph\+Flavour, Edge\+Weight, Edge\+Weight\+Pooling, Index\+Type, Sharing\+Preference, Shared\+Edge $>$ Struct Template Reference}
+\label{structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator}\index{sequoia::maths::graph\_impl::edge\_type\_generator$<$ GraphFlavour, EdgeWeight, EdgeWeightPooling, IndexType, SharingPreference, SharedEdge $>$@{sequoia::maths::graph\_impl::edge\_type\_generator$<$ GraphFlavour, EdgeWeight, EdgeWeightPooling, IndexType, SharingPreference, SharedEdge $>$}}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator_abaee72b1a216445a74ff50ff296f32ac}\label{structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator_abaee72b1a216445a74ff50ff296f32ac}} 
+using {\bfseries sharing} = \mbox{\hyperlink{structsequoia_1_1maths_1_1graph__impl_1_1sharing__traits}{sharing\+\_\+traits}}$<$ Graph\+Flavour, Sharing\+Preference, Edge\+Weight, Edge\+Weight\+Pooling $>$
+\item 
+\mbox{\Hypertarget{structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator_a190e8a20cd8cfb1965f7832d6330dfa9}\label{structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator_a190e8a20cd8cfb1965f7832d6330dfa9}} 
+using {\bfseries edge\+\_\+weight\+\_\+proxy} = typename \mbox{\hyperlink{structsequoia_1_1maths_1_1graph__impl_1_1edge__weight__wrapper}{edge\+\_\+weight\+\_\+wrapper}}$<$ Edge\+Weight, Edge\+Weight\+Pooling $>$\+::proxy
+\item 
+\mbox{\Hypertarget{structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator_a7cd5ba1045847343e05e97ad8e033069}\label{structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator_a7cd5ba1045847343e05e97ad8e033069}} 
+using {\bfseries edge\+\_\+type} = \mbox{\hyperlink{classsequoia_1_1maths_1_1partial__edge}{partial\+\_\+edge}}$<$ Edge\+Weight, \mbox{\hyperlink{structsequoia_1_1maths_1_1graph__impl_1_1sharing__v__to__type}{sharing\+\_\+v\+\_\+to\+\_\+type}}$<$ shared\+\_\+weight\+\_\+v $>$\+::template policy, edge\+\_\+weight\+\_\+proxy, Index\+Type $>$
+\item 
+\mbox{\Hypertarget{structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator_a35b709b0c653e6e983ebb9ab04d6a74d}\label{structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator_a35b709b0c653e6e983ebb9ab04d6a74d}} 
+using {\bfseries edge\+\_\+init\+\_\+type} = typename \mbox{\hyperlink{structsequoia_1_1maths_1_1graph__impl_1_1edge__init__type__generator}{edge\+\_\+init\+\_\+type\+\_\+generator}}$<$ \mbox{\hyperlink{classsequoia_1_1maths_1_1partial__edge}{edge\+\_\+type}}, Graph\+Flavour $>$\+::edge\+\_\+init\+\_\+type
+\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator_a90343c83269941464499ec03d79818f5}\label{structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator_a90343c83269941464499ec03d79818f5}} 
+static constexpr bool {\bfseries shared\+\_\+weight\+\_\+v} \{sharing\+::shared\+\_\+weight\+\_\+v\}
+\item 
+\mbox{\Hypertarget{structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator_a65b50dda79073fe2f68e0e3f3c664ca7}\label{structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator_a65b50dda79073fe2f68e0e3f3c664ca7}} 
+static constexpr bool {\bfseries shared\+\_\+edge\+\_\+v} \{Shared\+Edge\}
+\item 
+\mbox{\Hypertarget{structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator_a82ca280f4558aa810b4449e9e913fc0d}\label{structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator_a82ca280f4558aa810b4449e9e913fc0d}} 
+static constexpr bool {\bfseries init\+\_\+complementary\+\_\+data\+\_\+v} \{\mbox{\hyperlink{structsequoia_1_1maths_1_1graph__impl_1_1edge__init__type__generator}{edge\+\_\+init\+\_\+type\+\_\+generator}}$<$\mbox{\hyperlink{classsequoia_1_1maths_1_1partial__edge}{edge\+\_\+type}}, Graph\+Flavour$>$\+::complementary\+\_\+data\+\_\+v\}
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Maths/\+Graph/\mbox{\hyperlink{_graph_details_8hpp}{Graph\+Details.\+hpp}}\end{DoxyCompactItemize}

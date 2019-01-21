@@ -1,0 +1,64 @@
+\hypertarget{classsequoia_1_1maths_1_1partial__edge__base}{}\section{sequoia\+::maths\+::partial\+\_\+edge\+\_\+base$<$ Weight, Weight\+Sharing\+Policy, Weight\+Proxy, Index\+Type $>$ Class Template Reference}
+\label{classsequoia_1_1maths_1_1partial__edge__base}\index{sequoia::maths::partial\_edge\_base$<$ Weight, WeightSharingPolicy, WeightProxy, IndexType $>$@{sequoia::maths::partial\_edge\_base$<$ Weight, WeightSharingPolicy, WeightProxy, IndexType $>$}}
+
+
+Combines the \mbox{\hyperlink{classsequoia_1_1maths_1_1edge__base}{edge\+\_\+base}} and weighting class.  
+
+
+
+
+{\ttfamily \#include $<$Edge.\+hpp$>$}
+
+Inheritance diagram for sequoia\+::maths\+::partial\+\_\+edge\+\_\+base$<$ Weight, Weight\+Sharing\+Policy, Weight\+Proxy, Index\+Type $>$\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=1.294050cm]{classsequoia_1_1maths_1_1partial__edge__base}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsequoia_1_1maths_1_1partial__edge__base_afe46bc35c1e1e2629e9be62a1090ac20}\label{classsequoia_1_1maths_1_1partial__edge__base_afe46bc35c1e1e2629e9be62a1090ac20}} 
+using {\bfseries weight\+\_\+type} = Weight
+\item 
+\mbox{\Hypertarget{classsequoia_1_1maths_1_1partial__edge__base_ab599e5f3a01d5dabd07eee1a4047e476}\label{classsequoia_1_1maths_1_1partial__edge__base_ab599e5f3a01d5dabd07eee1a4047e476}} 
+using {\bfseries index\+\_\+type} = Index\+Type
+\item 
+\mbox{\Hypertarget{classsequoia_1_1maths_1_1partial__edge__base_a1de303eed37964e2c0dd538c3f76495f}\label{classsequoia_1_1maths_1_1partial__edge__base_a1de303eed37964e2c0dd538c3f76495f}} 
+using {\bfseries weight\+\_\+proxy\+\_\+type} = Weight\+Proxy
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsequoia_1_1maths_1_1partial__edge__base_a66a79658c2caff1cb863cac5cd33a618}\label{classsequoia_1_1maths_1_1partial__edge__base_a66a79658c2caff1cb863cac5cd33a618}} 
+{\footnotesize template$<$class... Args, class  = typename std\+::enable\+\_\+if\+\_\+t$<$!same\+\_\+decay\+\_\+v$<$partial\+\_\+edge\+\_\+base, Args...$>$ \&\& !is\+\_\+base\+\_\+of\+\_\+head\+\_\+v$<$partial\+\_\+edge\+\_\+base, Args...$>$$>$$>$ }\\constexpr {\bfseries partial\+\_\+edge\+\_\+base} (const index\+\_\+type target, Args \&\&... args)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1maths_1_1partial__edge__base_a8e5fe9b96767b35c1ec28e7b5a3dd4b1}\label{classsequoia_1_1maths_1_1partial__edge__base_a8e5fe9b96767b35c1ec28e7b5a3dd4b1}} 
+constexpr {\bfseries partial\+\_\+edge\+\_\+base} (const index\+\_\+type target, const \mbox{\hyperlink{classsequoia_1_1maths_1_1partial__edge__base}{partial\+\_\+edge\+\_\+base}} \&in)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1maths_1_1partial__edge__base_a9ef98fb04c9a7a95ffaec006aaa521b4}\label{classsequoia_1_1maths_1_1partial__edge__base_a9ef98fb04c9a7a95ffaec006aaa521b4}} 
+constexpr {\bfseries partial\+\_\+edge\+\_\+base} (const \mbox{\hyperlink{classsequoia_1_1maths_1_1partial__edge__base}{partial\+\_\+edge\+\_\+base}} \&in)=default
+\item 
+\mbox{\Hypertarget{classsequoia_1_1maths_1_1partial__edge__base_aeb18ee24992163aa564670753dfae51b}\label{classsequoia_1_1maths_1_1partial__edge__base_aeb18ee24992163aa564670753dfae51b}} 
+constexpr {\bfseries partial\+\_\+edge\+\_\+base} (\mbox{\hyperlink{classsequoia_1_1maths_1_1partial__edge__base}{partial\+\_\+edge\+\_\+base}} \&\&in) noexcept=default
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsequoia_1_1maths_1_1partial__edge__base_a03ed4dd1a07f6696d155329c068fc875}\label{classsequoia_1_1maths_1_1partial__edge__base_a03ed4dd1a07f6696d155329c068fc875}} 
+constexpr \mbox{\hyperlink{classsequoia_1_1maths_1_1partial__edge__base}{partial\+\_\+edge\+\_\+base}} \& {\bfseries operator=} (const \mbox{\hyperlink{classsequoia_1_1maths_1_1partial__edge__base}{partial\+\_\+edge\+\_\+base}} \&in)=default
+\item 
+\mbox{\Hypertarget{classsequoia_1_1maths_1_1partial__edge__base_a1be9a34231d7165b186f40d603ffaffe}\label{classsequoia_1_1maths_1_1partial__edge__base_a1be9a34231d7165b186f40d603ffaffe}} 
+constexpr \mbox{\hyperlink{classsequoia_1_1maths_1_1partial__edge__base}{partial\+\_\+edge\+\_\+base}} \& {\bfseries operator=} (\mbox{\hyperlink{classsequoia_1_1maths_1_1partial__edge__base}{partial\+\_\+edge\+\_\+base}} \&\&) noexcept=default
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$class Weight, template$<$ class $>$ class Weight\+Sharing\+Policy, class Weight\+Proxy, class Index\+Type$>$\newline
+class sequoia\+::maths\+::partial\+\_\+edge\+\_\+base$<$ Weight, Weight\+Sharing\+Policy, Weight\+Proxy, Index\+Type $>$}
+
+Combines the \mbox{\hyperlink{classsequoia_1_1maths_1_1edge__base}{edge\+\_\+base}} and weighting class. 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Maths/\+Graph/\mbox{\hyperlink{_edge_8hpp}{Edge.\+hpp}}\end{DoxyCompactItemize}

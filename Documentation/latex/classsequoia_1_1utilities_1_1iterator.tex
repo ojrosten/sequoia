@@ -1,0 +1,140 @@
+\hypertarget{classsequoia_1_1utilities_1_1iterator}{}\section{sequoia\+::utilities\+::iterator$<$ Iterator, Dereference\+Policy, Auxiliary\+Data\+Policy $>$ Class Template Reference}
+\label{classsequoia_1_1utilities_1_1iterator}\index{sequoia::utilities::iterator$<$ Iterator, DereferencePolicy, AuxiliaryDataPolicy $>$@{sequoia::utilities::iterator$<$ Iterator, DereferencePolicy, AuxiliaryDataPolicy $>$}}
+
+
+An iterator with policies controlling dereferncing and auxiliary data.  
+
+
+
+
+{\ttfamily \#include $<$Iterator.\+hpp$>$}
+
+Inheritance diagram for sequoia\+::utilities\+::iterator$<$ Iterator, Dereference\+Policy, Auxiliary\+Data\+Policy $>$\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classsequoia_1_1utilities_1_1iterator}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsequoia_1_1utilities_1_1iterator_ab53987191e27c9b1f33f4e916be8d9ef}\label{classsequoia_1_1utilities_1_1iterator_ab53987191e27c9b1f33f4e916be8d9ef}} 
+using {\bfseries dereference\+\_\+policy} = Dereference\+Policy
+\item 
+\mbox{\Hypertarget{classsequoia_1_1utilities_1_1iterator_af01eea8a268f532dd72c984f17ed6c66}\label{classsequoia_1_1utilities_1_1iterator_af01eea8a268f532dd72c984f17ed6c66}} 
+using {\bfseries auxiliary\+\_\+data\+\_\+policy} = Auxiliary\+Data\+Policy
+\item 
+\mbox{\Hypertarget{classsequoia_1_1utilities_1_1iterator_af167732549efba5d5db597e354ea22bc}\label{classsequoia_1_1utilities_1_1iterator_af167732549efba5d5db597e354ea22bc}} 
+using {\bfseries base\+\_\+iterator\+\_\+type} = Iterator
+\item 
+\mbox{\Hypertarget{classsequoia_1_1utilities_1_1iterator_a9cbb10816bfdac413573adf8802b2541}\label{classsequoia_1_1utilities_1_1iterator_a9cbb10816bfdac413573adf8802b2541}} 
+using {\bfseries iterator\+\_\+category} = typename std\+::iterator\+\_\+traits$<$ Iterator $>$\+::iterator\+\_\+category
+\item 
+\mbox{\Hypertarget{classsequoia_1_1utilities_1_1iterator_ae8566d56359d3fb113a678722e3f0409}\label{classsequoia_1_1utilities_1_1iterator_ae8566d56359d3fb113a678722e3f0409}} 
+using {\bfseries difference\+\_\+type} = typename std\+::iterator\+\_\+traits$<$ Iterator $>$\+::difference\+\_\+type
+\item 
+\mbox{\Hypertarget{classsequoia_1_1utilities_1_1iterator_a91306fff63b6a6212de3c4502ec130a5}\label{classsequoia_1_1utilities_1_1iterator_a91306fff63b6a6212de3c4502ec130a5}} 
+using {\bfseries value\+\_\+type} = typename Dereference\+Policy\+::value\+\_\+type
+\item 
+\mbox{\Hypertarget{classsequoia_1_1utilities_1_1iterator_a27c145a1c5cd32253d28f938bba5a02c}\label{classsequoia_1_1utilities_1_1iterator_a27c145a1c5cd32253d28f938bba5a02c}} 
+using {\bfseries pointer} = typename Dereference\+Policy\+::pointer
+\item 
+\mbox{\Hypertarget{classsequoia_1_1utilities_1_1iterator_a3850721ed5fc458db2c1fc252a69f69d}\label{classsequoia_1_1utilities_1_1iterator_a3850721ed5fc458db2c1fc252a69f69d}} 
+using {\bfseries reference} = typename Dereference\+Policy\+::reference
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsequoia_1_1utilities_1_1iterator_a7d3f03762aa085afb3a3ef2f0e9530bc}\label{classsequoia_1_1utilities_1_1iterator_a7d3f03762aa085afb3a3ef2f0e9530bc}} 
+{\footnotesize template$<$class Arg , class... Args, class  = std\+::enable\+\_\+if\+\_\+t$<$sizeof...(\+Args) $\vert$$\vert$ !same\+\_\+decay\+\_\+v$<$\+Arg, iterator$>$$>$$>$ }\\constexpr {\bfseries iterator} (Arg \&\&base\+Iter\+Arg, Args \&\&... args)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1utilities_1_1iterator_ae1a24866448637be8904288446877e25}\label{classsequoia_1_1utilities_1_1iterator_ae1a24866448637be8904288446877e25}} 
+{\footnotesize template$<$class Iter , class Deref\+Pol , class  = std\+::enable\+\_\+if\+\_\+t$<$           !std\+::is\+\_\+same\+\_\+v$<$\+Iter, Iterator$>$        \&\& std\+::is\+\_\+convertible\+\_\+v$<$\+Iter, base\+\_\+iterator\+\_\+type$>$        \&\& std\+::is\+\_\+same\+\_\+v$<$              std\+::remove\+\_\+cv\+\_\+t$<$std\+::remove\+\_\+reference\+\_\+t$<$typename Deref\+Pol\+::reference$>$$>$,              std\+::remove\+\_\+cv\+\_\+t$<$std\+::remove\+\_\+reference\+\_\+t$<$reference$>$$>$           $>$      $>$$>$ }\\constexpr {\bfseries iterator} (\mbox{\hyperlink{classsequoia_1_1utilities_1_1iterator}{iterator}}$<$ Iter, Deref\+Pol, Auxiliary\+Data\+Policy $>$ iter)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1utilities_1_1iterator_af3a8732b36d6b9ba6b74494ee3d77c6a}\label{classsequoia_1_1utilities_1_1iterator_af3a8732b36d6b9ba6b74494ee3d77c6a}} 
+constexpr {\bfseries iterator} (const \mbox{\hyperlink{classsequoia_1_1utilities_1_1iterator}{iterator}} \&)=default
+\item 
+\mbox{\Hypertarget{classsequoia_1_1utilities_1_1iterator_a0ad0afd57e63bab2854b8e0c75d75306}\label{classsequoia_1_1utilities_1_1iterator_a0ad0afd57e63bab2854b8e0c75d75306}} 
+constexpr {\bfseries iterator} (\mbox{\hyperlink{classsequoia_1_1utilities_1_1iterator}{iterator}} \&\&) noexcept=default
+\item 
+\mbox{\Hypertarget{classsequoia_1_1utilities_1_1iterator_ac1b5b6fb9f031bd189e6580dbb4b4cba}\label{classsequoia_1_1utilities_1_1iterator_ac1b5b6fb9f031bd189e6580dbb4b4cba}} 
+constexpr \mbox{\hyperlink{classsequoia_1_1utilities_1_1iterator}{iterator}} \& {\bfseries operator=} (const \mbox{\hyperlink{classsequoia_1_1utilities_1_1iterator}{iterator}} \&)=default
+\item 
+\mbox{\Hypertarget{classsequoia_1_1utilities_1_1iterator_a63879258d14ef73c475d35bb62f42baa}\label{classsequoia_1_1utilities_1_1iterator_a63879258d14ef73c475d35bb62f42baa}} 
+constexpr \mbox{\hyperlink{classsequoia_1_1utilities_1_1iterator}{iterator}} \& {\bfseries operator=} (\mbox{\hyperlink{classsequoia_1_1utilities_1_1iterator}{iterator}} \&\&) noexcept=default
+\item 
+\mbox{\Hypertarget{classsequoia_1_1utilities_1_1iterator_ad613fd631fcd7dd3ab99ea2c31999c00}\label{classsequoia_1_1utilities_1_1iterator_ad613fd631fcd7dd3ab99ea2c31999c00}} 
+constexpr base\+\_\+iterator\+\_\+type {\bfseries base\+\_\+iterator} () const noexcept
+\item 
+\mbox{\Hypertarget{classsequoia_1_1utilities_1_1iterator_a904896f68f65dd93a4c3cd757dcbc62b}\label{classsequoia_1_1utilities_1_1iterator_a904896f68f65dd93a4c3cd757dcbc62b}} 
+decltype(auto) constexpr {\bfseries operator $\ast$} () const
+\item 
+\mbox{\Hypertarget{classsequoia_1_1utilities_1_1iterator_a51bc1fb25f99950cf7bd5e63e79df0d6}\label{classsequoia_1_1utilities_1_1iterator_a51bc1fb25f99950cf7bd5e63e79df0d6}} 
+decltype(auto) constexpr {\bfseries operator\mbox{[}$\,$\mbox{]}} (const difference\+\_\+type n) const
+\item 
+\mbox{\Hypertarget{classsequoia_1_1utilities_1_1iterator_a1fe64d03f26f5ac3e016323f59f2327c}\label{classsequoia_1_1utilities_1_1iterator_a1fe64d03f26f5ac3e016323f59f2327c}} 
+constexpr pointer {\bfseries operator-\/$>$} () const
+\item 
+\mbox{\Hypertarget{classsequoia_1_1utilities_1_1iterator_a8a66cf09e2aa84ee5f3ffed44fa78a5e}\label{classsequoia_1_1utilities_1_1iterator_a8a66cf09e2aa84ee5f3ffed44fa78a5e}} 
+constexpr \mbox{\hyperlink{classsequoia_1_1utilities_1_1iterator}{iterator}} \& {\bfseries operator++} ()
+\item 
+\mbox{\Hypertarget{classsequoia_1_1utilities_1_1iterator_a3c4f6a421c2660d85e6dfd9952eddc65}\label{classsequoia_1_1utilities_1_1iterator_a3c4f6a421c2660d85e6dfd9952eddc65}} 
+constexpr \mbox{\hyperlink{classsequoia_1_1utilities_1_1iterator}{iterator}} \& {\bfseries operator+=} (const difference\+\_\+type n)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1utilities_1_1iterator_a1801a0875db84a591106c62f4b14ac1c}\label{classsequoia_1_1utilities_1_1iterator_a1801a0875db84a591106c62f4b14ac1c}} 
+constexpr \mbox{\hyperlink{classsequoia_1_1utilities_1_1iterator}{iterator}} {\bfseries operator++} (int)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1utilities_1_1iterator_a18872c5701c437a30972b4b8ec65f2d6}\label{classsequoia_1_1utilities_1_1iterator_a18872c5701c437a30972b4b8ec65f2d6}} 
+constexpr \mbox{\hyperlink{classsequoia_1_1utilities_1_1iterator}{iterator}} \& {\bfseries operator-\/-\/} ()
+\item 
+\mbox{\Hypertarget{classsequoia_1_1utilities_1_1iterator_a781d755163fde81dfefed4090350fc16}\label{classsequoia_1_1utilities_1_1iterator_a781d755163fde81dfefed4090350fc16}} 
+constexpr \mbox{\hyperlink{classsequoia_1_1utilities_1_1iterator}{iterator}} \& {\bfseries operator-\/=} (const difference\+\_\+type n)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1utilities_1_1iterator_a703899b7bc50ed38f8439f4da6e33f11}\label{classsequoia_1_1utilities_1_1iterator_a703899b7bc50ed38f8439f4da6e33f11}} 
+constexpr \mbox{\hyperlink{classsequoia_1_1utilities_1_1iterator}{iterator}} {\bfseries operator-\/-\/} (int)
+\end{DoxyCompactItemize}
+\subsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsequoia_1_1utilities_1_1iterator_a3f317066146fccb292eeb0b14690d905}\label{classsequoia_1_1utilities_1_1iterator_a3f317066146fccb292eeb0b14690d905}} 
+constexpr \mbox{\hyperlink{classsequoia_1_1utilities_1_1iterator}{iterator}} {\bfseries operator+} (const \mbox{\hyperlink{classsequoia_1_1utilities_1_1iterator}{iterator}} \&it, const difference\+\_\+type n)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1utilities_1_1iterator_ab67e1399ffbbe7dcb5968d7359bc2270}\label{classsequoia_1_1utilities_1_1iterator_ab67e1399ffbbe7dcb5968d7359bc2270}} 
+constexpr \mbox{\hyperlink{classsequoia_1_1utilities_1_1iterator}{iterator}} {\bfseries operator-\/} (const \mbox{\hyperlink{classsequoia_1_1utilities_1_1iterator}{iterator}} \&it, const difference\+\_\+type n)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1utilities_1_1iterator_a3c507bd7b7ccef9adec9b2d024cbd8dc}\label{classsequoia_1_1utilities_1_1iterator_a3c507bd7b7ccef9adec9b2d024cbd8dc}} 
+constexpr bool {\bfseries operator==} (const \mbox{\hyperlink{classsequoia_1_1utilities_1_1iterator}{iterator}} \&lhs, const \mbox{\hyperlink{classsequoia_1_1utilities_1_1iterator}{iterator}} \&rhs) noexcept
+\item 
+\mbox{\Hypertarget{classsequoia_1_1utilities_1_1iterator_aacbecc86727f6544d850384be5a84b88}\label{classsequoia_1_1utilities_1_1iterator_aacbecc86727f6544d850384be5a84b88}} 
+constexpr bool {\bfseries operator!=} (const \mbox{\hyperlink{classsequoia_1_1utilities_1_1iterator}{iterator}} \&lhs, const \mbox{\hyperlink{classsequoia_1_1utilities_1_1iterator}{iterator}} \&rhs) noexcept
+\item 
+\mbox{\Hypertarget{classsequoia_1_1utilities_1_1iterator_afba8b26a0e531e9e68212ed41067cbe5}\label{classsequoia_1_1utilities_1_1iterator_afba8b26a0e531e9e68212ed41067cbe5}} 
+constexpr bool {\bfseries operator$>$} (const \mbox{\hyperlink{classsequoia_1_1utilities_1_1iterator}{iterator}} \&lhs, const \mbox{\hyperlink{classsequoia_1_1utilities_1_1iterator}{iterator}} \&rhs) noexcept
+\item 
+\mbox{\Hypertarget{classsequoia_1_1utilities_1_1iterator_a576f3834e1e44f9aac4d3b806e41148c}\label{classsequoia_1_1utilities_1_1iterator_a576f3834e1e44f9aac4d3b806e41148c}} 
+constexpr bool {\bfseries operator$<$} (const \mbox{\hyperlink{classsequoia_1_1utilities_1_1iterator}{iterator}} \&lhs, const \mbox{\hyperlink{classsequoia_1_1utilities_1_1iterator}{iterator}} \&rhs) noexcept
+\item 
+\mbox{\Hypertarget{classsequoia_1_1utilities_1_1iterator_a03e896fd960e9f457ac0c28703adbc0e}\label{classsequoia_1_1utilities_1_1iterator_a03e896fd960e9f457ac0c28703adbc0e}} 
+constexpr bool {\bfseries operator$<$=} (const \mbox{\hyperlink{classsequoia_1_1utilities_1_1iterator}{iterator}} \&lhs, const \mbox{\hyperlink{classsequoia_1_1utilities_1_1iterator}{iterator}} \&rhs) noexcept
+\item 
+\mbox{\Hypertarget{classsequoia_1_1utilities_1_1iterator_ae5a820a6abec8178568e72b4010d9262}\label{classsequoia_1_1utilities_1_1iterator_ae5a820a6abec8178568e72b4010d9262}} 
+constexpr bool {\bfseries operator$>$=} (const \mbox{\hyperlink{classsequoia_1_1utilities_1_1iterator}{iterator}} \&lhs, const \mbox{\hyperlink{classsequoia_1_1utilities_1_1iterator}{iterator}} \&rhs) noexcept
+\item 
+\mbox{\Hypertarget{classsequoia_1_1utilities_1_1iterator_ae1d5fa3395b5367bf186e63b78e5b260}\label{classsequoia_1_1utilities_1_1iterator_ae1d5fa3395b5367bf186e63b78e5b260}} 
+constexpr auto {\bfseries distance} (\mbox{\hyperlink{classsequoia_1_1utilities_1_1iterator}{iterator}} lhs, \mbox{\hyperlink{classsequoia_1_1utilities_1_1iterator}{iterator}} rhs)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$class Iterator, class Dereference\+Policy, class Auxiliary\+Data\+Policy$>$\newline
+class sequoia\+::utilities\+::iterator$<$ Iterator, Dereference\+Policy, Auxiliary\+Data\+Policy $>$}
+
+An iterator with policies controlling dereferncing and auxiliary data. 
+
+The Dereference\+Policy allows customisation of the various dereferencing operators. In principle it is therefore possible that deferencing will not return a reference. This is forbidden in the case that the underlying iterator is non-\/const since the semantics could then be rather confusing. However, for const iterators this is tacitly allowed.
+
+The iterator may also hold extra (auxiliary) data, controlled via the Auxiliary\+Data\+Policy. 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Core/\+Utilities/\mbox{\hyperlink{_iterator_8hpp}{Iterator.\+hpp}}\end{DoxyCompactItemize}

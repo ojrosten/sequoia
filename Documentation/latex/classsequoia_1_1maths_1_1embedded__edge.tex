@@ -1,0 +1,83 @@
+\hypertarget{classsequoia_1_1maths_1_1embedded__edge}{}\section{sequoia\+::maths\+::embedded\+\_\+edge$<$ Weight, Weight\+Sharing\+Policy, Weight\+Proxy, Index\+Type $>$ Class Template Reference}
+\label{classsequoia_1_1maths_1_1embedded__edge}\index{sequoia::maths::embedded\_edge$<$ Weight, WeightSharingPolicy, WeightProxy, IndexType $>$@{sequoia::maths::embedded\_edge$<$ Weight, WeightSharingPolicy, WeightProxy, IndexType $>$}}
+
+
+Decoration of edge to record the location on the target node into which the edge is embedded.  
+
+
+
+
+{\ttfamily \#include $<$Edge.\+hpp$>$}
+
+Inheritance diagram for sequoia\+::maths\+::embedded\+\_\+edge$<$ Weight, Weight\+Sharing\+Policy, Weight\+Proxy, Index\+Type $>$\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=1.971831cm]{classsequoia_1_1maths_1_1embedded__edge}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsequoia_1_1maths_1_1embedded__edge_a79e835653e8a2651124e6302c72b69c7}\label{classsequoia_1_1maths_1_1embedded__edge_a79e835653e8a2651124e6302c72b69c7}} 
+using {\bfseries weight\+\_\+type} = typename \mbox{\hyperlink{classsequoia_1_1maths_1_1decorated__edge__base}{decorated\+\_\+edge\+\_\+base}}$<$ Weight, Weight\+Sharing\+Policy, Weight\+Proxy, Index\+Type $>$\+::weight\+\_\+type
+\item 
+\mbox{\Hypertarget{classsequoia_1_1maths_1_1embedded__edge_ae9ad52cd8171cb3d6b0f3a870ff0d6cd}\label{classsequoia_1_1maths_1_1embedded__edge_ae9ad52cd8171cb3d6b0f3a870ff0d6cd}} 
+using {\bfseries index\+\_\+type} = typename \mbox{\hyperlink{classsequoia_1_1maths_1_1decorated__edge__base}{decorated\+\_\+edge\+\_\+base}}$<$ Weight, Weight\+Sharing\+Policy, Weight\+Proxy, Index\+Type $>$\+::index\+\_\+type
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsequoia_1_1maths_1_1embedded__edge_a13d5d1abd84d8ca56a58976e04b8959a}\label{classsequoia_1_1maths_1_1embedded__edge_a13d5d1abd84d8ca56a58976e04b8959a}} 
+{\footnotesize template$<$class... Args, class  = typename std\+::enable\+\_\+if\+\_\+t$<$!same\+\_\+decay\+\_\+v$<$embedded\+\_\+edge, Args...$>$ \&\& !is\+\_\+base\+\_\+of\+\_\+head\+\_\+v$<$embedded\+\_\+edge, Args...$>$$>$$>$ }\\constexpr {\bfseries embedded\+\_\+edge} (const index\+\_\+type host, const index\+\_\+type target, const index\+\_\+type aux\+Index, Args \&\&... args)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1maths_1_1embedded__edge_ac85831ca46a9b163fe7ee3427fec16b1}\label{classsequoia_1_1maths_1_1embedded__edge_ac85831ca46a9b163fe7ee3427fec16b1}} 
+{\footnotesize template$<$bool Inverted, class... Args$>$ }\\constexpr {\bfseries embedded\+\_\+edge} (const index\+\_\+type node, const \mbox{\hyperlink{structsequoia_1_1maths_1_1inversion__constant}{inversion\+\_\+constant}}$<$ Inverted $>$ inverted, const index\+\_\+type aux\+Index, Args \&\&... args)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1maths_1_1embedded__edge_a2d9d6976eac0bc01d6af9093a279b091}\label{classsequoia_1_1maths_1_1embedded__edge_a2d9d6976eac0bc01d6af9093a279b091}} 
+constexpr {\bfseries embedded\+\_\+edge} (const index\+\_\+type aux\+Index, const \mbox{\hyperlink{classsequoia_1_1maths_1_1embedded__edge}{embedded\+\_\+edge}} \&in)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1maths_1_1embedded__edge_a3126279015c6f933df9e373a5aac5926}\label{classsequoia_1_1maths_1_1embedded__edge_a3126279015c6f933df9e373a5aac5926}} 
+constexpr {\bfseries embedded\+\_\+edge} (const \mbox{\hyperlink{classsequoia_1_1maths_1_1embedded__edge}{embedded\+\_\+edge}} \&in)=default
+\item 
+\mbox{\Hypertarget{classsequoia_1_1maths_1_1embedded__edge_add6f0a50a75ef9299d0f7deb7f439e4a}\label{classsequoia_1_1maths_1_1embedded__edge_add6f0a50a75ef9299d0f7deb7f439e4a}} 
+constexpr {\bfseries embedded\+\_\+edge} (\mbox{\hyperlink{classsequoia_1_1maths_1_1embedded__edge}{embedded\+\_\+edge}} \&\&in)=default
+\item 
+\mbox{\Hypertarget{classsequoia_1_1maths_1_1embedded__edge_a84dee88dcd34457538bc815160e721dd}\label{classsequoia_1_1maths_1_1embedded__edge_a84dee88dcd34457538bc815160e721dd}} 
+constexpr \mbox{\hyperlink{classsequoia_1_1maths_1_1embedded__edge}{embedded\+\_\+edge}} \& {\bfseries operator=} (const \mbox{\hyperlink{classsequoia_1_1maths_1_1embedded__edge}{embedded\+\_\+edge}} \&in)=default
+\item 
+\mbox{\Hypertarget{classsequoia_1_1maths_1_1embedded__edge_aeb67baf835feb5f981e90d4304be9445}\label{classsequoia_1_1maths_1_1embedded__edge_aeb67baf835feb5f981e90d4304be9445}} 
+constexpr \mbox{\hyperlink{classsequoia_1_1maths_1_1embedded__edge}{embedded\+\_\+edge}} \& {\bfseries operator=} (\mbox{\hyperlink{classsequoia_1_1maths_1_1embedded__edge}{embedded\+\_\+edge}} \&\&)=default
+\item 
+\mbox{\Hypertarget{classsequoia_1_1maths_1_1embedded__edge_a45b974ba44e020673f6a4ed492123e0c}\label{classsequoia_1_1maths_1_1embedded__edge_a45b974ba44e020673f6a4ed492123e0c}} 
+constexpr index\+\_\+type {\bfseries complementary\+\_\+index} () const noexcept
+\item 
+\mbox{\Hypertarget{classsequoia_1_1maths_1_1embedded__edge_a7c20c60df955051930f1dce542b6a8d2}\label{classsequoia_1_1maths_1_1embedded__edge_a7c20c60df955051930f1dce542b6a8d2}} 
+constexpr void {\bfseries complementary\+\_\+index} (const index\+\_\+type aux\+Index) noexcept
+\item 
+\mbox{\Hypertarget{classsequoia_1_1maths_1_1embedded__edge_a8b5ee7da93ae653789f6fb0020e37648}\label{classsequoia_1_1maths_1_1embedded__edge_a8b5ee7da93ae653789f6fb0020e37648}} 
+constexpr index\+\_\+type {\bfseries host\+\_\+node} () const noexcept
+\item 
+\mbox{\Hypertarget{classsequoia_1_1maths_1_1embedded__edge_acd69c46f93db372a7a6238d2654bd399}\label{classsequoia_1_1maths_1_1embedded__edge_acd69c46f93db372a7a6238d2654bd399}} 
+constexpr void {\bfseries host\+\_\+node} (const index\+\_\+type host) noexcept
+\item 
+\mbox{\Hypertarget{classsequoia_1_1maths_1_1embedded__edge_a1629c1963996bc0d49a259fd1b1d0b7c}\label{classsequoia_1_1maths_1_1embedded__edge_a1629c1963996bc0d49a259fd1b1d0b7c}} 
+constexpr bool {\bfseries inverted} () const noexcept
+\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsequoia_1_1maths_1_1embedded__edge_a359f62332eb9b847ab5913fd463a2b46}\label{classsequoia_1_1maths_1_1embedded__edge_a359f62332eb9b847ab5913fd463a2b46}} 
+static constexpr edge\+\_\+flavour {\bfseries flavour} \{edge\+\_\+flavour\+::full\+\_\+embedded\}
+\end{DoxyCompactItemize}
+\subsection*{Additional Inherited Members}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$class Weight, template$<$ class $>$ class Weight\+Sharing\+Policy, class Weight\+Proxy, class Index\+Type = std\+::size\+\_\+t$>$\newline
+class sequoia\+::maths\+::embedded\+\_\+edge$<$ Weight, Weight\+Sharing\+Policy, Weight\+Proxy, Index\+Type $>$}
+
+Decoration of edge to record the location on the target node into which the edge is embedded. 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Maths/\+Graph/\mbox{\hyperlink{_edge_8hpp}{Edge.\+hpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,57 @@
+\hypertarget{classsequoia_1_1utilities_1_1protective__wrapper}{}\section{sequoia\+::utilities\+::protective\+\_\+wrapper$<$ T, bool $>$ Class Template Reference}
+\label{classsequoia_1_1utilities_1_1protective__wrapper}\index{sequoia::utilities::protective\_wrapper$<$ T, bool $>$@{sequoia::utilities::protective\_wrapper$<$ T, bool $>$}}
+
+
+A wrapper which allows for getting, setting and mutation of its stored value.  
+
+
+
+
+{\ttfamily \#include $<$Protective\+Wrapper.\+hpp$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsequoia_1_1utilities_1_1protective__wrapper_a497db7be596dbe8cb452e33d9b9ecc80}\label{classsequoia_1_1utilities_1_1protective__wrapper_a497db7be596dbe8cb452e33d9b9ecc80}} 
+using {\bfseries value\+\_\+type} = T
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsequoia_1_1utilities_1_1protective__wrapper_aa7651891300f5d42583392aae4868c54}\label{classsequoia_1_1utilities_1_1protective__wrapper_aa7651891300f5d42583392aae4868c54}} 
+{\footnotesize template$<$class... Args, class  = std\+::enable\+\_\+if\+\_\+t$<$!same\+\_\+decay\+\_\+v$<$protective\+\_\+wrapper, Args...$>$$>$$>$ }\\constexpr {\bfseries protective\+\_\+wrapper} (Args \&\&... args)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1utilities_1_1protective__wrapper_a7dc48bc5d3ee87f99726b27e7fcd23a5}\label{classsequoia_1_1utilities_1_1protective__wrapper_a7dc48bc5d3ee87f99726b27e7fcd23a5}} 
+constexpr {\bfseries protective\+\_\+wrapper} (const \mbox{\hyperlink{classsequoia_1_1utilities_1_1protective__wrapper}{protective\+\_\+wrapper}} \&)=default
+\item 
+\mbox{\Hypertarget{classsequoia_1_1utilities_1_1protective__wrapper_aebc3cd6cc965477ffab94f28c6d4366c}\label{classsequoia_1_1utilities_1_1protective__wrapper_aebc3cd6cc965477ffab94f28c6d4366c}} 
+constexpr {\bfseries protective\+\_\+wrapper} (\mbox{\hyperlink{classsequoia_1_1utilities_1_1protective__wrapper}{protective\+\_\+wrapper}} \&\&) noexcept=default
+\item 
+\mbox{\Hypertarget{classsequoia_1_1utilities_1_1protective__wrapper_aaf1d871a25b5b8e913f16d0b4adbdedf}\label{classsequoia_1_1utilities_1_1protective__wrapper_aaf1d871a25b5b8e913f16d0b4adbdedf}} 
+constexpr \mbox{\hyperlink{classsequoia_1_1utilities_1_1protective__wrapper}{protective\+\_\+wrapper}} \& {\bfseries operator=} (const \mbox{\hyperlink{classsequoia_1_1utilities_1_1protective__wrapper}{protective\+\_\+wrapper}} \&)=default
+\item 
+\mbox{\Hypertarget{classsequoia_1_1utilities_1_1protective__wrapper_a31fe2a2a281d0a38d4470586636f1c7a}\label{classsequoia_1_1utilities_1_1protective__wrapper_a31fe2a2a281d0a38d4470586636f1c7a}} 
+constexpr \mbox{\hyperlink{classsequoia_1_1utilities_1_1protective__wrapper}{protective\+\_\+wrapper}} \& {\bfseries operator=} (\mbox{\hyperlink{classsequoia_1_1utilities_1_1protective__wrapper}{protective\+\_\+wrapper}} \&\&) noexcept=default
+\item 
+\mbox{\Hypertarget{classsequoia_1_1utilities_1_1protective__wrapper_aae4552413bb78efb8f59c85db2d02689}\label{classsequoia_1_1utilities_1_1protective__wrapper_aae4552413bb78efb8f59c85db2d02689}} 
+{\footnotesize template$<$class Arg , class... Args$>$ }\\constexpr void {\bfseries set} (Arg \&\&arg, Args \&\&... args)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1utilities_1_1protective__wrapper_a4d844f4ff80def39faef80441b8d8fe6}\label{classsequoia_1_1utilities_1_1protective__wrapper_a4d844f4ff80def39faef80441b8d8fe6}} 
+{\footnotesize template$<$class Fn $>$ }\\constexpr void {\bfseries mutate} (Fn fn)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1utilities_1_1protective__wrapper_ad23e29b565082f9b5336d7bc47026955}\label{classsequoia_1_1utilities_1_1protective__wrapper_ad23e29b565082f9b5336d7bc47026955}} 
+constexpr const T \& {\bfseries get} () const noexcept
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$class T, bool = std\+::is\+\_\+empty\+\_\+v$<$\+T$>$$>$\newline
+class sequoia\+::utilities\+::protective\+\_\+wrapper$<$ T, bool $>$}
+
+A wrapper which allows for getting, setting and mutation of its stored value. 
+
+This wrapper is designed for use alongside classes which expose proxies to the underlying data of interest. Throughout sequoia, such proxies should have the same get/set/mutate interface as \mbox{\hyperlink{classsequoia_1_1utilities_1_1protective__wrapper}{protective\+\_\+wrapper}}. Thus the \mbox{\hyperlink{classsequoia_1_1utilities_1_1protective__wrapper}{protective\+\_\+wrapper}} allows for a homogeneous treatment of families of classes, some of which must necessarily use proxies but all of which are desired to have the same semantics in terms of getting/setting/mutating the underlying data. 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Core/\+Utilities/\mbox{\hyperlink{_protective_wrapper_8hpp}{Protective\+Wrapper.\+hpp}}\end{DoxyCompactItemize}

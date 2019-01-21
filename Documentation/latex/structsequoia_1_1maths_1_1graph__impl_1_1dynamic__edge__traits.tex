@@ -1,0 +1,43 @@
+\hypertarget{structsequoia_1_1maths_1_1graph__impl_1_1dynamic__edge__traits}{}\section{sequoia\+::maths\+::graph\+\_\+impl\+::dynamic\+\_\+edge\+\_\+traits$<$ Graph\+Flavour, Edge\+Weight, Edge\+Weight\+Pooling, Edge\+Storage\+Traits, Index\+Type $>$ Struct Template Reference}
+\label{structsequoia_1_1maths_1_1graph__impl_1_1dynamic__edge__traits}\index{sequoia::maths::graph\_impl::dynamic\_edge\_traits$<$ GraphFlavour, EdgeWeight, EdgeWeightPooling, EdgeStorageTraits, IndexType $>$@{sequoia::maths::graph\_impl::dynamic\_edge\_traits$<$ GraphFlavour, EdgeWeight, EdgeWeightPooling, EdgeStorageTraits, IndexType $>$}}
+Inheritance diagram for sequoia\+::maths\+::graph\+\_\+impl\+::dynamic\+\_\+edge\+\_\+traits$<$ Graph\+Flavour, Edge\+Weight, Edge\+Weight\+Pooling, Edge\+Storage\+Traits, Index\+Type $>$\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=0.971379cm]{structsequoia_1_1maths_1_1graph__impl_1_1dynamic__edge__traits}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structsequoia_1_1maths_1_1graph__impl_1_1dynamic__edge__traits_a590051402918e12d2dc78625ff5cd4eb}\label{structsequoia_1_1maths_1_1graph__impl_1_1dynamic__edge__traits_a590051402918e12d2dc78625ff5cd4eb}} 
+using {\bfseries edge\+\_\+type\+\_\+gen} = \mbox{\hyperlink{structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator}{edge\+\_\+type\+\_\+generator}}$<$ Graph\+Flavour, Edge\+Weight, Edge\+Weight\+Pooling, Index\+Type, Edge\+Storage\+Traits$<$ Graph\+Flavour, Edge\+Weight, Edge\+Weight\+Pooling $>$\+::edge\+\_\+sharing $>$
+\item 
+\mbox{\Hypertarget{structsequoia_1_1maths_1_1graph__impl_1_1dynamic__edge__traits_ada4f0120b281cf0b0bd386a4c2753887}\label{structsequoia_1_1maths_1_1graph__impl_1_1dynamic__edge__traits_ada4f0120b281cf0b0bd386a4c2753887}} 
+using {\bfseries edge\+\_\+type} = typename \mbox{\hyperlink{classsequoia_1_1maths_1_1partial__edge}{edge\+\_\+type\+\_\+gen\+::edge\+\_\+type}}
+\item 
+\mbox{\Hypertarget{structsequoia_1_1maths_1_1graph__impl_1_1dynamic__edge__traits_a21c44b080625b3a66ff6a29d971b7d61}\label{structsequoia_1_1maths_1_1graph__impl_1_1dynamic__edge__traits_a21c44b080625b3a66ff6a29d971b7d61}} 
+using {\bfseries edge\+\_\+storage\+\_\+sharing\+\_\+policy} = typename \mbox{\hyperlink{structsequoia_1_1maths_1_1graph__impl_1_1shared__edge__v__to__policy}{shared\+\_\+edge\+\_\+v\+\_\+to\+\_\+policy}}$<$ shared\+\_\+edge\+\_\+v $>$\+::template edge\+\_\+storage\+\_\+sharing\+\_\+policy$<$ edge\+\_\+type $>$
+\item 
+\mbox{\Hypertarget{structsequoia_1_1maths_1_1graph__impl_1_1dynamic__edge__traits_a58728717c0d38eb2b69ed1ac2361d7b4}\label{structsequoia_1_1maths_1_1graph__impl_1_1dynamic__edge__traits_a58728717c0d38eb2b69ed1ac2361d7b4}} 
+using {\bfseries edge\+\_\+storage\+\_\+traits} = typename Edge\+Storage\+Traits$<$ Graph\+Flavour, Edge\+Weight, Edge\+Weight\+Pooling $>$\+::template traits\+\_\+type$<$ edge\+\_\+type, edge\+\_\+storage\+\_\+sharing\+\_\+policy $>$
+\item 
+\mbox{\Hypertarget{structsequoia_1_1maths_1_1graph__impl_1_1dynamic__edge__traits_abe7ac92f1ca2c7c9d0048124a4d5b761}\label{structsequoia_1_1maths_1_1graph__impl_1_1dynamic__edge__traits_abe7ac92f1ca2c7c9d0048124a4d5b761}} 
+using {\bfseries edge\+\_\+storage\+\_\+type} = typename Edge\+Storage\+Traits$<$ Graph\+Flavour, Edge\+Weight, Edge\+Weight\+Pooling $>$\+::template storage\+\_\+type$<$ edge\+\_\+type, edge\+\_\+storage\+\_\+sharing\+\_\+policy, edge\+\_\+storage\+\_\+traits $>$
+\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structsequoia_1_1maths_1_1graph__impl_1_1dynamic__edge__traits_a43cbbf6de1452f8a679b16cd11f4b4c5}\label{structsequoia_1_1maths_1_1graph__impl_1_1dynamic__edge__traits_a43cbbf6de1452f8a679b16cd11f4b4c5}} 
+static constexpr bool {\bfseries shared\+\_\+edge\+\_\+v} \{edge\+\_\+type\+\_\+gen\+::shared\+\_\+edge\+\_\+v\}
+\item 
+\mbox{\Hypertarget{structsequoia_1_1maths_1_1graph__impl_1_1dynamic__edge__traits_ac750f9719537b8ada55a5b1ac87b9aa6}\label{structsequoia_1_1maths_1_1graph__impl_1_1dynamic__edge__traits_ac750f9719537b8ada55a5b1ac87b9aa6}} 
+static constexpr bool {\bfseries mutual\+\_\+info\+\_\+v} \{Graph\+Flavour != graph\+\_\+flavour\+::directed\}
+\item 
+\mbox{\Hypertarget{structsequoia_1_1maths_1_1graph__impl_1_1dynamic__edge__traits_a2decbc31c8bbbd866f529854895f7df5}\label{structsequoia_1_1maths_1_1graph__impl_1_1dynamic__edge__traits_a2decbc31c8bbbd866f529854895f7df5}} 
+static constexpr bool {\bfseries weight\+\_\+setting\+\_\+exception\+\_\+guarantee\+\_\+v} \{true\}
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Maths/\+Graph/\mbox{\hyperlink{_dynamic_graph_impl_8hpp}{Dynamic\+Graph\+Impl.\+hpp}}\end{DoxyCompactItemize}

@@ -1,0 +1,26 @@
+\hypertarget{_node_storage_8hpp}{}\section{Maths/\+Graph/\+Node\+Storage.hpp File Reference}
+\label{_node_storage_8hpp}\index{Maths/Graph/NodeStorage.hpp@{Maths/Graph/NodeStorage.hpp}}
+
+
+Classes to allow homogeneous treatment of graphs with empty/non-\/empty node weights.  
+
+
+{\ttfamily \#include \char`\"{}Iterator.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Static\+Data.\+hpp\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}Algorithms.\+hpp\char`\"{}}\newline
+{\ttfamily \#include $<$type\+\_\+traits$>$}\newline
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structsequoia_1_1maths_1_1graph__impl_1_1proxy__dereference__policy}{sequoia\+::maths\+::graph\+\_\+impl\+::proxy\+\_\+dereference\+\_\+policy$<$ Iterator $>$}}
+\item 
+class \mbox{\hyperlink{classsequoia_1_1maths_1_1graph__impl_1_1node__storage}{sequoia\+::maths\+::graph\+\_\+impl\+::node\+\_\+storage$<$ Weight\+Proxy, Traits, bool $>$}}
+\item 
+class \mbox{\hyperlink{classsequoia_1_1maths_1_1graph__impl_1_1node__storage_3_01_weight_proxy_00_01_traits_00_01true_01_4}{sequoia\+::maths\+::graph\+\_\+impl\+::node\+\_\+storage$<$ Weight\+Proxy, Traits, true $>$}}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Classes to allow homogeneous treatment of graphs with empty/non-\/empty node weights. 
+
+These classes are designed to be inherited from publically, in order that graphs may aggregate the interface of the node storage. For empty node weights, the node storage specialization is itself empty, meaning that empty base class optimization will ensure that no space is wasted. 

@@ -1,0 +1,43 @@
+\hypertarget{_concurrency_models_8hpp}{}\section{Core/\+Concurrency/\+Concurrency\+Models.hpp File Reference}
+\label{_concurrency_models_8hpp}\index{Core/Concurrency/ConcurrencyModels.hpp@{Core/Concurrency/ConcurrencyModels.hpp}}
+
+
+Classes with a queue-\/like behaviour to which tasks can be pushed and results recovered, possibly following concurrent execution.  
+
+
+{\ttfamily \#include $<$queue$>$}\newline
+{\ttfamily \#include $<$thread$>$}\newline
+{\ttfamily \#include $<$mutex$>$}\newline
+{\ttfamily \#include $<$condition\+\_\+variable$>$}\newline
+{\ttfamily \#include $<$future$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include \char`\"{}Type\+Traits.\+hpp\char`\"{}}\newline
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classsequoia_1_1concurrency_1_1task__queue}{sequoia\+::concurrency\+::task\+\_\+queue$<$ R, Task, Q $>$}}
+\begin{DoxyCompactList}\small\item\em a task queue designed for use by mutliple threads. \end{DoxyCompactList}\item 
+struct \mbox{\hyperlink{structsequoia_1_1concurrency_1_1impl_1_1queue__details}{sequoia\+::concurrency\+::impl\+::queue\+\_\+details$<$ R, Multi\+Channel $>$}}
+\item 
+struct \mbox{\hyperlink{structsequoia_1_1concurrency_1_1impl_1_1queue__details_3_01_r_00_01false_01_4}{sequoia\+::concurrency\+::impl\+::queue\+\_\+details$<$ R, false $>$}}
+\item 
+class \mbox{\hyperlink{classsequoia_1_1concurrency_1_1serial}{sequoia\+::concurrency\+::serial$<$ R $>$}}
+\begin{DoxyCompactList}\small\item\em Tasks may be pushed, upon which they are immediately invoked; results may be acquired through get. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classsequoia_1_1concurrency_1_1serial_3_01void_01_4}{sequoia\+::concurrency\+::serial$<$ void $>$}}
+\begin{DoxyCompactList}\small\item\em Tasks may be pushed, upon which they are immediately invoked. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classsequoia_1_1concurrency_1_1asynchronous}{sequoia\+::concurrency\+::asynchronous$<$ R $>$}}
+\begin{DoxyCompactList}\small\item\em Tasks may be pushed, upon which they are fed to std\+::async; results may be acquired through get. \end{DoxyCompactList}\item 
+class \mbox{\hyperlink{classsequoia_1_1concurrency_1_1thread__pool}{sequoia\+::concurrency\+::thread\+\_\+pool$<$ R, Multi\+Pipeline $>$}}
+\begin{DoxyCompactList}\small\item\em Supports either a single pipeline or a pipeline for each thread, together with task stealing. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{_concurrency_models_8hpp_a5d2a7a82604cef26bf5afc9bacfb2fc2}\label{_concurrency_models_8hpp_a5d2a7a82604cef26bf5afc9bacfb2fc2}} 
+{\footnotesize template$<$class R $>$ }\\decltype(auto) {\bfseries sequoia\+::concurrency\+::impl\+::get\+\_\+results} (std\+::vector$<$ std\+::future$<$ R $>$$>$ \&futures)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Classes with a queue-\/like behaviour to which tasks can be pushed and results recovered, possibly following concurrent execution. 
+
+The three concurrency models serial, asynchronous and thread\+\_\+pool have a common interface for pushing tasks and recovering results, via the push and get methods. The semantics of get is that it may change the state of the class; for serial execution, any results are moved out of the class, whereas for asynchronous or thread pool models, extraction of data from a future occurs. 

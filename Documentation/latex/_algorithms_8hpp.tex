@@ -1,0 +1,53 @@
+\hypertarget{_algorithms_8hpp}{}\section{Algorithms/\+Algorithms.hpp File Reference}
+\label{_algorithms_8hpp}\index{Algorithms/Algorithms.hpp@{Algorithms/Algorithms.hpp}}
+
+
+A collection of constexpr algorithms.  
+
+
+{\ttfamily \#include $<$functional$>$}\newline
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{_algorithms_8hpp_aff5a8fa509c290cb9cbeaf0600391f01}\label{_algorithms_8hpp_aff5a8fa509c290cb9cbeaf0600391f01}} 
+{\footnotesize template$<$class T $>$ }\\constexpr void {\bfseries sequoia\+::swap} (T \&a, T \&b)
+\item 
+\mbox{\Hypertarget{_algorithms_8hpp_a3c76b567c9b9db3ea221ebf5aa5174a9}\label{_algorithms_8hpp_a3c76b567c9b9db3ea221ebf5aa5174a9}} 
+{\footnotesize template$<$class Iter $>$ }\\constexpr void {\bfseries sequoia\+::iter\+\_\+swap} (Iter a, Iter b)
+\item 
+\mbox{\Hypertarget{_algorithms_8hpp_a6f92f99d98834b387c91364ed27945db}\label{_algorithms_8hpp_a6f92f99d98834b387c91364ed27945db}} 
+{\footnotesize template$<$class Fwd\+Iter , class Comparer  = std\+::less$<$std\+::decay\+\_\+t$<$decltype($\ast$\+Fwd\+Iter())$>$$>$$>$ }\\constexpr void {\bfseries sequoia\+::bubble\+\_\+up} (Fwd\+Iter begin, Fwd\+Iter current, Comparer comp=Comparer\{\})
+\item 
+\mbox{\Hypertarget{_algorithms_8hpp_a263ce9cc9773bd10d1d4f798f9f09d52}\label{_algorithms_8hpp_a263ce9cc9773bd10d1d4f798f9f09d52}} 
+{\footnotesize template$<$class Fwd\+Iter , class Comparer  = std\+::less$<$std\+::decay\+\_\+t$<$decltype($\ast$\+Fwd\+Iter())$>$$>$$>$ }\\constexpr void {\bfseries sequoia\+::bubble\+\_\+down} (Fwd\+Iter begin, Fwd\+Iter current, Fwd\+Iter end, Comparer comp=Comparer\{\})
+\item 
+\mbox{\Hypertarget{_algorithms_8hpp_a11ac8e287bc135a4097d4fd94c1e9461}\label{_algorithms_8hpp_a11ac8e287bc135a4097d4fd94c1e9461}} 
+{\footnotesize template$<$class Fwd\+Iter , class Comparer  = std\+::less$<$std\+::decay\+\_\+t$<$decltype($\ast$\+Fwd\+Iter())$>$$>$$>$ }\\constexpr void {\bfseries sequoia\+::make\+\_\+heap} (Fwd\+Iter begin, Fwd\+Iter end, Comparer comp=Comparer\{\})
+\item 
+\mbox{\Hypertarget{_algorithms_8hpp_a85f4e9bb50033d7889996c5866d3c489}\label{_algorithms_8hpp_a85f4e9bb50033d7889996c5866d3c489}} 
+{\footnotesize template$<$class Fwd\+Iter , class Comparer  = std\+::less$<$std\+::decay\+\_\+t$<$decltype($\ast$\+Fwd\+Iter())$>$$>$$>$ }\\constexpr void {\bfseries sequoia\+::sort} (Fwd\+Iter begin, Fwd\+Iter end, Comparer comp=Comparer\{\})
+\item 
+\mbox{\Hypertarget{_algorithms_8hpp_a7494324a9943fe3cb0da375acf4a1587}\label{_algorithms_8hpp_a7494324a9943fe3cb0da375acf4a1587}} 
+{\footnotesize template$<$class Forward\+It $>$ }\\constexpr Forward\+It {\bfseries sequoia\+::rotate} (Forward\+It first, Forward\+It n\+\_\+first, Forward\+It last)
+\item 
+\mbox{\Hypertarget{_algorithms_8hpp_a9e4fe271be1a66cb822625d3e8e49a96}\label{_algorithms_8hpp_a9e4fe271be1a66cb822625d3e8e49a96}} 
+{\footnotesize template$<$class Fwd\+Iter , class Comparer  = std\+::equal\+\_\+to$<$std\+::decay\+\_\+t$<$decltype($\ast$\+Fwd\+Iter())$>$$>$$>$ }\\constexpr void {\bfseries sequoia\+::cluster} (Fwd\+Iter begin, Fwd\+Iter end, Comparer comp=Comparer\{\})
+\item 
+\mbox{\Hypertarget{_algorithms_8hpp_ac6199e7a0752808fae2c6dffa02dfb10}\label{_algorithms_8hpp_ac6199e7a0752808fae2c6dffa02dfb10}} 
+{\footnotesize template$<$class Fwd\+Iter , class T , class Comparer  = std\+::less$<$std\+::decay\+\_\+t$<$decltype($\ast$\+Fwd\+Iter())$>$$>$$>$ }\\constexpr Fwd\+Iter {\bfseries sequoia\+::lower\+\_\+bound} (Fwd\+Iter begin, Fwd\+Iter end, const T \&val, Comparer comp=Comparer\{\})
+\item 
+\mbox{\Hypertarget{_algorithms_8hpp_a06248f773be025dcd2695fa1b0cde8c6}\label{_algorithms_8hpp_a06248f773be025dcd2695fa1b0cde8c6}} 
+{\footnotesize template$<$class Fwd\+Iter , class T , class Comparer  = std\+::less$<$std\+::decay\+\_\+t$<$decltype($\ast$\+Fwd\+Iter())$>$$>$$>$ }\\constexpr Fwd\+Iter {\bfseries sequoia\+::upper\+\_\+bound} (Fwd\+Iter begin, Fwd\+Iter end, const T \&val, Comparer comp=Comparer\{\})
+\item 
+\mbox{\Hypertarget{_algorithms_8hpp_ab79ad0504b8777477cf4d002c5897466}\label{_algorithms_8hpp_ab79ad0504b8777477cf4d002c5897466}} 
+{\footnotesize template$<$class Fwd\+Iter , class T , class Comparer  = std\+::less$<$std\+::decay\+\_\+t$<$decltype($\ast$\+Fwd\+Iter())$>$$>$$>$ }\\constexpr std\+::pair$<$ Fwd\+Iter, Fwd\+Iter $>$ {\bfseries sequoia\+::equal\+\_\+range} (Fwd\+Iter begin, Fwd\+Iter end, const T \&val, Comparer comp=Comparer\{\})
+\item 
+\mbox{\Hypertarget{_algorithms_8hpp_ad446f3b790daab9e8d01ea2bdb80ccd5}\label{_algorithms_8hpp_ad446f3b790daab9e8d01ea2bdb80ccd5}} 
+{\footnotesize template$<$class Input\+It1 , class Input\+It2 $>$ }\\constexpr bool {\bfseries sequoia\+::equal} (Input\+It1 first1, Input\+It2 last1, Input\+It2 first2, Input\+It2 last2)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+A collection of constexpr algorithms. 
+
+These algorithms have been written as they have been required by other parts of the library; many will be retired once C++20 arrives. 

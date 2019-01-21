@@ -1,0 +1,65 @@
+\hypertarget{classsequoia_1_1maths_1_1edge__base}{}\section{sequoia\+::maths\+::edge\+\_\+base$<$ Index\+Type $>$ Class Template Reference}
+\label{classsequoia_1_1maths_1_1edge__base}\index{sequoia::maths::edge\_base$<$ IndexType $>$@{sequoia::maths::edge\_base$<$ IndexType $>$}}
+
+
+The base class of all edges.  
+
+
+
+
+{\ttfamily \#include $<$Edge.\+hpp$>$}
+
+Inheritance diagram for sequoia\+::maths\+::edge\+\_\+base$<$ Index\+Type $>$\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=0.934891cm]{classsequoia_1_1maths_1_1edge__base}
+\end{center}
+\end{figure}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsequoia_1_1maths_1_1edge__base_af23ce38501c44d512a575cd6d49945b2}\label{classsequoia_1_1maths_1_1edge__base_af23ce38501c44d512a575cd6d49945b2}} 
+using {\bfseries index\+\_\+type} = Index\+Type
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsequoia_1_1maths_1_1edge__base_a514135bfb425bab5ab013929aa429bbe}\label{classsequoia_1_1maths_1_1edge__base_a514135bfb425bab5ab013929aa429bbe}} 
+constexpr {\bfseries edge\+\_\+base} (const index\+\_\+type target) noexcept
+\item 
+\mbox{\Hypertarget{classsequoia_1_1maths_1_1edge__base_ab6616f1b265f9cbbdd8e8af67dee3a57}\label{classsequoia_1_1maths_1_1edge__base_ab6616f1b265f9cbbdd8e8af67dee3a57}} 
+constexpr {\bfseries edge\+\_\+base} (const \mbox{\hyperlink{classsequoia_1_1maths_1_1edge__base}{edge\+\_\+base}} \&) noexcept=default
+\item 
+\mbox{\Hypertarget{classsequoia_1_1maths_1_1edge__base_a48fb0e3b775b0919052988edbd85b52e}\label{classsequoia_1_1maths_1_1edge__base_a48fb0e3b775b0919052988edbd85b52e}} 
+constexpr {\bfseries edge\+\_\+base} (\mbox{\hyperlink{classsequoia_1_1maths_1_1edge__base}{edge\+\_\+base}} \&\&) noexcept=default
+\item 
+\mbox{\Hypertarget{classsequoia_1_1maths_1_1edge__base_ad66daeb0c6e3601563d06f5ee46e3584}\label{classsequoia_1_1maths_1_1edge__base_ad66daeb0c6e3601563d06f5ee46e3584}} 
+constexpr Index\+Type {\bfseries target\+\_\+node} () const noexcept
+\item 
+\mbox{\Hypertarget{classsequoia_1_1maths_1_1edge__base_a42f1446b541429acf520cf28bf2e7729}\label{classsequoia_1_1maths_1_1edge__base_a42f1446b541429acf520cf28bf2e7729}} 
+constexpr void {\bfseries target\+\_\+node} (const index\+\_\+type target) noexcept
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsequoia_1_1maths_1_1edge__base_a7f8988afd5dcaf3440b226b04f89e61a}\label{classsequoia_1_1maths_1_1edge__base_a7f8988afd5dcaf3440b226b04f89e61a}} 
+constexpr \mbox{\hyperlink{classsequoia_1_1maths_1_1edge__base}{edge\+\_\+base}} \& {\bfseries operator=} (const \mbox{\hyperlink{classsequoia_1_1maths_1_1edge__base}{edge\+\_\+base}} \&) noexcept=default
+\item 
+\mbox{\Hypertarget{classsequoia_1_1maths_1_1edge__base_a03854139835f23c804b94bbf5db9ad5f}\label{classsequoia_1_1maths_1_1edge__base_a03854139835f23c804b94bbf5db9ad5f}} 
+constexpr \mbox{\hyperlink{classsequoia_1_1maths_1_1edge__base}{edge\+\_\+base}} \& {\bfseries operator=} (\mbox{\hyperlink{classsequoia_1_1maths_1_1edge__base}{edge\+\_\+base}} \&\&) noexcept=default
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$class Index\+Type$>$\newline
+class sequoia\+::maths\+::edge\+\_\+base$<$ Index\+Type $>$}
+
+The base class of all edges. 
+
+This class is designed for inheritance and has protected destructor and assignment operators.
+
+The private data comprises a single member of Index\+Type which is the \textquotesingle{}target node\textquotesingle{} to which the edge points. 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Maths/\+Graph/\mbox{\hyperlink{_edge_8hpp}{Edge.\+hpp}}\end{DoxyCompactItemize}

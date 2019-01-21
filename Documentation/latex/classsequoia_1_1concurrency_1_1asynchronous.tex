@@ -1,0 +1,51 @@
+\hypertarget{classsequoia_1_1concurrency_1_1asynchronous}{}\section{sequoia\+::concurrency\+::asynchronous$<$ R $>$ Class Template Reference}
+\label{classsequoia_1_1concurrency_1_1asynchronous}\index{sequoia::concurrency::asynchronous$<$ R $>$@{sequoia::concurrency::asynchronous$<$ R $>$}}
+
+
+Tasks may be pushed, upon which they are fed to std\+::async; results may be acquired through get.  
+
+
+
+
+{\ttfamily \#include $<$Concurrency\+Models.\+hpp$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsequoia_1_1concurrency_1_1asynchronous_a2571ea52900b9eec28fc8df79035d044}\label{classsequoia_1_1concurrency_1_1asynchronous_a2571ea52900b9eec28fc8df79035d044}} 
+using {\bfseries return\+\_\+type} = R
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsequoia_1_1concurrency_1_1asynchronous_a6627a0bedf5bef8d807b997804dd8280}\label{classsequoia_1_1concurrency_1_1asynchronous_a6627a0bedf5bef8d807b997804dd8280}} 
+{\bfseries asynchronous} (const \mbox{\hyperlink{classsequoia_1_1concurrency_1_1asynchronous}{asynchronous}} \&)=delete
+\item 
+\mbox{\Hypertarget{classsequoia_1_1concurrency_1_1asynchronous_a7592571cc8d771a7e9564583b8f71f2a}\label{classsequoia_1_1concurrency_1_1asynchronous_a7592571cc8d771a7e9564583b8f71f2a}} 
+{\bfseries asynchronous} (\mbox{\hyperlink{classsequoia_1_1concurrency_1_1asynchronous}{asynchronous}} \&\&) noexcept=default
+\item 
+\mbox{\Hypertarget{classsequoia_1_1concurrency_1_1asynchronous_a97822b955f61c29f613cf05d2365c95b}\label{classsequoia_1_1concurrency_1_1asynchronous_a97822b955f61c29f613cf05d2365c95b}} 
+\mbox{\hyperlink{classsequoia_1_1concurrency_1_1asynchronous}{asynchronous}} \& {\bfseries operator=} (const \mbox{\hyperlink{classsequoia_1_1concurrency_1_1asynchronous}{asynchronous}} \&)=delete
+\item 
+\mbox{\Hypertarget{classsequoia_1_1concurrency_1_1asynchronous_a5b28aa5878aa05d52bee15f3ac146994}\label{classsequoia_1_1concurrency_1_1asynchronous_a5b28aa5878aa05d52bee15f3ac146994}} 
+\mbox{\hyperlink{classsequoia_1_1concurrency_1_1asynchronous}{asynchronous}} \& {\bfseries operator=} (\mbox{\hyperlink{classsequoia_1_1concurrency_1_1asynchronous}{asynchronous}} \&\&) noexcept=default
+\item 
+\mbox{\Hypertarget{classsequoia_1_1concurrency_1_1asynchronous_a142ac18d26990590d7fe579b1bf6da85}\label{classsequoia_1_1concurrency_1_1asynchronous_a142ac18d26990590d7fe579b1bf6da85}} 
+{\footnotesize template$<$class Fn , class... Args$>$ }\\void {\bfseries push} (Fn \&\&fn, Args \&\&... args)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1concurrency_1_1asynchronous_a8dfac0ddbe42e1df5f58052bad6bdb7d}\label{classsequoia_1_1concurrency_1_1asynchronous_a8dfac0ddbe42e1df5f58052bad6bdb7d}} 
+decltype(auto) {\bfseries get} ()
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$class R$>$\newline
+class sequoia\+::concurrency\+::asynchronous$<$ R $>$}
+
+Tasks may be pushed, upon which they are fed to std\+::async; results may be acquired through get. 
+
+Internally, the class holds a future for each pushed task. The get method extracts the associated return values of the tasks and, if they are no-\/void, returns them as a vector. 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Core/\+Concurrency/\mbox{\hyperlink{_concurrency_models_8hpp}{Concurrency\+Models.\+hpp}}\end{DoxyCompactItemize}

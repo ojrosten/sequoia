@@ -1,0 +1,40 @@
+\hypertarget{structsequoia_1_1data__structures_1_1impl_1_1static__contiguous__data_1_1data}{}\section{sequoia\+::data\+\_\+structures\+::impl\+::static\+\_\+contiguous\+\_\+data$<$ Npartitions, Nelements, Index\+Type $>$\+::data$<$ T $>$ Struct Template Reference}
+\label{structsequoia_1_1data__structures_1_1impl_1_1static__contiguous__data_1_1data}\index{sequoia::data\_structures::impl::static\_contiguous\_data$<$ Npartitions, Nelements, IndexType $>$::data$<$ T $>$@{sequoia::data\_structures::impl::static\_contiguous\_data$<$ Npartitions, Nelements, IndexType $>$::data$<$ T $>$}}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structsequoia_1_1data__structures_1_1impl_1_1static__contiguous__data_1_1data_a443fd6807bfa984c5765cdf6152fd855}\label{structsequoia_1_1data__structures_1_1impl_1_1static__contiguous__data_1_1data_a443fd6807bfa984c5765cdf6152fd855}} 
+using {\bfseries storage\+\_\+type} = std\+::array$<$ T, Nelements $>$
+\item 
+\mbox{\Hypertarget{structsequoia_1_1data__structures_1_1impl_1_1static__contiguous__data_1_1data_ae4ffe706a6b2eea3287a553e6c071632}\label{structsequoia_1_1data__structures_1_1impl_1_1static__contiguous__data_1_1data_ae4ffe706a6b2eea3287a553e6c071632}} 
+using {\bfseries auxiliary\+\_\+storage} = std\+::array$<$ Index\+Type, Npartitions $>$
+\item 
+\mbox{\Hypertarget{structsequoia_1_1data__structures_1_1impl_1_1static__contiguous__data_1_1data_a4b7761d4e2e34176a2e0471695f0914c}\label{structsequoia_1_1data__structures_1_1impl_1_1static__contiguous__data_1_1data_a4b7761d4e2e34176a2e0471695f0914c}} 
+using {\bfseries value\+\_\+type} = T
+\item 
+\mbox{\Hypertarget{structsequoia_1_1data__structures_1_1impl_1_1static__contiguous__data_1_1data_a68ed584a8b2c83d568cc6f8415cc4115}\label{structsequoia_1_1data__structures_1_1impl_1_1static__contiguous__data_1_1data_a68ed584a8b2c83d568cc6f8415cc4115}} 
+using {\bfseries iterator} = typename storage\+\_\+type\+::iterator
+\item 
+\mbox{\Hypertarget{structsequoia_1_1data__structures_1_1impl_1_1static__contiguous__data_1_1data_afce483613e4238694d365ba3f878d926}\label{structsequoia_1_1data__structures_1_1impl_1_1static__contiguous__data_1_1data_afce483613e4238694d365ba3f878d926}} 
+using {\bfseries const\+\_\+iterator} = typename storage\+\_\+type\+::const\+\_\+iterator
+\item 
+\mbox{\Hypertarget{structsequoia_1_1data__structures_1_1impl_1_1static__contiguous__data_1_1data_a367ba05187e14b1b1c1019c2cf76a36e}\label{structsequoia_1_1data__structures_1_1impl_1_1static__contiguous__data_1_1data_a367ba05187e14b1b1c1019c2cf76a36e}} 
+using {\bfseries reverse\+\_\+iterator} = typename storage\+\_\+type\+::reverse\+\_\+iterator
+\item 
+\mbox{\Hypertarget{structsequoia_1_1data__structures_1_1impl_1_1static__contiguous__data_1_1data_ae98853d733fefb047776d638c9410f0a}\label{structsequoia_1_1data__structures_1_1impl_1_1static__contiguous__data_1_1data_ae98853d733fefb047776d638c9410f0a}} 
+using {\bfseries const\+\_\+reverse\+\_\+iterator} = typename storage\+\_\+type\+::const\+\_\+reverse\+\_\+iterator
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structsequoia_1_1data__structures_1_1impl_1_1static__contiguous__data_1_1data_a9016baeeb7206b65d0fa95f91b37dd17}\label{structsequoia_1_1data__structures_1_1impl_1_1static__contiguous__data_1_1data_a9016baeeb7206b65d0fa95f91b37dd17}} 
+static constexpr std\+::size\+\_\+t {\bfseries num\+\_\+elements} () noexcept
+\item 
+\mbox{\Hypertarget{structsequoia_1_1data__structures_1_1impl_1_1static__contiguous__data_1_1data_ab57db9509ce960b474e0877bbe3be6a4}\label{structsequoia_1_1data__structures_1_1impl_1_1static__contiguous__data_1_1data_ab57db9509ce960b474e0877bbe3be6a4}} 
+static constexpr std\+::size\+\_\+t {\bfseries num\+\_\+partitions} () noexcept
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Core/\+Data\+Structures/\mbox{\hyperlink{_static_data_8hpp}{Static\+Data.\+hpp}}\end{DoxyCompactItemize}

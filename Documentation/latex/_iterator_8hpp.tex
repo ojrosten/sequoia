@@ -1,0 +1,31 @@
+\hypertarget{_iterator_8hpp}{}\section{Core/\+Utilities/\+Iterator.hpp File Reference}
+\label{_iterator_8hpp}\index{Core/Utilities/Iterator.hpp@{Core/Utilities/Iterator.hpp}}
+
+
+Implementation for an iterator with policies controlling dereferencing and auxiliary data.  
+
+
+{\ttfamily \#include \char`\"{}Type\+Traits.\+hpp\char`\"{}}\newline
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structsequoia_1_1utilities_1_1identity__dereference__policy}{sequoia\+::utilities\+::identity\+\_\+dereference\+\_\+policy$<$ Iterator $>$}}
+\item 
+struct \mbox{\hyperlink{structsequoia_1_1utilities_1_1null__data__policy}{sequoia\+::utilities\+::null\+\_\+data\+\_\+policy}}
+\item 
+class \mbox{\hyperlink{classsequoia_1_1utilities_1_1iterator}{sequoia\+::utilities\+::iterator$<$ Iterator, Dereference\+Policy, Auxiliary\+Data\+Policy $>$}}
+\begin{DoxyCompactList}\small\item\em An iterator with policies controlling dereferncing and auxiliary data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{_iterator_8hpp_ab92f082ce8093c32847dc792d212feea}\label{_iterator_8hpp_ab92f082ce8093c32847dc792d212feea}} 
+constexpr bool {\bfseries sequoia\+::utilities\+::operator==} (const null\+\_\+data\+\_\+policy \&lhs, const null\+\_\+data\+\_\+policy \&rhs)
+\item 
+\mbox{\Hypertarget{_iterator_8hpp_ae04f49b922e1fccd78bafa27b08c9432}\label{_iterator_8hpp_ae04f49b922e1fccd78bafa27b08c9432}} 
+constexpr bool {\bfseries sequoia\+::utilities\+::operator!=} (const null\+\_\+data\+\_\+policy \&lhs, const null\+\_\+data\+\_\+policy \&rhs)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Implementation for an iterator with policies controlling dereferencing and auxiliary data. 
+

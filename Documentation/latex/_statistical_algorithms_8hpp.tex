@@ -1,0 +1,41 @@
+\hypertarget{_statistical_algorithms_8hpp}{}\section{Maths/\+Statistics/\+Statistical\+Algorithms.hpp File Reference}
+\label{_statistical_algorithms_8hpp}\index{Maths/Statistics/StatisticalAlgorithms.hpp@{Maths/Statistics/StatisticalAlgorithms.hpp}}
+
+
+Tools for statistical analysis.  
+
+
+{\ttfamily \#include $<$cmath$>$}\newline
+{\ttfamily \#include $<$numeric$>$}\newline
+{\ttfamily \#include $<$optional$>$}\newline
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structsequoia_1_1maths_1_1bias_1_1gaussian__approx__estimator}{sequoia\+::maths\+::bias\+::gaussian\+\_\+approx\+\_\+estimator}}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{_statistical_algorithms_8hpp_a0e47f449fddd847f135b6bc876e53dea}\label{_statistical_algorithms_8hpp_a0e47f449fddd847f135b6bc876e53dea}} 
+{\footnotesize template$<$class Input\+It , class T  = typename std\+::iterator\+\_\+traits$<$\+Input\+It$>$\+::value\+\_\+type$>$ }\\std\+::optional$<$ T $>$ {\bfseries sequoia\+::maths\+::mean} (Input\+It first, Input\+It last)
+\item 
+\mbox{\Hypertarget{_statistical_algorithms_8hpp_aded0763171b8958a101b18fbe02c53eb}\label{_statistical_algorithms_8hpp_aded0763171b8958a101b18fbe02c53eb}} 
+{\footnotesize template$<$class Input\+It , class T  = typename std\+::iterator\+\_\+traits$<$\+Input\+It$>$\+::value\+\_\+type$>$ }\\std\+::pair$<$ std\+::optional$<$ T $>$, std\+::optional$<$ T $>$ $>$ {\bfseries sequoia\+::maths\+::cummulative\+\_\+square\+\_\+diffs} (Input\+It first, Input\+It last)
+\item 
+\mbox{\Hypertarget{_statistical_algorithms_8hpp_a6cbfa3d74f4987a73b270563e7686ce0}\label{_statistical_algorithms_8hpp_a6cbfa3d74f4987a73b270563e7686ce0}} 
+{\footnotesize template$<$class Input\+It , class T  = typename std\+::iterator\+\_\+traits$<$\+Input\+It$>$\+::value\+\_\+type$>$ }\\std\+::pair$<$ std\+::optional$<$ T $>$, std\+::optional$<$ T $>$ $>$ {\bfseries sequoia\+::maths\+::variance} (Input\+It first, Input\+It last)
+\item 
+\mbox{\Hypertarget{_statistical_algorithms_8hpp_a5553de7a13fd812bde6551abca9993ab}\label{_statistical_algorithms_8hpp_a5553de7a13fd812bde6551abca9993ab}} 
+{\footnotesize template$<$class Input\+It , class T  = typename std\+::iterator\+\_\+traits$<$\+Input\+It$>$\+::value\+\_\+type$>$ }\\std\+::pair$<$ std\+::optional$<$ T $>$, std\+::optional$<$ T $>$ $>$ {\bfseries sequoia\+::maths\+::sample\+\_\+variance} (Input\+It first, Input\+It last)
+\item 
+\mbox{\Hypertarget{_statistical_algorithms_8hpp_a9bf1082b9b2ba61dc4c7f110514a9631}\label{_statistical_algorithms_8hpp_a9bf1082b9b2ba61dc4c7f110514a9631}} 
+{\footnotesize template$<$class Input\+It , class T  = typename std\+::iterator\+\_\+traits$<$\+Input\+It$>$\+::value\+\_\+type$>$ }\\std\+::pair$<$ std\+::optional$<$ T $>$, std\+::optional$<$ T $>$ $>$ {\bfseries sequoia\+::maths\+::standard\+\_\+deviation} (Input\+It first, Input\+It last)
+\item 
+\mbox{\Hypertarget{_statistical_algorithms_8hpp_ac00c0484ead6a7c7a91722ee5dbd4f9e}\label{_statistical_algorithms_8hpp_ac00c0484ead6a7c7a91722ee5dbd4f9e}} 
+{\footnotesize template$<$class Input\+It , class Estimator  = bias\+::gaussian\+\_\+approx\+\_\+estimator, class T  = typename std\+::iterator\+\_\+traits$<$\+Input\+It$>$\+::value\+\_\+type$>$ }\\std\+::pair$<$ std\+::optional$<$ T $>$, std\+::optional$<$ T $>$ $>$ {\bfseries sequoia\+::maths\+::sample\+\_\+standard\+\_\+deviation} (Input\+It first, Input\+It last, Estimator estimator=Estimator\{\})
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Tools for statistical analysis. 
+

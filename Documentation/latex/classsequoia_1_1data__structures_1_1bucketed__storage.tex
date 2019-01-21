@@ -1,0 +1,169 @@
+\hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage}{}\section{sequoia\+::data\+\_\+structures\+::bucketed\+\_\+storage$<$ T, Sharing\+Policy, Traits $>$ Class Template Reference}
+\label{classsequoia_1_1data__structures_1_1bucketed__storage}\index{sequoia::data\_structures::bucketed\_storage$<$ T, SharingPolicy, Traits $>$@{sequoia::data\_structures::bucketed\_storage$<$ T, SharingPolicy, Traits $>$}}
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_a1633f9b1d5f06c47836422d53337660d}\label{classsequoia_1_1data__structures_1_1bucketed__storage_a1633f9b1d5f06c47836422d53337660d}} 
+using {\bfseries value\+\_\+type} = T
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_adf976cf9199b6656950a0f9a1acc5d9b}\label{classsequoia_1_1data__structures_1_1bucketed__storage_adf976cf9199b6656950a0f9a1acc5d9b}} 
+using {\bfseries size\+\_\+type} = typename bucket\+\_\+type\+::size\+\_\+type
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_a31c8ba7d81ca8a4cefa9ca7e186d3fe5}\label{classsequoia_1_1data__structures_1_1bucketed__storage_a31c8ba7d81ca8a4cefa9ca7e186d3fe5}} 
+using {\bfseries sharing\+\_\+policy\+\_\+type} = Sharing\+Policy
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_ac290e3b331cb991f378c30e5607aa3a5}\label{classsequoia_1_1data__structures_1_1bucketed__storage_ac290e3b331cb991f378c30e5607aa3a5}} 
+using {\bfseries partition\+\_\+iterator} = partition\+\_\+iterator$<$ individual\+\_\+bucket\+\_\+template, Sharing\+Policy, size\+\_\+type $>$
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_a6ac637ff689c81f8ad99ff6b20f67daf}\label{classsequoia_1_1data__structures_1_1bucketed__storage_a6ac637ff689c81f8ad99ff6b20f67daf}} 
+using {\bfseries const\+\_\+partition\+\_\+iterator} = const\+\_\+partition\+\_\+iterator$<$ individual\+\_\+bucket\+\_\+template, Sharing\+Policy, size\+\_\+type $>$
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_ae1cc3620938cff0aaa4462b00bfbdaed}\label{classsequoia_1_1data__structures_1_1bucketed__storage_ae1cc3620938cff0aaa4462b00bfbdaed}} 
+using {\bfseries reverse\+\_\+partition\+\_\+iterator} = reverse\+\_\+partition\+\_\+iterator$<$ individual\+\_\+bucket\+\_\+template, Sharing\+Policy, size\+\_\+type $>$
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_a5905f618d75869306ef77a42bf250033}\label{classsequoia_1_1data__structures_1_1bucketed__storage_a5905f618d75869306ef77a42bf250033}} 
+using {\bfseries const\+\_\+reverse\+\_\+partition\+\_\+iterator} = const\+\_\+reverse\+\_\+partition\+\_\+iterator$<$ individual\+\_\+bucket\+\_\+template, Sharing\+Policy, size\+\_\+type $>$
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_a53d966480f795dd004b847185cc1cc94}\label{classsequoia_1_1data__structures_1_1bucketed__storage_a53d966480f795dd004b847185cc1cc94}} 
+{\bfseries bucketed\+\_\+storage} (std\+::initializer\+\_\+list$<$ std\+::initializer\+\_\+list$<$ T $>$$>$ list)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_adf21ba4e27d89e6f0f06d9c9032f34b7}\label{classsequoia_1_1data__structures_1_1bucketed__storage_adf21ba4e27d89e6f0f06d9c9032f34b7}} 
+{\bfseries bucketed\+\_\+storage} (const \mbox{\hyperlink{classsequoia_1_1data__structures_1_1bucketed__storage}{bucketed\+\_\+storage}} \&in)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_acfd91a8dbfd9a083ebe792f1ee31056c}\label{classsequoia_1_1data__structures_1_1bucketed__storage_acfd91a8dbfd9a083ebe792f1ee31056c}} 
+{\bfseries bucketed\+\_\+storage} (\mbox{\hyperlink{classsequoia_1_1data__structures_1_1bucketed__storage}{bucketed\+\_\+storage}} \&\&in) noexcept=default
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_a302fe425b8ff743772a2f599af65aab9}\label{classsequoia_1_1data__structures_1_1bucketed__storage_a302fe425b8ff743772a2f599af65aab9}} 
+\mbox{\hyperlink{classsequoia_1_1data__structures_1_1bucketed__storage}{bucketed\+\_\+storage}} \& {\bfseries operator=} (\mbox{\hyperlink{classsequoia_1_1data__structures_1_1bucketed__storage}{bucketed\+\_\+storage}} \&\&) noexcept=default
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_aedc8bc3039e76dff863be031b1ae0c82}\label{classsequoia_1_1data__structures_1_1bucketed__storage_aedc8bc3039e76dff863be031b1ae0c82}} 
+\mbox{\hyperlink{classsequoia_1_1data__structures_1_1bucketed__storage}{bucketed\+\_\+storage}} \& {\bfseries operator=} (const \mbox{\hyperlink{classsequoia_1_1data__structures_1_1bucketed__storage}{bucketed\+\_\+storage}} \&in)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_ac690e3dc25e66bda98bab99e751b1893}\label{classsequoia_1_1data__structures_1_1bucketed__storage_ac690e3dc25e66bda98bab99e751b1893}} 
+size\+\_\+type {\bfseries size} () const
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_ab80d91b2a7fb141d589888333f5c5c4b}\label{classsequoia_1_1data__structures_1_1bucketed__storage_ab80d91b2a7fb141d589888333f5c5c4b}} 
+size\+\_\+type {\bfseries num\+\_\+partitions} () const noexcept
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_a0d4e14ddd17107acf99efa82343ad21f}\label{classsequoia_1_1data__structures_1_1bucketed__storage_a0d4e14ddd17107acf99efa82343ad21f}} 
+void {\bfseries swap\+\_\+partitions} (const size\+\_\+type i, const size\+\_\+type j)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_acd1f8822fe313b651188aaa3ef3e8867}\label{classsequoia_1_1data__structures_1_1bucketed__storage_acd1f8822fe313b651188aaa3ef3e8867}} 
+void {\bfseries add\+\_\+slot} ()
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_af9fe40058d414ed6431f7b76de09f177}\label{classsequoia_1_1data__structures_1_1bucketed__storage_af9fe40058d414ed6431f7b76de09f177}} 
+size\+\_\+type {\bfseries insert\+\_\+slot} (const size\+\_\+type pos)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_a07de442f4372d2074c8864c0dbe628ae}\label{classsequoia_1_1data__structures_1_1bucketed__storage_a07de442f4372d2074c8864c0dbe628ae}} 
+size\+\_\+type {\bfseries erase\+\_\+slot} (const size\+\_\+type n)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_a28629db63314232c647f0f33c36021db}\label{classsequoia_1_1data__structures_1_1bucketed__storage_a28629db63314232c647f0f33c36021db}} 
+void {\bfseries reserve\+\_\+partition} (const size\+\_\+type partition, const size\+\_\+type size)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_afed2a32832638cee4ca6a5cf0870e6d2}\label{classsequoia_1_1data__structures_1_1bucketed__storage_afed2a32832638cee4ca6a5cf0870e6d2}} 
+size\+\_\+type {\bfseries partition\+\_\+capacity} (const size\+\_\+type partition) const
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_abdf0f44e284fcafccca579f8ecf1cf4d}\label{classsequoia_1_1data__structures_1_1bucketed__storage_abdf0f44e284fcafccca579f8ecf1cf4d}} 
+void {\bfseries reserve\+\_\+partitions} (const size\+\_\+type num\+Partitions)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_a08f54abb3e729c130f769a83d62a18fa}\label{classsequoia_1_1data__structures_1_1bucketed__storage_a08f54abb3e729c130f769a83d62a18fa}} 
+size\+\_\+type {\bfseries num\+\_\+partitions\+\_\+capacity} () const noexcept
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_acc1a80a6112a7aa9ddd9306dd7d51713}\label{classsequoia_1_1data__structures_1_1bucketed__storage_acc1a80a6112a7aa9ddd9306dd7d51713}} 
+void {\bfseries shrink\+\_\+num\+\_\+partitions\+\_\+to\+\_\+fit} ()
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_a0c19b2c829aab7bd8354e69c5cda9dd7}\label{classsequoia_1_1data__structures_1_1bucketed__storage_a0c19b2c829aab7bd8354e69c5cda9dd7}} 
+void {\bfseries shrink\+\_\+to\+\_\+fit} (const size\+\_\+type partition)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_a78e6924191b76099aba16e90e2ab45f3}\label{classsequoia_1_1data__structures_1_1bucketed__storage_a78e6924191b76099aba16e90e2ab45f3}} 
+void {\bfseries shrink\+\_\+to\+\_\+fit} ()
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_ac37dc98980bb6eed8dd1225695648a7c}\label{classsequoia_1_1data__structures_1_1bucketed__storage_ac37dc98980bb6eed8dd1225695648a7c}} 
+void {\bfseries clear} () noexcept
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_afbb31041e6c83ace1b484410b0bc3094}\label{classsequoia_1_1data__structures_1_1bucketed__storage_afbb31041e6c83ace1b484410b0bc3094}} 
+{\footnotesize template$<$class... Args$>$ }\\void {\bfseries push\+\_\+back\+\_\+to\+\_\+partition} (const size\+\_\+type index, Args \&\&... args)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_a072950254d48faca1355efa51fcb24c5}\label{classsequoia_1_1data__structures_1_1bucketed__storage_a072950254d48faca1355efa51fcb24c5}} 
+void {\bfseries push\+\_\+back\+\_\+to\+\_\+partition} (const size\+\_\+type index, const\+\_\+partition\+\_\+iterator iter)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_af2557c8589f8923aa7407791e7ff24b9}\label{classsequoia_1_1data__structures_1_1bucketed__storage_af2557c8589f8923aa7407791e7ff24b9}} 
+{\footnotesize template$<$class... Args$>$ }\\partition\+\_\+iterator {\bfseries insert\+\_\+to\+\_\+partition} (const\+\_\+partition\+\_\+iterator pos, Args \&\&... args)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_a4b5b711766d78eeabb1483b2b16236b8}\label{classsequoia_1_1data__structures_1_1bucketed__storage_a4b5b711766d78eeabb1483b2b16236b8}} 
+{\footnotesize template$<$class... Args$>$ }\\partition\+\_\+iterator {\bfseries insert\+\_\+to\+\_\+partition} (const\+\_\+partition\+\_\+iterator pos, const\+\_\+partition\+\_\+iterator set\+From\+Iter)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_a645bc4b5a1013abde59830c060800d8e}\label{classsequoia_1_1data__structures_1_1bucketed__storage_a645bc4b5a1013abde59830c060800d8e}} 
+partition\+\_\+iterator {\bfseries erase\+\_\+from\+\_\+partition} (const size\+\_\+type index, const size\+\_\+type pos)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_a59d444e33f8084627dcaf4728ee69164}\label{classsequoia_1_1data__structures_1_1bucketed__storage_a59d444e33f8084627dcaf4728ee69164}} 
+partition\+\_\+iterator {\bfseries erase\+\_\+from\+\_\+partition} (const\+\_\+partition\+\_\+iterator iter)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_aa6e9287c528cdc8e3fb723d62d5784e6}\label{classsequoia_1_1data__structures_1_1bucketed__storage_aa6e9287c528cdc8e3fb723d62d5784e6}} 
+{\footnotesize template$<$class Unary\+Pred $>$ }\\size\+\_\+type {\bfseries erase\+\_\+from\+\_\+partition\+\_\+if} (const size\+\_\+type partition\+Index, Unary\+Pred pred)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_a988c59479d6d84bd7f844d0346dde417}\label{classsequoia_1_1data__structures_1_1bucketed__storage_a988c59479d6d84bd7f844d0346dde417}} 
+partition\+\_\+iterator {\bfseries begin\+\_\+partition} (const size\+\_\+type i)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_a294da83cf761f91001214150107c8dcf}\label{classsequoia_1_1data__structures_1_1bucketed__storage_a294da83cf761f91001214150107c8dcf}} 
+partition\+\_\+iterator {\bfseries end\+\_\+partition} (const size\+\_\+type i)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_aa36a0cc30e1d8382cba28102691d6867}\label{classsequoia_1_1data__structures_1_1bucketed__storage_aa36a0cc30e1d8382cba28102691d6867}} 
+const\+\_\+partition\+\_\+iterator {\bfseries begin\+\_\+partition} (const size\+\_\+type i) const
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_a85afb2e3b6d5c29b53ce1f03cf99f57a}\label{classsequoia_1_1data__structures_1_1bucketed__storage_a85afb2e3b6d5c29b53ce1f03cf99f57a}} 
+const\+\_\+partition\+\_\+iterator {\bfseries end\+\_\+partition} (const size\+\_\+type i) const
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_a856b6f043e12bd4168d7692e9cb2f6d1}\label{classsequoia_1_1data__structures_1_1bucketed__storage_a856b6f043e12bd4168d7692e9cb2f6d1}} 
+reverse\+\_\+partition\+\_\+iterator {\bfseries rbegin\+\_\+partition} (const size\+\_\+type i)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_ac236b1842145609709d41de5e576b119}\label{classsequoia_1_1data__structures_1_1bucketed__storage_ac236b1842145609709d41de5e576b119}} 
+reverse\+\_\+partition\+\_\+iterator {\bfseries rend\+\_\+partition} (const size\+\_\+type i)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_a0be952f5249e9e8566d1332ff0cb0270}\label{classsequoia_1_1data__structures_1_1bucketed__storage_a0be952f5249e9e8566d1332ff0cb0270}} 
+const\+\_\+reverse\+\_\+partition\+\_\+iterator {\bfseries rbegin\+\_\+partition} (const size\+\_\+type i) const
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_a6a67ec9e4f5dfdd86e94d3266fe0da35}\label{classsequoia_1_1data__structures_1_1bucketed__storage_a6a67ec9e4f5dfdd86e94d3266fe0da35}} 
+const\+\_\+reverse\+\_\+partition\+\_\+iterator {\bfseries rend\+\_\+partition} (const size\+\_\+type i) const
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_af401407cd44ba33481f6d9d7288f6919}\label{classsequoia_1_1data__structures_1_1bucketed__storage_af401407cd44ba33481f6d9d7288f6919}} 
+const\+\_\+partition\+\_\+iterator {\bfseries cbegin\+\_\+partition} (const size\+\_\+type i) const
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_ac6218fca23db2583c9cf8c1409f8300c}\label{classsequoia_1_1data__structures_1_1bucketed__storage_ac6218fca23db2583c9cf8c1409f8300c}} 
+const\+\_\+partition\+\_\+iterator {\bfseries cend\+\_\+partition} (const size\+\_\+type i) const
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_aa01c3bd00dc992ab91e3655386f23201}\label{classsequoia_1_1data__structures_1_1bucketed__storage_aa01c3bd00dc992ab91e3655386f23201}} 
+const\+\_\+reverse\+\_\+partition\+\_\+iterator {\bfseries crbegin\+\_\+partition} (const size\+\_\+type i) const
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_af96fe4f38f3241f9c680429a0d7ea286}\label{classsequoia_1_1data__structures_1_1bucketed__storage_af96fe4f38f3241f9c680429a0d7ea286}} 
+const\+\_\+reverse\+\_\+partition\+\_\+iterator {\bfseries crend\+\_\+partition} (const size\+\_\+type i) const
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_af8e8cb79f6fd8b8fdbd24e40e3fcce8d}\label{classsequoia_1_1data__structures_1_1bucketed__storage_af8e8cb79f6fd8b8fdbd24e40e3fcce8d}} 
+const\+\_\+partition\+\_\+iterator {\bfseries operator\mbox{[}$\,$\mbox{]}} (const size\+\_\+type i) const
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_a81e03ed0ee713c28494ae4bb0237d613}\label{classsequoia_1_1data__structures_1_1bucketed__storage_a81e03ed0ee713c28494ae4bb0237d613}} 
+partition\+\_\+iterator {\bfseries operator\mbox{[}$\,$\mbox{]}} (const size\+\_\+type i)
+\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_ad4cefb3b274b27f7464b7af4250c1d4f}\label{classsequoia_1_1data__structures_1_1bucketed__storage_ad4cefb3b274b27f7464b7af4250c1d4f}} 
+static constexpr bool {\bfseries throw\+\_\+on\+\_\+range\+\_\+error} \{Traits\+::throw\+\_\+on\+\_\+range\+\_\+error\}
+\end{DoxyCompactItemize}
+\subsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_a3891515691aad3068910b9f5d32406e3}\label{classsequoia_1_1data__structures_1_1bucketed__storage_a3891515691aad3068910b9f5d32406e3}} 
+bool {\bfseries operator==} (const \mbox{\hyperlink{classsequoia_1_1data__structures_1_1bucketed__storage}{bucketed\+\_\+storage}} \&lhs, const \mbox{\hyperlink{classsequoia_1_1data__structures_1_1bucketed__storage}{bucketed\+\_\+storage}} \&rhs) noexcept
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1bucketed__storage_ad3d01e83dd281043df95bb72fb5f5d88}\label{classsequoia_1_1data__structures_1_1bucketed__storage_ad3d01e83dd281043df95bb72fb5f5d88}} 
+bool {\bfseries operator!=} (const \mbox{\hyperlink{classsequoia_1_1data__structures_1_1bucketed__storage}{bucketed\+\_\+storage}} \&lhs, const \mbox{\hyperlink{classsequoia_1_1data__structures_1_1bucketed__storage}{bucketed\+\_\+storage}} \&rhs) noexcept
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Core/\+Data\+Structures/\mbox{\hyperlink{_partitioned_data_8hpp}{Partitioned\+Data.\+hpp}}\end{DoxyCompactItemize}

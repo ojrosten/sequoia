@@ -1,0 +1,143 @@
+\hypertarget{_graph_details_8hpp}{}\section{Maths/\+Graph/\+Graph\+Details.hpp File Reference}
+\label{_graph_details_8hpp}\index{Maths/Graph/GraphDetails.hpp@{Maths/Graph/GraphDetails.hpp}}
+
+
+Meta-\/programming elements for graph implementation.  
+
+
+{\ttfamily \#include \char`\"{}Edge.\+hpp\char`\"{}}\newline
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structsequoia_1_1data__sharing_1_1shared}{sequoia\+::data\+\_\+sharing\+::shared$<$ T $>$}}
+\item 
+struct \mbox{\hyperlink{structsequoia_1_1data__sharing_1_1independent}{sequoia\+::data\+\_\+sharing\+::independent$<$ T $>$}}
+\item 
+class \mbox{\hyperlink{classsequoia_1_1data__sharing_1_1unpooled}{sequoia\+::data\+\_\+sharing\+::unpooled$<$ T $>$}}
+\item 
+class \mbox{\hyperlink{classsequoia_1_1data__structures_1_1static__contiguous__storage}{sequoia\+::data\+\_\+structures\+::static\+\_\+contiguous\+\_\+storage$<$ T, Npartitions, Nelements, Index\+Type $>$}}
+\item 
+struct \mbox{\hyperlink{structsequoia_1_1maths_1_1graph__impl_1_1heterogeneous__tag}{sequoia\+::maths\+::graph\+\_\+impl\+::heterogeneous\+\_\+tag}}
+\item 
+struct \mbox{\hyperlink{structsequoia_1_1maths_1_1graph__impl_1_1sharing__v__to__type}{sequoia\+::maths\+::graph\+\_\+impl\+::sharing\+\_\+v\+\_\+to\+\_\+type$<$ Sharing $>$}}
+\item 
+struct \mbox{\hyperlink{structsequoia_1_1maths_1_1graph__impl_1_1sharing__v__to__type_3_01false_01_4}{sequoia\+::maths\+::graph\+\_\+impl\+::sharing\+\_\+v\+\_\+to\+\_\+type$<$ false $>$}}
+\item 
+struct \mbox{\hyperlink{structsequoia_1_1maths_1_1graph__impl_1_1edge__weight__wrapper}{sequoia\+::maths\+::graph\+\_\+impl\+::edge\+\_\+weight\+\_\+wrapper$<$ Edge\+Weight, Edge\+Weight\+Pooling, bool $>$}}
+\item 
+struct \mbox{\hyperlink{structsequoia_1_1maths_1_1graph__impl_1_1edge__weight__wrapper_3_01_edge_weight_00_01_edge_weight_pooling_00_01true_01_4}{sequoia\+::maths\+::graph\+\_\+impl\+::edge\+\_\+weight\+\_\+wrapper$<$ Edge\+Weight, Edge\+Weight\+Pooling, true $>$}}
+\item 
+struct \mbox{\hyperlink{structsequoia_1_1maths_1_1graph__impl_1_1sharing__traits}{sequoia\+::maths\+::graph\+\_\+impl\+::sharing\+\_\+traits$<$ Graph\+Flavour, Sharing\+Preference, Edge\+Weight, Edge\+Weight\+Pooling $>$}}
+\item 
+struct \mbox{\hyperlink{structsequoia_1_1maths_1_1graph__impl_1_1edge__init__type__generator}{sequoia\+::maths\+::graph\+\_\+impl\+::edge\+\_\+init\+\_\+type\+\_\+generator$<$ Edge, Graph\+Flavour, edge\+\_\+flavour $>$}}
+\item 
+struct \mbox{\hyperlink{structsequoia_1_1maths_1_1graph__impl_1_1edge__init__type__generator_3_01_edge_00_01graph__flavoe0b6797a51a27c44b843b57cf3be639f}{sequoia\+::maths\+::graph\+\_\+impl\+::edge\+\_\+init\+\_\+type\+\_\+generator$<$ Edge, graph\+\_\+flavour\+::undirected, edge\+\_\+flavour\+::partial $>$}}
+\item 
+struct \mbox{\hyperlink{structsequoia_1_1maths_1_1graph__impl_1_1edge__init__type__generator_3_01_edge_00_01graph__flavoc7f4d456a173fde3d13f1886bb621bc8}{sequoia\+::maths\+::graph\+\_\+impl\+::edge\+\_\+init\+\_\+type\+\_\+generator$<$ Edge, graph\+\_\+flavour\+::undirected\+\_\+embedded, edge\+\_\+flavour\+::partial $>$}}
+\item 
+struct \mbox{\hyperlink{structsequoia_1_1maths_1_1graph__impl_1_1edge__init__type__generator_3_01_edge_00_01graph__flavoa803d02d0461da84bd03c07855dc422d}{sequoia\+::maths\+::graph\+\_\+impl\+::edge\+\_\+init\+\_\+type\+\_\+generator$<$ Edge, graph\+\_\+flavour\+::directed, edge\+\_\+flavour\+::partial $>$}}
+\item 
+struct \mbox{\hyperlink{structsequoia_1_1maths_1_1graph__impl_1_1edge__init__type__generator_3_01_edge_00_01_graph_flavo3b993b0bac68c1627dcf2d463aaef92d}{sequoia\+::maths\+::graph\+\_\+impl\+::edge\+\_\+init\+\_\+type\+\_\+generator$<$ Edge, Graph\+Flavour, edge\+\_\+flavour\+::partial\+\_\+embedded $>$}}
+\item 
+struct \mbox{\hyperlink{structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator}{sequoia\+::maths\+::graph\+\_\+impl\+::edge\+\_\+type\+\_\+generator$<$ Graph\+Flavour, Edge\+Weight, Edge\+Weight\+Pooling, Index\+Type, Sharing\+Preference, Shared\+Edge $>$}}
+\item 
+struct \mbox{\hyperlink{structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator_3_01graph__flavour_1_1undirected_9e17ae143379e09deb5ba438fa684125}{sequoia\+::maths\+::graph\+\_\+impl\+::edge\+\_\+type\+\_\+generator$<$ graph\+\_\+flavour\+::undirected\+\_\+embedded, Edge\+Weight, Edge\+Weight\+Pooling, Index\+Type, Sharing\+Preference, Shared\+Edge $>$}}
+\item 
+struct \mbox{\hyperlink{structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator_3_01graph__flavour_1_1directed__ea342cc8fe32300e214551ee23d8584b1}{sequoia\+::maths\+::graph\+\_\+impl\+::edge\+\_\+type\+\_\+generator$<$ graph\+\_\+flavour\+::directed\+\_\+embedded, Edge\+Weight, Edge\+Weight\+Pooling, Index\+Type, Sharing\+Preference, true $>$}}
+\item 
+struct \mbox{\hyperlink{structsequoia_1_1maths_1_1graph__impl_1_1edge__type__generator_3_01graph__flavour_1_1directed__e5563bfe8942c6d0abe1edf2ec49203fb}{sequoia\+::maths\+::graph\+\_\+impl\+::edge\+\_\+type\+\_\+generator$<$ graph\+\_\+flavour\+::directed\+\_\+embedded, Edge\+Weight, Edge\+Weight\+Pooling, Index\+Type, Sharing\+Preference, false $>$}}
+\item 
+struct \mbox{\hyperlink{structsequoia_1_1maths_1_1graph__impl_1_1shared__edge__v__to__policy}{sequoia\+::maths\+::graph\+\_\+impl\+::shared\+\_\+edge\+\_\+v\+\_\+to\+\_\+policy$<$ bool $>$}}
+\item 
+struct \mbox{\hyperlink{structsequoia_1_1maths_1_1graph__impl_1_1shared__edge__v__to__policy_3_01true_01_4}{sequoia\+::maths\+::graph\+\_\+impl\+::shared\+\_\+edge\+\_\+v\+\_\+to\+\_\+policy$<$ true $>$}}
+\item 
+class \mbox{\hyperlink{classsequoia_1_1maths_1_1graph__impl_1_1weight__maker}{sequoia\+::maths\+::graph\+\_\+impl\+::weight\+\_\+maker$<$ Node\+Weight\+Pooling, Edge\+Weight\+Pooling, bool, bool, bool $>$}}
+\item 
+class \mbox{\hyperlink{classsequoia_1_1maths_1_1graph__impl_1_1weight__maker_3_01_node_weight_pooling_00_01_edge_weightd42e71208bc15661adf908c6dce03949}{sequoia\+::maths\+::graph\+\_\+impl\+::weight\+\_\+maker$<$ Node\+Weight\+Pooling, Edge\+Weight\+Pooling, true, true, Same $>$}}
+\item 
+class \mbox{\hyperlink{classsequoia_1_1maths_1_1graph__impl_1_1weight__maker_3_01_node_weight_pooling_00_01_edge_weightf3288a9dc2dbbbb7cec12cb6a57911c5}{sequoia\+::maths\+::graph\+\_\+impl\+::weight\+\_\+maker$<$ Node\+Weight\+Pooling, Edge\+Weight\+Pooling, true, false, false $>$}}
+\item 
+class \mbox{\hyperlink{classsequoia_1_1maths_1_1graph__impl_1_1weight__maker_3_01_node_weight_pooling_00_01_edge_weight9e5a11aa4386c3e35769774740a56bd6}{sequoia\+::maths\+::graph\+\_\+impl\+::weight\+\_\+maker$<$ Node\+Weight\+Pooling, Edge\+Weight\+Pooling, false, true, false $>$}}
+\item 
+class \mbox{\hyperlink{classsequoia_1_1maths_1_1graph__impl_1_1weight__maker_3_01_node_weight_pooling_00_01_edge_weight51eeaf74d246223c8fe9e272909992cd}{sequoia\+::maths\+::graph\+\_\+impl\+::weight\+\_\+maker$<$ Node\+Weight\+Pooling, Edge\+Weight\+Pooling, false, false, false $>$}}
+\item 
+class \mbox{\hyperlink{classsequoia_1_1maths_1_1graph__impl_1_1weight__maker_3_01_node_weight_pooling_00_01_edge_weightae6caf0d6d717c63a02de85d3731d5cd}{sequoia\+::maths\+::graph\+\_\+impl\+::weight\+\_\+maker$<$ Node\+Weight\+Pooling, Edge\+Weight\+Pooling, false, false, true $>$}}
+\item 
+struct \mbox{\hyperlink{structsequoia_1_1maths_1_1graph__impl_1_1size__type__generator}{sequoia\+::maths\+::graph\+\_\+impl\+::size\+\_\+type\+\_\+generator$<$ Edge\+Storage, Node\+Storage, bool $>$}}
+\item 
+struct \mbox{\hyperlink{structsequoia_1_1maths_1_1graph__impl_1_1size__type__generator_3_01_edge_storage_00_01_node_storage_00_01false_01_4}{sequoia\+::maths\+::graph\+\_\+impl\+::size\+\_\+type\+\_\+generator$<$ Edge\+Storage, Node\+Storage, false $>$}}
+\item 
+struct \mbox{\hyperlink{structsequoia_1_1maths_1_1graph__impl_1_1has__reservable__partitions}{sequoia\+::maths\+::graph\+\_\+impl\+::has\+\_\+reservable\+\_\+partitions$<$ T, class $>$}}
+\item 
+struct \mbox{\hyperlink{structsequoia_1_1maths_1_1graph__impl_1_1has__reservable__partitions_3_01_t_00_01std_1_1void__t_4a79d9591d14cc2b6bc8ba090ba73c62}{sequoia\+::maths\+::graph\+\_\+impl\+::has\+\_\+reservable\+\_\+partitions$<$ T, std\+::void\+\_\+t$<$ decltype(std\+::declval$<$ T $>$().\+reserve\+\_\+partition(0, 0))$>$ $>$}}
+\item 
+struct \mbox{\hyperlink{structsequoia_1_1maths_1_1graph__impl_1_1static__edge__index__type__generator}{sequoia\+::maths\+::graph\+\_\+impl\+::static\+\_\+edge\+\_\+index\+\_\+type\+\_\+generator$<$ Size, Order, Embedded, index\+\_\+type $>$}}
+\item 
+struct \mbox{\hyperlink{structsequoia_1_1maths_1_1graph__impl_1_1static__edge__index__type__generator_3_01_size_00_01_or7ffb8ded61fe20546e7d88be9c738f13}{sequoia\+::maths\+::graph\+\_\+impl\+::static\+\_\+edge\+\_\+index\+\_\+type\+\_\+generator$<$ Size, Order, Embedded, index\+\_\+type\+::u\+\_\+char $>$}}
+\item 
+struct \mbox{\hyperlink{structsequoia_1_1maths_1_1graph__impl_1_1static__edge__index__type__generator_3_01_size_00_01_orea7018a766e80958c32f72dd7544f1f3}{sequoia\+::maths\+::graph\+\_\+impl\+::static\+\_\+edge\+\_\+index\+\_\+type\+\_\+generator$<$ Size, Order, Embedded, index\+\_\+type\+::u\+\_\+short $>$}}
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{_graph_details_8hpp_a3abf7faf902fc49336ffb954da9f2214}\label{_graph_details_8hpp_a3abf7faf902fc49336ffb954da9f2214}} 
+enum {\bfseries directed\+\_\+flavour} \{ {\bfseries undirected}, 
+{\bfseries directed}
+ \}
+\item 
+\mbox{\Hypertarget{_graph_details_8hpp_a10cef5283d10d7f4d97552b42ae4d628}\label{_graph_details_8hpp_a10cef5283d10d7f4d97552b42ae4d628}} 
+enum {\bfseries graph\+\_\+flavour} \{ {\bfseries undirected}, 
+{\bfseries undirected\+\_\+embedded}, 
+{\bfseries directed}, 
+{\bfseries directed\+\_\+embedded}
+ \}
+\item 
+\mbox{\Hypertarget{_graph_details_8hpp_ab072c6d29219ff63ea4eead4981559d8}\label{_graph_details_8hpp_ab072c6d29219ff63ea4eead4981559d8}} 
+enum {\bfseries edge\+\_\+sharing\+\_\+preference} \{ {\bfseries agnostic}, 
+{\bfseries shared\+\_\+edge}, 
+{\bfseries shared\+\_\+weight}, 
+{\bfseries independent}
+ \}
+\item 
+\mbox{\Hypertarget{_graph_details_8hpp_a20d28eb3c5fe6ce4815b07e6d2c3e807}\label{_graph_details_8hpp_a20d28eb3c5fe6ce4815b07e6d2c3e807}} 
+enum {\bfseries index\+\_\+type} \{ {\bfseries u\+\_\+char}, 
+{\bfseries u\+\_\+short}, 
+{\bfseries u\+\_\+int}, 
+{\bfseries u\+\_\+long}
+ \}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{_graph_details_8hpp_a1b5b0ebb66268596a01da76a45f6d97e}\label{_graph_details_8hpp_a1b5b0ebb66268596a01da76a45f6d97e}} 
+constexpr bool {\bfseries sequoia\+::maths\+::directed} (const directed\+\_\+flavour directedness) noexcept
+\item 
+\mbox{\Hypertarget{_graph_details_8hpp_abdfd00e1ea9d73c25276f116e4bcb9f0}\label{_graph_details_8hpp_abdfd00e1ea9d73c25276f116e4bcb9f0}} 
+constexpr bool {\bfseries sequoia\+::maths\+::undirected} (const graph\+\_\+flavour flavour) noexcept
+\item 
+\mbox{\Hypertarget{_graph_details_8hpp_a8ab4815774e838de6de56ab07d55a03c}\label{_graph_details_8hpp_a8ab4815774e838de6de56ab07d55a03c}} 
+constexpr directed\+\_\+flavour {\bfseries sequoia\+::maths\+::to\+\_\+directedness} (const graph\+\_\+flavour gf) noexcept
+\item 
+\mbox{\Hypertarget{_graph_details_8hpp_a0912ed76c56b2ae1ff9da923d53227c6}\label{_graph_details_8hpp_a0912ed76c56b2ae1ff9da923d53227c6}} 
+constexpr std\+::size\+\_\+t {\bfseries sequoia\+::maths\+::graph\+\_\+impl\+::num\+\_\+static\+\_\+edges} (const graph\+\_\+flavour flavour, const std\+::size\+\_\+t size) noexcept
+\item 
+\mbox{\Hypertarget{_graph_details_8hpp_a07ca142ef55a6816bd674ee2a87ceb78}\label{_graph_details_8hpp_a07ca142ef55a6816bd674ee2a87ceb78}} 
+{\footnotesize template$<$class Edge\+Weight , template$<$ class $>$ class Edge\+Weight\+Pooling$>$ }\\constexpr bool {\bfseries sequoia\+::maths\+::graph\+\_\+impl\+::big\+\_\+proxy} () noexcept
+\item 
+\mbox{\Hypertarget{_graph_details_8hpp_a07a95c9f5e638d03196d962dfd199ea0}\label{_graph_details_8hpp_a07a95c9f5e638d03196d962dfd199ea0}} 
+{\footnotesize template$<$class Edge\+Weight , template$<$ class $>$ class Edge\+Weight\+Pooling$>$ }\\constexpr bool {\bfseries sequoia\+::maths\+::graph\+\_\+impl\+::copy\+\_\+constructible\+\_\+proxy} () noexcept
+\item 
+\mbox{\Hypertarget{_graph_details_8hpp_a34572a642cbfa63a7d2382962aceb017}\label{_graph_details_8hpp_a34572a642cbfa63a7d2382962aceb017}} 
+{\footnotesize template$<$std\+::size\+\_\+t Size, std\+::size\+\_\+t Order, bool Embedded$>$ }\\constexpr index\+\_\+type {\bfseries sequoia\+::maths\+::graph\+\_\+impl\+::to\+\_\+index\+\_\+max} () noexcept
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{_graph_details_8hpp_afb5d6fa0fa183e8de2310990e15732a3}\label{_graph_details_8hpp_afb5d6fa0fa183e8de2310990e15732a3}} 
+{\footnotesize template$<$class T $>$ }\\constexpr bool {\bfseries sequoia\+::maths\+::graph\+\_\+impl\+::has\+\_\+reservable\+\_\+partitions\+\_\+v} \{has\+\_\+reservable\+\_\+partitions$<$T$>$\+::value\}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Meta-\/programming elements for graph implementation. 
+

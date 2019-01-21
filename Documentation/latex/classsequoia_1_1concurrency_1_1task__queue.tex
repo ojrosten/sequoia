@@ -1,0 +1,60 @@
+\hypertarget{classsequoia_1_1concurrency_1_1task__queue}{}\section{sequoia\+::concurrency\+::task\+\_\+queue$<$ R, Task, Q $>$ Class Template Reference}
+\label{classsequoia_1_1concurrency_1_1task__queue}\index{sequoia::concurrency::task\_queue$<$ R, Task, Q $>$@{sequoia::concurrency::task\_queue$<$ R, Task, Q $>$}}
+
+
+a task queue designed for use by mutliple threads.  
+
+
+
+
+{\ttfamily \#include $<$Concurrency\+Models.\+hpp$>$}
+
+\subsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsequoia_1_1concurrency_1_1task__queue_a5ac7a443fcbc5c745ba506951717006e}\label{classsequoia_1_1concurrency_1_1task__queue_a5ac7a443fcbc5c745ba506951717006e}} 
+using {\bfseries task\+\_\+t} = Task
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsequoia_1_1concurrency_1_1task__queue_adc2d8eb4a9918eb74818d9a90bd9a0fd}\label{classsequoia_1_1concurrency_1_1task__queue_adc2d8eb4a9918eb74818d9a90bd9a0fd}} 
+{\bfseries task\+\_\+queue} (const \mbox{\hyperlink{classsequoia_1_1concurrency_1_1task__queue}{task\+\_\+queue}} \&)=delete
+\item 
+\mbox{\Hypertarget{classsequoia_1_1concurrency_1_1task__queue_a0464b91052448a85b99f3c457c064b38}\label{classsequoia_1_1concurrency_1_1task__queue_a0464b91052448a85b99f3c457c064b38}} 
+{\bfseries task\+\_\+queue} (\mbox{\hyperlink{classsequoia_1_1concurrency_1_1task__queue}{task\+\_\+queue}} \&\&)=delete
+\item 
+\mbox{\Hypertarget{classsequoia_1_1concurrency_1_1task__queue_aba2b3e37841b4912900cb4206457d6fb}\label{classsequoia_1_1concurrency_1_1task__queue_aba2b3e37841b4912900cb4206457d6fb}} 
+\mbox{\hyperlink{classsequoia_1_1concurrency_1_1task__queue}{task\+\_\+queue}} \& {\bfseries operator=} (const \mbox{\hyperlink{classsequoia_1_1concurrency_1_1task__queue}{task\+\_\+queue}} \&)=delete
+\item 
+\mbox{\Hypertarget{classsequoia_1_1concurrency_1_1task__queue_a0be9cf348a435ba4ef78f7ec18efba76}\label{classsequoia_1_1concurrency_1_1task__queue_a0be9cf348a435ba4ef78f7ec18efba76}} 
+\mbox{\hyperlink{classsequoia_1_1concurrency_1_1task__queue}{task\+\_\+queue}} \& {\bfseries operator=} (\mbox{\hyperlink{classsequoia_1_1concurrency_1_1task__queue}{task\+\_\+queue}} \&\&)=delete
+\item 
+\mbox{\Hypertarget{classsequoia_1_1concurrency_1_1task__queue_a618c596281f213b4e9820ed76e1320fc}\label{classsequoia_1_1concurrency_1_1task__queue_a618c596281f213b4e9820ed76e1320fc}} 
+void {\bfseries finish} ()
+\item 
+\mbox{\Hypertarget{classsequoia_1_1concurrency_1_1task__queue_af1b3f897fd87cf474296841c904e9660}\label{classsequoia_1_1concurrency_1_1task__queue_af1b3f897fd87cf474296841c904e9660}} 
+void {\bfseries push} (task\+\_\+t \&\&task)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1concurrency_1_1task__queue_ad24a0cc0adebc0b542faca7794b68920}\label{classsequoia_1_1concurrency_1_1task__queue_ad24a0cc0adebc0b542faca7794b68920}} 
+bool {\bfseries push} (task\+\_\+t \&\&task, std\+::try\+\_\+to\+\_\+lock\+\_\+t t)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1concurrency_1_1task__queue_a51e246508a145c3a161291b3dde9b8ce}\label{classsequoia_1_1concurrency_1_1task__queue_a51e246508a145c3a161291b3dde9b8ce}} 
+task\+\_\+t {\bfseries pop} (std\+::try\+\_\+to\+\_\+lock\+\_\+t t)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1concurrency_1_1task__queue_a0748f7b4e71a9fe2e5c6c3d8eb111017}\label{classsequoia_1_1concurrency_1_1task__queue_a0748f7b4e71a9fe2e5c6c3d8eb111017}} 
+task\+\_\+t {\bfseries pop} ()
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$class R, class Task = std\+::packaged\+\_\+task$<$\+R()$>$, class Q = std\+::queue$<$\+Task$>$$>$\newline
+class sequoia\+::concurrency\+::task\+\_\+queue$<$ R, Task, Q $>$}
+
+a task queue designed for use by mutliple threads. 
+
+This class supports both aggressive pushing and popping and also speculative versions which do not necessarily acquire the underlying mutex and may therefore fail. 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Core/\+Concurrency/\mbox{\hyperlink{_concurrency_models_8hpp}{Concurrency\+Models.\+hpp}}\end{DoxyCompactItemize}

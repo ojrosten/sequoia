@@ -1,0 +1,64 @@
+\hypertarget{classsequoia_1_1data__structures_1_1static__stack}{}\section{sequoia\+::data\+\_\+structures\+::static\+\_\+stack$<$ T, Max\+Depth $>$ Class Template Reference}
+\label{classsequoia_1_1data__structures_1_1static__stack}\index{sequoia::data\_structures::static\_stack$<$ T, MaxDepth $>$@{sequoia::data\_structures::static\_stack$<$ T, MaxDepth $>$}}
+
+
+A stack suitable for constexpr contexts.  
+
+
+
+
+{\ttfamily \#include $<$Static\+Stack.\+hpp$>$}
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1static__stack_a0b8eb414ab9e5fe863d3264700c3e369}\label{classsequoia_1_1data__structures_1_1static__stack_a0b8eb414ab9e5fe863d3264700c3e369}} 
+constexpr {\bfseries static\+\_\+stack} (std\+::initializer\+\_\+list$<$ T $>$ l)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1static__stack_a3f20b312c9285c2403db2b0481b2f8db}\label{classsequoia_1_1data__structures_1_1static__stack_a3f20b312c9285c2403db2b0481b2f8db}} 
+constexpr {\bfseries static\+\_\+stack} (const \mbox{\hyperlink{classsequoia_1_1data__structures_1_1static__stack}{static\+\_\+stack}} \&)=default
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1static__stack_aa25918224e466e6d8365b2296a744b72}\label{classsequoia_1_1data__structures_1_1static__stack_aa25918224e466e6d8365b2296a744b72}} 
+constexpr {\bfseries static\+\_\+stack} (\mbox{\hyperlink{classsequoia_1_1data__structures_1_1static__stack}{static\+\_\+stack}} \&) noexcept=default
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1static__stack_a4d98c7b136662c21b1d1a17ad28f470a}\label{classsequoia_1_1data__structures_1_1static__stack_a4d98c7b136662c21b1d1a17ad28f470a}} 
+constexpr \mbox{\hyperlink{classsequoia_1_1data__structures_1_1static__stack}{static\+\_\+stack}} \& {\bfseries operator=} (const \mbox{\hyperlink{classsequoia_1_1data__structures_1_1static__stack}{static\+\_\+stack}} \&)=default
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1static__stack_a90adb1c91ef6a3535f38d19d5c2daed4}\label{classsequoia_1_1data__structures_1_1static__stack_a90adb1c91ef6a3535f38d19d5c2daed4}} 
+constexpr \mbox{\hyperlink{classsequoia_1_1data__structures_1_1static__stack}{static\+\_\+stack}} \& {\bfseries operator=} (\mbox{\hyperlink{classsequoia_1_1data__structures_1_1static__stack}{static\+\_\+stack}} \&) noexcept=default
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1static__stack_adee19c222c7598fc9274d16ee6501788}\label{classsequoia_1_1data__structures_1_1static__stack_adee19c222c7598fc9274d16ee6501788}} 
+constexpr void {\bfseries push} (const T \&val)
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1static__stack_a7bcbe40ec916cfef1384c54fe615414f}\label{classsequoia_1_1data__structures_1_1static__stack_a7bcbe40ec916cfef1384c54fe615414f}} 
+constexpr const T \& {\bfseries top} () const noexcept
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1static__stack_ac053b88131511c576bb610d4d1f6f6f2}\label{classsequoia_1_1data__structures_1_1static__stack_ac053b88131511c576bb610d4d1f6f6f2}} 
+constexpr void {\bfseries pop} () noexcept
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1static__stack_a1175fa00c7df45c433076b33847a0175}\label{classsequoia_1_1data__structures_1_1static__stack_a1175fa00c7df45c433076b33847a0175}} 
+constexpr bool {\bfseries empty} () const noexcept
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1static__stack_ae347f3ffbed4e76b5ec94fdc2a14a253}\label{classsequoia_1_1data__structures_1_1static__stack_ae347f3ffbed4e76b5ec94fdc2a14a253}} 
+constexpr std\+::size\+\_\+t {\bfseries size} () const noexcept
+\end{DoxyCompactItemize}
+\subsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1static__stack_acc0fb4ab3dd0729aba8eefad853fc49c}\label{classsequoia_1_1data__structures_1_1static__stack_acc0fb4ab3dd0729aba8eefad853fc49c}} 
+constexpr bool {\bfseries operator==} (const \mbox{\hyperlink{classsequoia_1_1data__structures_1_1static__stack}{static\+\_\+stack}} \&lhs, const \mbox{\hyperlink{classsequoia_1_1data__structures_1_1static__stack}{static\+\_\+stack}} \&rhs) noexcept
+\item 
+\mbox{\Hypertarget{classsequoia_1_1data__structures_1_1static__stack_a477e73a8d47cf03cc64bb4e9e03624ab}\label{classsequoia_1_1data__structures_1_1static__stack_a477e73a8d47cf03cc64bb4e9e03624ab}} 
+constexpr bool {\bfseries operator!=} (const \mbox{\hyperlink{classsequoia_1_1data__structures_1_1static__stack}{static\+\_\+stack}} \&lhs, const \mbox{\hyperlink{classsequoia_1_1data__structures_1_1static__stack}{static\+\_\+stack}} \&rhs) noexcept
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$class T, std\+::size\+\_\+t Max\+Depth$>$\newline
+class sequoia\+::data\+\_\+structures\+::static\+\_\+stack$<$ T, Max\+Depth $>$}
+
+A stack suitable for constexpr contexts. 
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+Core/\+Data\+Structures/\mbox{\hyperlink{_static_stack_8hpp}{Static\+Stack.\+hpp}}\end{DoxyCompactItemize}
