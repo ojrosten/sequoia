@@ -9,7 +9,7 @@
 
 namespace sequoia::unit_testing
 {
-  class test_protective_wrapper_false_positives : public false_positive_test
+  class protective_wrapper_false_positive_test : public false_positive_test
   {
   public:
     using false_positive_test::false_positive_test;    

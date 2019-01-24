@@ -1,4 +1,4 @@
-#include "TestAlgorithms.hpp"
+#include "AlgorithmsTest.hpp"
 
 #include "Algorithms.hpp"
 #include "ProtectiveWrapper.hpp"
@@ -33,7 +33,7 @@ namespace sequoia
       return a;
     }
 
-    void test_algorithms::run_tests()
+    void algorithms_test::run_tests()
     {
       sort_basic_type();
       sort_protective_wrapper();
@@ -54,7 +54,7 @@ namespace sequoia
       test_rotate();
     }  
     
-    void test_algorithms::sort_basic_type()
+    void algorithms_test::sort_basic_type()
     {
       {
         constexpr std::array<int, 0> a{};
@@ -101,7 +101,7 @@ namespace sequoia
       }
     }
 
-    void test_algorithms::sort_protective_wrapper()
+    void algorithms_test::sort_protective_wrapper()
     {
       using wrapper = utilities::protective_wrapper<int>;
       constexpr std::array<wrapper, 4> a{wrapper{3}, wrapper{2}, wrapper{4}, wrapper{1}};
@@ -110,7 +110,7 @@ namespace sequoia
         check_equality(i+1, b[i].get(), LINE("Check array of wrapped ints, element " + std::to_string(i)));
     }  
 
-    void test_algorithms::sort_partial_edge()
+    void algorithms_test::sort_partial_edge()
     {
       struct null_weight{};
       using edge = maths::partial_edge<null_weight, data_sharing::independent, utilities::protective_wrapper<null_weight>>;
@@ -121,7 +121,7 @@ namespace sequoia
         check_equality(i, b[i].target_node(), LINE("Check array of partial edges, element " + std::to_string(i)));
     }    
 
-    void test_algorithms::cluster_basic_type()
+    void algorithms_test::cluster_basic_type()
     {
       {
         constexpr std::array<int, 9> a{1,2,2,1,3,1,2,2,1};
@@ -130,7 +130,7 @@ namespace sequoia
       }
     }
 
-    void test_algorithms::lower_bound_basic_type()
+    void algorithms_test::lower_bound_basic_type()
     {
       {
         constexpr std::array<int, 0> a{};
@@ -248,7 +248,7 @@ namespace sequoia
       }
     }
 
-    void test_algorithms::lower_bound_protective_wrapper()
+    void algorithms_test::lower_bound_protective_wrapper()
     {
       using wrapper = utilities::protective_wrapper<int>;
       constexpr std::array<wrapper, 3> a{wrapper{-1}, wrapper{-1}, wrapper{1}};
@@ -257,7 +257,7 @@ namespace sequoia
         
     }
 
-    void test_algorithms::lower_bound_partial_edge()
+    void algorithms_test::lower_bound_partial_edge()
     {
       struct null_weight{};
       using edge = maths::partial_edge<null_weight, data_sharing::independent, utilities::protective_wrapper<null_weight>>;
@@ -270,7 +270,7 @@ namespace sequoia
       check_equality<std::size_t>(2, e.target_node());
     }
 
-    void test_algorithms::upper_bound_basic_type()
+    void algorithms_test::upper_bound_basic_type()
     {
       {
         constexpr std::array<int, 0> a{};
@@ -356,7 +356,7 @@ namespace sequoia
       }
     }
 
-    void test_algorithms::equal_range_basic_type()
+    void algorithms_test::equal_range_basic_type()
     {
       {
         constexpr std::array<double, 0> a{};
@@ -377,7 +377,7 @@ namespace sequoia
       }
     }
 
-    void test_algorithms::equality()
+    void algorithms_test::equality()
     {
       constexpr std::array<int, 2> a{1,2};
       constexpr std::array<int, 3> b{1,2, 3};
@@ -389,7 +389,7 @@ namespace sequoia
       check(t, LINE(""));
     }
 
-    void test_algorithms::test_rotate()
+    void algorithms_test::test_rotate()
     {
       {
         std::array<int, 0> a{};

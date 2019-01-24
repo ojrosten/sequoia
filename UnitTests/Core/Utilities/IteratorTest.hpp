@@ -6,7 +6,7 @@ namespace sequoia
 {
   namespace unit_testing
   {
-    class test_iterator : public unit_test
+    class iterator_test : public unit_test
     {
     public:
       using unit_test::unit_test;

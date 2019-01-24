@@ -43,6 +43,7 @@ var searchData=
   ['static_5fpriority_5fqueue',['static_priority_queue',['../classsequoia_1_1data__structures_1_1static__priority__queue.html',1,'sequoia::data_structures']]],
   ['static_5fqueue',['static_queue',['../classsequoia_1_1data__structures_1_1static__queue.html',1,'sequoia::data_structures']]],
   ['static_5fstack',['static_stack',['../classsequoia_1_1data__structures_1_1static__stack.html',1,'sequoia::data_structures']]],
+  ['statistical_5falgorithms_5ftest',['statistical_algorithms_test',['../classsequoia_1_1unit__testing_1_1statistical__algorithms__test.html',1,'sequoia::unit_testing']]],
   ['storage_5fhelper',['storage_helper',['../structsequoia_1_1data__structures_1_1impl_1_1storage__helper.html',1,'sequoia::data_structures::impl']]],
   ['storage_5fhelper_3c_20c_2c_20false_20_3e',['storage_helper&lt; C, false &gt;',['../structsequoia_1_1data__structures_1_1impl_1_1storage__helper_3_01_c_00_01false_01_4.html',1,'sequoia::data_structures::impl']]],
   ['storage_5fhelper_3c_20container_3c_20nodeweightpooling_3c_20nodeweight_20_3e_3a_3aproxy_20_3e_20_3e',['storage_helper&lt; Container&lt; NodeWeightPooling&lt; NodeWeight &gt;::proxy &gt; &gt;',['../structsequoia_1_1data__structures_1_1impl_1_1storage__helper.html',1,'sequoia::data_structures::impl']]],

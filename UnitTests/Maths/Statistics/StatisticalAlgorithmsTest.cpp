@@ -5,13 +5,13 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "TestStatisticalAlgorithms.hpp"
+#include "StatisticalAlgorithmsTest.hpp"
 
 #include "StatisticalAlgorithms.hpp"
 
 namespace sequoia::unit_testing
 {
-  void test_statistical_algorithms::run_tests()
+  void statistical_algorithms_test::run_tests()
   {
     using namespace sequoia::maths;
     

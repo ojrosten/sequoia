@@ -15,6 +15,8 @@ var searchData=
   ['priority_5fqueue_5fselector_3c_20g_2c_20compare_2c_20true_20_3e',['priority_queue_selector&lt; G, Compare, true &gt;',['../structsequoia_1_1maths_1_1graph__impl_1_1priority__queue__selector_3_01_g_00_01_compare_00_01true_01_4.html',1,'sequoia::maths::graph_impl']]],
   ['protective_5fwrapper',['protective_wrapper',['../classsequoia_1_1utilities_1_1protective__wrapper.html',1,'sequoia::utilities']]],
   ['protective_5fwrapper_3c_20t_2c_20true_20_3e',['protective_wrapper&lt; T, true &gt;',['../classsequoia_1_1utilities_1_1protective__wrapper_3_01_t_00_01true_01_4.html',1,'sequoia::utilities']]],
+  ['protective_5fwrapper_5ffalse_5fpositive_5ftest',['protective_wrapper_false_positive_test',['../classsequoia_1_1unit__testing_1_1protective__wrapper__false__positive__test.html',1,'sequoia::unit_testing']]],
+  ['protective_5fwrapper_5ftest',['protective_wrapper_test',['../classsequoia_1_1unit__testing_1_1protective__wrapper__test.html',1,'sequoia::unit_testing']]],
   ['proxy',['proxy',['../classsequoia_1_1data__sharing_1_1data__pool_1_1proxy.html',1,'sequoia::data_sharing::data_pool']]],
   ['proxy_5fdereference_5fpolicy',['proxy_dereference_policy',['../structsequoia_1_1maths_1_1graph__impl_1_1proxy__dereference__policy.html',1,'sequoia::maths::graph_impl']]],
   ['prs',['PRS',['../structsequoia_1_1unit__testing_1_1_p_r_s.html',1,'sequoia::unit_testing']]]

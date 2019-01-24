@@ -9,14 +9,14 @@
 
 namespace sequoia::unit_testing
 {
-  void test_protective_wrapper_false_positives::run_tests()
+  void protective_wrapper_false_positive_test::run_tests()
   {
     test_basic_type();
     test_container_type();
     test_aggregate_type();
   }
 
-  void test_protective_wrapper_false_positives::test_basic_type()
+  void protective_wrapper_false_positive_test::test_basic_type()
   {
     using namespace utilities;
 
@@ -24,7 +24,7 @@ namespace sequoia::unit_testing
     check_equality(w, v, LINE(""));
   }
 
-  void test_protective_wrapper_false_positives::test_container_type()
+  void protective_wrapper_false_positive_test::test_container_type()
   {
     using namespace utilities;
 
@@ -38,7 +38,7 @@ namespace sequoia::unit_testing
     check_equality(u, v, LINE(""));
   }
 
-  void test_protective_wrapper_false_positives::test_aggregate_type()
+  void protective_wrapper_false_positive_test::test_aggregate_type()
   {
     using namespace utilities;
     

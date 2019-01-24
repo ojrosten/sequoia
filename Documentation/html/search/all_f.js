@@ -54,6 +54,7 @@ var searchData=
   ['staticpriorityqueue_2ehpp',['StaticPriorityQueue.hpp',['../_static_priority_queue_8hpp.html',1,'']]],
   ['staticqueue_2ehpp',['StaticQueue.hpp',['../_static_queue_8hpp.html',1,'']]],
   ['staticstack_2ehpp',['StaticStack.hpp',['../_static_stack_8hpp.html',1,'']]],
+  ['statistical_5falgorithms_5ftest',['statistical_algorithms_test',['../classsequoia_1_1unit__testing_1_1statistical__algorithms__test.html',1,'sequoia::unit_testing']]],
   ['statisticalalgorithms_2ehpp',['StatisticalAlgorithms.hpp',['../_statistical_algorithms_8hpp.html',1,'']]],
   ['storage_5fhelper',['storage_helper',['../structsequoia_1_1data__structures_1_1impl_1_1storage__helper.html',1,'sequoia::data_structures::impl']]],
   ['storage_5fhelper_3c_20c_2c_20false_20_3e',['storage_helper&lt; C, false &gt;',['../structsequoia_1_1data__structures_1_1impl_1_1storage__helper_3_01_c_00_01false_01_4.html',1,'sequoia::data_structures::impl']]],

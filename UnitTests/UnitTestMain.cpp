@@ -1,5 +1,11 @@
+#include "AlgorithmsTest.hpp"
 #include "ProtectiveWrapperTestingDiagnostics.hpp"
-#include "TestProtectiveWrapper.hpp"
+#include "ProtectiveWrapperTest.hpp"
+#include "IteratorTest.hpp"
+
+#include "StatisticalAlgorithmsTest.hpp"
+
+
 
 #include "TestPartitionedData.hpp"
 #include "TestStaticStack.hpp"
@@ -10,7 +16,6 @@
 #include "StaticPriorityQueueTestingDiagnostics.hpp"
 
 #include "TestDataPool.hpp"
-
 
 #include "EdgeTestingDiagnostics.hpp"
 #include "GraphTesterDiagnostics.hpp"
@@ -33,13 +38,7 @@
 
 #include "TestConcurrencyModels.hpp"
 
-#include "TestStatisticalAlgorithms.hpp"
-
 #include "TestExperimental.hpp"
-
-#include "TestIterator.hpp"
-
-#include "TestAlgorithms.hpp"
 
 #include "UnitTestDiagnostics.hpp"
 
@@ -63,29 +62,29 @@ int main(int argc, char** argv)
   runner.add_test_family(
     test_family{
       "Algorithms",
-      test_algorithms{"Unit Test"}
+      algorithms_test{"Unit Test"}
     }
   );
   
   runner.add_test_family(
     test_family{
       "Statistical Algorithms",
-      test_statistical_algorithms{"Unit Test"}
+      statistical_algorithms_test{"Unit Test"}
     }
   );
 
   runner.add_test_family(
     test_family{
       "Protective Wrapper",
-      test_protective_wrapper_false_positives{"False Positive Diagnostics"},
-      test_protective_wrapper{"Unit Test"}
+      protective_wrapper_false_positive_test{"False Positive Diagnostics"},
+      protective_wrapper_test{"Unit Test"}
     }
   );
 
   runner.add_test_family(
     test_family{
       "Iterator",
-      test_iterator{"Unit Test"}
+      iterator_test{"Unit Test"}
     }
   );
 

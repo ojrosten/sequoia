@@ -1,4 +1,4 @@
-#include "TestIterator.hpp"
+#include "IteratorTest.hpp"
 
 #include "Iterator.hpp"
 
@@ -8,14 +8,14 @@ namespace sequoia
 {
   namespace unit_testing
   {
-    void test_iterator::run_tests()
+    void iterator_test::run_tests()
     {
       test_vector_int();
       test_vector_vector();
       test_array();
     }
     
-    void test_iterator::test_vector_int()  
+    void iterator_test::test_vector_int()  
     {
       std::vector<int> v{3,0,1};
 
@@ -99,7 +99,7 @@ namespace sequoia
       check_equality(1, *crFromR, LINE(""));
     }
 
-    void test_iterator::test_vector_vector()
+    void iterator_test::test_vector_vector()
     {
       using namespace utilities;
       using c_type = std::vector<std::vector<int>>;
@@ -112,7 +112,7 @@ namespace sequoia
       check_equality(3, *i->begin(), LINE("Check -> operator"));
     }
     
-    void test_iterator::test_array()
+    void iterator_test::test_array()
     {
       using namespace utilities;
       using c_type = std::array<int, 5>;

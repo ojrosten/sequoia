@@ -5,7 +5,7 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "TestProtectiveWrapper.hpp"
+#include "ProtectiveWrapperTest.hpp"
 #include "ProtectiveWrapperTestingUtilities.hpp"
 
 namespace sequoia::unit_testing
@@ -20,14 +20,14 @@ namespace sequoia::unit_testing
     return d;
   }
   
-  void test_protective_wrapper::run_tests()
+  void protective_wrapper_test::run_tests()
   {
     test_basic_type();
     test_container_type();
     test_aggregate_type();   
   }
 
-  void test_protective_wrapper::test_basic_type()
+  void protective_wrapper_test::test_basic_type()
   {
     using namespace utilities;
 
@@ -49,7 +49,7 @@ namespace sequoia::unit_testing
     check_equality(wrapper{4}, w, LINE(""));
   }
   
-  void test_protective_wrapper::test_container_type()
+  void protective_wrapper_test::test_container_type()
   {
     using namespace utilities;
 
@@ -74,7 +74,7 @@ namespace sequoia::unit_testing
     check_regular_semantics(w, v, LINE("Regular semantics"));
   }
   
-  void test_protective_wrapper::test_aggregate_type()
+  void protective_wrapper_test::test_aggregate_type()
   {
     using namespace utilities;
 
