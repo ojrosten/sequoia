@@ -9,6 +9,8 @@
 
 #include "TypeTraits.hpp"
 
+#include <iterator>
+
 /*! \file Iterator.hpp
     \brief Implementation for an iterator with policies controlling dereferencing and auxiliary data.
  */
@@ -39,13 +41,13 @@ namespace sequoia::utilities
   };
 
   [[nodiscard]]
-  inline constexpr bool operator==(const null_data_policy& lhs, const null_data_policy& rhs)
+  inline constexpr bool operator==(const null_data_policy& lhs, const null_data_policy& rhs) noexcept
   {
     return true;
   }
 
   [[nodiscard]]
-  inline constexpr bool operator!=(const null_data_policy& lhs, const null_data_policy& rhs)
+  inline constexpr bool operator!=(const null_data_policy& lhs, const null_data_policy& rhs) noexcept
   {
     return !(lhs == rhs);
   }
