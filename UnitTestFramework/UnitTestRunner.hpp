@@ -17,6 +17,11 @@
 
 namespace sequoia::unit_testing
 {
+  struct argument_error : std::runtime_error
+  {
+    using std::runtime_error::runtime_error;
+  };
+  
   class unit_test_runner
   {
   public:
@@ -63,6 +68,8 @@ namespace sequoia::unit_testing
     static std::string to_camel_case(std::string text);
     
     static std::string warning(std::string_view message);
+
+    static std::string error(std::string_view message);
 
     static std::string report_arg_num(const std::size_t n);
 

@@ -59,6 +59,11 @@ namespace sequoia::unit_testing
     return std::string{"\n  Warning: "}.append(message);
   }
 
+  std::string unit_test_runner::error(std::string_view message)
+  {
+    return std::string{"\n  Error: "}.append(message);
+  }
+
   std::string unit_test_runner::report_arg_num(const std::size_t n)
   {
     return (std::to_string(n) += ((n==1) ? " was" : " were")) += " provided\n";
@@ -156,7 +161,6 @@ namespace sequoia::unit_testing
 
   unit_test_runner::unit_test_runner(int argc, char** argv)
   {
-    run_diagnostics();
     build_map();
     
     std::vector<arg_list> args;
@@ -213,10 +217,13 @@ namespace sequoia::unit_testing
         }
         else
         {
-          std::cout << (warning("argument \'") += key).append("\' not recognized\n\n");
+          throw argument_error{(error("argument \'") += key).append("\' not recognized\n\n")};
         }
       }
     }
+
+    
+    run_diagnostics();
   }
 
   void unit_test_runner::build_map()
@@ -228,7 +235,7 @@ namespace sequoia::unit_testing
         }
         else
         {
-          std::cout << warning("'test' requires one argument [test_name], but ").append(report_arg_num(argList.size()));
+          throw argument_error{error("'test' requires one argument [test_name], but ").append(report_arg_num(argList.size()))};
         }
       }
     );
@@ -240,7 +247,7 @@ namespace sequoia::unit_testing
         }
         else
         {
-          std::cout << warning("'create' requires two arguments [directory, class_name], but ").append(report_arg_num(argList.size()));
+          throw argument_error{error("'create' requires two arguments [directory, class_name], but ").append(report_arg_num(argList.size()))};
         }
       }
     );
@@ -252,7 +259,7 @@ namespace sequoia::unit_testing
         }
         else
         {
-          std::cout << warning("-async requires no arguments, but ").append(report_arg_num(argList.size()));
+          throw argument_error{error("-async requires no arguments, but ").append(report_arg_num(argList.size()))};
         }
       }
     );
@@ -264,7 +271,7 @@ namespace sequoia::unit_testing
         }
         else
         {
-          std::cout << warning("-verbose requires no arguments, but ").append(report_arg_num(argList.size()));
+          throw argument_error{error("-v requires no arguments, but ").append(report_arg_num(argList.size()))};
         }
       }
     );
