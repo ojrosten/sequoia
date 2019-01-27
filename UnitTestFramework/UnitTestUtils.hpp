@@ -422,9 +422,11 @@ namespace sequoia
 
         pad_left(checkNums.begin(), checkNums.end());
 
+        const auto len{10u - std::min(std::size_t{8}, checkNums.front().size())};
+
         for(int i{}; i<4; ++i)
         {
-          summaries[i] += checkNums[i] += ";    Failures: ";
+          summaries[i].append(checkNums[i] + ";").append(len, ' ').append("Failures: ");
         }
 
         std::array<std::string, 4> failures{
