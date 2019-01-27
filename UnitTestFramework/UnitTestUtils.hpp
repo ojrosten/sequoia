@@ -30,17 +30,18 @@ namespace sequoia
     template<class T, class=std::void_t<>> struct is_serializable : public std::false_type
     {};
 
-    template<class T> struct is_serializable<T, std::void_t<decltype(std::ostringstream{} << std::declval<T>())>> : public std::true_type
+    // Seems to be a bug here since decltype returns std::stringstream, whatever T!
+    template<class T> struct is_serializable<T, std::void_t<decltype(std::stringstream{} << std::declval<T>())>> : public std::true_type
     {};
 
     template<class T> constexpr bool is_serializable_v{is_serializable<T>::value};
-    
-    template<class T, class=std::void_t<>> struct string_maker;
-    
-    template<class T> struct string_maker<T, std::enable_if_t<is_serializable_v<T>>>
+
+    template<class T, class=std::enable_if_t<is_serializable_v<T>>>
+    struct string_maker
     {
+      [[nodiscard]]
       static std::string make(const T& val)
-      {
+      {        
         std::ostringstream os;
         os << std::boolalpha << val;
         return os.str();
@@ -559,9 +560,7 @@ namespace sequoia
 
     template<class T>
     struct equality_checker
-    {
-      static_assert(is_serializable_v<T>, "Either specialize string_make or equality_checker");
-       
+    {       
       template<class Logger, class S=T>
       static std::enable_if_t<!impl::container_detector_v<S>, bool>
       check(Logger& logger, const T& reference, const T& actual, std::string_view description="")
@@ -642,6 +641,8 @@ namespace sequoia
     
     template<class Logger, class T> bool check_equality(Logger& logger, const T& reference, const T& actual, std::string_view description="")
     {
+      static_assert(has_details_checker_v<T> || is_serializable_v<T>, "Provide either a specialization of details_checker or string_maker");
+      
       using sentinel = typename Logger::sentinel;
 
       const auto priorFailures{logger.failures()};

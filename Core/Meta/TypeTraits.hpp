@@ -83,7 +83,7 @@ namespace sequoia
   {};
 
   template<class T>
-  struct is_orderable<T, std::void_t<decltype((std::declval<T>() < std::declval<T>()))>> : std::true_type
+  struct is_orderable<T, std::void_t<decltype(std::declval<T>() < std::declval<T>())>> : std::true_type
   {};
 
   template<class T> constexpr bool is_orderable_v{is_orderable<T>::value};
@@ -93,7 +93,7 @@ namespace sequoia
   {};
 
   template<class T>
-  struct is_equal_to_comparable<T, std::void_t<decltype((std::declval<T>() == std::declval<T>()))>> : std::true_type
+  struct is_equal_to_comparable<T, std::void_t<decltype(std::declval<T>() == std::declval<T>())>> : std::true_type
   {};
 
   template<class T> constexpr bool is_equal_to_comparable_v{is_equal_to_comparable<T>::value};
