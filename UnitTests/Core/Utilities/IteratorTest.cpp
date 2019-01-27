@@ -32,7 +32,7 @@ namespace sequoia::unit_testing
     static_assert(std::is_same_v<custom_iter_t::reference, int&>);
 
     std::array<int, 3> a{3, 0, 1};
-    basic_checks<custom_iter_t>(a.begin(), a.end(), "Custom iterator from iterator");
+    basic_checks<custom_iter_t>(a.begin(), a.end(), &*a.begin(), "Custom iterator from iterator");
 
     custom_iter_t i{a.begin() + 1};
     
@@ -69,23 +69,21 @@ namespace sequoia::unit_testing
     static_assert(std::is_same_v<custom_citer_t::reference, const int&>);
 
     std::array<int, 3> a{3, 0, 1};
-    basic_checks<custom_citer_t>(a.cbegin(), a.cend(), "Custom const_iterator from const_iterator");
-    basic_checks<custom_citer_t>(a.begin(), a.end(), "Custom const_iterator from iterator");
+    basic_checks<custom_citer_t>(a.cbegin(), a.cend(), &*a.cbegin(), "Custom const_iterator from const_iterator");
+    basic_checks<custom_citer_t>(a.begin(), a.end(), &*a.cbegin(), "Custom const_iterator from iterator");
 
-    /*
     using i_type = std::array<int, 3>::iterator;
     using custom_iter_t = iterator<i_type, identity_dereference_policy<ci_type>, null_data_policy>;
 
-    basic_checks<custom_citer_t>(custom_iter_t{a.begin()}, custom_iter_t{a.end()});
-    */
+    basic_checks<custom_citer_t>(custom_iter_t{a.begin()}, custom_iter_t{a.end()}, &*a.cbegin(), "Custom const_iterator from custom iterator");
   }
   
   void iterator_test::test_reverse_iterator()
   {
     using namespace utilities;
     
-    using i_type = std::array<int, 3>::reverse_iterator;
-    using custom_riter_t = iterator<i_type, identity_dereference_policy<i_type>, null_data_policy>;
+    using ri_type = std::array<int, 3>::reverse_iterator;
+    using custom_riter_t = iterator<ri_type, identity_dereference_policy<ri_type>, null_data_policy>;
 
     static_assert(std::is_same_v<custom_riter_t::iterator_category, std::random_access_iterator_tag>);
     static_assert(std::is_same_v<custom_riter_t::difference_type, std::ptrdiff_t>);
@@ -94,7 +92,7 @@ namespace sequoia::unit_testing
     static_assert(std::is_same_v<custom_riter_t::reference, int&>);
 
     std::array<int, 3> a{3, 0, 1};
-    basic_checks<custom_riter_t>(a.rbegin(), a.rend(), "Custom reverse_iterator from reverse_iterator");
+    basic_checks<custom_riter_t>(a.rbegin(), a.rend(), &*a.rbegin(), "Custom reverse_iterator from reverse_iterator");
 
     custom_riter_t i{a.rbegin()};
 
@@ -121,8 +119,8 @@ namespace sequoia::unit_testing
   {
     using namespace utilities;
     
-    using i_type = std::array<int, 3>::const_reverse_iterator;
-    using custom_criter_t = iterator<i_type, identity_dereference_policy<i_type>, null_data_policy>;
+    using cri_type = std::array<int, 3>::const_reverse_iterator;
+    using custom_criter_t = iterator<cri_type, identity_dereference_policy<cri_type>, null_data_policy>;
 
     static_assert(std::is_same_v<custom_criter_t::iterator_category, std::random_access_iterator_tag>);
     static_assert(std::is_same_v<custom_criter_t::difference_type, std::ptrdiff_t>);
@@ -131,15 +129,18 @@ namespace sequoia::unit_testing
     static_assert(std::is_same_v<custom_criter_t::reference, const int&>);
 
     std::array<int, 3> a{3, 0, 1};
-    basic_checks<custom_criter_t>(a.crbegin(), a.crend(), "Custom const_reverse_iterator from const_reverse_iterator");
-    basic_checks<custom_criter_t>(a.rbegin(), a.rend(), "Custom const_reverse_iterator from reverse_iterator");
+    basic_checks<custom_criter_t>(a.crbegin(), a.crend(), &*a.crbegin(), "Custom const_reverse_iterator from const_reverse_iterator");
+    basic_checks<custom_criter_t>(a.rbegin(), a.rend(), &*a.crbegin(), "Custom const_reverse_iterator from reverse_iterator");
 
-    // TO DO: init with non-const r-iter
+    using ri_type = std::array<int, 3>::reverse_iterator;
+    using custom_riter_t = iterator<ri_type, identity_dereference_policy<ri_type>, null_data_policy>;
+
+    basic_checks<custom_criter_t>(custom_riter_t{a.rbegin()}, custom_riter_t{a.rend()}, &*a.crbegin(), "Custom const_reverse_iterator from custom reverse_iterator");
   }
   
 
-  template<class CustomIter, class Iter>
-  void iterator_test::basic_checks(Iter begin, Iter end, std::string_view message)
+  template<class CustomIter, class Iter, class Pointer>
+  void iterator_test::basic_checks(Iter begin, Iter end, Pointer pBegin, std::string_view message)
   {
     using namespace std;
     
@@ -152,8 +153,7 @@ namespace sequoia::unit_testing
     check_equality(begin[1], i[1], LINE(message));
     check_equality(begin[2], i[2], LINE(message));
 
-    using base_iter = typename CustomIter::base_iterator_type;
-    check_equality(i.operator->(), &*base_iter{begin}, LINE("Operator ->"));
+    check_equality(i.operator->(), pBegin, LINE("Operator ->"));
 
     CustomIter j{end};      
     check_regular_semantics(i, j, LINE("Regular semantics; one iterator at end"));

@@ -20,8 +20,8 @@ namespace sequoia::unit_testing
   private:
     void run_tests();
     
-    template<class CustomIter, class Iter>
-    void basic_checks(Iter begin, Iter end, std::string_view message);
+    template<class CustomIter, class Iter, class Pointer=typename CustomIter::pointer>
+    void basic_checks(Iter begin, Iter end, Pointer pBegin, std::string_view message);
 
     void test_iterator();
     void test_const_iterator();
