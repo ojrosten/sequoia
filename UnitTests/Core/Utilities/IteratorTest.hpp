@@ -9,8 +9,6 @@
 
 #include "UnitTestUtils.hpp"
 
-#include <array>
-
 namespace sequoia::unit_testing
 {
   class iterator_test : public unit_test
@@ -27,5 +25,16 @@ namespace sequoia::unit_testing
     void test_const_iterator();
     void test_reverse_iterator();
     void test_const_reverse_iterator();
-  };  
+  };
+
+  template<class Iterator>
+  struct scaling_dereference_policy
+  {
+    using value_type = typename std::iterator_traits<Iterator>::value_type;
+    using reference = typename std::iterator_traits<Iterator>::reference;
+    using pointer = typename std::iterator_traits<Iterator>::pointer;
+
+    [[nodiscard]]
+    static constexpr reference get(reference ref) noexcept { return ref; }
+  };
 }

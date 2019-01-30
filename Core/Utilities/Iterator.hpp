@@ -120,13 +120,49 @@ namespace sequoia::utilities
     [[nodiscard]]
     constexpr base_iterator_type base_iterator() const noexcept { return m_BaseIterator; }
 
+    // More generally need to chose between reference and proxy types
     [[nodiscard]]
-    constexpr decltype(auto) operator*() const { return DereferencePolicy::get(*m_BaseIterator); }
+    constexpr
+    std::conditional_t<is_const_reference_v<reference>, reference, const reference>
+    operator*() const
+    {
+      return DereferencePolicy::get(*m_BaseIterator);
+    }
 
+    template<class Ref=reference, class=std::enable_if_t<!is_const_reference_v<Ref>>>
     [[nodiscard]]
-    constexpr decltype(auto) operator[](const difference_type n) const { return DereferencePolicy::get(m_BaseIterator[n]); }
+    constexpr reference operator*()
+    {
+      return DereferencePolicy::get(*m_BaseIterator);
+    }
 
-    constexpr pointer operator->() const { return &DereferencePolicy::get(*m_BaseIterator); }
+    // More generally need to chose between reference and proxy types
+    [[nodiscard]]
+    constexpr
+    std::conditional_t<is_const_reference_v<reference>, reference, const reference>
+    operator[](const difference_type n) const
+    {
+      return DereferencePolicy::get(m_BaseIterator[n]);
+    }
+
+    template<class Ref=reference, class=std::enable_if_t<!is_const_reference_v<Ref>>>
+    [[nodiscard]]
+    constexpr reference operator[](const difference_type n)
+    {
+      return DereferencePolicy::get(m_BaseIterator[n]);
+    }
+
+    constexpr std::conditional_t<is_const_pointer_v<pointer>, pointer, const pointer>
+    operator->() const
+    {
+      return &DereferencePolicy::get(*m_BaseIterator);
+    }
+
+    template<class Ptr=pointer, class=std::enable_if_t<!is_const_pointer_v<Ptr>>>
+    constexpr pointer operator->()
+    {
+      return &DereferencePolicy::get(*m_BaseIterator);
+    }
 
     constexpr iterator& operator++() { ++m_BaseIterator; return *this; }
 

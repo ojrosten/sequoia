@@ -78,6 +78,20 @@ namespace sequoia
   template<class T, class... Args>
   constexpr bool is_base_of_head_v{is_base_of_head<T, Args...>::value};
 
+  template<class T>
+  struct is_const_pointer : std::false_type {};
+
+  template<class T>
+  struct is_const_pointer<const T*> : std::true_type {};
+
+  template<class T> constexpr bool is_const_pointer_v{is_const_pointer<T>::value};
+
+  template<class T>
+  struct is_const_reference : std::bool_constant<std::is_reference_v<T> && std::is_const_v<std::remove_reference_t<T>>> {};
+
+  template<class T> constexpr bool is_const_reference_v{is_const_reference<T>::value};
+
+  
   template<class T, class = std::void_t<>>
   struct is_orderable : std::false_type
   {};

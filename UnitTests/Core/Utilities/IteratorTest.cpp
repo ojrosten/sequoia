@@ -8,6 +8,8 @@
 #include "IteratorTest.hpp"
 #include "IteratorTestingUtilities.hpp"
 
+#include <array>
+
 namespace sequoia::unit_testing
 {    
   void iterator_test::run_tests()
