@@ -64,18 +64,55 @@ namespace sequoia::utilities
 
   namespace impl
   {
-    template<class DereferencePolicy, class=std::void_t<>> struct type_generator
+    template<class DereferencePolicy, class=std::void_t<>>
+    struct provides_reference_type : std::false_type
+    {};
+
+    template<class DereferencePolicy>
+    struct provides_reference_type<DereferencePolicy, std::void_t<typename DereferencePolicy::reference>>
+      : std::true_type
+    {};
+    
+    template<class DereferencePolicy>
+    constexpr bool provides_reference_type_v{provides_reference_type<DereferencePolicy>::value};
+
+    
+    template<class DereferencePolicy, class=std::void_t<>>
+    struct provides_proxy_type : std::false_type
+    {};
+
+    template<class DereferencePolicy>
+    struct provides_proxy_type<DereferencePolicy, std::void_t<typename DereferencePolicy::proxy>>
+      : std::true_type
+    {};
+    
+    template<class DereferencePolicy>
+    constexpr bool provides_proxy_type_v{provides_proxy_type<DereferencePolicy>::value};
+
+    template<class DereferencePolicy>
+    constexpr bool is_valid_v{
+         (provides_proxy_type_v<DereferencePolicy> && !provides_reference_type_v<DereferencePolicy>)
+      || (!provides_proxy_type_v<DereferencePolicy> && provides_reference_type_v<DereferencePolicy>)
+    };
+    
+    template<
+      class DereferencePolicy,
+      bool=provides_reference_type_v<DereferencePolicy>,
+      bool=provides_proxy_type_v<DereferencePolicy>
+    >
+    struct type_generator {};       
+
+    template<class DereferencePolicy> struct type_generator<DereferencePolicy, false, true>
     {
       using type = typename DereferencePolicy::proxy;
     };
 
-    template<class DereferencePolicy> struct type_generator<DereferencePolicy, std::void_t<typename DereferencePolicy::reference>>
+    template<class DereferencePolicy>
+    struct type_generator<DereferencePolicy, true, false>
     {
       using reference = typename DereferencePolicy::reference;
       using type = std::conditional_t<is_const_reference_v<reference>, reference, const reference>;
     };
-    
-      
   }
 
   /*! \class iterator
@@ -107,12 +144,8 @@ namespace sequoia::utilities
     // remove this
     using reference         = typename DereferencePolicy::reference;
 
-    // static_assert(
-    //      (has_member_type_v<DereferencePolicy, reference> && !has_member_type_v<DereferencePolicy, proxy>)
-    //   || (!has_member_type_v<DereferencePolicy, reference> && has_member_type_v<DereferencePolicy, proxy>)
-    //);
-
-    static_assert(std::is_reference_v<reference> || std::is_const_v<typename std::iterator_traits<Iterator>::reference>);
+    static_assert(impl::is_valid_v<DereferencePolicy>,
+      "The DereferencePolicy must supply exacly one type called either reference or proxy");
 
     template<
       class Arg,
