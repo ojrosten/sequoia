@@ -99,7 +99,7 @@ namespace sequoia::utilities
     constexpr bool are_compatible_v{
          (provides_reference_type_v<DerefPolicy1> && provides_reference_type_v<DerefPolicy2>)
       || (provides_proxy_type_v<DerefPolicy1> && provides_proxy_type_v<DerefPolicy2>)
-    };
+    };    
     
     template<
       class DereferencePolicy,
@@ -122,6 +122,12 @@ namespace sequoia::utilities
 
     template<class DereferencePolicy>
     using type_generator_t = typename type_generator<DereferencePolicy>::type;
+
+    template<class DereferencePolicy>
+    constexpr bool provides_mutable_reference_v{
+           std::is_reference_v<type_generator_t<DereferencePolicy>>
+        && !is_const_reference_v<type_generator_t<DereferencePolicy>>
+    };
   }
 
   /*! \class iterator
@@ -149,8 +155,6 @@ namespace sequoia::utilities
     using difference_type   = typename std::iterator_traits<Iterator>::difference_type;      
     using value_type        = typename DereferencePolicy::value_type;
     using pointer           = typename DereferencePolicy::pointer;
-
-    using reference          = typename DereferencePolicy::reference;
 
     static_assert(impl::is_valid_v<DereferencePolicy>,
       "The DereferencePolicy must supply exacly one type called either reference or proxy");
@@ -197,30 +201,36 @@ namespace sequoia::utilities
 
     [[nodiscard]]
     constexpr
-    typename impl::type_generator<DereferencePolicy>::type
+    typename impl::type_generator_t<DereferencePolicy>
     operator*() const
     {
       return DereferencePolicy::get(*m_BaseIterator);
     }
 
-    template<class Ref=reference, class=std::enable_if_t<!is_const_reference_v<Ref>>>
+    template<
+      class DerefPol = DereferencePolicy,
+      class=std::enable_if_t<impl::provides_mutable_reference_v<DerefPol>>
+    >
     [[nodiscard]]
-    constexpr reference operator*()
+    constexpr impl::type_generator_t<DereferencePolicy> operator*()
     {
       return DereferencePolicy::get(*m_BaseIterator);
     }
 
     [[nodiscard]]
     constexpr
-    typename impl::type_generator<DereferencePolicy>::type
+    typename impl::type_generator_t<DereferencePolicy>
     operator[](const difference_type n) const
     {
       return DereferencePolicy::get(m_BaseIterator[n]);
     }
 
-    template<class Ref=reference, class=std::enable_if_t<!is_const_reference_v<Ref>>>
+    template<
+      class DerefPol = DereferencePolicy,
+      class=std::enable_if_t<impl::provides_mutable_reference_v<DerefPol>>
+    >
     [[nodiscard]]
-    constexpr reference operator[](const difference_type n)
+    constexpr impl::type_generator_t<DereferencePolicy> operator[](const difference_type n)
     {
       return DereferencePolicy::get(m_BaseIterator[n]);
     }
