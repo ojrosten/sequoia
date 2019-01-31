@@ -94,6 +94,12 @@ namespace sequoia::utilities
          (provides_proxy_type_v<DereferencePolicy> && !provides_reference_type_v<DereferencePolicy>)
       || (!provides_proxy_type_v<DereferencePolicy> && provides_reference_type_v<DereferencePolicy>)
     };
+
+    template<class DerefPolicy1, class DerefPolicy2>
+    constexpr bool are_compatible_v{
+         (provides_reference_type_v<DerefPolicy1> && provides_reference_type_v<DerefPolicy2>)
+      || (provides_proxy_type_v<DerefPolicy1> && provides_proxy_type_v<DerefPolicy2>)
+    };
     
     template<
       class DereferencePolicy,
@@ -113,6 +119,9 @@ namespace sequoia::utilities
       using reference = typename DereferencePolicy::reference;
       using type = std::conditional_t<is_const_reference_v<reference>, reference, const reference>;
     };
+
+    template<class DereferencePolicy>
+    using type_generator_t = typename type_generator<DereferencePolicy>::type;
   }
 
   /*! \class iterator
@@ -141,8 +150,7 @@ namespace sequoia::utilities
     using value_type        = typename DereferencePolicy::value_type;
     using pointer           = typename DereferencePolicy::pointer;
 
-    // remove this
-    using reference         = typename DereferencePolicy::reference;
+    using reference          = typename DereferencePolicy::reference;
 
     static_assert(impl::is_valid_v<DereferencePolicy>,
       "The DereferencePolicy must supply exacly one type called either reference or proxy");
@@ -158,16 +166,16 @@ namespace sequoia::utilities
     {
     }
 
-    // Needs fixing...
     template<
       class Iter,
       class DerefPol,
       class=std::enable_if_t<
            !std::is_same_v<Iter, Iterator>
         && std::is_convertible_v<Iter, base_iterator_type>
+        && impl::are_compatible_v<DereferencePolicy, DerefPol>
         && std::is_same_v<
-              std::remove_cv_t<std::remove_reference_t<typename DerefPol::reference>>,
-              std::remove_cv_t<std::remove_reference_t<reference>>
+             std::decay_t<impl::type_generator_t<DereferencePolicy>>,
+             std::decay_t<impl::type_generator_t<DerefPol>>
            >
       >
     >
