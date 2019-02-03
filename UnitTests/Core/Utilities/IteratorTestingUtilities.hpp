@@ -11,10 +11,10 @@
 
 namespace sequoia::unit_testing
 {
-  template<class Iterator, class DereferencePolicy, class AuxiliaryDataPolicy>
-  struct string_maker<utilities::iterator<Iterator, DereferencePolicy, AuxiliaryDataPolicy>>
+  template<class Iterator, class DereferencePolicy>
+  struct string_maker<utilities::iterator<Iterator, DereferencePolicy>>
   {
-    using iter_type = utilities::iterator<Iterator, DereferencePolicy, AuxiliaryDataPolicy>;
+    using iter_type = utilities::iterator<Iterator, DereferencePolicy>;
     
     [[nodiscard]]
     static std::string make(const iter_type iter)

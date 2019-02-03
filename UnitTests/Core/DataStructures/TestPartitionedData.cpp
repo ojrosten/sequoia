@@ -696,7 +696,11 @@ namespace sequoia
 
       auto vec(v);
 
-      using p_i_t = utilities::iterator<typename partition_impl::partition_iterator_generator<C, SharingPolicy, ReferencePolicy, false>::iterator, partition_impl::dereference_policy<SharingPolicy, ReferencePolicy>, partition_impl::partition_index_policy<false, std::size_t>>;
+      using p_i_t
+        = utilities::iterator<
+            typename partition_impl::partition_iterator_generator<C, SharingPolicy, ReferencePolicy, false>::iterator,
+            partition_impl::dereference_policy<SharingPolicy, ReferencePolicy, partition_impl::partition_index_policy<false, std::size_t>>
+          >;
 
       p_i_t iter(vec.begin(), 4u);
 
@@ -757,7 +761,11 @@ namespace sequoia
       using T = typename SharingPolicy::elementary_type;
 
       auto vec(v);
-      using p_i_t = utilities::iterator<typename partition_impl::partition_iterator_generator<C, SharingPolicy, ReferencePolicy, false>::iterator, partition_impl::dereference_policy<SharingPolicy, ReferencePolicy>, partition_impl::partition_index_policy<false, std::size_t>>;
+      using p_i_t
+        = utilities::iterator<
+            typename partition_impl::partition_iterator_generator<C, SharingPolicy, ReferencePolicy, false>::iterator,
+          partition_impl::dereference_policy<SharingPolicy, ReferencePolicy, partition_impl::partition_index_policy<false, std::size_t>>
+          >;
 
       p_i_t iter(vec.begin(), 0u);
 

@@ -13,6 +13,7 @@
 
 #include "SharingPolicies.hpp"
 #include "StaticData.hpp"
+#include "TypeTraits.hpp"
 
 #include <map>
 
@@ -71,6 +72,9 @@ namespace sequoia::data_structures::partition_impl
   public:
     using index_type = IndexType;
 
+    constexpr explicit partition_index_policy(const index_type n) : m_Partition{n} {}
+    constexpr partition_index_policy(const partition_index_policy&) = default;
+
     constexpr static auto npos{std::numeric_limits<index_type>::max()};
 
     [[nodiscard]]
@@ -90,25 +94,40 @@ namespace sequoia::data_structures::partition_impl
 
     [[nodiscard]]
     constexpr IndexType partition_index() const noexcept { return m_Partition; }
-  protected:        
-    constexpr partition_index_policy(const index_type n) : m_Partition{n} {}        
+  protected:          
+    constexpr partition_index_policy(partition_index_policy&&) noexcept = default;
+    
     ~partition_index_policy() = default;
-        
-    constexpr partition_index_policy(const partition_index_policy&)                = default;
-    constexpr partition_index_policy(partition_index_policy&&) noexcept            = default;
+    
     constexpr partition_index_policy& operator=(const partition_index_policy&)     = default;
     constexpr partition_index_policy& operator=(partition_index_policy&&) noexcept = default;
   private:
     IndexType m_Partition;
   };
 
-  template<class SharingPolicy, template<class> class ReferencePolicy>
-  struct dereference_policy : public SharingPolicy
+  template<class SharingPolicy, template<class> class ReferencePolicy, class AuxiliaryDataPolicy>
+  struct dereference_policy : public SharingPolicy, public AuxiliaryDataPolicy
   {
     using elementary_type = typename SharingPolicy::elementary_type;
     using value_type      = elementary_type;
     using reference       = typename ReferencePolicy<elementary_type>::reference;
     using pointer         = typename ReferencePolicy<elementary_type>::pointer;
+
+    template<
+      class... Args,
+      class=std::enable_if_t<!same_decay_v<dereference_policy, Args...>>
+    >
+    constexpr dereference_policy(Args&&... args) : AuxiliaryDataPolicy{std::forward<Args>(args)...} {}
+    
+    constexpr dereference_policy(const dereference_policy&) = default;
+
+  protected:
+    constexpr dereference_policy(dereference_policy&&) noexcept = default;
+
+    ~dereference_policy() = default;
+
+    constexpr dereference_policy& operator=(const dereference_policy&) = default;
+    constexpr dereference_policy& operator=(dereference_policy&&) noexcept = default;
   };
 
   //============================= Helper classes for copy constructor ===================================//

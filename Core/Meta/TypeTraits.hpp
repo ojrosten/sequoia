@@ -135,4 +135,15 @@ namespace sequoia
   {};
 
   template<class T> constexpr bool is_not_equal_to_comparable_v{is_not_equal_to_comparable<T>::value};
+
+  template<class T, class = std::void_t<>>
+  struct has_default_constructor : std::false_type
+  {};
+
+  template<class T>
+  struct has_default_constructor<T, std::void_t<decltype(new T{})>> : std::true_type
+  {};
+
+  template<class T>
+  constexpr bool has_default_constructor_v{has_default_constructor<T>::value};  
 }

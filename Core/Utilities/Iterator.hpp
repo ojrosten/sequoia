@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "TypeTraits.hpp"
+#include "IteratorDetails.hpp"
 
 #include <iterator>
 
@@ -17,35 +17,17 @@
 
 namespace sequoia::utilities
 {
-  template<class Iterator>
-  struct identity_dereference_policy
-  {
-    using value_type = typename std::iterator_traits<Iterator>::value_type;
-    using reference = typename std::iterator_traits<Iterator>::reference;
-    using pointer = typename std::iterator_traits<Iterator>::pointer;
-
-    [[nodiscard]]
-    static constexpr reference get(reference ref) noexcept { return ref; }
-
-  protected:
-    constexpr identity_dereference_policy() = default;
-    constexpr identity_dereference_policy(const identity_dereference_policy&)     = default;
-    constexpr identity_dereference_policy(identity_dereference_policy&&) noexcept = default;
-    
-    ~identity_dereference_policy() = default;
-
-    constexpr identity_dereference_policy& operator=(const identity_dereference_policy&)     = default;
-    constexpr identity_dereference_policy& operator=(identity_dereference_policy&&) noexcept = default;
-  };
-
+  
   struct null_data_policy
   {
   protected:
     constexpr null_data_policy() = default;
-    ~null_data_policy() = default;
       
-    constexpr null_data_policy(const null_data_policy&)                = default;
-    constexpr null_data_policy(null_data_policy&&) noexcept            = default;
+    constexpr null_data_policy(const null_data_policy&)     = default;
+    constexpr null_data_policy(null_data_policy&&) noexcept = default;
+    
+    ~null_data_policy() = default;
+    
     constexpr null_data_policy& operator=(const null_data_policy&)     = default;
     constexpr null_data_policy& operator=(null_data_policy&&) noexcept = default;
   };
@@ -61,74 +43,48 @@ namespace sequoia::utilities
   {
     return !(lhs == rhs);
   }
-
-  namespace impl
+  
+  template<class Iterator, class AuxiliaryDataPolicy=null_data_policy>
+  struct identity_dereference_policy : public AuxiliaryDataPolicy
   {
-    template<class DereferencePolicy, class=std::void_t<>>
-    struct provides_reference_type : std::false_type
-    {};
-
-    template<class DereferencePolicy>
-    struct provides_reference_type<DereferencePolicy, std::void_t<typename DereferencePolicy::reference>>
-      : std::true_type
-    {};
+    using base_iterator_type    = Iterator;    
+    using auxiliary_data_policy = AuxiliaryDataPolicy;
     
-    template<class DereferencePolicy>
-    constexpr bool provides_reference_type_v{provides_reference_type<DereferencePolicy>::value};
+    using value_type = typename std::iterator_traits<Iterator>::value_type;
+    using reference  = typename std::iterator_traits<Iterator>::reference;
+    using pointer    = typename std::iterator_traits<Iterator>::pointer;
 
-    
-    template<class DereferencePolicy, class=std::void_t<>>
-    struct provides_proxy_type : std::false_type
-    {};
 
-    template<class DereferencePolicy>
-    struct provides_proxy_type<DereferencePolicy, std::void_t<typename DereferencePolicy::proxy>>
-      : std::true_type
-    {};
-    
-    template<class DereferencePolicy>
-    constexpr bool provides_proxy_type_v{provides_proxy_type<DereferencePolicy>::value};
-
-    template<class DereferencePolicy>
-    constexpr bool is_valid_v{
-         (provides_proxy_type_v<DereferencePolicy> && !provides_reference_type_v<DereferencePolicy>)
-      || (!provides_proxy_type_v<DereferencePolicy> && provides_reference_type_v<DereferencePolicy>)
-    };
-
-    template<class DerefPolicy1, class DerefPolicy2>
-    constexpr bool are_compatible_v{
-         (provides_reference_type_v<DerefPolicy1> && provides_reference_type_v<DerefPolicy2>)
-      || (provides_proxy_type_v<DerefPolicy1> && provides_proxy_type_v<DerefPolicy2>)
-    };    
-    
     template<
-      class DereferencePolicy,
-      bool=provides_reference_type_v<DereferencePolicy>,
-      bool=provides_proxy_type_v<DereferencePolicy>
+      class... Args,
+      class=std::enable_if_t<!same_decay_v<identity_dereference_policy, Args...>>
     >
-    struct type_generator {};       
+    constexpr explicit identity_dereference_policy(Args&&... args) : AuxiliaryDataPolicy{std::forward<Args>(args)...} {}
 
-    template<class DereferencePolicy> struct type_generator<DereferencePolicy, false, true>
+    constexpr identity_dereference_policy(const identity_dereference_policy&) = default;
+
+    [[nodiscard]]
+    static constexpr reference get(reference ref) noexcept { return ref; }
+
+    [[nodiscard]]
+    constexpr friend bool operator==(const identity_dereference_policy& lhs, const identity_dereference_policy& rhs) noexcept
     {
-      using type = typename DereferencePolicy::proxy;
-    };
+      return static_cast<const AuxiliaryDataPolicy&>(lhs) == static_cast<const AuxiliaryDataPolicy&>(rhs);
+    }
 
-    template<class DereferencePolicy>
-    struct type_generator<DereferencePolicy, true, false>
+    [[nodiscard]]
+    constexpr friend bool operator!=(const identity_dereference_policy& lhs, const identity_dereference_policy& rhs) noexcept
     {
-      using reference = typename DereferencePolicy::reference;
-      using type = std::conditional_t<is_const_reference_v<reference>, reference, const reference>;
-    };
+      return !(lhs == rhs);
+    }
+  protected:
+    constexpr identity_dereference_policy(identity_dereference_policy&&) noexcept = default;
+    
+    ~identity_dereference_policy() = default;
 
-    template<class DereferencePolicy>
-    using type_generator_t = typename type_generator<DereferencePolicy>::type;
-
-    template<class DereferencePolicy>
-    constexpr bool provides_mutable_reference_v{
-           std::is_reference_v<type_generator_t<DereferencePolicy>>
-        && !is_const_reference_v<type_generator_t<DereferencePolicy>>
-    };
-  }
+    constexpr identity_dereference_policy& operator=(const identity_dereference_policy&)     = default;
+    constexpr identity_dereference_policy& operator=(identity_dereference_policy&&) noexcept = default;
+  };  
 
   /*! \class iterator
       \brief An iterator with policies controlling dereferncing and auxiliary data.
@@ -143,13 +99,12 @@ namespace sequoia::utilities
 
    */
 
-  template<class Iterator, class DereferencePolicy, class AuxiliaryDataPolicy>
-  class iterator : public DereferencePolicy, public AuxiliaryDataPolicy
+  template<class Iterator, class DereferencePolicy>
+  class iterator : public DereferencePolicy
   {
   public:    
-    using dereference_policy    = DereferencePolicy;
-    using auxiliary_data_policy = AuxiliaryDataPolicy;
-    using base_iterator_type    = Iterator;
+    using dereference_policy = DereferencePolicy;
+    using base_iterator_type = Iterator;
       
     using iterator_category = typename std::iterator_traits<Iterator>::iterator_category;
     using difference_type   = typename std::iterator_traits<Iterator>::difference_type;      
@@ -165,7 +120,7 @@ namespace sequoia::utilities
       class=std::enable_if_t<sizeof...(Args) || !same_decay_v<Arg, iterator>>
      >
     constexpr explicit iterator(Arg&& baseIterArg, Args&&... args)
-      : AuxiliaryDataPolicy{std::forward<Args>(args)...}
+      : DereferencePolicy{std::forward<Args>(args)...}
       , m_BaseIterator{std::forward<Arg>(baseIterArg)}
     {
     }
@@ -183,8 +138,8 @@ namespace sequoia::utilities
            >
       >
     >
-    constexpr iterator(iterator<Iter, DerefPol, AuxiliaryDataPolicy> iter)
-      : AuxiliaryDataPolicy{static_cast<AuxiliaryDataPolicy&>(iter)}
+    constexpr iterator(iterator<Iter, DerefPol> iter)
+      : DereferencePolicy{static_cast<DerefPol&>(iter)}
       , m_BaseIterator{iter.base_iterator()} 
     {
     }

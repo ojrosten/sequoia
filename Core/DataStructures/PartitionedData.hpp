@@ -26,18 +26,33 @@ namespace sequoia
     //===================================A Custom Iterator===================================//
     
     template<template<class...> class C, class SharingPolicy, class IndexType>
-    using partition_iterator = utilities::iterator<typename partition_impl::partition_iterator_generator<C, SharingPolicy, partition_impl::mutable_reference, false>::iterator, partition_impl::dereference_policy<SharingPolicy, partition_impl::mutable_reference>, partition_impl::partition_index_policy<false, IndexType>>;
+    using partition_iterator
+      = utilities::iterator<
+          typename partition_impl::partition_iterator_generator<C, SharingPolicy, partition_impl::mutable_reference, false>::iterator,
+          partition_impl::dereference_policy<SharingPolicy, partition_impl::mutable_reference, partition_impl::partition_index_policy<false, IndexType>>
+        >;
 
     template<template<class...> class C, class SharingPolicy, class IndexType>
-    using const_partition_iterator = utilities::iterator<typename partition_impl::partition_iterator_generator<C, SharingPolicy, partition_impl::const_reference, false>::iterator, partition_impl::dereference_policy<SharingPolicy, partition_impl::const_reference>, partition_impl::partition_index_policy<false, IndexType>>;
+    using const_partition_iterator
+      = utilities::iterator<
+          typename partition_impl::partition_iterator_generator<C, SharingPolicy, partition_impl::const_reference, false>::iterator,
+        partition_impl::dereference_policy<SharingPolicy, partition_impl::const_reference, partition_impl::partition_index_policy<false, IndexType>>
+      >;
 
     template<template<class...> class C, class SharingPolicy, class IndexType>
-    using reverse_partition_iterator = utilities::iterator<typename partition_impl::partition_iterator_generator<C, SharingPolicy, partition_impl::mutable_reference, true>::iterator, partition_impl::dereference_policy<SharingPolicy, partition_impl::mutable_reference>, partition_impl::partition_index_policy<true, IndexType>>;
+    using reverse_partition_iterator
+      = utilities::iterator<
+          typename partition_impl::partition_iterator_generator<C, SharingPolicy, partition_impl::mutable_reference, true>::iterator,
+        partition_impl::dereference_policy<SharingPolicy, partition_impl::mutable_reference, partition_impl::partition_index_policy<true, IndexType>>
+      >;
 
     template<template<class...> class C, class SharingPolicy, class IndexType>
-    using const_reverse_partition_iterator = utilities::iterator<typename partition_impl::partition_iterator_generator<C, SharingPolicy, partition_impl::const_reference, true>::iterator, partition_impl::dereference_policy<SharingPolicy, partition_impl::const_reference>, partition_impl::partition_index_policy<true, IndexType>>;
-    
-    
+    using const_reverse_partition_iterator
+      = utilities::iterator<
+          typename partition_impl::partition_iterator_generator<C, SharingPolicy, partition_impl::const_reference, true>::iterator,
+          partition_impl::dereference_policy<SharingPolicy, partition_impl::const_reference, partition_impl::partition_index_policy<true, IndexType>>
+      >;
+        
     //===================================Storage using buckets===================================//
 
     template<class T, class SharingPolicy> struct bucketed_storage_traits

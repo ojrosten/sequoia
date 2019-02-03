@@ -41,7 +41,17 @@ namespace sequoia
         using pointer = std::add_pointer_t<reference>;
         using value_type = std::remove_cv_t<reference>;
 
+        constexpr proxy_dereference_policy() = default;
+        constexpr proxy_dereference_policy(const proxy_dereference_policy&) = default;
+
         static constexpr reference get(proxy_reference ref) noexcept { return ref.get(); }
+      protected:
+        constexpr proxy_dereference_policy(proxy_dereference_policy&&) noexcept = default;
+
+        ~proxy_dereference_policy() = default;
+
+        constexpr proxy_dereference_policy& operator=(const proxy_dereference_policy&)     = default;
+        constexpr proxy_dereference_policy& operator=(proxy_dereference_policy&&) noexcept = default;
       };
                                   
       template<class WeightProxy, class Traits, bool=std::is_empty_v<typename WeightProxy::value_type>>
@@ -55,8 +65,8 @@ namespace sequoia
         using weight_proxy_type = WeightProxy;
         using size_type         = typename Storage::size_type;
 
-        using const_iterator = utilities::iterator<typename Storage::const_iterator, proxy_dereference_policy<typename Storage::const_iterator>, utilities::null_data_policy>;
-        using const_reverse_iterator = utilities::iterator<typename Storage::const_reverse_iterator, proxy_dereference_policy<typename Storage::const_reverse_iterator>, utilities::null_data_policy>;
+        using const_iterator = utilities::iterator<typename Storage::const_iterator, proxy_dereference_policy<typename Storage::const_iterator>>;
+        using const_reverse_iterator = utilities::iterator<typename Storage::const_reverse_iterator, proxy_dereference_policy<typename Storage::const_reverse_iterator>>;
 
         constexpr static bool throw_on_range_error{Traits::throw_on_range_error};
 

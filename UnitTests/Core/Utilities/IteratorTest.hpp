@@ -25,16 +25,35 @@ namespace sequoia::unit_testing
     void test_const_iterator();
     void test_reverse_iterator();
     void test_const_reverse_iterator();
+
+    void test_const_scaling_iterator();
   };
 
   template<class Iterator>
-  struct scaling_dereference_policy
+  class scaling_dereference_policy
   {
+  public:    
     using value_type = typename std::iterator_traits<Iterator>::value_type;
-    using reference = typename std::iterator_traits<Iterator>::reference;
-    using pointer = typename std::iterator_traits<Iterator>::pointer;
+    using proxy      = value_type;
+    using pointer    = typename std::iterator_traits<Iterator>::pointer;
 
+    constexpr scaling_dereference_policy(const value_type scale) : m_Scale{scale} {}
+    constexpr scaling_dereference_policy(const scaling_dereference_policy&) = default;
+    
     [[nodiscard]]
-    static constexpr reference get(reference ref) noexcept { return ref; }
+    constexpr proxy get(typename Iterator::reference ref) noexcept
+    {
+      return ref;
+    }
+  protected:    
+    constexpr scaling_dereference_policy(scaling_dereference_policy&&)      = default;
+
+    ~scaling_dereference_policy() = default;
+
+    constexpr scaling_dereference_policy& operator=(const scaling_dereference_policy&) = default;
+    constexpr scaling_dereference_policy& operator=(scaling_dereference_policy&&)      = default;
+
+  private:
+    value_type m_Scale{1};
   };
 }
