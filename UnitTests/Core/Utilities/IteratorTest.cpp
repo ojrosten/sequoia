@@ -167,6 +167,9 @@ namespace sequoia::unit_testing
     basic_checks<custom_citer_t>(a.cbegin(), a.cend(), &*a.cbegin(), "Custom scaling iterator from const_iterator", 3);
 
     basic_checks<custom_citer_t>(a.begin(), a.end(), &*a.cbegin(), "Custom scaling iterator from iterator", -1);
+
+    custom_citer_t i{a.cend(), 1}, j{a.cend(), 2};
+    check(i == j, LINE("Custom iterators should compare equal if they point to the same thing, irrespective of any other state"));
   }
 
   void iterator_test::test_const_reverse_scaling_iterator()
@@ -186,6 +189,9 @@ namespace sequoia::unit_testing
     basic_checks<custom_criter_t>(a.crbegin(), a.crend(), &*a.crbegin(), "Custom reverse scaling iterator from const_reverse_iterator", -1);
 
     basic_checks<custom_criter_t>(a.rbegin(), a.rend(), &*a.crbegin(), "Custom reverse scaling iterator from reverse_iterator", 3);
+
+    custom_criter_t i{a.crend(), 1}, j{a.crend(), 2};
+    check(i == j, LINE("Custom reverse iterators should compare equal if they point to the same thing, irrespective of any other state"));
   }
   
   template<class CustomIter, class Iter, class... Args, class Pointer>
