@@ -105,7 +105,11 @@ namespace sequoia::data_structures::partition_impl
     IndexType m_Partition;
   };
 
-  template<class SharingPolicy, template<class> class ReferencePolicy, class AuxiliaryDataPolicy>
+  template<
+    class SharingPolicy,
+    template<class> class ReferencePolicy,
+    class AuxiliaryDataPolicy
+  >
   struct dereference_policy : public SharingPolicy, public AuxiliaryDataPolicy
   {
     using elementary_type = typename SharingPolicy::elementary_type;
@@ -119,8 +123,7 @@ namespace sequoia::data_structures::partition_impl
     >
     constexpr dereference_policy(Args&&... args) : AuxiliaryDataPolicy{std::forward<Args>(args)...} {}
     
-    constexpr dereference_policy(const dereference_policy&) = default;
-
+    constexpr dereference_policy(const dereference_policy&) = default;    
   protected:
     constexpr dereference_policy(dereference_policy&&) noexcept = default;
 

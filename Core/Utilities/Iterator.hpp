@@ -67,6 +67,9 @@ namespace sequoia::utilities
     static constexpr reference get(reference ref) noexcept { return ref; }
 
     [[nodiscard]]
+    static constexpr pointer get_ptr(reference ref) noexcept { return &ref; }
+
+    [[nodiscard]]
     constexpr friend bool operator==(const identity_dereference_policy& lhs, const identity_dereference_policy& rhs) noexcept
     {
       return static_cast<const AuxiliaryDataPolicy&>(lhs) == static_cast<const AuxiliaryDataPolicy&>(rhs);
@@ -110,6 +113,7 @@ namespace sequoia::utilities
     using difference_type   = typename std::iterator_traits<Iterator>::difference_type;      
     using value_type        = typename DereferencePolicy::value_type;
     using pointer           = typename DereferencePolicy::pointer;
+    using reference         = typename DereferencePolicy::reference;
 
     static_assert(impl::is_valid_v<DereferencePolicy>,
       "The DereferencePolicy must supply exacly one type called either reference or proxy");
@@ -193,13 +197,13 @@ namespace sequoia::utilities
     constexpr std::conditional_t<is_const_pointer_v<pointer>, pointer, const pointer>
     operator->() const
     {
-      return &DereferencePolicy::get(*m_BaseIterator);
+      return DereferencePolicy::get_ptr(*m_BaseIterator);
     }
 
     template<class Ptr=pointer, class=std::enable_if_t<!is_const_pointer_v<Ptr>>>
     constexpr pointer operator->()
     {
-      return &DereferencePolicy::get(*m_BaseIterator);
+      return DereferencePolicy::get_ptr(*m_BaseIterator);
     }
 
     constexpr iterator& operator++() { ++m_BaseIterator; return *this; }

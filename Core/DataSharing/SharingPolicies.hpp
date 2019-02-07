@@ -45,6 +45,12 @@ namespace sequoia::data_sharing
     {
       return *ptr;
     }
+
+    [[nodiscard]]
+    static T* get_ptr(handle_type ptr)
+    {
+      return &*ptr;
+    }
   private:
   };
 
@@ -69,6 +75,12 @@ namespace sequoia::data_sharing
 
     [[nodiscard]]
     static constexpr const T& get(const T& in) noexcept { return in; }
+
+    [[nodiscard]]
+    static constexpr T* get_ptr(T& in) noexcept { return &in; }
+
+    [[nodiscard]]
+    static constexpr const T* get_ptr(const T& in) noexcept { return &in; }
   private:
   };
 }

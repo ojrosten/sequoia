@@ -18,8 +18,13 @@ namespace sequoia::unit_testing
   private:
     void run_tests();
     
-    template<class CustomIter, class Iter, class Pointer=typename CustomIter::pointer>
-    void basic_checks(Iter begin, Iter end, Pointer pBegin, std::string_view message);
+    template<
+      class CustomIter,
+      class Iter,
+      class... Args,
+      class Pointer=typename CustomIter::pointer
+    >
+    void basic_checks(Iter begin, Iter end, Pointer pBegin, std::string_view message, Args... args);
 
     void test_iterator();
     void test_const_iterator();
@@ -36,15 +41,22 @@ namespace sequoia::unit_testing
     using value_type = typename std::iterator_traits<Iterator>::value_type;
     using proxy      = value_type;
     using pointer    = typename std::iterator_traits<Iterator>::pointer;
+    using reference  = typename std::iterator_traits<Iterator>::reference;
 
     constexpr scaling_dereference_policy(const value_type scale) : m_Scale{scale} {}
     constexpr scaling_dereference_policy(const scaling_dereference_policy&) = default;
     
     [[nodiscard]]
-    constexpr proxy get(typename Iterator::reference ref) noexcept
+    constexpr proxy get(typename std::iterator_traits<Iterator>::reference ref) const noexcept
     {
-      return ref;
+      return ref*m_Scale;
     }
+
+    [[nodiscard]]
+    static constexpr pointer get_ptr(reference ref) noexcept { return &ref; }
+
+    [[nodiscard]]
+    constexpr value_type scale() const noexcept { return m_Scale; }
   protected:    
     constexpr scaling_dereference_policy(scaling_dereference_policy&&)      = default;
 
@@ -56,4 +68,15 @@ namespace sequoia::unit_testing
   private:
     value_type m_Scale{1};
   };
+
+  template<class DerefPolicy, class=std::void_t<>>
+  struct is_scaling : std::false_type
+  {};
+
+  template<class DerefPolicy>
+  struct is_scaling<DerefPolicy, std::void_t<decltype(std::declval<DerefPolicy>().scale())>> : std::true_type
+  {};
+
+  template<class DerefPolicy>
+  constexpr bool is_scaling_v{is_scaling<DerefPolicy>::value};
 }

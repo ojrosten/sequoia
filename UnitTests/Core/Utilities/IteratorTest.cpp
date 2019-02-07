@@ -142,61 +142,6 @@ namespace sequoia::unit_testing
     basic_checks<custom_criter_t>(custom_riter_t{a.rbegin()}, custom_riter_t{a.rend()}, &*a.crbegin(), "Custom const_reverse_iterator from custom reverse_iterator");
   }
   
-
-  template<class CustomIter, class Iter, class Pointer>
-  void iterator_test::basic_checks(Iter begin, Iter end, Pointer pBegin, std::string_view message)
-  {
-    using namespace std;
-    
-    if(!check_equality<int64_t>(3, distance(begin, end), LINE(std::string{"Contract violated"}.append(message))))
-      return;
-    
-    CustomIter i{begin};
-    check_equality(*begin, *i, LINE(message));
-    check_equality(begin[0], i[0], LINE(message));
-    check_equality(begin[1], i[1], LINE(message));
-    check_equality(begin[2], i[2], LINE(message));
-
-    check_equality(i.operator->(), pBegin, LINE("Operator ->"));
-
-    CustomIter j{end};      
-    check_regular_semantics(i, j, LINE("Regular semantics; one iterator at end"));
-      
-    check(i < j, LINE(message));
-    check(j > i, LINE(message));
-    check(i <= j, LINE(message));
-    check(j >= i, LINE(message));      
-    check_equality(distance(begin, end), distance(i, j), LINE(std::string{message}.append(" Check non-zero distance")));
-
-    check_equality(begin[1], *++i, LINE(message));
-    check_equality(begin[1], *i++, LINE(message));
-    check_equality(begin[2], *i, LINE(message));
-    check(++i == j, LINE(message));
-    check(i <= j, LINE(message));
-    check(j >= i, LINE(message));
-
-    check_equality(begin[2], *--i, LINE(message));
-    check_equality(begin[2], *i--, LINE(message));
-    check_equality(begin[1], *i, LINE(message));
-
-    j = i - 1;
-    check_equality(begin[1], *i, LINE(message));
-    check_equality(begin[0], *j, LINE(message));
-    check_regular_semantics(i, j, LINE(std::string{message}.append(" Regular semantics")));
-
-    i = j + 2;
-    check_equality(begin[2], *i, LINE(message));
-
-    i -= 1;
-    check_equality(begin[1], *i, LINE(message));
-
-    j += 1;
-    check_equality(begin[1], *j, LINE(message));
-
-    check(i == j, LINE(message));
-    check_equality<int64_t>(0, distance(i, j), LINE(std::string{message}.append(" Check for distance of zero")));
-  }
-
   void iterator_test::test_const_scaling_iterator()
   {
     using namespace utilities;
@@ -204,5 +149,77 @@ namespace sequoia::unit_testing
     using ci_type = std::array<int, 3>::const_iterator;
     using custom_citer_t = iterator<ci_type, scaling_dereference_policy<ci_type>>;
 
+    static_assert(std::is_same_v<custom_citer_t::iterator_category, std::random_access_iterator_tag>);
+    static_assert(std::is_same_v<custom_citer_t::difference_type, std::ptrdiff_t>);
+    static_assert(std::is_same_v<custom_citer_t::value_type, int>);
+    static_assert(std::is_same_v<custom_citer_t::pointer, const int*>);
+    static_assert(std::is_same_v<custom_citer_t::proxy, int>);
+
+    std::array<int, 3> a{3, 0, 1};
+    basic_checks<custom_citer_t>(a.cbegin(), a.cend(), &*a.cbegin(), "Custom scaling iterator from const_iterator", 3);
+  }
+  
+  template<class CustomIter, class Iter, class... Args, class Pointer>
+  void iterator_test::basic_checks(Iter begin, Iter end, Pointer pBegin, std::string_view message, Args... args)
+  {
+    using namespace std;
+
+    using value_type = typename std::iterator_traits<Iter>::value_type;
+    using deref_pol = typename CustomIter::dereference_policy;
+        
+    if(!check_equality<int64_t>(3, distance(begin, end), LINE(std::string{"Contract violated"}.append(message))))
+      return;
+    
+    CustomIter i{begin, args...};
+
+    value_type scale{1};
+    if constexpr(is_scaling_v<deref_pol>)
+    {
+      scale = i.scale();
+    }
+    
+    check_equality(*begin * scale, *i, LINE(message));
+    check_equality(begin[0] * scale, i[0], LINE(message));
+    check_equality(begin[1] * scale, i[1], LINE(message));
+    check_equality(begin[2] * scale, i[2], LINE(message));
+
+    check_equality(i.operator->(), pBegin, LINE("Operator ->"));
+
+    CustomIter j{end, args...};      
+    check_regular_semantics(i, j, LINE("Regular semantics; one iterator at end"));
+      
+    check(i < j, LINE(message));
+    check(j > i, LINE(message));
+    check(i <= j, LINE(message));
+    check(j >= i, LINE(message));
+    check_equality(distance(begin, end), distance(i, j), LINE(std::string{message}.append(" Check non-zero distance")));
+
+    check_equality(begin[1] * scale, *++i, LINE(message));
+    check_equality(begin[1] * scale, *i++, LINE(message));
+    check_equality(begin[2] * scale, *i, LINE(message));
+    check(++i == j, LINE(message));
+    check(i <= j, LINE(message));
+    check(j >= i, LINE(message));
+
+    check_equality(begin[2] * scale, *--i, LINE(message));
+    check_equality(begin[2] * scale, *i--, LINE(message));
+    check_equality(begin[1] * scale, *i, LINE(message));
+
+    j = i - 1;
+    check_equality(begin[1] * scale, *i, LINE(message));
+    check_equality(begin[0] * scale, *j, LINE(message));
+    check_regular_semantics(i, j, LINE(std::string{message}.append(" Regular semantics")));
+
+    i = j + 2;
+    check_equality(begin[2] * scale, *i, LINE(message));
+
+    i -= 1;
+    check_equality(begin[1] * scale, *i, LINE(message));
+
+    j += 1;
+    check_equality(begin[1] * scale, *j, LINE(message));
+
+    check(i == j, LINE(message));
+    check_equality<int64_t>(0, distance(i, j), LINE(std::string{message}.append(" Check for distance of zero")));
   }
 }
