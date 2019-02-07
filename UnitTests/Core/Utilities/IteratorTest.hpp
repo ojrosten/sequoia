@@ -32,6 +32,7 @@ namespace sequoia::unit_testing
     void test_const_reverse_iterator();
 
     void test_const_scaling_iterator();
+    void test_const_reverse_scaling_iterator();
   };
 
   template<class Iterator>

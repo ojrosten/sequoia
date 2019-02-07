@@ -20,6 +20,7 @@ namespace sequoia::unit_testing
     test_const_reverse_iterator();
 
     test_const_scaling_iterator();
+    test_const_reverse_scaling_iterator();
   }
 
   void iterator_test::test_iterator()
@@ -157,6 +158,27 @@ namespace sequoia::unit_testing
 
     std::array<int, 3> a{3, 0, 1};
     basic_checks<custom_citer_t>(a.cbegin(), a.cend(), &*a.cbegin(), "Custom scaling iterator from const_iterator", 3);
+
+    basic_checks<custom_citer_t>(a.begin(), a.end(), &*a.cbegin(), "Custom scaling iterator from iterator", -1);
+  }
+
+  void iterator_test::test_const_reverse_scaling_iterator()
+  {
+    using namespace utilities;
+    
+    using cri_type = std::array<int, 3>::const_reverse_iterator;
+    using custom_criter_t = iterator<cri_type, scaling_dereference_policy<cri_type>>;
+
+    static_assert(std::is_same_v<custom_criter_t::iterator_category, std::random_access_iterator_tag>);
+    static_assert(std::is_same_v<custom_criter_t::difference_type, std::ptrdiff_t>);
+    static_assert(std::is_same_v<custom_criter_t::value_type, int>);
+    static_assert(std::is_same_v<custom_criter_t::pointer, const int*>);
+    static_assert(std::is_same_v<custom_criter_t::proxy, int>);
+
+    std::array<int, 3> a{3, 0, 1};
+    basic_checks<custom_criter_t>(a.crbegin(), a.crend(), &*a.crbegin(), "Custom reverse scaling iterator from const_reverse_iterator", -1);
+
+    basic_checks<custom_criter_t>(a.rbegin(), a.rend(), &*a.crbegin(), "Custom reverse scaling iterator from reverse_iterator", 3);
   }
   
   template<class CustomIter, class Iter, class... Args, class Pointer>
