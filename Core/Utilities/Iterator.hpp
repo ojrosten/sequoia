@@ -234,6 +234,12 @@ namespace sequoia::utilities
       iterator tmp{it};
       return tmp-=n;
     }
+
+    [[nodiscard]]
+    friend constexpr difference_type operator-(const iterator& i, const iterator& j)
+    {
+      return i.base_iterator() - j.base_iterator();
+    }
       
     constexpr iterator operator--(int)
     {

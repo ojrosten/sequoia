@@ -58,6 +58,13 @@ namespace sequoia::unit_testing
     check_equality(7, i[-1], LINE(""));
     check_equality(5, i[0], LINE(""));
     check_equality(1, i[1], LINE(""));
+
+    std::sort(custom_iter_t{a.begin()}, custom_iter_t{a.end()});
+    // 1 5 7
+    
+    check_equality(1, i[-1], LINE(""));
+    check_equality(5, i[0], LINE(""));
+    check_equality(7, i[1], LINE(""));
   }
 
   void iterator_test::test_const_iterator()
