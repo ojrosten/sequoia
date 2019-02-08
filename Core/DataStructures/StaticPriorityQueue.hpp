@@ -104,7 +104,7 @@ namespace sequoia::data_structures
 
     static constexpr std::array<T, MaxDepth> make_Q(std::initializer_list<T> l, const Compare& compare)
     {
-      auto q{utilities::to_array<MaxDepth>(l)};
+      auto q{utilities::to_array<T, MaxDepth>(l)};
       sequoia::make_heap(q.begin(), q.end(), compare);
 
       return q;

@@ -27,7 +27,7 @@ namespace sequoia::data_structures
   {
   public:    
     constexpr static_stack(std::initializer_list<T> l)
-      : m_Stack{utilities::to_array<MaxDepth>(l)}
+    : m_Stack{utilities::to_array<T, MaxDepth>(l)}
       , m_End{l.size()}
     {
     }

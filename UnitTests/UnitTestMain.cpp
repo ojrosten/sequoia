@@ -1,9 +1,11 @@
 #include "AlgorithmsTest.hpp"
+#include "StatisticalAlgorithmsTest.hpp"
+
+#include "ArrayUtilitiesTest.hpp"
 #include "ProtectiveWrapperTestingDiagnostics.hpp"
 #include "ProtectiveWrapperTest.hpp"
 #include "IteratorTest.hpp"
 
-#include "StatisticalAlgorithmsTest.hpp"
 
 
 
@@ -77,18 +79,25 @@ int main(int argc, char** argv)
 
     runner.add_test_family(
       test_family{
-        "Protective Wrapper",
-        protective_wrapper_false_positive_test{"False Positive Diagnostics"},
-        protective_wrapper_test{"Unit Test"}
+        "Array Utilities",
+        array_utilities_test{"Unit Test"}
       }
     );
-
+    
     runner.add_test_family(
       test_family{
         "Iterator",
         iterator_test{"Unit Test"}
       }
     );
+
+    runner.add_test_family(
+      test_family{
+        "Protective Wrapper",
+        protective_wrapper_false_positive_test{"False Positive Diagnostics"},
+        protective_wrapper_test{"Unit Test"}
+      }
+    );    
 
     runner.add_test_family(
       test_family{

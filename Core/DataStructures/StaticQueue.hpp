@@ -27,7 +27,7 @@ namespace sequoia::data_structures
   {
   public:
     constexpr static_queue(std::initializer_list<T> l)
-      : m_Queue{utilities::to_array<MaxDepth>(l)}
+      : m_Queue{utilities::to_array<T, MaxDepth>(l)}
       , m_Front{l.size() ? 0 : MaxDepth}
       , m_Back{l.size() ? l.size() - 1 : MaxDepth}
     {
