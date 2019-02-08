@@ -13,6 +13,7 @@
 
 #include "PartitionedDataDetails.hpp"
 #include "TypeTraits.hpp"
+#include "ArrayUtilities.hpp"
 #include "Iterator.hpp"
 #include "Algorithms.hpp"
 
@@ -882,26 +883,7 @@ namespace sequoia
         }
       }
 
-      constexpr static index_type get_size(const size_type i, std::initializer_list<std::initializer_list<T>> list)
-      {
-        return index_type((list.begin() + i)->size());
-      }
-
-      template<size_type... Inds>
-      constexpr static std::array<index_type, sizeof...(Inds)>
-      make_size_array(std::integer_sequence<size_type, Inds...>, std::initializer_list<std::initializer_list<T>> list)
-      {
-        return { get_size(Inds, list)... };
-      }
-
-      template<size_type... Inds>
-      constexpr static std::array<index_type, sizeof...(Inds)>
-      make_separator_array(std::integer_sequence<size_type, Inds...>, std::initializer_list<std::initializer_list<T>> list)
-      {
-        const auto sizeArray = make_size_array(std::make_index_sequence<container_type::num_partitions()>{}, list);
-        return { get_separator_element(Inds, sizeArray)... };
-      }
-
+      /*
       template<size_type N> constexpr static index_type get_separator_element(const size_type i, const std::array<index_type, N>& sizeArray)
       {
         index_type sep{};
@@ -909,11 +891,41 @@ namespace sequoia
           sep += sizeArray[j];
 
         return sep;
+        }*/
+
+      constexpr static auto make_size_array(std::initializer_list<std::initializer_list<T>> list)
+      {
+        constexpr auto N{container_type::num_partitions()};
+        return utilities::to_array<index_type, N>(list, [](const auto& l){ return l.size(); });
       }
 
+
+      template<std::size_t N>
+      constexpr static auto make_separator_array(std::array<index_type, N> sizeArray)
+      {
+        if(!sizeArray.empty())
+        {
+          for(auto iter{sizeArray.begin()+1}; iter!=sizeArray.end(); ++iter)
+          {
+            *iter += * (iter - 1);
+          }
+        }
+
+        return sizeArray;
+      }
+
+      /*
+      template<size_type... Inds>
+      constexpr static std::array<index_type, sizeof...(Inds)>
+      make_separator_array(std::integer_sequence<size_type, Inds...>, std::initializer_list<std::initializer_list<T>> list)
+      {        
+        return { get_separator_element(Inds, make_size_array(list))... };
+        }*/
+
+
       constexpr contiguous_storage_base(std::true_type, std::initializer_list<std::initializer_list<T>> list)
-        : m_Storage{make_array(std::make_index_sequence<container_type::num_elements()>{}, list, make_size_array(std::make_index_sequence<container_type::num_partitions()>{}, list))}
-        , m_Partitions{make_separator_array(std::make_index_sequence<container_type::num_partitions()>{}, list)}
+        : m_Storage{make_array(std::make_index_sequence<container_type::num_elements()>{}, list, make_size_array(list))}
+      , m_Partitions{make_separator_array(make_size_array(list))}
       {
       }
       
