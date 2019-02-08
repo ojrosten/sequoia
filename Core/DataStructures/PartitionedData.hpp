@@ -820,11 +820,12 @@ namespace sequoia
       using container_type = typename partition_impl::storage_type_generator<Storage, SharingPolicy>::container_type;     
       using StaticType     = typename partition_impl::storage_type_generator<Storage, SharingPolicy>::static_type;
       constexpr static index_type npos{partition_iterator::npos};
-      
-      StorageType m_Storage;
+     
       AuxiliaryType m_Partitions;
+      StorageType m_Storage;
 
-      constexpr contiguous_storage_base(std::false_type, const contiguous_storage_base& in) : m_Partitions{in.m_Partitions}
+      constexpr contiguous_storage_base(std::false_type, const contiguous_storage_base& in)
+        : m_Partitions{in.m_Partitions}
       {
         partition_impl::data_duplicator<SharingPolicy> duplicator;
         for(const auto& elt : in.m_Storage)
@@ -833,49 +834,40 @@ namespace sequoia
         }
       }
 
-      constexpr contiguous_storage_base(std::true_type, const contiguous_storage_base& in) : m_Storage{in.m_Storage}, m_Partitions{in.m_Partitions}
+      constexpr contiguous_storage_base(std::true_type, const contiguous_storage_base& in)
+        : m_Partitions{in.m_Partitions}, m_Storage{in.m_Storage}
       {
       }
 
-      template<class PartitionSizes>
-      constexpr static held_type make_element(size_type i, std::initializer_list<std::initializer_list<T>> list, const PartitionSizes& partitionSizes)
+      constexpr held_type make_element(size_type i, std::initializer_list<std::initializer_list<T>> list, index_type& partition)
       {
-        index_type partition{}, index{};        
-        while(!partitionSizes[partition]) ++partition;
-        while(i)
+        auto boundary{m_Partitions[partition]};
+        while(i == boundary)
         {
-          if(index + 1 < partitionSizes[partition])
-          {
-            ++index;
-          }
-          else
-          {
-            index = index_type{};
-            ++partition;
-            while(!partitionSizes[partition]) ++partition;
-          }
-                                                  
-          --i;
+          boundary = m_Partitions[++partition];
         }
+
+        auto index{partition ? i - m_Partitions[partition-1] : i};
         
         return SharingPolicy::make(*((list.begin() + partition)->begin() + index));
       }
 
-      template<class PartitionSizes, size_type... Inds>
-      constexpr static StorageType make_array(std::integer_sequence<size_type, Inds...>, std::initializer_list<std::initializer_list<T>> list, const PartitionSizes& partitionSizes)
+      template<size_type... Inds>
+      constexpr StorageType fill(std::integer_sequence<size_type, Inds...>, std::initializer_list<std::initializer_list<T>> list)
       {
         if(list.size() != container_type::num_partitions())
           throw std::logic_error("Overall initializer list of wrong size");
 
         size_type total{};
         for(auto l : list) total += l.size();
-        
+
         if(total != container_type::num_elements())
           throw std::logic_error("Inconsistent number of elements supplied by initializer lists");
-
+        
         if constexpr(sizeof...(Inds) > 0)
         {
-          return StorageType{ make_element(Inds, list, partitionSizes)... };
+          index_type partition{};
+          return StorageType{ make_element(Inds, list, partition)... };
         }
         else
         {
@@ -883,49 +875,24 @@ namespace sequoia
         }
       }
 
-      /*
-      template<size_type N> constexpr static index_type get_separator_element(const size_type i, const std::array<index_type, N>& sizeArray)
-      {
-        index_type sep{};
-        for(size_type j{}; j<=i; ++j)
-          sep += sizeArray[j];
-
-        return sep;
-        }*/
-
-      constexpr static auto make_size_array(std::initializer_list<std::initializer_list<T>> list)
+      constexpr static auto make_partitions(std::initializer_list<std::initializer_list<T>> list)
       {
         constexpr auto N{container_type::num_partitions()};
-        return utilities::to_array<index_type, N>(list, [](const auto& l){ return l.size(); });
-      }
-
-
-      template<std::size_t N>
-      constexpr static auto make_separator_array(std::array<index_type, N> sizeArray)
-      {
-        if(!sizeArray.empty())
+        auto sizes{utilities::to_array<index_type, N>(list, [](const auto& l){ return l.size(); })};
+        if(!sizes.empty())
         {
-          for(auto iter{sizeArray.begin()+1}; iter!=sizeArray.end(); ++iter)
+          for(auto iter{sizes.begin()+1}; iter!=sizes.end(); ++iter)
           {
-            *iter += * (iter - 1);
+            *iter += *(iter - 1);
           }
         }
 
-        return sizeArray;
+        return sizes;
       }
 
-      /*
-      template<size_type... Inds>
-      constexpr static std::array<index_type, sizeof...(Inds)>
-      make_separator_array(std::integer_sequence<size_type, Inds...>, std::initializer_list<std::initializer_list<T>> list)
-      {        
-        return { get_separator_element(Inds, make_size_array(list))... };
-        }*/
-
-
       constexpr contiguous_storage_base(std::true_type, std::initializer_list<std::initializer_list<T>> list)
-        : m_Storage{make_array(std::make_index_sequence<container_type::num_elements()>{}, list, make_size_array(list))}
-      , m_Partitions{make_separator_array(make_size_array(list))}
+        : m_Partitions{make_partitions(list)}
+        , m_Storage{fill(std::make_index_sequence<container_type::num_elements()>{}, list)}
       {
       }
       
