@@ -37,24 +37,38 @@ namespace sequoia::unit_testing
     using namespace utilities;
 
     {
+      check_exception_thrown<std::logic_error>([](){ return to_array<int,0>({1});}, LINE(""));
+
       constexpr auto a{to_array<int, 0>({})};
       check_equality({}, a, LINE(""));
+
     }
     
     {
+      check_exception_thrown<std::logic_error>([](){ return to_array<int,5>({0,1,2,3,4,5});}, LINE(""));
+
       constexpr auto a{to_array<int, 5>({3, 6, 9, 1, 0})};
       check_equality({3, 6, 9, 1, 0}, a, LINE(""));
     }
 
     {
+      check_exception_thrown<std::logic_error>([](){ return to_array<int,3>({0,1,2,3});}, LINE(""));
+
       constexpr auto a{to_array<int, 3>({1, 2, 3}, [](const int e) { return e * 3; })};
       check_equality({3, 6, 9}, a, LINE(""));
     }
 
     {
       using ndc_t = no_default_constructor;
+
+      auto converter{
+        [](int i){ return no_default_constructor{i}; }
+      };
+
+      check_exception_thrown<std::logic_error>([converter](){ return to_array<ndc_t,2>({0,1,2}, converter);}, LINE(""));
+
       constexpr std::array<no_default_constructor, 2>
-        a{to_array<ndc_t, 2>({2, 3}, [](int i){ return no_default_constructor{i}; })};
+        a{to_array<ndc_t, 2>({2, 3}, converter)};
 
       check_equality({ndc_t{2}, ndc_t{3}}, a, LINE(""));
     }
