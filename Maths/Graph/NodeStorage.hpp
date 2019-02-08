@@ -17,6 +17,7 @@
 
  */
 
+#include "ArrayUtilities.hpp"
 #include "Iterator.hpp"
 #include "StaticData.hpp"
 #include "Algorithms.hpp"
@@ -221,25 +222,22 @@ namespace sequoia
         }
 
         constexpr node_storage(std::true_type, std::initializer_list<weight_type> weights)
-          : m_NodeWeights{make_array(std::make_index_sequence<Container<WeightProxy>::num_elements()>{}, weights)}
+          : m_NodeWeights{make_array(weights)}
+        {
+        }
+
+        constexpr Storage make_array(std::initializer_list<weight_type> weights)
         {
           if(weights.size() != Container<WeightProxy>::num_elements())
             throw std::logic_error("Initializer list of wrong size");
-        }
-
-        constexpr WeightProxy make_element(const std::size_t i, std::initializer_list<weight_type> weights)
-        {
-          return WeightProxy{*(weights.begin() + i)};
-        }
-
-        template<std::size_t... Inds>
-        constexpr Storage make_array(std::integer_sequence<std::size_t, Inds...>, std::initializer_list<weight_type> weights)
-        {
-          return { make_element(Inds, weights)... };
+          
+          constexpr auto N{Container<WeightProxy>::num_elements()};
+          return utilities::to_array<WeightProxy, N>(weights, [](const auto& weight) {
+              return WeightProxy{weight}; });
         }
 
         template<std::size_t... Inds>
-        constexpr Storage make_default_array(std::integer_sequence<std::size_t, Inds...>)
+        constexpr Storage make_default_array(std::index_sequence<Inds...>)
         {
           return { make_default_element(Inds)... };
         }        

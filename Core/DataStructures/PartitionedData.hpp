@@ -89,7 +89,7 @@ namespace sequoia
 
       bucketed_storage(std::initializer_list<std::initializer_list<T>> list)
       {
-        for(auto iter = list.begin(); iter != list.end(); ++iter)
+        for(auto iter{list.begin()}; iter != list.end(); ++iter)
         { 
           add_slot();
           const auto dist{std::distance(list.begin(), iter)};
@@ -158,7 +158,7 @@ namespace sequoia
         auto partition{pos};
         if(pos < num_partitions())
         {
-          auto iter = m_Buckets.begin() + pos;
+          auto iter{m_Buckets.begin() + pos};
           m_Buckets.insert(iter, std::vector<held_type>());
         }
         else
@@ -277,8 +277,8 @@ namespace sequoia
 
       partition_iterator erase_from_partition(const size_type index, const size_type pos)
       {
-        auto iter = begin_partition(index);
-        auto next = end_partition(index).base_iterator();
+        auto iter{begin_partition(index)};
+        auto next{end_partition(index).base_iterator()};
         if(iter != end_partition(index) && pos < static_cast<size_type>(distance(iter, end_partition(index))))
         {
           next = m_Buckets[index].erase((iter + pos).base_iterator());
@@ -289,8 +289,8 @@ namespace sequoia
 
       partition_iterator erase_from_partition(const_partition_iterator iter)
       {
-        const auto partition = iter.partition_index();
-        const auto next = m_Buckets[partition].erase(iter.base_iterator());
+        const auto partition{iter.partition_index()};
+        const auto next{m_Buckets[partition].erase(iter.base_iterator())};
         return partition_iterator{next, partition};
       }
 
@@ -299,7 +299,7 @@ namespace sequoia
       size_type erase_from_partition_if(const size_type partitionIndex, UnaryPred pred)
       {
         size_type erased{};
-        auto iter = begin_partition(partitionIndex);
+        auto iter{begin_partition(partitionIndex)};
         while(iter != end_partition(partitionIndex))
         {
           if(pred(*iter))
@@ -440,8 +440,8 @@ namespace sequoia
           check_range(pos);
         }
 
-        auto bucketIter = m_Buckets[index].cbegin() + pos;
-        auto iter = m_Buckets[index].insert(bucketIter, toAdd);
+        auto bucketIter{m_Buckets[index].cbegin() + pos};
+        auto iter{m_Buckets[index].insert(bucketIter, toAdd)};
 
         return partition_iterator(iter, index);
       }
@@ -613,8 +613,8 @@ namespace sequoia
         index_type partition{pos};
         if(pos < num_partitions())
         {
-          auto iter = m_Partitions.begin() + pos;
-          const index_type newPartitionBound = (pos == 0) ? 0 : *(iter - 1);
+          auto iter{m_Partitions.begin() + pos};
+          const index_type newPartitionBound{(pos == 0) ? 0 : *(iter - 1)};
           m_Partitions.insert(iter, newPartitionBound);
         }
         else
@@ -690,7 +690,7 @@ namespace sequoia
       void push_back_to_partition(const index_type index, const_partition_iterator iter)
       {
         if constexpr(throw_on_range_error) check_range(index);
-        auto insertIter = m_Storage.end();
+        auto insertIter{m_Storage.end()};
         if(index == m_Partitions.size() - 1)
         {
           m_Storage.push_back(*(iter.base_iterator()));
@@ -746,8 +746,8 @@ namespace sequoia
 
       partition_iterator erase_from_partition(const index_type index, const size_type pos)
       {
-        auto next = end_partition(index).base_iterator();
-        auto iter = begin_partition(index);
+        auto next{end_partition(index).base_iterator()};
+        auto iter{begin_partition(index)};
         if(iter != end_partition(num_partitions() - 1) && pos < static_cast<size_type>(distance(iter, end_partition(index))))
         {
           next = m_Storage.erase((iter + pos).base_iterator());
@@ -762,8 +762,8 @@ namespace sequoia
 
       partition_iterator erase_from_partition(const_partition_iterator iter)
       {
-        const auto next = m_Storage.erase(iter.base_iterator());
-        const auto index = iter.partition_index();
+        const auto next{m_Storage.erase(iter.base_iterator())};
+        const auto index{iter.partition_index()};
         for(size_type i{index}; i < m_Partitions.size(); ++i)
         {
           --m_Partitions[i];
@@ -776,7 +776,7 @@ namespace sequoia
       index_type erase_from_partition_if(const index_type partitionIndex, UnaryPred pred)
       {
         index_type erased{};
-        auto iter = begin_partition(partitionIndex);
+        auto iter{begin_partition(partitionIndex)};
         while(iter != end_partition(partitionIndex))
         {
           if(pred(*iter))
@@ -853,7 +853,7 @@ namespace sequoia
       }
 
       template<size_type... Inds>
-      constexpr StorageType fill(std::integer_sequence<size_type, Inds...>, std::initializer_list<std::initializer_list<T>> list)
+      constexpr StorageType fill(std::index_sequence<Inds...>, std::initializer_list<std::initializer_list<T>> list)
       {
         if(list.size() != container_type::num_partitions())
           throw std::logic_error("Overall initializer list of wrong size");
@@ -898,7 +898,7 @@ namespace sequoia
       
       contiguous_storage_base(std::false_type, std::initializer_list<std::initializer_list<T>> list)
       {
-        for(auto iter = list.begin(); iter != list.end(); ++iter)
+        for(auto iter{list.begin()}; iter != list.end(); ++iter)
         { 
           add_slot();
           const auto dist{std::distance(list.begin(), iter)};
@@ -936,7 +936,7 @@ namespace sequoia
       template<class... Args>
       auto insert(const index_type index, Args&&... args)
       {
-        auto iter = m_Storage.end();
+        auto iter{m_Storage.end()};
         if(index == m_Partitions.size() - 1)
         {
           m_Storage.push_back(SharingPolicy::make(std::forward<Args>(args)...));
@@ -959,12 +959,12 @@ namespace sequoia
       {
         if constexpr(throw_on_range_error) check_range(index, pos);
 
-        auto iter = m_Storage.begin();
+        auto iter{m_Storage.begin()};
         const index_type offset{(index > index_type{}) ? m_Partitions[index - 1] + pos : pos};
 
         iter = m_Storage.insert(iter + offset, toAdd);
 
-        for(auto i = index; i < m_Partitions.size(); ++i)
+        for(auto i{index}; i < m_Partitions.size(); ++i)
         {
           ++m_Partitions[i];
         }
@@ -975,8 +975,8 @@ namespace sequoia
       template<class PartitionIterator, class Iterator>
       constexpr PartitionIterator get_begin_iterator(const index_type i, Iterator iter) const noexcept
       {
-        const index_type index(i >= m_Partitions.size() ? npos : i);
-        const auto offset = (i > 0 && i < m_Partitions.size()) ? m_Partitions[i-1] : index_type{};
+        const index_type index{i >= m_Partitions.size() ? npos : i};
+        const auto offset{(i > 0 && i < m_Partitions.size()) ? m_Partitions[i-1] : index_type{}};
         return PartitionIterator::reversed() ? PartitionIterator{iter, index} - offset : PartitionIterator{iter, index} + offset;
       }
 
