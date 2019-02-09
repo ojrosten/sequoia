@@ -50,7 +50,7 @@ namespace sequoia::unit_testing
     std::set<std::string> m_SpecificTests{};
     std::vector<nascent_test> m_NewFiles{};
     
-    bool m_Asynchronous{}, m_Verbose{};
+    bool m_Asynchronous{}, m_Verbose{}, m_Pause{};
 
     const static std::array<std::string, 5> st_TestNameStubs;
 

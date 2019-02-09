@@ -222,7 +222,12 @@ namespace sequoia::unit_testing
       }
     }
 
-    
+    if(m_Pause)
+    {
+      std::cout << "Please hit enter to continue...\n";
+      while(std::cin.get() != '\n'){}
+    }
+        
     run_diagnostics();
   }
 
@@ -272,6 +277,18 @@ namespace sequoia::unit_testing
         else
         {
           throw argument_error{error("-v requires no arguments, but ").append(report_arg_num(argList.size()))};
+        }
+      }
+    );
+
+    m_FunctionMap.emplace("-pause", [this](const arg_list& argList) {
+        if(argList.empty())
+        {
+          m_Pause = true;
+        }
+        else
+        {
+          throw argument_error{error("-pause requires no arguments, but ").append(report_arg_num(argList.size()))};
         }
       }
     );
