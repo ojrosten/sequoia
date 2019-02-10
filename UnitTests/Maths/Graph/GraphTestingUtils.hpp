@@ -118,57 +118,63 @@ namespace sequoia
 
       template<class G, class... NodeWeights, class E=typename G::edge_init_type>
       bool check_graph(const G& graph, const std::initializer_list<std::initializer_list<E>>& edges, const std::tuple<NodeWeights...>& nodeWeights, std::string_view failureMessage="")
-      {        
-        auto comparer{[&graph, nodeWeights, this](){
-            check_equality(nodeWeights, graph.all_node_weights(), "Node weights differ.");
-          }
-        };
+      {
+        auto r{checker<Logger>::make_sentinel(failureMessage)};
+        const auto numFailures{failures()};
         
-        return check_graph_edges(graph, edges, comparer, failureMessage);
+        check_equality(nodeWeights, graph.all_node_weights(), "Node weights differ");
+        
+        check_graph_edges(graph, edges, failureMessage);
+
+        return has_passed(numFailures, failureMessage);
       }
 
       template<class G, class E=typename G::edge_init_type>
       bool check_graph(const G& graph, std::initializer_list<std::initializer_list<E>> edges, std::initializer_list<typename G::node_weight_type> nodeWeights, std::string_view failureMessage="")
-      {
+      {        
+        auto r{checker<Logger>::make_sentinel(failureMessage)};
+        const auto numFailures{failures()};
+        
         constexpr bool nullNodeWeight{std::is_empty_v<typename G::node_weight_type>};
         if constexpr(!nullNodeWeight)       
         {
-          auto comparer{[&graph, nodeWeights, this](){
-              const auto dist{static_cast<std::size_t>(distance(graph.cbegin_node_weights(), graph.cend_node_weights()))};
-              if(check_equality(nodeWeights.size(), dist, "Number of nodes wrong"))
-              {
-                for(auto iter{graph.cbegin_node_weights()}; iter != graph.cend_node_weights(); ++iter)
-                {
-                  const auto i{distance(graph.cbegin_node_weights(), iter)};
-                  const std::string nodeMessage{"Node weight wrong for node " + std::to_string(i)};
-                  check_equality(*(nodeWeights.begin() + i), *(graph.cbegin_node_weights()+i), nodeMessage);
-                }
-              }
+          const auto dist{static_cast<std::size_t>(distance(graph.cbegin_node_weights(), graph.cend_node_weights()))};
+          if(check_equality(nodeWeights.size(), dist, "Number of nodes wrong"))
+          {
+            for(auto iter{graph.cbegin_node_weights()}; iter != graph.cend_node_weights(); ++iter)
+            {
+              const auto i{distance(graph.cbegin_node_weights(), iter)};
+              const std::string nodeMessage{"Node weight wrong for node " + std::to_string(i)};
+              check_equality(*(nodeWeights.begin() + i), *(graph.cbegin_node_weights()+i), nodeMessage);
             }
-          };
-
-          return check_graph_edges(graph, edges, comparer, failureMessage);
+          }
         }
-        else
-        {
-          return check_graph_edges(graph, edges, [](){}, failureMessage);
-        }          
+        
+        check_graph_edges(graph, edges, failureMessage);
+
+        return has_passed(numFailures, failureMessage);
       }
       
     private:
-      template<class G, class NodeComparer, class E=typename G::edge_init_type>
-      bool check_graph_edges(const G& graph, std::initializer_list<std::initializer_list<E>> edges, NodeComparer comparer, std::string_view failureMessage="")
+      bool has_passed(const std::size_t previousFailures, std::string_view failureMessage)
+      {
+        constexpr bool falsePosMode{checker<Logger>::mode == test_mode::false_positive};
+        const bool passed{(falsePosMode && (failures() != previousFailures)) || (!falsePosMode && (failures() == previousFailures))};
+        if(!passed && !failureMessage.empty())
+        {
+          post_message('\t' + std::string{failureMessage} + '\n');
+        }
+      
+        return passed;
+      }
+      
+      template<class G, class E=typename G::edge_init_type>
+      void check_graph_edges(const G& graph, std::initializer_list<std::initializer_list<E>> edges, std::string_view failureMessage="")
       {
         using Edge = typename G::edge_type;
         using RefEdge = E;
         constexpr bool nullEdgeWeight{std::is_empty_v<typename G::edge_weight_type>};
 
-        auto r{checker<Logger>::make_sentinel(failureMessage)};        
-        
-        const auto numFailures{failures()};
-
-        comparer();
-        
         const auto numNodes{edges.size()};
         double nEdges{};
         if(check_equality(numNodes, graph.order(), "Graph order wrong"))
@@ -240,16 +246,7 @@ namespace sequoia
             }
           }
         }
-        check_equality(static_cast<std::size_t>(nEdges), graph.size(), "Graph size wrong");
-
-        constexpr bool falsePosMode{checker<Logger>::mode == test_mode::false_positive};
-        const bool passed{(falsePosMode && (failures() != numFailures)) || (!falsePosMode && (failures() == numFailures))};
-        if(!passed && !failureMessage.empty())
-        {
-          post_message('\t' + std::string{failureMessage} + '\n');
-        }
-      
-        return passed;
+        check_equality(static_cast<std::size_t>(nEdges), graph.size(), "Graph size wrong");        
       }
     };
 
