@@ -33,10 +33,10 @@ namespace sequoia::unit_testing
       size_t pos{};
       while((pos = text.find("_", pos)) != std::string::npos)
       {
-        if((pos < text.length() - 1) && std::isalpha(text[pos + 1]))
+        text.erase(pos, 1);
+        if((pos < text.length()) && std::isalpha(text[pos]))
         {
-          text[pos + 1] = std::toupper(text[pos + 1]);         
-          pos += 2;
+          text[pos] = std::toupper(text[pos]);
         }
 
         pos += 1;
@@ -156,6 +156,10 @@ namespace sequoia::unit_testing
       {            
         class_name = qualified_class_name.substr(pos+2);
       }
+    }
+    else
+    {
+      class_name = qualified_class_name;
     }
   }
 
