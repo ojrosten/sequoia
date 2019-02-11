@@ -20,5 +20,7 @@ namespace sequoia::unit_testing
     void run_tests() override;
 
     void test_variadic_traits();
+
+    void test_same_decay();
   };
 }
