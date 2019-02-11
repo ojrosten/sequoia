@@ -1,6 +1,8 @@
 #include "AlgorithmsTest.hpp"
 #include "StatisticalAlgorithmsTest.hpp"
 
+#include "TypeTraitsTest.hpp"
+
 #include "ArrayUtilitiesTest.hpp"
 #include "ProtectiveWrapperTestingDiagnostics.hpp"
 #include "ProtectiveWrapperTest.hpp"
@@ -63,6 +65,13 @@ int main(int argc, char** argv)
       }
     );
 
+    runner.add_test_family(
+      test_family{
+        "Type Traits",
+        type_traits_test{"Unit Test"}
+      }
+    );
+    
     runner.add_test_family(
       test_family{
         "Algorithms",

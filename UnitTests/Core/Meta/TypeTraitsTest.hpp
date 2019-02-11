@@ -18,5 +18,7 @@ namespace sequoia::unit_testing
 
   private:
     void run_tests() override;
+
+    void test_variadic_traits();
   };
 }
