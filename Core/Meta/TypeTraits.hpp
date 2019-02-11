@@ -58,6 +58,7 @@ namespace sequoia
   struct variadic_traits<>
   {
     using head = void;
+    using tail = void;
     static constexpr std::size_t size() noexcept
     {
       return 0u;
