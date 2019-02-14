@@ -14,7 +14,7 @@ namespace sequoia::unit_testing
   void type_traits_test::run_tests()
   {
     test_variadic_traits();
-    test_same_decay();
+    test_resolve_to_copy_constructor();
   }
 
   void type_traits_test::test_variadic_traits()
@@ -126,10 +126,10 @@ namespace sequoia::unit_testing
     }
   }
 
-  void type_traits_test::test_same_decay()
+  void type_traits_test::test_resolve_to_copy_constructor()
   {
     {
-      using d = same_decay<int>;
+      using d = resolve_to_copy_constructor<int>;
       
       check([]() {
           static_assert(std::is_same_v<std::false_type, d::type>);
@@ -138,20 +138,20 @@ namespace sequoia::unit_testing
       );
 
       check([]() {
-          static_assert(std::is_same_v<std::false_type, same_decay_t<int>>);
+          static_assert(std::is_same_v<std::false_type, resolve_to_copy_constructor_t<int>>);
           return true;
         }
       );
 
       check([]() {
-          static_assert(!same_decay_v<int>);
+          static_assert(!resolve_to_copy_constructor_v<int>);
           return true;
         }
       );
     }
 
     {
-      using d = same_decay<int, int>;
+      using d = resolve_to_copy_constructor<int, int>;
       
       check([]() {
           static_assert(std::is_same_v<std::true_type, d::type>);
@@ -160,20 +160,20 @@ namespace sequoia::unit_testing
       );
 
       check([]() {
-          static_assert(std::is_same_v<std::true_type, same_decay_t<int, int>>);
+          static_assert(std::is_same_v<std::true_type, resolve_to_copy_constructor_t<int, int>>);
           return true;
         }
       );
 
       check([]() {
-          static_assert(same_decay_v<int, int>);
+          static_assert(resolve_to_copy_constructor_v<int, int>);
           return true;
         }
       );
     }
 
     {
-      using d = same_decay<int&, int>;
+      using d = resolve_to_copy_constructor<int&, int>;
       
       check([]() {
           static_assert(std::is_same_v<std::true_type, d::type>);
@@ -182,20 +182,20 @@ namespace sequoia::unit_testing
       );
 
       check([]() {
-          static_assert(std::is_same_v<std::true_type, same_decay_t<int&, int>>);
+          static_assert(std::is_same_v<std::true_type, resolve_to_copy_constructor_t<int&, int>>);
           return true;
         }
       );
 
       check([]() {
-          static_assert(same_decay_v<int&, int>);
+          static_assert(resolve_to_copy_constructor_v<int&, int>);
           return true;
         }
       );
     }
 
     {
-      using d = same_decay<int, int&>;
+      using d = resolve_to_copy_constructor<int, int&>;
       
       check([]() {
           static_assert(std::is_same_v<std::true_type, d::type>);
@@ -204,20 +204,20 @@ namespace sequoia::unit_testing
       );
 
       check([]() {
-          static_assert(std::is_same_v<std::true_type, same_decay_t<int, int&>>);
+          static_assert(std::is_same_v<std::true_type, resolve_to_copy_constructor_t<int, int&>>);
           return true;
         }
       );
 
       check([]() {
-          static_assert(same_decay_v<int, int&>);
+          static_assert(resolve_to_copy_constructor_v<int, int&>);
           return true;
         }
       );
     }
 
     {
-      using d = same_decay<const int&, volatile int&>;
+      using d = resolve_to_copy_constructor<const int&, volatile int&>;
       
       check([]() {
           static_assert(std::is_same_v<std::true_type, d::type>);
@@ -226,20 +226,20 @@ namespace sequoia::unit_testing
       );
 
       check([]() {
-          static_assert(std::is_same_v<std::true_type, same_decay_t<const int&, volatile int&>>);
+          static_assert(std::is_same_v<std::true_type, resolve_to_copy_constructor_t<const int&, volatile int&>>);
           return true;
         }
       );
 
       check([]() {
-          static_assert(same_decay_v<const int&, volatile int&>);
+          static_assert(resolve_to_copy_constructor_v<const int&, volatile int&>);
           return true;
         }
       );
     }
 
     {
-      using d = same_decay<int, double>;
+      using d = resolve_to_copy_constructor<int, double>;
       
       check([]() {
           static_assert(std::is_same_v<std::false_type, d::type>);
@@ -248,20 +248,20 @@ namespace sequoia::unit_testing
       );
 
       check([]() {
-          static_assert(std::is_same_v<std::false_type, same_decay_t<int, double>>);
+          static_assert(std::is_same_v<std::false_type, resolve_to_copy_constructor_t<int, double>>);
           return true;
         }
       );
 
       check([]() {
-          static_assert(!same_decay_v<int, double>);
+          static_assert(!resolve_to_copy_constructor_v<int, double>);
           return true;
         }
       );
     }
 
     {
-      using d = same_decay<int, int, int>;
+      using d = resolve_to_copy_constructor<int, int, int>;
       
       check([]() {
           static_assert(std::is_same_v<std::false_type, d::type>);
@@ -270,13 +270,13 @@ namespace sequoia::unit_testing
       );
 
       check([]() {
-          static_assert(std::is_same_v<std::false_type, same_decay_t<int, int, double>>);
+          static_assert(std::is_same_v<std::false_type, resolve_to_copy_constructor_t<int, int, double>>);
           return true;
         }
       );
 
       check([]() {
-          static_assert(!same_decay_v<int, int, int>);
+          static_assert(!resolve_to_copy_constructor_v<int, int, int>);
           return true;
         }
       );

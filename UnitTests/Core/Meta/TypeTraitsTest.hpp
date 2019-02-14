@@ -21,6 +21,6 @@ namespace sequoia::unit_testing
 
     void test_variadic_traits();
 
-    void test_same_decay();
+    void test_resolve_to_copy_constructor();
   };
 }

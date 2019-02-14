@@ -65,22 +65,6 @@ namespace sequoia
     }
   };
 
-  // same_decay
-
-  template<class T, class... Args>
-  struct same_decay
-    : std::bool_constant<
-           (variadic_traits<Args...>::size() == 1)
-        && std::is_same_v<std::decay_t<typename variadic_traits<Args...>::head>, std::decay_t<T>>
-      >
-  {};
-
-  template<class T, class... Args>
-  constexpr bool same_decay_v{same_decay<T, Args...>::value};
-
-  template<class T, class... Args>
-  using same_decay_t = typename same_decay<T, Args...>::type;
-
   // is_base_of_head
   
   template<class T, class... Args>
@@ -92,7 +76,24 @@ namespace sequoia
   constexpr bool is_base_of_head_v{is_base_of_head<T, Args...>::value};
 
   template<class T, class... Args>
-  using is_base_of_heat_t = typename is_base_of_head<T, Args...>::type;
+  using is_base_of_head_t = typename is_base_of_head<T, Args...>::type;
+
+  // resolve_to_copy_constructor
+
+  template<class T, class... Args>
+  struct resolve_to_copy_constructor
+    : std::bool_constant<
+           (variadic_traits<Args...>::size() == 1)
+        && (   std::is_same_v<std::decay_t<typename variadic_traits<Args...>::head>, std::decay_t<T>>
+            || is_base_of_head_v<T, Args...>)
+      >
+  {};
+
+  template<class T, class... Args>
+  constexpr bool resolve_to_copy_constructor_v{resolve_to_copy_constructor<T, Args...>::value};
+
+  template<class T, class... Args>
+  using resolve_to_copy_constructor_t = typename resolve_to_copy_constructor<T, Args...>::type;
 
   // is_const_pointer
   

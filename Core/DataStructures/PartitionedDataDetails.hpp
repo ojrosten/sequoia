@@ -119,7 +119,7 @@ namespace sequoia::data_structures::partition_impl
 
     template<
       class... Args,
-      class=std::enable_if_t<!same_decay_v<dereference_policy, Args...>>
+      class=std::enable_if_t<!resolve_to_copy_constructor_v<dereference_policy, Args...>>
     >
     constexpr dereference_policy(Args&&... args) : AuxiliaryDataPolicy{std::forward<Args>(args)...} {}
     

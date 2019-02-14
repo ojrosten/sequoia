@@ -57,7 +57,7 @@ namespace sequoia::utilities
 
     template<
       class... Args,
-      class=std::enable_if_t<!same_decay_v<identity_dereference_policy, Args...>>
+      class=std::enable_if_t<!resolve_to_copy_constructor_v<identity_dereference_policy, Args...>>
     >
     constexpr explicit identity_dereference_policy(Args&&... args) : AuxiliaryDataPolicy{std::forward<Args>(args)...} {}
 
@@ -121,7 +121,7 @@ namespace sequoia::utilities
     template<
       class Arg,
       class... Args,
-      class=std::enable_if_t<sizeof...(Args) || !same_decay_v<Arg, iterator>>
+      class=std::enable_if_t<sizeof...(Args) || !resolve_to_copy_constructor_v<Arg, iterator>>
      >
     constexpr explicit iterator(Arg&& baseIterArg, Args&&... args)
       : DereferencePolicy{std::forward<Args>(args)...}
