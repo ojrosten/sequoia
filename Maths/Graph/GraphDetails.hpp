@@ -52,9 +52,7 @@ namespace sequoia
     enum class edge_sharing_preference {agnostic, shared_edge, shared_weight, independent};
 
     namespace graph_impl
-    {
-      struct heterogeneous_tag {};
-      
+    {      
       constexpr std::size_t num_static_edges(const graph_flavour flavour, const std::size_t size) noexcept
       {
         return (flavour != graph_flavour::directed) ? 2*size : size;
@@ -297,102 +295,38 @@ namespace sequoia
       
       // Weight Makers
       
-      template
-      <
-        class NodeWeightPooling,
-        class EdgeWeightPooling,
-        bool=std::is_empty_v<NodeWeightPooling>,
-        bool=std::is_empty_v<EdgeWeightPooling>,
-        bool=std::is_same_v<NodeWeightPooling, EdgeWeightPooling>
-      >
-      class weight_maker;
-      
-
-      template
-      <
-        class NodeWeightPooling,
-        class EdgeWeightPooling,
-        bool Same
-      >
-      class weight_maker<NodeWeightPooling, EdgeWeightPooling, true, true, Same>
+      template<class WeightPooling, bool=std::is_empty_v<WeightPooling>>
+      class weight_maker
       {
       public:
-        using node_weight_proxy = typename NodeWeightPooling::proxy;
-        using edge_weight_proxy = typename EdgeWeightPooling::proxy;
+        using weight_proxy = typename WeightPooling::proxy;
 
         template<class... Args>
-        constexpr static node_weight_proxy make_node_weight(Args&&... args) { return NodeWeightPooling::make(std::forward<Args>(args)...); }
-
-        template<class... Args>
-        constexpr static edge_weight_proxy make_edge_weight(Args&&... args) { return EdgeWeightPooling::make(std::forward<Args>(args)...); }
-      };
-
-      template<class NodeWeightPooling, class EdgeWeightPooling>
-      class weight_maker<NodeWeightPooling, EdgeWeightPooling, true, false, false>
-      {
-      public:
-        using node_weight_proxy = typename NodeWeightPooling::proxy;
-        using edge_weight_proxy = typename EdgeWeightPooling::proxy;
-
-        template<class... Args>
-        constexpr static node_weight_proxy make_node_weight(Args&&... args) { return NodeWeightPooling::make(std::forward<Args>(args)...); }
-
-        template<class... Args>
-        edge_weight_proxy make_edge_weight(Args&&... args) { return m_EdgeWeightPooling.make(std::forward<Args>(args)...); }
-      private: 
-        EdgeWeightPooling m_EdgeWeightPooling;
-      };
-
-      template<class NodeWeightPooling, class EdgeWeightPooling>
-      class weight_maker<NodeWeightPooling, EdgeWeightPooling, false, true, false>
-      {
-      public:
-        using node_weight_proxy = typename NodeWeightPooling::proxy;
-        using edge_weight_proxy = typename EdgeWeightPooling::proxy;
-
-        template<class... Args>
-        node_weight_proxy make_node_weight(Args&&... args) { return m_NodeWeightPooling.make(std::forward<Args>(args)...); }
-       
-        template<class... Args>
-        constexpr static edge_weight_proxy make_edge_weight(Args&&... args) { return EdgeWeightPooling::make(std::forward<Args>(args)...); }
-        
-      private: 
-        NodeWeightPooling m_NodeWeightPooling;
-      };
-
-      template<class NodeWeightPooling, class EdgeWeightPooling>
-      class weight_maker<NodeWeightPooling, EdgeWeightPooling, false, false, false>
-      {
-      public:
-        using node_weight_proxy = typename NodeWeightPooling::proxy;
-        using edge_weight_proxy = typename EdgeWeightPooling::proxy;
-
-        template<class... Args>
-        node_weight_proxy make_node_weight(Args&&... args) { return m_NodeWeightPooling.make(std::forward<Args>(args)...); }
-
-        template<class... Args>
-        edge_weight_proxy make_edge_weight(Args&&... args) { return m_EdgeWeightPooling.make(std::forward<Args>(args)...); }
+        [[nodiscard]]
+        constexpr static weight_proxy make(Args&&... args)
+        {
+          return WeightPooling::make(std::forward<Args>(args)...);
+        }
       private:
-        NodeWeightPooling m_NodeWeightPooling;
-        EdgeWeightPooling m_EdgeWeightPooling;
       };
 
-      template<class NodeWeightPooling, class EdgeWeightPooling>
-      class weight_maker<NodeWeightPooling, EdgeWeightPooling, false, false, true>
+      template<class WeightPooling>
+      class weight_maker<WeightPooling, false>
       {
       public:
-        using node_weight_proxy = typename NodeWeightPooling::proxy;
-        using edge_weight_proxy = typename EdgeWeightPooling::proxy;
+        using weight_proxy = typename WeightPooling::proxy;
 
         template<class... Args>
-        node_weight_proxy make_node_weight(Args&&... args) { return m_NodeWeightPooling.make(std::forward<Args>(args)...); }
-
-        template<class... Args>
-        edge_weight_proxy make_edge_weight(Args&&... args) { return m_NodeWeightPooling.make(std::forward<Args>(args)...); }
+        [[nodiscard]]
+        weight_proxy make(Args&&... args)
+        {
+          return m_Pool.make(std::forward<Args>(args)...);
+        }
       private:
-        NodeWeightPooling m_NodeWeightPooling;
+        WeightPooling m_Pool;
       };
 
+      /*
       // size_type generator
 
       template<class EdgeStorage, class NodeStorage, bool=std::is_empty_v<typename NodeStorage::weight_type>>
@@ -406,6 +340,7 @@ namespace sequoia
       {
         using size_type = std::common_type_t<typename EdgeStorage::size_type, typename NodeStorage::size_type>;
       };
+      */
                            
       // Determine dynamic reservartion type etc
 

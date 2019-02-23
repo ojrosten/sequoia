@@ -62,44 +62,50 @@ namespace sequoia::maths
   class graph_base : public
     graph_primitive
     <
-      to_directedness(GraphFlavour),      
-      typename graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeWeightPooling, EdgeStorageTraits, std::size_t>,
-      graph_impl::node_storage
+      connectivity
       <
-        typename NodeWeightPooling<NodeWeight>::proxy,
-        NodeWeightStorageTraits<NodeWeight, NodeWeightPooling, std::is_empty_v<NodeWeight>>
+        to_directedness(GraphFlavour),
+        graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeWeightPooling, EdgeStorageTraits, std::size_t>,
+        graph_impl::weight_maker<EdgeWeightPooling<EdgeWeight>>
       >,
-      typename graph_impl::weight_maker<NodeWeightPooling<NodeWeight>, EdgeWeightPooling<EdgeWeight>>
+      graph_impl::node_storage
+      <     
+        graph_impl::weight_maker<NodeWeightPooling<NodeWeight>>,
+        NodeWeightStorageTraits<NodeWeight, NodeWeightPooling, std::is_empty_v<NodeWeight>>
+      >
     >
-  {
-  private:
-    using primitive =
+  {       
+  public:
+    using primitive_type =
       graph_primitive
       <
-        to_directedness(GraphFlavour),      
-        typename graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeWeightPooling, EdgeStorageTraits, std::size_t>,
+        connectivity<
+          to_directedness(GraphFlavour),
+          graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeWeightPooling, EdgeStorageTraits, std::size_t>,
+          graph_impl::weight_maker<EdgeWeightPooling<EdgeWeight>>
+        >,      
         graph_impl::node_storage
         <
-          typename NodeWeightPooling<NodeWeight>::proxy,
+          graph_impl::weight_maker<NodeWeightPooling<NodeWeight>>,
           NodeWeightStorageTraits<NodeWeight, NodeWeightPooling, std::is_empty_v<NodeWeight>>
-        >,
-        typename graph_impl::weight_maker<NodeWeightPooling<NodeWeight>, EdgeWeightPooling<EdgeWeight>>
+        >
       >;
     
-  public:
     using node_weight_type = NodeWeight;
     
     using
       graph_primitive
       <
-        to_directedness(GraphFlavour),     
-        typename graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeWeightPooling, EdgeStorageTraits, std::size_t>,
+        connectivity<
+          to_directedness(GraphFlavour),
+          graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeWeightPooling, EdgeStorageTraits, std::size_t>,
+          graph_impl::weight_maker<EdgeWeightPooling<EdgeWeight>>
+        >,
         graph_impl::node_storage
         <
-          typename NodeWeightPooling<NodeWeight>::proxy,
+          graph_impl::weight_maker<NodeWeightPooling<NodeWeight>>,
           NodeWeightStorageTraits<NodeWeight, NodeWeightPooling, std::is_empty_v<NodeWeight>>
-        >,
-        typename graph_impl::weight_maker<NodeWeightPooling<NodeWeight>, EdgeWeightPooling<EdgeWeight>>
+        >
       >::graph_primitive;
 
     graph_base(const graph_base&)            = default;
@@ -107,30 +113,30 @@ namespace sequoia::maths
     graph_base& operator=(const graph_base&) = default;
     graph_base& operator=(graph_base&&)      = default;
 
-    using primitive::swap_nodes;
+    using primitive_type::swap_nodes;
     
-    using primitive::add_node;
-    using primitive::insert_node;
-    using primitive::erase_node;
+    using primitive_type::add_node;
+    using primitive_type::insert_node;
+    using primitive_type::erase_node;
 
-    using primitive::join;      
-    using primitive::erase_edge;
+    using primitive_type::join;      
+    using primitive_type::erase_edge;
 
-    using primitive::clear;
+    using primitive_type::clear;
 
-    using primitive::reserve_edges;
-    using primitive::edges_capacity;
-    using primitive::reserve_nodes;
-    using primitive::node_capacity;
-    using primitive::shrink_to_fit;
+    using primitive_type::reserve_edges;
+    using primitive_type::edges_capacity;
+    using primitive_type::reserve_nodes;
+    using primitive_type::node_capacity;
+    using primitive_type::shrink_to_fit;
       
     constexpr static graph_flavour flavour{GraphFlavour};
 
     [[nodiscard]]
-    constexpr typename primitive::size_type order() const noexcept { return primitive::order_impl(); }
+    constexpr typename primitive_type::size_type order() const noexcept { return primitive_type::order_impl(); }
 
     [[nodiscard]]
-    constexpr typename primitive::size_type size() const noexcept { return primitive::size_impl(); }
+    constexpr typename primitive_type::size_type size() const noexcept { return primitive_type::size_impl(); }
   protected:
     ~graph_base() = default;
   };
@@ -230,17 +236,18 @@ namespace sequoia::maths
           NodeWeightStorageTraits
         >::graph_base;
       
-      using
-        graph_primitive
+      using base_type =
+        graph_base
         <
-          Directedness,        
-          typename graph_impl::dynamic_edge_traits<to_graph_flavour(), EdgeWeight, EdgeWeightPooling, EdgeStorageTraits, std::size_t>,
-          graph_impl::node_storage
-          <
-            typename NodeWeightPooling<NodeWeight>::proxy,
-            NodeWeightStorageTraits<NodeWeight, NodeWeightPooling, std::is_empty_v<NodeWeight>>
-          >,
-          typename graph_impl::weight_maker<NodeWeightPooling<NodeWeight>, EdgeWeightPooling<EdgeWeight>>
-        >::insert_join;
+          (Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded,      
+          EdgeWeight,
+          NodeWeight,     
+          EdgeWeightPooling,
+          NodeWeightPooling,
+          EdgeStorageTraits,
+          NodeWeightStorageTraits
+        >;
+
+      using base_type::primitive_type::insert_join;
     };  
 }

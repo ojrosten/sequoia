@@ -37,20 +37,26 @@ namespace sequoia::maths
   class static_graph final : public
     graph_primitive
     <
-      Directedness,
-      typename graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected, Order, Size, EdgeWeight, typename Traits::edge_index_type>,  
-      graph_impl::static_node_storage<utilities::protective_wrapper<NodeWeight>, Order>,
-      typename graph_impl::weight_maker<data_sharing::unpooled<NodeWeight>, data_sharing::unpooled<EdgeWeight>>
+      connectivity
+      <
+        Directedness,
+        graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected, Order, Size, EdgeWeight, typename Traits::edge_index_type>,
+        graph_impl::weight_maker<data_sharing::unpooled<EdgeWeight>>
+      >,
+      graph_impl::static_node_storage<graph_impl::weight_maker<data_sharing::unpooled<NodeWeight>>, Order>
     >
   {
   private:
-    using primitive =
+    using primitive_type =
       graph_primitive
       <
-        Directedness,
-        typename graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected, Order, Size, EdgeWeight, typename Traits::edge_index_type>,      
-        graph_impl::static_node_storage<utilities::protective_wrapper<NodeWeight>, Order>,
-        typename graph_impl::weight_maker<data_sharing::unpooled<NodeWeight>, data_sharing::unpooled<EdgeWeight>>
+        connectivity
+        <
+          Directedness,
+          graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected, Order, Size, EdgeWeight, typename Traits::edge_index_type>,
+          graph_impl::weight_maker<data_sharing::unpooled<EdgeWeight>>
+        >,
+        graph_impl::static_node_storage<graph_impl::weight_maker<data_sharing::unpooled<NodeWeight>>, Order>
       >;
       
   public:
@@ -68,14 +74,17 @@ namespace sequoia::maths
     using
       graph_primitive
       <
-        Directedness,
-        typename graph_impl::static_edge_traits<flavour, Order, Size, EdgeWeight, edge_index_type>,        
-        graph_impl::static_node_storage<utilities::protective_wrapper<NodeWeight>, Order>,
-        typename graph_impl::weight_maker<data_sharing::unpooled<NodeWeight>, data_sharing::unpooled<EdgeWeight>>
+        connectivity
+        <
+          Directedness,
+          graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected, Order, Size, EdgeWeight, typename Traits::edge_index_type>,
+          graph_impl::weight_maker<data_sharing::unpooled<EdgeWeight>>
+        >,
+        graph_impl::static_node_storage<graph_impl::weight_maker<data_sharing::unpooled<NodeWeight>>, Order>
       >::graph_primitive;
 
-    using primitive::swap_nodes;
-    using primitive::sort_edges;      
+    using primitive_type::swap_nodes;
+    using primitive_type::sort_edges;      
   };
 
   template<std::size_t Size, std::size_t Order, class EdgeWeight, class NodeWeight>
@@ -96,20 +105,26 @@ namespace sequoia::maths
   class static_embedded_graph final : public
     graph_primitive
     <
-      Directedness,
-      typename graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded, Order, Size, EdgeWeight, typename Traits::edge_index_type>,      
-      graph_impl::static_node_storage<utilities::protective_wrapper<NodeWeight>, Order>,
-      typename graph_impl::weight_maker<data_sharing::unpooled<NodeWeight>, data_sharing::unpooled<EdgeWeight>>
+      connectivity
+      <
+        Directedness,
+        graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded, Order, Size, EdgeWeight, typename Traits::edge_index_type>,
+        graph_impl::weight_maker<data_sharing::unpooled<EdgeWeight>>
+      >,
+      graph_impl::static_node_storage<graph_impl::weight_maker<data_sharing::unpooled<NodeWeight>>, Order>
     >
   {
   private:
     using primitive =
       graph_primitive
       <
-        Directedness,
-        typename graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded, Order, Size, EdgeWeight, typename Traits::edge_index_type>, 
-        graph_impl::static_node_storage<utilities::protective_wrapper<NodeWeight>, Order>,
-        typename graph_impl::weight_maker<data_sharing::unpooled<NodeWeight>, data_sharing::unpooled<EdgeWeight>>
+        connectivity
+        <
+          Directedness,
+          graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded, Order, Size, EdgeWeight, typename Traits::edge_index_type>,
+          graph_impl::weight_maker<data_sharing::unpooled<EdgeWeight>>
+        >,
+        graph_impl::static_node_storage<graph_impl::weight_maker<data_sharing::unpooled<NodeWeight>>, Order>
       >;
       
   public:
@@ -124,13 +139,17 @@ namespace sequoia::maths
     using node_weight_type =  NodeWeight;
     using edge_index_type = typename Traits::edge_index_type;
       
-    using graph_primitive
-    <
-      Directedness,
-      typename graph_impl::static_edge_traits<flavour, Order, Size, EdgeWeight, edge_index_type>,        
-      graph_impl::static_node_storage<utilities::protective_wrapper<NodeWeight>, Order>,
-      typename graph_impl::weight_maker<data_sharing::unpooled<NodeWeight>, data_sharing::unpooled<EdgeWeight>>
-    >::graph_primitive;
+    using
+      graph_primitive
+      <
+        connectivity
+        <
+          Directedness,
+          graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded, Order, Size, EdgeWeight, typename Traits::edge_index_type>,
+          graph_impl::weight_maker<data_sharing::unpooled<EdgeWeight>>
+        >,
+        graph_impl::static_node_storage<graph_impl::weight_maker<data_sharing::unpooled<NodeWeight>>, Order>
+      >::graph_primitive;
 
     using primitive::swap_nodes;
   };

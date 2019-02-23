@@ -35,69 +35,28 @@ namespace sequoia::unit_testing
     
 
     {
-      weight_maker<unpooled<int>, unpooled<int>> maker;
-      auto nproxy = maker.make_node_weight(2);
-      check_equality<int>(2, nproxy.get());
-
-      auto eproxy = maker.make_edge_weight(3);
-      check_equality<int>(3, eproxy.get());
-    }
-
-    {
-      weight_maker<unpooled<int>, unpooled<float>> maker;
-      auto nproxy = maker.make_node_weight(2);
-      check_equality<int>(2, nproxy.get());
-
-      auto eproxy = maker.make_edge_weight(3.0f);
-      check_equality<float>(3.0f, eproxy.get());
-    }
-
-    {
-      weight_maker<unpooled<int>, data_pool<int>> maker;
-      auto nproxy = maker.make_node_weight(2);
-      check_equality<int>(2, nproxy.get());
-
-      auto eproxy = maker.make_edge_weight(3);
-      check_equality<int>(3, eproxy.get());
-    }
-
-    {
-      weight_maker<data_pool<int>, unpooled<int>> maker;
-      auto nproxy = maker.make_node_weight(2);
-      check_equality<int>(2, nproxy.get());
-
-      auto eproxy = maker.make_edge_weight(3);
-      check_equality<int>(3, eproxy.get());
-    }
-
-    {
-      weight_maker<data_pool<int>, data_pool<int>> maker;
-      auto nproxy = maker.make_node_weight(2);
-      check_equality<int>(2, nproxy.get());
-
-      auto eproxy = maker.make_edge_weight(3);
-      check_equality<int>(3, eproxy.get());
-    }
-
-    {
-      weight_maker<data_pool<int>, data_pool<float>> maker;
-      auto nproxy = maker.make_node_weight(2);
-      check_equality<int>(2, nproxy.get());
-
-      auto eproxy = maker.make_edge_weight(3.0f);
-      check_equality<float>(3.0f, eproxy.get());
-    }
-
-    {
-      weight_maker<unpooled<double>, unpooled<int>> maker;
-      auto proxy = maker.make_edge_weight(2);
+      weight_maker<unpooled<int>> maker;
+      auto proxy = maker.make(2);
       check_equality<int>(2, proxy.get());
     }
 
     {
-      weight_maker<data_pool<double>, data_pool<int>> maker;
-      auto proxy = maker.make_edge_weight(2);
+      weight_maker<unpooled<float>> maker;
+
+      auto proxy = maker.make(3.0f);
+      check_equality<float>(3.0f, proxy.get());
+    }
+
+    {
+      weight_maker<data_pool<int>> maker;
+      auto proxy = maker.make(2);
       check_equality<int>(2, proxy.get());
+    }
+
+    {
+      weight_maker<data_pool<float>> maker;
+      auto proxy = maker.make(3.0f);
+      check_equality<float>(3.0f, proxy.get());
     }
   }
 

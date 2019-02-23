@@ -1,6 +1,7 @@
 #include "TestNodeStorage.hpp"
 #include "ProtectiveWrapper.hpp"
 #include "DataPool.hpp"
+#include "GraphDetails.hpp"
 
 #include <complex>
 #include <list>
@@ -19,7 +20,7 @@ namespace sequoia
     {
       using namespace maths::graph_impl;
 
-      using storage = node_storage_tester<utilities::protective_wrapper<double>>;
+      using storage = node_storage_tester<weight_maker<data_sharing::unpooled<double>>>;
 
       storage store{};
       check_storage(store, std::vector<double>{}, LINE(""));
@@ -109,7 +110,7 @@ namespace sequoia
     {
       using namespace maths::graph_impl;
 
-      constexpr static_node_storage_tester<utilities::protective_wrapper<int>, 4>
+      constexpr static_node_storage_tester<weight_maker<data_sharing::unpooled<int>>, 4>
         store{4, 4, 7, 9};
 
       check_storage(store, std::vector<int>{4, 4, 7, 9}, LINE(""));

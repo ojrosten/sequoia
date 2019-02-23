@@ -29,26 +29,26 @@ namespace sequoia
         template<class S> using underlying_storage_type = std::vector<S, std::allocator<S>>;
       };
       
-      template<class WeightProxy>
-      class node_storage_tester : public maths::graph_impl::node_storage<WeightProxy, node_storage_traits>
+      template<class WeightMaker>
+      class node_storage_tester : public maths::graph_impl::node_storage<WeightMaker, node_storage_traits>
       {
       public:
-        using maths::graph_impl::node_storage<WeightProxy, node_storage_traits>::node_storage;
-        using maths::graph_impl::node_storage<WeightProxy, node_storage_traits>::reserve;
-        using maths::graph_impl::node_storage<WeightProxy, node_storage_traits>::capacity;
-        using maths::graph_impl::node_storage<WeightProxy, node_storage_traits>::shrink_to_fit;
-        using maths::graph_impl::node_storage<WeightProxy, node_storage_traits>::add_node;
-        using maths::graph_impl::node_storage<WeightProxy, node_storage_traits>::insert_node;
-        using maths::graph_impl::node_storage<WeightProxy, node_storage_traits>::erase_node;
-        using maths::graph_impl::node_storage<WeightProxy, node_storage_traits>::erase_nodes;
-        using maths::graph_impl::node_storage<WeightProxy, node_storage_traits>::clear;
+        using maths::graph_impl::node_storage<WeightMaker, node_storage_traits>::node_storage;
+        using maths::graph_impl::node_storage<WeightMaker, node_storage_traits>::reserve;
+        using maths::graph_impl::node_storage<WeightMaker, node_storage_traits>::capacity;
+        using maths::graph_impl::node_storage<WeightMaker, node_storage_traits>::shrink_to_fit;
+        using maths::graph_impl::node_storage<WeightMaker, node_storage_traits>::add_node;
+        using maths::graph_impl::node_storage<WeightMaker, node_storage_traits>::insert_node;
+        using maths::graph_impl::node_storage<WeightMaker, node_storage_traits>::erase_node;
+        using maths::graph_impl::node_storage<WeightMaker, node_storage_traits>::erase_nodes;
+        using maths::graph_impl::node_storage<WeightMaker, node_storage_traits>::clear;
       };
 
-      template<class WeightProxy, std::size_t N>
-      class static_node_storage_tester : public maths::graph_impl::static_node_storage<WeightProxy, N>
+      template<class WeightMaker, std::size_t N>
+      class static_node_storage_tester : public maths::graph_impl::static_node_storage<WeightMaker, N>
       {
       public:
-        using maths::graph_impl::static_node_storage<WeightProxy, N>::static_node_storage;
+        using maths::graph_impl::static_node_storage<WeightMaker, N>::static_node_storage;
       };
 
       template<class Storage>

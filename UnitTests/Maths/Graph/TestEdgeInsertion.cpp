@@ -67,7 +67,7 @@ namespace sequoia
       using edge = embedded_edge<EdgeWeight, data_sharing::independent, utilities::protective_wrapper<EdgeWeight>>;
         
       graph_t g{};
-      constexpr bool ThrowOnError{graph_t::throw_on_range_error};
+      constexpr bool ThrowOnError{graph_t::connectivity_type::throw_on_range_error};
 
       if constexpr(ThrowOnError)
       {

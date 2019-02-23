@@ -37,31 +37,40 @@ namespace sequoia::maths
   class heterogeneous_static_graph final : public
     graph_primitive
     <
-      Directedness,
-      typename graph_impl::static_edge_traits<
+      connectivity
+      <
+        Directedness,
+        graph_impl::static_edge_traits
+        <
           (Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected,
           Order,
           Size,
           EdgeWeight,
           typename heterogeneous_graph_traits<Size, Order, EdgeWeight>::edge_index_type
-        >,  
-      graph_impl::heterogeneous_node_storage<NodeWeights...>,
-      typename graph_impl::weight_maker<data_sharing::unpooled<EdgeWeight>, data_sharing::unpooled<EdgeWeight>>
+        >,
+        graph_impl::weight_maker<data_sharing::unpooled<EdgeWeight>>
+      >,
+      graph_impl::heterogeneous_node_storage<NodeWeights...>
     >
   {
   private:
-    using primitive =
+    using primitive_type =
       graph_primitive
       <
-        Directedness,
-        typename graph_impl::static_edge_traits<
-          (Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected,
-          Order,
-          Size,
-          EdgeWeight,
-          typename heterogeneous_graph_traits<Size, Order, EdgeWeight>::edge_index_type>,  
-        graph_impl::heterogeneous_node_storage<NodeWeights...>,
-        typename graph_impl::weight_maker<data_sharing::unpooled<EdgeWeight>, data_sharing::unpooled<EdgeWeight>>
+        connectivity
+        <
+          Directedness,
+          graph_impl::static_edge_traits
+          <
+            (Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected,
+            Order,
+            Size,
+            EdgeWeight,
+            typename heterogeneous_graph_traits<Size, Order, EdgeWeight>::edge_index_type
+          >,
+          graph_impl::weight_maker<data_sharing::unpooled<EdgeWeight>>
+        >,
+        graph_impl::heterogeneous_node_storage<NodeWeights...>
       >;
 
   public:
@@ -80,20 +89,25 @@ namespace sequoia::maths
     using
       graph_primitive
       <
-        Directedness,
-        typename graph_impl::static_edge_traits<
-          (Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected,
-          Order,
-          Size,
-          EdgeWeight,
-          typename heterogeneous_graph_traits<Size, Order, EdgeWeight>::edge_index_type>,  
-          graph_impl::heterogeneous_node_storage<NodeWeights...>,
-          typename graph_impl::weight_maker<data_sharing::unpooled<EdgeWeight>, data_sharing::unpooled<EdgeWeight>>
+        connectivity
+        <
+          Directedness,
+          graph_impl::static_edge_traits
+          <
+            (Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected,
+            Order,
+            Size,
+            EdgeWeight,
+            typename heterogeneous_graph_traits<Size, Order, EdgeWeight>::edge_index_type
+          >,
+          graph_impl::weight_maker<data_sharing::unpooled<EdgeWeight>>
+        >,
+        graph_impl::heterogeneous_node_storage<NodeWeights...>
       >::graph_primitive;
 
-    using primitive::set_edge_weight;
-    using primitive::mutate_edge_weight;
-    using primitive::sort_edges;      
+    using primitive_type::set_edge_weight;
+    using primitive_type::mutate_edge_weight;
+    using primitive_type::sort_edges;      
   };
 
   template<std::size_t Size, std::size_t Order, class EdgeWeight>
@@ -113,31 +127,40 @@ namespace sequoia::maths
   class heterogeneous_embedded_static_graph final : public
     graph_primitive
     <
-      Directedness,
-      typename graph_impl::static_edge_traits<
+      connectivity
+      <
+        Directedness,
+        graph_impl::static_edge_traits
+        <
           (Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded,
           Order,
           Size,
           EdgeWeight,
           typename heterogeneous_embedded_graph_traits<Size, Order, EdgeWeight>::edge_index_type
-        >,  
-      graph_impl::heterogeneous_node_storage<NodeWeights...>,
-      typename graph_impl::weight_maker<data_sharing::unpooled<EdgeWeight>, data_sharing::unpooled<EdgeWeight>>
+        >,
+        graph_impl::weight_maker<data_sharing::unpooled<EdgeWeight>>
+      >,
+      graph_impl::heterogeneous_node_storage<NodeWeights...>
     >
   {
   private:
-    using primitive =
+    using primitive_type =
       graph_primitive
       <
-        Directedness,
-        typename graph_impl::static_edge_traits<
-          (Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded,
-          Order,
-          Size,
-          EdgeWeight,
-          typename heterogeneous_embedded_graph_traits<Size, Order, EdgeWeight>::edge_index_type>,  
-        graph_impl::heterogeneous_node_storage<NodeWeights...>,
-        typename graph_impl::weight_maker<data_sharing::unpooled<EdgeWeight>, data_sharing::unpooled<EdgeWeight>>
+        connectivity
+        <
+          Directedness,
+          graph_impl::static_edge_traits
+          <
+            (Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded,
+            Order,
+            Size,
+            EdgeWeight,
+            typename heterogeneous_embedded_graph_traits<Size, Order, EdgeWeight>::edge_index_type
+          >,
+          graph_impl::weight_maker<data_sharing::unpooled<EdgeWeight>>
+        >,
+        graph_impl::heterogeneous_node_storage<NodeWeights...>
       >;
 
   public:
@@ -154,18 +177,23 @@ namespace sequoia::maths
     using
       graph_primitive
       <
-        Directedness,
-        typename graph_impl::static_edge_traits<
-          (Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded,
-          Order,
-          Size,
-          EdgeWeight,
-          typename heterogeneous_embedded_graph_traits<Size, Order, EdgeWeight>::edge_index_type>,  
-          graph_impl::heterogeneous_node_storage<NodeWeights...>,
-          typename graph_impl::weight_maker<data_sharing::unpooled<EdgeWeight>, data_sharing::unpooled<EdgeWeight>>
+        connectivity
+        <
+          Directedness,
+          graph_impl::static_edge_traits
+          <
+            (Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded,
+            Order,
+            Size,
+            EdgeWeight,
+            typename heterogeneous_embedded_graph_traits<Size, Order, EdgeWeight>::edge_index_type
+          >,
+          graph_impl::weight_maker<data_sharing::unpooled<EdgeWeight>>
+        >,
+        graph_impl::heterogeneous_node_storage<NodeWeights...>
       >::graph_primitive;
 
-    using primitive::set_edge_weight;
-    using primitive::mutate_edge_weight;   
+    using primitive_type::set_edge_weight;
+    using primitive_type::mutate_edge_weight;   
   };
 }

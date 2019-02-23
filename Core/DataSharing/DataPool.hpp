@@ -48,7 +48,7 @@ namespace sequoia::data_sharing
       template<class... Args> handle(data_pool& pool, Args&&... args) : m_pPool{&pool}, m_Data{std::forward<Args>(args)...} {}        
 
       [[nodiscard]]
-      const T& get() const { return m_Data; }
+      const T& get() const noexcept { return m_Data; }
 
       template<class... Args>
       std::shared_ptr<handle> set(Args&&... args)

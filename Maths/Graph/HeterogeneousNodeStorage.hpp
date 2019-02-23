@@ -12,12 +12,11 @@
 
  */
 
-#include "NodeStorage.hpp"
+#include "HeterogeneousNodeDetails.hpp"
+#include <tuple>
 
 namespace sequoia::maths::graph_impl
 {
-  struct heterogeneous_tag;
-
   /*! class heterogeneous_node_storage
       \brief Storage for heterogeneous node weights.
    */
@@ -25,7 +24,9 @@ namespace sequoia::maths::graph_impl
   template<class... Ts>
   class heterogeneous_node_storage
   {
-  public:    
+  public:
+    using size_type = std::size_t;
+    
     template<class... Args>
     constexpr explicit heterogeneous_node_storage(Args&&... args) : m_Weights{std::forward<Args>(args)...}
     {

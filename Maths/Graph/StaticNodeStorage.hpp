@@ -16,30 +16,41 @@
 
 namespace sequoia::maths::graph_impl
 {
-  template<class WeightProxy, std::size_t N, bool=std::is_empty_v<typename WeightProxy::value_type>>
+  template
+  <
+    class WeightMaker,
+    std::size_t N,
+    bool=std::is_empty_v<typename WeightMaker::weight_proxy::value_type>
+  >
   struct static_node_storage_traits
   {
     constexpr static bool throw_on_range_error{true};
     template<class S> using underlying_storage_type = typename data_structures::impl::static_contiguous_data<1,N>::template data<S>;
   };
 
-  template<class WeightProxy, std::size_t N>
-  struct static_node_storage_traits<WeightProxy, N, true>
+  template<class WeightMaker, std::size_t N>
+  struct static_node_storage_traits<WeightMaker, N, true>
   {
   };
       
-  template<class WeightProxy, std::size_t N, bool=std::is_empty_v<typename WeightProxy::value_type>>
-  class static_node_storage : public node_storage<WeightProxy, static_node_storage_traits<WeightProxy, N>>
+  template
+  <
+    class WeightMaker,
+    std::size_t N,
+    bool=std::is_empty_v<typename WeightMaker::weight_proxy::value_type>
+  >
+  class static_node_storage : public node_storage<WeightMaker, static_node_storage_traits<WeightMaker, N>>
   {
-    using node_storage<WeightProxy, static_node_storage_traits<WeightProxy, N>>::node_storage;
+    using node_storage<WeightMaker, static_node_storage_traits<WeightMaker, N>>::node_storage;
   };
 
-  template<class WeightProxy, std::size_t N>
-  class static_node_storage<WeightProxy, N, true>
+  template<class WeightMaker, std::size_t N>
+  class static_node_storage<WeightMaker, N, true>
   {
   public:
-    using weight_proxy_type = WeightProxy;
-    using weight_type = typename WeightProxy::value_type;
+    using weight_proxy_type = typename WeightMaker::weight_proxy;
+    using weight_type       = typename weight_proxy_type::value_type;
+    using size_type         = std::size_t;
         
     constexpr static_node_storage() = default;
     constexpr static_node_storage(const std::size_t) {}
