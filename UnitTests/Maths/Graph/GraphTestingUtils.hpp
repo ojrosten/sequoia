@@ -121,11 +121,15 @@ namespace sequoia
       {
         auto r{checker<Logger>::make_sentinel(failureMessage)};
         const auto numFailures{failures()};
-        
-        check_equality(nodeWeights, graph.all_node_weights(), "Node weights differ");
-        
-        check_graph_edges(graph, edges, failureMessage);
 
+        if(check_equality(edges.size(), graph.order(), "Graph order wrong"))
+        {
+          check_equality(nodeWeights, graph.all_node_weights(), "Node weights differ");
+
+          using connectivity_t = typename G::connectivity_type;
+          check_graph_edges<G::flavour>(static_cast<const connectivity_t&>(graph), graph.size(), edges, failureMessage);
+        }
+        
         return has_passed(numFailures, failureMessage);
       }
 
@@ -134,23 +138,27 @@ namespace sequoia
       {        
         auto r{checker<Logger>::make_sentinel(failureMessage)};
         const auto numFailures{failures()};
-        
-        constexpr bool nullNodeWeight{std::is_empty_v<typename G::node_weight_type>};
-        if constexpr(!nullNodeWeight)       
+
+        if(check_equality(edges.size(), graph.order(), "Graph order wrong"))
         {
-          const auto dist{static_cast<std::size_t>(distance(graph.cbegin_node_weights(), graph.cend_node_weights()))};
-          if(check_equality(nodeWeights.size(), dist, "Number of nodes wrong"))
+          constexpr bool nullNodeWeight{std::is_empty_v<typename G::node_weight_type>};
+          if constexpr(!nullNodeWeight)       
           {
-            for(auto iter{graph.cbegin_node_weights()}; iter != graph.cend_node_weights(); ++iter)
+            const auto dist{static_cast<std::size_t>(distance(graph.cbegin_node_weights(), graph.cend_node_weights()))};
+            if(check_equality(nodeWeights.size(), dist, "Number of nodes wrong"))
             {
-              const auto i{distance(graph.cbegin_node_weights(), iter)};
-              const std::string nodeMessage{"Node weight wrong for node " + std::to_string(i)};
-              check_equality(*(nodeWeights.begin() + i), *(graph.cbegin_node_weights()+i), nodeMessage);
+              for(auto iter{graph.cbegin_node_weights()}; iter != graph.cend_node_weights(); ++iter)
+              {
+                const auto i{distance(graph.cbegin_node_weights(), iter)};
+                const std::string nodeMessage{"Node weight wrong for node " + std::to_string(i)};
+                check_equality(*(nodeWeights.begin() + i), *(graph.cbegin_node_weights()+i), nodeMessage);
+              }
             }
           }
+
+          using connectivity_t = typename G::connectivity_type;
+          check_graph_edges<G::flavour>(static_cast<const connectivity_t&>(graph), graph.size(), edges, failureMessage);
         }
-        
-        check_graph_edges(graph, edges, failureMessage);
 
         return has_passed(numFailures, failureMessage);
       }
@@ -168,85 +176,81 @@ namespace sequoia
         return passed;
       }
       
-      template<class G, class E=typename G::edge_init_type>
-      void check_graph_edges(const G& graph, std::initializer_list<std::initializer_list<E>> edges, std::string_view failureMessage="")
+      template<maths::graph_flavour F, class C, class E=typename C::edge_init_type>
+      void check_graph_edges(const C& connectivity, const std::size_t size, std::initializer_list<std::initializer_list<E>> edges, std::string_view failureMessage="")
       {
-        using Edge = typename G::edge_type;
+        using Edge = typename C::edge_type;
         using RefEdge = E;
-        constexpr bool nullEdgeWeight{std::is_empty_v<typename G::edge_weight_type>};
-
-        const auto numNodes{edges.size()};
+        constexpr bool nullEdgeWeight{std::is_empty_v<typename C::edge_weight_type>};
         double nEdges{};
-        if(check_equality(numNodes, graph.order(), "Graph order wrong"))
+        for(auto edgesIter{edges.begin()}; edgesIter != edges.end(); ++edgesIter)
         {
-          for(auto edgesIter{edges.begin()}; edgesIter != edges.end(); ++edgesIter)
+          const auto i{std::distance(edges.begin(), edgesIter)};
+          const std::string partStr{std::to_string(i)};
+
+          auto beginEdges{connectivity.cbegin_edges(i)};
+          auto endEdges{connectivity.cend_edges(i)};
+          auto rbeginEdges{connectivity.crbegin_edges(i)};
+          auto rendEdges{connectivity.crend_edges(i)};
+
+          const auto nNodeEdges{static_cast<std::size_t>(distance(beginEdges, endEdges))};
+          const auto nrNodeEdges{static_cast<std::size_t>(distance(rbeginEdges, rendEdges))};
+
+          const auto nodeEdges{*edgesIter};
+          if(check_equality(nodeEdges.size(), nNodeEdges, "Number of edges for partition " + partStr + " wrong")
+             && check_equality(nodeEdges.size(), nrNodeEdges, "Number of edges for reversed partition " + partStr + " wrong")
+             )
           {
-            const auto i{std::distance(edges.begin(), edgesIter)};
-            const std::string partStr{std::to_string(i)};
-
-            auto beginEdges{graph.cbegin_edges(i)};
-            auto endEdges{graph.cend_edges(i)};
-            auto rbeginEdges{graph.crbegin_edges(i)};
-            auto rendEdges{graph.crend_edges(i)};
-
-            const auto nNodeEdges{static_cast<std::size_t>(distance(beginEdges, endEdges))};
-            const auto nrNodeEdges{static_cast<std::size_t>(distance(rbeginEdges, rendEdges))};
-
-            const auto nodeEdges{*edgesIter};
-            if(check_equality(nodeEdges.size(), nNodeEdges, "Number of edges for partition " + partStr + " wrong")
-               && check_equality(nodeEdges.size(), nrNodeEdges, "Number of edges for reversed partition " + partStr + " wrong")
-               )
+            auto ansIter{nodeEdges.begin()};
+            auto redge{rendEdges};
+            for(auto edge{beginEdges}; edge != endEdges; ++edge, ++ansIter)
             {
-              auto ansIter{nodeEdges.begin()};
-              auto redge{rendEdges};
-              for(auto edge{beginEdges}; edge != endEdges; ++edge, ++ansIter)
-              {
-                --redge;
-                check(*edge == *redge, "Disagreement between forward and reverse itereators");
-                auto dist{distance(beginEdges, edge)};
-                const std::string message{" wrong for partition " + partStr + ", edge " + to_string(dist)};
+              --redge;
+              check(*edge == *redge, "Disagreement between forward and reverse itereators");
+              auto dist{distance(beginEdges, edge)};
+              const std::string message{" wrong for partition " + partStr + ", edge " + to_string(dist)};
             
-                const auto target{[edge=*ansIter](const std::size_t node){
-                  if constexpr (   (G::flavour != maths::graph_flavour::directed_embedded)
+              const auto target{[edge=*ansIter](const std::size_t node){
+                if constexpr (   (F != maths::graph_flavour::directed_embedded)
                               && (E::flavour != maths::edge_flavour::partial)
-                              && (E::flavour != maths::edge_flavour::partial_embedded)
-                  )
-                  {
-                    return (edge.host_node() == node) ? edge.target_node() : edge.host_node();
-                  }
-                  else
-                  {
-                    return edge.target_node();
-                  } 
-                }(i)};
+                              && (E::flavour != maths::edge_flavour::partial_embedded))
+                {
+                  return (edge.host_node() == node) ? edge.target_node() : edge.host_node();
+                }
+                else
+                {
+                  return edge.target_node();
+                } 
+              }(i)};
                 
-                check_equality(target, edge->target_node(), "target_node" + message);
+              check_equality(target, edge->target_node(), "target_node" + message);
 
-                if constexpr ((Edge::flavour == maths::edge_flavour::partial_embedded)
-                              && ((RefEdge::flavour == maths::edge_flavour::full_embedded) || (RefEdge::flavour == maths::edge_flavour::partial_embedded)))
-                {
-                  check_equality(ansIter->complementary_index(), edge->complementary_index(), "complementary_index" + message);
-                }
-                else if constexpr ((Edge::flavour == maths::edge_flavour::full_embedded) && (RefEdge::flavour == maths::edge_flavour::full_embedded))
-                {
-                  check_equality(ansIter->host_node(), edge->host_node(), "host_node " + message);
-                  check_equality(ansIter->complementary_index(), edge->complementary_index(), "complementary_index" + message);
-                  check_equality(ansIter->inverted(), edge->inverted(), "inverted" + message);
-                }
-                else if constexpr ((Edge::flavour == maths::edge_flavour::full) && (RefEdge::flavour == maths::edge_flavour::full))
-                {
-                  check_equality(ansIter->host_node(), edge->host_node(), "host_node" + message);
-                  check_equality(ansIter->inverted(), edge->inverted(), "inverted" + message);
-                }
-              
-                if constexpr(!nullEdgeWeight) check_equality(ansIter->weight(), edge->weight(), "Weight" + message);
-              
-                (G::flavour != maths::graph_flavour::directed) ? nEdges += 0.5 : ++nEdges;
+              if constexpr (  (Edge::flavour == maths::edge_flavour::partial_embedded)
+                           && (   (RefEdge::flavour == maths::edge_flavour::full_embedded)
+                               || (RefEdge::flavour == maths::edge_flavour::partial_embedded)))
+              {
+                check_equality(ansIter->complementary_index(), edge->complementary_index(), "complementary_index" + message);
               }
+              else if constexpr ((Edge::flavour == maths::edge_flavour::full_embedded) && (RefEdge::flavour == maths::edge_flavour::full_embedded))
+              {
+                check_equality(ansIter->host_node(), edge->host_node(), "host_node " + message);
+                check_equality(ansIter->complementary_index(), edge->complementary_index(), "complementary_index" + message);
+                check_equality(ansIter->inverted(), edge->inverted(), "inverted" + message);
+              }
+              else if constexpr ((Edge::flavour == maths::edge_flavour::full) && (RefEdge::flavour == maths::edge_flavour::full))
+              {
+                check_equality(ansIter->host_node(), edge->host_node(), "host_node" + message);
+                check_equality(ansIter->inverted(), edge->inverted(), "inverted" + message);
+              }
+              
+              if constexpr(!nullEdgeWeight) check_equality(ansIter->weight(), edge->weight(), "Weight" + message);
+              
+              (F != maths::graph_flavour::directed) ? nEdges += 0.5 : ++nEdges;
             }
           }
         }
-        check_equality(static_cast<std::size_t>(nEdges), graph.size(), "Graph size wrong");        
+          
+        check_equality(static_cast<std::size_t>(nEdges), size, "Graph size wrong"); 
       }
     };
 
