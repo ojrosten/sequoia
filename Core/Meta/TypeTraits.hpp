@@ -119,22 +119,6 @@ namespace sequoia
 
   template<class T> using is_const_reference_t = typename is_const_reference<T>::type;
 
-  // has_member_type
-  
-  template<class T, class M, class = std::void_t<>>
-  struct has_member_type : std::false_type
-  {};
-
-  template<class T, class M>
-  struct has_member_type<T, M, std::void_t<typename T::M>> : std::true_type
-  {};
-
-  template<class T, class M>
-  constexpr bool has_member_type_v{has_member_type<T,M>::value};
-  
-  template<class T, class M>
-  using has_member_type_t = typename has_member_type<T,M>::type;
-
   // is_orderable
   
   template<class T, class = std::void_t<>>

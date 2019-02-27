@@ -9,6 +9,8 @@
 
 #include "TypeTraits.hpp"
 
+#include <complex>
+
 namespace sequoia::unit_testing
 {
   void type_traits_test::run_tests()
@@ -18,7 +20,6 @@ namespace sequoia::unit_testing
     test_resolve_to_copy_constructor();
     test_is_const_pointer();
     test_is_const_reference();
-    test_has_member_type();
     test_is_orderable();
     test_is_equal_to_comparable();
     test_is_not_equal_to_comparable();
@@ -410,20 +411,210 @@ namespace sequoia::unit_testing
 
   void type_traits_test::test_is_const_reference()
   {
-  }
+    check([]() {
+        static_assert(std::is_same_v<std::true_type, is_const_reference_t<const int&>>);
+        return true;
+      }
+    );
 
-  void type_traits_test::test_has_member_type()
-  {
+    check([]() {
+        static_assert(is_const_reference_v<const int&>);
+        return true;
+      }
+    );
+
+    check([]() {
+        static_assert(std::is_same_v<std::true_type, is_const_reference_t<const volatile int&>>);
+        return true;
+      }
+    );
+
+    check([]() {
+        static_assert(is_const_reference_v<const volatile int&>);
+        return true;
+      }
+    );
+
+    check([]() {
+        static_assert(std::is_same_v<std::false_type, is_const_reference_t<int&>>);
+        return true;
+      }
+    );
+
+    check([]() {
+        static_assert(!is_const_reference_v<int&>);
+        return true;
+      }
+    );
   }
 
   void type_traits_test::test_is_orderable()
-  {}
+  {
+    check([]() {
+        static_assert(std::is_same_v<std::true_type, is_orderable_t<double>>);
+        return true;
+      }
+    );
+
+    check([]() {
+        static_assert(is_orderable_v<double>);
+        return true;
+      }
+    );
+
+    check([]() {
+        static_assert(std::is_same_v<std::true_type, is_orderable_t<std::set<double>>>);
+        return true;
+      }
+    );
+
+    check([]() {
+        static_assert(is_orderable_v<std::set<double>>);
+        return true;
+      }
+    );
+    
+    check([]() {
+        static_assert(std::is_same_v<std::false_type, is_orderable_t<std::complex<double>>>);
+        return true;
+      }
+    );
+
+    check([]() {
+        static_assert(!is_orderable_v<std::complex<double>>);
+        return true;
+      }
+    );
+  }
 
   void type_traits_test::test_is_equal_to_comparable()
-  {}
+  {
+    check([]() {
+        static_assert(std::is_same_v<std::true_type, is_equal_to_comparable_t<double>>);
+        return true;
+      }
+    );
+
+    check([]() {
+        static_assert(is_equal_to_comparable_v<double>);
+        return true;
+      }
+    );
+
+    check([]() {
+        static_assert(std::is_same_v<std::true_type, is_equal_to_comparable_t<std::vector<double>>>);
+        return true;
+      }
+    );
+
+    check([]() {
+        static_assert(is_equal_to_comparable_v<std::vector<double>>);
+        return true;
+      }
+    );
+
+    check([]() {
+        static_assert(std::is_same_v<std::false_type, is_equal_to_comparable_t<std::thread>>);
+        return true;
+      }
+    );
+
+    check([]() {
+        static_assert(!is_equal_to_comparable_v<std::thread>);
+        return true;
+      }
+    );
+  }
 
   void type_traits_test::test_is_not_equal_to_comparable()
-  {}
+  {
+    check([]() {
+        static_assert(std::is_same_v<std::true_type, is_not_equal_to_comparable_t<double>>);
+        return true;
+      }
+    );
 
-  void type_traits_test::test_has_default_constructor(){}
+    check([]() {
+        static_assert(is_not_equal_to_comparable_v<double>);
+        return true;
+      }
+    );
+
+    check([]() {
+        static_assert(std::is_same_v<std::true_type, is_not_equal_to_comparable_t<std::vector<double>>>);
+        return true;
+      }
+    );
+
+    check([]() {
+        static_assert(is_not_equal_to_comparable_v<std::vector<double>>);
+        return true;
+      }
+    );
+
+    check([]() {
+        static_assert(std::is_same_v<std::false_type, is_not_equal_to_comparable_t<std::thread>>);
+        return true;
+      }
+    );
+
+    check([]() {
+        static_assert(!is_not_equal_to_comparable_v<std::thread>);
+        return true;
+      }
+    );
+  }
+
+  void type_traits_test::test_has_default_constructor()
+  {
+    struct protected_destructor
+    {
+      protected_destructor() = default;
+    protected:
+      ~protected_destructor() = default;
+    };
+
+    struct no_default_constructor
+    {
+      no_default_constructor(int) {}
+    };
+    
+    check([]() {
+        static_assert(std::is_same_v<std::true_type, has_default_constructor_t<std::vector<double>>>);
+        return true;
+      }
+    );
+
+    check([]() {
+        static_assert(has_default_constructor_v<std::vector<double>>);
+        return true;
+      }
+    );
+
+    check([]() {
+        static_assert(std::is_same_v<std::true_type, has_default_constructor_t<protected_destructor>>);
+        static_assert(std::is_same_v<std::false_type, typename std::is_constructible<protected_destructor>::type>);
+        return true;
+      }
+    );
+
+    check([]() {
+        static_assert(has_default_constructor_v<protected_destructor>);
+        static_assert(!std::is_constructible_v<protected_destructor>);
+        return true;
+      }
+    );
+
+    check([]() {
+        static_assert(std::is_same_v<std::false_type, has_default_constructor_t<no_default_constructor>>);
+        return true;
+      }
+    );
+
+    check([]() {
+        static_assert(!has_default_constructor_v<no_default_constructor>);
+        return true;
+      }
+    );
+  }
 }

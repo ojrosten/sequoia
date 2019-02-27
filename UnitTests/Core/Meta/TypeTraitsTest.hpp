@@ -29,8 +29,6 @@ namespace sequoia::unit_testing
 
     void test_is_const_reference();
 
-    void test_has_member_type();
-
     void test_is_orderable();
 
     void test_is_equal_to_comparable();
