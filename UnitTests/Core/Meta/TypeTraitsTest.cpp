@@ -14,7 +14,15 @@ namespace sequoia::unit_testing
   void type_traits_test::run_tests()
   {
     test_variadic_traits();
+    test_base_of_head();
     test_resolve_to_copy_constructor();
+    test_is_const_pointer();
+    test_is_const_reference();
+    test_has_member_type();
+    test_is_orderable();
+    test_is_equal_to_comparable();
+    test_is_not_equal_to_comparable();
+    test_has_default_constructor();
   }
 
   void type_traits_test::test_variadic_traits()
@@ -126,6 +134,69 @@ namespace sequoia::unit_testing
     }
   }
 
+  void type_traits_test::test_base_of_head()
+  {
+    check([]() {
+        static_assert(std::is_same_v<std::false_type, is_base_of_head_t<int, double>>);
+        return true;
+      }
+    );
+
+    check([]() {
+        static_assert(!is_base_of_head_v<int, double>);
+        return true;
+      }
+    );
+
+    check([]() {
+        static_assert(std::is_same_v<std::true_type, is_base_of_head_t<std::basic_iostream<char>, std::stringstream>>);
+        return true;
+      }
+    );
+
+    check([]() {
+        static_assert(is_base_of_head_v<std::basic_iostream<char>, std::stringstream>);
+        return true;
+      }
+    );
+
+    check([]() {
+        static_assert(std::is_same_v<std::true_type, is_base_of_head_t<std::basic_iostream<char>, std::stringstream, double>>);
+        return true;
+      }
+    );
+
+    check([]() {
+        static_assert(is_base_of_head_v<std::basic_iostream<char>, std::stringstream, double>);
+        return true;
+      }
+    );    
+
+    check([]() {
+        static_assert(std::is_same_v<std::false_type, is_base_of_head_t<std::basic_iostream<char>, double, std::stringstream>>);
+        return true;
+      }
+    );
+
+    check([]() {
+        static_assert(!is_base_of_head_v<std::basic_iostream<char>, double, std::stringstream>);
+        return true;
+      }
+    );
+
+    check([]() {
+        static_assert(std::is_same_v<std::false_type, is_base_of_head_t<std::stringstream, std::basic_iostream<char>>>);
+        return true;
+      }
+    );
+
+    check([]() {
+        static_assert(!is_base_of_head_v<std::stringstream, std::basic_iostream<char>>);
+        return true;
+      }
+    );
+  }
+  
   void type_traits_test::test_resolve_to_copy_constructor()
   {
     {
@@ -282,4 +353,29 @@ namespace sequoia::unit_testing
       );
     }
   }
+
+  
+
+  void type_traits_test::test_is_const_pointer()
+  {
+  }
+
+  void type_traits_test::test_is_const_reference()
+  {
+  }
+
+  void type_traits_test::test_has_member_type()
+  {
+  }
+
+  void type_traits_test::test_is_orderable()
+  {}
+
+  void type_traits_test::test_is_equal_to_comparable()
+  {}
+
+  void type_traits_test::test_is_not_equal_to_comparable()
+  {}
+
+  void type_traits_test::test_has_default_constructor(){}
 }

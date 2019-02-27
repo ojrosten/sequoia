@@ -21,6 +21,22 @@ namespace sequoia::unit_testing
 
     void test_variadic_traits();
 
+    void test_base_of_head();
+    
     void test_resolve_to_copy_constructor();
+
+    void test_is_const_pointer();
+
+    void test_is_const_reference();
+
+    void test_has_member_type();
+
+    void test_is_orderable();
+
+    void test_is_equal_to_comparable();
+
+    void test_is_not_equal_to_comparable();
+
+    void test_has_default_constructor();
   };
 }
