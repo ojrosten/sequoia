@@ -103,6 +103,9 @@ namespace sequoia
   template<class T>
   struct is_const_pointer<const T*> : std::true_type {};
 
+  template<class T>
+  struct is_const_pointer<const T* const> : std::true_type {};
+
   template<class T> constexpr bool is_const_pointer_v{is_const_pointer<T>::value};
 
   template<class T> using is_const_pointer_t = typename is_const_pointer<T>::type;

@@ -358,6 +358,54 @@ namespace sequoia::unit_testing
 
   void type_traits_test::test_is_const_pointer()
   {
+
+    check([]() {
+        static_assert(std::is_same_v<std::true_type, is_const_pointer_t<const int*>>);
+        return true;
+      }
+    );
+
+    check([]() {
+        static_assert(is_const_pointer_v<const int*>);
+        return true;
+      }
+    );
+
+    check([]() {
+        static_assert(std::is_same_v<std::false_type, is_const_pointer_t<int*>>);
+        return true;
+      }
+    );
+
+    check([]() {
+        static_assert(!is_const_pointer_v<int*>);
+        return true;
+      }
+    );
+
+    check([]() {
+        static_assert(std::is_same_v<std::false_type, is_const_pointer_t<int* const>>);
+        return true;
+      }
+    );
+
+    check([]() {
+        static_assert(!is_const_pointer_v<int* const>);
+        return true;
+      }
+    );
+
+    check([]() {
+        static_assert(std::is_same_v<std::true_type, is_const_pointer_t<const int* const>>);
+        return true;
+      }
+    );
+
+    check([]() {
+        static_assert(is_const_pointer_v<const int* const>);
+        return true;
+      }
+    );
   }
 
   void type_traits_test::test_is_const_reference()
