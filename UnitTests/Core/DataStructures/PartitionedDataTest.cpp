@@ -439,20 +439,24 @@ namespace sequoia
 
       check_partitions(storage, answers_type{{12, 13, 3, -8}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}});
 
-      storage.erase_from_partition(0, 0);
+      iter = storage.erase_from_partition(0, 0);
       // [13, 3, -8][4][1, 2, 8, 9,-3, 7, 5][]
 
       check_partitions(storage, answers_type{{13, 3, -8}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}});
+      check_equality(13, *iter, LINE(""));
+      check_equality<std::size_t>(0, iter.partition_index(), LINE(""));
 
       storage.erase_from_partition(0, 2);
       // [13, 3][4][1, 2, 8, 9,-3, 7, 5][]
 
       check_partitions(storage, answers_type{{13, 3}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}});
 
-      storage.erase_from_partition(storage.cbegin_partition(0));
+      iter = storage.erase_from_partition(storage.cbegin_partition(0));
       // [3][4][1, 2, 8, 9,-3, 7, 5][]
 
       check_partitions(storage, answers_type{{3}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}});
+      check_equality(3, *iter, LINE(""));
+      check_equality<std::size_t>(0, iter.partition_index(), LINE(""));
 
       storage.insert_to_partition(storage.cbegin_partition(2), -2);
       storage.insert_to_partition(storage.cbegin_partition(3), -2);
