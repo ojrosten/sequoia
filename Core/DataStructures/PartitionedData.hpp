@@ -665,7 +665,6 @@ namespace sequoia
         insert(index, std::forward<Args>(args)...);
       }
 
-      // Unify this with insert method
       void push_back_to_partition(const index_type index, const_partition_iterator iter)
       {
         if constexpr(throw_on_range_error) check_range(index);
@@ -680,10 +679,7 @@ namespace sequoia
           insertIter = m_Storage.insert(m_Storage.begin() + m_Partitions[index], *(iter.base_iterator()));
         }
 
-        for(size_type i{index}; i < m_Partitions.size(); ++i)
-        {
-          ++m_Partitions[i];
-        }
+        increment_partition_indices(index);
       }
 
       template<class... Args>
@@ -696,13 +692,9 @@ namespace sequoia
          
         const auto host{pos.partition_index()};
         auto iter{m_Storage.insert(pos.base_iterator(), SharingPolicy::make(std::forward<Args>(args)...))};
+        increment_partition_indices(host);
 
-        for(auto i{host}; i < m_Partitions.size(); ++i)
-        {
-          ++m_Partitions[i];
-        }
-
-        return partition_iterator(iter, host);
+        return partition_iterator{iter, host};
       }
 
       partition_iterator insert_to_partition(const_partition_iterator pos, const_partition_iterator setFromIter)
@@ -714,13 +706,9 @@ namespace sequoia
         
         const auto host{pos.partition_index()};
         auto iter{m_Storage.insert(pos.base_iterator(), *(setFromIter.base_iterator()))};
+        increment_partition_indices(host);
 
-        for(auto i{host}; i < m_Partitions.size(); ++i)
-        {
-          ++m_Partitions[i];
-        }
-
-        return partition_iterator(iter, host);
+        return partition_iterator{iter, host};
       }
 
       partition_iterator erase_from_partition(const index_type index, const size_type pos)
@@ -730,10 +718,7 @@ namespace sequoia
         if(iter != end_partition(num_partitions() - 1) && pos < static_cast<size_type>(distance(iter, end_partition(index))))
         {
           next = m_Storage.erase((iter + pos).base_iterator());
-          for(size_type i{index}; i < m_Partitions.size(); ++i)
-          {
-            m_Partitions[i]-=1;
-          }
+          decrement_partition_indices(index);
         }
 
         return partition_iterator(next, index);
@@ -743,10 +728,8 @@ namespace sequoia
       {
         const auto next{m_Storage.erase(iter.base_iterator())};
         const auto index{iter.partition_index()};
-        for(size_type i{index}; i < m_Partitions.size(); ++i)
-        {
-          --m_Partitions[i];
-        }
+        decrement_partition_indices(index);
+          
         return partition_iterator{next, iter.partition_index()};
       }
       
@@ -861,6 +844,22 @@ namespace sequoia
         }
       }
 
+      void increment_partition_indices(const size_type first) noexcept
+      {
+        for(size_type i{first}; i < m_Partitions.size(); ++i)
+        {
+          ++m_Partitions[i];
+        }
+      }
+
+      void decrement_partition_indices(const size_type first) noexcept
+      {
+        for(size_type i{first}; i < m_Partitions.size(); ++i)
+        {
+          --m_Partitions[i];
+        }
+      }
+
       void check_range(const size_type index) const
       {
         if(index >= m_Partitions.size())
@@ -899,10 +898,7 @@ namespace sequoia
           iter = m_Storage.insert(m_Storage.begin() + m_Partitions[index], SharingPolicy::make(std::forward<Args>(args)...));
         }
 
-        for(size_type i{index}; i < m_Partitions.size(); ++i)
-        {
-          ++m_Partitions[i];
-        }
+       increment_partition_indices(index);
 
         return iter;
       }
@@ -915,11 +911,7 @@ namespace sequoia
         const index_type offset{(index > index_type{}) ? m_Partitions[index - 1] + pos : pos};
 
         iter = m_Storage.insert(iter + offset, toAdd);
-
-        for(auto i{index}; i < m_Partitions.size(); ++i)
-        {
-          ++m_Partitions[i];
-        }
+        increment_partition_indices(index);
 
         return partition_iterator(iter, index);
       }
