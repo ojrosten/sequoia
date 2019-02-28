@@ -360,10 +360,12 @@ namespace sequoia
 
       check_partitions(storage, answers_type{{3}, {4}, {9, -3}});
 
-      storage.insert_to_partition(storage.cbegin_partition(2), 2);
+      iter = storage.insert_to_partition(storage.cbegin_partition(2), 2);
       // [3][4][2, 9,-3]
 
       check_partitions(storage, answers_type{{3}, {4}, {2, 9, -3}});
+      check_equality(2, *iter, LINE(""));
+      check_equality<std::size_t>(2, iter.partition_index(), LINE(""));
 
       storage.swap_partitions(0,2);
       // [2, 9,-3][4][3]
@@ -375,15 +377,19 @@ namespace sequoia
 
       check_partitions(storage, answers_type{{3}, {4}, {2, 9, -3}});
 
-      storage.insert_to_partition(storage.cbegin_partition(2) + 1, 8);
+      iter = storage.insert_to_partition(storage.cbegin_partition(2) + 1, 8);
       // [3][4][2, 8, 9,-3]
 
       check_partitions(storage, answers_type{{3}, {4}, {2, 8, 9, -3}});
+      check_equality(8, *iter, LINE(""));
+      check_equality<std::size_t>(2, iter.partition_index(), LINE(""));
 
-      storage.insert_to_partition(storage.begin_partition(2) + 4, 7);
+      iter = storage.insert_to_partition(storage.begin_partition(2) + 4, 7);
       // [3][4][2, 8, 9,-3, 7]
 
       check_partitions(storage, answers_type{{3}, {4}, {2, 8, 9, -3, 7}});
+      check_equality(7, *iter, LINE(""));
+      check_equality<std::size_t>(2, iter.partition_index(), LINE(""));
 
       storage.insert_to_partition(storage.cbegin_partition(2) + 5, 5);
       // [3][4][2, 8, 9,-3, 7, 5]
