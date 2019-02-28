@@ -648,24 +648,26 @@ namespace sequoia
       void push_back_to_partition(const index_type index, Args&&... args)
       {
         if constexpr(throw_on_range_error) check_range(index);
-        insert(index, std::forward<Args>(args)...);
+        auto maker{
+          [](auto&&... a) {
+            return SharingPolicy::make(std::forward<decltype(a)>(a)...);
+          }
+        };
+        
+        insert(index, maker, std::forward<Args>(args)...);
       }
 
       void push_back_to_partition(const index_type index, const_partition_iterator iter)
       {
         if constexpr(throw_on_range_error) check_range(index);
-        auto insertIter{m_Storage.end()};
-        if(index == m_Partitions.size() - 1)
-        {
-          m_Storage.push_back(*(iter.base_iterator()));
-          insertIter = --m_Storage.end();
-        }
-        else
-        {
-          insertIter = m_Storage.insert(m_Storage.begin() + m_Partitions[index], *(iter.base_iterator()));
-        }
 
-        increment_partition_indices(index);
+         auto maker{
+          [](const_partition_iterator i) {
+            return *(i.base_iterator());
+          }
+        };
+
+        insert(index, maker, iter);
       }
 
       template<class... Args>
@@ -870,21 +872,21 @@ namespace sequoia
         if(pos > maxPos + expand) throw std::out_of_range("contiguous_storage::pos index out of range");
       }
 
-      template<class... Args>
-      auto insert(const index_type index, Args&&... args)
+      template<class Maker, class... Args>
+      auto insert(const index_type index, Maker maker, Args&&... args)
       {
         auto iter{m_Storage.end()};
         if(index == m_Partitions.size() - 1)
         {
-          m_Storage.push_back(SharingPolicy::make(std::forward<Args>(args)...));
+          m_Storage.push_back(maker(std::forward<Args>(args)...));
           iter = --m_Storage.end();
         }
         else
         {
-          iter = m_Storage.insert(m_Storage.begin() + m_Partitions[index], SharingPolicy::make(std::forward<Args>(args)...));
+          iter = m_Storage.insert(m_Storage.begin() + m_Partitions[index], maker(std::forward<Args>(args)...));
         }
 
-       increment_partition_indices(index);
+        increment_partition_indices(index);
 
         return iter;
       }
