@@ -410,20 +410,6 @@ namespace sequoia
           throw std::out_of_range("bucketed_storage::partition " + std::to_string(index) + " pos " + std::to_string(pos) + " out of range");
         }
       }
-
-      partition_iterator insert_directly_to_partition(const size_type index, const size_type pos, const held_type& toAdd)
-      {
-        if constexpr(throw_on_range_error)
-        {
-          check_range(index);
-          check_range(pos);
-        }
-
-        auto bucketIter{m_Buckets[index].cbegin() + pos};
-        auto iter{m_Buckets[index].insert(bucketIter, toAdd)};
-
-        return partition_iterator(iter, index);
-      }
     };
 
     //===================================Contiguous storage===================================//
@@ -902,20 +888,7 @@ namespace sequoia
 
         return iter;
       }
-
-      partition_iterator insert_directly_to_partition(const index_type index, const index_type pos, const held_type& toAdd)
-      {
-        if constexpr(throw_on_range_error) check_range(index, pos);
-
-        auto iter{m_Storage.begin()};
-        const index_type offset{(index > index_type{}) ? m_Partitions[index - 1] + pos : pos};
-
-        iter = m_Storage.insert(iter + offset, toAdd);
-        increment_partition_indices(index);
-
-        return partition_iterator(iter, index);
-      }
-
+      
       template<class PartitionIterator, class Iterator>
       constexpr PartitionIterator get_begin_iterator(const index_type i, Iterator iter) const noexcept
       {
