@@ -673,30 +673,24 @@ namespace sequoia
       template<class... Args>
       partition_iterator insert_to_partition(const_partition_iterator pos, Args&&... args)
       {
-        if constexpr(throw_on_range_error)
-        {
-          if(!m_Partitions.size()) throw std::out_of_range("contiguous_storage: no partitions into which to insert");
-        }
-         
-        const auto host{pos.partition_index()};
-        auto iter{m_Storage.insert(pos.base_iterator(), SharingPolicy::make(std::forward<Args>(args)...))};
-        increment_partition_indices(host);
+        auto maker{
+          [](auto&&... a) {
+            return SharingPolicy::make(std::forward<decltype(a)>(a)...);
+          }
+        };
 
-        return partition_iterator{iter, host};
+        return insert(pos, maker, std::forward<Args>(args)...);
       }
 
       partition_iterator insert_to_partition(const_partition_iterator pos, const_partition_iterator setFromIter)
       {
-        if constexpr(throw_on_range_error)
-        {
-          if(!m_Partitions.size()) throw std::out_of_range("contiguous_storage: no partitions into which to insert");
-        }
-        
-        const auto host{pos.partition_index()};
-        auto iter{m_Storage.insert(pos.base_iterator(), *(setFromIter.base_iterator()))};
-        increment_partition_indices(host);
+        auto maker{
+          [](const_partition_iterator i) {
+            return *(i.base_iterator());
+          }
+        };
 
-        return partition_iterator{iter, host};
+        return insert(pos, maker, setFromIter);
       }
 
       partition_iterator erase_from_partition(const index_type index, const size_type pos)
@@ -889,6 +883,21 @@ namespace sequoia
         increment_partition_indices(index);
 
         return iter;
+      }
+
+      template<class Maker, class... Args>
+      auto insert(const_partition_iterator pos, Maker maker, Args&&... args)
+      {
+        if constexpr(throw_on_range_error)
+        {
+          if(!m_Partitions.size()) throw std::out_of_range("contiguous_storage: no partitions into which to insert");
+        }
+         
+        const auto host{pos.partition_index()};
+        auto iter{m_Storage.insert(pos.base_iterator(), maker(std::forward<Args>(args)...))};
+        increment_partition_indices(host);
+
+        return partition_iterator{iter, host};
       }
       
       template<class PartitionIterator, class Iterator>
