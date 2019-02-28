@@ -1,3 +1,10 @@
+////////////////////////////////////////////////////////////////////
+//                 Copyright Oliver Rosten 2018.                  //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
 #pragma once
 
 #include "PartitionedData.hpp"
@@ -27,7 +34,7 @@ namespace sequoia
         static std::string str() { return "CONTIGUOUS STORAGE; SHARED DATA"; }
     };
   
-    class test_partitioned_data : public unit_test
+    class partitioned_data_test : public unit_test
     {
     public:
       using unit_test::unit_test;

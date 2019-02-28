@@ -1,3 +1,10 @@
+////////////////////////////////////////////////////////////////////
+//                 Copyright Oliver Rosten 2018.                  //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
 #include "AlgorithmsTest.hpp"
 #include "StatisticalAlgorithmsTest.hpp"
 
@@ -8,18 +15,18 @@
 #include "ProtectiveWrapperTest.hpp"
 #include "IteratorTest.hpp"
 
+#include "DataPoolTest.hpp"
 
+#include "ConcurrencyModelsTest.hpp"
 
+#include "PartitionedDataTest.hpp"
 
-#include "TestPartitionedData.hpp"
 #include "TestStaticStack.hpp"
 #include "TestStaticQueue.hpp"
 #include "TestStaticPriorityQueue.hpp"
 #include "StaticStackTestingDiagnostics.hpp"
 #include "StaticQueueTestingDiagnostics.hpp"
 #include "StaticPriorityQueueTestingDiagnostics.hpp"
-
-#include "TestDataPool.hpp"
 
 #include "EdgeTestingDiagnostics.hpp"
 #include "GraphTesterDiagnostics.hpp"
@@ -40,9 +47,7 @@
 #include "TestGraphUpdate.hpp"
 #include "TestSubgraph.hpp"
 
-#include "TestConcurrencyModels.hpp"
-
-#include "TestExperimental.hpp"
+#include "ExperimentalTest.hpp"
 
 #include "UnitTestDiagnostics.hpp"
 
@@ -111,14 +116,21 @@ int main(int argc, char** argv)
     runner.add_test_family(
       test_family{
         "Data Pool",
-        test_data_pool{"Unit Test"}
+        data_pool_test{"Unit Test"}
+      }
+    );
+
+    runner.add_test_family(
+      test_family{
+        "Concurrency Models",
+        threading_models_test{"Unit Test"}
       }
     );
 
     runner.add_test_family(
       test_family{
         "Partitioned Data",
-        test_partitioned_data{"Unit Test"}
+        partitioned_data_test{"Unit Test"}
       }
     );
 
@@ -143,13 +155,6 @@ int main(int argc, char** argv)
         "Static Priority Queue",
         test_static_priority_queue_false_positives{"Static priority queue false positive diagnostics"},
         test_static_priority_queue{"Unit Test"}
-      }
-    );
-
-    runner.add_test_family(
-      test_family{
-        "Concurrency Models",
-        test_threading_models{"Unit Test"}
       }
     );
   
@@ -197,7 +202,7 @@ int main(int argc, char** argv)
     runner.add_test_family(
       test_family{
         "Experimental",
-        test_experimental{"Unit Test"}
+        experimental_test{"Unit Test"}
       }
     );
  

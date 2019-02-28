@@ -1,9 +1,16 @@
-#include "TestConcurrencyModels.hpp"
+////////////////////////////////////////////////////////////////////
+//                 Copyright Oliver Rosten 2018.                  //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
+#include "ConcurrencyModelsTest.hpp"
 #include "ConcurrencyModels.hpp"
 
 namespace sequoia::unit_testing
 {
-  void test_threading_models::run_tests()
+  void threading_models_test::run_tests()
   {
     using namespace concurrency;
 
@@ -29,7 +36,7 @@ namespace sequoia::unit_testing
     test_functor_update<serial<void>>();
   }
 
-  void test_threading_models::test_task_queue()
+  void threading_models_test::test_task_queue()
   {
     using namespace concurrency;
 
@@ -81,7 +88,7 @@ namespace sequoia::unit_testing
     }
   }
 
-  void test_threading_models::test_waiting_task(const std::chrono::milliseconds millisecs)
+  void threading_models_test::test_waiting_task(const std::chrono::milliseconds millisecs)
   {
     using namespace concurrency;
 
@@ -140,7 +147,7 @@ namespace sequoia::unit_testing
     }
   }
 
-  void test_threading_models::test_waiting_task_return(const std::chrono::milliseconds millisecs)
+  void threading_models_test::test_waiting_task_return(const std::chrono::milliseconds millisecs)
   {
     using namespace concurrency;
 
@@ -171,7 +178,7 @@ namespace sequoia::unit_testing
     }
   }
 
-  void test_threading_models::check_return_values(performance_results<std::vector<int>>&& futures, std::string_view message)
+  void threading_models_test::check_return_values(performance_results<std::vector<int>>&& futures, std::string_view message)
   {
     for(auto& f : futures.fast_futures)
     {
@@ -195,7 +202,7 @@ namespace sequoia::unit_testing
   }
 
   template<class ThreadModel, class... Args>
-  void test_threading_models::waiting_task(const std::size_t nTasks, const std::chrono::milliseconds millisecs, Args&&... args)
+  void threading_models_test::waiting_task(const std::size_t nTasks, const std::chrono::milliseconds millisecs, Args&&... args)
   {
     ThreadModel model{std::forward<Args>(args)...};
     
@@ -208,7 +215,7 @@ namespace sequoia::unit_testing
   }
 
   template<class ThreadModel, class... Args>
-  std::vector<int> test_threading_models::waiting_task_return(const std::size_t nTasks, const std::chrono::milliseconds millisecs, Args&&... args)
+  std::vector<int> threading_models_test::waiting_task_return(const std::size_t nTasks, const std::chrono::milliseconds millisecs, Args&&... args)
   {
     ThreadModel model{std::forward<Args>(args)...};
     
@@ -226,7 +233,7 @@ namespace sequoia::unit_testing
   }
 
   template<class ThreadModel, class Exception, class... Args>
-  void test_threading_models::test_exceptions(std::string_view message, Args&&... args)
+  void threading_models_test::test_exceptions(std::string_view message, Args&&... args)
   {
     ThreadModel threadModel{std::forward<Args>(args)...};;
     using R = typename ThreadModel::return_type;
@@ -237,7 +244,7 @@ namespace sequoia::unit_testing
   }
 
   template<class Model>
-  void test_threading_models::test_functor_update()
+  void threading_models_test::test_functor_update()
   {
     Model threadModel;
 

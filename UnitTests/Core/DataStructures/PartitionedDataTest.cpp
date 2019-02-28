@@ -1,4 +1,11 @@
-#include "TestPartitionedData.hpp"
+////////////////////////////////////////////////////////////////////
+//                 Copyright Oliver Rosten 2018.                  //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
+#include "PartitionedDataTest.hpp"
 
 #include <array>
 #include <complex>
@@ -7,7 +14,7 @@ namespace sequoia
 {
   namespace unit_testing
   {
-    void test_partitioned_data::run_tests()
+    void partitioned_data_test::run_tests()
     {
       using namespace data_sharing;
       using namespace data_structures;
@@ -35,7 +42,7 @@ namespace sequoia
 
 
     template<template<class...> class Storage, class T>
-    void test_partitioned_data::test_init_lists(std::initializer_list<std::initializer_list<T>> list)
+    void partitioned_data_test::test_init_lists(std::initializer_list<std::initializer_list<T>> list)
     {
       using namespace data_structures;
       Storage<T,data_sharing::shared<T>> s{list};
@@ -43,7 +50,7 @@ namespace sequoia
     }
 
     template<class S, class T>
-    bool test_partitioned_data::check_partitions(S& storage, std::initializer_list<std::initializer_list<T>> answers)
+    bool partitioned_data_test::check_partitions(S& storage, std::initializer_list<std::initializer_list<T>> answers)
     {
       std::vector<std::vector<T>> ans;
       for(const auto& list : answers)
@@ -59,7 +66,7 @@ namespace sequoia
     }
 
     template<class S, class T>
-    bool test_partitioned_data::check_partitions(S& storage, const std::vector<std::vector<T>>& answers)
+    bool partitioned_data_test::check_partitions(S& storage, const std::vector<std::vector<T>>& answers)
     {
       const auto numFailures{this->failures()};
         
@@ -110,7 +117,7 @@ namespace sequoia
     }
 
     template<class S, class T>
-    bool test_partitioned_data::check_constexpr_partitions(S& storage, std::initializer_list<std::initializer_list<T>> answers)
+    bool partitioned_data_test::check_constexpr_partitions(S& storage, std::initializer_list<std::initializer_list<T>> answers)
     {
       std::vector<std::vector<T>> ans;
       for(const auto& list : answers)
@@ -126,7 +133,7 @@ namespace sequoia
     }
 
     template<class S, class T>
-    bool test_partitioned_data::check_constexpr_partitions(const S& storage, const std::vector<std::vector<T>>& answers)
+    bool partitioned_data_test::check_constexpr_partitions(const S& storage, const std::vector<std::vector<T>>& answers)
     {
       const auto numFailures{this->failures()};
         
@@ -170,7 +177,7 @@ namespace sequoia
       return this->failures() == numFailures;
     }
 
-    void test_partitioned_data::test_static_storage()
+    void partitioned_data_test::test_static_storage()
     {
       using namespace data_structures;
 
@@ -221,7 +228,7 @@ namespace sequoia
       }
     }
     
-    void test_partitioned_data::test_storage()
+    void partitioned_data_test::test_storage()
     {
       using namespace data_structures;
       using namespace data_sharing;
@@ -239,7 +246,7 @@ namespace sequoia
     }
 
     template <class Storage>
-    Storage test_partitioned_data::test_generic_storage()
+    Storage partitioned_data_test::test_generic_storage()
     {
       using namespace data_structures;
       using namespace data_sharing;
@@ -668,7 +675,7 @@ namespace sequoia
     }
 
     template<template<class> class SharingPolicy>
-    void test_partitioned_data::test_iterators()
+    void partitioned_data_test::test_iterators()
     {
       using namespace data_structures;
 
@@ -689,7 +696,7 @@ namespace sequoia
     }
 
     template<template<class...> class C, class SharingPolicy, template<class> class ReferencePolicy, class Arg>
-    void test_partitioned_data::test_generic_iterator_properties(const Arg& v)
+    void partitioned_data_test::test_generic_iterator_properties(const Arg& v)
     {
       using namespace data_structures;
       using T = typename SharingPolicy::elementary_type;
@@ -755,7 +762,7 @@ namespace sequoia
     }
 
     template<template<class...> class C, class SharingPolicy, template<class> class ReferencePolicy, class Arg>
-    void test_partitioned_data::test_generic_iterator_deref(const Arg& v)
+    void partitioned_data_test::test_generic_iterator_deref(const Arg& v)
     {
       using namespace data_structures;
       using T = typename SharingPolicy::elementary_type;
@@ -774,7 +781,7 @@ namespace sequoia
     }
 
     template<class T, class SharingPolicy, bool ThrowOnRangeError>
-    void test_partitioned_data::test_contiguous_capacity()
+    void partitioned_data_test::test_contiguous_capacity()
     {
       using namespace data_structures;
        
@@ -796,7 +803,7 @@ namespace sequoia
     }
 
     template<class T, class SharingPolicy, bool ThrowOnRangeError>
-    void test_partitioned_data::test_bucketed_capacity()
+    void partitioned_data_test::test_bucketed_capacity()
     {
       using namespace data_structures;
        

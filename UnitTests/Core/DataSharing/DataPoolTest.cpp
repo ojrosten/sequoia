@@ -1,17 +1,24 @@
-#include "TestDataPool.hpp"
+////////////////////////////////////////////////////////////////////
+//                 Copyright Oliver Rosten 2018.                  //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
+#include "DataPoolTest.hpp"
 
 namespace sequoia
 {
   namespace unit_testing
   {
-    void test_data_pool::run_tests()
+    void data_pool_test::run_tests()
     {
       test_pooled();
       test_multi_pools();
       test_unpooled();      
     }
 
-    data_sharing::data_pool<int> test_data_pool::make_int_pool(const int val)
+    data_sharing::data_pool<int> data_pool_test::make_int_pool(const int val)
     {
       using namespace data_sharing;
       data_pool<int> pool{};
@@ -27,7 +34,7 @@ namespace sequoia
       return pool;
     }
 
-    void test_data_pool::test_multi_pools()
+    void data_pool_test::test_multi_pools()
     {
       using namespace data_sharing;
       data_pool<int> pool{make_int_pool(5)};           
@@ -98,7 +105,7 @@ namespace sequoia
       check_equality<size_t>(10, _2elt4.get(), LINE(""));
     }
     
-    void test_data_pool::test_pooled()
+    void data_pool_test::test_pooled()
     {
       using namespace data_sharing;
       data_pool<int> pool{};
@@ -164,7 +171,7 @@ namespace sequoia
       check_equality(7, elt3.get(), LINE(""));
     }
 
-    void test_data_pool::test_unpooled()
+    void data_pool_test::test_unpooled()
     {
       using namespace data_sharing;
       constexpr auto x = unpooled<double>::make(3.0);
