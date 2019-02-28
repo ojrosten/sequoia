@@ -379,7 +379,7 @@ namespace sequoia
             }
             else
             {
-              m_Edges.erase_from_partition_if(partition, fn);
+              erase_from_partition_if(m_Edges, partition, fn);
             }
           }
         }
@@ -388,7 +388,7 @@ namespace sequoia
           for(size_type i{}; i < m_Edges.num_partitions(); ++i)
           {
             if(i == node) continue;
-            m_Edges.erase_from_partition_if(i, [node](const edge_type& e) {
+            erase_from_partition_if(m_Edges, i, [node](const edge_type& e) {
                 return (e.target_node() == node);
             });
           }          

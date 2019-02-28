@@ -77,6 +77,7 @@ namespace sequoia
     public:
       using value_type = T;
       using size_type = typename bucket_type::size_type;
+      using index_type = size_type;
       using sharing_policy_type = SharingPolicy;
       using partition_iterator = partition_iterator<individual_bucket_template, SharingPolicy, size_type>;
       using const_partition_iterator = const_partition_iterator<individual_bucket_template, SharingPolicy, size_type>;
@@ -85,7 +86,7 @@ namespace sequoia
 
       constexpr static bool throw_on_range_error{Traits::throw_on_range_error};
       
-      bucketed_storage() noexcept {}
+      bucketed_storage() noexcept = default;
 
       bucketed_storage(std::initializer_list<std::initializer_list<T>> list)
       {
@@ -294,28 +295,6 @@ namespace sequoia
         return partition_iterator{next, partition};
       }
 
-      // TO DO: move to namespace
-      template<class UnaryPred>
-      size_type erase_from_partition_if(const size_type partitionIndex, UnaryPred pred)
-      {
-        size_type erased{};
-        auto iter{begin_partition(partitionIndex)};
-        while(iter != end_partition(partitionIndex))
-        {
-          if(pred(*iter))
-          {
-            iter = partition_iterator(m_Buckets[partitionIndex].erase(iter.base_iterator()), partitionIndex);
-            ++erased;
-          }
-          else
-          {
-            ++iter;
-          }
-        }
-
-        return erased;
-      }
-
       partition_iterator begin_partition(const size_type i)
       {
         if constexpr(throw_on_range_error) if(m_Buckets.empty()) throw std::out_of_range("bucketed_storage::begin_partition: no buckets!\n");
@@ -469,7 +448,7 @@ namespace sequoia
 
       constexpr static bool throw_on_range_error{Traits::throw_on_range_error};
       
-      contiguous_storage_base() noexcept {}
+      contiguous_storage_base() noexcept = default;
 
       constexpr contiguous_storage_base(std::initializer_list<std::initializer_list<T>> list) : contiguous_storage_base(StaticType{}, list)
       {}
@@ -770,34 +749,7 @@ namespace sequoia
         }
         return partition_iterator{next, iter.partition_index()};
       }
-
-      // TO DO: move to namespace
-      template<class UnaryPred>
-      index_type erase_from_partition_if(const index_type partitionIndex, UnaryPred pred)
-      {
-        index_type erased{};
-        auto iter{begin_partition(partitionIndex)};
-        while(iter != end_partition(partitionIndex))
-        {
-          if(pred(*iter))
-          {
-            iter = partition_iterator(m_Storage.erase(iter.base_iterator()), partitionIndex);
-            ++erased;
-
-            for(size_type i{partitionIndex}; i < m_Partitions.size(); ++i)
-            {
-              --m_Partitions[i];
-            }
-          }
-          else
-          {
-            ++iter;
-          }
-        }
-
-        return erased;
-      }
-
+      
       friend constexpr bool operator==(const contiguous_storage_base& lhs, const contiguous_storage_base& rhs)
       {
         if constexpr(std::is_same_v<SharingPolicy, data_sharing::independent<T>>)
@@ -1024,7 +976,6 @@ namespace sequoia
       using base_t::push_back_to_partition;
       using base_t::insert_to_partition;
       using base_t::erase_from_partition;
-      using base_t::erase_from_partition_if;
     };
 
     template<class T, std::size_t Npartitions, std::size_t Nelements, class IndexType> struct static_contiguous_storage_traits
@@ -1076,6 +1027,16 @@ namespace sequoia
       }
 
       return true;
+    }    
+  }
+
+  template<class PartitionedData, class Pred, class Index=typename PartitionedData::index_type>
+  void erase_from_partition_if(PartitionedData& data, const Index partitionIndex, Pred pred)
+  {
+    auto i{data.begin_partition(partitionIndex)};
+    while(i != data.end_partition(partitionIndex))
+    {
+      i = pred(*i) ? data.erase_from_partition(i) : std::next(i);
     }
   }
 }

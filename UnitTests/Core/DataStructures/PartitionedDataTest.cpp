@@ -628,7 +628,7 @@ namespace sequoia
       if(check(found != storage.end_partition(0)))
         check_equality<std::size_t>(6, *found);
 
-      storage.erase_from_partition_if(0, [](const int& elt) { return elt == 6; });
+      erase_from_partition_if(storage, 0, [](const int& elt) { return elt == 6; });
       // [-5,-2][4,6,-2]
 
       check_partitions(storage, answers_type{{-5, -2}, {4, 6, -2}});
@@ -647,7 +647,7 @@ namespace sequoia
 
       check_partitions(storage, answers_type{{-5, -2}, {4, 6, -2, 7, 7}});
 
-      check_equality<std::size_t>(2, storage.erase_from_partition_if(1, [](const int& elt) { return elt == 7; }));
+      erase_from_partition_if(storage, 1, [](const int& elt) { return elt == 7; });
       // [-5,-2][4,6,-2]
 
       check_partitions(storage, answers_type{{-5, -2}, {4, 6, -2}});
