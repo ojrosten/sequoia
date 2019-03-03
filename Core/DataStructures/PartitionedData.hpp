@@ -434,7 +434,7 @@ namespace sequoia
 
       constexpr static bool throw_on_range_error{Traits::throw_on_range_error};
       
-      contiguous_storage_base() noexcept = default;
+      constexpr contiguous_storage_base() noexcept = default;
 
       constexpr contiguous_storage_base(std::initializer_list<std::initializer_list<T>> list) : contiguous_storage_base(StaticType{}, list)
       {}
@@ -442,14 +442,14 @@ namespace sequoia
       constexpr contiguous_storage_base(const contiguous_storage_base& in) : contiguous_storage_base(StaticType{}, in)
       {}
       
-      contiguous_storage_base(contiguous_storage_base&& in) noexcept = default;
+      constexpr contiguous_storage_base(contiguous_storage_base&& in) noexcept = default;
 
-      contiguous_storage_base& operator=(contiguous_storage_base&&) noexcept = default;
+      constexpr contiguous_storage_base& operator=(contiguous_storage_base&&) noexcept = default;
       
-      contiguous_storage_base& operator=(const contiguous_storage_base& in)
+      constexpr contiguous_storage_base& operator=(const contiguous_storage_base& in)
       {
         contiguous_storage_base tmp{in};
-        std::swap(tmp, *this);
+        sequoia::swap(tmp, *this);
         return *this;
       }
 
@@ -523,7 +523,7 @@ namespace sequoia
       constexpr const_partition_iterator operator[](const index_type i) const noexcept { return cbegin_partition(i); }
 
       [[nodiscard]]
-      partition_iterator operator[](const index_type i) noexcept { return begin_partition(i); }
+      constexpr partition_iterator operator[](const index_type i) noexcept { return begin_partition(i); }
 
       constexpr void swap_partitions(size_type i, size_type j)
       {
@@ -715,7 +715,7 @@ namespace sequoia
         return partition_iterator{next, iter.partition_index()};
       }
       
-      friend constexpr bool operator==(const contiguous_storage_base& lhs, const contiguous_storage_base& rhs)
+      friend constexpr bool operator==(const contiguous_storage_base& lhs, const contiguous_storage_base& rhs) noexcept
       {
         if constexpr(std::is_same_v<SharingPolicy, data_sharing::independent<T>>)
         {
@@ -727,7 +727,7 @@ namespace sequoia
         }        
       }
 
-      friend bool operator!=(const contiguous_storage_base lhs, const contiguous_storage_base& rhs)
+      friend constexpr bool operator!=(const contiguous_storage_base lhs, const contiguous_storage_base& rhs) noexcept
       {
         return !(lhs == rhs);
       }
@@ -973,10 +973,7 @@ namespace sequoia
     };
     
 
-    template
-    <
-      class Storage1, class Storage2
-    >
+    template<class Storage1, class Storage2>
     constexpr bool isomorphic(const Storage1& lhs, const Storage2& rhs) noexcept
     {
       using size_type = std::common_type_t<
