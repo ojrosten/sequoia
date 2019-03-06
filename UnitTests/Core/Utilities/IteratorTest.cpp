@@ -35,7 +35,8 @@ namespace sequoia::unit_testing
     static_assert(std::is_same_v<custom_iter_t::value_type, int>);
     static_assert(std::is_same_v<custom_iter_t::pointer, int*>);
     static_assert(std::is_same_v<custom_iter_t::reference, int&>);
-
+    static_assert(std::is_same_v<custom_iter_t::const_dereference_type, const int&>);
+    
     std::array<int, 3> a{3, 0, 1};
     basic_checks<custom_iter_t>(a.begin(), a.end(), &*a.begin(), "Custom iterator from iterator");
 
@@ -79,6 +80,7 @@ namespace sequoia::unit_testing
     static_assert(std::is_same_v<custom_citer_t::value_type, int>);
     static_assert(std::is_same_v<custom_citer_t::pointer, const int*>);
     static_assert(std::is_same_v<custom_citer_t::reference, const int&>);
+    static_assert(std::is_same_v<custom_citer_t::const_dereference_type, const int&>);
 
     std::array<int, 3> a{3, 0, 1};
     basic_checks<custom_citer_t>(a.cbegin(), a.cend(), &*a.cbegin(), "Custom const_iterator from const_iterator");
@@ -102,6 +104,7 @@ namespace sequoia::unit_testing
     static_assert(std::is_same_v<custom_riter_t::value_type, int>);
     static_assert(std::is_same_v<custom_riter_t::pointer, int*>);
     static_assert(std::is_same_v<custom_riter_t::reference, int&>);
+    static_assert(std::is_same_v<custom_riter_t::const_dereference_type, const int&>);
 
     std::array<int, 3> a{3, 0, 1};
     basic_checks<custom_riter_t>(a.rbegin(), a.rend(), &*a.rbegin(), "Custom reverse_iterator from reverse_iterator");
@@ -139,6 +142,7 @@ namespace sequoia::unit_testing
     static_assert(std::is_same_v<custom_criter_t::value_type, int>);
     static_assert(std::is_same_v<custom_criter_t::pointer, const int*>);
     static_assert(std::is_same_v<custom_criter_t::reference, const int&>);
+    static_assert(std::is_same_v<custom_criter_t::const_dereference_type, const int&>);
 
     std::array<int, 3> a{3, 0, 1};
     basic_checks<custom_criter_t>(a.crbegin(), a.crend(), &*a.crbegin(), "Custom const_reverse_iterator from const_reverse_iterator");
@@ -162,6 +166,7 @@ namespace sequoia::unit_testing
     static_assert(std::is_same_v<custom_citer_t::value_type, int>);
     static_assert(std::is_same_v<custom_citer_t::pointer, const int*>);
     static_assert(std::is_same_v<custom_citer_t::proxy, int>);
+    static_assert(std::is_same_v<custom_citer_t::const_dereference_type, int>);
 
     std::array<int, 3> a{3, 0, 1};
     basic_checks<custom_citer_t>(a.cbegin(), a.cend(), &*a.cbegin(), "Custom scaling iterator from const_iterator", 3);
@@ -184,6 +189,7 @@ namespace sequoia::unit_testing
     static_assert(std::is_same_v<custom_criter_t::value_type, int>);
     static_assert(std::is_same_v<custom_criter_t::pointer, const int*>);
     static_assert(std::is_same_v<custom_criter_t::proxy, int>);
+    static_assert(std::is_same_v<custom_criter_t::const_dereference_type, int>);
 
     std::array<int, 3> a{3, 0, 1};
     basic_checks<custom_criter_t>(a.crbegin(), a.crend(), &*a.crbegin(), "Custom reverse scaling iterator from const_reverse_iterator", -1);

@@ -65,7 +65,7 @@ namespace sequoia::utilities
     struct type_generator<DereferencePolicy, false>
     {
       using reference = typename DereferencePolicy::reference;
-      using type = std::conditional_t<is_const_reference_v<reference>, reference, const reference>;
+      using type = std::conditional_t<std::is_lvalue_reference_v<reference>, std::remove_reference_t<reference> const&, reference>;
     };
 
     template<class DereferencePolicy>
@@ -73,8 +73,9 @@ namespace sequoia::utilities
 
     template<class DereferencePolicy>
     constexpr bool provides_mutable_reference_v{
-           std::is_reference_v<type_generator_t<DereferencePolicy>>
-        && !is_const_reference_v<type_generator_t<DereferencePolicy>>
+           !provides_proxy_type_v<DereferencePolicy>
+        &&  std::is_reference_v<typename DereferencePolicy::reference>
+        && !is_const_reference_v<typename DereferencePolicy::reference>
     };
   }
 }

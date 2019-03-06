@@ -109,11 +109,12 @@ namespace sequoia::utilities
     using dereference_policy = DereferencePolicy;
     using base_iterator_type = Iterator;
       
-    using iterator_category = typename std::iterator_traits<Iterator>::iterator_category;
-    using difference_type   = typename std::iterator_traits<Iterator>::difference_type;      
-    using value_type        = typename DereferencePolicy::value_type;
-    using pointer           = typename DereferencePolicy::pointer;
-    using reference         = typename DereferencePolicy::reference;
+    using iterator_category      = typename std::iterator_traits<Iterator>::iterator_category;
+    using difference_type        = typename std::iterator_traits<Iterator>::difference_type;      
+    using value_type             = typename DereferencePolicy::value_type;
+    using pointer                = typename DereferencePolicy::pointer;
+    using reference              = typename DereferencePolicy::reference;
+    using const_dereference_type = impl::type_generator_t<DereferencePolicy>;
 
     static_assert(impl::is_valid_v<DereferencePolicy>,
       "The DereferencePolicy must supply exacly one type called either reference or proxy");
@@ -159,9 +160,7 @@ namespace sequoia::utilities
     constexpr base_iterator_type base_iterator() const noexcept { return m_BaseIterator; }
 
     [[nodiscard]]
-    constexpr
-    typename impl::type_generator_t<DereferencePolicy>
-    operator*() const
+    constexpr const_dereference_type operator*() const
     {
       return DereferencePolicy::get(*m_BaseIterator);
     }
@@ -171,15 +170,13 @@ namespace sequoia::utilities
       class=std::enable_if_t<impl::provides_mutable_reference_v<DerefPol>>
     >
     [[nodiscard]]
-    constexpr impl::type_generator_t<DereferencePolicy> operator*()
+    constexpr reference operator*()
     {
       return DereferencePolicy::get(*m_BaseIterator);
     }
 
     [[nodiscard]]
-    constexpr
-    typename impl::type_generator_t<DereferencePolicy>
-    operator[](const difference_type n) const
+    constexpr const_dereference_type operator[](const difference_type n) const
     {
       return DereferencePolicy::get(m_BaseIterator[n]);
     }
@@ -189,13 +186,12 @@ namespace sequoia::utilities
       class=std::enable_if_t<impl::provides_mutable_reference_v<DerefPol>>
     >
     [[nodiscard]]
-    constexpr impl::type_generator_t<DereferencePolicy> operator[](const difference_type n)
+    constexpr reference operator[](const difference_type n)
     {
       return DereferencePolicy::get(m_BaseIterator[n]);
     }
 
-    constexpr std::conditional_t<is_const_pointer_v<pointer>, pointer, const pointer>
-    operator->() const
+    constexpr std::conditional_t<is_const_pointer_v<pointer>, pointer, const pointer> operator->() const
     {
       return DereferencePolicy::get_ptr(*m_BaseIterator);
     }
