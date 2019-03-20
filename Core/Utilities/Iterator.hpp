@@ -30,19 +30,19 @@ namespace sequoia::utilities
     
     constexpr null_data_policy& operator=(const null_data_policy&)     = default;
     constexpr null_data_policy& operator=(null_data_policy&&) noexcept = default;
+
+    [[nodiscard]]
+    friend constexpr bool operator==(const null_data_policy& lhs, const null_data_policy& rhs) noexcept
+    {
+      return true;
+    }
+
+    [[nodiscard]]
+    friend constexpr bool operator!=(const null_data_policy& lhs, const null_data_policy& rhs) noexcept
+    {
+      return !(lhs == rhs);
+    }
   };
-
-  [[nodiscard]]
-  inline constexpr bool operator==(const null_data_policy& lhs, const null_data_policy& rhs) noexcept
-  {
-    return true;
-  }
-
-  [[nodiscard]]
-  inline constexpr bool operator!=(const null_data_policy& lhs, const null_data_policy& rhs) noexcept
-  {
-    return !(lhs == rhs);
-  }
   
   template<class Iterator, class AuxiliaryDataPolicy=null_data_policy>
   struct identity_dereference_policy : public AuxiliaryDataPolicy
@@ -70,13 +70,13 @@ namespace sequoia::utilities
     static constexpr pointer get_ptr(reference ref) noexcept { return &ref; }
 
     [[nodiscard]]
-    constexpr friend bool operator==(const identity_dereference_policy& lhs, const identity_dereference_policy& rhs) noexcept
+    friend constexpr bool operator==(const identity_dereference_policy& lhs, const identity_dereference_policy& rhs) noexcept
     {
       return static_cast<const AuxiliaryDataPolicy&>(lhs) == static_cast<const AuxiliaryDataPolicy&>(rhs);
     }
 
     [[nodiscard]]
-    constexpr friend bool operator!=(const identity_dereference_policy& lhs, const identity_dereference_policy& rhs) noexcept
+    friend constexpr bool operator!=(const identity_dereference_policy& lhs, const identity_dereference_policy& rhs) noexcept
     {
       return !(lhs == rhs);
     }

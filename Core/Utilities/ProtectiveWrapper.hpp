@@ -56,6 +56,42 @@ namespace sequoia::utilities
 
     [[nodiscard]]
     constexpr const T& get() const noexcept { return m_Type; }
+
+    [[nodiscard]]
+    friend constexpr bool operator==(const protective_wrapper& lhs, const protective_wrapper& rhs) noexcept
+    {
+      return lhs.get() == rhs.get();
+    }
+  
+    [[nodiscard]]
+    friend constexpr bool operator!=(const protective_wrapper& lhs, const protective_wrapper& rhs) noexcept
+    {
+      return !(lhs == rhs);
+    }
+
+    [[nodiscard]]
+    friend constexpr bool operator<(const protective_wrapper& lhs, const protective_wrapper& rhs) noexcept
+    {
+      return lhs.get() < rhs.get();
+    }
+  
+    [[nodiscard]]
+    friend constexpr bool operator>(const protective_wrapper& lhs, const protective_wrapper& rhs) noexcept
+    {
+      return lhs.get() > rhs.get();
+    }
+
+    [[nodiscard]]
+    friend constexpr bool operator>=(const protective_wrapper& lhs, const protective_wrapper& rhs) noexcept
+    {
+      return !(lhs.get() < rhs.get());
+    }
+
+    [[nodiscard]]
+    friend constexpr bool operator<=(const protective_wrapper& lhs, const protective_wrapper& rhs) noexcept
+    {
+      return !(lhs.get() > rhs.get());
+    }
   private:
     T m_Type;
   };
@@ -71,49 +107,4 @@ namespace sequoia::utilities
     constexpr protective_wrapper& operator=(protective_wrapper&&) noexcept = default;
   private:
   };
-
-
-  //===================================Comparison operators===================================//
-
-  template<class T>
-  [[nodiscard]]
-  constexpr bool operator==(const protective_wrapper<T>& lhs, const protective_wrapper<T>& rhs) noexcept
-  {
-    return lhs.get() == rhs.get();
-  }
-  
-  template<class T>
-  [[nodiscard]]
-  constexpr bool operator!=(const protective_wrapper<T>& lhs, const protective_wrapper<T>& rhs) noexcept
-  {
-    return !(lhs == rhs);
-  }
-  
-  template<class T>
-  [[nodiscard]]
-  constexpr bool operator<(const protective_wrapper<T>& lhs, const protective_wrapper<T>& rhs) noexcept
-  {
-    return lhs.get() < rhs.get();
-  }
-  
-  template<class T>
-  [[nodiscard]]
-  constexpr bool operator>(const protective_wrapper<T>& lhs, const protective_wrapper<T>& rhs) noexcept
-  {
-    return lhs.get() > rhs.get();
-  }
-
-  template<class T>
-  [[nodiscard]]
-  constexpr bool operator>=(const protective_wrapper<T>& lhs, const protective_wrapper<T>& rhs) noexcept
-  {
-    return !(lhs.get() < rhs.get());
-  }
-
-  template<class T>
-  [[nodiscard]]
-  constexpr bool operator<=(const protective_wrapper<T>& lhs, const protective_wrapper<T>& rhs) noexcept
-  {
-    return !(lhs.get() > rhs.get());
-  }
 }
