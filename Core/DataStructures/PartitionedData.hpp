@@ -413,7 +413,7 @@ namespace sequoia
     };
 
     //===================================Contiguous storage===================================//
-    
+        
     template<class T, class SharingPolicy, class Traits>
     class [[nodiscard]] contiguous_storage_base
     {
@@ -457,7 +457,7 @@ namespace sequoia
       constexpr auto size() const noexcept { return m_Storage.size(); }
 
       [[nodiscard]]
-      constexpr auto num_partitions() const noexcept { return m_Partitions.size(); }      
+      constexpr auto num_partitions() const noexcept { return m_Partitions.size(); }
       
       constexpr partition_iterator begin_partition(const index_type i) noexcept
       {

@@ -7,6 +7,8 @@
 
 #include "AlgorithmsTest.hpp"
 #include "StatisticalAlgorithmsTest.hpp"
+#include "MonotonicSequenceTestingDiagnostics.hpp"
+#include "MonotonicSequenceTest.hpp"
 
 #include "TypeTraitsTest.hpp"
 
@@ -88,6 +90,14 @@ int main(int argc, char** argv)
       test_family{
         "Statistical Algorithms",
         statistical_algorithms_test{"Unit Test"}
+      }
+    );
+
+    runner.add_test_family(
+      test_family{
+        "Monotonic Sequence",
+        monotonic_sequence_false_positive_test{"False Positive Diagnostics"},
+        monotonic_sequence_test{"Unit Test"}
       }
     );
 
