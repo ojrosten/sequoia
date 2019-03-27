@@ -19,6 +19,8 @@ namespace sequoia::unit_testing
     // - ; 1
 
     check_equivalence(s, std::initializer_list<int>{1}, LINE("Empty sequence inequivalent to a single value"));
+    check_equivalence(t, std::initializer_list<int>{}, LINE("Non-empty sequence inequivalent to empty list"));
+    check_equivalence(t, std::initializer_list<int>{2}, LINE("Sequence of size one inequivalent to list with different value"));
     check_equality(s, t, LINE("Empty/non-empty sequences should compare different"));
 
     s.push_back(2);
@@ -34,6 +36,8 @@ namespace sequoia::unit_testing
     t.insert(t.end(), 0);
     // 3,2 ; 1, 0
 
+    check_equivalence(s, std::initializer_list<int>{3, 1}, LINE("Inequivalent sequences of size two"));
+    check_equivalence(s, std::initializer_list<int>{1, 2}, LINE("Inequivalent sequences of size two"));
     check_equality(s, t, LINE("Sequences of size 2 with different elements should compare different"));
 
     t.mutate(t.begin(), t.end(), [](const int& i){ return i * 3; });
