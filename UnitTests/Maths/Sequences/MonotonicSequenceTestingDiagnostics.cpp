@@ -17,7 +17,8 @@ namespace sequoia::unit_testing
 
     monotonic_sequence<int> s{}, t{1};
     // - ; 1
-    
+
+    check_equivalence(s, std::initializer_list<int>{1}, LINE("Empty sequence inequivalent to a single value"));
     check_equality(s, t, LINE("Empty/non-empty sequences should compare different"));
 
     s.push_back(2);

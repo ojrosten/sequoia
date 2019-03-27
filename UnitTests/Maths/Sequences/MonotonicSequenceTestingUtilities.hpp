@@ -51,4 +51,16 @@ namespace sequoia::unit_testing
       }
     }
   };
+
+  template<class T, class C, class Compare>
+  struct equivalence_checker<maths::monotonic_sequence<T, C, Compare>>
+  {
+    using type = maths::monotonic_sequence<T, C, Compare>;
+    
+    template<class Logger>
+    static void check(Logger& logger, const type& sequence, std::initializer_list<T> refVals, std::string_view description="")
+    {
+      check_range(logger, sequence.begin(), sequence.end(), refVals.begin(), refVals.end(), description);            
+    }
+  };
 }

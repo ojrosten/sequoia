@@ -513,6 +513,8 @@ namespace sequoia
 
     template<class T> struct details_checker;
 
+    template<class T> struct equivalence_checker;
+
     template<class T, class=std::void_t<>> struct has_details_checker : public std::false_type
     {};
 
@@ -688,6 +690,29 @@ namespace sequoia
       return check_equality(logger, true, value, description);
     }
 
+    template<class Logger, class T, class S, class... U>
+    bool check_equivalence(Logger& logger, const T& value, const S& s, const U&... u, std::string_view description="")
+    {
+      using sentinel = typename Logger::sentinel;
+      
+      sentinel r{logger, description};
+      const auto previousFailures{logger.failures()};
+
+      equivalence_checker<T>::check(logger, value, s, u..., description);
+
+      constexpr bool falsePosMode{Logger::mode == test_mode::false_positive};
+      const bool additionalFailures{logger.failures() != previousFailures};
+      
+      const bool passed{(falsePosMode && additionalFailures) || (!falsePosMode && !additionalFailures)};
+      if(!passed)
+      {
+        std::string mess{description.empty() ? "Undescribed failure" : description};
+        logger.post_message('\t' + mess + '\n');
+      }
+      
+      return passed;
+    }
+
     template<class Logger, class T>
     bool check_equality_within_tolerance(Logger& logger, const T& reference, const T& value, const T& tol, std::string_view description="")
     {
@@ -744,8 +769,10 @@ namespace sequoia
       bool equal{true};
       const auto refSize = std::distance(refBegin, refEnd);
       if(check_equality(logger, refSize, std::distance(resBegin, resEnd), std::string{description}.append(" container size wrong")))
-      {        
-        for(auto refIter = refBegin, resIter = resBegin; refIter != refEnd; ++refIter, ++resIter)
+      {
+        auto refIter{refBegin};
+        auto resIter{resBegin};
+        for(; refIter != refEnd; ++refIter, ++resIter)
         {
           const std::string dist{std::to_string(std::distance(refBegin, refIter))};
           if(!check_equality(logger, *refIter, *resIter, std::string{description}.append("element ") += dist)) equal = false;
@@ -916,6 +943,12 @@ namespace sequoia
         return unit_testing::check_equality(m_Logger, reference, value, description);
       }
 
+      template<class T, class S, class... U>
+      bool check_equivalence(const T& value, const S& s, const U&... u, std::string_view description="")
+      {
+        return unit_testing::check_equivalence(m_Logger, value, s, u..., description);
+      }
+      
       template<class T>
       bool check_equality_within_tolerance(const T reference, const T value, const T tol, std::string_view description="")
       {
