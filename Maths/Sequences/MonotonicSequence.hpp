@@ -75,7 +75,7 @@ namespace sequoia::maths
           throw std::logic_error{"monotonic_sequence_base::mutate - monotonicity violated"};
         }
 
-        *pos = nascent;
+        *pos = std::move(nascent);
       }
     }
 

@@ -18,5 +18,9 @@ namespace sequoia::unit_testing
 
   private:
     void run_tests() override;
+
+    void test_decreasing_sequence();
+
+    void test_static_decreasing_sequence();
   };
 }

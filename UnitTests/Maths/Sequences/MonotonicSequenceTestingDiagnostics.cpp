@@ -11,8 +11,6 @@ namespace sequoia::unit_testing
 {
   void monotonic_sequence_false_positive_test::run_tests()
   {
-    // TO DO
-
     using namespace sequoia::maths;
 
     monotonic_sequence<int> s{}, t{1};

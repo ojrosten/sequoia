@@ -6,6 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "MonotonicSequenceTest.hpp"
+#include "MonotonicSequenceTestingUtilities.hpp"
 
 #include "MonotonicSequence.hpp"
 
@@ -13,6 +14,21 @@ namespace sequoia::unit_testing
 {
   void monotonic_sequence_test::run_tests()
   {
-    // TO DO
+    test_decreasing_sequence();
+    test_static_decreasing_sequence();
+  }
+
+  void monotonic_sequence_test::test_decreasing_sequence()
+  {
+    using namespace sequoia::maths;
+
+    monotonic_sequence<int> s{}, t{1};
+    check_equivalence(s, std::initializer_list<int>{}, LINE(""));
+    check_equivalence(t, std::initializer_list<int>{1}, LINE(""));
+    check_regular_semantics(s, t, LINE("Regular Semantics"));
+  }
+
+  void monotonic_sequence_test::test_static_decreasing_sequence()
+  {
   }
 }
