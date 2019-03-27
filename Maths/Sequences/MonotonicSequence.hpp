@@ -66,11 +66,11 @@ namespace sequoia::maths
       while(first != last)
       {
         using std::distance;
-        iterator pos{begin() + distance(cbegin(), first++)};
+        auto pos{m_Sequence.begin() + distance(cbegin(), first++)};
         const auto nascent{op(*pos)};
 
-        if(   ((pos   != begin()) && Compare{}(*(pos - 1), nascent))
-           || ((pos+1 != end())   && Compare{}(nascent, *(pos + 1))))
+        if(   ((pos   != m_Sequence.begin()) && Compare{}(*(pos - 1), nascent))
+           || ((pos+1 != m_Sequence.end())   && Compare{}(nascent, *(pos + 1))))
         {
           throw std::logic_error{"monotonic_sequence_base::mutate - monotonicity violated"};
         }
@@ -90,9 +90,6 @@ namespace sequoia::maths
     }
     
   protected:    
-    using iterator         = typename C::iterator;    
-    using reverse_iterator = typename C::iterator;
-    
     constexpr monotonic_sequence_base(monotonic_sequence_base&&) noexcept = default;
     
     ~monotonic_sequence_base() = default;
@@ -149,7 +146,9 @@ namespace sequoia::maths
     }
 
     
-  private:
+  private:    
+    using iterator = typename C::iterator;
+
     C m_Sequence;    
   };
 

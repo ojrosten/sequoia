@@ -35,5 +35,14 @@ namespace sequoia::unit_testing
 
     check_equality(s, t, LINE("Sequences of size 2 with different elements should compare different"));
 
+    t.mutate(t.begin(), t.end(), [](const int& i){ return i * 3; });
+    // 3, 2 ; 3, 0
+
+    check_equality(s, t, LINE("Sequences of size 2 with different final elements should compare different"));
+
+    t.mutate(t.begin(), t.end(), [](const int& i){ return i + 2; });
+    // 3, 2 ; 5, 2
+
+    check_equality(s, t, LINE("Sequences of size 2 with different first elements should compare different"));
   }
 }
