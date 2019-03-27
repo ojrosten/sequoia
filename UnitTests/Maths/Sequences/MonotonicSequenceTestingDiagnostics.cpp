@@ -12,5 +12,28 @@ namespace sequoia::unit_testing
   void monotonic_sequence_false_positive_test::run_tests()
   {
     // TO DO
+
+    using namespace sequoia::maths;
+
+    monotonic_sequence<int> s{}, t{1};
+    // - ; 1
+    
+    check_equality(s, t, LINE("Empty/non-empty sequences should compare different"));
+
+    s.push_back(2);
+    // 2 ; 1
+
+    check_equality(s, t, LINE("Sequences of size 1 with different elements should compare different"));
+
+    s.insert(s.cbegin(), 3);
+    // 3,2 ; 1
+
+    check_equality(s, t, LINE("Sequences of different sizes should compare different"));
+
+    t.insert(t.end(), 0);
+    // 3,2 ; 1, 0
+
+    check_equality(s, t, LINE("Sequences of size 2 with different elements should compare different"));
+
   }
 }

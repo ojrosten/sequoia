@@ -22,11 +22,11 @@ namespace sequoia::maths
     using size_type  = typename C::size_type;
     
     using const_iterator         = typename C::const_iterator;
-    using const_reverse_iterator = typename C::const_iterator;
+    using const_reverse_iterator = typename C::const_reverse_iterator;
 
-    monotonic_sequence_base() = default;
+    constexpr monotonic_sequence_base() = default;
     
-    monotonic_sequence_base(std::initializer_list<T> list) : m_Sequence{list}
+    constexpr monotonic_sequence_base(std::initializer_list<T> list) : m_Sequence{list}
     {
       if(list.size() > 1)
       {
@@ -38,25 +38,30 @@ namespace sequoia::maths
       }
     }
 
-    monotonic_sequence_base(const monotonic_sequence_base&) = default;
+    constexpr monotonic_sequence_base(const monotonic_sequence_base&) = default;
       
     [[nodiscard]]
     constexpr size_type size() const noexcept { return m_Sequence.size(); }
+
+    [[nodiscard]]
+    constexpr bool empty() const noexcept { return m_Sequence.empty(); }
       
-    const_iterator begin() const noexcept { return m_Sequence.begin(); }
-    const_iterator end() const noexcept { return m_Sequence.end(); }
+    constexpr const_iterator begin() const noexcept { return m_Sequence.begin(); }
+    constexpr const_iterator end() const noexcept { return m_Sequence.end(); }
       
-    const_iterator cbegin() const noexcept { return m_Sequence.cbegin(); }
-    const_iterator cend() const noexcept { return m_Sequence.cend(); }
+    constexpr const_iterator cbegin() const noexcept { return m_Sequence.cbegin(); }
+    constexpr const_iterator cend() const noexcept { return m_Sequence.cend(); }
           
-    const_reverse_iterator rbegin() const noexcept { return m_Sequence.rbegin(); }
-    const_reverse_iterator rend() const noexcept { return m_Sequence.rend(); }
+    constexpr const_reverse_iterator rbegin() const noexcept { return m_Sequence.rbegin(); }
+    constexpr const_reverse_iterator rend() const noexcept { return m_Sequence.rend(); }
       
-    const_reverse_iterator crbegin() const noexcept { return m_Sequence.crbegin(); }
-    const_reverse_iterator crend() const noexcept { return m_Sequence.crend(); }
+    constexpr const_reverse_iterator crbegin() const noexcept { return m_Sequence.crbegin(); }
+    constexpr const_reverse_iterator crend() const noexcept { return m_Sequence.crend(); }
+
+    constexpr const T& operator[](const size_type i) const { return m_Sequence[i]; }
 
     template<class UnaryOp>
-    void mutate(const_iterator first, const_iterator last, UnaryOp op)
+    constexpr void mutate(const_iterator first, const_iterator last, UnaryOp op)
     {
       while(first != last)
       {
@@ -88,19 +93,13 @@ namespace sequoia::maths
     using iterator         = typename C::iterator;    
     using reverse_iterator = typename C::iterator;
     
+    constexpr monotonic_sequence_base(monotonic_sequence_base&&) noexcept = default;
+    
     ~monotonic_sequence_base() = default;
+    
+    constexpr monotonic_sequence_base& operator=(const monotonic_sequence_base&)     = default;    
+    constexpr monotonic_sequence_base& operator=(monotonic_sequence_base&&) noexcept = default;
 
-    monotonic_sequence_base(monotonic_sequence_base&&) noexcept = default;
-    
-    monotonic_sequence_base& operator=(const monotonic_sequence_base&)     = default;    
-    monotonic_sequence_base& operator=(monotonic_sequence_base&&) noexcept = default;
-    
-    iterator begin() noexcept { return m_Sequence.begin(); }
-    iterator end() noexcept { return m_Sequence.end(); }
-
-    reverse_iterator rbegin() noexcept { return m_Sequence.rbegin(); }
-    reverse_iterator rend() noexcept { return m_Sequence.rend(); }
-    
     void push_back(T v)
     {
       if(!m_Sequence.empty() && Compare{}(m_Sequence.back(), v))
@@ -111,7 +110,7 @@ namespace sequoia::maths
 
     const_iterator insert(const_iterator pos, T v)
     {
-      if(((pos != cend()) && Compare{}(v, *pos)) || ((pos != cbegin()) && Compare(*(pos-1), v)))
+      if(((pos != cend()) && Compare{}(v, *pos)) || ((pos != cbegin()) && Compare{}(*(pos-1), v)))
       {
         throw std::logic_error{"monotonic_sequence_base::insert - monotonicity violated"};        
       }
@@ -152,5 +151,22 @@ namespace sequoia::maths
     
   private:
     C m_Sequence;    
+  };
+
+
+  template<class T, class C=std::vector<T>, class Compare=std::less<T>>
+  class monotonic_sequence : public monotonic_sequence_base<T, C, Compare>
+  {    
+    using base_t = monotonic_sequence_base<T, C, Compare>;
+  public:
+    using monotonic_sequence_base<T, C, Compare>::monotonic_sequence_base;
+
+    using base_t::push_back;
+    using base_t::insert;
+    using base_t::erase;
+    using base_t::reserve;
+    using base_t::capacity;
+    using base_t::shrink_to_fit;
+    using base_t::clear;
   };
 }
