@@ -324,46 +324,46 @@ namespace sequoia
     struct unsortable
     {
       int x{};
+
+      friend constexpr bool operator==(const unsortable& lhs, const unsortable& rhs) noexcept
+      {
+        return lhs.x == rhs.x;
+      }
+
+      friend constexpr bool operator!=(const unsortable& lhs, const unsortable& rhs) noexcept
+      {
+        return !(lhs == rhs);
+      }
+      
+      template<class Stream> friend Stream& operator<<(Stream& s, const unsortable& u)
+      {
+        s << std::to_string(u.x);
+        return s;
+      }
     };
-
-    constexpr bool operator==(const unsortable& lhs, const unsortable& rhs) noexcept
-    {
-      return lhs.x == rhs.x;
-    }
-
-    constexpr bool operator!=(const unsortable& lhs, const unsortable& rhs) noexcept
-    {
-      return !(lhs == rhs);
-    }
-
-    template<class Stream> Stream& operator<<(Stream& s, const unsortable& u)
-    {
-      s << std::to_string(u.x);
-      return s;
-    }
 
     struct big_unsortable
     {
       int w{}, x{1}, y{2}, z{3};
-    };
 
-    constexpr bool operator==(const big_unsortable& lhs, const big_unsortable& rhs) noexcept
-    {
-      return (lhs.w == rhs.w)
+      friend constexpr bool operator==(const big_unsortable& lhs, const big_unsortable& rhs) noexcept
+      {
+        return (lhs.w == rhs.w)
           && (lhs.x == rhs.x)
           && (lhs.y == rhs.y)
           && (lhs.z == rhs.z);
-    }
+      }
 
-    constexpr bool operator!=(const big_unsortable& lhs, const big_unsortable& rhs) noexcept
-    {
-      return !(lhs == rhs);
-    }
+      friend constexpr bool operator!=(const big_unsortable& lhs, const big_unsortable& rhs) noexcept
+      {
+        return !(lhs == rhs);
+      }
 
-    template<class Stream> Stream& operator<<(Stream& s, const big_unsortable& u)
-    {
-      s << std::to_string(u.w) << ' ' << std::to_string(u.x) << ' ' << std::to_string(u.y) << ' ' << std::to_string(u.z);
-      return s;
-    }
+      template<class Stream> friend Stream& operator<<(Stream& s, const big_unsortable& u)
+      {
+        s << std::to_string(u.w) << ' ' << std::to_string(u.x) << ' ' << std::to_string(u.y) << ' ' << std::to_string(u.z);
+        return s;
+      }
+    };
   }
 }
