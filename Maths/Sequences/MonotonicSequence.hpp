@@ -11,10 +11,22 @@
     \brief Classes implementing the concept of a monotonic sequence.
  */
 
+#include "ArrayUtilities.hpp"
+
 #include <stdexcept>
 
 namespace sequoia::maths
 {
+  namespace impl
+  {
+    template<class C> struct static_storage : std::false_type {};
+
+    template<class T, std::size_t N> struct static_storage<std::array<T, N>> : std::true_type
+    {
+      constexpr static std::size_t size() { return N; }
+    };
+  }
+  
   template<class T, class C, class Compare=std::less<T>> class monotonic_sequence_base
   {
   public:
@@ -26,17 +38,8 @@ namespace sequoia::maths
 
     constexpr monotonic_sequence_base() = default;
     
-    constexpr monotonic_sequence_base(std::initializer_list<T> list) : m_Sequence{list}
-    {
-      if(list.size() > 1)
-      {
-        for(auto i{list.begin()+1}; i != list.end(); ++i)
-        {
-          if(Compare{}(*(i-1), *i))
-            throw std::logic_error("monotonic_sequence_base::monotonic_sequence_base - monotonicity violated");
-        }
-      }
-    }
+    constexpr monotonic_sequence_base(std::initializer_list<T> list) : monotonic_sequence_base{static_type{}, list}
+    {}
 
     constexpr monotonic_sequence_base(const monotonic_sequence_base&) = default;
       
@@ -146,10 +149,33 @@ namespace sequoia::maths
     }
 
     
-  private:    
-    using iterator = typename C::iterator;
+  private:
+    using static_type = impl::static_storage<C>;
 
-    C m_Sequence;    
+    C m_Sequence;
+
+    constexpr monotonic_sequence_base(std::false_type, std::initializer_list<T> list) : m_Sequence{list}
+    {
+      check();
+    }
+    
+    constexpr monotonic_sequence_base(std::true_type, std::initializer_list<T> list)
+      : m_Sequence{utilities::to_array<T, static_type::size()>(list)}
+    {
+      check();
+    }
+
+    constexpr void check()
+    {
+      if(size() > 1)
+      {
+        for(auto i{begin()+1}; i != end(); ++i)
+        {
+          if(Compare{}(*(i-1), *i))
+            throw std::logic_error("monotonic_sequence_base::monotonic_sequence_base - monotonicity violated");
+        }
+      }
+    }
   };
 
 
@@ -167,5 +193,12 @@ namespace sequoia::maths
     using base_t::capacity;
     using base_t::shrink_to_fit;
     using base_t::clear;
+  };
+
+  template<class T, std::size_t N, class Compare=std::less<T>>
+  class static_monotonic_sequence : public monotonic_sequence_base<T, std::array<T, N>, Compare>
+  {
+  public:
+    using monotonic_sequence_base<T, std::array<T, N>, Compare>::monotonic_sequence_base;
   };
 }

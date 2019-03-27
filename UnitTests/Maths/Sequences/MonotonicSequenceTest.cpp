@@ -79,5 +79,11 @@ namespace sequoia::unit_testing
 
   void monotonic_sequence_test::test_static_decreasing_sequence()
   {
+    using namespace sequoia::maths;
+
+    check_exception_thrown<std::logic_error>([](){ static_monotonic_sequence<double, 2> s{1,2}; }, LINE("Invariant violated by initialization"));
+
+    constexpr static_monotonic_sequence<double, 2> s{5.1, 3.8}, t{-3.4, -4.4};
+    check_regular_semantics(s, t, LINE("Regular Semantics"));
   }
 }
