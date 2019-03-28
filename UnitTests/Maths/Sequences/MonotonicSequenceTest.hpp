@@ -19,6 +19,7 @@ namespace sequoia::unit_testing
     using unit_test::unit_test;
 
   private:
+    template<bool Check>
     constexpr static maths::static_monotonic_sequence<int, 6, std::greater<int>> make_sequence();
     
     void run_tests() override;

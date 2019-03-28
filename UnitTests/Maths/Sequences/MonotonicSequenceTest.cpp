@@ -86,6 +86,7 @@ namespace sequoia::unit_testing
     check_regular_semantics(s, t, LINE("Regular Semantics"));
   }
 
+  template<bool Check>
   constexpr maths::static_monotonic_sequence<int,6, std::greater<int>>
   monotonic_sequence_test::make_sequence()
   {
@@ -93,7 +94,7 @@ namespace sequoia::unit_testing
 
     static_monotonic_sequence<int, 6, std::greater<int>> s{-1,0,1,1,2,6};
 
-    s.mutate(s.begin(), s.end(), [](const int i) { return i * 2; });
+    s.mutate<Check>(s.begin(), s.end(), [](const int i) { return i * 2; });
     
     return s;
   }
@@ -102,8 +103,12 @@ namespace sequoia::unit_testing
   {
     using namespace maths;
 
-    constexpr auto s{make_sequence()};
+    constexpr auto s{make_sequence<false>()};
     check_equivalence(s, std::initializer_list<int>{-2,0,2,2,4,12}, LINE(""));
+
+    constexpr auto s2{make_sequence<true>()};
+    check_equivalence(s2, std::initializer_list<int>{-2,0,2,2,4,12}, LINE(""));
+    
     //check_equality(s, static_monotonic_sequence<int, 6>{-2,0,2,2,4,12}, LINE(""));
 
     static_monotonic_sequence<int, 6, std::greater<int>> t{2,2,2,3,3,3};
