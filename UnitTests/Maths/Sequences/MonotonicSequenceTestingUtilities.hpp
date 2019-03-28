@@ -13,13 +13,10 @@
 
 namespace sequoia::unit_testing
 {
-  template<class T, class C, class Compare>
-  struct details_checker<maths::monotonic_sequence<T, C, Compare>>
+  namespace impl
   {
-    using type = maths::monotonic_sequence<T, C, Compare>;
-    
-    template<class Logger>
-    static void check(Logger& logger, const type& reference, const type& actual, std::string_view description="")
+    template<class Logger, class T>
+    void check(Logger& logger, const T& reference, const T& actual, std::string_view description="")
     {
       if(check_equality(logger, reference.size(), actual.size(), impl::concat_messages(description, "Size incorrect")))
       {
@@ -50,6 +47,18 @@ namespace sequoia::unit_testing
         unit_testing::check(logger, cri_ref == reference.crend(), "criterator location wrong");
       }
     }
+  }
+  
+  template<class T, class C, class Compare>
+  struct details_checker<maths::monotonic_sequence<T, C, Compare>>
+  {
+    using type = maths::monotonic_sequence<T, C, Compare>;
+    
+    template<class Logger>
+    static void check(Logger& logger, const type& reference, const type& actual, std::string_view description="")
+    {
+      impl::check(logger, reference, actual, description);
+    }
   };
 
   template<class T, class C, class Compare>
@@ -61,6 +70,18 @@ namespace sequoia::unit_testing
     static void check(Logger& logger, const type& sequence, std::initializer_list<T> refVals, std::string_view description="")
     {
       check_range(logger, sequence.begin(), sequence.end(), refVals.begin(), refVals.end(), description);            
+    }
+  };
+
+  template<class T, std::size_t N, class Compare>
+  struct details_checker<maths::static_monotonic_sequence<T, N, Compare>>
+  {
+    using type = maths::static_monotonic_sequence<T, N, Compare>;
+    
+    template<class Logger>
+    static void check(Logger& logger, const type& reference, const type& actual, std::string_view description="")
+    {
+      impl::check(logger, reference, actual, description);
     }
   };
 

@@ -109,14 +109,14 @@ namespace sequoia::unit_testing
     constexpr auto s2{make_sequence<true>()};
     check_equivalence(s2, std::initializer_list<int>{-2,0,2,2,4,12}, LINE(""));
     
-    //check_equality(s, static_monotonic_sequence<int, 6>{-2,0,2,2,4,12}, LINE(""));
+    check_equality(s, static_monotonic_sequence<int, 6, std::greater<int>>{-2,0,2,2,4,12}, LINE(""));
 
     static_monotonic_sequence<int, 6, std::greater<int>> t{2,2,2,3,3,3};
     check_exception_thrown<std::logic_error>([&t](){
         t.mutate(t.begin()+1, t.begin()+3,[](const int i){ return i*2;});}, LINE(""));
     
     check_equivalence(t, std::initializer_list<int>{2,2,2,3,3,3}, LINE(""));
-    //check_regular_semanitcs(s, t, LINE("Regular Semantics"));
+    check_regular_semantics(s, t, LINE("Regular Semantics"));
 
     static_monotonic_sequence<int, 6, std::greater<int>> u{2,3,3,4,4,5};
     check_exception_thrown<std::logic_error>([&u](){
