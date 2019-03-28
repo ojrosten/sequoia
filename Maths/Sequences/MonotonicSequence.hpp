@@ -63,7 +63,7 @@ namespace sequoia::maths
 
     constexpr const T& operator[](const size_type i) const { return m_Sequence[i]; }
 
-    template<class UnaryOp, bool Checked=true>
+    template<bool Checked=true, class UnaryOp>
     constexpr void mutate(const_iterator first, const_iterator last, UnaryOp op)
     {
       using std::distance;
