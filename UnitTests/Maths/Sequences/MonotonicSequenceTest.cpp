@@ -112,5 +112,11 @@ namespace sequoia::unit_testing
     
     check_equivalence(t, std::initializer_list<int>{2,2,2,3,3,3}, LINE(""));
     //check_regular_semanitcs(s, t, LINE("Regular Semantics"));
+
+    static_monotonic_sequence<int, 6, std::greater<int>> u{2,3,3,4,4,5};
+    check_exception_thrown<std::logic_error>([&u](){
+        u.mutate(u.begin()+1, u.begin()+4,[](const int i){ return i*2;});}, LINE(""));
+
+    check_equivalence(u, std::initializer_list<int>{2,3,3,4,4,5}, LINE(""));
   }
 }

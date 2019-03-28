@@ -63,23 +63,45 @@ namespace sequoia::maths
 
     constexpr const T& operator[](const size_type i) const { return m_Sequence[i]; }
 
-    template<class UnaryOp>
+    template<class UnaryOp, bool Checked=true>
     constexpr void mutate(const_iterator first, const_iterator last, UnaryOp op)
-    {      
-      while(first != last)
+    {
+      using std::distance;
+      if constexpr(Checked)
       {
-        using std::distance;
-        auto pos{m_Sequence.begin() + distance(cbegin(), first++)};
-        const auto nascent{op(*pos)};
-
-        if(   ((pos   != m_Sequence.begin()) && Compare{}(*(pos - 1), nascent))
-            | ((pos+1 != m_Sequence.end())   && Compare{}(nascent, first + 1 == last ? *(pos + 1) : op(*(pos + 1)))))
+        if(first != last)
         {
-          throw std::logic_error{"monotonic_sequence_base::mutate - monotonicity violated"};
-        }
+          auto tmp{m_Sequence};
+          auto f{tmp.begin() + distance(cbegin(), first)};
+          auto l{tmp.begin() + distance(cbegin(), last)};
+        
+          for(auto i{f}; i != l; ++i)
+          {
+            *i = op(*i);
+          }
 
-        *pos = std::move(nascent);
+          if(f != tmp.begin()) --f;
+          if(l != tmp.end()) ++l;
+
+          while((f != l) && (f + 1) != tmp.end())
+          {
+            if(Compare{}(*f, *(f+1)))
+              throw std::logic_error("monotonic_sequence::mutate - monotonicity violated");
+
+            ++f;
+          }
+
+          m_Sequence = std::move(tmp);
+        }
       }
+      else
+      {
+        while(first != last)
+        {
+          auto pos{m_Sequence.begin() + distance(cbegin(), first++)};                    
+          *pos = op(*pos);
+        }
+      }      
     }
 
     constexpr friend bool operator==(const monotonic_sequence_base& lhs, const monotonic_sequence_base& rhs)
