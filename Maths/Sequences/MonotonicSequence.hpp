@@ -73,7 +73,7 @@ namespace sequoia::maths
         const auto nascent{op(*pos)};
 
         if(   ((pos   != m_Sequence.begin()) && Compare{}(*(pos - 1), nascent))
-           || ((pos+1 != m_Sequence.end())   && Compare{}(nascent, op(*(pos + 1)))))
+            | ((pos+1 != m_Sequence.end())   && Compare{}(nascent, first + 1 == last ? *(pos + 1) : op(*(pos + 1)))))
         {
           throw std::logic_error{"monotonic_sequence_base::mutate - monotonicity violated"};
         }
