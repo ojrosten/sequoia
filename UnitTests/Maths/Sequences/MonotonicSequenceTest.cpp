@@ -8,19 +8,18 @@
 #include "MonotonicSequenceTest.hpp"
 #include "MonotonicSequenceTestingUtilities.hpp"
 
-#include "MonotonicSequence.hpp"
-
 namespace sequoia::unit_testing
 {
   void monotonic_sequence_test::run_tests()
   {
     test_decreasing_sequence();
     test_static_decreasing_sequence();
+    test_static_increasing_sequence();
   }
 
   void monotonic_sequence_test::test_decreasing_sequence()
   {
-    using namespace sequoia::maths;
+    using namespace maths;
 
     check_exception_thrown<std::logic_error>([](){ monotonic_sequence<int> s{1,2}; }, LINE("Invariant violated by initialization"));
 
@@ -79,11 +78,35 @@ namespace sequoia::unit_testing
 
   void monotonic_sequence_test::test_static_decreasing_sequence()
   {
-    using namespace sequoia::maths;
+    using namespace maths;
 
     check_exception_thrown<std::logic_error>([](){ static_monotonic_sequence<double, 2> s{1,2}; }, LINE("Invariant violated by initialization"));
 
     constexpr static_monotonic_sequence<double, 2> s{5.1, 3.8}, t{-3.4, -4.4};
     check_regular_semantics(s, t, LINE("Regular Semantics"));
+  }
+
+  constexpr maths::static_monotonic_sequence<int,6, std::greater<int>>
+  monotonic_sequence_test::make_sequence()
+  {
+    using namespace maths;
+
+    static_monotonic_sequence<int, 6, std::greater<int>> s{-1,0,1,1,2,6};
+
+    s.mutate(s.begin(), s.end(), [](const int i) { return i * 2; });
+    
+    return s;
+  }
+  
+  void monotonic_sequence_test::test_static_increasing_sequence()
+  {
+    using namespace maths;
+
+    constexpr auto s{make_sequence()};
+    check_equivalence(s, std::initializer_list<int>{-2,0,2,2,4,12}, LINE(""));
+    //check_equality(s, static_monotonic_sequence<int, 6>{-2,0,2,2,4,12}, LINE(""));
+
+    //constexpr static_monotonic_sequence<int, 6, std::greater> t{2,2,2,3,3,3};
+    //check_regular_semanitcs(s, t, LINE("Regular Semantics"));
   }
 }

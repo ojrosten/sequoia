@@ -65,7 +65,7 @@ namespace sequoia::maths
 
     template<class UnaryOp>
     constexpr void mutate(const_iterator first, const_iterator last, UnaryOp op)
-    {
+    {      
       while(first != last)
       {
         using std::distance;
@@ -73,7 +73,7 @@ namespace sequoia::maths
         const auto nascent{op(*pos)};
 
         if(   ((pos   != m_Sequence.begin()) && Compare{}(*(pos - 1), nascent))
-           || ((pos+1 != m_Sequence.end())   && Compare{}(nascent, *(pos + 1))))
+           || ((pos+1 != m_Sequence.end())   && Compare{}(nascent, op(*(pos + 1)))))
         {
           throw std::logic_error{"monotonic_sequence_base::mutate - monotonicity violated"};
         }
