@@ -10,7 +10,7 @@ BUILDSUBDIRS += $(addprefix $(UTBUILDDIR)/, $(LIBSUBDIRS))
 
 CC := clang++
 #CC := g++
-CFLAGS := -Wall -std=c++1z -O0 -ferror-limit=1 \
+CFLAGS := -Wall -std=c++2a -O0 -ferror-limit=1 \
 	  -Wno-missing-braces		       \
 	  $(patsubst %,-I%, $(UTSUBDIRS))      \
           $(patsubst %,-I%, $(LIBSUBDIRS))
