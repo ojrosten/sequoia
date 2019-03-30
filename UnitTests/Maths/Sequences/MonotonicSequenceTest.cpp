@@ -74,6 +74,20 @@ namespace sequoia::unit_testing
     check_equality(0ul, t.capacity(), LINE("Capacity"));
     t.reserve(2);
     check_equality(2ul, t.capacity(), LINE("Capacity"));
+
+    t = monotonic_sequence<int>{8, 4, 3};
+    // - ; 8,4,3
+    check_equivalence(t, std::initializer_list<int>{8, 4, 3}, LINE(""));
+
+    check_exception_thrown<std::logic_error>(
+      [&t](){ t.mutate(t.begin(), t.begin()+2, [](const int i) { return i/2; }); }, LINE(""));
+
+    check_equivalence(t, std::initializer_list<int>{8, 4, 3}, LINE(""));
+
+    t.mutate(t.begin(), t.end(), [](const int i) { return i/2; });
+    // -; 4, 2, 1
+    
+    check_equivalence(t, std::initializer_list<int>{4, 2, 1}, LINE(""));
   }
 
   void monotonic_sequence_test::test_static_decreasing_sequence()
