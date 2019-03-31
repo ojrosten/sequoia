@@ -20,6 +20,12 @@ namespace sequoia::unit_testing
     {
       if(check_equality(logger, reference.size(), actual.size(), impl::concat_messages(description, "Size incorrect")))
       {
+        if(reference.size())
+        {
+          check_equality(logger, reference.back(), actual.back(), impl::concat_messages(description, "Back element wrong"));
+          check_equality(logger, reference.front(), actual.front(), impl::concat_messages(description, "Front element wrong"));
+        }
+       
         auto i_ref{reference.begin()}, i_act{actual.begin()};
         auto ci_ref{reference.cbegin()}, ci_act{actual.cbegin()};
         auto ri_ref{reference.rbegin()}, ri_act{actual.rbegin()};

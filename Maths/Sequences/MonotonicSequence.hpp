@@ -27,7 +27,7 @@ namespace sequoia::maths
     };
   }
   
-  template<class T, class C, class Compare=std::less<T>> class monotonic_sequence_base
+  template<class T, class C, class Compare> class monotonic_sequence_base
   {
   public:
     using value_type = T;
@@ -62,6 +62,9 @@ namespace sequoia::maths
     constexpr const_reverse_iterator crend() const noexcept { return m_Sequence.crend(); }
 
     constexpr const T& operator[](const size_type i) const { return m_Sequence[i]; }
+
+    constexpr const T& back() const { return *(end() - 1); }
+    constexpr const T& front() const { return *begin(); }
 
     template<bool Checked=true, class UnaryOp>
     constexpr void mutate(const_iterator first, const_iterator last, UnaryOp op)
@@ -201,7 +204,7 @@ namespace sequoia::maths
   };
 
 
-  template<class T, class C=std::vector<T>, class Compare=std::less<T>>
+  template<class T, class Compare=std::less<T>, class C=std::vector<T>>
   class monotonic_sequence : public monotonic_sequence_base<T, C, Compare>
   {    
     using base_t = monotonic_sequence_base<T, C, Compare>;
