@@ -41,6 +41,11 @@ namespace sequoia::maths
     constexpr monotonic_sequence_base(std::initializer_list<T> list) : monotonic_sequence_base{static_type{}, list}
     {}
 
+    constexpr monotonic_sequence_base(C c) : m_Sequence{std::move(c)}
+    {
+      check();
+    }
+
     constexpr monotonic_sequence_base(const monotonic_sequence_base&) = default;
       
     [[nodiscard]]

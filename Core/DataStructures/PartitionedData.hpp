@@ -16,6 +16,7 @@
 #include "ArrayUtilities.hpp"
 #include "Iterator.hpp"
 #include "Algorithms.hpp"
+#include "MonotonicSequence.hpp"
 
 #include <string>
 #include <numeric>
@@ -419,13 +420,13 @@ namespace sequoia
     {
     private:
       template<class S> using Storage = typename Traits::template underlying_storage_type<S>;
-      using AuxiliaryType = typename partition_impl::storage_type_generator<Storage, SharingPolicy>::auxiliary_storage_type;  
-      using StorageType   = typename partition_impl::storage_type_generator<Storage, SharingPolicy>::storage_type; 
+      using PartitionsType = typename Traits::partitions_type;
+      using StorageType    = typename partition_impl::storage_type_generator<Storage, SharingPolicy>::storage_type; 
     public:
       using value_type          = T;
       using sharing_policy_type = SharingPolicy;
-      using size_type           = std::common_type_t<typename AuxiliaryType::size_type, typename StorageType::size_type>;
-      using index_type          = typename AuxiliaryType::value_type;
+      using size_type           = std::common_type_t<typename Traits::partition_index_type, typename StorageType::size_type>;
+      using index_type          = typename Traits::index_type;
 
       using partition_iterator               = partition_iterator<Storage, SharingPolicy, index_type>;
       using const_partition_iterator         = const_partition_iterator<Storage, SharingPolicy, index_type>;
@@ -554,11 +555,8 @@ namespace sequoia
 
             if(len_i != len_j)
             {
-              for(auto iter{m_Partitions.begin() + i}; iter != m_Partitions.begin() + j; ++iter)
-              {
-                auto& partitionBound{*iter};
-                partitionBound = partitionBound + len_j - len_i;
-              }
+              m_Partitions.template mutate<false>(m_Partitions.begin() + i, m_Partitions.begin() + j,
+                                  [len_i, len_j](const auto index){ return index + len_j - len_i;});
             }     
           }
         }
@@ -603,10 +601,7 @@ namespace sequoia
             m_Storage.erase(m_Storage.begin() + offset, m_Storage.begin() + m_Partitions[n]);
           }
           m_Partitions.erase(m_Partitions.begin() + n);
-          for(size_type i{n}; i < m_Partitions.size(); ++i)
-          {
-            m_Partitions[i]-=erased;
-          }
+          m_Partitions.template mutate<false>(m_Partitions.begin() + n, m_Partitions.end(), [erased](const auto index){ return index - erased; });
         }
 
         return erased;
@@ -738,7 +733,7 @@ namespace sequoia
       using StaticType     = typename partition_impl::storage_type_generator<Storage, SharingPolicy>::static_type;
       constexpr static index_type npos{partition_iterator::npos};
      
-      AuxiliaryType m_Partitions;
+      PartitionsType m_Partitions; // TO DO, C++20: [no_unique_address]
       StorageType m_Storage;
 
       constexpr contiguous_storage_base(std::false_type, const contiguous_storage_base& in)
@@ -794,7 +789,7 @@ namespace sequoia
 
       constexpr static auto make_partitions(std::initializer_list<std::initializer_list<T>> list)
       {
-        constexpr auto N{container_type::num_partitions()};
+        constexpr auto N{Traits::num_partitions_v};
         auto sizes{utilities::to_array<index_type, N>(list, [](const auto& l){ return l.size(); })};
         if(!sizes.empty())
         {
@@ -828,18 +823,12 @@ namespace sequoia
 
       void increment_partition_indices(const size_type first) noexcept
       {
-        for(size_type i{first}; i < m_Partitions.size(); ++i)
-        {
-          ++m_Partitions[i];
-        }
+        m_Partitions.mutate(m_Partitions.begin() + first, m_Partitions.end(), [](const auto index){ return index + 1; });
       }
 
       void decrement_partition_indices(const size_type first) noexcept
       {
-        for(size_type i{first}; i < m_Partitions.size(); ++i)
-        {
-          --m_Partitions[i];
-        }
+        m_Partitions.mutate(m_Partitions.begin() + first, m_Partitions.end(), [](const auto index){ return index - 1; });
       }
 
       void check_range(const size_type index) const
@@ -927,7 +916,12 @@ namespace sequoia
     template<class T, class SharingPolicy> struct contiguous_storage_traits
     {
       constexpr static bool throw_on_range_error{true};
-      template<class S> using underlying_storage_type = std::vector<S, std::allocator<S>>; 
+
+      using index_type = std::size_t;
+      using partition_index_type = std::size_t;
+      using partitions_type = maths::monotonic_sequence<partition_index_type, std::greater<partition_index_type>>;
+      
+      template<class S> using underlying_storage_type = std::vector<S, std::allocator<S>>;
     };
 
     template<class T, class SharingPolicy=data_sharing::independent<T>, class Traits=contiguous_storage_traits<T, SharingPolicy>>
@@ -957,7 +951,15 @@ namespace sequoia
     template<class T, std::size_t Npartitions, std::size_t Nelements, class IndexType> struct static_contiguous_storage_traits
     {
       constexpr static bool throw_on_range_error{true};
-      template<class S> using underlying_storage_type = typename impl::static_contiguous_data<Npartitions,Nelements,std::make_unsigned_t<IndexType>>::template data<S>; 
+      constexpr static std::size_t num_partitions_v{Npartitions};
+      constexpr static std::size_t num_elements_v{Nelements};
+      
+      using index_type = IndexType;
+      using partition_index_type = std::make_unsigned_t<IndexType>;      
+      using partitions_type = maths::static_monotonic_sequence<partition_index_type, Npartitions, std::greater<partition_index_type>>;
+      
+      template<class S> using underlying_storage_type
+        = typename impl::static_contiguous_data<Npartitions, Nelements, partition_index_type>::template data<S>;
     };
 
     template<class T, std::size_t Npartitions, std::size_t Nelements, class IndexType=std::size_t>
