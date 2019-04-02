@@ -730,7 +730,7 @@ namespace sequoia
     private:
       using held_type      = typename partition_impl::storage_type_generator<Storage, SharingPolicy>::held_type;
       using container_type = typename partition_impl::storage_type_generator<Storage, SharingPolicy>::container_type;     
-      using StaticType     = typename partition_impl::storage_type_generator<Storage, SharingPolicy>::static_type;
+      using StaticType     = std::bool_constant<Traits::static_storage_v>;
       constexpr static index_type npos{partition_iterator::npos};
      
       PartitionsType m_Partitions; // TO DO, C++20: [no_unique_address]
@@ -767,13 +767,13 @@ namespace sequoia
       template<size_type... Inds>
       constexpr StorageType fill(std::index_sequence<Inds...>, std::initializer_list<std::initializer_list<T>> list)
       {
-        if(list.size() != container_type::num_partitions())
+        if(list.size() != Traits::num_partitions_v)
           throw std::logic_error("Overall initializer list of wrong size");
 
         size_type total{};
         for(auto l : list) total += l.size();
 
-        if(total != container_type::num_elements())
+        if(total != Traits::num_elements_v)
           throw std::logic_error("Inconsistent number of elements supplied by initializer lists");
         
         if constexpr(sizeof...(Inds) > 0)
@@ -804,7 +804,7 @@ namespace sequoia
 
       constexpr contiguous_storage_base(std::true_type, std::initializer_list<std::initializer_list<T>> list)
         : m_Partitions{make_partitions(list)}
-        , m_Storage{fill(std::make_index_sequence<container_type::num_elements()>{}, list)}
+        , m_Storage{fill(std::make_index_sequence<Traits::num_elements_v>{}, list)}
       {
       }
       
@@ -915,6 +915,7 @@ namespace sequoia
 
     template<class T, class SharingPolicy> struct contiguous_storage_traits
     {
+      constexpr static bool static_storage_v{false};
       constexpr static bool throw_on_range_error{true};
 
       using index_type = std::size_t;
@@ -950,6 +951,7 @@ namespace sequoia
 
     template<class T, std::size_t Npartitions, std::size_t Nelements, class IndexType> struct static_contiguous_storage_traits
     {
+      constexpr static bool static_storage_v{true};
       constexpr static bool throw_on_range_error{true};
       constexpr static std::size_t num_partitions_v{Npartitions};
       constexpr static std::size_t num_elements_v{Nelements};
@@ -958,8 +960,7 @@ namespace sequoia
       using partition_index_type = std::make_unsigned_t<IndexType>;      
       using partitions_type = maths::static_monotonic_sequence<partition_index_type, Npartitions, std::greater<partition_index_type>>;
       
-      template<class S> using underlying_storage_type
-        = typename impl::static_contiguous_data<Npartitions, Nelements, partition_index_type>::template data<S>;
+      template<class S> using underlying_storage_type = std::array<S, Nelements>;
     };
 
     template<class T, std::size_t Npartitions, std::size_t Nelements, class IndexType=std::size_t>
