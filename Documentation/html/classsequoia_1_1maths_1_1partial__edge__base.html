@@ -69,6 +69,7 @@ $(function() {
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="#friends">Friends</a> &#124;
 <a href="classsequoia_1_1maths_1_1partial__edge__base-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">sequoia::maths::partial_edge_base&lt; Weight, WeightSharingPolicy, WeightProxy, IndexType &gt; Class Template Reference</div>  </div>
@@ -120,7 +121,7 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>weight_proxy_type</b
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a66a79658c2caff1cb863cac5cd33a618"><td class="memTemplParams" colspan="2"><a id="a66a79658c2caff1cb863cac5cd33a618"></a>
-template&lt;class... Args, class  = typename std::enable_if_t&lt;!same_decay_v&lt;partial_edge_base, Args...&gt; &amp;&amp; !is_base_of_head_v&lt;partial_edge_base, Args...&gt;&gt;&gt; </td></tr>
+template&lt;class... Args, class  = typename std::enable_if_t&lt;!resolve_to_copy_constructor_v&lt;partial_edge_base, Args...&gt;&gt;&gt; </td></tr>
 <tr class="memitem:a66a79658c2caff1cb863cac5cd33a618"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>partial_edge_base</b> (const index_type target, Args &amp;&amp;... args)</td></tr>
 <tr class="separator:a66a79658c2caff1cb863cac5cd33a618"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8e5fe9b96767b35c1ec28e7b5a3dd4b1"><td class="memItemLeft" align="right" valign="top"><a id="a8e5fe9b96767b35c1ec28e7b5a3dd4b1"></a>
@@ -193,6 +194,15 @@ constexpr <a class="el" href="classsequoia_1_1maths_1_1weighting.html">weighting
 <tr class="memitem:aa08fa2e70e2fad9151fb06fabb062114 inherit pro_methods_classsequoia_1_1maths_1_1weighting"><td class="memItemLeft" align="right" valign="top"><a id="aa08fa2e70e2fad9151fb06fabb062114"></a>
 constexpr <a class="el" href="classsequoia_1_1maths_1_1weighting.html">weighting</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="classsequoia_1_1maths_1_1weighting.html">weighting</a> &amp;&amp;) noexcept=default</td></tr>
 <tr class="separator:aa08fa2e70e2fad9151fb06fabb062114 inherit pro_methods_classsequoia_1_1maths_1_1weighting"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
+Friends</h2></td></tr>
+<tr class="memitem:a44b8619db02ab1637f0ff988db72d7a2"><td class="memItemLeft" align="right" valign="top"><a id="a44b8619db02ab1637f0ff988db72d7a2"></a>
+constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="classsequoia_1_1maths_1_1partial__edge__base.html">partial_edge_base</a> &amp;lhs, const <a class="el" href="classsequoia_1_1maths_1_1partial__edge__base.html">partial_edge_base</a> &amp;rhs) noexcept</td></tr>
+<tr class="separator:a44b8619db02ab1637f0ff988db72d7a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ecd90e5d6843288f01b41ef6da7d1ce"><td class="memItemLeft" align="right" valign="top"><a id="a2ecd90e5d6843288f01b41ef6da7d1ce"></a>
+constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator!=</b> (const <a class="el" href="classsequoia_1_1maths_1_1partial__edge__base.html">partial_edge_base</a> &amp;lhs, const <a class="el" href="classsequoia_1_1maths_1_1partial__edge__base.html">partial_edge_base</a> &amp;rhs) noexcept</td></tr>
+<tr class="separator:a2ecd90e5d6843288f01b41ef6da7d1ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;class Weight, template&lt; class &gt; class WeightSharingPolicy, class WeightProxy, class IndexType&gt;<br />

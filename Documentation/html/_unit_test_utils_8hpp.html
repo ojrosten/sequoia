@@ -96,11 +96,9 @@ $(function() {
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1unit__testing_1_1is__serializable.html">sequoia::unit_testing::is_serializable&lt; T, class &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1unit__testing_1_1is__serializable_3_01_t_00_01std_1_1void__t_3_01decltype_07std61c4532bf909ef233a275d2e14c1f393.html">sequoia::unit_testing::ostringstream{}&lt;&lt; std::declval&lt; T &gt;())&gt; &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1unit__testing_1_1is__serializable_3_01_t_00_01std_1_1void__t_3_01decltype_07std7a426030976866592c6e2b8ee927ca37.html">sequoia::unit_testing::stringstream{}&lt;&lt; std::declval&lt; T &gt;())&gt; &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1unit__testing_1_1string__maker.html">sequoia::unit_testing::string_maker&lt; T, class &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1unit__testing_1_1string__maker_3_01_t_00_01std_1_1enable__if__t_3_01is__serializable__v_3_01_t_01_4_01_4_01_4.html">sequoia::unit_testing::string_maker&lt; T, std::enable_if_t&lt; is_serializable_v&lt; T &gt; &gt; &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsequoia_1_1unit__testing_1_1unit__test__logger.html">sequoia::unit_testing::unit_test_logger&lt; Mode &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -111,6 +109,8 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1unit__testing_1_1equality__checker.html">sequoia::unit_testing::equality_checker&lt; T &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1unit__testing_1_1details__checker.html">sequoia::unit_testing::details_checker&lt; T &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1unit__testing_1_1equivalence__checker.html">sequoia::unit_testing::equivalence_checker&lt; T &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1unit__testing_1_1has__details__checker.html">sequoia::unit_testing::has_details_checker&lt; T, class &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -211,6 +211,10 @@ template&lt;class Logger , class T &gt; </td></tr>
 template&lt;class Logger &gt; </td></tr>
 <tr class="memitem:a5b7c2874e24f21d0c85f5ab3f6f32390"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::check</b> (Logger &amp;logger, const bool value, std::string_view description=&quot;&quot;)</td></tr>
 <tr class="separator:a5b7c2874e24f21d0c85f5ab3f6f32390"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a42032b0370f39a660523e4783fb1f52b"><td class="memTemplParams" colspan="2"><a id="a42032b0370f39a660523e4783fb1f52b"></a>
+template&lt;class Logger , class T , class S , class... U&gt; </td></tr>
+<tr class="memitem:a42032b0370f39a660523e4783fb1f52b"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::check_equivalence</b> (Logger &amp;logger, const T &amp;value, const S &amp;s, const U &amp;... u, std::string_view description=&quot;&quot;)</td></tr>
+<tr class="separator:a42032b0370f39a660523e4783fb1f52b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a60fbdeb234906b92333bf7f86a546ac3"><td class="memTemplParams" colspan="2"><a id="a60fbdeb234906b92333bf7f86a546ac3"></a>
 template&lt;class Logger , class T &gt; </td></tr>
 <tr class="memitem:a60fbdeb234906b92333bf7f86a546ac3"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::check_equality_within_tolerance</b> (Logger &amp;logger, const T &amp;reference, const T &amp;value, const T &amp;tol, std::string_view description=&quot;&quot;)</td></tr>

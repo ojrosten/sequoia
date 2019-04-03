@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.15"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: sequoia::maths::graph_impl::static_node_storage_traits&lt; WeightProxy, N, bool &gt; Struct Template Reference</title>
+<title>Sequoia: sequoia::maths::graph_impl::static_node_storage_traits&lt; WeightMaker, N, bool &gt; Struct Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -70,22 +70,28 @@ $(function() {
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="structsequoia_1_1maths_1_1graph__impl_1_1static__node__storage__traits-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">sequoia::maths::graph_impl::static_node_storage_traits&lt; WeightProxy, N, bool &gt; Struct Template Reference</div>  </div>
+<div class="title">sequoia::maths::graph_impl::static_node_storage_traits&lt; WeightMaker, N, bool &gt; Struct Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a2ca3c8429bbdf27382a712389a584091"><td class="memTemplParams" colspan="2"><a id="a2ca3c8429bbdf27382a712389a584091"></a>
+<tr class="memitem:ab219d289355b8e1aba1fe5c4b29eef91"><td class="memTemplParams" colspan="2"><a id="ab219d289355b8e1aba1fe5c4b29eef91"></a>
 template&lt;class S &gt; </td></tr>
-<tr class="memitem:a2ca3c8429bbdf27382a712389a584091"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>underlying_storage_type</b> = typename <a class="el" href="structsequoia_1_1data__structures_1_1impl_1_1static__contiguous__data.html">data_structures::impl::static_contiguous_data</a>&lt; 1, N &gt;::template data&lt; S &gt;</td></tr>
-<tr class="separator:a2ca3c8429bbdf27382a712389a584091"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab219d289355b8e1aba1fe5c4b29eef91"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>container_type</b> = std::array&lt; S, N &gt;</td></tr>
+<tr class="separator:ab219d289355b8e1aba1fe5c4b29eef91"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr class="memitem:a15207a91a769942648d509e6e37d59a2"><td class="memItemLeft" align="right" valign="top"><a id="a15207a91a769942648d509e6e37d59a2"></a>
+<tr class="memitem:aa4864785c178e6e44cf55130d92cd715"><td class="memItemLeft" align="right" valign="top"><a id="aa4864785c178e6e44cf55130d92cd715"></a>
 static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>throw_on_range_error</b> {true}</td></tr>
-<tr class="separator:a15207a91a769942648d509e6e37d59a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:aa4864785c178e6e44cf55130d92cd715"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2bab79e2b461b9e123a37a8b984f5356"><td class="memItemLeft" align="right" valign="top"><a id="a2bab79e2b461b9e123a37a8b984f5356"></a>
+static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>static_storage_v</b> {true}</td></tr>
+<tr class="separator:a2bab79e2b461b9e123a37a8b984f5356"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0df3f3b38c276ace0d7975c63afc7576"><td class="memItemLeft" align="right" valign="top"><a id="a0df3f3b38c276ace0d7975c63afc7576"></a>
+static constexpr std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>num_elements_v</b> {N}</td></tr>
+<tr class="separator:a0df3f3b38c276ace0d7975c63afc7576"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>Maths/Graph/<a class="el" href="_static_node_storage_8hpp_source.html">StaticNodeStorage.hpp</a></li>

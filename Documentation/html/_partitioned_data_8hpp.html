@@ -78,8 +78,10 @@ $(function() {
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="_partitioned_data_details_8hpp_source.html">PartitionedDataDetails.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_type_traits_8hpp_source.html">TypeTraits.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_array_utilities_8hpp_source.html">ArrayUtilities.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_iterator_8hpp_source.html">Iterator.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_algorithms_8hpp_source.html">Algorithms.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_monotonic_sequence_8hpp_source.html">MonotonicSequence.hpp</a>&quot;</code><br />
 <code>#include &lt;string&gt;</code><br />
 <code>#include &lt;numeric&gt;</code><br />
 </div>
@@ -104,22 +106,22 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:a5a66d41ea1d1fb7109200e4b8a734fc4"><td class="memTemplParams" colspan="2"><a id="a5a66d41ea1d1fb7109200e4b8a734fc4"></a>
-template&lt;template&lt; class... &gt; class C, class SharingPolicy , class IndexType &gt; </td></tr>
-<tr class="memitem:a5a66d41ea1d1fb7109200e4b8a734fc4"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::data_structures::partition_iterator</b> = utilities::iterator&lt; typename partition_impl::partition_iterator_generator&lt; C, SharingPolicy, partition_impl::mutable_reference, false &gt;::iterator, partition_impl::dereference_policy&lt; SharingPolicy, partition_impl::mutable_reference &gt;, partition_impl::partition_index_policy&lt; false, IndexType &gt; &gt;</td></tr>
-<tr class="separator:a5a66d41ea1d1fb7109200e4b8a734fc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae535070d1c685637ce1b7d37f3ae4f36"><td class="memTemplParams" colspan="2"><a id="ae535070d1c685637ce1b7d37f3ae4f36"></a>
-template&lt;template&lt; class... &gt; class C, class SharingPolicy , class IndexType &gt; </td></tr>
-<tr class="memitem:ae535070d1c685637ce1b7d37f3ae4f36"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::data_structures::const_partition_iterator</b> = utilities::iterator&lt; typename partition_impl::partition_iterator_generator&lt; C, SharingPolicy, partition_impl::const_reference, false &gt;::iterator, partition_impl::dereference_policy&lt; SharingPolicy, partition_impl::const_reference &gt;, partition_impl::partition_index_policy&lt; false, IndexType &gt; &gt;</td></tr>
-<tr class="separator:ae535070d1c685637ce1b7d37f3ae4f36"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab357fbbfc12758672bf161bb4603c795"><td class="memTemplParams" colspan="2"><a id="ab357fbbfc12758672bf161bb4603c795"></a>
-template&lt;template&lt; class... &gt; class C, class SharingPolicy , class IndexType &gt; </td></tr>
-<tr class="memitem:ab357fbbfc12758672bf161bb4603c795"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::data_structures::reverse_partition_iterator</b> = utilities::iterator&lt; typename partition_impl::partition_iterator_generator&lt; C, SharingPolicy, partition_impl::mutable_reference, true &gt;::iterator, partition_impl::dereference_policy&lt; SharingPolicy, partition_impl::mutable_reference &gt;, partition_impl::partition_index_policy&lt; true, IndexType &gt; &gt;</td></tr>
-<tr class="separator:ab357fbbfc12758672bf161bb4603c795"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1d365346cd67a28529d93d85931702a0"><td class="memTemplParams" colspan="2"><a id="a1d365346cd67a28529d93d85931702a0"></a>
-template&lt;template&lt; class... &gt; class C, class SharingPolicy , class IndexType &gt; </td></tr>
-<tr class="memitem:a1d365346cd67a28529d93d85931702a0"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::data_structures::const_reverse_partition_iterator</b> = utilities::iterator&lt; typename partition_impl::partition_iterator_generator&lt; C, SharingPolicy, partition_impl::const_reference, true &gt;::iterator, partition_impl::dereference_policy&lt; SharingPolicy, partition_impl::const_reference &gt;, partition_impl::partition_index_policy&lt; true, IndexType &gt; &gt;</td></tr>
-<tr class="separator:a1d365346cd67a28529d93d85931702a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b834aad8debaaddcdb92b8c55db344d"><td class="memTemplParams" colspan="2"><a id="a2b834aad8debaaddcdb92b8c55db344d"></a>
+template&lt;class Traits , class SharingPolicy , class IndexType &gt; </td></tr>
+<tr class="memitem:a2b834aad8debaaddcdb92b8c55db344d"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::data_structures::partition_iterator</b> = utilities::iterator&lt; typename partition_impl::partition_iterator_generator&lt; Traits, SharingPolicy, partition_impl::mutable_reference, false &gt;::iterator, partition_impl::dereference_policy&lt; SharingPolicy, partition_impl::mutable_reference, partition_impl::partition_index_policy&lt; false, IndexType &gt; &gt; &gt;</td></tr>
+<tr class="separator:a2b834aad8debaaddcdb92b8c55db344d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01ffed1e9d13e8d91cfe80309dc93b28"><td class="memTemplParams" colspan="2"><a id="a01ffed1e9d13e8d91cfe80309dc93b28"></a>
+template&lt;class Traits , class SharingPolicy , class IndexType &gt; </td></tr>
+<tr class="memitem:a01ffed1e9d13e8d91cfe80309dc93b28"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::data_structures::const_partition_iterator</b> = utilities::iterator&lt; typename partition_impl::partition_iterator_generator&lt; Traits, SharingPolicy, partition_impl::const_reference, false &gt;::iterator, partition_impl::dereference_policy&lt; SharingPolicy, partition_impl::const_reference, partition_impl::partition_index_policy&lt; false, IndexType &gt; &gt; &gt;</td></tr>
+<tr class="separator:a01ffed1e9d13e8d91cfe80309dc93b28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa139748a49ab2c9e39fc8e7978d8385a"><td class="memTemplParams" colspan="2"><a id="aa139748a49ab2c9e39fc8e7978d8385a"></a>
+template&lt;class Traits , class SharingPolicy , class IndexType &gt; </td></tr>
+<tr class="memitem:aa139748a49ab2c9e39fc8e7978d8385a"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::data_structures::reverse_partition_iterator</b> = utilities::iterator&lt; typename partition_impl::partition_iterator_generator&lt; Traits, SharingPolicy, partition_impl::mutable_reference, true &gt;::iterator, partition_impl::dereference_policy&lt; SharingPolicy, partition_impl::mutable_reference, partition_impl::partition_index_policy&lt; true, IndexType &gt; &gt; &gt;</td></tr>
+<tr class="separator:aa139748a49ab2c9e39fc8e7978d8385a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a016e813cdda6ea4387b154c3fa5ad57c"><td class="memTemplParams" colspan="2"><a id="a016e813cdda6ea4387b154c3fa5ad57c"></a>
+template&lt;class Traits , class SharingPolicy , class IndexType &gt; </td></tr>
+<tr class="memitem:a016e813cdda6ea4387b154c3fa5ad57c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::data_structures::const_reverse_partition_iterator</b> = utilities::iterator&lt; typename partition_impl::partition_iterator_generator&lt; Traits, SharingPolicy, partition_impl::const_reference, true &gt;::iterator, partition_impl::dereference_policy&lt; SharingPolicy, partition_impl::const_reference, partition_impl::partition_index_policy&lt; true, IndexType &gt; &gt; &gt;</td></tr>
+<tr class="separator:a016e813cdda6ea4387b154c3fa5ad57c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
@@ -127,6 +129,10 @@ Functions</h2></td></tr>
 template&lt;class Storage1 , class Storage2 &gt; </td></tr>
 <tr class="memitem:a57fadabb5f32efac101d8bf97c4a8869"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::data_structures::isomorphic</b> (const Storage1 &amp;lhs, const Storage2 &amp;rhs) noexcept</td></tr>
 <tr class="separator:a57fadabb5f32efac101d8bf97c4a8869"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6257799193c895fb0382fb21adf4ddb5"><td class="memTemplParams" colspan="2"><a id="a6257799193c895fb0382fb21adf4ddb5"></a>
+template&lt;class PartitionedData , class Pred , class Index  = typename PartitionedData::index_type&gt; </td></tr>
+<tr class="memitem:a6257799193c895fb0382fb21adf4ddb5"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::erase_from_partition_if</b> (PartitionedData &amp;data, const Index partitionIndex, Pred pred)</td></tr>
+<tr class="separator:a6257799193c895fb0382fb21adf4ddb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Classes implementing the concept of a sequence of data which is divided into partitions. </p>

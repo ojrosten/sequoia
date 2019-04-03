@@ -1,4 +1,31 @@
 var searchData=
 [
-  ['ostringstream_7b_7d_3c_3c_20std_3a_3adeclval_3c_20t_20_3e_28_29_29_3e_20_3e',['ostringstream{}&lt;&lt; std::declval&lt; T &gt;())&gt; &gt;',['../structsequoia_1_1unit__testing_1_1is__serializable_3_01_t_00_01std_1_1void__t_3_01decltype_07std61c4532bf909ef233a275d2e14c1f393.html',1,'sequoia::unit_testing']]]
+  ['partial_5fedge',['partial_edge',['../classsequoia_1_1maths_1_1partial__edge.html',1,'sequoia::maths']]],
+  ['partial_5fedge_5fbase',['partial_edge_base',['../classsequoia_1_1maths_1_1partial__edge__base.html',1,'sequoia::maths']]],
+  ['partial_5fedge_5fbase_3c_20weight_2c_20data_5fsharing_3a_3aindependent_2c_20weightproxy_2c_20indextype_20_3e',['partial_edge_base&lt; Weight, data_sharing::independent, WeightProxy, IndexType &gt;',['../classsequoia_1_1maths_1_1partial__edge__base.html',1,'sequoia::maths']]],
+  ['partition_5findex_5fpolicy',['partition_index_policy',['../classsequoia_1_1data__structures_1_1partition__impl_1_1partition__index__policy.html',1,'sequoia::data_structures::partition_impl']]],
+  ['partition_5fiterator_5fgenerator',['partition_iterator_generator',['../structsequoia_1_1data__structures_1_1partition__impl_1_1partition__iterator__generator.html',1,'sequoia::data_structures::partition_impl']]],
+  ['partition_5fiterator_5fgenerator_3c_20traits_2c_20sharingpolicy_2c_20const_5freference_2c_20false_20_3e',['partition_iterator_generator&lt; Traits, SharingPolicy, const_reference, false &gt;',['../structsequoia_1_1data__structures_1_1partition__impl_1_1partition__iterator__generator_3_01_traia93efbbb7c8a981c1c3eed99a7d2d50a.html',1,'sequoia::data_structures::partition_impl']]],
+  ['partition_5fiterator_5fgenerator_3c_20traits_2c_20sharingpolicy_2c_20const_5freference_2c_20true_20_3e',['partition_iterator_generator&lt; Traits, SharingPolicy, const_reference, true &gt;',['../structsequoia_1_1data__structures_1_1partition__impl_1_1partition__iterator__generator_3_01_trai1038b6ff9cc12f452331c8702f4bd0d2.html',1,'sequoia::data_structures::partition_impl']]],
+  ['partition_5fiterator_5fgenerator_3c_20traits_2c_20sharingpolicy_2c_20mutable_5freference_2c_20true_20_3e',['partition_iterator_generator&lt; Traits, SharingPolicy, mutable_reference, true &gt;',['../structsequoia_1_1data__structures_1_1partition__impl_1_1partition__iterator__generator_3_01_traib689722e992c93bad860bebbcad0c5be.html',1,'sequoia::data_structures::partition_impl']]],
+  ['partitioned_5fdata_5ftest',['partitioned_data_test',['../classsequoia_1_1unit__testing_1_1partitioned__data__test.html',1,'sequoia::unit_testing']]],
+  ['partitioneddata_2ehpp',['PartitionedData.hpp',['../_partitioned_data_8hpp.html',1,'']]],
+  ['partitioneddatadetails_2ehpp',['PartitionedDataDetails.hpp',['../_partitioned_data_details_8hpp.html',1,'']]],
+  ['perfectly_5fnormal_5fbeast',['perfectly_normal_beast',['../structsequoia_1_1unit__testing_1_1perfectly__normal__beast.html',1,'sequoia::unit_testing']]],
+  ['performance_5fresults',['performance_results',['../structsequoia_1_1unit__testing_1_1performance__results.html',1,'sequoia::unit_testing']]],
+  ['priority_5fqueue_5fselector',['priority_queue_selector',['../structsequoia_1_1sequoia_1_1maths_1_1graph__impl_1_1priority__queue__selector.html',1,'sequoia::sequoia::maths::graph_impl::priority_queue_selector&lt; G, Compare, bool &gt;'],['../structsequoia_1_1maths_1_1graph__impl_1_1priority__queue__selector.html',1,'sequoia::maths::graph_impl::priority_queue_selector&lt; G, Compare, bool &gt;']]],
+  ['priority_5fqueue_5fselector_3c_20g_2c_20compare_2c_20false_20_3e',['priority_queue_selector&lt; G, Compare, false &gt;',['../structsequoia_1_1maths_1_1graph__impl_1_1priority__queue__selector_3_01_g_00_01_compare_00_01false_01_4.html',1,'sequoia::maths::graph_impl']]],
+  ['priority_5fqueue_5fselector_3c_20g_2c_20compare_2c_20true_20_3e',['priority_queue_selector&lt; G, Compare, true &gt;',['../structsequoia_1_1maths_1_1graph__impl_1_1priority__queue__selector_3_01_g_00_01_compare_00_01true_01_4.html',1,'sequoia::maths::graph_impl']]],
+  ['protective_5fwrapper',['protective_wrapper',['../classsequoia_1_1utilities_1_1protective__wrapper.html',1,'sequoia::utilities']]],
+  ['protective_5fwrapper_3c_20t_2c_20true_20_3e',['protective_wrapper&lt; T, true &gt;',['../classsequoia_1_1utilities_1_1protective__wrapper_3_01_t_00_01true_01_4.html',1,'sequoia::utilities']]],
+  ['protective_5fwrapper_5ffalse_5fpositive_5ftest',['protective_wrapper_false_positive_test',['../classsequoia_1_1unit__testing_1_1protective__wrapper__false__positive__test.html',1,'sequoia::unit_testing']]],
+  ['protective_5fwrapper_5ftest',['protective_wrapper_test',['../classsequoia_1_1unit__testing_1_1protective__wrapper__test.html',1,'sequoia::unit_testing']]],
+  ['protectivewrapper_2ehpp',['ProtectiveWrapper.hpp',['../_protective_wrapper_8hpp.html',1,'']]],
+  ['provides_5fproxy_5ftype',['provides_proxy_type',['../structsequoia_1_1utilities_1_1impl_1_1provides__proxy__type.html',1,'sequoia::utilities::impl']]],
+  ['provides_5fproxy_5ftype_3c_20dereferencepolicy_2c_20std_3a_3avoid_5ft_3c_20typename_20dereferencepolicy_3a_3aproxy_20_3e_20_3e',['provides_proxy_type&lt; DereferencePolicy, std::void_t&lt; typename DereferencePolicy::proxy &gt; &gt;',['../structsequoia_1_1utilities_1_1impl_1_1provides__proxy__type_3_01_dereference_policy_00_01std_1_141de644b2c2c743baa6a8868fa59f717.html',1,'sequoia::utilities::impl']]],
+  ['provides_5freference_5ftype',['provides_reference_type',['../structsequoia_1_1utilities_1_1impl_1_1provides__reference__type.html',1,'sequoia::utilities::impl']]],
+  ['provides_5freference_5ftype_3c_20dereferencepolicy_2c_20std_3a_3avoid_5ft_3c_20typename_20dereferencepolicy_3a_3areference_20_3e_20_3e',['provides_reference_type&lt; DereferencePolicy, std::void_t&lt; typename DereferencePolicy::reference &gt; &gt;',['../structsequoia_1_1utilities_1_1impl_1_1provides__reference__type_3_01_dereference_policy_00_01stdda3e971910f26fcb2e17fdc235edfcea.html',1,'sequoia::utilities::impl']]],
+  ['proxy',['proxy',['../classsequoia_1_1data__sharing_1_1data__pool_1_1proxy.html',1,'sequoia::data_sharing::data_pool']]],
+  ['proxy_5fdereference_5fpolicy',['proxy_dereference_policy',['../structsequoia_1_1maths_1_1graph__impl_1_1proxy__dereference__policy.html',1,'sequoia::maths::graph_impl']]],
+  ['prs',['PRS',['../structsequoia_1_1unit__testing_1_1_p_r_s.html',1,'sequoia::unit_testing']]]
 ];

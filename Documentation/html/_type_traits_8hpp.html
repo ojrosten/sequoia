@@ -67,6 +67,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">TypeTraits.hpp File Reference</div>  </div>
@@ -89,33 +90,88 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1variadic__traits_3_4.html">sequoia::variadic_traits&lt;&gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1same__decay.html">sequoia::same_decay&lt; T, Args &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1is__base__of__head.html">sequoia::is_base_of_head&lt; T, Args &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1resolve__to__copy__constructor.html">sequoia::resolve_to_copy_constructor&lt; T, Args &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1is__const__pointer.html">sequoia::is_const_pointer&lt; T &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1is__const__pointer_3_01const_01_t_01_5_01_4.html">sequoia::is_const_pointer&lt; const T * &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1is__const__pointer_3_01const_01_t_01_5const_01_4.html">sequoia::is_const_pointer&lt; const T *const &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1is__const__reference.html">sequoia::is_const_reference&lt; T &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1is__orderable.html">sequoia::is_orderable&lt; T, class &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1is__orderable_3_01_t_00_01std_1_1void__t_3_01decltype_07_07std_1_1declval_3_01_0f03bdba07d0876f312f843f164b5a13.html">sequoia::void_t&lt; decltype((std::declval&lt; T &gt;()&lt; std::declval&lt; T &gt;()))&gt; &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1is__orderable_3_01_t_00_01std_1_1void__t_3_01decltype_07std_1_1declval_3_01_t_069c35a3fc838b4f622235a8c36928d18.html">sequoia::void_t&lt; decltype(std::declval&lt; T &gt;()&lt; std::declval&lt; T &gt;())&gt; &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1is__equal__to__comparable.html">sequoia::is_equal_to_comparable&lt; T, class &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1is__equal__to__comparable_3_01_t_00_01std_1_1void__t_3_01decltype_07_07std_1_1ded2f377db75fb1abb86e3e07113b5271.html">sequoia::is_equal_to_comparable&lt; T, std::void_t&lt; decltype((std::declval&lt; T &gt;()==std::declval&lt; T &gt;()))&gt; &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1is__equal__to__comparable_3_01_t_00_01std_1_1void__t_3_01decltype_07std_1_1decl63d4f1b7534d2575e3af6c21dc9e9b10.html">sequoia::is_equal_to_comparable&lt; T, std::void_t&lt; decltype(std::declval&lt; T &gt;()==std::declval&lt; T &gt;())&gt; &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1is__not__equal__to__comparable.html">sequoia::is_not_equal_to_comparable&lt; T, class &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1is__not__equal__to__comparable_3_01_t_00_01std_1_1void__t_3_01decltype_07_07stda046c42576a8423b543392105dd6eb81.html">sequoia::is_not_equal_to_comparable&lt; T, std::void_t&lt; decltype((std::declval&lt; T &gt;() !=std::declval&lt; T &gt;()))&gt; &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1has__default__constructor.html">sequoia::has_default_constructor&lt; T, class &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1has__default__constructor_3_01_t_00_01std_1_1void__t_3_01decltype_07new_01_t_02_03_08_4_01_4.html">sequoia::has_default_constructor&lt; T, std::void_t&lt; decltype(new T{})&gt; &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a37a651440a60f865d5552ec56efa5cc6"><td class="memTemplParams" colspan="2"><a id="a37a651440a60f865d5552ec56efa5cc6"></a>
+template&lt;class T , class... Args&gt; </td></tr>
+<tr class="memitem:a37a651440a60f865d5552ec56efa5cc6"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::is_base_of_head_t</b> = typename is_base_of_head&lt; T, Args... &gt;::type</td></tr>
+<tr class="separator:a37a651440a60f865d5552ec56efa5cc6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abdac72499a3714276776ed639e802a91"><td class="memTemplParams" colspan="2"><a id="abdac72499a3714276776ed639e802a91"></a>
+template&lt;class T , class... Args&gt; </td></tr>
+<tr class="memitem:abdac72499a3714276776ed639e802a91"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::resolve_to_copy_constructor_t</b> = typename resolve_to_copy_constructor&lt; T, Args... &gt;::type</td></tr>
+<tr class="separator:abdac72499a3714276776ed639e802a91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a60500b8aa430563fe9e4babc7ca98ede"><td class="memTemplParams" colspan="2"><a id="a60500b8aa430563fe9e4babc7ca98ede"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a60500b8aa430563fe9e4babc7ca98ede"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::is_const_pointer_t</b> = typename is_const_pointer&lt; T &gt;::type</td></tr>
+<tr class="separator:a60500b8aa430563fe9e4babc7ca98ede"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2006d10da9429a0220e218bb90c57502"><td class="memTemplParams" colspan="2"><a id="a2006d10da9429a0220e218bb90c57502"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a2006d10da9429a0220e218bb90c57502"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::is_const_reference_t</b> = typename is_const_reference&lt; T &gt;::type</td></tr>
+<tr class="separator:a2006d10da9429a0220e218bb90c57502"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a310ef81e26eee49adcbdb99417830613"><td class="memTemplParams" colspan="2"><a id="a310ef81e26eee49adcbdb99417830613"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a310ef81e26eee49adcbdb99417830613"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::is_orderable_t</b> = typename is_orderable&lt; T &gt;::type</td></tr>
+<tr class="separator:a310ef81e26eee49adcbdb99417830613"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a007e47c4a8826bfbea3179020ab1d04c"><td class="memTemplParams" colspan="2"><a id="a007e47c4a8826bfbea3179020ab1d04c"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a007e47c4a8826bfbea3179020ab1d04c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::is_equal_to_comparable_t</b> = typename is_equal_to_comparable&lt; T &gt;::type</td></tr>
+<tr class="separator:a007e47c4a8826bfbea3179020ab1d04c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a315f5c1ec9aaa85576317084c6701f3c"><td class="memTemplParams" colspan="2"><a id="a315f5c1ec9aaa85576317084c6701f3c"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a315f5c1ec9aaa85576317084c6701f3c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::is_not_equal_to_comparable_t</b> = typename is_not_equal_to_comparable&lt; T &gt;::type</td></tr>
+<tr class="separator:a315f5c1ec9aaa85576317084c6701f3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a5be202fb6aa4b72db6d1dae1d1989a"><td class="memTemplParams" colspan="2"><a id="a7a5be202fb6aa4b72db6d1dae1d1989a"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a7a5be202fb6aa4b72db6d1dae1d1989a"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::has_default_constructor_t</b> = typename has_default_constructor&lt; T &gt;::type</td></tr>
+<tr class="separator:a7a5be202fb6aa4b72db6d1dae1d1989a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a7e67d95bbe4f75bf32b57c2ca56006c1"><td class="memTemplParams" colspan="2"><a id="a7e67d95bbe4f75bf32b57c2ca56006c1"></a>
-template&lt;class T , class... Args&gt; </td></tr>
-<tr class="memitem:a7e67d95bbe4f75bf32b57c2ca56006c1"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::same_decay_v</b> {same_decay&lt;T, Args...&gt;::value}</td></tr>
-<tr class="separator:a7e67d95bbe4f75bf32b57c2ca56006c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a51063e2718ac15a1370456e1fee5200a"><td class="memTemplParams" colspan="2"><a id="a51063e2718ac15a1370456e1fee5200a"></a>
 template&lt;class T , class... Args&gt; </td></tr>
 <tr class="memitem:a51063e2718ac15a1370456e1fee5200a"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::is_base_of_head_v</b> {is_base_of_head&lt;T, Args...&gt;::value}</td></tr>
 <tr class="separator:a51063e2718ac15a1370456e1fee5200a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adefa844439e1fc98b7be88f4712a90ba"><td class="memTemplParams" colspan="2"><a id="adefa844439e1fc98b7be88f4712a90ba"></a>
+template&lt;class T , class... Args&gt; </td></tr>
+<tr class="memitem:adefa844439e1fc98b7be88f4712a90ba"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::resolve_to_copy_constructor_v</b> {resolve_to_copy_constructor&lt;T, Args...&gt;::value}</td></tr>
+<tr class="separator:adefa844439e1fc98b7be88f4712a90ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7ae64f8f899f2c4dfb6f63b3f6cffd1d"><td class="memTemplParams" colspan="2"><a id="a7ae64f8f899f2c4dfb6f63b3f6cffd1d"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a7ae64f8f899f2c4dfb6f63b3f6cffd1d"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::is_const_pointer_v</b> {is_const_pointer&lt;T&gt;::value}</td></tr>
+<tr class="separator:a7ae64f8f899f2c4dfb6f63b3f6cffd1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4197082ae7c0daad3d37de45e53dc281"><td class="memTemplParams" colspan="2"><a id="a4197082ae7c0daad3d37de45e53dc281"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a4197082ae7c0daad3d37de45e53dc281"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::is_const_reference_v</b> {is_const_reference&lt;T&gt;::value}</td></tr>
+<tr class="separator:a4197082ae7c0daad3d37de45e53dc281"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af0c8e1665a381bfbb38307d296887e62"><td class="memTemplParams" colspan="2"><a id="af0c8e1665a381bfbb38307d296887e62"></a>
 template&lt;class T &gt; </td></tr>
 <tr class="memitem:af0c8e1665a381bfbb38307d296887e62"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::is_orderable_v</b> {is_orderable&lt;T&gt;::value}</td></tr>
@@ -128,6 +184,10 @@ template&lt;class T &gt; </td></tr>
 template&lt;class T &gt; </td></tr>
 <tr class="memitem:a5fb68fe73ee26115d9769661a3232fb6"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::is_not_equal_to_comparable_v</b> {is_not_equal_to_comparable&lt;T&gt;::value}</td></tr>
 <tr class="separator:a5fb68fe73ee26115d9769661a3232fb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a992e315887bb4d372c93bef760db3bb8"><td class="memTemplParams" colspan="2"><a id="a992e315887bb4d372c93bef760db3bb8"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a992e315887bb4d372c93bef760db3bb8"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::has_default_constructor_v</b> {has_default_constructor&lt;T&gt;::value}</td></tr>
+<tr class="separator:a992e315887bb4d372c93bef760db3bb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Traits added as required by other components of the library. </p>

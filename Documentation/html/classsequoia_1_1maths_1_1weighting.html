@@ -69,6 +69,7 @@ $(function() {
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="#friends">Friends</a> &#124;
 <a href="classsequoia_1_1maths_1_1weighting-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">sequoia::maths::weighting&lt; Weight, WeightSharingPolicy, WeightProxy, IndexType, bool &gt; Class Template Reference</div>  </div>
@@ -106,7 +107,7 @@ template&lt;class Fn &gt; </td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:ae448c3393dcdf650e44d6c4b6c44f50f"><td class="memTemplParams" colspan="2"><a id="ae448c3393dcdf650e44d6c4b6c44f50f"></a>
-template&lt;class... Args, class  = std::enable_if_t&lt;!same_decay_v&lt;weighting, Args...&gt; &amp;&amp; !is_base_of_head_v&lt;weighting, Args...&gt;&gt;&gt; </td></tr>
+template&lt;class... Args, class  = std::enable_if_t&lt;                   !resolve_to_copy_constructor_v&lt;weighting, Args...&gt;                &amp;&amp; !is_base_of_head_v&lt;weighting, Args...&gt;              &gt;&gt; </td></tr>
 <tr class="memitem:ae448c3393dcdf650e44d6c4b6c44f50f"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>weighting</b> (Args &amp;&amp;... args)</td></tr>
 <tr class="separator:ae448c3393dcdf650e44d6c4b6c44f50f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae6e1b24a1d3a139ba4faf57154e45f51"><td class="memItemLeft" align="right" valign="top"><a id="ae6e1b24a1d3a139ba4faf57154e45f51"></a>
@@ -124,6 +125,15 @@ constexpr <a class="el" href="classsequoia_1_1maths_1_1weighting.html">weighting
 <tr class="memitem:aa08fa2e70e2fad9151fb06fabb062114"><td class="memItemLeft" align="right" valign="top"><a id="aa08fa2e70e2fad9151fb06fabb062114"></a>
 constexpr <a class="el" href="classsequoia_1_1maths_1_1weighting.html">weighting</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="classsequoia_1_1maths_1_1weighting.html">weighting</a> &amp;&amp;) noexcept=default</td></tr>
 <tr class="separator:aa08fa2e70e2fad9151fb06fabb062114"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
+Friends</h2></td></tr>
+<tr class="memitem:a70c5b10ad0fccdcc9aa46305e48baebc"><td class="memItemLeft" align="right" valign="top"><a id="a70c5b10ad0fccdcc9aa46305e48baebc"></a>
+constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="classsequoia_1_1maths_1_1weighting.html">weighting</a> &amp;lhs, const <a class="el" href="classsequoia_1_1maths_1_1weighting.html">weighting</a> &amp;rhs) noexcept</td></tr>
+<tr class="separator:a70c5b10ad0fccdcc9aa46305e48baebc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa318e80820b31f4cd7eb02254d094917"><td class="memItemLeft" align="right" valign="top"><a id="aa318e80820b31f4cd7eb02254d094917"></a>
+constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator!=</b> (const <a class="el" href="classsequoia_1_1maths_1_1weighting.html">weighting</a> &amp;lhs, const <a class="el" href="classsequoia_1_1maths_1_1weighting.html">weighting</a> &amp;rhs) noexcept</td></tr>
+<tr class="separator:aa318e80820b31f4cd7eb02254d094917"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;class Weight, template&lt; class &gt; class WeightSharingPolicy, class WeightProxy, class IndexType, bool = std::is_empty_v&lt;Weight&gt;&gt;<br />

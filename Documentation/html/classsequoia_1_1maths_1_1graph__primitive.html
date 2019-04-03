@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.15"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: sequoia::maths::graph_primitive&lt; Directedness, EdgeTraits, Nodes, WeightMaker &gt; Class Template Reference</title>
+<title>Sequoia: sequoia::maths::graph_primitive&lt; Connectivity, Nodes &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -69,17 +69,15 @@ $(function() {
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
-<a href="#pro-types">Protected Types</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#friends">Friends</a> &#124;
 <a href="classsequoia_1_1maths_1_1graph__primitive-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">sequoia::maths::graph_primitive&lt; Directedness, EdgeTraits, Nodes, WeightMaker &gt; Class Template Reference</div>  </div>
+<div class="title">sequoia::maths::graph_primitive&lt; Connectivity, Nodes &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="dynheader">
-Inheritance diagram for sequoia::maths::graph_primitive&lt; Directedness, EdgeTraits, Nodes, WeightMaker &gt;:</div>
+Inheritance diagram for sequoia::maths::graph_primitive&lt; Connectivity, Nodes &gt;:</div>
 <div class="dyncontent">
  <div class="center">
   <img src="classsequoia_1_1maths_1_1graph__primitive.png" alt=""/>
@@ -87,193 +85,86 @@ Inheritance diagram for sequoia::maths::graph_primitive&lt; Directedness, EdgeTr
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:ab1e4796db67d1ee283a16c7ac4ae4747"><td class="memItemLeft" align="right" valign="top"><a id="ab1e4796db67d1ee283a16c7ac4ae4747"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_type</b> = typename EdgeTraits::edge_type</td></tr>
-<tr class="separator:ab1e4796db67d1ee283a16c7ac4ae4747"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aad12810028f45979410db99fc0e573bc"><td class="memItemLeft" align="right" valign="top"><a id="aad12810028f45979410db99fc0e573bc"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_weight_type</b> = typename edge_type::weight_type</td></tr>
-<tr class="separator:aad12810028f45979410db99fc0e573bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acabf76a52e8025cc06e4863eb13f0592"><td class="memItemLeft" align="right" valign="top"><a id="acabf76a52e8025cc06e4863eb13f0592"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_index_type</b> = typename edge_type::index_type</td></tr>
-<tr class="separator:acabf76a52e8025cc06e4863eb13f0592"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3bccaa0a8e742994800cab7e1be2a8e3"><td class="memItemLeft" align="right" valign="top"><a id="a3bccaa0a8e742994800cab7e1be2a8e3"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_init_type</b> = typename EdgeTraits::edge_init_type</td></tr>
-<tr class="separator:a3bccaa0a8e742994800cab7e1be2a8e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa2ca8a5c8206cf5928287159a4cbde78"><td class="memItemLeft" align="right" valign="top"><a id="aa2ca8a5c8206cf5928287159a4cbde78"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>size_type</b> = typename <a class="el" href="structsequoia_1_1maths_1_1graph__impl_1_1size__type__generator.html">graph_impl::size_type_generator</a>&lt; edge_storage_type, Nodes &gt;::size_type</td></tr>
-<tr class="separator:aa2ca8a5c8206cf5928287159a4cbde78"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac6abaabbafe8181ac639c074a8d2d2c3"><td class="memItemLeft" align="right" valign="top"><a id="ac6abaabbafe8181ac639c074a8d2d2c3"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>const_edge_iterator</b> = typename edge_storage_type::const_partition_iterator</td></tr>
-<tr class="separator:ac6abaabbafe8181ac639c074a8d2d2c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a55cb18bf16295db0f953d45c57bdd7de"><td class="memItemLeft" align="right" valign="top"><a id="a55cb18bf16295db0f953d45c57bdd7de"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>const_reverse_edge_iterator</b> = typename edge_storage_type::const_reverse_partition_iterator</td></tr>
-<tr class="separator:a55cb18bf16295db0f953d45c57bdd7de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa0a602563a54114035874434f66ae319"><td class="memItemLeft" align="right" valign="top"><a id="aa0a602563a54114035874434f66ae319"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>connectivity_type</b> = Connectivity</td></tr>
+<tr class="separator:aa0a602563a54114035874434f66ae319"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a541bbe0bcfa41a615b66fa8c0924a43c"><td class="memItemLeft" align="right" valign="top"><a id="a541bbe0bcfa41a615b66fa8c0924a43c"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_init_type</b> = typename Connectivity::edge_init_type</td></tr>
+<tr class="separator:a541bbe0bcfa41a615b66fa8c0924a43c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a09d6c7738501c953a869c098e324ff5d"><td class="memItemLeft" align="right" valign="top"><a id="a09d6c7738501c953a869c098e324ff5d"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_index_type</b> = typename Connectivity::edge_index_type</td></tr>
+<tr class="separator:a09d6c7738501c953a869c098e324ff5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a679414db0d5cf5d6316842362367b391"><td class="memItemLeft" align="right" valign="top"><a id="a679414db0d5cf5d6316842362367b391"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>size_type</b> = std::common_type_t&lt; typename Connectivity::size_type, typename Nodes::size_type &gt;</td></tr>
+<tr class="separator:a679414db0d5cf5d6316842362367b391"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:af0e00c0676a6090578ed3bbc59aea863"><td class="memItemLeft" align="right" valign="top"><a id="af0e00c0676a6090578ed3bbc59aea863"></a>
+<tr class="memitem:a293d33630f0bf9f6093da3342ac00be4"><td class="memItemLeft" align="right" valign="top"><a id="a293d33630f0bf9f6093da3342ac00be4"></a>
 constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>graph_primitive</b> (std::initializer_list&lt; std::initializer_list&lt; edge_init_type &gt;&gt; edges)</td></tr>
-<tr class="separator:af0e00c0676a6090578ed3bbc59aea863"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaa93473853499706069117a6516d8ad8"><td class="memTemplParams" colspan="2"><a id="aaa93473853499706069117a6516d8ad8"></a>
+<tr class="separator:a293d33630f0bf9f6093da3342ac00be4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c2247ec65fd4bf043fbb2e5e3facd41"><td class="memTemplParams" colspan="2"><a id="a5c2247ec65fd4bf043fbb2e5e3facd41"></a>
 template&lt;class N  = node_weight_type, class  = std::enable_if_t&lt;!std::is_empty_v&lt;N&gt; &amp;&amp; !std::is_same_v&lt;N, graph_impl::heterogeneous_tag&gt;&gt;&gt; </td></tr>
-<tr class="memitem:aaa93473853499706069117a6516d8ad8"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>graph_primitive</b> (std::initializer_list&lt; std::initializer_list&lt; edge_init_type &gt;&gt; edges, std::initializer_list&lt; N &gt; nodeWeights)</td></tr>
-<tr class="separator:aaa93473853499706069117a6516d8ad8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8d7c68391b619456ad223e9325b8ae47"><td class="memTemplParams" colspan="2"><a id="a8d7c68391b619456ad223e9325b8ae47"></a>
+<tr class="memitem:a5c2247ec65fd4bf043fbb2e5e3facd41"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>graph_primitive</b> (std::initializer_list&lt; std::initializer_list&lt; edge_init_type &gt;&gt; edges, std::initializer_list&lt; N &gt; nodeWeights)</td></tr>
+<tr class="separator:a5c2247ec65fd4bf043fbb2e5e3facd41"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aef28ef4c67bb0fd2206fe2c818988d1e"><td class="memTemplParams" colspan="2"><a id="aef28ef4c67bb0fd2206fe2c818988d1e"></a>
 template&lt;class... NodeWeights, class N  = node_weight_type, class  = std::enable_if_t&lt;std::is_same_v&lt;N, graph_impl::heterogeneous_tag&gt;&gt;&gt; </td></tr>
-<tr class="memitem:a8d7c68391b619456ad223e9325b8ae47"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>graph_primitive</b> (std::initializer_list&lt; std::initializer_list&lt; edge_init_type &gt;&gt; edges, NodeWeights &amp;&amp;... nodeWeights)</td></tr>
-<tr class="separator:a8d7c68391b619456ad223e9325b8ae47"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaf874b0cc6c3423055d578430f01165a"><td class="memItemLeft" align="right" valign="top"><a id="aaf874b0cc6c3423055d578430f01165a"></a>
+<tr class="memitem:aef28ef4c67bb0fd2206fe2c818988d1e"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>graph_primitive</b> (std::initializer_list&lt; std::initializer_list&lt; edge_init_type &gt;&gt; edges, NodeWeights &amp;&amp;... nodeWeights)</td></tr>
+<tr class="separator:aef28ef4c67bb0fd2206fe2c818988d1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a389dfd57deed1b3ba694c6ca68805f91"><td class="memItemLeft" align="right" valign="top"><a id="a389dfd57deed1b3ba694c6ca68805f91"></a>
 constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>graph_primitive</b> (const <a class="el" href="classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a> &amp;in)</td></tr>
-<tr class="separator:aaf874b0cc6c3423055d578430f01165a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa77217df765fcc3de032ada873ed7eb5"><td class="memItemLeft" align="right" valign="top"><a id="aa77217df765fcc3de032ada873ed7eb5"></a>
-constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>graph_primitive</b> (<a class="el" href="classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a> &amp;&amp;in) noexcept=default</td></tr>
-<tr class="separator:aa77217df765fcc3de032ada873ed7eb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acae3543c3da3aaaf1fcd702c536b8c78"><td class="memItemLeft" align="right" valign="top"><a id="acae3543c3da3aaaf1fcd702c536b8c78"></a>
-constexpr <a class="el" href="classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a> &amp;&amp;in) noexcept=default</td></tr>
-<tr class="separator:acae3543c3da3aaaf1fcd702c536b8c78"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6a32de5d880fa7e0b1ef1ffaf9643994"><td class="memItemLeft" align="right" valign="top"><a id="a6a32de5d880fa7e0b1ef1ffaf9643994"></a>
-constexpr <a class="el" href="classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a> &amp;in)</td></tr>
-<tr class="separator:a6a32de5d880fa7e0b1ef1ffaf9643994"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad0e508677da84bc91115a525d460e3eb"><td class="memItemLeft" align="right" valign="top"><a id="ad0e508677da84bc91115a525d460e3eb"></a>
-constexpr const_edge_iterator&#160;</td><td class="memItemRight" valign="bottom"><b>cbegin_edges</b> (const edge_index_type node) const</td></tr>
-<tr class="separator:ad0e508677da84bc91115a525d460e3eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa9e0f31680f282d45ccd778cea33319d"><td class="memItemLeft" align="right" valign="top"><a id="aa9e0f31680f282d45ccd778cea33319d"></a>
-constexpr const_edge_iterator&#160;</td><td class="memItemRight" valign="bottom"><b>cend_edges</b> (const edge_index_type node) const</td></tr>
-<tr class="separator:aa9e0f31680f282d45ccd778cea33319d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac0085576d48392b33553310f51313aa7"><td class="memItemLeft" align="right" valign="top"><a id="ac0085576d48392b33553310f51313aa7"></a>
-constexpr const_reverse_edge_iterator&#160;</td><td class="memItemRight" valign="bottom"><b>crbegin_edges</b> (const edge_index_type node) const</td></tr>
-<tr class="separator:ac0085576d48392b33553310f51313aa7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae2074995254e768afb4bb7e862adddda"><td class="memItemLeft" align="right" valign="top"><a id="ae2074995254e768afb4bb7e862adddda"></a>
-constexpr const_reverse_edge_iterator&#160;</td><td class="memItemRight" valign="bottom"><b>crend_edges</b> (const edge_index_type node) const</td></tr>
-<tr class="separator:ae2074995254e768afb4bb7e862adddda"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abf85f31fdce6725b520b327aade04b8c"><td class="memTemplParams" colspan="2"><a id="abf85f31fdce6725b520b327aade04b8c"></a>
-template&lt;class Fn &gt; </td></tr>
-<tr class="memitem:abf85f31fdce6725b520b327aade04b8c"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>mutate_edge_weight</b> (const_edge_iterator citer, Fn fn)</td></tr>
-<tr class="separator:abf85f31fdce6725b520b327aade04b8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac0e792491e081f8c8ba162843e051819"><td class="memTemplParams" colspan="2"><a id="ac0e792491e081f8c8ba162843e051819"></a>
-template&lt;class Arg , class... Args&gt; </td></tr>
-<tr class="memitem:ac0e792491e081f8c8ba162843e051819"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>set_edge_weight</b> (const_edge_iterator citer, Arg &amp;&amp;arg, Args &amp;&amp;... args)</td></tr>
-<tr class="separator:ac0e792491e081f8c8ba162843e051819"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3f16c0921d7fd0d218c36dcd01f1267c"><td class="memTemplParams" colspan="2"><a id="a3f16c0921d7fd0d218c36dcd01f1267c"></a>
-template&lt;class Arg , class... Args&gt; </td></tr>
-<tr class="memitem:a3f16c0921d7fd0d218c36dcd01f1267c"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>set_edge_weight</b> (const_reverse_edge_iterator criter, Arg &amp;&amp;arg, Args &amp;&amp;... args)</td></tr>
-<tr class="separator:a3f16c0921d7fd0d218c36dcd01f1267c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:addb1de80af85f13d4c81aa8061741b46"><td class="memTemplParams" colspan="2"><a id="addb1de80af85f13d4c81aa8061741b46"></a>
-template&lt;class Fn &gt; </td></tr>
-<tr class="memitem:addb1de80af85f13d4c81aa8061741b46"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>mutate_edge_weight</b> (const_reverse_edge_iterator criter, Fn fn)</td></tr>
-<tr class="separator:addb1de80af85f13d4c81aa8061741b46"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
-Static Public Attributes</h2></td></tr>
-<tr class="memitem:a12942ed96be03623122d4dca0fbc02f3"><td class="memItemLeft" align="right" valign="top"><a id="a12942ed96be03623122d4dca0fbc02f3"></a>
-static constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><b>npos</b> {std::numeric_limits&lt;edge_index_type&gt;::max()}</td></tr>
-<tr class="separator:a12942ed96be03623122d4dca0fbc02f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0c95f47b232faf2e178dc02252ca56cb"><td class="memItemLeft" align="right" valign="top"><a id="a0c95f47b232faf2e178dc02252ca56cb"></a>
-static constexpr directed_flavour&#160;</td><td class="memItemRight" valign="bottom"><b>directedness</b> {Directedness}</td></tr>
-<tr class="separator:a0c95f47b232faf2e178dc02252ca56cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac8d4f7171d818fbe88e895a426dda8ca"><td class="memItemLeft" align="right" valign="top"><a id="ac8d4f7171d818fbe88e895a426dda8ca"></a>
-static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>throw_on_range_error</b> {edge_storage_type::throw_on_range_error}</td></tr>
-<tr class="separator:ac8d4f7171d818fbe88e895a426dda8ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-types"></a>
-Protected Types</h2></td></tr>
-<tr class="memitem:ad5028522912b7754095222975618915e"><td class="memItemLeft" align="right" valign="top"><a id="ad5028522912b7754095222975618915e"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_storage_type</b> = typename EdgeTraits::edge_storage_type</td></tr>
-<tr class="separator:ad5028522912b7754095222975618915e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a98f0da927974fb015a2f0569504b7b89"><td class="memItemLeft" align="right" valign="top"><a id="a98f0da927974fb015a2f0569504b7b89"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_iterator</b> = typename edge_storage_type::partition_iterator</td></tr>
-<tr class="separator:a98f0da927974fb015a2f0569504b7b89"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a389dfd57deed1b3ba694c6ca68805f91"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:a5daaf1d4434564d804ad69b9b1c1851e"><td class="memItemLeft" align="right" valign="top"><a id="a5daaf1d4434564d804ad69b9b1c1851e"></a>
-constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>swap</b> (<a class="el" href="classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a> &amp;rhs) noexcept</td></tr>
-<tr class="separator:a5daaf1d4434564d804ad69b9b1c1851e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aba33964900093630c4752b1332b595f0"><td class="memItemLeft" align="right" valign="top"><a id="aba33964900093630c4752b1332b595f0"></a>
-constexpr size_type&#160;</td><td class="memItemRight" valign="bottom"><b>order_impl</b> () const noexcept</td></tr>
-<tr class="separator:aba33964900093630c4752b1332b595f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa48b9ac010adc543a902c7f0196312e6"><td class="memItemLeft" align="right" valign="top"><a id="aa48b9ac010adc543a902c7f0196312e6"></a>
-constexpr size_type&#160;</td><td class="memItemRight" valign="bottom"><b>size_impl</b> () const noexcept</td></tr>
-<tr class="separator:aa48b9ac010adc543a902c7f0196312e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a47bacd2540cedc9108116af317276621"><td class="memItemLeft" align="right" valign="top"><a id="a47bacd2540cedc9108116af317276621"></a>
+<tr class="memitem:abe72da08b6c9039c50e761b8bbc844a7"><td class="memItemLeft" align="right" valign="top"><a id="abe72da08b6c9039c50e761b8bbc844a7"></a>
+constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>graph_primitive</b> (<a class="el" href="classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a> &amp;&amp;in) noexcept=default</td></tr>
+<tr class="separator:abe72da08b6c9039c50e761b8bbc844a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abfb08ca66ef969b6b3de116c8e4ef6d9"><td class="memItemLeft" align="right" valign="top"><a id="abfb08ca66ef969b6b3de116c8e4ef6d9"></a>
+constexpr <a class="el" href="classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a> &amp;&amp;in) noexcept=default</td></tr>
+<tr class="separator:abfb08ca66ef969b6b3de116c8e4ef6d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac0611b5c2906121e16b2cbc20b665872"><td class="memItemLeft" align="right" valign="top"><a id="ac0611b5c2906121e16b2cbc20b665872"></a>
+constexpr <a class="el" href="classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a> &amp;in)</td></tr>
+<tr class="separator:ac0611b5c2906121e16b2cbc20b665872"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5e97ae65180043ebb65d20ae8c00abaf"><td class="memItemLeft" align="right" valign="top"><a id="a5e97ae65180043ebb65d20ae8c00abaf"></a>
 constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>swap_nodes</b> (size_type i, size_type j)</td></tr>
-<tr class="separator:a47bacd2540cedc9108116af317276621"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afedce51c52c53b2b01fd9a69b04f885e"><td class="memItemLeft" align="right" valign="top"><a id="afedce51c52c53b2b01fd9a69b04f885e"></a>
+<tr class="separator:a5e97ae65180043ebb65d20ae8c00abaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0b7cc8a417c83634a5ee8a7e8181fc39"><td class="memItemLeft" align="right" valign="top"><a id="a0b7cc8a417c83634a5ee8a7e8181fc39"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>reserve_nodes</b> (const size_type size)</td></tr>
-<tr class="separator:afedce51c52c53b2b01fd9a69b04f885e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac2941b24817886d4b7b876c4c7424437"><td class="memItemLeft" align="right" valign="top"><a id="ac2941b24817886d4b7b876c4c7424437"></a>
+<tr class="separator:a0b7cc8a417c83634a5ee8a7e8181fc39"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b36d59c5f0799d7ecf57fa411b2946d"><td class="memItemLeft" align="right" valign="top"><a id="a4b36d59c5f0799d7ecf57fa411b2946d"></a>
 size_type&#160;</td><td class="memItemRight" valign="bottom"><b>node_capacity</b> () const noexcept</td></tr>
-<tr class="separator:ac2941b24817886d4b7b876c4c7424437"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abd8653f95905e6f2045ca7d6de44a535"><td class="memTemplParams" colspan="2"><a id="abd8653f95905e6f2045ca7d6de44a535"></a>
-template&lt;class T  = edge_storage_type&gt; </td></tr>
-<tr class="memitem:abd8653f95905e6f2045ca7d6de44a535"><td class="memTemplItemLeft" align="right" valign="top">std::enable_if_t&lt; graph_impl::has_reservable_partitions_v&lt; T &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>reserve_edges</b> (const edge_index_type partition, const edge_index_type size)</td></tr>
-<tr class="separator:abd8653f95905e6f2045ca7d6de44a535"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac713215b452a0e767efee7ecfbe2d8e3"><td class="memTemplParams" colspan="2"><a id="ac713215b452a0e767efee7ecfbe2d8e3"></a>
-template&lt;class T  = edge_storage_type&gt; </td></tr>
-<tr class="memitem:ac713215b452a0e767efee7ecfbe2d8e3"><td class="memTemplItemLeft" align="right" valign="top">std::enable_if_t&lt;!graph_impl::has_reservable_partitions_v&lt; T &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>reserve_edges</b> (const edge_index_type size)</td></tr>
-<tr class="separator:ac713215b452a0e767efee7ecfbe2d8e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aef265e2f84338de576bff365dfe52e87"><td class="memTemplParams" colspan="2"><a id="aef265e2f84338de576bff365dfe52e87"></a>
-template&lt;class T  = edge_storage_type&gt; </td></tr>
-<tr class="memitem:aef265e2f84338de576bff365dfe52e87"><td class="memTemplItemLeft" align="right" valign="top">std::enable_if_t&lt; graph_impl::has_reservable_partitions_v&lt; T &gt;, size_type &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>edges_capacity</b> (const edge_index_type partition) const</td></tr>
-<tr class="separator:aef265e2f84338de576bff365dfe52e87"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5fa56ed62b7c45a8a67837c7349e64ca"><td class="memTemplParams" colspan="2"><a id="a5fa56ed62b7c45a8a67837c7349e64ca"></a>
-template&lt;class T  = edge_storage_type&gt; </td></tr>
-<tr class="memitem:a5fa56ed62b7c45a8a67837c7349e64ca"><td class="memTemplItemLeft" align="right" valign="top">std::enable_if_t&lt;!graph_impl::has_reservable_partitions_v&lt; T &gt;, size_type &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>edges_capacity</b> () const noexcept</td></tr>
-<tr class="separator:a5fa56ed62b7c45a8a67837c7349e64ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a162a0acf42cf4dde704be83266266157"><td class="memItemLeft" align="right" valign="top"><a id="a162a0acf42cf4dde704be83266266157"></a>
+<tr class="separator:a4b36d59c5f0799d7ecf57fa411b2946d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a70f0efcbdbab16a0f0a50448fa3bc2c9"><td class="memItemLeft" align="right" valign="top"><a id="a70f0efcbdbab16a0f0a50448fa3bc2c9"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>shrink_to_fit</b> ()</td></tr>
-<tr class="separator:a162a0acf42cf4dde704be83266266157"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a74d9c50e0a0fe43878a3023dd5614c23"><td class="memItemLeft" align="right" valign="top"><a id="a74d9c50e0a0fe43878a3023dd5614c23"></a>
-constexpr edge_iterator&#160;</td><td class="memItemRight" valign="bottom"><b>begin_edges</b> (const edge_index_type node)</td></tr>
-<tr class="separator:a74d9c50e0a0fe43878a3023dd5614c23"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a299ddc6843cb0aa648860288734d2c3f"><td class="memItemLeft" align="right" valign="top"><a id="a299ddc6843cb0aa648860288734d2c3f"></a>
-constexpr edge_iterator&#160;</td><td class="memItemRight" valign="bottom"><b>end_edges</b> (const edge_index_type node)</td></tr>
-<tr class="separator:a299ddc6843cb0aa648860288734d2c3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afe1b1e38c88094c4ca9837502cff0c52"><td class="memTemplParams" colspan="2"><a id="afe1b1e38c88094c4ca9837502cff0c52"></a>
+<tr class="separator:a70f0efcbdbab16a0f0a50448fa3bc2c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a815d1ff0e63b5038a160ece6ffc99d9a"><td class="memTemplParams" colspan="2"><a id="a815d1ff0e63b5038a160ece6ffc99d9a"></a>
 template&lt;class... Args&gt; </td></tr>
-<tr class="memitem:afe1b1e38c88094c4ca9837502cff0c52"><td class="memTemplItemLeft" align="right" valign="top">size_type&#160;</td><td class="memTemplItemRight" valign="bottom"><b>add_node</b> (Args &amp;&amp;... args)</td></tr>
-<tr class="separator:afe1b1e38c88094c4ca9837502cff0c52"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a79d8a3fa997cad634d2eecd9ef319a1e"><td class="memTemplParams" colspan="2"><a id="a79d8a3fa997cad634d2eecd9ef319a1e"></a>
+<tr class="memitem:a815d1ff0e63b5038a160ece6ffc99d9a"><td class="memTemplItemLeft" align="right" valign="top">size_type&#160;</td><td class="memTemplItemRight" valign="bottom"><b>add_node</b> (Args &amp;&amp;... args)</td></tr>
+<tr class="separator:a815d1ff0e63b5038a160ece6ffc99d9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1af1005ee4d79defe0763e5ea71570b8"><td class="memTemplParams" colspan="2"><a id="a1af1005ee4d79defe0763e5ea71570b8"></a>
 template&lt;class... Args&gt; </td></tr>
-<tr class="memitem:a79d8a3fa997cad634d2eecd9ef319a1e"><td class="memTemplItemLeft" align="right" valign="top">size_type&#160;</td><td class="memTemplItemRight" valign="bottom"><b>insert_node</b> (const size_type pos, Args &amp;&amp;... args)</td></tr>
-<tr class="separator:a79d8a3fa997cad634d2eecd9ef319a1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a768e22791d71f8b648aa012a251b51f2"><td class="memItemLeft" align="right" valign="top"><a id="a768e22791d71f8b648aa012a251b51f2"></a>
+<tr class="memitem:a1af1005ee4d79defe0763e5ea71570b8"><td class="memTemplItemLeft" align="right" valign="top">size_type&#160;</td><td class="memTemplItemRight" valign="bottom"><b>insert_node</b> (const size_type pos, Args &amp;&amp;... args)</td></tr>
+<tr class="separator:a1af1005ee4d79defe0763e5ea71570b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a09a7e4c2ce1850916f680cefc112ea"><td class="memItemLeft" align="right" valign="top"><a id="a3a09a7e4c2ce1850916f680cefc112ea"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>erase_node</b> (const size_type node)</td></tr>
-<tr class="separator:a768e22791d71f8b648aa012a251b51f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ada19de45b6e761a1b1380546951d4f9a"><td class="memItemLeft" align="right" valign="top"><a id="ada19de45b6e761a1b1380546951d4f9a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>reserve_for_join</b> (const edge_index_type node1, const edge_index_type node2)</td></tr>
-<tr class="separator:ada19de45b6e761a1b1380546951d4f9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2025970994d6fc6753a8d9da270455a5"><td class="memTemplParams" colspan="2"><a id="a2025970994d6fc6753a8d9da270455a5"></a>
+<tr class="separator:a3a09a7e4c2ce1850916f680cefc112ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a14c24129786bf8388e895c71459e5c7d"><td class="memTemplParams" colspan="2"><a id="a14c24129786bf8388e895c71459e5c7d"></a>
 template&lt;class... Args&gt; </td></tr>
-<tr class="memitem:a2025970994d6fc6753a8d9da270455a5"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>join</b> (const edge_index_type node1, const edge_index_type node2, Args &amp;&amp;... args)</td></tr>
-<tr class="separator:a2025970994d6fc6753a8d9da270455a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4151c41ecc4e80575c3c96acbb9ca87e"><td class="memTemplParams" colspan="2"><a id="a4151c41ecc4e80575c3c96acbb9ca87e"></a>
-template&lt;class... Args&gt; </td></tr>
-<tr class="memitem:a4151c41ecc4e80575c3c96acbb9ca87e"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; const_edge_iterator, const_edge_iterator &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>insert_join</b> (const_edge_iterator citer1, const_edge_iterator citer2, Args &amp;&amp;... args)</td></tr>
-<tr class="separator:a4151c41ecc4e80575c3c96acbb9ca87e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adbc223d6067de93b1c92dbe2130c08d4"><td class="memTemplParams" colspan="2"><a id="adbc223d6067de93b1c92dbe2130c08d4"></a>
-template&lt;class... Args&gt; </td></tr>
-<tr class="memitem:adbc223d6067de93b1c92dbe2130c08d4"><td class="memTemplItemLeft" align="right" valign="top">std::pair&lt; const_edge_iterator, const_edge_iterator &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>insert_join</b> (const_edge_iterator citer1, const edge_index_type pos2, Args &amp;&amp;... args)</td></tr>
-<tr class="separator:adbc223d6067de93b1c92dbe2130c08d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae7f32aa03de23d5218719ef2d5d5aef2"><td class="memItemLeft" align="right" valign="top"><a id="ae7f32aa03de23d5218719ef2d5d5aef2"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>erase_edge</b> (const_edge_iterator citer)</td></tr>
-<tr class="separator:ae7f32aa03de23d5218719ef2d5d5aef2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a25d336e899f392297b103c8ada988287"><td class="memItemLeft" align="right" valign="top"><a id="a25d336e899f392297b103c8ada988287"></a>
+<tr class="memitem:a14c24129786bf8388e895c71459e5c7d"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>join</b> (const edge_index_type node1, const edge_index_type node2, Args &amp;&amp;... args)</td></tr>
+<tr class="separator:a14c24129786bf8388e895c71459e5c7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61a928017e2d6a9f5843a70ba67787be"><td class="memItemLeft" align="right" valign="top"><a id="a61a928017e2d6a9f5843a70ba67787be"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>clear</b> () noexcept</td></tr>
-<tr class="separator:a25d336e899f392297b103c8ada988287"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abd685fa53183f904e92e1a6b5f6234b2"><td class="memTemplParams" colspan="2"><a id="abd685fa53183f904e92e1a6b5f6234b2"></a>
-template&lt;class Comparer &gt; </td></tr>
-<tr class="memitem:abd685fa53183f904e92e1a6b5f6234b2"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sort_edges</b> (const_edge_iterator begin, const_edge_iterator end, Comparer comp)</td></tr>
-<tr class="separator:abd685fa53183f904e92e1a6b5f6234b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a61a928017e2d6a9f5843a70ba67787be"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
 Friends</h2></td></tr>
-<tr class="memitem:ab685124cf16425888d50b8c1aef8ce47"><td class="memItemLeft" align="right" valign="top"><a id="ab685124cf16425888d50b8c1aef8ce47"></a>
-constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a> &amp;first, const <a class="el" href="classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a> &amp;second)</td></tr>
-<tr class="separator:ab685124cf16425888d50b8c1aef8ce47"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abfde4ebc61fd9e49b6ff499661df9d50"><td class="memItemLeft" align="right" valign="top"><a id="abfde4ebc61fd9e49b6ff499661df9d50"></a>
-constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator!=</b> (const <a class="el" href="classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a> &amp;first, const <a class="el" href="classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a> &amp;second)</td></tr>
-<tr class="separator:abfde4ebc61fd9e49b6ff499661df9d50"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a7ef642ffc25cc26ad5eb8d64932661"><td class="memItemLeft" align="right" valign="top"><a id="a4a7ef642ffc25cc26ad5eb8d64932661"></a>
+constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a> &amp;lhs, const <a class="el" href="classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a> &amp;rhs)</td></tr>
+<tr class="separator:a4a7ef642ffc25cc26ad5eb8d64932661"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1fbe048f86d54ff64f8b25660447d83a"><td class="memItemLeft" align="right" valign="top"><a id="a1fbe048f86d54ff64f8b25660447d83a"></a>
+constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator!=</b> (const <a class="el" href="classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a> &amp;lhs, const <a class="el" href="classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a> &amp;rhs)</td></tr>
+<tr class="separator:a1fbe048f86d54ff64f8b25660447d83a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>Maths/Graph/<a class="el" href="_graph_impl_8hpp_source.html">GraphImpl.hpp</a></li>

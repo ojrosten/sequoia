@@ -135,7 +135,7 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>weight_proxy_type</b
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a52510e7e210f4f6d38b23da69610ba1f"><td class="memTemplParams" colspan="2"><a id="a52510e7e210f4f6d38b23da69610ba1f"></a>
-template&lt;class... Args, class  = typename std::enable_if_t&lt;!same_decay_v&lt;edge, Args...&gt; &amp;&amp; !is_base_of_head_v&lt;edge, Args...&gt;&gt;&gt; </td></tr>
+template&lt;class... Args, class  = typename std::enable_if_t&lt;!resolve_to_copy_constructor_v&lt;edge, Args...&gt;&gt;&gt; </td></tr>
 <tr class="memitem:a52510e7e210f4f6d38b23da69610ba1f"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>edge</b> (const index_type host, const index_type target, Args &amp;&amp;... args)</td></tr>
 <tr class="separator:a52510e7e210f4f6d38b23da69610ba1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeed73af87ac1101bff306a7fdab7d62b"><td class="memTemplParams" colspan="2"><a id="aeed73af87ac1101bff306a7fdab7d62b"></a>

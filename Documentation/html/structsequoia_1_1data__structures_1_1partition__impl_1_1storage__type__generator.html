@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.15"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: sequoia::data_structures::partition_impl::storage_type_generator&lt; C, SharingPolicy &gt; Struct Template Reference</title>
+<title>Sequoia: sequoia::data_structures::partition_impl::storage_type_generator&lt; Traits, SharingPolicy &gt; Struct Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -69,30 +69,18 @@ $(function() {
 <a href="#pub-types">Public Types</a> &#124;
 <a href="structsequoia_1_1data__structures_1_1partition__impl_1_1storage__type__generator-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">sequoia::data_structures::partition_impl::storage_type_generator&lt; C, SharingPolicy &gt; Struct Template Reference</div>  </div>
+<div class="title">sequoia::data_structures::partition_impl::storage_type_generator&lt; Traits, SharingPolicy &gt; Struct Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a595376204eae6e00eae556b8ef49cdaf"><td class="memItemLeft" align="right" valign="top"><a id="a595376204eae6e00eae556b8ef49cdaf"></a>
+<tr class="memitem:a20f03eccdc12d8bdee1dd8731f9e4c9f"><td class="memItemLeft" align="right" valign="top"><a id="a20f03eccdc12d8bdee1dd8731f9e4c9f"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>held_type</b> = typename SharingPolicy::handle_type</td></tr>
-<tr class="separator:a595376204eae6e00eae556b8ef49cdaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a26a3c744ccbac8cea5b665dbe4ed9d08"><td class="memItemLeft" align="right" valign="top"><a id="a26a3c744ccbac8cea5b665dbe4ed9d08"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>container_type</b> = C&lt; held_type &gt;</td></tr>
-<tr class="separator:a26a3c744ccbac8cea5b665dbe4ed9d08"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa5e19162c53c2ca18f7e03a0dd0b3406"><td class="memItemLeft" align="right" valign="top"><a id="aa5e19162c53c2ca18f7e03a0dd0b3406"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>helper</b> = <a class="el" href="structsequoia_1_1data__structures_1_1impl_1_1storage__helper.html">impl::storage_helper</a>&lt; container_type &gt;</td></tr>
-<tr class="separator:aa5e19162c53c2ca18f7e03a0dd0b3406"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a13fe4492289d47f0bfba54953db7dd05"><td class="memItemLeft" align="right" valign="top"><a id="a13fe4492289d47f0bfba54953db7dd05"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>storage_type</b> = typename helper::storage_type</td></tr>
-<tr class="separator:a13fe4492289d47f0bfba54953db7dd05"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af347fd975c05e10a6d21f390060d6021"><td class="memItemLeft" align="right" valign="top"><a id="af347fd975c05e10a6d21f390060d6021"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>auxiliary_storage_type</b> = typename helper::auxiliary_storage_type</td></tr>
-<tr class="separator:af347fd975c05e10a6d21f390060d6021"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a81682604ab208c2447797c86ca4a7a49"><td class="memItemLeft" align="right" valign="top"><a id="a81682604ab208c2447797c86ca4a7a49"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>static_type</b> = typename <a class="el" href="structsequoia_1_1data__structures_1_1impl_1_1is__static__data.html">impl::is_static_data</a>&lt; container_type &gt;::type</td></tr>
-<tr class="separator:a81682604ab208c2447797c86ca4a7a49"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a20f03eccdc12d8bdee1dd8731f9e4c9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa888846d6f138c114b0ccae7ae692d97"><td class="memItemLeft" align="right" valign="top"><a id="aa888846d6f138c114b0ccae7ae692d97"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>container_type</b> = typename Traits::template container_type&lt; held_type &gt;</td></tr>
+<tr class="separator:aa888846d6f138c114b0ccae7ae692d97"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>Core/DataStructures/<a class="el" href="_partitioned_data_details_8hpp_source.html">PartitionedDataDetails.hpp</a></li>

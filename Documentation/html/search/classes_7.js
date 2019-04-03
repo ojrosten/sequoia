@@ -1,6 +1,8 @@
 var searchData=
 [
   ['handle',['handle',['../classsequoia_1_1data__sharing_1_1data__pool_1_1handle.html',1,'sequoia::data_sharing::data_pool']]],
+  ['has_5fdefault_5fconstructor',['has_default_constructor',['../structsequoia_1_1has__default__constructor.html',1,'sequoia']]],
+  ['has_5fdefault_5fconstructor_3c_20t_2c_20std_3a_3avoid_5ft_3c_20decltype_28new_20t_7b_7d_29_3e_20_3e',['has_default_constructor&lt; T, std::void_t&lt; decltype(new T{})&gt; &gt;',['../structsequoia_1_1has__default__constructor_3_01_t_00_01std_1_1void__t_3_01decltype_07new_01_t_02_03_08_4_01_4.html',1,'sequoia']]],
   ['has_5fdetails_5fchecker',['has_details_checker',['../structsequoia_1_1unit__testing_1_1has__details__checker.html',1,'sequoia::unit_testing']]],
   ['has_5fdetails_5fchecker_3c_20t_2c_20std_3a_3avoid_5ft_3c_20decltype_28details_5fchecker_3c_20t_20_3e_7b_7d_29_3e_20_3e',['has_details_checker&lt; T, std::void_t&lt; decltype(details_checker&lt; T &gt;{})&gt; &gt;',['../structsequoia_1_1unit__testing_1_1has__details__checker_3_01_t_00_01std_1_1void__t_3_01decltype_7c6067a34e19675cf336ea8dff44d78b.html',1,'sequoia::unit_testing']]],
   ['has_5freservable_5fpartitions',['has_reservable_partitions',['../structsequoia_1_1maths_1_1graph__impl_1_1has__reservable__partitions.html',1,'sequoia::maths::graph_impl']]],

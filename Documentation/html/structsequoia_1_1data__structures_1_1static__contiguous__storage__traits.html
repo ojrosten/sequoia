@@ -76,16 +76,34 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a08f0258b6a7049ffb51cae963573a154"><td class="memTemplParams" colspan="2"><a id="a08f0258b6a7049ffb51cae963573a154"></a>
+<tr class="memitem:ad1b1c190929ce4d299d3dd732ad85c1e"><td class="memItemLeft" align="right" valign="top"><a id="ad1b1c190929ce4d299d3dd732ad85c1e"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>index_type</b> = IndexType</td></tr>
+<tr class="separator:ad1b1c190929ce4d299d3dd732ad85c1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc2eafdd7a2f90d005660034272cbb78"><td class="memItemLeft" align="right" valign="top"><a id="abc2eafdd7a2f90d005660034272cbb78"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>partition_index_type</b> = std::make_unsigned_t&lt; IndexType &gt;</td></tr>
+<tr class="separator:abc2eafdd7a2f90d005660034272cbb78"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8610f2000f15ae69ce3c5b545752b5f9"><td class="memItemLeft" align="right" valign="top"><a id="a8610f2000f15ae69ce3c5b545752b5f9"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>partitions_type</b> = <a class="el" href="classsequoia_1_1maths_1_1static__monotonic__sequence.html">maths::static_monotonic_sequence</a>&lt; partition_index_type, Npartitions, std::greater&lt; partition_index_type &gt; &gt;</td></tr>
+<tr class="separator:a8610f2000f15ae69ce3c5b545752b5f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9147e71051a04df82ffa35625901739"><td class="memTemplParams" colspan="2"><a id="ae9147e71051a04df82ffa35625901739"></a>
 template&lt;class S &gt; </td></tr>
-<tr class="memitem:a08f0258b6a7049ffb51cae963573a154"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>underlying_storage_type</b> = typename <a class="el" href="structsequoia_1_1data__structures_1_1impl_1_1static__contiguous__data.html">impl::static_contiguous_data</a>&lt; Npartitions, Nelements, std::make_unsigned_t&lt; IndexType &gt; &gt;::template data&lt; S &gt;</td></tr>
-<tr class="separator:a08f0258b6a7049ffb51cae963573a154"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9147e71051a04df82ffa35625901739"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>container_type</b> = std::array&lt; S, Nelements &gt;</td></tr>
+<tr class="separator:ae9147e71051a04df82ffa35625901739"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
+<tr class="memitem:a0ad41f2e90328ff883dc3a0324cd5cd5"><td class="memItemLeft" align="right" valign="top"><a id="a0ad41f2e90328ff883dc3a0324cd5cd5"></a>
+static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>static_storage_v</b> {true}</td></tr>
+<tr class="separator:a0ad41f2e90328ff883dc3a0324cd5cd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a72caf0bceb7f48644fdfa2836b290e81"><td class="memItemLeft" align="right" valign="top"><a id="a72caf0bceb7f48644fdfa2836b290e81"></a>
 static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>throw_on_range_error</b> {true}</td></tr>
 <tr class="separator:a72caf0bceb7f48644fdfa2836b290e81"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6097d3e08ad935a25d06d39c7e87bc1d"><td class="memItemLeft" align="right" valign="top"><a id="a6097d3e08ad935a25d06d39c7e87bc1d"></a>
+static constexpr std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>num_partitions_v</b> {Npartitions}</td></tr>
+<tr class="separator:a6097d3e08ad935a25d06d39c7e87bc1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af59360e61b75e7c7d9fd70643a6b3aab"><td class="memItemLeft" align="right" valign="top"><a id="af59360e61b75e7c7d9fd70643a6b3aab"></a>
+static constexpr std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>num_elements_v</b> {Nelements}</td></tr>
+<tr class="separator:af59360e61b75e7c7d9fd70643a6b3aab"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>Core/DataStructures/<a class="el" href="_partitioned_data_8hpp_source.html">PartitionedData.hpp</a></li>

@@ -84,21 +84,24 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>value_type</b> = T</
 <tr class="memitem:adf976cf9199b6656950a0f9a1acc5d9b"><td class="memItemLeft" align="right" valign="top"><a id="adf976cf9199b6656950a0f9a1acc5d9b"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>size_type</b> = typename bucket_type::size_type</td></tr>
 <tr class="separator:adf976cf9199b6656950a0f9a1acc5d9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a695dfb013bf7113a9d89977b3e2ba19b"><td class="memItemLeft" align="right" valign="top"><a id="a695dfb013bf7113a9d89977b3e2ba19b"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>index_type</b> = size_type</td></tr>
+<tr class="separator:a695dfb013bf7113a9d89977b3e2ba19b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a31c8ba7d81ca8a4cefa9ca7e186d3fe5"><td class="memItemLeft" align="right" valign="top"><a id="a31c8ba7d81ca8a4cefa9ca7e186d3fe5"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>sharing_policy_type</b> = SharingPolicy</td></tr>
 <tr class="separator:a31c8ba7d81ca8a4cefa9ca7e186d3fe5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac290e3b331cb991f378c30e5607aa3a5"><td class="memItemLeft" align="right" valign="top"><a id="ac290e3b331cb991f378c30e5607aa3a5"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>partition_iterator</b> = partition_iterator&lt; individual_bucket_template, SharingPolicy, size_type &gt;</td></tr>
-<tr class="separator:ac290e3b331cb991f378c30e5607aa3a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6ac637ff689c81f8ad99ff6b20f67daf"><td class="memItemLeft" align="right" valign="top"><a id="a6ac637ff689c81f8ad99ff6b20f67daf"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>const_partition_iterator</b> = const_partition_iterator&lt; individual_bucket_template, SharingPolicy, size_type &gt;</td></tr>
-<tr class="separator:a6ac637ff689c81f8ad99ff6b20f67daf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae1cc3620938cff0aaa4462b00bfbdaed"><td class="memItemLeft" align="right" valign="top"><a id="ae1cc3620938cff0aaa4462b00bfbdaed"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>reverse_partition_iterator</b> = reverse_partition_iterator&lt; individual_bucket_template, SharingPolicy, size_type &gt;</td></tr>
-<tr class="separator:ae1cc3620938cff0aaa4462b00bfbdaed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5905f618d75869306ef77a42bf250033"><td class="memItemLeft" align="right" valign="top"><a id="a5905f618d75869306ef77a42bf250033"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>const_reverse_partition_iterator</b> = const_reverse_partition_iterator&lt; individual_bucket_template, SharingPolicy, size_type &gt;</td></tr>
-<tr class="separator:a5905f618d75869306ef77a42bf250033"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe3c702a6963e262649ac89d5bf7df26"><td class="memItemLeft" align="right" valign="top"><a id="afe3c702a6963e262649ac89d5bf7df26"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>partition_iterator</b> = partition_iterator&lt; Traits, SharingPolicy, size_type &gt;</td></tr>
+<tr class="separator:afe3c702a6963e262649ac89d5bf7df26"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8710f9dcb5e88d408a0a2b4250b86a83"><td class="memItemLeft" align="right" valign="top"><a id="a8710f9dcb5e88d408a0a2b4250b86a83"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>const_partition_iterator</b> = const_partition_iterator&lt; Traits, SharingPolicy, size_type &gt;</td></tr>
+<tr class="separator:a8710f9dcb5e88d408a0a2b4250b86a83"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad88390eb25d6669cd055031e6af29aaf"><td class="memItemLeft" align="right" valign="top"><a id="ad88390eb25d6669cd055031e6af29aaf"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>reverse_partition_iterator</b> = reverse_partition_iterator&lt; Traits, SharingPolicy, size_type &gt;</td></tr>
+<tr class="separator:ad88390eb25d6669cd055031e6af29aaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aba61b970a2879392c80870a1f3f2e559"><td class="memItemLeft" align="right" valign="top"><a id="aba61b970a2879392c80870a1f3f2e559"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>const_reverse_partition_iterator</b> = const_reverse_partition_iterator&lt; Traits, SharingPolicy, size_type &gt;</td></tr>
+<tr class="separator:aba61b970a2879392c80870a1f3f2e559"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -180,10 +183,6 @@ partition_iterator&#160;</td><td class="memItemRight" valign="bottom"><b>erase_f
 <tr class="memitem:a59d444e33f8084627dcaf4728ee69164"><td class="memItemLeft" align="right" valign="top"><a id="a59d444e33f8084627dcaf4728ee69164"></a>
 partition_iterator&#160;</td><td class="memItemRight" valign="bottom"><b>erase_from_partition</b> (const_partition_iterator iter)</td></tr>
 <tr class="separator:a59d444e33f8084627dcaf4728ee69164"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa6e9287c528cdc8e3fb723d62d5784e6"><td class="memTemplParams" colspan="2"><a id="aa6e9287c528cdc8e3fb723d62d5784e6"></a>
-template&lt;class UnaryPred &gt; </td></tr>
-<tr class="memitem:aa6e9287c528cdc8e3fb723d62d5784e6"><td class="memTemplItemLeft" align="right" valign="top">size_type&#160;</td><td class="memTemplItemRight" valign="bottom"><b>erase_from_partition_if</b> (const size_type partitionIndex, UnaryPred pred)</td></tr>
-<tr class="separator:aa6e9287c528cdc8e3fb723d62d5784e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a988c59479d6d84bd7f844d0346dde417"><td class="memItemLeft" align="right" valign="top"><a id="a988c59479d6d84bd7f844d0346dde417"></a>
 partition_iterator&#160;</td><td class="memItemRight" valign="bottom"><b>begin_partition</b> (const size_type i)</td></tr>
 <tr class="separator:a988c59479d6d84bd7f844d0346dde417"><td class="memSeparator" colspan="2">&#160;</td></tr>

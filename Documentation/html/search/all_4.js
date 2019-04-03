@@ -32,5 +32,9 @@ var searchData=
   ['embedded_5fpartial_5fedge',['embedded_partial_edge',['../classsequoia_1_1maths_1_1embedded__partial__edge.html',1,'sequoia::maths']]],
   ['equality_5fchecker',['equality_checker',['../structsequoia_1_1unit__testing_1_1equality__checker.html',1,'sequoia::unit_testing']]],
   ['equality_5fchecker_3c_20std_3a_3apair_3c_20t_2c_20s_20_3e_20_3e',['equality_checker&lt; std::pair&lt; T, S &gt; &gt;',['../structsequoia_1_1unit__testing_1_1equality__checker_3_01std_1_1pair_3_01_t_00_01_s_01_4_01_4.html',1,'sequoia::unit_testing']]],
-  ['equality_5fchecker_3c_20std_3a_3atuple_3c_20t_2e_2e_2e_20_3e_20_3e',['equality_checker&lt; std::tuple&lt; T... &gt; &gt;',['../structsequoia_1_1unit__testing_1_1equality__checker_3_01std_1_1tuple_3_01_t_8_8_8_01_4_01_4.html',1,'sequoia::unit_testing']]]
+  ['equality_5fchecker_3c_20std_3a_3atuple_3c_20t_2e_2e_2e_20_3e_20_3e',['equality_checker&lt; std::tuple&lt; T... &gt; &gt;',['../structsequoia_1_1unit__testing_1_1equality__checker_3_01std_1_1tuple_3_01_t_8_8_8_01_4_01_4.html',1,'sequoia::unit_testing']]],
+  ['equivalence_5fchecker',['equivalence_checker',['../structsequoia_1_1unit__testing_1_1equivalence__checker.html',1,'sequoia::unit_testing']]],
+  ['equivalence_5fchecker_3c_20maths_3a_3amonotonic_5fsequence_3c_20t_2c_20c_2c_20compare_20_3e_20_3e',['equivalence_checker&lt; maths::monotonic_sequence&lt; T, C, Compare &gt; &gt;',['../structsequoia_1_1unit__testing_1_1equivalence__checker_3_01maths_1_1monotonic__sequence_3_01_t_00_01_c_00_01_compare_01_4_01_4.html',1,'sequoia::unit_testing']]],
+  ['equivalence_5fchecker_3c_20maths_3a_3astatic_5fmonotonic_5fsequence_3c_20t_2c_20n_2c_20compare_20_3e_20_3e',['equivalence_checker&lt; maths::static_monotonic_sequence&lt; T, N, Compare &gt; &gt;',['../structsequoia_1_1unit__testing_1_1equivalence__checker_3_01maths_1_1static__monotonic__sequence_28cef0e201629f9d7acec841397e35ba.html',1,'sequoia::unit_testing']]],
+  ['experimental_5ftest',['experimental_test',['../classsequoia_1_1unit__testing_1_1experimental__test.html',1,'sequoia::unit_testing']]]
 ];

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.15"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: sequoia::utilities::identity_dereference_policy&lt; Iterator &gt; Struct Template Reference</title>
+<title>Sequoia: sequoia::utilities::identity_dereference_policy&lt; Iterator, AuxiliaryDataPolicy &gt; Struct Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -67,30 +67,79 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="#friends">Friends</a> &#124;
 <a href="structsequoia_1_1utilities_1_1identity__dereference__policy-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">sequoia::utilities::identity_dereference_policy&lt; Iterator &gt; Struct Template Reference</div>  </div>
+<div class="title">sequoia::utilities::identity_dereference_policy&lt; Iterator, AuxiliaryDataPolicy &gt; Struct Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+<div class="dynheader">
+Inheritance diagram for sequoia::utilities::identity_dereference_policy&lt; Iterator, AuxiliaryDataPolicy &gt;:</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="structsequoia_1_1utilities_1_1identity__dereference__policy.png" alt=""/>
+ </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:adbf814cd794163884d5fe9a4e7c50d43"><td class="memItemLeft" align="right" valign="top"><a id="adbf814cd794163884d5fe9a4e7c50d43"></a>
+<tr class="memitem:a2beee1d919bbb2db99b9541bae6c63a1"><td class="memItemLeft" align="right" valign="top"><a id="a2beee1d919bbb2db99b9541bae6c63a1"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>base_iterator_type</b> = Iterator</td></tr>
+<tr class="separator:a2beee1d919bbb2db99b9541bae6c63a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a09f04dc65c28696ea39f877e3d1bed23"><td class="memItemLeft" align="right" valign="top"><a id="a09f04dc65c28696ea39f877e3d1bed23"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>auxiliary_data_policy</b> = AuxiliaryDataPolicy</td></tr>
+<tr class="separator:a09f04dc65c28696ea39f877e3d1bed23"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85625e53a9017cb9801fb70b862b2cd1"><td class="memItemLeft" align="right" valign="top"><a id="a85625e53a9017cb9801fb70b862b2cd1"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>value_type</b> = typename std::iterator_traits&lt; Iterator &gt;::value_type</td></tr>
-<tr class="separator:adbf814cd794163884d5fe9a4e7c50d43"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae7dbecf94a34b7c642eacb7d77b3ac27"><td class="memItemLeft" align="right" valign="top"><a id="ae7dbecf94a34b7c642eacb7d77b3ac27"></a>
+<tr class="separator:a85625e53a9017cb9801fb70b862b2cd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a50e208a7b88de1d0d817989e6450e70f"><td class="memItemLeft" align="right" valign="top"><a id="a50e208a7b88de1d0d817989e6450e70f"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>reference</b> = typename std::iterator_traits&lt; Iterator &gt;::reference</td></tr>
-<tr class="separator:ae7dbecf94a34b7c642eacb7d77b3ac27"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7e4aa48f55968b3a293f060f1307a597"><td class="memItemLeft" align="right" valign="top"><a id="a7e4aa48f55968b3a293f060f1307a597"></a>
+<tr class="separator:a50e208a7b88de1d0d817989e6450e70f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae31aec242207d0b4255c1a055c4b977b"><td class="memItemLeft" align="right" valign="top"><a id="ae31aec242207d0b4255c1a055c4b977b"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>pointer</b> = typename std::iterator_traits&lt; Iterator &gt;::pointer</td></tr>
-<tr class="separator:a7e4aa48f55968b3a293f060f1307a597"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:ae31aec242207d0b4255c1a055c4b977b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a2d28594491f7f299c8386446d1a2e681"><td class="memTemplParams" colspan="2"><a id="a2d28594491f7f299c8386446d1a2e681"></a>
+template&lt;class... Args, class  = std::enable_if_t&lt;!resolve_to_copy_constructor_v&lt;identity_dereference_policy, Args...&gt;&gt;&gt; </td></tr>
+<tr class="memitem:a2d28594491f7f299c8386446d1a2e681"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>identity_dereference_policy</b> (Args &amp;&amp;... args)</td></tr>
+<tr class="separator:a2d28594491f7f299c8386446d1a2e681"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaae3ebf97a09d947a15e243361470946"><td class="memItemLeft" align="right" valign="top"><a id="aaae3ebf97a09d947a15e243361470946"></a>
+constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>identity_dereference_policy</b> (const <a class="el" href="structsequoia_1_1utilities_1_1identity__dereference__policy.html">identity_dereference_policy</a> &amp;)=default</td></tr>
+<tr class="separator:aaae3ebf97a09d947a15e243361470946"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a4265163d49461e9b24d36a95b0b03219"><td class="memItemLeft" align="right" valign="top"><a id="a4265163d49461e9b24d36a95b0b03219"></a>
+<tr class="memitem:a898be6968ccc5f9ff292e2069b13a8e9"><td class="memItemLeft" align="right" valign="top"><a id="a898be6968ccc5f9ff292e2069b13a8e9"></a>
 static constexpr reference&#160;</td><td class="memItemRight" valign="bottom"><b>get</b> (reference ref) noexcept</td></tr>
-<tr class="separator:a4265163d49461e9b24d36a95b0b03219"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a898be6968ccc5f9ff292e2069b13a8e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a97663342b4a4fcd78f4dce78ea1cd5b2"><td class="memItemLeft" align="right" valign="top"><a id="a97663342b4a4fcd78f4dce78ea1cd5b2"></a>
+static constexpr pointer&#160;</td><td class="memItemRight" valign="bottom"><b>get_ptr</b> (reference ref) noexcept</td></tr>
+<tr class="separator:a97663342b4a4fcd78f4dce78ea1cd5b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:a1ae630460b62ab805f5304fd436fcc71"><td class="memItemLeft" align="right" valign="top"><a id="a1ae630460b62ab805f5304fd436fcc71"></a>
+constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>identity_dereference_policy</b> (<a class="el" href="structsequoia_1_1utilities_1_1identity__dereference__policy.html">identity_dereference_policy</a> &amp;&amp;) noexcept=default</td></tr>
+<tr class="separator:a1ae630460b62ab805f5304fd436fcc71"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa53912a4cd040305e62e22c3dd2fe565"><td class="memItemLeft" align="right" valign="top"><a id="aa53912a4cd040305e62e22c3dd2fe565"></a>
+constexpr <a class="el" href="structsequoia_1_1utilities_1_1identity__dereference__policy.html">identity_dereference_policy</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="structsequoia_1_1utilities_1_1identity__dereference__policy.html">identity_dereference_policy</a> &amp;)=default</td></tr>
+<tr class="separator:aa53912a4cd040305e62e22c3dd2fe565"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a020f3c75eaa31c2e7dc230310be3d8f9"><td class="memItemLeft" align="right" valign="top"><a id="a020f3c75eaa31c2e7dc230310be3d8f9"></a>
+constexpr <a class="el" href="structsequoia_1_1utilities_1_1identity__dereference__policy.html">identity_dereference_policy</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="structsequoia_1_1utilities_1_1identity__dereference__policy.html">identity_dereference_policy</a> &amp;&amp;) noexcept=default</td></tr>
+<tr class="separator:a020f3c75eaa31c2e7dc230310be3d8f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
+Friends</h2></td></tr>
+<tr class="memitem:a498209160651b95f219639a46b22ecc8"><td class="memItemLeft" align="right" valign="top"><a id="a498209160651b95f219639a46b22ecc8"></a>
+constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="structsequoia_1_1utilities_1_1identity__dereference__policy.html">identity_dereference_policy</a> &amp;lhs, const <a class="el" href="structsequoia_1_1utilities_1_1identity__dereference__policy.html">identity_dereference_policy</a> &amp;rhs) noexcept</td></tr>
+<tr class="separator:a498209160651b95f219639a46b22ecc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4fbe6dace2ebb1889fa6b4e575644df2"><td class="memItemLeft" align="right" valign="top"><a id="a4fbe6dace2ebb1889fa6b4e575644df2"></a>
+constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator!=</b> (const <a class="el" href="structsequoia_1_1utilities_1_1identity__dereference__policy.html">identity_dereference_policy</a> &amp;lhs, const <a class="el" href="structsequoia_1_1utilities_1_1identity__dereference__policy.html">identity_dereference_policy</a> &amp;rhs) noexcept</td></tr>
+<tr class="separator:a4fbe6dace2ebb1889fa6b4e575644df2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>Core/Utilities/<a class="el" href="_iterator_8hpp_source.html">Iterator.hpp</a></li>

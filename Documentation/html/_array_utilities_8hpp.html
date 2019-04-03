@@ -73,31 +73,36 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Utilities to convert an initializer_list into an array.  
+<p>Utility to convert an initializer_list into an array, potentially transforming the inlitializer_list in the process.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;array&gt;</code><br />
 <code>#include &lt;utility&gt;</code><br />
+<code>#include &lt;type_traits&gt;</code><br />
 </div>
 <p><a href="_array_utilities_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1utilities_1_1to__element.html">sequoia::utilities::to_element&lt; T &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1utilities_1_1identity__transform.html">sequoia::utilities::identity_transform&lt; T &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ac7fc751191d05e0b4e97dd1ae8c63bee"><td class="memTemplParams" colspan="2"><a id="ac7fc751191d05e0b4e97dd1ae8c63bee"></a>
-template&lt;std::size_t N, class T , std::size_t... I, class Fn &gt; </td></tr>
-<tr class="memitem:ac7fc751191d05e0b4e97dd1ae8c63bee"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::array&lt; T, N &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::utilities::impl::to_array</b> (std::initializer_list&lt; T &gt; l, std::index_sequence&lt; I... &gt;, Fn fn)</td></tr>
-<tr class="separator:ac7fc751191d05e0b4e97dd1ae8c63bee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a963f06bab1497c140d06da3dd1cdd181"><td class="memTemplParams" colspan="2"><a id="a963f06bab1497c140d06da3dd1cdd181"></a>
-template&lt;std::size_t N, class T , class Fn  = to_element&lt;T&gt;&gt; </td></tr>
-<tr class="memitem:a963f06bab1497c140d06da3dd1cdd181"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::array&lt; T, N &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::utilities::to_array</b> (std::initializer_list&lt; T &gt; l, Fn fn=Fn{})</td></tr>
-<tr class="separator:a963f06bab1497c140d06da3dd1cdd181"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d34508013a8a5f5c8c89fdaff143001"><td class="memTemplParams" colspan="2"><a id="a8d34508013a8a5f5c8c89fdaff143001"></a>
+template&lt;class T , class InitType , class Fn &gt; </td></tr>
+<tr class="memitem:a8d34508013a8a5f5c8c89fdaff143001"><td class="memTemplItemLeft" align="right" valign="top">constexpr T&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::utilities::impl::to_element</b> (std::initializer_list&lt; InitType &gt; l, const std::size_t i, Fn fn)</td></tr>
+<tr class="separator:a8d34508013a8a5f5c8c89fdaff143001"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5bcd7844ab2b737bb5eed62597384ce1"><td class="memTemplParams" colspan="2"><a id="a5bcd7844ab2b737bb5eed62597384ce1"></a>
+template&lt;class T , std::size_t N, class InitType , std::size_t... I, class Fn &gt; </td></tr>
+<tr class="memitem:a5bcd7844ab2b737bb5eed62597384ce1"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::array&lt; T, N &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::utilities::impl::to_array</b> (std::initializer_list&lt; InitType &gt; l, std::index_sequence&lt; I... &gt;, Fn fn)</td></tr>
+<tr class="separator:a5bcd7844ab2b737bb5eed62597384ce1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a233db7547fe75fcb014d118c6d5ee093"><td class="memTemplParams" colspan="2"><a id="a233db7547fe75fcb014d118c6d5ee093"></a>
+template&lt;class T , std::size_t N, class InitType  = T, class Fn  = identity_transform&lt;T&gt;&gt; </td></tr>
+<tr class="memitem:a233db7547fe75fcb014d118c6d5ee093"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::array&lt; T, N &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::utilities::to_array</b> (std::initializer_list&lt; InitType &gt; l, Fn fn=Fn{})</td></tr>
+<tr class="separator:a233db7547fe75fcb014d118c6d5ee093"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Utilities to convert an initializer_list into an array. </p>
+<div class="textblock"><p>Utility to convert an initializer_list into an array, potentially transforming the inlitializer_list in the process. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
