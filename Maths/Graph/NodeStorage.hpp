@@ -20,7 +20,6 @@
 #include "ArrayUtilities.hpp"
 #include "Iterator.hpp"
 #include "ProtectiveWrapper.hpp"
-#include "StaticData.hpp"
 #include "Algorithms.hpp"
 
 #include <type_traits>
@@ -59,8 +58,8 @@ namespace sequoia::maths::graph_impl
   class node_storage : private WeightMaker
   {
   private:
-    template<class S> using Container = typename Traits::template underlying_storage_type<S>;
-    using Storage = typename data_structures::impl::storage_helper<Container<typename WeightMaker::weight_proxy>>::storage_type;
+    template<class S> using Container = typename Traits::template container_type<S>;
+    using Storage = Container<typename WeightMaker::weight_proxy>;
   public:    
     using weight_proxy_type = typename WeightMaker::weight_proxy;
     using weight_type       = typename weight_proxy_type::value_type;
@@ -217,7 +216,7 @@ namespace sequoia::maths::graph_impl
     }
       
   private:    
-    using StaticType = typename data_structures::impl::is_static_data<Container<weight_proxy_type>>::type;
+    using StaticType = std::bool_constant<Traits::static_storage_v>;
 
     // copy meta
     template<bool Direct>
@@ -242,7 +241,7 @@ namespace sequoia::maths::graph_impl
 
     // constructors impl
     constexpr node_storage(std::true_type, const size_type n)
-      : m_NodeWeights{make_default_array(std::make_index_sequence<Container<weight_proxy_type>::num_elements()>{})} {}
+      : m_NodeWeights{make_default_array(std::make_index_sequence<Traits::num_elements_v>{})} {}
 
     constexpr node_storage(std::false_type, const size_type n)
     {
@@ -286,10 +285,10 @@ namespace sequoia::maths::graph_impl
 
     constexpr Storage make_array(std::initializer_list<weight_type> weights)
     {
-      if(weights.size() != Container<weight_proxy_type>::num_elements())
+      if(weights.size() != Traits::num_elements_v)
         throw std::logic_error("Initializer list of wrong size");
           
-      constexpr auto N{Container<weight_proxy_type>::num_elements()};
+      constexpr auto N{Traits::num_elements_v};
       return utilities::to_array<weight_proxy_type, N>(weights, [](const auto& weight) {
           return weight_proxy_type{weight}; });
     }

@@ -26,7 +26,8 @@ namespace sequoia
       struct node_storage_traits
       {
         constexpr static bool throw_on_range_error{true};
-        template<class S> using underlying_storage_type = std::vector<S, std::allocator<S>>;
+        constexpr static bool static_storage_v{};
+        template<class S> using container_type = std::vector<S, std::allocator<S>>;
       };
       
       template<class WeightMaker>

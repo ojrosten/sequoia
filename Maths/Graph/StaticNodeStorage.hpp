@@ -25,7 +25,9 @@ namespace sequoia::maths::graph_impl
   struct static_node_storage_traits
   {
     constexpr static bool throw_on_range_error{true};
-    template<class S> using underlying_storage_type = typename data_structures::impl::static_contiguous_data<1,N>::template data<S>;
+    constexpr static bool static_storage_v{true};
+    constexpr static std::size_t num_elements_v{N};
+    template<class S> using container_type = std::array<S, N>;
   };
 
   template<class WeightMaker, std::size_t N>
