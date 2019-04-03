@@ -12,7 +12,6 @@
  */
 
 #include "SharingPolicies.hpp"
-#include "StaticData.hpp"
 #include "TypeTraits.hpp"
 
 #include <map>
@@ -33,39 +32,36 @@ namespace sequoia::data_structures::partition_impl
     using pointer   = T*;
   };
 
-  template<template<class...> class C, class SharingPolicy> struct storage_type_generator
+  template<class Traits, class SharingPolicy> struct storage_type_generator
   {
-    using held_type = typename SharingPolicy::handle_type;
-    using container_type = C<held_type>;
-    using helper = impl::storage_helper<container_type>;
-    using storage_type = typename helper::storage_type;
-    using auxiliary_storage_type = typename helper::auxiliary_storage_type;
-    using static_type = typename impl::is_static_data<container_type>::type;
+    using held_type      = typename SharingPolicy::handle_type;
+    using container_type = typename Traits::template container_type<held_type>;
   };
     
-  template<template<class...> class C, class SharingPolicy, template<class> class ReferencePolicy, bool Reversed>
+  template<class Traits, class SharingPolicy, template<class> class ReferencePolicy, bool Reversed>
   struct partition_iterator_generator
   {
-    using iterator = typename storage_type_generator<C, SharingPolicy>::storage_type::iterator;
+    using iterator = typename storage_type_generator<Traits, SharingPolicy>::container_type::iterator;
   };
 
-  template<template<class...> class C, class SharingPolicy>
-  struct partition_iterator_generator<C, SharingPolicy, mutable_reference, true>
+  template<class Traits, class SharingPolicy>
+  struct partition_iterator_generator<Traits, SharingPolicy, mutable_reference, true>
   {
-    using iterator = typename storage_type_generator<C, SharingPolicy>::storage_type::reverse_iterator;
+    using iterator = typename storage_type_generator<Traits,SharingPolicy>::container_type::reverse_iterator;
   };
     
-  template<template<class...> class C, class SharingPolicy>
-  struct partition_iterator_generator<C, SharingPolicy, const_reference, false>
+  template<class Traits, class SharingPolicy>
+  struct partition_iterator_generator<Traits, SharingPolicy, const_reference, false>
   {
-    using iterator = typename storage_type_generator<C, SharingPolicy>::storage_type::const_iterator;
+    using iterator = typename storage_type_generator<Traits, SharingPolicy>::container_type::const_iterator;
   };
 
-  template<template<class...> class C, class SharingPolicy>
-  struct partition_iterator_generator<C, SharingPolicy, const_reference, true>
+  template<class Traits, class SharingPolicy>
+  struct partition_iterator_generator<Traits, SharingPolicy, const_reference, true>
   {
-    using iterator = typename storage_type_generator<C, SharingPolicy>::storage_type::const_reverse_iterator;
+    using iterator = typename storage_type_generator<Traits, SharingPolicy>::container_type::const_reverse_iterator;
   };
+  
   template<bool Reversed, class IndexType>
   class partition_index_policy
   {
@@ -156,16 +152,16 @@ namespace sequoia::data_structures::partition_impl
     handle_type duplicate(const handle_type in)
     {
       handle_type ptr{};
-      auto found = m_ProcessedPointers.find(in);
+      auto found{m_ProcessedPointers.find(in)};
       if(found == m_ProcessedPointers.end())
-        {
-          ptr = data_sharing::shared<T>::make(*in);
-          m_ProcessedPointers.insert(make_pair(in, ptr));
-        }
+      {
+        ptr = data_sharing::shared<T>::make(*in);
+        m_ProcessedPointers.insert(make_pair(in, ptr));
+      }
       else
-        {
-          ptr = found->second;
-        }
+      {
+        ptr = found->second;
+      }
       return ptr;
     }
   private:

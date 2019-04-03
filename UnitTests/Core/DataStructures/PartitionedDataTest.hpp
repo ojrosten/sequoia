@@ -93,13 +93,18 @@ namespace sequoia
       template<class T, class SharingPolicy, bool ThrowOnRangeError>
       void test_bucketed_capacity();
       
-      template<template<class...> class C, class SharingPolicy, template<class> class ReferencePolicy, class Arg>
+      template<class Traits, class SharingPolicy, template<class> class ReferencePolicy, class Arg>
       void test_generic_iterator_properties(const Arg& v);
 
-      template<template<class...> class C, class SharingPolicy, template<class> class ReferencePolicy, class Arg>
+      template<class Traits, class SharingPolicy, template<class> class ReferencePolicy, class Arg>
       void test_generic_iterator_deref(const Arg& v);
       
       template<template<class> class SharingPolicy> void test_iterators();
+
+      struct traits
+      {
+        template<class S> using container_type = std::vector<S, std::allocator<S>>;
+      };
     };
   }
 }

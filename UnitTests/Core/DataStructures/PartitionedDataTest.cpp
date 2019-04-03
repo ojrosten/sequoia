@@ -691,8 +691,8 @@ namespace sequoia
 
       {
         std::vector<typename SharingPolicy<int>::handle_type> vec{SharingPolicy<int>::make(1), SharingPolicy<int>::make(2), SharingPolicy<int>::make(3)};
-        test_generic_iterator_properties<std::vector, SharingPolicy<int>, partition_impl::mutable_reference>(vec);
-        test_generic_iterator_properties<std::vector, SharingPolicy<int>, partition_impl::const_reference>(vec);
+        test_generic_iterator_properties<traits, SharingPolicy<int>, partition_impl::mutable_reference>(vec);
+        test_generic_iterator_properties<traits, SharingPolicy<int>, partition_impl::const_reference>(vec);
       }
 
       {
@@ -700,12 +700,12 @@ namespace sequoia
 
         std::vector<typename SharingPolicy<data>::handle_type> vec{SharingPolicy<data>::make(true, 1.0)};
 
-        test_generic_iterator_deref<std::vector, SharingPolicy<std::pair<bool, double>>, partition_impl::mutable_reference>(vec);
-        test_generic_iterator_deref<std::vector, SharingPolicy<std::pair<bool, double>>, partition_impl::const_reference>(vec);
+        test_generic_iterator_deref<traits, SharingPolicy<std::pair<bool, double>>, partition_impl::mutable_reference>(vec);
+        test_generic_iterator_deref<traits, SharingPolicy<std::pair<bool, double>>, partition_impl::const_reference>(vec);
       }
     }
 
-    template<template<class...> class C, class SharingPolicy, template<class> class ReferencePolicy, class Arg>
+    template<class Traits, class SharingPolicy, template<class> class ReferencePolicy, class Arg>
     void partitioned_data_test::test_generic_iterator_properties(const Arg& v)
     {
       using namespace data_structures;
@@ -715,7 +715,7 @@ namespace sequoia
 
       using p_i_t
         = utilities::iterator<
-            typename partition_impl::partition_iterator_generator<C, SharingPolicy, ReferencePolicy, false>::iterator,
+            typename partition_impl::partition_iterator_generator<Traits, SharingPolicy, ReferencePolicy, false>::iterator,
             partition_impl::dereference_policy<SharingPolicy, ReferencePolicy, partition_impl::partition_index_policy<false, std::size_t>>
           >;
 
@@ -771,7 +771,7 @@ namespace sequoia
       check_equality<T>(1, SharingPolicy::get(*std_iter));
     }
 
-    template<template<class...> class C, class SharingPolicy, template<class> class ReferencePolicy, class Arg>
+    template<class Traits, class SharingPolicy, template<class> class ReferencePolicy, class Arg>
     void partitioned_data_test::test_generic_iterator_deref(const Arg& v)
     {
       using namespace data_structures;
@@ -780,7 +780,7 @@ namespace sequoia
       auto vec(v);
       using p_i_t
         = utilities::iterator<
-            typename partition_impl::partition_iterator_generator<C, SharingPolicy, ReferencePolicy, false>::iterator,
+            typename partition_impl::partition_iterator_generator<Traits, SharingPolicy, ReferencePolicy, false>::iterator,
           partition_impl::dereference_policy<SharingPolicy, ReferencePolicy, partition_impl::partition_index_policy<false, std::size_t>>
           >;
 

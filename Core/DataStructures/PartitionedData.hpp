@@ -27,31 +27,31 @@ namespace sequoia
   {
     //===================================A Custom Iterator===================================//
     
-    template<template<class...> class C, class SharingPolicy, class IndexType>
+    template<class Traits, class SharingPolicy, class IndexType>
     using partition_iterator
       = utilities::iterator<
-          typename partition_impl::partition_iterator_generator<C, SharingPolicy, partition_impl::mutable_reference, false>::iterator,
+          typename partition_impl::partition_iterator_generator<Traits, SharingPolicy, partition_impl::mutable_reference, false>::iterator,
           partition_impl::dereference_policy<SharingPolicy, partition_impl::mutable_reference, partition_impl::partition_index_policy<false, IndexType>>
         >;
 
-    template<template<class...> class C, class SharingPolicy, class IndexType>
+    template<class Traits, class SharingPolicy, class IndexType>
     using const_partition_iterator
       = utilities::iterator<
-          typename partition_impl::partition_iterator_generator<C, SharingPolicy, partition_impl::const_reference, false>::iterator,
+          typename partition_impl::partition_iterator_generator<Traits, SharingPolicy, partition_impl::const_reference, false>::iterator,
         partition_impl::dereference_policy<SharingPolicy, partition_impl::const_reference, partition_impl::partition_index_policy<false, IndexType>>
       >;
 
-    template<template<class...> class C, class SharingPolicy, class IndexType>
+    template<class Traits, class SharingPolicy, class IndexType>
     using reverse_partition_iterator
       = utilities::iterator<
-          typename partition_impl::partition_iterator_generator<C, SharingPolicy, partition_impl::mutable_reference, true>::iterator,
+          typename partition_impl::partition_iterator_generator<Traits, SharingPolicy, partition_impl::mutable_reference, true>::iterator,
         partition_impl::dereference_policy<SharingPolicy, partition_impl::mutable_reference, partition_impl::partition_index_policy<true, IndexType>>
       >;
 
-    template<template<class...> class C, class SharingPolicy, class IndexType>
+    template<class Traits, class SharingPolicy, class IndexType>
     using const_reverse_partition_iterator
       = utilities::iterator<
-          typename partition_impl::partition_iterator_generator<C, SharingPolicy, partition_impl::const_reference, true>::iterator,
+          typename partition_impl::partition_iterator_generator<Traits, SharingPolicy, partition_impl::const_reference, true>::iterator,
           partition_impl::dereference_policy<SharingPolicy, partition_impl::const_reference, partition_impl::partition_index_policy<true, IndexType>>
       >;
         
@@ -61,8 +61,8 @@ namespace sequoia
     {
       constexpr static bool throw_on_range_error{true};
 
-      template<class S> using buckets_type           = std::vector<S, std::allocator<S>>; 
-      template<class S> using individual_bucket_type = std::vector<S, std::allocator<S>>; 
+      template<class S> using buckets_type   = std::vector<S, std::allocator<S>>; 
+      template<class S> using container_type = std::vector<S, std::allocator<S>>; 
     };
     
     template<class T, class SharingPolicy=data_sharing::independent<T>, class Traits=bucketed_storage_traits<T, SharingPolicy>>
@@ -70,20 +70,20 @@ namespace sequoia
     {
     private:
       template<class S> using buckets_template           = typename Traits::template buckets_type<S>;
-      template<class S> using individual_bucket_template = typename Traits::template individual_bucket_type<S>;
+      template<class S> using container_template = typename Traits::template container_type<S>;
         
       using held_type      = typename SharingPolicy::handle_type;
-      using bucket_type    = individual_bucket_template<held_type>;
+      using bucket_type    = container_template<held_type>;
       using storage_type   = buckets_template<bucket_type>;
     public:
       using value_type = T;
       using size_type = typename bucket_type::size_type;
       using index_type = size_type;
       using sharing_policy_type = SharingPolicy;
-      using partition_iterator = partition_iterator<individual_bucket_template, SharingPolicy, size_type>;
-      using const_partition_iterator = const_partition_iterator<individual_bucket_template, SharingPolicy, size_type>;
-      using reverse_partition_iterator = reverse_partition_iterator<individual_bucket_template, SharingPolicy, size_type>;
-      using const_reverse_partition_iterator = const_reverse_partition_iterator<individual_bucket_template, SharingPolicy, size_type>;
+      using partition_iterator = partition_iterator<Traits, SharingPolicy, size_type>;
+      using const_partition_iterator = const_partition_iterator<Traits, SharingPolicy, size_type>;
+      using reverse_partition_iterator = reverse_partition_iterator<Traits, SharingPolicy, size_type>;
+      using const_reverse_partition_iterator = const_reverse_partition_iterator<Traits, SharingPolicy, size_type>;
 
       constexpr static bool throw_on_range_error{Traits::throw_on_range_error};
       
@@ -419,19 +419,17 @@ namespace sequoia
     class [[nodiscard]] contiguous_storage_base
     {
     private:
-      template<class S> using Storage = typename Traits::template underlying_storage_type<S>;
-      using PartitionsType = typename Traits::partitions_type;
-      using StorageType    = typename partition_impl::storage_type_generator<Storage, SharingPolicy>::storage_type; 
+      using ContainerType    = typename partition_impl::storage_type_generator<Traits, SharingPolicy>::container_type; 
     public:
       using value_type          = T;
       using sharing_policy_type = SharingPolicy;
-      using size_type           = std::common_type_t<typename Traits::partition_index_type, typename StorageType::size_type>;
+      using size_type           = std::common_type_t<typename Traits::partition_index_type, typename ContainerType::size_type>;
       using index_type          = typename Traits::index_type;
 
-      using partition_iterator               = partition_iterator<Storage, SharingPolicy, index_type>;
-      using const_partition_iterator         = const_partition_iterator<Storage, SharingPolicy, index_type>;
-      using reverse_partition_iterator       = reverse_partition_iterator<Storage, SharingPolicy, index_type>;
-      using const_reverse_partition_iterator = const_reverse_partition_iterator<Storage, SharingPolicy, index_type>;
+      using partition_iterator               = partition_iterator<Traits, SharingPolicy, index_type>;
+      using const_partition_iterator         = const_partition_iterator<Traits, SharingPolicy, index_type>;
+      using reverse_partition_iterator       = reverse_partition_iterator<Traits, SharingPolicy, index_type>;
+      using const_reverse_partition_iterator = const_reverse_partition_iterator<Traits, SharingPolicy, index_type>;
 
       constexpr static bool throw_on_range_error{Traits::throw_on_range_error};
       
@@ -727,14 +725,13 @@ namespace sequoia
         return !(lhs == rhs);
       }
 
-    private:
-      using held_type      = typename partition_impl::storage_type_generator<Storage, SharingPolicy>::held_type;
-      using container_type = typename partition_impl::storage_type_generator<Storage, SharingPolicy>::container_type;     
-      using StaticType     = std::bool_constant<Traits::static_storage_v>;
+    private:   
+      using StaticType = std::bool_constant<Traits::static_storage_v>;      
+      using PartitionsType = typename Traits::partitions_type;
       constexpr static index_type npos{partition_iterator::npos};
-     
+
       PartitionsType m_Partitions; // TO DO, C++20: [no_unique_address]
-      StorageType m_Storage;
+      ContainerType m_Storage;
 
       constexpr contiguous_storage_base(std::false_type, const contiguous_storage_base& in)
         : m_Partitions{in.m_Partitions}
@@ -751,7 +748,7 @@ namespace sequoia
       {
       }
 
-      constexpr held_type make_element(size_type i, std::initializer_list<std::initializer_list<T>> list, index_type& partition)
+      constexpr auto make_element(size_type i, std::initializer_list<std::initializer_list<T>> list, index_type& partition)
       {
         auto boundary{m_Partitions[partition]};
         while(i == boundary)
@@ -765,7 +762,7 @@ namespace sequoia
       }
 
       template<size_type... Inds>
-      constexpr StorageType fill(std::index_sequence<Inds...>, std::initializer_list<std::initializer_list<T>> list)
+      constexpr ContainerType fill(std::index_sequence<Inds...>, std::initializer_list<std::initializer_list<T>> list)
       {
         if(list.size() != Traits::num_partitions_v)
           throw std::logic_error("Overall initializer list of wrong size");
@@ -779,11 +776,11 @@ namespace sequoia
         if constexpr(sizeof...(Inds) > 0)
         {
           index_type partition{};
-          return StorageType{ make_element(Inds, list, partition)... };
+          return ContainerType{ make_element(Inds, list, partition)... };
         }
         else
         {
-          return StorageType{};
+          return ContainerType{};
         }
       }
 
@@ -922,7 +919,7 @@ namespace sequoia
       using partition_index_type = std::size_t;
       using partitions_type = maths::monotonic_sequence<partition_index_type, std::greater<partition_index_type>>;
       
-      template<class S> using underlying_storage_type = std::vector<S, std::allocator<S>>;
+      template<class S> using container_type = std::vector<S, std::allocator<S>>;
     };
 
     template<class T, class SharingPolicy=data_sharing::independent<T>, class Traits=contiguous_storage_traits<T, SharingPolicy>>
@@ -960,7 +957,7 @@ namespace sequoia
       using partition_index_type = std::make_unsigned_t<IndexType>;      
       using partitions_type = maths::static_monotonic_sequence<partition_index_type, Npartitions, std::greater<partition_index_type>>;
       
-      template<class S> using underlying_storage_type = std::array<S, Nelements>;
+      template<class S> using container_type = std::array<S, Nelements>;
     };
 
     template<class T, std::size_t Npartitions, std::size_t Nelements, class IndexType=std::size_t>
