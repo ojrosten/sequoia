@@ -20,7 +20,7 @@ namespace sequoia::unit_testing
     {
       if(check_equality(logger, reference.size(), actual.size(), impl::concat_messages(description, "Size incorrect")))
       {
-        if(reference.size())
+        if(!reference.empty())
         {
           check_equality(logger, reference.back(), actual.back(), impl::concat_messages(description, "Back element wrong"));
           check_equality(logger, reference.front(), actual.front(), impl::concat_messages(description, "Front element wrong"));
