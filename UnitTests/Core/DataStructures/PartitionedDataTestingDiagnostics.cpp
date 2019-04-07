@@ -15,6 +15,10 @@ namespace sequoia::unit_testing
     using namespace data_sharing;
     
     test<bucketed_storage<int, data_sharing::independent<int>>>();
+    test<bucketed_storage<int, data_sharing::shared<int>>>();
+
+    test<contiguous_storage<int, data_sharing::independent<int>>>();
+    test<contiguous_storage<int, data_sharing::shared<int>>>();
   }
 
   template<class PartitionedData> void partitioned_data_false_positive_test::test()
