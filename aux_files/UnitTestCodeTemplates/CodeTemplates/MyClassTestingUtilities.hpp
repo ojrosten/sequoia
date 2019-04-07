@@ -31,7 +31,7 @@ namespace sequoia::unit_testing
     using type = ::my_class/*<???>*/;
     
     template<class Logger>
-    static void check(Logger& logger, const type& reference, const type& actual, std::string_view description="")
+    static void check(Logger& logger, const type& actual, /*???*/ refVals, std::string_view description="")
     {
       // TO DO
     }
