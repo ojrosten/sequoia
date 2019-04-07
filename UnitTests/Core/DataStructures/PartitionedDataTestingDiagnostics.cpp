@@ -21,9 +21,12 @@ namespace sequoia::unit_testing
   {
     using value_type = typename PartitionedData::value_type;
     using expected_t = std::initializer_list<std::initializer_list<value_type>>;
+
+    this->failure_message_prefix(type_to_string<PartitionedData>::str());
     
     PartitionedData d{}, e{{value_type{1}}};
 
     check_equivalence(d, expected_t{{value_type{1}}}, LINE("Empty data inequivalent to non-empty data "));
+    check_equivalence(e, expected_t{{}}, LINE("Non-empty data inequivalent to empty data "));
   }
 }

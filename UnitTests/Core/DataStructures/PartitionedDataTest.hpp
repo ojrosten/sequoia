@@ -12,27 +12,7 @@
 namespace sequoia
 {
   namespace unit_testing
-  {
-    template<class T> struct type_to_string<data_structures::bucketed_storage<T>>
-    {
-        static std::string str() { return "BUCKETED STORAGE; UNSHARED DATA"; }
-    };
-
-    template<class T> struct type_to_string<data_structures::contiguous_storage<T>>
-    {
-        static std::string str() { return "CONTIGUOUS STORAGE; UNSHARED DATA"; }
-    };
-
-    template<class T> struct type_to_string<data_structures::bucketed_storage<T, data_sharing::shared<T>>>
-    {
-        static std::string str() { return "BUCKETED STORAGE; SHARED DATA"; }
-    };
-
-    template<class T> struct type_to_string<data_structures::contiguous_storage<T, data_sharing::shared<T>>>
-    {
-        static std::string str() { return "CONTIGUOUS STORAGE; SHARED DATA"; }
-    };
-  
+  {  
     class partitioned_data_test : public unit_test
     {
     public:
