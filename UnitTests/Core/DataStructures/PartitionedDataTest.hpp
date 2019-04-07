@@ -7,8 +7,7 @@
 
 #pragma once
 
-#include "PartitionedData.hpp"
-#include "TestPartitionedDataHelper.hpp"
+#include "PartitionedDataTestingUtilities.hpp"
 
 namespace sequoia
 {
