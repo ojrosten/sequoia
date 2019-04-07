@@ -24,4 +24,16 @@ namespace sequoia::unit_testing
       // TO DO
     }
   };
+
+  //template<???>
+  struct equivalence_checker<::my_class/*<???>*/>
+  {
+    using type = ::my_class/*<???>*/;
+    
+    template<class Logger>
+    static void check(Logger& logger, const type& reference, const type& actual, std::string_view description="")
+    {
+      // TO DO
+    }
+  };
 }
