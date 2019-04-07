@@ -22,6 +22,7 @@
 #include "ConcurrencyModelsTest.hpp"
 
 #include "PartitionedDataTest.hpp"
+#include "PartitionedDataTestingDiagnostics.hpp"
 
 #include "TestStaticStack.hpp"
 #include "TestStaticQueue.hpp"
@@ -140,6 +141,7 @@ int main(int argc, char** argv)
     runner.add_test_family(
       test_family{
         "Partitioned Data",
+        partitioned_data_false_positive_test{"False Positive Diagnostics"},
         partitioned_data_test{"Unit Test"}
       }
     );
@@ -147,7 +149,7 @@ int main(int argc, char** argv)
     runner.add_test_family(
       test_family{
         "Static Stack",
-        test_static_stack_false_positives{"Static stack false positive diagnostics"},
+        test_static_stack_false_positives{"False Positive Diagnostics"},
         test_static_stack{"Unit Test"}
       }
     );
@@ -155,7 +157,7 @@ int main(int argc, char** argv)
     runner.add_test_family(
       test_family{
         "Static Queue",
-        test_static_queue_false_positives{"Static queue false positive diagnostics"},
+        test_static_queue_false_positives{"False Positive Diagnostics"},
         test_static_queue{"Unit Test"}
       }
     );
@@ -163,7 +165,7 @@ int main(int argc, char** argv)
     runner.add_test_family(
       test_family{
         "Static Priority Queue",
-        test_static_priority_queue_false_positives{"Static priority queue false positive diagnostics"},
+        test_static_priority_queue_false_positives{"False Positive Diagnostics"},
         test_static_priority_queue{"Unit Test"}
       }
     );
@@ -171,7 +173,7 @@ int main(int argc, char** argv)
     runner.add_test_family(
       test_family{
         "Edges",
-        test_edge_false_positives{"Edge false positive diagnostics"},
+        test_edge_false_positives{"False positive diagnostics"},
         test_edges{"Unit Test"}
       }
     );
