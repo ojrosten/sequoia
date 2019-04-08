@@ -1151,14 +1151,44 @@ namespace sequoia
       static std::string str();
     };
 
-    template<bool B> struct bool_to_string
+    template<> struct type_to_string<char>
     {
-      static std::string str() { return "TRUE"; }
+      static std::string str() noexcept { return "CHAR"; }
+    };
+    
+    template<> struct type_to_string<int>
+    {
+      static std::string str() noexcept { return "INT"; }
+    };
+
+    template<> struct type_to_string<std::size_t>
+    {
+      static std::string str() noexcept { return "STD::SIZE_T"; }
+    };
+
+    template<> struct type_to_string<float>
+    {
+      static std::string str() noexcept { return "FLOAT"; }
+    };
+
+    template<> struct type_to_string<double>
+    {
+      static std::string str() noexcept { return "DOUBLE"; }
+    };
+    
+    template<class T, class U> struct type_to_string<std::pair<T,U>>
+    {
+      static std::string str() noexcept { return "PAIR<" + type_to_string<T>::str() + "," + type_to_string<U>::str() + ">"; }
+    };
+
+    template<bool> struct bool_to_string
+    {
+      static std::string str() noexcept { return "TRUE"; }
     };
 
     template<> struct bool_to_string<false>
     {
-      static std::string str() { return "FALSE"; }
+      static std::string str() noexcept { return "FALSE"; }
     };
 
     template<template <class...> class T> struct template_class_to_string
