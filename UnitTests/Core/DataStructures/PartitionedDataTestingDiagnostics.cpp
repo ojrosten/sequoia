@@ -54,20 +54,24 @@ namespace sequoia::unit_testing
     check_equality(value_type{2}, *e.cbegin_partition(0), LINE(""));
     check_equality(value_type{2}, *e.rbegin_partition(0), LINE(""));
     check_equality(value_type{2}, *e.crbegin_partition(0), LINE(""));
+    check_equality(value_type{2}, e[0][0], LINE(""));
 
     check_equality(value_type{1}, *(g.end_partition(0) -1), LINE(""));
     check_equality(value_type{1}, *(g.cend_partition(0) -1), LINE(""));
     check_equality(value_type{2}, *(g.rend_partition(0) - 1), LINE(""));
     check_equality(value_type{2}, *(g.crend_partition(0) - 1), LINE(""));
+    check_equality(value_type{1}, g[0][1], LINE(""));
 
     check_equality(value_type{2}, *h.begin_partition(0), LINE(""));
     check_equality(value_type{2}, *h.cbegin_partition(0), LINE(""));
     check_equality(value_type{2}, *h.rbegin_partition(0), LINE(""));
     check_equality(value_type{2}, *h.crbegin_partition(0), LINE(""));
+    check_equality(value_type{2}, h[0][0], LINE(""));
 
     check_equality(value_type{1}, *h.begin_partition(1), LINE(""));
     check_equality(value_type{1}, *h.cbegin_partition(1), LINE(""));
     check_equality(value_type{1}, *h.rbegin_partition(1), LINE(""));
     check_equality(value_type{1}, *h.crbegin_partition(1), LINE(""));
+    check_equality(value_type{1}, h[1][0], LINE(""));
   }
 }
