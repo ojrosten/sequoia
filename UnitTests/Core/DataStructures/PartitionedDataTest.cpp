@@ -284,9 +284,9 @@ namespace sequoia
       check_equivalence(storage, equivalent_type{}, LINE(""));
 
       storage.add_slot();
-      check_equivalence(storage, equivalent_type{{}}, LINE(""));
       // []
-
+     
+      check_equality(storage, Storage{{}}, LINE(""));
       check_regular_semantics(storage, Storage{}, LINE("Regular semantics"));
 
       check_exception_thrown<std::out_of_range>([&storage]() {
@@ -300,20 +300,27 @@ namespace sequoia
       );
       
       storage.swap_partitions(0,0);
-      check_partitions(storage, answers_type{{}});
-            
+      check_equality(storage, Storage{{}}, LINE(""));
+      
       check_equality<std::size_t>(0, storage.erase_slot(1), LINE(""));
       check_equality<std::size_t>(0, storage.erase_slot(0), LINE(""));
-      check_partitions(storage, answers_type{});
       // Null
+    
+      check_equality(storage, Storage{}, LINE(""));
 
       storage.add_slot();
       storage.add_slot();
-      check_partitions(storage, answers_type{{}, {}});
       // [][]
       
+      check_equality(storage, Storage{{}, {}}, LINE(""));
+      check_regular_semantics(storage, Storage{}, LINE(""));
+      check_regular_semantics(storage, Storage{{}}, LINE(""));
+      
       storage.swap_partitions(0,1);
-      check_partitions(storage, answers_type{{}, {}});
+      check_equality(storage, Storage{{}, {}}, LINE(""));
+
+
+
       
       storage.push_back_to_partition(0, 2);
       check_partitions(storage, answers_type{{2}, {}});
