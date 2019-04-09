@@ -46,6 +46,10 @@ namespace sequoia::unit_testing
     check_equivalence(f, expected_t{{value_type{1}}}, LINE("Single partitions holding different elements compare not equal"));
     check_equivalence(g, expected_t{{value_type{1}}, {value_type{2}}}, LINE("Identical elements divided between different partitions compare notequal"));
     check_equivalence(h, expected_t{{value_type{1}, value_type{2}}}, LINE("Identical elements divided between different partitions compare notequal"));
+
+    check_equality(d, e, LINE(""));
+    check_equality(e, f, LINE(""));
+    check_equality(g, h, LINE(""));
        
     check_equality(1ul, d.size(), LINE("Size 0 should not compare equal to 1"));
     check_equality(0ul, e.size(), LINE("Size 1 should not compare equal to 0"));

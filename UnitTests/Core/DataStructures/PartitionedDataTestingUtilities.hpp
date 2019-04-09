@@ -39,22 +39,52 @@ namespace sequoia::unit_testing
     template<class Logger, class PartitionedData>
     void check_details(Logger& logger, const PartitionedData& reference, const PartitionedData& actual, std::string_view description="")
     {
+      check_equality(logger, reference.size(), actual.size(), concat_messages(description, "Size different"));
+      if(check_equality(logger, reference.num_partitions(), actual.num_partitions(), concat_messages(description, "Number of partitions different")))
+      {
+        for(std::size_t i{}; i<reference.num_partitions(); ++i)
+        {
+          const std::string message{concat_messages(description,"Partition " + std::to_string(i))};
+          if(check_range(logger, reference.begin_partition(i), reference.end_partition(i), actual.begin_partition(i), actual.end_partition(i), concat_messages(message, "iterator (const)")))
+          {
+            for(int64_t j{}; j<distance(reference.begin_partition(i), reference.end_partition(i)); ++j)
+            {
+              check_equality(logger, reference[i][j], actual[i][j], concat_messages(message,"[] (const)"));
+            }
+          }
+          
+          check_range(logger, reference.rbegin_partition(i), reference.rend_partition(i), actual.rbegin_partition(i), actual.rend_partition(i), concat_messages(message, "r_iterator (const)"));
+          check_range(logger, reference.cbegin_partition(i), reference.cend_partition(i), actual.cbegin_partition(i), actual.cend_partition(i), concat_messages(message, "c_iterator"));
+          check_range(logger, reference.crbegin_partition(i), reference.crend_partition(i), actual.crbegin_partition(i), actual.crend_partition(i), concat_messages(message, "cr_iterator"));
 
+          auto& r{const_cast<PartitionedData&>(reference)};
+          auto& a{const_cast<PartitionedData&>(actual)};
+          if(check_range(logger, r.begin_partition(i), r.end_partition(i), a.begin_partition(i), a.end_partition(i), concat_messages(message, "iterator")))
+          {
+            for(int64_t j{}; j<distance(r.begin_partition(i), r.end_partition(i)); ++j)
+            {
+              check_equality(logger, r[i][j], a[i][j], concat_messages(message,"[]"));
+            }
+          }
+          
+          check_range(logger, r.rbegin_partition(i), r.rend_partition(i), a.rbegin_partition(i), a.rend_partition(i), concat_messages(message, "r_iterator"));          
+        }
+      }
     }
 
     template<class Logger, class PartitionedData, class T=typename PartitionedData::value_type>
-    void check_equivalence(Logger& logger, const PartitionedData& data, std::initializer_list<std::initializer_list<T>> expected, std::string_view description="")
+    void check_equivalence(Logger& logger, const PartitionedData& data, std::initializer_list<std::initializer_list<T>> reference, std::string_view description="")
     {
-      const auto numElements{std::accumulate(expected.begin(), expected.end(), std::size_t{},
+      const auto numElements{std::accumulate(reference.begin(), reference.end(), std::size_t{},
                                              [](std::size_t val, std::initializer_list<T> partition) { return val += partition.size();})};
 
       check_equality(logger, numElements, data.size(), "Number of elements");
 
-      if(check_equality(logger, expected.size(), data.num_partitions(), "Number of partitions"))
+      if(check_equality(logger, reference.size(), data.num_partitions(), "Number of partitions"))
       {
-        for(std::size_t i{}; i<expected.size(); ++i)
+        for(std::size_t i{}; i<reference.size(); ++i)
         {
-          check_range(logger, (expected.begin() + i)->begin(), (expected.begin() + i)->end(), data.begin_partition(i), data.end_partition(i), "Partition " + std::to_string(i));
+          check_range(logger, (reference.begin() + i)->begin(), (reference.begin() + i)->end(), data.begin_partition(i), data.end_partition(i), "Partition " + std::to_string(i));
         }
       }
     }
@@ -68,7 +98,7 @@ namespace sequoia::unit_testing
     template<class Logger>
     static void check(Logger& logger, const type& reference, const type& actual, std::string_view description="")
     {
-      // TO DO
+      impl::check_details(logger, reference, actual, description);
     }
   };
 
@@ -78,9 +108,9 @@ namespace sequoia::unit_testing
     using type = data_structures::bucketed_storage<T, SharingPolicy, Traits>;
     
     template<class Logger>
-    static void check(Logger& logger, const type& data, std::initializer_list<std::initializer_list<T>> expected, std::string_view description="")
+    static void check(Logger& logger, const type& data, std::initializer_list<std::initializer_list<T>> reference, std::string_view description="")
     {
-      impl::check_equivalence(logger, data, expected, description);
+      impl::check_equivalence(logger, data, reference, description);
     }
   };
 
@@ -92,7 +122,7 @@ namespace sequoia::unit_testing
     template<class Logger>
     static void check(Logger& logger, const type& reference, const type& actual, std::string_view description="")
     {
-      // TO DO
+      impl::check_details(logger, reference, actual, description);
     }
   };
 
@@ -102,9 +132,9 @@ namespace sequoia::unit_testing
     using type = data_structures::contiguous_storage<T, SharingPolicy, Traits>;
     
     template<class Logger>
-    static void check(Logger& logger, const type& data, std::initializer_list<std::initializer_list<T>> expected, std::string_view description="")
+    static void check(Logger& logger, const type& data, std::initializer_list<std::initializer_list<T>> reference, std::string_view description="")
     {
-      impl::check_equivalence(logger, data, expected, description);
+      impl::check_equivalence(logger, data, reference, description);
     }
   };
 
@@ -116,7 +146,7 @@ namespace sequoia::unit_testing
     template<class Logger>
     static void check(Logger& logger, const type& reference, const type& actual, std::string_view description="")
     {
-      // TO DO
+      impl::check_details(logger, reference, actual, description);
     }
   };
 
@@ -126,9 +156,9 @@ namespace sequoia::unit_testing
     using type = data_structures::static_contiguous_storage<T, Npartitions, Nelements, IndexType>;
     
     template<class Logger>
-    static void check(Logger& logger, const type& data, std::initializer_list<std::initializer_list<T>> expected, std::string_view description="")
+    static void check(Logger& logger, const type& data, std::initializer_list<std::initializer_list<T>> reference, std::string_view description="")
     {
-      impl::check_equivalence(logger, data, expected, description);
+      impl::check_equivalence(logger, data, reference, description);
     }
   };
 }
