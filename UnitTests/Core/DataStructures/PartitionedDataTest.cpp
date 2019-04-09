@@ -251,21 +251,29 @@ namespace sequoia
       using namespace data_structures;
       using namespace data_sharing;
       using value_type = typename Storage::value_type;
+      using equivalent_type = std::initializer_list<std::initializer_list<value_type>>;
+      
       using answers_type = std::vector<std::vector<value_type>>;
+      
 
       constexpr bool sharedData{std::is_same<typename Storage::sharing_policy_type, shared<typename Storage::value_type>>::value};
 
-      const std::string prefix{type_to_string<Storage>::str()};
-      this->failure_message_prefix(prefix);
+      this->failure_message_prefix(type_to_string<Storage>::str());
 
       Storage storage;
 
       // Null
-      check_partitions(storage, answers_type{});
+      check_equivalence(storage, equivalent_type{}, LINE(""));
 
-      check_exception_thrown<std::out_of_range>([&storage]() { storage.push_back_to_partition(0, 8); }, LINE("No partition available to push back to"));
-      check_exception_thrown<std::out_of_range>([&storage]() { storage.insert_to_partition(storage.cbegin_partition(0), 1); }, LINE("No partition available to insert into"));
-
+      check_exception_thrown<std::out_of_range>([&storage]() {
+          storage.push_back_to_partition(0, 8);
+        }, LINE("No partition available to push back to")
+      );
+      
+      check_exception_thrown<std::out_of_range>([&storage]() {
+          storage.insert_to_partition(storage.cbegin_partition(0), 1);
+        }, LINE("No partition available to insert into")
+      );
       
       check_exception_thrown<std::out_of_range>([&storage]() {
           storage.swap_partitions(0,0);
@@ -273,13 +281,18 @@ namespace sequoia
       );
       
       check_equality<std::size_t>(0, storage.erase_slot(0));
-      check_partitions(storage, answers_type{});
+      check_equivalence(storage, equivalent_type{}, LINE(""));
 
       storage.add_slot();
-      check_partitions(storage, answers_type{{}});
+      check_equivalence(storage, equivalent_type{{}}, LINE(""));
       // []
 
-      check_exception_thrown<std::out_of_range>([&storage]() { storage.push_back_to_partition(1, 7); }, LINE("Only one partition available so cannot push back to the second"));
+      check_regular_semantics(storage, Storage{}, LINE("Regular semantics"));
+
+      check_exception_thrown<std::out_of_range>([&storage]() {
+          storage.push_back_to_partition(1, 7);
+        }, LINE("Only one partition available so cannot push back to the second")
+      );
 
       check_exception_thrown<std::out_of_range>([&storage]() {
           storage.swap_partitions(0,1);
