@@ -34,6 +34,11 @@ namespace sequoia::unit_testing
       f{{value_type{2}}},
       g{{value_type{1}, value_type{2}}},
       h{{value_type{1}}, {value_type{2}}};
+
+    const PartitionedData
+      ce{{value_type{1}}},
+      cg{{value_type{1}, value_type{2}}},
+      ch{{value_type{1}}, {value_type{2}}};
       
 
     check_equivalence(d, expected_t{{value_type{1}}}, LINE("Empty data inequivalent to non-empty data "));
@@ -73,5 +78,22 @@ namespace sequoia::unit_testing
     check_equality(value_type{1}, *h.rbegin_partition(1), LINE(""));
     check_equality(value_type{1}, *h.crbegin_partition(1), LINE(""));
     check_equality(value_type{1}, h[1][0], LINE(""));
+
+    
+    check_equality(value_type{2}, *ce.begin_partition(0), LINE(""));
+    check_equality(value_type{2}, *ce.rbegin_partition(0), LINE(""));
+    check_equality(value_type{2}, ce[0][0], LINE(""));
+
+    check_equality(value_type{1}, *(cg.end_partition(0) -1), LINE(""));
+    check_equality(value_type{2}, *(cg.rend_partition(0) - 1), LINE(""));
+    check_equality(value_type{1}, cg[0][1], LINE(""));
+
+    check_equality(value_type{2}, *ch.begin_partition(0), LINE(""));
+    check_equality(value_type{2}, *ch.rbegin_partition(0), LINE(""));
+    check_equality(value_type{2}, ch[0][0], LINE(""));
+
+    check_equality(value_type{1}, *ch.begin_partition(1), LINE(""));
+    check_equality(value_type{1}, *h.crbegin_partition(1), LINE(""));
+    check_equality(value_type{1}, ch[1][0], LINE(""));
   }
 }
