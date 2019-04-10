@@ -155,9 +155,8 @@ namespace sequoia
         m_Buckets.push_back(std::vector<held_type>());
       }
 
-      size_type insert_slot(const size_type pos)
+      void insert_slot(const size_type pos)
       {
-        auto partition{pos};
         if(pos < num_partitions())
         {
           auto iter{m_Buckets.begin() + pos};
@@ -166,22 +165,15 @@ namespace sequoia
         else
         {
           add_slot();
-          partition = (num_partitions() - 1);
         }
-
-        return partition;
       }
 
-      size_type erase_slot(const size_type n)
+      void erase_slot(const size_type n)
       {
-        size_type erased{};
         if(n < m_Buckets.size())
         {
-          erased = m_Buckets[n].size();
           m_Buckets.erase(m_Buckets.begin() + n);
         }
-
-        return erased;
       }
 
       void reserve_partition(const size_type partition, const size_type size)
@@ -569,9 +561,8 @@ namespace sequoia
         m_Partitions.push_back(m_Storage.size());
       }
 
-      size_type insert_slot(const size_t pos)
+      void insert_slot(const size_t pos)
       {
-        index_type partition{pos};
         if(pos < num_partitions())
         {
           auto iter{m_Partitions.begin() + pos};
@@ -581,17 +572,14 @@ namespace sequoia
         else
         {
           add_slot();
-          partition = (num_partitions() - 1);
         }
-
-        return partition;
       }
 
-      index_type erase_slot(const index_type n)
+      void erase_slot(const index_type n)
       {
-        index_type erased{};
         if(n < m_Partitions.size())
         {
+          index_type erased{};
           const index_type offset{(n > 0) ? m_Partitions[n - 1] : index_type{}};
           if(m_Partitions[n] > 0)
           {
@@ -601,8 +589,6 @@ namespace sequoia
           m_Partitions.erase(m_Partitions.begin() + n);
           m_Partitions.template mutate<false>(m_Partitions.begin() + n, m_Partitions.end(), [erased](const auto index){ return index - erased; });
         }
-
-        return erased;
       }
 
       void reserve(const size_type size)

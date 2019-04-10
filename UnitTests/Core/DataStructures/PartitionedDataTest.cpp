@@ -280,7 +280,7 @@ namespace sequoia
         }, LINE("No partitions to swap")
       );
       
-      check_equality<std::size_t>(0, storage.erase_slot(0));
+      storage.erase_slot(0);
       check_equivalence(storage, equivalent_type{}, LINE(""));
 
       storage.add_slot();
@@ -302,8 +302,8 @@ namespace sequoia
       storage.swap_partitions(0,0);
       check_equality(storage, Storage{{}}, LINE(""));
       
-      check_equality<std::size_t>(0, storage.erase_slot(1), LINE(""));
-      check_equality<std::size_t>(0, storage.erase_slot(0), LINE(""));
+      storage.erase_slot(1);
+      storage.erase_slot(0);
       // Null
     
       check_equality(storage, Storage{}, LINE(""));
@@ -490,18 +490,18 @@ namespace sequoia
 
       check_partitions(storage, answers_type{{3}, {4}, {-2, 1, 2, 8, 9, -3, 7, 5}, {-4, -2, -4}});
 
-      check_equality<std::size_t>(3, storage.erase_slot(3));
-      check_equality<std::size_t>(8, storage.erase_slot(2));
+      storage.erase_slot(3);
+      storage.erase_slot(2);
       // [3][4]
 
       check_partitions(storage, answers_type{{3}, {4}});
 
-      check_equality<std::size_t>(1, storage.insert_slot(1));
+      storage.insert_slot(1);
       // [3][][4]
 
       check_partitions(storage, answers_type{{3}, {}, {4}});
 
-      check_equality<std::size_t>(0, storage.insert_slot(0));
+      storage.insert_slot(0);
       // [][3][][4]
 
       check_partitions(storage, answers_type{{}, {3}, {}, {4}});
@@ -540,12 +540,12 @@ namespace sequoia
 
       check_partitions(storage, answers_type{{2, 1, 2}, {3}, {7,1}, {4}});
 
-      check_equality<std::size_t>(2, storage.erase_slot(2));
+      storage.erase_slot(2);
       // [2,1,2][3][4]
 
       check_partitions(storage, answers_type{{2,1,2}, {3}, {4}});
 
-      check_equality<std::size_t>(3, storage.erase_slot(0));
+      storage.erase_slot(0);
       // [3][4]
 
       check_partitions(storage, answers_type{{3}, {4}});
@@ -584,12 +584,12 @@ namespace sequoia
 
       check_partitions(storage, answers_type{{3, -5}, {4, -5}, {8, 9}});
 
-      check_equality<std::size_t>(2, storage.erase_slot(1));
+      storage.erase_slot(1);
       // [3,-5][8,9]
 
       check_partitions(storage, answers_type{{3, -5}, {8, 9}});
 
-      check_equality<std::size_t>(2, storage.erase_slot(0));
+      storage.erase_slot(0);
       // [8,9]
 
       check_partitions(storage, answers_type{{8, 9}});
