@@ -56,9 +56,6 @@ namespace sequoia
 
       template<class S, class T>
       bool check_constexpr_partitions(const S& storage, const std::vector<std::vector<T>>& answers);
-    
-      template<template<class...> class Storage, class T>
-      void test_init_lists(std::initializer_list<std::initializer_list<T>> list);
       
       void test_storage();
       

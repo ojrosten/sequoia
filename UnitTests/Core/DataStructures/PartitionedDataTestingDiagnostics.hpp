@@ -17,6 +17,8 @@ namespace sequoia::unit_testing
   private:    
     void run_tests() override;
 
+    template<class T> void test_set();
+
     template<class PartitionedData> void test();
   };
 }

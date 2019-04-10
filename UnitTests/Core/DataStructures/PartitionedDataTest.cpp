@@ -21,11 +21,6 @@ namespace sequoia
       test_iterators<independent>();
       test_iterators<shared>();
       test_storage();
-      test_init_lists<bucketed_storage, int>({{1}, {2}});
-      test_init_lists<contiguous_storage, int>({{1}, {2}});
-
-      test_init_lists<bucketed_storage, std::complex<double>>({{{1.0, 5.7}, {8.7, 3.3}}, {{2.0, -5.7}, {-0.7, 3.2}, {1.0, -1.0}}});
-      test_init_lists<contiguous_storage, std::complex<double>>({{{1.0, 5.7}, {8.7, 3.3}}, {{2.0, -5.7}, {-0.7, 3.2}, {1.0, -1.0}}});
 
       test_static_storage();
 
@@ -38,15 +33,6 @@ namespace sequoia
       test_bucketed_capacity<int, shared<int>, true>();
       test_bucketed_capacity<int, independent<int>, false>();
       test_bucketed_capacity<int, shared<int>, false>();
-    }
-
-
-    template<template<class...> class Storage, class T>
-    void partitioned_data_test::test_init_lists(std::initializer_list<std::initializer_list<T>> list)
-    {
-      using namespace data_structures;
-      Storage<T,data_sharing::shared<T>> s{list};
-      check_partitions(s, list);
     }
 
     template<class S, class T>

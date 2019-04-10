@@ -9,18 +9,31 @@
 
 namespace sequoia::unit_testing
 {
+  // Move this!
+  template<class T> struct type_to_string<std::vector<T>>
+  {
+    static std::string str() noexcept { return "STD::VECTOR<" + type_to_string<T>::str() + ">"; }
+  };
+
+  
   void partitioned_data_false_positive_test::run_tests()
+  {
+    test_set<int>();
+    test_set<std::vector<double>>();
+  }
+
+  template<class T> void partitioned_data_false_positive_test::test_set()
   {
     using namespace data_structures;
     using namespace data_sharing;
     
-    test<bucketed_storage<int, data_sharing::independent<int>>>();
-    test<bucketed_storage<int, data_sharing::shared<int>>>();
+    test<bucketed_storage<T, data_sharing::independent<T>>>();
+    test<bucketed_storage<T, data_sharing::shared<T>>>();
 
-    test<contiguous_storage<int, data_sharing::independent<int>>>();
-    test<contiguous_storage<int, data_sharing::shared<int>>>();
+    test<contiguous_storage<T, data_sharing::independent<T>>>();
+    test<contiguous_storage<T, data_sharing::shared<T>>>();
   }
-
+  
   template<class PartitionedData> void partitioned_data_false_positive_test::test()
   {
     using value_type = typename PartitionedData::value_type;
