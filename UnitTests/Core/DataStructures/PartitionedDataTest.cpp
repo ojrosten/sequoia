@@ -252,9 +252,6 @@ namespace sequoia
       using namespace data_sharing;
       using value_type = typename Storage::value_type;
       using equivalent_type = std::initializer_list<std::initializer_list<value_type>>;
-      
-      using answers_type = std::vector<std::vector<value_type>>;
-      
 
       constexpr bool sharedData{std::is_same<typename Storage::sharing_policy_type, shared<typename Storage::value_type>>::value};
 
@@ -318,163 +315,161 @@ namespace sequoia
       
       storage.swap_partitions(0,1);
       check_equality(storage, Storage{{}, {}}, LINE(""));
-
-
-
       
       storage.push_back_to_partition(0, 2);
-      check_partitions(storage, answers_type{{2}, {}});
+      check_equality(storage, Storage{{2}, {}});
       // [2][]
 
       storage.swap_partitions(0,1);
-      check_partitions(storage, answers_type{{}, {2}});
+      check_equality(storage, Storage{{}, {2}});
       // [][2]
 
       storage.swap_partitions(0,1);
-      check_partitions(storage, answers_type{{2}, {}});
+      check_equality(storage, Storage{{2}, {}});
       // [2][]
 
       storage.swap_partitions(1,0);
-      check_partitions(storage, answers_type{{}, {2}});
+      check_equality(storage, Storage{{}, {2}});
       // [][2]
 
       storage.swap_partitions(1,0);
-      check_partitions(storage, answers_type{{2}, {}});
+      check_equality(storage, Storage{{2}, {}});
       // [2][]
 
       auto iter = storage.begin_partition(0);
-      check_equality<int>(2, *iter);
+      check_equality(2, *iter);
       *iter = 3;
       // [3][]
 
-      check_partitions(storage, answers_type{{3}, {}});
-
+      check_equality(storage, Storage{{3}, {}});
+      
       storage.push_back_to_partition(1, 4);
       // [3][4]
 
-      check_partitions(storage, answers_type{{3}, {4}});
+      check_equality(storage, Storage{{3}, {4}});
 
       storage.swap_partitions(1,0);
-      check_partitions(storage, answers_type{{4}, {3}});
       // [4][3]
+      
+      check_equality(storage, Storage{{4}, {3}});
 
       storage.swap_partitions(0,1);
-      check_partitions(storage, answers_type{{3}, {4}});
       // [3]4]
       
+      check_equality(storage, Storage{{3}, {4}});
 
       storage.add_slot();
       storage.push_back_to_partition(2, 9);
       storage.push_back_to_partition(2, -3);
       // [3][4][9,-3]
 
-      check_partitions(storage, answers_type{{3}, {4}, {9, -3}});
+      check_equality(storage, Storage{{3}, {4}, {9, -3}});
 
       storage.swap_partitions(1,2);
       // [3][9,-3][4]
       
-      check_partitions(storage, answers_type{{3}, {9, -3}, {4}});
+      check_equality(storage, Storage{{3}, {9, -3}, {4}});
 
       storage.swap_partitions(2,1);
       // [3][4][9,-3]
 
-      check_partitions(storage, answers_type{{3}, {4}, {9, -3}});
+      check_equality(storage, Storage{{3}, {4}, {9, -3}});
 
       iter = storage.insert_to_partition(storage.cbegin_partition(2), 2);
       // [3][4][2, 9,-3]
 
-      check_partitions(storage, answers_type{{3}, {4}, {2, 9, -3}});
+      check_equality(storage, Storage{{3}, {4}, {2, 9, -3}});
       check_equality(2, *iter, LINE(""));
       check_equality<std::size_t>(2, iter.partition_index(), LINE(""));
 
       storage.swap_partitions(0,2);
       // [2, 9,-3][4][3]
 
-      check_partitions(storage, answers_type{{2, 9, -3}, {4}, {3}});
+      check_equality(storage, Storage{{2, 9, -3}, {4}, {3}});
 
       storage.swap_partitions(2,0);
       // [3][4][2, 9,-3]
 
-      check_partitions(storage, answers_type{{3}, {4}, {2, 9, -3}});
+      check_equality(storage, Storage{{3}, {4}, {2, 9, -3}});
 
       iter = storage.insert_to_partition(storage.cbegin_partition(2) + 1, 8);
       // [3][4][2, 8, 9,-3]
 
-      check_partitions(storage, answers_type{{3}, {4}, {2, 8, 9, -3}});
+      check_equality(storage, Storage{{3}, {4}, {2, 8, 9, -3}});
       check_equality(8, *iter, LINE(""));
       check_equality<std::size_t>(2, iter.partition_index(), LINE(""));
 
       iter = storage.insert_to_partition(storage.begin_partition(2) + 4, 7);
       // [3][4][2, 8, 9,-3, 7]
 
-      check_partitions(storage, answers_type{{3}, {4}, {2, 8, 9, -3, 7}});
+      check_equality(storage, Storage{{3}, {4}, {2, 8, 9, -3, 7}});
       check_equality(7, *iter, LINE(""));
       check_equality<std::size_t>(2, iter.partition_index(), LINE(""));
 
       storage.insert_to_partition(storage.cbegin_partition(2) + 5, 5);
       // [3][4][2, 8, 9,-3, 7, 5]
 
-      check_partitions(storage, answers_type{{3}, {4}, {2, 8, 9, -3, 7, 5}});
+      check_equality(storage, Storage{{3}, {4}, {2, 8, 9, -3, 7, 5}});
 
       storage.add_slot();
       storage.insert_to_partition(storage.cbegin_partition(2), 1);
       // [3][4][1, 2, 8, 9,-3, 7, 5][]
 
-      check_partitions(storage, answers_type{{3}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}});
+      check_equality(storage, Storage{{3}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}});
 
       storage.insert_to_partition(storage.cbegin_partition(0), 12);
       // [12, 3][4][1, 2, 8, 9,-3, 7, 5][]
 
-      check_partitions(storage, answers_type{{12, 3}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}});
+      check_equality(storage, Storage{{12, 3}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}});
 
       storage.swap_partitions(2, 1);
       // [12, 3][1, 2, 8, 9,-3, 7, 5][4][]
 
-      check_partitions(storage, answers_type{{12, 3}, {1, 2, 8, 9, -3, 7, 5}, {4}, {}});
+      check_equality(storage, Storage{{12, 3}, {1, 2, 8, 9, -3, 7, 5}, {4}, {}});
 
       storage.swap_partitions(0,1);
       // [1, 2, 8, 9,-3, 7, 5][12, 3][4][]
 
-      check_partitions(storage, answers_type{{1, 2, 8, 9, -3, 7, 5}, {12, 3}, {4}, {}});
+      check_equality(storage, Storage{{1, 2, 8, 9, -3, 7, 5}, {12, 3}, {4}, {}});
 
       storage.swap_partitions(1,0);
 
       // [12, 3][1, 2, 8, 9,-3, 7, 5][4][]
 
-      check_partitions(storage, answers_type{{12, 3}, {1, 2, 8, 9, -3, 7, 5}, {4}, {}});
+      check_equality(storage, Storage{{12, 3}, {1, 2, 8, 9, -3, 7, 5}, {4}, {}});
 
       storage.swap_partitions(1,2);
 
       // [12, 3][4][1, 2, 8, 9,-3, 7, 5][]
 
-      check_partitions(storage, answers_type{{12, 3}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}});
+      check_equality(storage, Storage{{12, 3}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}});
       
       storage.insert_to_partition(storage.begin_partition(0) + 1, 13);
       // [12, 13, 3][4][1, 2, 8, 9,-3, 7, 5][]
 
-      check_partitions(storage, answers_type{{12, 13, 3}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}});
+      check_equality(storage, Storage{{12, 13, 3}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}});
 
       storage.insert_to_partition(storage.cbegin_partition(0) + 3, -8);
       // [12, 13, 3, -8][4][1, 2, 8, 9,-3, 7, 5][]
 
-      check_partitions(storage, answers_type{{12, 13, 3, -8}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}});
+      check_equality(storage, Storage{{12, 13, 3, -8}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}});
 
       iter = storage.erase_from_partition(0, 0);
       // [13, 3, -8][4][1, 2, 8, 9,-3, 7, 5][]
 
-      check_partitions(storage, answers_type{{13, 3, -8}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}});
+      check_equality(storage, Storage{{13, 3, -8}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}});
       check_equality(13, *iter, LINE(""));
       check_equality<std::size_t>(0, iter.partition_index(), LINE(""));
 
       storage.erase_from_partition(0, 2);
       // [13, 3][4][1, 2, 8, 9,-3, 7, 5][]
 
-      check_partitions(storage, answers_type{{13, 3}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}});
+      check_equality(storage, Storage{{13, 3}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}});
 
       iter = storage.erase_from_partition(storage.cbegin_partition(0));
       // [3][4][1, 2, 8, 9,-3, 7, 5][]
 
-      check_partitions(storage, answers_type{{3}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}});
+      check_equality(storage, Storage{{3}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}});
       check_equality(3, *iter, LINE(""));
       check_equality<std::size_t>(0, iter.partition_index(), LINE(""));
 
@@ -482,99 +477,99 @@ namespace sequoia
       storage.insert_to_partition(storage.cbegin_partition(3), -2);
       // [3][4][-2, 1, 2, 8, 9,-3, 7, 5][-2]
 
-      check_partitions(storage, answers_type{{3}, {4}, {-2, 1, 2, 8, 9, -3, 7, 5}, {-2}});
+      check_equality(storage, Storage{{3}, {4}, {-2, 1, 2, 8, 9, -3, 7, 5}, {-2}});
 
       storage.insert_to_partition(storage.cbegin_partition(3) + 1,-4);
       storage.insert_to_partition(storage.cbegin_partition(3), -4);
       // [3][4][-2, 1, 2, 8, 9,-3, 7, 5][-4, -2,-4]
 
-      check_partitions(storage, answers_type{{3}, {4}, {-2, 1, 2, 8, 9, -3, 7, 5}, {-4, -2, -4}});
+      check_equality(storage, Storage{{3}, {4}, {-2, 1, 2, 8, 9, -3, 7, 5}, {-4, -2, -4}});
 
       storage.erase_slot(3);
       storage.erase_slot(2);
       // [3][4]
 
-      check_partitions(storage, answers_type{{3}, {4}});
+      check_equality(storage, Storage{{3}, {4}});
 
       storage.insert_slot(1);
       // [3][][4]
 
-      check_partitions(storage, answers_type{{3}, {}, {4}});
+      check_equality(storage, Storage{{3}, {}, {4}});
 
       storage.insert_slot(0);
       // [][3][][4]
 
-      check_partitions(storage, answers_type{{}, {3}, {}, {4}});
+      check_equality(storage, Storage{{}, {3}, {}, {4}});
 
       storage.insert_to_partition(storage.cbegin_partition(0), 1);
       storage.insert_to_partition(storage.cbegin_partition(2), storage.cbegin_partition(0));
       // [1][3][1][4]
 
-      if(check_partitions(storage, answers_type{{1}, {3}, {1}, {4}}))
+      if(check_equality(storage, Storage{{1}, {3}, {1}, {4}}))
       {
         auto iter = storage.begin_partition(0);
         *iter = 2;
         // shared: [2][3][2][4], independent: [2][3][1][4]
-        check_partitions(storage, sharedData ? answers_type{{2}, {3}, {2}, {4}} : answers_type{{2}, {3}, {1}, {4}});
+        check_equality(storage, sharedData ? Storage{{2}, {3}, {2}, {4}} : Storage{{2}, {3}, {1}, {4}});
         *iter = 1;
         // [1][3][1][4]
-        check_partitions(storage, answers_type{{1}, {3}, {1}, {4}});
+        check_equality(storage, Storage{{1}, {3}, {1}, {4}});
 
         iter = storage.begin_partition(2);
         *iter = -2;
         // shared: [-2][3][-2][4], independent: [-2][3][1][4]
-        check_partitions(storage, sharedData ? answers_type{{-2}, {3}, {-2}, {4}} : answers_type{{1}, {3}, {-2}, {4}});
+        check_equality(storage, sharedData ? Storage{{-2}, {3}, {-2}, {4}} : Storage{{1}, {3}, {-2}, {4}});
         *iter = 1;
         // [1][3][1][4]
-        check_partitions(storage, answers_type{{1}, {3}, {1}, {4}});
+        check_equality(storage, Storage{{1}, {3}, {1}, {4}});
       }
 
       storage.insert_to_partition(storage.cbegin_partition(0), 2);
       storage.insert_to_partition(storage.cbegin_partition(0) + 2, storage.cbegin_partition(0));
       // [2,1,2][3][1][4]
 
-      check_partitions(storage, answers_type{{2, 1, 2}, {3}, {1}, {4}});
+      check_equality(storage, Storage{{2, 1, 2}, {3}, {1}, {4}});
 
       storage.insert_to_partition(storage.cbegin_partition(2), 7);
       // [2,1,2][3][1, 7][4]
 
-      check_partitions(storage, answers_type{{2, 1, 2}, {3}, {7,1}, {4}});
+      check_equality(storage, Storage{{2, 1, 2}, {3}, {7,1}, {4}});
 
       storage.erase_slot(2);
       // [2,1,2][3][4]
 
-      check_partitions(storage, answers_type{{2,1,2}, {3}, {4}});
+      check_equality(storage, Storage{{2,1,2}, {3}, {4}});
 
       storage.erase_slot(0);
       // [3][4]
 
-      check_partitions(storage, answers_type{{3}, {4}});
+      check_equality(storage, Storage{{3}, {4}});
 
       storage.push_back_to_partition(0, -5);       
       storage.push_back_to_partition(1, --storage.cend_partition(0));
       // [3,-5][4,-5]
 
-      if(check_partitions(storage, answers_type{{3, -5}, {4, -5}}))
+      if(check_equality(storage, Storage{{3, -5}, {4, -5}}))
       {
         auto iter = storage.begin_partition(0);
         ++iter;
         *iter = 2;
         // shared [3,2][4,2], independent: [3,2][4,-5]
-        check_partitions(storage, sharedData ? answers_type{{3, 2}, {4, 2}} : answers_type{{3, 2}, {4, -5}});
+        check_equality(storage, sharedData ? Storage{{3, 2}, {4, 2}} : Storage{{3, 2}, {4, -5}});
 
         *iter = -5;
         // [3,-5][4,-5]
-        check_partitions(storage, answers_type{{3, -5}, {4, -5}});
+        check_equality(storage, Storage{{3, -5}, {4, -5}});
 
         iter = storage.begin_partition(1);
         ++iter;
         *iter = -2;
         // shared [3,-2][4,-2], independent: [3,-5][4,-2]
-        check_partitions(storage, sharedData ? answers_type{{3, -2}, {4, -2}} : answers_type{{3, -5}, {4, -2}});
+        check_equality(storage, sharedData ? Storage{{3, -2}, {4, -2}} : Storage{{3, -5}, {4, -2}});
 
         *iter = -5;
         // [3,-5][4,-5]
-        check_partitions(storage, answers_type{{3, -5}, {4, -5}});
+        check_equality(storage, Storage{{3, -5}, {4, -5}});
       }
 
       storage.add_slot();
@@ -582,24 +577,24 @@ namespace sequoia
       storage.push_back_to_partition(2, 9);
       // [3,-5][4,-5][8,9]
 
-      check_partitions(storage, answers_type{{3, -5}, {4, -5}, {8, 9}});
+      check_equality(storage, Storage{{3, -5}, {4, -5}, {8, 9}});
 
       storage.erase_slot(1);
       // [3,-5][8,9]
 
-      check_partitions(storage, answers_type{{3, -5}, {8, 9}});
+      check_equality(storage, Storage{{3, -5}, {8, 9}});
 
       storage.erase_slot(0);
       // [8,9]
 
-      check_partitions(storage, answers_type{{8, 9}});
+      check_equality(storage, Storage{{8, 9}});
 
       storage.add_slot();
       storage.push_back_to_partition(1, 4);
       storage.push_back_to_partition(1, -5);
       // [8,9][4,-5]
 
-      check_partitions(storage, answers_type{{8, 9}, {4, -5}});
+      check_equality(storage, Storage{{8, 9}, {4, -5}});
 
       {
         auto iter = storage.begin_partition(0);
@@ -610,7 +605,7 @@ namespace sequoia
       }
       // [-5][4,-5]
 
-      check_partitions(storage, answers_type{{-5}, {4, -5}});
+      check_equality(storage, Storage{{-5}, {4, -5}});
 
 
       {
@@ -619,7 +614,7 @@ namespace sequoia
       }
       // [-5][4,-5]
 
-      check_partitions(storage, answers_type{{-5}, {4, -5}});
+      check_equality(storage, Storage{{-5}, {4, -5}});
 
       {
         auto next = storage.erase_from_partition(1, 1);
@@ -627,19 +622,19 @@ namespace sequoia
       }
       // [-5][4]
 
-      check_partitions(storage, answers_type{{-5}, {4}});
+      check_equality(storage, Storage{{-5}, {4}});
 
       storage.push_back_to_partition(0, 6);
       storage.push_back_to_partition(1, --storage.cend_partition(0));
       // [-5,6][4,6]
 
-      check_partitions(storage, answers_type{{-5, 6}, {4, 6}});
+      check_equality(storage, Storage{{-5, 6}, {4, 6}});
 
       storage.push_back_to_partition(0, -2);
       storage.push_back_to_partition(1, --storage.cend_partition(0));
       // [-5,6,-2][4,6,-2]
 
-      check_partitions(storage, answers_type{{-5, 6, -2}, {4, 6, -2}});
+      check_equality(storage, Storage{{-5, 6, -2}, {4, 6, -2}});
 
       auto found{std::find_if(storage.begin_partition(0), storage.end_partition(0),
         [](const int& elt) { return elt == 6; }
@@ -651,7 +646,7 @@ namespace sequoia
       erase_from_partition_if(storage, 0, [](const int& elt) { return elt == 6; });
       // [-5,-2][4,6,-2]
 
-      check_partitions(storage, answers_type{{-5, -2}, {4, 6, -2}});
+      check_equality(storage, Storage{{-5, -2}, {4, 6, -2}});
       
       auto found2{std::find_if(storage.cbegin_partition(0), storage.cend_partition(0),
         [](const int& elt) { return elt == 6; })
@@ -665,12 +660,12 @@ namespace sequoia
 
       // [-5,-2][4,6,-2,7,7]
 
-      check_partitions(storage, answers_type{{-5, -2}, {4, 6, -2, 7, 7}});
+      check_equality(storage, Storage{{-5, -2}, {4, 6, -2, 7, 7}});
 
       erase_from_partition_if(storage, 1, [](const int& elt) { return elt == 7; });
       // [-5,-2][4,6,-2]
 
-      check_partitions(storage, answers_type{{-5, -2}, {4, 6, -2}});
+      check_equality(storage, Storage{{-5, -2}, {4, 6, -2}});
 
       // now check copy constructor etc
 
@@ -684,22 +679,22 @@ namespace sequoia
       // Check original has been unchanged (bearing in mind
       // possible presence of shared_ptrs
 
-      check_partitions(storage, answers_type{{-5, -2}, {4, 6, -2}});
+      check_equality(storage, Storage{{-5, -2}, {4, 6, -2}});
 
       // Now check new instance
 
-      check_partitions(storage2, answers_type{{-5, -2, 7}, {4, 6, -2}});
+      check_equality(storage2, Storage{{-5, -2, 7}, {4, 6, -2}});
 
       std::swap(storage, storage2);
 
-      check_partitions(storage2, answers_type{{-5, -2}, {4, 6, -2}});
-      check_partitions(storage, answers_type{{-5, -2, 7}, {4, 6, -2}});
+      check_equality(storage2, Storage{{-5, -2}, {4, 6, -2}});
+      check_equality(storage, Storage{{-5, -2, 7}, {4, 6, -2}});
 
       storage = storage2;
       check(storage == storage2);
 
-      check_partitions(storage2, answers_type{{-5, -2}, {4, 6, -2}});
-      check_partitions(storage, answers_type{{-5, -2}, {4, 6, -2}});
+      check_equality(storage2, Storage{{-5, -2}, {4, 6, -2}});
+      check_equality(storage, Storage{{-5, -2}, {4, 6, -2}});
 
       return storage;
     }
