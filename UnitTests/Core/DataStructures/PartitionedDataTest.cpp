@@ -317,159 +317,168 @@ namespace sequoia
       check_equality(storage, Storage{{}, {}}, LINE(""));
       
       storage.push_back_to_partition(0, 2);
-      check_equality(storage, Storage{{2}, {}});
       // [2][]
+   
+      check_equality(storage, Storage{{2}, {}}, LINE(""));
+      check_regular_semantics(storage, Storage{{1},{}}, LINE("Regular semantics"));
 
       storage.swap_partitions(0,1);
-      check_equality(storage, Storage{{}, {2}});
       // [][2]
+      
+      check_equality(storage, Storage{{}, {2}});
+      check_regular_semantics(storage, Storage{{2},{}}, LINE("Regular semantics"));
 
       storage.swap_partitions(0,1);
-      check_equality(storage, Storage{{2}, {}});
       // [2][]
+      
+      check_equality(storage, Storage{{2}, {}}, LINE(""));
 
       storage.swap_partitions(1,0);
-      check_equality(storage, Storage{{}, {2}});
       // [][2]
-
+      
+      check_equality(storage, Storage{{}, {2}}, LINE(""));
+ 
       storage.swap_partitions(1,0);
-      check_equality(storage, Storage{{2}, {}});
       // [2][]
-
+      
+      check_equality(storage, Storage{{2}, {}}, LINE(""));
+      
       auto iter = storage.begin_partition(0);
-      check_equality(2, *iter);
+      check_equality(2, *iter, LINE(""));
       *iter = 3;
       // [3][]
 
-      check_equality(storage, Storage{{3}, {}});
+      check_equality(storage, Storage{{3}, {}}, LINE(""));
       
       storage.push_back_to_partition(1, 4);
       // [3][4]
 
-      check_equality(storage, Storage{{3}, {4}});
+      check_equality(storage, Storage{{3}, {4}}, LINE(""));
+      check_regular_semantics(storage, Storage{{4},{3}}, LINE("Regular semantics"));
 
       storage.swap_partitions(1,0);
       // [4][3]
       
-      check_equality(storage, Storage{{4}, {3}});
+      check_equality(storage, Storage{{4}, {3}}, LINE(""));
 
       storage.swap_partitions(0,1);
       // [3]4]
       
-      check_equality(storage, Storage{{3}, {4}});
+      check_equality(storage, Storage{{3}, {4}}, LINE(""));
 
       storage.add_slot();
       storage.push_back_to_partition(2, 9);
       storage.push_back_to_partition(2, -3);
       // [3][4][9,-3]
 
-      check_equality(storage, Storage{{3}, {4}, {9, -3}});
+      check_equality(storage, Storage{{3}, {4}, {9, -3}}, LINE(""));
+      check_regular_semantics(storage, Storage{{4},{3}}, LINE("Regular semantics"));
 
       storage.swap_partitions(1,2);
       // [3][9,-3][4]
       
-      check_equality(storage, Storage{{3}, {9, -3}, {4}});
+      check_equality(storage, Storage{{3}, {9, -3}, {4}}, LINE(""));
 
       storage.swap_partitions(2,1);
       // [3][4][9,-3]
 
-      check_equality(storage, Storage{{3}, {4}, {9, -3}});
+      check_equality(storage, Storage{{3}, {4}, {9, -3}}, LINE(""));
 
       iter = storage.insert_to_partition(storage.cbegin_partition(2), 2);
       // [3][4][2, 9,-3]
 
-      check_equality(storage, Storage{{3}, {4}, {2, 9, -3}});
+      check_equality(storage, Storage{{3}, {4}, {2, 9, -3}}, LINE(""));
       check_equality(2, *iter, LINE(""));
       check_equality<std::size_t>(2, iter.partition_index(), LINE(""));
 
       storage.swap_partitions(0,2);
       // [2, 9,-3][4][3]
 
-      check_equality(storage, Storage{{2, 9, -3}, {4}, {3}});
+      check_equality(storage, Storage{{2, 9, -3}, {4}, {3}}, LINE(""));
 
       storage.swap_partitions(2,0);
       // [3][4][2, 9,-3]
 
-      check_equality(storage, Storage{{3}, {4}, {2, 9, -3}});
+      check_equality(storage, Storage{{3}, {4}, {2, 9, -3}}, LINE(""));
 
       iter = storage.insert_to_partition(storage.cbegin_partition(2) + 1, 8);
       // [3][4][2, 8, 9,-3]
 
-      check_equality(storage, Storage{{3}, {4}, {2, 8, 9, -3}});
+      check_equality(storage, Storage{{3}, {4}, {2, 8, 9, -3}}, LINE(""));
       check_equality(8, *iter, LINE(""));
       check_equality<std::size_t>(2, iter.partition_index(), LINE(""));
 
       iter = storage.insert_to_partition(storage.begin_partition(2) + 4, 7);
       // [3][4][2, 8, 9,-3, 7]
 
-      check_equality(storage, Storage{{3}, {4}, {2, 8, 9, -3, 7}});
+      check_equality(storage, Storage{{3}, {4}, {2, 8, 9, -3, 7}}, LINE(""));
       check_equality(7, *iter, LINE(""));
       check_equality<std::size_t>(2, iter.partition_index(), LINE(""));
 
       storage.insert_to_partition(storage.cbegin_partition(2) + 5, 5);
       // [3][4][2, 8, 9,-3, 7, 5]
 
-      check_equality(storage, Storage{{3}, {4}, {2, 8, 9, -3, 7, 5}});
+      check_equality(storage, Storage{{3}, {4}, {2, 8, 9, -3, 7, 5}}, LINE(""));
 
       storage.add_slot();
       storage.insert_to_partition(storage.cbegin_partition(2), 1);
       // [3][4][1, 2, 8, 9,-3, 7, 5][]
 
-      check_equality(storage, Storage{{3}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}});
+      check_equality(storage, Storage{{3}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}}, LINE(""));
 
       storage.insert_to_partition(storage.cbegin_partition(0), 12);
       // [12, 3][4][1, 2, 8, 9,-3, 7, 5][]
 
-      check_equality(storage, Storage{{12, 3}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}});
+      check_equality(storage, Storage{{12, 3}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}}, LINE(""));
 
       storage.swap_partitions(2, 1);
       // [12, 3][1, 2, 8, 9,-3, 7, 5][4][]
 
-      check_equality(storage, Storage{{12, 3}, {1, 2, 8, 9, -3, 7, 5}, {4}, {}});
+      check_equality(storage, Storage{{12, 3}, {1, 2, 8, 9, -3, 7, 5}, {4}, {}}, LINE(""));
 
       storage.swap_partitions(0,1);
       // [1, 2, 8, 9,-3, 7, 5][12, 3][4][]
 
-      check_equality(storage, Storage{{1, 2, 8, 9, -3, 7, 5}, {12, 3}, {4}, {}});
+      check_equality(storage, Storage{{1, 2, 8, 9, -3, 7, 5}, {12, 3}, {4}, {}}, LINE(""));
 
       storage.swap_partitions(1,0);
 
       // [12, 3][1, 2, 8, 9,-3, 7, 5][4][]
 
-      check_equality(storage, Storage{{12, 3}, {1, 2, 8, 9, -3, 7, 5}, {4}, {}});
+      check_equality(storage, Storage{{12, 3}, {1, 2, 8, 9, -3, 7, 5}, {4}, {}}, LINE(""));
 
       storage.swap_partitions(1,2);
 
       // [12, 3][4][1, 2, 8, 9,-3, 7, 5][]
 
-      check_equality(storage, Storage{{12, 3}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}});
+      check_equality(storage, Storage{{12, 3}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}}, LINE(""));
       
       storage.insert_to_partition(storage.begin_partition(0) + 1, 13);
       // [12, 13, 3][4][1, 2, 8, 9,-3, 7, 5][]
 
-      check_equality(storage, Storage{{12, 13, 3}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}});
+      check_equality(storage, Storage{{12, 13, 3}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}}, LINE(""));
 
       storage.insert_to_partition(storage.cbegin_partition(0) + 3, -8);
       // [12, 13, 3, -8][4][1, 2, 8, 9,-3, 7, 5][]
 
-      check_equality(storage, Storage{{12, 13, 3, -8}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}});
+      check_equality(storage, Storage{{12, 13, 3, -8}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}}, LINE(""));
 
       iter = storage.erase_from_partition(0, 0);
       // [13, 3, -8][4][1, 2, 8, 9,-3, 7, 5][]
 
-      check_equality(storage, Storage{{13, 3, -8}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}});
+      check_equality(storage, Storage{{13, 3, -8}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}}, LINE(""));
       check_equality(13, *iter, LINE(""));
       check_equality<std::size_t>(0, iter.partition_index(), LINE(""));
 
       storage.erase_from_partition(0, 2);
       // [13, 3][4][1, 2, 8, 9,-3, 7, 5][]
 
-      check_equality(storage, Storage{{13, 3}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}});
+      check_equality(storage, Storage{{13, 3}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}}, LINE(""));
 
       iter = storage.erase_from_partition(storage.cbegin_partition(0));
       // [3][4][1, 2, 8, 9,-3, 7, 5][]
 
-      check_equality(storage, Storage{{3}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}});
+      check_equality(storage, Storage{{3}, {4}, {1, 2, 8, 9, -3, 7, 5}, {}}, LINE(""));
       check_equality(3, *iter, LINE(""));
       check_equality<std::size_t>(0, iter.partition_index(), LINE(""));
 
@@ -483,80 +492,83 @@ namespace sequoia
       storage.insert_to_partition(storage.cbegin_partition(3), -4);
       // [3][4][-2, 1, 2, 8, 9,-3, 7, 5][-4, -2,-4]
 
-      check_equality(storage, Storage{{3}, {4}, {-2, 1, 2, 8, 9, -3, 7, 5}, {-4, -2, -4}});
+      check_equality(storage, Storage{{3}, {4}, {-2, 1, 2, 8, 9, -3, 7, 5}, {-4, -2, -4}}, LINE(""));
 
       storage.erase_slot(3);
       storage.erase_slot(2);
       // [3][4]
 
-      check_equality(storage, Storage{{3}, {4}});
+      check_equality(storage, Storage{{3}, {4}}, LINE(""));
 
       storage.insert_slot(1);
       // [3][][4]
 
-      check_equality(storage, Storage{{3}, {}, {4}});
+      check_equality(storage, Storage{{3}, {}, {4}}, LINE(""));
 
       storage.insert_slot(0);
       // [][3][][4]
 
-      check_equality(storage, Storage{{}, {3}, {}, {4}});
+      check_equality(storage, Storage{{}, {3}, {}, {4}}, LINE(""));
 
       storage.insert_to_partition(storage.cbegin_partition(0), 1);
       storage.insert_to_partition(storage.cbegin_partition(2), storage.cbegin_partition(0));
       // [1][3][1][4]
 
-      if(check_equality(storage, Storage{{1}, {3}, {1}, {4}}))
+      if(check_equality(storage, Storage{{1}, {3}, {1}, {4}}, LINE("")))
       {
         auto iter = storage.begin_partition(0);
         *iter = 2;
         // shared: [2][3][2][4], independent: [2][3][1][4]
-        check_equality(storage, sharedData ? Storage{{2}, {3}, {2}, {4}} : Storage{{2}, {3}, {1}, {4}});
+        check_equality(storage, sharedData ? Storage{{2}, {3}, {2}, {4}} : Storage{{2}, {3}, {1}, {4}}, LINE(""));
+        check_regular_semantics(storage, Storage{{1}, {3}, {1}, {4}}, LINE(""));
+        
         *iter = 1;
         // [1][3][1][4]
-        check_equality(storage, Storage{{1}, {3}, {1}, {4}});
+        check_equality(storage, Storage{{1}, {3}, {1}, {4}}, LINE(""));
 
         iter = storage.begin_partition(2);
         *iter = -2;
         // shared: [-2][3][-2][4], independent: [-2][3][1][4]
-        check_equality(storage, sharedData ? Storage{{-2}, {3}, {-2}, {4}} : Storage{{1}, {3}, {-2}, {4}});
+        check_equality(storage, sharedData ? Storage{{-2}, {3}, {-2}, {4}} : Storage{{1}, {3}, {-2}, {4}}, LINE(""));
         *iter = 1;
         // [1][3][1][4]
-        check_equality(storage, Storage{{1}, {3}, {1}, {4}});
+        check_equality(storage, Storage{{1}, {3}, {1}, {4}}, LINE(""));
       }
 
       storage.insert_to_partition(storage.cbegin_partition(0), 2);
       storage.insert_to_partition(storage.cbegin_partition(0) + 2, storage.cbegin_partition(0));
       // [2,1,2][3][1][4]
 
-      check_equality(storage, Storage{{2, 1, 2}, {3}, {1}, {4}});
+      check_equality(storage, Storage{{2, 1, 2}, {3}, {1}, {4}}, LINE(""));
 
       storage.insert_to_partition(storage.cbegin_partition(2), 7);
       // [2,1,2][3][1, 7][4]
 
-      check_equality(storage, Storage{{2, 1, 2}, {3}, {7,1}, {4}});
+      check_equality(storage, Storage{{2, 1, 2}, {3}, {7,1}, {4}}, LINE(""));
 
       storage.erase_slot(2);
       // [2,1,2][3][4]
 
-      check_equality(storage, Storage{{2,1,2}, {3}, {4}});
+      check_equality(storage, Storage{{2,1,2}, {3}, {4}}, LINE(""));
 
       storage.erase_slot(0);
       // [3][4]
 
-      check_equality(storage, Storage{{3}, {4}});
+      check_equality(storage, Storage{{3}, {4}}, LINE(""));
 
       storage.push_back_to_partition(0, -5);       
       storage.push_back_to_partition(1, --storage.cend_partition(0));
       // [3,-5][4,-5]
 
-      if(check_equality(storage, Storage{{3, -5}, {4, -5}}))
+      if(check_equality(storage, Storage{{3, -5}, {4, -5}}, LINE("")))
       {
         auto iter = storage.begin_partition(0);
         ++iter;
         *iter = 2;
         // shared [3,2][4,2], independent: [3,2][4,-5]
-        check_equality(storage, sharedData ? Storage{{3, 2}, {4, 2}} : Storage{{3, 2}, {4, -5}});
-
+        check_equality(storage, sharedData ? Storage{{3, 2}, {4, 2}} : Storage{{3, 2}, {4, -5}}, LINE(""));
+        check_regular_semantics(storage, Storage{{3, -5}, {4, -5}}, LINE(""));
+        
         *iter = -5;
         // [3,-5][4,-5]
         check_equality(storage, Storage{{3, -5}, {4, -5}});
@@ -565,11 +577,11 @@ namespace sequoia
         ++iter;
         *iter = -2;
         // shared [3,-2][4,-2], independent: [3,-5][4,-2]
-        check_equality(storage, sharedData ? Storage{{3, -2}, {4, -2}} : Storage{{3, -5}, {4, -2}});
+        check_equality(storage, sharedData ? Storage{{3, -2}, {4, -2}} : Storage{{3, -5}, {4, -2}}, LINE(""));
 
         *iter = -5;
         // [3,-5][4,-5]
-        check_equality(storage, Storage{{3, -5}, {4, -5}});
+        check_equality(storage, Storage{{3, -5}, {4, -5}}, LINE(""));
       }
 
       storage.add_slot();
@@ -577,44 +589,44 @@ namespace sequoia
       storage.push_back_to_partition(2, 9);
       // [3,-5][4,-5][8,9]
 
-      check_equality(storage, Storage{{3, -5}, {4, -5}, {8, 9}});
+      check_equality(storage, Storage{{3, -5}, {4, -5}, {8, 9}}, LINE(""));
 
       storage.erase_slot(1);
       // [3,-5][8,9]
 
-      check_equality(storage, Storage{{3, -5}, {8, 9}});
+      check_equality(storage, Storage{{3, -5}, {8, 9}}, LINE(""));
 
       storage.erase_slot(0);
       // [8,9]
 
-      check_equality(storage, Storage{{8, 9}});
+      check_equality(storage, Storage{{8, 9}}, LINE(""));
 
       storage.add_slot();
       storage.push_back_to_partition(1, 4);
       storage.push_back_to_partition(1, -5);
       // [8,9][4,-5]
 
-      check_equality(storage, Storage{{8, 9}, {4, -5}});
+      check_equality(storage, Storage{{8, 9}, {4, -5}}, LINE(""));
 
       {
         auto iter = storage.begin_partition(0);
         iter++;
         *iter = -5;
         auto next = storage.erase_from_partition(0, 0);
-        check_equality<std::size_t>(-5, *next);
+        check_equality(-5, *next, LINE(""));
       }
       // [-5][4,-5]
 
-      check_equality(storage, Storage{{-5}, {4, -5}});
+      check_equality(storage, Storage{{-5}, {4, -5}}, LINE(""));
 
 
       {
         auto next = storage.erase_from_partition(0, 2);
-        check(next == storage.end_partition(0));
+        check(next == storage.end_partition(0), LINE(""));
       }
       // [-5][4,-5]
 
-      check_equality(storage, Storage{{-5}, {4, -5}});
+      check_equality(storage, Storage{{-5}, {4, -5}}, LINE(""));
 
       {
         auto next = storage.erase_from_partition(1, 1);
@@ -622,26 +634,26 @@ namespace sequoia
       }
       // [-5][4]
 
-      check_equality(storage, Storage{{-5}, {4}});
+      check_equality(storage, Storage{{-5}, {4}}, LINE(""));
 
       storage.push_back_to_partition(0, 6);
       storage.push_back_to_partition(1, --storage.cend_partition(0));
       // [-5,6][4,6]
 
-      check_equality(storage, Storage{{-5, 6}, {4, 6}});
+      check_equality(storage, Storage{{-5, 6}, {4, 6}}, LINE(""));
 
       storage.push_back_to_partition(0, -2);
       storage.push_back_to_partition(1, --storage.cend_partition(0));
       // [-5,6,-2][4,6,-2]
 
-      check_equality(storage, Storage{{-5, 6, -2}, {4, 6, -2}});
+      check_equality(storage, Storage{{-5, 6, -2}, {4, 6, -2}}, LINE(""));
 
       auto found{std::find_if(storage.begin_partition(0), storage.end_partition(0),
         [](const int& elt) { return elt == 6; }
       )};
       
       if(check(found != storage.end_partition(0)))
-        check_equality<std::size_t>(6, *found);
+        check_equality(6, *found, LINE(""));
 
       erase_from_partition_if(storage, 0, [](const int& elt) { return elt == 6; });
       // [-5,-2][4,6,-2]
@@ -660,41 +672,12 @@ namespace sequoia
 
       // [-5,-2][4,6,-2,7,7]
 
-      check_equality(storage, Storage{{-5, -2}, {4, 6, -2, 7, 7}});
+      check_equality(storage, Storage{{-5, -2}, {4, 6, -2, 7, 7}}, LINE(""));
 
       erase_from_partition_if(storage, 1, [](const int& elt) { return elt == 7; });
       // [-5,-2][4,6,-2]
 
-      check_equality(storage, Storage{{-5, -2}, {4, 6, -2}});
-
-      // now check copy constructor etc
-
-      Storage storage2(storage);
-
-      check(storage == storage2);
-      storage2.push_back_to_partition(0, 7);
-      // storage2: [-5,-2, 7][4,6,-2]
-      check(storage != storage2);
-
-      // Check original has been unchanged (bearing in mind
-      // possible presence of shared_ptrs
-
-      check_equality(storage, Storage{{-5, -2}, {4, 6, -2}});
-
-      // Now check new instance
-
-      check_equality(storage2, Storage{{-5, -2, 7}, {4, 6, -2}});
-
-      std::swap(storage, storage2);
-
-      check_equality(storage2, Storage{{-5, -2}, {4, 6, -2}});
-      check_equality(storage, Storage{{-5, -2, 7}, {4, 6, -2}});
-
-      storage = storage2;
-      check(storage == storage2);
-
-      check_equality(storage2, Storage{{-5, -2}, {4, 6, -2}});
-      check_equality(storage, Storage{{-5, -2}, {4, 6, -2}});
+      check_equality(storage, Storage{{-5, -2}, {4, 6, -2}}, LINE(""));
 
       return storage;
     }
