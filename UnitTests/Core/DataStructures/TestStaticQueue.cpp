@@ -1,3 +1,10 @@
+////////////////////////////////////////////////////////////////////
+//                 Copyright Oliver Rosten 2019.                  //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
 #include "TestStaticQueue.hpp"
 #include "StaticQueueTestingUtilities.hpp"
 
@@ -40,7 +47,7 @@ namespace sequoia::unit_testing
 
     t.pop();
     t.push(1);
-    check_equality(s, t, LINE(""));
+    check_equality(t, s, LINE(""));
   }
 
   constexpr auto test_static_queue::make_static_queue_2()
@@ -70,27 +77,27 @@ namespace sequoia::unit_testing
 
     check_exception_thrown<std::logic_error>([]() { static_queue<int, 2>{1, 2, 3}; }, LINE("Can't construct queue of depth 2 with 3 elements"));
 
-    check_equality<std::size_t>(0, a.size(), LINE(""));
+    check_equality(a.size(), 0ul, LINE(""));
     check(a.empty(), LINE(""));
     
     a.push(5);
     a.push(7);
-    check_equality(static_queue<int, 2>{5, 7}, a, LINE(""));
+    check_equality(a, static_queue<int, 2>{5, 7}, LINE(""));
     
     check_exception_thrown<std::logic_error>([&a]() { a.push(0); }, LINE("Trying to push 3 elements to a queue of depth 2"));
     
     a.pop();
-    check_equality(static_queue<int, 2>{7}, a, LINE(""));
+    check_equality(a, static_queue<int, 2>{7}, LINE(""));
 
     a.push(4);
-    check_equality(static_queue<int, 2>{7, 4}, a, LINE(""));
+    check_equality(a, static_queue<int, 2>{7, 4}, LINE(""));
 
     check_exception_thrown<std::logic_error>([&a]() { a.push(0); }, LINE("Trying to push 3 elements to a queue of depth 2"));
 
     a.pop();
-    check_equality(static_queue<int, 2>{4}, a, LINE(""));
+    check_equality(a, static_queue<int, 2>{4}, LINE(""));
 
     a.pop();
-    check_equality(static_queue<int, 2>{}, a, LINE(""));
+    check_equality(a, static_queue<int, 2>{}, LINE(""));
   }
 }

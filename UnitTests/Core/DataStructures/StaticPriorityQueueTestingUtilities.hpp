@@ -16,8 +16,10 @@ namespace sequoia::unit_testing
   template<class T, std::size_t MaxDepth, class Compare>
   struct details_checker<data_structures::static_priority_queue<T, MaxDepth, Compare>>
   {
+    using type = data_structures::static_priority_queue<T, MaxDepth, Compare>;
+    
     template<class Logger>
-    static void check(Logger& logger, const data_structures::static_priority_queue<T, MaxDepth, Compare>& queue, const data_structures::static_priority_queue<T, MaxDepth, Compare>& prediction, std::string_view description="")
+    static void check(Logger& logger, const type& queue, const type& prediction, std::string_view description="")
     {
       check_equality(logger, queue.empty(), prediction.empty(), impl::concat_messages(description, "Inconsistent emptiness"));
       check_equality(logger, queue.size(), prediction.size(), impl::concat_messages(description, "Inconsistent size"));

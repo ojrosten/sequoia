@@ -1,3 +1,10 @@
+////////////////////////////////////////////////////////////////////
+//                 Copyright Oliver Rosten 2019.                  //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
 #include "TestStaticPriorityQueue.hpp"
 #include "StaticPriorityQueueTestingUtilities.hpp"
 
@@ -42,10 +49,10 @@ namespace sequoia::unit_testing
     check_exception_thrown<std::logic_error>([]() { queue_t{1, 2}; }, LINE("Can't construct queue of depth 1 with 2 elements"));
 
     t.pop();
-    check_equality(queue_t{}, t, LINE(""));
+    check_equality(t, queue_t{}, LINE(""));
     
     t.push(1);
-    check_equality(queue_t{1}, t, LINE(""));
+    check_equality(t, queue_t{1}, LINE(""));
   }
 
   void test_static_priority_queue::check_depth_2()
@@ -57,8 +64,8 @@ namespace sequoia::unit_testing
       constexpr queue_t s{1, 2};
       queue_t t{4, 3};
 
-      check_equality(2, s.top(), LINE(""));
-      check_equality(4, t.top(), LINE(""));
+      check_equality(s.top(), 2, LINE(""));
+      check_equality(t.top(), 4, LINE(""));
       
       check_regular_semantics(s, t, LINE("Standard Semantics"));
 
@@ -66,10 +73,10 @@ namespace sequoia::unit_testing
       check_exception_thrown<std::logic_error>([]() { queue_t{1, 2, 3}; }, LINE("Can't construct queue of depth 2 with 3 elements"));
 
       t.pop();
-      check_equality(queue_t{3}, t, LINE(""));
+      check_equality(t, queue_t{3}, LINE(""));
 
       t.push(5);
-      check_equality(queue_t{5, 3}, t, LINE(""));
+      check_equality(t, queue_t{5, 3}, LINE(""));
       
     }
 
@@ -87,7 +94,7 @@ namespace sequoia::unit_testing
       };
       
       constexpr static_priority_queue<int, 2, comp> s{{3, 2}, comp{3}}, t{{4, 6}, comp{2}};
-      check_equality(2, s.top(), LINE(""));
+      check_equality(s.top(), 2, LINE(""));
 
       check_regular_semantics(s, t, LINE("Standard semantics"));
     }
@@ -114,20 +121,20 @@ namespace sequoia::unit_testing
     using queue_t = static_priority_queue<int, 3>;
 
     constexpr queue_t s{make_static_priority_queue_3()};
-    check_equality(queue_t{8, 2, 6}, s, LINE(""));
+    check_equality(s, queue_t{8, 2, 6}, LINE(""));
 
     auto t{s};
-    check_equality(queue_t{8, 2, 6}, t, LINE(""));
+    check_equality(t, queue_t{8, 2, 6}, LINE(""));
 
     t.pop();
-    check_equality(queue_t{6, 2}, t, LINE(""));
+    check_equality(t, queue_t{6, 2}, LINE(""));
 
     check_regular_semantics(s, t, LINE("Standard semantics"));
 
     t.pop();
-    check_equality(queue_t{2}, t, LINE(""));
+    check_equality(t, queue_t{2}, LINE(""));
 
     t.pop();
-    check_equality(queue_t{}, t, LINE(""));
+    check_equality(t, queue_t{}, LINE(""));
   }
 }
