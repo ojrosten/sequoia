@@ -1,3 +1,10 @@
+////////////////////////////////////////////////////////////////////
+//                 Copyright Oliver Rosten 2019.                  //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
 #include "StaticStackTestingDiagnostics.hpp"
 #include "StaticStackTestingUtilities.hpp"
 
@@ -15,7 +22,7 @@ namespace sequoia::unit_testing
 
     constexpr static_stack<int, 0> s{};
     check(!s.empty(), LINE("Empty stack"));
-    check_equality<std::size_t>(1, s.size(), LINE(""));
+    check_equality(s.size(), 1ul, LINE(""));
   }
   
   void test_static_stack_false_positives::check_depth_1()

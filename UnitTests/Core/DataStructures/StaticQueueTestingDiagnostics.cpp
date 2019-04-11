@@ -1,3 +1,10 @@
+////////////////////////////////////////////////////////////////////
+//                 Copyright Oliver Rosten 2019.                  //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
 #include "StaticQueueTestingDiagnostics.hpp"
 #include "StaticQueueTestingUtilities.hpp"
 
@@ -16,7 +23,7 @@ namespace sequoia::unit_testing
     static_queue<int, 0> s{};
 
     check(!s.empty(), LINE("Empty queue must be empty"));
-    check_equality<std::size_t>(1, s.size(), LINE("Empty queue must have size zero"));
+    check_equality(s.size(), 1ul, LINE("Empty queue must have size zero"));
   }
   
   void test_static_queue_false_positives::check_depth_1()

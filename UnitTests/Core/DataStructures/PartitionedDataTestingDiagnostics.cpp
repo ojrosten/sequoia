@@ -64,53 +64,53 @@ namespace sequoia::unit_testing
     check_equality(e, f, LINE(""));
     check_equality(g, h, LINE(""));
        
-    check_equality(1ul, d.size(), LINE("Size 0 should not compare equal to 1"));
-    check_equality(0ul, e.size(), LINE("Size 1 should not compare equal to 0"));
+    check_equality(d.size(), 1ul, LINE("Size 0 should not compare equal to 1"));
+    check_equality(e.size(), 0ul, LINE("Size 1 should not compare equal to 0"));
 
-    check_equality(1ul, d.num_partitions(), LINE(""));
-    check_equality(0ul, e.num_partitions(), LINE(""));
-    check_equality(2ul, g.num_partitions(), LINE(""));
-    check_equality(1ul, h.num_partitions(), LINE(""));
+    check_equality(d.num_partitions(), 1ul, LINE(""));
+    check_equality(e.num_partitions(), 0ul, LINE(""));
+    check_equality(g.num_partitions(), 2ul, LINE(""));
+    check_equality(h.num_partitions(), 1ul, LINE(""));
 
-    check_equality(value_type{2}, *e.begin_partition(0), LINE(""));
-    check_equality(value_type{2}, *e.cbegin_partition(0), LINE(""));
-    check_equality(value_type{2}, *e.rbegin_partition(0), LINE(""));
-    check_equality(value_type{2}, *e.crbegin_partition(0), LINE(""));
-    check_equality(value_type{2}, e[0][0], LINE(""));
+    check_equality(*e.begin_partition(0), value_type{2}, LINE(""));
+    check_equality(*e.cbegin_partition(0), value_type{2}, LINE(""));
+    check_equality(*e.rbegin_partition(0), value_type{2}, LINE(""));
+    check_equality(*e.crbegin_partition(0), value_type{2}, LINE(""));
+    check_equality(e[0][0], value_type{2}, LINE(""));
 
-    check_equality(value_type{1}, *(g.end_partition(0) -1), LINE(""));
-    check_equality(value_type{1}, *(g.cend_partition(0) -1), LINE(""));
-    check_equality(value_type{2}, *(g.rend_partition(0) - 1), LINE(""));
-    check_equality(value_type{2}, *(g.crend_partition(0) - 1), LINE(""));
-    check_equality(value_type{1}, g[0][1], LINE(""));
+    check_equality(*(g.end_partition(0) -1), value_type{1}, LINE(""));
+    check_equality(*(g.cend_partition(0) -1), value_type{1}, LINE(""));
+    check_equality(*(g.rend_partition(0) - 1), value_type{2}, LINE(""));
+    check_equality(*(g.crend_partition(0) - 1), value_type{2}, LINE(""));
+    check_equality(g[0][1], value_type{1}, LINE(""));
 
-    check_equality(value_type{2}, *h.begin_partition(0), LINE(""));
-    check_equality(value_type{2}, *h.cbegin_partition(0), LINE(""));
-    check_equality(value_type{2}, *h.rbegin_partition(0), LINE(""));
-    check_equality(value_type{2}, *h.crbegin_partition(0), LINE(""));
-    check_equality(value_type{2}, h[0][0], LINE(""));
+    check_equality(*h.begin_partition(0), value_type{2}, LINE(""));
+    check_equality(*h.cbegin_partition(0), value_type{2}, LINE(""));
+    check_equality(*h.rbegin_partition(0), value_type{2}, LINE(""));
+    check_equality(*h.crbegin_partition(0), value_type{2}, LINE(""));
+    check_equality(h[0][0], value_type{2}, LINE(""));
 
-    check_equality(value_type{1}, *h.begin_partition(1), LINE(""));
-    check_equality(value_type{1}, *h.cbegin_partition(1), LINE(""));
-    check_equality(value_type{1}, *h.rbegin_partition(1), LINE(""));
-    check_equality(value_type{1}, *h.crbegin_partition(1), LINE(""));
-    check_equality(value_type{1}, h[1][0], LINE(""));
+    check_equality(*h.begin_partition(1), value_type{1}, LINE(""));
+    check_equality(*h.cbegin_partition(1), value_type{1}, LINE(""));
+    check_equality(*h.rbegin_partition(1), value_type{1}, LINE(""));
+    check_equality(*h.crbegin_partition(1), value_type{1}, LINE(""));
+    check_equality(h[1][0], value_type{1}, LINE(""));
 
     
-    check_equality(value_type{2}, *ce.begin_partition(0), LINE(""));
-    check_equality(value_type{2}, *ce.rbegin_partition(0), LINE(""));
-    check_equality(value_type{2}, ce[0][0], LINE(""));
+    check_equality(*ce.begin_partition(0), value_type{2}, LINE(""));
+    check_equality(*ce.rbegin_partition(0), value_type{2}, LINE(""));
+    check_equality(ce[0][0], value_type{2}, LINE(""));
 
-    check_equality(value_type{1}, *(cg.end_partition(0) -1), LINE(""));
-    check_equality(value_type{2}, *(cg.rend_partition(0) - 1), LINE(""));
-    check_equality(value_type{1}, cg[0][1], LINE(""));
+    check_equality(*(cg.end_partition(0) -1), value_type{1}, LINE(""));
+    check_equality(*(cg.rend_partition(0) - 1), value_type{2}, LINE(""));
+    check_equality(cg[0][1], value_type{1}, LINE(""));
 
-    check_equality(value_type{2}, *ch.begin_partition(0), LINE(""));
-    check_equality(value_type{2}, *ch.rbegin_partition(0), LINE(""));
-    check_equality(value_type{2}, ch[0][0], LINE(""));
+    check_equality(*ch.begin_partition(0), value_type{2}, LINE(""));
+    check_equality(*ch.rbegin_partition(0), value_type{2}, LINE(""));
+    check_equality(ch[0][0], value_type{2}, LINE(""));
 
-    check_equality(value_type{1}, *ch.begin_partition(1), LINE(""));
-    check_equality(value_type{1}, *h.crbegin_partition(1), LINE(""));
-    check_equality(value_type{1}, ch[1][0], LINE(""));
+    check_equality(*ch.begin_partition(1), value_type{1}, LINE(""));
+    check_equality(*h.crbegin_partition(1), value_type{1}, LINE(""));
+    check_equality(ch[1][0], value_type{1}, LINE(""));
   }
 }
