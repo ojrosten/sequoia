@@ -69,11 +69,11 @@ namespace sequoia::unit_testing
 
     check_equivalence(s, std::initializer_list<int>{}, LINE(""));
 
-    check_equality(2ul, t.capacity(), LINE("Capacity"));
+    check_equality(t.capacity(), 2ul, LINE("Capacity"));
     t.shrink_to_fit();
-    check_equality(0ul, t.capacity(), LINE("Capacity"));
+    check_equality(t.capacity(), 0ul, LINE("Capacity"));
     t.reserve(2);
-    check_equality(2ul, t.capacity(), LINE("Capacity"));
+    check_equality(t.capacity(), 2ul, LINE("Capacity"));
 
     t = monotonic_sequence<int>{8, 4, 3};
     // - ; 8,4,3

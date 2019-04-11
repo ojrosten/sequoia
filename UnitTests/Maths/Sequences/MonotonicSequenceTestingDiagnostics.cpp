@@ -24,16 +24,16 @@ namespace sequoia::unit_testing
     check(!s.empty(), LINE("Empty sequence should not report as non-empty"));
     check(t.empty(), LINE("Non-empty sequence should not report as empty"));
 
-    check_equality(1ul, s.size(), LINE("Empty sequence should not report non-zero size"));
-    check_equality(0ul, t.size(), LINE("Non-Eepty sequence should not report zero size"));
+    check_equality(s.size(), 1ul, LINE("Empty sequence should not report non-zero size"));
+    check_equality(t.size(), 0ul, LINE("Non-Eepty sequence should not report zero size"));
 
-    check_equality(2, t.back(), LINE("Back element equal to 1 should not report as 2"));
-    check_equality(2, t.front(), LINE("Front element equal to 1 should not report as 2"));
-    check_equality(2, t[0], LINE("Zeroth element equal to 1 should not report as 2"));
-    check_equality(2, *t.begin(), LINE("begin() pointing to 1 should not dereference as 2"));
-    check_equality(2, *t.cbegin(), LINE("cbegin() pointing to 1 should not dereference as 2"));
-    check_equality(2, *t.rbegin(), LINE("rbegin() pointing to 1 should not dereference as 2"));
-    check_equality(2, *t.crbegin(), LINE("crbegin() pointing to 1 should not dereference as 2"));
+    check_equality(t.back(), 2, LINE("Back element equal to 1 should not report as 2"));
+    check_equality(t.front(), 2, LINE("Front element equal to 1 should not report as 2"));
+    check_equality(t[0], 2, LINE("Zeroth element equal to 1 should not report as 2"));
+    check_equality(*t.begin(), 2, LINE("begin() pointing to 1 should not dereference as 2"));
+    check_equality(*t.cbegin(), 2, LINE("cbegin() pointing to 1 should not dereference as 2"));
+    check_equality(*t.rbegin(), 2, LINE("rbegin() pointing to 1 should not dereference as 2"));
+    check_equality(*t.crbegin(), 2, LINE("crbegin() pointing to 1 should not dereference as 2"));
 
     s.push_back(2);
     // 2 ; 1
@@ -48,18 +48,18 @@ namespace sequoia::unit_testing
     t.insert(t.end(), 0);
     // 3,2 ; 1, 0
 
-    check_equality(1, t.back(), LINE("Back element equal to 0 should not report as 1"));
-    check_equality(0, t.front(), LINE("Front element equal to 0 should not report as 1"));
-    check_equality(0, t[0], LINE("Zeroth element equal to 1 should not report as 1"));
-    check_equality(1, t[1], LINE("First element equal to 0 should not report as 1"));
-    check_equality(0, *t.begin(), LINE("begin() pointing to 1 should not dereference as 0"));
-    check_equality(0, *t.cbegin(), LINE("cbegin() pointing to 1 should not dereference as 0"));
-    check_equality(1, *t.rbegin(), LINE("rbegin() pointing to 0 should not dereference as 1"));
-    check_equality(1, *t.crbegin(), LINE("crbegin() pointing to 0 should not dereference as 1"));
-    check_equality(1, *(t.end()-1), LINE("iterator pointing to 0 should not dereference as 1"));
-    check_equality(1, *(t.cend()-1), LINE("citerator pointing to 0 should not dereference as 1"));
-    check_equality(0, *(t.rend()-1), LINE("riterator pointing to 1 should not dereference as 0"));
-    check_equality(0, *(t.crend()-1), LINE("criterator pointing to 1 should not dereference as 0"));
+    check_equality(t.back(), 1, LINE("Back element equal to 0 should not report as 1"));
+    check_equality(t.front(), 0, LINE("Front element equal to 0 should not report as 1"));
+    check_equality(t[0], 0, LINE("Zeroth element equal to 1 should not report as 1"));
+    check_equality(t[1], 1, LINE("First element equal to 0 should not report as 1"));
+    check_equality(*t.begin(), 0, LINE("begin() pointing to 1 should not dereference as 0"));
+    check_equality(*t.cbegin(), 0, LINE("cbegin() pointing to 1 should not dereference as 0"));
+    check_equality(*t.rbegin(), 1, LINE("rbegin() pointing to 0 should not dereference as 1"));
+    check_equality(*t.crbegin(), 1, LINE("crbegin() pointing to 0 should not dereference as 1"));
+    check_equality(*(t.end()-1), 1, LINE("iterator pointing to 0 should not dereference as 1"));
+    check_equality(*(t.cend()-1), 1, LINE("citerator pointing to 0 should not dereference as 1"));
+    check_equality(*(t.rend()-1), 0, LINE("riterator pointing to 1 should not dereference as 0"));
+    check_equality(*(t.crend()-1), 0, LINE("criterator pointing to 1 should not dereference as 0"));
 
     check_equivalence(s, std::initializer_list<int>{3, 1}, LINE("Inequivalent sequences of size two"));
     check_equivalence(s, std::initializer_list<int>{1, 2}, LINE("Inequivalent sequences of size two"));
