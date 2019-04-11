@@ -28,8 +28,8 @@ namespace sequoia
       // proxy: elt  --->  handle -----> Pool 
       //                      ^-----------               
 
-      check_equality<size_t>(1, pool.size());
-      check_equality<int>(val, elt.get());
+      check_equality(pool.size(), 1ul, LINE(""));
+      check_equality(elt.get(), val);
 
       return pool;
     }
@@ -39,143 +39,143 @@ namespace sequoia
       using namespace data_sharing;
       data_pool<int> pool{make_int_pool(5)};           
 
-      check_equality<size_t>(1, pool.size());
+      check_equality(pool.size(), 1ul, LINE(""));
 
       auto elt = pool.make(5);
 
-      check_equality<size_t>(1, pool.size());
-      check_equality<int>(5, elt.get());
+      check_equality(pool.size(), 1ul, LINE(""));
+      check_equality(elt.get(), 5, LINE(""));
 
       auto elt2 = pool.make(6);
-      check_equality<size_t>(2, pool.size());
-      check_equality<int>(5, elt.get());
-      check_equality<int>(6, elt2.get());
+      check_equality(pool.size(), 2ul, LINE(""));
+      check_equality(elt.get(), 5, LINE(""));
+      check_equality(elt2.get(), 6, LINE(""));
 
       
       data_pool<int> pool2{make_int_pool(4)};
 
       auto _2elt = pool2.make(4);
 
-      check_equality<size_t>(1, pool2.size());
-      check_equality<int>(4, _2elt.get());
+      check_equality(pool2.size(), 1ul, LINE(""));
+      check_equality(_2elt.get(), 4, LINE(""));
 
       auto _2elt2 = pool2.make(7);
 
-      check_equality<size_t>(2, pool2.size());
-      check_equality<int>(4, _2elt.get());
-      check_equality<int>(7, _2elt2.get());
+      check_equality(pool2.size(), 2ul, LINE(""));
+      check_equality(_2elt.get(), 4, LINE(""));
+      check_equality(_2elt2.get(), 7, LINE(""));
 
       auto _2elt3 = pool2.make(-3);
       
-      check_equality<size_t>(3, pool2.size());
-      check_equality<int>(4, _2elt.get());
-      check_equality<int>(7, _2elt2.get());
-      check_equality<int>(-3, _2elt3.get());
+      check_equality(pool2.size(), 3ul, LINE(""));
+      check_equality(_2elt.get(), 4, LINE(""));
+      check_equality(_2elt2.get(), 7, LINE(""));
+      check_equality(_2elt3.get(), -3, LINE(""));
 
       swap(pool, pool2);
 
       // Pools are swapped...
-      check_equality<size_t>(3, pool.size());
-      check_equality<size_t>(2, pool2.size());
+      check_equality(pool.size(), 3ul, LINE(""));
+      check_equality(pool2.size(), 2ul, LINE(""));
 
       // But proxies still point to the same things!
 
       // These are now stored in pool 1
-      check_equality<int>(4, _2elt.get());
-      check_equality<int>(7, _2elt2.get());
-      check_equality<int>(-3, _2elt3.get());
+      check_equality(_2elt.get(), 4, LINE(""));
+      check_equality(_2elt2.get(), 7, LINE(""));
+      check_equality(_2elt3.get(), -3, LINE(""));
 
       // and these are now stored in pool 2
-      check_equality<int>(5, elt.get());
-      check_equality<int>(6, elt2.get());
+      check_equality(elt.get(), 5, LINE(""));
+      check_equality(elt2.get(), 6, LINE(""));
 
       elt.set(-6);
 
-      check_equality<size_t>(3, pool.size(), LINE("Will increase if pool pointers haven't ben swapped"));
-      check_equality<size_t>(3, pool2.size(), LINE(""));
+      check_equality(pool.size(), 3ul, LINE("Will increase if pool pointers haven't ben swapped"));
+      check_equality(pool2.size(), 3ul, LINE(""));
 
       auto elt3 = pool.make(1);
       
-      check_equality<size_t>(4, pool.size(), LINE(""));
-      check_equality<int>(1, elt3.get(), LINE(""));
+      check_equality(pool.size(), 4ul, LINE(""));
+      check_equality(elt3.get(), 1, LINE(""));
 
       auto _2elt4 = pool2.make(10);
 
-      check_equality<size_t>(4, pool2.size(), LINE(""));
-      check_equality<size_t>(10, _2elt4.get(), LINE(""));
+      check_equality(pool2.size(), 4ul, LINE(""));
+      check_equality(_2elt4.get(), 10, LINE(""));
     }
     
     void data_pool_test::test_pooled()
     {
       using namespace data_sharing;
       data_pool<int> pool{};
-      check_equality<size_t>(0, pool.size());
+      check_equality(pool.size(), 0ul, LINE(""));
 
       auto elt = pool.make(3);
       // 3(1)
 
-      check_equality<size_t>(1, pool.size(), LINE(""));
-      check_equality<int>(3, elt.get(), LINE(""));
+      check_equality(pool.size(), 1ul, LINE(""));
+      check_equality(elt.get(), 3, LINE(""));
 
       elt.set(4);
       // 3(0), 4(1)
-      check_equality<size_t>(2, pool.size(), LINE(""));
-      check_equality(4, elt.get(), LINE(""));
+      check_equality(pool.size(), 2ul, LINE(""));
+      check_equality(elt.get(), 4, LINE(""));
 
       auto elt2 = pool.make(4);
       // 3(0), 4(2)
-      check_equality<size_t>(2, pool.size(), LINE(""));
-      check_equality(4, elt.get(), LINE(""));
-      check_equality(4, elt2.get(), LINE(""));
+      check_equality(pool.size(), 2ul, LINE(""));
+      check_equality(elt.get(), 4, LINE(""));
+      check_equality(elt2.get(), 4, LINE(""));
 
       auto elt3 = pool.make(5);
       // 3(0), 4(2), 5(1)
-      check_equality<size_t>(3, pool.size(), LINE(""));
-      check_equality(4, elt.get(), LINE(""));
-      check_equality(4, elt2.get(), LINE(""));
-      check_equality(5, elt3.get(), LINE(""));
+      check_equality(pool.size(), 3ul, LINE(""));
+      check_equality(elt.get(), 4, LINE(""));
+      check_equality(elt2.get(), 4, LINE(""));
+      check_equality(elt3.get(), 5, LINE(""));
 
       elt2.set(5);
       // 3(0), 4(1), 5(2)
-      check_equality<size_t>(3, pool.size(), LINE(""));
-      check_equality(4, elt.get(), LINE(""));
-      check_equality(5, elt2.get(), LINE(""));
-      check_equality(5, elt3.get(), LINE(""));
+      check_equality(pool.size(), 3ul, LINE(""));
+      check_equality(elt.get(), 4, LINE(""));
+      check_equality(elt2.get(), 5, LINE(""));
+      check_equality(elt3.get(), 5, LINE(""));
 
       elt3.set(6);      
       // 3(0), 4(1), 5(1), 6(1)
-      check_equality<size_t>(4, pool.size(), LINE(""));
-      check_equality(4, elt.get(), LINE(""));
-      check_equality(5, elt2.get(), LINE(""));
-      check_equality(6, elt3.get(), LINE(""));
+      check_equality(pool.size(), 4ul, LINE(""));
+      check_equality(elt.get(), 4, LINE(""));
+      check_equality(elt2.get(), 5, LINE(""));
+      check_equality(elt3.get(), 6, LINE(""));
 
       elt.mutate([](auto& e) { e = 3;});      
       // 3(1), 4(0), 5(1), 6(1)
-      check_equality<size_t>(4, pool.size(), LINE(""));
-      check_equality(3, elt.get(), LINE(""));
-      check_equality(5, elt2.get(), LINE(""));
-      check_equality(6, elt3.get(), LINE(""));
+      check_equality(pool.size(), 4ul, LINE(""));
+      check_equality(elt.get(), 3, LINE(""));
+      check_equality(elt2.get(), 5, LINE(""));
+      check_equality(elt3.get(), 6, LINE(""));
 
       elt3.mutate([](auto& e){ e = 7;});
       // 3(1), 4(0), 5(1), 6(0), 7(1)
-      check_equality<size_t>(5, pool.size(), LINE(""));
-      check_equality(3, elt.get(), LINE(""));
-      check_equality(5, elt2.get(), LINE(""));
-      check_equality(7, elt3.get(), LINE(""));
+      check_equality(pool.size(), 5ul, LINE(""));
+      check_equality(elt.get(), 3, LINE(""));
+      check_equality(elt2.get(), 5, LINE(""));
+      check_equality(elt3.get(), 7, LINE(""));
 
       elt2.mutate([](auto& e) { e = 3; });
       // 3(2), 4(0), 5(0), 6(0), 7(1)
-      check_equality<size_t>(5, pool.size(), LINE(""));
-      check_equality(3, elt.get(), LINE(""));
-      check_equality(3, elt2.get(), LINE(""));
-      check_equality(7, elt3.get(), LINE(""));
+      check_equality(pool.size(), 5ul, LINE(""));
+      check_equality(elt.get(), 3, LINE(""));
+      check_equality(elt2.get(), 3, LINE(""));
+      check_equality(elt3.get(), 7, LINE(""));
     }
 
     void data_pool_test::test_unpooled()
     {
       using namespace data_sharing;
       constexpr auto x = unpooled<double>::make(3.0);
-      check_equality<double>(3.0, x.get());
+      check_equality(x.get(), 3.0);
     }
   }
 }

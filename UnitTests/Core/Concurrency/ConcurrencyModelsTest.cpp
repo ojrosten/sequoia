@@ -51,13 +51,13 @@ namespace sequoia::unit_testing
       auto t{q.pop(std::try_to_lock)};
 
       t();
-      check_equality(1, a, LINE(""));
+      check_equality(a, 1, LINE(""));
       
       q.push(task_t{[&a](){ a+= 2; }});
       t = q.pop();
 
       t();
-      check_equality(3, a, LINE(""));
+      check_equality(a, 3, LINE(""));
 
       q.finish();
     }
@@ -74,7 +74,7 @@ namespace sequoia::unit_testing
       auto fut{t.get_future()};
       t();
       
-      check_equality(1, fut.get(), LINE(""));
+      check_equality(fut.get(), 1, LINE(""));
       
       q.push(task_t{[](){ return 2;}});
       t = q.pop();
@@ -82,7 +82,7 @@ namespace sequoia::unit_testing
       fut = t.get_future();
       t();
       
-      check_equality(2, fut.get(), LINE(""));
+      check_equality(fut.get(), 2, LINE(""));
 
       q.finish();
     }
@@ -183,20 +183,20 @@ namespace sequoia::unit_testing
     for(auto& f : futures.fast_futures)
     {
       auto results{f.get()};
-      if(check_equality(2ul, results.size(), LINE(message)))
+      if(check_equality(results.size(), 2ul, LINE(message)))
       {
-        check_equality(0, results[0], LINE(message));
-        check_equality(1, results[1], LINE(message));
+        check_equality(results[0], 0, LINE(message));
+        check_equality(results[1], 1, LINE(message));
       }
     }
 
     for(auto& f : futures.slow_futures)
     {
       auto results{f.get()};
-      if(check_equality(2ul, results.size(), LINE(message)))
+      if(check_equality(results.size(), 2ul, LINE(message)))
       {
-        check_equality(0, results[0], LINE(message));
-        check_equality(1, results[1], LINE(message));
+        check_equality(results[0], 0, LINE(message));
+        check_equality(results[1], 1, LINE(message));
       }
     }
   }
@@ -254,6 +254,6 @@ namespace sequoia::unit_testing
 
     threadModel.get();
 	
-    check_equality(std::vector<int>{0}, functor.get_data());
+    check_equality(functor.get_data(), std::vector<int>{0}, LINE(""));
   }    
 }
