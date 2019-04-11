@@ -24,9 +24,9 @@
 #include "PartitionedDataTest.hpp"
 #include "PartitionedDataTestingDiagnostics.hpp"
 
-#include "TestStaticStack.hpp"
-#include "TestStaticQueue.hpp"
-#include "TestStaticPriorityQueue.hpp"
+#include "StaticStackTest.hpp"
+#include "StaticQueueTest.hpp"
+#include "StaticPriorityQueueTest.hpp"
 #include "StaticStackTestingDiagnostics.hpp"
 #include "StaticQueueTestingDiagnostics.hpp"
 #include "StaticPriorityQueueTestingDiagnostics.hpp"
