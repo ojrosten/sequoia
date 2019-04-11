@@ -16,8 +16,10 @@ namespace sequoia::unit_testing
   template<class T, std::size_t MaxPushes>
   struct details_checker<data_structures::static_queue<T, MaxPushes>>
   {
+    using type = data_structures::static_queue<T, MaxPushes>;
+
     template<class Logger>
-    static void check(Logger& logger, const data_structures::static_queue<T, MaxPushes>& queue, const data_structures::static_queue<T, MaxPushes>& prediction, std::string_view description="")
+    static void check(Logger& logger, const type& queue, const type& prediction, std::string_view description="")
     {
       check_equality(logger, queue.empty(), prediction.empty(), impl::concat_messages(description, "Inconsistent emptiness"));
 

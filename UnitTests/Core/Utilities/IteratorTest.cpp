@@ -45,27 +45,27 @@ namespace sequoia::unit_testing
     *i = 5;
     // 3 5 1
 
-    check_equality({3, 5, 1}, a, LINE("Check changing pointee"));
-    check_equality(5, *i, LINE(""));
-    check_equality(3, i[-1], LINE(""));
-    check_equality(5, i[0], LINE(""));
-    check_equality(1, i[1], LINE(""));
+    check_equality(a, {3, 5, 1}, LINE("Check changing pointee"));
+    check_equality(*i, 5, LINE(""));
+    check_equality(i[-1], 3, LINE(""));
+    check_equality(i[0], 5, LINE(""));
+    check_equality(i[1], 1, LINE(""));
 
     i[-1] = 7;
     // 7 5 1
     
-    check_equality({7, 5, 1}, a, LINE("Check changing pointee via []"));
-    check_equality(5, *i, LINE(""));
-    check_equality(7, i[-1], LINE(""));
-    check_equality(5, i[0], LINE(""));
-    check_equality(1, i[1], LINE(""));
+    check_equality(a, {7, 5, 1}, LINE("Check changing pointee via []"));
+    check_equality(*i, 5, LINE(""));
+    check_equality(i[-1], 7, LINE(""));
+    check_equality(i[0], 5, LINE(""));
+    check_equality(i[1], 1, LINE(""));
 
     std::sort(custom_iter_t{a.begin()}, custom_iter_t{a.end()});
     // 1 5 7
     
-    check_equality(1, i[-1], LINE(""));
-    check_equality(5, i[0], LINE(""));
-    check_equality(7, i[1], LINE(""));
+    check_equality(i[-1], 1, LINE(""));
+    check_equality(i[0], 5, LINE(""));
+    check_equality(i[1], 7, LINE(""));
   }
 
   void iterator_test::test_const_iterator()
@@ -114,20 +114,20 @@ namespace sequoia::unit_testing
     *i = 5;
     // 3 0 5
 
-    check_equality({3, 0, 5}, a, LINE("Check changing pointee"));
-    check_equality(5, *i, LINE(""));
-    check_equality(5, i[0], LINE(""));
-    check_equality(0, i[1], LINE(""));
-    check_equality(3, i[2], LINE(""));
+    check_equality(a, {3, 0, 5}, LINE("Check changing pointee"));
+    check_equality(*i, 5, LINE(""));
+    check_equality(i[0], 5, LINE(""));
+    check_equality(i[1], 0, LINE(""));
+    check_equality(i[2], 3, LINE(""));
 
     i[2] = 7;
     // 7 0 5
     
-    check_equality({7, 0, 5}, a, LINE("Check changing pointee via []"));
-    check_equality(5, *i, LINE(""));
-    check_equality(5, i[0], LINE(""));
-    check_equality(0, i[1], LINE(""));
-    check_equality(7, i[2], LINE(""));
+    check_equality(a, {7, 0, 5}, LINE("Check changing pointee via []"));
+    check_equality(*i, 5, LINE(""));
+    check_equality(i[0], 5, LINE(""));
+    check_equality(i[1], 0, LINE(""));
+    check_equality(i[2], 7, LINE(""));
   }
 
   void iterator_test::test_const_reverse_iterator()
@@ -219,12 +219,12 @@ namespace sequoia::unit_testing
       scale = i.scale();
     }
     
-    check_equality(*begin * scale, *i, LINE(message));
-    check_equality(begin[0] * scale, i[0], LINE(message));
-    check_equality(begin[1] * scale, i[1], LINE(message));
-    check_equality(begin[2] * scale, i[2], LINE(message));
+    check_equality(*i, *begin * scale, LINE(message));
+    check_equality(i[0], begin[0] * scale, LINE(message));
+    check_equality(i[1], begin[1] * scale, LINE(message));
+    check_equality(i[2], begin[2] * scale, LINE(message));
 
-    check_equality(i.operator->(), pBegin, LINE("Operator ->"));
+    check_equality(i.operator->(), pBegin, LINE(std::string{message}.append( "Operator ->")));
 
     CustomIter j{end, args...};      
     check_regular_semantics(i, j, LINE("Regular semantics; one iterator at end"));
@@ -233,32 +233,32 @@ namespace sequoia::unit_testing
     check(j > i, LINE(message));
     check(i <= j, LINE(message));
     check(j >= i, LINE(message));
-    check_equality(distance(begin, end), distance(i, j), LINE(std::string{message}.append(" Check non-zero distance")));
+    check_equality(distance(i, j), distance(begin, end), LINE(std::string{message}.append(" Check non-zero distance")));
 
-    check_equality(begin[1] * scale, *++i, LINE(message));
-    check_equality(begin[1] * scale, *i++, LINE(message));
-    check_equality(begin[2] * scale, *i, LINE(message));
+    check_equality(*++i, begin[1] * scale, LINE(message));
+    check_equality(*i++, begin[1] * scale, LINE(message));
+    check_equality(*i, begin[2] * scale, LINE(message));
     check(++i == j, LINE(message));
     check(i <= j, LINE(message));
     check(j >= i, LINE(message));
 
-    check_equality(begin[2] * scale, *--i, LINE(message));
-    check_equality(begin[2] * scale, *i--, LINE(message));
-    check_equality(begin[1] * scale, *i, LINE(message));
+    check_equality(*--i, begin[2] * scale, LINE(message));
+    check_equality(*i--, begin[2] * scale, LINE(message));
+    check_equality(*i, begin[1] * scale, LINE(message));
 
     j = i - 1;
-    check_equality(begin[1] * scale, *i, LINE(message));
-    check_equality(begin[0] * scale, *j, LINE(message));
+    check_equality(*i, begin[1] * scale, LINE(message));
+    check_equality(*j, begin[0] * scale, LINE(message));
     check_regular_semantics(i, j, LINE(std::string{message}.append(" Regular semantics")));
 
     i = j + 2;
-    check_equality(begin[2] * scale, *i, LINE(message));
+    check_equality(*i, begin[2] * scale, LINE(message));
 
     i -= 1;
-    check_equality(begin[1] * scale, *i, LINE(message));
+    check_equality(*i, begin[1] * scale, LINE(message));
 
     j += 1;
-    check_equality(begin[1] * scale, *j, LINE(message));
+    check_equality(*j, begin[1] * scale, LINE(message));
 
     check(i == j, LINE(message));
     check_equality<int64_t>(0, distance(i, j), LINE(std::string{message}.append(" Check for distance of zero")));

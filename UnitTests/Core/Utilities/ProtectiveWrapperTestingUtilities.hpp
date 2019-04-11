@@ -16,10 +16,12 @@ namespace sequoia::unit_testing
   template<class T>
   struct details_checker<utilities::protective_wrapper<T, std::is_empty_v<T>>>
   {
+    using type = utilities::protective_wrapper<T, std::is_empty_v<T>>;
+    
     template<class Logger>
-    static void check(Logger& logger, const utilities::protective_wrapper<T, std::is_empty_v<T>>& reference, const utilities::protective_wrapper<T, std::is_empty_v<T>>& actual, std::string_view description="")
+    static void check(Logger& logger, const type& wrapper, const type& prediction, std::string_view description="")
     {
-      check_equality(logger, reference.get(), actual.get(), description);
+      check_equality(logger, wrapper.get(), prediction.get(), description);
     }
   };
 
