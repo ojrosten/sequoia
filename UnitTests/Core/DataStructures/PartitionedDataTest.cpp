@@ -34,68 +34,7 @@ namespace sequoia
       test_bucketed_capacity<int, independent<int>, false>();
       test_bucketed_capacity<int, shared<int>, false>();
     }
-
-    template<class S, class T>
-    bool partitioned_data_test::check_constexpr_partitions(S& storage, std::initializer_list<std::initializer_list<T>> answers)
-    {
-      std::vector<std::vector<T>> ans;
-      for(const auto& list : answers)
-      {
-        ans.emplace_back();
-        for(const auto& element : list)
-        {
-          ans.back().emplace_back(element);
-        }
-      }
-
-      return check_constexpr_partitions(storage, ans);
-    }
-
-    template<class S, class T>
-    bool partitioned_data_test::check_constexpr_partitions(const S& storage, const std::vector<std::vector<T>>& answers)
-    {
-      const auto numFailures{this->failures()};
-        
-      using cp_iter = typename S::const_partition_iterator;
-      using crp_iter = typename S::const_reverse_partition_iterator;
-
-      const std::size_t numPartitions{answers.size()};
-      check_equality<std::size_t>(numPartitions, storage.num_partitions(), "Storage does not have expected number of partitions");
-      std::size_t nElements{0};
-      for(const auto& ans : answers)
-      {
-        nElements += ans.size();
-      }
-      check_equality<std::size_t>(nElements, storage.size(), "Storage does not have the expected number of elements");
-
-      if(numPartitions == storage.num_partitions())
-      {
-        for(auto ansIter = answers.cbegin(); ansIter != answers.cend(); ++ansIter)
-        {
-          const std::size_t partitionIndex{static_cast<std::size_t>(std::distance(answers.cbegin(), ansIter))};
-          const std::size_t partitionSize{ansIter->size()};
-          const std::string indexStr{std::to_string(partitionIndex)};
-          check_equality<std::size_t>(partitionSize, distance(storage.cbegin_partition(partitionIndex), storage.cend_partition(partitionIndex)), "Partition " + indexStr + " not of expceted size");
-          {
-            cp_iter cpiter{storage.cbegin_partition(partitionIndex)};
-            for(auto aiter = ansIter->cbegin(); aiter != ansIter->cend(); ++aiter, ++cpiter)
-            {
-              check_equality<T>(*aiter, *cpiter, "Results wrong for const forward iteration through partition " + indexStr);
-            }
-          }
-          {
-            crp_iter crpiter{storage.crbegin_partition(partitionIndex)};
-            for(auto ariter = ansIter->crbegin(); ariter != ansIter->crend(); ++ariter,++crpiter)
-            {
-              check_equality<T>(*ariter, *crpiter, "Results wrong for const reverse iteration through partition " + indexStr);
-            }
-          }
-        }
-      }
-
-      return this->failures() == numFailures;
-    }
-
+    
     void partitioned_data_test::test_static_storage()
     {
       using namespace data_structures;
@@ -144,11 +83,20 @@ namespace sequoia
 
       {
         using ndc = no_default_constructor;
-        constexpr static_contiguous_storage<no_default_constructor, 1, 1> storage{{1}};
-        check_constexpr_partitions(storage, {{ndc{1}}});
+        using prediction_t = std::initializer_list<std::initializer_list<ndc>>;
 
-        constexpr static_contiguous_storage<no_default_constructor, 3, 5> storage2{{1, 1}, {0}, {2, 4}};
-        check_constexpr_partitions(storage2, {{ndc{1}, ndc{1}}, {ndc{0}}, {ndc{2}, ndc{4}}});
+        {
+          using storage_t = static_contiguous_storage<no_default_constructor, 1, 1>;      
+          constexpr storage_t storage{{1}};
+          
+          check_equivalence(storage, prediction_t{{ndc{1}}}, LINE(""));
+        }
+
+        {
+          using storage_t = static_contiguous_storage<no_default_constructor, 3, 5>;
+          constexpr storage_t storage2{{1, 1}, {0}, {2, 4}};
+          check_equivalence(storage2, prediction_t{{ndc{1}, ndc{1}}, {ndc{0}}, {ndc{2}, ndc{4}}}, LINE(""));
+        }
       }
     }
     

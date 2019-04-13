@@ -44,12 +44,6 @@ namespace sequoia
       
       void run_tests() override;
 
-      template<class S, class T>
-      bool check_constexpr_partitions(S& storage, std::initializer_list<std::initializer_list<T>> answers);
-
-      template<class S, class T>
-      bool check_constexpr_partitions(const S& storage, const std::vector<std::vector<T>>& answers);
-      
       void test_storage();
       
       template <class Storage> Storage test_generic_storage();
