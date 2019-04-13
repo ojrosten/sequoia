@@ -180,7 +180,8 @@ namespace sequoia
       storage.add_slot();
       storage.add_slot();
       // [][]
-      
+
+      check_equivalence(storage, equivalent_type{{}, {}}, LINE(""));
       check_equality(storage, Storage{{}, {}}, LINE(""));
       check_regular_semantics(storage, Storage{}, LINE(""));
       check_regular_semantics(storage, Storage{{}}, LINE(""));
@@ -190,13 +191,15 @@ namespace sequoia
       
       storage.push_back_to_partition(0, 2);
       // [2][]
-   
+
+      check_equivalence(storage, equivalent_type{{2}, {}}, LINE(""));
       check_equality(storage, Storage{{2}, {}}, LINE(""));
       check_regular_semantics(storage, Storage{{1},{}}, LINE("Regular semantics"));
 
       storage.swap_partitions(0,1);
       // [][2]
-      
+
+      check_equivalence(storage, equivalent_type{{}, {2}}, LINE(""));
       check_equality(storage, Storage{{}, {2}});
       check_regular_semantics(storage, Storage{{2},{}}, LINE("Regular semantics"));
 
@@ -225,12 +228,14 @@ namespace sequoia
       storage.push_back_to_partition(1, 4);
       // [3][4]
 
+      check_equivalence(storage, equivalent_type{{3}, {4}}, LINE(""));
       check_equality(storage, Storage{{3}, {4}}, LINE(""));
       check_regular_semantics(storage, Storage{{4},{3}}, LINE("Regular semantics"));
 
       storage.swap_partitions(1,0);
       // [4][3]
-      
+
+      check_equivalence(storage, equivalent_type{{4}, {3}}, LINE(""));
       check_equality(storage, Storage{{4}, {3}}, LINE(""));
 
       storage.swap_partitions(0,1);
@@ -243,6 +248,7 @@ namespace sequoia
       storage.push_back_to_partition(2, -3);
       // [3][4][9,-3]
 
+      check_equivalence(storage, equivalent_type{{3}, {4}, {9, -3}}, LINE(""));
       check_equality(storage, Storage{{3}, {4}, {9, -3}}, LINE(""));
       check_regular_semantics(storage, Storage{{4},{3}}, LINE("Regular semantics"));
 
@@ -559,71 +565,71 @@ namespace sequoia
     {
       using namespace data_structures;
 
-      {
-        std::vector<typename SharingPolicy<int>::handle_type> vec{SharingPolicy<int>::make(1), SharingPolicy<int>::make(2), SharingPolicy<int>::make(3)};
-        test_generic_iterator_properties<traits, SharingPolicy<int>, partition_impl::mutable_reference>(vec);
-        test_generic_iterator_properties<traits, SharingPolicy<int>, partition_impl::const_reference>(vec);
-      }
-
-      {
-        using data = std::pair<bool, double>;
-
-        std::vector<typename SharingPolicy<data>::handle_type> vec{SharingPolicy<data>::make(true, 1.0)};
-
-        test_generic_iterator_deref<traits, SharingPolicy<std::pair<bool, double>>, partition_impl::mutable_reference>(vec);
-        test_generic_iterator_deref<traits, SharingPolicy<std::pair<bool, double>>, partition_impl::const_reference>(vec);
-      }
+      test_generic_iterator_properties<traits, SharingPolicy, partition_impl::mutable_reference>();
+      test_generic_iterator_properties<traits, SharingPolicy, partition_impl::const_reference>();
     }
 
-    template<class Traits, class SharingPolicy, template<class> class ReferencePolicy, class Arg>
-    void partitioned_data_test::test_generic_iterator_properties(const Arg& v)
+    template<class Traits, template<class> class SharingPolicy, template<class> class ReferencePolicy>
+    void partitioned_data_test::test_generic_iterator_properties()
     {
       using namespace data_structures;
-      using T = typename SharingPolicy::elementary_type;
 
-      auto vec(v);
+      using container_t = std::vector<typename SharingPolicy<int>::handle_type>;
+
+      container_t vec{SharingPolicy<int>::make(1), SharingPolicy<int>::make(2), SharingPolicy<int>::make(3)};
 
       using p_i_t
         = utilities::iterator<
-            typename partition_impl::partition_iterator_generator<Traits, SharingPolicy, ReferencePolicy, false>::iterator,
-            partition_impl::dereference_policy<SharingPolicy, ReferencePolicy, partition_impl::partition_index_policy<false, std::size_t>>
+            typename partition_impl::partition_iterator_generator<Traits, SharingPolicy<int>, ReferencePolicy, false>::iterator,
+            partition_impl::dereference_policy<SharingPolicy<int>, ReferencePolicy, partition_impl::partition_index_policy<false, std::size_t>>
           >;
 
       p_i_t iter(vec.begin(), 4u);
 
-      check_equality<T>(SharingPolicy::get(v[0]),*iter);
-      check_equality<std::size_t>(4, iter.partition_index());
+      if constexpr(std::is_same_v<ReferencePolicy<int>, partition_impl::mutable_reference<int>>)
+      {
+        check_equality(iter.operator->(), &SharingPolicy<int>::get(*vec.begin()), LINE(""));
+      }
+      else
+      {
+        check_equality(iter.operator->(), &SharingPolicy<int>::get(*vec.cbegin()), LINE(""));
+      }
+      
+      
+      check_equality(SharingPolicy<int>::get(vec[0]),*iter);
+      check_equality(iter.partition_index(), 4ul, LINE(""));
 
       ++iter;
-      check_equality<T>(SharingPolicy::get(v[1]), *iter);
-      check_equality<std::size_t>(4, iter.partition_index());
+      check_equality(*iter, SharingPolicy<int>::get(vec[1]), LINE(""));
+      check_equality(iter.partition_index(), 4ul, LINE(""));
 
       iter++;
-      check_equality<T>(SharingPolicy::get(v[2]), *iter);
+      check_equality(*iter, SharingPolicy<int>::get(vec[2]), LINE(""));
 
       --iter;
-      check_equality<T>(SharingPolicy::get(v[1]), *iter);
-      check_equality<std::size_t>(4, iter.partition_index());
+      check_equality(*iter, SharingPolicy<int>::get(vec[1]), LINE(""));
+      check_equality(iter.partition_index(), 4ul, LINE(""));
 
       iter--;
-      check_equality<T>(SharingPolicy::get(v[0]), *iter);
+      check_equality(*iter, SharingPolicy<int>::get(vec[0]), LINE(""));
 
-      check_equality<T>(SharingPolicy::get(v[0]), iter[0]);
-      check_equality<T>(SharingPolicy::get(v[1]), iter[1]);
-      check_equality<T>(SharingPolicy::get(v[2]), iter[2]);
+      check_equality(iter[0], SharingPolicy<int>::get(vec[0]), LINE(""));
+      check_equality(iter[1], SharingPolicy<int>::get(vec[1]), LINE(""));
+      check_equality(iter[2], SharingPolicy<int>::get(vec[2]), LINE(""));
 
       iter+=1;
-      check_equality<T>(SharingPolicy::get(v[1]), iter[0]);
+      check_equality(iter[0], SharingPolicy<int>::get(vec[1]), LINE(""));
 
       iter-=1;
-      check_equality<T>(SharingPolicy::get(v[0]), iter[0]);
+      check_equality(iter[0], SharingPolicy<int>::get(vec[0]), LINE(""));
 
       auto iter2 = iter + 2;
-      check_equality<T>(SharingPolicy::get(v[0]), iter[0]);
-      check_equality<T>(SharingPolicy::get(v[2]), iter2[0]);
+      check_equality(iter[0], SharingPolicy<int>::get(vec[0]), LINE(""));
+      check_equality(iter2[0], SharingPolicy<int>::get(vec[2]), LINE(""));
+      //check_regular_semantics(iter, iter2, LINE("Regular semantics"));
 
       auto iter3 = iter2 - 2;
-      check_equality<T>(SharingPolicy::get(v[0]), iter3[0]);
+      check_equality(iter3[0], SharingPolicy<int>::get(vec[0]), LINE(""));
 
       check(iter == iter3);
       check(iter2 != iter3);
@@ -633,31 +639,12 @@ namespace sequoia
       check(iter >= iter3);
       check(iter <= iter3);
 
-      check_equality<std::ptrdiff_t>(-2, distance(iter2, iter3));
-      check_equality<std::ptrdiff_t>(2, distance(iter, iter2));
+      check_equality(std::ptrdiff_t{-2}, distance(iter2, iter3));
+      check_equality(std::ptrdiff_t{2}, distance(iter, iter2));
 
       auto std_iter = iter.base_iterator();
 
-      check_equality<T>(1, SharingPolicy::get(*std_iter));
-    }
-
-    template<class Traits, class SharingPolicy, template<class> class ReferencePolicy, class Arg>
-    void partitioned_data_test::test_generic_iterator_deref(const Arg& v)
-    {
-      using namespace data_structures;
-      using T = typename SharingPolicy::elementary_type;
-
-      auto vec(v);
-      using p_i_t
-        = utilities::iterator<
-            typename partition_impl::partition_iterator_generator<Traits, SharingPolicy, ReferencePolicy, false>::iterator,
-          partition_impl::dereference_policy<SharingPolicy, ReferencePolicy, partition_impl::partition_index_policy<false, std::size_t>>
-          >;
-
-      p_i_t iter(vec.begin(), 0u);
-
-      check_equality<typename T::first_type>(SharingPolicy::get(v[0]).first, iter->first);
-      check_equality<typename T::second_type>(SharingPolicy::get(v[0]).first, iter->second);
+      check_equality(SharingPolicy<int>::get(*std_iter), 1, LINE(""));      
     }
 
     template<class T, class SharingPolicy, bool ThrowOnRangeError>

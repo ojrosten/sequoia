@@ -41,16 +41,28 @@ namespace sequoia::data_sharing
     }
 
     [[nodiscard]]
-    static T& get(handle_type ptr)
+    static T& get(handle_type& ptr)
     {
       return *ptr;
     }
 
     [[nodiscard]]
-    static T* get_ptr(handle_type ptr)
+    static const T& get(const handle_type& ptr)
+    {
+      return *ptr;
+    }
+
+    [[nodiscard]]
+    static T* get_ptr(handle_type& ptr)
     {
       return &*ptr;
     }
+
+    [[nodiscard]]
+    static const T* get_ptr(const handle_type& ptr)
+    {
+      return &*ptr;
+    }  
   private:
   };
 

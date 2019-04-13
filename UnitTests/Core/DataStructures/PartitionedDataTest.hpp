@@ -56,11 +56,8 @@ namespace sequoia
       template<class T, class SharingPolicy, bool ThrowOnRangeError>
       void test_bucketed_capacity();
       
-      template<class Traits, class SharingPolicy, template<class> class ReferencePolicy, class Arg>
-      void test_generic_iterator_properties(const Arg& v);
-
-      template<class Traits, class SharingPolicy, template<class> class ReferencePolicy, class Arg>
-      void test_generic_iterator_deref(const Arg& v);
+      template<class Traits, template<class> class SharingPolicy, template<class> class ReferencePolicy>
+      void test_generic_iterator_properties();
       
       template<template<class> class SharingPolicy> void test_iterators();
 

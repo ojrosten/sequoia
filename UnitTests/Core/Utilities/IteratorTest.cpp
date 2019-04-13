@@ -208,7 +208,7 @@ namespace sequoia::unit_testing
     using value_type = typename std::iterator_traits<Iter>::value_type;
     using deref_pol = typename CustomIter::dereference_policy;
         
-    if(!check_equality<int64_t>(3, distance(begin, end), LINE(std::string{"Contract violated"}.append(message))))
+    if(!check_equality<int64_t>(3, distance(begin, end), LINE(std::string{message}.append(" Contract violated"))))
       return;
     
     CustomIter i{begin, args...};
@@ -224,10 +224,10 @@ namespace sequoia::unit_testing
     check_equality(i[1], begin[1] * scale, LINE(message));
     check_equality(i[2], begin[2] * scale, LINE(message));
 
-    check_equality(i.operator->(), pBegin, LINE(std::string{message}.append( "Operator ->")));
+    check_equality(i.operator->(), pBegin, LINE(std::string{message}.append(" Operator ->")));
 
     CustomIter j{end, args...};      
-    check_regular_semantics(i, j, LINE("Regular semantics; one iterator at end"));
+    check_regular_semantics(i, j, LINE(std::string{message}.append(" Regular semantics; one iterator at end")));
       
     check(i < j, LINE(message));
     check(j > i, LINE(message));
