@@ -36,73 +36,6 @@ namespace sequoia
     }
 
     template<class S, class T>
-    bool partitioned_data_test::check_partitions(S& storage, std::initializer_list<std::initializer_list<T>> answers)
-    {
-      std::vector<std::vector<T>> ans;
-      for(const auto& list : answers)
-      {
-        ans.emplace_back();
-        for(const auto& element : list)
-        {
-          ans.back().emplace_back(element);
-        }
-      }
-
-      return check_partitions(storage, ans);
-    }
-
-    template<class S, class T>
-    bool partitioned_data_test::check_partitions(S& storage, const std::vector<std::vector<T>>& answers)
-    {
-      const auto numFailures{this->failures()};
-        
-      using p_iter = typename S::partition_iterator;
-      using cp_iter = typename S::const_partition_iterator;
-      using rp_iter = typename S::reverse_partition_iterator;
-      using crp_iter = typename S::const_reverse_partition_iterator;
-
-      const std::size_t numPartitions{answers.size()};
-      check_equality<std::size_t>(numPartitions, storage.num_partitions(), "Storage does not have expected number of partitions");
-      std::size_t nElements{};
-      for(const auto& ans : answers)
-      {
-        nElements += ans.size();
-      }
-      check_equality<std::size_t>(nElements, storage.size(), "Storage does not have the expected number of elements");
-
-      if(numPartitions == storage.num_partitions())
-      {
-        for(auto ansIter = answers.cbegin(); ansIter != answers.cend(); ++ansIter)
-        {
-          const std::size_t partitionIndex{static_cast<std::size_t>(std::distance(answers.cbegin(), ansIter))};
-          const std::size_t partitionSize{ansIter->size()};
-          const std::string indexStr{std::to_string(partitionIndex)};
-          check_equality<std::size_t>(partitionSize, distance(storage.cbegin_partition(partitionIndex), storage.cend_partition(partitionIndex)), "Partition " + indexStr + " not of expceted size");
-          {
-            p_iter piter{storage.begin_partition(partitionIndex)};
-            cp_iter cpiter{storage.cbegin_partition(partitionIndex)};
-            for(auto aiter = ansIter->cbegin(); aiter != ansIter->cend(); ++aiter, ++piter, ++cpiter)
-            {
-              check_equality<T>(*aiter, *piter, "Results wrong for forward iteration through partition " + indexStr);
-              check_equality<T>(*aiter, *cpiter, "Results wrong for const forward iteration through partition " + indexStr);
-            }
-          }
-          {
-            rp_iter rpiter{storage.rbegin_partition(partitionIndex)};
-            crp_iter crpiter{storage.crbegin_partition(partitionIndex)};
-            for(auto ariter = ansIter->crbegin(); ariter != ansIter->crend(); ++ariter, ++rpiter, ++crpiter)
-            {
-              check_equality<T>(*ariter, *rpiter, "Results wrong for reverse iteration through partition " + indexStr);
-              check_equality<T>(*ariter, *crpiter, "Results wrong for const reverse iteration through partition " + indexStr);
-            }
-          }
-        }
-      }
-
-      return this->failures() == numFailures;
-    }
-
-    template<class S, class T>
     bool partitioned_data_test::check_constexpr_partitions(S& storage, std::initializer_list<std::initializer_list<T>> answers)
     {
       std::vector<std::vector<T>> ans;
@@ -168,40 +101,45 @@ namespace sequoia
       using namespace data_structures;
 
       {
-        static_contiguous_storage<int, 1, 1> storage{{5}};
-        check_partitions(storage, {{5}});
+        using prediction_t = std::initializer_list<std::initializer_list<int>>;
+        
+        using storage_t = static_contiguous_storage<int, 1, 1>;
+        storage_t storage{{5}};
+        check_equivalence(storage, prediction_t{{5}}, LINE(""));
+        
+        storage_t storage2{{3}};
+        check_equivalence(storage, prediction_t{{5}}, LINE(""));
 
-        static_contiguous_storage<int, 1, 1> storage2{{3}};
-        check_partitions(storage2, {{3}});
+        check_regular_semantics(storage, storage2, LINE("Regular Semantics"));
 
-        std::swap(storage, storage2);
-        check_partitions(storage, {{3}});
-        check_partitions(storage2, {{5}});
-
-        check(storage != storage2);
         auto iter = storage.begin_partition(0);
-        check_equality<int>(3, *iter);
-        *iter = 5;
-        check_equality<int>(5, *iter);
-        check(storage == storage2);
+        *iter = 4;
+        check_equality(storage, storage_t{{4}}, LINE(""));
       }
 
       {
-        static_contiguous_storage<double, 3, 6> storage{{1.2, 1.1}, {2.6, -7.8}, {0.0, -9.3}};
-        check_partitions(storage, {{1.2, 1.1}, {2.6, -7.8}, {0.0, -9.3}});
+        using prediction_t = std::initializer_list<std::initializer_list<double>>;
+        
+        using storage_t = static_contiguous_storage<double, 3, 6>;
+        storage_t storage{{1.2, 1.1}, {2.6, -7.8}, {0.0, -9.3}};
+        check_equivalence(storage, prediction_t{{1.2, 1.1}, {2.6, -7.8}, {0.0, -9.3}}, LINE(""));
 
-        static_contiguous_storage<double, 3, 6> storage2{{1.2}, {1.1, 2.6, -7.8}, {0.0, -9.3}};
-        check_partitions(storage2, {{1.2}, {1.1, 2.6, -7.8}, {0.0, -9.3}});
+        storage_t storage2{{1.2}, {1.1, 2.6, -7.8}, {0.0, -9.3}};
+        check_equivalence(storage2, prediction_t{{1.2}, {1.1, 2.6, -7.8}, {0.0, -9.3}}, LINE(""));
 
-        check(storage != storage2);
+        check_regular_semantics(storage, storage2, LINE("Regular Semantics"));
       }
 
       {
-        static_contiguous_storage<double, 2, 6> storage{{0.2,0.3,-0.4}, {0.8,-1.1,-1.4}};
-        check_partitions(storage, {{0.2,0.3,-0.4}, {0.8,-1.1,-1.4}});
+        using prediction_t = std::initializer_list<std::initializer_list<double>>;
+        
+        using storage_t = static_contiguous_storage<double, 2, 6>;   
+        storage_t storage{{0.2,0.3,-0.4}, {0.8,-1.1,-1.4}}, storage2{{0.2,0.3}, {-0.4, 0.8,-1.1,-1.4}};
+        
+        check_equivalence(storage, prediction_t{{0.2,0.3,-0.4}, {0.8,-1.1,-1.4}}, LINE(""));
+        check_equivalence(storage2, prediction_t{{0.2,0.3}, {-0.4, 0.8,-1.1,-1.4}}, LINE(""));
 
-        auto storage2 = storage;
-        check_partitions(storage2, {{0.2,0.3,-0.4}, {0.8,-1.1,-1.4}});
+        check_regular_semantics(storage, storage2, LINE("Regular Semantics"));
       }
 
       {

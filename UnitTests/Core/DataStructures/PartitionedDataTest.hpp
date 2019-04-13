@@ -45,13 +45,6 @@ namespace sequoia
       void run_tests() override;
 
       template<class S, class T>
-      bool check_partitions(S& storage, std::initializer_list<std::initializer_list<T>> answers);
-      
-      // storge passed by non-const reference, so that non-const iterators can be tested!
-      template<class S, class T>
-      bool check_partitions(S& storage, const std::vector<std::vector<T>>& answers);
-
-      template<class S, class T>
       bool check_constexpr_partitions(S& storage, std::initializer_list<std::initializer_list<T>> answers);
 
       template<class S, class T>
