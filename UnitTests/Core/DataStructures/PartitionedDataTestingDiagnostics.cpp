@@ -8,14 +8,7 @@
 #include "PartitionedDataTestingDiagnostics.hpp"
 
 namespace sequoia::unit_testing
-{
-  // Move this!
-  template<class T> struct type_to_string<std::vector<T>>
-  {
-    static std::string str() noexcept { return "STD::VECTOR<" + type_to_string<T>::str() + ">"; }
-  };
-
-  
+{  
   void partitioned_data_false_positive_test::run_tests()
   {
     test_set<int>();
@@ -39,7 +32,7 @@ namespace sequoia::unit_testing
     using value_type = typename PartitionedData::value_type;
     using expected_t = std::initializer_list<std::initializer_list<value_type>>;
 
-    this->failure_message_prefix(type_to_string<PartitionedData>::str());
+    this->failure_message_prefix(demangle<PartitionedData>());
     
     PartitionedData
       d{},

@@ -163,8 +163,7 @@ namespace sequoia
         using UndirectedType = std::bool_constant<maths::undirected(GraphFlavour)>;        
         using TraversalType = std::integral_constant<bool, isBFS>;
 
-        std::string prefix{this->failure_message_prefix()};
-        prefix += "; " + type_to_string<Traverser>::str();
+        std::string prefix{this->failure_message_prefix() + demangle<Traverser>()};
         this->failure_message_prefix(prefix);
 
         const std::string iterDescription{Traverser::iterator_description()};
@@ -718,13 +717,7 @@ namespace sequoia
 
       void testNodeAndFirstEdgeTraversal()
       {
-        const std::string prefix{to_string(GraphFlavour) + "; "
-          + template_class_to_string<NodeWeightPooling>::str() + "; "
-          + template_class_to_string<EdgeWeightPooling>::str() + "; "
-          + storage_traits_to_string<EdgeStorageTraits>::str() + "; "
-          + node_weight_storage_traits_to_string<NodeWeightStorageTraits>::str()};
-
-        this->failure_message_prefix(prefix);
+        this->failure_message_prefix(demangle<GGraph>());
 
         GGraph graph{generate_test_graph()};
 

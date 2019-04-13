@@ -13,7 +13,6 @@
 
 #include "StatisticalAlgorithms.hpp"
 #include "TypeTraits.hpp"
-#include "TemplateParameterReporting.hpp"
 
 #include <sstream>
 #include <fstream>
@@ -207,7 +206,7 @@ namespace sequoia
       std::size_t performance_checks() const noexcept { return m_PerformanceChecks; } 
 
       [[nodiscard]]
-      std::string_view failure_message_prefix() const noexcept { return m_FailureMessagePrefix; }
+      const std::string& failure_message_prefix() const noexcept { return m_FailureMessagePrefix; }
       
       void failure_message_prefix(std::string_view prefix) { m_FailureMessagePrefix = prefix; }
 
@@ -1017,7 +1016,7 @@ namespace sequoia
       void failure_message_prefix(std::string_view prefix) { m_Logger.failure_message_prefix(prefix); }
 
       [[nodiscard]]
-      std::string_view failure_message_prefix() const noexcept{ return m_Logger.failure_message_prefix(); }
+      const std::string& failure_message_prefix() const noexcept{ return m_Logger.failure_message_prefix(); }
       
       void post_message(std::string_view message) { m_Logger.post_message(message); }
 

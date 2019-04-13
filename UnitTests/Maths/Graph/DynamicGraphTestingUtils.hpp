@@ -39,56 +39,7 @@ namespace sequoia::unit_testing
     template <class T, class Sharing> using traits_type = data_structures::bucketed_storage_traits<T, Sharing>;
 
     constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::shared_weight};
-  };
-  
-  template<> struct template_class_to_string<data_sharing::unpooled>
-  {
-    static std::string str() { return "UNPOOLED"; }
-  };
-
-  template<> struct template_class_to_string<data_sharing::data_pool>
-  {
-    static std::string str() { return "DATA POOL"; }
-  };
-
-  template<template <maths::graph_flavour, class, template<class> class> class> struct storage_traits_to_string;
-
-  template<> struct storage_traits_to_string<maths::bucketed_edge_storage_traits>
-  {
-    static std::string str() { return "BUCKETED STORAGE"; }
-  };
-
-  template<> struct storage_traits_to_string<maths::contiguous_edge_storage_traits>
-  {
-    static std::string str() { return "CONTIGUOUS STORAGE"; }
-  };
-
-  template<> struct storage_traits_to_string<independent_bucketed_edge_storage_traits>
-  {
-    static std::string str() { return "INDEPENDENT BUCKETED STORAGE"; }
-  };
-
-  template<> struct storage_traits_to_string<independent_contiguous_edge_storage_traits>
-  {
-    static std::string str() { return "INDEPENDENT CONTIGUOUS STORAGE"; }
-  };
-
-  template<> struct storage_traits_to_string<shared_weight_bucketed_edge_storage_traits>
-  {
-    static std::string str() { return "SHARED WEIGHT BUCKETED STORAGE"; }
-  };
-
-  template<> struct storage_traits_to_string<shared_weight_contiguous_edge_storage_traits>
-  {
-    static std::string str() { return "SHARED WEIGHT CONTIGUOUS STORAGE"; }
-  };
-
-  template<template <class, template<class> class, bool> class T> struct node_weight_storage_traits_to_string;
-    
-  template<> struct node_weight_storage_traits_to_string<maths::node_weight_storage_traits>
-  {
-    static std::string str() { return "NODE WEIGHT STORAGE TRAITS"; }
-  };
+  };  
 
   template
   <
@@ -139,15 +90,7 @@ namespace sequoia::unit_testing
       
     log_summary run(const std::string& helpername)
     {        
-      const std::string prefix{
-        to_string(GraphFlavour) + "; "           
-          + template_class_to_string<EdgeWeightPooling>::str() + "; "
-          + template_class_to_string<NodeWeightPooling>::str() + "; "
-          + storage_traits_to_string<EdgeStorageTraits>::str() + "; "
-          + node_weight_storage_traits_to_string<NodeWeightStorageTraits>::str() + "; " 
-          + helpername};
-
-      this->failure_message_prefix(prefix);
+      this->failure_message_prefix(demangle<graph_type>());
 
       execute_operations();
 
@@ -156,7 +99,7 @@ namespace sequoia::unit_testing
 
     log_summary get_summary() const { return this->summary(""); }
     
-    std::string_view prefix() const noexcept { return this->failure_message_prefix(); }
+    const std::string& prefix() const noexcept { return this->failure_message_prefix(); }
       
   protected:
     virtual void execute_operations() = 0;

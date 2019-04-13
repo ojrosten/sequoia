@@ -53,19 +53,4 @@ namespace sequoia::unit_testing
 
     static std::string iterator_description() { return "forward"; }
   };
-
-  template<> struct type_to_string<Traverser<BFS>>
-  {
-    static std::string str() { return "BFS"; }
-  };
-
-  template<> struct type_to_string<Traverser<DFS>>
-  {
-    static std::string str() { return "DFS"; }
-  };
-
-  template<> struct type_to_string<Traverser<PRS>>
-  {
-    static std::string str() { return "PRS"; }
-  };  
 }

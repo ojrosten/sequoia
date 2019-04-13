@@ -7,33 +7,11 @@
 
 #pragma once
 
-#include "SharingPolicyTestingUtilities.hpp"
-
+#include "UnitTestUtils.hpp"
 #include "PartitionedData.hpp"
 
 namespace sequoia::unit_testing
-{
-  template<class T> struct type_to_string<data_structures::bucketed_storage<T>>
-  {
-    static std::string str() { return "BUCKETED STORAGE; " + type_to_string<T>::str() + "; UNSHARED DATA"; }
-  };
-
-  template<class T> struct type_to_string<data_structures::contiguous_storage<T>>
-  {
-    static std::string str() { return "CONTIGUOUS STORAGE; " + type_to_string<T>::str() + ";UNSHARED DATA"; }
-  };
-
-  template<class T> struct type_to_string<data_structures::bucketed_storage<T, data_sharing::shared<T>>>
-  {
-    static std::string str() { return "BUCKETED STORAGE; " + type_to_string<T>::str() + ";SHARED DATA"; }
-  };
-
-  template<class T> struct type_to_string<data_structures::contiguous_storage<T, data_sharing::shared<T>>>
-  {
-    static std::string str() { return "CONTIGUOUS STORAGE; ; " + type_to_string<T>::str() + ";SHARED DATA"; }
-  };
-
-  
+{  
   namespace impl
   {
     template<class Logger, class PartitionedData>
