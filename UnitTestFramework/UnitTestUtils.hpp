@@ -24,6 +24,10 @@
 #include <set>
 #include <array>
 
+#ifndef _MSC_VER_
+  #include <cxxabi.h>
+#endif
+
 namespace sequoia
 {
   namespace unit_testing
@@ -1158,5 +1162,15 @@ namespace sequoia
     }
 
     #define LINE(message) report_line(__FILE__, __LINE__, message)
+
+    template<class T> std::string demangle()
+    {
+      #ifndef _MSC_VER_
+        int status;
+        return abi::__cxa_demangle(typeid(T).name(), 0, 0, &status);
+      #else        
+        return typeid(T).name();
+      #endif
+    }
   }
 }

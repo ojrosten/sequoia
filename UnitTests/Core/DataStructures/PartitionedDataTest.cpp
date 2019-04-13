@@ -127,7 +127,7 @@ namespace sequoia
 
       constexpr bool sharedData{std::is_same<typename Storage::sharing_policy_type, shared<typename Storage::value_type>>::value};
 
-      this->failure_message_prefix(type_to_string<Storage>::str());
+      this->failure_message_prefix(demangle<Storage>());
 
       Storage storage;
 
