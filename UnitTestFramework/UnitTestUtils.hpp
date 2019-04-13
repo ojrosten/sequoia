@@ -222,10 +222,10 @@ namespace sequoia
       }
 
       [[nodiscard]]
-      std::string_view messages() const noexcept{ return m_Messages; }
+      const std::string& messages() const noexcept{ return m_Messages; }
 
       [[nodiscard]]
-      std::string_view current_message() const noexcept { return m_CurrentMessage; }
+      const std::string& current_message() const noexcept { return m_CurrentMessage; }
 
       void exceptions_detected_by_sentinel(const int n) { m_ExceptionsInFlight = n; }
 
@@ -401,7 +401,7 @@ namespace sequoia
       }
 
       [[nodiscard]]
-      std::string_view name() const noexcept { return m_Name; }
+      const std::string& name() const noexcept { return m_Name; }
       
       void name(std::string_view p) { m_Name = p; }      
       
@@ -1021,7 +1021,7 @@ namespace sequoia
       void post_message(std::string_view message) { m_Logger.post_message(message); }
 
       [[nodiscard]]
-      std::string_view current_message() const noexcept{ return m_Logger.current_message(); }
+      const std::string& current_message() const noexcept{ return m_Logger.current_message(); }
 
       [[nodiscard]]
       int exceptions_detected_by_sentinel() const noexcept { return m_Logger.exceptions_detected_by_sentinel(); }
@@ -1049,7 +1049,7 @@ namespace sequoia
 
       virtual log_summary execute() = 0;
 
-      std::string_view name() const noexcept { return m_Name; }
+      const std::string& name() const noexcept { return m_Name; }
     protected:
       test(const test&) = default;
       test(test&&)      = default;
