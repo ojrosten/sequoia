@@ -666,20 +666,20 @@ namespace sequoia
       using namespace data_structures;
        
       contiguous_storage<T, SharingPolicy> s{};
-      check_equality<std::size_t>(0, s.capacity(), LINE(""));
-      check_equality<std::size_t>(0, s.num_partitions_capacity(), LINE(""));
+      check_equality(s.capacity(), 0ul, LINE(""));
+      check_equality(s.num_partitions_capacity(), 0ul, LINE(""));
 
       s.reserve(4);
-      check_equality<std::size_t>(4, s.capacity(), LINE(""));
-      check_equality<std::size_t>(0, s.num_partitions_capacity(), LINE(""));
+      check_equality(s.capacity(), 4ul, LINE(""));
+      check_equality(s.num_partitions_capacity(), 0ul, LINE(""));
 
       s.reserve_partitions(8);
-      check_equality<std::size_t>(4, s.capacity(), LINE(""));
-      check_equality<std::size_t>(8, s.num_partitions_capacity(), LINE(""));
+      check_equality(s.capacity(), 4ul, LINE(""));
+      check_equality(s.num_partitions_capacity(), 8ul, LINE(""));
 
       s.shrink_to_fit();
-      check_equality<std::size_t>(0, s.capacity(), LINE(""));
-      check_equality<std::size_t>(0, s.num_partitions_capacity(), LINE(""));
+      check_equality(s.capacity(), 0ul, LINE(""));
+      check_equality(s.num_partitions_capacity(), 0ul, LINE(""));
     }
 
     template<class T, class SharingPolicy, bool ThrowOnRangeError>
@@ -689,26 +689,26 @@ namespace sequoia
        
       bucketed_storage<T, SharingPolicy> s{};
 
-      check_equality<std::size_t>(0, s.num_partitions_capacity(), LINE(""));
+      check_equality(s.num_partitions_capacity(), 0ul, LINE(""));
       if constexpr(ThrowOnRangeError) check_exception_thrown<std::out_of_range>([&s](){ return s.partition_capacity(0); }, LINE(""));
 
       s.reserve_partitions(4);
-      check_equality<std::size_t>(4, s.num_partitions_capacity(), LINE(""));
+      check_equality(s.num_partitions_capacity(), 4ul, LINE(""));
       if constexpr(ThrowOnRangeError) check_exception_thrown<std::out_of_range>([&s](){ return s.partition_capacity(0); }, LINE(""));
 
       s.shrink_num_partitions_to_fit();
-      check_equality<std::size_t>(0, s.num_partitions_capacity(), LINE("May fail if shrink to fit impl does not reduce capacity"));
+      check_equality(s.num_partitions_capacity(), 0ul, LINE("May fail if shrink to fit impl does not reduce capacity"));
       if constexpr(ThrowOnRangeError) check_exception_thrown<std::out_of_range>([&s](){ return s.partition_capacity(0); }, LINE(""));
 
       s.add_slot();
-      check_equality<std::size_t>(0, s.partition_capacity(0), LINE(""));
+      check_equality(s.partition_capacity(0), 0ul, LINE(""));
       if constexpr(ThrowOnRangeError) check_exception_thrown<std::out_of_range>([&s](){ return s.partition_capacity(1); }, LINE(""));
 
       s.reserve_partition(0, 4);
-      check_equality<std::size_t>(4, s.partition_capacity(0), LINE(""));
+      check_equality(s.partition_capacity(0), 4ul, LINE(""));
        
       s.shrink_to_fit(0);
-      check_equality<std::size_t>(0, s.partition_capacity(0), LINE("May fail if shrink to fit impl does not reduce capacity"));
+      check_equality(s.partition_capacity(0), 0ul, LINE("May fail if shrink to fit impl does not reduce capacity"));
       if constexpr(ThrowOnRangeError) check_exception_thrown<std::out_of_range>([&s](){ s.shrink_to_fit(1); }, LINE(""));
     }
   }
