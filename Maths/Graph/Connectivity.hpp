@@ -70,9 +70,12 @@ namespace sequoia
       {}
 
       [[nodiscard]]
+      constexpr size_type order() const noexcept { return m_Edges.num_partitions(); }
+
+      [[nodiscard]]
       constexpr const_edge_iterator cbegin_edges(const edge_index_type node) const
       {
-        if constexpr (throw_on_range_error) if(node >= order_impl()) throw std::out_of_range("Node index out of range!");
+        if constexpr (throw_on_range_error) if(node >= order()) throw std::out_of_range("Node index out of range!");
         
         return m_Edges.cbegin_partition(node);
       }
@@ -80,7 +83,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr const_edge_iterator cend_edges(const edge_index_type node) const
       {
-        if constexpr (throw_on_range_error) if(node >= order_impl()) throw std::out_of_range("Node index out of range!");
+        if constexpr (throw_on_range_error) if(node >= order()) throw std::out_of_range("Node index out of range!");
 
         return m_Edges.cend_partition(node);
       }
@@ -88,7 +91,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr const_reverse_edge_iterator crbegin_edges(const edge_index_type node) const
       {
-        if constexpr (throw_on_range_error) if(node >= order_impl()) throw std::out_of_range("Node index out of range!");
+        if constexpr (throw_on_range_error) if(node >= order()) throw std::out_of_range("Node index out of range!");
 
         return m_Edges.crbegin_partition(node);
       }
@@ -96,7 +99,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr const_reverse_edge_iterator crend_edges(const edge_index_type node) const
       {
-        if constexpr (throw_on_range_error) if(node >= order_impl()) throw std::out_of_range("Node index out of range!");
+        if constexpr (throw_on_range_error) if(node >= order()) throw std::out_of_range("Node index out of range!");
 
         return m_Edges.crend_partition(node);
       }
@@ -197,9 +200,6 @@ namespace sequoia
       }
 
       [[nodiscard]]
-      constexpr size_type order_impl() const noexcept { return m_Edges.num_partitions(); }
-
-      [[nodiscard]]
       constexpr size_type size_impl()  const noexcept
       {
         auto size{m_Edges.size()};
@@ -235,7 +235,7 @@ namespace sequoia
         }
         else
         {
-          for(size_type n{}; n<order_impl(); ++n)
+          for(size_type n{}; n<order(); ++n)
           {
           
             for(auto iter{begin_edges(n)}; iter != end_edges(n); ++iter)
@@ -304,7 +304,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr edge_iterator begin_edges(const edge_index_type node)
       {
-        if constexpr (throw_on_range_error) if(node >= order_impl()) throw std::out_of_range("Node index out of range!");
+        if constexpr (throw_on_range_error) if(node >= order()) throw std::out_of_range("Node index out of range!");
         
         return m_Edges.begin_partition(node);
       }
@@ -312,7 +312,7 @@ namespace sequoia
       [[nodiscard]]
       constexpr edge_iterator end_edges(const edge_index_type node)
       {
-        if constexpr (throw_on_range_error) if(node >= order_impl()) throw std::out_of_range("Node index out of range!");
+        if constexpr (throw_on_range_error) if(node >= order()) throw std::out_of_range("Node index out of range!");
 
         return m_Edges.end_partition(node);
       }
@@ -332,7 +332,7 @@ namespace sequoia
 
       void erase_node(const size_type node)
       {
-        if constexpr (throw_on_range_error) if(node >= order_impl()) throw std::out_of_range("Cannot erase node: index out of range");
+        if constexpr (throw_on_range_error) if(node >= order()) throw std::out_of_range("Cannot erase node: index out of range");
         
         if constexpr (EdgeTraits::mutual_info_v)
         {
@@ -428,7 +428,7 @@ namespace sequoia
         if constexpr (std::is_empty_v<edge_weight_type>)
           static_assert(sizeof...(args) == 0, "Makes no sense to supply arguments for an empty weight!");
         
-        if constexpr (throw_on_range_error) if(node1 >= order_impl() || node2 >= order_impl()) throw std::out_of_range("Graph::join - index out of range");
+        if constexpr (throw_on_range_error) if(node1 >= order() || node2 >= order()) throw std::out_of_range("Graph::join - index out of range");
 
         if constexpr(std::is_empty_v<edge_weight_type>)
         {
@@ -1215,7 +1215,7 @@ namespace sequoia
       void copy_edges(const connectivity& in)
       {
         std::map<const edge_weight_type*, std::pair<edge_index_type, edge_index_type>> weightMap;
-        for(size_type i{}; i<in.order_impl(); ++i)
+        for(size_type i{}; i<in.order(); ++i)
         {
           m_Edges.add_slot();
           for(auto inIter{in.cbegin_edges(i)}; inIter != in.cend_edges(i); ++inIter)

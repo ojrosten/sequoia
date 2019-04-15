@@ -70,9 +70,7 @@ namespace sequoia
       {
         return !(lhs == rhs);
       }
-    protected:   
-      using Connectivity::order_impl;
-      
+    protected:      
       constexpr graph_primitive(graph_primitive&& in) noexcept = default;
       
       ~graph_primitive() = default;
@@ -132,19 +130,19 @@ namespace sequoia
       template<class... Args>
       size_type add_node(Args&&... args)
       {
-        reserve_nodes(order_impl() + 1);
+        reserve_nodes(this->order() + 1);
         
         Connectivity::add_node();
         if constexpr (!emptyNodes) Nodes::add_node(std::forward<Args>(args)...);
-        return (order_impl()-1);
+        return (this->order()-1);
       }
 
       template<class... Args>
       size_type insert_node(const size_type pos, Args&&... args)
       {
-        reserve_nodes(order_impl() + 1);
+        reserve_nodes(this->order() + 1);
         
-        const auto node{(pos < order_impl()) ? pos : (order_impl() - 1)};
+        const auto node{(pos < this->order()) ? pos : (this->order() - 1)};
         if constexpr (!emptyNodes)
         {
           Nodes::insert_node(this->cbegin_node_weights() + pos, std::forward<Args>(args)...);
@@ -194,7 +192,6 @@ namespace sequoia
         }    
       }
 
-      // TO DO: resolve to correct Connectivity constructor!
       template<class N=node_weight_type, class=std::enable_if_t<!std::is_same_v<N, graph_impl::heterogeneous_tag>>>
       constexpr graph_primitive(homo_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges, std::initializer_list<node_weight_type> nodeWeights)
         : Connectivity{edges}

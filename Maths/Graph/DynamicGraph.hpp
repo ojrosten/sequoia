@@ -134,9 +134,6 @@ namespace sequoia::maths
     constexpr static graph_flavour flavour{GraphFlavour};
 
     [[nodiscard]]
-    constexpr typename primitive_type::size_type order() const noexcept { return primitive_type::order_impl(); }
-
-    [[nodiscard]]
     constexpr typename primitive_type::size_type size() const noexcept { return primitive_type::size_impl(); }
   protected:
     ~graph_base() = default;

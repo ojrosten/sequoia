@@ -64,7 +64,7 @@ namespace sequoia::maths
 
     [[nodiscard]]
     constexpr static std::size_t order() noexcept { return Order; }
-
+    
     [[nodiscard]]
     constexpr static std::size_t size() noexcept { return Size; }
 
