@@ -73,6 +73,15 @@ namespace sequoia
       constexpr size_type order() const noexcept { return m_Edges.num_partitions(); }
 
       [[nodiscard]]
+      constexpr size_type size()  const noexcept
+      {
+        auto size{m_Edges.size()};
+        if constexpr (EdgeTraits::mutual_info_v) return size /= 2;
+
+        return size;
+      }
+
+      [[nodiscard]]
       constexpr const_edge_iterator cbegin_edges(const edge_index_type node) const
       {
         if constexpr (throw_on_range_error) if(node >= order()) throw std::out_of_range("Node index out of range!");
@@ -197,15 +206,6 @@ namespace sequoia
         auto tmp{in};
         sequoia::swap(*this, tmp);
         return *this;
-      }
-
-      [[nodiscard]]
-      constexpr size_type size_impl()  const noexcept
-      {
-        auto size{m_Edges.size()};
-        if constexpr (EdgeTraits::mutual_info_v) return size /= 2;
-
-        return size;
       }
 
       constexpr void swap_nodes(size_type i, size_type j)
@@ -416,7 +416,7 @@ namespace sequoia
         }
         else
         {
-          reserve_edges(size_impl() + 2);
+          reserve_edges(size() + 2);
         }        
       }
       

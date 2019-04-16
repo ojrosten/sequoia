@@ -132,9 +132,6 @@ namespace sequoia::maths
     using primitive_type::shrink_to_fit;
       
     constexpr static graph_flavour flavour{GraphFlavour};
-
-    [[nodiscard]]
-    constexpr typename primitive_type::size_type size() const noexcept { return primitive_type::size_impl(); }
   protected:
     ~graph_base() = default;
   };

@@ -1,11 +1,43 @@
 #pragma once
 
-#include "UnitTestUtils.hpp"
+#include "EdgeTestingUtilities.hpp"
 
 #include "ProtectiveWrapper.hpp"
 #include "PartitionedData.hpp"
 #include "DataPool.hpp"
 #include "GraphImpl.hpp"
+
+namespace sequoia::unit_testing
+{
+  template
+  <      
+    maths::directed_flavour Directedness,     
+    class EdgeTraits,
+    class WeightMaker
+  >
+  struct details_checker<maths::connectivity<Directedness, EdgeTraits, WeightMaker>>
+  {
+    using type = maths::connectivity<Directedness, EdgeTraits, WeightMaker>;
+
+    template<class Logger>
+    static void check(Logger& logger, const type& connectivity, const type& prediction, std::string_view description)
+    {
+      check_equality(logger, connectivity.size(), prediction.size(), impl::concat_messages(description, "Connectivity sizes different"));
+      
+      if(check_equality(logger, connectivity.order(), prediction.order(), impl::concat_messages(description, "Connectivity orders different")))
+      {
+        for(std::size_t i{}; i<connectivity.order(); ++i)
+        {
+          const std::string message{impl::concat_messages(description,"Partition " + std::to_string(i))};
+          check_range(logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), prediction.cbegin_edges(i), prediction.cend_edges(i), impl::concat_messages(message, "cedge_iterator"));
+
+          check_range(logger, connectivity.crbegin_edges(i), connectivity.crend_edges(i), prediction.crbegin_edges(i), prediction.crend_edges(i), impl::concat_messages(message, "credge_iterator"));
+        }
+      }
+    } 
+  };
+}
+
 
 namespace sequoia
 {

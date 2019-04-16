@@ -83,6 +83,11 @@ namespace sequoia::unit_testing
 
     check_graph(network, {{}}, {}, LINE(""));
 
+    
+    check_equality(network, GGraph{{}}, LINE(""));
+
+
+    
     check_exception_thrown<std::out_of_range>([&network](){ get_edge(network, 0, 0, 0); },  LINE("For network with no edges, trying to obtain a reference to one throws an exception"));
 
     check_exception_thrown<std::out_of_range>([&network]() { network.join(0, 1); }, LINE("Unable to join zeroth node to non-existant first node"));

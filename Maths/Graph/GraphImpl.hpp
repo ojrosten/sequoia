@@ -55,14 +55,20 @@ namespace sequoia
         : Connectivity{static_cast<const Connectivity&>(in)}
         , Nodes{static_cast<const Nodes&>(in)}
       {}
+
+      [[nodiscard]]
+      constexpr size_type size()  const noexcept
+      {
+        return connectivity_type::size();
+      }
       
       //===============================equality (not isomorphism) operators================================//
 
       [[nodiscard]]
       friend constexpr bool operator==(const graph_primitive& lhs, const graph_primitive& rhs)
       {
-        return (static_cast<Connectivity&>(lhs) == static_cast<Connectivity&>(rhs))
-            && (static_cast<Nodes&>(lhs) == static_cast<Nodes&>(rhs));
+        return (static_cast<const Connectivity&>(lhs) == static_cast<const Connectivity&>(rhs))
+            && (static_cast<const Nodes&>(lhs) == static_cast<const Nodes&>(rhs));
       }
 
       [[nodiscard]]

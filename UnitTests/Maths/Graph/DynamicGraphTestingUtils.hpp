@@ -4,7 +4,60 @@
 #include "DynamicGraph.hpp"
 
 namespace sequoia::unit_testing
-{
+{ 
+  template
+  <
+    maths::directed_flavour Directedness,      
+    class EdgeWeight,
+    class NodeWeight,      
+    template <class> class EdgeWeightPooling,
+    template <class> class NodeWeightPooling,
+    template<maths::graph_flavour, class, template<class> class> class EdgeStorageTraits,
+    template<class, template<class> class, bool> class NodeWeightStorageTraits
+  >
+  struct details_checker<maths::graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>>
+  {
+    using type = maths::graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>;
+
+    template<class Logger>
+    static void check(Logger& logger, const type& graph, const type& prediction, std::string_view description)
+    {
+      using connectivity_t = typename type::connectivity_type;
+
+      check_equality(logger, static_cast<const connectivity_t&>(graph), static_cast<const connectivity_t&>(prediction), description);
+
+      // TO DO: nodes
+    }    
+  };
+
+  template
+  <
+    maths::directed_flavour Directedness,      
+    class EdgeWeight,
+    class NodeWeight,      
+    template <class> class EdgeWeightPooling,
+    template <class> class NodeWeightPooling,
+    template<maths::graph_flavour, class, template<class> class> class EdgeStorageTraits,
+    template<class, template<class> class, bool> class NodeWeightStorageTraits
+  >
+  struct details_checker<maths::embedded_graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>>
+  {
+    using type = maths::embedded_graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>;
+
+    template<class Logger>
+    static void check(Logger& logger, const type& graph, const type& prediction, std::string_view description)
+    {
+      using connectivity_t = typename type::connectivity_type;
+
+      check_equality(logger, static_cast<const connectivity_t&>(graph), static_cast<const connectivity_t&>(prediction), description);
+
+      // TO DO: nodes
+    }    
+  };
+  
+
+  
+  
   template<maths::graph_flavour GraphFlavour, class EdgeWeight, template <class> class EdgeWeightPooling>
   struct independent_contiguous_edge_storage_traits
   {

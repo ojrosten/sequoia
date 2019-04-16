@@ -27,7 +27,7 @@ namespace sequoia::unit_testing
     }
   
     template<class Logger, class Edge>
-    void check_host(Logger& logger, const Edge& prediction, const Edge& edge, std::string_view description)
+    void check_host(Logger& logger, const Edge& edge, const Edge& prediction, std::string_view description)
     {
       check_equality(logger, edge.host_node(), prediction.host_node(),
                          impl::concat_messages(description, "Host node incorrect"));
@@ -50,7 +50,7 @@ namespace sequoia::unit_testing
     using type = maths::partial_edge<Weight, WeightSharingPolicy, WeightProxy, IndexType>;
     
     template<class Logger>
-    static void check(Logger& logger, const type& prediction, const type& edge, std::string_view description="")
+    static void check(Logger& logger, const type& edge, const type& prediction, std::string_view description="")
     {
       impl::check_partial(logger, edge, prediction, description);
     }
@@ -67,7 +67,7 @@ namespace sequoia::unit_testing
   {
     using type = maths::embedded_partial_edge<Weight, WeightSharingPolicy, WeightProxy, IndexType>;
     template<class Logger>
-    static void check(Logger& logger, const type& prediction, const type& edge, std::string_view description="")
+    static void check(Logger& logger, const type& edge, const type& prediction, std::string_view description="")
     {
       impl::check_partial(logger, edge, prediction, description);
       impl::check_complementary(logger, edge, prediction, description);
