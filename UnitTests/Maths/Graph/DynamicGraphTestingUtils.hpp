@@ -1,3 +1,10 @@
+////////////////////////////////////////////////////////////////////
+//                 Copyright Oliver Rosten 2019.                  //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
 #pragma once
 
 #include "GraphTestingUtils.hpp"
@@ -43,7 +50,7 @@ namespace sequoia::unit_testing
   struct details_checker<maths::embedded_graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>>
   {
     using type = maths::embedded_graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>;
-
+    
     template<class Logger>
     static void check(Logger& logger, const type& graph, const type& prediction, std::string_view description)
     {
@@ -55,7 +62,59 @@ namespace sequoia::unit_testing
     }    
   };
   
+  template
+  <
+    maths::directed_flavour Directedness,      
+    class EdgeWeight,
+    class NodeWeight,      
+    template <class> class EdgeWeightPooling,
+    template <class> class NodeWeightPooling,
+    template<maths::graph_flavour, class, template<class> class> class EdgeStorageTraits,
+    template<class, template<class> class, bool> class NodeWeightStorageTraits
+  >
+  struct equivalence_checker<maths::graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>>
+  {
+    using type = maths::graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>;
 
+    using connectivity_equivalent_type = std::initializer_list<std::initializer_list<typename type::edge_init_type>>;    
+
+    template<class Logger>
+    static void check(Logger& logger, const type& graph, connectivity_equivalent_type prediction, std::string_view description)
+    {
+      using connectivity_t = typename type::connectivity_type;
+
+      check_equivalence(logger, static_cast<const connectivity_t&>(graph), prediction, description);
+
+      // TO DO: nodes
+    }    
+  };
+
+  template
+  <
+    maths::directed_flavour Directedness,      
+    class EdgeWeight,
+    class NodeWeight,      
+    template <class> class EdgeWeightPooling,
+    template <class> class NodeWeightPooling,
+    template<maths::graph_flavour, class, template<class> class> class EdgeStorageTraits,
+    template<class, template<class> class, bool> class NodeWeightStorageTraits
+  >
+  struct equivalence_checker<maths::embedded_graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>>
+  {
+    using type = maths::embedded_graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>;
+
+    using connectivity_equivalent_type = std::initializer_list<std::initializer_list<typename type::edge_init_type>>;
+
+    template<class Logger>
+    static void check(Logger& logger, const type& graph, connectivity_equivalent_type prediction, std::string_view description)
+    {
+      using connectivity_t = typename type::connectivity_type;
+
+      check_equivalence(logger, static_cast<const connectivity_t&>(graph), prediction, description);
+
+      // TO DO: nodes
+    }    
+  };
   
   
   template<maths::graph_flavour GraphFlavour, class EdgeWeight, template <class> class EdgeWeightPooling>

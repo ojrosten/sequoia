@@ -1,3 +1,10 @@
+////////////////////////////////////////////////////////////////////
+//                 Copyright Oliver Rosten 2019.                  //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
 #pragma once
 
 #include "EdgeTestingUtilities.hpp"
@@ -35,6 +42,35 @@ namespace sequoia::unit_testing
         }
       }
     } 
+  };
+
+  template
+  <      
+    maths::directed_flavour Directedness,     
+    class EdgeTraits,
+    class WeightMaker
+  >
+  struct equivalence_checker<maths::connectivity<Directedness, EdgeTraits, WeightMaker>>
+  {
+    using type = maths::connectivity<Directedness, EdgeTraits, WeightMaker>;
+    using equivalent_type = std::initializer_list<std::initializer_list<typename type::edge_init_type>>;
+
+    template<class Logger>
+    static void check(Logger& logger, const type& connectivity, equivalent_type prediction, std::string_view description)
+    {
+      
+      if(check_equality(logger, connectivity.order(), prediction.size(), impl::concat_messages(description, "Connectivity order wrong")))
+      {
+        for(std::size_t i{}; i<connectivity.order(); ++i)
+        {
+          const std::string message{impl::concat_messages(description,"Partition " + std::to_string(i))};
+
+          // TO DO: reinstate this, but node that edges and edge_init_type may be different...
+          
+          //check_range(logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), (prediction.begin()+i)->begin(), (prediction.begin() + i)->end(), impl::concat_messages(message, "cedge_iterator"));
+        }
+      }
+    }    
   };
 }
 
@@ -147,6 +183,7 @@ namespace sequoia
       using checker<Logger>::check_equality;
       using checker<Logger>::check;
       using checker<Logger>::check_exception_thrown;
+      using checker<Logger>::check_equivalence;
 
       template<class G, class... NodeWeights, class E=typename G::edge_init_type>
       bool check_graph(const G& graph, const std::initializer_list<std::initializer_list<E>>& edges, const std::tuple<NodeWeights...>& nodeWeights, std::string_view failureMessage="")
@@ -342,11 +379,16 @@ namespace sequoia
         return m_Checker.template check_graph(graph, edges, nodeWeights, failureMessage);
       }
 
-      template<class T> bool check_equality(const T& reference, const T& value, const std::string& description="")
+      template<class T> bool check_equality(const T& value, const T& prediction, const std::string& description="")
       {
-        return m_Checker.template check_equality(reference, value, description);
+        return m_Checker.template check_equality(value, prediction, description);
       }
 
+      template<class T, class S, class... U>
+      bool check_equivalence(const T& value, const S& s, const U&... u, std::string_view description="")
+      {
+        return m_Checker.template check_equivalence(value, s, u..., description);
+      }
 
     private:
       Checker& m_Checker;

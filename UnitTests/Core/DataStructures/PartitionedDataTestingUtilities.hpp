@@ -108,9 +108,10 @@ namespace sequoia::unit_testing
   struct equivalence_checker<data_structures::contiguous_storage<T, SharingPolicy, Traits>>
   {
     using type = data_structures::contiguous_storage<T, SharingPolicy, Traits>;
+    using equivalent_type = std::initializer_list<std::initializer_list<T>>;
     
     template<class Logger>
-    static void check(Logger& logger, const type& data, std::initializer_list<std::initializer_list<T>> prediction, std::string_view description="")
+    static void check(Logger& logger, const type& data, equivalent_type prediction, std::string_view description="")
     {
       impl::check_equivalence(logger, data, prediction, description);
     }
