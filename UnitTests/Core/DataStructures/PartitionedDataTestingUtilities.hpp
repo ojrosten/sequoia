@@ -62,7 +62,10 @@ namespace sequoia::unit_testing
       {
         for(std::size_t i{}; i<prediction.size(); ++i)
         {
-          check_range(logger, data.begin_partition(i), data.end_partition(i), (prediction.begin() + i)->begin(), (prediction.begin() + i)->end(), "Partition " + std::to_string(i));
+          const std::string message{concat_messages(description,"Partition " + std::to_string(i))};
+          check_range(logger, data.begin_partition(i), data.end_partition(i), (prediction.begin() + i)->begin(), (prediction.begin() + i)->end(), message + ": iterator");
+
+          check_range(logger, data.rbegin_partition(i), data.rend_partition(i), std::rbegin(*(prediction.begin() + i)), std::rend(*(prediction.begin() + i)), message + ": riterator");
         }
       }
     }
