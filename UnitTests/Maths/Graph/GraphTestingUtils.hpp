@@ -52,22 +52,28 @@ namespace sequoia::unit_testing
   >
   struct equivalence_checker<maths::connectivity<Directedness, EdgeTraits, WeightMaker>>
   {
-    using type = maths::connectivity<Directedness, EdgeTraits, WeightMaker>;
-    using equivalent_type = std::initializer_list<std::initializer_list<typename type::edge_init_type>>;
+    using type            = maths::connectivity<Directedness, EdgeTraits, WeightMaker>;
+    using edge_init_type  = typename type::edge_init_type;
+    using edge_type       = typename type::edge_type;
+    using equivalent_type = std::initializer_list<std::initializer_list<edge_init_type>>;
 
     template<class Logger>
     static void check(Logger& logger, const type& connectivity, equivalent_type prediction, std::string_view description)
     {
-      
       if(check_equality(logger, connectivity.order(), prediction.size(), impl::concat_messages(description, "Connectivity order wrong")))
       {
         for(std::size_t i{}; i<connectivity.order(); ++i)
         {
           const std::string message{impl::concat_messages(description,"Partition " + std::to_string(i))};
 
-          // TO DO: reinstate this, but node that edges and edge_init_type may be different...
-          
-          //check_range(logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), (prediction.begin()+i)->begin(), (prediction.begin() + i)->end(), impl::concat_messages(message, "cedge_iterator"));
+          if constexpr(std::is_same_v<edge_type, edge_init_type>)
+          {
+            check_range(logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), (prediction.begin()+i)->begin(), (prediction.begin() + i)->end(), impl::concat_messages(message, "cedge_iterator"));
+          }
+          else
+          {
+            // TO DO
+          }              
         }
       }
     }    

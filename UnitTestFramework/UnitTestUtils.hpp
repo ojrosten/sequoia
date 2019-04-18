@@ -519,6 +519,8 @@ namespace sequoia
 
     template<class T> struct equivalence_checker;
 
+    template<class T> struct weak_equivalence_checker;
+
     template<class T, class=std::void_t<>> struct has_details_checker : public std::false_type
     {};
 
@@ -526,6 +528,10 @@ namespace sequoia
     {};
 
     template<class T> constexpr bool has_details_checker_v{has_details_checker<T>::value};
+
+    struct equality_tag{};
+    struct equivalence_tag{};
+    struct weak_equivalence_tag{};
     
     namespace impl
     {      
@@ -563,7 +569,30 @@ namespace sequoia
         const std::string message{"Tuple elements differ for " + std::to_string(I) + "th element"};
         equality_checker<S>::check(logger, std::get<I>(value), std::get<I>(prediction), concat_messages(description, message));
         check_tuple_elements<Logger, I+1, T...>(logger, value, prediction, description);
-      }       
+      }
+
+      template<class EquivChecker, class Logger, class T, class S, class... U>
+      bool check(Logger& logger, const T& value, const S& s, const U&... u, std::string_view description)
+      {      
+        using sentinel = typename Logger::sentinel;
+      
+        sentinel r{logger, description};
+        const auto previousFailures{logger.failures()};
+
+        EquivChecker::check(logger, value, s, u..., description);
+
+        constexpr bool falsePosMode{Logger::mode == test_mode::false_positive};
+        const bool additionalFailures{logger.failures() != previousFailures};
+      
+        const bool passed{(falsePosMode && additionalFailures) || (!falsePosMode && !additionalFailures)};
+        if(!passed)
+        {
+          std::string mess{description.empty() ? "Undescribed failure" : description};
+          logger.post_message('\t' + mess + '\n');
+        }
+      
+        return passed;
+      }     
     }
 
     template<class T>
@@ -646,8 +675,9 @@ namespace sequoia
         return equal;
       }
     };
-    
-    template<class Logger, class T> bool check_equality(Logger& logger, const T& value, const T& prediction, std::string_view description="")
+
+    template<class Logger, class T>
+    bool check(Logger& logger, equality_tag, const T& value, const T& prediction, std::string_view description)
     {
       static_assert(has_details_checker_v<T> || is_serializable_v<T>, "Provide either a specialization of details_checker or string_maker");
       
@@ -688,33 +718,39 @@ namespace sequoia
             
       return logger.failures() == priorFailures;
     }
-
-    template<class Logger> bool check(Logger& logger, const bool value, std::string_view description="")
+    
+    template<class Logger, class T, class S, class... U>
+    bool check(Logger& logger, equivalence_tag, const T& value, const S& s, const U&... u, std::string_view description)
     {
-      return check_equality(logger, value, true, description);
+      return impl::check<equivalence_checker<T>, Logger, T, S, U...>(logger, value, s, u..., description);      
+    }
+
+    template<class Logger, class T, class S, class... U>
+    bool check(Logger& logger, weak_equivalence_tag, const T& value, const S& s, const U&... u, std::string_view description)
+    {
+      return impl::check<weak_equivalence_checker<T>, Logger, T, S, U...>(logger, value, s, u..., description);
+    }
+    
+    template<class Logger, class T> bool check_equality(Logger& logger, const T& value, const T& prediction, std::string_view description="")
+    {
+      return check(logger, equality_tag{}, value, prediction, description);
     }
 
     template<class Logger, class T, class S, class... U>
     bool check_equivalence(Logger& logger, const T& value, const S& s, const U&... u, std::string_view description)
     {
-      using sentinel = typename Logger::sentinel;
-      
-      sentinel r{logger, description};
-      const auto previousFailures{logger.failures()};
+      return check<Logger, T, S, U...>(logger, equivalence_tag{}, value, s, u..., description);      
+    }
 
-      equivalence_checker<T>::check(logger, value, s, u..., description);
+    template<class Logger, class T, class S, class... U>
+    bool check_weak_equivalence(Logger& logger, const T& value, const S& s, const U&... u, std::string_view description)
+    {
+      return check<Logger, T, S, U...>(logger, weak_equivalence_tag{}, value, s, u..., description);      
+    }
 
-      constexpr bool falsePosMode{Logger::mode == test_mode::false_positive};
-      const bool additionalFailures{logger.failures() != previousFailures};
-      
-      const bool passed{(falsePosMode && additionalFailures) || (!falsePosMode && !additionalFailures)};
-      if(!passed)
-      {
-        std::string mess{description.empty() ? "Undescribed failure" : description};
-        logger.post_message('\t' + mess + '\n');
-      }
-      
-      return passed;
+    template<class Logger> bool check(Logger& logger, const bool value, std::string_view description="")
+    {
+      return check_equality(logger, value, true, description);
     }
 
     template<class Logger, class T>
@@ -766,32 +802,55 @@ namespace sequoia
       }
     }
 
-    template<class Logger, class Iter, class PredictionIter>
-    bool check_range(Logger& logger, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, std::string_view description="")
+    namespace impl
     {
-      typename Logger::sentinel r{logger, description};
-      bool equal{true};
+      template<class Logger, class Tag, class Iter, class PredictionIter>
+      bool check_range(Logger& logger, Tag tag, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, std::string_view description)
+      {
+        typename Logger::sentinel r{logger, description};
+        bool equal{true};
 
-      using std::distance;
-      const auto predictedSize{distance(predictionFirst, predictionLast)};
-      if(check_equality(logger, distance(first, last), predictedSize, std::string{description}.append(" container size wrong")))
-      {
-        auto predictionIter{predictionFirst};
-        auto iter{first};
-        for(; predictionIter != predictionLast; ++predictionIter, ++iter)
+        using std::distance;
+        const auto predictedSize{distance(predictionFirst, predictionLast)};
+        if(check_equality(logger, distance(first, last), predictedSize, impl::concat_messages(description, "container size wrong")))
         {
-          const std::string dist{std::to_string(std::distance(predictionFirst, predictionIter))};
-          if(!check_equality(logger, *iter, *predictionIter, std::string{description}.append("element ") += dist)) equal = false;
+          auto predictionIter{predictionFirst};
+          auto iter{first};
+          for(; predictionIter != predictionLast; ++predictionIter, ++iter)
+          {
+            const std::string dist{std::to_string(std::distance(predictionFirst, predictionIter))};
+            if(!check(logger, tag, *iter, *predictionIter, impl::concat_messages(description, "element ") += dist)) equal = false;
+          }
         }
-      }
-      else
-      {
-        equal = false;
-      }
+        else
+        {
+          equal = false;
+        }
       
-      return equal;
+        return equal;
+      }
     }
 
+    
+    template<class Logger, class Iter, class PredictionIter>
+    bool check_range(Logger& logger, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, std::string_view description)
+    {
+      return impl::check_range(logger, equality_tag{}, first, last, predictionFirst, predictionLast, description);      
+    }
+
+    template<class Logger, class Iter, class PredictionIter>
+    bool check_range_equivalence(Logger& logger, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, std::string_view description)
+    {
+      return impl::check_range(logger, equivalence_tag{}, first, last, predictionFirst, predictionLast, description);      
+    }
+
+    template<class Logger, class Iter, class PredictionIter>
+    bool check_range_weak_equivalence(Logger& logger, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, std::string_view description)
+    {
+      return impl::check_range(logger, weak_equivalence_tag{}, first, last, predictionFirst, predictionLast, description);      
+    }
+
+    
     template<class Logger, class T>
     void check_regular_semantics(Logger& logger, const T& x, const T& y, std::string_view description="")
     {
