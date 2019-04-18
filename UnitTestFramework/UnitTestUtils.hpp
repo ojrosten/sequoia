@@ -695,7 +695,7 @@ namespace sequoia
     }
 
     template<class Logger, class T, class S, class... U>
-    bool check_equivalence(Logger& logger, const T& value, const S& s, const U&... u, std::string_view description="")
+    bool check_equivalence(Logger& logger, const T& value, const S& s, const U&... u, std::string_view description)
     {
       using sentinel = typename Logger::sentinel;
       
@@ -950,9 +950,9 @@ namespace sequoia
       }
 
       template<class T, class S, class... U>
-      bool check_equivalence(const T& value, const S& s, const U&... u, std::string_view description="")
+      bool check_equivalence(const T& value, const S& s, const U&... u, std::string_view description)
       {
-        return unit_testing::check_equivalence(m_Logger, value, s, u..., description);
+        return unit_testing::check_equivalence<Logger, T, S, U...>(m_Logger, value, s, u..., description);
       }
       
       template<class T>

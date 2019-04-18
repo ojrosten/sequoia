@@ -26,6 +26,7 @@ namespace sequoia
 
     public:
       using connectivity_type = Connectivity;
+      using nodes_type        = Nodes;
       using edge_init_type    = typename Connectivity::edge_init_type;
       using edge_index_type   = typename Connectivity::edge_index_type;      
       using size_type         = std::common_type_t<typename Connectivity::size_type, typename Nodes::size_type>;

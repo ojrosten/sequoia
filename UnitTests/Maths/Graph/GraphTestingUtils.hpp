@@ -385,9 +385,9 @@ namespace sequoia
       }
 
       template<class T, class S, class... U>
-      bool check_equivalence(const T& value, const S& s, const U&... u, std::string_view description="")
+      bool check_equivalence(const T& value, const S& s, const U&... u, std::string_view description)
       {
-        return m_Checker.template check_equivalence(value, s, u..., description);
+        return m_Checker.template check_equivalence<T, S, U...>(value, s, u..., description);
       }
 
     private:

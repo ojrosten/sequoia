@@ -101,8 +101,9 @@ namespace sequoia
       {        
         this->template check_graph(g, {}, {}, LINE(""));
 
-        using prediction_t = std::initializer_list<std::initializer_list<typename Graph::edge_init_type>>;
-        this->template check_equivalence(g, prediction_t{}, LINE(""));
+        using conn_prediction_t = std::initializer_list<std::initializer_list<typename Graph::edge_init_type>>;
+        using nodes_prediction_t = std::initializer_list<typename Graph::node_weight_type>;
+        this->template check_equivalence<Graph, conn_prediction_t, nodes_prediction_t>(g, conn_prediction_t{}, nodes_prediction_t{}, LINE(""));
       }
 
       template<class Graph>

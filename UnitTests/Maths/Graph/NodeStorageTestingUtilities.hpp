@@ -67,7 +67,7 @@ namespace sequoia::unit_testing
     template<class Logger>
     static void check(Logger& logger, const type& nodes, equivalent_type prediction, std::string_view description)
     {
-      check(logger, !prediction.size(), impl::concat_messages(description, "Node storage should have zero size for empty node weights"));
+      unit_testing::check(logger, !prediction.size(), impl::concat_messages(description, "Node storage should have zero size for empty node weights"));
     }
   };
 

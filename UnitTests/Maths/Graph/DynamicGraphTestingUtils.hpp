@@ -8,6 +8,7 @@
 #pragma once
 
 #include "GraphTestingUtils.hpp"
+#include "NodeStorageTestingUtilities.hpp"
 #include "DynamicGraph.hpp"
 
 namespace sequoia::unit_testing
@@ -30,10 +31,10 @@ namespace sequoia::unit_testing
     static void check(Logger& logger, const type& graph, const type& prediction, std::string_view description)
     {
       using connectivity_t = typename type::connectivity_type;
+      using nodes_t = typename type::nodes_type;
 
       check_equality(logger, static_cast<const connectivity_t&>(graph), static_cast<const connectivity_t&>(prediction), description);
-
-      // TO DO: nodes
+      check_equality(logger, static_cast<const nodes_t&>(graph), static_cast<const nodes_t&>(prediction), description);
     }    
   };
 
@@ -55,10 +56,10 @@ namespace sequoia::unit_testing
     static void check(Logger& logger, const type& graph, const type& prediction, std::string_view description)
     {
       using connectivity_t = typename type::connectivity_type;
-
+      using nodes_t = typename type::nodes_type;
+      
       check_equality(logger, static_cast<const connectivity_t&>(graph), static_cast<const connectivity_t&>(prediction), description);
-
-      // TO DO: nodes
+      check_equality(logger, static_cast<const nodes_t&>(graph), static_cast<const nodes_t&>(prediction), description);
     }    
   };
   
@@ -75,17 +76,18 @@ namespace sequoia::unit_testing
   struct equivalence_checker<maths::graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>>
   {
     using type = maths::graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>;
-
+    
     using connectivity_equivalent_type = std::initializer_list<std::initializer_list<typename type::edge_init_type>>;    
-
+    using nodes_equivalent_type = std::initializer_list<typename type::node_weight_type>;    
+   
     template<class Logger>
-    static void check(Logger& logger, const type& graph, connectivity_equivalent_type prediction, std::string_view description)
+    static void check(Logger& logger, const type& graph, connectivity_equivalent_type connPrediction, nodes_equivalent_type nodesPrediction, std::string_view description)
     {
       using connectivity_t = typename type::connectivity_type;
+      using nodes_t = typename type::nodes_type;
 
-      check_equivalence(logger, static_cast<const connectivity_t&>(graph), prediction, description);
-
-      // TO DO: nodes
+      check_equivalence(logger, static_cast<const connectivity_t&>(graph), connPrediction, description);
+      check_equivalence(logger, static_cast<const nodes_t&>(graph), nodesPrediction, description);
     }    
   };
 
@@ -104,15 +106,16 @@ namespace sequoia::unit_testing
     using type = maths::embedded_graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>;
 
     using connectivity_equivalent_type = std::initializer_list<std::initializer_list<typename type::edge_init_type>>;
+    using nodes_equivalent_type = std::initializer_list<typename type::node_weight_type>;
 
     template<class Logger>
-    static void check(Logger& logger, const type& graph, connectivity_equivalent_type prediction, std::string_view description)
+    static void check(Logger& logger, const type& graph, connectivity_equivalent_type connPrediction, nodes_equivalent_type nodesPrediction, std::string_view description)
     {
       using connectivity_t = typename type::connectivity_type;
+      using nodes_t = typename type::nodes_type;
 
-      check_equivalence(logger, static_cast<const connectivity_t&>(graph), prediction, description);
-
-      // TO DO: nodes
+      check_equivalence(logger, static_cast<const connectivity_t&>(graph), connPrediction, description);
+      check_equivalence(logger, static_cast<const nodes_t&>(graph), nodesPrediction, description);
     }    
   };
   
