@@ -720,15 +720,15 @@ namespace sequoia
     }
     
     template<class Logger, class T, class S, class... U>
-    bool check(Logger& logger, equivalence_tag, const T& value, const S& s, const U&... u, std::string_view description)
+    bool check(Logger& logger, equivalence_tag, const T& value, S&& s, U&&... u, std::string_view description)
     {
-      return impl::check<equivalence_checker<T>, Logger, T, S, U...>(logger, value, s, u..., description);      
+      return impl::check<equivalence_checker<T>, Logger, T, S, U...>(logger, value, std::forward<S>(s), std::forward<U>(u)..., description);      
     }
 
     template<class Logger, class T, class S, class... U>
-    bool check(Logger& logger, weak_equivalence_tag, const T& value, const S& s, const U&... u, std::string_view description)
+    bool check(Logger& logger, weak_equivalence_tag, const T& value, S&& s, U&&... u, std::string_view description)
     {
-      return impl::check<weak_equivalence_checker<T>, Logger, T, S, U...>(logger, value, s, u..., description);
+      return impl::check<weak_equivalence_checker<T>, Logger, T, S, U...>(logger, value, std::forward<S>(s), std::forward<U>(u)..., description);
     }
     
     template<class Logger, class T> bool check_equality(Logger& logger, const T& value, const T& prediction, std::string_view description="")
@@ -737,15 +737,15 @@ namespace sequoia
     }
 
     template<class Logger, class T, class S, class... U>
-    bool check_equivalence(Logger& logger, const T& value, const S& s, const U&... u, std::string_view description)
+    bool check_equivalence(Logger& logger, const T& value, S&& s, U&&... u, std::string_view description)
     {
-      return check<Logger, T, S, U...>(logger, equivalence_tag{}, value, s, u..., description);      
+      return check<Logger, T, S, U...>(logger, equivalence_tag{}, value, std::forward<S>(s), std::forward<U>(u)..., description);      
     }
 
     template<class Logger, class T, class S, class... U>
-    bool check_weak_equivalence(Logger& logger, const T& value, const S& s, const U&... u, std::string_view description)
+    bool check_weak_equivalence(Logger& logger, const T& value, S&& s, U&&... u, std::string_view description)
     {
-      return check<Logger, T, S, U...>(logger, weak_equivalence_tag{}, value, s, u..., description);      
+      return check<Logger, T, S, U...>(logger, weak_equivalence_tag{}, value, std::forward<S>(s), std::forward<U>(u)..., description);      
     }
 
     template<class Logger> bool check(Logger& logger, const bool value, std::string_view description="")
@@ -1009,9 +1009,15 @@ namespace sequoia
       }
 
       template<class T, class S, class... U>
-      bool check_equivalence(const T& value, const S& s, const U&... u, std::string_view description)
+      bool check_equivalence(const T& value, S&& s, U&&... u, std::string_view description)
       {
-        return unit_testing::check_equivalence<Logger, T, S, U...>(m_Logger, value, s, u..., description);
+        return unit_testing::check_equivalence<Logger, T, S, U...>(m_Logger, value, std::forward<S>(s), std::forward<U>(u)..., description);
+      }
+
+      template<class T, class S, class... U>
+      bool check_weak_equivalence(const T& value, S&& s, U&&... u, std::string_view description)
+      {
+        return unit_testing::check_weak_equivalence<Logger, T, S, U...>(m_Logger, value, std::forward<S>(s), std::forward<U>(u)..., description);
       }
       
       template<class T>
