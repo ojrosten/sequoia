@@ -16,6 +16,16 @@
 
 namespace sequoia::unit_testing
 {
+  namespace impl
+  {
+    template<class Edge> struct use_weak_equiv : std::false_type {};
+
+    template<class Weight, class WeightProxy, class IndexType>
+    struct use_weak_equiv<maths::edge<Weight, WeightProxy, IndexType>> : std::true_type {};
+
+    template<class Edge> constexpr bool use_weak_equiv_v{use_weak_equiv<Edge>::value};
+  }
+  
   template
   <      
     maths::directed_flavour Directedness,     
@@ -43,7 +53,7 @@ namespace sequoia::unit_testing
       }
     } 
   };
-
+  
   template
   <      
     maths::directed_flavour Directedness,     
@@ -70,10 +80,14 @@ namespace sequoia::unit_testing
           {
             check_range(logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), (prediction.begin()+i)->begin(), (prediction.begin() + i)->end(), impl::concat_messages(message, "cedge_iterator"));
           }
+          else if constexpr(impl::use_weak_equiv_v<edge_type>)
+          {
+             check_range_weak_equivalence(logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), (prediction.begin()+i)->begin(), (prediction.begin() + i)->end(), impl::concat_messages(message, "cedge_iterator"));
+          }
           else
           {
-            // TO DO
-          }              
+            check_range_equivalence(logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), (prediction.begin()+i)->begin(), (prediction.begin() + i)->end(), impl::concat_messages(message, "cedge_iterator"));
+          }                
         }
       }
     }    
