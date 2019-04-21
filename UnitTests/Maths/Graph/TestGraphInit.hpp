@@ -70,17 +70,14 @@ namespace sequoia
       using graph_checker<unit_test_logger<test_mode::standard>>::check_equivalence;
 
     private:
-      using GGraph = typename
+      using graph_t = typename
         graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>::graph_type;
 
-      using node_weight_type = typename GGraph::node_weight_type;
-      using NodeWeights = std::vector<node_weight_type>;
-      using edge = typename GGraph::edge_init_type;
       
       void execute_operations() override
       {
         typename checker_selector<GraphFlavour>::template init_checker<test_initialization> checker{*this};
-        checker.template check_all<GGraph>();
+        checker.template check_all<graph_t>();
       }
     };
   }
