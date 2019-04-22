@@ -129,25 +129,43 @@ namespace sequoia::unit_testing
 
     network.swap_nodes(0,1);
 
-    if constexpr (mutual_info(GraphFlavour))
+    if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_graph(network, {{E_Edge{1,0,0}}, {E_Edge{1,0,0}}}, {}, LINE(""));
+      check_equality(network, GGraph{{}, {edge_init_t{0}}}, LINE(""));
+    }
+    else if constexpr(GraphFlavour == graph_flavour::undirected)
+    {
+      check_equality(network, GGraph{{edge_init_t{1}}, {edge_init_t{0}}}, LINE(""));
+    }
+    else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
+    {
+      check_equality(network, GGraph{{edge_init_t{1,0,0}}, {edge_init_t{1,0,0}}}, LINE(""));
     }
     else
     {
-      check_graph(network, {{}, {Edge{0,1}}}, {}, LINE(""));
+      check_equality(network, GGraph{{edge_init_t{1,0}}, {edge_init_t{0,0}}}, LINE(""));
     }
     
     network.swap_nodes(1,0);
 
-    if constexpr (mutual_info(GraphFlavour))
+    if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_graph(network, {{E_Edge{0,1,0}}, {E_Edge{0,1,0}}}, {}, LINE(""));
+      check_equality(network, GGraph{{edge_init_t{1}}, {}}, LINE(""));
+    }
+    else if constexpr(GraphFlavour == graph_flavour::undirected)
+    {
+      check_equality(network, GGraph{{edge_init_t{1}}, {edge_init_t{0}}}, LINE(""));
+    }
+    else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
+    {
+      check_equality(network, GGraph{{edge_init_t{0,1,0}}, {edge_init_t{0,1,0}}}, LINE(""));
     }
     else
     {
-      check_graph(network, {{Edge{0,1}}, {}}, {}, LINE(""));
+      check_equality(network, GGraph{{edge_init_t{1,0}}, {edge_init_t{0,0}}}, LINE(""));
     }
+
+    
 
     std::size_t nodeNum{network.add_node()};
     check_equality<std::size_t>(2, nodeNum, LINE("Index of added node is 2"));

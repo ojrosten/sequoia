@@ -51,6 +51,16 @@ namespace sequoia
         return os.str();
       }
     };
+
+    template<class T> std::string demangle()
+    {
+      #ifndef _MSC_VER_
+        int status;
+        return abi::__cxa_demangle(typeid(T).name(), 0, 0, &status);
+      #else        
+        return typeid(T).name();
+      #endif
+    }
     
     template<class T> [[nodiscard]] std::string to_string(const T& value)
     {
@@ -693,7 +703,7 @@ namespace sequoia
           s.log_check();
           if(!(prediction == value))
           {
-            logger.log_failure(impl::concat_messages(description, "Equal-to comparison failed"));
+            logger.log_failure("\n\t" + impl::concat_messages(description, "operator== returned false for type\n\t" + demangle<T>()));
           }
         }
 
@@ -703,7 +713,7 @@ namespace sequoia
           s.log_check();
           if(prediction != value)
           {
-            logger.log_failure(impl::concat_messages(description, "Spurious not-equal-to comparison"));
+            logger.log_failure("\n\t" + impl::concat_messages(description, "operator!= returned true for type\n\t" + demangle<T>()));
           }
         }
 
@@ -1224,16 +1234,6 @@ namespace sequoia
       return s;
     }
 
-    #define LINE(message) report_line(__FILE__, __LINE__, message)
-
-    template<class T> std::string demangle()
-    {
-      #ifndef _MSC_VER_
-        int status;
-        return abi::__cxa_demangle(typeid(T).name(), 0, 0, &status);
-      #else        
-        return typeid(T).name();
-      #endif
-    }
+    #define LINE(message) report_line(__FILE__, __LINE__, message)    
   }
 }
