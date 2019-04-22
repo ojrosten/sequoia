@@ -917,6 +917,8 @@ namespace sequoia
 
       constexpr void process_complementary_edges(std::initializer_list<std::initializer_list<edge_init_type>> edges)
       {
+        if constexpr(!direct_edge_init()) m_Edges.reserve_partitions(edges.size());
+                      
         for(auto nodeEdgesIter{edges.begin()}; nodeEdgesIter != edges.end(); ++nodeEdgesIter)
         {
           if constexpr(!direct_edge_init()) m_Edges.add_slot();
@@ -990,20 +992,23 @@ namespace sequoia
             
             if constexpr(!direct_edge_init())
             {
-              auto partner{target};
-              if constexpr(directed(directedness))
-              {
-                if(target == currentNodeIndex) partner = edge.host_node();
-              }
-              
-              const auto pos{static_cast<edge_index_type>(std::distance(nodeEdges.begin(), edgeIter))};
-              if(!EdgeTraits::shared_edge_v || (partner > currentNodeIndex) || ((partner == currentNodeIndex) && (compIndex > pos)))
+              if constexpr(!EdgeTraits::shared_edge_v)
               {
                 m_Edges.push_back_to_partition(currentNodeIndex, make_edge(currentNodeIndex, edge));
               }
               else
               {
-                m_Edges.push_back_to_partition(currentNodeIndex, cbegin_edges(partner) + compIndex);
+                const auto pos{static_cast<edge_index_type>(std::distance(nodeEdges.begin(), edgeIter))};
+                const auto host{edge.host_node()};
+                const auto partner{target == currentNodeIndex ? host : target};
+                if((partner > currentNodeIndex) || ((partner == currentNodeIndex) && (compIndex > pos)))
+                {
+                  m_Edges.push_back_to_partition(currentNodeIndex, make_edge(host, edge));
+                }
+                else
+                {
+                  m_Edges.push_back_to_partition(currentNodeIndex, cbegin_edges(partner) + compIndex);
+                }
               }
             }
           }
