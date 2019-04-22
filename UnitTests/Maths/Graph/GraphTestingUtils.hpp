@@ -80,14 +80,37 @@ namespace sequoia::unit_testing
           {
             check_range(logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), (prediction.begin()+i)->begin(), (prediction.begin() + i)->end(), impl::concat_messages(message, "cedge_iterator"));
           }
-          else if constexpr(impl::use_weak_equiv_v<edge_type>)
-          {
-             check_range_weak_equivalence(logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), (prediction.begin()+i)->begin(), (prediction.begin() + i)->end(), impl::concat_messages(message, "cedge_iterator"));
-          }
           else
           {
             check_range_equivalence(logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), (prediction.begin()+i)->begin(), (prediction.begin() + i)->end(), impl::concat_messages(message, "cedge_iterator"));
           }                
+        }
+      }
+    }    
+  };
+
+  template
+  <      
+    maths::directed_flavour Directedness,     
+    class EdgeTraits,
+    class WeightMaker
+  >
+  struct weak_equivalence_checker<maths::connectivity<Directedness, EdgeTraits, WeightMaker>>
+  {
+    using type            = maths::connectivity<Directedness, EdgeTraits, WeightMaker>;
+    using edge_init_type  = typename type::edge_init_type;
+    using edge_type       = typename type::edge_type;
+    using equivalent_type = std::initializer_list<std::initializer_list<edge_init_type>>;
+
+    template<class Logger>
+    static void check(Logger& logger, const type& connectivity, equivalent_type prediction, std::string_view description)
+    {
+      if(check_equality(logger, connectivity.order(), prediction.size(), impl::concat_messages(description, "Connectivity order wrong")))
+      {
+        for(std::size_t i{}; i<connectivity.order(); ++i)
+        {
+          const std::string message{impl::concat_messages(description,"Partition " + std::to_string(i))};
+          check_range_weak_equivalence(logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), (prediction.begin()+i)->begin(), (prediction.begin() + i)->end(), impl::concat_messages(message, "cedge_iterator"));
         }
       }
     }    
@@ -376,45 +399,7 @@ namespace sequoia
 
     using graph_unit_test = graph_basic_test<unit_test_logger<test_mode::standard>>;
     using graph_false_positive_test = graph_basic_test<unit_test_logger<test_mode::false_positive>>;    
-
-
-    template<class Checker>
-    class checker_wrapper
-    {
-    public:
-      checker_wrapper(Checker& checker) : m_Checker{checker} {}
-      
-    protected:
-      ~checker_wrapper() = default;
-      
-      template<class E, class Fn>
-      bool check_exception_thrown(Fn&& function, const std::string& description="")
-      {
-        return m_Checker.template check_exception_thrown<E>(std::forward<Fn>(function), description);
-      }
-
-      template<class G, class E=typename G::edge_init_type>
-      bool check_graph(const G& graph, const std::initializer_list<std::initializer_list<E>>& edges, const std::initializer_list<typename G::node_weight_type>& nodeWeights, const std::string& failureMessage="")
-      {
-        return m_Checker.template check_graph(graph, edges, nodeWeights, failureMessage);
-      }
-
-      template<class T> bool check_equality(const T& value, const T& prediction, const std::string& description="")
-      {
-        return m_Checker.template check_equality(value, prediction, description);
-      }
-
-      template<class T, class S, class... U>
-      bool check_equivalence(const T& value, const S& s, const U&... u, std::string_view description)
-      {
-        return m_Checker.template check_equivalence<T, S, U...>(value, s, u..., description);
-      }
-
-    private:
-      Checker& m_Checker;
-    };
-    
-    
+       
     struct unsortable
     {
       int x{};

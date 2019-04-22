@@ -14,12 +14,14 @@ namespace sequoia
   namespace unit_testing
   {
     template<class Checker>
-    class init_checker : public checker_wrapper<Checker>
+    class init_checker
     {
     public:
-      using checker_wrapper<Checker>::checker_wrapper;
+      init_checker(Checker& checker) : m_Checker{checker} {}
 
     protected:
+      Checker& m_Checker;
+      
       ~init_checker() = default;
 
       template<class Graph>
@@ -49,7 +51,7 @@ namespace sequoia
         {
           // Remove restriction in C++20
           if constexpr(!is_static_graph_v<Graph>)
-                        this->template check_exception_thrown<std::logic_error>([](){ Graph{{{},{}}, {NodeWeight{}}}; }, LINE("Mismatched nodes and edges"));
+                        m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{{},{}}, {NodeWeight{}}}; }, LINE("Mismatched nodes and edges"));
           
           if constexpr(is_static_graph_v<Graph>)
           {
@@ -76,7 +78,7 @@ namespace sequoia
         {
           // Remove restriction in C++20
           if constexpr(!is_static_graph_v<Graph>)
-                        this->template check_exception_thrown<std::logic_error>([](){ Graph{{{}}, {NodeWeight{}, NodeWeight{}}}; }, LINE("Mismatched nodes and edges"));
+                        m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{{}}, {NodeWeight{}, NodeWeight{}}}; }, LINE("Mismatched nodes and edges"));
           
           if constexpr(is_static_graph_v<Graph>)
           {
@@ -99,11 +101,11 @@ namespace sequoia
       template<class Graph>
       void check_0_0(const Graph& g)
       {        
-        this->template check_graph(g, {}, {}, LINE(""));
+        m_Checker.template check_graph(g, {}, {}, LINE(""));
 
-        using conn_prediction_t = std::initializer_list<std::initializer_list<typename Graph::edge_init_type>>;
-        using nodes_prediction_t = std::initializer_list<typename Graph::node_weight_type>;
-        this->template check_equivalence<Graph, conn_prediction_t, nodes_prediction_t>(g, conn_prediction_t{}, nodes_prediction_t{}, LINE(""));
+        //using conn_prediction_t = std::initializer_list<std::initializer_list<typename Graph::edge_init_type>>;
+        //using nodes_prediction_t = std::initializer_list<typename Graph::node_weight_type>;
+        //m_Checker.template check_equivalence<Graph, conn_prediction_t, nodes_prediction_t>(g, conn_prediction_t{}, nodes_prediction_t{}, LINE(""));
       }
 
       template<class Graph>
@@ -111,7 +113,7 @@ namespace sequoia
       {        
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, {{}}, {NodeWeight{}}, LINE(""));
+        m_Checker.template check_graph(g, {{}}, {NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
@@ -119,12 +121,12 @@ namespace sequoia
       {        
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, {{}, {}}, {NodeWeight{}, NodeWeight{}}, LINE(""));
+        m_Checker.template check_graph(g, {{}, {}}, {NodeWeight{}, NodeWeight{}}, LINE(""));
       }
     };
     
     template<class Checker>
-    class undirected_init_checker : public init_checker<Checker>
+    class undirected_init_checker : protected init_checker<Checker>
     {
     public:
       using init_checker<Checker>::init_checker;
@@ -155,8 +157,8 @@ namespace sequoia
         //{
         //  using edge = typename Graph::edge_init_type;
 
-        //  this->template check_exception_thrown<std::logic_error>([](){ Graph{{}}; }, LINE("Initializer list too long"));
-        // this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0}}}; }, LINE("Initializer list too long"));
+        //  m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{}}; }, LINE("Initializer list too long"));
+        // m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0}}}; }, LINE("Initializer list too long"));
         //}
 
         init_checker<Checker>::template check_0_0<Graph>();
@@ -183,15 +185,15 @@ namespace sequoia
       {
         using edge = typename Graph::edge_init_type;
 
-        if constexpr(is_static_graph_v<Graph>) this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0}}}; }, LINE("Too few elements in initializer list"));
-        this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1}, edge{0}}}; }, LINE("First partial index of loop out of range"));
-        this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0}, edge{1}}}; }, LINE("Second partial index of loop out of range"));
-        if constexpr(is_static_graph_v<Graph>) this->template check_exception_thrown<std::logic_error>([](){ Graph{{}, {}}; }, LINE("Initializer list too long"));
+        if constexpr(is_static_graph_v<Graph>) m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0}}}; }, LINE("Too few elements in initializer list"));
+        m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1}, edge{0}}}; }, LINE("First partial index of loop out of range"));
+        m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0}, edge{1}}}; }, LINE("Second partial index of loop out of range"));
+        if constexpr(is_static_graph_v<Graph>) m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{}, {}}; }, LINE("Initializer list too long"));
 
         using edge_weight = typename edge::weight_type;
         if constexpr(!std::is_empty_v<edge_weight>)
         {
-          this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0,2}, edge{0,-2}}}; }, LINE("Mismatch between weights"));
+          m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0,2}, edge{0,-2}}}; }, LINE("Mismatch between weights"));
         }
         
         //  /\
@@ -228,9 +230,9 @@ namespace sequoia
         using node_weight = typename Graph::node_weight_type;        
         if constexpr(!std::is_empty_v<node_weight>)
         {
-          this->template check_exception_thrown<std::logic_error>([](){ Graph{{{edge{0}, edge{0}}, {}}, {node_weight{}}}; }, LINE("Mismatch between node and edge init"));
+          m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{{edge{0}, edge{0}}, {}}, {node_weight{}}}; }, LINE("Mismatch between node and edge init"));
 
-          this->template check_exception_thrown<std::logic_error>([](){ Graph{{{edge{0}, edge{0}}}, {node_weight{}, node_weight{}}}; }, LINE("Mismatch between node and edge init"));
+          m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{{edge{0}, edge{0}}}, {node_weight{}, node_weight{}}}; }, LINE("Mismatch between node and edge init"));
           
           if constexpr(is_static_graph_v<Graph>)
           {
@@ -266,14 +268,14 @@ namespace sequoia
       {
         using edge = typename Graph::edge_init_type;
 
-        this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0}, edge{0}, edge{0}}}; }, LINE("Too few elements in initializer list"));
-        this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0}, edge{0}, edge{0}, edge{1}}}; }, LINE("Partial index out of range"));
-        this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0}, edge{0}, edge{0}, edge{0}, edge{0}}}; }, LINE("Too Many elements in initializer list"));
+        m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0}, edge{0}, edge{0}}}; }, LINE("Too few elements in initializer list"));
+        m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0}, edge{0}, edge{0}, edge{1}}}; }, LINE("Partial index out of range"));
+        m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0}, edge{0}, edge{0}, edge{0}, edge{0}}}; }, LINE("Too Many elements in initializer list"));
 
         using edge_weight = typename edge::weight_type;
         if constexpr(!std::is_empty_v<edge_weight>)
         {
-          this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0,2}, edge{0,-1}, edge{0,2}, edge{0,2}}}; }, LINE("Weight mismatch"));
+          m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0,2}, edge{0,-1}, edge{0,2}, edge{0,2}}}; }, LINE("Weight mismatch"));
         }
 
         //  /\
@@ -321,19 +323,19 @@ namespace sequoia
       {
         using edge = typename Graph::edge_init_type;
 
-        if constexpr(is_static_graph_v<Graph>) this->template check_exception_thrown<std::logic_error>([](){ Graph{{}, {}}; }, LINE("Too few elements in both sub-initializer list"));
-        this->template check_exception_thrown<std::logic_error>([](){ Graph{{}, {edge{0}}}; }, LINE("Too few elements in first sub-initializer list"));
-        this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0}}, {}}; }, LINE("Too few elements in second sub-initializer list"));
+        if constexpr(is_static_graph_v<Graph>) m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{}, {}}; }, LINE("Too few elements in both sub-initializer list"));
+        m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{}, {edge{0}}}; }, LINE("Too few elements in first sub-initializer list"));
+        m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0}}, {}}; }, LINE("Too few elements in second sub-initializer list"));
 
-        this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0}, edge{0}}, {edge{1}}}; }, LINE("Too many elements in first sub-initializer list"));
-        this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0}}, {edge{1}, edge{0}}}; }, LINE("Too many elements in second sub-initializer list"));
+        m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0}, edge{0}}, {edge{1}}}; }, LINE("Too many elements in first sub-initializer list"));
+        m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0}}, {edge{1}, edge{0}}}; }, LINE("Too many elements in second sub-initializer list"));
 
-        this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0}}, {edge{0}}}; }, LINE("Mismatched indices"));
+        m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0}}, {edge{0}}}; }, LINE("Mismatched indices"));
 
         using edge_weight = typename edge::weight_type;
         if constexpr(!std::is_empty_v<edge_weight>)
         {
-          this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1,5}}, {edge{0,-5}}}; }, LINE("Mismatched weights"));
+          m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1,5}}, {edge{0,-5}}}; }, LINE("Mismatched weights"));
         }
             
 
@@ -372,14 +374,14 @@ namespace sequoia
       {
         using edge = typename Graph::edge_init_type;
 
-        if constexpr(is_static_graph_v<Graph>) this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1}}, {edge{0}}, {}}; }, LINE("Too few elements in sub-initializer list"));
-        this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1}}, {edge{0}, edge{0}}, {edge{1}}}; }, LINE("Mismatched partial indices"));
+        if constexpr(is_static_graph_v<Graph>) m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1}}, {edge{0}}, {}}; }, LINE("Too few elements in sub-initializer list"));
+        m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1}}, {edge{0}, edge{0}}, {edge{1}}}; }, LINE("Mismatched partial indices"));
 
         using edge_weight = typename edge::weight_type;
         if constexpr(!std::is_empty_v<edge_weight>)
         {
-          this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1,1}}, {edge{0,8}, edge{2,1}}, {edge{1,8}}}; }, LINE("Mismatched weights"));
-          this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1,1}}, {edge{0,8}, edge{2,8}}, {edge{1,8}}}; }, LINE("Mismatched weight"));
+          m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1,1}}, {edge{0,8}, edge{2,1}}, {edge{1,8}}}; }, LINE("Mismatched weights"));
+          m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1,1}}, {edge{0,8}, edge{2,8}}, {edge{1,8}}}; }, LINE("Mismatched weight"));
         }
       
         // x-----x-----x
@@ -430,9 +432,9 @@ namespace sequoia
         using edge_weight = typename edge::weight_type;
         if constexpr(!std::is_empty_v<edge_weight>)
         {
-          this->template check_exception_thrown<std::logic_error>([](){Graph{{edge{1,-2}}, {edge{1,-2}, edge{0,-2}, edge{1,-2}, edge{2,-3}}, {edge{1,-2}}};}, LINE("Mismatched weights"));
+          m_Checker.template check_exception_thrown<std::logic_error>([](){Graph{{edge{1,-2}}, {edge{1,-2}, edge{0,-2}, edge{1,-2}, edge{2,-3}}, {edge{1,-2}}};}, LINE("Mismatched weights"));
 
-          this->template check_exception_thrown<std::logic_error>([](){Graph{{edge{2,7}, edge{1,2}}, {edge{2,5}, edge{0,2}}, {edge{1,-7}, edge{0,5}}};}, LINE("Mismatched weights"));
+          m_Checker.template check_exception_thrown<std::logic_error>([](){Graph{{edge{2,7}, edge{1,2}}, {edge{2,5}, edge{0,2}}, {edge{1,-7}, edge{0,5}}};}, LINE("Mismatched weights"));
         }
         
         using edge = typename Graph::edge_init_type;
@@ -521,7 +523,7 @@ namespace sequoia
         using edge_weight = typename edge::weight_type;
         if constexpr(!std::is_empty_v<edge_weight>)
         {
-          this->template check_exception_thrown<std::logic_error>([](){Graph{{edge{2,1}, edge{1,0}, edge{1,1}}, {edge{2,1}, edge{0,0}, edge{0,0}}, {edge{1,1}, edge{0,1}}};}, LINE("Mismatched weights"));
+          m_Checker.template check_exception_thrown<std::logic_error>([](){Graph{{edge{2,1}, edge{1,0}, edge{1,1}}, {edge{2,1}, edge{0,0}, edge{0,0}}, {edge{1,1}, edge{0,1}}};}, LINE("Mismatched weights"));
         }
 
         //    x
@@ -557,14 +559,15 @@ namespace sequoia
         }
       }
     private:
-
+      using init_checker<Checker>::m_Checker;
+      
       template<class Graph>
       void check_1_1(const Graph& g)
       {
         using edge = typename Graph::edge_init_type;
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, {{edge{0}, edge{0}}}, {NodeWeight{}}, LINE(""));
+        m_Checker.template check_graph(g, {{edge{0}, edge{0}}}, {NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
@@ -574,7 +577,7 @@ namespace sequoia
         
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, {{edge{0, -2}, edge{0, -2}}}, {NodeWeight{}}, LINE(""));
+        m_Checker.template check_graph(g, {{edge{0, -2}, edge{0, -2}}}, {NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
@@ -584,7 +587,7 @@ namespace sequoia
         
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, {{edge{0}, edge{0}, edge{0}, edge{0}}}, {NodeWeight{}}, LINE(""));
+        m_Checker.template check_graph(g, {{edge{0}, edge{0}, edge{0}, edge{0}}}, {NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
@@ -594,8 +597,8 @@ namespace sequoia
         
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, {{edge{0, 0}, edge{0, 0}, edge{0, 1}, edge{0, 1}}}, {NodeWeight{}}, LINE(""));
-        this->template check_graph(g2, {{edge{0, -1}, edge{0, -1}, edge{0, -1}, edge{0, -1}}}, {NodeWeight{}}, LINE(""));
+        m_Checker.template check_graph(g, {{edge{0, 0}, edge{0, 0}, edge{0, 1}, edge{0, 1}}}, {NodeWeight{}}, LINE(""));
+        m_Checker.template check_graph(g2, {{edge{0, -1}, edge{0, -1}, edge{0, -1}, edge{0, -1}}}, {NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
@@ -605,7 +608,7 @@ namespace sequoia
         
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, {{edge{1}}, {edge{0}}}, {NodeWeight{}, NodeWeight{}}, LINE(""));
+        m_Checker.template check_graph(g, {{edge{1}}, {edge{0}}}, {NodeWeight{}, NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
@@ -615,7 +618,7 @@ namespace sequoia
         
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, {{edge{1,-5}}, {edge{0,-5}}}, {NodeWeight{}, NodeWeight{}}, LINE(""));
+        m_Checker.template check_graph(g, {{edge{1,-5}}, {edge{0,-5}}}, {NodeWeight{}, NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
@@ -625,8 +628,8 @@ namespace sequoia
         
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, {{edge{1}}, {edge{0}, edge{2}}, {edge{1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
-        this->template check_graph(g2, {{edge{1}}, {edge{0}, edge{2}}, {edge{1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));       
+        m_Checker.template check_graph(g, {{edge{1}}, {edge{0}, edge{2}}, {edge{1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+        m_Checker.template check_graph(g2, {{edge{1}}, {edge{0}, edge{2}}, {edge{1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));       
       }
 
       template<class Graph>
@@ -636,8 +639,8 @@ namespace sequoia
         
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, {{edge{1,1}}, {edge{0,1}, edge{2,8}}, {edge{1,8}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
-        this->template check_graph(g2, {{edge{1,2}}, {edge{0,2}, edge{2,-2}}, {edge{1,-2}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));       
+        m_Checker.template check_graph(g, {{edge{1,1}}, {edge{0,1}, edge{2,8}}, {edge{1,8}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+        m_Checker.template check_graph(g2, {{edge{1,2}}, {edge{0,2}, edge{2,-2}}, {edge{1,-2}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));       
       }
 
       template<class Graph>
@@ -647,8 +650,8 @@ namespace sequoia
         
         using NodeWeight = typename Graph::node_weight_type;
         
-        this->template check_graph(g, {{edge{1}}, {edge{0}, edge{1}, edge{1}, edge{2}}, {edge{1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
-        this->template check_graph(g2, {{edge{1}}, {edge{0}, edge{1}, edge{1}, edge{2}}, {edge{1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+        m_Checker.template check_graph(g, {{edge{1}}, {edge{0}, edge{1}, edge{1}, edge{2}}, {edge{1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+        m_Checker.template check_graph(g2, {{edge{1}}, {edge{0}, edge{1}, edge{1}, edge{2}}, {edge{1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
@@ -658,8 +661,8 @@ namespace sequoia
         
         using NodeWeight = typename Graph::node_weight_type;
         
-        this->template check_graph(g,  {{edge{1,-2}}, {edge{0,-2}, edge{1,-2}, edge{1,-2}, edge{2,-2}}, {edge{1,-2}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
-        this->template check_graph(g2, {{edge{1,-2}}, {edge{0,-2}, edge{1,3}, edge{1,3}, edge{2,4}}, {edge{1,4}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+        m_Checker.template check_graph(g,  {{edge{1,-2}}, {edge{0,-2}, edge{1,-2}, edge{1,-2}, edge{2,-2}}, {edge{1,-2}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+        m_Checker.template check_graph(g2, {{edge{1,-2}}, {edge{0,-2}, edge{1,3}, edge{1,3}, edge{2,4}}, {edge{1,4}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
@@ -669,7 +672,7 @@ namespace sequoia
         
         using NodeWeight = typename Graph::node_weight_type;
         
-        this->template check_graph(g, {{edge{1}, edge{2}}, {edge{0}, edge{2}}, {edge{0}, edge{1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+        m_Checker.template check_graph(g, {{edge{1}, edge{2}}, {edge{0}, edge{2}}, {edge{0}, edge{1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
@@ -679,7 +682,7 @@ namespace sequoia
         
         using NodeWeight = typename Graph::node_weight_type;
         
-        this->template check_graph(g, {{edge{1,2}, edge{2,7}}, {edge{0,2}, edge{2,0}}, {edge{0,7}, edge{1,0}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+        m_Checker.template check_graph(g, {{edge{1,2}, edge{2,7}}, {edge{0,2}, edge{2,0}}, {edge{0,7}, edge{1,0}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
@@ -689,7 +692,7 @@ namespace sequoia
         
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, {{edge{1}, edge{1}, edge{2}}, {edge{0}, edge{0}, edge{2}}, {edge{0}, edge{1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+        m_Checker.template check_graph(g, {{edge{1}, edge{1}, edge{2}}, {edge{0}, edge{0}, edge{2}}, {edge{0}, edge{1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
@@ -702,18 +705,18 @@ namespace sequoia
 
         if constexpr (!is_orderable_v<edge_weight_type>)
         {
-          this->template check_graph(g, {{edge{1,0}, edge{1,1}, edge{2,1}}, {edge{0,1}, edge{0,0}, edge{2,1}}, {edge{0,1}, edge{1,1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+          m_Checker.template check_graph(g, {{edge{1,0}, edge{1,1}, edge{2,1}}, {edge{0,1}, edge{0,0}, edge{2,1}}, {edge{0,1}, edge{1,1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
         }
         else
         {
-          this->template check_graph(g, {{edge{1,0}, edge{1,1}, edge{2,1}}, {edge{0,0}, edge{0,1}, edge{2,1}}, {edge{0,1}, edge{1,1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+          m_Checker.template check_graph(g, {{edge{1,0}, edge{1,1}, edge{2,1}}, {edge{0,0}, edge{0,1}, edge{2,1}}, {edge{0,1}, edge{1,1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
         }
       }
     };
 
 
     template<class Checker>
-    class undirected_embedded_init_checker : public init_checker<Checker>
+    class undirected_embedded_init_checker : protected init_checker<Checker>
     {
     public:
       using init_checker<Checker>::init_checker;
@@ -743,8 +746,8 @@ namespace sequoia
         //{
         //  using edge = typename Graph::edge_init_type;
 
-        //  this->template check_exception_thrown<std::logic_error>([](){ Graph{{}}; }, LINE("Initializer list too long"));
-        // this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0,0}}}; }, LINE("Initializer list too long"));
+        //  m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{}}; }, LINE("Initializer list too long"));
+        // m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0,0}}}; }, LINE("Initializer list too long"));
         //}
 
         init_checker<Checker>::template check_0_0<Graph>();
@@ -771,19 +774,19 @@ namespace sequoia
       {
         using edge = typename Graph::edge_init_type;
       
-        this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0,1}}}; }, LINE("Too few elements in initializer list"));
-        this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1,1}, edge{0,1}}}; }, LINE("First partial index of loop out of range"));
-        this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0,1}, edge{1,0}}}; }, LINE("Second partial index of loop out of range"));
-        if constexpr (is_static_graph_v<Graph>) this->template check_exception_thrown<std::logic_error>([](){ Graph{{}, {}}; }, LINE("Initializer list too long"));
-        this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0,0}, edge{0,0}}}; }, LINE("First complementary index is self-referential"));
-        this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0,0}, edge{0,1}}}; }, LINE("Second complementary index is self-referential"));
-        this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0,2}, edge{0,0}}}; }, LINE("First complementary index is out of range"));
-        this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0,0}, edge{0,2}}}; }, LINE("First complementary index is out of range"));
+        m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0,1}}}; }, LINE("Too few elements in initializer list"));
+        m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1,1}, edge{0,1}}}; }, LINE("First partial index of loop out of range"));
+        m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0,1}, edge{1,0}}}; }, LINE("Second partial index of loop out of range"));
+        if constexpr (is_static_graph_v<Graph>) m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{}, {}}; }, LINE("Initializer list too long"));
+        m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0,0}, edge{0,0}}}; }, LINE("First complementary index is self-referential"));
+        m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0,0}, edge{0,1}}}; }, LINE("Second complementary index is self-referential"));
+        m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0,2}, edge{0,0}}}; }, LINE("First complementary index is out of range"));
+        m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0,0}, edge{0,2}}}; }, LINE("First complementary index is out of range"));
 
         using edge_weight = typename edge::weight_type;
         if constexpr(!std::is_empty_v<edge_weight>)
         {
-          this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0,1,1}, edge{0,0,2}}}; }, LINE("Weight mismatch"));
+          m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0,1,1}, edge{0,0,2}}}; }, LINE("Weight mismatch"));
         }
 
         //  /\
@@ -822,9 +825,9 @@ namespace sequoia
         if constexpr(!std::is_empty_v<node_weight>)
         {
 
-          this->template check_exception_thrown<std::logic_error>([](){ Graph{{{edge{0,1}, edge{0,0}}, {}}, {node_weight{}}}; }, LINE("Mismatch between node and edge init"));
+          m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{{edge{0,1}, edge{0,0}}, {}}, {node_weight{}}}; }, LINE("Mismatch between node and edge init"));
 
-          this->template check_exception_thrown<std::logic_error>([](){ Graph{{{edge{0,1}, edge{0,0}}}, {node_weight{}, node_weight{}}}; }, LINE("Mismatch between node and edge init"));
+          m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{{edge{0,1}, edge{0,0}}}, {node_weight{}, node_weight{}}}; }, LINE("Mismatch between node and edge init"));
           
           if constexpr(is_static_graph_v<Graph>)
           {
@@ -860,16 +863,16 @@ namespace sequoia
       {
         using edge = typename Graph::edge_init_type;
 
-        this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0,1}, edge{0,0}, edge{0,0}}}; }, LINE("Too few elements in initializer lists"));
-        this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0,2}, edge{0,3}, edge{0,0}, edge{1,1}}}; }, LINE("Partial index out of range"));
-        this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0,2}, edge{0,3}, edge{0,0}, edge{0,1}, edge{0,0}}}; }, LINE("Too Many elements in initializer list"));
-        this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0,0}, edge{0,3}, edge{0,2}, edge{0,1}}}; }, LINE("Self-referential complementary indices"));
-        this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0,4}, edge{0,3}, edge{0,0}, edge{0,1}}}; }, LINE("Complementary index out of range"));
+        m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0,1}, edge{0,0}, edge{0,0}}}; }, LINE("Too few elements in initializer lists"));
+        m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0,2}, edge{0,3}, edge{0,0}, edge{1,1}}}; }, LINE("Partial index out of range"));
+        m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0,2}, edge{0,3}, edge{0,0}, edge{0,1}, edge{0,0}}}; }, LINE("Too Many elements in initializer list"));
+        m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0,0}, edge{0,3}, edge{0,2}, edge{0,1}}}; }, LINE("Self-referential complementary indices"));
+        m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0,4}, edge{0,3}, edge{0,0}, edge{0,1}}}; }, LINE("Complementary index out of range"));
 
         using edge_weight = typename edge::weight_type;
         if constexpr(!std::is_empty_v<edge_weight>)
         {
-          this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0,2,1}, edge{0,3,1}, edge{0,0,2}, edge{0,1,2}}}; }, LINE("Weight mismatch"));
+          m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0,2,1}, edge{0,3,1}, edge{0,0,2}, edge{0,1,2}}}; }, LINE("Weight mismatch"));
         }
       
         //  /\
@@ -895,20 +898,20 @@ namespace sequoia
       {
         using edge = typename Graph::edge_init_type;
 
-        if constexpr(is_static_graph_v<Graph>) this->template check_exception_thrown<std::logic_error>([](){ Graph{{}, {}}; }, LINE("Too few elements in both sub-initializer lists"));
-        this->template check_exception_thrown<std::logic_error>([](){ Graph{{}, {edge{0,0}}}; }, LINE("Too few elements in first sub-initializer list"));
-        this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1,0}}, {}}; }, LINE("Too few elements in second sub-initializer list"));
+        if constexpr(is_static_graph_v<Graph>) m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{}, {}}; }, LINE("Too few elements in both sub-initializer lists"));
+        m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{}, {edge{0,0}}}; }, LINE("Too few elements in first sub-initializer list"));
+        m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1,0}}, {}}; }, LINE("Too few elements in second sub-initializer list"));
 
-        this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0,1}, edge{0,1}}, {edge{1,0}}}; }, LINE("Too many elements in first sub-initializer list"));
-        this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1,0}}, {edge{1,0}, edge{0,0}}}; }, LINE("Too many elements in second sub-initializer list"));
+        m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0,1}, edge{0,1}}, {edge{1,0}}}; }, LINE("Too many elements in first sub-initializer list"));
+        m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1,0}}, {edge{1,0}, edge{0,0}}}; }, LINE("Too many elements in second sub-initializer list"));
 
-        this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1,1}}, {edge{0,0}}}; }, LINE("Complementary index out of range"));
-        this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1,1}}, {edge{0,1}}}; }, LINE("Complementary indices out of range"));
+        m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1,1}}, {edge{0,0}}}; }, LINE("Complementary index out of range"));
+        m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1,1}}, {edge{0,1}}}; }, LINE("Complementary indices out of range"));
 
         using edge_weight = typename edge::weight_type;
         if constexpr(!std::is_empty_v<edge_weight>)
         {
-          this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1,0,1}, edge{0,0,0}}}; }, LINE("Weight mismatch"));
+          m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1,0,1}, edge{0,0,0}}}; }, LINE("Weight mismatch"));
         }
       
         // x------x
@@ -919,10 +922,10 @@ namespace sequoia
             check_2_1(g);
             
             constexpr auto o{g.order()};
-            this->template check_equality<size_t>(2u, o, LINE("Check constexpr order")); 
+            m_Checker.template check_equality<size_t>(2u, o, LINE("Check constexpr order")); 
 
             constexpr auto s{g.size()};
-            this->template check_equality<size_t>(1u, s, LINE("Check constexpr size"));
+            m_Checker.template check_equality<size_t>(1u, s, LINE("Check constexpr size"));
           }
 
           if constexpr(!std::is_empty_v<edge_weight>)
@@ -931,10 +934,10 @@ namespace sequoia
             check_2_1w(g);
 
             constexpr auto o{g.order()};
-            this->template check_equality<size_t>(2u, o, LINE("Check constexpr order")); 
+            m_Checker.template check_equality<size_t>(2u, o, LINE("Check constexpr order")); 
 
             constexpr auto s{g.size()};
-            this->template check_equality<size_t>(1u, s, LINE("Check constexpr size"));
+            m_Checker.template check_equality<size_t>(1u, s, LINE("Check constexpr size"));
           }
         }
         else
@@ -957,14 +960,14 @@ namespace sequoia
       {
         using edge = typename Graph::edge_init_type;
 
-        if constexpr(is_static_graph_v<Graph>) this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1,0}}, {edge{0,0}}, {}}; }, LINE("Too few elements in sub-initializer list"));
-        this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1,0}}, {edge{0,0}, edge{0,0}}, {edge{1,0}}}; }, LINE("Mismatched partial indices"));
-        this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1,1}}, {edge{0,0}, edge{2,0}}, {edge{1,0}}}; }, LINE("Mismatched complementary indices"));
+        if constexpr(is_static_graph_v<Graph>) m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1,0}}, {edge{0,0}}, {}}; }, LINE("Too few elements in sub-initializer list"));
+        m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1,0}}, {edge{0,0}, edge{0,0}}, {edge{1,0}}}; }, LINE("Mismatched partial indices"));
+        m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1,1}}, {edge{0,0}, edge{2,0}}, {edge{1,0}}}; }, LINE("Mismatched complementary indices"));
 
         using edge_weight = typename edge::weight_type;
         if constexpr(!std::is_empty_v<edge_weight>)
         {
-          this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1,0,0}}, {edge{0,0,1}, edge{2,0,0}}, {edge{1,1,0}}}; }, LINE("Weight mismatch"));
+          m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1,0,0}}, {edge{0,0,1}, edge{2,0,0}}, {edge{1,1,0}}}; }, LINE("Weight mismatch"));
         }
         
         // x-----x-----x
@@ -992,12 +995,12 @@ namespace sequoia
       {
         using edge = typename Graph::edge_init_type;
       
-        this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1,1}}, {edge{1,2}, edge{0,1}, edge{1,0}, edge{2,0}}, {edge{1,3}}}; }, LINE("Mismatched complementary index"));
+        m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1,1}}, {edge{1,2}, edge{0,1}, edge{1,0}, edge{2,0}}, {edge{1,3}}}; }, LINE("Mismatched complementary index"));
 
         using edge_weight = typename edge::weight_type;
         if constexpr(!std::is_empty_v<edge_weight>)
         {
-          this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1,1,2}}, {edge{1,2,2}, edge{0,0,0}, edge{1,0,2}, edge{2,0,-3}}, {edge{1,3,-3}}}; }, LINE("Weight mismatch"));
+          m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1,1,2}}, {edge{1,2,2}, edge{0,0,0}, edge{1,0,2}, edge{2,0,-3}}, {edge{1,3,-3}}}; }, LINE("Weight mismatch"));
         }
 
       
@@ -1022,7 +1025,7 @@ namespace sequoia
             check_3_3(g, g2);
         }
 
-        this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{2,1}, edge{1,1}}, {edge{2,0}, edge{0,1}}, {edge{0,0}, edge{1,0}}}; }, LINE("Mismatched complementary indices"));
+        m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{2,1}, edge{1,1}}, {edge{2,0}, edge{0,1}}, {edge{0,0}, edge{1,0}}}; }, LINE("Mismatched complementary indices"));
 
         //    x
         //   / \
@@ -1042,6 +1045,7 @@ namespace sequoia
       }
       
     private:
+      using init_checker<Checker>::m_Checker;
       
       template<class Graph>
       void check_1_1(const Graph& g)
@@ -1051,7 +1055,7 @@ namespace sequoia
         
         using NodeWeight = typename Graph::node_weight_type;
         
-        this->template check_graph(g, {{edge{0,1}, edge{0,0}}}, {NodeWeight{}}, LINE(""));
+        m_Checker.template check_graph(g, {{edge{0,1}, edge{0,0}}}, {NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
@@ -1062,7 +1066,7 @@ namespace sequoia
         
         using NodeWeight = typename Graph::node_weight_type;
         
-        this->template check_graph(g, {{edge{0,1, -1}, edge{0,0, -1}}}, {NodeWeight{}}, LINE(""));
+        m_Checker.template check_graph(g, {{edge{0,1, -1}, edge{0,0, -1}}}, {NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
@@ -1073,7 +1077,7 @@ namespace sequoia
         
         using NodeWeight = typename Graph::node_weight_type;
         
-        this->template check_graph(g, {{edge{0,2}, edge{0,3}, edge{0,0}, edge{0,1}}}, {NodeWeight{}}, LINE(""));        
+        m_Checker.template check_graph(g, {{edge{0,2}, edge{0,3}, edge{0,0}, edge{0,1}}}, {NodeWeight{}}, LINE(""));        
       }
 
       template<class Graph>
@@ -1084,7 +1088,7 @@ namespace sequoia
         
         using NodeWeight = typename Graph::node_weight_type;
         
-        this->template check_graph(g, {{edge{1,0}}, {edge{0,0}}}, {NodeWeight{}, NodeWeight{}});
+        m_Checker.template check_graph(g, {{edge{1,0}}, {edge{0,0}}}, {NodeWeight{}, NodeWeight{}});
       }
 
       template<class Graph>
@@ -1095,7 +1099,7 @@ namespace sequoia
         
         using NodeWeight = typename Graph::node_weight_type;
         
-        this->template check_graph(g, {{edge{1,0,-3}}, {edge{0,0,-3}}}, {NodeWeight{}, NodeWeight{}});
+        m_Checker.template check_graph(g, {{edge{1,0,-3}}, {edge{0,0,-3}}}, {NodeWeight{}, NodeWeight{}});
       }
 
       template<class Graph>
@@ -1106,8 +1110,8 @@ namespace sequoia
         
         using NodeWeight = typename Graph::node_weight_type;
       
-        this->template check_graph(g, {{edge{1,0}}, {edge{0,0}, edge{2,0}}, {edge{1,1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
-        this->template check_graph(g2, {{edge{1,1}}, {edge{2,0}, edge{0,0}}, {edge{1,0}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+        m_Checker.template check_graph(g, {{edge{1,0}}, {edge{0,0}, edge{2,0}}, {edge{1,1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+        m_Checker.template check_graph(g2, {{edge{1,1}}, {edge{2,0}, edge{0,0}}, {edge{1,0}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
@@ -1117,8 +1121,8 @@ namespace sequoia
         
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, {{edge{1,1}}, {edge{1,2}, edge{0,0}, edge{1,0}, edge{2,0}}, {edge{1,3}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
-        this->template check_graph(g2, {{edge{1,3}}, {edge{2,0}, edge{1,2}, edge{1,1}, edge{0,0}}, {edge{1,0}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+        m_Checker.template check_graph(g, {{edge{1,1}}, {edge{1,2}, edge{0,0}, edge{1,0}, edge{2,0}}, {edge{1,3}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+        m_Checker.template check_graph(g2, {{edge{1,3}}, {edge{2,0}, edge{1,2}, edge{1,1}, edge{0,0}}, {edge{1,0}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
@@ -1128,14 +1132,14 @@ namespace sequoia
         
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, {{edge{2,1}, edge{1,1}}, {edge{2,0}, edge{0,1}}, {edge{1,0}, edge{0,0}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+        m_Checker.template check_graph(g, {{edge{2,1}, edge{1,1}}, {edge{2,0}, edge{0,1}}, {edge{1,0}, edge{0,0}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
       }
     };
 
     
 
     template<class Checker>
-    class directed_init_checker : public init_checker<Checker>
+    class directed_init_checker : protected init_checker<Checker>
     {
     public:
       using init_checker<Checker>::init_checker;
@@ -1165,8 +1169,8 @@ namespace sequoia
         //{
         //  using edge = typename Graph::edge_init_type;
 
-        //  this->template check_exception_thrown<std::logic_error>([](){ Graph{{}}; }, LINE("Initializer list too long"));
-        // this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0}}}; }, LINE("Initializer list too long"));
+        //  m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{}}; }, LINE("Initializer list too long"));
+        // m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0}}}; }, LINE("Initializer list too long"));
         //}
 
         init_checker<Checker>::template check_0_0<Graph>();
@@ -1193,7 +1197,7 @@ namespace sequoia
       {
         using edge = typename Graph::edge_init_type;
 
-        this-> template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1}}}; }, LINE("Partial index out of range"));
+        m_Checker. template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1}}}; }, LINE("Partial index out of range"));
 
         //  />\
         //  \ /
@@ -1230,9 +1234,9 @@ namespace sequoia
         using node_weight = typename Graph::node_weight_type;
         if constexpr(!std::is_empty_v<node_weight>)
         {
-          this->template check_exception_thrown<std::logic_error>([](){ Graph{{{edge{0}}, {}}, {node_weight{}}}; }, LINE("Mismatch between node and edge init"));
+          m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{{edge{0}}, {}}, {node_weight{}}}; }, LINE("Mismatch between node and edge init"));
 
-          this->template check_exception_thrown<std::logic_error>([](){ Graph{{{edge{0}}}, {node_weight{}, node_weight{}}}; }, LINE("Mismatch between node and edge init"));
+          m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{{edge{0}}}, {node_weight{}, node_weight{}}}; }, LINE("Mismatch between node and edge init"));
           
           if constexpr(is_static_graph_v<Graph>)
           {
@@ -1270,10 +1274,10 @@ namespace sequoia
 
         if constexpr(is_static_graph_v<Graph>)
         {
-          this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0}}}; }, LINE("Too few elements in initializer lists"));
-          this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0}, edge{0}, edge{0}}}; }, LINE("Too many elements in initializer lists"));
+          m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0}}}; }, LINE("Too few elements in initializer lists"));
+          m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0}, edge{0}, edge{0}}}; }, LINE("Too many elements in initializer lists"));
         }
-        this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0}, edge{1}}}; }, LINE("Partial index out of range"));
+        m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0}, edge{1}}}; }, LINE("Partial index out of range"));
         
         //  />\
         //  \ /
@@ -1300,11 +1304,11 @@ namespace sequoia
 
         if constexpr(is_static_graph_v<Graph>)
         {
-          this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1}}}; }, LINE("Too few elements in initializer lists"));
-          this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1}}, {edge{0}}}; }, LINE("Too many elements in initializer lists"));
+          m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1}}}; }, LINE("Too few elements in initializer lists"));
+          m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1}}, {edge{0}}}; }, LINE("Too many elements in initializer lists"));
         }
 
-        this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{2}}, {}}; }, LINE("Partial index out of range"));
+        m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{2}}, {}}; }, LINE("Partial index out of range"));
 
         // x-->---x
         if constexpr(is_static_graph_v<Graph>)
@@ -1326,9 +1330,9 @@ namespace sequoia
 
         if constexpr(is_static_graph_v<Graph>)
         {
-          this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1}}}; }, LINE("Only one element in initializer lists"));
-          this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1}}, {edge{0}}}; }, LINE("Only two elements in initializer lists"));
-          this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1}}, {edge{0}}, {}, {}}; }, LINE("Too many elements in initializer lists"));
+          m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1}}}; }, LINE("Only one element in initializer lists"));
+          m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1}}, {edge{0}}}; }, LINE("Only two elements in initializer lists"));
+          m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1}}, {edge{0}}, {}, {}}; }, LINE("Too many elements in initializer lists"));
         }
 
         // x-->--x--<--x
@@ -1371,6 +1375,8 @@ namespace sequoia
         }
       }
     private:
+      using init_checker<Checker>::m_Checker;
+      
       template<class Graph>
       void check_1_1(const Graph& g)
       {
@@ -1378,7 +1384,7 @@ namespace sequoia
         
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, {{edge{0}}}, {NodeWeight{}}, LINE(""));
+        m_Checker.template check_graph(g, {{edge{0}}}, {NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
@@ -1388,7 +1394,7 @@ namespace sequoia
         
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, {{edge{0,10}}}, {NodeWeight{}}, LINE(""));
+        m_Checker.template check_graph(g, {{edge{0,10}}}, {NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
@@ -1398,7 +1404,7 @@ namespace sequoia
         
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, {{edge{0}, edge{0}}}, {NodeWeight{}}, LINE(""));
+        m_Checker.template check_graph(g, {{edge{0}, edge{0}}}, {NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
@@ -1408,7 +1414,7 @@ namespace sequoia
         
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, {{edge{1}}, {}}, {NodeWeight{}, NodeWeight{}}, LINE(""));
+        m_Checker.template check_graph(g, {{edge{1}}, {}}, {NodeWeight{}, NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
@@ -1418,8 +1424,8 @@ namespace sequoia
         
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, {{edge{1}}, {}, {edge{1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
-        this->template check_graph(g2, {{}, {edge{2}, edge{0}}, {}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+        m_Checker.template check_graph(g, {{edge{1}}, {}, {edge{1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+        m_Checker.template check_graph(g2, {{}, {edge{2}, edge{0}}, {}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
@@ -1429,13 +1435,13 @@ namespace sequoia
         
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, {{}, {}, {edge{2}, edge{3}}, {}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+        m_Checker.template check_graph(g, {{}, {}, {edge{2}, edge{3}}, {}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
       }
     };
 
 
     template<class Checker>
-    class directed_embedded_init_checker : public init_checker<Checker>
+    class directed_embedded_init_checker : protected init_checker<Checker>
     {
     public:
       using init_checker<Checker>::init_checker;
@@ -1463,8 +1469,8 @@ namespace sequoia
         //{
         //  using edge = typename Graph::edge_init_type;
 
-        //  this->template check_exception_thrown<std::logic_error>([](){ Graph{{}}; }, LINE("Initializer list too long"));
-        // this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0,0,0}}}; }, LINE("Initializer list too long"));
+        //  m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{}}; }, LINE("Initializer list too long"));
+        // m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0,0,0}}}; }, LINE("Initializer list too long"));
         //}
 
         init_checker<Checker>::template check_0_0<Graph>();
@@ -1492,8 +1498,8 @@ namespace sequoia
         using maths::inversion_constant;
         using edge = typename Graph::edge_init_type;
 
-        this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1,0,1}, edge{0,0,0}}}; }, LINE("Partial index out of range"));
-        this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0,0,1}, edge{0,0,1}}}; }, LINE("Mismatched complementary indices"));
+        m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1,0,1}, edge{0,0,0}}}; }, LINE("Partial index out of range"));
+        m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{0,0,1}, edge{0,0,1}}}; }, LINE("Mismatched complementary indices"));
 
         //  />\   /<\
         //  \ /   \ /
@@ -1538,9 +1544,9 @@ namespace sequoia
         using node_weight = typename Graph::node_weight_type;
         if constexpr(!std::is_empty_v<node_weight>)
         {
-          this->template check_exception_thrown<std::logic_error>([](){ Graph{{{edge{0,0,1}, edge{0,0,0}}, {}}, {node_weight{}}}; }, LINE("Mismatch between node and edge init"));
+          m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{{edge{0,0,1}, edge{0,0,0}}, {}}, {node_weight{}}}; }, LINE("Mismatch between node and edge init"));
 
-          this->template check_exception_thrown<std::logic_error>([](){ Graph{{{edge{0,0,1}, edge{0,0,0}}}, {node_weight{}, node_weight{}}}; }, LINE("Mismatch between node and edge init"));
+          m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{{edge{0,0,1}, edge{0,0,0}}}, {node_weight{}, node_weight{}}}; }, LINE("Mismatch between node and edge init"));
           
           if constexpr(is_static_graph_v<Graph>)
           {
@@ -1584,7 +1590,7 @@ namespace sequoia
       {
         using edge = typename Graph::edge_init_type;
 
-        this->template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1,0,1}, edge{0,1,0}}}; }, LINE("Mismatched full edges"));
+        m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{edge{1,0,1}, edge{0,1,0}}}; }, LINE("Mismatched full edges"));
 
         // x--<--x  x-->--x
 
@@ -1611,7 +1617,7 @@ namespace sequoia
       {
         using edge = typename Graph::edge_init_type;
 
-        this->template check_exception_thrown<std::logic_error>([](){ Graph{{}, {edge{1,1,1}, edge{1,1,1}}, {}}; }, LINE("Mismatched complementary indices"));
+        m_Checker.template check_exception_thrown<std::logic_error>([](){ Graph{{}, {edge{1,1,1}, edge{1,1,1}}, {}}; }, LINE("Mismatched complementary indices"));
 
         //    />\
         //    \ /
@@ -1629,6 +1635,8 @@ namespace sequoia
         }
       }
     private:
+      using init_checker<Checker>::m_Checker;
+      
       template<class Graph>
       void check_1_1(const Graph& g, const Graph& g2)
       {
@@ -1637,8 +1645,8 @@ namespace sequoia
         
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, {{edge{0,0,1}, edge{0,0,0}}}, {NodeWeight{}}, LINE(""));
-        this->template check_graph(g2, {{edge{0,inversion_constant<true>{},1}, edge{0,inversion_constant<true>{},0}}}, {NodeWeight{}}, LINE(""));
+        m_Checker.template check_graph(g, {{edge{0,0,1}, edge{0,0,0}}}, {NodeWeight{}}, LINE(""));
+        m_Checker.template check_graph(g2, {{edge{0,inversion_constant<true>{},1}, edge{0,inversion_constant<true>{},0}}}, {NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
@@ -1649,8 +1657,8 @@ namespace sequoia
         
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, {{edge{0,0,1,9}, edge{0,0,0,9}}}, {NodeWeight{}}, LINE(""));
-        this->template check_graph(g2, {{edge{0,inversion_constant<true>{},1,-7}, edge{0,inversion_constant<true>{},0,-7}}}, {NodeWeight{}}, LINE(""));
+        m_Checker.template check_graph(g, {{edge{0,0,1,9}, edge{0,0,0,9}}}, {NodeWeight{}}, LINE(""));
+        m_Checker.template check_graph(g2, {{edge{0,inversion_constant<true>{},1,-7}, edge{0,inversion_constant<true>{},0,-7}}}, {NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
@@ -1660,8 +1668,8 @@ namespace sequoia
         
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, {{edge{0,1,0}}, {edge{0,1,0}}}, {NodeWeight{}, NodeWeight{}}, LINE(""));
-        this->template check_graph(g2, {{edge{1,0,0}}, {edge{1,0,0}}}, {NodeWeight{}, NodeWeight{}}, LINE(""));
+        m_Checker.template check_graph(g, {{edge{0,1,0}}, {edge{0,1,0}}}, {NodeWeight{}, NodeWeight{}}, LINE(""));
+        m_Checker.template check_graph(g2, {{edge{1,0,0}}, {edge{1,0,0}}}, {NodeWeight{}, NodeWeight{}}, LINE(""));
       }
 
       template<class Graph>
@@ -1671,7 +1679,7 @@ namespace sequoia
         
         using NodeWeight = typename Graph::node_weight_type;
 
-        this->template check_graph(g, {{}, {edge{1,1,1}, edge{1,1,0}}, {}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+        m_Checker.template check_graph(g, {{}, {edge{1,1,1}, edge{1,1,0}}, {}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
       }
     };
   }

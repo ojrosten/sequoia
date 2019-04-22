@@ -7,9 +7,11 @@ namespace sequoia
   namespace unit_testing
   {
     template<class Checker>
-    class undirected_fixed_topology_checker : public checker_wrapper<Checker>
+    class undirected_fixed_topology_checker
     {
     public:
+      undirected_fixed_topology_checker(Checker& checker) : m_Checker{checker} {}
+      
       template<class Graph>
       void check_all()
       {
@@ -33,6 +35,8 @@ namespace sequoia
         }
       }
     private:
+      Checker& m_Checker;
+      
       template<class Graph>
       constexpr static Graph make_2_4()
       {
@@ -72,19 +76,21 @@ namespace sequoia
 
         if constexpr(std::is_empty_v<NodeWeight>)            
         {
-          this->template check_graph(g, {{edge{1,1}, edge{1,2}, edge{1,5}, edge{0,9}, edge{0, 9}}, {edge{0, 1}, edge{0,2}, edge{0,5}}}, {NodeWeight{}, NodeWeight{}}, LINE(""));
+          m_Checker.template check_graph(g, {{edge{1,1}, edge{1,2}, edge{1,5}, edge{0,9}, edge{0, 9}}, {edge{0, 1}, edge{0,2}, edge{0,5}}}, {NodeWeight{}, NodeWeight{}}, LINE(""));
         }
         else
         {
-          this->template check_graph(g, {{edge{1,1}, edge{1,2}, edge{1,5}, edge{0,9}, edge{0, 9}}, {edge{0, 1}, edge{0,2}, edge{0,5}}}, {NodeWeight{2}, NodeWeight{-3}}, LINE(""));
+          m_Checker.template check_graph(g, {{edge{1,1}, edge{1,2}, edge{1,5}, edge{0,9}, edge{0, 9}}, {edge{0, 1}, edge{0,2}, edge{0,5}}}, {NodeWeight{2}, NodeWeight{-3}}, LINE(""));
         }
       }
     };
 
     template<class Checker>
-    class directed_fixed_topology_checker : public checker_wrapper<Checker>
+    class directed_fixed_topology_checker
     {
     public:
+      directed_fixed_topology_checker(Checker& checker) : m_Checker{checker} {}
+      
       template<class Graph>
       void check_all()
       {
@@ -108,6 +114,8 @@ namespace sequoia
         }
       }
     private:
+      Checker& m_Checker;
+      
       template<class Graph>
       constexpr static Graph make_3_10()
       {
@@ -154,7 +162,7 @@ namespace sequoia
 
         if constexpr(std::is_empty_v<NodeWeight>)            
         {
-          this->template check_graph(g,
+          m_Checker.template check_graph(g,
             {
               {edge{1,1}, edge{1,0}, edge{0, -2}, edge{1,3}},
               {edge{2,8}, edge{0,9}, edge{1,6}},
@@ -163,7 +171,7 @@ namespace sequoia
         }
         else
         {
-          this->template check_graph(g,
+          m_Checker.template check_graph(g,
             {
               {edge{1,1}, edge{1,0}, edge{0, -2}, edge{1,3}},
               {edge{2,8}, edge{0,9}, edge{1,6}},
@@ -174,9 +182,11 @@ namespace sequoia
     };
 
     template<class Checker>
-    class e_undirected_fixed_topology_checker : public checker_wrapper<Checker>
+    class e_undirected_fixed_topology_checker
     {
     public:
+      e_undirected_fixed_topology_checker(Checker& checker) : m_Checker{checker} {}
+      
       template<class Graph>
       void check_all()
       {
@@ -200,6 +210,8 @@ namespace sequoia
         }
       }
     private:
+      Checker& m_Checker;
+      
       template<class Graph>
       constexpr static Graph make_2_2()
       {
@@ -233,19 +245,21 @@ namespace sequoia
 
         if constexpr(std::is_empty_v<NodeWeight>)            
         {
-          this->template check_graph(g, {{}, {edge{1,2,3}, edge{1,3,-2}, edge{1,0,3}, edge{1,1,-2}}}, {NodeWeight{}, NodeWeight{}}, LINE(""));
+          m_Checker.template check_graph(g, {{}, {edge{1,2,3}, edge{1,3,-2}, edge{1,0,3}, edge{1,1,-2}}}, {NodeWeight{}, NodeWeight{}}, LINE(""));
         }
         else
         {
-          this->template check_graph(g, {{}, {edge{1,2,3}, edge{1,3,-2}, edge{1,0,3}, edge{1,1,-2}}}, {NodeWeight{2}, NodeWeight{-3}}, LINE(""));          
+          m_Checker.template check_graph(g, {{}, {edge{1,2,3}, edge{1,3,-2}, edge{1,0,3}, edge{1,1,-2}}}, {NodeWeight{2}, NodeWeight{-3}}, LINE(""));          
         }
       }
     };
 
     template<class Checker>
-    class e_directed_fixed_topology_checker : public checker_wrapper<Checker>
+    class e_directed_fixed_topology_checker
     {
     public:
+      e_directed_fixed_topology_checker(Checker& checker) : m_Checker{checker} {}
+      
       template<class Graph>
       void check_all()
       {
@@ -269,6 +283,7 @@ namespace sequoia
         }
       }
     private:
+      Checker& m_Checker;
       
       template<bool B> using inversion_constant = maths::inversion_constant<B>;
       
@@ -305,11 +320,11 @@ namespace sequoia
 
         if constexpr(std::is_empty_v<NodeWeight>)            
         {
-          this->template check_graph(g, {{edge{0,inversion_constant<true>{},2,3}, edge{0,0,3,6}, edge{0,inversion_constant<true>{},0,3}, edge{0,0,1,6}}, {}}, {NodeWeight{}, NodeWeight{}}, LINE(""));
+          m_Checker.template check_graph(g, {{edge{0,inversion_constant<true>{},2,3}, edge{0,0,3,6}, edge{0,inversion_constant<true>{},0,3}, edge{0,0,1,6}}, {}}, {NodeWeight{}, NodeWeight{}}, LINE(""));
         }
         else
         {
-          this->template check_graph(g, {{edge{0,inversion_constant<true>{},2,3}, edge{0,0,3,6}, edge{0,inversion_constant<true>{},0,3}, edge{0,0,1,6}}, {}}, {NodeWeight{2}, NodeWeight{-3}}, LINE(""));
+          m_Checker.template check_graph(g, {{edge{0,inversion_constant<true>{},2,3}, edge{0,0,3,6}, edge{0,inversion_constant<true>{},0,3}, edge{0,0,1,6}}, {}}, {NodeWeight{2}, NodeWeight{-3}}, LINE(""));
         }
       }
     };

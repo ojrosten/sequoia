@@ -1043,6 +1043,12 @@ namespace sequoia
         return unit_testing::check_range(m_Logger, first, last, predictionFirst, predictionLast, description);
       }
 
+      template<class T>
+      void check_regular_semantics(const T& x, const T& y, std::string_view description="")
+      {
+        unit_testing::check_regular_semantics(m_Logger, x, y, description);        
+      }
+      
       template<class F, class S>
       auto check_relative_performance(F fast, S slow, const double minSpeedUp, const double maxSpeedUp, std::string_view description="", const std::size_t trials=5, const double num_sds=3)
         -> performance_results<decltype(fast())>
@@ -1094,13 +1100,6 @@ namespace sequoia
       typename Logger::sentinel make_sentinel(std::string_view message)
       {
         return {m_Logger, message};
-      }
-
-      
-      template<class T>
-      void check_regular_semantics(const T& x, const T& y, std::string_view description="")
-      {
-        unit_testing::check_regular_semantics(m_Logger, x, y, description);        
       }
     private:
       Logger m_Logger;      
