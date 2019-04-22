@@ -1,3 +1,10 @@
+////////////////////////////////////////////////////////////////////
+//                 Copyright Oliver Rosten 2019.                  //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
 #include "TestGraph.hpp"
 
 #include <complex>
@@ -73,6 +80,8 @@ namespace sequoia::unit_testing
     using Edge = edge<EdgeWeight, utilities::protective_wrapper<EdgeWeight>>;
     using E_Edge = embedded_edge<EdgeWeight, data_sharing::independent, utilities::protective_wrapper<EdgeWeight>>;
 
+    using edge_init_t = typename GGraph::edge_init_type;
+
     check_exception_thrown<std::out_of_range>([&network]() { return network.cbegin_edges(0); }, LINE("cbegin_edges throws for empty graph"));
     check_exception_thrown<std::out_of_range>([&network]() { return network.cend_edges(0); }, LINE("cend_edges throws for empty graph"));
 
@@ -80,13 +89,8 @@ namespace sequoia::unit_testing
           
     check_equality<std::size_t>(0,network.add_node(), LINE("Index of added node is 0"));
     //    0
-
-    check_graph(network, {{}}, {}, LINE(""));
-
     
     check_equality(network, GGraph{{}}, LINE(""));
-
-
     
     check_exception_thrown<std::out_of_range>([&network](){ get_edge(network, 0, 0, 0); },  LINE("For network with no edges, trying to obtain a reference to one throws an exception"));
 
@@ -97,22 +101,30 @@ namespace sequoia::unit_testing
     check_equality<std::size_t>(1, network.add_node(), LINE("Index of added node is 1"));
     //    0    1
 
-    check_graph(network, {{}, {}}, {}, LINE(""));
+    check_equality(network, GGraph{{}, {}}, LINE(""));
 
     network.swap_nodes(0,1);
     
-    check_graph(network, {{}, {}}, {}, LINE(""));
+    check_equality(network, GGraph{{}, {}}, LINE(""));
     
     network.join(0, 1);
     //    0----1
 
-    if constexpr (mutual_info(GraphFlavour))
+    if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_graph(network, {{E_Edge{0,1,0}}, {E_Edge{0,1,0}}}, {}, LINE(""));
+      check_equality(network, GGraph{{edge_init_t{1}}, {}}, LINE(""));
+    }
+    else if constexpr(GraphFlavour == graph_flavour::undirected)
+    {
+      check_equality(network, GGraph{{edge_init_t{1}}, {edge_init_t{0}}}, LINE(""));
+    }
+    else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
+    {
+      check_equality(network, GGraph{{edge_init_t{0,1,0}}, {edge_init_t{0,1,0}}}, LINE(""));
     }
     else
     {
-      check_graph(network, {{Edge{0,1}}, {}}, {}, LINE(""));
+      check_equality(network, GGraph{{edge_init_t{1,0}}, {edge_init_t{0,0}}}, LINE(""));
     }
 
     network.swap_nodes(0,1);
