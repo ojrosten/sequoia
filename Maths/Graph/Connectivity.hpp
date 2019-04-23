@@ -209,7 +209,7 @@ namespace sequoia
       }
 
       constexpr void swap_nodes(size_type i, size_type j)
-      {                
+      {
         if constexpr (EdgeTraits::shared_edge_v)
         {
           for(auto iter{begin_edges(i)}; iter != end_edges(i); ++iter)

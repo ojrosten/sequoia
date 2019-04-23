@@ -1456,6 +1456,7 @@ namespace sequoia
         check_2_0<Graph>();
         check_2_1<Graph>();
         check_3_1<Graph>();
+        check_3_2<Graph>();
       }
       
       template<class Graph>
@@ -1634,6 +1635,26 @@ namespace sequoia
           check_3_1(g);
         }
       }
+
+      template<class Graph>
+      void check_3_2()
+      {
+        using edge = typename Graph::edge_init_type;
+
+        // x-->--x-->--x
+
+        if constexpr(is_static_graph_v<Graph>)
+        {
+          constexpr Graph g{{edge{0,1,0}}, {edge{0,1,0}, edge{1,2,0}}, {edge{1,2,1}}};
+          check_3_2(g);
+        }
+        else
+        {
+          const Graph g{{edge{0,1,0}}, {edge{0,1,0}, edge{1,2,0}}, {edge{1,2,1}}};
+          check_3_2(g);
+        }
+      }
+        
     private:
       using init_checker<Checker>::m_Checker;
       
@@ -1680,6 +1701,16 @@ namespace sequoia
         using NodeWeight = typename Graph::node_weight_type;
 
         m_Checker.template check_graph(g, {{}, {edge{1,1,1}, edge{1,1,0}}, {}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+      }
+
+      template<class Graph>
+      void check_3_2(const Graph& g)
+      {
+        using edge = typename Graph::edge_init_type;
+        
+        using NodeWeight = typename Graph::node_weight_type;
+
+        m_Checker.template check_graph(g, {{edge{0,1,0}}, {edge{0,1,0}, edge{1,2,0}}, {edge{1,2,1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
       }
     };
   }
