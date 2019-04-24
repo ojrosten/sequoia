@@ -783,40 +783,72 @@ namespace sequoia::unit_testing
     // \/
     //  0---1
 
-    if constexpr (mutual_info(GraphFlavour))
+    if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_graph(network, {{E_Edge(1,0,0), E_Edge(0,0,2), E_Edge(0,0,1)}, {E_Edge(1,0,0)}}, {}, LINE(""));
+      check_equality(network, GGraph{{edge_init_t{1}, edge_init_t{0}}, {}}, LINE(""));
     }
-    else
+    else if constexpr(GraphFlavour == graph_flavour::undirected)
     {
-      check_graph(network, {{Edge(0,1), Edge(0,0)}, {}}, {}, LINE(""));
+      GGraph g{{edge_init_t{0}, edge_init_t{0}, edge_init_t{1}}, {edge_init_t{0}}};
+      g.sort_edges(g.cbegin_edges(0), g.cend_edges(0),
+                   [](const auto& l, const auto& r) {return l.target_node() > r.target_node();});
+      
+      check_equality(network, g, LINE(""));
+    }    
+    else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
+    {
+      check_equality(network,
+                     GGraph{
+                       {edge_init_t{1,0,0}, edge_init_t{0,0,2}, edge_init_t{0,0,1}},
+                       {edge_init_t{1,0,0}}
+                     }, LINE(""));
+    }
+    else 
+    { 
+      check_equality(network,
+                     GGraph{
+                       {edge_init_t{1,0}, edge_init_t{0,2}, edge_init_t{0,1}},
+                       {edge_init_t{0,0}}
+                     }, LINE(""));
     }
           
     network.erase_edge(++network.cbegin_edges(0));
     //  0----1
 
-    if constexpr (mutual_info(GraphFlavour))
+    if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_graph(network, {{E_Edge(1,0,0)}, {E_Edge(1,0,0)}}, {}, LINE(""));
+      check_equality(network, GGraph{{edge_init_t{1}}, {}}, LINE(""));
     }
-    else
+    else if constexpr(GraphFlavour == graph_flavour::undirected)
+    {      
+      check_equality(network, GGraph{{edge_init_t{1}}, {edge_init_t{0}}}, LINE(""));
+    }    
+    else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
-      check_graph(network, {{Edge(0,1)}, {}}, {}, LINE(""));
+      check_equality(network,  GGraph{{edge_init_t{1,0,0}}, {edge_init_t{1,0,0}}}, LINE(""));
+    }
+    else 
+    { 
+      check_equality(network,  GGraph{{edge_init_t{1,0}}, {edge_init_t{0,0}}}, LINE(""));
     }
 
     network.erase_node(0);
     // 0
+
+    check_equality(network, GGraph{{}});
 
     check_graph(network, {{}}, {}, LINE(""));
 
     network.erase_node(0);
     //
 
-    check_graph(network, {}, {});
+    check_graph(network, {}, {}, LINE(""));
 
-    check_equality<std::size_t>(0, network.add_node(), LINE("Node added back to graph"));
+    check_equality(network.add_node(), 0ul, LINE("Node added back to graph"));
     // 0
 
+
+    
     network.join(0, 0);
     // /\
     // \/
