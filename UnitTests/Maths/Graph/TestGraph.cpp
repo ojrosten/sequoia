@@ -677,19 +677,43 @@ namespace sequoia::unit_testing
     //    ||//
     //     2
 
-    if constexpr (mutual_info(GraphFlavour))
+    if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_graph(network,
-                  { {E_Edge(0,1,0), E_Edge(0,1,1), E_Edge(0,2,0), E_Edge(0,2,1)}
-                    , {E_Edge(0,1,0), E_Edge(0,1,1), E_Edge(1,2,2), E_Edge(2,1,3)}
-                    , {E_Edge(0,2,2), E_Edge(0,2,3), E_Edge(1,2,2), E_Edge(2,1,3)}
-                  }, {}, LINE(""));
+      check_equality(network,
+                     GGraph{
+                       {edge_init_t{1}, edge_init_t{1}, edge_init_t{2}, edge_init_t{2}},
+                       {edge_init_t{2}},
+                       {edge_init_t{1}}
+                     }, LINE(""));
     }
-    else
+    else if constexpr(GraphFlavour == graph_flavour::undirected)
+    {      
+      check_equality(network,
+                     GGraph{
+                       {edge_init_t{1}, edge_init_t{1}, edge_init_t{2}, edge_init_t{2}},
+                       {edge_init_t{0}, edge_init_t{0}, edge_init_t{2}, edge_init_t{2}},
+                       {edge_init_t{0}, edge_init_t{0}, edge_init_t{1}, edge_init_t{1}}
+                     }, LINE(""));
+    }    
+    else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
-      check_graph(network, {{Edge(0,1), Edge(0,1), Edge(0,2), Edge(0,2)}, {Edge(1,2)}, {Edge(2,1)}}, {}, LINE(""));
+      check_equality(network,
+                     GGraph{
+                       {edge_init_t{0,1,0}, edge_init_t{0,1,1}, edge_init_t{0,2,0}, edge_init_t{0,2,1}},
+                       {edge_init_t{0,1,0}, edge_init_t{0,1,1}, edge_init_t{1,2,2}, edge_init_t{2,1,3}},
+                       {edge_init_t{0,2,2}, edge_init_t{0,2,3}, edge_init_t{1,2,2}, edge_init_t{2,1,3}}
+                     }, LINE(""));
     }
-
+    else 
+    { 
+      check_equality(network,
+                     GGraph{
+                       {edge_init_t{1,0}, edge_init_t{1,1}, edge_init_t{2,0}, edge_init_t{2,1}},
+                       {edge_init_t{0,0}, edge_init_t{0,1}, edge_init_t{2,2}, edge_init_t{2,3}},
+                       {edge_init_t{0,2}, edge_init_t{0,3}, edge_init_t{1,2}, edge_init_t{1,3}}
+                     }, LINE(""));
+    }
+    
     mutual_info(GraphFlavour) ? network.erase_edge(network.cbegin_edges(2)+2) : network.erase_edge(network.cbegin_edges(2));
 
     //    0=====1
@@ -697,29 +721,61 @@ namespace sequoia::unit_testing
     //    ||/
     //     2
 
-    if constexpr (mutual_info(GraphFlavour))
+    if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_graph(network,
-                  { {E_Edge(0,1,0), E_Edge(0,1,1), E_Edge(0,2,0), E_Edge(0,2,1)}
-                    , {E_Edge(0,1,0), E_Edge(0,1,1), E_Edge(2,1,2)}
-                    , {E_Edge(0,2,2), E_Edge(0,2,3), E_Edge(2,1,2)}
-                  }, {}, LINE(""));
+      check_equality(network,
+                     GGraph{
+                       {edge_init_t{1}, edge_init_t{1}, edge_init_t{2}, edge_init_t{2}},
+                       {edge_init_t{2}},
+                       {}
+                     }, LINE(""));
     }
-    else
+    else if constexpr(GraphFlavour == graph_flavour::undirected)
+    {      
+      check_equality(network,
+                     GGraph{
+                       {edge_init_t{1}, edge_init_t{1}, edge_init_t{2}, edge_init_t{2}},
+                       {edge_init_t{0}, edge_init_t{0}, edge_init_t{2}},
+                       {edge_init_t{0}, edge_init_t{0}, edge_init_t{1}}
+                     }, LINE(""));
+    }    
+    else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
-      check_graph(network, {{Edge(0,1), Edge(0,1), Edge(0,2), Edge(0,2)}, {Edge(1,2)}, {}}, {}, LINE(""));
+      check_equality(network,
+                     GGraph{
+                       {edge_init_t{0,1,0}, edge_init_t{0,1,1}, edge_init_t{0,2,0}, edge_init_t{0,2,1}},
+                       {edge_init_t{0,1,0}, edge_init_t{0,1,1}, edge_init_t{2,1,2}},
+                       {edge_init_t{0,2,2}, edge_init_t{0,2,3}, edge_init_t{2,1,2}}
+                     }, LINE(""));
     }
-
+    else 
+    { 
+      check_equality(network,
+                     GGraph{
+                       {edge_init_t{1,0}, edge_init_t{1,1}, edge_init_t{2,0}, edge_init_t{2,1}},
+                       {edge_init_t{0,0}, edge_init_t{0,1}, edge_init_t{2,2}},
+                       {edge_init_t{0,2}, edge_init_t{0,3}, edge_init_t{1,2}}
+                     }, LINE(""));
+    }
+        
     network.erase_node(0);
     //  0----1
 
-    if constexpr (mutual_info(GraphFlavour))
+    if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_graph(network, {{E_Edge(1,0,0)}, {E_Edge(1,0,0)}}, {}, LINE(""));
+      check_equality(network, GGraph{{edge_init_t{1}}, {}}, LINE(""));
     }
-    else
+    else if constexpr(GraphFlavour == graph_flavour::undirected)
+    {      
+      check_equality(network, GGraph{{edge_init_t{1}}, {edge_init_t{0}}}, LINE(""));
+    }    
+    else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
-      check_graph(network, {{Edge(0,1)}, {}}, {}, LINE(""));
+      check_equality(network,  GGraph{{edge_init_t{1,0,0}}, {edge_init_t{1,0,0}}}, LINE(""));
+    }
+    else 
+    { 
+      check_equality(network,  GGraph{{edge_init_t{1,0}}, {edge_init_t{0,0}}}, LINE(""));
     }
 
     network.join(0, 0);
