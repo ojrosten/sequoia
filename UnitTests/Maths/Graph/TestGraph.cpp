@@ -1337,35 +1337,114 @@ namespace sequoia::unit_testing
     //   /\
     //   \/-4
         
-    if constexpr(mutual_info(GraphFlavour))
+    if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_graph(graph, {{Edge(0,0,1), Edge(0,0,1), Edge(0,0,-4), Edge(0,0,-4), Edge(0,1,6)}, {Edge(0,1,6)}}, {{1.1,-4.3}, {0,0}}, LINE(""));
+      check_equality(graph, GGraph{{{edge_init_t{0,1}, edge_init_t{0,-4}, edge_init_t{1, 6}}, {}}, {{1.1,-4.3}, {}}}, LINE(""));
     }
-    else
+    else if constexpr(GraphFlavour == graph_flavour::undirected)
     {
-      check_graph(graph, {{Edge(0,0,1), Edge(0,0,-4), Edge(0,1,6)}, {}}, {{1.1,-4.3}, {0,0}}, LINE(""));
-    }
+      GGraph g{{{edge_init_t{0,1}, edge_init_t{0,1}, edge_init_t{0,-4}, edge_init_t{0,-4}, edge_init_t{1, 6}},
+                {edge_init_t{0, 6}}
+               }, {{1.1,-4.3}, {}}};
 
+      if constexpr(is_orderable_v<edge_weight_t>)
+      {
+        g.sort_edges(g.cbegin_edges(0), g.cend_edges(0) - 1,
+                   [](const auto& l , const auto& r){ return l.weight() > r.weight(); }
+        );
+      }
+      check_equality(graph, g, LINE(""));
+    }
+    else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
+    {
+      check_equality(graph,
+                     GGraph{{{edge_init_t{0,0,1,1}, edge_init_t{0,0,0,1}, edge_init_t{0,0,3,-4}, edge_init_t{0,0,2,-4}, edge_init_t{0,1,0,6}},
+                             {edge_init_t{0,1,4,6}}
+                            }, {{1.1,-4.3}, {}}}, LINE(""));
+    }
+    else 
+    { 
+      check_equality(graph,
+                     GGraph{{{edge_init_t{0,1,1}, edge_init_t{0,0,1}, edge_init_t{0,3,-4}, edge_init_t{0,2,-4}, edge_init_t{1,0,6}},
+                             {edge_init_t{0,4,6}}
+                            }, {{1.1,-4.3}, {}}}, LINE(""));
+    }
+    
     graph.swap_nodes(0,1);
 
-    if constexpr(mutual_info(GraphFlavour))
+    if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_graph(graph, {{Edge(1,0,6)}, {Edge(1,1,1), Edge(1,1,1), Edge(1,1,-4), Edge(1,1,-4), Edge(1,0,6)}}, {{0,0}, {1.1,-4.3}}, LINE(""));
+      check_equality(graph, GGraph{{{}, {edge_init_t{1,1}, edge_init_t{1,-4}, edge_init_t{0, 6}}}, {{}, {1.1,-4.3}}}, LINE(""));
     }
-    else
+    else if constexpr(GraphFlavour == graph_flavour::undirected)
     {
-      check_graph(graph, {{}, {Edge(1,1,1), Edge(1,1,-4), Edge(1,0,6)}}, {{0,0}, {1.1,-4.3}}, LINE(""));
+      GGraph g{{{edge_init_t{1,6}},
+                {edge_init_t{1,1}, edge_init_t{1,1}, edge_init_t{1,-4}, edge_init_t{1,-4}, edge_init_t{0, 6}}
+               }, {{}, {1.1,-4.3}}};
+      
+      g.sort_edges(g.cbegin_edges(1), g.cend_edges(1),
+                   [](const auto& l , const auto& r){
+                       if constexpr(is_orderable_v<edge_weight_t>)
+                       {
+                         return (l.target_node() == r.target_node()) ? (l.weight() > r.weight()) : (l.target_node() > r.target_node());
+                       }
+                       else
+                       {
+                         return l.target_node() > r.target_node();
+                       }
+                   }
+      );
+      
+      check_equality(graph, g, LINE(""));
+    }
+    else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
+    {
+      check_equality(graph,
+                     GGraph{{{edge_init_t{1,0,4,6}},
+                             {edge_init_t{1,1,1,1}, edge_init_t{1,1,0,1}, edge_init_t{1,1,3,-4}, edge_init_t{1,1,2,-4}, edge_init_t{1,0,0,6}}
+                            }, {{}, {1.1,-4.3}}}, LINE(""));
+    }
+    else 
+    { 
+      check_equality(graph,
+                     GGraph{{{edge_init_t{1,4,6}},
+                             {edge_init_t{1,1,1}, edge_init_t{1,0,1}, edge_init_t{1,3,-4}, edge_init_t{1,2,-4}, edge_init_t{0,0,6}}
+                       }, {{}, {1.1,-4.3}}}, LINE(""));
     }
 
     graph.swap_nodes(1,0);
 
-    if constexpr(mutual_info(GraphFlavour))
+    if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_graph(graph, {{Edge(0,0,1), Edge(0,0,1), Edge(0,0,-4), Edge(0,0,-4), Edge(0,1,6)}, {Edge(0,1,6)}}, {{1.1,-4.3}, {0,0}}, LINE(""));
+      check_equality(graph, GGraph{{{edge_init_t{0,1}, edge_init_t{0,-4}, edge_init_t{1, 6}}, {}}, {{1.1,-4.3}, {}}}, LINE(""));
     }
-    else
+    else if constexpr(GraphFlavour == graph_flavour::undirected)
     {
-      check_graph(graph, {{Edge(0,0,1), Edge(0,0,-4), Edge(0,1,6)}, {}}, {{1.1,-4.3}, {0,0}}, LINE(""));
+      GGraph g{{{edge_init_t{0,1}, edge_init_t{0,1}, edge_init_t{0,-4}, edge_init_t{0,-4}, edge_init_t{1, 6}},
+                {edge_init_t{0, 6}}
+               }, {{1.1,-4.3}, {}}};
+
+      if constexpr(is_orderable_v<edge_weight_t>)
+      {
+        g.sort_edges(g.cbegin_edges(0), g.cend_edges(0) - 1,
+                   [](const auto& l , const auto& r){ return l.weight() > r.weight(); }
+        );
+      }
+      check_equality(graph, g, LINE(""));
+    }
+    else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
+    {
+      check_equality(graph,
+                     GGraph{{{edge_init_t{0,0,1,1}, edge_init_t{0,0,0,1}, edge_init_t{0,0,3,-4}, edge_init_t{0,0,2,-4}, edge_init_t{0,1,0,6}},
+                             {edge_init_t{0,1,4,6}}
+                            }, {{1.1,-4.3}, {}}}, LINE(""));
+    }
+    else 
+    { 
+      check_equality(graph,
+                     GGraph{{{edge_init_t{0,1,1}, edge_init_t{0,0,1}, edge_init_t{0,3,-4}, edge_init_t{0,2,-4}, edge_init_t{1,0,6}},
+                             {edge_init_t{0,4,6}}
+                            }, {{1.1,-4.3}, {}}}, LINE(""));
     }
 
     graph.set_edge_weight(--graph.cend_edges(0), 7);
