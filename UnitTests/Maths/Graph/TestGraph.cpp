@@ -999,18 +999,18 @@ namespace sequoia::unit_testing
   {
     graph_t g{};
 
-    check_equality<std::size_t>(0, g.edges_capacity(), LINE(""));
-    check_equality<std::size_t>(0, g.node_capacity());
+    check_equality(g.edges_capacity(), 0ul, LINE(""));
+    check_equality(g.node_capacity(), 0ul, LINE(""));
 
     g.reserve_edges(4);
-    check_equality<std::size_t>(4, g.edges_capacity(), LINE(""));
+    check_equality(g.edges_capacity(), 4ul, LINE(""));
 
     g.reserve_nodes(4);
-    check_equality<std::size_t>(4, g.node_capacity());
+    check_equality(g.node_capacity(), 4ul, LINE(""));
 
     g.shrink_to_fit();
-    check_equality<std::size_t>(0, g.edges_capacity(), LINE("May fail if stl implementation doesn't actually shrink to fit!"));
-    check_equality<std::size_t>(0, g.node_capacity(), LINE("May fail if stl implementation doesn't actually shrink to fit!"));    
+    check_equality(g.edges_capacity(), 0ul, LINE("May fail if stl implementation doesn't actually shrink to fit!"));
+    check_equality(g.node_capacity(), 0ul, LINE("May fail if stl implementation doesn't actually shrink to fit!"));    
   }
 
    template
@@ -1037,20 +1037,20 @@ namespace sequoia::unit_testing
 
     check_exception_thrown<std::out_of_range>([&g](){ g.reserve_edges(0, 4);}, LINE(""));
     check_exception_thrown<std::out_of_range>([&g](){ return g.edges_capacity(0);}, LINE(""));
-    check_equality<std::size_t>(0, g.node_capacity());
+    check_equality(g.node_capacity(), 0ul, LINE(""));
 
     g.add_node();
-    check_equality<std::size_t>(0, g.edges_capacity(0), LINE(""));
-    check_equality<std::size_t>(1, g.node_capacity(), LINE(""));
+    check_equality(g.edges_capacity(0), 0ul, LINE(""));
+    check_equality(g.node_capacity(), 1ul, LINE(""));
     g.reserve_edges(0, 4);
-    check_equality<std::size_t>(4, g.edges_capacity(0), LINE(""));
+    check_equality(g.edges_capacity(0), 4ul, LINE(""));
 
     g.reserve_nodes(4);
-    check_equality<std::size_t>(4, g.node_capacity());
+    check_equality(g.node_capacity(), 4ul, LINE(""));
 
     g.shrink_to_fit();
-    check_equality<std::size_t>(0, g.edges_capacity(0), LINE("May fail if stl implementation doesn't actually shrink to fit!"));
-    check_equality<std::size_t>(1, g.node_capacity(), LINE("May fail if stl implementation doesn't actually shrink to fit!"));
+    check_equality(g.edges_capacity(0), 0ul, LINE("May fail if stl implementation doesn't actually shrink to fit!"));
+    check_equality(g.node_capacity(), 1ul, LINE("May fail if stl implementation doesn't actually shrink to fit!"));
   }
 
   // Generic Weighted
@@ -1080,9 +1080,9 @@ namespace sequoia::unit_testing
     using E_Edge = maths::embedded_edge<EdgeWeight, data_sharing::independent, utilities::protective_wrapper<EdgeWeight>>;
 
     graph.reserve_nodes(4);
-    check_equality<std::size_t>(4, graph.node_capacity(), LINE(""));
+    check_equality(graph.node_capacity(), 4ul, LINE(""));
     graph.shrink_to_fit();
-    check_equality<std::size_t>(0, graph.node_capacity(), LINE("May fail if stl implementation doesn't actually shrink to fit!"));
+    check_equality(graph.node_capacity(), 0ul, LINE("May fail if stl implementation doesn't actually shrink to fit!"));
 
     // NULL
     check_exception_thrown<std::out_of_range>([&graph](){ graph.erase_node(0); }, LINE("No nodes to erase"));
@@ -1094,7 +1094,7 @@ namespace sequoia::unit_testing
 
     check_graph(graph, {}, {}, LINE(""));
         
-    check_equality<std::size_t>(0, graph.add_node(0.0, 1.0), "Node added with weight i");
+    check_equality(graph.add_node(0.0, 1.0), 0ul, "Node added with weight i");
     //   (i)
 
     check_graph(graph, {{}}, {{0,1}}, LINE(""));
@@ -1107,7 +1107,7 @@ namespace sequoia::unit_testing
 
     check_graph(graph, {}, {}, LINE(""));
 
-    check_equality<std::size_t>(0, graph.add_node(0.0, 1.0), "Node of weight i recreated");
+    check_equality(graph.add_node(0.0, 1.0), 0ul, "Node of weight i recreated");
     //    (i)
 
     check_graph(graph, {{}}, {{0,1}}, LINE(""));
@@ -1451,7 +1451,7 @@ namespace sequoia::unit_testing
     }
  
 
-    check_equality<std::size_t>(0, graph.insert_node(0, 1.0, 1.0), "Node with weight 1+i inserted into slot 0");
+    check_equality(graph.insert_node(0, 1.0, 1.0), 0ul, "Node with weight 1+i inserted into slot 0");
     //       /\ 1
     //       \/
     // (1+i) (0)
