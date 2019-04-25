@@ -84,10 +84,11 @@ namespace sequoia::unit_testing
 
     check_exception_thrown<std::out_of_range>([&network]() { network.swap_nodes(0,0); }, LINE("swapping nodes throws for empty graph"));
           
-    check_equality<std::size_t>(0,network.add_node(), LINE("Index of added node is 0"));
+    check_equality(network.add_node(), 0ul, LINE("Index of added node is 0"));
     //    0
     
     check_equality(network, GGraph{{}}, LINE(""));
+    check_regular_semantics(network, GGraph{}, LINE("Regular semantics"));
     
     check_exception_thrown<std::out_of_range>([&network](){ get_edge(network, 0, 0, 0); },  LINE("For network with no edges, trying to obtain a reference to one throws an exception"));
 
@@ -95,10 +96,11 @@ namespace sequoia::unit_testing
 
     check_exception_thrown<std::out_of_range>([&network]() { network.swap_nodes(0,1); }, LINE("Index out of range for swapping nodes"));
     
-    check_equality<std::size_t>(1, network.add_node(), LINE("Index of added node is 1"));
+    check_equality(network.add_node(), 1ul, LINE("Index of added node is 1"));
     //    0    1
 
     check_equality(network, GGraph{{}, {}}, LINE(""));
+    check_regular_semantics(network, GGraph{{}}, LINE("Regular semantics"));
 
     network.swap_nodes(0,1);
     
@@ -124,6 +126,8 @@ namespace sequoia::unit_testing
       check_equality(network, GGraph{{edge_init_t{1,0}}, {edge_init_t{0,0}}}, LINE(""));
     }
 
+    check_regular_semantics(network, GGraph{{}, {}}, LINE("Regular semantics"));
+    
     network.swap_nodes(0,1);
 
     if constexpr (GraphFlavour == graph_flavour::directed)
