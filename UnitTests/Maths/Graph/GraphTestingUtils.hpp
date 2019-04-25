@@ -374,6 +374,7 @@ namespace sequoia
       using basic_test<Logger, graph_checker<Logger>>::check_exception_thrown;
       using basic_test<Logger, graph_checker<Logger>>::check_equality;
       using basic_test<Logger, graph_checker<Logger>>::check_graph;
+      using basic_test<Logger, graph_checker<Logger>>::check_regular_semantics;
 
       log_summary execute() override
       {        
