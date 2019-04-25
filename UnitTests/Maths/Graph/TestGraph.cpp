@@ -1089,9 +1089,7 @@ namespace sequoia::unit_testing
     check_exception_thrown<std::out_of_range>([&graph](){ graph.erase_edge(graph.cbegin_edges(0)); }, LINE("No edges to erase"));
     check_exception_thrown<std::out_of_range>([&graph](){ graph.node_weight(graph.cend_node_weights(), 1.0); }, LINE("No nodes to set weight"));
     check_exception_thrown<std::out_of_range>([&graph](){ graph.set_edge_weight(graph.cbegin_edges(0), 1); }, LINE("No edges to set weight"));
-    auto getEdgeFn = [&graph]() { get_edge(graph, 0, 0, 0); };
-    check_exception_thrown<std::out_of_range>(getEdgeFn, "No edges so can't acquire a reference to an edge");
-
+    
     check_graph(graph, {}, {}, LINE(""));
         
     check_equality(graph.add_node(0.0, 1.0), 0ul, "Node added with weight i");
@@ -1100,8 +1098,7 @@ namespace sequoia::unit_testing
     check_graph(graph, {{}}, {{0,1}}, LINE(""));
 
     check_exception_thrown<std::out_of_range>([&graph](){ graph.node_weight(graph.cend_node_weights(), 0.0); }, LINE("Throw if node out of range"));
-    check_exception_thrown<std::out_of_range>(getEdgeFn, LINE("Throw if edge out of range"));
-
+    
     graph.erase_node(0);
     //    NULL
 
@@ -1194,9 +1191,6 @@ namespace sequoia::unit_testing
     {
       check_graph(graph, {{Edge(0,0,1), Edge(0,0,-1)}}, {{1.1,-4.3}}, LINE(""));
     }
-        
-    check_equality<EdgeWeight>(1, get_edge(graph, 0, 0, 0).weight());
-    mutual_info(GraphFlavour) ? check_equality<EdgeWeight>(1, get_edge(graph, 0, 0, 1).weight()) : check_equality<EdgeWeight>(-1, get_edge(graph, 0, 0, 1).weight());
 
     mutual_info(GraphFlavour) ? graph.set_edge_weight(graph.cbegin_edges(0) + 2, -4) : graph.set_edge_weight(++graph.cbegin_edges(0), -4);
     //   /\ 1
