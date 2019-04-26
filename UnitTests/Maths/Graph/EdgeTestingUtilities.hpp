@@ -15,7 +15,7 @@ namespace sequoia::unit_testing
     
       if constexpr (!std::is_empty_v<typename Edge::weight_type>)
       {
-        check_equality(logger, prediction.weight(), edge.weight(), impl::concat_messages(description, "Weight incorrect"));
+        check_equality(logger, edge.weight(), prediction.weight(), impl::concat_messages(description, "Weight incorrect"));
       }
     }
 
