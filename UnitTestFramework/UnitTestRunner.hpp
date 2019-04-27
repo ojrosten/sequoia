@@ -11,7 +11,7 @@
     \brief Helper for running unit tests from the command line.
 */
 
-#include "UnitTestUtils.hpp"
+#include "UnitTestFamily.hpp"
 
 #include <map>
 
