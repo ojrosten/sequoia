@@ -27,7 +27,7 @@ namespace sequoia::unit_testing
   template<class T, class=std::void_t<>> struct is_serializable : public std::false_type
   {};
 
-  // Seems to be a bug here since decltype returns std::stringstream, whatever T!
+  // Seems to be a bug here for clang-1000.11.45.5 since decltype returns std::stringstream, whatever T!
   template<class T> struct is_serializable<T, std::void_t<decltype(std::stringstream{} << std::declval<T>())>> : public std::true_type
   {};
 
