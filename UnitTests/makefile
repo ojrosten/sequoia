@@ -10,9 +10,9 @@ BUILDSUBDIRS += $(addprefix $(UTBUILDDIR)/, $(LIBSUBDIRS))
 
 CC := clang++
 #CC := g++
+#-D MINIMAL_GRAPH_TEST
 CFLAGS := -Wall -std=c++2a -O0 -ferror-limit=1 \
 	  -Wno-missing-braces		       \
-#	  -D MINIMAL_GRAPH_TESTS		\
 	  $(patsubst %,-I%, $(UTSUBDIRS))      \
           $(patsubst %,-I%, $(LIBSUBDIRS))
 EXE := $(UTBUILDDIR)/UnitTest.exe
