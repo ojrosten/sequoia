@@ -204,17 +204,13 @@ namespace sequoia::unit_testing
     using graph_type = typename graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>::graph_type;      
       
     log_summary run(const std::string& helpername)
-    {        
-      this->failure_message_prefix(demangle<graph_type>());
-
+    {
       execute_operations();
 
       return this->summary("");
     }
 
     log_summary get_summary() const { return this->summary(""); }
-    
-    const std::string& prefix() const noexcept { return this->failure_message_prefix(); }
       
   protected:
     virtual void execute_operations() = 0;
@@ -248,12 +244,14 @@ namespace sequoia::unit_testing
       sentry<Test> s{unitTest, m_Summary};
       
       run_graph_flavour_tests<flavour::undirected, TemplateTestClass>();
-      run_graph_flavour_tests<flavour::undirected_embedded, TemplateTestClass>();
-      run_graph_flavour_tests<flavour::directed, TemplateTestClass>();
-      run_graph_flavour_tests<flavour::directed_embedded, TemplateTestClass>();
+      #ifndef MINIMAL_GRAPH_TESTS
+        run_graph_flavour_tests<flavour::undirected_embedded, TemplateTestClass>();
+        run_graph_flavour_tests<flavour::directed, TemplateTestClass>();
+        run_graph_flavour_tests<flavour::directed_embedded, TemplateTestClass>();
 
-      graph_storage_tests_impl<flavour::directed_embedded, independent_contiguous_edge_storage_traits, TemplateTestClass>();
-      graph_storage_tests_impl<flavour::directed_embedded, independent_bucketed_edge_storage_traits, TemplateTestClass>();
+        graph_storage_tests_impl<flavour::directed_embedded, independent_contiguous_edge_storage_traits, TemplateTestClass>();
+        graph_storage_tests_impl<flavour::directed_embedded, independent_bucketed_edge_storage_traits, TemplateTestClass>();
+      #endif
     }
       
     template
@@ -278,9 +276,11 @@ namespace sequoia::unit_testing
       sentry<Test> s{unitTest, m_Summary};
       
       graph_storage_tests_impl<flavour::undirected,          EdgeStorage, TemplateTestClass>();
-      graph_storage_tests_impl<flavour::undirected_embedded, EdgeStorage, TemplateTestClass>();
-      graph_storage_tests_impl<flavour::directed,            EdgeStorage, TemplateTestClass>();
-      graph_storage_tests_impl<flavour::directed_embedded,   EdgeStorage, TemplateTestClass>();          
+      #ifndef MINIMAL_GRAPH_TESTS
+        graph_storage_tests_impl<flavour::undirected_embedded, EdgeStorage, TemplateTestClass>();
+        graph_storage_tests_impl<flavour::directed,            EdgeStorage, TemplateTestClass>();
+        graph_storage_tests_impl<flavour::directed_embedded,   EdgeStorage, TemplateTestClass>();
+      #endif
     }
       
     template
@@ -358,13 +358,16 @@ namespace sequoia::unit_testing
  
       if constexpr(!std::is_empty_v<EdgeWeight> && !std::is_empty_v<NodeWeight>)
       {
-        TemplateTestClass<GraphType, EdgeWeight, NodeWeight, unpooled, data_pool, EdgeStorage, maths::node_weight_storage_traits> test1;
-        TemplateTestClass<GraphType, EdgeWeight, NodeWeight, data_pool, unpooled, EdgeStorage, maths::node_weight_storage_traits> test2;
-        TemplateTestClass<GraphType, EdgeWeight, NodeWeight, data_pool, data_pool, EdgeStorage, maths::node_weight_storage_traits> test3;
-      
+        TemplateTestClass<GraphType, EdgeWeight, NodeWeight, unpooled, data_pool, EdgeStorage, maths::node_weight_storage_traits> test1;        
         run_graph_test(test1);
-        run_graph_test(test2);
-        run_graph_test(test3);
+
+        #ifndef MINIMAL_GRAPH_TESTS
+          TemplateTestClass<GraphType, EdgeWeight, NodeWeight, data_pool, unpooled, EdgeStorage, maths::node_weight_storage_traits> test2;
+          TemplateTestClass<GraphType, EdgeWeight, NodeWeight, data_pool, data_pool, EdgeStorage, maths::node_weight_storage_traits> test3;
+      
+          run_graph_test(test2);
+          run_graph_test(test3);
+        #endif
       }
       else if constexpr(!std::is_empty_v<EdgeWeight>)
       {
@@ -398,7 +401,9 @@ namespace sequoia::unit_testing
       using namespace data_structures;
         
       graph_storage_tests_impl<GraphType, maths::contiguous_edge_storage_traits, TemplateTestClass>();
-      graph_storage_tests_impl<GraphType, maths::bucketed_edge_storage_traits, TemplateTestClass>();
+      #ifndef MINIMAL_GRAPH_TESTS
+        graph_storage_tests_impl<GraphType, maths::bucketed_edge_storage_traits, TemplateTestClass>();
+      #endif
     }
 
     template<class Test>
@@ -411,7 +416,6 @@ namespace sequoia::unit_testing
       catch(...)
       {
         m_Summary += test.get_summary();
-        m_Summary.name(test.prefix());
         throw;
       }
     }

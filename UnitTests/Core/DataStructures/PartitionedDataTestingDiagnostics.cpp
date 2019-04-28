@@ -31,8 +31,6 @@ namespace sequoia::unit_testing
   {
     using value_type = typename PartitionedData::value_type;
     using expected_t = std::initializer_list<std::initializer_list<value_type>>;
-
-    this->failure_message_prefix(demangle<PartitionedData>());
     
     PartitionedData
       d{},

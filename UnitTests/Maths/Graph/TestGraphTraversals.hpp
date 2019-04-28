@@ -130,19 +130,15 @@ namespace sequoia
 
       using edge_results = std::vector<std::pair<std::size_t, std::size_t>>;
 
+      // TO DO: bespoke check_equality to include demangled traversal tag
       using graph_checker<unit_test_logger<test_mode::standard>>::check_equality;      
       using graph_checker<unit_test_logger<test_mode::standard>>::check_exception_thrown;
       using graph_checker<unit_test_logger<test_mode::standard>>::check;
       
       void execute_operations() override
-      {
-        const auto basicPrefix = this->failure_message_prefix();
-        
+      {        
         test_tracker_algorithm<Traverser<BFS>>();
-        this->failure_message_prefix(basicPrefix);
-        
-        test_tracker_algorithm<Traverser<DFS>>();
-        this->failure_message_prefix(basicPrefix);        
+        test_tracker_algorithm<Traverser<DFS>>();        
       }
 
       template<class Traverser, class G, class... Fn>
@@ -162,9 +158,6 @@ namespace sequoia
         
         using UndirectedType = std::bool_constant<maths::undirected(GraphFlavour)>;        
         using TraversalType = std::integral_constant<bool, isBFS>;
-
-        std::string prefix{this->failure_message_prefix() + demangle<Traverser>()};
-        this->failure_message_prefix(prefix);
 
         const std::string iterDescription{Traverser::iterator_description()};
         constexpr bool forwardIter{Traverser::uses_forward_iterator()};
@@ -717,8 +710,6 @@ namespace sequoia
 
       void testNodeAndFirstEdgeTraversal()
       {
-        this->failure_message_prefix(demangle<GGraph>());
-
         GGraph graph{generate_test_graph()};
 
         //================================ Node functors =========================//

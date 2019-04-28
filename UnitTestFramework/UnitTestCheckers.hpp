@@ -70,12 +70,12 @@ namespace sequoia
 
       template<class Logger, std::size_t I = 0, class... T>
       std::enable_if_t<I == sizeof...(T), void>
-      check_tuple_elements(Logger& logger, const std::tuple<T...>& value, const std::tuple<T...>& prediction, std::string_view description="")
+      check_tuple_elements(Logger& logger, const std::tuple<T...>& value, const std::tuple<T...>& prediction, std::string_view description)
       {}
 
       template<class Logger, std::size_t I = 0, class... T>
       std::enable_if_t<I < sizeof...(T), void>
-      check_tuple_elements(Logger& logger, const std::tuple<T...>& value, const std::tuple<T...>& prediction, std::string_view description="")
+      check_tuple_elements(Logger& logger, const std::tuple<T...>& value, const std::tuple<T...>& prediction, std::string_view description)
       {
         using S = std::decay_t<decltype(std::get<I>(prediction))>;
         const std::string message{"Tuple elements differ for " + std::to_string(I) + "th element"};
@@ -120,7 +120,7 @@ namespace sequoia
         if(!equal)
         {
           const std::string message{
-            logger.failure_description(description) + "\n\t"
+            logger.failure_description(description) + "\n\t[" + demangle<T>() + "]\n\t"
               + to_string(value) +  " differs from " + to_string(prediction)
               };
         
@@ -199,13 +199,20 @@ namespace sequoia
 
       if constexpr(has_details_checker_v<T>)
       {
+        auto messageGenerator{
+          [description](std::string op, std::string retVal){
+            const std::string info{"\n\t[" + demangle<T>() + "]\n\toperator" + std::move(op) + " returned " + std::move(retVal)};            
+            return description.empty() ? info : std::string{"\t"}.append(description).append(info);
+          }
+        };
+        
         if constexpr(is_equal_to_comparable_v<T>)
         {
           sentinel s{logger, description};
           s.log_check();
           if(!(prediction == value))
           {
-            logger.log_failure("\n\t" + impl::concat_messages(description, "operator== returned false for type\n\t" + demangle<T>()));
+            logger.log_failure(messageGenerator("==", "false"));
           }
         }
 
@@ -215,7 +222,7 @@ namespace sequoia
           s.log_check();
           if(prediction != value)
           {
-            logger.log_failure("\n\t" + impl::concat_messages(description, "operator!= returned true for type\n\t" + demangle<T>()));
+            logger.log_failure(messageGenerator("!=", "true"));
           }
         }
 
@@ -595,12 +602,7 @@ namespace sequoia
 
       [[nodiscard]]
       std::size_t failures() const noexcept { return m_Logger.failures(); }
-      
-      void failure_message_prefix(std::string_view prefix) { m_Logger.failure_message_prefix(prefix); }
-
-      [[nodiscard]]
-      const std::string& failure_message_prefix() const noexcept{ return m_Logger.failure_message_prefix(); }
-      
+            
       void post_message(std::string_view message) { m_Logger.post_message(message); }
 
       [[nodiscard]]

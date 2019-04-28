@@ -122,9 +122,9 @@ namespace sequoia::unit_testing
       {
         if(!logger.depth()) logger.current_message(message);
         if constexpr (diagnostic(Mode))
-                     {
-                       if(!logger.depth()) logger.log_check();
-                     }
+        {
+          if(!logger.depth()) logger.log_check();
+        }
         logger.increment_depth();
       }
 
@@ -133,18 +133,18 @@ namespace sequoia::unit_testing
         auto& logger = m_Logger.get();
         logger.decrement_depth();
         if constexpr (diagnostic(Mode))
-                     {
-                       if(!logger.depth())
-                       {
-                         const bool failure{((Mode == test_mode::false_positive) && !logger.failures()) || ((Mode == test_mode::false_negative) && logger.failures())};
-                         if(failure)
-                         {
-                           const std::string message{(Mode == test_mode::false_positive) ? logger.failure_description(logger.current_message()) : ""};
-                           logger.log_diagnostic_failure(message);
-                         }
-                         logger.reset_failures();
-                       }
-                     }
+        {
+          if(!logger.depth())
+          {
+            const bool failure{((Mode == test_mode::false_positive) && !logger.failures()) || ((Mode == test_mode::false_negative) && logger.failures())};
+            if(failure)
+            {
+              const std::string message{(Mode == test_mode::false_positive) ? logger.failure_description(logger.current_message()) : ""};
+              logger.log_diagnostic_failure(message);
+            }
+            logger.reset_failures();
+          }
+        }
 
         if(!logger.depth()) logger.exceptions_detected_by_sentinel(std::uncaught_exceptions());
       }
@@ -171,7 +171,7 @@ namespace sequoia::unit_testing
     void log_failure(std::string_view message)
     {
       ++m_Failures;
-      if constexpr (Mode != test_mode::false_positive) m_Messages += (std::string{message} + '\n');
+      if constexpr (Mode != test_mode::false_positive) m_Messages += (std::string{message} + "\n\n");
       if(std::ofstream of{m_RecoveryFile}) of << m_Messages;
     }
 
@@ -212,17 +212,11 @@ namespace sequoia::unit_testing
     std::size_t performance_checks() const noexcept { return m_PerformanceChecks; } 
 
     [[nodiscard]]
-    const std::string& failure_message_prefix() const noexcept { return m_FailureMessagePrefix; }
-      
-    void failure_message_prefix(std::string_view prefix) { m_FailureMessagePrefix = prefix; }
-
-    [[nodiscard]]
     std::string failure_description(std::string_view description) const
-    {
-      const std::string prefix{failure_message_prefix()};
-      std::string message{prefix.empty() ? failure_message_preface() : "\n\t[" + prefix + "] " + failure_message_preface()};
-        
-      if(!description.empty()) message.append(" (").append(description).append(")");
+    {      
+      std::string message{"\t"};
+      if(description.empty()) message.append("Undescribed check failure");
+      else message.append(description);
 
       return message;
     }
@@ -240,7 +234,6 @@ namespace sequoia::unit_testing
   private:
     std::string
       m_Messages,
-      m_FailureMessagePrefix,
       m_CurrentMessage;
 
     // TO DO: use std::filesystem once supported!
@@ -249,13 +242,13 @@ namespace sequoia::unit_testing
     int m_ExceptionsInFlight{};
       
     std::size_t
-    m_Failures{},
-                                                 m_PerformanceFailures{},
-                                                 m_Checks{},
-                                                 m_PerformanceChecks{},
-                                                 m_Depth{},
-                                                 m_DiagnosticFailures{},
-                                                 m_CriticalFailures{};
+      m_Failures{},
+      m_PerformanceFailures{},
+      m_Checks{},
+      m_PerformanceChecks{},
+      m_Depth{},
+      m_DiagnosticFailures{},
+      m_CriticalFailures{};
 
     [[nodiscard]]
     std::size_t depth() const noexcept { return m_Depth; }
@@ -284,26 +277,6 @@ namespace sequoia::unit_testing
     {
       m_CurrentMessage = message;
       if(std::ofstream of{m_RecoveryFile}) of << m_CurrentMessage;            
-    }
-
-    [[nodiscard]]
-    static std::string prefix()
-    {
-      switch (Mode)
-      {
-      case test_mode::standard:
-        return " ";
-      case test_mode::false_positive:
-        return " False positive diagnostic ";
-      case test_mode::false_negative:
-        return " False negative diagnostic ";
-      }
-    }
-
-    [[nodiscard]]
-    std::string failure_message_preface() const
-    {
-      return {"\n\tError -- check number " + std::to_string(checks()) +  ": "};
     }
   };
 
@@ -408,9 +381,7 @@ namespace sequoia::unit_testing
 
     [[nodiscard]]
     const std::string& name() const noexcept { return m_Name; }
-      
-    void name(std::string_view p) { m_Name = p; }      
-      
+    
     [[nodiscard]]
     std::string summarize(std::string_view checkNumsPrefix, const log_verbosity suppression ) const
     {

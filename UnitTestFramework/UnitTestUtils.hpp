@@ -61,7 +61,7 @@ namespace sequoia::unit_testing
   protected:
     virtual void run_tests() = 0;
 
-    virtual std::string current_message() const { return std::string{Checker::failure_message_prefix()} + std::string{Checker::current_message()}; }
+    virtual std::string current_message() const { return std::string{Checker::current_message()}; }
 
     std::string make_message(std::string_view tag, std::string_view exceptionMessage) const
     {
@@ -98,5 +98,5 @@ namespace sequoia::unit_testing
     return s;
   }
 
-#define LINE(message) report_line(__FILE__, __LINE__, message)    
+  #define LINE(message) report_line(__FILE__, __LINE__, message)    
 }
