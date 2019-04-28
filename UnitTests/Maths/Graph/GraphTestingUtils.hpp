@@ -39,16 +39,16 @@ namespace sequoia::unit_testing
     template<class Logger>
     static void check(Logger& logger, const type& connectivity, const type& prediction, std::string_view description)
     {
-      check_equality(logger, connectivity.size(), prediction.size(), impl::concat_messages(description, "Connectivity sizes different"));
+      check_equality(logger, connectivity.size(), prediction.size(), impl::combine_messages(description, "Connectivity sizes different"));
       
-      if(check_equality(logger, connectivity.order(), prediction.order(), impl::concat_messages(description, "Connectivity orders different")))
+      if(check_equality(logger, connectivity.order(), prediction.order(), impl::combine_messages(description, "Connectivity orders different")))
       {
         for(std::size_t i{}; i<connectivity.order(); ++i)
         {
-          const std::string message{impl::concat_messages(description,"Partition " + std::to_string(i))};
-          check_range(logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), prediction.cbegin_edges(i), prediction.cend_edges(i), impl::concat_messages(message, "cedge_iterator"));
+          const std::string message{impl::combine_messages(description,"Partition " + std::to_string(i))};
+          check_range(logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), prediction.cbegin_edges(i), prediction.cend_edges(i), impl::combine_messages(message, "cedge_iterator"));
 
-          check_range(logger, connectivity.crbegin_edges(i), connectivity.crend_edges(i), prediction.crbegin_edges(i), prediction.crend_edges(i), impl::concat_messages(message, "credge_iterator"));
+          check_range(logger, connectivity.crbegin_edges(i), connectivity.crend_edges(i), prediction.crbegin_edges(i), prediction.crend_edges(i), impl::combine_messages(message, "credge_iterator"));
         }
       }
     } 
@@ -70,19 +70,19 @@ namespace sequoia::unit_testing
     template<class Logger>
     static void check(Logger& logger, const type& connectivity, equivalent_type prediction, std::string_view description)
     {
-      if(check_equality(logger, connectivity.order(), prediction.size(), impl::concat_messages(description, "Connectivity order wrong")))
+      if(check_equality(logger, connectivity.order(), prediction.size(), impl::combine_messages(description, "Connectivity order wrong")))
       {
         for(std::size_t i{}; i<connectivity.order(); ++i)
         {
-          const std::string message{impl::concat_messages(description,"Partition " + std::to_string(i))};
+          const std::string message{impl::combine_messages(description,"Partition " + std::to_string(i))};
 
           if constexpr(std::is_same_v<edge_type, edge_init_type>)
           {
-            check_range(logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), (prediction.begin()+i)->begin(), (prediction.begin() + i)->end(), impl::concat_messages(message, "cedge_iterator"));
+            check_range(logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), (prediction.begin()+i)->begin(), (prediction.begin() + i)->end(), impl::combine_messages(message, "cedge_iterator"));
           }
           else
           {
-            check_range_equivalence(logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), (prediction.begin()+i)->begin(), (prediction.begin() + i)->end(), impl::concat_messages(message, "cedge_iterator"));
+            check_range_equivalence(logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), (prediction.begin()+i)->begin(), (prediction.begin() + i)->end(), impl::combine_messages(message, "cedge_iterator"));
           }                
         }
       }
@@ -105,12 +105,12 @@ namespace sequoia::unit_testing
     template<class Logger>
     static void check(Logger& logger, const type& connectivity, equivalent_type prediction, std::string_view description)
     {
-      if(check_equality(logger, connectivity.order(), prediction.size(), impl::concat_messages(description, "Connectivity order wrong")))
+      if(check_equality(logger, connectivity.order(), prediction.size(), impl::combine_messages(description, "Connectivity order wrong")))
       {
         for(std::size_t i{}; i<connectivity.order(); ++i)
         {
-          const std::string message{impl::concat_messages(description,"Partition " + std::to_string(i))};
-          check_range_weak_equivalence(logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), (prediction.begin()+i)->begin(), (prediction.begin() + i)->end(), impl::concat_messages(message, "cedge_iterator"));
+          const std::string message{impl::combine_messages(description,"Partition " + std::to_string(i))};
+          check_range_weak_equivalence(logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), (prediction.begin()+i)->begin(), (prediction.begin() + i)->end(), impl::combine_messages(message, "cedge_iterator"));
         }
       }
     }    

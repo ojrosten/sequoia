@@ -21,16 +21,16 @@ namespace sequoia::unit_testing
     template<class Logger>
     static void check(Logger& logger, const type& stack, const type& prediction, std::string_view description="")
     {
-      check_equality(logger, stack.empty(), prediction.empty(), impl::concat_messages(description, "Inconsistent emptiness"));
+      check_equality(logger, stack.empty(), prediction.empty(), impl::combine_messages(description, "Inconsistent emptiness"));
 
-      check_equality(logger, stack.size(), prediction.size(), impl::concat_messages(description, "Inconsistent size"));
+      check_equality(logger, stack.size(), prediction.size(), impl::combine_messages(description, "Inconsistent size"));
            
       if(!prediction.empty() && !stack.empty())
       {
-        check_equality(logger, stack.top(), prediction.top(), impl::concat_messages(description, "Inconsistent top element"));
+        check_equality(logger, stack.top(), prediction.top(), impl::combine_messages(description, "Inconsistent top element"));
       }
 
-      check_equality(logger, prediction == stack, true, impl::concat_messages(description, "Hidden state"));
+      check_equality(logger, prediction == stack, true, impl::combine_messages(description, "Hidden state"));
     }
   };
 }

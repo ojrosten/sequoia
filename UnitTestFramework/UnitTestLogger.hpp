@@ -24,27 +24,20 @@
 
 namespace sequoia::unit_testing
 {
-  template<class T, class=std::void_t<>> struct is_serializable : public std::false_type
-  {};
-
-  // Seems to be a bug here for clang-1000.11.45.5 since decltype returns std::stringstream, whatever T!
-  template<class T> struct is_serializable<T, std::void_t<decltype(std::stringstream{} << std::declval<T>())>> : public std::true_type
-  {};
-
-  template<class T> constexpr bool is_serializable_v{is_serializable<T>::value};
-
-  template<class T, class=std::enable_if_t<is_serializable_v<T>>>
-  struct string_maker
+  namespace impl
   {
-    [[nodiscard]]
-    static std::string make(const T& val)
-    {        
-      std::ostringstream os;
-      os << std::boolalpha << val;
-      return os.str();
+    inline std::string combine_messages(std::string_view s1, std::string_view s2, std::string_view sep=" ")
+    {
+      std::string mess{!s1.empty() ? s1 : s2};
+      if(!s1.empty() && !s2.empty())
+      {
+        mess.append(sep).append(s2);
+      }
+        
+      return mess;
     }
-  };
-
+  }
+  
   template<class T> std::string demangle()
   {
     #ifndef _MSC_VER_
@@ -54,12 +47,7 @@ namespace sequoia::unit_testing
       return typeid(T).name();
     #endif
   }
-    
-  template<class T> [[nodiscard]] std::string to_string(const T& value)
-  {
-    return string_maker<T>::make(value);
-  }
-
+  
   template<class Iter> void pad_right(Iter begin, Iter end, std::string_view suffix)
   {
     auto maxIter{
@@ -116,21 +104,20 @@ namespace sequoia::unit_testing
       
     class [[nodiscard]] sentinel
     {
-    public:        
+    public:
       sentinel(unit_test_logger& logger, std::string_view message)
         : m_Logger{logger}
       {
         if(!logger.depth()) logger.current_message(message);
-        if constexpr (diagnostic(Mode))
-        {
-          if(!logger.depth()) logger.log_check();
-        }
+        
+        if(diagnostic(Mode) && !logger.depth()) logger.log_check();
+        
         logger.increment_depth();
       }
 
       ~sentinel()
       {
-        auto& logger = m_Logger.get();
+        auto& logger{m_Logger.get()};
         logger.decrement_depth();
         if constexpr (diagnostic(Mode))
         {
@@ -139,7 +126,7 @@ namespace sequoia::unit_testing
             const bool failure{((Mode == test_mode::false_positive) && !logger.failures()) || ((Mode == test_mode::false_negative) && logger.failures())};
             if(failure)
             {
-              const std::string message{(Mode == test_mode::false_positive) ? logger.failure_description(logger.current_message()) : ""};
+              const std::string message{(Mode == test_mode::false_positive) ? logger.current_message() : ""};
               logger.log_diagnostic_failure(message);
             }
             logger.reset_failures();
@@ -154,15 +141,15 @@ namespace sequoia::unit_testing
 
       sentinel& operator=(const sentinel&) = delete;
       sentinel& operator=(sentinel&&)      = delete;
-        
-      void log_check()
-      {
-        if(!diagnostic(Mode)) m_Logger.get().log_check();
-      }
 
       void log_performance_check()
       {
         if(!diagnostic(Mode)) m_Logger.get().log_performance_check();
+      }
+
+      void log_check()
+      {
+        if(!diagnostic(Mode)) m_Logger.get().log_check();
       }
     private:
       std::reference_wrapper<unit_test_logger> m_Logger;
@@ -210,16 +197,6 @@ namespace sequoia::unit_testing
 
     [[nodiscard]]
     std::size_t performance_checks() const noexcept { return m_PerformanceChecks; } 
-
-    [[nodiscard]]
-    std::string failure_description(std::string_view description) const
-    {      
-      std::string message{"\t"};
-      if(description.empty()) message.append("Undescribed check failure");
-      else message.append(description);
-
-      return message;
-    }
 
     [[nodiscard]]
     const std::string& messages() const noexcept{ return m_Messages; }

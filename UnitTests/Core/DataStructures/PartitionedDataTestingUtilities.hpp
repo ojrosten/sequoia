@@ -17,35 +17,35 @@ namespace sequoia::unit_testing
     template<class Logger, class PartitionedData>
     void check_details(Logger& logger, const PartitionedData& data, const PartitionedData& prediction, std::string_view description="")
     {
-      check_equality(logger, data.size(), prediction.size(), concat_messages(description, "Size different"));
-      if(check_equality(logger, data.num_partitions(), prediction.num_partitions(), concat_messages(description, "Number of partitions different")))
+      check_equality(logger, data.size(), prediction.size(), combine_messages(description, "Size different"));
+      if(check_equality(logger, data.num_partitions(), prediction.num_partitions(), combine_messages(description, "Number of partitions different")))
       {
         for(std::size_t i{}; i<prediction.num_partitions(); ++i)
         {
-          const std::string message{concat_messages(description,"Partition " + std::to_string(i))};
-          if(check_range(logger, data.begin_partition(i), data.end_partition(i), prediction.begin_partition(i), prediction.end_partition(i), concat_messages(message, "iterator (const)")))
+          const std::string message{combine_messages(description,"Partition " + std::to_string(i))};
+          if(check_range(logger, data.begin_partition(i), data.end_partition(i), prediction.begin_partition(i), prediction.end_partition(i), combine_messages(message, "iterator (const)")))
           {
             for(int64_t j{}; j<distance(prediction.begin_partition(i), prediction.end_partition(i)); ++j)
             {
-              check_equality(logger, data[i][j], prediction[i][j], concat_messages(message,"[] (const)"));
+              check_equality(logger, data[i][j], prediction[i][j], combine_messages(message,"[] (const)"));
             }
           }
           
-          check_range(logger, data.rbegin_partition(i), data.rend_partition(i), prediction.rbegin_partition(i), prediction.rend_partition(i), concat_messages(message, "r_iterator (const)"));
-          check_range(logger, data.cbegin_partition(i), data.cend_partition(i), prediction.cbegin_partition(i), prediction.cend_partition(i), concat_messages(message, "c_iterator"));
-          check_range(logger, data.crbegin_partition(i), data.crend_partition(i), prediction.crbegin_partition(i), prediction.crend_partition(i), concat_messages(message, "cr_iterator"));
+          check_range(logger, data.rbegin_partition(i), data.rend_partition(i), prediction.rbegin_partition(i), prediction.rend_partition(i), combine_messages(message, "r_iterator (const)"));
+          check_range(logger, data.cbegin_partition(i), data.cend_partition(i), prediction.cbegin_partition(i), prediction.cend_partition(i), combine_messages(message, "c_iterator"));
+          check_range(logger, data.crbegin_partition(i), data.crend_partition(i), prediction.crbegin_partition(i), prediction.crend_partition(i), combine_messages(message, "cr_iterator"));
 
           auto& r{const_cast<PartitionedData&>(prediction)};
           auto& d{const_cast<PartitionedData&>(data)};
-          if(check_range(logger, d.begin_partition(i), d.end_partition(i), r.begin_partition(i), r.end_partition(i), concat_messages(message, "iterator")))
+          if(check_range(logger, d.begin_partition(i), d.end_partition(i), r.begin_partition(i), r.end_partition(i), combine_messages(message, "iterator")))
           {
             for(int64_t j{}; j<distance(r.begin_partition(i), r.end_partition(i)); ++j)
             {
-              check_equality(logger, d[i][j], r[i][j], concat_messages(message,"[]"));
+              check_equality(logger, d[i][j], r[i][j], combine_messages(message,"[]"));
             }
           }
           
-          check_range(logger, d.rbegin_partition(i), d.rend_partition(i), r.rbegin_partition(i), r.rend_partition(i), concat_messages(message, "r_iterator"));          
+          check_range(logger, d.rbegin_partition(i), d.rend_partition(i), r.rbegin_partition(i), r.rend_partition(i), combine_messages(message, "r_iterator"));          
         }
       }
     }
@@ -62,7 +62,7 @@ namespace sequoia::unit_testing
       {
         for(std::size_t i{}; i<prediction.size(); ++i)
         {
-          const std::string message{concat_messages(description,"Partition " + std::to_string(i))};
+          const std::string message{combine_messages(description,"Partition " + std::to_string(i))};
           check_range(logger, data.begin_partition(i), data.end_partition(i), (prediction.begin() + i)->begin(), (prediction.begin() + i)->end(), message + ": iterator");
 
           check_range(logger, data.rbegin_partition(i), data.rend_partition(i), std::rbegin(*(prediction.begin() + i)), std::rend(*(prediction.begin() + i)), message + ": riterator");

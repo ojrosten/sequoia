@@ -22,11 +22,11 @@ namespace sequoia::unit_testing
     template<class Logger>
     static void check(Logger& logger, const type& nodes, const type& prediction, std::string_view description)
     {
-      check_equality(logger, nodes.size(), prediction.size(), impl::concat_messages(description, "Sizes different"));
+      check_equality(logger, nodes.size(), prediction.size(), impl::combine_messages(description, "Sizes different"));
 
-      check_range(logger, nodes.cbegin_node_weights(), nodes.cend_node_weights(), prediction.cbegin_node_weights(), prediction.cend_node_weights(), impl::concat_messages(description, "const_node_iter"));
+      check_range(logger, nodes.cbegin_node_weights(), nodes.cend_node_weights(), prediction.cbegin_node_weights(), prediction.cend_node_weights(), impl::combine_messages(description, "const_node_iter"));
 
-      check_range(logger, nodes.crbegin_node_weights(), nodes.crend_node_weights(), prediction.crbegin_node_weights(), prediction.crend_node_weights(), impl::concat_messages(description, "const_reverse_node_iter"));
+      check_range(logger, nodes.crbegin_node_weights(), nodes.crend_node_weights(), prediction.crbegin_node_weights(), prediction.crend_node_weights(), impl::combine_messages(description, "const_reverse_node_iter"));
     }
   };
 
@@ -51,9 +51,9 @@ namespace sequoia::unit_testing
     template<class Logger>
     static void check(Logger& logger, const type& nodes, equivalent_type prediction, std::string_view description)
     {
-      check_equality(logger, nodes.size(), prediction.size(), impl::concat_messages(description, "Sizes different"));
+      check_equality(logger, nodes.size(), prediction.size(), impl::combine_messages(description, "Sizes different"));
 
-      check_range(logger, nodes.cbegin_node_weights(), nodes.cend_node_weights(), prediction.begin(), prediction.end(), impl::concat_messages(description, "const_node_iter"));
+      check_range(logger, nodes.cbegin_node_weights(), nodes.cend_node_weights(), prediction.begin(), prediction.end(), impl::combine_messages(description, "const_node_iter"));
     }
   };
 
@@ -67,7 +67,7 @@ namespace sequoia::unit_testing
     template<class Logger>
     static void check(Logger& logger, const type& nodes, equivalent_type prediction, std::string_view description)
     {
-      unit_testing::check(logger, !prediction.size(), impl::concat_messages(description, "Node storage should have zero size for empty node weights"));
+      unit_testing::check(logger, !prediction.size(), impl::combine_messages(description, "Node storage should have zero size for empty node weights"));
     }
   };
 

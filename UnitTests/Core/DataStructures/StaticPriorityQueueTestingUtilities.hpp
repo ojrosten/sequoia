@@ -21,16 +21,16 @@ namespace sequoia::unit_testing
     template<class Logger>
     static void check(Logger& logger, const type& queue, const type& prediction, std::string_view description="")
     {
-      check_equality(logger, queue.empty(), prediction.empty(), impl::concat_messages(description, "Inconsistent emptiness"));
-      check_equality(logger, queue.size(), prediction.size(), impl::concat_messages(description, "Inconsistent size"));
+      check_equality(logger, queue.empty(), prediction.empty(), impl::combine_messages(description, "Inconsistent emptiness"));
+      check_equality(logger, queue.size(), prediction.size(), impl::combine_messages(description, "Inconsistent size"));
 
       if(!prediction.empty() && !queue.empty())
       {
-        check_equality(logger, queue.top(), prediction.top(), impl::concat_messages(description, "Inconsistent top element"));
+        check_equality(logger, queue.top(), prediction.top(), impl::combine_messages(description, "Inconsistent top element"));
       }
 
-      check_equality(logger, prediction == queue, true, impl::concat_messages(description, "Inconsistent Hidden state"));
-      check_equality(logger, queue == prediction, true, impl::concat_messages(description, "Inconsistent Hidden state, symmetry of =="));
+      check_equality(logger, prediction == queue, true, impl::combine_messages(description, "Inconsistent Hidden state"));
+      check_equality(logger, queue == prediction, true, impl::combine_messages(description, "Inconsistent Hidden state, symmetry of =="));
     }
   };
 }
