@@ -158,6 +158,7 @@ namespace sequoia::unit_testing
     void log_failure(std::string_view message)
     {
       ++m_Failures;
+      m_CurrentMessage = message;
       if constexpr (Mode != test_mode::false_positive) m_Messages += (std::string{message} + "\n\n");
       if(std::ofstream of{m_RecoveryFile}) of << m_Messages;
     }

@@ -60,9 +60,14 @@ namespace sequoia
         }
       };
 
-      check_relative_performance([wait]() { return wait(1); }, [wait]() { return wait(1); }, 2.0, 2.0, LINE("Performance Test for which fast task is too slow"));
-      check_relative_performance([wait]() { return wait(1); }, [wait]() { return wait(1); }, 2.0, 3.0, LINE("Performance Test for which fast task is too slow"));
-      check_relative_performance([wait]() { return wait(1); }, [wait]() { return wait(4); }, 2.0, 2.5, LINE("Performance Test for which fast task is too fast"));      
+      check_relative_performance([wait]() { return wait(1); },
+                                 [wait]() { return wait(1); }, 2.0, 2.0, LINE("Performance Test for which fast task is too slow, [1, (2.0, 2.0)"));
+      
+      check_relative_performance([wait]() { return wait(1); },
+                                 [wait]() { return wait(1); }, 2.0, 3.0, LINE("Performance Test for which fast task is too slow [1, (2.0, 3.0)"));
+      
+      check_relative_performance([wait]() { return wait(1); },
+                                 [wait]() { return wait(4); }, 2.0, 2.5, LINE("Performance Test for which fast task is too fast [4, (2.0, 2.5)]"));      
     }
 
     void false_positive_diagnostics::test_mixed()

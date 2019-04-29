@@ -359,20 +359,17 @@ namespace sequoia
     };
 
     template<class Logger, class F, class S>
-    auto check_relative_performance(Logger& logger, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials, const double num_sds, const bool reportSuccess, std::string_view description) -> performance_results<std::invoke_result_t<F>>
+    auto check_relative_performance(Logger& logger, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials, const double num_sds, std::string_view description) -> performance_results<std::invoke_result_t<F>>
     {      
       using R = std::invoke_result_t<F>;
       static_assert(std::is_same_v<R, std::invoke_result_t<S>>, "Fast/Slow invokables must have same return value");
-      
+            
       // Replace with contracts in 2020
       if((minSpeedUp <= 1) || (maxSpeedUp <= 1))
         throw std::logic_error("Relative performance test requires speed-up factors > 1!");
 
       if(minSpeedUp > maxSpeedUp)
         throw std::logic_error("maxSpeedUp must be >= minSpeedUp");      
-
-      typename Logger::sentinel r{logger, description};
-      r.log_performance_check();
       
       performance_results<R> results;      
       
@@ -443,19 +440,20 @@ namespace sequoia
           message << " +- " << num_sds << " * " << sig_f;
           message << "\n\tSlow Task duration: " << m_s << "s";
           message << " +- " << num_sds << " * " << sig_s;
-          message << " [" << m_s / m_f << "; (" << minSpeedUp << ", " << maxSpeedUp << ")]\n";
+          message << " [" << m_s / m_f << "; (" << minSpeedUp << ", " << maxSpeedUp << ")]";
 
           return message.str();
         }
       };
 
+      const std::string message{description.empty() ? serializer() : std::string{"\t"}.append(description).append("\n" + serializer())};
+      
+      typename Logger::sentinel r{logger, message};
+      r.log_performance_check();
+
       if(!results.passed)
       {        
-        logger.log_performance_failure(description.empty() ? serializer() : std::string{"\t"}.append(description).append("\n" + serializer()));
-      }
-      else if(reportSuccess)
-      {
-        logger.post_message(serializer());
+        logger.log_performance_failure(message);
       }
 
       return results;
@@ -523,8 +521,7 @@ namespace sequoia
       auto check_relative_performance(F fast, S slow, const double minSpeedUp, const double maxSpeedUp, std::string_view description="", const std::size_t trials=5, const double num_sds=3)
         -> performance_results<decltype(fast())>
       {
-        constexpr bool verboseIfPassed{Logger::mode == test_mode::false_positive};
-        return unit_testing::check_relative_performance(m_Logger, fast, slow, minSpeedUp, maxSpeedUp, trials, num_sds, verboseIfPassed, description);
+        return unit_testing::check_relative_performance(m_Logger, fast, slow, minSpeedUp, maxSpeedUp, trials, num_sds, description);
       }
 
       template<class Stream>
