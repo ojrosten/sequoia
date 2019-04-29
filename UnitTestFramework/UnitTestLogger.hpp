@@ -159,7 +159,7 @@ namespace sequoia::unit_testing
     {
       ++m_Failures;
       m_CurrentMessage = message;
-      if constexpr (Mode != test_mode::false_positive) m_Messages += (std::string{message} + "\n\n");
+      if constexpr (Mode != test_mode::false_positive) m_Messages.append(m_CurrentMessage).append("\n");
       if(std::ofstream of{m_RecoveryFile}) of << m_Messages;
     }
 
@@ -172,7 +172,7 @@ namespace sequoia::unit_testing
     void log_critical_failure(std::string_view message)
     {
       ++m_CriticalFailures;
-      m_Messages.append(message) += '\n';
+      m_Messages.append(message).append("\n");
       if(std::ofstream of{m_RecoveryFile}) of << m_Messages;
     }
 
@@ -248,7 +248,7 @@ namespace sequoia::unit_testing
     void log_diagnostic_failure(std::string_view message)
     {
       ++m_DiagnosticFailures;
-      m_Messages.append(message) += '\n';
+      m_Messages.append(message).append("\n");
     }
 
     void current_message(std::string_view message)

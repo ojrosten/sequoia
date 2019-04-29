@@ -133,7 +133,7 @@ namespace sequoia
           auto message{messageGenerator("==", "false")};
           if constexpr(!delegate)
           {
-            message.append("\t" + to_string(value) +  " differs from " + to_string(prediction) + '\n');
+            message.append("\t" + to_string(value) +  " differs from " + to_string(prediction) + "\n\n");
           }
           logger.log_failure(message);
         }
@@ -440,7 +440,7 @@ namespace sequoia
           message << " +- " << num_sds << " * " << sig_f;
           message << "\n\tSlow Task duration: " << m_s << "s";
           message << " +- " << num_sds << " * " << sig_s;
-          message << " [" << m_s / m_f << "; (" << minSpeedUp << ", " << maxSpeedUp << ")]";
+          message << " [" << m_s / m_f << "; (" << minSpeedUp << ", " << maxSpeedUp << ")]\n";
 
           return message.str();
         }
