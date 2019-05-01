@@ -1770,13 +1770,13 @@ namespace sequoia::unit_testing
         g.sort_edges(g.cbegin_edges(1), g.cbegin_edges(1) + 2,
                    [](const auto& l , const auto& r){ return l.weight() > r.weight(); }
         );
-
-        check_equality(graph, g, LINE(""));
       }
       else
       {
-        // TO DO: use check_equivalence here as clustering can never give the required 10,6,10
+        g.swap_edges(1, 1, 2);
       }
+
+      check_equality(graph, g, LINE(""));
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
@@ -1823,13 +1823,17 @@ namespace sequoia::unit_testing
         g.sort_edges(g.cbegin_edges(1), g.cbegin_edges(1) + 2,
                    [](const auto& l , const auto& r){ return l.weight() > r.weight(); }
         );
-
-        check_equality(graph, g, LINE(""));
       }
       else
       {
-        // TO DO!!!
+        g.swap_edges(0, 2, 4);
+        g.swap_edges(0, 3, 4);
+        g.swap_edges(1, 0, 1);
+        g.swap_edges(1, 1, 2);
       }
+
+      
+      check_equality(graph, g, LINE(""));
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {

@@ -186,6 +186,7 @@ namespace sequoia::maths
       >::graph_base;
 
     using base::sort_edges;
+    using base::swap_edges;
   };
 
   template

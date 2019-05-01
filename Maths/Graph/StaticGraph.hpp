@@ -84,7 +84,8 @@ namespace sequoia::maths
       >::graph_primitive;
 
     using primitive_type::swap_nodes;
-    using primitive_type::sort_edges;      
+    using primitive_type::sort_edges;
+    using primitive_type::swap_edges;
   };
 
   template<std::size_t Size, std::size_t Order, class EdgeWeight, class NodeWeight>

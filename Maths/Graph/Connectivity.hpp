@@ -208,6 +208,11 @@ namespace sequoia
         return *this;
       }
 
+      constexpr void swap_edges(edge_index_type node, edge_index_type i, edge_index_type j)
+      {
+        sequoia::iter_swap(begin_edges(node) + i, begin_edges(node) + j);
+      }
+
       constexpr void swap_nodes(size_type i, size_type j)
       {
         if constexpr (EdgeTraits::shared_edge_v)

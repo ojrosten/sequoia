@@ -107,7 +107,8 @@ namespace sequoia::maths
 
     using primitive_type::set_edge_weight;
     using primitive_type::mutate_edge_weight;
-    using primitive_type::sort_edges;      
+    using primitive_type::sort_edges;
+    using primitive_type::swap_edges;
   };
 
   template<std::size_t Size, std::size_t Order, class EdgeWeight>
