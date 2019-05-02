@@ -33,7 +33,6 @@ namespace sequoia::unit_testing
       graph_test_helper<int, complex<double>>  helper{"int, complex<double>"};
       
       helper.run_tests<generic_weighted_graph_tests>(*this);
-
       helper.run_storage_tests<contiguous_edge_storage_traits, graph_contiguous_capacity>(*this);
       helper.run_storage_tests<bucketed_edge_storage_traits, graph_bucketed_capacity>(*this);
     }
@@ -41,16 +40,8 @@ namespace sequoia::unit_testing
     {
       graph_test_helper<complex<int>, complex<double>>  helper{"complex<int>, complex<double>"};
       helper.run_tests<generic_weighted_graph_tests>(*this);
-    }
-
-    {
-      graph_test_helper<complex<double>, int> helper{"complex<double>, int"};
-      helper.run_tests<more_generic_weighted_graph_tests>(*this);
-    }
-      
-    {
-      graph_test_helper<std::vector<int>, std::vector<int>>  helper{"Weighted (vector<int>, vector<int>)"};
-      helper.run_tests<test_copy_move>(*this);
+      helper.run_storage_tests<contiguous_edge_storage_traits, graph_contiguous_capacity>(*this);
+      helper.run_storage_tests<bucketed_edge_storage_traits, graph_bucketed_capacity>(*this);
     }
   }
 
@@ -1101,6 +1092,8 @@ namespace sequoia::unit_testing
     //   (i)
 
     check_equality(graph, GGraph{edge_init_list_t{{}}, {{0,1}}}, LINE(""));
+    check_regular_semantics(graph, GGraph{}, LINE("Regular semantics"));
+    check_regular_semantics(graph, GGraph{edge_init_list_t{{}}, {{1,0}}}, LINE("Regular semantics"));
 
     check_exception_thrown<std::out_of_range>([&graph](){ graph.node_weight(graph.cend_node_weights(), 0.0); }, LINE("Throw if node out of range"));
     
@@ -1127,19 +1120,29 @@ namespace sequoia::unit_testing
     if constexpr (GraphFlavour == graph_flavour::directed)
     {
       check_equality(graph, GGraph{{{{edge_init_t{0,1}}}}, {{1.1,-4.3}}}, LINE(""));
+      check_regular_semantics(graph, GGraph{{{{edge_init_t{0,2}}}}, {{1.1,-4.3}}}, LINE("Regular semantics"));
+      check_regular_semantics(graph, GGraph{{{{edge_init_t{0,1}}}}, {{-4.3, 1.1}}}, LINE("Regular semantics"));
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected)
     {      
       check_equality(graph, GGraph{{{edge_init_t{0,1}, edge_init_t{0,1}}}, {{1.1,-4.3}}}, LINE(""));
+      check_regular_semantics(graph, GGraph{{{edge_init_t{0,2}, edge_init_t{0,2}}}, {{1.1,-4.3}}}, LINE("Regular semantics"));
+      check_regular_semantics(graph, GGraph{{{edge_init_t{0,1}, edge_init_t{0,1}}}, {{-4.3,1.1}}}, LINE("Regular semantics"));
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
       check_equality(graph, GGraph{{{edge_init_t{0,0,1,1}, edge_init_t{0,0,0,1}}}, {{1.1,-4.3}}}, LINE(""));
+      check_regular_semantics(graph, GGraph{{{edge_init_t{0,0,1,2}, edge_init_t{0,0,0,2}}}, {{1.1,-4.3}}}, LINE(""));
+      check_regular_semantics(graph, GGraph{{{edge_init_t{0,0,1,1}, edge_init_t{0,0,0,1}}}, {{-4.3,1.1}}}, LINE(""));      
     }
     else 
     { 
       check_equality(graph, GGraph{{{edge_init_t{0,1,1}, edge_init_t{0,0,1}}}, {{1.1,-4.3}}}, LINE(""));
+      check_regular_semantics(graph, GGraph{{{edge_init_t{0,1,2}, edge_init_t{0,0,2}}}, {{1.1,-4.3}}}, LINE(""));
+      check_regular_semantics(graph, GGraph{{{edge_init_t{0,1,1}, edge_init_t{0,0,1}}}, {{-4.3,1.1}}}, LINE(""));
     }
+
+    check_regular_semantics(graph, GGraph{}, LINE("Regular semantics"));
 
     graph.set_edge_weight(graph.cbegin_edges(0), -2);
     //   /\ -2
@@ -1163,7 +1166,7 @@ namespace sequoia::unit_testing
       check_equality(graph, GGraph{{{edge_init_t{0,1,-2}, edge_init_t{0,0,-2}}}, {{1.1,-4.3}}}, LINE(""));
     }
 
-    graph.set_edge_weight(graph.cbegin_edges(0), -4);
+    graph.set_edge_weight(graph.crbegin_edges(0), -4);
     //   /\ -4
     //   \/
     // (1.1-i4.3)
@@ -1899,63 +1902,5 @@ namespace sequoia::unit_testing
     { 
       check_equality(graph, GGraph{{{}, {edge_init_t{1,1,1}, edge_init_t{1,0,1}}}, {{1, 1}, {}}}, LINE(""));
     }
-  }
-
-  
-  // Copy, Move...
-  
-  template
-  <
-    maths::graph_flavour GraphFlavour,
-    class EdgeWeight,
-    class NodeWeight,      
-    template <class> class EdgeWeightPooling,
-    template <class> class NodeWeightPooling,
-    template <maths::graph_flavour, class, template<class> class> class EdgeStorageTraits,
-    template <class, template<class> class, bool> class NodeWeightStorageTraits
-  >
-  void test_copy_move<
-      GraphFlavour,
-      EdgeWeight,
-      NodeWeight,
-      EdgeWeightPooling,
-      NodeWeightPooling,
-      EdgeStorageTraits,
-      NodeWeightStorageTraits
-  >::execute_operations()
-  {
-    const std::vector<int> specialWeight{5, -6};
-
-    GGraph graph1{generate_test_graph1(specialWeight)};
-    check_test_graph_1(graph1, specialWeight, LINE("Checking rvalue constructor"));
- 
-    GGraph graph2;
-    check_empty_graph(graph2);
-
-    graph2 = graph1;
-
-    check_test_graph_1(graph2, specialWeight, LINE("Checking assignment operator"));
-        
-    graph1 = GGraph();
-    check_empty_graph(graph1, LINE("Checking assignment of empty graph"));
-
-    std::swap(graph1, graph2);
-
-    check_test_graph_1(graph1, specialWeight, LINE("Checking results of swap"));
-    check_empty_graph(graph2, LINE("Checking results of swap giving empty graph"));
-        
-    GGraph graph3{graph1};
-    check_test_graph_1(graph3, specialWeight, LINE("Checking lvalue constructor"));
-    check_test_graph_1(graph1, specialWeight, LINE("Checking no unexpected side effects of lvalue constructor"));
-        
-    const std::vector<int> newWeight{-7, 9};
-    graph1.set_edge_weight(mutual_info(GraphFlavour) ? graph1.cbegin_edges(0) + 2: ++graph1.cbegin_edges(0), newWeight);
-        
-    check_test_graph_1(graph1, newWeight, LINE("Checking result of setting weight"));
-    check_test_graph_1(graph3, specialWeight, LINE("Checking no unexpected side effects of result of setting weight"));
-        
-    GGraph graph4{graph1};
-    graph4.set_edge_weight(mutual_info(GraphFlavour) ? graph4.cbegin_edges(0) + 2 : ++graph4.cbegin_edges(0), 8, 4);
-    check_test_graph_1(graph4, {8,4});
-  }
+  }  
 }

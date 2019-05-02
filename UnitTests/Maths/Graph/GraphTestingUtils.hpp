@@ -227,6 +227,7 @@ namespace sequoia
       using checker<Logger>::check;
       using checker<Logger>::check_exception_thrown;
       using checker<Logger>::check_equivalence;
+      using checker<Logger>::check_regular_semantics;
 
       template<class G, class... NodeWeights, class E=typename G::edge_init_type>
       bool check_graph(const G& graph, const std::initializer_list<std::initializer_list<E>>& edges, const std::tuple<NodeWeights...>& nodeWeights, std::string_view failureMessage="")
