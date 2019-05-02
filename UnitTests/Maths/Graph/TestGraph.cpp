@@ -1082,8 +1082,7 @@ namespace sequoia::unit_testing
     using edge_init_list_t = std::initializer_list<std::initializer_list<edge_init_t>>;
     using edge_weight_t = typename GGraph::edge_weight_type; 
     
-    GGraph graph;    
-    using Edge = maths::edge<EdgeWeight, utilities::protective_wrapper<EdgeWeight>>;
+    GGraph graph;
 
     graph.reserve_nodes(4);
     check_equality(graph.node_capacity(), 4ul, LINE(""));
@@ -1861,13 +1860,21 @@ namespace sequoia::unit_testing
     //   \/
     //   (0)
         
-    if constexpr(mutual_info(GraphFlavour))
+    if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_graph(graph, {{Edge(0, 0, 1), Edge(0, 0, 1)}}, {{0}}, LINE(""));
+      check_equality(graph, GGraph{{{{edge_init_t{0,1}}}}, {{}}}, LINE(""));
     }
-    else
+    else if constexpr(GraphFlavour == graph_flavour::undirected)
+    {      
+      check_equality(graph, GGraph{{{edge_init_t{0,1}, edge_init_t{0,1}}}, {{}}}, LINE(""));
+    }
+    else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
-      check_graph(graph, {{Edge(0, 0, 1)}}, {{0}}, LINE(""));
+      check_equality(graph, GGraph{{{edge_init_t{0,0,1,1}, edge_init_t{0,0,0,1}}}, {{}}}, LINE(""));
+    }
+    else 
+    { 
+      check_equality(graph, GGraph{{{edge_init_t{0,1,1}, edge_init_t{0,0,1}}}, {{}}}, LINE(""));
     }
  
 
@@ -1876,14 +1883,21 @@ namespace sequoia::unit_testing
     //       \/
     // (1+i) (0)
 
-    if constexpr(mutual_info(GraphFlavour))
+    if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_graph(graph, {{}, {Edge(1,1,1), Edge(1,1,1)}}, {{1,1}, {0}}, LINE(""));
+      check_equality(graph, GGraph{{{{}, {edge_init_t{1,1}}}}, {{1, 1}, {}}}, LINE(""));
     }
-    else
+    else if constexpr(GraphFlavour == graph_flavour::undirected)
+    {      
+      check_equality(graph, GGraph{{{}, {edge_init_t{1,1}, edge_init_t{1,1}}}, {{1, 1}, {}}}, LINE(""));
+    }
+    else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
-      check_graph(graph, {{}, {Edge(1,1,1)}}, {{1,1}, {0}}, LINE(""));
-       
+      check_equality(graph, GGraph{{{}, {edge_init_t{1,1,1,1}, edge_init_t{1,1,0,1}}}, {{1, 1}, {}}}, LINE(""));
+    }
+    else 
+    { 
+      check_equality(graph, GGraph{{{}, {edge_init_t{1,1,1}, edge_init_t{1,0,1}}}, {{1, 1}, {}}}, LINE(""));
     }
   }
 
