@@ -75,19 +75,7 @@ namespace sequoia
       {
         return combine_messages(description, "\n\t[" + demangle<T>() + "]\n");        
       }
-      
-      template<class T, class = void> struct container_detector : std::false_type
-      {
-      };
-
-      template<class T> struct container_detector<T, std::void_t<decltype(std::begin(std::declval<T>()))>> : std::true_type
-      {
-      };
-
-      template<class T> struct dependent_false : std::false_type {};
-
-      template<class T> constexpr bool container_detector_v{container_detector<T>::value};
-      
+            
       template<class EquivChecker, class Logger, class T, class S, class... U>
       bool check(Logger& logger, const T& value, const S& s, const U&... u, std::string_view description)
       {
@@ -108,7 +96,7 @@ namespace sequoia
     template<class Logger, class T>
     bool check(Logger& logger, equality_tag, const T& value, const T& prediction, std::string_view description)
     {
-      constexpr bool delegate{has_details_checker_v<T> || impl::container_detector_v<T>};
+      constexpr bool delegate{has_details_checker_v<T> || is_container_v<T>};
        
       static_assert(delegate || is_serializable_v<T> || is_equal_to_comparable_v<T>,
                     "Provide either a specialization of details_checker or string_maker and/or operator==");
@@ -156,13 +144,13 @@ namespace sequoia
           sentinel s{logger, impl::add_type_info<T>(description)};
           details_checker<T>::check(logger, value, prediction, description);
         }
-        else if constexpr(impl::container_detector_v<T>)
+        else if constexpr(is_container_v<T>)
         {
           check_range(logger, std::begin(value), std::end(value), std::begin(prediction), std::end(prediction), description);
         }      
         else
         {
-          static_assert(impl::dependent_false<T>::value, "Unable to check the details for input type");
+          static_assert(dependent_false<T>::value, "Unable to check the details for input type");
         }
       }
 

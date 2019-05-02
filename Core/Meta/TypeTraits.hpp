@@ -8,6 +8,7 @@
 #pragma once
 
 #include <type_traits>
+#include <iterator>
 
 /*! \file TypeTraits.hpp
     \brief Traits added as required by other components of the library.
@@ -177,5 +178,21 @@ namespace sequoia
   constexpr bool has_default_constructor_v{has_default_constructor<T>::value};
 
   template<class T>
-  using has_default_constructor_t = typename has_default_constructor<T>::type;  
+  using has_default_constructor_t = typename has_default_constructor<T>::type;
+
+  // is_container
+
+  template<class T, class = void> struct is_container : std::false_type
+  {
+  };
+
+  template<class T> struct is_container<T, std::void_t<decltype(std::begin(std::declval<T>()))>> : std::true_type
+  {
+  };
+
+  template<class T> constexpr bool is_container_v{is_container<T>::value};
+
+  // dependent_false
+  
+  template<class T> struct dependent_false : std::false_type {};
 }

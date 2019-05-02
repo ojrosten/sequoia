@@ -43,6 +43,14 @@ namespace sequoia::unit_testing
       helper.run_storage_tests<contiguous_edge_storage_traits, graph_contiguous_capacity>(*this);
       helper.run_storage_tests<bucketed_edge_storage_traits, graph_bucketed_capacity>(*this);
     }
+
+    {
+      graph_test_helper<std::vector<int>, std::vector<complex<double>>>  helper{""};
+      
+      helper.run_tests<generic_weighted_graph_tests>(*this);
+      helper.run_storage_tests<contiguous_edge_storage_traits, graph_contiguous_capacity>(*this);
+      helper.run_storage_tests<bucketed_edge_storage_traits, graph_bucketed_capacity>(*this);
+    }
   }
 
   // Generic Graph Operations
@@ -1188,7 +1196,19 @@ namespace sequoia::unit_testing
       check_equality(graph, GGraph{{{edge_init_t{0,1,-4}, edge_init_t{0,0,-4}}}, {{1.1,-4.3}}}, LINE(""));
     }
 
-    graph.mutate_edge_weight(graph.cbegin_edges(0), [](auto& val) { val *= 2; });
+    graph.mutate_edge_weight(graph.cbegin_edges(0),
+        [](auto& val) {
+        if constexpr(is_container_v<edge_weight_t>)
+        {
+          val[0] *= 2;
+        }
+        else
+        {
+          val *= 2;
+        }
+      }
+    );
+
     //   /\ -8
     //   \/
     // (1.1-i4.3)
@@ -1655,7 +1675,19 @@ namespace sequoia::unit_testing
                             }, {{1.1,-4.3}, {}}}, LINE(""));
     }
         
-    graph.mutate_edge_weight(graph.cbegin_edges(0) + (mutual_info(GraphFlavour) ?  3 : 2), [](auto& val){ val = 6; });
+    graph.mutate_edge_weight(graph.cbegin_edges(0) + (mutual_info(GraphFlavour) ?  3 : 2),
+      [](auto& val){
+        if constexpr(is_container_v<edge_weight_t>)
+        {
+          val[0] = 6;
+        }
+        else
+        {
+          val = 6;
+        }
+      }
+    );
+    
     //            8 (6, directed)
     //           /--\
     //          /6(7)\
@@ -1746,7 +1778,19 @@ namespace sequoia::unit_testing
                             }, {{1.1,-4.3}, {}}}, LINE(""));
     }
 
-    graph.mutate_edge_weight(graph.cbegin_edges(0) + (mutual_info(GraphFlavour) ?  4 : 1), [](auto& val){ val = 10; });
+    graph.mutate_edge_weight(graph.cbegin_edges(0) + (mutual_info(GraphFlavour) ?  4 : 1),
+      [](auto& val){
+        if constexpr(is_container_v<edge_weight_t>)
+        {
+          val[0] = 10;
+        }
+        else
+        {
+          val = 10;
+        }
+      }
+    );
+    
     //            10
     //           /--\
     //          / 10 \
@@ -1795,7 +1839,18 @@ namespace sequoia::unit_testing
                             }, {{1.1,-4.3}, {}}}, LINE(""));
     }
 
-    graph.mutate_edge_weight(graph.cbegin_edges(0) + (mutual_info(GraphFlavour) ?  4 : 2), [](auto& val){ val = 7; });
+    graph.mutate_edge_weight(graph.cbegin_edges(0) + (mutual_info(GraphFlavour) ?  4 : 2),
+      [](auto& val){
+        if constexpr(is_container_v<edge_weight_t>)
+        {
+          val[0] = 7;
+        }
+        else
+        {
+          val = 7;
+        }
+      }
+    );
     //            7
     //           /--\
     //          / 10 \
