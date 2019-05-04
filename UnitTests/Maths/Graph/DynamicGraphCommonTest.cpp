@@ -1081,6 +1081,7 @@ namespace sequoia::unit_testing
     using edge_t           = typename GGraph::edge_type;
     using edge_init_list_t = std::initializer_list<std::initializer_list<edge_init_t>>;
     using edge_weight_t    = typename GGraph::edge_weight_type;
+    using node_weight_t    = typename GGraph::node_weight_type;
 
     constexpr bool edgeDataPool{std::is_same_v<EdgeWeightPooling<int>, data_sharing::data_pool<int>>};
     
@@ -1975,6 +1976,36 @@ namespace sequoia::unit_testing
     else 
     { 
       check_equality(graph, GGraph{{{}, {edge_init_t{1,1,1}, edge_init_t{1,0,1}}}, {{1, 1}, {}}}, LINE(""));
+    }
+
+    graph.mutate_node_weight(graph.cbegin_node_weights(), [](auto& val){
+        if constexpr(is_container_v<node_weight_t>)
+        {
+          val[0] *= 2;
+          val[1] *= 2;
+        }
+        else
+        {
+          val *= 2;
+        }
+      }
+    );
+
+    if constexpr (GraphFlavour == graph_flavour::directed)
+    {
+      check_equality(graph, GGraph{{{}, {edge_init_t{1,1}}}, {{2, 2}, {}}}, LINE(""));
+    }
+    else if constexpr(GraphFlavour == graph_flavour::undirected)
+    {      
+      check_equality(graph, GGraph{{{}, {edge_init_t{1,1}, edge_init_t{1,1}}}, {{2, 2}, {}}}, LINE(""));
+    }
+    else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
+    {
+      check_equality(graph, GGraph{{{}, {edge_init_t{1,1,1,1}, edge_init_t{1,1,0,1}}}, {{2, 2}, {}}}, LINE(""));
+    }
+    else 
+    { 
+      check_equality(graph, GGraph{{{}, {edge_init_t{1,1,1}, edge_init_t{1,0,1}}}, {{2, 2}, {}}}, LINE(""));
     }
   }  
 }
