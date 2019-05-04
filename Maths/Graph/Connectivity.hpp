@@ -1162,8 +1162,11 @@ namespace sequoia
                   }
                   else
                   {
+                    static_assert(!EdgeTraits::shared_edge_v);
+                    
                     const auto compIndex{static_cast<size_t>(distance(orderedEdges.cbegin_partition(target), range.second + distance(upperIter, lowerIter)))};
-                    m_Edges.push_back_to_partition(i, cbegin_edges(target) + compIndex);
+
+                    m_Edges.push_back_to_partition(i, edge_type{target, *(cbegin_edges(target) + compIndex)});
                   }
                 }
               }

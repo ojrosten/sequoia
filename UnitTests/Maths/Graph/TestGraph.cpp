@@ -1077,9 +1077,12 @@ namespace sequoia::unit_testing
   >::test_basic_operations()
   {
     using namespace maths;
-    using edge_init_t = typename GGraph::edge_init_type;
+    using edge_init_t      = typename GGraph::edge_init_type;
+    using edge_t           = typename GGraph::edge_type;
     using edge_init_list_t = std::initializer_list<std::initializer_list<edge_init_t>>;
-    using edge_weight_t = typename GGraph::edge_weight_type; 
+    using edge_weight_t    = typename GGraph::edge_weight_type;
+
+    constexpr bool edgeDataPool{std::is_same_v<EdgeWeightPooling<int>, data_sharing::data_pool<int>>};
     
     GGraph graph;
 
@@ -1760,6 +1763,11 @@ namespace sequoia::unit_testing
                    [](const auto& l , const auto& r){ return l.weight() < r.weight(); }
         );
       }
+
+      if constexpr(!edgeDataPool && !std::is_same_v<edge_init_t, edge_t>)
+      {
+        g.swap_edges(1, 0, 1);
+      }
       
       check_equality(graph, g, LINE(""));
     }
@@ -1816,6 +1824,11 @@ namespace sequoia::unit_testing
         g.sort_edges(g.cbegin_edges(1), g.cbegin_edges(1) + 2,
                    [](const auto& l , const auto& r){ return l.weight() > r.weight(); }
         );
+
+        if constexpr(!edgeDataPool && !std::is_same_v<edge_init_t, edge_t>)
+        {
+          g.swap_edges(1, 0, 1);
+        }
       }
       else
       {
@@ -1880,6 +1893,12 @@ namespace sequoia::unit_testing
         g.sort_edges(g.cbegin_edges(1), g.cbegin_edges(1) + 2,
                    [](const auto& l , const auto& r){ return l.weight() > r.weight(); }
         );
+
+        if constexpr(!edgeDataPool && !std::is_same_v<edge_init_t, edge_t>)
+        {
+          g.swap_edges(1, 0, 1);
+          g.swap_edges(1, 1, 2);
+        }
       }
       else
       {
@@ -1920,7 +1939,7 @@ namespace sequoia::unit_testing
         
     if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_equality(graph, GGraph{{{{edge_init_t{0,1}}}}, {{}}}, LINE(""));
+      check_equality(graph, GGraph{edge_init_list_t{{edge_init_t{0,1}}}, {{}}}, LINE(""));
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected)
     {      
@@ -1943,7 +1962,7 @@ namespace sequoia::unit_testing
 
     if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_equality(graph, GGraph{{{{}, {edge_init_t{1,1}}}}, {{1, 1}, {}}}, LINE(""));
+      check_equality(graph, GGraph{{{}, {edge_init_t{1,1}}}, {{1, 1}, {}}}, LINE(""));
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected)
     {      
