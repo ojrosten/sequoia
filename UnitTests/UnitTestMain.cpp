@@ -31,12 +31,13 @@
 #include "StaticQueueTestingDiagnostics.hpp"
 #include "StaticPriorityQueueTestingDiagnostics.hpp"
 
+#include "EdgeTest.hpp"
 #include "EdgeTestingDiagnostics.hpp"
+#include "DynamicGraphCommonTest.hpp"
+
 #include "GraphTesterDiagnostics.hpp"
-#include "TestEdges.hpp"
 #include "TestNodeStorage.hpp"
 #include "TestHeterogeneousNodeStorage.hpp"
-#include "TestGraph.hpp"
 #include "TestStaticGraph.hpp"
 #include "TestHeterogeneousStaticGraph.hpp"
 #include "TestGraphInit.hpp"
