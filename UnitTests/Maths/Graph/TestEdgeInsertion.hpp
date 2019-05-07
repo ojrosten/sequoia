@@ -1,3 +1,10 @@
+////////////////////////////////////////////////////////////////////
+//                 Copyright Oliver Rosten 2019.                  //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
 #pragma once
 
 #include "DynamicGraphTestingUtils.hpp"
@@ -38,6 +45,7 @@ namespace sequoia
       using graph_checker<unit_test_logger<test_mode::standard>>::check_equality;      
       using graph_checker<unit_test_logger<test_mode::standard>>::check_exception_thrown;
       using graph_checker<unit_test_logger<test_mode::standard>>::check_graph;
+      using graph_checker<unit_test_logger<test_mode::standard>>::check_regular_semantics;
 
       void execute_operations();
     };
@@ -65,6 +73,8 @@ namespace sequoia
       using graph_checker<unit_test_logger<test_mode::standard>>::check_equality;      
       using graph_checker<unit_test_logger<test_mode::standard>>::check_exception_thrown;
       using graph_checker<unit_test_logger<test_mode::standard>>::check_graph;
+      using graph_checker<unit_test_logger<test_mode::standard>>::check_regular_semantics;
+
 
       void execute_operations();
     };

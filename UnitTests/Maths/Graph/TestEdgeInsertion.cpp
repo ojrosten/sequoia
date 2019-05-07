@@ -1,3 +1,10 @@
+////////////////////////////////////////////////////////////////////
+//                 Copyright Oliver Rosten 2019.                  //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
 #include "TestEdgeInsertion.hpp"
 
 #include <complex>
@@ -91,7 +98,10 @@ namespace sequoia
       else
       {
         check_equality(g, {{{0,inv_t{},1}, {0,inv_t{},0}}}, LINE(""));
+        check_regular_semantics(g, {{{0,0,1}, {0,0,0}}}, LINE("Regular semantics"));
       }
+
+      check_regular_semantics(g, graph_t{}, LINE("Regular semantics"));
 
       g.insert_join(g.cbegin_edges(0) + 1, 3);
       //   /<\/>\
@@ -204,8 +214,6 @@ namespace sequoia
     >::execute_operations()
     {
       using namespace maths;
-
-      using edge = embedded_edge<EdgeWeight, data_sharing::independent, utilities::protective_wrapper<EdgeWeight>>;
         
       graph_t g{};
 
@@ -217,11 +225,11 @@ namespace sequoia
 
       if constexpr(GraphFlavour == graph_flavour::undirected_embedded)
       {
-        check_graph(g, {{edge{0,1,0,5}}, {edge{0,1,0,5}}}, {{}, {}}, LINE(""));
+        check_equality(g, {{{1,0,5}}, {{0,0,5}}}, LINE(""));
       }
       else
       {
-        check_graph(g, {{edge{0,1,0,5}}, {edge{0,1,0,5}}}, {{}, {}}, LINE(""));
+        check_equality(g, {{{0,1,0,5}}, {{0,1,0,5}}}, LINE(""));
       }
 
       g.insert_join(g.cend_edges(1), 0, 6);
@@ -232,12 +240,16 @@ namespace sequoia
 
       if constexpr(GraphFlavour == graph_flavour::undirected_embedded)
       {
-        check_graph(g, {{edge{0,1,1,5}}, {edge{1,1,2,6}, edge{0,1,0,5}, edge{1,1,0,6}}}, {{}, {}}, LINE(""));
+        check_equality(g, {{{1,1,5}}, {{1,2,6}, {0,0,5}, {1,0,6}}}, LINE(""));
+        check_regular_semantics(g, {{{1,0,5}}, {{0,0,5}, {1,2,6}, {1,1,6}}}, LINE("Regular semantics"));
       }
       else
       {
-        check_graph(g, {{edge{0,1,1,5}}, {edge{1,inversion_constant<true>{},2,6}, edge{0,1,0,5}, edge{1,inversion_constant<true>{},0,6}}}, {{}, {}}, LINE(""));
+        check_equality(g, {{{0,1,1,5}}, {{1,inversion_constant<true>{},2,6}, {0,1,0,5}, {1,inversion_constant<true>{},0,6}}}, LINE(""));
+        check_regular_semantics(g, {{{0,1,1,5}}, {{1,1,2,6}, {0,1,0,5}, {1,1,0,6}}}, LINE("Regular semantics"));
       }
+
+      check_regular_semantics(g, graph_t{}, LINE("Regular semantics"));
     }
   }
 }
