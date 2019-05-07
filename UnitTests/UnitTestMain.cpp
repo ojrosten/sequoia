@@ -34,6 +34,8 @@
 #include "EdgeTest.hpp"
 #include "EdgeTestingDiagnostics.hpp"
 #include "DynamicGraphCommonTest.hpp"
+#include "DynamicGraphEmbeddedTest.hpp"
+
 
 #include "GraphTesterDiagnostics.hpp"
 #include "TestNodeStorage.hpp"
@@ -44,7 +46,6 @@
 #include "TestFixedTopology.hpp"
 #include "TestStaticFixedTopology.hpp"
 #include "TestGraphMeta.hpp"
-#include "TestEdgeInsertion.hpp"
 
 #include "TestGraphTraversals.hpp"
 #include "TestStaticGraphTraversals.hpp"
