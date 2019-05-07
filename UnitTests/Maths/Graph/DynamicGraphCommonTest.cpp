@@ -839,12 +839,12 @@ namespace sequoia::unit_testing
 
     check_equality(network, GGraph{{}});
 
-    check_graph(network, {{}}, {}, LINE(""));
+    check_equality(network, {{}}, LINE(""));
 
     network.erase_node(0);
     //
 
-    check_graph(network, {}, {}, LINE(""));
+    check_equality(network, {}, LINE(""));
 
     check_equality(network.add_node(), 0ul, LINE("Node added back to graph"));
     // 0

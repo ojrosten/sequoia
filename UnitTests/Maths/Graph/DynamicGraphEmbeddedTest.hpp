@@ -44,7 +44,6 @@ namespace sequoia
 
       using graph_checker<unit_test_logger<test_mode::standard>>::check_equality;      
       using graph_checker<unit_test_logger<test_mode::standard>>::check_exception_thrown;
-      using graph_checker<unit_test_logger<test_mode::standard>>::check_graph;
       using graph_checker<unit_test_logger<test_mode::standard>>::check_regular_semantics;
 
       void execute_operations();
@@ -72,7 +71,6 @@ namespace sequoia
 
       using graph_checker<unit_test_logger<test_mode::standard>>::check_equality;      
       using graph_checker<unit_test_logger<test_mode::standard>>::check_exception_thrown;
-      using graph_checker<unit_test_logger<test_mode::standard>>::check_graph;
       using graph_checker<unit_test_logger<test_mode::standard>>::check_regular_semantics;
 
 
