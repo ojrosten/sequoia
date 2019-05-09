@@ -62,16 +62,11 @@ namespace sequoia
     >
     class test_initialization
       : public graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>
-    {
-    public:      
-      using graph_checker<unit_test_logger<test_mode::standard>>::check_exception_thrown;
-      using graph_checker<unit_test_logger<test_mode::standard>>::check_equality;      
-      using graph_checker<unit_test_logger<test_mode::standard>>::check_graph;
-      using graph_checker<unit_test_logger<test_mode::standard>>::check_equivalence;
-
+    {    
     private:
-      using graph_t = typename
-        graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>::graph_type;
+      using base_t = graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>;
+      
+      using graph_t = typename base_t::graph_type;
 
       
       void execute_operations() override
@@ -79,6 +74,11 @@ namespace sequoia
         typename checker_selector<GraphFlavour>::template init_checker<test_initialization> checker{*this};
         checker.template check_all<graph_t>();
       }
+    public:
+      using base_t::check_exception_thrown;
+      using base_t::check_equality;      
+      using base_t::check_graph;
+      using base_t::check_equivalence;
     };
   }
 }

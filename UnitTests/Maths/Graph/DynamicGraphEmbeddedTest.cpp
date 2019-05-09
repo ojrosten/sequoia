@@ -21,19 +21,19 @@ namespace sequoia
       struct null_weight {};
       
       {
-        graph_test_helper<null_weight, null_weight> helper{"unweighted"};
+        graph_test_helper<null_weight, null_weight> helper{};
         helper.run_individual_test<graph_flavour::undirected_embedded, generic_edge_insertions>(*this);
         helper.run_individual_test<graph_flavour::directed_embedded, generic_edge_insertions>(*this);
       }
       
       {
-        graph_test_helper<null_weight, int> helper{"unweighted, int"};
+        graph_test_helper<null_weight, int> helper{};
         helper.run_individual_test<graph_flavour::undirected_embedded, generic_edge_insertions>(*this);
         helper.run_individual_test<graph_flavour::directed_embedded, generic_edge_insertions>(*this);
       }
 
       {
-        graph_test_helper<int, null_weight> helper{"int, unweighted"};
+        graph_test_helper<int, null_weight> helper{};
         helper.run_individual_test<graph_flavour::undirected_embedded, generic_edge_insertions>(*this);
         helper.run_individual_test<graph_flavour::undirected_embedded, generic_weighted_edge_insertions>(*this);
         
@@ -42,7 +42,7 @@ namespace sequoia
       }
 
       {
-        graph_test_helper<int, int> helper{"int, int"};
+        graph_test_helper<int, int> helper{};
         helper.run_individual_test<graph_flavour::undirected_embedded, generic_edge_insertions>(*this);
         helper.run_individual_test<graph_flavour::directed_embedded, generic_edge_insertions>(*this);
       }

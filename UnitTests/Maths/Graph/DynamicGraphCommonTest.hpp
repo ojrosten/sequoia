@@ -41,12 +41,12 @@ namespace sequoia
     private:
       using base_t = graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>;
       
-      using GGraph = typename base_t::graph_type;
+      using graph_t = typename base_t::graph_type;
 
-      using graph_checker<unit_test_logger<test_mode::standard>>::check_equality;      
+      using base_t::check_equality;
+      using base_t::check_regular_semantics;
       using graph_checker<unit_test_logger<test_mode::standard>>::check_exception_thrown;
-      using graph_checker<unit_test_logger<test_mode::standard>>::check_regular_semantics;
-
+      
       void execute_operations() override;
     };
 
@@ -65,12 +65,13 @@ namespace sequoia
     {
     public:
     private:
-      using GGraph = typename
-        graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>::graph_type;
+      using base_t = graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>;
+      
+      using graph_t = typename base_t::graph_type;
 
-      using graph_checker<unit_test_logger<test_mode::standard>>::check_equality;      
+      using base_t::check_equality;
+      using base_t::check_regular_semantics;
       using graph_checker<unit_test_logger<test_mode::standard>>::check_exception_thrown;
-      using graph_checker<unit_test_logger<test_mode::standard>>::check_regular_semantics;
       
       void execute_operations() override
       {
@@ -100,8 +101,8 @@ namespace sequoia
       using base_t = graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>;
       
       using graph_t = typename base_t::graph_type;
-
-      using graph_checker<unit_test_logger<test_mode::standard>>::check_equality;      
+      
+      using base_t::check_equality;
       using graph_checker<unit_test_logger<test_mode::standard>>::check_exception_thrown;
 
       void execute_operations() override;
@@ -127,7 +128,7 @@ namespace sequoia
       
       using graph_t = typename base_t::graph_type;
 
-      using graph_checker<unit_test_logger<test_mode::standard>>::check_equality;      
+      using base_t::check_equality;
       using graph_checker<unit_test_logger<test_mode::standard>>::check_exception_thrown;
 
       void execute_operations() override;

@@ -201,9 +201,12 @@ namespace sequoia::unit_testing
   class graph_operations : protected graph_checker<Logger>
   {
   public:
-    using graph_type = typename graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>::graph_type;      
-      
-    log_summary run(const std::string& helpername)
+    using graph_type = typename graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>::graph_type;   
+    
+    using graph_checker<Logger>::check_equality;
+    using graph_checker<Logger>::check_regular_semantics;
+    
+    log_summary run()
     {
       execute_operations();
 
@@ -221,7 +224,7 @@ namespace sequoia::unit_testing
   class graph_test_helper
   {
   public:
-    graph_test_helper(std::string_view name="") : m_Name{name} {}
+    graph_test_helper() = default;
       
     template
     <
@@ -306,7 +309,6 @@ namespace sequoia::unit_testing
     }
       
   private:
-    std::string m_Name;
     log_summary m_Summary{};
 
     template<class Test>
@@ -410,7 +412,7 @@ namespace sequoia::unit_testing
     {
       try
       {
-        m_Summary += test.run(m_Name);
+        m_Summary += test.run();
       }
       catch(...)
       {
