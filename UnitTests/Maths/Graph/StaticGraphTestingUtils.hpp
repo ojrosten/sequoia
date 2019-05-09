@@ -31,7 +31,7 @@ namespace sequoia::unit_testing
 
       check_equality(logger, static_cast<const connectivity_t&>(graph), static_cast<const connectivity_t&>(prediction), description);
 
-      // TO DO: nodes
+      check_equality(logger, static_cast<const nodes_t&>(graph), static_cast<const nodes_t&>(prediction), description);
     }    
   };
 
@@ -55,7 +55,7 @@ namespace sequoia::unit_testing
 
       check_equality(logger, static_cast<const connectivity_t&>(graph), static_cast<const connectivity_t&>(prediction), description);
 
-      // TO DO: nodes
+      check_equality(logger, static_cast<const nodes_t&>(graph), static_cast<const nodes_t&>(prediction), description);
     }    
   };
 
@@ -81,7 +81,7 @@ namespace sequoia::unit_testing
 
       check_equivalence(logger, static_cast<const connectivity_t&>(graph), prediction, description);
 
-      // TO DO: nodes
+      check_equivalence(logger, static_cast<const nodes_t&>(graph), static_cast<const nodes_t&>(prediction), description);
     }    
   };
 
@@ -107,7 +107,7 @@ namespace sequoia::unit_testing
 
       check_equivalence(logger, static_cast<const connectivity_t&>(graph), prediction, description);
 
-      // TO DO: nodes
+      check_equivalence(logger, static_cast<const nodes_t&>(graph), static_cast<const nodes_t&>(prediction), description);
     }    
   };
 }

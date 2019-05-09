@@ -11,6 +11,7 @@
 
 #include "NodeStorage.hpp"
 #include "StaticNodeStorage.hpp"
+#include "HeterogeneousNodeStorage.hpp"
 
 namespace sequoia::unit_testing
 {
@@ -71,6 +72,8 @@ namespace sequoia::unit_testing
     }
   };
 
+  // Static
+
   template<class WeightMaker, std::size_t N>
   struct details_checker<maths::graph_impl::static_node_storage<WeightMaker, N>>
     : public details_checker<maths::graph_impl::node_storage<WeightMaker, maths::graph_impl::static_node_storage_traits<WeightMaker, N>>>
@@ -81,6 +84,63 @@ namespace sequoia::unit_testing
   struct equivalence_checker<maths::graph_impl::static_node_storage<WeightMaker, N>>
     : public equivalence_checker<maths::graph_impl::node_storage<WeightMaker, maths::graph_impl::static_node_storage_traits<WeightMaker, N>>>
   {
+  };
+
+  // Heterogeneous
+
+  template<class... Ts>
+  struct details_checker<maths::graph_impl::heterogeneous_node_storage<Ts...>>
+  {
+    using type = maths::graph_impl::heterogeneous_node_storage<Ts...>;
+
+    template<class Logger>
+    static void check(Logger& logger, const type& nodes, const type& prediction, std::string_view description)
+    {
+      if(check_equality(logger, nodes.size(), prediction.size(), impl::combine_messages(description, "Node storaage sizes different")))
+      {
+        check_elements(logger, nodes, prediction, description);
+      }
+    }
+
+  private:
+    template<class Logger, std::size_t I=0>
+    static void check_elements(Logger& logger, const type& nodes, const type& prediction, std::string_view description)
+    {
+      if constexpr(I < sizeof...(Ts))
+      {
+        const std::string message{impl::combine_messages(description, std::to_string(I) + "th element incorrect")};
+        check_equality(logger, nodes.template node_weight<I>(), prediction.template node_weight<I>(), impl::combine_messages(description, message));
+        check_elements<Logger, I+1>(logger, nodes, prediction, description);
+      }
+    }
+  };
+
+  template<class... Ts>
+  struct equivalence_checker<maths::graph_impl::heterogeneous_node_storage<Ts...>>
+  {
+    using type = maths::graph_impl::heterogeneous_node_storage<Ts...>;
+    using equivalent_type = std::tuple<Ts...>;
+
+    template<class Logger>
+    static void check(Logger& logger, const type& nodes, const equivalent_type& prediction, std::string_view description)
+    {
+      if(check_equality(logger, nodes.size(), prediction.size(), impl::combine_messages(description, "Node storaage sizes different")))
+      {
+        check_elements(logger, nodes, prediction, description);
+      }
+    }
+
+  private:
+    template<class Logger, std::size_t I=0>
+    static void check_elements(Logger& logger, const type& nodes, const equivalent_type& prediction, std::string_view description)
+    {
+      if constexpr(I < sizeof...(Ts))
+      {
+        const std::string message{impl::combine_messages(description, std::to_string(I) + "th element incorrect")};
+        check_equality(logger, nodes.template node_weight<I>(), std::get<I>(prediction), impl::combine_messages(description, message));
+        check_elements<Logger, I+1>(logger, nodes, prediction, description);
+      }
+    }
   };
 
   
