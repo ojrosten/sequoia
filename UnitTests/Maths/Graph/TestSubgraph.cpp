@@ -54,8 +54,6 @@ namespace sequoia::unit_testing
     using namespace maths;
     GGraph graph;
 
-    using Edge = maths::edge<EdgeWeight, utilities::protective_wrapper<EdgeWeight>>;
-
     using edge_init_t = typename GGraph::edge_init_type;
     using edge_init_list_t = std::initializer_list<std::initializer_list<edge_init_t>>;
 
@@ -149,7 +147,7 @@ namespace sequoia::unit_testing
 
     // Graph: 
     // (1,1)  4  (1,0)
-    //   0---------0
+    //   X---------X
     //  /\
     //  \/ 2
 
@@ -181,7 +179,7 @@ namespace sequoia::unit_testing
 
     // Subgraph
     // (1,1)
-    //   0
+    //   X
     //  /\
     //  \/ 2
 
@@ -206,7 +204,7 @@ namespace sequoia::unit_testing
 
     // Subgraph
     // (1,0)
-    //   0
+    //   X
 
     check_equality(subgraph, {edge_init_list_t{{}}, {{1,0}}}, LINE(""));
 
@@ -216,49 +214,81 @@ namespace sequoia::unit_testing
 
     // Graph: 
     // (1,1)  4  (1,0)
-    //   0---------0
+    //   X---------X
     //  /\\       /
     // 2\/ \0    /
     //      \   /-3
     //       \ /
-    //        0
+    //        X
     //       (1,1)
         
-    if constexpr(mutual_info(GraphFlavour))
+    if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_graph(graph, {{Edge(0,1,4), Edge(0,0,2), Edge(0,0,2), Edge(0,2,0)}, {Edge(0,1,4), Edge(1,2,-3)}, {Edge(0,2,0), Edge(1,2,-3)}}, {{1,1}, {1,0}, {1,1}}, LINE(""));
+      check_equality(graph, {{{edge_init_t{1, 4}, edge_init_t{0, 2}, edge_init_t{2,0}},
+                              {edge_init_t{2,-3}},
+                              {}}, {{1,1}, {1,0}, {1,1}}}, LINE(""));
+    }
+    else if constexpr(GraphFlavour == graph_flavour::undirected)
+    {
+      GGraph g{{{edge_init_t{0, 2}, edge_init_t{0, 2}, edge_init_t{1,4}, edge_init_t{2,0}},
+                {edge_init_t{0,4}, edge_init_t{2,-3}},
+                {edge_init_t{0,0}, edge_init_t{1,-3}}}, {{1,1}, {1,0}, {1,1}}};
+
+      g.swap_edges(0, 0, 2);
+      
+      check_equality(graph, g, LINE(""));
+    }
+    else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
+    {
+      check_equality(graph, {{{edge_init_t{0,1,0,4}, edge_init_t{0,0,2,2}, edge_init_t{0,0,1,2}, edge_init_t{0,2,0,0}},
+                              {edge_init_t{0,1,0,4}, edge_init_t{1,2,1,-3}},
+                              {edge_init_t{0,2,3,0}, edge_init_t{1,2,1,-3}}}, {{1,1}, {1,0}, {1,1}}}, LINE(""));
     }
     else
     {
-      check_graph(graph, {{Edge(0,1,4), Edge(0,0,2), Edge(0,2,0)}, {Edge(1,2,-3)}, {}}, {{1,1}, {1,0}, {1,1}}, LINE(""));
+      check_equality(graph, {{{edge_init_t{1,0,4}, edge_init_t{0,2,2}, edge_init_t{0,1,2}, edge_init_t{2,0,0}},
+                              {edge_init_t{0,0,4}, edge_init_t{2,1,-3}},
+                              {edge_init_t{0,3,0}, edge_init_t{1,1,-3}}}, {{1,1}, {1,0}, {1,1}}}, LINE(""));
     }
       
     subgraph = sub_graph(graph, [](auto&& wt) { return wt == NodeWeight(1, 1); });
     // subgraph: 
     // (1,1)
-    //   0
+    //   X
     //  /\\
     // 2\/ \0
     //      \
     //       \
-    //        0
+    //        X
     //       (1,1)
         
-    if constexpr(mutual_info(GraphFlavour))
+    if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_graph(subgraph, {{Edge(0,0,2), Edge(0,0,2), Edge(0,1,0)}, {Edge(0,1,0)}}, {{1,1}, {1,1}}, LINE(""));
+      check_equality(subgraph, {edge_init_list_t{{edge_init_t{0, 2}, edge_init_t{1,0}},
+                                                 {}}, {{1,1}, {1,1}}}, LINE(""));
+    }
+    else if constexpr(GraphFlavour == graph_flavour::undirected)
+    {      
+      check_equality(subgraph, {edge_init_list_t{{edge_init_t{0, 2}, edge_init_t{0, 2}, edge_init_t{1,0}},
+                                                 {edge_init_t{0,0}}}, {{1,1}, {1,1}}}, LINE(""));
+    }
+    else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
+    {
+      check_equality(subgraph, {{{edge_init_t{0,0,1,2}, edge_init_t{0,0,0,2}, edge_init_t{0,1,0,0}},
+                                 {edge_init_t{0,1,2,0}}}, {{1,1}, {1,1}}}, LINE(""));
     }
     else
     {
-      check_graph(subgraph, {{Edge(0,0,2), Edge(0,1,0)}, {}}, {{1,1}, {1,1}}, LINE(""));
+      check_equality(subgraph, {{{edge_init_t{0,1,2}, edge_init_t{0,0,2}, edge_init_t{1,0,0}},
+                                 {edge_init_t{0,2,0}}}, {{1,1}, {1,1}}}, LINE(""));
     }
 
     subgraph = sub_graph(graph, [](auto&& wt) { return wt == NodeWeight(1, 0); });
 
     // Subgraph
     // (1,0)
-    //   0
+    //   X
 
-    check_graph(subgraph, {{}}, {{1,0}});
+    check_equality(subgraph, {edge_init_list_t{{}}, {{1,0}}}, LINE(""));
   }
 }
