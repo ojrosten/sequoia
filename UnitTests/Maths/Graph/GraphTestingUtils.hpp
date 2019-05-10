@@ -24,6 +24,81 @@ namespace sequoia::unit_testing
     struct use_weak_equiv<maths::edge<Weight, WeightProxy, IndexType>> : std::true_type {};
 
     template<class Edge> constexpr bool use_weak_equiv_v{use_weak_equiv<Edge>::value};
+
+    // Details Checker
+    
+    template<class Graph> struct graph_details_checker
+    {
+      using type = Graph;
+      
+      template<class Logger>
+      static void check(Logger& logger, const Graph& graph, const Graph& prediction, std::string_view description)
+      {
+        using connectivity_t = typename type::connectivity_type;
+        using nodes_t = typename type::nodes_type;
+
+        check_equality(logger, static_cast<const connectivity_t&>(graph), static_cast<const connectivity_t&>(prediction), description);
+        check_equality(logger, static_cast<const nodes_t&>(graph), static_cast<const nodes_t&>(prediction), description);
+      }
+    };
+
+    // Equivalence Checker
+
+    template<class Graph> struct graph_equivalence_checker
+    {
+      using type = Graph;
+
+      using connectivity_equivalent_type = std::initializer_list<std::initializer_list<typename type::edge_init_type>>;
+      using node_weight_type = typename type::node_weight_type;
+      using nodes_equivalent_type = std::initializer_list<node_weight_type>;
+
+      template<class Logger, class W=node_weight_type, std::enable_if_t<!std::is_empty_v<W>, int> = 0>
+      static void check(Logger& logger, const type& graph, connectivity_equivalent_type connPrediction, nodes_equivalent_type nodesPrediction, std::string_view description)
+      {
+        using connectivity_t = typename type::connectivity_type;
+        using nodes_t = typename type::nodes_type;
+
+        check_equivalence(logger, static_cast<const connectivity_t&>(graph), connPrediction, description);
+        check_equivalence(logger, static_cast<const nodes_t&>(graph), nodesPrediction, description);
+      }
+
+      template<class Logger, class W=node_weight_type, std::enable_if_t<std::is_empty_v<W>, int> = 0>
+      static void check(Logger& logger, const type& graph, connectivity_equivalent_type connPrediction, std::string_view description)
+      {
+        using connectivity_t = typename type::connectivity_type;
+
+        check_equivalence(logger, static_cast<const connectivity_t&>(graph), connPrediction, description);
+      }
+    };
+
+    // Weak Equivalence Checker
+
+    template<class Graph> struct graph_weak_equivalence_checker
+    {
+      using type = Graph;
+
+      using connectivity_equivalent_type = std::initializer_list<std::initializer_list<typename type::edge_init_type>>;
+      using node_weight_type = typename type::node_weight_type;
+      using nodes_equivalent_type = std::initializer_list<node_weight_type>;
+
+      template<class Logger, class W=node_weight_type, std::enable_if_t<!std::is_empty_v<W>, int> = 0>
+      static void check(Logger& logger, const type& graph, connectivity_equivalent_type connPrediction, nodes_equivalent_type nodesPrediction, std::string_view description)
+      {
+        using connectivity_t = typename type::connectivity_type;
+        using nodes_t = typename type::nodes_type;
+
+        check_weak_equivalence(logger, static_cast<const connectivity_t&>(graph), connPrediction, description);
+        check_equivalence(logger, static_cast<const nodes_t&>(graph), nodesPrediction, description);
+      }
+
+      template<class Logger, class W=node_weight_type, std::enable_if_t<std::is_empty_v<W>, int> = 0>
+      static void check(Logger& logger, const type& graph, connectivity_equivalent_type connPrediction, std::string_view description)
+      {
+        using connectivity_t = typename type::connectivity_type;
+
+        check_weak_equivalence(logger, static_cast<const connectivity_t&>(graph), connPrediction, description);
+      }
+    };
   }
   
   template
@@ -218,10 +293,6 @@ namespace sequoia
     template<class Logger>
     class graph_checker : protected checker<Logger>
     {
-    private:
-      using checker<Logger>::failures;
-      using checker<Logger>::post_message;
-
     public:      
       using checker<Logger>::check_equality;
       using checker<Logger>::check;
@@ -230,140 +301,45 @@ namespace sequoia
       using checker<Logger>::check_regular_semantics;
 
       template<class G, class... NodeWeights, class E=typename G::edge_init_type>
-      bool check_graph(const G& graph, const std::initializer_list<std::initializer_list<E>>& edges, const std::tuple<NodeWeights...>& nodeWeights, std::string_view failureMessage="")
+      void check_graph(const G& graph, std::initializer_list<std::initializer_list<E>> edges, const std::tuple<NodeWeights...>& nodeWeights, std::string_view description="")
       {
-        auto r{checker<Logger>::make_sentinel(failureMessage)};
-        const auto numFailures{failures()};
-
-        if(check_equality(edges.size(), graph.order(), "Graph order wrong"))
-        {
-          check_equality(nodeWeights, graph.all_node_weights(), "Node weights differ");
-
-          using connectivity_t = typename G::connectivity_type;
-          check_graph_edges<G::flavour>(static_cast<const connectivity_t&>(graph), graph.size(), edges, failureMessage);
-        }
-        
-        return has_passed(numFailures, failureMessage);
+        checker<Logger>::template check_equivalence<G, std::initializer_list<std::initializer_list<E>>, std::tuple<NodeWeights...>>(graph, std::move(edges), nodeWeights, description);
       }
 
-      template<class G, class E=typename G::edge_init_type>
-      bool check_graph(const G& graph, std::initializer_list<std::initializer_list<E>> edges, std::initializer_list<typename G::node_weight_type> nodeWeights, std::string_view failureMessage="")
-      {        
-        auto r{checker<Logger>::make_sentinel(failureMessage)};
-        const auto numFailures{failures()};
-
-        if(check_equality(edges.size(), graph.order(), "Graph order wrong"))
-        {
-          constexpr bool nullNodeWeight{std::is_empty_v<typename G::node_weight_type>};
-          if constexpr(!nullNodeWeight)       
-          {
-            const auto dist{static_cast<std::size_t>(distance(graph.cbegin_node_weights(), graph.cend_node_weights()))};
-            if(check_equality(nodeWeights.size(), dist, "Number of nodes wrong"))
-            {
-              for(auto iter{graph.cbegin_node_weights()}; iter != graph.cend_node_weights(); ++iter)
-              {
-                const auto i{distance(graph.cbegin_node_weights(), iter)};
-                const std::string nodeMessage{"Node weight wrong for node " + std::to_string(i)};
-                check_equality(*(nodeWeights.begin() + i), *(graph.cbegin_node_weights()+i), nodeMessage);
-              }
-            }
-          }
-
-          using connectivity_t = typename G::connectivity_type;
-          check_graph_edges<G::flavour>(static_cast<const connectivity_t&>(graph), graph.size(), edges, failureMessage);
-        }
-
-        return has_passed(numFailures, failureMessage);
-      }
-      
-    private:
-      bool has_passed(const std::size_t previousFailures, std::string_view failureMessage)
+      template<
+        class G,
+        class E=typename G::edge_init_type,
+        class W=typename G::node_weight_type,
+        std::enable_if_t<!std::is_empty_v<W>, int> = 0
+      >
+      void check_graph(const G& graph, std::initializer_list<std::initializer_list<E>> edges, std::initializer_list<typename G::node_weight_type> nodeWeights, std::string_view description="")
       {
-        constexpr bool falsePosMode{checker<Logger>::mode == test_mode::false_positive};
-        const bool passed{(falsePosMode && (failures() != previousFailures)) || (!falsePosMode && (failures() == previousFailures))};
-        if(!passed && !failureMessage.empty())
+        if constexpr(impl::use_weak_equiv_v<typename G::edge_type>)
         {
-          post_message('\t' + std::string{failureMessage} + '\n');
+          checker<Logger>::template check_weak_equivalence<G, std::initializer_list<std::initializer_list<E>>, std::initializer_list<typename G::node_weight_type>>(graph, std::move(edges), std::move(nodeWeights), description);
         }
-      
-        return passed;
+        else
+        {
+          checker<Logger>::template check_equivalence<G, std::initializer_list<std::initializer_list<E>>, std::initializer_list<typename G::node_weight_type>>(graph, std::move(edges), std::move(nodeWeights), description);
+        }
       }
-      
-      template<maths::graph_flavour F, class C, class E=typename C::edge_init_type>
-      void check_graph_edges(const C& connectivity, const std::size_t size, std::initializer_list<std::initializer_list<E>> edges, std::string_view failureMessage="")
+
+      template<
+        class G,
+        class E=typename G::edge_init_type,
+        class W=typename G::node_weight_type,
+        std::enable_if_t<std::is_empty_v<W>, int> = 0
+      >
+      void check_graph(const G& graph, std::initializer_list<std::initializer_list<E>> edges, std::string_view description="")
       {
-        using Edge = typename C::edge_type;
-        using RefEdge = E;
-        constexpr bool nullEdgeWeight{std::is_empty_v<typename C::edge_weight_type>};
-        double nEdges{};
-        for(auto edgesIter{edges.begin()}; edgesIter != edges.end(); ++edgesIter)
+        if constexpr(impl::use_weak_equiv_v<typename G::edge_type>)
         {
-          const auto i{std::distance(edges.begin(), edgesIter)};
-          const std::string partStr{std::to_string(i)};
-
-          auto beginEdges{connectivity.cbegin_edges(i)};
-          auto endEdges{connectivity.cend_edges(i)};
-          auto rbeginEdges{connectivity.crbegin_edges(i)};
-          auto rendEdges{connectivity.crend_edges(i)};
-
-          const auto nNodeEdges{static_cast<std::size_t>(distance(beginEdges, endEdges))};
-          const auto nrNodeEdges{static_cast<std::size_t>(distance(rbeginEdges, rendEdges))};
-
-          const auto nodeEdges{*edgesIter};
-          if(check_equality(nodeEdges.size(), nNodeEdges, "Number of edges for partition " + partStr + " wrong")
-             && check_equality(nodeEdges.size(), nrNodeEdges, "Number of edges for reversed partition " + partStr + " wrong")
-             )
-          {
-            auto ansIter{nodeEdges.begin()};
-            auto redge{rendEdges};
-            for(auto edge{beginEdges}; edge != endEdges; ++edge, ++ansIter)
-            {
-              --redge;
-              check(*edge == *redge, "Disagreement between forward and reverse itereators");
-              auto dist{distance(beginEdges, edge)};
-              const std::string message{" wrong for partition " + partStr + ", edge " + to_string(dist)};
-            
-              const auto target{[edge=*ansIter](const std::size_t node){
-                if constexpr (   (F != maths::graph_flavour::directed_embedded)
-                              && (E::flavour != maths::edge_flavour::partial)
-                              && (E::flavour != maths::edge_flavour::partial_embedded))
-                {
-                  return (edge.host_node() == node) ? edge.target_node() : edge.host_node();
-                }
-                else
-                {
-                  return edge.target_node();
-                } 
-              }(i)};
-                
-              check_equality(target, edge->target_node(), "target_node" + message);
-
-              if constexpr (  (Edge::flavour == maths::edge_flavour::partial_embedded)
-                           && (   (RefEdge::flavour == maths::edge_flavour::full_embedded)
-                               || (RefEdge::flavour == maths::edge_flavour::partial_embedded)))
-              {
-                check_equality(ansIter->complementary_index(), edge->complementary_index(), "complementary_index" + message);
-              }
-              else if constexpr ((Edge::flavour == maths::edge_flavour::full_embedded) && (RefEdge::flavour == maths::edge_flavour::full_embedded))
-              {
-                check_equality(ansIter->host_node(), edge->host_node(), "host_node " + message);
-                check_equality(ansIter->complementary_index(), edge->complementary_index(), "complementary_index" + message);
-                check_equality(ansIter->inverted(), edge->inverted(), "inverted" + message);
-              }
-              else if constexpr ((Edge::flavour == maths::edge_flavour::full) && (RefEdge::flavour == maths::edge_flavour::full))
-              {
-                check_equality(ansIter->host_node(), edge->host_node(), "host_node" + message);
-                check_equality(ansIter->inverted(), edge->inverted(), "inverted" + message);
-              }
-              
-              if constexpr(!nullEdgeWeight) check_equality(ansIter->weight(), edge->weight(), "Weight" + message);
-              
-              (F != maths::graph_flavour::directed) ? nEdges += 0.5 : ++nEdges;
-            }
-          }
+          checker<Logger>::template check_weak_equivalence<G, std::initializer_list<std::initializer_list<E>>>(graph, std::move(edges), description);
         }
-          
-        check_equality(static_cast<std::size_t>(nEdges), size, "Graph size wrong"); 
+        else
+        {
+          checker<Logger>::template check_equivalence<G, std::initializer_list<std::initializer_list<E>>>(graph, std::move(edges), description);
+        }
       }
     };
 

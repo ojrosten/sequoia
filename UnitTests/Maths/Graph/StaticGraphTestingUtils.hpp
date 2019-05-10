@@ -8,12 +8,16 @@
 #pragma once
 
 #include "GraphTestingUtils.hpp"
+#include "NodeStorageTestingUtilities.hpp"
+#include "StaticGraph.hpp"
 
 namespace sequoia::unit_testing
 {
+  // Details Checkers
+  
   template
   <
-    directed_flavour Directedness,      
+    maths::directed_flavour Directedness,      
     std::size_t Size,
     std::size_t Order,      
     class EdgeWeight,
@@ -21,47 +25,29 @@ namespace sequoia::unit_testing
     class Traits
   >
   struct details_checker<maths::static_graph<Directedness, Size, Order, EdgeWeight, NodeWeight, Traits>>
-  {
-    using type = maths::static_graph<Directedness, Size, Order, EdgeWeight, NodeWeight, Traits>;
-
-    template<class Logger>
-    static void check(Logger& logger, const type& graph, const type& prediction, std::string_view description)
-    {
-      using connectivity_t = typename type::connectivity_type;
-
-      check_equality(logger, static_cast<const connectivity_t&>(graph), static_cast<const connectivity_t&>(prediction), description);
-
-      check_equality(logger, static_cast<const nodes_t&>(graph), static_cast<const nodes_t&>(prediction), description);
-    }    
+    : impl::graph_details_checker<maths::static_graph<Directedness, Size, Order, EdgeWeight, NodeWeight, Traits>>
+  {   
   };
 
   template
   <
-    directed_flavour Directedness,      
+    maths::directed_flavour Directedness,      
     std::size_t Size,
     std::size_t Order,      
     class EdgeWeight,
     class NodeWeight,
     class Traits
   >
-  struct details_checker<maths::embedded_static_graph<Directedness, Size, Order, EdgeWeight, NodeWeight, Traits>>
-  {
-    using type = maths::embedded_static_graph<Directedness, Size, Order, EdgeWeight, NodeWeight, Traits>;
-
-    template<class Logger>
-    static void check(Logger& logger, const type& graph, const type& prediction, std::string_view description)
-    {
-      using connectivity_t = typename type::connectivity_type;
-
-      check_equality(logger, static_cast<const connectivity_t&>(graph), static_cast<const connectivity_t&>(prediction), description);
-
-      check_equality(logger, static_cast<const nodes_t&>(graph), static_cast<const nodes_t&>(prediction), description);
-    }    
+  struct details_checker<maths::static_embedded_graph<Directedness, Size, Order, EdgeWeight, NodeWeight, Traits>>
+    : impl::graph_details_checker<maths::static_embedded_graph<Directedness, Size, Order, EdgeWeight, NodeWeight, Traits>>
+  {    
   };
+
+  // Equivalence Checkers
 
   template
   <
-    directed_flavour Directedness,      
+    maths::directed_flavour Directedness,      
     std::size_t Size,
     std::size_t Order,      
     class EdgeWeight,
@@ -69,45 +55,21 @@ namespace sequoia::unit_testing
     class Traits
   >
   struct equivalence_checker<maths::static_graph<Directedness, Size, Order, EdgeWeight, NodeWeight, Traits>>
+    : impl::graph_equivalence_checker<maths::static_graph<Directedness, Size, Order, EdgeWeight, NodeWeight, Traits>>
   {
-    using type = maths::static_graph<Directedness, Size, Order, EdgeWeight, NodeWeight, Traits>;
-
-    using connectivity_equivalent_type = std::initializer_list<std::initializer_list<typename type::edge_init_type>>;    
-
-    template<class Logger>
-    static void check(Logger& logger, const type& graph, connectivity_equivalent_type prediction, std::string_view description)
-    {
-      using connectivity_t = typename type::connectivity_type;
-
-      check_equivalence(logger, static_cast<const connectivity_t&>(graph), prediction, description);
-
-      check_equivalence(logger, static_cast<const nodes_t&>(graph), static_cast<const nodes_t&>(prediction), description);
-    }    
   };
 
   template
   <
-    directed_flavour Directedness,      
+    maths::directed_flavour Directedness,      
     std::size_t Size,
     std::size_t Order,      
     class EdgeWeight,
     class NodeWeight,
     class Traits
   >
-  struct equivalence_checker<maths::embedded_static_graph<Directedness, Size, Order, EdgeWeight, NodeWeight, Traits>>
-  {
-    using type = maths::embedded_static_graph<Directedness, Size, Order, EdgeWeight, NodeWeight, Traits>;
-
-    using connectivity_equivalent_type = std::initializer_list<std::initializer_list<typename type::edge_init_type>>;    
-
-    template<class Logger>
-    static void check(Logger& logger, const type& graph, connectivity_equivalent_type prediction, std::string_view description)
-    {
-      using connectivity_t = typename type::connectivity_type;
-
-      check_equivalence(logger, static_cast<const connectivity_t&>(graph), prediction, description);
-
-      check_equivalence(logger, static_cast<const nodes_t&>(graph), static_cast<const nodes_t&>(prediction), description);
-    }    
+  struct equivalence_checker<maths::static_embedded_graph<Directedness, Size, Order, EdgeWeight, NodeWeight, Traits>>
+    : impl::graph_equivalence_checker<maths::static_embedded_graph<Directedness, Size, Order, EdgeWeight, NodeWeight, Traits>>
+  {    
   };
 }
