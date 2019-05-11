@@ -1,3 +1,10 @@
+////////////////////////////////////////////////////////////////////
+//                 Copyright Oliver Rosten 2019.                  //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
 #include "GraphTesterDiagnostics.hpp"
 
 namespace sequoia::unit_testing
@@ -29,23 +36,28 @@ namespace sequoia::unit_testing
   >::execute_operations()
   {
     using namespace maths;
-
-    using Edge = edge<EdgeWeight, utilities::protective_wrapper<EdgeWeight>>;     
-    using E_Edge = embedded_edge<EdgeWeight, data_sharing::independent, utilities::protective_wrapper<EdgeWeight>>;
+    using edge_init_t = typename graph_t::edge_init_type; 
 
     graph_t network{};
 
-    if constexpr (mutual_info(GraphFlavour))
+    check_equality(network, {{}}, LINE("Check false positive: empty graph versus single node"));
+
+    std::string message{"Check false positive: empty graph versus single node with loop"};
+    if constexpr (GraphFlavour == graph_flavour::directed)
     {
-      check_graph(network, {{}}, {}, LINE("Check false positive: empty graph versus single node"));
-      check_graph(network, {{E_Edge{0,0,0}, E_Edge{0,0,1}}}, {},
-                  LINE("Check false positive: empty graph versus single node with loop"));
+      check_equality(network, graph_t{{edge_init_t{0}}}, LINE(message));
+    }
+    else if constexpr(GraphFlavour == graph_flavour::undirected)
+    {
+      check_equality(network, graph_t{{edge_init_t{0}, edge_init_t{0}}}, LINE(message));
+    }
+    else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
+    {
+      check_equality(network, graph_t{{edge_init_t{0,0,1}, edge_init_t{0,0,0}}}, LINE(message));
     }
     else
     {
-      check_graph(network, {{}}, {}, LINE("Check false positive: empty graph versus single node"));
-      check_graph(network, {{Edge{0,0}}}, {},
-                  LINE("Check false positive: empty graph versus single node with loop"));        
+      check_equality(network, graph_t{{edge_init_t{0,1}, edge_init_t{0,0}}}, LINE(message));
     }
   }
 }

@@ -1,6 +1,14 @@
+////////////////////////////////////////////////////////////////////
+//                 Copyright Oliver Rosten 2019.                  //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
 #pragma once
 
 #include "GraphTestingUtils.hpp"
+#include "StaticGraphTestingUtils.hpp"
 
 namespace sequoia
 {
@@ -36,6 +44,25 @@ namespace sequoia
       }
     private:
       Checker& m_Checker;
+
+      /*
+      template<
+        class Graph,
+        class Edge=typename Graph::edge_init_type,
+        class NodeWeight=typename Graph::node_weight_type
+      >
+      void check_graph(const Graph g, std::initializer_list<std::initializer_list<Edge>> connPrediction, std::initializer_list<NodeWeight> nodePrediction, std::string_view description)
+      {
+        if constexpr(std::is_empty_v<NodeWeight>)
+        {
+          m_Checker.template check_graph(g, connPrediction, description);
+        }
+        else
+        {
+          m_Checker.template check_graph(g, connPrediction, nodePrediction, description);
+        }
+      }
+      */
       
       template<class Graph>
       constexpr static Graph make_2_4()
@@ -76,11 +103,11 @@ namespace sequoia
 
         if constexpr(std::is_empty_v<NodeWeight>)            
         {
-          m_Checker.template check_graph(g, {{edge{1,1}, edge{1,2}, edge{1,5}, edge{0,9}, edge{0, 9}}, {edge{0, 1}, edge{0,2}, edge{0,5}}}, {NodeWeight{}, NodeWeight{}}, LINE(""));
+          m_Checker.check_equality(g, {{edge{1,1}, edge{1,2}, edge{1,5}, edge{0,9}, edge{0, 9}}, {edge{0, 1}, edge{0,2}, edge{0,5}}}, LINE(""));
         }
         else
         {
-          m_Checker.template check_graph(g, {{edge{1,1}, edge{1,2}, edge{1,5}, edge{0,9}, edge{0, 9}}, {edge{0, 1}, edge{0,2}, edge{0,5}}}, {NodeWeight{2}, NodeWeight{-3}}, LINE(""));
+          m_Checker.check_equality(g, {{{edge{1,1}, edge{1,2}, edge{1,5}, edge{0,9}, edge{0, 9}}, {edge{0, 1}, edge{0,2}, edge{0,5}}}, {NodeWeight{2}, NodeWeight{-3}}}, LINE(""));
         }
       }
     };
@@ -162,21 +189,21 @@ namespace sequoia
 
         if constexpr(std::is_empty_v<NodeWeight>)            
         {
-          m_Checker.template check_graph(g,
+          m_Checker.check_equality(g,
             {
               {edge{1,1}, edge{1,0}, edge{0, -2}, edge{1,3}},
               {edge{2,8}, edge{0,9}, edge{1,6}},
               {edge{1, 7}, edge{2, -3}, edge{2, 42}}
-            }, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+            }, LINE(""));
         }
         else
         {
-          m_Checker.template check_graph(g,
-            {
+          m_Checker.check_equality(g,
+            {{
               {edge{1,1}, edge{1,0}, edge{0, -2}, edge{1,3}},
               {edge{2,8}, edge{0,9}, edge{1,6}},
               {edge{1, 7}, edge{2, -3}, edge{2, 42}}
-            }, {NodeWeight{}, NodeWeight{2}, NodeWeight{-3}}, LINE(""));
+             }, {NodeWeight{}, NodeWeight{2}, NodeWeight{-3}}}, LINE(""));
         }
       }
     };
@@ -245,11 +272,11 @@ namespace sequoia
 
         if constexpr(std::is_empty_v<NodeWeight>)            
         {
-          m_Checker.template check_graph(g, {{}, {edge{1,2,3}, edge{1,3,-2}, edge{1,0,3}, edge{1,1,-2}}}, {NodeWeight{}, NodeWeight{}}, LINE(""));
+          m_Checker.check_equality(g, {{}, {edge{1,2,3}, edge{1,3,-2}, edge{1,0,3}, edge{1,1,-2}}}, LINE(""));
         }
         else
         {
-          m_Checker.template check_graph(g, {{}, {edge{1,2,3}, edge{1,3,-2}, edge{1,0,3}, edge{1,1,-2}}}, {NodeWeight{2}, NodeWeight{-3}}, LINE(""));          
+          m_Checker.check_equality(g, {{{}, {edge{1,2,3}, edge{1,3,-2}, edge{1,0,3}, edge{1,1,-2}}}, {NodeWeight{2}, NodeWeight{-3}}}, LINE(""));          
         }
       }
     };
@@ -320,11 +347,11 @@ namespace sequoia
 
         if constexpr(std::is_empty_v<NodeWeight>)            
         {
-          m_Checker.template check_graph(g, {{edge{0,inversion_constant<true>{},2,3}, edge{0,0,3,6}, edge{0,inversion_constant<true>{},0,3}, edge{0,0,1,6}}, {}}, {NodeWeight{}, NodeWeight{}}, LINE(""));
+          m_Checker.check_equality(g, {{edge{0,inversion_constant<true>{},2,3}, edge{0,0,3,6}, edge{0,inversion_constant<true>{},0,3}, edge{0,0,1,6}}, {}}, LINE(""));
         }
         else
         {
-          m_Checker.template check_graph(g, {{edge{0,inversion_constant<true>{},2,3}, edge{0,0,3,6}, edge{0,inversion_constant<true>{},0,3}, edge{0,0,1,6}}, {}}, {NodeWeight{2}, NodeWeight{-3}}, LINE(""));
+          m_Checker.check_equality(g, {{{edge{0,inversion_constant<true>{},2,3}, edge{0,0,3,6}, edge{0,inversion_constant<true>{},0,3}, edge{0,0,1,6}}, {}}, {NodeWeight{2}, NodeWeight{-3}}}, LINE(""));
         }
       }
     };

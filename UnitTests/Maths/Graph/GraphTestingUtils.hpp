@@ -8,6 +8,7 @@
 #pragma once
 
 #include "EdgeTestingUtilities.hpp"
+#include "NodeStorageTestingUtilities.hpp"
 
 #include "ProtectiveWrapper.hpp"
 #include "PartitionedData.hpp"
@@ -301,9 +302,9 @@ namespace sequoia
       using checker<Logger>::check_regular_semantics;
 
       template<class G, class... NodeWeights, class E=typename G::edge_init_type>
-      void check_graph(const G& graph, std::initializer_list<std::initializer_list<E>> edges, const std::tuple<NodeWeights...>& nodeWeights, std::string_view description="")
+      void check_graph(const G& graph, std::initializer_list<std::initializer_list<E>> edges, const std::tuple<NodeWeights...>& nodeWeights, std::string_view description)
       {
-        checker<Logger>::template check_equivalence<G, std::initializer_list<std::initializer_list<E>>, std::tuple<NodeWeights...>>(graph, std::move(edges), nodeWeights, description);
+        checker<Logger>::template check_equivalence<G, std::initializer_list<std::initializer_list<E>>, const std::tuple<NodeWeights...>&>(graph, std::move(edges), nodeWeights, description);
       }
 
       template<
@@ -312,7 +313,7 @@ namespace sequoia
         class W=typename G::node_weight_type,
         std::enable_if_t<!std::is_empty_v<W>, int> = 0
       >
-      void check_graph(const G& graph, std::initializer_list<std::initializer_list<E>> edges, std::initializer_list<typename G::node_weight_type> nodeWeights, std::string_view description="")
+      void check_graph(const G& graph, std::initializer_list<std::initializer_list<E>> edges, std::initializer_list<typename G::node_weight_type> nodeWeights, std::string_view description)
       {
         if constexpr(impl::use_weak_equiv_v<typename G::edge_type>)
         {
@@ -330,7 +331,7 @@ namespace sequoia
         class W=typename G::node_weight_type,
         std::enable_if_t<std::is_empty_v<W>, int> = 0
       >
-      void check_graph(const G& graph, std::initializer_list<std::initializer_list<E>> edges, std::string_view description="")
+      void check_graph(const G& graph, std::initializer_list<std::initializer_list<E>> edges, std::string_view description)
       {
         if constexpr(impl::use_weak_equiv_v<typename G::edge_type>)
         {

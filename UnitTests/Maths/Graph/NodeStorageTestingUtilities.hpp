@@ -15,74 +15,93 @@
 
 namespace sequoia::unit_testing
 {
-  template<class WeightMaker, class Traits>
-  struct details_checker<maths::graph_impl::node_storage<WeightMaker, Traits, false>>
+  namespace impl
   {
-    using type = maths::graph_impl::node_storage<WeightMaker, Traits>;
-
-    template<class Logger>
-    static void check(Logger& logger, const type& nodes, const type& prediction, std::string_view description)
+    template<class Nodes, bool=std::is_empty_v<typename Nodes::weight_type>>
+    struct node_details_checker
     {
-      check_equality(logger, nodes.size(), prediction.size(), impl::combine_messages(description, "Sizes different"));
+      using type = Nodes;
 
-      check_range(logger, nodes.cbegin_node_weights(), nodes.cend_node_weights(), prediction.cbegin_node_weights(), prediction.cend_node_weights(), impl::combine_messages(description, "const_node_iter"));
+      template<class Logger>
+      static void check(Logger& logger, const Nodes& nodes, const Nodes& prediction, std::string_view description)
+      {
+        check_equality(logger, nodes.size(), prediction.size(), impl::combine_messages(description, "Sizes different"));
 
-      check_range(logger, nodes.crbegin_node_weights(), nodes.crend_node_weights(), prediction.crbegin_node_weights(), prediction.crend_node_weights(), impl::combine_messages(description, "const_reverse_node_iter"));
-    }
+        check_range(logger, nodes.cbegin_node_weights(), nodes.cend_node_weights(), prediction.cbegin_node_weights(), prediction.cend_node_weights(), impl::combine_messages(description, "const_node_iter"));
+
+        check_range(logger, nodes.crbegin_node_weights(), nodes.crend_node_weights(), prediction.crbegin_node_weights(), prediction.crend_node_weights(), impl::combine_messages(description, "const_reverse_node_iter"));
+      }
+    };
+
+    template<class Nodes>
+    struct node_details_checker<Nodes, true>
+    {
+      using type = Nodes;
+      
+      template<class Logger>
+      static void check(Logger& logger, const Nodes& nodes, const Nodes& prediction, std::string_view description)
+      {
+      }
+    };
+
+    template<class Nodes, bool=std::is_empty_v<typename Nodes::weight_type>>
+    struct node_equivalence_checker
+    {
+      using type = Nodes;
+
+      using equivalent_type = std::initializer_list<typename type::weight_type>;
+
+      template<class Logger>
+      static void check(Logger& logger, const Nodes& nodes, equivalent_type prediction, std::string_view description)
+      {
+        check_equality(logger, nodes.size(), prediction.size(), impl::combine_messages(description, "Sizes different"));
+
+        check_range(logger, nodes.cbegin_node_weights(), nodes.cend_node_weights(), prediction.begin(), prediction.end(), impl::combine_messages(description, "const_node_iter"));
+      }
+    };
+
+    template<class Nodes>
+    struct node_equivalence_checker<Nodes, true>
+    {
+      using type = Nodes;
+
+      using equivalent_type = std::initializer_list<typename type::weight_type>;
+
+      template<class Logger>
+      static void check(Logger& logger, const Nodes& nodes, equivalent_type prediction, std::string_view description)
+      {
+        unit_testing::check(logger, !prediction.size(), impl::combine_messages(description, "Node storage should have zero size for empty node weights"));
+      }
+    };
+  }
+
+  // Details Checkers
+  
+  template<class WeightMaker, class Traits, bool IsEmpty>
+  struct details_checker<maths::graph_impl::node_storage<WeightMaker, Traits, IsEmpty>>
+    : impl::node_details_checker<maths::graph_impl::node_storage<WeightMaker, Traits, IsEmpty>>
+  {   
   };
 
-  template<class WeightMaker, class Traits>
-  struct details_checker<maths::graph_impl::node_storage<WeightMaker, Traits, true>>
+  // Equivalence Checkers
+
+  template<class WeightMaker, class Traits, bool IsEmpty>
+  struct equivalence_checker<maths::graph_impl::node_storage<WeightMaker, Traits, IsEmpty>>
+    : impl::node_equivalence_checker<maths::graph_impl::node_storage<WeightMaker, Traits, IsEmpty>>
   {
-    using type = maths::graph_impl::node_storage<WeightMaker, Traits>;
-
-    template<class Logger>
-    static void check(Logger& logger, const type& nodes, const type& prediction, std::string_view description)
-    {
-    }
-  };
-
-  template<class WeightMaker, class Traits>
-  struct equivalence_checker<maths::graph_impl::node_storage<WeightMaker, Traits, false>>
-  {
-    using type = maths::graph_impl::node_storage<WeightMaker, Traits>;
-
-    using equivalent_type = std::initializer_list<typename type::weight_type>;
-
-    template<class Logger>
-    static void check(Logger& logger, const type& nodes, equivalent_type prediction, std::string_view description)
-    {
-      check_equality(logger, nodes.size(), prediction.size(), impl::combine_messages(description, "Sizes different"));
-
-      check_range(logger, nodes.cbegin_node_weights(), nodes.cend_node_weights(), prediction.begin(), prediction.end(), impl::combine_messages(description, "const_node_iter"));
-    }
-  };
-
-  template<class WeightMaker, class Traits>
-  struct equivalence_checker<maths::graph_impl::node_storage<WeightMaker, Traits, true>>
-  {
-    using type = maths::graph_impl::node_storage<WeightMaker, Traits>;
-
-    using equivalent_type = std::initializer_list<typename type::weight_type>;
-
-    template<class Logger>
-    static void check(Logger& logger, const type& nodes, equivalent_type prediction, std::string_view description)
-    {
-      unit_testing::check(logger, !prediction.size(), impl::combine_messages(description, "Node storage should have zero size for empty node weights"));
-    }
   };
 
   // Static
 
-  template<class WeightMaker, std::size_t N>
-  struct details_checker<maths::graph_impl::static_node_storage<WeightMaker, N>>
-    : public details_checker<maths::graph_impl::node_storage<WeightMaker, maths::graph_impl::static_node_storage_traits<WeightMaker, N>>>
+  template<class WeightMaker, std::size_t N, bool IsEmpty>
+  struct details_checker<maths::graph_impl::static_node_storage<WeightMaker, N, IsEmpty>>
+    : impl::node_details_checker<maths::graph_impl::static_node_storage<WeightMaker, N, IsEmpty>>
   {
   };
 
-  template<class WeightMaker, std::size_t N>
-  struct equivalence_checker<maths::graph_impl::static_node_storage<WeightMaker, N>>
-    : public equivalence_checker<maths::graph_impl::node_storage<WeightMaker, maths::graph_impl::static_node_storage_traits<WeightMaker, N>>>
+  template<class WeightMaker, std::size_t N, bool IsEmpty>
+  struct equivalence_checker<maths::graph_impl::static_node_storage<WeightMaker, N, IsEmpty>>
+    : impl::node_equivalence_checker<maths::graph_impl::static_node_storage<WeightMaker, N, IsEmpty>>
   {
   };
 
@@ -124,7 +143,7 @@ namespace sequoia::unit_testing
     template<class Logger>
     static void check(Logger& logger, const type& nodes, const equivalent_type& prediction, std::string_view description)
     {
-      if(check_equality(logger, nodes.size(), prediction.size(), impl::combine_messages(description, "Node storaage sizes different")))
+      if(check_equality(logger, nodes.size(), sizeof...(Ts), impl::combine_messages(description, "Node storage sizes different")))
       {
         check_elements(logger, nodes, prediction, description);
       }
