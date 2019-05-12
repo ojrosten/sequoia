@@ -30,7 +30,7 @@ namespace sequoia
         class Edge=typename Graph::edge_init_type,
         class NodeWeight=typename Graph::node_weight_type
       >
-      void check_graph(const Graph g, std::initializer_list<std::initializer_list<Edge>> connPrediction, std::initializer_list<NodeWeight> nodePrediction, std::string_view description)
+      void check_graph(const Graph& g, std::initializer_list<std::initializer_list<Edge>> connPrediction, std::initializer_list<NodeWeight> nodePrediction, std::string_view description)
       {
         if constexpr(std::is_empty_v<NodeWeight>)
         {
@@ -648,7 +648,9 @@ namespace sequoia
         using NodeWeight = typename Graph::node_weight_type;
 
         check_graph(g, {{edge{1}}, {edge{0}, edge{2}}, {edge{1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
-        check_graph(g2, {{edge{1}}, {edge{0}, edge{2}}, {edge{1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));       
+        check_graph(g2, {{edge{1}}, {edge{0}, edge{2}}, {edge{1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+
+        //m_Checker.check_regular_semantics(g, {{edge{1}}, {edge{0}}, {}}, LINE(""));
       }
 
       template<class Graph>
