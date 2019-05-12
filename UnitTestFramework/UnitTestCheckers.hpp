@@ -71,9 +71,18 @@ namespace sequoia
     
     namespace impl
     {
-      template<class T> std::string add_type_info(std::string_view description)
+      template<class T, class... U> std::string make_type_info()
+      {        
+        std::string info{demangle<T>()};
+        if constexpr(sizeof...(U) > 0)
+          info.append("\n;").append(make_type_info<U...>());
+
+        return info;
+      }
+      
+      template<class T, class... U> std::string add_type_info(std::string_view description)
       {
-        return combine_messages(description, "[" + demangle<T>() + "]\n",
+        return combine_messages(description, "[" + make_type_info<T, U...>() + "]\n",
                                 description.empty() ? "" : (description.back() == '\n') ? "\n" : "\n\n");
       }
             
@@ -81,11 +90,16 @@ namespace sequoia
       bool check(Logger& logger, const T& value, const S& s, const U&... u, std::string_view description)
       {
         using sentinel = typename Logger::sentinel;
+
+        const std::string message{
+          add_type_info<S, U...>(
+            impl::combine_messages(description, "Comparison performed using:\n\t[" + demangle<EquivChecker>() + "]\n\tWith equivalent types:", "\n"))
+        };
       
-        sentinel r{logger, impl::add_type_info<T>(description)};
+        sentinel r{logger, message};
         const auto previousFailures{logger.failures()};
 
-        EquivChecker::check(logger, value, s, u..., add_type_info<T>(description));
+        EquivChecker::check(logger, value, s, u..., message);
       
         return logger.failures() == previousFailures;
       }     
@@ -244,8 +258,8 @@ namespace sequoia
           auto iter{first};
           for(; predictionIter != predictionLast; ++predictionIter, ++iter)
           {
-            const std::string dist{std::to_string(std::distance(predictionFirst, predictionIter))};
-            if(!check(logger, tag, *iter, *predictionIter, impl::combine_messages(description, "element ") += dist)) equal = false;
+            std::string dist{std::to_string(std::distance(predictionFirst, predictionIter)).append("\n")};
+            if(!check(logger, tag, *iter, *predictionIter, impl::combine_messages(description, "element ").append(std::move(dist)))) equal = false;
           }
         }
         else

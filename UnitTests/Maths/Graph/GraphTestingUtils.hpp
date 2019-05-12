@@ -335,11 +335,11 @@ namespace sequoia
       {
         if constexpr(impl::use_weak_equiv_v<typename G::edge_type>)
         {
-          checker<Logger>::template check_weak_equivalence<G, std::initializer_list<std::initializer_list<E>>>(graph, std::move(edges), description);
+          checker<Logger>::check_weak_equivalence(graph, std::move(edges), description);
         }
         else
         {
-          checker<Logger>::template check_equivalence<G, std::initializer_list<std::initializer_list<E>>>(graph, std::move(edges), description);
+          checker<Logger>::check_equivalence(graph, std::move(edges), description);
         }
       }
     };
