@@ -103,11 +103,11 @@ namespace sequoia
 
         if constexpr(std::is_empty_v<NodeWeight>)            
         {
-          m_Checker.check_equality(g, {{edge{1,1}, edge{1,2}, edge{1,5}, edge{0,9}, edge{0, 9}}, {edge{0, 1}, edge{0,2}, edge{0,5}}}, LINE(""));
+          m_Checker.check_graph(g, {{edge{1,1}, edge{1,2}, edge{1,5}, edge{0,9}, edge{0, 9}}, {edge{0, 1}, edge{0,2}, edge{0,5}}}, LINE(""));
         }
         else
         {
-          m_Checker.check_equality(g, {{{edge{1,1}, edge{1,2}, edge{1,5}, edge{0,9}, edge{0, 9}}, {edge{0, 1}, edge{0,2}, edge{0,5}}}, {NodeWeight{2}, NodeWeight{-3}}}, LINE(""));
+          m_Checker.check_graph(g, {{edge{1,1}, edge{1,2}, edge{1,5}, edge{0,9}, edge{0, 9}}, {edge{0, 1}, edge{0,2}, edge{0,5}}}, {NodeWeight{2}, NodeWeight{-3}}, LINE(""));
         }
       }
     };

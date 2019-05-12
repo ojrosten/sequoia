@@ -28,10 +28,26 @@ namespace sequoia::unit_testing
   {
     inline std::string combine_messages(std::string_view s1, std::string_view s2, std::string_view sep=" ")
     {
-      std::string mess{!s1.empty() ? s1 : s2};
-      if(!s1.empty() && !s2.empty())
+      std::string mess{};
+      if(s1.empty())
       {
-        mess.append(sep).append(s2);
+        if(!s2.empty()) mess.append("\t").append(s2);
+      }
+      else
+      {
+        mess.append(s1);
+        if(!s2.empty())
+        {
+          if((mess.back() == '\n') && (sep.empty() || sep == " "))
+            mess.append("\t");
+          else
+          {
+            mess.append(sep);
+            if(sep.back() == '\n') mess.append("\t");
+          }
+          
+          mess.append(s2);
+        }
       }
         
       return mess;

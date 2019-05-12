@@ -115,13 +115,13 @@ namespace sequoia::unit_testing
     template<class Logger>
     static void check(Logger& logger, const type& connectivity, const type& prediction, std::string_view description)
     {
-      check_equality(logger, connectivity.size(), prediction.size(), impl::combine_messages(description, "Connectivity sizes different"));
+      check_equality(logger, connectivity.size(), prediction.size(), impl::combine_messages(description, "Connectivity sizes different", "\n"));
       
-      if(check_equality(logger, connectivity.order(), prediction.order(), impl::combine_messages(description, "Connectivity orders different")))
+      if(check_equality(logger, connectivity.order(), prediction.order(), impl::combine_messages(description, "Connectivity orders different", "\n")))
       {
         for(std::size_t i{}; i<connectivity.order(); ++i)
         {
-          const std::string message{impl::combine_messages(description,"Partition " + std::to_string(i))};
+          const std::string message{impl::combine_messages(description, "Partition " + std::to_string(i), "\n")};
           check_range(logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), prediction.cbegin_edges(i), prediction.cend_edges(i), impl::combine_messages(message, "cedge_iterator"));
 
           check_range(logger, connectivity.crbegin_edges(i), connectivity.crend_edges(i), prediction.crbegin_edges(i), prediction.crend_edges(i), impl::combine_messages(message, "credge_iterator"));

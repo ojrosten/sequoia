@@ -73,7 +73,8 @@ namespace sequoia
     {
       template<class T> std::string add_type_info(std::string_view description)
       {
-        return combine_messages(description, "\n\t[" + demangle<T>() + "]\n");        
+        return combine_messages(description, "[" + demangle<T>() + "]\n",
+                                description.empty() ? "" : (description.back() == '\n') ? "\n" : "\n\n");
       }
             
       template<class EquivChecker, class Logger, class T, class S, class... U>
@@ -84,7 +85,7 @@ namespace sequoia
         sentinel r{logger, impl::add_type_info<T>(description)};
         const auto previousFailures{logger.failures()};
 
-        EquivChecker::check(logger, value, s, u..., description);
+        EquivChecker::check(logger, value, s, u..., add_type_info<T>(description));
       
         return logger.failures() == previousFailures;
       }     
