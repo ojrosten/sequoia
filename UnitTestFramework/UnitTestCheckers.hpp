@@ -303,22 +303,22 @@ namespace sequoia
       if(!check(logger, x != y, impl::combine_messages(description, "Precondition - for check the standard semantics, x and y are assumed to be different"))) return;
       
       auto z{x};
-      check_equality(logger, x, z, impl::combine_messages(description, "Copy constructor"));
+      check_equality(logger, z, x, impl::combine_messages(description, "Copy constructor"));
       check(logger, z == x, impl::combine_messages(description, "Equality operator"));
 
       z = y;
-      check_equality(logger, y, z, impl::combine_messages(description, "Copy assignment"));
+      check_equality(logger, z, y, impl::combine_messages(description, "Copy assignment"));
       check(logger, z != x, impl::combine_messages(description, "Inequality operator"));
 
       auto w{std::move(z)};
-      check_equality(logger, y, w, impl::combine_messages(description, "Move constructor"));
+      check_equality(logger, w, y, impl::combine_messages(description, "Move constructor"));
 
       z = [x](){ return x;}();
-      check_equality(logger, x, z, impl::combine_messages(description, "Move assignment"));      
+      check_equality(logger, z, x, impl::combine_messages(description, "Move assignment"));      
 
       std::swap(w,z);
-      check_equality(logger, x, w, impl::combine_messages(description, "Swap"));
-      check_equality(logger, y, z, impl::combine_messages(description, "Swap"));
+      check_equality(logger, w, x, impl::combine_messages(description, "Swap"));
+      check_equality(logger, z, y, impl::combine_messages(description, "Swap"));
     }
 
     template<class T, class S>

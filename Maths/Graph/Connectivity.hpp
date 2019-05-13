@@ -1286,12 +1286,12 @@ namespace sequoia
             {
               const auto& indices{found->second};
               if constexpr(edge_type::flavour == edge_flavour::partial)
-              {                
-                m_Edges.push_back_to_partition(i, indices.first, *(cbegin_edges(indices.first)+indices.second));
+              {
+                m_Edges.push_back_to_partition(i, inIter->target_node(), *(cbegin_edges(indices.first)+indices.second));
               }
               else if constexpr(edge_type::flavour == edge_flavour::partial_embedded)
               {
-                m_Edges.push_back_to_partition(i, indices.first, indices.second, *(cbegin_edges(indices.first)+indices.second));
+                m_Edges.push_back_to_partition(i, inIter->target_node(), inIter->complementary_index(), *(cbegin_edges(indices.first)+indices.second));
               }
               else if constexpr(edge_type::flavour == edge_flavour::full)
               {

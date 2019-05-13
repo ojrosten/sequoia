@@ -650,7 +650,7 @@ namespace sequoia
         check_graph(g, {{edge{1}}, {edge{0}, edge{2}}, {edge{1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
         check_graph(g2, {{edge{1}}, {edge{0}, edge{2}}, {edge{1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
 
-        //m_Checker.check_regular_semantics(g, {{edge{1}}, {edge{0}}, {}}, LINE(""));
+        m_Checker.check_regular_semantics(g, {{edge{1}}, {edge{0}}, {edge{2}, edge{2}}}, LINE("Regular semantics"));
       }
 
       template<class Graph>
@@ -999,7 +999,9 @@ namespace sequoia
             g{{edge{1,0}}, {edge{0,0}, edge{2,0}}, {edge{1,1}}},
             g2{{edge{1,1}}, {edge{2,0}, edge{0,0}}, {edge{1,0}}};
         
-            check_3_2(g, g2);   
+            check_3_2(g, g2);
+
+            m_Checker.check_regular_semantics(g, {{edge{1,0}}, {edge{0,0}}, {edge{2,1}, edge{2,0}}}, LINE("Regular semantics"));
         }
         else
         {
@@ -1007,7 +1009,9 @@ namespace sequoia
             g{{edge{1,0}}, {edge{0,0}, edge{2,0}}, {edge{1,1}}},
             g2{{edge{1,1}}, {edge{2,0}, edge{0,0}}, {edge{1,0}}};
         
-            check_3_2(g, g2);  
+            check_3_2(g, g2);
+
+            m_Checker.check_regular_semantics(g, {{edge{1,0}}, {edge{0,0}}, {edge{2,1}, edge{2,0}}}, LINE("Regular semantics"));
         }
       }
 
