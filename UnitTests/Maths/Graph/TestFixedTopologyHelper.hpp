@@ -44,25 +44,6 @@ namespace sequoia
       }
     private:
       Checker& m_Checker;
-
-      /*
-      template<
-        class Graph,
-        class Edge=typename Graph::edge_init_type,
-        class NodeWeight=typename Graph::node_weight_type
-      >
-      void check_graph(const Graph g, std::initializer_list<std::initializer_list<Edge>> connPrediction, std::initializer_list<NodeWeight> nodePrediction, std::string_view description)
-      {
-        if constexpr(std::is_empty_v<NodeWeight>)
-        {
-          m_Checker.template check_graph(g, connPrediction, description);
-        }
-        else
-        {
-          m_Checker.template check_graph(g, connPrediction, nodePrediction, description);
-        }
-      }
-      */
       
       template<class Graph>
       constexpr static Graph make_2_4()

@@ -1227,44 +1227,46 @@ namespace sequoia
 
       void copy_edges(const connectivity& in)
       {
-        std::map<const edge_weight_type*, std::pair<edge_index_type, edge_index_type>> weightMap;
+        using edge_weight_proxy = typename edge_type::weight_proxy_type;
+        
+        std::map<const edge_weight_proxy*, std::pair<edge_index_type, edge_index_type>> weightMap;
         for(size_type i{}; i<in.order(); ++i)
         {
           m_Edges.add_slot();
           for(auto inIter{in.cbegin_edges(i)}; inIter != in.cend_edges(i); ++inIter)
           {
-            auto weightPtr{&inIter->weight()};
+            auto weightPtr{&inIter->weight_proxy()};
             auto found{weightMap.find(weightPtr)};
             if(found == weightMap.end())
             {
-              auto appender = [this, &in, inIter, i, &weightMap](const auto& e){
-                m_Edges.push_back_to_partition(i, e);
+              auto appender = [this, &in, inIter, i, &weightMap](auto&& e){
+                m_Edges.push_back_to_partition(i, std::move(e));
                 const std::pair<edge_index_type, edge_index_type> indices{i, static_cast<edge_index_type>(distance(in.cbegin_edges(i), inIter))};
-                weightMap.emplace(&inIter->weight(), indices);
+                weightMap.emplace(&inIter->weight_proxy(), indices);
               };
               
               if constexpr(edge_type::flavour == edge_flavour::partial)
               {
-                const edge_type e{inIter->target_node(), make_edge_weight(inIter->weight())};
-                appender(e);
+                edge_type e{inIter->target_node(), make_edge_weight(inIter->weight())};
+                appender(std::move(e));
               }
               else if constexpr(edge_type::flavour == edge_flavour::partial_embedded)
               {
-                const edge_type e{inIter->target_node(), inIter->complementary_index(), make_edge_weight(inIter->weight())};
-                appender(e);
+                edge_type e{inIter->target_node(), inIter->complementary_index(), make_edge_weight(inIter->weight())};
+                appender(std::move(e));
               }
               else if constexpr(edge_type::flavour == edge_flavour::full)
               {
                 if(inIter->inverted())
                 {                  
                   using inv_t = inversion_constant<true>;
-                  const edge_type e{inIter->host_node(), inv_t{}, make_edge_weight(inIter->weight())};
-                  appender(e);
+                  edge_type e{inIter->host_node(), inv_t{}, make_edge_weight(inIter->weight())};
+                  appender(std::move(e));
                 }
                 else
                 {
-                  const edge_type e{inIter->host_node(), inIter->target_node(), make_edge_weight(inIter->weight())};
-                  appender(e);
+                  edge_type e{inIter->host_node(), inIter->target_node(), make_edge_weight(inIter->weight())};
+                  appender(std::move(e));
                 }
               }
               else if constexpr(edge_type::flavour == edge_flavour::full_embedded)
@@ -1272,13 +1274,13 @@ namespace sequoia
                 if(inIter->inverted())
                 {
                   using inv_t = inversion_constant<true>;
-                  const edge_type e{inIter->host_node(), inv_t{}, inIter->complementary_index(), make_edge_weight(inIter->weight())};
-                  appender(e);
+                  edge_type e{inIter->host_node(), inv_t{}, inIter->complementary_index(), make_edge_weight(inIter->weight())};
+                  appender(std::move(e));
                 }
                 else
                 {
-                  const edge_type e{inIter->host_node(), inIter->target_node(), inIter->complementary_index(), make_edge_weight(inIter->weight())};
-                  appender(e);
+                  edge_type e{inIter->host_node(), inIter->target_node(), inIter->complementary_index(), make_edge_weight(inIter->weight())};
+                  appender(std::move(e));
                 }
               }
             }
@@ -1299,7 +1301,7 @@ namespace sequoia
               }
               else if constexpr(edge_type::flavour == edge_flavour::full_embedded)
               {
-                m_Edges.push_back_to_partition(i, indices.second, *(cbegin_edges(indices.first)+indices.second));
+                m_Edges.push_back_to_partition(i, inIter->complementary_index(), *(cbegin_edges(indices.first)+indices.second));
               }
             }
           }

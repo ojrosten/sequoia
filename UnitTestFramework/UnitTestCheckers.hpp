@@ -296,7 +296,7 @@ namespace sequoia
     {
       typename Logger::sentinel s{logger, impl::add_type_info<T>(description)};
 
-      if(!check(logger, x == x, impl::combine_messages(description, "Equality operator is inconsist"))) return;
+      if(!check(logger, x == x, impl::combine_messages(description, "Equality operator is inconsistent"))) return;
       if(!check(logger, !(x != x), impl::combine_messages(description, "Inequality operator is inconsistent"))) return;
 
       // TO DO: contract in C++20
@@ -319,6 +319,21 @@ namespace sequoia
       std::swap(w,z);
       check_equality(logger, w, x, impl::combine_messages(description, "Swap"));
       check_equality(logger, z, y, impl::combine_messages(description, "Swap"));
+    }
+
+    template<class Logger, class T, class Mutator>
+    void check_copy_consistency(Logger& logger, T& target, const T& prediction, Mutator m, std::string_view description="")
+    {
+      typename Logger::sentinel s{logger, impl::add_type_info<T>(description)};
+
+      auto c{target};
+      
+      m(target);
+      check_equality(logger, target, prediction, impl::combine_messages(description, "Mutation of target"));
+
+      m(c);
+      check_equality(logger, c, prediction, impl::combine_messages(description, "Mutation of copy"));
+      
     }
 
     template<class T, class S>
@@ -519,6 +534,12 @@ namespace sequoia
       {
         unit_testing::check_regular_semantics(m_Logger, x, y, description);        
       }
+
+       template<class T, class Mutator>
+       void check_copy_consistency(T& target, const T& prediction, Mutator m, std::string_view description="")
+       {
+         unit_testing::check_copy_consistency(m_Logger, target, prediction, std::move(m), description);
+       }
       
       template<class F, class S>
       auto check_relative_performance(F fast, S slow, const double minSpeedUp, const double maxSpeedUp, std::string_view description="", const std::size_t trials=5, const double num_sds=3)

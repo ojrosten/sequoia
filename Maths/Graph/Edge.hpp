@@ -114,7 +114,10 @@ namespace sequoia
       }
 
       [[nodiscard]]
-      constexpr const Weight& weight() const noexcept { return wrapped_weight::get(m_Weight).get(); }
+      constexpr const weight_type& weight() const noexcept { return wrapped_weight::get(m_Weight).get(); }
+
+      [[nodiscard]]
+      constexpr const weight_proxy_type& weight_proxy() const noexcept { return wrapped_weight::get(m_Weight); }
 
       template<class Fn>
       constexpr void mutate_weight(Fn fn)

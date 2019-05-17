@@ -999,9 +999,7 @@ namespace sequoia
             g{{edge{1,0}}, {edge{0,0}, edge{2,0}}, {edge{1,1}}},
             g2{{edge{1,1}}, {edge{2,0}, edge{0,0}}, {edge{1,0}}};
         
-            check_3_2(g, g2);
-
-            m_Checker.check_regular_semantics(g, {{edge{1,0}}, {edge{0,0}}, {edge{2,1}, edge{2,0}}}, LINE("Regular semantics"));
+            check_3_2(g, g2);            
         }
         else
         {
@@ -1010,8 +1008,6 @@ namespace sequoia
             g2{{edge{1,1}}, {edge{2,0}, edge{0,0}}, {edge{1,0}}};
         
             check_3_2(g, g2);
-
-            m_Checker.check_regular_semantics(g, {{edge{1,0}}, {edge{0,0}}, {edge{2,1}, edge{2,0}}}, LINE("Regular semantics"));
         }
       }
 
@@ -1138,6 +1134,8 @@ namespace sequoia
       
         check_graph(g, {{edge{1,0}}, {edge{0,0}, edge{2,0}}, {edge{1,1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
         check_graph(g2, {{edge{1,1}}, {edge{2,0}, edge{0,0}}, {edge{1,0}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+
+        m_Checker.check_regular_semantics(g, {{edge{1,0}}, {edge{0,0}}, {edge{2,1}, edge{2,0}}}, LINE("Regular semantics"));
       }
 
       template<class Graph>
@@ -1369,13 +1367,15 @@ namespace sequoia
           constexpr Graph
             g{{edge{1}}, {}, {edge{1}}},
             g2{{}, {edge{2}, edge{0}}, {}};
-            check_3_2(g, g2);
+
+          check_3_2(g, g2);
         }
         else
         {
           const Graph
             g{{edge{1}}, {}, {edge{1}}},
             g2{{}, {edge{2}, edge{0}}, {}};
+
           check_3_2(g, g2);
         }
       }
@@ -1453,6 +1453,8 @@ namespace sequoia
 
         check_graph(g, {{edge{1}}, {}, {edge{1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
         check_graph(g2, {{}, {edge{2}, edge{0}}, {}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+
+        m_Checker.check_regular_semantics(g, g2, LINE("Regular semantics"));
       }
 
       template<class Graph>
@@ -1669,16 +1671,23 @@ namespace sequoia
         using edge = typename Graph::edge_init_type;
 
         // x-->--x-->--x
+        // x--<--x--<--x
 
         if constexpr(is_static_graph_v<Graph>)
         {
-          constexpr Graph g{{edge{0,1,0}}, {edge{0,1,0}, edge{1,2,0}}, {edge{1,2,1}}};
-          check_3_2(g);
+          constexpr Graph
+            g{{edge{0,1,0}}, {edge{0,1,0}, edge{1,2,0}}, {edge{1,2,1}}},
+            g2{{edge{1,0,1}}, {edge{2,1,0}, edge{1,0,0}}, {edge{2,1,0}}};
+
+            check_3_2(g, g2);
         }
         else
         {
-          const Graph g{{edge{0,1,0}}, {edge{0,1,0}, edge{1,2,0}}, {edge{1,2,1}}};
-          check_3_2(g);
+          const Graph
+            g{{edge{0,1,0}}, {edge{0,1,0}, edge{1,2,0}}, {edge{1,2,1}}},
+            g2{{edge{1,0,1}}, {edge{2,1,0}, edge{1,0,0}}, {edge{2,1,0}}};
+            
+          check_3_2(g, g2);
         }
       }
         
@@ -1696,6 +1705,8 @@ namespace sequoia
 
         check_graph(g, {{edge{0,0,1}, edge{0,0,0}}}, {NodeWeight{}}, LINE(""));
         check_graph(g2, {{edge{0,inversion_constant<true>{},1}, edge{0,inversion_constant<true>{},0}}}, {NodeWeight{}}, LINE(""));
+
+        m_Checker.check_regular_semantics(g, g2, LINE("Regular semantics"));
       }
 
       template<class Graph>
@@ -1732,13 +1743,17 @@ namespace sequoia
       }
 
       template<class Graph>
-      void check_3_2(const Graph& g)
+      void check_3_2(const Graph& g, const Graph& g2)
       {
         using edge = typename Graph::edge_init_type;
         
         using NodeWeight = typename Graph::node_weight_type;
 
         check_graph(g, {{edge{0,1,0}}, {edge{0,1,0}, edge{1,2,0}}, {edge{1,2,1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+
+        check_graph(g2, {{edge{1,0,1}}, {edge{2,1,0}, edge{1,0,0}}, {edge{2,1,0}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}}, LINE(""));
+
+        m_Checker.check_regular_semantics(g, g2, LINE("Regular semantics"));
       }
     };
   }
