@@ -25,7 +25,29 @@ namespace sequoia
       {
         static_assert(!is_static_graph_v<Graph>, "This call only makes sense for dynamic graphs, which are of the same type for all orders/sizes");
 
+        check_2_2<Graph>();
         check_2_4<Graph>();
+      }
+
+      template<class Graph>
+      void check_2_2()
+      {
+        using edge = typename Graph::edge_init_type;
+
+        // x=====x
+        
+        Graph g{{edge{1}, edge{1}}, {edge{0}, edge{0}}};
+
+        auto mutator{
+          [](Graph& gr){
+            gr.set_edge_weight(gr.cbegin_edges(0) + 1, 3);
+          }
+        };
+
+        Graph prediction{{edge{1,0}, edge{1,3}}, {edge{0,3}, edge{0,0}}};
+        prediction.swap_edges(1, 0, 1);
+        
+        m_Checker.check_copy_consistency(g, prediction, mutator, LINE("Copy consistency"));
       }
       
       template<class Graph>
@@ -74,7 +96,7 @@ namespace sequoia
         
         return g;
       }
-
+      
       template<class Graph>
       void check_2_4(const Graph& g)
       {
