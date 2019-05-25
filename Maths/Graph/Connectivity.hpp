@@ -1227,35 +1227,101 @@ namespace sequoia
 
       void copy_edges(const connectivity& in)
       {
-        if constexpr(edge_type::flavour == edge_flavour::partial)
+        if constexpr((edge_type::flavour == edge_flavour::partial) || (edge_type::flavour == edge_flavour::full))
         {
-          
-        }
-        else if constexpr(edge_type::flavour == edge_flavour::full)
-        {
-          
-        }
-        else
-        {
-          if constexpr(edge_type::flavour == edge_flavour::full_embedded)
-          {
-            auto Processor{
-              [&m_Edges]() {
+          using edge_weight_proxy = typename edge_type::weight_proxy_type;
+          std::map<const edge_weight_proxy*, std::pair<edge_index_type, edge_index_type>> weightMap;
+          auto processor{
+            [this, &weightMap](const size_type node, const_edge_iterator first, const_edge_iterator i) {
+              auto weightPtr{&i->weight_proxy()};
+              if(auto found{weightMap.find(weightPtr)}; found == weightMap.end())
+              {
+                auto appender{[this, node, first, i, &weightMap](auto&& e){
+                    m_Edges.push_back_to_partition(node, std::move(e));
+                    const std::pair<edge_index_type, edge_index_type> indices{node, static_cast<edge_index_type>(distance(first, i))};
+                    weightMap.emplace(&i->weight_proxy(), indices);
+                  }
+                };
 
+                if constexpr(edge_type::flavour == edge_flavour::partial)
+                {
+                  edge_type e{i->target_node(), make_edge_weight(i->weight())};
+                  appender(std::move(e));
+                }
+                else
+                {
+                  if(i->inverted())
+                  {                  
+                    using inv_t = inversion_constant<true>;
+                    edge_type e{i->host_node(), inv_t{}, make_edge_weight(i->weight())};
+                    appender(std::move(e));
+                  }
+                  else
+                  {
+                    edge_type e{i->host_node(), i->target_node(), make_edge_weight(i->weight())};
+                    appender(std::move(e));
+                  }
+                }
               }
-            };
-            
-            auto nodeIndexGetter{
-              [](const size_type i, const auto edge& e){
-                if(e.host_node() < i) return e.host_node();
-
-                if(e.target_node() < i) return e.target_node();
-
-                return i;
+              else
+              {
+                const auto& indices{found->second};
+                if constexpr(edge_type::flavour == edge_flavour::partial)
+                {
+                  m_Edges.push_back_to_partition(node, i->target_node(), *(cbegin_edges(indices.first)+indices.second));
+                }
+                else if constexpr(edge_type::flavour == edge_flavour::full)
+                {
+                  m_Edges.push_back_to_partition(node, cbegin_edges(indices.first)+indices.second);
+                }
               }
-            };
+            }
+          };
+
+          copy_edges(in, processor);
+        }
+        else if constexpr(edge_type::flavour == edge_flavour::full_embedded)
+        {
+          auto nodeIndexGetter{
+            [](const size_type node, const edge_type& e){
+              if(e.host_node() < node) return e.host_node();
+              
+              if(e.target_node() < node) return e.target_node();
+
+              return node;
+            }
+          };
             
-            for(size_type i{}; i<in.order(); ++i)
+          auto processor{
+            [this, nodeIndexGetter](const size_type node, const_edge_iterator first, const_edge_iterator i) {
+              const bool encountered{((i->host_node() < node) || (i->target_node() < node))
+                  || ((i->host_node() == node) && (i->target_node() == node) && (i->complementary_index() < distance(first, i)))};
+
+              if(!encountered)
+              {
+                if(i->inverted())
+                {                  
+                  using inv_t = inversion_constant<true>;
+                  edge_type e{i->host_node(), inv_t{}, i->complementary_index(), make_edge_weight(i->weight())};
+                  m_Edges.push_back_to_partition(node, std::move(e));
+                }
+                else
+                {
+                  edge_type e{i->host_node(), i->target_node(), i->complementary_index(), make_edge_weight(i->weight())};
+                  m_Edges.push_back_to_partition(node, std::move(e));
+                }
+              }
+              else
+              {
+                const auto compI{i->complementary_index()};
+                m_Edges.push_back_to_partition(node, compI, *(cbegin_edges(nodeIndexGetter(node, *i)) + compI));
+              }
+            }
+          };
+
+          copy_edges(in, processor);        
+            
+            /*for(size_type i{}; i<in.order(); ++i)
             {
               m_Edges.add_slot();
               for(auto inIter{in.cbegin_edges(i)}; inIter != in.cend_edges(i); ++inIter)
@@ -1283,17 +1349,36 @@ namespace sequoia
                   m_Edges.push_back_to_partition(i, compI, *(cbegin_edges(nodeIndexGetter(i, *inIter)) + compI));
                 }
               }
-            }
-          }
-          else if constexpr(edge_type::flavour == edge_flavour::partial_embedded)
-          {
-          }
-          else
-          {
-            static_assert(dependent_false<edge_type>::value, "Unaccounted for edge flavour")
-          }
+              }*/
         }
-        
+        else if constexpr(edge_type::flavour == edge_flavour::partial_embedded)
+        {
+          auto processor{
+            [this](const size_type node, const_edge_iterator first, const_edge_iterator i) {
+              const bool encountered{(i->target_node() < node)
+                  || ((i->target_node() == node) && (i->complementary_index() < distance(first, i)))};
+
+              if(!encountered)
+              {           
+                edge_type e{i->target_node(), i->complementary_index(), make_edge_weight(i->weight())};
+                m_Edges.push_back_to_partition(node, std::move(e));
+              }
+              else
+              {
+                const auto compI{i->complementary_index()};
+                m_Edges.push_back_to_partition(node, i->target_node(), compI, *(cbegin_edges(i->target_node()) + compI));
+              }
+            }
+          };
+
+          copy_edges(in, processor);
+        }
+        else
+        {
+          static_assert(dependent_false<edge_type>::value, "Unaccounted for edge flavour");        
+        }
+
+        /*
         using edge_weight_proxy = typename edge_type::weight_proxy_type;
         
         std::map<const edge_weight_proxy*, std::pair<edge_index_type, edge_index_type>> weightMap;
@@ -1373,6 +1458,7 @@ namespace sequoia
             }
           }
         }
+        */
       }
 
       template<class Processor> 
@@ -1383,7 +1469,7 @@ namespace sequoia
           m_Edges.add_slot();
           for(auto inIter{in.cbegin_edges(i)}; inIter != in.cend_edges(i); ++inIter)
           {
-            processor(i, inIter);
+            processor(i, in.cbegin_edges(i), inIter);
           }
         }
       }
