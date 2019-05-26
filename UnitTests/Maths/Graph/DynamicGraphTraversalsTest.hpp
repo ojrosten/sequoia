@@ -104,9 +104,9 @@ namespace sequoia
         auto stack = graph_impl::queue_constructor<graph_type, std::stack<std::size_t>>::make(graph);
         stack.push(0);
         stack.push(1);
-        check_equality<std::size_t>(1, stack.top());
+        check_equality(stack.top(), 1ul, LINE(""));
         stack.pop();
-        check_equality<std::size_t>(0, stack.top());
+        check_equality(stack.top(), 0ul, LINE(""));
 
         using PQ_t = std::priority_queue<std::size_t, std::vector<std::size_t>, graph_impl::node_comparer<graph_type, std::less<int>>>;
 
@@ -114,7 +114,7 @@ namespace sequoia
         pqueue.push(0);
         pqueue.push(1);
 
-        check_equality<std::size_t>(0, pqueue.top());
+        check_equality(pqueue.top(), 0ul, LINE(""));
       }
     };
 
@@ -210,7 +210,7 @@ namespace sequoia
         {
           check_equality<std::size_t>(0, order.front(), LINE("Node 0 must be discovered first in single node network"));
         }
-        check_equality(order, order2);
+        check_equality(order, order2, LINE(""));
         check(edgeOrder.empty(), "No edges to discover");
         if constexpr(UndirectedType::value) check_equality(edge_results{}, edgeDiscovery.order(), LINE(""));
         
@@ -236,7 +236,7 @@ namespace sequoia
           check_equality<std::size_t>(0, *iter, LINE("Node 0 discovered first"));
           check_equality<std::size_t>(1, *++iter, LINE("Node 1 discovered second"));
         }
-        check_equality(order, order2);
+        check_equality(order, order2, LINE(""));
         check(edgeOrder.empty(), LINE("No edges to discover"));
         if constexpr(UndirectedType::value) check_equality(edge_results{}, edgeDiscovery.order(), LINE(""));
         
@@ -259,7 +259,7 @@ namespace sequoia
           check_equality<std::size_t>(1, *iter, LINE("Node 1 discovered first"));
           check_equality<std::size_t>(0, *++iter, LINE("Node 0 discovered second"));
         }
-        check_equality(order, order2);
+        check_equality(order, order2, LINE(""));
         check(edgeOrder.empty(), LINE("No edges to discover"));
         if constexpr(UndirectedType::value) check_equality(edge_results{}, edgeDiscovery.order(), LINE(""));
 
@@ -281,7 +281,7 @@ namespace sequoia
           auto iter = order.begin();
           check_equality<std::size_t>(0, *iter, LINE("Node 0, alone, discovered first"));
         }
-        check_equality(order, order2);
+        check_equality(order, order2, LINE(""));
         check(edgeOrder.empty(), LINE("No edges to discover"));
         if constexpr(UndirectedType::value) check_equality(edge_results{}, edgeDiscovery.order(), LINE(""));
 
@@ -310,7 +310,7 @@ namespace sequoia
           check_equality<std::size_t>(1, *++iter, LINE("Node 1 discovered next"));
           check_equality<std::size_t>(2, *++iter, LINE("Node 2 discovered last"));
         }
-        check_equality(order, order2);
+        check_equality(order, order2, LINE(""));
         check_equality<std::size_t>(2, edgeOrder.size(), LINE("Two edges to discover"));
         if(edgeOrder.size() == 2)
         {
@@ -353,7 +353,7 @@ namespace sequoia
           check_equality<std::size_t>(1, *iter, LINE("Middle node 1 discovered first"));
           check_equality<std::size_t>(2, *++iter, LINE("Node 2 discovered next"));
         }
-        check_equality(order, order2);
+        check_equality(order, order2, LINE(""));
         message = UndirectedType::value ? "Search from middle; two edges to discover" : "Search from middle; only one edge to discover";
         check_equality<std::size_t>(UndirectedType::value ? 2 : 1, edgeOrder.size(), LINE(message));
         if(edgeOrder.size() == 2)
@@ -401,7 +401,7 @@ namespace sequoia
           auto iter = order.begin();
           check_equality<std::size_t>(2, *iter, LINE("End node 2 discovered first"));
         }
-        check_equality(order, order2);
+        check_equality(order, order2, LINE(""));
         message = UndirectedType::value ? "Search from end; two edges to discover" : "Search from end; no edges to discover";
         check_equality<std::size_t>(UndirectedType::value ? 2 : 0, edgeOrder.size(), LINE(message));
         if(edgeOrder.size() == 2)
@@ -448,7 +448,7 @@ namespace sequoia
             test_square_graph(discovery, edgeDiscovery, 0, mutualInfo, TraversalType{});
           }
         }
-        check_equality(order, order2);
+        check_equality(order, order2, LINE(""));
 
         if constexpr(UndirectedType::value)
         {
@@ -473,7 +473,7 @@ namespace sequoia
             test_square_graph(discovery, edgeDiscovery, 2, mutualInfo, TraversalType{});
           }
         }
-        check_equality(order, order2);
+        check_equality(order, order2, LINE(""));
       }
 
       // true_types correspond BFS

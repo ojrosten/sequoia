@@ -28,7 +28,7 @@ namespace sequoia::unit_testing
 
     // Details Checker
     
-    template<class Graph> struct graph_details_checker
+    template<class Graph> struct graph_detailed_equality_checker
     {
       using type = Graph;
       
@@ -108,7 +108,7 @@ namespace sequoia::unit_testing
     class EdgeTraits,
     class WeightMaker
   >
-  struct details_checker<maths::connectivity<Directedness, EdgeTraits, WeightMaker>>
+  struct detailed_equality_checker<maths::connectivity<Directedness, EdgeTraits, WeightMaker>>
   {
     using type = maths::connectivity<Directedness, EdgeTraits, WeightMaker>;
 

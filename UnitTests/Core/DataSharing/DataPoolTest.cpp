@@ -29,7 +29,7 @@ namespace sequoia
       //                      ^-----------               
 
       check_equality(pool.size(), 1ul, LINE(""));
-      check_equality(elt.get(), val);
+      check_equality(elt.get(), val, LINE(""));
 
       return pool;
     }
@@ -175,7 +175,7 @@ namespace sequoia
     {
       using namespace data_sharing;
       constexpr auto x = unpooled<double>::make(3.0);
-      check_equality(x.get(), 3.0);
+      check_equality(x.get(), 3.0, LINE(""));
     }
   }
 }

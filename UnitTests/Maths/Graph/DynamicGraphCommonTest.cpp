@@ -835,7 +835,7 @@ namespace sequoia::unit_testing
     network.erase_node(0);
     // 0
 
-    check_equality(network, graph_t{{}});
+    check_equality(network, graph_t{{}}, LINE(""));
 
     check_equality(network, {{}}, LINE(""));
 

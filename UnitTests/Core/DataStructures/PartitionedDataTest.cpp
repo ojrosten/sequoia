@@ -108,13 +108,13 @@ namespace sequoia
       auto storage1 = test_generic_storage<bucketed_storage<int>>();
       auto storage2 = test_generic_storage<contiguous_storage<int>>();
 
-      check(isomorphic(storage1, storage2));
-      check(isomorphic(storage2, storage1));
+      check(isomorphic(storage1, storage2), LINE(""));
+      check(isomorphic(storage2, storage1), LINE(""));
 
       auto storage3 = test_generic_storage<bucketed_storage<int, independent<int>>>();
       auto storage4 = test_generic_storage<contiguous_storage<int, independent<int>>>();
 
-      check(isomorphic(storage3, storage4));
+      check(isomorphic(storage3, storage4), LINE(""));
     }
 
     template <class Storage>
@@ -198,7 +198,7 @@ namespace sequoia
       // [][2]
 
       check_equivalence(storage, equivalent_type{{}, {2}}, LINE(""));
-      check_equality(storage, Storage{{}, {2}});
+      check_equality(storage, Storage{{}, {2}}, LINE(""));
       check_regular_semantics(storage, Storage{{2},{}}, LINE("Regular semantics"));
 
       storage.swap_partitions(0,1);
@@ -362,7 +362,7 @@ namespace sequoia
       storage.insert_to_partition(storage.cbegin_partition(3), -2);
       // [3][4][-2, 1, 2, 8, 9,-3, 7, 5][-2]
 
-      check_equality(storage, Storage{{3}, {4}, {-2, 1, 2, 8, 9, -3, 7, 5}, {-2}});
+      check_equality(storage, Storage{{3}, {4}, {-2, 1, 2, 8, 9, -3, 7, 5}, {-2}}, LINE(""));
 
       storage.insert_to_partition(storage.cbegin_partition(3) + 1,-4);
       storage.insert_to_partition(storage.cbegin_partition(3), -4);
@@ -447,7 +447,7 @@ namespace sequoia
         
         *iter = -5;
         // [3,-5][4,-5]
-        check_equality(storage, Storage{{3, -5}, {4, -5}});
+        check_equality(storage, Storage{{3, -5}, {4, -5}}, LINE(""));
 
         iter = storage.begin_partition(1);
         ++iter;
@@ -506,7 +506,7 @@ namespace sequoia
 
       {
         auto next = storage.erase_from_partition(1, 1);
-        check(next == storage.end_partition(1));
+        check(next == storage.end_partition(1), LINE(""));
       }
       // [-5][4]
 
@@ -528,20 +528,20 @@ namespace sequoia
         [](const int& elt) { return elt == 6; }
       )};
       
-      if(check(found != storage.end_partition(0)))
+      if(check(found != storage.end_partition(0), LINE("")))
         check_equality(6, *found, LINE(""));
 
       erase_from_partition_if(storage, 0, [](const int& elt) { return elt == 6; });
       // [-5,-2][4,6,-2]
 
-      check_equality(storage, Storage{{-5, -2}, {4, 6, -2}});
+      check_equality(storage, Storage{{-5, -2}, {4, 6, -2}}, LINE(""));
       
       auto found2{std::find_if(storage.cbegin_partition(0), storage.cend_partition(0),
         [](const int& elt) { return elt == 6; })
       };
       
-      check(found2 == storage.cend_partition(0));
-      check_equality<std::size_t>(5, storage.size());
+      check(found2 == storage.cend_partition(0), LINE(""));
+      check_equality<std::size_t>(5, storage.size(), LINE(""));
 
       storage.push_back_to_partition(1, 7);
       storage.push_back_to_partition(1, --storage.cend_partition(1));
@@ -594,7 +594,7 @@ namespace sequoia
       }
       
       
-      check_equality(SharingPolicy<int>::get(vec[0]),*iter);
+      check_equality(SharingPolicy<int>::get(vec[0]),*iter, LINE(""));
       check_equality(iter.partition_index(), 4ul, LINE(""));
 
       ++iter;
@@ -629,20 +629,20 @@ namespace sequoia
       auto iter3 = iter2 - 2;
       check_equality(iter3[0], SharingPolicy<int>::get(vec[0]), LINE(""));
 
-      check(iter == iter3);
-      check(iter2 != iter3);
+      check(iter == iter3, LINE(""));
+      check(iter2 != iter3, LINE(""));
 
-      check(iter2 > iter);
-      check(iter < iter2);
-      check(iter >= iter3);
-      check(iter <= iter3);
+      check(iter2 > iter, LINE(""));
+      check(iter < iter2, LINE(""));
+      check(iter >= iter3, LINE(""));
+      check(iter <= iter3, LINE(""));
 
-      check_equality(std::ptrdiff_t{-2}, distance(iter2, iter3));
-      check_equality(std::ptrdiff_t{2}, distance(iter, iter2));
+      check_equality(std::ptrdiff_t{-2}, distance(iter2, iter3), LINE(""));
+      check_equality(std::ptrdiff_t{2}, distance(iter, iter2), LINE(""));
 
       auto std_iter = iter.base_iterator();
 
-      check_equality(SharingPolicy<int>::get(*std_iter), 1, LINE(""));      
+      check_equality(SharingPolicy<int>::get(*std_iter), 1, LINE(""));
     }
 
     template<class T, class SharingPolicy, bool ThrowOnRangeError>

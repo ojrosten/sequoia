@@ -16,7 +16,7 @@ namespace sequoia::unit_testing
   namespace impl
   {
     template<class Logger, class T>
-    void check(Logger& logger, const T& sequence, const T& prediction, std::string_view description="")
+    void check(Logger& logger, const T& sequence, const T& prediction, std::string_view description)
     {
       if(check_equality(logger, sequence.size(), prediction.size(), impl::combine_messages(description, "Size incorrect")))
       {
@@ -56,12 +56,12 @@ namespace sequoia::unit_testing
   }
   
   template<class T, class C, class Compare>
-  struct details_checker<maths::monotonic_sequence<T, C, Compare>>
+  struct detailed_equality_checker<maths::monotonic_sequence<T, C, Compare>>
   {
     using type = maths::monotonic_sequence<T, C, Compare>;
     
     template<class Logger>
-    static void check(Logger& logger, const type& sequence, const type& prediction, std::string_view description="")
+    static void check(Logger& logger, const type& sequence, const type& prediction, std::string_view description)
     {
       impl::check(logger, sequence, prediction, description);
     }
@@ -73,19 +73,19 @@ namespace sequoia::unit_testing
     using type = maths::monotonic_sequence<T, C, Compare>;
     
     template<class Logger>
-    static void check(Logger& logger, const type& sequence, std::initializer_list<T> prediction, std::string_view description="")
+    static void check(Logger& logger, const type& sequence, std::initializer_list<T> prediction, std::string_view description)
     {
       check_range(logger, sequence.begin(), sequence.end(), prediction.begin(), prediction.end(), description);            
     }
   };
 
   template<class T, std::size_t N, class Compare>
-  struct details_checker<maths::static_monotonic_sequence<T, N, Compare>>
+  struct detailed_equality_checker<maths::static_monotonic_sequence<T, N, Compare>>
   {
     using type = maths::static_monotonic_sequence<T, N, Compare>;
     
     template<class Logger>
-    static void check(Logger& logger, const type& sequence, const type& prediction, std::string_view description="")
+    static void check(Logger& logger, const type& sequence, const type& prediction, std::string_view description)
     {
       impl::check(logger, sequence, prediction, description);
     }
@@ -97,7 +97,7 @@ namespace sequoia::unit_testing
     using type = maths::static_monotonic_sequence<T, N, Compare>;
     
     template<class Logger>
-    static void check(Logger& logger, const type& sequence, std::initializer_list<T> prediction, std::string_view description="")
+    static void check(Logger& logger, const type& sequence, std::initializer_list<T> prediction, std::string_view description)
     {
       check_range(logger, sequence.begin(), sequence.end(), prediction.begin(), prediction.end(), description);            
     }

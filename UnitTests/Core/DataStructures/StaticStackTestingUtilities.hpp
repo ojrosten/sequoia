@@ -14,12 +14,12 @@
 namespace sequoia::unit_testing
 {  
   template<class T, std::size_t MaxDepth>
-  struct details_checker<data_structures::static_stack<T, MaxDepth>>
+  struct detailed_equality_checker<data_structures::static_stack<T, MaxDepth>>
   {
     using type = data_structures::static_stack<T, MaxDepth>;
     
     template<class Logger>
-    static void check(Logger& logger, const type& stack, const type& prediction, std::string_view description="")
+    static void check(Logger& logger, const type& stack, const type& prediction, std::string_view description)
     {
       check_equality(logger, stack.empty(), prediction.empty(), impl::combine_messages(description, "Inconsistent emptiness"));
 

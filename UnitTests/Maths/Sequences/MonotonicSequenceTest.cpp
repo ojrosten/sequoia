@@ -30,7 +30,7 @@ namespace sequoia::unit_testing
     check_equivalence(t, std::initializer_list<int>{1}, LINE(""));
     check_regular_semantics(s, t, LINE("Regular Semantics"));
 
-    check_exception_thrown<std::logic_error>([&t](){ t.push_back(2); });
+    check_exception_thrown<std::logic_error>([&t](){ t.push_back(2); }, LINE(""));
     check_equivalence(t, std::initializer_list<int>{1}, LINE("Invariant violated by attempted push_back"));
 
     check_exception_thrown<std::logic_error>([&t](){ t.insert(t.cbegin(), 0); }, LINE("Invariant violated by attempted insertion at beginning"));

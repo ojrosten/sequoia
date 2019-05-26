@@ -81,7 +81,7 @@ namespace sequoia
       // 5.6, 3.0, -7.66
 
       check_equality(store, storage{5.6, 3.0, -7.66}, LINE(""));
-      check_equality(3.0, *citer);
+      check_equality(3.0, *citer, LINE(""));
 
       store.insert_node(store.cend_node_weights(), 2.2);
       // 5.6, 3.0, -7.66 2.2
@@ -98,8 +98,8 @@ namespace sequoia
 
       check_equality(store, storage{5.6, 2.2}, LINE(""));
 
-      check_exception_thrown<std::out_of_range>([&store]() { store.erase_nodes(store.cend_node_weights(), store.cbegin_node_weights()); });
-      check_exception_thrown<std::out_of_range>([&store]() { store.erase_node(store.cend_node_weights()); });
+      check_exception_thrown<std::out_of_range>([&store]() { store.erase_nodes(store.cend_node_weights(), store.cbegin_node_weights()); }, LINE(""));
+      check_exception_thrown<std::out_of_range>([&store]() { store.erase_node(store.cend_node_weights()); }, LINE(""));
     }
 
     void test_node_storage::test_static_node_storage()

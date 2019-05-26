@@ -46,8 +46,8 @@ namespace sequoia::unit_testing
     class EdgeWeight,
     class... NodeWeights
   >
-  struct details_checker<maths::heterogeneous_static_graph<Directedness, Size, Order, EdgeWeight, NodeWeights...>>
-    : impl::graph_details_checker<maths::heterogeneous_static_graph<Directedness, Size, Order, EdgeWeight, NodeWeights...>>
+  struct detailed_equality_checker<maths::heterogeneous_static_graph<Directedness, Size, Order, EdgeWeight, NodeWeights...>>
+    : impl::graph_detailed_equality_checker<maths::heterogeneous_static_graph<Directedness, Size, Order, EdgeWeight, NodeWeights...>>
   {   
   };
 
@@ -59,8 +59,8 @@ namespace sequoia::unit_testing
     class EdgeWeight,
     class... NodeWeights
   >
-  struct details_checker<maths::heterogeneous_embedded_static_graph<Directedness, Size, Order, EdgeWeight, NodeWeights...>>
-    : impl::graph_details_checker<maths::heterogeneous_embedded_static_graph<Directedness, Size, Order, EdgeWeight, NodeWeights...>>
+  struct detailed_equality_checker<maths::heterogeneous_embedded_static_graph<Directedness, Size, Order, EdgeWeight, NodeWeights...>>
+    : impl::graph_detailed_equality_checker<maths::heterogeneous_embedded_static_graph<Directedness, Size, Order, EdgeWeight, NodeWeights...>>
   {   
   };
 

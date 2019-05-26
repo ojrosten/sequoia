@@ -52,12 +52,12 @@ namespace sequoia::unit_testing
     class WeightProxy,
     class IndexType
   >
-  struct details_checker<maths::partial_edge<Weight, WeightSharingPolicy, WeightProxy, IndexType>>
+  struct detailed_equality_checker<maths::partial_edge<Weight, WeightSharingPolicy, WeightProxy, IndexType>>
   {
     using type = maths::partial_edge<Weight, WeightSharingPolicy, WeightProxy, IndexType>;
     
     template<class Logger>
-    static void check(Logger& logger, const type& edge, const type& prediction, std::string_view description="")
+    static void check(Logger& logger, const type& edge, const type& prediction, std::string_view description)
     {
       impl::check_partial(logger, edge, prediction, description);
     }
@@ -90,12 +90,12 @@ namespace sequoia::unit_testing
     class WeightProxy,
     class IndexType
   >
-  struct details_checker<maths::embedded_partial_edge<Weight, WeightSharingPolicy, WeightProxy, IndexType>>
+  struct detailed_equality_checker<maths::embedded_partial_edge<Weight, WeightSharingPolicy, WeightProxy, IndexType>>
   {
     using type = maths::embedded_partial_edge<Weight, WeightSharingPolicy, WeightProxy, IndexType>;
     
     template<class Logger>
-    static void check(Logger& logger, const type& edge, const type& prediction, std::string_view description="")
+    static void check(Logger& logger, const type& edge, const type& prediction, std::string_view description)
     {
       impl::check_partial(logger, edge, prediction, description);
       impl::check_complementary(logger, edge, prediction, description);
@@ -127,12 +127,12 @@ namespace sequoia::unit_testing
     class WeightProxy,
     class IndexType
   >
-  struct details_checker<maths::edge<Weight, WeightProxy, IndexType>>
+  struct detailed_equality_checker<maths::edge<Weight, WeightProxy, IndexType>>
   {
     using type = maths::edge<Weight, WeightProxy, IndexType>;
     
     template<class Logger>
-    static void check(Logger& logger, const type& edge, const type& prediction, std::string_view description="")
+    static void check(Logger& logger, const type& edge, const type& prediction, std::string_view description)
     {
       impl::check_partial(logger, edge, prediction, description);
       impl::check_host(logger, edge, prediction, description);
@@ -164,12 +164,12 @@ namespace sequoia::unit_testing
     class WeightProxy,
     class IndexType
   >
-  struct details_checker<maths::embedded_edge<Weight, WeightSharingPolicy, WeightProxy, IndexType>>
+  struct detailed_equality_checker<maths::embedded_edge<Weight, WeightSharingPolicy, WeightProxy, IndexType>>
   {
     using type = maths::embedded_edge<Weight, WeightSharingPolicy, WeightProxy, IndexType>;
     
     template<class Logger>
-    static void check(Logger& logger, const type& edge, const type& prediction, std::string_view description="")
+    static void check(Logger& logger, const type& edge, const type& prediction, std::string_view description)
     {
       impl::check_partial(logger, edge, prediction, description);
       impl::check_complementary(logger, edge, prediction, description);

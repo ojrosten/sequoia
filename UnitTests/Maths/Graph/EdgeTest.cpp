@@ -345,7 +345,7 @@ namespace sequoia
       using namespace data_sharing;
 
       using edge_t = embedded_edge<null_weight, independent, utilities::protective_wrapper<null_weight>>;
-      check_equality(3*sizeof(std::size_t), sizeof(edge_t));
+      check_equality(3*sizeof(std::size_t), sizeof(edge_t), LINE(""));
 
       using compact_edge_t = embedded_edge<null_weight, independent, utilities::protective_wrapper<null_weight>, unsigned char>;
       static_assert(3*sizeof(unsigned char) == sizeof(compact_edge_t));
@@ -381,13 +381,13 @@ namespace sequoia
       using namespace data_sharing;
 
       using edge_t = embedded_edge<double, independent, utilities::protective_wrapper<double>>;
-      check_equality(3*sizeof(std::size_t) + sizeof(double), sizeof(edge_t));
+      check_equality(3*sizeof(std::size_t) + sizeof(double), sizeof(edge_t), LINE(""));
 
       constexpr edge_t e{3, 4, 1, 4.2};
-      check_equality(edge_t{3, 4, 1, 4.2}, e);
+      check_equality(edge_t{3, 4, 1, 4.2}, e, LINE(""));
 
       edge_t e2{4, inversion_constant<true>{}, 1, 1.1};
-      check_equality(edge_t{4, inversion_constant<true>{}, 1, 1.1}, e2);
+      check_equality(edge_t{4, inversion_constant<true>{}, 1, 1.1}, e2, LINE(""));
 
       e2.host_node(8);
       check_equality(edge_t{8, inversion_constant<true>{}, 1, 1.1}, e2, LINE("Change host"));

@@ -51,19 +51,19 @@ namespace sequoia
       return string_maker<T>::make(value);
     }
 
-    template<class T> struct details_checker;
+    template<class T> struct detailed_equality_checker;
 
     template<class T> struct equivalence_checker;
 
     template<class T> struct weak_equivalence_checker;
 
-    template<class T, class=std::void_t<>> struct has_details_checker : public std::false_type
+    template<class T, class=std::void_t<>> struct has_detailed_equality_checker : public std::false_type
     {};
 
-    template<class T> struct has_details_checker<T, std::void_t<decltype(details_checker<T>{})>> : public std::true_type
+    template<class T> struct has_detailed_equality_checker<T, std::void_t<decltype(detailed_equality_checker<T>{})>> : public std::true_type
     {};
 
-    template<class T> constexpr bool has_details_checker_v{has_details_checker<T>::value};
+    template<class T> constexpr bool has_detailed_equality_checker_v{has_detailed_equality_checker<T>::value};
 
     struct equality_tag{};
     struct equivalence_tag{};
@@ -111,10 +111,10 @@ namespace sequoia
     template<class Logger, class T>
     bool check(Logger& logger, equality_tag, const T& value, const T& prediction, std::string_view description)
     {
-      constexpr bool delegate{has_details_checker_v<T> || is_container_v<T>};
+      constexpr bool delegate{has_detailed_equality_checker_v<T> || is_container_v<T>};
        
       static_assert(delegate || is_serializable_v<T> || is_equal_to_comparable_v<T>,
-                    "Provide either a specialization of details_checker or string_maker and/or operator==");
+                    "Provide either a specialization of detailed_equality_checker or string_maker and/or operator==");
       
       using sentinel = typename Logger::sentinel;
 
@@ -154,10 +154,10 @@ namespace sequoia
           }
         }
 
-        if constexpr(has_details_checker_v<T>)
+        if constexpr(has_detailed_equality_checker_v<T>)
         {          
           sentinel s{logger, impl::add_type_info<T>(description)};
-          details_checker<T>::check(logger, value, prediction, description);
+          detailed_equality_checker<T>::check(logger, value, prediction, description);
         }
         else if constexpr(is_container_v<T>)
         {
@@ -183,10 +183,8 @@ namespace sequoia
     {
       return impl::check<weak_equivalence_checker<T>, Logger, T, S, U...>(logger, value, std::forward<S>(s), std::forward<U>(u)..., description);
     }
-
-
     
-    template<class Logger, class T> bool check_equality(Logger& logger, const T& value, const T& prediction, std::string_view description="")
+    template<class Logger, class T> bool check_equality(Logger& logger, const T& value, const T& prediction, std::string_view description)
     {
       return check(logger, equality_tag{}, value, prediction, description);
     }
@@ -203,20 +201,20 @@ namespace sequoia
       return check<Logger, T, S, U...>(logger, weak_equivalence_tag{}, value, std::forward<S>(s), std::forward<U>(u)..., description);      
     }
 
-    template<class Logger> bool check(Logger& logger, const bool value, std::string_view description="")
+    template<class Logger> bool check(Logger& logger, const bool value, std::string_view description)
     {
       return check_equality(logger, value, true, description);
     }
 
     template<class Logger, class T>
-    bool check_equality_within_tolerance(Logger& logger, const T& value, const T& prediction, const T& tol, std::string_view description="")
+    bool check_equality_within_tolerance(Logger& logger, const T& value, const T& prediction, const T& tol, std::string_view description)
     {
       auto message{impl::combine_messages(description, "Check using tolerance of " + std::to_string(tol))};
       return check(logger, (value > prediction - tol) && (value < prediction + tol), std::move(message));
     }
 
     template<class Logger, class E, class Fn>
-    bool check_exception_thrown(Logger& logger, Fn&& function, std::string_view description="")
+    bool check_exception_thrown(Logger& logger, Fn&& function, std::string_view description)
     {
       typename Logger::sentinel r{logger, description};
       r.log_check();
@@ -292,7 +290,7 @@ namespace sequoia
 
     
     template<class Logger, class T>
-    void check_regular_semantics(Logger& logger, const T& x, const T& y, std::string_view description="")
+    void check_regular_semantics(Logger& logger, const T& x, const T& y, std::string_view description)
     {
       typename Logger::sentinel s{logger, impl::add_type_info<T>(description)};
 
@@ -322,7 +320,7 @@ namespace sequoia
     }
 
     template<class Logger, class T, class Mutator>
-    void check_copy_consistency(Logger& logger, T& target, const T& prediction, Mutator m, std::string_view description="")
+    void check_copy_consistency(Logger& logger, T& target, const T& prediction, Mutator m, std::string_view description)
     {
       typename Logger::sentinel s{logger, impl::add_type_info<T>(description)};
 
@@ -337,7 +335,7 @@ namespace sequoia
     }
 
     template<class T, class S>
-    struct details_checker<std::pair<T, S>>
+    struct detailed_equality_checker<std::pair<T, S>>
     {
       template<class Logger>
       static void check(Logger& logger, const std::pair<T, S>& value, const std::pair<T,S>& prediction, std::string_view description)
@@ -348,7 +346,7 @@ namespace sequoia
     };
 
     template<class... T>
-    struct details_checker<std::tuple<T...>>
+    struct detailed_equality_checker<std::tuple<T...>>
     {     
     private:
       template<class Logger, std::size_t I = 0>
@@ -489,7 +487,7 @@ namespace sequoia
       checker(const checker&)            = delete;
       checker& operator=(const checker&) = delete;
 
-      template<class T> bool check_equality(const T& value, const T& prediction, std::string_view description="")
+      template<class T> bool check_equality(const T& value, const T& prediction, std::string_view description)
       {
         return unit_testing::check_equality(m_Logger, value, prediction, description);
       }
@@ -507,42 +505,42 @@ namespace sequoia
       }
       
       template<class T>
-      bool check_equality_within_tolerance(const T prediction, const T value, const T tol, std::string_view description="")
+      bool check_equality_within_tolerance(const T prediction, const T value, const T tol, std::string_view description)
       {
         return unit_testing::check_equality_within_tolerance(m_Logger, value, prediction, tol, description);
       }
 
-      bool check(const bool value, std::string_view description="")
+      bool check(const bool value, std::string_view description)
       {
         return unit_testing::check(m_Logger, value, description);
       }
 
       template<class E, class Fn>
-      bool check_exception_thrown(Fn&& function, std::string_view description="")
+      bool check_exception_thrown(Fn&& function, std::string_view description)
       {
         return unit_testing::check_exception_thrown<Logger, E, Fn>(m_Logger, std::forward<Fn>(function), description);
       }
 
       template<class Iter, class PredictionIter>
-      bool check_range(Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, std::string_view description="")
+      bool check_range(Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, std::string_view description)
       {
         return unit_testing::check_range(m_Logger, first, last, predictionFirst, predictionLast, description);
       }
 
       template<class T>
-      void check_regular_semantics(const T& x, const T& y, std::string_view description="")
+      void check_regular_semantics(const T& x, const T& y, std::string_view description)
       {
         unit_testing::check_regular_semantics(m_Logger, x, y, description);        
       }
 
        template<class T, class Mutator>
-       void check_copy_consistency(T& target, const T& prediction, Mutator m, std::string_view description="")
+       void check_copy_consistency(T& target, const T& prediction, Mutator m, std::string_view description)
        {
          unit_testing::check_copy_consistency(m_Logger, target, prediction, std::move(m), description);
        }
       
       template<class F, class S>
-      auto check_relative_performance(F fast, S slow, const double minSpeedUp, const double maxSpeedUp, std::string_view description="", const std::size_t trials=5, const double num_sds=3)
+      auto check_relative_performance(F fast, S slow, const double minSpeedUp, const double maxSpeedUp, std::string_view description, const std::size_t trials=5, const double num_sds=3)
         -> performance_results<decltype(fast())>
       {
         return unit_testing::check_relative_performance(m_Logger, fast, slow, minSpeedUp, maxSpeedUp, trials, num_sds, description);

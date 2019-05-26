@@ -1,3 +1,11 @@
+////////////////////////////////////////////////////////////////////
+//                 Copyright Oliver Rosten 2018.                  //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
+
 #include "AlgorithmsTest.hpp"
 
 #include "Algorithms.hpp"
@@ -267,7 +275,7 @@ namespace sequoia
           })
       };
 
-      check_equality<std::size_t>(2, e.target_node());
+      check_equality(2ul, e.target_node(), LINE(""));
     }
 
     void algorithms_test::upper_bound_basic_type()
@@ -361,19 +369,19 @@ namespace sequoia
       {
         constexpr std::array<double, 0> a{};
         auto iters{equal_range(a.begin(), a.end(), 0)};
-        check(iters.first == a.end());
-        check(iters.second == a.end());
+        check(iters.first == a.end(), LINE(""));
+        check(iters.second == a.end(), LINE(""));
       }
 
       {
         constexpr std::array<double, 0> a{1};
         auto iters{equal_range(a.begin(), a.end(), 0)};
-        check(iters.first == a.begin());
-        check(iters.second == a.begin());
+        check(iters.first == a.begin(), LINE(""));
+        check(iters.second == a.begin(), LINE(""));
 
         iters = equal_range(a.begin(), a.end(), 1);
-        check(iters.first == a.begin());
-        check(iters.second == a.end());
+        check(iters.first == a.begin(), LINE(""));
+        check(iters.second == a.end(), LINE(""));
       }
     }
 

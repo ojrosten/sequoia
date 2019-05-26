@@ -18,7 +18,7 @@ namespace sequoia::unit_testing
   namespace impl
   {
     template<class Nodes, bool=std::is_empty_v<typename Nodes::weight_type>>
-    struct node_details_checker
+    struct node_detailed_equality_checker
     {
       using type = Nodes;
 
@@ -34,7 +34,7 @@ namespace sequoia::unit_testing
     };
 
     template<class Nodes>
-    struct node_details_checker<Nodes, true>
+    struct node_detailed_equality_checker<Nodes, true>
     {
       using type = Nodes;
       
@@ -78,8 +78,8 @@ namespace sequoia::unit_testing
   // Details Checkers
   
   template<class WeightMaker, class Traits, bool IsEmpty>
-  struct details_checker<maths::graph_impl::node_storage<WeightMaker, Traits, IsEmpty>>
-    : impl::node_details_checker<maths::graph_impl::node_storage<WeightMaker, Traits, IsEmpty>>
+  struct detailed_equality_checker<maths::graph_impl::node_storage<WeightMaker, Traits, IsEmpty>>
+    : impl::node_detailed_equality_checker<maths::graph_impl::node_storage<WeightMaker, Traits, IsEmpty>>
   {   
   };
 
@@ -94,8 +94,8 @@ namespace sequoia::unit_testing
   // Static
 
   template<class WeightMaker, std::size_t N, bool IsEmpty>
-  struct details_checker<maths::graph_impl::static_node_storage<WeightMaker, N, IsEmpty>>
-    : impl::node_details_checker<maths::graph_impl::static_node_storage<WeightMaker, N, IsEmpty>>
+  struct detailed_equality_checker<maths::graph_impl::static_node_storage<WeightMaker, N, IsEmpty>>
+    : impl::node_detailed_equality_checker<maths::graph_impl::static_node_storage<WeightMaker, N, IsEmpty>>
   {
   };
 
@@ -108,7 +108,7 @@ namespace sequoia::unit_testing
   // Heterogeneous
 
   template<class... Ts>
-  struct details_checker<maths::graph_impl::heterogeneous_node_storage<Ts...>>
+  struct detailed_equality_checker<maths::graph_impl::heterogeneous_node_storage<Ts...>>
   {
     using type = maths::graph_impl::heterogeneous_node_storage<Ts...>;
 
@@ -194,8 +194,8 @@ namespace sequoia::unit_testing
 
   
   template<class WeightMaker>
-  struct details_checker<node_storage_tester<WeightMaker>>
-    : public details_checker<maths::graph_impl::node_storage<WeightMaker, node_storage_traits>>
+  struct detailed_equality_checker<node_storage_tester<WeightMaker>>
+    : public detailed_equality_checker<maths::graph_impl::node_storage<WeightMaker, node_storage_traits>>
   {
   };
 
@@ -206,8 +206,8 @@ namespace sequoia::unit_testing
   };
 
   template<class WeightMaker, std::size_t N>
-  struct details_checker<static_node_storage_tester<WeightMaker, N>>
-    : public details_checker<maths::graph_impl::static_node_storage<WeightMaker, N>>
+  struct detailed_equality_checker<static_node_storage_tester<WeightMaker, N>>
+    : public detailed_equality_checker<maths::graph_impl::static_node_storage<WeightMaker, N>>
   {
   };
 
