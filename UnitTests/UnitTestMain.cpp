@@ -33,24 +33,28 @@
 
 #include "EdgeTest.hpp"
 #include "EdgeTestingDiagnostics.hpp"
+
+#include "NodeStorageTest.hpp"
+#include "HeterogeneousNodeStorageTest.hpp"
+
+#include "GraphMetaTest.hpp"
+
+#include "DynamicGraphTestingDiagnostics.hpp"
+#include "DynamicGraphInitializationTest.hpp"
 #include "DynamicGraphCommonTest.hpp"
 #include "DynamicGraphEmbeddedTest.hpp"
+#include "DynamicGraphFixedTopologyTest.hpp"
 
+#include "StaticGraphTest.hpp"
+#include "StaticGraphFixedTopologyTest.hpp"
 
-#include "GraphTesterDiagnostics.hpp"
-#include "TestNodeStorage.hpp"
-#include "TestHeterogeneousNodeStorage.hpp"
-#include "TestStaticGraph.hpp"
-#include "TestHeterogeneousStaticGraph.hpp"
-#include "TestGraphInit.hpp"
-#include "TestFixedTopology.hpp"
-#include "TestStaticFixedTopology.hpp"
-#include "TestGraphMeta.hpp"
+#include "HeterogeneousStaticGraphTest.hpp"
 
-#include "TestGraphTraversals.hpp"
-#include "TestStaticGraphTraversals.hpp"
-#include "TestGraphUpdate.hpp"
-#include "TestSubgraph.hpp"
+#include "DynamicGraphTraversalsTest.hpp"
+#include "DynamicGraphUpdateTest.hpp"
+#include "DynamicSubgraphTest.hpp"
+
+#include "StaticGraphTraversalsTest.hpp"
 
 #include "ExperimentalTest.hpp"
 

@@ -5,7 +5,7 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "GraphTesterDiagnostics.hpp"
+#include "DynamicGraphTestingDiagnostics.hpp"
 
 namespace sequoia::unit_testing
 {

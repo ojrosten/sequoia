@@ -7,8 +7,9 @@
 
 #pragma once
 
-#include "GraphTestingUtils.hpp"
+#include "GraphTestingUtilities.hpp"
 #include "NodeStorageTestingUtilities.hpp"
+
 #include "DynamicGraph.hpp"
 
 namespace sequoia::unit_testing

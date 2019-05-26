@@ -5,7 +5,7 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "TestNodeStorage.hpp"
+#include "NodeStorageTest.hpp"
 #include "ProtectiveWrapper.hpp"
 #include "DataPool.hpp"
 #include "GraphDetails.hpp"

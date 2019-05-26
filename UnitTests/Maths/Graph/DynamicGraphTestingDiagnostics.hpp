@@ -7,14 +7,14 @@
 
 #pragma once
 
-#include "DynamicGraphTestingUtils.hpp"
+#include "DynamicGraphTestingUtilities.hpp"
 
 namespace sequoia::unit_testing
 {
-  class test_subgraph : public graph_unit_test
+  class test_graph_false_positives : public graph_false_positive_test
   {
   public:
-    using graph_unit_test::graph_unit_test;
+    using  graph_false_positive_test::graph_false_positive_test;
 
   private:
     void run_tests() override;
@@ -22,31 +22,28 @@ namespace sequoia::unit_testing
 
   template
   <
-    maths::graph_flavour GraphFlavour,
+    maths::graph_flavour GraphFlavour,    
     class EdgeWeight,
-    class NodeWeight,      
+    class NodeWeight,    
     template <class> class EdgeWeightPooling,
     template <class> class NodeWeightPooling,
     template <maths::graph_flavour, class, template<class> class> class EdgeStorageTraits,
     template <class, template<class> class, bool> class NodeWeightStorageTraits
   >
-  class generic_subgraph_tests
-    : public graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>
+  class dynamic_graph_false_positives
+    : public graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits, unit_test_logger<test_mode::false_positive>>
   {
   public:
+      
   private:
     using base_t = graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>;
-    
+      
     using graph_t = typename base_t::graph_type;
 
-    using base_t::check_equality;      
-    using base_t::check_exception_thrown;
-      
-    void execute_operations() override
-    {
-      test_sub_graph();
-    }
+    using graph_checker<unit_test_logger<test_mode::false_positive>>::check_equality;      
+    using graph_checker<unit_test_logger<test_mode::false_positive>>::check_exception_thrown;
+    using graph_checker<unit_test_logger<test_mode::false_positive>>::check_graph;
 
-    void test_sub_graph();
+    void execute_operations() override;
   };
 }

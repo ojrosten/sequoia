@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "GraphTestingUtils.hpp"
+#include "GraphTestingUtilities.hpp"
 #include "HeterogeneousStaticGraph.hpp"
 #include "NodeStorageTestingUtilities.hpp"
 

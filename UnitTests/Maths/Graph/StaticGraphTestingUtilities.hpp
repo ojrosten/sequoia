@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "GraphTestingUtils.hpp"
+#include "GraphTestingUtilities.hpp"
 #include "StaticGraph.hpp"
 
 namespace sequoia::unit_testing

@@ -5,28 +5,16 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#pragma once
+#include "DynamicGraphUpdateTest.hpp"
 
-#include "NodeStorageTestingUtilities.hpp"
-
-namespace sequoia
+namespace sequoia::unit_testing
 {
-  namespace unit_testing
+  void test_graph_update::run_tests()
   {
-    class test_node_storage : public unit_test
-    {
-    public:
-      using unit_test::unit_test;
+    graph_test_helper<std::vector<double>, std::vector<int>> helper;
+    helper.run_tests<test_BF_update>(*this);
 
-    private:
-      using unit_test::check_equality;
-      
-      void run_tests() override;
-
-      struct null_weight{};
-
-      void test_dynamic_node_storage();
-      void test_static_node_storage();
-    };
+    graph_test_helper<size_t, size_t> helper2;
+    helper2.run_tests<test_update>(*this);
   }
 }

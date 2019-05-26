@@ -5,7 +5,7 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "TestHeterogeneousStaticGraph.hpp"
+#include "HeterogeneousStaticGraphTest.hpp"
 
 #include "HeterogeneousStaticGraph.hpp"
 

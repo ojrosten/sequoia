@@ -9,8 +9,6 @@
 
 #include <complex>
 
-#include <iostream>
-
 namespace sequoia::unit_testing
 {
   void test_graph::run_tests()
