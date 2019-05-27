@@ -14,109 +14,78 @@
 
 #include <functional>
 
-namespace sequoia
+namespace sequoia::unit_testing
 {
-  namespace unit_testing
+  class NodeTracker
   {
-    class NodeTracker
-    {
-    public:
-      void clear() { m_Order.clear(); }
+  public:
+    void clear() noexcept { m_Order.clear(); }
       
-      void operator()(const std::size_t index) { m_Order.push_back(index); }
+    void operator()(const std::size_t index) { m_Order.push_back(index); }
 
-      const std::vector<std::size_t>& order() const { return m_Order; }
-    private:
-      std::vector<std::size_t> m_Order;
-    };
+    const std::vector<std::size_t>& order() const noexcept { return m_Order; }
+  private:
+    std::vector<std::size_t> m_Order;
+  };
 
-    template<class G, class T>
-    class EdgeTracker
-    {
-    public:
-      using result_type = std::vector<std::pair<std::size_t, std::size_t>>;
+  template<class G, class T>
+  class EdgeTracker
+  {
+  public:
+    using result_type = std::vector<std::pair<std::size_t, std::size_t>>;
       
-      EdgeTracker(const G& graph) : m_Graph(graph) {}
+    EdgeTracker(const G& graph) : m_Graph(graph) {}
       
-      void clear() { m_Order.clear(); }
+    void clear() noexcept { m_Order.clear(); }
 
-      template<class I> void operator()(I iter)
-      {
-        const auto pos = dist(typename std::is_same<typename T::type, DFS>::type(), iter);
-        m_Order.emplace_back(iter.partition_index(), static_cast<std::size_t>(pos));
-      }
-
-      const result_type& order() const { return m_Order; }
-    private:
-      template<class I> auto dist(std::true_type, I iter)
-      {
-        return distance(m_Graph.crbegin_edges(iter.partition_index()), iter);
-      }
-
-      template<class I> auto dist(std::false_type, I iter)
-      {
-        return distance(m_Graph.cbegin_edges(iter.partition_index()), iter);
-      }
-
-      result_type m_Order;
-      const G& m_Graph;
-    };
-
-    template<class F> void clear(F& f)
+    template<class I> void operator()(I iter)
     {
-      f.clear();     
+      const auto pos = dist(typename std::is_same<typename T::type, DFS>::type(), iter);
+      m_Order.emplace_back(iter.partition_index(), static_cast<std::size_t>(pos));
     }
 
-    template<> inline void clear<maths::null_functor>(maths::null_functor&) {};
+    const result_type& order() const noexcept { return m_Order; }
+  private:    
+    result_type m_Order;
+    const G& m_Graph;
     
-    template<class F, class... Fn>
-    void clear(F& f, Fn&... fn)
+    template<class I> auto dist(std::true_type, I iter)
     {
-      f.clear();
-      clear(fn...);
+      return distance(m_Graph.crbegin_edges(iter.partition_index()), iter);
     }
 
-    class test_graph_traversals : public graph_unit_test
+    template<class I> auto dist(std::false_type, I iter)
     {
-    public:
-      using graph_unit_test::graph_unit_test;
+      return distance(m_Graph.cbegin_edges(iter.partition_index()), iter);
+    }
+  };
 
-    private:      
-      struct null_weight {};
+  template<class F> void clear(F& f)
+  {
+    f.clear();     
+  }
 
-      void run_tests();
+  template<> inline void clear<maths::null_functor>(maths::null_functor&) {};
+    
+  template<class F, class... Fn>
+  void clear(F& f, Fn&... fn)
+  {
+    f.clear();
+    clear(fn...);
+  }
 
-      void test_PRS_helpers()
-      {
-        using namespace maths;
+  class test_graph_traversals : public graph_unit_test
+  {
+  public:
+    using graph_unit_test::graph_unit_test;
 
-        using graph_type = embedded_graph<directed_flavour::undirected, null_weight, int>;
-        graph_type graph;
+  private:      
+    struct null_weight {};
 
-        graph.add_node(3);
-        graph.add_node(2);
+    void run_tests();
 
-        using node_comparer = graph_impl::node_comparer<graph_type, std::less<int>>;
-        node_comparer compare(graph);
-
-        check(!compare(0, 1), "node_comparer sees that weight_0 > weight_1 and so returns false");
-
-        auto stack = graph_impl::queue_constructor<graph_type, std::stack<std::size_t>>::make(graph);
-        stack.push(0);
-        stack.push(1);
-        check_equality(stack.top(), 1ul, LINE(""));
-        stack.pop();
-        check_equality(stack.top(), 0ul, LINE(""));
-
-        using PQ_t = std::priority_queue<std::size_t, std::vector<std::size_t>, graph_impl::node_comparer<graph_type, std::less<int>>>;
-
-        auto pqueue = graph_impl::queue_constructor<graph_type, PQ_t>::make(graph);
-        pqueue.push(0);
-        pqueue.push(1);
-
-        check_equality(pqueue.top(), 0ul, LINE(""));
-      }
-    };
+    void test_PRS_helpers();
+  };
 
     template
     <
@@ -156,325 +125,7 @@ namespace sequoia
       }
 
       template<class Traverser>
-      void test_tracker_algorithm()
-      {        
-        using namespace maths;
-        
-        constexpr bool isBFS{std::is_same<typename Traverser::type, BFS>::value};
-        constexpr bool mutualInfo{mutual_info(GraphFlavour)};
-        
-        using UndirectedType = std::bool_constant<maths::undirected(GraphFlavour)>;        
-        using TraversalType = std::integral_constant<bool, isBFS>;
-
-        const std::string iterDescription{Traverser::iterator_description()};
-        constexpr bool forwardIter{Traverser::uses_forward_iterator()};
-
-        Connectivity network;
-        NodeTracker discovery, discovery2;
-        EdgeTracker<Connectivity, Traverser> edgeDiscovery{network}, edgeDiscovery2{network};
-
-        if constexpr(UndirectedType::value)
-        {
-          traverse_graph<Traverser>(network, true, 0, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
-        }
-        else
-        {
-          traverse_graph<Traverser>(network, true, 0, discovery, discovery2, edgeDiscovery);
-        }
-        
-        auto order = discovery.order();
-        auto order2 = discovery2.order();
-        auto edgeOrder = edgeDiscovery.order();
-        check(order.empty(), LINE("No nodes to discover"));
-        check_equality(order, order2, LINE(""));
-        check(edgeOrder.empty(), LINE("No edges to discover"));
-        if constexpr(UndirectedType::value) check_equality(edge_results{}, edgeDiscovery.order(), LINE(""));
-
-        check_equality<std::size_t>(0, network.add_node(), LINE("First node added"));
-        // 0
-
-        if constexpr(UndirectedType::value)
-        {
-          traverse_graph<Traverser>(network, true, 0, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
-        }
-        else
-        {
-          traverse_graph<Traverser>(network, true, 0, discovery, discovery2, edgeDiscovery);
-        }
-
-        order = discovery.order();
-        order2 = discovery2.order();
-        edgeOrder = edgeDiscovery.order();
-        check_equality<std::size_t>(1, order.size(), LINE("One node to discover"));
-        if(order.size() == 1)
-        {
-          check_equality<std::size_t>(0, order.front(), LINE("Node 0 must be discovered first in single node network"));
-        }
-        check_equality(order, order2, LINE(""));
-        check(edgeOrder.empty(), "No edges to discover");
-        if constexpr(UndirectedType::value) check_equality(edge_results{}, edgeDiscovery.order(), LINE(""));
-        
-        check_equality<std::size_t>(1, network.add_node(), LINE("Second node added"));
-        // 0 0
-
-        if constexpr(UndirectedType::value)
-        {
-          traverse_graph<Traverser>(network, true, 0, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
-        }
-        else
-        {
-          traverse_graph<Traverser>(network, true, 0, discovery, discovery2, edgeDiscovery);
-        }
- 
-        order = discovery.order();
-        order2 = discovery2.order();
-        edgeOrder = edgeDiscovery.order();
-        check_equality<std::size_t>(2, order.size(), LINE("Two nodes to discover"));
-        if(order.size() == 2)
-        {
-          auto iter = order.begin();
-          check_equality<std::size_t>(0, *iter, LINE("Node 0 discovered first"));
-          check_equality<std::size_t>(1, *++iter, LINE("Node 1 discovered second"));
-        }
-        check_equality(order, order2, LINE(""));
-        check(edgeOrder.empty(), LINE("No edges to discover"));
-        if constexpr(UndirectedType::value) check_equality(edge_results{}, edgeDiscovery.order(), LINE(""));
-        
-        if constexpr(UndirectedType::value)
-        {
-          traverse_graph<Traverser>(network, true, 1, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
-        }
-        else
-        {
-          traverse_graph<Traverser>(network, true, 1, discovery, discovery2, edgeDiscovery);
-        }
-
-        order = discovery.order();
-        order2 = discovery2.order();
-        edgeOrder = edgeDiscovery.order();
-        check_equality<std::size_t>(2, order.size(), LINE("Two nodes to discover but this time in reverse order"));
-        if(order.size() == 2)
-        {
-          auto iter = order.begin();
-          check_equality<std::size_t>(1, *iter, LINE("Node 1 discovered first"));
-          check_equality<std::size_t>(0, *++iter, LINE("Node 0 discovered second"));
-        }
-        check_equality(order, order2, LINE(""));
-        check(edgeOrder.empty(), LINE("No edges to discover"));
-        if constexpr(UndirectedType::value) check_equality(edge_results{}, edgeDiscovery.order(), LINE(""));
-
-        if constexpr(UndirectedType::value)
-        {
-          traverse_graph<Traverser>(network, false, 0, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
-        }
-        else
-        {
-          traverse_graph<Traverser>(network, false, 0, discovery, discovery2, edgeDiscovery);
-        }
-
-        order = discovery.order();
-        order2 = discovery2.order();
-        edgeOrder = edgeDiscovery.order();
-        check_equality<std::size_t>(1, order.size(), LINE("Of two disconnected nodes, only one will be discovered"));
-        if(order.size() == 1)
-        {
-          auto iter = order.begin();
-          check_equality<std::size_t>(0, *iter, LINE("Node 0, alone, discovered first"));
-        }
-        check_equality(order, order2, LINE(""));
-        check(edgeOrder.empty(), LINE("No edges to discover"));
-        if constexpr(UndirectedType::value) check_equality(edge_results{}, edgeDiscovery.order(), LINE(""));
-
-        check_equality<std::size_t>(2, network.add_node(), LINE("Third node added"));
-        network.join(0, 1);
-        network.join(1, 2);
-        // 0----0----0
-
-        if constexpr(UndirectedType::value)
-        {
-          traverse_graph<Traverser>(network, true, 0, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
-        }
-        else
-        {
-          traverse_graph<Traverser>(network, true, 0, discovery, discovery2, edgeDiscovery);
-        }
-
-        order = discovery.order();
-        order2 = discovery2.order();
-        edgeOrder = edgeDiscovery.order();
-        check_equality<std::size_t>(3, order.size(), LINE("Three nodes to discover"));
-        if(order.size() == 3)
-        {
-          auto iter = order.begin();
-          check_equality<std::size_t>(0, *iter, LINE("Starting node 0 discovered first"));
-          check_equality<std::size_t>(1, *++iter, LINE("Node 1 discovered next"));
-          check_equality<std::size_t>(2, *++iter, LINE("Node 2 discovered last"));
-        }
-        check_equality(order, order2, LINE(""));
-        check_equality<std::size_t>(2, edgeOrder.size(), LINE("Two edges to discover"));
-        if(edgeOrder.size() == 2)
-        {
-            auto iter = edgeOrder.begin();
-            check_equality<std::size_t>(0, iter->first, LINE("Edge attached to node 0"));
-            check_equality<std::size_t>(0, iter->second, LINE("Edge has " + iterDescription + " index 0"));
-            ++iter;
-            check_equality<std::size_t>(1, iter->first, LINE("Edge attached to node 1"));
-            const std::string num{mutualInfo && forwardIter ? "1" : "0"};
-            check_equality<std::size_t>(mutualInfo && forwardIter ? 1 : 0, iter->second, LINE("Edge has " + iterDescription + " index " + num));
-        }
-        if constexpr(UndirectedType::value) check_equality(isBFS ? edge_results{{1,0}, {2,0}} : edge_results{{1, 1}, {2, 0}}, edgeDiscovery2.order(), LINE(""));
-                       
-
-        std::string message;
-        if constexpr(UndirectedType::value)
-        {
-          traverse_graph<Traverser>(network, false, 1, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
-        }
-        else
-        {
-          traverse_graph<Traverser>(network, false, 1, discovery, discovery2, edgeDiscovery);
-        }
-
-        order = discovery.order();
-        order2 = discovery2.order();
-        edgeOrder = edgeDiscovery.order();
-        message = UndirectedType::value ? "Search from middle; still three nodes to discover" : "Search from middle; only nodes to discover";
-        check_equality<std::size_t>(UndirectedType::value ? 3 : 2, order.size(), LINE(message));
-        if(order.size() == 3)
-        {
-          auto iter = order.begin();
-          check_equality<std::size_t>(1, *iter, LINE("Middle node 1 discovered first"));
-          check_equality<std::size_t>(0, *++iter, LINE("Node 0 discovered next"));
-          check_equality<std::size_t>(2, *++iter, LINE("Node 2 discovered last"));
-        }
-        else if(order.size() == 2)
-        {
-          auto iter = order.begin();
-          check_equality<std::size_t>(1, *iter, LINE("Middle node 1 discovered first"));
-          check_equality<std::size_t>(2, *++iter, LINE("Node 2 discovered next"));
-        }
-        check_equality(order, order2, LINE(""));
-        message = UndirectedType::value ? "Search from middle; two edges to discover" : "Search from middle; only one edge to discover";
-        check_equality<std::size_t>(UndirectedType::value ? 2 : 1, edgeOrder.size(), LINE(message));
-        if(edgeOrder.size() == 2)
-        {
-          auto iter = edgeOrder.begin();
-          check_equality<std::size_t>(1, iter->first, LINE("Edge attached to node 1"));
-          check_equality<std::size_t>(0, iter->second, LINE("Edge has " + iterDescription + " index 0"));
-          ++iter;
-          check_equality<std::size_t>(1, iter->first, LINE("Edge attached to node 1"));
-          check_equality<std::size_t>(1, iter->second, LINE("Edge has " + iterDescription + " index 1"));
-        }
-        else if(edgeOrder.size() == 1)
-        {
-          auto iter = edgeOrder.begin();
-          check_equality<std::size_t>(1, iter->first, LINE("Edge attached to node 1"));
-          const std::string num{mutualInfo ? "1" : "0"};
-          check_equality<std::size_t>((mutualInfo && isBFS) ? 1 : 0, iter->second, LINE("Edge has " + iterDescription + " index " + num));
-        }
-        if constexpr(UndirectedType::value) check_equality(isBFS ? edge_results{{0, 0}, {2, 0}} : edge_results{{0, 0}, {2, 0}}, edgeDiscovery2.order(), LINE(""));
-                                            
-
-        if constexpr(UndirectedType::value)
-        {
-          traverse_graph<Traverser>(network, false, 2, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
-        }
-        else
-        {
-          traverse_graph<Traverser>(network, false, 2, discovery, discovery2, edgeDiscovery);
-        }
-
-        order = discovery.order();
-        order2 = discovery2.order();
-        edgeOrder = edgeDiscovery.order();
-        message = UndirectedType::value ? "Search from end; still three nodes to discover" : "Search for connected components from end, so only one node to discover";
-        check_equality<std::size_t>(UndirectedType::value ? 3 : 1, order.size(), LINE(message));
-        if(order.size() == 3)
-        {
-          auto iter = order.begin();
-          check_equality<std::size_t>(2, *iter, LINE("End node 2 discovered first"));
-          check_equality<std::size_t>(1, *++iter, LINE("Middle node 1 discovered next"));
-          check_equality<std::size_t>(0, *++iter, LINE("First node 0 discovered last"));
-        }
-        else if(order.size() == 1)
-        {
-          auto iter = order.begin();
-          check_equality<std::size_t>(2, *iter, LINE("End node 2 discovered first"));
-        }
-        check_equality(order, order2, LINE(""));
-        message = UndirectedType::value ? "Search from end; two edges to discover" : "Search from end; no edges to discover";
-        check_equality<std::size_t>(UndirectedType::value ? 2 : 0, edgeOrder.size(), LINE(message));
-        if(edgeOrder.size() == 2)
-        {
-          auto iter = edgeOrder.begin();
-          check_equality<std::size_t>(2, iter->first, LINE("Edge attached to node 2"));
-          check_equality<std::size_t>(0, iter->second, LINE("Edge has " + iterDescription + " index 0"));
-          ++iter;
-          check_equality<std::size_t>(1, iter->first, LINE("Edge attached to node 1"));
-          const std::string num{forwardIter ? "0" : "1"};
-          check_equality<std::size_t>(forwardIter ? 0 : 1, iter->second, LINE("Edge has " + iterDescription + " index " + num));
-        }
-        if constexpr(UndirectedType::value) check_equality(isBFS ? edge_results{{1, 1}, {0, 0}} : edge_results{{1, 0}, {0, 0}}, edgeDiscovery2.order(), LINE(""));
-         
-
-        check_equality<std::size_t>(3, network.add_node(), LINE("Fourth node added"));
-        network.join(2, 3);
-        network.join(3, 0);
-        //  0----0
-        //  |    |
-        //  |    |
-        //  0----0
-
-        if constexpr(UndirectedType::value)
-        {
-          traverse_graph<Traverser>(network, false, 0, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
-        }
-        else
-        {
-          traverse_graph<Traverser>(network, false, 0, discovery, discovery2, edgeDiscovery);
-        }
-        order = discovery.order();
-        order2 = discovery2.order();
-        edgeOrder = edgeDiscovery.order();
-        check_equality<std::size_t>(4, order.size(), LINE("Four nodes to discover"));
-        if(order.size() == 4)
-        {
-          if constexpr(UndirectedType::value)
-          {
-            test_square_graph(discovery, edgeDiscovery, edgeDiscovery2, 0, mutualInfo, TraversalType{});
-          }
-          else
-          {
-            test_square_graph(discovery, edgeDiscovery, 0, mutualInfo, TraversalType{});
-          }
-        }
-        check_equality(order, order2, LINE(""));
-
-        if constexpr(UndirectedType::value)
-        {
-          traverse_graph<Traverser>(network, false, 2, discovery, discovery2, edgeDiscovery, edgeDiscovery2);
-        }
-        else
-        {
-          traverse_graph<Traverser>(network, false, 2, discovery, discovery2, edgeDiscovery);
-        }
-        order = discovery.order();
-        order2 = discovery2.order();
-        edgeOrder = edgeDiscovery.order();
-        check_equality<std::size_t>(4, order.size(), LINE("Four nodes to discover but this time starting from middle"));
-        if(order.size() == 4)
-        {
-          if constexpr(UndirectedType::value)
-          {
-            test_square_graph(discovery, edgeDiscovery, edgeDiscovery2, 2, mutualInfo, TraversalType{});
-          }
-          else
-          {
-            test_square_graph(discovery, edgeDiscovery, 2, mutualInfo, TraversalType{});
-          }
-        }
-        check_equality(order, order2, LINE(""));
-      }
+      void test_tracker_algorithm();
 
       // true_types correspond BFS
       template<class NTracker, class ETracker, class ETracker2>
@@ -956,4 +607,3 @@ namespace sequoia
       }
     };
   }
-}
