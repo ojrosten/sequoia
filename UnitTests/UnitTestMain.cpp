@@ -45,8 +45,8 @@
 #include "DynamicGraphEmbeddedTest.hpp"
 #include "DynamicGraphFixedTopologyTest.hpp"
 
-#include "StaticGraphTest.hpp"
-#include "StaticGraphFixedTopologyTest.hpp"
+#include "StaticGraphInitializationTest.hpp"
+#include "StaticGraphManipulationsTest.hpp"
 
 #include "HeterogeneousStaticGraphTest.hpp"
 
@@ -197,12 +197,12 @@ int main(int argc, char** argv)
         "Graph",
         test_graph_false_positives{"Graph false positive diagnostics"},
         test_graph_meta("Meta Tests"),
-        test_graph_init("Initialization Tests"),        
-        test_static_graph{"Static Graphs"},
+        test_graph_init("Dynamic Graph Init"),        
+        test_static_graph{"Static Graph Init"},
         test_heterogeneous_static_graph{"Heterogeneous Static Graphs"},
-        test_graph{"Basic Tests"},
-        test_fixed_topology{"Fixed Topology"},
-        test_static_fixed_topology{"Static Fixed Topology"},
+        test_graph{"Dynmaic Graph Common Tests"},
+        test_fixed_topology{"Dynamic Graph Fixed Topology"},
+        test_static_fixed_topology{"Static Graph Manipulations"},
         test_edge_insertion{"Edge Insertions"}  
       }
     );
