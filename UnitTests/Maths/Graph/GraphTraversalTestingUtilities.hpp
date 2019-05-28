@@ -26,9 +26,9 @@ namespace sequoia::unit_testing
       maths::breadth_first_search(g, findDisconnected, start, std::forward<Fn>(fn)...);
     }
 
-    constexpr static bool uses_forward_iterator() { return true; }
+    constexpr static bool uses_forward_iterator() noexcept { return true; }
 
-    static std::string iterator_description() { return "forward"; }
+    static std::string iterator_description() noexcept { return "forward"; }
   };
 
   template<> struct Traverser<DFS>
@@ -41,9 +41,9 @@ namespace sequoia::unit_testing
       maths::depth_first_search(g, findDisconnected, start, std::forward<Fn>(fn)...);
     }
 
-    constexpr static bool uses_forward_iterator() { return false; }
+    constexpr static bool uses_forward_iterator() noexcept { return false; }
 
-    static std::string iterator_description() { return "reverse"; }
+    static std::string iterator_description() noexcept { return "reverse"; }
   };
 
   template<> struct Traverser<PRS>
@@ -56,8 +56,8 @@ namespace sequoia::unit_testing
       maths::priority_search(g, findDisconnected, start, std::forward<Fn>(fn)...);
     }
 
-    constexpr static bool uses_forward_iterator() { return true; }
+    constexpr static bool uses_forward_iterator() noexcept { return true; }
 
-    static std::string iterator_description() { return "forward"; }
+    static std::string iterator_description() noexcept { return "forward"; }
   };
 }
