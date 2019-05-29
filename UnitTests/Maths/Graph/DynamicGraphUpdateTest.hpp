@@ -48,6 +48,46 @@ namespace sequoia
       return std::make_tuple(node, targ, nthConnection);
     }
 
+    template<class G>
+    std::size_t local_edge_index(const G& graph, const std::size_t node1, const std::size_t node2, const std::size_t n)
+    {
+      if(node1 >= graph.order() || node2 >= graph.order())
+        throw std::out_of_range("graph_utilities::local_edge_index - nodex index out of range");
+
+      std::size_t counter{};
+      auto found = graph.cend_edges(node1);
+      for(auto citer = graph.cbegin_edges(node1); citer != graph.cend_edges(node1); ++citer)
+      {
+        if(citer->target_node() == node2)
+        {
+          if(counter == n)
+          {
+            found = citer;
+            break;
+          }
+          else
+          {
+            ++counter;
+          }
+        }
+      }
+
+      if(found == graph.cend_edges(node1))
+        throw std::out_of_range("Graph::find_nth_connection - nth connection out of range");
+
+      return static_cast<std::size_t>(distance(graph.cbegin_edges(node1), found));
+    }
+    
+    template<class G>
+    const auto& get_edge(const G& graph, const std::size_t node1, const std::size_t node2, const std::size_t nthConnection)
+    {
+      const std::size_t pos{local_edge_index(graph, node1, node2, nthConnection)};
+      if(pos == (G::npos)) throw std::out_of_range("graph_utilities::get_edge - index out of range!\n");
+
+      auto iter = graph.cbegin_edges(node1);
+      return *(iter + pos);
+    }
+
     //=======================================================================================//
     // Class which will be used to provide graph update functions
 
@@ -115,7 +155,7 @@ namespace sequoia
       : public graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>
     {
     private:
-      using GGraph =
+      using graph_t =
         typename graph_operations
         <
           GraphFlavour,      
@@ -135,7 +175,7 @@ namespace sequoia
       
       void execute_operations() override
       {
-        GGraph graph;
+        graph_t graph;
 
         graph.add_node(std::size_t{5});
         graph.add_node(std::size_t{2});
@@ -158,7 +198,7 @@ namespace sequoia
 
         check_edge_weights<false>(graph, initial_reversed_edge_weights(), LINE(""));
 
-        GraphUpdaterFunctors<GGraph> updater(graph);
+        GraphUpdaterFunctors<graph_t> updater(graph);
 
         //=============================== DFS ===============================//
         auto firstNodeFn = [&updater](const std::size_t index){ updater.firstNodeTraversal(index); };
@@ -313,25 +353,25 @@ namespace sequoia
       }
 
       template<class UpdateFunctor>
-      void dfu_second_edge_traversal(std::true_type, GGraph& graph, UpdateFunctor fn)
+      void dfu_second_edge_traversal(std::true_type, graph_t& graph, UpdateFunctor fn)
       {
         maths::depth_first_search(graph, false, 0, maths::null_functor(), maths::null_functor(), maths::null_functor(), fn);
       }
 
       template<class UpdateFunctor>
-      void dfu_second_edge_traversal(std::false_type, GGraph& graph, UpdateFunctor fn)
+      void dfu_second_edge_traversal(std::false_type, graph_t& graph, UpdateFunctor fn)
       {
         maths::depth_first_search(graph, false, 0, maths::null_functor(), maths::null_functor(), fn);
       }
 
       template<class UpdateFunctor>
-      void bfu_second_edge_traversal(std::true_type, GGraph& graph, UpdateFunctor fn)
+      void bfu_second_edge_traversal(std::true_type, graph_t& graph, UpdateFunctor fn)
       {
         maths::breadth_first_search(graph, false, 0, maths::null_functor(), maths::null_functor(), maths::null_functor(), fn);
       }
 
       template<class UpdateFunctor>
-      void bfu_second_edge_traversal(std::false_type, GGraph& graph, UpdateFunctor fn)
+      void bfu_second_edge_traversal(std::false_type, graph_t& graph, UpdateFunctor fn)
       {
         maths::breadth_first_search(graph, false, 0, maths::null_functor(), maths::null_functor(), fn);
       }
@@ -513,13 +553,13 @@ namespace sequoia
       }
 
       template<class UpdateFunctor>
-      void ps_second_edge_traversal(std::true_type, GGraph& graph, UpdateFunctor fn)
+      void ps_second_edge_traversal(std::true_type, graph_t& graph, UpdateFunctor fn)
       {
         maths::priority_search(graph, false, 0, maths::null_functor(), maths::null_functor(), maths::null_functor(), fn);
       }
 
       template<class UpdateFunctor>
-      void ps_second_edge_traversal(std::false_type, GGraph& graph, UpdateFunctor fn)
+      void ps_second_edge_traversal(std::false_type, graph_t& graph, UpdateFunctor fn)
       {
         maths::priority_search(graph, false, 0, maths::null_functor(), maths::null_functor(), fn);
       }
@@ -555,7 +595,7 @@ namespace sequoia
       }
       
       template<bool Forward>
-      void check_edge_weights(const GGraph& graph, const std::vector<std::vector<std::size_t>>& answers, const std::string& failureMessage = "")
+      void check_edge_weights(const graph_t& graph, const std::vector<std::vector<std::size_t>>& answers, const std::string& failureMessage = "")
       {
           for(auto cans_iter=answers.cbegin(); cans_iter != answers.cend(); ++cans_iter)
           {
@@ -604,7 +644,7 @@ namespace sequoia
     {
     private:
       using UndirectedType = std::bool_constant<maths::undirected(GraphFlavour)>;
-      using GGraph =
+      using graph_t =
         typename graph_operations
         <
           GraphFlavour,      
@@ -621,7 +661,7 @@ namespace sequoia
       
       void execute_operations() override
       {
-        GGraph graph;
+        graph_t graph;
         graph.add_node();
         graph.add_node();
         graph.add_node();
@@ -690,7 +730,7 @@ namespace sequoia
         test_second_edge_traversal_update(graph, UndirectedType());
       }
 
-      void test_second_edge_traversal_update(GGraph& graph, std::true_type)
+      void test_second_edge_traversal_update(graph_t& graph, std::true_type)
       {
         auto edgeFn2 = [&graph](auto edgeIter)
         {
@@ -725,7 +765,7 @@ namespace sequoia
                    : check_equality(std::vector<double>{1}, get_edge(graph, 2, 2, 1).weight(), "First connection from node 2 --> 2 isn't traversed twice, so keeps value from first traversal update");
       }
 
-      void test_second_edge_traversal_update(GGraph& graph, std::false_type)
+      void test_second_edge_traversal_update(graph_t& graph, std::false_type)
       {
 
       }

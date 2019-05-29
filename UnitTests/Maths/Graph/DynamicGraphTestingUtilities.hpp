@@ -130,7 +130,13 @@ namespace sequoia::unit_testing
     template <class T, class Sharing> using traits_type = data_structures::bucketed_storage_traits<T, Sharing>;
 
     constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::shared_weight};
-  };  
+  };
+
+  constexpr bool embedded(const maths::graph_flavour graphFlavour)
+  {
+    using gf = maths::graph_flavour;
+    return (graphFlavour == gf::directed_embedded) || (graphFlavour == gf::undirected_embedded);
+  }
 
   template
   <

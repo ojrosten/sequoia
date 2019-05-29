@@ -88,8 +88,6 @@ namespace sequoia::unit_testing
     
     check_equality(network, graph_t{{}}, LINE(""));
     check_regular_semantics(network, graph_t{}, LINE("Regular semantics"));
-    
-    check_exception_thrown<std::out_of_range>([&network](){ get_edge(network, 0, 0, 0); },  LINE("For network with no edges, trying to obtain a reference to one throws an exception"));
 
     check_exception_thrown<std::out_of_range>([&network]() { network.join(0, 1); }, LINE("Unable to join zeroth node to non-existant first node"));
 

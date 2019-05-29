@@ -191,237 +191,155 @@ namespace sequoia::unit_testing
       }
     }    
   };
-}
 
+  struct null_weight{};
 
-namespace sequoia
-{
-  namespace unit_testing
+  template<class G, class = std::void_t<>>
+  struct is_static_graph : std::true_type
+  {};
+
+  template<class G>
+  struct is_static_graph<G, std::void_t<decltype(std::declval<G>().add_node())>> : std::false_type
+  {};
+
+  template<class G>
+  constexpr bool is_static_graph_v{is_static_graph<G>::value};    
+
+  constexpr bool mutual_info(const maths::graph_flavour flavour) noexcept
   {
-    struct null_weight{};
+    return flavour != maths::graph_flavour::directed;
+  }
 
-    template<class G, class = std::void_t<>>
-    struct is_static_graph : std::true_type
-    {};
+  template<class Logger>
+  class graph_checker : protected checker<Logger>
+  {
+  public:      
+    using checker<Logger>::check_equality;
+    using checker<Logger>::check;
+    using checker<Logger>::check_exception_thrown;
+    using checker<Logger>::check_equivalence;
+    using checker<Logger>::check_regular_semantics;
 
-    template<class G>
-    struct is_static_graph<G, std::void_t<decltype(std::declval<G>().add_node())>> : std::false_type
-    {};
-
-    template<class G>
-    constexpr bool is_static_graph_v{is_static_graph<G>::value};    
-
-    inline constexpr bool mutual_info(const maths::graph_flavour flavour) noexcept
+    template<class G, class... NodeWeights, class E=typename G::edge_init_type>
+    void check_graph(const G& graph, std::initializer_list<std::initializer_list<E>> edges, const std::tuple<NodeWeights...>& nodeWeights, std::string_view description)
     {
-      return flavour != maths::graph_flavour::directed;
+      checker<Logger>::template check_equivalence<G, std::initializer_list<std::initializer_list<E>>, const std::tuple<NodeWeights...>&>(graph, std::move(edges), nodeWeights, description);
     }
-    
-    inline std::string to_string(const maths::graph_flavour flavour)
+
+    template<
+      class G,
+      class E=typename G::edge_init_type,
+      class W=typename G::node_weight_type,
+      std::enable_if_t<!std::is_empty_v<W>, int> = 0
+    >
+    void check_graph(const G& graph, std::initializer_list<std::initializer_list<E>> edges, std::initializer_list<typename G::node_weight_type> nodeWeights, std::string_view description)
     {
-      using graph_flavour = maths::graph_flavour;
-      std::string s{};
-      switch(flavour)
+      if constexpr(impl::use_weak_equiv_v<typename G::edge_type>)
       {
-      case graph_flavour::undirected:
-        s = "Undirected";
-        break;
-      case graph_flavour::undirected_embedded:
-        s = "Undirected Embedded";
-        break;
-      case graph_flavour::directed:
-        s = "Directed";
-        break;
-      case graph_flavour::directed_embedded:
-        s= "Directed Embedded";
-        break;
+        checker<Logger>::template check_weak_equivalence<G, std::initializer_list<std::initializer_list<E>>, std::initializer_list<typename G::node_weight_type>>(graph, std::move(edges), std::move(nodeWeights), description);
       }
+      else
+      {
+        checker<Logger>::template check_equivalence<G, std::initializer_list<std::initializer_list<E>>, std::initializer_list<typename G::node_weight_type>>(graph, std::move(edges), std::move(nodeWeights), description);
+      }
+    }
+
+    template<
+      class G,
+      class E=typename G::edge_init_type,
+      class W=typename G::node_weight_type,
+      std::enable_if_t<std::is_empty_v<W>, int> = 0
+    >
+    void check_graph(const G& graph, std::initializer_list<std::initializer_list<E>> edges, std::string_view description)
+    {
+      if constexpr(impl::use_weak_equiv_v<typename G::edge_type>)
+      {
+        checker<Logger>::check_weak_equivalence(graph, std::move(edges), description);
+      }
+      else
+      {
+        checker<Logger>::check_equivalence(graph, std::move(edges), description);
+      }
+    }
+  };
+
+  template<class Logger>
+  class graph_basic_test : public basic_test<Logger, graph_checker<Logger>>
+  {
+  public:
+    using basic_test<Logger, graph_checker<Logger>>::basic_test;
+    using basic_test<Logger, graph_checker<Logger>>::check_exception_thrown;
+    using basic_test<Logger, graph_checker<Logger>>::check_equality;
+    using basic_test<Logger, graph_checker<Logger>>::check_graph;
+    using basic_test<Logger, graph_checker<Logger>>::check_regular_semantics;
+
+    log_summary execute() override
+    {        
+      return base_t::execute() + m_AccumulatedSummaries;
+    }
+      
+    void merge(const log_summary& summary)
+    {
+      m_AccumulatedSummaries += summary;
+    }
+
+  protected:
+    virtual std::string current_message() const override
+    {
+      const log_summary s{this->summary("") + m_AccumulatedSummaries};
+      return s.current_message();
+    }
+  private:
+    using base_t = basic_test<Logger, graph_checker<Logger>>;
+      
+    log_summary m_AccumulatedSummaries{};
+  };
+
+  using graph_unit_test = graph_basic_test<unit_test_logger<test_mode::standard>>;
+  using graph_false_positive_test = graph_basic_test<unit_test_logger<test_mode::false_positive>>;    
+       
+  struct unsortable
+  {
+    int x{};
+
+    friend constexpr bool operator==(const unsortable& lhs, const unsortable& rhs) noexcept
+    {
+      return lhs.x == rhs.x;
+    }
+
+    friend constexpr bool operator!=(const unsortable& lhs, const unsortable& rhs) noexcept
+    {
+      return !(lhs == rhs);
+    }
+      
+    template<class Stream> friend Stream& operator<<(Stream& s, const unsortable& u)
+    {
+      s << std::to_string(u.x);
       return s;
     }
-    
-    template<class Edge> constexpr std::size_t get_target_for_partial(const Edge& edge, const std::size_t node)
+  };
+
+  struct big_unsortable
+  {
+    int w{}, x{1}, y{2}, z{3};
+
+    friend constexpr bool operator==(const big_unsortable& lhs, const big_unsortable& rhs) noexcept
     {
-      const bool isNode{(edge.host_node() != node) && (edge.target_node() != node)};
-      const std::size_t target{isNode ? node : (edge.host_node() == node ? edge.target_node() : edge.host_node())};
-      return target;
+      return (lhs.w == rhs.w)
+        && (lhs.x == rhs.x)
+        && (lhs.y == rhs.y)
+        && (lhs.z == rhs.z);
     }
 
-    inline constexpr bool embedded(const maths::graph_flavour graphFlavour)
+    friend constexpr bool operator!=(const big_unsortable& lhs, const big_unsortable& rhs) noexcept
     {
-      using gf = maths::graph_flavour;
-      return (graphFlavour == gf::directed_embedded) || (graphFlavour == gf::undirected_embedded);
+      return !(lhs == rhs);
     }
 
-    template<class G>
-    std::size_t local_edge_index(const G& graph, const std::size_t node1, const std::size_t node2, const std::size_t n)
+    template<class Stream> friend Stream& operator<<(Stream& s, const big_unsortable& u)
     {
-      if(node1 >= graph.order() || node2 >= graph.order())
-        throw std::out_of_range("graph_utilities::local_edge_index - nodex index out of range");
-
-      std::size_t counter{};
-      auto found = graph.cend_edges(node1);
-      for(auto citer = graph.cbegin_edges(node1); citer != graph.cend_edges(node1); ++citer)
-      {
-        if(citer->target_node() == node2)
-        {
-          if(counter == n)
-          {
-            found = citer;
-            break;
-          }
-          else
-          {
-            ++counter;
-          }
-        }
-      }
-
-      if(found == graph.cend_edges(node1))
-        throw std::out_of_range("Graph::find_nth_connection - nth connection out of range");
-
-      return static_cast<std::size_t>(distance(graph.cbegin_edges(node1), found));
+      s << std::to_string(u.w) << ' ' << std::to_string(u.x) << ' ' << std::to_string(u.y) << ' ' << std::to_string(u.z);
+      return s;
     }
-    
-    template<class G>
-    const auto& get_edge(const G& graph, const std::size_t node1, const std::size_t node2, const std::size_t nthConnection)
-    {
-      const std::size_t pos{local_edge_index(graph, node1, node2, nthConnection)};
-      if(pos == (G::npos)) throw std::out_of_range("graph_utilities::get_edge - index out of range!\n");
-
-      auto iter = graph.cbegin_edges(node1);
-      return *(iter + pos);
-    }
-    
-    template<class Logger>
-    class graph_checker : protected checker<Logger>
-    {
-    public:      
-      using checker<Logger>::check_equality;
-      using checker<Logger>::check;
-      using checker<Logger>::check_exception_thrown;
-      using checker<Logger>::check_equivalence;
-      using checker<Logger>::check_regular_semantics;
-
-      template<class G, class... NodeWeights, class E=typename G::edge_init_type>
-      void check_graph(const G& graph, std::initializer_list<std::initializer_list<E>> edges, const std::tuple<NodeWeights...>& nodeWeights, std::string_view description)
-      {
-        checker<Logger>::template check_equivalence<G, std::initializer_list<std::initializer_list<E>>, const std::tuple<NodeWeights...>&>(graph, std::move(edges), nodeWeights, description);
-      }
-
-      template<
-        class G,
-        class E=typename G::edge_init_type,
-        class W=typename G::node_weight_type,
-        std::enable_if_t<!std::is_empty_v<W>, int> = 0
-      >
-      void check_graph(const G& graph, std::initializer_list<std::initializer_list<E>> edges, std::initializer_list<typename G::node_weight_type> nodeWeights, std::string_view description)
-      {
-        if constexpr(impl::use_weak_equiv_v<typename G::edge_type>)
-        {
-          checker<Logger>::template check_weak_equivalence<G, std::initializer_list<std::initializer_list<E>>, std::initializer_list<typename G::node_weight_type>>(graph, std::move(edges), std::move(nodeWeights), description);
-        }
-        else
-        {
-          checker<Logger>::template check_equivalence<G, std::initializer_list<std::initializer_list<E>>, std::initializer_list<typename G::node_weight_type>>(graph, std::move(edges), std::move(nodeWeights), description);
-        }
-      }
-
-      template<
-        class G,
-        class E=typename G::edge_init_type,
-        class W=typename G::node_weight_type,
-        std::enable_if_t<std::is_empty_v<W>, int> = 0
-      >
-      void check_graph(const G& graph, std::initializer_list<std::initializer_list<E>> edges, std::string_view description)
-      {
-        if constexpr(impl::use_weak_equiv_v<typename G::edge_type>)
-        {
-          checker<Logger>::check_weak_equivalence(graph, std::move(edges), description);
-        }
-        else
-        {
-          checker<Logger>::check_equivalence(graph, std::move(edges), description);
-        }
-      }
-    };
-
-    template<class Logger>
-    class graph_basic_test : public basic_test<Logger, graph_checker<Logger>>
-    {
-    public:
-      using basic_test<Logger, graph_checker<Logger>>::basic_test;
-      using basic_test<Logger, graph_checker<Logger>>::check_exception_thrown;
-      using basic_test<Logger, graph_checker<Logger>>::check_equality;
-      using basic_test<Logger, graph_checker<Logger>>::check_graph;
-      using basic_test<Logger, graph_checker<Logger>>::check_regular_semantics;
-
-      log_summary execute() override
-      {        
-        return base_t::execute() + m_AccumulatedSummaries;
-      }
-      
-      void merge(const log_summary& summary)
-      {
-        m_AccumulatedSummaries += summary;
-      }
-
-    protected:
-      virtual std::string current_message() const override
-      {
-        const log_summary s{this->summary("") + m_AccumulatedSummaries};
-        return s.current_message();
-      }
-    private:
-      using base_t = basic_test<Logger, graph_checker<Logger>>;
-      
-      log_summary m_AccumulatedSummaries{};
-    };
-
-    using graph_unit_test = graph_basic_test<unit_test_logger<test_mode::standard>>;
-    using graph_false_positive_test = graph_basic_test<unit_test_logger<test_mode::false_positive>>;    
-       
-    struct unsortable
-    {
-      int x{};
-
-      friend constexpr bool operator==(const unsortable& lhs, const unsortable& rhs) noexcept
-      {
-        return lhs.x == rhs.x;
-      }
-
-      friend constexpr bool operator!=(const unsortable& lhs, const unsortable& rhs) noexcept
-      {
-        return !(lhs == rhs);
-      }
-      
-      template<class Stream> friend Stream& operator<<(Stream& s, const unsortable& u)
-      {
-        s << std::to_string(u.x);
-        return s;
-      }
-    };
-
-    struct big_unsortable
-    {
-      int w{}, x{1}, y{2}, z{3};
-
-      friend constexpr bool operator==(const big_unsortable& lhs, const big_unsortable& rhs) noexcept
-      {
-        return (lhs.w == rhs.w)
-          && (lhs.x == rhs.x)
-          && (lhs.y == rhs.y)
-          && (lhs.z == rhs.z);
-      }
-
-      friend constexpr bool operator!=(const big_unsortable& lhs, const big_unsortable& rhs) noexcept
-      {
-        return !(lhs == rhs);
-      }
-
-      template<class Stream> friend Stream& operator<<(Stream& s, const big_unsortable& u)
-      {
-        s << std::to_string(u.w) << ' ' << std::to_string(u.x) << ' ' << std::to_string(u.y) << ' ' << std::to_string(u.z);
-        return s;
-      }
-    };
-  }
+  };
 }
