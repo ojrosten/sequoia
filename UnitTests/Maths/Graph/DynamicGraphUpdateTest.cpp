@@ -37,6 +37,9 @@ namespace sequoia::unit_testing
     EdgeStorageTraits,
     NodeWeightStorageTraits>::execute_operations()
   {
+    using maths::graph_flavour;
+    using edge_init_t  = typename graph_t::edge_init_type;
+    
     graph_t graph;
     graph.add_node();
     graph.add_node();
@@ -54,7 +57,57 @@ namespace sequoia::unit_testing
     // --  0 --
     //    / \
     //   /   \
-    //  0=====0
+    //  0=====0    
+    
+    if constexpr(GraphFlavour == graph_flavour::undirected)
+    {
+      graph_t expected{
+        {{edge_init_t{1}, edge_init_t{1}, edge_init_t{2}},
+        {edge_init_t{0}, edge_init_t{0}, edge_init_t{2}},
+        {edge_init_t{0}, edge_init_t{1}, edge_init_t{2}, edge_init_t{2}, edge_init_t{2}, edge_init_t{2}}},
+        {std::vector<int>{}, std::vector<int>{}, std::vector<int>{}}
+      };
+      
+      expected.swap_edges(2, 0, 1);
+      check_equality(graph, expected, LINE(""));
+    }
+    else if constexpr(GraphFlavour == graph_flavour::directed)
+    {
+      graph_t expected{
+        {{edge_init_t{1}},
+        {edge_init_t{0}, edge_init_t{2}},
+        {edge_init_t{0}, edge_init_t{2}, edge_init_t{2}}},
+        {std::vector<int>{}, std::vector<int>{}, std::vector<int>{}}
+      };
+      
+      check_equality(graph, expected, LINE(""));
+    }
+    else if constexpr(GraphFlavour == graph_flavour::undirected_embedded)
+    {
+      graph_t expected{
+        {{edge_init_t{1,0}, edge_init_t{1,1}, edge_init_t{2,1}},
+         {edge_init_t{0,0}, edge_init_t{0,1}, edge_init_t{2,0}},
+         {edge_init_t{1,2}, edge_init_t{0,2}, edge_init_t{2,3}, edge_init_t{2,2}, edge_init_t{2,5}, edge_init_t{2,4}}},
+        {std::vector<int>{}, std::vector<int>{}, std::vector<int>{}}
+      };
+
+      check_equality(graph, expected, LINE(""));
+    }
+    else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
+    {
+      graph_t expected{
+        {{edge_init_t{0,1,0}, edge_init_t{1,0,1}, edge_init_t{2,0,1}},
+         {edge_init_t{0,1,0}, edge_init_t{1,0,1}, edge_init_t{1,2,0}},
+         {edge_init_t{1,2,2}, edge_init_t{2,0,2}, edge_init_t{2,2,3}, edge_init_t{2,2,2}, edge_init_t{2,2,5}, edge_init_t{2,2,4}}},
+        {std::vector<int>{}, std::vector<int>{}, std::vector<int>{}}
+      };
+
+      check_equality(graph, expected, LINE(""));
+    }
+    else
+    {
+      static_assert(dependent_false<graph_t>::value);
+    }
 
     auto nodeFn1 = [&graph](const std::size_t index) { graph.node_weight(graph.cbegin_node_weights() + index, std::vector<int>{static_cast<int>(index)}); };
     maths::breadth_first_search(graph, false, 0, nodeFn1);
