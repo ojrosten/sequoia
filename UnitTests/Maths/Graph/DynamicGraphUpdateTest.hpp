@@ -658,6 +658,7 @@ namespace sequoia
 
       using checker<unit_test_logger<test_mode::standard>>::check_equality;
       using checker<unit_test_logger<test_mode::standard>>::check_exception_thrown;
+      using checker<unit_test_logger<test_mode::standard>>::check_range;
       
       void execute_operations() override;
 

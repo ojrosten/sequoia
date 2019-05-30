@@ -112,16 +112,14 @@ namespace sequoia::unit_testing
     auto nodeFn1 = [&graph](const std::size_t index) { graph.node_weight(graph.cbegin_node_weights() + index, std::vector<int>{static_cast<int>(index)}); };
     maths::breadth_first_search(graph, false, 0, nodeFn1);
 
-    check_equality(*graph.cbegin_node_weights(), std::vector<int>{0}, LINE("Node 0 has a vector holding a single zero"));
-    check_equality(*(graph.cbegin_node_weights()+1), std::vector<int>{1}, LINE("Node 1 has a vector holding a single one"));
-    check_equality(*(graph.cbegin_node_weights()+2), std::vector<int>{2}, LINE("Node 2 has a vector holding a single two"));
+    std::vector<std::vector<int>> expectedNodeWeights{{0}, {1}, {2}};
+    check_range(graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend(), LINE(""));
 
     auto nodeFn2 = [&graph](const std::size_t index) { graph.node_weight(graph.cbegin_node_weights() + index, std::vector<int>{3 - static_cast<int>(index)}); };
     maths::breadth_first_search(graph, false, 0, maths::null_functor(), nodeFn2);
 
-    check_equality(*graph.cbegin_node_weights(), std::vector<int>{3}, LINE("Node 0 has a vector holding a single three"));
-    check_equality(*(graph.cbegin_node_weights()+1), std::vector<int>{2}, LINE("Node 1 has a vector holding a single two"));
-    check_equality(*(graph.cbegin_node_weights()+2), std::vector<int>{1}, LINE("Node 2 has a vector holding a single one"));
+    expectedNodeWeights = std::vector<std::vector<int>>{{3}, {2}, {1}};
+    check_range(graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend(), LINE(""));    
 
     auto edgeFn1 = [&graph](auto edgeIter) {
       const std::size_t node{edgeIter.partition_index()};
