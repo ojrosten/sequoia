@@ -59,16 +59,16 @@ namespace sequoia::unit_testing
     auto nodeFn1 = [&graph](const std::size_t index) { graph.node_weight(graph.cbegin_node_weights() + index, std::vector<int>{static_cast<int>(index)}); };
     maths::breadth_first_search(graph, false, 0, nodeFn1);
 
-    check_equality(std::vector<int>{0}, *graph.cbegin_node_weights(), "Node 0 has a vector holding a single zero");
-    check_equality(std::vector<int>{1}, *(graph.cbegin_node_weights()+1), "Node 1 has a vector holding a single one");
-    check_equality(std::vector<int>{2}, *(graph.cbegin_node_weights()+2), "Node 2 has a vector holding a single two");
+    check_equality(*graph.cbegin_node_weights(), std::vector<int>{0}, LINE("Node 0 has a vector holding a single zero"));
+    check_equality(*(graph.cbegin_node_weights()+1), std::vector<int>{1}, LINE("Node 1 has a vector holding a single one"));
+    check_equality(*(graph.cbegin_node_weights()+2), std::vector<int>{2}, LINE("Node 2 has a vector holding a single two"));
 
     auto nodeFn2 = [&graph](const std::size_t index) { graph.node_weight(graph.cbegin_node_weights() + index, std::vector<int>{3 - static_cast<int>(index)}); };
     maths::breadth_first_search(graph, false, 0, maths::null_functor(), nodeFn2);
 
-    check_equality(std::vector<int>{3}, *graph.cbegin_node_weights(), "Node 0 has a vector holding a single three");
-    check_equality(std::vector<int>{2}, *(graph.cbegin_node_weights()+1), "Node 1 has a vector holding a single two");
-    check_equality(std::vector<int>{1}, *(graph.cbegin_node_weights()+2), "Node 2 has a vector holding a single one");
+    check_equality(*graph.cbegin_node_weights(), std::vector<int>{3}, LINE("Node 0 has a vector holding a single three"));
+    check_equality(*(graph.cbegin_node_weights()+1), std::vector<int>{2}, LINE("Node 1 has a vector holding a single two"));
+    check_equality(*(graph.cbegin_node_weights()+2), std::vector<int>{1}, LINE("Node 2 has a vector holding a single one"));
 
     auto edgeFn1 = [&graph](auto edgeIter) {
       const std::size_t node{edgeIter.partition_index()};
@@ -80,27 +80,27 @@ namespace sequoia::unit_testing
 
     maths::breadth_first_search(graph, false, 0, maths::null_functor(), maths::null_functor(), edgeFn1);
 
-    check_equality(std::vector<double>{0}, get_edge(graph, 0, 1, 0).weight(), "Zeroth connection from node 0 --> 1 has vector holding single zero");
-    undirected(GraphFlavour) ? check_equality(std::vector<double>{1}, get_edge(graph, 0, 1, 1).weight(), "First connection from node 0 --> 1 has vector holding single one")
+    check_equality(get_edge(graph, 0, 1, 0).weight(), std::vector<double>{0}, LINE("Zeroth connection from node 0 --> 1 has vector holding single zero"));
+    undirected(GraphFlavour) ? check_equality(get_edge(graph, 0, 1, 1).weight(), std::vector<double>{1}, LINE("First connection from node 0 --> 1 has vector holding single one"))
       : check_exception_thrown<std::out_of_range>([&graph](){ return get_edge(graph, 0, 1, 1).weight(); }, "Only one connection from node 0 --> 1");
 
-    check_equality(std::vector<double>{0}, get_edge(graph, 1, 0, 0).weight(), "Zeroth connection from node 1 --> 0 has vector holding single zero");
-    undirected(GraphFlavour) ? check_equality(std::vector<double>{1}, get_edge(graph, 1, 0, 1).weight(), "First connection from node 1 --> 0 has vector holding single one")
+    check_equality(get_edge(graph, 1, 0, 0).weight(), std::vector<double>{0}, LINE("Zeroth connection from node 1 --> 0 has vector holding single zero"));
+    undirected(GraphFlavour) ? check_equality(get_edge(graph, 1, 0, 1).weight(), std::vector<double>{1}, LINE("First connection from node 1 --> 0 has vector holding single one"))
       : check_exception_thrown<std::out_of_range>([&graph](){ return get_edge(graph, 1, 0, 1).weight(); }, "Only one connection from node 1 --> 0");
 
-    check_equality(std::vector<double>{0}, get_edge(graph, 1, 2, 0).weight(), "Zeroth connection from node 1 --> 2 has vector holding single zero");
-    undirected(GraphFlavour) ? check_equality(std::vector<double>{0}, get_edge(graph, 2, 1, 0).weight(), "Zeroth connection from node 2 --> 1 has vector holding single zero")
+    check_equality(get_edge(graph, 1, 2, 0).weight(), std::vector<double>{0}, LINE("Zeroth connection from node 1 --> 2 has vector holding single zero"));
+    undirected(GraphFlavour) ? check_equality(get_edge(graph, 2, 1, 0).weight(), std::vector<double>{0}, LINE("Zeroth connection from node 2 --> 1 has vector holding single zero"))
       : check_exception_thrown<std::out_of_range>([&graph]() { return get_edge(graph, 2, 1, 0).weight(); }, "No connections from node 2 --> 1");
 
-    check_equality(std::vector<double>{0}, get_edge(graph, 2, 0, 0).weight(), "Zeroth connection from node 2 --> 0 has vector holding single zero");
-    undirected(GraphFlavour) ? check_equality(std::vector<double>{0}, get_edge(graph, 0, 2, 0).weight(), "Zeroth connection from node 0 --> 2 has vector holding single zero")
+    check_equality(get_edge(graph, 2, 0, 0).weight(), std::vector<double>{0}, LINE("Zeroth connection from node 2 --> 0 has vector holding single zero"));
+    undirected(GraphFlavour) ? check_equality(get_edge(graph, 0, 2, 0).weight(), std::vector<double>{0}, LINE("Zeroth connection from node 0 --> 2 has vector holding single zero"))
       : check_exception_thrown<std::out_of_range>([&graph]() { return get_edge(graph, 0, 2, 0).weight(); }, "No connections from node 0 --> 2");
 
-    check_equality(std::vector<double>{0}, get_edge(graph, 2, 2, 0).weight(), "Zeroth connection from node 2 --> 2 has vector holding single zero");
-    undirected(GraphFlavour) ? check_equality(std::vector<double>{0}, get_edge(graph, 2, 2, 1).weight(), "First connection from node 2 --> 2 has vector holding single zero"),
-      check_equality(std::vector<double>{2}, get_edge(graph, 2, 2, 2).weight(), "Second connection from node 2 --> 2 has vector holding single two"),
-      check_equality(std::vector<double>{2}, get_edge(graph, 2, 2, 3).weight(), "Second connection from node 2 --> 2 has vector holding single two")
-      : check_equality(std::vector<double>{1}, get_edge(graph, 2, 2, 1).weight(), "First connection from node 2 --> 2 has vector holding single one");
+    check_equality(get_edge(graph, 2, 2, 0).weight(), std::vector<double>{0}, LINE("Zeroth connection from node 2 --> 2 has vector holding single zero"));
+    undirected(GraphFlavour) ? check_equality(get_edge(graph, 2, 2, 1).weight(), std::vector<double>{0}, LINE("First connection from node 2 --> 2 has vector holding single zero")),
+      check_equality(get_edge(graph, 2, 2, 2).weight(), std::vector<double>{2}, LINE("Second connection from node 2 --> 2 has vector holding single two")),
+      check_equality(get_edge(graph, 2, 2, 3).weight(), std::vector<double>{2}, LINE("Second connection from node 2 --> 2 has vector holding single two"))
+      : check_equality(get_edge(graph, 2, 2, 1).weight(), std::vector<double>{1}, LINE("First connection from node 2 --> 2 has vector holding single one"));
 
     if constexpr(UndirectedType::value)
     {
@@ -140,22 +140,22 @@ namespace sequoia::unit_testing
 
     maths::breadth_first_search(graph, false, 0, maths::null_functor(), maths::null_functor(), maths::null_functor(), edgeFn2);
 
-    check_equality(std::vector<double>{0, 1}, get_edge(graph, 0, 1, 0).weight(), "Zeroth connection from node 0 --> 1 has vector holding (0,1)");
-    check_equality(std::vector<double>{0, 2}, get_edge(graph, 0, 1, 1).weight(), "First connection from node 0 --> 1 has vector holding (0,2)");
-    check_equality(std::vector<double>{0, 1}, get_edge(graph, 0, 2, 0).weight(), "Zeroth connection from node 0 --> 2 has vector holding (0,1)");
+    check_equality(get_edge(graph, 0, 1, 0).weight(), std::vector<double>{0, 1}, LINE("Zeroth connection from node 0 --> 1 has vector holding (0,1)"));
+    check_equality(get_edge(graph, 0, 1, 1).weight(), std::vector<double>{0, 2}, LINE("First connection from node 0 --> 1 has vector holding (0,2)"));
+    check_equality(get_edge(graph, 0, 2, 0).weight(), std::vector<double>{0, 1}, LINE("Zeroth connection from node 0 --> 2 has vector holding (0,1)"));
 
-    check_equality(std::vector<double>{0, 1}, get_edge(graph, 1, 0, 0).weight(), "Zeroth connection from node 1 --> 0 has vector holding (0,1)");
-    check_equality(std::vector<double>{0, 2}, get_edge(graph, 1, 0, 1).weight(), "First connection from node 1 --> 0 has vector holding (0,2)");
-    check_equality(std::vector<double>{1, 1}, get_edge(graph, 1, 2, 0).weight(), "Zeroth connection from node 1 --> 2 has vector holding (1,1)");
+    check_equality(get_edge(graph, 1, 0, 0).weight(), std::vector<double>{0, 1}, LINE("Zeroth connection from node 1 --> 0 has vector holding (0,1)"));
+    check_equality(get_edge(graph, 1, 0, 1).weight(), std::vector<double>{0, 2}, LINE("First connection from node 1 --> 0 has vector holding (0,2)"));
+    check_equality(get_edge(graph, 1, 2, 0).weight(), std::vector<double>{1, 1}, LINE("Zeroth connection from node 1 --> 2 has vector holding (1,1)"));
 
-    check_equality(std::vector<double>{0, 1}, get_edge(graph, 2, 0, 0).weight(), "Zeroth connection from node 2 --> 0 has vector holding (0,1)");
-    check_equality(std::vector<double>{1, 1}, get_edge(graph, 2, 1, 0).weight(), "Zeroth connection from node 2 --> 1 has vector holding (1,1)");
-    undirected(GraphFlavour) ? check_equality(std::vector<double>{2,2}, get_edge(graph, 2, 2, 0).weight(), "Zeroth connection from node 2 --> 2 has vector holding (2,2)")
-      : check_equality(std::vector<double>{0}, get_edge(graph, 2, 2, 0).weight(), "Zeroth connection from node 2 --> 2 isn't traversed twice, so keeps value from first traversal update");
+    check_equality(get_edge(graph, 2, 0, 0).weight(), std::vector<double>{0, 1}, LINE("Zeroth connection from node 2 --> 0 has vector holding (0,1)"));
+    check_equality(get_edge(graph, 2, 1, 0).weight(), std::vector<double>{1, 1}, LINE("Zeroth connection from node 2 --> 1 has vector holding (1,1)"));
+    undirected(GraphFlavour) ? check_equality(get_edge(graph, 2, 2, 0).weight(), std::vector<double>{2,2}, LINE("Zeroth connection from node 2 --> 2 has vector holding (2,2)"))
+      : check_equality(get_edge(graph, 2, 2, 0).weight(), std::vector<double>{0}, LINE("Zeroth connection from node 2 --> 2 isn't traversed twice, so keeps value from first traversal update"));
 
-    undirected(GraphFlavour) ? check_equality(std::vector<double>{2,2}, get_edge(graph, 2, 2, 1).weight(), "First connection from node 2 --> 2 has vector holding (2,2)"),
-      check_equality(std::vector<double>{2,4}, get_edge(graph, 2, 2, 2).weight(), "Second connection from node 2 --> 2 has vector holding (2,4)"),
-      check_equality(std::vector<double>{2,4}, get_edge(graph, 2, 2, 2).weight(), "Third connection from node 2 --> 2 has vector holding (2,4)")
-      : check_equality(std::vector<double>{1}, get_edge(graph, 2, 2, 1).weight(), "First connection from node 2 --> 2 isn't traversed twice, so keeps value from first traversal update"); 
+    undirected(GraphFlavour) ? check_equality(get_edge(graph, 2, 2, 1).weight(), std::vector<double>{2,2}, LINE("First connection from node 2 --> 2 has vector holding (2,2)")),
+      check_equality(get_edge(graph, 2, 2, 2).weight(), std::vector<double>{2,4}, LINE("Second connection from node 2 --> 2 has vector holding (2,4)")),
+      check_equality(get_edge(graph, 2, 2, 2).weight(), std::vector<double>{2,4}, LINE("Third connection from node 2 --> 2 has vector holding (2,4)"))
+      : check_equality(get_edge(graph, 2, 2, 1).weight(), std::vector<double>{1}, LINE("First connection from node 2 --> 2 isn't traversed twice, so keeps value from first traversal update")); 
   }
 }
