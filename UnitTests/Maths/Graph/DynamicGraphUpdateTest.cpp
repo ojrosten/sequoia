@@ -131,27 +131,57 @@ namespace sequoia::unit_testing
 
     maths::breadth_first_search(graph, false, 0, maths::null_functor(), maths::null_functor(), edgeFn1);
 
-    check_equality(get_edge(graph, 0, 1, 0).weight(), std::vector<double>{0}, LINE("Zeroth connection from node 0 --> 1 has vector holding single zero"));
-    undirected(GraphFlavour) ? check_equality(get_edge(graph, 0, 1, 1).weight(), std::vector<double>{1}, LINE("First connection from node 0 --> 1 has vector holding single one"))
-      : check_exception_thrown<std::out_of_range>([&graph](){ return get_edge(graph, 0, 1, 1).weight(); }, "Only one connection from node 0 --> 1");
+    using ew_t = std::vector<double>;
 
-    check_equality(get_edge(graph, 1, 0, 0).weight(), std::vector<double>{0}, LINE("Zeroth connection from node 1 --> 0 has vector holding single zero"));
-    undirected(GraphFlavour) ? check_equality(get_edge(graph, 1, 0, 1).weight(), std::vector<double>{1}, LINE("First connection from node 1 --> 0 has vector holding single one"))
-      : check_exception_thrown<std::out_of_range>([&graph](){ return get_edge(graph, 1, 0, 1).weight(); }, "Only one connection from node 1 --> 0");
+    if constexpr(GraphFlavour == graph_flavour::undirected)
+    {
+      graph_t expected{
+        {{edge_init_t{1, ew_t{0}}, edge_init_t{1, ew_t{1}}, edge_init_t{2, ew_t{0}}},
+         {edge_init_t{0, ew_t{0}}, edge_init_t{0, ew_t{1}}, edge_init_t{2, ew_t{0}}},
+         {edge_init_t{0, ew_t{0}}, edge_init_t{1, ew_t{0}}, edge_init_t{2, ew_t{0}}, edge_init_t{2, ew_t{0}}, edge_init_t{2, ew_t{2}}, edge_init_t{2, ew_t{2}}}},
+        {std::vector<int>{3}, std::vector<int>{2}, std::vector<int>{1}}
+      };
+      
+      expected.swap_edges(2, 0, 1);
+      check_equality(graph, expected, LINE(""));
+    }
+    else if constexpr(GraphFlavour == graph_flavour::directed)
+    {
+      graph_t expected{
+        {{edge_init_t{1, ew_t{0}}},
+         {edge_init_t{0, ew_t{0}}, edge_init_t{2, ew_t{0}}},
+         {edge_init_t{0, ew_t{0}}, edge_init_t{2, ew_t{0}}, edge_init_t{2, ew_t{1}}}},
+        {std::vector<int>{3}, std::vector<int>{2}, std::vector<int>{1}}
+      };
+      
+      check_equality(graph, expected, LINE(""));
+    }
+    else if constexpr(GraphFlavour == graph_flavour::undirected_embedded)
+    {
+      graph_t expected{
+        {{edge_init_t{1,0, ew_t{0}}, edge_init_t{1,1, ew_t{1}}, edge_init_t{2,1, ew_t{0}}},
+         {edge_init_t{0,0, ew_t{0}}, edge_init_t{0,1, ew_t{1}}, edge_init_t{2,0, ew_t{0}}},
+         {edge_init_t{1,2, ew_t{0}}, edge_init_t{0,2, ew_t{0}}, edge_init_t{2,3, ew_t{0}}, edge_init_t{2,2, ew_t{0}}, edge_init_t{2,5, ew_t{2}}, edge_init_t{2,4, ew_t{2}}}},
+        {std::vector<int>{3}, std::vector<int>{2}, std::vector<int>{1}}
+      };
 
-    check_equality(get_edge(graph, 1, 2, 0).weight(), std::vector<double>{0}, LINE("Zeroth connection from node 1 --> 2 has vector holding single zero"));
-    undirected(GraphFlavour) ? check_equality(get_edge(graph, 2, 1, 0).weight(), std::vector<double>{0}, LINE("Zeroth connection from node 2 --> 1 has vector holding single zero"))
-      : check_exception_thrown<std::out_of_range>([&graph]() { return get_edge(graph, 2, 1, 0).weight(); }, "No connections from node 2 --> 1");
+      check_equality(graph, expected, LINE(""));
+    }
+    else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
+    {
+      graph_t expected{
+        {{edge_init_t{0,1,0,ew_t{0}}, edge_init_t{1,0,1,ew_t{0}}, edge_init_t{2,0,1,ew_t{0}}},
+         {edge_init_t{0,1,0,ew_t{0}}, edge_init_t{1,0,1,ew_t{0}}, edge_init_t{1,2,0,ew_t{0}}},
+           {edge_init_t{1,2,2,ew_t{0}}, edge_init_t{2,0,2,ew_t{0}}, edge_init_t{2,2,3,ew_t{1}}, edge_init_t{2,2,2,ew_t{1}}, edge_init_t{2,2,5,ew_t{3}}, edge_init_t{2,2,4,ew_t{3}}}},
+        {std::vector<int>{3}, std::vector<int>{2}, std::vector<int>{1}}
+      };
 
-    check_equality(get_edge(graph, 2, 0, 0).weight(), std::vector<double>{0}, LINE("Zeroth connection from node 2 --> 0 has vector holding single zero"));
-    undirected(GraphFlavour) ? check_equality(get_edge(graph, 0, 2, 0).weight(), std::vector<double>{0}, LINE("Zeroth connection from node 0 --> 2 has vector holding single zero"))
-      : check_exception_thrown<std::out_of_range>([&graph]() { return get_edge(graph, 0, 2, 0).weight(); }, "No connections from node 0 --> 2");
-
-    check_equality(get_edge(graph, 2, 2, 0).weight(), std::vector<double>{0}, LINE("Zeroth connection from node 2 --> 2 has vector holding single zero"));
-    undirected(GraphFlavour) ? check_equality(get_edge(graph, 2, 2, 1).weight(), std::vector<double>{0}, LINE("First connection from node 2 --> 2 has vector holding single zero")),
-      check_equality(get_edge(graph, 2, 2, 2).weight(), std::vector<double>{2}, LINE("Second connection from node 2 --> 2 has vector holding single two")),
-      check_equality(get_edge(graph, 2, 2, 3).weight(), std::vector<double>{2}, LINE("Second connection from node 2 --> 2 has vector holding single two"))
-      : check_equality(get_edge(graph, 2, 2, 1).weight(), std::vector<double>{1}, LINE("First connection from node 2 --> 2 has vector holding single one"));
+      check_equality(graph, expected, LINE(""));
+    }
+    else
+    {
+      static_assert(dependent_false<graph_t>::value);
+    }
 
     if constexpr(UndirectedType::value)
     {
