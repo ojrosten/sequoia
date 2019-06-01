@@ -231,12 +231,10 @@ namespace sequoia::unit_testing
 
     check_equality(get_edge(graph, 2, 0, 0).weight(), std::vector<double>{0, 1}, LINE("Zeroth connection from node 2 --> 0 has vector holding (0,1)"));
     check_equality(get_edge(graph, 2, 1, 0).weight(), std::vector<double>{1, 1}, LINE("Zeroth connection from node 2 --> 1 has vector holding (1,1)"));
-    undirected(GraphFlavour) ? check_equality(get_edge(graph, 2, 2, 0).weight(), std::vector<double>{2,2}, LINE("Zeroth connection from node 2 --> 2 has vector holding (2,2)"))
-      : check_equality(get_edge(graph, 2, 2, 0).weight(), std::vector<double>{0}, LINE("Zeroth connection from node 2 --> 2 isn't traversed twice, so keeps value from first traversal update"));
+    check_equality(get_edge(graph, 2, 2, 0).weight(), std::vector<double>{2,2}, LINE("Zeroth connection from node 2 --> 2 has vector holding (2,2)"));
 
-    undirected(GraphFlavour) ? check_equality(get_edge(graph, 2, 2, 1).weight(), std::vector<double>{2,2}, LINE("First connection from node 2 --> 2 has vector holding (2,2)")),
-      check_equality(get_edge(graph, 2, 2, 2).weight(), std::vector<double>{2,4}, LINE("Second connection from node 2 --> 2 has vector holding (2,4)")),
-      check_equality(get_edge(graph, 2, 2, 2).weight(), std::vector<double>{2,4}, LINE("Third connection from node 2 --> 2 has vector holding (2,4)"))
-      : check_equality(get_edge(graph, 2, 2, 1).weight(), std::vector<double>{1}, LINE("First connection from node 2 --> 2 isn't traversed twice, so keeps value from first traversal update")); 
+    check_equality(get_edge(graph, 2, 2, 1).weight(), std::vector<double>{2,2}, LINE("First connection from node 2 --> 2 has vector holding (2,2)"));
+    check_equality(get_edge(graph, 2, 2, 2).weight(), std::vector<double>{2,4}, LINE("Second connection from node 2 --> 2 has vector holding (2,4)"));
+    check_equality(get_edge(graph, 2, 2, 2).weight(), std::vector<double>{2,4}, LINE("Third connection from node 2 --> 2 has vector holding (2,4)"));
   }
 }
