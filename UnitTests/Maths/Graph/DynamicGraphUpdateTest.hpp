@@ -48,46 +48,6 @@ namespace sequoia
       return std::make_tuple(node, targ, nthConnection);
     }
 
-    template<class G>
-    std::size_t local_edge_index(const G& graph, const std::size_t node1, const std::size_t node2, const std::size_t n)
-    {
-      if(node1 >= graph.order() || node2 >= graph.order())
-        throw std::out_of_range("graph_utilities::local_edge_index - nodex index out of range");
-
-      std::size_t counter{};
-      auto found = graph.cend_edges(node1);
-      for(auto citer = graph.cbegin_edges(node1); citer != graph.cend_edges(node1); ++citer)
-      {
-        if(citer->target_node() == node2)
-        {
-          if(counter == n)
-          {
-            found = citer;
-            break;
-          }
-          else
-          {
-            ++counter;
-          }
-        }
-      }
-
-      if(found == graph.cend_edges(node1))
-        throw std::out_of_range("Graph::find_nth_connection - nth connection out of range");
-
-      return static_cast<std::size_t>(distance(graph.cbegin_edges(node1), found));
-    }
-    
-    template<class G>
-    const auto& get_edge(const G& graph, const std::size_t node1, const std::size_t node2, const std::size_t nthConnection)
-    {
-      const std::size_t pos{local_edge_index(graph, node1, node2, nthConnection)};
-      if(pos == (G::npos)) throw std::out_of_range("graph_utilities::get_edge - index out of range!\n");
-
-      auto iter = graph.cbegin_edges(node1);
-      return *(iter + pos);
-    }
-
     //=======================================================================================//
     // Class which will be used to provide graph update functions
 
@@ -656,6 +616,9 @@ namespace sequoia
           NodeWeightStorageTraits
         >::graph_type;
 
+      using ei_t  = typename graph_t::edge_init_type;      
+      using ew_t = std::vector<double>;
+      
       using checker<unit_test_logger<test_mode::standard>>::check_equality;
       using checker<unit_test_logger<test_mode::standard>>::check_exception_thrown;
       using checker<unit_test_logger<test_mode::standard>>::check_range;
