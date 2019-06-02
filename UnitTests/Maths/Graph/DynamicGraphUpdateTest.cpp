@@ -180,7 +180,7 @@ namespace sequoia::unit_testing
       static_assert(dependent_false<graph_t>::value);
     }
 
-    if constexpr(UndirectedType::value)
+    if constexpr(maths::undirected(GraphFlavour))
     {
       test_second_edge_traversal_update(graph);
     }

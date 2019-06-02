@@ -603,7 +603,6 @@ namespace sequoia
       : public graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>
     {
     private:
-      using UndirectedType = std::bool_constant<maths::undirected(GraphFlavour)>;
       using graph_t =
         typename graph_operations
         <
