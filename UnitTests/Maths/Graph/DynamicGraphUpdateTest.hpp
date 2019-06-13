@@ -127,14 +127,18 @@ namespace sequoia
           NodeWeightStorageTraits
         >::graph_type;
 
+      using ei_t = typename graph_t::edge_init_type;
+
       using flavour = maths::graph_flavour;
       using UndirectedType = std::bool_constant<maths::undirected(GraphFlavour)>;
       using MutualType = std::bool_constant<mutual_info(GraphFlavour)>;
 
       using checker<unit_test_logger<test_mode::standard>>::check_equality;
+
+      void check_setup(const graph_t& graph);
       
-      void execute_operations() override
-      {
+      void execute_operations() override;
+      /*{
         graph_t graph;
 
         graph.add_node(std::size_t{5});
@@ -311,6 +315,7 @@ namespace sequoia
         
         check_edge_weights<true>(graph, psu_second_traversal_answers(), LINE(""));
       }
+      */
 
       template<class UpdateFunctor>
       void dfu_second_edge_traversal(std::true_type, graph_t& graph, UpdateFunctor fn)
@@ -615,7 +620,7 @@ namespace sequoia
           NodeWeightStorageTraits
         >::graph_type;
 
-      using ei_t  = typename graph_t::edge_init_type;      
+      using ei_t = typename graph_t::edge_init_type;
       using ew_t = std::vector<double>;
       
       using checker<unit_test_logger<test_mode::standard>>::check_equality;

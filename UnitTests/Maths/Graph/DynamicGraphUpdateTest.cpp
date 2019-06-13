@@ -11,12 +11,139 @@ namespace sequoia::unit_testing
 {
   void test_graph_update::run_tests()
   {
-    graph_test_helper<std::vector<double>, std::vector<int>> helper;
-    helper.run_tests<test_bf_update>(*this);
+    {
+      graph_test_helper<std::vector<double>, std::vector<int>> helper{};
+      helper.run_tests<test_bf_update>(*this);
+    }
 
-    graph_test_helper<size_t, size_t> helper2;
-    helper2.run_tests<test_update>(*this);
+    {
+      graph_test_helper<size_t, size_t> helper;
+      helper.run_tests<test_update>(*this);
+    }
   }
+
+  //============================= General traversal tests ============================//
+
+  template
+  <
+    maths::graph_flavour GraphFlavour,
+    class EdgeWeight,
+    class NodeWeight,      
+    template <class> class EdgeWeightPooling,
+    template <class> class NodeWeightPooling,
+    template <maths::graph_flavour, class, template<class> class> class EdgeStorageTraits,
+    template <class, template<class> class, bool> class NodeWeightStorageTraits
+  >
+  void test_update<
+    GraphFlavour,
+    EdgeWeight,
+    NodeWeight,
+    EdgeWeightPooling,
+    NodeWeightPooling,
+    EdgeStorageTraits,
+    NodeWeightStorageTraits>::check_setup(const graph_t& graph)
+  {
+    using maths::graph_flavour;
+    if constexpr(GraphFlavour == graph_flavour::undirected)
+    {
+      graph_t expected{
+        {{ei_t{1,1ul}, ei_t{2,7ul}, ei_t{2,2ul}},
+         {ei_t{0,1ul}, ei_t{3,3ul}},
+         {ei_t{3,4ul}, ei_t{0,7ul}, ei_t{0,2ul}},
+         {ei_t{1,3ul}, ei_t{2,4ul}}},
+        {5ul, 2ul, 10ul, 4ul}
+      };
+      
+      expected.swap_edges(0, 1, 2);
+      expected.swap_edges(2, 0, 2);
+      check_equality(graph, expected, LINE(""));
+    }
+    else if constexpr(GraphFlavour == graph_flavour::directed)
+    {
+      graph_t expected{
+        {{ei_t{1,1ul}, ei_t{2,7ul}},
+         {ei_t{3,3ul}},
+         {ei_t{0,2ul}},
+         {ei_t{2,4ul}}},
+        {5ul, 2ul, 10ul, 4ul}
+      };
+      
+      check_equality(graph, expected, LINE(""));
+    }
+    else if constexpr(GraphFlavour == graph_flavour::undirected_embedded)
+    {
+      graph_t expected{
+        {{ei_t{1,0,1ul}, ei_t{2,1,7ul}, ei_t{2,2,2ul}},
+         {ei_t{0,0,1ul}, ei_t{3,0,3ul}},
+         {ei_t{3,1,4ul}, ei_t{0,1,7ul}, ei_t{0,2,2ul}},
+         {ei_t{1,1,3ul}, ei_t{2,0,4ul}}},
+        {5ul, 2ul, 10ul, 4ul}
+      };
+
+      check_equality(graph, expected, LINE(""));
+    }
+    else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
+    {
+      graph_t expected{
+        {{ei_t{0,1,0,1ul}, ei_t{0,2,1,7ul}, ei_t{2,0,2,2ul}},
+         {ei_t{0,1,0,1ul}, ei_t{1,3,0,3ul}},
+         {ei_t{3,2,1,4ul}, ei_t{0,2,1,7ul}, ei_t{2,0,2,2ul}},
+         {ei_t{1,3,1,3ul}, ei_t{3,2,0,4ul}}},
+        {5ul, 2ul, 10ul, 4ul}
+      };
+
+      check_equality(graph, expected, LINE(""));
+    }
+    else
+    {
+      static_assert(dependent_false<graph_t>::value);
+    }
+  }
+
+  template
+  <
+    maths::graph_flavour GraphFlavour,
+    class EdgeWeight,
+    class NodeWeight,      
+    template <class> class EdgeWeightPooling,
+    template <class> class NodeWeightPooling,
+    template <maths::graph_flavour, class, template<class> class> class EdgeStorageTraits,
+    template <class, template<class> class, bool> class NodeWeightStorageTraits
+  >
+  void test_update<
+    GraphFlavour,
+    EdgeWeight,
+    NodeWeight,
+    EdgeWeightPooling,
+    NodeWeightPooling,
+    EdgeStorageTraits,
+    NodeWeightStorageTraits>::execute_operations()
+  {
+    graph_t graph;
+
+    graph.add_node(5ul);
+    graph.add_node(2ul);
+    graph.add_node(10ul);
+    graph.add_node(4ul);
+
+    graph.join(0, 1, 1ul);
+    graph.join(1, 3, 3ul);
+    graph.join(3, 2, 4ul);
+    graph.join(0, 2, 7ul);
+    graph.join(2, 0, 2ul);
+
+    //       7
+    //(0)5=======10(2)
+    //   |   2   |
+    //  1|       |4
+    //   |       |
+    //(1)2-------4(3)
+    //       3
+
+    check_setup(graph);
+  }
+
+  //============================= Breadth-first only tests ===========================//
 
   template
   <
