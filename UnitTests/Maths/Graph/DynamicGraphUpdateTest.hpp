@@ -341,28 +341,6 @@ namespace sequoia
         maths::breadth_first_search(graph, false, 0, maths::null_functor(), maths::null_functor(), fn);
       }
       
-      std::vector<std::vector<std::size_t>> initial_reversed_edge_weights()
-      {
-        if constexpr(mutual_info(GraphFlavour))
-        {
-          return {
-            std::vector<std::size_t>{2, 7, 1},
-            std::vector<std::size_t>{3, 1},
-            std::vector<std::size_t>{2, 7, 4},
-            std::vector<std::size_t>{4, 3}
-          };
-        }
-        else
-        {
-          return {
-            std::vector<std::size_t>{7, 1},
-            std::vector<std::size_t>{3},
-            std::vector<std::size_t>{2},
-            std::vector<std::size_t>{4}
-          };
-        }
-      }
-
       std::vector<std::vector<std::size_t>> dfu_first_traversal_answers()
       {
         if constexpr (maths::undirected(GraphFlavour))
