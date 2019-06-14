@@ -217,25 +217,26 @@ namespace sequoia::unit_testing
       
       check_equality(graph, expected, LINE(""));
     }
-    /*else if constexpr(GraphFlavour == flavour::undirected_embedded)
+    else if constexpr(GraphFlavour == flavour::undirected_embedded)
     {
+      /*
       graph_t expected{
-        {{ei_t{1,0,1ul}, ei_t{2,1,7ul}, ei_t{2,2,2ul}},
-         {ei_t{0,0,1ul}, ei_t{3,0,3ul}},
-         {ei_t{3,1,4ul}, ei_t{0,1,7ul}, ei_t{0,2,2ul}},
-         {ei_t{1,1,3ul}, ei_t{2,0,4ul}}},
+        {{ei_t{1,0,12ul}, ei_t{2,1,17ul}, ei_t{2,2,16ul}},
+         {ei_t{0,0,12ul}, ei_t{3,0,15ul}},
+         {ei_t{3,1,17ul}, ei_t{0,1,17ul}, ei_t{0,2,16ul}},
+         {ei_t{1,1,15ul}, ei_t{2,0,17ul}}},
         {5ul, 2ul, 10ul, 4ul}
       };
 
-      check_equality(graph, expected, LINE(""));
+      check_equality(graph, expected, LINE(""));*/
     }
     else if constexpr(GraphFlavour == flavour::directed_embedded)
     {
       graph_t expected{
-        {{ei_t{0,1,0,1ul}, ei_t{0,2,1,7ul}, ei_t{2,0,2,2ul}},
-         {ei_t{0,1,0,1ul}, ei_t{1,3,0,3ul}},
-         {ei_t{3,2,1,4ul}, ei_t{0,2,1,7ul}, ei_t{2,0,2,2ul}},
-         {ei_t{1,3,1,3ul}, ei_t{3,2,0,4ul}}},
+        {{ei_t{0,1,0,12ul}, ei_t{0,2,1,17ul}, ei_t{2,0,2,16ul}},
+         {ei_t{0,1,0,12ul}, ei_t{1,3,0,15ul}},
+         {ei_t{3,2,1,17ul}, ei_t{0,2,1,17ul}, ei_t{2,0,2,16ul}},
+         {ei_t{1,3,1,15ul}, ei_t{3,2,0,17ul}}},
         {5ul, 2ul, 10ul, 4ul}
       };
 
@@ -244,7 +245,7 @@ namespace sequoia::unit_testing
     else
     {
       static_assert(dependent_false<graph_t>::value);
-      }*/
+    }
 
     auto secondEdgeFn = [&updater](auto citer) { updater.secondEdgeTraversal(citer); };
     dfu_second_edge_traversal(UndirectedType(), graph, secondEdgeFn);
