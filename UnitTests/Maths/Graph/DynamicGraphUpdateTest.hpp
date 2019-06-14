@@ -134,6 +134,7 @@ namespace sequoia
       using MutualType = std::bool_constant<mutual_info(GraphFlavour)>;
 
       using checker<unit_test_logger<test_mode::standard>>::check_equality;
+      using checker<unit_test_logger<test_mode::standard>>::check_range;
 
       void check_setup(const graph_t& graph);
       

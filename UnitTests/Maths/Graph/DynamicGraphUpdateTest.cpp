@@ -43,8 +43,7 @@ namespace sequoia::unit_testing
     EdgeStorageTraits,
     NodeWeightStorageTraits>::check_setup(const graph_t& graph)
   {
-    using maths::graph_flavour;
-    if constexpr(GraphFlavour == graph_flavour::undirected)
+    if constexpr(GraphFlavour == flavour::undirected)
     {
       graph_t expected{
         {{ei_t{1,1ul}, ei_t{2,7ul}, ei_t{2,2ul}},
@@ -58,7 +57,7 @@ namespace sequoia::unit_testing
       expected.swap_edges(2, 0, 2);
       check_equality(graph, expected, LINE(""));
     }
-    else if constexpr(GraphFlavour == graph_flavour::directed)
+    else if constexpr(GraphFlavour == flavour::directed)
     {
       graph_t expected{
         {{ei_t{1,1ul}, ei_t{2,7ul}},
@@ -70,7 +69,7 @@ namespace sequoia::unit_testing
       
       check_equality(graph, expected, LINE(""));
     }
-    else if constexpr(GraphFlavour == graph_flavour::undirected_embedded)
+    else if constexpr(GraphFlavour == flavour::undirected_embedded)
     {
       graph_t expected{
         {{ei_t{1,0,1ul}, ei_t{2,1,7ul}, ei_t{2,2,2ul}},
@@ -82,7 +81,7 @@ namespace sequoia::unit_testing
 
       check_equality(graph, expected, LINE(""));
     }
-    else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
+    else if constexpr(GraphFlavour == flavour::directed_embedded)
     {
       graph_t expected{
         {{ei_t{0,1,0,1ul}, ei_t{0,2,1,7ul}, ei_t{2,0,2,2ul}},
@@ -141,6 +140,125 @@ namespace sequoia::unit_testing
     //       3
 
     check_setup(graph);
+
+    //=============================== DFS ===============================//
+
+    GraphUpdaterFunctors<graph_t> updater(graph);
+    auto firstNodeFn = [&updater](const std::size_t index){ updater.firstNodeTraversal(index); };
+    maths::depth_first_search(graph, false, 0, firstNodeFn);
+
+    // new node weights given by (2 + traversal index)*old
+    //
+    //       7
+    //(0)10=======50(2)
+    //    |   2   |
+    //   1|       |4
+    //    |       |
+    // (1)6-------16(3)
+    //       3
+
+    std::array<std::size_t, 4> expectedNodeWeights{10,6,50,16};
+    check_range(graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend(), LINE(""));
+
+    auto secondNodeFn = [&updater](const std::size_t index){ updater.secondNodeTraversal(index); };
+    maths::depth_first_search(graph, false, 0, maths::null_functor(), secondNodeFn);
+
+    // new node weights given by old/(5-traversal index)
+    //
+    //       7
+    //(0)5=======10(2)
+    //   |   2   |
+    //  1|       |4
+    //   |       |
+    //(1)2-------4(3)
+    //       3
+
+    expectedNodeWeights = {5,2,10,4};
+    check_range(graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend(), LINE(""));
+
+    auto firstEdgeFn = [&updater](auto citer) { updater.firstEdgeTraversal(citer); };
+    maths::depth_first_search(graph, false, 0, maths::null_functor(), maths::null_functor(), firstEdgeFn);
+
+    // edge weight set to 10 + traversal index + weight
+    //
+    //  Undirected            Directed        0-1;1-3;3-2;0-2;2-0;
+    //      18                  17
+    //(0)5=======10(2)   (0)5=======10(2)
+    //   |  12   |          |   16   |
+    // 13|       |18      12|        |17
+    //   |       |          |        |
+    //(1)2-------4(3)    (1)2--------4(3)
+    //      16                  15
+
+
+    if constexpr(GraphFlavour == flavour::undirected)
+    {
+      graph_t expected{
+        {{ei_t{1,13ul}, ei_t{2,18ul}, ei_t{2,12ul}},
+         {ei_t{0,13ul}, ei_t{3,16ul}},
+         {ei_t{3,18ul}, ei_t{0,18ul}, ei_t{0,12ul}},
+         {ei_t{1,16ul}, ei_t{2,18ul}}},
+        {5ul, 2ul, 10ul, 4ul}
+      };
+      
+      expected.swap_edges(0, 1, 2);
+      expected.swap_edges(2, 0, 2);
+      check_equality(graph, expected, LINE(""));
+    }
+    else if constexpr(GraphFlavour == flavour::directed)
+    {
+      graph_t expected{
+        {{ei_t{1,12ul}, ei_t{2,17ul}},
+         {ei_t{3,15ul}},
+         {ei_t{0,16ul}},
+         {ei_t{2,17ul}}},
+        {5ul, 2ul, 10ul, 4ul}
+      };
+      
+      check_equality(graph, expected, LINE(""));
+    }
+    /*else if constexpr(GraphFlavour == flavour::undirected_embedded)
+    {
+      graph_t expected{
+        {{ei_t{1,0,1ul}, ei_t{2,1,7ul}, ei_t{2,2,2ul}},
+         {ei_t{0,0,1ul}, ei_t{3,0,3ul}},
+         {ei_t{3,1,4ul}, ei_t{0,1,7ul}, ei_t{0,2,2ul}},
+         {ei_t{1,1,3ul}, ei_t{2,0,4ul}}},
+        {5ul, 2ul, 10ul, 4ul}
+      };
+
+      check_equality(graph, expected, LINE(""));
+    }
+    else if constexpr(GraphFlavour == flavour::directed_embedded)
+    {
+      graph_t expected{
+        {{ei_t{0,1,0,1ul}, ei_t{0,2,1,7ul}, ei_t{2,0,2,2ul}},
+         {ei_t{0,1,0,1ul}, ei_t{1,3,0,3ul}},
+         {ei_t{3,2,1,4ul}, ei_t{0,2,1,7ul}, ei_t{2,0,2,2ul}},
+         {ei_t{1,3,1,3ul}, ei_t{3,2,0,4ul}}},
+        {5ul, 2ul, 10ul, 4ul}
+      };
+
+      check_equality(graph, expected, LINE(""));
+    }
+    else
+    {
+      static_assert(dependent_false<graph_t>::value);
+      }*/
+
+    auto secondEdgeFn = [&updater](auto citer) { updater.secondEdgeTraversal(citer); };
+    dfu_second_edge_traversal(UndirectedType(), graph, secondEdgeFn);
+
+    //  Undirected            Directed        0-1;1-3;3-2;0-2;2-0;
+    //       5                   7
+    //(0)5=======10(2)   (0)5=======10(2)
+    //   |   0   |          |    2   |
+    //  3|       |4        1|        |4
+    //   |       |          |        |
+    //(1)2-------4(3)    (1)2--------4(3)
+    //       5                  3
+
+ 
   }
 
   //============================= Breadth-first only tests ===========================//
