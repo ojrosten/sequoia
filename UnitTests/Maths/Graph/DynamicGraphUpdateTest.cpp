@@ -219,16 +219,15 @@ namespace sequoia::unit_testing
     }
     else if constexpr(GraphFlavour == flavour::undirected_embedded)
     {
-      /*
       graph_t expected{
-        {{ei_t{1,0,12ul}, ei_t{2,1,17ul}, ei_t{2,2,16ul}},
-         {ei_t{0,0,12ul}, ei_t{3,0,15ul}},
-         {ei_t{3,1,17ul}, ei_t{0,1,17ul}, ei_t{0,2,16ul}},
-         {ei_t{1,1,15ul}, ei_t{2,0,17ul}}},
+        {{ei_t{1,0,13ul}, ei_t{2,1,18ul}, ei_t{2,2,12ul}},
+         {ei_t{0,0,13ul}, ei_t{3,0,16ul}},
+         {ei_t{3,1,18ul}, ei_t{0,1,18ul}, ei_t{0,2,12ul}},
+         {ei_t{1,1,16ul}, ei_t{2,0,18ul}}},
         {5ul, 2ul, 10ul, 4ul}
       };
 
-      check_equality(graph, expected, LINE(""));*/
+      check_equality(graph, expected, LINE(""));
     }
     else if constexpr(GraphFlavour == flavour::directed_embedded)
     {
