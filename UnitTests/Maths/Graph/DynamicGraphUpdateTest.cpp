@@ -292,7 +292,7 @@ namespace sequoia::unit_testing
     }
 
     auto secondEdgeFn = [&updater](auto citer) { updater.secondEdgeTraversal(citer); };
-    if constexpr(UndirectedType::value)
+    if constexpr(undirected)
     {
       maths::depth_first_search(graph, false, 0, maths::null_functor(), maths::null_functor(), maths::null_functor(), secondEdgeFn);
     }
@@ -492,7 +492,7 @@ namespace sequoia::unit_testing
     }
 
     auto secondEdgeFn = [&updater](auto citer) { updater.secondEdgeTraversal(citer); };
-    if constexpr(UndirectedType::value)
+    if constexpr(undirected)
     {
       maths::breadth_first_search(graph, false, 0, maths::null_functor(), maths::null_functor(), maths::null_functor(), secondEdgeFn);
     }
@@ -551,7 +551,7 @@ namespace sequoia::unit_testing
     //        3                  3
 
     auto expectedNodeWeights =
-      UndirectedType::value ? std::array<std::size_t, 4>{10,10,30,16} : std::array<std::size_t, 4>{10,8,30,20};
+      undirected ? std::array<std::size_t, 4>{10,10,30,16} : std::array<std::size_t, 4>{10,8,30,20};
     check_range(graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend(), LINE(""));
 
     auto secondNodeFn = [&updater](const std::size_t index){ updater.secondNodeTraversal(index); };
@@ -641,7 +641,7 @@ namespace sequoia::unit_testing
     }
 
     auto secondEdgeFn = [&updater](auto citer) { updater.secondEdgeTraversal(citer); };
-    if constexpr(UndirectedType::value)
+    if constexpr(undirected)
     {
       maths::priority_search(graph, false, 0, maths::null_functor(), maths::null_functor(), maths::null_functor(), secondEdgeFn);
     }

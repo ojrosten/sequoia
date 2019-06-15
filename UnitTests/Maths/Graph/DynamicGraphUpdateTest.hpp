@@ -111,10 +111,11 @@ namespace sequoia
       using ei_t = typename graph_t::edge_init_type;
 
       using flavour = maths::graph_flavour;
-      using UndirectedType = std::bool_constant<maths::undirected(GraphFlavour)>;
 
       using checker<unit_test_logger<test_mode::standard>>::check_equality;
       using checker<unit_test_logger<test_mode::standard>>::check_range;
+
+      static constexpr bool undirected{maths::undirected(GraphFlavour)};
 
       auto make_graph() -> graph_t;
       void check_setup(const graph_t& graph);
