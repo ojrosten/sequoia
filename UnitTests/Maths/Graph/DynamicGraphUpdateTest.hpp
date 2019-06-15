@@ -136,7 +136,9 @@ namespace sequoia
       using checker<unit_test_logger<test_mode::standard>>::check_equality;
       using checker<unit_test_logger<test_mode::standard>>::check_range;
 
+      auto make_graph() -> graph_t;
       void check_setup(const graph_t& graph);
+      void check_df_update(graph_t graph);
       
       void execute_operations() override;
       /*{

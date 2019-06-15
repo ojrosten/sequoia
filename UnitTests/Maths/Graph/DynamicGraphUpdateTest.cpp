@@ -34,6 +34,51 @@ namespace sequoia::unit_testing
     template <maths::graph_flavour, class, template<class> class> class EdgeStorageTraits,
     template <class, template<class> class, bool> class NodeWeightStorageTraits
   >
+  auto test_update<
+    GraphFlavour,
+    EdgeWeight,
+    NodeWeight,
+    EdgeWeightPooling,
+    NodeWeightPooling,
+    EdgeStorageTraits,
+    NodeWeightStorageTraits>::make_graph() -> graph_t
+  {
+    graph_t graph;
+
+    graph.add_node(5ul);
+    graph.add_node(2ul);
+    graph.add_node(10ul);
+    graph.add_node(4ul);
+
+    graph.join(0, 1, 1ul);
+    graph.join(1, 3, 3ul);
+    graph.join(3, 2, 4ul);
+    graph.join(0, 2, 7ul);
+    graph.join(2, 0, 2ul);
+
+    //       7
+    //(0)5=======10(2)
+    //   |   2   |
+    //  1|       |4
+    //   |       |
+    //(1)2-------4(3)
+    //       3
+
+    return graph;
+  }
+
+  //============================= check_setup =============================//
+  
+  template
+  <
+    maths::graph_flavour GraphFlavour,
+    class EdgeWeight,
+    class NodeWeight,      
+    template <class> class EdgeWeightPooling,
+    template <class> class NodeWeightPooling,
+    template <maths::graph_flavour, class, template<class> class> class EdgeStorageTraits,
+    template <class, template<class> class, bool> class NodeWeightStorageTraits
+  >
   void test_update<
     GraphFlavour,
     EdgeWeight,
@@ -99,6 +144,8 @@ namespace sequoia::unit_testing
     }
   }
 
+  //============================= check_df_update =============================//
+
   template
   <
     maths::graph_flavour GraphFlavour,
@@ -116,34 +163,9 @@ namespace sequoia::unit_testing
     EdgeWeightPooling,
     NodeWeightPooling,
     EdgeStorageTraits,
-    NodeWeightStorageTraits>::execute_operations()
+    NodeWeightStorageTraits>::check_df_update(graph_t graph)
   {
-    graph_t graph;
-
-    graph.add_node(5ul);
-    graph.add_node(2ul);
-    graph.add_node(10ul);
-    graph.add_node(4ul);
-
-    graph.join(0, 1, 1ul);
-    graph.join(1, 3, 3ul);
-    graph.join(3, 2, 4ul);
-    graph.join(0, 2, 7ul);
-    graph.join(2, 0, 2ul);
-
-    //       7
-    //(0)5=======10(2)
-    //   |   2   |
-    //  1|       |4
-    //   |       |
-    //(1)2-------4(3)
-    //       3
-
-    check_setup(graph);
-
-    //=============================== DFS ===============================//
-
-    GraphUpdaterFunctors<graph_t> updater(graph);
+  GraphUpdaterFunctors<graph_t> updater(graph);
     auto firstNodeFn = [&updater](const std::size_t index){ updater.firstNodeTraversal(index); };
     maths::depth_first_search(graph, false, 0, firstNodeFn);
 
@@ -314,6 +336,41 @@ namespace sequoia::unit_testing
     {
       static_assert(dependent_false<graph_t>::value);
     }
+  }
+
+  //============================= execute_operations =============================//
+  
+  template
+  <
+    maths::graph_flavour GraphFlavour,
+    class EdgeWeight,
+    class NodeWeight,      
+    template <class> class EdgeWeightPooling,
+    template <class> class NodeWeightPooling,
+    template <maths::graph_flavour, class, template<class> class> class EdgeStorageTraits,
+    template <class, template<class> class, bool> class NodeWeightStorageTraits
+  >
+  void test_update<
+    GraphFlavour,
+    EdgeWeight,
+    NodeWeight,
+    EdgeWeightPooling,
+    NodeWeightPooling,
+    EdgeStorageTraits,
+    NodeWeightStorageTraits>::execute_operations()
+  {
+    const graph_t graph{make_graph()};
+    check_setup(graph);
+
+    //       7
+    //(0)5=======10(2)
+    //   |   2   |
+    //  1|       |4
+    //   |       |
+    //(1)2-------4(3)
+    //       3
+
+    check_df_update(graph);
   }
 
   //============================= Breadth-first only tests ===========================//

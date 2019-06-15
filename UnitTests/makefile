@@ -11,11 +11,11 @@ BUILDSUBDIRS += $(addprefix $(UTBUILDDIR)/, $(LIBSUBDIRS))
 CC := clang++
 #CC := g++
 # -D MINIMAL_GRAPH_TESTS
-CFLAGS := -Wall -std=c++2a -O0 -ferror-limit=0 \
-	  -Wno-missing-braces		       \
+CFLAGS := -Wall -std=c++2a -O0 -ferror-limit=1 \
+	  -Wno-missing-braces		       	   \
 	  -ftemplate-backtrace-limit=0	       \
 	  $(patsubst %,-I%, $(UTSUBDIRS))      \
-          $(patsubst %,-I%, $(LIBSUBDIRS))
+      $(patsubst %,-I%, $(LIBSUBDIRS))
 EXE := $(UTBUILDDIR)/UnitTest.exe
 
 UTSRCS := $(shell find . -name '*.cpp')
