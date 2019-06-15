@@ -541,7 +541,7 @@ namespace sequoia::unit_testing
     //  Undirected            Directed        0-1;1-3;3-2;0-2;2-0;
     //      18                  18
     //(0)5=======10(2)   (0)5=======10(2)
-    //   |  15   |          |   14   |
+    //   |  14   |          |   14   |
     // 11|       |17      11|        |18
     //   |       |          |        |
     //(1)2-------4(3)    (1)2--------4(3)
@@ -606,24 +606,32 @@ namespace sequoia::unit_testing
     auto secondEdgeFn = [&updater](auto citer) { updater.secondEdgeTraversal(citer); };
     ps_second_edge_traversal(UndirectedType(), graph, secondEdgeFn);
 
-
-
+    // edge_weight -= (10 + traversal index)
+    //
+    //  Undirected            Directed        0-1;1-3;3-2;0-2;2-0;
+    //       8                   7
+    //(0)5=======10(2)   (0)5=======10(2)
+    //   |   3   |          |    2   |
+    // -2|       | 5       1|        |4
+    //   |       |          |        |
+    //(1)2-------4(3)    (1)2--------4(3)
+    //       3                   3
+    
 
     if constexpr(GraphFlavour == flavour::undirected)
     {
-      /*
+      const auto w{std::numeric_limits<std::size_t>::max() - 1ul};
       graph_t expected{
-        {{ei_t{1,1ul}, ei_t{2,7ul}, ei_t{2,2ul}},
-         {ei_t{0,1ul}, ei_t{3,3ul}},
-         {ei_t{3,4ul}, ei_t{0,7ul}, ei_t{0,2ul}},
-         {ei_t{1,3ul}, ei_t{2,4ul}}},
+        {{ei_t{1,w}, ei_t{2,8ul}, ei_t{2,3ul}},
+         {ei_t{0,w}, ei_t{3,3ul}},
+         {ei_t{3,5ul}, ei_t{0,8ul}, ei_t{0,3ul}},
+         {ei_t{1,3ul}, ei_t{2,5ul}}},
         {5ul, 2ul, 10ul, 4ul}
       };
       
       expected.swap_edges(0, 1, 2);
       expected.swap_edges(2, 0, 2);
       check_equality(graph, expected, LINE(""));
-      */
     }
     else if constexpr(GraphFlavour == flavour::directed)
     {
@@ -639,17 +647,16 @@ namespace sequoia::unit_testing
     }
     else if constexpr(GraphFlavour == flavour::undirected_embedded)
     {
-      /*
+      const auto w{std::numeric_limits<std::size_t>::max() - 1ul};
       graph_t expected{
-        {{ei_t{1,0,1ul}, ei_t{2,1,7ul}, ei_t{2,2,2ul}},
-         {ei_t{0,0,1ul}, ei_t{3,0,3ul}},
-         {ei_t{3,1,4ul}, ei_t{0,1,7ul}, ei_t{0,2,2ul}},
-         {ei_t{1,1,3ul}, ei_t{2,0,4ul}}},
+        {{ei_t{1,0,w}, ei_t{2,1,8ul}, ei_t{2,2,3ul}},
+         {ei_t{0,0,w}, ei_t{3,0,3ul}},
+         {ei_t{3,1,5ul}, ei_t{0,1,8ul}, ei_t{0,2,3ul}},
+         {ei_t{1,1,3ul}, ei_t{2,0,5ul}}},
         {5ul, 2ul, 10ul, 4ul}
       };
 
       check_equality(graph, expected, LINE(""));
-      */
     }
     else if constexpr(GraphFlavour == flavour::directed_embedded)
     {
