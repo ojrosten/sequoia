@@ -165,19 +165,19 @@ namespace sequoia::unit_testing
     EdgeStorageTraits,
     NodeWeightStorageTraits>::check_df_update(graph_t graph)
   {
-  GraphUpdaterFunctors<graph_t> updater(graph);
+    GraphUpdaterFunctors<graph_t> updater(graph);
     auto firstNodeFn = [&updater](const std::size_t index){ updater.firstNodeTraversal(index); };
     maths::depth_first_search(graph, false, 0, firstNodeFn);
 
-    // new node weights given by (2 + traversal index)*old
+    // node_weight *=  (2 + traversal index)
     //
-    //       7
+    //        7
     //(0)10=======50(2)
     //    |   2   |
     //   1|       |4
     //    |       |
     // (1)6-------16(3)
-    //       3
+    //        3
 
     std::array<std::size_t, 4> expectedNodeWeights{10,6,50,16};
     check_range(graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend(), LINE(""));
@@ -185,7 +185,7 @@ namespace sequoia::unit_testing
     auto secondNodeFn = [&updater](const std::size_t index){ updater.secondNodeTraversal(index); };
     maths::depth_first_search(graph, false, 0, maths::null_functor(), secondNodeFn);
 
-    // new node weights given by old/(5-traversal index)
+    // node_weight / = (2 + traversal index)
     //
     //       7
     //(0)5=======10(2)
@@ -201,7 +201,7 @@ namespace sequoia::unit_testing
     auto firstEdgeFn = [&updater](auto citer) { updater.firstEdgeTraversal(citer); };
     maths::depth_first_search(graph, false, 0, maths::null_functor(), maths::null_functor(), firstEdgeFn);
 
-    // new edge weights set to 10 + traversal index + weight
+    // edge_weight += 10 + traversal index
     //
     //  Undirected            Directed        0-1;1-3;3-2;0-2;2-0;
     //      18                  17
@@ -271,7 +271,7 @@ namespace sequoia::unit_testing
     auto secondEdgeFn = [&updater](auto citer) { updater.secondEdgeTraversal(citer); };
     dfu_second_edge_traversal(UndirectedType(), graph, secondEdgeFn);
 
-    // new edge weights set to old - 14 + traversal index
+    // edge_weight -= (10 + traversal index)
     //
     //  Undirected            Directed        0-1;1-3;3-2;0-2;2-0;
     //       5                   7
@@ -338,6 +338,86 @@ namespace sequoia::unit_testing
     }
   }
 
+  template
+  <
+    maths::graph_flavour GraphFlavour,
+    class EdgeWeight,
+    class NodeWeight,      
+    template <class> class EdgeWeightPooling,
+    template <class> class NodeWeightPooling,
+    template <maths::graph_flavour, class, template<class> class> class EdgeStorageTraits,
+    template <class, template<class> class, bool> class NodeWeightStorageTraits
+  >
+  void test_update<
+    GraphFlavour,
+    EdgeWeight,
+    NodeWeight,
+    EdgeWeightPooling,
+    NodeWeightPooling,
+    EdgeStorageTraits,
+    NodeWeightStorageTraits>::check_bf_update(graph_t graph)
+  {
+    GraphUpdaterFunctors<graph_t> updater(graph);
+    auto firstNodeFn = [&updater](const std::size_t index){ updater.firstNodeTraversal(index); };
+    maths::breadth_first_search(graph, false, 0, firstNodeFn);
+
+    // node_weight *=  (2 + traversal index)
+    //
+    //        7
+    //(0)10=======40(2)
+    //    |   2   |
+    //   1|       |4
+    //    |       |
+    // (1)6-------20(3)
+    //        3
+
+    std::array<std::size_t, 4> expectedNodeWeights{10,6,40,20};
+    check_range(graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend(), LINE(""));
+
+    auto secondNodeFn = [&updater](const std::size_t index){ updater.secondNodeTraversal(index); };
+    maths::breadth_first_search(graph, false, 0, maths::null_functor(), secondNodeFn);
+
+    // node_weight / = (2 + traversal index)
+    //
+    //       7
+    //(0)5=======10(2)
+    //   |   2   |
+    //  1|       |4
+    //   |       |
+    //(1)2-------4(3)
+    //       3
+
+    expectedNodeWeights = {5,2,10,4};
+    check_range(graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend(), LINE(""));
+
+    auto firstEdgeFn = [&updater](auto citer) { updater.firstEdgeTraversal(citer); };
+    maths::breadth_first_search(graph, false, 0, maths::null_functor(), maths::null_functor(), firstEdgeFn);
+
+    //  edge_weight += 10 + traversal index
+    //
+    //  Undirected            Directed        0-1;1-3;3-2;0-2;2-0;
+    //      18                  18
+    //(0)5=======10(2)   (0)5=======10(2)
+    //   |  14   |          |   15   |
+    // 11|       |18      11|        |18
+    //   |       |          |        |
+    //(1)2-------4(3)    (1)2--------4(3)
+    //      16                  15
+
+    if constexpr(GraphFlavour == flavour::undirected_embedded)
+    {
+      graph_t expected{
+        {{ei_t{1,0,11ul}, ei_t{2,1,18ul}, ei_t{2,2,14ul}},
+         {ei_t{0,0,11ul}, ei_t{3,0,16ul}},
+         {ei_t{3,1,18ul}, ei_t{0,1,18ul}, ei_t{0,2,14ul}},
+         {ei_t{1,1,16ul}, ei_t{2,0,18ul}}},
+        {5ul, 2ul, 10ul, 4ul}
+      };
+
+      check_equality(graph, expected, LINE(""));
+    }
+  }
+
   //============================= execute_operations =============================//
   
   template
@@ -371,6 +451,7 @@ namespace sequoia::unit_testing
     //       3
 
     check_df_update(graph);
+    check_bf_update(graph);
   }
 
   //============================= Breadth-first only tests ===========================//
