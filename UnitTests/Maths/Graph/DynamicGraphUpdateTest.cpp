@@ -338,6 +338,8 @@ namespace sequoia::unit_testing
     }
   }
 
+  //============================= check_bf_update =============================//
+  
   template
   <
     maths::graph_flavour GraphFlavour,
@@ -529,6 +531,63 @@ namespace sequoia::unit_testing
     }
   }
 
+  //============================= check_pr_update =============================//
+  
+  template
+  <
+    maths::graph_flavour GraphFlavour,
+    class EdgeWeight,
+    class NodeWeight,      
+    template <class> class EdgeWeightPooling,
+    template <class> class NodeWeightPooling,
+    template <maths::graph_flavour, class, template<class> class> class EdgeStorageTraits,
+    template <class, template<class> class, bool> class NodeWeightStorageTraits
+  >
+  void test_update<
+    GraphFlavour,
+    EdgeWeight,
+    NodeWeight,
+    EdgeWeightPooling,
+    NodeWeightPooling,
+    EdgeStorageTraits,
+    NodeWeightStorageTraits>::check_pr_update(graph_t graph)
+  {
+    GraphUpdaterFunctors<graph_t> updater(graph);
+    auto firstNodeFn = [&updater](const std::size_t index){ updater.firstNodeTraversal(index); };
+    maths::priority_search(graph, false, 0, firstNodeFn);
+
+    // node_weight *=  (2 + traversal index)
+    //
+    //    Undirected          Directed
+    //        7                  7
+    //(0)10=======30(2)  (0)10=======30(2)
+    //    |   2   |          |   2   |
+    //   1|       |4        1|       |4
+    //    |       |          |       |
+    //(1)10-------16(3)  (1) 8-------20(3)
+    //        3                  3
+
+    auto expectedNodeWeights =
+      UndirectedType::value ? std::array<std::size_t, 4>{10,10,30,16} : std::array<std::size_t, 4>{10,8,30,20};
+    check_range(graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend(), LINE(""));
+
+    auto secondNodeFn = [&updater](const std::size_t index){ updater.secondNodeTraversal(index); };
+    maths::priority_search(graph, false, 0, maths::null_functor(), secondNodeFn);
+
+    // node_weight / = (2 + traversal index)
+    //
+    //       7
+    //(0)5=======10(2)
+    //   |   2   |
+    //  1|       |4
+    //   |       |
+    //(1)2-------4(3)
+    //       3
+
+    expectedNodeWeights = {5,2,10,4};
+    check_range(graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend(), LINE(""));
+  }
+
   //============================= execute_operations =============================//
   
   template
@@ -563,6 +622,7 @@ namespace sequoia::unit_testing
 
     check_df_update(graph);
     check_bf_update(graph);
+    check_pr_update(graph);
   }
 
   //============================= Breadth-first only tests ===========================//

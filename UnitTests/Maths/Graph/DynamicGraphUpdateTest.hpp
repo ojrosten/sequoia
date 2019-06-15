@@ -140,6 +140,7 @@ namespace sequoia
       void check_setup(const graph_t& graph);
       void check_df_update(graph_t graph);
       void check_bf_update(graph_t graph);
+      void check_pr_update(graph_t graph);
       
       void execute_operations() override;
       /*{
