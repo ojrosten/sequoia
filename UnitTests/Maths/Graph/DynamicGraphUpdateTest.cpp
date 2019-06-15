@@ -9,6 +9,29 @@
 
 namespace sequoia::unit_testing
 {
+  template<class G>
+  std::tuple<std::size_t, std::size_t, std::size_t> nth_connection_indices(const G& graph, const std::size_t node, const std::size_t localEdgeIndex)
+  {
+    auto begin = graph.cbegin_edges(node);
+    auto end   = graph.cend_edges(node);
+
+    if(localEdgeIndex >= static_cast<std::size_t>(distance(begin, end)))
+      throw std::out_of_range("graph_utilities::nth_connection_indices - localEdgeIndex out of range");
+
+    auto& edge = *(begin + localEdgeIndex);
+    const std::size_t targ = edge.target_node();
+    std::size_t nthConnection{};
+
+    for(auto citer = begin; citer != begin + localEdgeIndex; ++citer)
+      {
+        auto& currentEdge = (*citer);
+        if(targ == currentEdge.target_node()) ++nthConnection;
+      }
+
+    return std::make_tuple(node, targ, nthConnection);
+  }
+
+  
   void test_graph_update::run_tests()
   {
     {
@@ -165,7 +188,7 @@ namespace sequoia::unit_testing
     EdgeStorageTraits,
     NodeWeightStorageTraits>::check_df_update(graph_t graph)
   {
-    GraphUpdaterFunctors<graph_t> updater(graph);
+    graph_updater<graph_t> updater(graph);
     auto firstNodeFn = [&updater](const std::size_t index){ updater.firstNodeTraversal(index); };
     maths::depth_first_search(graph, false, 0, firstNodeFn);
 
@@ -359,7 +382,7 @@ namespace sequoia::unit_testing
     EdgeStorageTraits,
     NodeWeightStorageTraits>::check_bf_update(graph_t graph)
   {
-    GraphUpdaterFunctors<graph_t> updater(graph);
+    graph_updater<graph_t> updater(graph);
     auto firstNodeFn = [&updater](const std::size_t index){ updater.firstNodeTraversal(index); };
     maths::breadth_first_search(graph, false, 0, firstNodeFn);
 
@@ -498,7 +521,7 @@ namespace sequoia::unit_testing
     EdgeStorageTraits,
     NodeWeightStorageTraits>::check_pr_update(graph_t graph)
   {
-    GraphUpdaterFunctors<graph_t> updater(graph);
+    graph_updater<graph_t> updater(graph);
     auto firstNodeFn = [&updater](const std::size_t index){ updater.firstNodeTraversal(index); };
     maths::priority_search(graph, false, 0, firstNodeFn);
 
