@@ -123,42 +123,6 @@ namespace sequoia
       void check_pr_update(graph_t graph);
       
       void execute_operations() override;
-
-      template<class UpdateFunctor>
-      void dfu_second_edge_traversal(std::true_type, graph_t& graph, UpdateFunctor fn)
-      {
-        maths::depth_first_search(graph, false, 0, maths::null_functor(), maths::null_functor(), maths::null_functor(), fn);
-      }
-
-      template<class UpdateFunctor>
-      void dfu_second_edge_traversal(std::false_type, graph_t& graph, UpdateFunctor fn)
-      {
-        maths::depth_first_search(graph, false, 0, maths::null_functor(), maths::null_functor(), fn);
-      }
-
-      template<class UpdateFunctor>
-      void bfu_second_edge_traversal(std::true_type, graph_t& graph, UpdateFunctor fn)
-      {
-        maths::breadth_first_search(graph, false, 0, maths::null_functor(), maths::null_functor(), maths::null_functor(), fn);
-      }
-
-      template<class UpdateFunctor>
-      void bfu_second_edge_traversal(std::false_type, graph_t& graph, UpdateFunctor fn)
-      {
-        maths::breadth_first_search(graph, false, 0, maths::null_functor(), maths::null_functor(), fn);
-      }
-
-      template<class UpdateFunctor>
-      void ps_second_edge_traversal(std::true_type, graph_t& graph, UpdateFunctor fn)
-      {
-        maths::priority_search(graph, false, 0, maths::null_functor(), maths::null_functor(), maths::null_functor(), fn);
-      }
-
-      template<class UpdateFunctor>
-      void ps_second_edge_traversal(std::false_type, graph_t& graph, UpdateFunctor fn)
-      {
-        maths::priority_search(graph, false, 0, maths::null_functor(), maths::null_functor(), fn);
-      }
     };
     
     //=======================================================================================//

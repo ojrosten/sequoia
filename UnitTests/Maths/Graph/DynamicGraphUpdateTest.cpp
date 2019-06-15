@@ -292,7 +292,14 @@ namespace sequoia::unit_testing
     }
 
     auto secondEdgeFn = [&updater](auto citer) { updater.secondEdgeTraversal(citer); };
-    dfu_second_edge_traversal(UndirectedType(), graph, secondEdgeFn);
+    if constexpr(UndirectedType::value)
+    {
+      maths::depth_first_search(graph, false, 0, maths::null_functor(), maths::null_functor(), maths::null_functor(), secondEdgeFn);
+    }
+    else
+    {
+      maths::depth_first_search(graph, false, 0, maths::null_functor(), maths::null_functor(), secondEdgeFn);
+    }
 
     // edge_weight -= (10 + traversal index)
     //
@@ -485,7 +492,14 @@ namespace sequoia::unit_testing
     }
 
     auto secondEdgeFn = [&updater](auto citer) { updater.secondEdgeTraversal(citer); };
-    bfu_second_edge_traversal(UndirectedType(), graph, secondEdgeFn);
+    if constexpr(UndirectedType::value)
+    {
+      maths::breadth_first_search(graph, false, 0, maths::null_functor(), maths::null_functor(), maths::null_functor(), secondEdgeFn);
+    }
+    else
+    {
+      maths::breadth_first_search(graph, false, 0, maths::null_functor(), maths::null_functor(), secondEdgeFn);
+    }
 
     // edge_weight -= (10 + traversal index)
     //
@@ -627,7 +641,14 @@ namespace sequoia::unit_testing
     }
 
     auto secondEdgeFn = [&updater](auto citer) { updater.secondEdgeTraversal(citer); };
-    ps_second_edge_traversal(UndirectedType(), graph, secondEdgeFn);
+    if constexpr(UndirectedType::value)
+    {
+      maths::priority_search(graph, false, 0, maths::null_functor(), maths::null_functor(), maths::null_functor(), secondEdgeFn);
+    }
+    else
+    {
+      maths::priority_search(graph, false, 0, maths::null_functor(), maths::null_functor(), secondEdgeFn);
+    }
 
     // edge_weight -= (10 + traversal index)
     //
