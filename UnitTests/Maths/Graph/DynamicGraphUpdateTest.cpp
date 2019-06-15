@@ -404,7 +404,33 @@ namespace sequoia::unit_testing
     //(1)2-------4(3)    (1)2--------4(3)
     //      16                  15
 
-    if constexpr(GraphFlavour == flavour::undirected_embedded)
+    if constexpr(GraphFlavour == flavour::undirected)
+    {
+      graph_t expected{
+        {{ei_t{1,11ul}, ei_t{2,18ul}, ei_t{2,14ul}},
+         {ei_t{0,11ul}, ei_t{3,16ul}},
+         {ei_t{3,18ul}, ei_t{0,18ul}, ei_t{0,14ul}},
+         {ei_t{1,16ul}, ei_t{2,18ul}}},
+        {5ul, 2ul, 10ul, 4ul}
+      };
+
+      expected.swap_edges(0, 1, 2);
+      expected.swap_edges(2, 0, 2);
+      check_equality(graph, expected, LINE(""));
+    }
+    else if constexpr(GraphFlavour == flavour::directed)
+    {
+      graph_t expected{
+        {{ei_t{1,11ul}, ei_t{2,18ul}},
+         {ei_t{3,15ul}},
+         {ei_t{0,15ul}},
+         {ei_t{2,18ul}}},
+        {5ul, 2ul, 10ul, 4ul}
+      };
+
+      check_equality(graph, expected, LINE(""));
+    }
+    else if constexpr(GraphFlavour == flavour::undirected_embedded)
     {
       graph_t expected{
         {{ei_t{1,0,11ul}, ei_t{2,1,18ul}, ei_t{2,2,14ul}},
@@ -415,6 +441,22 @@ namespace sequoia::unit_testing
       };
 
       check_equality(graph, expected, LINE(""));
+    }
+    else if constexpr(GraphFlavour == flavour::directed_embedded)
+    {
+      graph_t expected{
+        {{ei_t{0,1,0,11ul}, ei_t{0,2,1,18ul}, ei_t{2,0,2,15ul}},
+         {ei_t{0,1,0,11ul}, ei_t{1,3,0,15ul}},
+         {ei_t{3,2,1,18ul}, ei_t{0,2,1,18ul}, ei_t{2,0,2,15ul}},
+         {ei_t{1,3,1,15ul}, ei_t{3,2,0,18ul}}},
+        {5ul, 2ul, 10ul, 4ul}
+      };
+
+      check_equality(graph, expected, LINE(""));
+    }
+    else
+    {
+      static_assert(dependent_false<graph_t>::value);
     }
   }
 
