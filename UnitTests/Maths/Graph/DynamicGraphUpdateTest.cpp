@@ -586,6 +586,76 @@ namespace sequoia::unit_testing
 
     expectedNodeWeights = {5,2,10,4};
     check_range(graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend(), LINE(""));
+
+    auto firstEdgeFn = [&updater](auto citer) { updater.firstEdgeTraversal(citer); };
+    maths::priority_search(graph, false, 0, maths::null_functor(), maths::null_functor(), firstEdgeFn);
+
+    // edge_weight += 10 + traversal index
+    //
+    //  Undirected            Directed        0-1;1-3;3-2;0-2;2-0;
+    //      18                  18
+    //(0)5=======10(2)   (0)5=======10(2)
+    //   |  15   |          |   14   |
+    // 11|       |17      11|        |18
+    //   |       |          |        |
+    //(1)2-------4(3)    (1)2--------4(3)
+    //      17                  16
+
+
+    if constexpr(GraphFlavour == flavour::undirected)
+    {
+      graph_t expected{
+        {{ei_t{1,11ul}, ei_t{2,18ul}, ei_t{2,14ul}},
+         {ei_t{0,11ul}, ei_t{3,17ul}},
+         {ei_t{3,17ul}, ei_t{0,18ul}, ei_t{0,14ul}},
+         {ei_t{1,17ul}, ei_t{2,17ul}}},
+        {5ul, 2ul, 10ul, 4ul}
+      };
+      
+      expected.swap_edges(0, 1, 2);
+      expected.swap_edges(2, 0, 2);
+      check_equality(graph, expected, LINE(""));
+    }
+    else if constexpr(GraphFlavour == flavour::directed)
+    {
+      graph_t expected{
+        {{ei_t{1,11ul}, ei_t{2,18ul}},
+         {ei_t{3,16ul}},
+         {ei_t{0,14ul}},
+         {ei_t{2,18ul}}},
+        {5ul, 2ul, 10ul, 4ul}
+      };
+      
+      check_equality(graph, expected, LINE(""));
+    }
+    else if constexpr(GraphFlavour == flavour::undirected_embedded)
+    {
+      graph_t expected{
+        {{ei_t{1,0,11ul}, ei_t{2,1,18ul}, ei_t{2,2,14ul}},
+         {ei_t{0,0,11ul}, ei_t{3,0,17ul}},
+         {ei_t{3,1,17ul}, ei_t{0,1,18ul}, ei_t{0,2,14ul}},
+         {ei_t{1,1,17ul}, ei_t{2,0,17ul}}},
+        {5ul, 2ul, 10ul, 4ul}
+      };
+
+      check_equality(graph, expected, LINE(""));
+    }
+    else if constexpr(GraphFlavour == flavour::directed_embedded)
+    {
+      graph_t expected{
+        {{ei_t{0,1,0,11ul}, ei_t{0,2,1,18ul}, ei_t{2,0,2,14ul}},
+         {ei_t{0,1,0,11ul}, ei_t{1,3,0,16ul}},
+         {ei_t{3,2,1,18ul}, ei_t{0,2,1,18ul}, ei_t{2,0,2,14ul}},
+         {ei_t{1,3,1,16ul}, ei_t{3,2,0,18ul}}},
+        {5ul, 2ul, 10ul, 4ul}
+      };
+
+      check_equality(graph, expected, LINE(""));
+    }
+    else
+    {
+      static_assert(dependent_false<graph_t>::value);
+    }
   }
 
   //============================= execute_operations =============================//
