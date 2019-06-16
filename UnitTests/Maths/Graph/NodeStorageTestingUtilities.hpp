@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "UnitTestUtils.hpp"
+#include "UnitTestCore.hpp"
 
 #include "NodeStorage.hpp"
 #include "StaticNodeStorage.hpp"

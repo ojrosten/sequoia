@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "UnitTestUtils.hpp"
+#include "UnitTestCore.hpp"
 
 /*! \file UnitTestFamily.hpp
     \brief Utilities for grouping unit tests

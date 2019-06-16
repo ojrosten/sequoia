@@ -7,8 +7,8 @@
 
 #pragma once
 
-/*! \file UnitTestUtils.hpp
-    \brief Utilties for the unit testing framework.
+/*! \file UnitTestCore.hpp
+    \brief Core functionality for the unit testing framework.
 */
 
 #include "UnitTestCheckers.hpp"
