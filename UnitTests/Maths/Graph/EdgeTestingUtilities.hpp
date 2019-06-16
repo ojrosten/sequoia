@@ -18,11 +18,11 @@ namespace sequoia::unit_testing
     void check_partial(Logger& logger, const Edge& edge, const Prediction& prediction, std::string_view description)
     {
       check_equality(logger, edge.target_node(), prediction.target_node(),
-                       impl::combine_messages(description, "Target node incorrect"));
+                       combine_messages(description, "Target node incorrect"));
     
       if constexpr (!std::is_empty_v<typename Edge::weight_type>)
       {
-        check_equality(logger, edge.weight(), prediction.weight(), impl::combine_messages(description, "Weight incorrect"));
+        check_equality(logger, edge.weight(), prediction.weight(), combine_messages(description, "Weight incorrect"));
       }
     }
 
@@ -30,17 +30,17 @@ namespace sequoia::unit_testing
     void check_complementary(Logger& logger, const Edge& edge, const Prediction& prediction, std::string_view description)
     {
       check_equality(logger, edge.complementary_index(), prediction.complementary_index(),
-                     impl::combine_messages(description, "Complementary index incorrect"));
+                     combine_messages(description, "Complementary index incorrect"));
     }
   
     template<class Logger, class Edge, class Prediction>
     void check_host(Logger& logger, const Edge& edge, const Prediction& prediction, std::string_view description)
     {
       check_equality(logger, edge.host_node(), prediction.host_node(),
-                         impl::combine_messages(description, "Host node incorrect"));
+                         combine_messages(description, "Host node incorrect"));
 
       check_equality(logger, edge.inverted(), prediction.inverted(),
-                         impl::combine_messages(description, "Inversion flag incorrect")); 
+                         combine_messages(description, "Inversion flag incorrect")); 
 
     }
   }

@@ -18,12 +18,12 @@ namespace sequoia::unit_testing
     template<class Logger, class T>
     void check(Logger& logger, const T& sequence, const T& prediction, std::string_view description)
     {
-      if(check_equality(logger, sequence.size(), prediction.size(), impl::combine_messages(description, "Size incorrect")))
+      if(check_equality(logger, sequence.size(), prediction.size(), combine_messages(description, "Size incorrect")))
       {
         if(!prediction.empty())
         {
-          check_equality(logger, sequence.back(), prediction.back(), impl::combine_messages(description, "Back element wrong"));
-          check_equality(logger, sequence.front(), prediction.front(), impl::combine_messages(description, "Front element wrong"));
+          check_equality(logger, sequence.back(), prediction.back(), combine_messages(description, "Back element wrong"));
+          check_equality(logger, sequence.front(), prediction.front(), combine_messages(description, "Front element wrong"));
         }
        
         auto i_prediction{prediction.begin()}, i{sequence.begin()};
@@ -37,14 +37,14 @@ namespace sequoia::unit_testing
           const auto d{distance(prediction.begin(), i_prediction)};
           const std::string mess{" for index " + std::to_string(d)};
           
-          check_equality(logger, *i, *i_prediction, impl::combine_messages(description, "Dereferenced iterator wrong" + mess));
-          check_equality(logger, *ci, *ci_prediction, impl::combine_messages(description, "Dereferenced citerator wrong" + mess));
+          check_equality(logger, *i, *i_prediction, combine_messages(description, "Dereferenced iterator wrong" + mess));
+          check_equality(logger, *ci, *ci_prediction, combine_messages(description, "Dereferenced citerator wrong" + mess));
 
-          check_equality(logger, sequence[d], prediction[d], impl::combine_messages(description, "operator[] wrong" + mess));  
+          check_equality(logger, sequence[d], prediction[d], combine_messages(description, "operator[] wrong" + mess));  
 
           const auto shift{static_cast<int64_t>(prediction.size()) - d - 1};
-          check_equality(logger, *(ri + shift), *(ri_prediction + shift), impl::combine_messages(description, "Dereferenced riterator wrong" + mess));
-          check_equality(logger, *(cri + shift), *(cri_prediction + shift), impl::combine_messages(description, "Dereferenced criterator wrong" + mess));
+          check_equality(logger, *(ri + shift), *(ri_prediction + shift), combine_messages(description, "Dereferenced riterator wrong" + mess));
+          check_equality(logger, *(cri + shift), *(cri_prediction + shift), combine_messages(description, "Dereferenced criterator wrong" + mess));
         }
           
         unit_testing::check(logger, i_prediction == prediction.end(), "iterator location wrong");

@@ -93,7 +93,7 @@ namespace sequoia
 
         const std::string message{
           add_type_info<S, U...>(
-            impl::combine_messages(description, "Comparison performed using:\n\t[" + demangle<EquivChecker>() + "]\n\tWith equivalent types:", "\n"))
+            combine_messages(description, "Comparison performed using:\n\t[" + demangle<EquivChecker>() + "]\n\tWith equivalent types:", "\n"))
         };
       
         sentinel r{logger, message};
@@ -209,7 +209,7 @@ namespace sequoia
     template<class Logger, class T>
     bool check_equality_within_tolerance(Logger& logger, const T& value, const T& prediction, const T& tol, std::string_view description)
     {
-      auto message{impl::combine_messages(description, "Check using tolerance of " + std::to_string(tol))};
+      auto message{combine_messages(description, "Check using tolerance of " + std::to_string(tol))};
       return check(logger, (value > prediction - tol) && (value < prediction + tol), std::move(message));
     }
 
@@ -221,7 +221,7 @@ namespace sequoia
       try
       {
         function();
-        logger.log_failure(impl::combine_messages(description, "\tNo exception thrown\n", "\n"));
+        logger.log_failure(combine_messages(description, "\tNo exception thrown\n", "\n"));
         return false;
       }
       catch(E&)
@@ -230,12 +230,12 @@ namespace sequoia
       }
       catch(std::exception& e)
       {
-        logger.log_failure(impl::combine_messages(description, std::string{"\tUnexpected exception thrown -\""} + e.what() + "\"\n", "\n"));
+        logger.log_failure(combine_messages(description, std::string{"\tUnexpected exception thrown -\""} + e.what() + "\"\n", "\n"));
         return false;
       }
       catch(...)
       {
-        logger.log_failure(impl::combine_messages(description, "\tUnknown exception thrown\n", "\n"));
+        logger.log_failure(combine_messages(description, "\tUnknown exception thrown\n", "\n"));
         return false;
       }
     }
@@ -250,14 +250,14 @@ namespace sequoia
 
         using std::distance;
         const auto predictedSize{distance(predictionFirst, predictionLast)};
-        if(check_equality(logger, distance(first, last), predictedSize, impl::combine_messages(description, "container size wrong")))
+        if(check_equality(logger, distance(first, last), predictedSize, combine_messages(description, "container size wrong")))
         {
           auto predictionIter{predictionFirst};
           auto iter{first};
           for(; predictionIter != predictionLast; ++predictionIter, ++iter)
           {
             std::string dist{std::to_string(std::distance(predictionFirst, predictionIter)).append("\n")};
-            if(!check(logger, tag, *iter, *predictionIter, impl::combine_messages(description, "element ").append(std::move(dist)))) equal = false;
+            if(!check(logger, tag, *iter, *predictionIter, combine_messages(description, "element ").append(std::move(dist)))) equal = false;
           }
         }
         else
@@ -294,29 +294,29 @@ namespace sequoia
     {
       typename Logger::sentinel s{logger, impl::add_type_info<T>(description)};
 
-      if(!check(logger, x == x, impl::combine_messages(description, "Equality operator is inconsistent"))) return;
-      if(!check(logger, !(x != x), impl::combine_messages(description, "Inequality operator is inconsistent"))) return;
+      if(!check(logger, x == x, combine_messages(description, "Equality operator is inconsistent"))) return;
+      if(!check(logger, !(x != x), combine_messages(description, "Inequality operator is inconsistent"))) return;
 
       // TO DO: contract in C++20
-      if(!check(logger, x != y, impl::combine_messages(description, "Precondition - for check the standard semantics, x and y are assumed to be different"))) return;
+      if(!check(logger, x != y, combine_messages(description, "Precondition - for check the standard semantics, x and y are assumed to be different"))) return;
       
       auto z{x};
-      check_equality(logger, z, x, impl::combine_messages(description, "Copy constructor"));
-      check(logger, z == x, impl::combine_messages(description, "Equality operator"));
+      check_equality(logger, z, x, combine_messages(description, "Copy constructor"));
+      check(logger, z == x, combine_messages(description, "Equality operator"));
 
       z = y;
-      check_equality(logger, z, y, impl::combine_messages(description, "Copy assignment"));
-      check(logger, z != x, impl::combine_messages(description, "Inequality operator"));
+      check_equality(logger, z, y, combine_messages(description, "Copy assignment"));
+      check(logger, z != x, combine_messages(description, "Inequality operator"));
 
       auto w{std::move(z)};
-      check_equality(logger, w, y, impl::combine_messages(description, "Move constructor"));
+      check_equality(logger, w, y, combine_messages(description, "Move constructor"));
 
       z = [x](){ return x;}();
-      check_equality(logger, z, x, impl::combine_messages(description, "Move assignment"));      
+      check_equality(logger, z, x, combine_messages(description, "Move assignment"));      
 
       std::swap(w,z);
-      check_equality(logger, w, x, impl::combine_messages(description, "Swap"));
-      check_equality(logger, z, y, impl::combine_messages(description, "Swap"));
+      check_equality(logger, w, x, combine_messages(description, "Swap"));
+      check_equality(logger, z, y, combine_messages(description, "Swap"));
     }
 
     template<class Logger, class T, class Mutator>
@@ -327,10 +327,10 @@ namespace sequoia
       auto c{target};
       
       m(target);
-      check_equality(logger, target, prediction, impl::combine_messages(description, "Mutation of target"));
+      check_equality(logger, target, prediction, combine_messages(description, "Mutation of target"));
 
       m(c);
-      check_equality(logger, c, prediction, impl::combine_messages(description, "Mutation of copy"));
+      check_equality(logger, c, prediction, combine_messages(description, "Mutation of copy"));
       
     }
 
@@ -340,8 +340,8 @@ namespace sequoia
       template<class Logger>
       static void check(Logger& logger, const std::pair<T, S>& value, const std::pair<T,S>& prediction, std::string_view description)
       {
-        check_equality(logger, value.first, prediction.first, impl::combine_messages(description, "First element of pair is incorrent"));
-        check_equality(logger, value.second, prediction.second, impl::combine_messages(description, "First element of pair is incorrect"));
+        check_equality(logger, value.first, prediction.first, combine_messages(description, "First element of pair is incorrent"));
+        check_equality(logger, value.second, prediction.second, combine_messages(description, "First element of pair is incorrect"));
       }
     };
 
@@ -355,7 +355,7 @@ namespace sequoia
         if constexpr(I < sizeof...(T))
         {
           const std::string message{std::to_string(I) + "th element of tuple incorrect"};
-          check_equality(logger, std::get<I>(value), std::get<I>(prediction), impl::combine_messages(description, message));
+          check_equality(logger, std::get<I>(value), std::get<I>(prediction), combine_messages(description, message));
           check_tuple_elements<Logger, I+1>(logger, value, prediction, description);
         }
       }

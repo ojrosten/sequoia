@@ -25,11 +25,11 @@ namespace sequoia::unit_testing
       template<class Logger>
       static void check(Logger& logger, const Nodes& nodes, const Nodes& prediction, std::string_view description)
       {
-        check_equality(logger, nodes.size(), prediction.size(), impl::combine_messages(description, "Sizes different"));
+        check_equality(logger, nodes.size(), prediction.size(), combine_messages(description, "Sizes different"));
 
-        check_range(logger, nodes.cbegin_node_weights(), nodes.cend_node_weights(), prediction.cbegin_node_weights(), prediction.cend_node_weights(), impl::combine_messages(description, "const_node_iter"));
+        check_range(logger, nodes.cbegin_node_weights(), nodes.cend_node_weights(), prediction.cbegin_node_weights(), prediction.cend_node_weights(), combine_messages(description, "const_node_iter"));
 
-        check_range(logger, nodes.crbegin_node_weights(), nodes.crend_node_weights(), prediction.crbegin_node_weights(), prediction.crend_node_weights(), impl::combine_messages(description, "const_reverse_node_iter"));
+        check_range(logger, nodes.crbegin_node_weights(), nodes.crend_node_weights(), prediction.crbegin_node_weights(), prediction.crend_node_weights(), combine_messages(description, "const_reverse_node_iter"));
       }
     };
 
@@ -54,9 +54,9 @@ namespace sequoia::unit_testing
       template<class Logger>
       static void check(Logger& logger, const Nodes& nodes, equivalent_type prediction, std::string_view description)
       {
-        check_equality(logger, nodes.size(), prediction.size(), impl::combine_messages(description, "Sizes different"));
+        check_equality(logger, nodes.size(), prediction.size(), combine_messages(description, "Sizes different"));
 
-        check_range(logger, nodes.cbegin_node_weights(), nodes.cend_node_weights(), prediction.begin(), prediction.end(), impl::combine_messages(description, "const_node_iter"));
+        check_range(logger, nodes.cbegin_node_weights(), nodes.cend_node_weights(), prediction.begin(), prediction.end(), combine_messages(description, "const_node_iter"));
       }
     };
 
@@ -70,7 +70,7 @@ namespace sequoia::unit_testing
       template<class Logger>
       static void check(Logger& logger, const Nodes& nodes, equivalent_type prediction, std::string_view description)
       {
-        unit_testing::check(logger, !prediction.size(), impl::combine_messages(description, "Node storage should have zero size for empty node weights"));
+        unit_testing::check(logger, !prediction.size(), combine_messages(description, "Node storage should have zero size for empty node weights"));
       }
     };
   }
@@ -115,7 +115,7 @@ namespace sequoia::unit_testing
     template<class Logger>
     static void check(Logger& logger, const type& nodes, const type& prediction, std::string_view description)
     {
-      if(check_equality(logger, nodes.size(), prediction.size(), impl::combine_messages(description, "Node storaage sizes different")))
+      if(check_equality(logger, nodes.size(), prediction.size(), combine_messages(description, "Node storaage sizes different")))
       {
         check_elements(logger, nodes, prediction, description);
       }
@@ -127,8 +127,8 @@ namespace sequoia::unit_testing
     {
       if constexpr(I < sizeof...(Ts))
       {
-        const std::string message{impl::combine_messages(description, std::to_string(I) + "th element incorrect")};
-        check_equality(logger, nodes.template node_weight<I>(), prediction.template node_weight<I>(), impl::combine_messages(description, message));
+        const std::string message{combine_messages(description, std::to_string(I) + "th element incorrect")};
+        check_equality(logger, nodes.template node_weight<I>(), prediction.template node_weight<I>(), combine_messages(description, message));
         check_elements<Logger, I+1>(logger, nodes, prediction, description);
       }
     }
@@ -143,7 +143,7 @@ namespace sequoia::unit_testing
     template<class Logger>
     static void check(Logger& logger, const type& nodes, const equivalent_type& prediction, std::string_view description)
     {
-      if(check_equality(logger, nodes.size(), sizeof...(Ts), impl::combine_messages(description, "Node storage sizes different")))
+      if(check_equality(logger, nodes.size(), sizeof...(Ts), combine_messages(description, "Node storage sizes different")))
       {
         check_elements(logger, nodes, prediction, description);
       }
@@ -155,8 +155,8 @@ namespace sequoia::unit_testing
     {
       if constexpr(I < sizeof...(Ts))
       {
-        const std::string message{impl::combine_messages(description, std::to_string(I) + "th element incorrect")};
-        check_equality(logger, nodes.template node_weight<I>(), std::get<I>(prediction), impl::combine_messages(description, message));
+        const std::string message{combine_messages(description, std::to_string(I) + "th element incorrect")};
+        check_equality(logger, nodes.template node_weight<I>(), std::get<I>(prediction), combine_messages(description, message));
         check_elements<Logger, I+1>(logger, nodes, prediction, description);
       }
     }
