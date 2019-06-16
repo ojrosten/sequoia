@@ -208,7 +208,7 @@ namespace sequoia::unit_testing
     using value_type = typename std::iterator_traits<Iter>::value_type;
     using deref_pol = typename CustomIter::dereference_policy;
         
-    if(!check_equality<int64_t>(3, distance(begin, end), LINE(std::string{message}.append(" Contract violated"))))
+    if(!check_equality<int64_t>(3, distance(begin, end), LINE(combine_messages(message, "Contract violated"))))
       return;
     
     CustomIter i{begin, args...};
@@ -224,16 +224,16 @@ namespace sequoia::unit_testing
     check_equality(i[1], begin[1] * scale, LINE(message));
     check_equality(i[2], begin[2] * scale, LINE(message));
 
-    check_equality(i.operator->(), pBegin, LINE(std::string{message}.append(" Operator ->")));
+    check_equality(i.operator->(), pBegin, LINE(combine_messages(message, "Operator ->")));
 
     CustomIter j{end, args...};      
-    check_regular_semantics(i, j, LINE(std::string{message}.append(" Regular semantics; one iterator at end")));
+    check_regular_semantics(i, j, LINE(combine_messages(message, "Regular semantics; one iterator at end")));
       
     check(i < j, LINE(message));
     check(j > i, LINE(message));
     check(i <= j, LINE(message));
     check(j >= i, LINE(message));
-    check_equality(distance(i, j), distance(begin, end), LINE(std::string{message}.append(" Check non-zero distance")));
+    check_equality(distance(i, j), distance(begin, end), LINE(combine_messages(message, "Check non-zero distance")));
 
     check_equality(*++i, begin[1] * scale, LINE(message));
     check_equality(*i++, begin[1] * scale, LINE(message));
@@ -249,7 +249,7 @@ namespace sequoia::unit_testing
     j = i - 1;
     check_equality(*i, begin[1] * scale, LINE(message));
     check_equality(*j, begin[0] * scale, LINE(message));
-    check_regular_semantics(i, j, LINE(std::string{message}.append(" Regular semantics")));
+    check_regular_semantics(i, j, LINE(combine_messages(message, "Regular semantics")));
 
     i = j + 2;
     check_equality(*i, begin[2] * scale, LINE(message));
@@ -261,6 +261,6 @@ namespace sequoia::unit_testing
     check_equality(*j, begin[1] * scale, LINE(message));
 
     check(i == j, LINE(message));
-    check_equality<int64_t>(0, distance(i, j), LINE(std::string{message}.append(" Check for distance of zero")));
+    check_equality<int64_t>(0, distance(i, j), LINE(combine_messages(message, "Check for distance of zero")));
   }
 }
