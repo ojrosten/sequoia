@@ -79,7 +79,7 @@ namespace sequoia::unit_testing
     }
   }  
       
-  template<class Iter> void pad_left(Iter begin, Iter end)
+  template<class Iter> void pad_left(Iter begin, Iter end, const std::size_t minChars)
   {
     auto maxIter{std::max_element(begin, end, [](const std::string& lhs, const std::string& rhs) {
           return lhs.size() < rhs.size();
@@ -87,7 +87,7 @@ namespace sequoia::unit_testing
       )
     };
 
-    const auto maxChars{maxIter->size()};
+    const auto maxChars{std::max(maxIter->size(), minChars)};
 
     for(; begin != end; ++begin)
     {
@@ -392,9 +392,10 @@ namespace sequoia::unit_testing
         std::to_string(false_positive_checks())
       };
 
-      pad_left(checkNums.begin(), checkNums.end());
+      constexpr std::size_t minChars{8};
+      pad_left(checkNums.begin(), checkNums.end(), minChars);
 
-      const auto len{10u - std::min(std::size_t{8}, checkNums.front().size())};
+      const auto len{10u - std::min(std::size_t{minChars}, checkNums.front().size())};
         
       for(int i{}; i<4; ++i)
       {
@@ -408,7 +409,7 @@ namespace sequoia::unit_testing
         std::to_string(false_positive_failures())
       };
 
-      pad_left(failures.begin(), failures.end());
+      pad_left(failures.begin(), failures.end(), 2);
 
       for(int i{}; i<4; ++i)
       {
