@@ -18,30 +18,7 @@ namespace sequoia
     public:
       using unit_test::unit_test;
 
-    private:
-      struct no_default_constructor
-      {
-        constexpr no_default_constructor(const int _x) : x{_x} {}
-
-        friend bool operator==(const no_default_constructor& lhs, const no_default_constructor& rhs)
-        {
-          return lhs.x == rhs.x;
-        }
-
-        friend bool operator!=(const no_default_constructor& lhs, const no_default_constructor& rhs)
-        {
-          return !(lhs == rhs);
-        }
-
-        template<class Stream> friend Stream& operator<<(Stream& stream, const no_default_constructor& ndc)
-        {
-          stream << ndc.x;
-          return stream;
-        }
-        
-        int x;
-      };
-      
+    private:      
       void run_tests() override;
 
       void test_storage();

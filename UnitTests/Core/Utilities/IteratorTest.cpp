@@ -11,7 +11,7 @@
 #include <array>
 
 namespace sequoia::unit_testing
-{    
+{
   void iterator_test::run_tests()
   {
     test_iterator();

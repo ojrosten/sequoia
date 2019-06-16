@@ -5,6 +5,7 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+#include "UnitTestUtilities.hpp"
 #include "PartitionedDataTest.hpp"
 
 #include <array>
@@ -87,14 +88,14 @@ namespace sequoia
 
         {
           using storage_t = static_contiguous_storage<no_default_constructor, 1, 1>;      
-          constexpr storage_t storage{{1}};
+          constexpr storage_t storage{{ndc{1}}};
           
           check_equivalence(storage, prediction_t{{ndc{1}}}, LINE(""));
         }
 
         {
           using storage_t = static_contiguous_storage<no_default_constructor, 3, 5>;
-          constexpr storage_t storage2{{1, 1}, {0}, {2, 4}};
+          constexpr storage_t storage2{{ndc{1}, ndc{1}}, {ndc{0}}, {ndc{2}, ndc{4}}};
           check_equivalence(storage2, prediction_t{{ndc{1}, ndc{1}}, {ndc{0}}, {ndc{2}, ndc{4}}}, LINE(""));
         }
       }
