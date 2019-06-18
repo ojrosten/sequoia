@@ -14,7 +14,7 @@
 namespace sequoia
 {
   namespace unit_testing
-  {
+  {    
     void partitioned_data_test::run_tests()
     {
       using namespace data_sharing;
@@ -106,16 +106,25 @@ namespace sequoia
       using namespace data_structures;
       using namespace data_sharing;
 
-      auto storage1 = test_generic_storage<bucketed_storage<int>>();
-      auto storage2 = test_generic_storage<contiguous_storage<int>>();
+      {
+        auto storage1 = test_generic_storage<bucketed_storage<int, shared<int>>>();
+        auto storage2 = test_generic_storage<contiguous_storage<int,shared<int>>>();
 
-      check(isomorphic(storage1, storage2), LINE(""));
-      check(isomorphic(storage2, storage1), LINE(""));
+        check(isomorphic(storage1, storage2), LINE(""));
+        check(isomorphic(storage2, storage1), LINE(""));
+      }
 
-      auto storage3 = test_generic_storage<bucketed_storage<int, independent<int>>>();
-      auto storage4 = test_generic_storage<contiguous_storage<int, independent<int>>>();
+      {
+        auto storage3 = test_generic_storage<bucketed_storage<int, independent<int>>>();
+        auto storage4 = test_generic_storage<contiguous_storage<int, independent<int>>>();
 
-      check(isomorphic(storage3, storage4), LINE(""));
+        check(isomorphic(storage3, storage4), LINE(""));
+      }
+
+      /*{
+        test_generic_storage<
+          bucketed_storage<int, independent<int>, bucketed_pmr_storage_traits<int, independent<int>>>>();
+          }*/
     }
 
     template <class Storage>

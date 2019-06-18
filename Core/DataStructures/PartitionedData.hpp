@@ -69,31 +69,41 @@ namespace sequoia
     class [[nodiscard]] bucketed_storage
     {
     private:
-      template<class S> using buckets_template           = typename Traits::template buckets_type<S>;
+      template<class S> using buckets_template   = typename Traits::template buckets_type<S>;
       template<class S> using container_template = typename Traits::template container_type<S>;
         
       using held_type      = typename SharingPolicy::handle_type;
       using bucket_type    = container_template<held_type>;
       using storage_type   = buckets_template<bucket_type>;
     public:
-      using value_type = T;
-      using size_type = typename bucket_type::size_type;
-      using index_type = size_type;
-      using sharing_policy_type = SharingPolicy;
-      using partition_iterator = partition_iterator<Traits, SharingPolicy, size_type>;
-      using const_partition_iterator = const_partition_iterator<Traits, SharingPolicy, size_type>;
-      using reverse_partition_iterator = reverse_partition_iterator<Traits, SharingPolicy, size_type>;
+      using value_type            = T;
+      using size_type             = typename bucket_type::size_type;
+      using index_type            = size_type;
+      using allocator_type        = typename storage_type::allocator_type;
+      using bucket_allocator_type = typename bucket_type::allocator_type;
+      using sharing_policy_type   = SharingPolicy;
+
+      using partition_iterator               = partition_iterator<Traits, SharingPolicy, size_type>;
+      using const_partition_iterator         = const_partition_iterator<Traits, SharingPolicy, size_type>;
+      using reverse_partition_iterator       = reverse_partition_iterator<Traits, SharingPolicy, size_type>;
       using const_reverse_partition_iterator = const_reverse_partition_iterator<Traits, SharingPolicy, size_type>;
 
       constexpr static bool throw_on_range_error{Traits::throw_on_range_error};
       
-      bucketed_storage() noexcept = default;
+      bucketed_storage() noexcept(noexcept(allocator_type{})) = default;
 
-      bucketed_storage(std::initializer_list<std::initializer_list<T>> list)
+      explicit bucketed_storage(const allocator_type& allocator) noexcept
+        : m_Buckets(allocator) {}
+
+      bucketed_storage(
+                       std::initializer_list<std::initializer_list<T>> list,
+                       const allocator_type& allocator = allocator_type{},
+                       const bucket_allocator_type& bucketAllocator = bucket_allocator_type{})
+        : m_Buckets(allocator)
       {
         for(auto iter{list.begin()}; iter != list.end(); ++iter)
         { 
-          add_slot();
+          add_slot(bucketAllocator);
           const auto dist{std::distance(list.begin(), iter)};
           for(const auto& element : (*iter))
           {
@@ -150,21 +160,21 @@ namespace sequoia
         }        
       }
 
-      void add_slot()
+      void add_slot(const bucket_allocator_type& allocator = bucket_allocator_type{})
       {
-        m_Buckets.push_back(std::vector<held_type>());
+        m_Buckets.push_back(std::vector<held_type, bucket_allocator_type>(allocator));
       }
 
-      void insert_slot(const size_type pos)
+      void insert_slot(const size_type pos, const bucket_allocator_type& allocator = bucket_allocator_type{})
       {
         if(pos < num_partitions())
         {
           auto iter{m_Buckets.begin() + pos};
-          m_Buckets.insert(iter, std::vector<held_type>());
+          m_Buckets.insert(iter, std::vector<held_type, bucket_allocator_type>(allocator));
         }
         else
         {
-          add_slot();
+          add_slot(allocator);
         }
       }
 
@@ -716,7 +726,7 @@ namespace sequoia
       using PartitionsType = typename Traits::partitions_type;
       constexpr static index_type npos{partition_iterator::npos};
 
-      PartitionsType m_Partitions; // TO DO, C++20: [no_unique_address]
+      PartitionsType m_Partitions; // TO DO, C++20: [[no_unique_address]]
       ContainerType m_Storage;
 
       constexpr contiguous_storage_base(std::false_type, const contiguous_storage_base& in)
