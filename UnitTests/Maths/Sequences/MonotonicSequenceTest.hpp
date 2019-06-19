@@ -29,5 +29,7 @@ namespace sequoia::unit_testing
     void test_static_decreasing_sequence();
 
     void test_static_increasing_sequence();
+
+    void test_pmr_sequence();
   };
 }

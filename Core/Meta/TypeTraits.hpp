@@ -164,6 +164,21 @@ namespace sequoia
 
   template<class T> using is_not_equal_to_comparable_t = typename is_not_equal_to_comparable<T>::type;
 
+  // is_container
+
+  template<class T, class = void> struct is_container : std::false_type
+  {
+  };
+
+  template<class T> struct is_container<T, std::void_t<decltype(std::begin(std::declval<T>()))>> : std::true_type
+  {
+  };
+
+  template<class T> constexpr bool is_container_v{is_container<T>::value};
+
+  template<class T>
+  using is_container_t = typename is_container<T>::type;
+
   // has_default_constructor
 
   template<class T, class = std::void_t<>>
@@ -180,17 +195,20 @@ namespace sequoia
   template<class T>
   using has_default_constructor_t = typename has_default_constructor<T>::type;
 
-  // is_container
+  // has_allocator_type
 
-  template<class T, class = void> struct is_container : std::false_type
-  {
-  };
+  template<class T, class = std::void_t<>>
+  struct has_allocator_type : std::false_type
+  {};
 
-  template<class T> struct is_container<T, std::void_t<decltype(std::begin(std::declval<T>()))>> : std::true_type
-  {
-  };
+  template<class T>
+  struct has_allocator_type<T, std::void_t<typename T::allocator_type>> : std::true_type
+  {};
 
-  template<class T> constexpr bool is_container_v{is_container<T>::value};
+  template<class T> constexpr bool has_allocator_type_v = has_allocator_type<T>::value;
+
+  template<class T> using has_allocator_type_t = typename has_allocator_type<T>::type;
+
 
   // dependent_false
   

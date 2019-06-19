@@ -12,7 +12,7 @@
 #include <complex>
 
 namespace sequoia::unit_testing
-{
+{  
   void type_traits_test::run_tests()
   {
     test_variadic_traits();
@@ -23,7 +23,9 @@ namespace sequoia::unit_testing
     test_is_orderable();
     test_is_equal_to_comparable();
     test_is_not_equal_to_comparable();
+    test_is_container();    
     test_has_default_constructor();
+    test_has_allocator_type();
   }
 
   void type_traits_test::test_variadic_traits()
@@ -565,6 +567,33 @@ namespace sequoia::unit_testing
     );
   }
 
+  void type_traits_test::test_is_container()
+  {
+    check([]() {
+        static_assert(std::is_same_v<std::true_type, is_container_t<std::vector<double>>>);
+        return true;
+      }(), LINE("")
+    );
+
+    check([]() {
+        static_assert(is_container_v<std::vector<double>>);
+        return true;
+      }(), LINE("")
+    );
+
+    check([]() {
+        static_assert(std::is_same_v<std::false_type, is_container_t<double>>);
+        return true;
+      }(), LINE("")
+    );
+
+    check([]() {
+        static_assert(!is_container_v<double>);
+        return true;
+      }(), LINE("")
+    );
+  }
+
   void type_traits_test::test_has_default_constructor()
   {
     struct protected_destructor
@@ -617,4 +646,31 @@ namespace sequoia::unit_testing
       }(), LINE("")
     );
   }
+
+ void type_traits_test::test_has_allocator_type()
+ {
+   check([]() {
+       static_assert(std::is_same_v<std::true_type, has_allocator_type_t<std::vector<double>>>);
+       return true;
+     }(), LINE("")
+   );
+
+   check([]() {
+       static_assert(has_allocator_type_v<std::vector<double>>);
+       return true;
+     }(), LINE("")
+   );
+
+   check([]() {
+       static_assert(std::is_same_v<std::false_type, has_allocator_type_t<double>>);
+       return true;
+     }(), LINE("")
+   );
+
+   check([]() {
+       static_assert(!has_allocator_type_v<double>);
+       return true;
+     }(), LINE("")
+   );
+ }
 }

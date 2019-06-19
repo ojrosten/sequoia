@@ -12,6 +12,7 @@
  */
 
 #include "ArrayUtilities.hpp"
+#include "TypeTraits.hpp"
 
 #include <stdexcept>
 
@@ -30,8 +31,10 @@ namespace sequoia::maths
   template<class T, class C, class Compare> class monotonic_sequence_base
   {
   public:
-    using value_type = T;
-    using size_type  = typename C::size_type;
+    using value_type     = T;
+    using container_type = C;
+    using compare_type   = Compare;
+    using size_type      = typename C::size_type;
     
     using const_iterator         = typename C::const_iterator;
     using const_reverse_iterator = typename C::const_reverse_iterator;
@@ -112,17 +115,31 @@ namespace sequoia::maths
       }      
     }
 
-    constexpr friend bool operator==(const monotonic_sequence_base& lhs, const monotonic_sequence_base& rhs)
+    [[nodiscard]]
+    constexpr friend bool operator==(const monotonic_sequence_base& lhs, const monotonic_sequence_base& rhs) noexcept
     {
       return lhs.m_Sequence == rhs.m_Sequence;
     }
 
-    constexpr friend bool operator!=(const monotonic_sequence_base& lhs, const monotonic_sequence_base& rhs)
+    [[nodiscard]]
+    constexpr friend bool operator!=(const monotonic_sequence_base& lhs, const monotonic_sequence_base& rhs) noexcept
     {
       return !(lhs == rhs);
     }
     
-  protected:    
+  protected:
+    template<class Allocator>
+    constexpr explicit monotonic_sequence_base(const Allocator& allocator)
+      : m_Sequence(allocator)
+    {}
+
+    template<class Allocator>
+    constexpr monotonic_sequence_base(std::initializer_list<T> list, const Allocator& allocator)
+      : m_Sequence{list, allocator}
+    {
+      check();
+    }
+    
     constexpr monotonic_sequence_base(monotonic_sequence_base&&) noexcept = default;
     
     ~monotonic_sequence_base() = default;
@@ -214,7 +231,27 @@ namespace sequoia::maths
   {    
     using base_t = monotonic_sequence_base<T, C, Compare>;
   public:
-    using monotonic_sequence_base<T, C, Compare>::monotonic_sequence_base;
+    static_assert(has_allocator_type_v<C>);
+    
+    using allocator_type = typename C::allocator_type;
+    
+    monotonic_sequence() = default;
+
+    explicit monotonic_sequence(const allocator_type& allocator)
+      : monotonic_sequence_base<T, C, Compare>(allocator)
+    {}
+
+    monotonic_sequence(std::initializer_list<T> list, const allocator_type& allocator=allocator_type{})
+      : monotonic_sequence_base<T, C, Compare>{list, allocator}
+    {}
+
+    monotonic_sequence(const monotonic_sequence&)     = default;
+    monotonic_sequence(monotonic_sequence&&) noexcept = default;
+
+    ~monotonic_sequence() = default;
+
+    monotonic_sequence& operator=(const monotonic_sequence&)     = default;
+    monotonic_sequence& operator=(monotonic_sequence&&) noexcept = default;
 
     using base_t::push_back;
     using base_t::insert;
