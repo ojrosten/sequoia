@@ -72,7 +72,7 @@ namespace sequoia::maths::graph_impl
 
     constexpr node_storage() = default;
 
-    constexpr node_storage(const size_type n)
+    constexpr explicit node_storage(const size_type n)
       : node_storage(StaticType{}, n)
     {}
 
@@ -137,6 +137,21 @@ namespace sequoia::maths::graph_impl
       return !(lhs == rhs);
     }
   protected:
+    template<class Allocator>
+    constexpr explicit node_storage(const Allocator& allocator)
+      : m_NodeWeights(allocator)
+    {}
+
+    template<class Allocator>
+    constexpr node_storage(const size_t n, const Allocator& allocator)
+      : m_NodeWeights(init(n), allocator)
+    {}
+
+    template<class Allocator>
+    constexpr node_storage(std::initializer_list<weight_type> weights, const Allocator& allocator)
+      : m_NodeWeights(init(weights), allocator)
+    {}
+    
     constexpr node_storage(const node_storage& in)
       : node_storage{direct_copy(), in}
     {}
@@ -244,13 +259,8 @@ namespace sequoia::maths::graph_impl
       : m_NodeWeights{make_default_array(std::make_index_sequence<Traits::num_elements_v>{})} {}
 
     constexpr node_storage(std::false_type, const size_type n)
-    {
-      m_NodeWeights.reserve(n);
-      for(size_type i{}; i<n; ++i)
-      {
-        m_NodeWeights.push_back(make_node_weight());
-      }
-    }
+      : m_NodeWeights{init(n)}
+    {}
 
     constexpr node_storage(std::true_type, std::initializer_list<weight_type> weights)
       : m_NodeWeights{make_array(weights)}
@@ -258,13 +268,8 @@ namespace sequoia::maths::graph_impl
     }
 
     constexpr node_storage(std::false_type, std::initializer_list<weight_type> weights)
-    {
-      m_NodeWeights.reserve(weights.size());
-      for(const auto& weight : weights)
-      {
-        m_NodeWeights.push_back(make_node_weight(weight));
-      }
-    }
+      : m_NodeWeights{init(weights)}
+    {}
   
     constexpr node_storage(direct_copy_type, const node_storage& in)
       : m_NodeWeights{in.m_NodeWeights}
@@ -279,9 +284,34 @@ namespace sequoia::maths::graph_impl
         m_NodeWeights.emplace_back(make_node_weight(weight.get()));
       }
     }
-
-    
+  
     // helper methods
+
+    [[nodiscard]]
+    Storage init(const size_type n)
+    {
+      Storage nodeWeights{};
+      nodeWeights.reserve(n);
+      for(size_type i{}; i<n; ++i)
+      {
+        nodeWeights.push_back(make_node_weight());
+      }
+
+      return nodeWeights;
+    }
+
+    [[nodiscard]]
+    Storage init(std::initializer_list<weight_type> weights)
+    {
+      Storage nodeWeights{};
+      nodeWeights.reserve(weights.size());
+      for(const auto& weight : weights)
+      {
+        nodeWeights.push_back(make_node_weight(weight));
+      }
+
+      return nodeWeights;
+    }
 
     constexpr Storage make_array(std::initializer_list<weight_type> weights)
     {
@@ -322,9 +352,12 @@ namespace sequoia::maths::graph_impl
     using size_type         = typename std::size_t;
     
     constexpr node_storage() = default;
-    constexpr node_storage(const std::size_t) noexcept {}
+    constexpr explicit node_storage(const std::size_t) noexcept {}
 
+    [[nodiscard]]
     constexpr friend bool operator==(const node_storage& lhs, const node_storage& rhs) noexcept { return true;}
+
+    [[nodiscard]]
     constexpr friend bool operator!=(const node_storage& lhs, const node_storage& rhs) noexcept { return !(lhs == rhs);}
   protected:
     constexpr node_storage(const node_storage&)                = default;
