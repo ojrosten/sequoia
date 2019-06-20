@@ -129,7 +129,7 @@ namespace sequoia::maths
     
   protected:
     template<class Allocator>
-    constexpr explicit monotonic_sequence_base(const Allocator& allocator)
+    constexpr explicit monotonic_sequence_base(const Allocator& allocator) noexcept
       : m_Sequence(allocator)
     {}
 

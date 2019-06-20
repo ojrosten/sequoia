@@ -50,5 +50,20 @@ namespace sequoia::unit_testing
       template<class S> using buckets_type   = std::vector<S, std::experimental::pmr::polymorphic_allocator<S>>; 
       template<class S> using container_type = std::vector<S, std::experimental::pmr::polymorphic_allocator<S>>; 
     };
+
+    template<class T, class SharingPolicy> struct contiguous_pmr_storage_traits
+    {
+      constexpr static bool static_storage_v{false};
+      constexpr static bool throw_on_range_error{true};
+
+      using index_type = std::size_t;
+      using partition_index_type = std::size_t;
+
+      using partitions_container = std::vector<partition_index_type, std::experimental::pmr::polymorphic_allocator<partition_index_type>>;
+      
+      using partitions_type = maths::monotonic_sequence<partition_index_type, std::greater<partition_index_type>, partitions_container>;
+      
+      template<class S> using container_type = std::vector<S, std::experimental::pmr::polymorphic_allocator<S>>;
+    };
   };
 }

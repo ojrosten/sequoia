@@ -115,16 +115,24 @@ namespace sequoia
       }
 
       {
-        auto storage3 = test_generic_storage<bucketed_storage<int, independent<int>>>();
-        auto storage4 = test_generic_storage<contiguous_storage<int, independent<int>>>();
+        auto storage1 = test_generic_storage<bucketed_storage<int, independent<int>>>();
+        auto storage2 = test_generic_storage<contiguous_storage<int, independent<int>>>();
 
-        check(isomorphic(storage3, storage4), LINE(""));
+        check(isomorphic(storage1, storage2), LINE(""));
       }
 
-      /*{
-        test_generic_storage<
+      /*
+      {
+        auto storage1 = test_generic_storage<
           bucketed_storage<int, independent<int>, bucketed_pmr_storage_traits<int, independent<int>>>>();
-          }*/
+        auto storage2 = test_generic_storage<
+          contiguous_storage<int, independent<int>, contiguous_pmr_storage_traits<int, independent<int>>>>();
+
+          check(isomorphic(storage1, storage2), LINE(""));
+       }
+      */
+
+      
     }
 
     template <class Storage>
