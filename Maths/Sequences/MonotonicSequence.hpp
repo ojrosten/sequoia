@@ -141,6 +141,16 @@ namespace sequoia::maths
     }
     
     constexpr monotonic_sequence_base(monotonic_sequence_base&&) noexcept = default;
+
+    template<class Allocator>
+    constexpr monotonic_sequence_base(const monotonic_sequence_base& s, const Allocator& allocator)
+      : m_Sequence{s.m_Sequence, allocator}
+    {}
+
+    template<class Allocator>
+    constexpr monotonic_sequence_base(monotonic_sequence_base&& s, const Allocator& allocator) noexcept
+      : m_Sequence{std::move(s.m_Sequence), allocator}
+    {}
     
     ~monotonic_sequence_base() = default;
     
@@ -246,7 +256,16 @@ namespace sequoia::maths
     {}
 
     monotonic_sequence(const monotonic_sequence&)     = default;
+
+    monotonic_sequence(const monotonic_sequence& s, const allocator_type& allocator)
+      : monotonic_sequence_base<T, C, Compare>{s, allocator}
+    {}
+    
     monotonic_sequence(monotonic_sequence&&) noexcept = default;
+
+    monotonic_sequence(monotonic_sequence&& s, const allocator_type& allocator)
+      : monotonic_sequence_base<T, C, Compare>{std::move(s), allocator}
+    {}
 
     ~monotonic_sequence() = default;
 

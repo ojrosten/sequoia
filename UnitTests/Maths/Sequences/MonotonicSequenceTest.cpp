@@ -144,8 +144,18 @@ namespace sequoia::unit_testing
 
   void monotonic_sequence_test::test_pmr_sequence()
   {
-    //using namespace maths;
-    
-    //monotonic_sequence<int, std::less<int>, std::pmr::vector<int>> s{}; 
+    using namespace maths;
+
+    // TO DO: replace with pmr when available
+    using allocator = std::allocator<int>;
+    using sequence = monotonic_sequence<int, std::less<int>, std::vector<int, allocator>>;
+
+    sequence s(allocator{});
+    check_equivalence(s, std::initializer_list<int>{}, LINE(""));
+
+    sequence t{{4, 3}, allocator{}};
+    check_equivalence(t, std::initializer_list<int>{4, 3}, LINE(""));
+
+    check_regular_semantics(s, t, allocator{}, LINE("Regular Semantics"));
   }
 }

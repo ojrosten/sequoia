@@ -66,7 +66,7 @@ namespace sequoia
     };
     
     template<class T, class SharingPolicy=data_sharing::independent<T>, class Traits=bucketed_storage_traits<T, SharingPolicy>>
-    class [[nodiscard]] bucketed_storage
+    class bucketed_storage
     {
     private:
       template<class S> using buckets_template   = typename Traits::template buckets_type<S>;
@@ -418,7 +418,7 @@ namespace sequoia
     //===================================Contiguous storage===================================//
         
     template<class T, class SharingPolicy, class Traits>
-    class [[nodiscard]] contiguous_storage_base
+    class contiguous_storage_base
     {
     public:
       using value_type          = T;

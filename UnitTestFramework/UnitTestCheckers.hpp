@@ -319,6 +319,36 @@ namespace sequoia
       check_equality(logger, z, y, combine_messages(description, "Swap"));
     }
 
+    template<class Logger, class T, class Allocator>
+    void check_regular_semantics(Logger& logger, const T& x, const T& y, const Allocator& allocator, std::string_view description)
+    {
+      typename Logger::sentinel s{logger, impl::add_type_info<T>(description)};
+
+      if(!check(logger, x == x, combine_messages(description, "Equality operator is inconsistent"))) return;
+      if(!check(logger, !(x != x), combine_messages(description, "Inequality operator is inconsistent"))) return;
+
+      // TO DO: contract in C++20
+      if(!check(logger, x != y, combine_messages(description, "Precondition - for check the standard semantics, x and y are assumed to be different"))) return;
+      
+      T z{x, allocator};
+      check_equality(logger, z, x, combine_messages(description, "Copy constructor"));
+      check(logger, z == x, combine_messages(description, "Equality operator"));
+
+      z = y;
+      check_equality(logger, z, y, combine_messages(description, "Copy assignment"));
+      check(logger, z != x, combine_messages(description, "Inequality operator"));
+
+      T w{std::move(z), allocator};
+      check_equality(logger, w, y, combine_messages(description, "Move constructor"));
+
+      z = [x](){ return x;}();
+      check_equality(logger, z, x, combine_messages(description, "Move assignment"));      
+
+      std::swap(w,z);
+      check_equality(logger, w, x, combine_messages(description, "Swap"));
+      check_equality(logger, z, y, combine_messages(description, "Swap"));
+    }
+
     template<class Logger, class T, class Mutator>
     void check_copy_consistency(Logger& logger, T& target, const T& prediction, Mutator m, std::string_view description)
     {
@@ -533,11 +563,17 @@ namespace sequoia
         unit_testing::check_regular_semantics(m_Logger, x, y, description);        
       }
 
-       template<class T, class Mutator>
-       void check_copy_consistency(T& target, const T& prediction, Mutator m, std::string_view description)
-       {
-         unit_testing::check_copy_consistency(m_Logger, target, prediction, std::move(m), description);
-       }
+      template<class T, class Allocator>
+      void check_regular_semantics(const T& x, const T& y, const Allocator& allocator, std::string_view description)
+      {
+        unit_testing::check_regular_semantics(m_Logger, x, y, allocator, description);        
+      }
+
+      template<class T, class Mutator>
+      void check_copy_consistency(T& target, const T& prediction, Mutator m, std::string_view description)
+      {
+        unit_testing::check_copy_consistency(m_Logger, target, prediction, std::move(m), description);
+      }
       
       template<class F, class S>
       auto check_relative_performance(F fast, S slow, const double minSpeedUp, const double maxSpeedUp, std::string_view description, const std::size_t trials=5, const double num_sds=3)
