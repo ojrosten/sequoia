@@ -59,14 +59,15 @@ namespace sequoia::maths::graph_impl
   {
   private:
     template<class S> using Container = typename Traits::template container_type<S>;
-    using Storage = Container<typename WeightMaker::weight_proxy>;
+  protected:
+    using container_type = Container<typename WeightMaker::weight_proxy>;
   public:    
     using weight_proxy_type = typename WeightMaker::weight_proxy;
     using weight_type       = typename weight_proxy_type::value_type;
-    using size_type         = typename Storage::size_type;
+    using size_type         = typename container_type::size_type;
 
-    using const_iterator = utilities::iterator<typename Storage::const_iterator, proxy_dereference_policy<typename Storage::const_iterator>>;
-    using const_reverse_iterator = utilities::iterator<typename Storage::const_reverse_iterator, proxy_dereference_policy<typename Storage::const_reverse_iterator>>;
+    using const_iterator         = utilities::iterator<typename container_type::const_iterator, proxy_dereference_policy<typename container_type::const_iterator>>;
+    using const_reverse_iterator = utilities::iterator<typename container_type::const_reverse_iterator, proxy_dereference_policy<typename container_type::const_reverse_iterator>>;
 
     constexpr static bool throw_on_range_error{Traits::throw_on_range_error};
 
@@ -155,8 +156,18 @@ namespace sequoia::maths::graph_impl
     constexpr node_storage(const node_storage& in)
       : node_storage{direct_copy(), in}
     {}
+
+    template<class Allocator>
+    constexpr node_storage(const node_storage& in, const Allocator& allocator)
+      : node_storage{direct_copy(), in, allocator}
+    {}
       
     constexpr node_storage(node_storage&&) noexcept = default;
+
+    template<class Allocator>
+    constexpr node_storage(node_storage&& s, const Allocator& allocator) noexcept
+      : m_NodeWeights{std::move(s.m_NodeWeights), allocator}
+    {}
         
     ~node_storage() = default;
 
@@ -252,7 +263,7 @@ namespace sequoia::maths::graph_impl
     }
 
     // private data
-    Storage m_NodeWeights;
+    container_type m_NodeWeights;
 
     // constructors impl
     constexpr node_storage(std::true_type, const size_type n)
@@ -273,24 +284,28 @@ namespace sequoia::maths::graph_impl
   
     constexpr node_storage(direct_copy_type, const node_storage& in)
       : m_NodeWeights{in.m_NodeWeights}
-    {
-    }
+    {}
+
+    template<class Allocator>
+    constexpr node_storage(direct_copy_type, const node_storage& in, const Allocator& allocator)
+      : m_NodeWeights{in.m_NodeWeights, allocator}
+    {}
 
     constexpr node_storage(indirect_copy_type, const node_storage& in)
-    {
-      m_NodeWeights.reserve(in.m_NodeWeights.size());
-      for(const auto& weight : in.m_NodeWeights)
-      {
-        m_NodeWeights.emplace_back(make_node_weight(weight.get()));
-      }
-    }
+      : m_NodeWeights{clone(in)}
+    {}
+
+    template<class Allocator>
+    constexpr node_storage(indirect_copy_type, const node_storage& in, const Allocator& allocator)
+      : m_NodeWeights(clone(in), allocator)
+    {}
   
     // helper methods
 
     [[nodiscard]]
-    Storage init(const size_type n)
+    container_type init(const size_type n)
     {
-      Storage nodeWeights{};
+      container_type nodeWeights{};
       nodeWeights.reserve(n);
       for(size_type i{}; i<n; ++i)
       {
@@ -301,9 +316,9 @@ namespace sequoia::maths::graph_impl
     }
 
     [[nodiscard]]
-    Storage init(std::initializer_list<weight_type> weights)
+    container_type init(std::initializer_list<weight_type> weights)
     {
-      Storage nodeWeights{};
+      container_type nodeWeights{};
       nodeWeights.reserve(weights.size());
       for(const auto& weight : weights)
       {
@@ -313,7 +328,21 @@ namespace sequoia::maths::graph_impl
       return nodeWeights;
     }
 
-    constexpr Storage make_array(std::initializer_list<weight_type> weights)
+    [[nodiscard]]
+    container_type clone(const node_storage& in)
+    {
+      container_type nodeWeights{};
+      nodeWeights.reserve(in.m_NodeWeights.size());
+      for(const auto& weight : in.m_NodeWeights)
+      {
+        nodeWeights.emplace_back(make_node_weight(weight.get()));
+      }
+
+      return nodeWeights;
+    }
+
+    [[nodiscard]]
+    constexpr container_type make_array(std::initializer_list<weight_type> weights)
     {
       if(weights.size() != Traits::num_elements_v)
         throw std::logic_error("Initializer list of wrong size");
@@ -324,16 +353,17 @@ namespace sequoia::maths::graph_impl
     }
 
     template<std::size_t... Inds>
-    constexpr Storage make_default_array(std::index_sequence<Inds...>)
+    [[nodiscard]]
+    constexpr container_type make_default_array(std::index_sequence<Inds...>)
     {
       return { make_default_element(Inds)... };
     }        
-        
+
+    [[nodiscard]]
     constexpr weight_proxy_type make_default_element(const std::size_t i)
     {
       return weight_proxy_type{weight_type{}};
     }
-
 
     template<class... Args>
     [[nodiscard]]

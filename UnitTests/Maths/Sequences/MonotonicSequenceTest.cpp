@@ -8,8 +8,6 @@
 #include "MonotonicSequenceTest.hpp"
 #include "MonotonicSequenceTestingUtilities.hpp"
 
-//#include <experimental/memory_resource>
-
 namespace sequoia::unit_testing
 {
   void monotonic_sequence_test::run_tests()
@@ -17,7 +15,7 @@ namespace sequoia::unit_testing
     test_decreasing_sequence();
     test_static_decreasing_sequence();
     test_static_increasing_sequence();
-    test_pmr_sequence();
+    test_allocator();
   }
 
   void monotonic_sequence_test::test_decreasing_sequence()
@@ -142,7 +140,7 @@ namespace sequoia::unit_testing
     check_equivalence(u, std::initializer_list<int>{2,3,3,4,4,5}, LINE(""));
   }
 
-  void monotonic_sequence_test::test_pmr_sequence()
+  void monotonic_sequence_test::test_allocator()
   {
     using namespace maths;
 

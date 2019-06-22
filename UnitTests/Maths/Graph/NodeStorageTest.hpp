@@ -25,5 +25,6 @@ namespace sequoia::unit_testing
 
     void test_dynamic_node_storage();
     void test_static_node_storage();
+    void test_allocator();
   };
 }

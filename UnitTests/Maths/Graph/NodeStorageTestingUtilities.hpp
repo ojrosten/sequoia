@@ -173,8 +173,54 @@ namespace sequoia::unit_testing
   template<class WeightMaker>
   class node_storage_tester : public maths::graph_impl::node_storage<WeightMaker, node_storage_traits>
   {
+  private:
+    using base_t = maths::graph_impl::node_storage<WeightMaker, node_storage_traits>;
+    
   public:
-    using maths::graph_impl::node_storage<WeightMaker, node_storage_traits>::node_storage;
+    using allocator_type = typename base_t::container_type::allocator_type;
+    using size_type      = typename base_t::size_type;
+    using weight_type    = typename base_t::weight_type;
+    
+    node_storage_tester() = default;
+
+    explicit node_storage_tester(const allocator_type& allocator)
+      : base_t(allocator)
+    {}
+
+    explicit node_storage_tester(const size_type n)
+      : base_t(n)
+    {}
+
+    node_storage_tester(const size_type n, const allocator_type& allocator)
+      : base_t(n, allocator)
+    {}
+
+    node_storage_tester(std::initializer_list<weight_type> weights)
+      : base_t{weights}
+    {}
+
+    node_storage_tester(std::initializer_list<weight_type> weights, const allocator_type& allocator)
+      : base_t{weights, allocator}
+    {}
+
+    node_storage_tester(const node_storage_tester&) = default;
+
+    node_storage_tester(const node_storage_tester& s, const allocator_type& allocator)
+      : base_t{s, allocator}
+    {}
+
+    node_storage_tester(node_storage_tester&&) noexcept = default;
+
+    node_storage_tester(node_storage_tester&& s, const allocator_type& allocator)
+      : base_t{std::move(s), allocator}
+    {}
+    
+    ~node_storage_tester() = default;
+    
+    node_storage_tester& operator=(const node_storage_tester&) = default;
+
+    node_storage_tester& operator=(node_storage_tester&&) noexcept = default;
+    
     using maths::graph_impl::node_storage<WeightMaker, node_storage_traits>::reserve;
     using maths::graph_impl::node_storage<WeightMaker, node_storage_traits>::capacity;
     using maths::graph_impl::node_storage<WeightMaker, node_storage_traits>::shrink_to_fit;

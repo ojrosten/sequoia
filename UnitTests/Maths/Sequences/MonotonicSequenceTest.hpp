@@ -30,6 +30,6 @@ namespace sequoia::unit_testing
 
     void test_static_increasing_sequence();
 
-    void test_pmr_sequence();
+    void test_allocator();
   };
 }
