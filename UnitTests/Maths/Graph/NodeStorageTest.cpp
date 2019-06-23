@@ -18,9 +18,12 @@ namespace sequoia:: unit_testing
   void test_node_storage::run_tests()
   {
     test_dynamic_node_storage<data_sharing::unpooled<double>>();
-    //test_dynamic_node_storage<data_sharing::data_pool<double>>();
+    test_dynamic_node_storage<data_sharing::data_pool<double>>();
+    
     test_static_node_storage();
-    test_allocator();
+    
+    test_allocator<data_sharing::unpooled<int>>();
+    test_allocator<data_sharing::data_pool<int>>();
   }
 
   template<class Sharing>
@@ -114,11 +117,12 @@ namespace sequoia:: unit_testing
     check_regular_semantics(store, {4, 4, 9, 7}, LINE("Regular semantics"));
   }
 
+  template<class Sharing>
   void test_node_storage::test_allocator()
   {
     using namespace maths::graph_impl;
     
-    using storage_t = node_storage_tester<weight_maker<data_sharing::unpooled<int>>>;
+    using storage_t = node_storage_tester<weight_maker<Sharing>>;
     using allocator_t = typename storage_t::allocator_type;
 
     storage_t s{allocator_t{}}, t{{1, 1, 0}, allocator_t{}};

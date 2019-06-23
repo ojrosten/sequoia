@@ -58,7 +58,7 @@ namespace sequoia
       {}
 
       [[nodiscard]]
-      constexpr size_type size()  const noexcept
+      constexpr size_type size() const noexcept
       {
         return connectivity_type::size();
       }
@@ -66,14 +66,14 @@ namespace sequoia
       //===============================equality (not isomorphism) operators================================//
 
       [[nodiscard]]
-      friend constexpr bool operator==(const graph_primitive& lhs, const graph_primitive& rhs)
+      friend constexpr bool operator==(const graph_primitive& lhs, const graph_primitive& rhs) noexcept
       {
         return (static_cast<const Connectivity&>(lhs) == static_cast<const Connectivity&>(rhs))
             && (static_cast<const Nodes&>(lhs) == static_cast<const Nodes&>(rhs));
       }
 
       [[nodiscard]]
-      friend constexpr bool operator!=(const graph_primitive& lhs, const graph_primitive& rhs)
+      friend constexpr bool operator!=(const graph_primitive& lhs, const graph_primitive& rhs) noexcept
       {
         return !(lhs == rhs);
       }

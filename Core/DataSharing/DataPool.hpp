@@ -118,7 +118,7 @@ namespace sequoia::data_sharing
 
     friend class handle;
       
-    data_pool() {}
+    data_pool() = default;
 
     data_pool(const data_pool&) = delete;
 

@@ -325,22 +325,6 @@ namespace sequoia
       private:
         WeightPooling m_Pool;
       };
-
-      /*
-      // size_type generator
-
-      template<class EdgeStorage, class NodeStorage, bool=std::is_empty_v<typename NodeStorage::weight_type>>
-      struct size_type_generator
-      {
-        using size_type = typename EdgeStorage::size_type;
-      };
-
-      template<class EdgeStorage, class NodeStorage>
-      struct size_type_generator<EdgeStorage, NodeStorage, false>
-      {
-        using size_type = std::common_type_t<typename EdgeStorage::size_type, typename NodeStorage::size_type>;
-      };
-      */
                            
       // Determine dynamic reservartion type etc
 

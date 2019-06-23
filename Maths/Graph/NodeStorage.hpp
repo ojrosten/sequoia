@@ -171,8 +171,13 @@ namespace sequoia::maths::graph_impl
         
     ~node_storage() = default;
 
-    constexpr node_storage& operator=(const node_storage& in) = default;
- 
+    constexpr node_storage& operator=(const node_storage& in)
+    {
+      auto tmp{in};
+      *this = std::move(tmp);
+      return *this;
+    }    
+
     constexpr node_storage& operator=(node_storage&&) noexcept = default;
 
     constexpr void swap_nodes(const size_type i, const size_type j)

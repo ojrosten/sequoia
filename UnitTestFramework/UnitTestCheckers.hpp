@@ -113,7 +113,7 @@ namespace sequoia
         if(!check(logger, !(x != x), combine_messages(description, "Inequality operator is inconsistent"))) return;
 
         // TO DO: contract in C++20
-        if(!check(logger, x != y, combine_messages(description, "Precondition - for check the standard semantics, x and y are assumed to be different"))) return;
+        if(!check(logger, x != y, combine_messages(description, "Precondition - for checking regular semantics, x and y are assumed to be different"))) return;
       
         T z{x, args...};
         check_equality(logger, z, x, combine_messages(description, "Copy constructor"));
@@ -127,11 +127,39 @@ namespace sequoia
         check_equality(logger, w, y, combine_messages(description, "Move constructor"));
 
         z = [&x]() -> T { return x; }();
-        check_equality(logger, z, x, combine_messages(description, "Move assignment"));      
+        check_equality(logger, z, x, combine_messages(description, "Move assignment"));
 
-        std::swap(w,z);
+        using std::swap;
+        swap(w,z);
         check_equality(logger, w, x, combine_messages(description, "Swap"));
         check_equality(logger, z, y, combine_messages(description, "Swap"));
+      }
+
+      template<class Logger, class T, class... Args>
+      void check_regular_semantics(Logger& logger, T&& x, T&& y, const T& xClone, const T& yClone, std::string_view description, const Args&... args)
+      {
+        typename Logger::sentinel s{logger, impl::add_type_info<T>(description)};
+
+        if(!check(logger, x == x, combine_messages(description, "Equality operator is inconsistent"))) return;
+        if(!check(logger, !(x != x), combine_messages(description, "Inequality operator is inconsistent"))) return;
+
+        // TO DO: contract in C++20
+        if(!check(logger, x != y, combine_messages(description, "Precondition - for checking regular semantics, x and y are assumed to be different"))) return;
+
+        if(!check(logger, x == xClone, combine_messages(description, "Precondition - for checking regular semantics, x and xClone are assumed to be equal"))) return;
+
+        if(!check(logger, y == yClone, combine_messages(description, "Precondition - for checking regular semantics, y and yClone are assumed to be equal"))) return;
+
+        T z{std::move(x), args...};
+        check_equality(logger, z, xClone, combine_messages(description, "Move constructor"));
+        
+        x = std::move(y);
+        check_equality(logger, x, yClone, combine_messages(description, "Move assignment"));
+
+        using std::swap;
+        swap(z, x);
+        check_equality(logger, x, xClone, combine_messages(description, "Swap"));
+        check_equality(logger, z, yClone, combine_messages(description, "Swap"));
       }
     }
 
@@ -329,6 +357,18 @@ namespace sequoia
     void check_regular_semantics(Logger& logger, const T& x, const T& y, const Allocator& allocator, std::string_view description)
     {
       impl::check_regular_semantics(logger, x, y, description, allocator);
+    }
+
+    template<class Logger, class T>
+    void check_regular_semantics(Logger& logger, T&& x, T&& y, const T& xClone, const T& yClone, std::string_view description)
+    {
+      impl::check_regular_semantics(logger, std::move(x), std::move(y), xClone, yClone, description);
+    }
+
+    template<class Logger, class T, class Allocator>
+    void check_regular_semantics(Logger& logger, T&& x, T&& y, const T& xClone, const T& yClone, const Allocator& allocator, std::string_view description)
+    {
+      impl::check_regular_semantics(logger, std::move(x), std::move(y), xClone, yClone, description, allocator);
     }
 
     template<class Logger, class T, class Mutator>
@@ -548,7 +588,19 @@ namespace sequoia
       template<class T, class Allocator>
       void check_regular_semantics(const T& x, const T& y, const Allocator& allocator, std::string_view description)
       {
-        unit_testing::check_regular_semantics(m_Logger, x, y, allocator, description);        
+        unit_testing::check_regular_semantics(m_Logger, x, y, allocator, description);
+      }
+
+      template<class T>
+      void check_regular_semantics(T&& x, T&& y, const T& xClone, const T& yClone, std::string_view description)
+      {
+        unit_testing::check_regular_semantics(m_Logger, std::move(x), std::move(y), xClone, yClone, description);
+      }
+
+      template<class T, class Allocator>
+      void check_regular_semantics(T&& x, T&& y, const T& xClone, const T& yClone, const Allocator& allocator, std::string_view description)
+      {
+        unit_testing::check_regular_semantics(m_Logger, std::move(x), std::move(y), xClone, yClone, allocator, description);
       }
 
       template<class T, class Mutator>
