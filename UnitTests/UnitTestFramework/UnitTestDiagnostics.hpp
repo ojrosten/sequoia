@@ -81,7 +81,21 @@ namespace sequoia
 
     struct broken_inequality
     {
+      using allocator_type = std::vector<int>::allocator_type;
+
       broken_inequality(std::initializer_list<int> list) : x{list} {};
+
+      broken_inequality(const broken_inequality&) = default;
+
+      broken_inequality(const broken_inequality& other, const allocator_type& alloc) : x(other.x, alloc) {}
+
+      broken_inequality(broken_inequality&&) noexcept = default;
+
+      broken_inequality(broken_inequality&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+
+      broken_inequality& operator=(const broken_inequality&) = default;
+
+      broken_inequality& operator=(broken_inequality&&) noexcept = default;
 
       std::vector<int> x{};
 
@@ -105,6 +119,8 @@ namespace sequoia
 
     struct broken_copy
     {
+      using allocator_type = std::vector<int>::allocator_type;
+
       broken_copy(std::initializer_list<int> list) : x{list} {};
 
       broken_copy(const broken_copy&)
@@ -112,7 +128,14 @@ namespace sequoia
         // Do nothing
       }
 
+      broken_copy(const broken_copy&, const allocator_type&)
+      {
+        // Do nothing
+      }
+
       broken_copy(broken_copy&&) = default;
+
+      broken_copy(broken_copy&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
       
       broken_copy& operator=(const broken_copy&) = default;
 
@@ -140,11 +163,20 @@ namespace sequoia
 
     struct broken_move
     {
+      using allocator_type = std::vector<int>::allocator_type;
+
       broken_move(std::initializer_list<int> list) : x{list} {};
 
       broken_move(const broken_move&) = default;
 
+      broken_move(const broken_move& other, const allocator_type& alloc) : x(other.x, alloc) {}
+
       broken_move(broken_move&&)      
+      {
+        // Do nothing
+      }
+
+      broken_move(broken_move&&, const allocator_type&)      
       {
         // Do nothing
       }
@@ -175,11 +207,17 @@ namespace sequoia
 
     struct broken_copy_assignment
     {
+      using allocator_type = std::vector<int>::allocator_type;
+
       broken_copy_assignment(std::initializer_list<int> list) : x{list} {};
 
       broken_copy_assignment(const broken_copy_assignment&) = default;
 
+      broken_copy_assignment(const broken_copy_assignment& other, const allocator_type& alloc) : x(other.x, alloc) {}
+
       broken_copy_assignment(broken_copy_assignment&&) = default;
+
+      broken_copy_assignment(broken_copy_assignment&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
       
       broken_copy_assignment& operator=(const broken_copy_assignment&)
       {
@@ -210,11 +248,17 @@ namespace sequoia
 
     struct broken_move_assignment
     {
+      using allocator_type = std::vector<int>::allocator_type;
+
       broken_move_assignment(std::initializer_list<int> list) : x{list} {};
 
       broken_move_assignment(const broken_move_assignment&) = default;
 
+      broken_move_assignment(const broken_move_assignment& other, const allocator_type& alloc) : x(other.x, alloc) {}
+
       broken_move_assignment(broken_move_assignment&&) = default;
+
+      broken_move_assignment(broken_move_assignment&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
       
       broken_move_assignment& operator=(const broken_move_assignment&) = default;
       
@@ -245,7 +289,21 @@ namespace sequoia
 
     struct perfectly_normal_beast
     {
+      using allocator_type = std::vector<int>::allocator_type;
+
       perfectly_normal_beast(std::initializer_list<int> list) : x{list} {};
+
+      perfectly_normal_beast(const perfectly_normal_beast&) = default;
+
+      perfectly_normal_beast(const perfectly_normal_beast& other, const allocator_type& alloc) : x(other.x, alloc) {}
+
+      perfectly_normal_beast(perfectly_normal_beast&&) noexcept = default;
+
+      perfectly_normal_beast(perfectly_normal_beast&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+
+      perfectly_normal_beast& operator=(const perfectly_normal_beast&) = default;
+
+      perfectly_normal_beast& operator=(perfectly_normal_beast&&) noexcept = default;
       
       std::vector<int> x{};
 

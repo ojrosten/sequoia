@@ -108,7 +108,7 @@ namespace sequoia
       check_regular_semantics(perfectly_normal_beast{1}, perfectly_normal_beast{1}, LINE(""));
 
       check_regular_semantics(broken_equality{1}, broken_equality{2}, broken_equality{1}, broken_equality{2}, LINE(""));
-      check_regular_semantics(broken_inequality{1}, broken_inequality{2}, broken_inequality{1}, broken_inequality{2},LINE(""));
+      check_regular_semantics(broken_inequality{1}, broken_inequality{2}, broken_inequality{1}, broken_inequality{2}, LINE(""));
       check_regular_semantics(broken_move{1}, broken_move{2}, broken_move{1}, broken_move{2}, LINE(""));
       check_regular_semantics(broken_move_assignment{1}, broken_move_assignment{2}, broken_move_assignment{1}, broken_move_assignment{2}, LINE(""));
       check_regular_semantics(perfectly_normal_beast{1}, perfectly_normal_beast{1}, perfectly_normal_beast{1}, perfectly_normal_beast{1}, LINE(""));
@@ -117,6 +117,20 @@ namespace sequoia
 
       using allocator = std::vector<int>::allocator_type;
       check_regular_semantics(broken_equality{1}, broken_equality{2}, allocator{}, LINE(""));
+      check_regular_semantics(broken_inequality{1}, broken_inequality{2}, allocator{}, LINE(""));
+      check_regular_semantics(broken_copy{1}, broken_copy{2}, allocator{}, LINE(""));
+      check_regular_semantics(broken_move{1}, broken_move{2}, allocator{}, LINE(""));
+      check_regular_semantics(broken_copy_assignment{1}, broken_copy_assignment{2}, allocator{}, LINE(""));
+      check_regular_semantics(broken_move_assignment{1}, broken_move_assignment{2}, allocator{}, LINE(""));
+      check_regular_semantics(perfectly_normal_beast{1}, perfectly_normal_beast{1}, allocator{}, LINE(""));
+
+      check_regular_semantics(broken_equality{1}, broken_equality{2}, broken_equality{1}, broken_equality{2}, allocator{}, LINE(""));
+      check_regular_semantics(broken_inequality{1}, broken_inequality{2}, broken_inequality{1}, broken_inequality{2}, allocator{}, LINE(""));
+      check_regular_semantics(broken_move{1}, broken_move{2}, broken_move{1}, broken_move{2}, LINE(""));
+      check_regular_semantics(broken_move_assignment{1}, broken_move_assignment{2}, broken_move_assignment{1}, broken_move_assignment{2}, allocator{}, LINE(""));
+      check_regular_semantics(perfectly_normal_beast{1}, perfectly_normal_beast{1}, perfectly_normal_beast{1}, perfectly_normal_beast{1}, allocator{}, LINE(""));
+      check_regular_semantics(perfectly_normal_beast{1}, perfectly_normal_beast{3}, perfectly_normal_beast{2}, perfectly_normal_beast{3}, allocator{}, LINE(""));
+      check_regular_semantics(perfectly_normal_beast{1}, perfectly_normal_beast{2}, perfectly_normal_beast{3}, perfectly_normal_beast{2}, allocator{}, LINE(""));
     }
 
     void false_negative_diagnostics::run_tests()
@@ -193,6 +207,10 @@ namespace sequoia
     {
       check_regular_semantics(perfectly_normal_beast{1}, perfectly_normal_beast{2}, LINE(""));
       check_regular_semantics(perfectly_normal_beast{1}, perfectly_normal_beast{2}, perfectly_normal_beast{1}, perfectly_normal_beast{2}, LINE(""));
+
+      using allocator = std::vector<int>::allocator_type;
+      check_regular_semantics(perfectly_normal_beast{1}, perfectly_normal_beast{2}, allocator{}, LINE(""));
+      check_regular_semantics(perfectly_normal_beast{1}, perfectly_normal_beast{2}, perfectly_normal_beast{1}, perfectly_normal_beast{2}, allocator{}, LINE(""));
     }
   }
 }
