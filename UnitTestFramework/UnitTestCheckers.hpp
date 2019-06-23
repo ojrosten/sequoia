@@ -102,7 +102,37 @@ namespace sequoia
         EquivChecker::check(logger, value, s, u..., message);
       
         return logger.failures() == previousFailures;
-      }     
+      }
+
+      template<class Logger, class T, class... Args>
+      void check_regular_semantics(Logger& logger, const T& x, const T& y, std::string_view description, const Args&... args)
+      {
+        typename Logger::sentinel s{logger, impl::add_type_info<T>(description)};
+
+        if(!check(logger, x == x, combine_messages(description, "Equality operator is inconsistent"))) return;
+        if(!check(logger, !(x != x), combine_messages(description, "Inequality operator is inconsistent"))) return;
+
+        // TO DO: contract in C++20
+        if(!check(logger, x != y, combine_messages(description, "Precondition - for check the standard semantics, x and y are assumed to be different"))) return;
+      
+        T z{x, args...};
+        check_equality(logger, z, x, combine_messages(description, "Copy constructor"));
+        check(logger, z == x, combine_messages(description, "Equality operator"));
+
+        z = y;
+        check_equality(logger, z, y, combine_messages(description, "Copy assignment"));
+        check(logger, z != x, combine_messages(description, "Inequality operator"));
+
+        T w{std::move(z), args...};
+        check_equality(logger, w, y, combine_messages(description, "Move constructor"));
+
+        z = [&x]() -> T { return x; }();
+        check_equality(logger, z, x, combine_messages(description, "Move assignment"));      
+
+        std::swap(w,z);
+        check_equality(logger, w, x, combine_messages(description, "Swap"));
+        check_equality(logger, z, y, combine_messages(description, "Swap"));
+      }
     }
 
     template<class Logger, class Iter, class PredictionIter>
@@ -292,61 +322,13 @@ namespace sequoia
     template<class Logger, class T>
     void check_regular_semantics(Logger& logger, const T& x, const T& y, std::string_view description)
     {
-      typename Logger::sentinel s{logger, impl::add_type_info<T>(description)};
-
-      if(!check(logger, x == x, combine_messages(description, "Equality operator is inconsistent"))) return;
-      if(!check(logger, !(x != x), combine_messages(description, "Inequality operator is inconsistent"))) return;
-
-      // TO DO: contract in C++20
-      if(!check(logger, x != y, combine_messages(description, "Precondition - for check the standard semantics, x and y are assumed to be different"))) return;
-      
-      auto z{x};
-      check_equality(logger, z, x, combine_messages(description, "Copy constructor"));
-      check(logger, z == x, combine_messages(description, "Equality operator"));
-
-      z = y;
-      check_equality(logger, z, y, combine_messages(description, "Copy assignment"));
-      check(logger, z != x, combine_messages(description, "Inequality operator"));
-
-      auto w{std::move(z)};
-      check_equality(logger, w, y, combine_messages(description, "Move constructor"));
-
-      z = [x](){ return x;}();
-      check_equality(logger, z, x, combine_messages(description, "Move assignment"));      
-
-      std::swap(w,z);
-      check_equality(logger, w, x, combine_messages(description, "Swap"));
-      check_equality(logger, z, y, combine_messages(description, "Swap"));
+      impl::check_regular_semantics(logger, x, y, description);
     }
 
     template<class Logger, class T, class Allocator>
     void check_regular_semantics(Logger& logger, const T& x, const T& y, const Allocator& allocator, std::string_view description)
     {
-      typename Logger::sentinel s{logger, impl::add_type_info<T>(description)};
-
-      if(!check(logger, x == x, combine_messages(description, "Equality operator is inconsistent"))) return;
-      if(!check(logger, !(x != x), combine_messages(description, "Inequality operator is inconsistent"))) return;
-
-      // TO DO: contract in C++20
-      if(!check(logger, x != y, combine_messages(description, "Precondition - for check the standard semantics, x and y are assumed to be different"))) return;
-      
-      T z{x, allocator};
-      check_equality(logger, z, x, combine_messages(description, "Copy constructor"));
-      check(logger, z == x, combine_messages(description, "Equality operator"));
-
-      z = y;
-      check_equality(logger, z, y, combine_messages(description, "Copy assignment"));
-      check(logger, z != x, combine_messages(description, "Inequality operator"));
-
-      T w{std::move(z), allocator};
-      check_equality(logger, w, y, combine_messages(description, "Move constructor"));
-
-      z = [x](){ return x;}();
-      check_equality(logger, z, x, combine_messages(description, "Move assignment"));      
-
-      std::swap(w,z);
-      check_equality(logger, w, x, combine_messages(description, "Swap"));
-      check_equality(logger, z, y, combine_messages(description, "Swap"));
+      impl::check_regular_semantics(logger, x, y, description, allocator);
     }
 
     template<class Logger, class T, class Mutator>

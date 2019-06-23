@@ -23,8 +23,11 @@ namespace sequoia::unit_testing
 
     struct null_weight{};
 
+    template<class Sharing>
     void test_dynamic_node_storage();
+    
     void test_static_node_storage();
+    
     void test_allocator();
   };
 }

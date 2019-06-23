@@ -17,16 +17,18 @@ namespace sequoia:: unit_testing
 {
   void test_node_storage::run_tests()
   {
-    test_dynamic_node_storage();
+    test_dynamic_node_storage<data_sharing::unpooled<double>>();
+    //test_dynamic_node_storage<data_sharing::data_pool<double>>();
     test_static_node_storage();
     test_allocator();
   }
 
+  template<class Sharing>
   void test_node_storage::test_dynamic_node_storage()
   {
     using namespace maths::graph_impl;
 
-    using storage = node_storage_tester<weight_maker<data_sharing::unpooled<double>>>;
+    using storage = node_storage_tester<weight_maker<Sharing>>;
 
     storage store{};
     check_equivalence(store, std::initializer_list<double>{}, LINE(""));
