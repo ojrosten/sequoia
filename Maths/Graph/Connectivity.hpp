@@ -195,11 +195,11 @@ namespace sequoia
     protected:
       using edge_iterator = typename edge_storage_type::partition_iterator;
       
-      constexpr connectivity(connectivity&& in) noexcept = default;
+      constexpr connectivity(connectivity&&) noexcept = default;
       
       ~connectivity() = default;
 
-      constexpr connectivity& operator=(connectivity&& in) noexcept = default;
+      constexpr connectivity& operator=(connectivity&&) noexcept = default;
       
       constexpr connectivity& operator=(const connectivity& in)
       {

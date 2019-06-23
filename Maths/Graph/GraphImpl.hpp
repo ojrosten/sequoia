@@ -78,11 +78,11 @@ namespace sequoia
         return !(lhs == rhs);
       }
     protected:      
-      constexpr graph_primitive(graph_primitive&& in) noexcept = default;
+      constexpr graph_primitive(graph_primitive&&) noexcept = default;
       
       ~graph_primitive() = default;
 
-      constexpr graph_primitive& operator=(graph_primitive&& in) noexcept = default;
+      constexpr graph_primitive& operator=(graph_primitive&&) noexcept = default;
       
       constexpr graph_primitive& operator=(const graph_primitive& in)
       {
