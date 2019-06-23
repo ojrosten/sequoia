@@ -1,3 +1,10 @@
+////////////////////////////////////////////////////////////////////
+//                 Copyright Oliver Rosten 2019.                  //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
 #include "UnitTestDiagnostics.hpp"
 
 #include <complex>
@@ -13,7 +20,7 @@ namespace sequoia
       test_container_checks();
       test_relative_performance();
       test_mixed();
-      test_standard_semantics();
+      test_regular_semantics();
     }
 
     void false_positive_diagnostics::basic_tests()
@@ -90,7 +97,7 @@ namespace sequoia
       }
     }
 
-    void false_positive_diagnostics::test_standard_semantics()
+    void false_positive_diagnostics::test_regular_semantics()
     {
       check_regular_semantics(broken_equality{1}, broken_equality{2}, LINE(""));
       check_regular_semantics(broken_inequality{1}, broken_inequality{2}, LINE(""));
@@ -98,8 +105,15 @@ namespace sequoia
       check_regular_semantics(broken_move{1}, broken_move{2}, LINE(""));
       check_regular_semantics(broken_copy_assignment{1}, broken_copy_assignment{2}, LINE(""));
       check_regular_semantics(broken_move_assignment{1}, broken_move_assignment{2}, LINE(""));
-
       check_regular_semantics(perfectly_normal_beast{1}, perfectly_normal_beast{1}, LINE(""));
+
+      check_regular_semantics(broken_equality{1}, broken_equality{2}, broken_equality{1}, broken_equality{2}, LINE(""));
+      check_regular_semantics(broken_inequality{1}, broken_inequality{2}, broken_inequality{1}, broken_inequality{2},LINE(""));
+      check_regular_semantics(broken_move{1}, broken_move{2}, broken_move{1}, broken_move{2}, LINE(""));
+      check_regular_semantics(broken_move_assignment{1}, broken_move_assignment{2}, broken_move_assignment{1}, broken_move_assignment{2}, LINE(""));
+      check_regular_semantics(perfectly_normal_beast{1}, perfectly_normal_beast{1}, perfectly_normal_beast{1}, perfectly_normal_beast{1}, LINE(""));
+      check_regular_semantics(perfectly_normal_beast{1}, perfectly_normal_beast{3}, perfectly_normal_beast{2}, perfectly_normal_beast{3}, LINE(""));
+      check_regular_semantics(perfectly_normal_beast{1}, perfectly_normal_beast{2}, perfectly_normal_beast{3}, perfectly_normal_beast{2}, LINE(""));
     }
 
     void false_negative_diagnostics::run_tests()
@@ -108,7 +122,7 @@ namespace sequoia
       test_container_checks();
       test_relative_performance();
       test_mixed();
-      test_standard_semantics();
+      test_regular_semantics();
     }
 
     void false_negative_diagnostics::basic_tests()
@@ -172,9 +186,10 @@ namespace sequoia
 
     }
 
-    void false_negative_diagnostics::test_standard_semantics()
+    void false_negative_diagnostics::test_regular_semantics()
     {
       check_regular_semantics(perfectly_normal_beast{1}, perfectly_normal_beast{2}, LINE(""));
+      check_regular_semantics(perfectly_normal_beast{1}, perfectly_normal_beast{2}, perfectly_normal_beast{1}, perfectly_normal_beast{2}, LINE(""));
     }
   }
 }
