@@ -43,14 +43,30 @@ namespace sequoia
 
     struct broken_equality
     {
-      int x{};
+      using allocator_type = std::vector<int>::allocator_type;
+      
+      broken_equality(std::initializer_list<int> list) : x{list} {};
 
-      friend constexpr bool operator==(const broken_equality& lhs, const broken_equality& rhs) noexcept
+      broken_equality(const broken_equality&) = default;
+
+      broken_equality(const broken_equality& other, const allocator_type& alloc) : x(other.x, alloc) {}
+
+      broken_equality(broken_equality&&) noexcept = default;
+
+      broken_equality(broken_equality&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+
+      broken_equality& operator=(const broken_equality&) = default;
+
+      broken_equality& operator=(broken_equality&&) noexcept = default;
+      
+      std::vector<int> x{};
+
+      friend bool operator==(const broken_equality& lhs, const broken_equality& rhs) noexcept
       {
         return lhs.x != rhs.x;
       }
 
-      friend constexpr bool operator!=(const broken_equality& lhs, const broken_equality& rhs) noexcept
+      friend bool operator!=(const broken_equality& lhs, const broken_equality& rhs) noexcept
       {
         return lhs.x != rhs.x;
       }
@@ -58,21 +74,23 @@ namespace sequoia
       template<class Stream>
       friend Stream& operator<<(Stream& s, const broken_equality& b)
       {
-        s << b.x;
+        for(auto i : b.x) s << i << ' ';
         return s;
       }
     };
 
     struct broken_inequality
     {
-      int x{};
+      broken_inequality(std::initializer_list<int> list) : x{list} {};
 
-      friend constexpr bool operator==(const broken_inequality& lhs, const broken_inequality& rhs) noexcept
+      std::vector<int> x{};
+
+      friend bool operator==(const broken_inequality& lhs, const broken_inequality& rhs) noexcept
       {
         return lhs.x != rhs.x;
       }
 
-      friend constexpr bool operator!=(const broken_inequality& lhs, const broken_inequality& rhs) noexcept
+      friend bool operator!=(const broken_inequality& lhs, const broken_inequality& rhs) noexcept
       {
         return lhs.x == rhs.x;
       }
@@ -80,34 +98,34 @@ namespace sequoia
       template<class Stream>
       friend Stream& operator<<(Stream& s, const broken_inequality& b)
       {
-        s << b.x;
+        for(auto i : b.x) s << i << ' ';
         return s;
       }
     };
 
     struct broken_copy
     {
-      constexpr explicit broken_copy(int a) : x{a} {};
+      broken_copy(std::initializer_list<int> list) : x{list} {};
 
-      constexpr broken_copy(const broken_copy& other)
+      broken_copy(const broken_copy&)
       {
         // Do nothing
       }
 
-      constexpr broken_copy(broken_copy&&) = default;
+      broken_copy(broken_copy&&) = default;
       
-      constexpr broken_copy& operator=(const broken_copy&) = default;
+      broken_copy& operator=(const broken_copy&) = default;
 
-      constexpr broken_copy& operator=(broken_copy&&) = default;
+      broken_copy& operator=(broken_copy&&) = default;
       
-      int x{};
+      std::vector<int> x{};
 
-      friend constexpr bool operator==(const broken_copy& lhs, const broken_copy& rhs) noexcept
+      friend bool operator==(const broken_copy& lhs, const broken_copy& rhs) noexcept
       {
         return lhs.x == rhs.x;
       }
 
-      friend constexpr bool operator!=(const broken_copy& lhs, const broken_copy& rhs) noexcept
+      friend bool operator!=(const broken_copy& lhs, const broken_copy& rhs) noexcept
       {
         return !(lhs == rhs);
       }
@@ -115,34 +133,34 @@ namespace sequoia
       template<class Stream>
       friend Stream& operator<<(Stream& s, const broken_copy& b)
       {
-        s << b.x;
+        for(auto i : b.x) s << i << ' ';
         return s;
       }
     };
 
     struct broken_move
     {
-      constexpr explicit broken_move(int a) : x{a} {};
+      broken_move(std::initializer_list<int> list) : x{list} {};
 
-      constexpr broken_move(const broken_move&) = default;
+      broken_move(const broken_move&) = default;
 
-      constexpr broken_move(broken_move&&)      
+      broken_move(broken_move&&)      
       {
         // Do nothing
       }
       
-      constexpr broken_move& operator=(const broken_move&) = default;
+      broken_move& operator=(const broken_move&) = default;
 
-      constexpr broken_move& operator=(broken_move&&) = default;
+      broken_move& operator=(broken_move&&) = default;
       
-      int x{};
+      std::vector<int> x{};
 
-      friend constexpr bool operator==(const broken_move& lhs, const broken_move& rhs) noexcept
+      friend bool operator==(const broken_move& lhs, const broken_move& rhs) noexcept
       {
         return lhs.x == rhs.x;
       }
 
-      friend constexpr bool operator!=(const broken_move& lhs, const broken_move& rhs) noexcept
+      friend bool operator!=(const broken_move& lhs, const broken_move& rhs) noexcept
       {
         return !(lhs == rhs);
       }
@@ -150,34 +168,34 @@ namespace sequoia
       template<class Stream>
       friend Stream& operator<<(Stream& s, const broken_move& b)
       {
-        s << b.x;
+        for(auto i : b.x) s << i << ' ';
         return s;
       }
     };
 
     struct broken_copy_assignment
     {
-      constexpr explicit broken_copy_assignment(int a) : x{a} {};
+      broken_copy_assignment(std::initializer_list<int> list) : x{list} {};
 
-      constexpr broken_copy_assignment(const broken_copy_assignment&) = default;
+      broken_copy_assignment(const broken_copy_assignment&) = default;
 
-      constexpr broken_copy_assignment(broken_copy_assignment&&) = default;
+      broken_copy_assignment(broken_copy_assignment&&) = default;
       
-      constexpr broken_copy_assignment& operator=(const broken_copy_assignment& other)
+      broken_copy_assignment& operator=(const broken_copy_assignment&)
       {
         return *this;
       }
 
-      constexpr broken_copy_assignment& operator=(broken_copy_assignment&&) = default;
+      broken_copy_assignment& operator=(broken_copy_assignment&&) = default;
       
-      int x{};
+      std::vector<int> x{};
 
-      friend constexpr bool operator==(const broken_copy_assignment& lhs, const broken_copy_assignment& rhs) noexcept
+      friend bool operator==(const broken_copy_assignment& lhs, const broken_copy_assignment& rhs) noexcept
       {
         return lhs.x == rhs.x;
       }
 
-      friend constexpr bool operator!=(const broken_copy_assignment& lhs, const broken_copy_assignment& rhs) noexcept
+      friend bool operator!=(const broken_copy_assignment& lhs, const broken_copy_assignment& rhs) noexcept
       {
         return !(lhs == rhs);
       }
@@ -185,35 +203,34 @@ namespace sequoia
       template<class Stream>
       friend Stream& operator<<(Stream& s, const broken_copy_assignment& b)
       {
-        s << b.x;
+        for(auto i : b.x) s << i << ' ';
         return s;
       }
     };
 
     struct broken_move_assignment
     {
-      constexpr explicit broken_move_assignment(int a) : x{a} {};
+      broken_move_assignment(std::initializer_list<int> list) : x{list} {};
 
-      constexpr broken_move_assignment(const broken_move_assignment&) = default;
+      broken_move_assignment(const broken_move_assignment&) = default;
 
-      constexpr broken_move_assignment(broken_move_assignment&&) = default;
+      broken_move_assignment(broken_move_assignment&&) = default;
       
-      constexpr broken_move_assignment& operator=(const broken_move_assignment&) = default;
+      broken_move_assignment& operator=(const broken_move_assignment&) = default;
       
-
-      constexpr broken_move_assignment& operator=(broken_move_assignment&& other)
+      broken_move_assignment& operator=(broken_move_assignment&&)
       {
         return *this;
       }
       
-      int x{};
+      std::vector<int> x{};
 
-      friend constexpr bool operator==(const broken_move_assignment& lhs, const broken_move_assignment& rhs) noexcept
+      friend bool operator==(const broken_move_assignment& lhs, const broken_move_assignment& rhs) noexcept
       {
         return lhs.x == rhs.x;
       }
 
-      friend constexpr bool operator!=(const broken_move_assignment& lhs, const broken_move_assignment& rhs) noexcept
+      friend bool operator!=(const broken_move_assignment& lhs, const broken_move_assignment& rhs) noexcept
       {
         return !(lhs == rhs);
       }
@@ -221,21 +238,23 @@ namespace sequoia
       template<class Stream>
       friend Stream& operator<<(Stream& s, const broken_move_assignment& b)
       {
-        s << b.x;
+        for(auto i : b.x) s << i << ' ';
         return s;
       }
     };
 
     struct perfectly_normal_beast
     {
-      int x{};
+      perfectly_normal_beast(std::initializer_list<int> list) : x{list} {};
+      
+      std::vector<int> x{};
 
-      friend constexpr bool operator==(const perfectly_normal_beast& lhs, const perfectly_normal_beast& rhs) noexcept
+      friend bool operator==(const perfectly_normal_beast& lhs, const perfectly_normal_beast& rhs) noexcept
       {
         return lhs.x == rhs.x;
       }
 
-      friend constexpr bool operator!=(const perfectly_normal_beast& lhs, const perfectly_normal_beast& rhs) noexcept
+      friend bool operator!=(const perfectly_normal_beast& lhs, const perfectly_normal_beast& rhs) noexcept
       {
         return !(lhs == rhs);
       }
@@ -243,7 +262,7 @@ namespace sequoia
       template<class Stream>
       friend Stream& operator<<(Stream& s, const perfectly_normal_beast& b)
       {
-        s << b.x;
+        for(auto i : b.x) s << i << ' ';
         return s;
       }
     };

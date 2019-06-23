@@ -114,6 +114,9 @@ namespace sequoia
       check_regular_semantics(perfectly_normal_beast{1}, perfectly_normal_beast{1}, perfectly_normal_beast{1}, perfectly_normal_beast{1}, LINE(""));
       check_regular_semantics(perfectly_normal_beast{1}, perfectly_normal_beast{3}, perfectly_normal_beast{2}, perfectly_normal_beast{3}, LINE(""));
       check_regular_semantics(perfectly_normal_beast{1}, perfectly_normal_beast{2}, perfectly_normal_beast{3}, perfectly_normal_beast{2}, LINE(""));
+
+      using allocator = std::vector<int>::allocator_type;
+      check_regular_semantics(broken_equality{1}, broken_equality{2}, allocator{}, LINE(""));
     }
 
     void false_negative_diagnostics::run_tests()
