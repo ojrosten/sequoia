@@ -120,7 +120,9 @@ namespace sequoia::unit_testing
     check_regular_semantics(LINE(""), broken_equality{1}, broken_equality{2}, allocator{});
     check_regular_semantics(LINE(""), broken_inequality{1}, broken_inequality{2}, allocator{});
     check_regular_semantics(LINE(""), broken_copy{1}, broken_copy{2}, allocator{});
+    check_regular_semantics(LINE(""), broken_copy_alloc{1}, broken_copy_alloc{2}, allocator{});
     check_regular_semantics(LINE(""), broken_move{1}, broken_move{2}, allocator{});
+    check_regular_semantics(LINE(""), broken_move_alloc{1}, broken_move_alloc{2}, allocator{});
     check_regular_semantics(LINE(""), broken_copy_assignment{1}, broken_copy_assignment{2}, allocator{});
     check_regular_semantics(LINE(""), broken_move_assignment{1}, broken_move_assignment{2}, allocator{});
     check_regular_semantics(LINE(""), perfectly_normal_beast{1}, perfectly_normal_beast{1}, allocator{});

@@ -288,8 +288,8 @@ namespace sequoia
       return impl::check_range(description, logger, weak_equivalence_tag{}, first, last, predictionFirst, predictionLast);      
     }
 
-    template<class Logger, class T, class... Args>
-    void check_regular_semantics(std::string_view description, Logger& logger, const T& x, const T& y, const Args&... args)
+    template<class Logger, class T, class... Allocators>
+    void check_regular_semantics(std::string_view description, Logger& logger, const T& x, const T& y, const Allocators&... allocators)
     {
       typename Logger::sentinel s{logger, impl::add_type_info<T>(description)};
 
@@ -299,15 +299,15 @@ namespace sequoia
       // TO DO: contract in C++20
       if(!check(combine_messages(description, "Precondition - for checking regular semantics, x and y are assumed to be different"), logger, x != y)) return;
       
-      T z{x, args...};
+      T z{x};
       check_equality(combine_messages(description, "Copy constructor"), logger, z, x);
       check(combine_messages(description, "Equality operator"), logger, z == x);
 
       z = y;
       check_equality(combine_messages(description, "Copy assignment"), logger, z, y);
-      check(combine_messages(description, "Inequality operator"), logger, z != x);
+      check(combine_messages(description, "Inequality operator"), logger, z != x);     
 
-      T w{std::move(z), args...};
+      T w{std::move(z)};
       check_equality(combine_messages(description, "Move constructor"), logger, w, y);
 
       z = [&x]() -> T { return x; }();
@@ -317,10 +317,19 @@ namespace sequoia
       swap(w,z);
       check_equality(combine_messages(description, "Swap"), logger, w, x);
       check_equality(combine_messages(description, "Swap"), logger, z, y);
+
+      if constexpr(sizeof...(allocators))
+      {
+        T u{x, allocators...};
+        check_equality(combine_messages(description, "Copy constructor using allocator"), logger, u, x);
+
+        T v{std::move(u), allocators...};
+        check_equality(combine_messages(description, "Move constructor using allocator"), logger, v, y);
+      }
     }
 
-    template<class Logger, class T, class... Args>
-    void check_regular_semantics(std::string_view description, Logger& logger, T&& x, T&& y, const T& xClone, const T& yClone, const Args&... args)
+    template<class Logger, class T, class... Allocators>
+    void check_regular_semantics(std::string_view description, Logger& logger, T&& x, T&& y, const T& xClone, const T& yClone, const Allocators&... allocators)
     {
       typename Logger::sentinel s{logger, impl::add_type_info<T>(description)};
 
@@ -334,7 +343,7 @@ namespace sequoia
 
       if(!check(combine_messages(description, "Precondition - for checking regular semantics, y and yClone are assumed to be equal"), logger, y == yClone)) return;
 
-      T z{std::move(x), args...};
+      T z{std::move(x)};
       check_equality(combine_messages(description, "Move constructor"), logger, z, xClone);
         
       x = std::move(y);
@@ -344,6 +353,12 @@ namespace sequoia
       swap(z, x);
       check_equality(combine_messages(description, "Swap"), logger, x, xClone);
       check_equality(combine_messages(description, "Swap"), logger, z, yClone);
+
+      if constexpr(sizeof...(allocators))
+      {
+        T u{std::move(x), allocators...};
+        check_equality(combine_messages(description, "Move constructor using allocator"), logger, u, xClone);
+      }
     }
     
     template<class Logger, class T, class Mutator>

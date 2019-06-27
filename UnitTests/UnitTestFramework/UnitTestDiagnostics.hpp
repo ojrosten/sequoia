@@ -128,10 +128,8 @@ namespace sequoia
         // Do nothing
       }
 
-      broken_copy(const broken_copy&, const allocator_type&)
-      {
-        // Do nothing
-      }
+      broken_copy(const broken_copy& other, const allocator_type& alloc) : x(other.x, alloc)
+      {}
 
       broken_copy(broken_copy&&) = default;
 
@@ -161,6 +159,47 @@ namespace sequoia
       }
     };
 
+    struct broken_copy_alloc
+    {
+      using allocator_type = std::vector<int>::allocator_type;
+
+      broken_copy_alloc(std::initializer_list<int> list) : x{list} {};
+
+      broken_copy_alloc(const broken_copy_alloc&) = default;
+
+      broken_copy_alloc(const broken_copy_alloc&, const allocator_type&)
+      {
+        // do nothing
+      }
+
+      broken_copy_alloc(broken_copy_alloc&&) = default;
+
+      broken_copy_alloc(broken_copy_alloc&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+      
+      broken_copy_alloc& operator=(const broken_copy_alloc&) = default;
+
+      broken_copy_alloc& operator=(broken_copy_alloc&&) = default;
+      
+      std::vector<int> x{};
+
+      friend bool operator==(const broken_copy_alloc& lhs, const broken_copy_alloc& rhs) noexcept
+      {
+        return lhs.x == rhs.x;
+      }
+
+      friend bool operator!=(const broken_copy_alloc& lhs, const broken_copy_alloc& rhs) noexcept
+      {
+        return !(lhs == rhs);
+      }
+
+      template<class Stream>
+      friend Stream& operator<<(Stream& s, const broken_copy_alloc& b)
+      {
+        for(auto i : b.x) s << i << ' ';
+        return s;
+      }
+    };
+
     struct broken_move
     {
       using allocator_type = std::vector<int>::allocator_type;
@@ -176,10 +215,8 @@ namespace sequoia
         // Do nothing
       }
 
-      broken_move(broken_move&&, const allocator_type&)      
-      {
-        // Do nothing
-      }
+      broken_move(broken_move&& other, const allocator_type& alloc) : x(std::move(other.x), alloc)
+      {}
       
       broken_move& operator=(const broken_move&) = default;
 
@@ -199,6 +236,47 @@ namespace sequoia
 
       template<class Stream>
       friend Stream& operator<<(Stream& s, const broken_move& b)
+      {
+        for(auto i : b.x) s << i << ' ';
+        return s;
+      }
+    };
+
+    struct broken_move_alloc
+    {
+      using allocator_type = std::vector<int>::allocator_type;
+
+      broken_move_alloc(std::initializer_list<int> list) : x{list} {};
+
+      broken_move_alloc(const broken_move_alloc&) = default;
+
+      broken_move_alloc(const broken_move_alloc& other, const allocator_type& alloc) : x(other.x, alloc) {}
+
+      broken_move_alloc(broken_move_alloc&&) = default;
+
+      broken_move_alloc(broken_move_alloc&&, const allocator_type&)
+      {
+        // do nothing
+      }
+      
+      broken_move_alloc& operator=(const broken_move_alloc&) = default;
+
+      broken_move_alloc& operator=(broken_move_alloc&&) = default;
+      
+      std::vector<int> x{};
+
+      friend bool operator==(const broken_move_alloc& lhs, const broken_move_alloc& rhs) noexcept
+      {
+        return lhs.x == rhs.x;
+      }
+
+      friend bool operator!=(const broken_move_alloc& lhs, const broken_move_alloc& rhs) noexcept
+      {
+        return !(lhs == rhs);
+      }
+
+      template<class Stream>
+      friend Stream& operator<<(Stream& s, const broken_move_alloc& b)
       {
         for(auto i : b.x) s << i << ' ';
         return s;
