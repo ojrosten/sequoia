@@ -591,7 +591,7 @@ namespace sequoia
       check_equivalence(LINE(""), s, prediction{});
       check_equivalence(LINE(""), t, prediction{{0,2}, {1}});
 
-      //check_regular_semantics(LINE("Regular semantics"), s, t, allocator{}, bucket_allocator{});
+      check_regular_semantics(LINE("Regular semantics"), s, t, allocator{}, bucket_allocator{});
     }
 
     template<template<class> class SharingPolicy>

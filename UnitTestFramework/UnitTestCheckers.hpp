@@ -318,7 +318,7 @@ namespace sequoia
       check_equality(combine_messages(description, "Swap"), logger, w, x);
       check_equality(combine_messages(description, "Swap"), logger, z, y);
 
-      if constexpr(sizeof...(allocators))
+      if constexpr(sizeof...(allocators) > 0)
       {
         T u{x, allocators...};
         check_equality(combine_messages(description, "Copy constructor using allocator"), logger, u, x);
@@ -354,7 +354,7 @@ namespace sequoia
       check_equality(combine_messages(description, "Swap"), logger, x, xClone);
       check_equality(combine_messages(description, "Swap"), logger, z, yClone);
 
-      if constexpr(sizeof...(allocators))
+      if constexpr(sizeof...(allocators) > 0)
       {
         T u{std::move(x), allocators...};
         check_equality(combine_messages(description, "Move constructor using allocator"), logger, u, xClone);
