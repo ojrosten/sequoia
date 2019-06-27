@@ -19,21 +19,21 @@ namespace sequoia::unit_testing
     using type = data_structures::static_queue<T, MaxPushes>;
 
     template<class Logger>
-    static void check(Logger& logger, const type& queue, const type& prediction, std::string_view description)
+    static void check(std::string_view description, Logger& logger, const type& queue, const type& prediction)
     {
-      check_equality(logger, queue.empty(), prediction.empty(), combine_messages(description, "Inconsistent emptiness"));
+      check_equality(combine_messages(description, "Inconsistent emptiness"), logger, queue.empty(), prediction.empty());
 
-      check_equality(logger, queue.size(), prediction.size(), combine_messages(description, "Inconsistent size"));
+      check_equality(combine_messages(description, "Inconsistent size"), logger, queue.size(), prediction.size());
       
       if(!prediction.empty() && !queue.empty())
       {
-        check_equality(logger, queue.front(), prediction.front(), combine_messages(description, "Inconsistent front element"));
+        check_equality(combine_messages(description, "Inconsistent front element"), logger, queue.front(), prediction.front());
 
-        check_equality(logger, queue.back(), prediction.back(), combine_messages(description, "Inconsistent back element"));
+        check_equality(combine_messages(description, "Inconsistent back element"), logger, queue.back(), prediction.back());
       }
 
-      check_equality(logger, prediction == queue, true, combine_messages(description, "Hidden state"));
-      check_equality(logger, queue == prediction, true, combine_messages(description, "Hidden state, symmetry of operator=="));
+      check_equality(combine_messages(description, "Hidden state"), logger, prediction == queue, true);
+      check_equality(combine_messages(description, "Hidden state, symmetry of operator=="), logger, queue == prediction, true);
     }
   };
 }

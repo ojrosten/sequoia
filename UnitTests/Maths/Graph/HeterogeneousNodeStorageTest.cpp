@@ -26,50 +26,50 @@ namespace sequoia::unit_testing
   {
     storage_tester<int, double> s{3, 0.8};
 
-    check_equality(3, s.node_weight<0>(), LINE(""));
-    check_equality(3, s.node_weight<int>(), LINE(""));
+    check_equality(LINE(""), s.node_weight<0>(), 3);
+    check_equality(LINE(""), s.node_weight<int>(), 3);
 
-    check_equality(0.8, s.node_weight<1>(), LINE(""));
-    check_equality(0.8, s.node_weight<double>(), LINE(""));
+    check_equality(LINE(""), s.node_weight<1>(), 0.8);
+    check_equality(LINE(""), s.node_weight<double>(), 0.8);
 
     s.node_weight<0>(-4);
-    check_equality(-4, s.node_weight<0>(), LINE(""));
-    check_equality(-4, s.node_weight<int>(), LINE(""));
+    check_equality(LINE(""), s.node_weight<0>(), -4);
+    check_equality(LINE(""), s.node_weight<int>(), -4);
 
     s.node_weight<int>(10);
-    check_equality(10, s.node_weight<0>(), LINE(""));
-    check_equality(10, s.node_weight<int>(), LINE(""));
+    check_equality(LINE(""), s.node_weight<0>(), 10);
+    check_equality(LINE(""), s.node_weight<int>(), 10);
 
     s.node_weight<1>(3.2);
-    check_equality(3.2, s.node_weight<1>(), LINE(""));
-    check_equality(3.2, s.node_weight<double>(), LINE(""));
+    check_equality(LINE(""), s.node_weight<1>(), 3.2);
+    check_equality(LINE(""), s.node_weight<double>(), 3.2);
 
     s.node_weight<double>(10.4);
-    check_equality(10.4, s.node_weight<1>(), LINE(""));
-    check_equality(10.4, s.node_weight<double>(), LINE(""));
+    check_equality(LINE(""), s.node_weight<1>(), 10.4);
+    check_equality(LINE(""), s.node_weight<double>(), 10.4);
 
     s.mutate_node_weight<0>([](int& i) { return i+=5; });
-    check_equality(15, s.node_weight<0>(), LINE(""));
-    check_equality(15, s.node_weight<int>(), LINE(""));
+    check_equality(LINE(""), s.node_weight<0>(), 15);
+    check_equality(LINE(""), s.node_weight<int>(), 15);
 
     s.mutate_node_weight<int>([](int& i) { return i/=5; });
-    check_equality(3, s.node_weight<0>(), LINE(""));
-    check_equality(3, s.node_weight<int>(), LINE(""));
+    check_equality(LINE(""), s.node_weight<0>(), 3);
+    check_equality(LINE(""), s.node_weight<int>(), 3);
 
     s.mutate_node_weight<1>([](double& d) { return d-=4.4; });
-    check_equality(6.0, s.node_weight<1>(), LINE(""));
-    check_equality(6.0, s.node_weight<double>(), LINE(""));
+    check_equality(LINE(""), s.node_weight<1>(), 6.0);
+    check_equality(LINE(""), s.node_weight<double>(), 6.0);
 
     s.mutate_node_weight<double>([](double& d) { return d/=6; });
-    check_equality(1.0, s.node_weight<1>(), LINE(""));
-    check_equality(1.0, s.node_weight<double>(), LINE(""));
+    check_equality(LINE(""), s.node_weight<1>(), 1.0);
+    check_equality(LINE(""), s.node_weight<double>(), 1.0);
 
     constexpr storage_tester<float, int> t{make_storage()};
 
-    check_equality(3.0f, t.node_weight<0>(), LINE(""));
-    check_equality(3.0f, t.node_weight<float>(), LINE(""));
+    check_equality(LINE(""), t.node_weight<0>(), 3.0f);
+    check_equality(LINE(""), t.node_weight<float>(), 3.0f);
 
-    check_equality(2, t.node_weight<1>(), LINE(""));
-    check_equality(2, t.node_weight<int>(), LINE(""));
+    check_equality(LINE(""), t.node_weight<1>(), 2);
+    check_equality(LINE(""), t.node_weight<int>(), 2);
   }
 }

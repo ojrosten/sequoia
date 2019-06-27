@@ -324,7 +324,7 @@ namespace sequoia
         check_equality(combine_messages(description, "Copy constructor using allocator"), logger, u, x);
 
         T v{std::move(u), allocators...};
-        check_equality(combine_messages(description, "Move constructor using allocator"), logger, v, y);
+        check_equality(combine_messages(description, "Move constructor using allocator"), logger, v, x);
       }
     }
 

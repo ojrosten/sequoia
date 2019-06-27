@@ -27,10 +27,10 @@ namespace sequoia::unit_testing
     constexpr static_priority_queue<int, 0> s{};
     static_priority_queue<int, 0> t{};
 
-    check_equality(t, s, LINE("Equality of null queues"));
+    check_equality(LINE("Equality of null queues"), t, s);
 
-    check_exception_thrown<std::logic_error>([&t]() { t.push(1); }, LINE("Can't push to null queue"));
-    check_exception_thrown<std::logic_error>([]() { static_priority_queue<int, 0>{1}; }, LINE("Can't construct non-null null queue"));
+    check_exception_thrown<std::logic_error>(LINE("Can't push to null queue"), [&t]() { t.push(1); });
+    check_exception_thrown<std::logic_error>(LINE("Can't construct non-null null queue"), []() { static_priority_queue<int, 0>{1}; });
 
   }
   
@@ -43,16 +43,16 @@ namespace sequoia::unit_testing
     queue_t t{};
     t.push(2);
 
-    check_regular_semantics(s, t, LINE("Standard Semantics"));
+    check_regular_semantics(LINE("Standard Semantics"), s, t);
 
-    check_exception_thrown<std::logic_error>([&t]() { t.push(1); }, LINE("Trying to push two elements to queue of depth 1"));
-    check_exception_thrown<std::logic_error>([]() { queue_t{1, 2}; }, LINE("Can't construct queue of depth 1 with 2 elements"));
+    check_exception_thrown<std::logic_error>(LINE("Trying to push two elements to queue of depth 1"), [&t]() { t.push(1); });
+    check_exception_thrown<std::logic_error>(LINE("Can't construct queue of depth 1 with 2 elements"), []() { queue_t{1, 2}; });
 
     t.pop();
-    check_equality(t, queue_t{}, LINE(""));
+    check_equality(LINE(""), t, queue_t{});
     
     t.push(1);
-    check_equality(t, queue_t{1}, LINE(""));
+    check_equality(LINE(""), t, queue_t{1});
   }
 
   void test_static_priority_queue::check_depth_2()
@@ -64,19 +64,19 @@ namespace sequoia::unit_testing
       constexpr queue_t s{1, 2};
       queue_t t{4, 3};
 
-      check_equality(s.top(), 2, LINE(""));
-      check_equality(t.top(), 4, LINE(""));
+      check_equality(LINE(""), s.top(), 2);
+      check_equality(LINE(""), t.top(), 4);
       
-      check_regular_semantics(s, t, LINE("Standard Semantics"));
+      check_regular_semantics(LINE("Standard Semantics"), s, t);
 
-      check_exception_thrown<std::logic_error>([&t]() { t.push(1); }, LINE("Trying to push three elements to queue of depth 2"));
-      check_exception_thrown<std::logic_error>([]() { queue_t{1, 2, 3}; }, LINE("Can't construct queue of depth 2 with 3 elements"));
+      check_exception_thrown<std::logic_error>(LINE("Trying to push three elements to queue of depth 2"), [&t]() { t.push(1); });
+      check_exception_thrown<std::logic_error>(LINE("Can't construct queue of depth 2 with 3 elements"), []() { queue_t{1, 2, 3}; });
 
       t.pop();
-      check_equality(t, queue_t{3}, LINE(""));
+      check_equality(LINE(""), t, queue_t{3});
 
       t.push(5);
-      check_equality(t, queue_t{5, 3}, LINE(""));
+      check_equality(LINE(""), t, queue_t{5, 3});
       
     }
 
@@ -94,9 +94,9 @@ namespace sequoia::unit_testing
       };
       
       constexpr static_priority_queue<int, 2, comp> s{{3, 2}, comp{3}}, t{{4, 6}, comp{2}};
-      check_equality(s.top(), 2, LINE(""));
+      check_equality(LINE(""), s.top(), 2);
 
-      check_regular_semantics(s, t, LINE("Standard semantics"));
+      check_regular_semantics(LINE("Standard semantics"), s, t);
     }
   }
 
@@ -121,20 +121,20 @@ namespace sequoia::unit_testing
     using queue_t = static_priority_queue<int, 3>;
 
     constexpr queue_t s{make_static_priority_queue_3()};
-    check_equality(s, queue_t{8, 2, 6}, LINE(""));
+    check_equality(LINE(""), s, queue_t{8, 2, 6});
 
     auto t{s};
-    check_equality(t, queue_t{8, 2, 6}, LINE(""));
+    check_equality(LINE(""), t, queue_t{8, 2, 6});
 
     t.pop();
-    check_equality(t, queue_t{6, 2}, LINE(""));
+    check_equality(LINE(""), t, queue_t{6, 2});
 
-    check_regular_semantics(s, t, LINE("Standard semantics"));
-
-    t.pop();
-    check_equality(t, queue_t{2}, LINE(""));
+    check_regular_semantics(LINE("Standard semantics"), s, t);
 
     t.pop();
-    check_equality(t, queue_t{}, LINE(""));
+    check_equality(LINE(""), t, queue_t{2});
+
+    t.pop();
+    check_equality(LINE(""), t, queue_t{});
   }
 }

@@ -25,13 +25,13 @@ namespace sequoia::unit_testing
       using nodes_equivalent_type = std::tuple<NodeWeights...>;
 
       template<class Logger>
-      static void check(Logger& logger, const type& graph, connectivity_equivalent_type connPrediction, const nodes_equivalent_type& nodesPrediction, std::string_view description)
+      static void check(std::string_view description, Logger& logger, const type& graph, connectivity_equivalent_type connPrediction, const nodes_equivalent_type& nodesPrediction)
       {
         using connectivity_t = typename type::connectivity_type;
         using nodes_t = typename type::nodes_type;
 
-        check_equivalence(logger, static_cast<const connectivity_t&>(graph), connPrediction, description);
-        check_equivalence(logger, static_cast<const nodes_t&>(graph), nodesPrediction, description);
+        check_equivalence(description, logger, static_cast<const connectivity_t&>(graph), connPrediction);
+        check_equivalence(description, logger, static_cast<const nodes_t&>(graph), nodesPrediction);
       }
     };
   }

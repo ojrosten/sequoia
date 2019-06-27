@@ -21,7 +21,7 @@ namespace sequoia::unit_testing
     using namespace utilities;
 
     protective_wrapper<int> w{1}, v{};
-    check_equality(w, v, LINE(""));
+    check_equality(LINE(""), w, v);
   }
 
   void protective_wrapper_false_positive_test::test_container_type()
@@ -29,13 +29,13 @@ namespace sequoia::unit_testing
     using namespace utilities;
 
     protective_wrapper<std::vector<int>> w{}, v{1};
-    check_equality(w, v, LINE(""));
+    check_equality(LINE(""), w, v);
 
     w.mutate([](auto& vec) { vec.push_back(2); });
-    check_equality(w, v, LINE(""));
+    check_equality(LINE(""), w, v);
 
     protective_wrapper<std::vector<int>> u{std::vector<int>(1)};
-    check_equality(u, v, LINE(""));
+    check_equality(LINE(""), u, v);
   }
 
   void protective_wrapper_false_positive_test::test_aggregate_type()
@@ -43,6 +43,6 @@ namespace sequoia::unit_testing
     using namespace utilities;
     
     protective_wrapper<data> w{}, v{1, 2.0};
-    check_equality(w, v, LINE(""));
+    check_equality(LINE(""), w, v);
   }
 }

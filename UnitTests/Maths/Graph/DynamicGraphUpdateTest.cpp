@@ -123,7 +123,7 @@ namespace sequoia::unit_testing
       
       expected.swap_edges(0, 1, 2);
       expected.swap_edges(2, 0, 2);
-      check_equality(graph, expected, LINE(""));
+      check_equality(LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == flavour::directed)
     {
@@ -135,7 +135,7 @@ namespace sequoia::unit_testing
         {5ul, 2ul, 10ul, 4ul}
       };
       
-      check_equality(graph, expected, LINE(""));
+      check_equality(LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == flavour::undirected_embedded)
     {
@@ -147,7 +147,7 @@ namespace sequoia::unit_testing
         {5ul, 2ul, 10ul, 4ul}
       };
 
-      check_equality(graph, expected, LINE(""));
+      check_equality(LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == flavour::directed_embedded)
     {
@@ -159,7 +159,7 @@ namespace sequoia::unit_testing
         {5ul, 2ul, 10ul, 4ul}
       };
 
-      check_equality(graph, expected, LINE(""));
+      check_equality(LINE(""), graph, expected);
     }
     else
     {
@@ -203,7 +203,7 @@ namespace sequoia::unit_testing
     //        3
 
     std::array<std::size_t, 4> expectedNodeWeights{10,6,50,16};
-    check_range(graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend(), LINE(""));
+    check_range(LINE(""), graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend());
 
     auto secondNodeFn = [&updater](const std::size_t index){ updater.secondNodeTraversal(index); };
     maths::depth_first_search(graph, false, 0, maths::null_functor(), secondNodeFn);
@@ -219,7 +219,7 @@ namespace sequoia::unit_testing
     //       3
 
     expectedNodeWeights = {5,2,10,4};
-    check_range(graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend(), LINE(""));
+    check_range(LINE(""), graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend());
 
     auto firstEdgeFn = [&updater](auto citer) { updater.firstEdgeTraversal(citer); };
     maths::depth_first_search(graph, false, 0, maths::null_functor(), maths::null_functor(), firstEdgeFn);
@@ -248,7 +248,7 @@ namespace sequoia::unit_testing
       
       expected.swap_edges(0, 1, 2);
       expected.swap_edges(2, 0, 2);
-      check_equality(graph, expected, LINE(""));
+      check_equality(LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == flavour::directed)
     {
@@ -260,7 +260,7 @@ namespace sequoia::unit_testing
         {5ul, 2ul, 10ul, 4ul}
       };
       
-      check_equality(graph, expected, LINE(""));
+      check_equality(LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == flavour::undirected_embedded)
     {
@@ -272,7 +272,7 @@ namespace sequoia::unit_testing
         {5ul, 2ul, 10ul, 4ul}
       };
 
-      check_equality(graph, expected, LINE(""));
+      check_equality(LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == flavour::directed_embedded)
     {
@@ -284,7 +284,7 @@ namespace sequoia::unit_testing
         {5ul, 2ul, 10ul, 4ul}
       };
 
-      check_equality(graph, expected, LINE(""));
+      check_equality(LINE(""), graph, expected);
     }
     else
     {
@@ -324,7 +324,7 @@ namespace sequoia::unit_testing
       
       expected.swap_edges(0, 1, 2);
       expected.swap_edges(2, 0, 2);
-      check_equality(graph, expected, LINE(""));
+      check_equality(LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == flavour::directed)
     {
@@ -336,7 +336,7 @@ namespace sequoia::unit_testing
         {5ul, 2ul, 10ul, 4ul}
       };
       
-      check_equality(graph, expected, LINE(""));
+      check_equality(LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == flavour::undirected_embedded)
     {
@@ -348,7 +348,7 @@ namespace sequoia::unit_testing
         {5ul, 2ul, 10ul, 4ul}
       };
 
-      check_equality(graph, expected, LINE(""));
+      check_equality(LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == flavour::directed_embedded)
     {
@@ -360,7 +360,7 @@ namespace sequoia::unit_testing
         {5ul, 2ul, 10ul, 4ul}
       };
 
-      check_equality(graph, expected, LINE(""));
+      check_equality(LINE(""), graph, expected);
     }
     else
     {
@@ -404,7 +404,7 @@ namespace sequoia::unit_testing
     //        3
 
     std::array<std::size_t, 4> expectedNodeWeights{10,6,40,20};
-    check_range(graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend(), LINE(""));
+    check_range(LINE(""), graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend());
 
     auto secondNodeFn = [&updater](const std::size_t index){ updater.secondNodeTraversal(index); };
     maths::breadth_first_search(graph, false, 0, maths::null_functor(), secondNodeFn);
@@ -420,7 +420,7 @@ namespace sequoia::unit_testing
     //       3
 
     expectedNodeWeights = {5,2,10,4};
-    check_range(graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend(), LINE(""));
+    check_range(LINE(""), graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend());
 
     auto firstEdgeFn = [&updater](auto citer) { updater.firstEdgeTraversal(citer); };
     maths::breadth_first_search(graph, false, 0, maths::null_functor(), maths::null_functor(), firstEdgeFn);
@@ -448,7 +448,7 @@ namespace sequoia::unit_testing
 
       expected.swap_edges(0, 1, 2);
       expected.swap_edges(2, 0, 2);
-      check_equality(graph, expected, LINE(""));
+      check_equality(LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == flavour::directed)
     {
@@ -460,7 +460,7 @@ namespace sequoia::unit_testing
         {5ul, 2ul, 10ul, 4ul}
       };
 
-      check_equality(graph, expected, LINE(""));
+      check_equality(LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == flavour::undirected_embedded)
     {
@@ -472,7 +472,7 @@ namespace sequoia::unit_testing
         {5ul, 2ul, 10ul, 4ul}
       };
 
-      check_equality(graph, expected, LINE(""));
+      check_equality(LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == flavour::directed_embedded)
     {
@@ -484,7 +484,7 @@ namespace sequoia::unit_testing
         {5ul, 2ul, 10ul, 4ul}
       };
 
-      check_equality(graph, expected, LINE(""));
+      check_equality(LINE(""), graph, expected);
     }
     else
     {
@@ -552,7 +552,7 @@ namespace sequoia::unit_testing
 
     auto expectedNodeWeights =
       undirected ? std::array<std::size_t, 4>{10,10,30,16} : std::array<std::size_t, 4>{10,8,30,20};
-    check_range(graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend(), LINE(""));
+    check_range(LINE(""), graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend());
 
     auto secondNodeFn = [&updater](const std::size_t index){ updater.secondNodeTraversal(index); };
     maths::priority_search(graph, false, 0, maths::null_functor(), secondNodeFn);
@@ -568,7 +568,7 @@ namespace sequoia::unit_testing
     //       3
 
     expectedNodeWeights = {5,2,10,4};
-    check_range(graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend(), LINE(""));
+    check_range(LINE(""), graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend());
 
     auto firstEdgeFn = [&updater](auto citer) { updater.firstEdgeTraversal(citer); };
     maths::priority_search(graph, false, 0, maths::null_functor(), maths::null_functor(), firstEdgeFn);
@@ -597,7 +597,7 @@ namespace sequoia::unit_testing
       
       expected.swap_edges(0, 1, 2);
       expected.swap_edges(2, 0, 2);
-      check_equality(graph, expected, LINE(""));
+      check_equality(LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == flavour::directed)
     {
@@ -609,7 +609,7 @@ namespace sequoia::unit_testing
         {5ul, 2ul, 10ul, 4ul}
       };
       
-      check_equality(graph, expected, LINE(""));
+      check_equality(LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == flavour::undirected_embedded)
     {
@@ -621,7 +621,7 @@ namespace sequoia::unit_testing
         {5ul, 2ul, 10ul, 4ul}
       };
 
-      check_equality(graph, expected, LINE(""));
+      check_equality(LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == flavour::directed_embedded)
     {
@@ -633,7 +633,7 @@ namespace sequoia::unit_testing
         {5ul, 2ul, 10ul, 4ul}
       };
 
-      check_equality(graph, expected, LINE(""));
+      check_equality(LINE(""), graph, expected);
     }
     else
     {
@@ -675,7 +675,7 @@ namespace sequoia::unit_testing
       
       expected.swap_edges(0, 1, 2);
       expected.swap_edges(2, 0, 2);
-      check_equality(graph, expected, LINE(""));
+      check_equality(LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == flavour::directed)
     {
@@ -687,7 +687,7 @@ namespace sequoia::unit_testing
         {5ul, 2ul, 10ul, 4ul}
       };
       
-      check_equality(graph, expected, LINE(""));
+      check_equality(LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == flavour::undirected_embedded)
     {
@@ -700,7 +700,7 @@ namespace sequoia::unit_testing
         {5ul, 2ul, 10ul, 4ul}
       };
 
-      check_equality(graph, expected, LINE(""));
+      check_equality(LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == flavour::directed_embedded)
     {
@@ -712,7 +712,7 @@ namespace sequoia::unit_testing
         {5ul, 2ul, 10ul, 4ul}
       };
 
-      check_equality(graph, expected, LINE(""));
+      check_equality(LINE(""), graph, expected);
     }
     else
     {
@@ -809,7 +809,7 @@ namespace sequoia::unit_testing
       };
       
       expected.swap_edges(2, 0, 1);
-      check_equality(graph, expected, LINE(""));
+      check_equality(LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == graph_flavour::directed)
     {
@@ -820,7 +820,7 @@ namespace sequoia::unit_testing
         {std::vector<int>{}, std::vector<int>{}, std::vector<int>{}}
       };
       
-      check_equality(graph, expected, LINE(""));
+      check_equality(LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected_embedded)
     {
@@ -831,7 +831,7 @@ namespace sequoia::unit_testing
         {std::vector<int>{}, std::vector<int>{}, std::vector<int>{}}
       };
 
-      check_equality(graph, expected, LINE(""));
+      check_equality(LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
@@ -842,7 +842,7 @@ namespace sequoia::unit_testing
         {std::vector<int>{}, std::vector<int>{}, std::vector<int>{}}
       };
 
-      check_equality(graph, expected, LINE(""));
+      check_equality(LINE(""), graph, expected);
     }
     else
     {
@@ -853,13 +853,13 @@ namespace sequoia::unit_testing
     maths::breadth_first_search(graph, false, 0, nodeFn1);
 
     std::vector<std::vector<int>> expectedNodeWeights{{0}, {1}, {2}};
-    check_range(graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend(), LINE(""));
+    check_range(LINE(""), graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend());
 
     auto nodeFn2 = [&graph](const std::size_t index) { graph.node_weight(graph.cbegin_node_weights() + index, std::vector<int>{3 - static_cast<int>(index)}); };
     maths::breadth_first_search(graph, false, 0, maths::null_functor(), nodeFn2);
 
     expectedNodeWeights = std::vector<std::vector<int>>{{3}, {2}, {1}};
-    check_range(graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend(), LINE(""));    
+    check_range(LINE(""), graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend());    
 
     auto edgeFn1 = [&graph](auto edgeIter) {
       const std::size_t node{edgeIter.partition_index()};
@@ -881,7 +881,7 @@ namespace sequoia::unit_testing
       };
       
       expected.swap_edges(2, 0, 1);
-      check_equality(graph, expected, LINE(""));
+      check_equality(LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == graph_flavour::directed)
     {
@@ -892,7 +892,7 @@ namespace sequoia::unit_testing
         {std::vector<int>{3}, std::vector<int>{2}, std::vector<int>{1}}
       };
       
-      check_equality(graph, expected, LINE(""));
+      check_equality(LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected_embedded)
     {
@@ -903,7 +903,7 @@ namespace sequoia::unit_testing
         {std::vector<int>{3}, std::vector<int>{2}, std::vector<int>{1}}
       };
 
-      check_equality(graph, expected, LINE(""));
+      check_equality(LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
@@ -914,7 +914,7 @@ namespace sequoia::unit_testing
         {std::vector<int>{3}, std::vector<int>{2}, std::vector<int>{1}}
       };
 
-      check_equality(graph, expected, LINE(""));
+      check_equality(LINE(""), graph, expected);
     }
     else
     {
@@ -971,7 +971,7 @@ namespace sequoia::unit_testing
       };
       
       expected.swap_edges(2, 0, 1);
-      check_equality(graph, expected, LINE(""));
+      check_equality(LINE(""), graph, expected);
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected_embedded)
     {
@@ -982,7 +982,7 @@ namespace sequoia::unit_testing
         {std::vector<int>{3}, std::vector<int>{2}, std::vector<int>{1}}
       };
 
-      check_equality(graph, expected, LINE(""));
+      check_equality(LINE(""), graph, expected);
     }
     else
     {

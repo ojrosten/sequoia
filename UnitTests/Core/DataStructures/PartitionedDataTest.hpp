@@ -9,8 +9,6 @@
 
 #include "PartitionedDataTestingUtilities.hpp"
 
-#include <experimental/memory_resource>
-
 namespace sequoia::unit_testing
 {  
   class partitioned_data_test : public unit_test
@@ -32,6 +30,9 @@ namespace sequoia::unit_testing
 
     template<class T, class SharingPolicy, bool ThrowOnRangeError>
     void test_bucketed_capacity();
+
+    template<class T, class SharingPolicy>
+    void test_bucketed_allocation();
       
     template<class Traits, template<class> class SharingPolicy, template<class> class ReferencePolicy>
     void test_generic_iterator_properties();
@@ -41,29 +42,6 @@ namespace sequoia::unit_testing
     struct traits
     {
       template<class S> using container_type = std::vector<S, std::allocator<S>>;
-    };
-
-    template<class T, class SharingPolicy> struct bucketed_pmr_storage_traits
-    {
-      constexpr static bool throw_on_range_error{true};
-
-      template<class S> using buckets_type   = std::vector<S, std::experimental::pmr::polymorphic_allocator<S>>; 
-      template<class S> using container_type = std::vector<S, std::experimental::pmr::polymorphic_allocator<S>>; 
-    };
-
-    template<class T, class SharingPolicy> struct contiguous_pmr_storage_traits
-    {
-      constexpr static bool static_storage_v{false};
-      constexpr static bool throw_on_range_error{true};
-
-      using index_type = std::size_t;
-      using partition_index_type = std::size_t;
-
-      using partitions_container = std::vector<partition_index_type, std::experimental::pmr::polymorphic_allocator<partition_index_type>>;
-      
-      using partitions_type = maths::monotonic_sequence<partition_index_type, std::greater<partition_index_type>, partitions_container>;
-      
-      template<class S> using container_type = std::vector<S, std::experimental::pmr::polymorphic_allocator<S>>;
     };
   };
 }

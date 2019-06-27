@@ -33,13 +33,13 @@ namespace sequoia::unit_testing
       using type = Graph;
       
       template<class Logger>
-      static void check(Logger& logger, const Graph& graph, const Graph& prediction, std::string_view description)
+      static void check(std::string_view description, Logger& logger, const Graph& graph, const Graph& prediction)
       {
         using connectivity_t = typename type::connectivity_type;
         using nodes_t = typename type::nodes_type;
 
-        check_equality(logger, static_cast<const connectivity_t&>(graph), static_cast<const connectivity_t&>(prediction), description);
-        check_equality(logger, static_cast<const nodes_t&>(graph), static_cast<const nodes_t&>(prediction), description);
+        check_equality(description, logger, static_cast<const connectivity_t&>(graph), static_cast<const connectivity_t&>(prediction));
+        check_equality(description, logger, static_cast<const nodes_t&>(graph), static_cast<const nodes_t&>(prediction));
       }
     };
 
@@ -54,21 +54,21 @@ namespace sequoia::unit_testing
       using nodes_equivalent_type = std::initializer_list<node_weight_type>;
 
       template<class Logger, class W=node_weight_type, std::enable_if_t<!std::is_empty_v<W>, int> = 0>
-      static void check(Logger& logger, const type& graph, connectivity_equivalent_type connPrediction, nodes_equivalent_type nodesPrediction, std::string_view description)
+      static void check(std::string_view description, Logger& logger, const type& graph, connectivity_equivalent_type connPrediction, nodes_equivalent_type nodesPrediction)
       {
         using connectivity_t = typename type::connectivity_type;
         using nodes_t = typename type::nodes_type;
 
-        check_equivalence(logger, static_cast<const connectivity_t&>(graph), connPrediction, description);
-        check_equivalence(logger, static_cast<const nodes_t&>(graph), nodesPrediction, description);
+        check_equivalence(description, logger, static_cast<const connectivity_t&>(graph), connPrediction);
+        check_equivalence(description, logger, static_cast<const nodes_t&>(graph), nodesPrediction);
       }
 
       template<class Logger, class W=node_weight_type, std::enable_if_t<std::is_empty_v<W>, int> = 0>
-      static void check(Logger& logger, const type& graph, connectivity_equivalent_type connPrediction, std::string_view description)
+      static void check(std::string_view description, Logger& logger, const type& graph, connectivity_equivalent_type connPrediction)
       {
         using connectivity_t = typename type::connectivity_type;
 
-        check_equivalence(logger, static_cast<const connectivity_t&>(graph), connPrediction, description);
+        check_equivalence(description, logger, static_cast<const connectivity_t&>(graph), connPrediction);
       }
     };
 
@@ -83,21 +83,21 @@ namespace sequoia::unit_testing
       using nodes_equivalent_type = std::initializer_list<node_weight_type>;
 
       template<class Logger, class W=node_weight_type, std::enable_if_t<!std::is_empty_v<W>, int> = 0>
-      static void check(Logger& logger, const type& graph, connectivity_equivalent_type connPrediction, nodes_equivalent_type nodesPrediction, std::string_view description)
+      static void check(std::string_view description, Logger& logger, const type& graph, connectivity_equivalent_type connPrediction, nodes_equivalent_type nodesPrediction)
       {
         using connectivity_t = typename type::connectivity_type;
         using nodes_t = typename type::nodes_type;
 
-        check_weak_equivalence(logger, static_cast<const connectivity_t&>(graph), connPrediction, description);
-        check_equivalence(logger, static_cast<const nodes_t&>(graph), nodesPrediction, description);
+        check_weak_equivalence(description, logger, static_cast<const connectivity_t&>(graph), connPrediction);
+        check_equivalence(description, logger, static_cast<const nodes_t&>(graph), nodesPrediction);
       }
 
       template<class Logger, class W=node_weight_type, std::enable_if_t<std::is_empty_v<W>, int> = 0>
-      static void check(Logger& logger, const type& graph, connectivity_equivalent_type connPrediction, std::string_view description)
+      static void check(std::string_view description, Logger& logger, const type& graph, connectivity_equivalent_type connPrediction)
       {
         using connectivity_t = typename type::connectivity_type;
 
-        check_weak_equivalence(logger, static_cast<const connectivity_t&>(graph), connPrediction, description);
+        check_weak_equivalence(description, logger, static_cast<const connectivity_t&>(graph), connPrediction);
       }
     };
   }
@@ -113,18 +113,18 @@ namespace sequoia::unit_testing
     using type = maths::connectivity<Directedness, EdgeTraits, WeightMaker>;
 
     template<class Logger>
-    static void check(Logger& logger, const type& connectivity, const type& prediction, std::string_view description)
+    static void check(std::string_view description, Logger& logger, const type& connectivity, const type& prediction)
     {
-      check_equality(logger, connectivity.size(), prediction.size(), combine_messages(description, "Connectivity sizes different", "\n"));
+      check_equality(combine_messages(description, "Connectivity sizes different", "\n"), logger, connectivity.size(), prediction.size());
       
-      if(check_equality(logger, connectivity.order(), prediction.order(), combine_messages(description, "Connectivity orders different", "\n")))
+      if(check_equality(combine_messages(description, "Connectivity orders different", "\n"), logger, connectivity.order(), prediction.order()))
       {
         for(std::size_t i{}; i<connectivity.order(); ++i)
         {
           const std::string message{combine_messages(description, "Partition " + std::to_string(i), "\n")};
-          check_range(logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), prediction.cbegin_edges(i), prediction.cend_edges(i), combine_messages(message, "cedge_iterator"));
+          check_range(combine_messages(message, "cedge_iterator"), logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), prediction.cbegin_edges(i), prediction.cend_edges(i));
 
-          check_range(logger, connectivity.crbegin_edges(i), connectivity.crend_edges(i), prediction.crbegin_edges(i), prediction.crend_edges(i), combine_messages(message, "credge_iterator"));
+          check_range(combine_messages(message, "credge_iterator"), logger, connectivity.crbegin_edges(i), connectivity.crend_edges(i), prediction.crbegin_edges(i), prediction.crend_edges(i));
         }
       }
     } 
@@ -144,9 +144,9 @@ namespace sequoia::unit_testing
     using equivalent_type = std::initializer_list<std::initializer_list<edge_init_type>>;
 
     template<class Logger>
-    static void check(Logger& logger, const type& connectivity, equivalent_type prediction, std::string_view description)
+    static void check(std::string_view description, Logger& logger, const type& connectivity, equivalent_type prediction)
     {
-      if(check_equality(logger, connectivity.order(), prediction.size(), combine_messages(description, "Connectivity order wrong")))
+      if(check_equality(combine_messages(description, "Connectivity order wrong"), logger, connectivity.order(), prediction.size()))
       {
         for(std::size_t i{}; i<connectivity.order(); ++i)
         {
@@ -154,11 +154,11 @@ namespace sequoia::unit_testing
 
           if constexpr(std::is_same_v<edge_type, edge_init_type>)
           {
-            check_range(logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), (prediction.begin()+i)->begin(), (prediction.begin() + i)->end(), combine_messages(message, "cedge_iterator"));
+            check_range(combine_messages(message, "cedge_iterator"), logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), (prediction.begin()+i)->begin(), (prediction.begin() + i)->end());
           }
           else
           {
-            check_range_equivalence(logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), (prediction.begin()+i)->begin(), (prediction.begin() + i)->end(), combine_messages(message, "cedge_iterator"));
+            check_range_equivalence(combine_messages(message, "cedge_iterator"), logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), (prediction.begin()+i)->begin(), (prediction.begin() + i)->end());
           }                
         }
       }
@@ -179,14 +179,14 @@ namespace sequoia::unit_testing
     using equivalent_type = std::initializer_list<std::initializer_list<edge_init_type>>;
 
     template<class Logger>
-    static void check(Logger& logger, const type& connectivity, equivalent_type prediction, std::string_view description)
+    static void check(std::string_view description, Logger& logger, const type& connectivity, equivalent_type prediction)
     {
-      if(check_equality(logger, connectivity.order(), prediction.size(), combine_messages(description, "Connectivity order wrong")))
+      if(check_equality(combine_messages(description, "Connectivity order wrong"), logger, connectivity.order(), prediction.size()))
       {
         for(std::size_t i{}; i<connectivity.order(); ++i)
         {
           const std::string message{combine_messages(description,"Partition " + std::to_string(i))};
-          check_range_weak_equivalence(logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), (prediction.begin()+i)->begin(), (prediction.begin() + i)->end(), combine_messages(message, "cedge_iterator"));
+          check_range_weak_equivalence(combine_messages(message, "cedge_iterator"), logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), (prediction.begin()+i)->begin(), (prediction.begin() + i)->end());
         }
       }
     }    
@@ -221,9 +221,9 @@ namespace sequoia::unit_testing
     using checker<Logger>::check_regular_semantics;
 
     template<class G, class... NodeWeights, class E=typename G::edge_init_type>
-    void check_graph(const G& graph, std::initializer_list<std::initializer_list<E>> edges, const std::tuple<NodeWeights...>& nodeWeights, std::string_view description)
+    void check_graph(std::string_view description, const G& graph, std::initializer_list<std::initializer_list<E>> edges, const std::tuple<NodeWeights...>& nodeWeights)
     {
-      checker<Logger>::template check_equivalence<G, std::initializer_list<std::initializer_list<E>>, const std::tuple<NodeWeights...>&>(graph, std::move(edges), nodeWeights, description);
+      checker<Logger>::template check_equivalence<G, std::initializer_list<std::initializer_list<E>>, const std::tuple<NodeWeights...>&>(description, graph, std::move(edges), nodeWeights);
     }
 
     template<
@@ -232,15 +232,15 @@ namespace sequoia::unit_testing
       class W=typename G::node_weight_type,
       std::enable_if_t<!std::is_empty_v<W>, int> = 0
     >
-    void check_graph(const G& graph, std::initializer_list<std::initializer_list<E>> edges, std::initializer_list<typename G::node_weight_type> nodeWeights, std::string_view description)
+    void check_graph(std::string_view description, const G& graph, std::initializer_list<std::initializer_list<E>> edges, std::initializer_list<typename G::node_weight_type> nodeWeights)
     {
       if constexpr(impl::use_weak_equiv_v<typename G::edge_type>)
       {
-        checker<Logger>::template check_weak_equivalence<G, std::initializer_list<std::initializer_list<E>>, std::initializer_list<typename G::node_weight_type>>(graph, std::move(edges), std::move(nodeWeights), description);
+        checker<Logger>::template check_weak_equivalence<G, std::initializer_list<std::initializer_list<E>>, std::initializer_list<typename G::node_weight_type>>(description, graph, std::move(edges), std::move(nodeWeights));
       }
       else
       {
-        checker<Logger>::template check_equivalence<G, std::initializer_list<std::initializer_list<E>>, std::initializer_list<typename G::node_weight_type>>(graph, std::move(edges), std::move(nodeWeights), description);
+        checker<Logger>::template check_equivalence<G, std::initializer_list<std::initializer_list<E>>, std::initializer_list<typename G::node_weight_type>>(description, graph, std::move(edges), std::move(nodeWeights));
       }
     }
 
@@ -250,15 +250,15 @@ namespace sequoia::unit_testing
       class W=typename G::node_weight_type,
       std::enable_if_t<std::is_empty_v<W>, int> = 0
     >
-    void check_graph(const G& graph, std::initializer_list<std::initializer_list<E>> edges, std::string_view description)
+    void check_graph(std::string_view description, const G& graph, std::initializer_list<std::initializer_list<E>> edges)
     {
       if constexpr(impl::use_weak_equiv_v<typename G::edge_type>)
       {
-        checker<Logger>::check_weak_equivalence(graph, std::move(edges), description);
+        checker<Logger>::check_weak_equivalence(description, graph, std::move(edges));
       }
       else
       {
-        checker<Logger>::check_equivalence(graph, std::move(edges), description);
+        checker<Logger>::check_equivalence(description, graph, std::move(edges));
       }
     }
   };

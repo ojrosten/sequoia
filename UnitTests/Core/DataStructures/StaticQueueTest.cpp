@@ -26,10 +26,10 @@ namespace sequoia::unit_testing
     constexpr static_queue<int, 0> s{};
     static_queue<int, 0> t{};
 
-    check_equality(t, s, LINE("Equality of null queues"));
+    check_equality(LINE("Equality of null queues"), t, s);
 
-    check_exception_thrown<std::logic_error>([&t]() { t.push(1); }, LINE("Can't push to null queue"));
-    check_exception_thrown<std::logic_error>([]() { static_queue<int, 0>{1}; }, LINE("Can't construct non-null null queue"));
+    check_exception_thrown<std::logic_error>(LINE("Can't push to null queue"), [&t]() { t.push(1); });
+    check_exception_thrown<std::logic_error>(LINE("Can't construct non-null null queue"), []() { static_queue<int, 0>{1}; });
   }
 
   void test_static_queue::check_depth_1()
@@ -40,14 +40,14 @@ namespace sequoia::unit_testing
     static_queue<int, 1> t{};
     t.push(2);
 
-    check_regular_semantics(s, t, LINE("Standard Semantics"));
+    check_regular_semantics(LINE("Standard Semantics"), s, t);
 
-    check_exception_thrown<std::logic_error>([&t]() { t.push(1); }, LINE("Trying to push two elements to queue of depth 1"));
-    check_exception_thrown<std::logic_error>([]() { static_queue<int, 1>{1, 2}; }, LINE("Can't construct queue of depth 1 with 2 elements"));
+    check_exception_thrown<std::logic_error>(LINE("Trying to push two elements to queue of depth 1"), [&t]() { t.push(1); });
+    check_exception_thrown<std::logic_error>( LINE("Can't construct queue of depth 1 with 2 elements"), []() { static_queue<int, 1>{1, 2}; });
 
     t.pop();
     t.push(1);
-    check_equality(t, s, LINE(""));
+    check_equality(LINE(""), t, s);
   }
 
   constexpr auto test_static_queue::make_static_queue_2()
@@ -70,34 +70,34 @@ namespace sequoia::unit_testing
     static_queue<int, 2> a{}, b{1}, c{3, 2};
     constexpr static_queue<int, 2> s{make_static_queue_2()};
 
-    check_regular_semantics(a, b, LINE("Standard Semantics"));
-    check_regular_semantics(b, c, LINE("Standard Semantics"));
-    check_regular_semantics(a, c, LINE("Standard Semantics"));
-    check_regular_semantics(b, s, LINE("Standard Semantics"));
+    check_regular_semantics(LINE("Standard Semantics"), a, b);
+    check_regular_semantics(LINE("Standard Semantics"), b, c);
+    check_regular_semantics(LINE("Standard Semantics"), a, c);
+    check_regular_semantics(LINE("Standard Semantics"), b, s);
 
-    check_exception_thrown<std::logic_error>([]() { static_queue<int, 2>{1, 2, 3}; }, LINE("Can't construct queue of depth 2 with 3 elements"));
+    check_exception_thrown<std::logic_error>(LINE("Can't construct queue of depth 2 with 3 elements"), []() { static_queue<int, 2>{1, 2, 3}; });
 
-    check_equality(a.size(), 0ul, LINE(""));
-    check(a.empty(), LINE(""));
+    check_equality(LINE(""), a.size(), 0ul);
+    check(LINE(""), a.empty());
     
     a.push(5);
     a.push(7);
-    check_equality(a, static_queue<int, 2>{5, 7}, LINE(""));
+    check_equality(LINE(""), a, static_queue<int, 2>{5, 7});
     
-    check_exception_thrown<std::logic_error>([&a]() { a.push(0); }, LINE("Trying to push 3 elements to a queue of depth 2"));
+    check_exception_thrown<std::logic_error>(LINE("Trying to push 3 elements to a queue of depth 2"), [&a]() { a.push(0); });
     
     a.pop();
-    check_equality(a, static_queue<int, 2>{7}, LINE(""));
+    check_equality(LINE(""), a, static_queue<int, 2>{7});
 
     a.push(4);
-    check_equality(a, static_queue<int, 2>{7, 4}, LINE(""));
+    check_equality(LINE(""), a, static_queue<int, 2>{7, 4});
 
-    check_exception_thrown<std::logic_error>([&a]() { a.push(0); }, LINE("Trying to push 3 elements to a queue of depth 2"));
-
-    a.pop();
-    check_equality(a, static_queue<int, 2>{4}, LINE(""));
+    check_exception_thrown<std::logic_error>(LINE("Trying to push 3 elements to a queue of depth 2"), [&a]() { a.push(0); });
 
     a.pop();
-    check_equality(a, static_queue<int, 2>{}, LINE(""));
+    check_equality(LINE(""), a, static_queue<int, 2>{4});
+
+    a.pop();
+    check_equality(LINE(""), a, static_queue<int, 2>{});
   }
 }

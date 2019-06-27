@@ -106,22 +106,22 @@ namespace sequoia::unit_testing
   {
     {
       constexpr auto ordering{topological_sort()};
-      check_equality<std::size_t>(0, ordering[0], LINE(""));
-      check_equality<std::size_t>(1, ordering[1], LINE(""));
+      check_equality(LINE(""), ordering[0], 0ul);
+      check_equality(LINE(""), ordering[1], 1ul);
     }
 
     {
       constexpr auto data{bfs()};
-      check_equality<std::size_t>(3, data[0], LINE(""));
-      check_equality<std::size_t>(0, data[1], LINE(""));
+      check_equality(LINE(""), data[0], 3ul);
+      check_equality(LINE(""), data[1], 0ul);
     }
 
     {
       constexpr auto weights{priority_search()};
-      check_equality<std::size_t>(0, weights[0], LINE(""));
-      check_equality<std::size_t>(8, weights[1], LINE(""));
-      check_equality<std::size_t>(6, weights[2], LINE(""));
-      check_equality<std::size_t>(2, weights[3], LINE(""));
+      check_equality(LINE(""), weights[0], 0);
+      check_equality(LINE(""), weights[1], 8);
+      check_equality(LINE(""), weights[2], 6);
+      check_equality(LINE(""), weights[3], 2);
     }
   }
 }

@@ -29,7 +29,7 @@ namespace sequoia::unit_testing
     template<class ThreadModel, class... Args>
     std::vector<int> waiting_task_return(const std::size_t nTasks, const std::chrono::milliseconds millisecs, Args&&... args);
 
-    void check_return_values(performance_results<std::vector<int>>&& futures, std::string_view message);        
+    void check_return_values(std::string_view message, performance_results<std::vector<int>>&& futures);        
 
     template<class ThreadModel, class Exception, class... Args>
     void test_exceptions(std::string_view message, Args&&... args);

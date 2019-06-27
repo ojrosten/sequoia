@@ -39,31 +39,30 @@ namespace sequoia::unit_testing
   {
     using namespace maths::graph_impl;
     using namespace data_sharing;
-    
 
     {
       weight_maker<unpooled<int>> maker;
       auto proxy = maker.make(2);
-      check_equality<int>(2, proxy.get(), LINE(""));
+      check_equality(LINE(""), proxy.get(), 2);
     }
 
     {
       weight_maker<unpooled<float>> maker;
 
       auto proxy = maker.make(3.0f);
-      check_equality<float>(3.0f, proxy.get(), LINE(""));
+      check_equality(LINE(""), proxy.get(), 3.0f);
     }
 
     {
       weight_maker<data_pool<int>> maker;
       auto proxy = maker.make(2);
-      check_equality<int>(2, proxy.get(), LINE(""));
+      check_equality(LINE(""), proxy.get(), 2);
     }
 
     {
       weight_maker<data_pool<float>> maker;
       auto proxy = maker.make(3.0f);
-      check_equality<float>(3.0f, proxy.get(), LINE(""));
+      check_equality(LINE(""), proxy.get(), 3.0f);
     }
   }
 

@@ -42,14 +42,14 @@ namespace sequoia::unit_testing
     using node_comparer = graph_impl::node_comparer<graph_type, std::less<int>>;
     node_comparer compare(graph);
 
-    check(!compare(0, 1), "node_comparer sees that weight_0 > weight_1 and so returns false");
+    check(LINE("node_comparer sees that weight_0 > weight_1 and so returns false"), !compare(0, 1));
 
     auto stack = graph_impl::queue_constructor<graph_type, std::stack<std::size_t>>::make(graph);
     stack.push(0);
     stack.push(1);
-    check_equality(stack.top(), 1ul, LINE(""));
+    check_equality(LINE(""), stack.top(), 1ul);
     stack.pop();
-    check_equality(stack.top(), 0ul, LINE(""));
+    check_equality(LINE(""), stack.top(), 0ul);
 
     using PQ_t = std::priority_queue<std::size_t, std::vector<std::size_t>, graph_impl::node_comparer<graph_type, std::less<int>>>;
 
@@ -57,7 +57,7 @@ namespace sequoia::unit_testing
     pqueue.push(0);
     pqueue.push(1);
 
-    check_equality(pqueue.top(), 0ul, LINE(""));
+    check_equality(LINE(""), pqueue.top(), 0ul);
   }
 
   //=============================== Tracker Test ===============================//
@@ -116,15 +116,15 @@ namespace sequoia::unit_testing
     auto order2 = discovery2.order();
     auto edgeOrder = edgeDiscovery.order();
     
-    check(order.empty(), LINE(make_message("No nodes to discover")));
-    check_equality(order, order2, LINE(make_message("")));
-    check(edgeOrder.empty(), LINE(make_message("No edges to discover")));
+    check(LINE(make_message("No nodes to discover")), order.empty());
+    check_equality(LINE(make_message("")), order, order2);
+    check(LINE(make_message("No edges to discover")), edgeOrder.empty());
     if constexpr(undirected)
     {
-      check_equality(edgeDiscovery.order(), edge_results{}, LINE(make_message("")));
+      check_equality(LINE(make_message("")), edgeDiscovery.order(), edge_results{});
     }
     
-    check_equality(network.add_node(), 0ul, LINE(make_message("First node added")));
+    check_equality(LINE(make_message("First node added")), network.add_node(), 0ul);
     // 0
 
     if constexpr(undirected)
@@ -140,18 +140,18 @@ namespace sequoia::unit_testing
     order2 = discovery2.order();
     edgeOrder = edgeDiscovery.order();
 
-    if(check_equality(order.size(), 1ul, LINE(make_message("One node to discover"))))
+    if(check_equality(LINE(make_message("One node to discover")), order.size(), 1ul))
     {
-      check_equality(order.front(), 0ul, LINE(make_message("Node 0 must be discovered first in single node network")));
+      check_equality(LINE(make_message("Node 0 must be discovered first in single node network")), order.front(), 0ul);
     }
-    check_equality(order, order2, LINE(make_message("")));
-    check(edgeOrder.empty(), "No edges to discover");
+    check_equality(LINE(make_message("")), order, order2);
+    check(LINE(make_message("No edges to discover")), edgeOrder.empty());
     if constexpr(undirected)
     {
-      check_equality(edgeDiscovery.order(), edge_results{}, LINE(make_message("")));
+      check_equality(LINE(make_message("")), edgeDiscovery.order(), edge_results{});
     }  
 
-    check_equality(network.add_node(), 1ul, LINE(make_message("Second node added")));
+    check_equality(LINE(make_message("Second node added")), network.add_node(), 1ul);
     // 0 0
 
     if constexpr(undirected)
@@ -167,19 +167,19 @@ namespace sequoia::unit_testing
     order2 = discovery2.order();
     edgeOrder = edgeDiscovery.order();
 
-    check_equality(order.size(), 2ul, LINE(make_message("Two nodes to discover")));
+    check_equality(LINE(make_message("Two nodes to discover")), order.size(), 2ul);
     if(order.size() == 2)
     {
       auto iter = order.begin();
-      check_equality(*iter, 0ul, LINE(make_message("Node 0 discovered first")));
-      check_equality(*++iter, 1ul, LINE(make_message("Node 1 discovered second")));
+      check_equality(LINE(make_message("Node 0 discovered first")), *iter, 0ul);
+      check_equality(LINE(make_message("Node 1 discovered second")), *++iter, 1ul);
     }
     
-    check_equality(order, order2, LINE(make_message("")));
-    check(edgeOrder.empty(), LINE(make_message("No edges to discover")));
+    check_equality(LINE(make_message("")), order, order2);
+    check(LINE(make_message("No edges to discover")), edgeOrder.empty());
     if constexpr(undirected)
     {
-      check_equality(edgeDiscovery.order(), edge_results{}, LINE(make_message("")));
+      check_equality(LINE(make_message("")), edgeDiscovery.order(), edge_results{});
     }
     
     if constexpr(undirected)
@@ -195,19 +195,19 @@ namespace sequoia::unit_testing
     order2 = discovery2.order();
     edgeOrder = edgeDiscovery.order();
     
-    check_equality(order.size(), 2ul, LINE(make_message("Two nodes to discover but this time in reverse order")));
+    check_equality(LINE(make_message("Two nodes to discover but this time in reverse order")), order.size(), 2ul);
 
     if(order.size() == 2)
     {
       auto iter = order.begin();
-      check_equality(*iter, 1ul, LINE(make_message("Node 1 discovered first")));
-      check_equality(*++iter, 0ul, LINE(make_message("Node 0 discovered second")));
+      check_equality(LINE(make_message("Node 1 discovered first")), *iter, 1ul);
+      check_equality(LINE(make_message("Node 0 discovered second")), *++iter, 0ul);
     }
-    check_equality(order, order2, LINE(make_message("")));
-    check(edgeOrder.empty(), LINE(make_message("No edges to discover")));
+    check_equality(LINE(make_message("")), order, order2);
+    check(LINE(make_message("No edges to discover")), edgeOrder.empty());
     if constexpr(undirected)
     {
-      check_equality(edgeDiscovery.order(), edge_results{}, LINE(make_message("")));
+      check_equality(LINE(make_message("")), edgeDiscovery.order(), edge_results{});
     }
     
     if constexpr(undirected)
@@ -223,19 +223,19 @@ namespace sequoia::unit_testing
     order2 = discovery2.order();
     edgeOrder = edgeDiscovery.order();
 
-    if(check_equality(order.size(), 1ul, LINE(make_message("Of two disconnected nodes, only one will be discovered"))))
+    if(check_equality(LINE(make_message("Of two disconnected nodes, only one will be discovered")), order.size(), 1ul))
     {
       auto iter = order.begin();
-      check_equality(*iter, 0ul, LINE(make_message("Node 0, alone, discovered first")));
+      check_equality(LINE(make_message("Node 0, alone, discovered first")), *iter, 0ul);
     }
-    check_equality(order, order2, LINE(make_message("")));
-    check(edgeOrder.empty(), LINE(make_message("No edges to discover")));
+    check_equality(LINE(make_message("")), order, order2);
+    check(LINE(make_message("No edges to discover")), edgeOrder.empty());
     if constexpr(undirected)
     {
-      check_equality(edgeDiscovery.order(), edge_results{}, LINE(make_message("")));
+      check_equality(LINE(make_message("")), edgeDiscovery.order(), edge_results{});
     }
     
-    check_equality(network.add_node(), 2ul, LINE(make_message("Third node added")));
+    check_equality(LINE(make_message("Third node added")), network.add_node(), 2ul);
     network.join(0, 1);
     network.join(1, 2);
     // 0----0----0
@@ -253,29 +253,29 @@ namespace sequoia::unit_testing
     order2 = discovery2.order();
     edgeOrder = edgeDiscovery.order();
     
-    if(check_equality(order.size(), 3ul, LINE(make_message("Three nodes to discover"))))
+    if(check_equality(LINE(make_message("Three nodes to discover")), order.size(), 3ul))
     {
       auto iter = order.begin();
-      check_equality(*iter, 0ul, LINE(make_message("Starting node 0 discovered first")));
-      check_equality(*++iter, 1ul, LINE(make_message("Node 1 discovered next")));
-      check_equality(*++iter, 2ul, LINE(make_message("Node 2 discovered last")));
+      check_equality(LINE(make_message("Starting node 0 discovered first")), *iter, 0ul);
+      check_equality(LINE(make_message("Node 1 discovered next")), *++iter, 1ul);
+      check_equality(LINE(make_message("Node 2 discovered last")), *++iter, 2ul);
     }
-    check_equality(order, order2, LINE(make_message("")));
+    check_equality(LINE(make_message("")), order, order2);
 
-    if(check_equality(edgeOrder.size(), 2ul, LINE(make_message("Two edges to discover"))))
+    if(check_equality(LINE(make_message("Two edges to discover")), edgeOrder.size(), 2ul))
     {
       auto iter = edgeOrder.begin();
-      check_equality(iter->first, 0ul, LINE(make_message("Edge attached to node 0")));
-      check_equality(iter->second, 0ul, LINE(make_message("Edge has " + iterDescription + " index 0")));
+      check_equality(LINE(make_message("Edge attached to node 0")), iter->first, 0ul);
+      check_equality(LINE(make_message("Edge has " + iterDescription + " index 0")), iter->second, 0ul);
       ++iter;
-      check_equality(iter->first, 1ul, LINE(make_message("Edge attached to node 1")));
+      check_equality(LINE(make_message("Edge attached to node 1")), iter->first, 1ul);
       const auto expected{mutualInfo && forwardIter ? 1ul : 0ul};
-      check_equality(iter->second, expected, LINE(make_message("Edge has " + iterDescription + " index " + std::to_string(expected))));
+      check_equality(LINE(make_message("Edge has " + iterDescription + " index " + std::to_string(expected))), iter->second, expected);
     }
 
     if constexpr(undirected)
     {
-      check_equality(edgeDiscovery2.order(), isBFS ? edge_results{{1,0}, {2,0}} : edge_results{{1, 1}, {2, 0}}, LINE(make_message("")));
+      check_equality(LINE(make_message("")), edgeDiscovery2.order(), isBFS ? edge_results{{1,0}, {2,0}} : edge_results{{1, 1}, {2, 0}});
     }                 
 
     if constexpr(undirected)
@@ -293,49 +293,49 @@ namespace sequoia::unit_testing
 
     if constexpr(undirected)
     {
-      if(check_equality(order.size(), 3ul, LINE(make_message("Search from middle; still three nodes to discover"))))
+      if(check_equality(LINE(make_message("Search from middle; still three nodes to discover")), order.size(), 3ul))
       {
         auto iter = order.begin();
-        check_equality(*iter, 1ul, LINE(make_message("Middle node 1 discovered first")));
-        check_equality(*++iter, 0ul, LINE(make_message("Node 0 discovered next")));
-        check_equality(*++iter, 2ul, LINE(make_message("Node 2 discovered last")));
+        check_equality(LINE(make_message("Middle node 1 discovered first")), *iter, 1ul);
+        check_equality(LINE(make_message("Node 0 discovered next")), *++iter, 0ul);
+        check_equality(LINE(make_message("Node 2 discovered last")), *++iter, 2ul);
       }
     }
     else
     {
-      if(check_equality(order.size(), 2ul, LINE(make_message("Search from middle; only two nodes to discover"))))
+      if(check_equality(LINE(make_message("Search from middle; only two nodes to discover")), order.size(), 2ul))
       {
         auto iter = order.begin();
-        check_equality(*iter, 1ul, LINE(make_message("Middle node 1 discovered first")));
-        check_equality(*++iter, 2ul, LINE(make_message("Node 2 discovered next")));
+        check_equality(LINE(make_message("Middle node 1 discovered first")), *iter, 1ul);
+        check_equality(LINE(make_message("Node 2 discovered next")), *++iter, 2ul);
       }
     }
     
-    check_equality(order, order2, LINE(make_message("")));
+    check_equality(LINE(make_message("")), order, order2);
     
     if constexpr(undirected)
     {
-      if(check_equality(edgeOrder.size(), 2ul, LINE(make_message("Search from middle; two edges to discover"))))
+      if(check_equality(LINE(make_message("Search from middle; two edges to discover")), edgeOrder.size(), 2ul))
       {
         auto iter = edgeOrder.begin();
-        check_equality(iter->first, 1ul, LINE(make_message("Edge attached to node 1")));
-        check_equality(iter->second, 0ul, LINE(make_message("Edge has " + iterDescription + " index 0")));
+        check_equality(LINE(make_message("Edge attached to node 1")), iter->first, 1ul);
+        check_equality(LINE(make_message("Edge has " + iterDescription + " index 0")), iter->second, 0ul);
         ++iter;
-        check_equality(iter->first, 1ul, LINE(make_message("Edge attached to node 1")));
-        check_equality(iter->second, 1ul, LINE(make_message("Edge has " + iterDescription + " index 1")));
+        check_equality(LINE(make_message("Edge attached to node 1")), iter->first, 1ul);
+        check_equality(LINE(make_message("Edge has " + iterDescription + " index 1")), iter->second, 1ul);
       }
 
-      check_equality(edgeDiscovery2.order(), isBFS ? edge_results{{0, 0}, {2, 0}} : edge_results{{0, 0}, {2, 0}}, LINE(make_message("")));
+      check_equality(LINE(make_message("")), edgeDiscovery2.order(), isBFS ? edge_results{{0, 0}, {2, 0}} : edge_results{{0, 0}, {2, 0}});
     }
     else
     {
-      if(check_equality(edgeOrder.size(), 1ul, LINE(make_message("Search from middle; only one edge to discover"))))
+      if(check_equality(LINE(make_message("Search from middle; only one edge to discover")), edgeOrder.size(), 1ul))
       {
         auto iter = edgeOrder.begin();
-        check_equality(iter->first, 1ul, LINE(make_message("Edge attached to node 1")));
+        check_equality(LINE(make_message("Edge attached to node 1")), iter->first, 1ul);
         const std::string num{mutualInfo ? "1" : "0"};
         const auto expected{(mutualInfo && isBFS) ? 1ul : 0ul};
-        check_equality(iter->second, expected, LINE(make_message("Edge has " + iterDescription + " index " + std::to_string(expected))));
+        check_equality(LINE(make_message("Edge has " + iterDescription + " index " + std::to_string(expected))), iter->second, expected);
       }
     }
                                               
@@ -354,42 +354,42 @@ namespace sequoia::unit_testing
 
     if constexpr(undirected)
     {
-      if(check_equality(order.size(), 3ul, LINE(make_message("Search from end; still three nodes to discover"))))
+      if(check_equality(LINE(make_message("Search from end; still three nodes to discover")), order.size(), 3ul))
       {
         auto iter = order.begin();
-        check_equality(*iter, 2ul, LINE(make_message("End node 2 discovered first")));
-        check_equality(*++iter, 1ul, LINE(make_message("Middle node 1 discovered next")));
-        check_equality(*++iter, 0ul, LINE(make_message("First node 0 discovered last")));
+        check_equality(LINE(make_message("End node 2 discovered first")), *iter, 2ul);
+        check_equality(LINE(make_message("Middle node 1 discovered next")), *++iter, 1ul);
+        check_equality(LINE(make_message("First node 0 discovered last")), *++iter, 0ul);
       }
 
-      if(check_equality(edgeOrder.size(), 2ul, LINE(make_message("Search from end; two edges to discover"))))
+      if(check_equality(LINE(make_message("Search from end; two edges to discover")), edgeOrder.size(), 2ul))
       {
         auto iter = edgeOrder.begin();
-        check_equality(iter->first, 2ul, LINE(make_message("Edge attached to node 2")));
-        check_equality(iter->second, 0ul, LINE(make_message("Edge has " + iterDescription + " index 0")));
+        check_equality(LINE(make_message("Edge attached to node 2")), iter->first, 2ul);
+        check_equality(LINE(make_message("Edge has " + iterDescription + " index 0")), iter->second, 0ul);
         ++iter;
-        check_equality(iter->first, 1ul, LINE(make_message("Edge attached to node 1")));
+        check_equality(LINE(make_message("Edge attached to node 1")), iter->first, 1ul);
         const auto expected{forwardIter ? 0ul : 1ul};
-        check_equality(iter->second, expected, LINE(make_message("Edge has " + iterDescription + " index " + std::to_string(expected))));
+        check_equality(LINE(make_message("Edge has " + iterDescription + " index " + std::to_string(expected))), iter->second, expected);
       }
 
-      check_equality(edgeDiscovery2.order(), isBFS ? edge_results{{1, 1}, {0, 0}} : edge_results{{1, 0}, {0, 0}}, LINE(make_message("")));
+      check_equality(LINE(make_message("")), edgeDiscovery2.order(), isBFS ? edge_results{{1, 1}, {0, 0}} : edge_results{{1, 0}, {0, 0}});
     }
     else
     {
-      if(check_equality(order.size(), 1ul, LINE(make_message("Search for connected components from end, so only one node to discover"))))
+      if(check_equality(LINE(make_message("Search for connected components from end, so only one node to discover")), order.size(), 1ul))
       {
         auto iter = order.begin();
-        check_equality(*iter, 2ul, LINE(make_message("End node 2 discovered first")));
+        check_equality(LINE(make_message("End node 2 discovered first")), *iter, 2ul);
       }
       
-      check_equality(edgeOrder.size(), 0ul, LINE(make_message("Search from end; no edges to discover")));
+      check_equality(LINE(make_message("Search from end; no edges to discover")), edgeOrder.size(), 0ul);
     }
         
-    check_equality(order, order2, LINE(make_message("")));
+    check_equality(LINE(make_message("")), order, order2);
          
 
-    check_equality(network.add_node(), 3ul, LINE(make_message("Fourth node added")));
+    check_equality(LINE(make_message("Fourth node added")), network.add_node(), 3ul);
     network.join(2, 3);
     network.join(3, 0);
     //  0----0
@@ -410,7 +410,7 @@ namespace sequoia::unit_testing
     order2 = discovery2.order();
     edgeOrder = edgeDiscovery.order();
 
-    if(check_equality(order.size(), 4ul, LINE(make_message("Four nodes to discover"))))
+    if(check_equality(LINE(make_message("Four nodes to discover")), order.size(), 4ul))
     {
       if constexpr(undirected)
       {
@@ -422,7 +422,7 @@ namespace sequoia::unit_testing
       }
     }
 
-    check_equality(order, order2, LINE(make_message("")));
+    check_equality(LINE(make_message("")), order, order2);
 
     if constexpr(undirected)
     {
@@ -437,7 +437,7 @@ namespace sequoia::unit_testing
     order2 = discovery2.order();
     edgeOrder = edgeDiscovery.order();
 
-    if(check_equality(order.size(), 4ul, LINE(make_message("Four nodes to discover but this time starting from middle"))))
+    if(check_equality(LINE(make_message("Four nodes to discover but this time starting from middle")), order.size(), 4ul))
     {
       if constexpr(undirected)
       {
@@ -449,7 +449,7 @@ namespace sequoia::unit_testing
       }
     }
     
-    check_equality(order, order2, LINE(make_message("")));
+    check_equality(LINE(make_message("")), order, order2);
   }
 
   template
@@ -486,9 +486,9 @@ namespace sequoia::unit_testing
       edgeAnswers = edge_results{{2, 0}, {2, 1}, {1, 0}, {3, 1}};
       edgeAnswers2 = edge_results{{1, 1}, {3, 0}, {0, 0}, {0, 1}};
     }
-    check_equality(expected, tracker.order(), LINE(""));
-    check_equality(edgeAnswers, eTracker.order(), LINE("First edge traversal"));
-    check_equality(edgeAnswers2, eTracker2.order(), LINE("Second edge traversal"));
+    check_equality(LINE(""), tracker.order(), expected);
+    check_equality(LINE("First edge traversal"), eTracker.order(), edgeAnswers);
+    check_equality(LINE("Second edge traversal"), eTracker2.order(), edgeAnswers2);
   }
 
   template
@@ -523,8 +523,8 @@ namespace sequoia::unit_testing
       expected = std::vector<std::size_t>{2,3,0,1};
       edgeAnswers = mutualInfo ? edge_results{{2, 1}, {3, 1}, {0, 0}, {1, 1}} : edge_results{{2, 0}, {3, 0}, {0, 0}, {1, 0}};
     }
-    check_equality(expected, tracker.order(), LINE("start = " + std::to_string(start) + " "));
-    check_equality(edgeAnswers, eTracker.order(), LINE("First edge traversal, start = " + std::to_string(start) + " "));
+    check_equality(LINE("start = " + std::to_string(start) + " "), tracker.order(), expected);
+    check_equality(LINE("First edge traversal, start = " + std::to_string(start) + " "), eTracker.order(), edgeAnswers);
   }
 
   template
@@ -561,9 +561,9 @@ namespace sequoia::unit_testing
       edgeAnswers = edge_results{{2, 0}, {2, 1}, {1, 1}, {0, 0}};
       edgeAnswers2 = edge_results{{1, 0}, {0, 1}, {3, 0}, {3, 1}};
     }
-    check_equality(expected, tracker.order(), LINE(""));
-    check_equality(edgeAnswers, eTracker.order(), LINE("First edge traversal"));
-    check_equality(edgeAnswers2, eTracker2.order(), LINE("Second edge traversal"));
+    check_equality(LINE(""), tracker.order(), expected);
+    check_equality(LINE("First edge traversal"), eTracker.order(), edgeAnswers);
+    check_equality(LINE("Second edge traversal"), eTracker2.order(), edgeAnswers2);
   }
 
   template
@@ -598,8 +598,8 @@ namespace sequoia::unit_testing
       expected = std::vector<std::size_t>{2,3,0,1};
       edgeAnswers = mutualInfo ? edge_results{{2, 0}, {3, 0}, {0, 1}, {1, 0}} : edge_results{{2, 0}, {3, 0}, {0, 0}, {1, 0}};
     }
-    check_equality(expected, tracker.order(), LINE("start = " + std::to_string(start) + " "));
-    check_equality(edgeAnswers, eTracker.order(), LINE("First edge traversal, start = " + std::to_string(start) + " "));
+    check_equality(LINE("start = " + std::to_string(start) + " "), tracker.order(), expected);
+    check_equality(LINE("First edge traversal, start = " + std::to_string(start) + " "), eTracker.order(), edgeAnswers);
   }
 
   //=============================== Priority Search  ===============================//
@@ -629,7 +629,7 @@ namespace sequoia::unit_testing
     maths::priority_search(graph, false, 0, tracker);
 
     auto order = tracker.order();
-    check_equality(order, std::vector<std::size_t>{0,2,4,3,6,1,5}, LINE(""));
+    check_equality(LINE(""), order, std::vector<std::size_t>{0,2,4,3,6,1,5});
   }
 
   template
@@ -736,9 +736,9 @@ namespace sequoia::unit_testing
       poolResults = poolFn(),
       expected = answers(upper);
 
-    check_equality(serialResults, expected, "Null edge first task expected");
-    check_equality(asyncResults, expected, "Async edge first task expected");
-    check_equality(poolResults, expected, "Pool edge first task expected");
+    check_equality(LINE("Null edge first task expected"), serialResults, expected);
+    check_equality(LINE("Async edge first task expected"), asyncResults, expected);
+    check_equality(LINE("Pool edge first task expected"), poolResults, expected);
   }
 
   template
@@ -778,9 +778,9 @@ namespace sequoia::unit_testing
         poolResults = poolFn(),
         expected = node_task_answers(upper);
 
-      check_equality(serialResults, expected, "Null node task expected");
-      check_equality(asyncResults, expected, "Async node task expected");
-      check_equality(poolResults, expected, "Pool node task expected");
+      check_equality(LINE("Null node task expected"), serialResults, expected);
+      check_equality(LINE("Async node task expected"), asyncResults, expected);
+      check_equality(LINE("Pool node task expected"), poolResults, expected);
     }
 
     //================================ Edge First Traversal functors =========================//
@@ -806,9 +806,9 @@ namespace sequoia::unit_testing
         poolResults = poolFn(),
         expected = edge_task_answers(upper);
 
-      check_equality(serialResults, expected, "Null edge first task expected");
-      check_equality(asyncResults, expected, "Async edge first task expected");
-      check_equality(poolResults, expected, "Pool edge first task expected");
+      check_equality(LINE("Null edge first task expected"), serialResults, expected);
+      check_equality(LINE("Async edge first task expected"), asyncResults, expected);
+      check_equality(LINE("Pool edge first task expected"), poolResults, expected);
 
     }
 
@@ -840,25 +840,25 @@ namespace sequoia::unit_testing
 
       auto expected = node_task_answers(upper);
 
-      auto futures = check_relative_performance(asyncFn, serialFn, 2.0, 4.5, LINE("Null versus async check"));
-      auto futures2 = check_relative_performance(poolFn, serialFn, 2.0, 4.5, LINE("Null versus pool check"));
+      auto futures = check_relative_performance(LINE("Null versus async check"), asyncFn, serialFn, 2.0, 4.5);
+      auto futures2 = check_relative_performance(LINE("Null versus pool check"), poolFn, serialFn, 2.0, 4.5);
 
       for(auto&& fut : futures.fast_futures)
       {
         auto results = fut.get();
-        check_equality(results, expected, LINE("Async node performance task results wrong"));
+        check_equality(LINE("Async node performance task results wrong"), results, expected);
       }
 
       for(auto&& fut : futures.slow_futures)
       {
         auto results = fut.get();
-        check_equality(results, expected, LINE("Null node performance task results wrong"));
+        check_equality(LINE("Null node performance task results wrong"), results, expected);
       }
 
       for(auto&& fut : futures2.fast_futures)
       {
         auto results = fut.get();
-        check_equality(results, expected, LINE("Pool node performance task results wrong"));
+        check_equality(LINE("Pool node performance task results wrong"), results, expected);
       }
     }
   }

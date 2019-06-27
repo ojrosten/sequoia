@@ -26,10 +26,10 @@ namespace sequoia::unit_testing
     constexpr static_stack<int, 0> s{};
     static_stack<int, 0> t{};
 
-    check_equality(t, s, LINE("Equality of null queues"));
+    check_equality(LINE("Equality of null queues"), t, s);
 
-    check_exception_thrown<std::logic_error>([&t]() { t.push(1); }, LINE("Can't push to null stack"));
-    check_exception_thrown<std::logic_error>([]() { static_stack<int, 0>{1}; }, LINE("Can't construct non-null null stack"));
+    check_exception_thrown<std::logic_error>(LINE("Can't push to null stack"), [&t]() { t.push(1); });
+    check_exception_thrown<std::logic_error>(LINE("Can't construct non-null null stack"), []() { static_stack<int, 0>{1}; });
   }
 
   void test_static_stack::check_depth_1()
@@ -41,16 +41,16 @@ namespace sequoia::unit_testing
     stack_t t{};
     t.push(2);
 
-    check_regular_semantics(s, t, LINE("Standard Semantics"));
+    check_regular_semantics(LINE("Standard Semantics"), s, t);
 
-    check_exception_thrown<std::logic_error>([&t]() { t.push(1); }, LINE("Trying to push two elements to stack of depth 1"));
-    check_exception_thrown<std::logic_error>([]() { static_stack<int, 1>{1, 2}; }, LINE("Can't construct stack of depth 1 with 2 elements"));
+    check_exception_thrown<std::logic_error>(LINE("Trying to push two elements to stack of depth 1"), [&t]() { t.push(1); });
+    check_exception_thrown<std::logic_error>(LINE("Can't construct stack of depth 1 with 2 elements"), []() { static_stack<int, 1>{1, 2}; });
 
     t.pop();
-    check_equality(t, stack_t{}, LINE(""));
+    check_equality(LINE(""), t, stack_t{});
     
     t.push(1);
-    check_equality(t, stack_t{1}, LINE(""));
+    check_equality(LINE(""), t, stack_t{1});
   }
 
   constexpr auto test_static_stack::make_static_stack_2()
@@ -75,12 +75,12 @@ namespace sequoia::unit_testing
     constexpr stack_t s{make_static_stack_2()};
     auto t{s};
 
-    check_equality(t, stack_t{11, 12}, LINE(""));
+    check_equality(LINE(""), t, stack_t{11, 12});
 
     t.pop();
-    check_equality(t, stack_t{11}, LINE(""));
+    check_equality(LINE(""), t, stack_t{11});
 
     t.pop();
-    check_equality(t, stack_t{}, LINE(""));
+    check_equality(LINE(""), t, stack_t{});
   }
 }

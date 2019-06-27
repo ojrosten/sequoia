@@ -47,7 +47,7 @@ namespace sequoia
         Graph prediction{{edge{1,0}, edge{1,3}}, {edge{0,3}, edge{0,0}}};
         prediction.swap_edges(1, 0, 1);
         
-        m_Checker.check_copy_consistency(g, prediction, mutator, LINE("Copy consistency"));
+        m_Checker.check_copy_consistency(LINE("Copy consistency"), g, prediction, mutator);
       }
       
       template<class Graph>
@@ -106,11 +106,11 @@ namespace sequoia
 
         if constexpr(std::is_empty_v<NodeWeight>)            
         {
-          m_Checker.check_graph(g, {{edge{1,1}, edge{1,2}, edge{1,5}, edge{0,9}, edge{0, 9}}, {edge{0, 1}, edge{0,2}, edge{0,5}}}, LINE(""));
+          m_Checker.check_graph(LINE(""), g, {{edge{1,1}, edge{1,2}, edge{1,5}, edge{0,9}, edge{0, 9}}, {edge{0, 1}, edge{0,2}, edge{0,5}}});
         }
         else
         {
-          m_Checker.check_graph(g, {{edge{1,1}, edge{1,2}, edge{1,5}, edge{0,9}, edge{0, 9}}, {edge{0, 1}, edge{0,2}, edge{0,5}}}, {NodeWeight{2}, NodeWeight{-3}}, LINE(""));
+          m_Checker.check_graph(LINE(""), g, {{edge{1,1}, edge{1,2}, edge{1,5}, edge{0,9}, edge{0, 9}}, {edge{0, 1}, edge{0,2}, edge{0,5}}}, {NodeWeight{2}, NodeWeight{-3}});
         }
       }
     };
@@ -192,21 +192,21 @@ namespace sequoia
 
         if constexpr(std::is_empty_v<NodeWeight>)            
         {
-          m_Checker.check_equality(g,
+          m_Checker.check_equality( LINE(""), g,
             {
               {edge{1,1}, edge{1,0}, edge{0, -2}, edge{1,3}},
               {edge{2,8}, edge{0,9}, edge{1,6}},
               {edge{1, 7}, edge{2, -3}, edge{2, 42}}
-            }, LINE(""));
+            });
         }
         else
         {
-          m_Checker.check_equality(g,
+          m_Checker.check_equality( LINE(""), g,
             {{
               {edge{1,1}, edge{1,0}, edge{0, -2}, edge{1,3}},
               {edge{2,8}, edge{0,9}, edge{1,6}},
               {edge{1, 7}, edge{2, -3}, edge{2, 42}}
-             }, {NodeWeight{}, NodeWeight{2}, NodeWeight{-3}}}, LINE(""));
+             }, {NodeWeight{}, NodeWeight{2}, NodeWeight{-3}}});
         }
       }
     };
@@ -275,11 +275,11 @@ namespace sequoia
 
         if constexpr(std::is_empty_v<NodeWeight>)            
         {
-          m_Checker.check_equality(g, {{}, {edge{1,2,3}, edge{1,3,-2}, edge{1,0,3}, edge{1,1,-2}}}, LINE(""));
+          m_Checker.check_equality(LINE(""), g, {{}, {edge{1,2,3}, edge{1,3,-2}, edge{1,0,3}, edge{1,1,-2}}});
         }
         else
         {
-          m_Checker.check_equality(g, {{{}, {edge{1,2,3}, edge{1,3,-2}, edge{1,0,3}, edge{1,1,-2}}}, {NodeWeight{2}, NodeWeight{-3}}}, LINE(""));          
+          m_Checker.check_equality(LINE(""), g, {{{}, {edge{1,2,3}, edge{1,3,-2}, edge{1,0,3}, edge{1,1,-2}}}, {NodeWeight{2}, NodeWeight{-3}}});          
         }
       }
     };
@@ -350,11 +350,11 @@ namespace sequoia
 
         if constexpr(std::is_empty_v<NodeWeight>)            
         {
-          m_Checker.check_equality(g, {{edge{0,inversion_constant<true>{},2,3}, edge{0,0,3,6}, edge{0,inversion_constant<true>{},0,3}, edge{0,0,1,6}}, {}}, LINE(""));
+          m_Checker.check_equality(LINE(""), g, {{edge{0,inversion_constant<true>{},2,3}, edge{0,0,3,6}, edge{0,inversion_constant<true>{},0,3}, edge{0,0,1,6}}, {}});
         }
         else
         {
-          m_Checker.check_equality(g, {{{edge{0,inversion_constant<true>{},2,3}, edge{0,0,3,6}, edge{0,inversion_constant<true>{},0,3}, edge{0,0,1,6}}, {}}, {NodeWeight{2}, NodeWeight{-3}}}, LINE(""));
+          m_Checker.check_equality(LINE(""), g, {{{edge{0,inversion_constant<true>{},2,3}, edge{0,0,3,6}, edge{0,inversion_constant<true>{},0,3}, edge{0,0,1,6}}, {}}, {NodeWeight{2}, NodeWeight{-3}}});
         }
       }
     };

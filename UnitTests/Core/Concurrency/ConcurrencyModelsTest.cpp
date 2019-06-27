@@ -47,17 +47,17 @@ namespace sequoia::unit_testing
       q_t q{};
 
       int a{};
-      check(q.push(task_t{[&a](){ a+= 1; }}, std::try_to_lock), LINE(""));
+      check(LINE(""), q.push(task_t{[&a](){ a+= 1; }}, std::try_to_lock));
       auto t{q.pop(std::try_to_lock)};
 
       t();
-      check_equality(a, 1, LINE(""));
+      check_equality(LINE(""), a, 1);
       
       q.push(task_t{[&a](){ a+= 2; }});
       t = q.pop();
 
       t();
-      check_equality(a, 3, LINE(""));
+      check_equality(LINE(""), a, 3);
 
       q.finish();
     }
@@ -68,13 +68,13 @@ namespace sequoia::unit_testing
 
       q_t q{};
 
-      check(q.push(task_t{[](){ return 1;}}, std::try_to_lock), LINE(""));
+      check(LINE(""), q.push(task_t{[](){ return 1;}}, std::try_to_lock));
       auto t{q.pop(std::try_to_lock)};
 
       auto fut{t.get_future()};
       t();
       
-      check_equality(fut.get(), 1, LINE(""));
+      check_equality(LINE(""), fut.get(), 1);
       
       q.push(task_t{[](){ return 2;}});
       t = q.pop();
@@ -82,7 +82,7 @@ namespace sequoia::unit_testing
       fut = t.get_future();
       t();
       
-      check_equality(fut.get(), 2, LINE(""));
+      check_equality(LINE(""), fut.get(), 2);
 
       q.finish();
     }
@@ -107,9 +107,9 @@ namespace sequoia::unit_testing
 
       auto asyncFn{[this, millisecs]() { waiting_task<asynchronous<void>>(2u, millisecs); }};
 
-      check_relative_performance(threadPoolFn, nullThreadFn, 1.9, 2.1, LINE("Two Waiting tasks; pool_2/null"));
-      check_relative_performance(threadPoolMonoFn, nullThreadFn, 1.9, 2.1, LINE("Two Waiting tasks; pool_2M/null"));
-      check_relative_performance(asyncFn, nullThreadFn, 1.9, 2.1, LINE("Two Waiting tasks; async/null"));
+      check_relative_performance(LINE("Two Waiting tasks; pool_2/null"), threadPoolFn, nullThreadFn, 1.9, 2.1);
+      check_relative_performance(LINE("Two Waiting tasks; pool_2M/null"), threadPoolMonoFn, nullThreadFn, 1.9, 2.1);
+      check_relative_performance(LINE("Two Waiting tasks; async/null"), asyncFn, nullThreadFn, 1.9, 2.1);
     }
 
     {
@@ -125,8 +125,8 @@ namespace sequoia::unit_testing
 
       auto nullThreadFn{[this, millisecs]() { waiting_task<serial<void>>(4u, millisecs); }};
 
-      check_relative_performance(threadPoolFn, nullThreadFn, 1.9, 2.1, LINE("Four Waiting tasks; pool_2/null"));
-      check_relative_performance(threadPoolMonoFn, nullThreadFn, 1.9, 2.1, LINE("Four Waiting tasks; pool_2M/null"));
+      check_relative_performance(LINE("Four Waiting tasks; pool_2/null"), threadPoolFn, nullThreadFn, 1.9, 2.1);
+      check_relative_performance(LINE("Four Waiting tasks; pool_2M/null"), threadPoolMonoFn, nullThreadFn, 1.9, 2.1);
     }
 
     {
@@ -142,8 +142,8 @@ namespace sequoia::unit_testing
 
       auto nullThreadFn{[this, millisecs]() { waiting_task<serial<void>>(4u, millisecs); }};
 
-      check_relative_performance(threadPoolFn, nullThreadFn, 3.9, 4.1, LINE("Four Waiting tasks; pool_4/null"));
-      check_relative_performance(threadPoolMonoFn, nullThreadFn, 3.9, 4.1, LINE("Four Waiting tasks; pool_4M/null"));
+      check_relative_performance(LINE("Four Waiting tasks; pool_4/null"), threadPoolFn, nullThreadFn, 3.9, 4.1);
+      check_relative_performance(LINE("Four Waiting tasks; pool_4M/null"), threadPoolMonoFn, nullThreadFn, 3.9, 4.1);
     }
   }
 
@@ -166,37 +166,37 @@ namespace sequoia::unit_testing
 
       auto asyncFn{[this, millisecs]() { return waiting_task_return<asynchronous<int>>(2u, millisecs); }};
 
-      auto futures{check_relative_performance(threadPoolFn, nullThreadFn, 1.9, 2.1, LINE("Two Waiting tasks; pool_2/null"))};
-      check_return_values(std::move(futures), LINE("pool_2"));
+      auto futures{check_relative_performance(LINE("Two Waiting tasks; pool_2/null"), threadPoolFn, nullThreadFn, 1.9, 2.1)};
+      check_return_values(LINE("pool_2"), std::move(futures));
 
           
-      futures = check_relative_performance(threadPoolMonoFn, nullThreadFn, 1.9, 2.1, LINE("Two Waiting tasks; pool_2M/null"));
-      check_return_values(std::move(futures), LINE("pool_2M"));
+      futures = check_relative_performance(LINE("Two Waiting tasks; pool_2M/null"), threadPoolMonoFn, nullThreadFn, 1.9, 2.1);
+      check_return_values(LINE("pool_2M"), std::move(futures));
 
-      futures = check_relative_performance(asyncFn, nullThreadFn, 1.9, 2.1, LINE("Two Waiting tasks; async/null"));
-      check_return_values(std::move(futures), LINE("async"));
+      futures = check_relative_performance(LINE("Two Waiting tasks; async/null"), asyncFn, nullThreadFn, 1.9, 2.1);
+      check_return_values(LINE("async"), std::move(futures));
     }
   }
 
-  void threading_models_test::check_return_values(performance_results<std::vector<int>>&& futures, std::string_view message)
+  void threading_models_test::check_return_values(std::string_view message, performance_results<std::vector<int>>&& futures)
   {
     for(auto& f : futures.fast_futures)
     {
       auto results{f.get()};
-      if(check_equality(results.size(), 2ul, LINE(message)))
+      if(check_equality(LINE(message), results.size(), 2ul))
       {
-        check_equality(results[0], 0, LINE(message));
-        check_equality(results[1], 1, LINE(message));
+        check_equality(LINE(message), results[0], 0);
+        check_equality(LINE(message), results[1], 1);
       }
     }
 
     for(auto& f : futures.slow_futures)
     {
       auto results{f.get()};
-      if(check_equality(results.size(), 2ul, LINE(message)))
+      if(check_equality(LINE(message), results.size(), 2ul))
       {
-        check_equality(results[0], 0, LINE(message));
-        check_equality(results[1], 1, LINE(message));
+        check_equality(LINE(message), results[0], 0);
+        check_equality(LINE(message), results[1], 1);
       }
     }
   }
@@ -240,7 +240,7 @@ namespace sequoia::unit_testing
     
     threadModel.push([]() -> R { throw Exception{"Error!"}; });
 
-    check_exception_thrown<Exception>([&threadModel]() { return threadModel.get(); }, std::string{message});
+    check_exception_thrown<Exception>(std::string{message}, [&threadModel]() { return threadModel.get(); });
   }
 
   template<class Model>
@@ -254,6 +254,6 @@ namespace sequoia::unit_testing
 
     threadModel.get();
 	
-    check_equality(functor.get_data(), std::vector<int>{0}, LINE(""));
+    check_equality(LINE(""), functor.get_data(), std::vector<int>{0});
   }    
 }

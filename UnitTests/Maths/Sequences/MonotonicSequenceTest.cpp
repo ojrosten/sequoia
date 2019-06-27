@@ -22,83 +22,83 @@ namespace sequoia::unit_testing
   {
     using namespace maths;
 
-    check_exception_thrown<std::logic_error>([](){ monotonic_sequence<int> s{1,2}; }, LINE("Invariant violated by initialization"));
+    check_exception_thrown<std::logic_error>(LINE("Invariant violated by initialization"), [](){ monotonic_sequence<int> s{1,2}; });
 
     monotonic_sequence<int> s{}, t{1};
     // - ; 1
     
-    check_equivalence(s, std::initializer_list<int>{}, LINE(""));
-    check_equivalence(t, std::initializer_list<int>{1}, LINE(""));
-    check_regular_semantics(s, t, LINE("Regular Semantics"));
+    check_equivalence(LINE(""), s, std::initializer_list<int>{});
+    check_equivalence(LINE(""), t, std::initializer_list<int>{1});
+    check_regular_semantics(LINE("Regular Semantics"), s, t);
 
-    check_exception_thrown<std::logic_error>([&t](){ t.push_back(2); }, LINE(""));
-    check_equivalence(t, std::initializer_list<int>{1}, LINE("Invariant violated by attempted push_back"));
+    check_exception_thrown<std::logic_error>(LINE(""), [&t](){ t.push_back(2); });
+    check_equivalence(LINE("Invariant violated by attempted push_back"), t, std::initializer_list<int>{1});
 
-    check_exception_thrown<std::logic_error>([&t](){ t.insert(t.cbegin(), 0); }, LINE("Invariant violated by attempted insertion at beginning"));
-    check_equivalence(t, std::initializer_list<int>{1}, LINE(""));
+    check_exception_thrown<std::logic_error>(LINE("Invariant violated by attempted insertion at beginning"), [&t](){ t.insert(t.cbegin(), 0); });
+    check_equivalence(LINE(""), t, std::initializer_list<int>{1});
 
     t.push_back(1);
     // - ; 1,1
 
-    check_equivalence(t, std::initializer_list<int>{1, 1}, LINE(""));
-    check_equality(t, monotonic_sequence<int>{1,1}, LINE(""));
+    check_equivalence(LINE(""), t, std::initializer_list<int>{1, 1});
+    check_equality(LINE(""), t, monotonic_sequence<int>{1,1});
 
-    check_exception_thrown<std::logic_error>([&t](){ t.insert(t.cbegin() + 1, 2); }, LINE("Invariant violated by attempted insertion in middle"));
+    check_exception_thrown<std::logic_error>(LINE("Invariant violated by attempted insertion in middle"), [&t](){ t.insert(t.cbegin() + 1, 2); });
 
     t.mutate(t.cbegin(), t.cend() - 1, [](int a){ return a *= 2; });
     // - ; 2,1
 
-    check_equivalence(t, std::initializer_list<int>{2, 1}, LINE(""));
-    check_equality(t, monotonic_sequence<int>{2,1}, LINE(""));
+    check_equivalence(LINE(""), t, std::initializer_list<int>{2, 1});
+    check_equality(LINE(""), t, monotonic_sequence<int>{2,1});
 
     s.mutate(s.begin(), s.end(), [](int a) { return a+1; });
-    check_equivalence(s, std::initializer_list<int>{}, LINE(""));
+    check_equivalence(LINE(""), s, std::initializer_list<int>{});
 
     s.push_back(4);
     // 4 ; 2,1
 
-    check_equivalence(s, std::initializer_list<int>{4}, LINE(""));
-    check_regular_semantics(s, t, LINE("Regular Semantics"));
+    check_equivalence(LINE(""), s, std::initializer_list<int>{4});
+    check_regular_semantics(LINE("Regular Semantics"), s, t);
 
     t.erase(t.begin(), t.end());
     // 4 ; -
     
-    check_equivalence(t, std::initializer_list<int>{}, LINE(""));
+    check_equivalence(LINE(""), t, std::initializer_list<int>{});
 
     s.erase(s.begin());
     // - ; -
 
-    check_equivalence(s, std::initializer_list<int>{}, LINE(""));
+    check_equivalence(LINE(""), s, std::initializer_list<int>{});
 
-    check_equality(t.capacity(), 2ul, LINE("Capacity"));
+    check_equality(LINE("Capacity"), t.capacity(), 2ul);
     t.shrink_to_fit();
-    check_equality(t.capacity(), 0ul, LINE("Capacity"));
+    check_equality(LINE("Capacity"), t.capacity(), 0ul);
     t.reserve(2);
-    check_equality(t.capacity(), 2ul, LINE("Capacity"));
+    check_equality(LINE("Capacity"), t.capacity(), 2ul);
 
     t = monotonic_sequence<int>{8, 4, 3};
     // - ; 8,4,3
-    check_equivalence(t, std::initializer_list<int>{8, 4, 3}, LINE(""));
+    check_equivalence(LINE(""), t, std::initializer_list<int>{8, 4, 3});
 
-    check_exception_thrown<std::logic_error>(
-      [&t](){ t.mutate(t.begin(), t.begin()+2, [](const int i) { return i/2; }); }, LINE(""));
+    check_exception_thrown<std::logic_error>(LINE(""),
+      [&t](){ t.mutate(t.begin(), t.begin()+2, [](const int i) { return i/2; }); });
 
-    check_equivalence(t, std::initializer_list<int>{8, 4, 3}, LINE(""));
+    check_equivalence(LINE(""), t, std::initializer_list<int>{8, 4, 3});
 
     t.mutate(t.begin(), t.end(), [](const int i) { return i/2; });
     // -; 4, 2, 1
     
-    check_equivalence(t, std::initializer_list<int>{4, 2, 1}, LINE(""));
+    check_equivalence(LINE(""), t, std::initializer_list<int>{4, 2, 1});
   }
 
   void monotonic_sequence_test::test_static_decreasing_sequence()
   {
     using namespace maths;
 
-    check_exception_thrown<std::logic_error>([](){ static_monotonic_sequence<double, 2> s{1,2}; }, LINE("Invariant violated by initialization"));
+    check_exception_thrown<std::logic_error>(LINE("Invariant violated by initialization"), [](){ static_monotonic_sequence<double, 2> s{1,2}; });
 
     constexpr static_monotonic_sequence<double, 2> s{5.1, 3.8}, t{-3.4, -4.4};
-    check_regular_semantics(s, t, LINE("Regular Semantics"));
+    check_regular_semantics(LINE("Regular Semantics"), s, t);
   }
 
   template<bool Check>
@@ -119,25 +119,25 @@ namespace sequoia::unit_testing
     using namespace maths;
 
     constexpr auto s{make_sequence<false>()};
-    check_equivalence(s, std::initializer_list<int>{-2,0,2,2,4,12}, LINE(""));
+    check_equivalence(LINE(""), s, std::initializer_list<int>{-2,0,2,2,4,12});
 
     constexpr auto s2{make_sequence<true>()};
-    check_equivalence(s2, std::initializer_list<int>{-2,0,2,2,4,12}, LINE(""));
+    check_equivalence(LINE(""), s2, std::initializer_list<int>{-2,0,2,2,4,12});
     
-    check_equality(s, static_monotonic_sequence<int, 6, std::greater<int>>{-2,0,2,2,4,12}, LINE(""));
+    check_equality(LINE(""), s, static_monotonic_sequence<int, 6, std::greater<int>>{-2,0,2,2,4,12});
 
     static_monotonic_sequence<int, 6, std::greater<int>> t{2,2,2,3,3,3};
-    check_exception_thrown<std::logic_error>([&t](){
-        t.mutate(t.begin()+1, t.begin()+3,[](const int i){ return i*2;});}, LINE(""));
+    check_exception_thrown<std::logic_error>(LINE(""), [&t](){
+        t.mutate(t.begin()+1, t.begin()+3,[](const int i){ return i*2;});});
     
-    check_equivalence(t, std::initializer_list<int>{2,2,2,3,3,3}, LINE(""));
-    check_regular_semantics(s, t, LINE("Regular Semantics"));
+    check_equivalence(LINE(""), t, std::initializer_list<int>{2,2,2,3,3,3});
+    check_regular_semantics(LINE("Regular Semantics"), s, t);
 
     static_monotonic_sequence<int, 6, std::greater<int>> u{2,3,3,4,4,5};
-    check_exception_thrown<std::logic_error>([&u](){
-        u.mutate(u.begin()+1, u.begin()+4,[](const int i){ return i*2;});}, LINE(""));
+    check_exception_thrown<std::logic_error>(LINE(""), [&u](){
+        u.mutate(u.begin()+1, u.begin()+4,[](const int i){ return i*2;});});
 
-    check_equivalence(u, std::initializer_list<int>{2,3,3,4,4,5}, LINE(""));
+    check_equivalence(LINE(""), u, std::initializer_list<int>{2,3,3,4,4,5});
   }
 
   void monotonic_sequence_test::test_allocator()
@@ -149,11 +149,11 @@ namespace sequoia::unit_testing
     using sequence = monotonic_sequence<int, std::less<int>, std::vector<int, allocator>>;
 
     sequence s(allocator{});
-    check_equivalence(s, std::initializer_list<int>{}, LINE(""));
+    check_equivalence(LINE(""), s, std::initializer_list<int>{});
 
     sequence t{{4, 3}, allocator{}};
-    check_equivalence(t, std::initializer_list<int>{4, 3}, LINE(""));
+    check_equivalence(LINE(""), t, std::initializer_list<int>{4, 3});
 
-    check_regular_semantics(s, t, allocator{}, LINE("Regular Semantics"));
+    check_regular_semantics(LINE("Regular Semantics"), s, t, allocator{});
   }
 }

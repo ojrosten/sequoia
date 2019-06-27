@@ -38,15 +38,15 @@ namespace sequoia::unit_testing
     wrapper w{};
     constexpr wrapper v{1};
 
-    check_regular_semantics(w, v, LINE("Regular semantics"));
+    check_regular_semantics(LINE("Regular semantics"), w, v);
 
     w.set(2);
 
-    check_equality(w, wrapper{2}, LINE(""));
+    check_equality(LINE(""), w, wrapper{2});
 
     w.mutate([](auto& u) { u *=2; });
 
-    check_equality(w, wrapper{4}, LINE(""));
+    check_equality(LINE(""), w, wrapper{4});
   }
   
   void protective_wrapper_test::test_container_type()
@@ -59,19 +59,19 @@ namespace sequoia::unit_testing
 
     wrapper w{}, v{1};
 
-    check_regular_semantics(w, v, LINE("Regular semantics"));
+    check_regular_semantics(LINE("Regular semantics"), w, v);
 
     w.set(2);
 
-    check_equality(w, wrapper{std::vector<int>{2}}, LINE(""));
+    check_equality(LINE(""), w, wrapper{std::vector<int>{2}});
 
-    check_regular_semantics(w, v, LINE("Regular semantics"));
+    check_regular_semantics(LINE("Regular semantics"), w, v);
 
     v.mutate([](auto& u) { u.push_back(3); });
 
-    check_equality(v, wrapper{std::vector<int>{1, 3}}, LINE(""));
+    check_equality(LINE(""), v, wrapper{std::vector<int>{1, 3}});
 
-    check_regular_semantics(w, v, LINE("Regular semantics"));
+    check_regular_semantics(LINE("Regular semantics"), w, v);
   }
   
   void protective_wrapper_test::test_aggregate_type()
@@ -85,8 +85,8 @@ namespace sequoia::unit_testing
     wrapper w{};
     constexpr wrapper v{make(1, 2.0)};
 
-    check_equality(v, wrapper{2, 4.0}, LINE(""));
+    check_equality(LINE(""), v, wrapper{2, 4.0});
 
-    check_regular_semantics(w, v, LINE("Regular semantics"));
+    check_regular_semantics(LINE("Regular semantics"), w, v);
   }
 }

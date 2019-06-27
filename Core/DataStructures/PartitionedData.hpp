@@ -113,11 +113,18 @@ namespace sequoia
       }
 
       bucketed_storage(const bucketed_storage& in)
+        : bucketed_storage(in, allocator_type{}, bucket_allocator_type{})
+      {}
+
+      bucketed_storage(const bucketed_storage& in, const allocator_type& allocator, const bucket_allocator_type& bucketAllocator) : m_Buckets(allocator)
       {
+        m_Buckets.reserve(in.m_Buckets.size());
+        
         partition_impl::data_duplicator<SharingPolicy> duplicator;
         for(const auto& bucket : in.m_Buckets)
         {
-          add_slot();
+          add_slot(bucketAllocator);
+          m_Buckets.back().reserve(in.m_Buckets.back().size());
           for(const auto& elt : bucket)
           {
             m_Buckets.back().push_back(duplicator.duplicate(elt));
@@ -126,6 +133,16 @@ namespace sequoia
       }
 
       bucketed_storage(bucketed_storage&& in) noexcept = default;
+
+      bucketed_storage(bucketed_storage&& in, const allocator_type& allocator, const bucket_allocator_type& bucketAllocator) : m_Buckets(allocator)
+      {
+        m_Buckets.reserve(in.m_Buckets.size());
+        
+        for(auto&& bucket : in.m_Buckets)
+        {
+          m_Buckets.push_back(std::vector<held_type, bucket_allocator_type>(bucketAllocator, std::move(bucket)));          
+        }
+      }
 
       bucketed_storage& operator=(bucketed_storage&&) noexcept = default;
       

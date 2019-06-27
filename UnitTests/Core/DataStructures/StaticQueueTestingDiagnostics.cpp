@@ -22,8 +22,8 @@ namespace sequoia::unit_testing
 
     static_queue<int, 0> s{};
 
-    check(!s.empty(), LINE("Empty queue must be empty"));
-    check_equality(s.size(), 1ul, LINE("Empty queue must have size zero"));
+    check(LINE("Empty queue must be empty"), !s.empty());
+    check_equality(LINE("Empty queue must have size zero"), s.size(), 1ul);
   }
   
   void test_static_queue_false_positives::check_depth_1()
@@ -33,12 +33,12 @@ namespace sequoia::unit_testing
     static_queue<int, 1> s{}, t{};
     t.push(1);
 
-    check_equality(s, t, LINE("Empty queue versus populated queue"));
+    check_equality(LINE("Empty queue versus populated queue"), s, t);
 
     s.push(2);
-    check_equality(s, t, LINE("Differing elements"));
+    check_equality(LINE("Differing elements"), s, t);
 
     s.pop();
-    check_equality(s, t, LINE("Empty queue versus populated queue"));
+    check_equality(LINE("Empty queue versus populated queue"), s, t);
   }
 }

@@ -19,18 +19,18 @@ namespace sequoia::unit_testing
     using type = data_structures::static_stack<T, MaxDepth>;
     
     template<class Logger>
-    static void check(Logger& logger, const type& stack, const type& prediction, std::string_view description)
+    static void check(std::string_view description, Logger& logger, const type& stack, const type& prediction)
     {
-      check_equality(logger, stack.empty(), prediction.empty(), combine_messages(description, "Inconsistent emptiness"));
+      check_equality(combine_messages(description, "Inconsistent emptiness"), logger, stack.empty(), prediction.empty());
 
-      check_equality(logger, stack.size(), prediction.size(), combine_messages(description, "Inconsistent size"));
+      check_equality(combine_messages(description, "Inconsistent size"), logger, stack.size(), prediction.size());
            
       if(!prediction.empty() && !stack.empty())
       {
-        check_equality(logger, stack.top(), prediction.top(), combine_messages(description, "Inconsistent top element"));
+        check_equality(combine_messages(description, "Inconsistent top element"), logger, stack.top(), prediction.top());
       }
 
-      check_equality(logger, prediction == stack, true, combine_messages(description, "Hidden state"));
+      check_equality(combine_messages(description, "Hidden state"), logger, prediction == stack, true);
     }
   };
 }

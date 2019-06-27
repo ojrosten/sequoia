@@ -17,25 +17,25 @@ namespace sequoia::unit_testing
     using namespace utilities;
 
     {
-      check_exception_thrown<std::logic_error>([](){ return to_array<int,0>({1});}, LINE(""));
+      check_exception_thrown<std::logic_error>(LINE(""), [](){ return to_array<int,0>({1});});
 
       constexpr auto a{to_array<int, 0>({})};
-      check_equality(a, {}, LINE(""));
+      check_equality(LINE(""), a, {});
 
     }
     
     {
-      check_exception_thrown<std::logic_error>([](){ return to_array<int,5>({0,1,2,3,4,5});}, LINE(""));
+      check_exception_thrown<std::logic_error>(LINE(""), [](){ return to_array<int,5>({0,1,2,3,4,5});});
 
       constexpr auto a{to_array<int, 5>({3, 6, 9, 1, 0})};
-      check_equality(a, {3, 6, 9, 1, 0}, LINE(""));
+      check_equality(LINE(""), a, {3, 6, 9, 1, 0});
     }
 
     {
-      check_exception_thrown<std::logic_error>([](){ return to_array<int,3>({0,1,2,3});}, LINE(""));
+      check_exception_thrown<std::logic_error>(LINE(""), [](){ return to_array<int,3>({0,1,2,3});});
 
       constexpr auto a{to_array<int, 3>({1, 2, 3}, [](const int e) { return e * 3; })};
-      check_equality(a, {3, 6, 9}, LINE(""));
+      check_equality(LINE(""), a, {3, 6, 9});
     }
 
     {
@@ -45,12 +45,12 @@ namespace sequoia::unit_testing
         [](int i){ return no_default_constructor{i}; }
       };
 
-      check_exception_thrown<std::logic_error>([converter](){ return to_array<ndc_t,2>({0,1,2}, converter);}, LINE(""));
+      check_exception_thrown<std::logic_error>(LINE(""), [converter](){ return to_array<ndc_t,2>({0,1,2}, converter);});
 
       constexpr std::array<no_default_constructor, 2>
         a{to_array<ndc_t, 2>({2, 3}, converter)};
 
-      check_equality(a, {ndc_t{2}, ndc_t{3}}, LINE(""));
+      check_equality(LINE(""), a, {ndc_t{2}, ndc_t{3}});
     }
   }
 }
