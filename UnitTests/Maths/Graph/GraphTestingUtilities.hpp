@@ -223,7 +223,7 @@ namespace sequoia::unit_testing
     template<class G, class... NodeWeights, class E=typename G::edge_init_type>
     void check_graph(std::string_view description, const G& graph, std::initializer_list<std::initializer_list<E>> edges, const std::tuple<NodeWeights...>& nodeWeights)
     {
-      checker<Logger>::template check_equivalence<G, std::initializer_list<std::initializer_list<E>>, const std::tuple<NodeWeights...>&>(description, graph, std::move(edges), nodeWeights);
+      checker<Logger>::check_equivalence(description, graph, std::move(edges), nodeWeights);
     }
 
     template<
@@ -236,11 +236,11 @@ namespace sequoia::unit_testing
     {
       if constexpr(impl::use_weak_equiv_v<typename G::edge_type>)
       {
-        checker<Logger>::template check_weak_equivalence<G, std::initializer_list<std::initializer_list<E>>, std::initializer_list<typename G::node_weight_type>>(description, graph, std::move(edges), std::move(nodeWeights));
+        checker<Logger>::check_weak_equivalence(description, graph, edges, nodeWeights);
       }
       else
       {
-        checker<Logger>::template check_equivalence<G, std::initializer_list<std::initializer_list<E>>, std::initializer_list<typename G::node_weight_type>>(description, graph, std::move(edges), std::move(nodeWeights));
+        checker<Logger>::check_equivalence(description, graph, edges, nodeWeights);
       }
     }
 
