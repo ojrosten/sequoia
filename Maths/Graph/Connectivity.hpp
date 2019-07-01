@@ -786,8 +786,7 @@ namespace sequoia
 
       template<bool Direct>
       struct edge_copy_constant : std::bool_constant<Direct>
-      {
-      };
+      {};
 
       using direct_edge_copy_type   = edge_copy_constant<true>;
       using indirect_edge_copy_type = edge_copy_constant<false>;
