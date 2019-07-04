@@ -584,7 +584,7 @@ namespace sequoia
     {
       using namespace data_structures;
 
-      using storage = bucketed_storage<T, SharingPolicy>;
+      using storage = bucketed_storage<T, SharingPolicy, custom_bucketed_storage_traits<T, SharingPolicy>>;
       using allocator = typename storage::allocator_type;
       using bucket_allocator = typename storage::bucket_allocator_type;
       using prediction = std::initializer_list<std::initializer_list<int>>;
@@ -606,7 +606,7 @@ namespace sequoia
     {
       using namespace data_structures;
       
-      using storage = contiguous_storage<T, SharingPolicy>;
+      using storage = contiguous_storage<T, SharingPolicy, custom_contiguous_storage_traits<T, SharingPolicy>>;
       using allocator = typename storage::allocator_type;
       using partition_allocator = typename storage::traits_type::partitions_allocator_type;
       using prediction = std::initializer_list<std::initializer_list<int>>;
