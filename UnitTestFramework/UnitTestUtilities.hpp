@@ -58,12 +58,12 @@ namespace sequoia::unit_testing
 
     [[nodiscard]] T* allocate(std::size_t n)
     {
-      return static_cast<T*>(::operator new(n));
+      return static_cast<T*>(::operator new(n * sizeof(T)));
     }
 
     void deallocate(T* p, std::size_t n)
     {
-      ::operator delete(p, n);
+      ::operator delete(p);
     }
 
     [[nodiscard]]

@@ -8,6 +8,7 @@
 #pragma once
 
 #include "UnitTestCore.hpp"
+#include "UnitTestUtilities.hpp"
 
 #include "NodeStorage.hpp"
 #include "StaticNodeStorage.hpp"
@@ -167,7 +168,7 @@ namespace sequoia::unit_testing
   {
     constexpr static bool throw_on_range_error{true};
     constexpr static bool static_storage_v{};
-    template<class S> using container_type = std::vector<S, std::allocator<S>>;
+    template<class S> using container_type = std::vector<S, custom_allocator<S>>;
   };
 
   template<class WeightMaker>
