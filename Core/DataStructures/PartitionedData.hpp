@@ -134,7 +134,8 @@ namespace sequoia
 
       bucketed_storage(bucketed_storage&& in) noexcept = default;
 
-      bucketed_storage(bucketed_storage&& in, const allocator_type& allocator, const bucket_allocator_type& bucketAllocator) : m_Buckets(allocator)
+      bucketed_storage(bucketed_storage&& in, const allocator_type& allocator, const bucket_allocator_type& bucketAllocator)
+        : m_Buckets(allocator)
       {
         m_Buckets.reserve(in.m_Buckets.size());
         
@@ -622,7 +623,7 @@ namespace sequoia
 
       template<class Allocator, class PartitionsAllocator>
       constexpr contiguous_storage_base(const Allocator& allocator, const PartitionsAllocator& partitionsAllocator) noexcept
-        : m_Partitions(allocator)
+        : m_Partitions(partitionsAllocator)
         , m_Storage(allocator)
       {}
 
@@ -635,24 +636,31 @@ namespace sequoia
 
       template<class Allocator, class PartitionsAllocator>
       constexpr contiguous_storage_base(std::initializer_list<std::initializer_list<T>> list, const Allocator& allocator, const PartitionsAllocator& partitionsAllocator)
-        : m_Partitions(allocator)
+        : m_Partitions(partitionsAllocator)
         , m_Storage(allocator)
       {
         init(list);
       }
 
-      void init(std::initializer_list<std::initializer_list<T>> list)
-      {
-        for(auto iter{list.begin()}; iter != list.end(); ++iter)
-        {
-          add_slot();
-          const auto dist{std::distance(list.begin(), iter)};
-          for(const auto& element : (*iter))
-          {
-            push_back_to_partition(dist, element);
-          }
-        }
-      }
+      template<class Allocator>
+      constexpr contiguous_storage_base(const contiguous_storage_base& in, const Allocator& allocator)
+        : contiguous_storage_base(copy_constant<directCopy>{}, in, allocator)
+      {};
+      
+      template<class Allocator, class PartitionsAllocator>
+      constexpr contiguous_storage_base(const contiguous_storage_base& in, const Allocator& allocator, const PartitionsAllocator& partitionsAllocator)
+        : contiguous_storage_base(copy_constant<directCopy>{}, in, allocator, partitionsAllocator)
+      {};
+
+      template<class Allocator>
+      constexpr contiguous_storage_base(contiguous_storage_base&& in, const Allocator& allocator)
+        : m_Partitions{std::move(in.m_Partitions)}, m_Storage{std::move(in.m_Storage), allocator}
+      {};
+      
+      template<class Allocator, class PartitionsAllocator>
+      constexpr contiguous_storage_base(contiguous_storage_base&& in, const Allocator& allocator, const PartitionsAllocator& partitionsAllocator)
+        : m_Partitions{std::move(in.m_Partitions), partitionsAllocator}, m_Storage{std::move(in.m_Storage), allocator}
+      {};
 
       void add_slot()
       {
@@ -808,9 +816,7 @@ namespace sequoia
 
       constexpr static bool staticStorage{Traits::static_storage_v};
       constexpr static bool directCopy{std::is_same_v<SharingPolicy, data_sharing::independent<T>>};
-      
-      
-      using StaticType = std::bool_constant<Traits::static_storage_v>;      
+
       using PartitionsType = typename Traits::partitions_type;
       constexpr static index_type npos{partition_iterator::npos};
 
@@ -827,24 +833,62 @@ namespace sequoia
         init(list);
       }
 
+      
       constexpr contiguous_storage_base(indirect_copy_type, const contiguous_storage_base& in)
         : m_Partitions{in.m_Partitions}
       {
-        partition_impl::data_duplicator<SharingPolicy> duplicator;
-        for(const auto& elt : in.m_Storage)
-        {
-          m_Storage.push_back(duplicator.duplicate(elt));
-        }
+        init(in.m_Storage);
       }
+
+      template<class Allocator>
+      constexpr contiguous_storage_base(indirect_copy_type, const contiguous_storage_base& in, const Allocator& allocator)
+        : m_Partitions{in.m_Partitions}, m_Storage(allocator)        
+      {
+        init(in.m_Storage);
+      }
+
+      template<class Allocator, class PartitionsAllocator>
+      constexpr contiguous_storage_base(indirect_copy_type, const contiguous_storage_base& in, const Allocator& allocator, const PartitionsAllocator& partitionsAllocator)
+      : m_Partitions{in.m_Partitions, partitionsAllocator}, m_Storage(allocator)        
+      {
+        init(in.m_Storage);
+      }      
 
       constexpr contiguous_storage_base(direct_copy_type, const contiguous_storage_base& in)
         : m_Partitions{in.m_Partitions}, m_Storage{in.m_Storage}
       {}
 
-      /*constexpr contiguous_storage_base()
-      {
+      template<class Allocator>
+      constexpr contiguous_storage_base(direct_copy_type, const contiguous_storage_base& in, const Allocator& allocator)
+        : m_Partitions{in.m_Partitions}, m_Storage{in.m_Storage, allocator}
+      {};
 
-      }*/
+      template<class Allocator, class PartitionsAllocator>
+      constexpr contiguous_storage_base(direct_copy_type, const contiguous_storage_base& in , const Allocator& allocator, const PartitionsAllocator& partitionsAllocator)
+        : m_Partitions{in.m_Partitions, partitionsAllocator}, m_Storage{in.m_Storage, allocator}
+      {};
+
+      void init(std::initializer_list<std::initializer_list<T>> list)
+      {
+        for(auto iter{list.begin()}; iter != list.end(); ++iter)
+        {
+          add_slot();
+          const auto dist{std::distance(list.begin(), iter)};
+          for(const auto& element : (*iter))
+          {
+            push_back_to_partition(dist, element);
+          }
+        }
+      }
+
+      void init(const container_type& c)
+      {
+        partition_impl::data_duplicator<SharingPolicy> duplicator;
+        for(const auto& elt : c)
+        {
+          m_Storage.push_back(duplicator.duplicate(elt));
+        }
+      }
 
       constexpr auto make_element(size_type i, std::initializer_list<std::initializer_list<T>> list, index_type& partition)
       {
@@ -1027,10 +1071,16 @@ namespace sequoia
       {}
 
       contiguous_storage(const contiguous_storage&)     = default;
-      //contiguous_storage(const contiguous_storage&, const allocator_type& allocator, const partitions_allocator_type& partitionAllocator)
 
+      contiguous_storage(const contiguous_storage& s, const allocator_type& allocator, const partitions_allocator_type& partitionAllocator)
+        : contiguous_storage_base<T, SharingPolicy, Traits>(s, allocator, partitionAllocator)
+      {}
       
       contiguous_storage(contiguous_storage&&) noexcept = default;
+
+      contiguous_storage(contiguous_storage&& s, const allocator_type& allocator, const partitions_allocator_type& partitionAllocator)
+        : contiguous_storage_base<T, SharingPolicy, Traits>(std::move(s), allocator, partitionAllocator)
+      {}
 
       ~contiguous_storage() = default;
 

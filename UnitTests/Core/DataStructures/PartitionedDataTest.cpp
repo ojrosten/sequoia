@@ -37,6 +37,9 @@ namespace sequoia
 
       test_bucketed_allocation<int, independent<int>>();
       test_bucketed_allocation<int, shared<int>>();
+
+      test_contiguous_allocation<int, independent<int>>();
+      test_contiguous_allocation<int, shared<int>>();
     }
     
     void partitioned_data_test::test_static_storage()
@@ -587,11 +590,37 @@ namespace sequoia
       using prediction = std::initializer_list<std::initializer_list<int>>;
 
       // null; [0,2][1]
-      storage s{allocator{}}, t{{{0,2}, {1}}, allocator{}};
+      storage s{allocator{}}, t{{{0,2}, {1}}, allocator{}, bucket_allocator{}};
       check_equivalence(LINE(""), s, prediction{});
       check_equivalence(LINE(""), t, prediction{{0,2}, {1}});
 
       check_regular_semantics(LINE("Regular semantics"), s, t, allocator{}, bucket_allocator{});
+
+      s.add_slot(bucket_allocator{});
+      // []
+      check_equality(LINE(""), s, storage{{{}}, allocator{}, bucket_allocator{}});
+    }
+
+    template<class T, class SharingPolicy>
+    void partitioned_data_test::test_contiguous_allocation()
+    {
+      using namespace data_structures;
+      
+      using storage = contiguous_storage<T, SharingPolicy>;
+      using allocator = typename storage::allocator_type;
+      using partition_allocator = typename storage::traits_type::partitions_allocator_type;
+      using prediction = std::initializer_list<std::initializer_list<int>>;
+
+      // null; [0,2][1]
+      storage s{allocator{}}, t{{{0,2}, {1}}, allocator{}, partition_allocator{}};
+      check_equivalence(LINE(""), s, prediction{});
+      check_equivalence(LINE(""), t, prediction{{0,2}, {1}});
+
+      check_regular_semantics(LINE("Regular semantics"), s, t, allocator{}, partition_allocator{});
+
+      s.add_slot();
+      // []
+      check_equality(LINE(""), s, storage{{{}}, allocator{}, partition_allocator{}});
     }
 
     template<template<class> class SharingPolicy>

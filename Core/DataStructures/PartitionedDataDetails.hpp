@@ -131,9 +131,7 @@ namespace sequoia::data_structures::partition_impl
 
   //============================= Helper classes for copy constructor ===================================//
 
-  template<class T> class data_duplicator
-  {
-  };
+  template<class T> class data_duplicator;
     
   template<class T> class data_duplicator<data_sharing::independent<T>>
   {

@@ -33,6 +33,9 @@ namespace sequoia::unit_testing
 
     template<class T, class SharingPolicy>
     void test_bucketed_allocation();
+
+    template<class T, class SharingPolicy>
+    void test_contiguous_allocation();
       
     template<class Traits, template<class> class SharingPolicy, template<class> class ReferencePolicy>
     void test_generic_iterator_properties();
