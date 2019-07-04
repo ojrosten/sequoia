@@ -689,7 +689,6 @@ namespace sequoia
       auto iter2 = iter + 2;
       check_equality(LINE(""), iter[0], SharingPolicy<int>::get(vec[0]));
       check_equality(LINE(""), iter2[0], SharingPolicy<int>::get(vec[2]));
-      //check_regular_semantics(LINE("Regular semantics"), iter, iter2);
 
       auto iter3 = iter2 - 2;
       check_equality(LINE(""), iter3[0], SharingPolicy<int>::get(vec[0]));

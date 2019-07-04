@@ -8,6 +8,8 @@
 #include "MonotonicSequenceTest.hpp"
 #include "MonotonicSequenceTestingUtilities.hpp"
 
+#include "UnitTestUtilities.hpp"
+
 namespace sequoia::unit_testing
 {
   void monotonic_sequence_test::run_tests()
@@ -144,8 +146,7 @@ namespace sequoia::unit_testing
   {
     using namespace maths;
 
-    // TO DO: replace with pmr when available
-    using allocator = std::allocator<int>;
+    using allocator = custom_allocator<int>;
     using sequence = monotonic_sequence<int, std::less<int>, std::vector<int, allocator>>;
 
     sequence s(allocator{});
