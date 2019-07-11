@@ -193,7 +193,23 @@ namespace sequoia
         return !(lhs == rhs);
       }
     protected:
-      using edge_iterator = typename edge_storage_type::partition_iterator;
+      using edge_iterator = typename edge_storage_type::partition_iterator;      
+      using init_t = std::initializer_list<std::initializer_list<edge_init_type>>;
+
+      template<class Allocator, class... Allocators>
+      constexpr connectivity(const Allocator& a, const Allocators&... as)
+        : m_Edges(a, as...)
+      {}
+
+      template<class Allocator, class... Allocators>
+      constexpr connectivity(init_t edges, const Allocator& a, const Allocators&... as)
+        : connectivity(direct_edge_init(), edges, a, as...)
+      {}
+      
+      template<class Allocator, class... Allocators>
+      constexpr connectivity(const connectivity& c, const Allocator& a, const Allocators&... as)
+        : connectivity(direct_edge_copy(), a, as...)
+      {}
       
       constexpr connectivity(connectivity&&) noexcept = default;
       
@@ -841,23 +857,29 @@ namespace sequoia
       edge_storage_type m_Edges;
 
       // constructor implementations
-      constexpr connectivity(direct_edge_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges)
-        : m_Edges{edges}
+      template<class... Allocators>
+      constexpr connectivity(direct_edge_init_type, init_t edges, const Allocators&... as)
+        : m_Edges{edges, as...}
       {
         process_edges(edges);
       }
 
-      constexpr connectivity(indirect_edge_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges)
+      template<class... Allocators>
+      constexpr connectivity(indirect_edge_init_type, init_t edges, const Allocators&... as)
+        : m_Edges(as...)
       {
          process_edges(edges);
       }
 
-      constexpr connectivity(direct_edge_copy_type, const connectivity& in)
-        : m_Edges{in.m_Edges}
+      template<class... Allocators>
+      constexpr connectivity(direct_edge_copy_type, const connectivity& in, const Allocators&... as)
+        : m_Edges{in.m_Edges, as...}
       {
       }
 
-      constexpr connectivity(indirect_edge_copy_type, const connectivity& in)
+      template<class... Allocators>
+      constexpr connectivity(indirect_edge_copy_type, const connectivity& in, const Allocators&... as)
+        : m_Edges(as...)
       {
         copy_edges(in);
       }
