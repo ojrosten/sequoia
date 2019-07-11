@@ -212,6 +212,11 @@ namespace sequoia
       {}
       
       constexpr connectivity(connectivity&&) noexcept = default;
+
+      template<class Allocator, class... Allocators>
+      constexpr connectivity(connectivity&& c, const Allocator& a, const Allocators&... as)
+        : m_Edges{c.m_Edges, a, as...}
+      {}
       
       ~connectivity() = default;
 
@@ -338,14 +343,16 @@ namespace sequoia
         return m_Edges.end_partition(node);
       }
 
-      void add_node()
+      template<class... Allocators>
+      void add_node(const Allocators&... as)
       {        
-        m_Edges.add_slot();
+        m_Edges.add_slot(as...);
       }
 
-      void insert_node(const size_type node)
+      template<class... Allocators>
+      void insert_node(const size_type node, const Allocators&... as)
       {
-        m_Edges.insert_slot(node);
+        m_Edges.insert_slot(node, as...);
         fix_edge_data(node,
                       [](const auto targetNode, const auto node) { return targetNode >= node; },
                       [](const auto index) { return index + 1; });
