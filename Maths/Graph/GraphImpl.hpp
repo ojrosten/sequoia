@@ -31,16 +31,18 @@ namespace sequoia
       using edge_index_type   = typename Connectivity::edge_index_type;      
       using size_type         = std::common_type_t<typename Connectivity::size_type, typename Nodes::size_type>;
 
+      using edges_initializer = std::initializer_list<std::initializer_list<edge_init_type>>;
+
       constexpr graph_primitive() = default;
       
-      constexpr graph_primitive(std::initializer_list<std::initializer_list<edge_init_type>> edges)
+      constexpr graph_primitive(edges_initializer edges)
         : graph_primitive(get_init_type(), edges)
       {
         static_assert(std::is_empty_v<node_weight_type> || std::is_default_constructible_v<node_weight_type>);
       }
       
       template<class N=node_weight_type, class=std::enable_if_t<!std::is_empty_v<N> && !std::is_same_v<N, graph_impl::heterogeneous_tag>>>
-      constexpr graph_primitive(std::initializer_list<std::initializer_list<edge_init_type>> edges, std::initializer_list<N> nodeWeights)
+      constexpr graph_primitive(edges_initializer edges, std::initializer_list<N> nodeWeights)
         : graph_primitive(homo_init_type{}, edges, nodeWeights)
       {
         if(nodeWeights.size() != edges.size())
@@ -48,7 +50,7 @@ namespace sequoia
       }
 
       template<class... NodeWeights, class N=node_weight_type, class=std::enable_if_t<std::is_same_v<N, graph_impl::heterogeneous_tag>>>
-      constexpr graph_primitive(std::initializer_list<std::initializer_list<edge_init_type>> edges, NodeWeights&&... nodeWeights)
+      constexpr graph_primitive(edges_initializer edges, NodeWeights&&... nodeWeights)
         : graph_primitive(hetero_init_type{}, edges, std::forward<NodeWeights>(nodeWeights)...)
       {}
       
@@ -77,7 +79,95 @@ namespace sequoia
       {
         return !(lhs == rhs);
       }
-    protected:      
+    protected:
+      template
+      <
+        class EdgeAllocator,
+        class AuxEdgeAllocator,
+        class NodeAllocator,
+        class N=node_weight_type,
+        std::enable_if_t<!std::is_same_v<N, graph_impl::heterogeneous_tag> && !std::is_empty_v<N>, int>  = 0
+      >
+      constexpr graph_primitive(const EdgeAllocator& edgeAlloc, const AuxEdgeAllocator& auxEdgeAlloc, const NodeAllocator& nodeAlloc)
+        : Connectivity(edgeAlloc, auxEdgeAlloc)
+        , Nodes(nodeAlloc)
+      {}
+
+      template
+      <
+        class EdgeAllocator,
+        class AuxEdgeAllocator,
+        class N=node_weight_type,
+        std::enable_if_t<std::is_same_v<N, graph_impl::heterogeneous_tag> || std::is_empty_v<N>, int>  = 0
+      >
+      constexpr graph_primitive(const EdgeAllocator& edgeAlloc, const AuxEdgeAllocator& auxEdgeAlloc)
+        : Connectivity(edgeAlloc, auxEdgeAlloc)
+      {}
+
+      template
+      <
+        class EdgeAllocator,
+        class AuxEdgeAllocator,
+        class NodeAllocator,
+        class N=node_weight_type,
+        std::enable_if_t<!std::is_same_v<N, graph_impl::heterogeneous_tag> && !std::is_empty_v<N>, int> = 0
+      >
+      constexpr graph_primitive(edges_initializer edges, const EdgeAllocator& edgeAlloc, const AuxEdgeAllocator& auxEdgeAlloc, std::initializer_list<node_weight_type> nodeWeights, const NodeAllocator& nodeAlloc)
+        : Connectivity{edges, edgeAlloc, auxEdgeAlloc}
+        , Nodes{nodeWeights, nodeAlloc}
+      {}
+
+      template
+      <
+        class EdgeAllocator,
+        class AuxEdgeAllocator,
+        class... NodeWeights,
+        class N=node_weight_type,
+        std::enable_if_t<std::is_same_v<N, graph_impl::heterogeneous_tag>, int> = 0
+      >
+      constexpr graph_primitive(edges_initializer edges, const EdgeAllocator& edgeAlloc, const AuxEdgeAllocator& auxEdgeAlloc, NodeWeights&&... nodeWeights)
+        : Connectivity{edges, edgeAlloc, auxEdgeAlloc}
+        , Nodes{std::forward<NodeWeights>(nodeWeights)...}
+      {}
+
+      template
+      <
+        class EdgeAllocator,
+        class AuxEdgeAllocator,
+        class NodeAllocator,
+        class N=node_weight_type,
+        std::enable_if_t<!std::is_same_v<N, graph_impl::heterogeneous_tag> && !std::is_empty_v<N>, int> = 0
+      >
+      constexpr graph_primitive(edges_initializer edges, const EdgeAllocator& edgeAlloc, const AuxEdgeAllocator& auxEdgeAlloc, const NodeAllocator& nodeAlloc)
+        : Connectivity{edges, edgeAlloc, auxEdgeAlloc}
+        , Nodes(edges.size(), nodeAlloc)
+      {}
+
+      template
+      <
+        class EdgeAllocator,
+        class AuxEdgeAllocator,
+        class NodeAllocator,
+        class N=node_weight_type,
+        std::enable_if_t<!std::is_same_v<N, graph_impl::heterogeneous_tag> && std::is_empty_v<N>, int> = 0
+      >
+      constexpr graph_primitive(edges_initializer edges, const EdgeAllocator& edgeAlloc, const AuxEdgeAllocator& auxEdgeAlloc)
+        : Connectivity{edges, edgeAlloc, auxEdgeAlloc}
+        , Nodes{}
+      {}
+
+      template
+      <
+        class EdgeAllocator,
+        class AuxEdgeAllocator,
+        class N=node_weight_type,
+        std::enable_if_t<std::is_same_v<N, graph_impl::heterogeneous_tag>, int> = 0
+      >
+      constexpr graph_primitive(edges_initializer edges, const EdgeAllocator& edgeAlloc, const AuxEdgeAllocator& auxEdgeAlloc)
+        : Connectivity{edges, edgeAlloc, auxEdgeAlloc},
+          Nodes{}
+      {}
+
       constexpr graph_primitive(graph_primitive&&) noexcept = default;
       
       ~graph_primitive() = default;
@@ -199,33 +289,55 @@ namespace sequoia
         }    
       }
 
-      template<class N=node_weight_type, class=std::enable_if_t<!std::is_same_v<N, graph_impl::heterogeneous_tag>>>
-      constexpr graph_primitive(homo_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges, std::initializer_list<node_weight_type> nodeWeights)
+      template
+      <
+        class N=node_weight_type,
+        std::enable_if_t<!std::is_same_v<N, graph_impl::heterogeneous_tag>, int> = 0
+      >
+      constexpr graph_primitive(homo_init_type, edges_initializer edges, std::initializer_list<node_weight_type> nodeWeights)
         : Connectivity{edges}
         , Nodes{nodeWeights}
-      {
-      }
+      {}
 
-      template<class... NodeWeights, class N=node_weight_type, class=std::enable_if_t<std::is_same_v<N, graph_impl::heterogeneous_tag>>>
-      constexpr graph_primitive(hetero_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges, NodeWeights&&... nodeWeights)
+      template
+      <
+        class... NodeWeights,
+        class N=node_weight_type, std::enable_if_t<std::is_same_v<N, graph_impl::heterogeneous_tag>, int> = 0
+      >
+      constexpr graph_primitive(hetero_init_type, edges_initializer edges, NodeWeights&&... nodeWeights)
         : Connectivity{edges}
         , Nodes{std::forward<NodeWeights>(nodeWeights)...}
-      {
-      }
-      
-      template<class N=node_weight_type, class=std::enable_if_t<!std::is_same_v<N, graph_impl::heterogeneous_tag>>>
-      constexpr graph_primitive(homo_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges)
+      {}
+
+      template
+      <
+        class N=node_weight_type,
+        std::enable_if_t<!std::is_same_v<N, graph_impl::heterogeneous_tag> && !std::is_empty_v<N>, int> = 0
+      >
+      constexpr graph_primitive(homo_init_type, edges_initializer edges)
         : Connectivity{edges}
         , Nodes(edges.size())
-      {
-      }
+      {}
 
-      template<class N=node_weight_type, class=std::enable_if_t<std::is_same_v<N, graph_impl::heterogeneous_tag>>>
-      constexpr graph_primitive(hetero_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges)
+      template
+      <
+        class N=node_weight_type,
+        std::enable_if_t<!std::is_same_v<N, graph_impl::heterogeneous_tag> && std::is_empty_v<N>, int> = 0
+      >
+      constexpr graph_primitive(homo_init_type, edges_initializer edges)
+        : Connectivity{edges}
+        , Nodes{}
+      {}
+
+      template
+      <
+        class N=node_weight_type,
+        std::enable_if_t<std::is_same_v<N, graph_impl::heterogeneous_tag>, int> = 0
+      >
+      constexpr graph_primitive(hetero_init_type, edges_initializer edges)
         : Connectivity{edges},
           Nodes{}
-      {
-      }
+      {}
     };
   }
 }

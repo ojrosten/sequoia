@@ -386,8 +386,7 @@ namespace sequoia::maths::graph_impl
     using weight_type       = typename weight_proxy_type::value_type;
     using size_type         = typename std::size_t;
     
-    constexpr node_storage() = default;
-    constexpr explicit node_storage(const std::size_t) noexcept {}
+    constexpr node_storage() noexcept = default;
 
     [[nodiscard]]
     constexpr friend bool operator==(const node_storage& lhs, const node_storage& rhs) noexcept { return true;}
@@ -395,12 +394,12 @@ namespace sequoia::maths::graph_impl
     [[nodiscard]]
     constexpr friend bool operator!=(const node_storage& lhs, const node_storage& rhs) noexcept { return !(lhs == rhs);}
   protected:
-    constexpr node_storage(const node_storage&)                = default;
-    constexpr node_storage(node_storage&&) noexcept            = default;
+    constexpr node_storage(const node_storage&) noexcept = default;
+    constexpr node_storage(node_storage&&)      noexcept = default;
         
     ~node_storage() = default;
 
-    constexpr node_storage& operator=(const node_storage&)     = default;
-    constexpr node_storage& operator=(node_storage&&) noexcept = default;
+    constexpr node_storage& operator=(const node_storage&) noexcept = default;
+    constexpr node_storage& operator=(node_storage&&)      noexcept = default;
   };     
 }
