@@ -585,20 +585,20 @@ namespace sequoia
       using namespace data_structures;
 
       using storage = bucketed_storage<T, SharingPolicy, custom_bucketed_storage_traits<T, SharingPolicy>>;
+      using partitions_allocator = typename storage::partitions_allocator_type;
       using allocator = typename storage::allocator_type;
-      using bucket_allocator = typename storage::bucket_allocator_type;
       using prediction = std::initializer_list<std::initializer_list<int>>;
 
       // null; [0,2][1]
-      storage s{allocator{}}, t{{{0,2}, {1}}, allocator{}, bucket_allocator{}};
+      storage s{partitions_allocator{}}, t{{{0,2}, {1}}, partitions_allocator{}, allocator{}};
       check_equivalence(LINE(""), s, prediction{});
       check_equivalence(LINE(""), t, prediction{{0,2}, {1}});
 
-      check_regular_semantics(LINE("Regular semantics"), s, t, allocator{}, bucket_allocator{});
+      check_regular_semantics(LINE("Regular semantics"), s, t, partitions_allocator{}, allocator{});
 
-      s.add_slot(bucket_allocator{});
+      s.add_slot(allocator{});
       // []
-      check_equality(LINE(""), s, storage{{{}}, allocator{}, bucket_allocator{}});
+      check_equality(LINE(""), s, storage{{{}}, partitions_allocator{}, allocator{}});
     }
 
     template<class T, class SharingPolicy>
@@ -608,19 +608,19 @@ namespace sequoia
       
       using storage = contiguous_storage<T, SharingPolicy, custom_contiguous_storage_traits<T, SharingPolicy>>;
       using allocator = typename storage::allocator_type;
-      using partition_allocator = typename storage::traits_type::partitions_allocator_type;
+      using partitions_allocator = typename storage::traits_type::partitions_allocator_type;
       using prediction = std::initializer_list<std::initializer_list<int>>;
 
       // null; [0,2][1]
-      storage s{allocator{}}, t{{{0,2}, {1}}, allocator{}, partition_allocator{}};
+      storage s{partitions_allocator{}, allocator{}}, t{{{0,2}, {1}}, partitions_allocator{}, allocator{}};
       check_equivalence(LINE(""), s, prediction{});
       check_equivalence(LINE(""), t, prediction{{0,2}, {1}});
 
-      check_regular_semantics(LINE("Regular semantics"), s, t, allocator{}, partition_allocator{});
+      check_regular_semantics(LINE("Regular semantics"), s, t, partitions_allocator{}, allocator{});
 
       s.add_slot();
       // []
-      check_equality(LINE(""), s, storage{{{}}, allocator{}, partition_allocator{}});
+      check_equality(LINE(""), s, storage{{{}}, partitions_allocator{}, allocator{}});
     }
 
     template<template<class> class SharingPolicy>
