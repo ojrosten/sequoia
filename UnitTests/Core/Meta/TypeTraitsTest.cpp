@@ -24,6 +24,7 @@ namespace sequoia::unit_testing
     test_is_equal_to_comparable();
     test_is_not_equal_to_comparable();
     test_is_container();    
+    test_is_constructible_with();
     test_has_default_constructor();
     test_has_allocator_type();
   }
@@ -647,30 +648,95 @@ namespace sequoia::unit_testing
     );
   }
 
- void type_traits_test::test_has_allocator_type()
- {
-   check(LINE(""), []() {
-       static_assert(std::is_same_v<std::true_type, has_allocator_type_t<std::vector<double>>>);
-       return true;
-     }()
-   );
+  void type_traits_test::test_is_constructible_with()
+  {
+    check(LINE(""), []() {
+        static_assert(std::is_same_v<std::true_type, is_constructible_with_t<std::vector<double>>>);
+        return true;
+      }()
+    );
 
-   check(LINE(""), []() {
-       static_assert(has_allocator_type_v<std::vector<double>>);
-       return true;
-     }()
-   );
+    check(LINE(""), []() {
+        static_assert(is_constructible_with_v<std::vector<double>>);
+        return true;
+      }()
+    );
+    
+    check(LINE(""), []() {
+        static_assert(std::is_same_v<std::true_type, is_constructible_with_t<std::vector<double>, double>>);
+        return true;
+      }()
+    );
 
-   check(LINE(""), []() {
-       static_assert(std::is_same_v<std::false_type, has_allocator_type_t<double>>);
-       return true;
-     }()
-   );
+    check(LINE(""), []() {
+        static_assert(is_constructible_with_v<std::vector<double>, double>);
+        return true;
+      }()
+    );
 
-   check(LINE(""), []() {
-       static_assert(!has_allocator_type_v<double>);
-       return true;
-     }()
-   );
- }
+    check(LINE(""), []() {
+        static_assert(std::is_same_v<std::false_type, is_constructible_with_t<std::vector<double>, std::vector<int>>>);
+        return true;
+      }()
+    );
+
+    check(LINE(""), []() {
+        static_assert(!is_constructible_with_v<std::vector<double>, std::vector<int>>);
+        return true;
+      }()
+    );
+
+    using allocator = std::vector<double>::allocator_type;
+    
+    check(LINE(""), []() {
+        static_assert(std::is_same_v<std::true_type, is_constructible_with_t<std::vector<double>, double, allocator>>);
+        return true;
+      }()
+    );
+
+    check(LINE(""), []() {
+        static_assert(is_constructible_with_v<std::vector<double>, double, allocator>);
+        return true;
+      }()
+    );
+
+    check(LINE(""), []() {
+        static_assert(std::is_same_v<std::false_type, is_constructible_with_t<std::vector<double>, allocator, allocator>>);
+        return true;
+      }()
+    );
+
+    check(LINE(""), []() {
+        static_assert(!is_constructible_with_v<std::vector<double>, allocator, allocator>);
+        return true;
+      }()
+    );
+  }
+
+  void type_traits_test::test_has_allocator_type()
+  {
+    check(LINE(""), []() {
+        static_assert(std::is_same_v<std::true_type, has_allocator_type_t<std::vector<double>>>);
+        return true;
+      }()
+    );
+
+    check(LINE(""), []() {
+        static_assert(has_allocator_type_v<std::vector<double>>);
+        return true;
+      }()
+    );
+
+    check(LINE(""), []() {
+        static_assert(std::is_same_v<std::false_type, has_allocator_type_t<double>>);
+        return true;
+      }()
+    );
+
+    check(LINE(""), []() {
+        static_assert(!has_allocator_type_v<double>);
+        return true;
+      }()
+    );
+  }
 }

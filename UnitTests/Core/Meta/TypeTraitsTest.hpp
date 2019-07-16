@@ -37,6 +37,8 @@ namespace sequoia::unit_testing
 
     void test_is_container();
 
+    void test_is_constructible_with();
+    
     void test_has_default_constructor();
 
     void test_has_allocator_type();
