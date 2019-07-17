@@ -51,6 +51,9 @@ namespace sequoia::maths::graph_impl
     using edge_storage_traits = typename EdgeStorageTraits<GraphFlavour, EdgeWeight, EdgeWeightPooling>::template traits_type<edge_type, edge_storage_sharing_policy>;
     using edge_storage_type = typename EdgeStorageTraits<GraphFlavour, EdgeWeight, EdgeWeightPooling>::template storage_type<edge_type, edge_storage_sharing_policy, edge_storage_traits>;
 
+    using edge_allocator_type            = typename edge_storage_type::allocator_type;
+    using edge_partitions_allocator_type = typename edge_storage_type::partitions_allocator_type;
+
     constexpr static bool mutual_info_v{GraphFlavour != graph_flavour::directed};
 
     constexpr static bool weight_setting_exception_guarantee_v{true};
