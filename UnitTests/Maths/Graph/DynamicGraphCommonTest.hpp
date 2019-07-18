@@ -81,7 +81,6 @@ namespace sequoia
       void test_basic_operations();
     };
 
-
     template
     <
       maths::graph_flavour GraphFlavour,
@@ -92,7 +91,7 @@ namespace sequoia
       template <maths::graph_flavour, class, template<class> class> class EdgeStorageTraits,
       template <class, template<class> class, bool> class NodeWeightStorageTraits
     >
-    class graph_contiguous_capacity
+    class graph_contiguous_memory
       : public graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>
     {
     public:
@@ -118,7 +117,7 @@ namespace sequoia
       template <maths::graph_flavour, class, template<class> class> class EdgeStorageTraits,
       template <class, template<class> class, bool> class NodeWeightStorageTraits
     >
-    class graph_bucketed_capacity
+    class graph_bucketed_memory
       : public graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>
     {
     public:

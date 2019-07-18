@@ -58,16 +58,15 @@ namespace sequoia::maths::graph_impl
   class node_storage : private WeightMaker
   {
   private:
-    template<class S> using Container = typename Traits::template container_type<S>;
-  protected:
-    using container_type = Container<typename WeightMaker::weight_proxy>;
-  public:    
-    using weight_proxy_type = typename WeightMaker::weight_proxy;
-    using weight_type       = typename weight_proxy_type::value_type;
-    using size_type         = typename container_type::size_type;
+    template<class S> using Container = typename Traits::template container_type<S>;    
+  public:
+    using node_weight_container_type = Container<typename WeightMaker::weight_proxy>;
+    using weight_proxy_type          = typename WeightMaker::weight_proxy;
+    using weight_type                = typename weight_proxy_type::value_type;
+    using size_type                  = typename node_weight_container_type::size_type;
 
-    using const_iterator         = utilities::iterator<typename container_type::const_iterator, proxy_dereference_policy<typename container_type::const_iterator>>;
-    using const_reverse_iterator = utilities::iterator<typename container_type::const_reverse_iterator, proxy_dereference_policy<typename container_type::const_reverse_iterator>>;
+    using const_iterator         = utilities::iterator<typename node_weight_container_type::const_iterator, proxy_dereference_policy<typename node_weight_container_type::const_iterator>>;
+    using const_reverse_iterator = utilities::iterator<typename node_weight_container_type::const_reverse_iterator, proxy_dereference_policy<typename node_weight_container_type::const_reverse_iterator>>;
 
     constexpr static bool throw_on_range_error{Traits::throw_on_range_error};
 
@@ -268,7 +267,7 @@ namespace sequoia::maths::graph_impl
     }
 
     // private data
-    container_type m_NodeWeights;
+    node_weight_container_type m_NodeWeights;
 
     // constructors impl
     constexpr node_storage(std::true_type, const size_type n)
@@ -308,9 +307,9 @@ namespace sequoia::maths::graph_impl
     // helper methods
 
     [[nodiscard]]
-    container_type init(const size_type n)
+    node_weight_container_type init(const size_type n)
     {
-      container_type nodeWeights{};
+      node_weight_container_type nodeWeights{};
       nodeWeights.reserve(n);
       for(size_type i{}; i<n; ++i)
       {
@@ -321,9 +320,9 @@ namespace sequoia::maths::graph_impl
     }
 
     [[nodiscard]]
-    container_type init(std::initializer_list<weight_type> weights)
+    node_weight_container_type init(std::initializer_list<weight_type> weights)
     {
-      container_type nodeWeights{};
+      node_weight_container_type nodeWeights{};
       nodeWeights.reserve(weights.size());
       for(const auto& weight : weights)
       {
@@ -334,9 +333,9 @@ namespace sequoia::maths::graph_impl
     }
 
     [[nodiscard]]
-    container_type clone(const node_storage& in)
+    node_weight_container_type clone(const node_storage& in)
     {
-      container_type nodeWeights{};
+      node_weight_container_type nodeWeights{};
       nodeWeights.reserve(in.m_NodeWeights.size());
       for(const auto& weight : in.m_NodeWeights)
       {
@@ -347,7 +346,7 @@ namespace sequoia::maths::graph_impl
     }
 
     [[nodiscard]]
-    constexpr container_type make_array(std::initializer_list<weight_type> weights)
+    constexpr node_weight_container_type make_array(std::initializer_list<weight_type> weights)
     {
       if(weights.size() != Traits::num_elements_v)
         throw std::logic_error("Initializer list of wrong size");
@@ -359,7 +358,7 @@ namespace sequoia::maths::graph_impl
 
     template<std::size_t... Inds>
     [[nodiscard]]
-    constexpr container_type make_default_array(std::index_sequence<Inds...>)
+    constexpr node_weight_container_type make_default_array(std::index_sequence<Inds...>)
     {
       return { make_default_element(Inds)... };
     }        

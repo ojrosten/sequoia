@@ -16,6 +16,16 @@
 
 namespace sequoia::maths::graph_impl
 {
+  template<class NodeStorage, bool=std::is_empty_v<typename NodeStorage::weight_type>>
+  struct node_allocator_generator
+  {
+    using allocator_type = typename NodeStorage::node_weight_container_type::allocator_type;
+  };
+
+  template<class NodeStorage>
+  struct node_allocator_generator<NodeStorage, true>
+  {};
+
   template
   <        
     graph_flavour GraphFlavour,
@@ -47,9 +57,14 @@ namespace sequoia::maths::graph_impl
     using edge_type = typename edge_type_gen::edge_type;
     constexpr static bool shared_edge_v{edge_type_gen::shared_edge_v};
         
-    using edge_storage_sharing_policy = typename shared_edge_v_to_policy<shared_edge_v>::template edge_storage_sharing_policy<edge_type>;
-    using edge_storage_traits = typename EdgeStorageTraits<GraphFlavour, EdgeWeight, EdgeWeightPooling>::template traits_type<edge_type, edge_storage_sharing_policy>;
-    using edge_storage_type = typename EdgeStorageTraits<GraphFlavour, EdgeWeight, EdgeWeightPooling>::template storage_type<edge_type, edge_storage_sharing_policy, edge_storage_traits>;
+    using edge_storage_sharing_policy
+      = typename shared_edge_v_to_policy<shared_edge_v>::template edge_storage_sharing_policy<edge_type>;
+
+    using edge_storage_traits
+      = typename EdgeStorageTraits<GraphFlavour, EdgeWeight, EdgeWeightPooling>::template traits_type<edge_type, edge_storage_sharing_policy>;
+
+    using edge_storage_type
+      = typename EdgeStorageTraits<GraphFlavour, EdgeWeight, EdgeWeightPooling>::template storage_type<edge_type, edge_storage_sharing_policy, edge_storage_traits>;
 
     using edge_allocator_type            = typename edge_storage_type::allocator_type;
     using edge_partitions_allocator_type = typename edge_storage_type::partitions_allocator_type;

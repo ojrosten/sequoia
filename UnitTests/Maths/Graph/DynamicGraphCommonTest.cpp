@@ -23,31 +23,31 @@ namespace sequoia::unit_testing
       graph_test_helper<null_weight, null_weight> helper{};
       
       helper.run_tests<generic_graph_operations>(*this);
-      helper.run_storage_tests<contiguous_edge_storage_traits, graph_contiguous_capacity>(*this);
-      helper.run_storage_tests<bucketed_edge_storage_traits, graph_bucketed_capacity>(*this);
+      helper.run_storage_tests<custom_allocator_contiguous_edge_storage_traits, graph_contiguous_memory>(*this);
+      helper.run_storage_tests<custom_allocator_bucketed_edge_storage_traits, graph_bucketed_memory>(*this);
     }
       
     {
       graph_test_helper<int, complex<double>>  helper{};
       
       helper.run_tests<generic_weighted_graph_tests>(*this);
-      helper.run_storage_tests<contiguous_edge_storage_traits, graph_contiguous_capacity>(*this);
-      helper.run_storage_tests<bucketed_edge_storage_traits, graph_bucketed_capacity>(*this);
+      helper.run_storage_tests<custom_allocator_contiguous_edge_storage_traits, graph_contiguous_memory>(*this);
+      helper.run_storage_tests<custom_allocator_bucketed_edge_storage_traits, graph_bucketed_memory>(*this);
     }
 
     {
       graph_test_helper<complex<int>, complex<double>>  helper{};
       helper.run_tests<generic_weighted_graph_tests>(*this);
-      helper.run_storage_tests<contiguous_edge_storage_traits, graph_contiguous_capacity>(*this);
-      helper.run_storage_tests<bucketed_edge_storage_traits, graph_bucketed_capacity>(*this);
+      helper.run_storage_tests<custom_allocator_contiguous_edge_storage_traits, graph_contiguous_memory>(*this);
+      helper.run_storage_tests<custom_allocator_bucketed_edge_storage_traits, graph_bucketed_memory>(*this);
     }
 
     {
       graph_test_helper<std::vector<int>, std::vector<complex<double>>>  helper{};
       
       helper.run_tests<generic_weighted_graph_tests>(*this);
-      helper.run_storage_tests<contiguous_edge_storage_traits, graph_contiguous_capacity>(*this);
-      helper.run_storage_tests<bucketed_edge_storage_traits, graph_bucketed_capacity>(*this);
+      helper.run_storage_tests<custom_allocator_contiguous_edge_storage_traits, graph_contiguous_memory>(*this);
+      helper.run_storage_tests<custom_allocator_bucketed_edge_storage_traits, graph_bucketed_memory>(*this);
     }
   }
 
@@ -984,7 +984,7 @@ namespace sequoia::unit_testing
     template <maths::graph_flavour, class, template<class> class> class EdgeStorageTraits,
     template <class, template<class> class, bool> class NodeWeightStorageTraits
   >
-  void graph_contiguous_capacity<
+  void graph_contiguous_memory<
       GraphFlavour,
       EdgeWeight,
       NodeWeight,
@@ -994,7 +994,24 @@ namespace sequoia::unit_testing
       NodeWeightStorageTraits
   >::execute_operations()
   {
-    graph_t g{};
+    using edge_partitions_allocator = typename graph_t::edge_partitions_allocator_type;
+    using edge_allocator = typename graph_t::edge_allocator_type;
+
+    auto maker{
+      [](){
+        if constexpr(std::is_empty_v<NodeWeight>)
+        {
+          return graph_t(edge_partitions_allocator{}, edge_allocator{});
+        }
+        else
+        {
+          using node_allocator = typename graph_t::node_weight_container_type::allocator_type;
+          return graph_t{edge_partitions_allocator{}, edge_allocator{}, node_allocator{}};
+        }
+      }
+    };
+    
+    graph_t g{maker()};
 
     check_equality(LINE(""), g.edges_capacity(), 0ul);
     check_equality(LINE(""), g.node_capacity(), 0ul);
@@ -1020,7 +1037,7 @@ namespace sequoia::unit_testing
      template <maths::graph_flavour, class, template<class> class> class EdgeStorageTraits,
     template <class, template<class> class, bool> class NodeWeightStorageTraits
   >
-  void graph_bucketed_capacity<
+  void graph_bucketed_memory<
       GraphFlavour,
       EdgeWeight,
       NodeWeight,
@@ -1030,6 +1047,10 @@ namespace sequoia::unit_testing
       NodeWeightStorageTraits
   >::execute_operations()
   {
+    //using edge_partitions_allocator = typename graph_t::edge_partitions_allocator_type;
+    //using edge_allocator = typename graph_t::edge_allocator_type;
+    
+    //graph_t g{edge_partitions_allocator{}};
     graph_t g{};
 
     check_exception_thrown<std::out_of_range>(LINE(""), [&g](){ g.reserve_edges(0, 4);});

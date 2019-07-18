@@ -9,6 +9,7 @@
 
 #include "GraphTestingUtilities.hpp"
 #include "NodeStorageTestingUtilities.hpp"
+#include "PartitionedDataTestingUtilities.hpp"
 
 #include "DynamicGraph.hpp"
 
@@ -28,8 +29,7 @@ namespace sequoia::unit_testing
   >
   struct detailed_equality_checker<maths::graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>>
     : impl::graph_detailed_equality_checker<maths::graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>>
-  {        
-  };
+  {};
 
   template
   <
@@ -43,8 +43,7 @@ namespace sequoia::unit_testing
   >
   struct detailed_equality_checker<maths::embedded_graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>>
     : impl::graph_detailed_equality_checker<maths::embedded_graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>>
-  {   
-  };
+  {};
 
   // Equivalence Checkers
   
@@ -60,8 +59,7 @@ namespace sequoia::unit_testing
   >
   struct equivalence_checker<maths::graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>>
     : impl::graph_equivalence_checker<maths::graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>>
-  {    
-  };
+  {};
 
   template
   <
@@ -75,8 +73,7 @@ namespace sequoia::unit_testing
   >
   struct equivalence_checker<maths::embedded_graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>>
     : impl::graph_equivalence_checker<maths::embedded_graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>>
-  {     
-  };
+  {};
 
   // Weak Equivalence
 
@@ -92,9 +89,9 @@ namespace sequoia::unit_testing
   >
   struct weak_equivalence_checker<maths::embedded_graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>>
     : impl::graph_weak_equivalence_checker<maths::embedded_graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>>
-  {     
-  };
-  
+  {};
+
+  // Edge Storage Traits
   
   template<maths::graph_flavour GraphFlavour, class EdgeWeight, template <class> class EdgeWeightPooling>
   struct independent_contiguous_edge_storage_traits
@@ -132,7 +129,27 @@ namespace sequoia::unit_testing
     constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::shared_weight};
   };
 
-  constexpr bool embedded(const maths::graph_flavour graphFlavour)
+  template<maths::graph_flavour GraphFlavour, class EdgeWeight, template <class> class EdgeWeightPooling>
+  struct custom_allocator_contiguous_edge_storage_traits
+  {
+    template <class T, class Sharing, class Traits> using storage_type = data_structures::contiguous_storage<T, Sharing, Traits>;
+    template <class T, class Sharing> using traits_type = custom_contiguous_storage_traits<T, Sharing>;
+
+    constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::agnostic};
+  };
+
+  template<maths::graph_flavour GraphFlavour, class EdgeWeight, template <class> class EdgeWeightPooling>
+  struct custom_allocator_bucketed_edge_storage_traits
+  {
+    template <class T, class Sharing, class Traits> using storage_type = data_structures::bucketed_storage<T, Sharing, Traits>;
+    template <class T, class Sharing> using traits_type = custom_bucketed_storage_traits<T, Sharing>;
+
+    constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::agnostic};
+  };
+
+  // Meta
+  
+  constexpr bool embedded(const maths::graph_flavour graphFlavour) noexcept
   {
     using gf = maths::graph_flavour;
     return (graphFlavour == gf::directed_embedded) || (graphFlavour == gf::undirected_embedded);
@@ -169,6 +186,8 @@ namespace sequoia::unit_testing
     using graph_type = maths::embedded_graph<maths::to_directedness(GraphFlavour), EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>;
   };
 
+  // Unit test utilities
+  
   template
   <
     maths::graph_flavour GraphFlavour,      
@@ -234,14 +253,14 @@ namespace sequoia::unit_testing
         run_graph_flavour_tests<flavour::directed, TemplateTestClass>();
         run_graph_flavour_tests<flavour::directed_embedded, TemplateTestClass>();
 
-        graph_storage_tests_impl<flavour::directed_embedded, independent_contiguous_edge_storage_traits, TemplateTestClass>();
-        graph_storage_tests_impl<flavour::directed_embedded, independent_bucketed_edge_storage_traits, TemplateTestClass>();
+        graph_storage_tests<flavour::directed_embedded, independent_contiguous_edge_storage_traits, TemplateTestClass>();
+        graph_storage_tests<flavour::directed_embedded, independent_bucketed_edge_storage_traits, TemplateTestClass>();
       #endif
     }
       
     template
     <
-      template <maths::graph_flavour, class, template<class> class> class EdgeStorage,
+      template<maths::graph_flavour, class, template<class> class> class EdgeStorage,
       template
       <
         maths::graph_flavour,
@@ -260,11 +279,11 @@ namespace sequoia::unit_testing
       using flavour = maths::graph_flavour;
       sentry<Test> s{unitTest, m_Summary};
       
-      graph_storage_tests_impl<flavour::undirected,          EdgeStorage, TemplateTestClass>();
+      graph_storage_tests<flavour::undirected, EdgeStorage, TemplateTestClass>();
       #ifndef MINIMAL_GRAPH_TESTS
-        graph_storage_tests_impl<flavour::undirected_embedded, EdgeStorage, TemplateTestClass>();
-        graph_storage_tests_impl<flavour::directed,            EdgeStorage, TemplateTestClass>();
-        graph_storage_tests_impl<flavour::directed_embedded,   EdgeStorage, TemplateTestClass>();
+        graph_storage_tests<flavour::undirected_embedded, EdgeStorage, TemplateTestClass>();
+        graph_storage_tests<flavour::directed,            EdgeStorage, TemplateTestClass>();
+        graph_storage_tests<flavour::directed_embedded,   EdgeStorage, TemplateTestClass>();
       #endif
     }
       
@@ -331,7 +350,7 @@ namespace sequoia::unit_testing
       >
       class TemplateTestClass
     >
-    void graph_storage_tests_impl()
+    void graph_storage_tests()
     {
       using namespace data_sharing;
 
@@ -383,9 +402,9 @@ namespace sequoia::unit_testing
     {
       using namespace data_structures;
         
-      graph_storage_tests_impl<GraphType, maths::contiguous_edge_storage_traits, TemplateTestClass>();
+      graph_storage_tests<GraphType, maths::contiguous_edge_storage_traits, TemplateTestClass>();
       #ifndef MINIMAL_GRAPH_TESTS
-        graph_storage_tests_impl<GraphType, maths::bucketed_edge_storage_traits, TemplateTestClass>();
+        graph_storage_tests<GraphType, maths::bucketed_edge_storage_traits, TemplateTestClass>();
       #endif
     }
 

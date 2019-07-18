@@ -8,6 +8,8 @@
 #pragma once
 
 #include "UnitTestCore.hpp"
+#include "UnitTestUtilities.hpp"
+
 #include "PartitionedData.hpp"
 
 namespace sequoia::unit_testing
@@ -142,5 +144,34 @@ namespace sequoia::unit_testing
     {
       impl::check_equivalence(description, logger, data, prediction);
     }
+  };
+  
+  // Custom allocator traits
+
+  template<class T, class SharingPolicy> struct custom_bucketed_storage_traits
+  {
+    constexpr static bool throw_on_range_error{true};
+
+    template<class S> using buckets_type   = std::vector<S, custom_allocator<S>>; 
+    template<class S> using container_type = std::vector<S, custom_allocator<S>>; 
+  };
+
+  template<class T, class SharingPolicy> struct custom_contiguous_storage_traits
+  {
+    constexpr static bool static_storage_v{false};
+    constexpr static bool throw_on_range_error{true};
+
+    using index_type = std::size_t;
+    using partition_index_type = std::size_t;
+    using partitions_type
+      = maths::monotonic_sequence<
+          partition_index_type,
+          std::greater<partition_index_type>,
+          std::vector<partition_index_type, custom_allocator<partition_index_type>>
+        >;
+    
+    using partitions_allocator_type = typename partitions_type::allocator_type;
+      
+    template<class S> using container_type = std::vector<S, custom_allocator<S>>;
   };
 }

@@ -178,7 +178,7 @@ namespace sequoia::unit_testing
     using base_t = maths::graph_impl::node_storage<WeightMaker, node_storage_traits>;
     
   public:
-    using allocator_type = typename base_t::container_type::allocator_type;
+    using allocator_type = typename base_t::node_weight_container_type::allocator_type;
     using size_type      = typename base_t::size_type;
     using weight_type    = typename base_t::weight_type;
     
