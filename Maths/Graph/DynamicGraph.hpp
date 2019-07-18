@@ -162,7 +162,8 @@ namespace sequoia::maths
     <
       class EdgeStorage = typename edge_traits_type::edge_storage_type,
       class EdgePartitionsAllocator = edge_partitions_allocator_type,
-      std::enable_if_t<is_constructible_with_v<EdgeStorage, EdgePartitionsAllocator>, int> = 0
+      class N = NodeWeight,
+      std::enable_if_t<is_constructible_with_v<EdgeStorage, EdgePartitionsAllocator> && std::is_empty_v<N>, int> = 0
     >
     graph_base(edges_initializer edges, const EdgePartitionsAllocator& edgePartitionsAllocator)
       : primitive_type{edges, edgePartitionsAllocator}
@@ -172,15 +173,71 @@ namespace sequoia::maths
     <
       class EdgeStorage = typename edge_traits_type::edge_storage_type,
       class EdgePartitionsAllocator = edge_partitions_allocator_type,
+      class N = node_storage_type,
+      class NodeWeightAllocator = typename graph_impl::node_allocator_generator<N>::allocator_type,
+      std::enable_if_t<is_constructible_with_v<EdgeStorage, EdgePartitionsAllocator> && !std::is_empty_v<N>, int> = 0
+    >
+    graph_base(edges_initializer edges, const EdgePartitionsAllocator& edgePartitionsAllocator, const NodeWeightAllocator& nodeWeightAllocator)
+      : primitive_type{edges, edgePartitionsAllocator, nodeWeightAllocator}
+    {}
+
+    template
+    <
+      class EdgeStorage = typename edge_traits_type::edge_storage_type,
+      class EdgePartitionsAllocator = edge_partitions_allocator_type,
       class EdgeAllocator = edge_allocator_type,
-      std::enable_if_t<is_constructible_with_v<EdgeStorage, EdgePartitionsAllocator, EdgeAllocator>, int> = 0
+      class N = NodeWeight,
+      std::enable_if_t<is_constructible_with_v<EdgeStorage, EdgePartitionsAllocator, EdgeAllocator> && std::is_empty_v<N>, int> = 0
     >
     graph_base(edges_initializer edges, const EdgePartitionsAllocator& edgePartitionsAllocator, const EdgeAllocator& edgeAllocator)
       : primitive_type{edges, edgePartitionsAllocator, edgeAllocator}
     {}
 
+    template
+    <
+      class EdgeStorage = typename edge_traits_type::edge_storage_type,
+      class EdgePartitionsAllocator = edge_partitions_allocator_type,
+      class EdgeAllocator = edge_allocator_type,
+      class N = node_storage_type,
+      class NodeWeightAllocator = typename graph_impl::node_allocator_generator<N>::allocator_type,
+      std::enable_if_t<is_constructible_with_v<EdgeStorage, EdgePartitionsAllocator, EdgeAllocator> && !std::is_empty_v<N>, int> = 0
+    >
+    graph_base(edges_initializer edges, const EdgePartitionsAllocator& edgePartitionsAllocator, const EdgeAllocator& edgeAllocator, const NodeWeightAllocator& nodeWeightAllocator)
+      : primitive_type{edges, edgePartitionsAllocator, edgeAllocator, nodeWeightAllocator}
+    {}
+
+    template
+    <
+      class N=NodeWeight,
+      std::enable_if_t<!std::is_empty_v<N>, int> = 0
+    >
     graph_base(edges_initializer edges, std::initializer_list<node_weight_type> nodeWeights)
       : primitive_type{edges, nodeWeights}
+    {}
+
+    template
+    <
+      class EdgeStorage = typename edge_traits_type::edge_storage_type,
+      class EdgePartitionsAllocator = edge_partitions_allocator_type,
+      class N = node_storage_type,
+      class NodeWeightAllocator = typename graph_impl::node_allocator_generator<N>::allocator_type,
+      std::enable_if_t<is_constructible_with_v<EdgeStorage, EdgePartitionsAllocator> && !std::is_empty_v<N>, int> = 0
+    >
+    graph_base(edges_initializer edges, const EdgePartitionsAllocator& edgePartitionsAllocator, std::initializer_list<node_weight_type> nodeWeights, const NodeWeightAllocator& nodeWeightAllocator)
+      : primitive_type{edges, edgePartitionsAllocator, nodeWeights, nodeWeightAllocator}
+    {}
+
+    template
+    <
+      class EdgeStorage = typename edge_traits_type::edge_storage_type,
+      class EdgePartitionsAllocator = edge_partitions_allocator_type,
+      class EdgeAllocator = edge_allocator_type,
+      class N = node_storage_type,
+      class NodeWeightAllocator = typename graph_impl::node_allocator_generator<N>::allocator_type,
+      std::enable_if_t<is_constructible_with_v<EdgeStorage, EdgePartitionsAllocator, EdgeAllocator> && !std::is_empty_v<N>, int> = 0
+    >
+    graph_base(edges_initializer edges, const EdgePartitionsAllocator& edgePartitionsAllocator, const EdgeAllocator& edgeAllocator, std::initializer_list<node_weight_type> nodeWeights, const NodeWeightAllocator& nodeWeightAllocator)
+      : primitive_type{edges, edgePartitionsAllocator, edgeAllocator, nodeWeights, nodeWeightAllocator}
     {}
 
     graph_base(const graph_base&)                = default;
