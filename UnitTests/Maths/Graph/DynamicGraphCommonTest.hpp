@@ -102,6 +102,7 @@ namespace sequoia
       using graph_t = typename base_t::graph_type;
       
       using base_t::check_equality;
+      using base_t::check_regular_semantics;
       using graph_checker<unit_test_logger<test_mode::standard>>::check_exception_thrown;
 
       void execute_operations() override;
@@ -128,6 +129,7 @@ namespace sequoia
       using graph_t = typename base_t::graph_type;
 
       using base_t::check_equality;
+      using base_t::check_regular_semantics;
       using graph_checker<unit_test_logger<test_mode::standard>>::check_exception_thrown;
 
       void execute_operations() override;
