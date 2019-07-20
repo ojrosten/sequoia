@@ -13,6 +13,7 @@
 
 #include "GraphDetails.hpp"
 #include "Algorithms.hpp"
+#include "TypeTraits.hpp"
 
 #include <limits>
 #include <set>
@@ -872,27 +873,72 @@ namespace sequoia
       }
 
       template<class... Allocators>
-      constexpr connectivity(indirect_edge_init_type, init_t edges, const Allocators&... as)
-        : m_Edges(as...)
+      constexpr connectivity(indirect_edge_init_type, init_t edges)
+        : m_Edges{}
       {
          process_edges(edges);
+      }
+
+      template
+      <
+        class PartitionAllocator,
+        class EdgeAllocator,
+        std::enable_if_t<is_constructible_with_v<edge_storage_type, PartitionAllocator, EdgeAllocator>, int> = 0
+      >
+      constexpr connectivity(indirect_edge_init_type, init_t edges, const PartitionAllocator& partitionAllocator, const EdgeAllocator& edgeAllocator)
+        : m_Edges(partitionAllocator, edgeAllocator)
+      {
+         process_edges(edges);
+      }
+
+      template
+      <
+        class PartitionAllocator,
+        class EdgeAllocator,
+        std::enable_if_t<!is_constructible_with_v<edge_storage_type, PartitionAllocator, EdgeAllocator>, int> = 0
+      >
+      constexpr connectivity(indirect_edge_init_type, init_t edges, const PartitionAllocator& partitionAllocator, const EdgeAllocator& edgeAllocator)
+        : m_Edges(partitionAllocator)
+      {
+         process_edges(edges, edgeAllocator);
       }
 
       template<class... Allocators>
       constexpr connectivity(direct_edge_copy_type, const connectivity& in, const Allocators&... as)
         : m_Edges{in.m_Edges, as...}
-      {
-      }
+      {}
 
-      template<class... Allocators>
-      constexpr connectivity(indirect_edge_copy_type, const connectivity& in, const Allocators&... as)
-        : m_Edges(as...)
+      constexpr connectivity(indirect_edge_copy_type, const connectivity& in)
+        : m_Edges{}
       {
         copy_edges(in);
       }
 
-      // helper methods
+      template
+      <
+        class PartitionAllocator,
+        class EdgeAllocator,
+        std::enable_if_t<is_constructible_with_v<edge_storage_type, PartitionAllocator, EdgeAllocator>, int> = 0
+      >
+      constexpr connectivity(indirect_edge_copy_type, const connectivity& in, const PartitionAllocator& partitionAllocator, const EdgeAllocator& edgeAllocator)
+        : m_Edges(partitionAllocator, edgeAllocator)
+      {
+         copy_edges(in);
+      }
 
+      template
+      <
+        class PartitionAllocator,
+        class EdgeAllocator,
+        std::enable_if_t<!is_constructible_with_v<edge_storage_type, PartitionAllocator, EdgeAllocator>, int> = 0
+      >
+      constexpr connectivity(indirect_edge_copy_type, const connectivity& in, const PartitionAllocator& partitionAllocator, const EdgeAllocator& edgeAllocator)
+        : m_Edges(partitionAllocator)
+      {
+         copy_edges(in, edgeAllocator);
+      }
+      
+      // helper methods
       template<class... Args>
       [[nodiscard]]
       decltype(auto) make_edge_weight(Args&&... args)
@@ -916,17 +962,18 @@ namespace sequoia
         }
       }
 
-      constexpr void process_edges(std::initializer_list<std::initializer_list<edge_init_type>> edges)
+      template<class... Allocators>
+      constexpr void process_edges(std::initializer_list<std::initializer_list<edge_init_type>> edges, const Allocators&... allocs)
       {
         if constexpr (EdgeTraits::init_complementary_data_v)
         {
-          process_complementary_edges(edges);
+          process_complementary_edges(edges, allocs...);
         }
         else if constexpr (directed(directedness))
         {
           for(auto nodeEdgesIter{edges.begin()}; nodeEdgesIter != edges.end(); ++nodeEdgesIter)
           {
-            if constexpr(!direct_edge_init()) m_Edges.add_slot();
+            if constexpr(!direct_edge_init()) m_Edges.add_slot(allocs...);
 
             const auto& nodeEdges{*nodeEdgesIter};
             for(const auto& edge : nodeEdges)
@@ -944,17 +991,18 @@ namespace sequoia
         }
         else
         {
-          process_edges(direct_edge_init(), edges);          
+          process_edges(direct_edge_init(), edges, allocs...);          
         }
       }
 
-      constexpr void process_complementary_edges(std::initializer_list<std::initializer_list<edge_init_type>> edges)
+      template<class... Allocators>
+      constexpr void process_complementary_edges(std::initializer_list<std::initializer_list<edge_init_type>> edges, const Allocators&... allocs)
       {
         if constexpr(!direct_edge_init()) m_Edges.reserve_partitions(edges.size());
                       
         for(auto nodeEdgesIter{edges.begin()}; nodeEdgesIter != edges.end(); ++nodeEdgesIter)
         {
-          if constexpr(!direct_edge_init()) m_Edges.add_slot();
+          if constexpr(!direct_edge_init()) m_Edges.add_slot(allocs...);
           
           const auto& nodeEdges{*nodeEdgesIter};
           const auto currentNodeIndex{std::distance(edges.begin(), nodeEdgesIter)};
@@ -1048,15 +1096,16 @@ namespace sequoia
         }
       }
 
-      constexpr void process_edges(indirect_edge_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges)
+      template<class... Allocators>
+      constexpr void process_edges(indirect_edge_init_type, init_t edges, const Allocators&... allocs)
       {
         using namespace data_structures;
         using traits_t = contiguous_storage_traits<edge_init_type, data_sharing::independent<edge_init_type>>;
         contiguous_storage<edge_init_type, data_sharing::independent<edge_init_type>, traits_t> edgesForChecking{edges};
-        process_edges(edgesForChecking);
+        process_edges(edgesForChecking, allocs...);
       }
 
-      constexpr void process_edges(direct_edge_init_type, std::initializer_list<std::initializer_list<edge_init_type>> edges)
+      constexpr void process_edges(direct_edge_init_type, init_t edges)
       {
         process_edges(m_Edges);
       }
@@ -1074,8 +1123,8 @@ namespace sequoia
         return end;
       }
       
-      template<class Edges>
-      constexpr void process_edges(Edges& orderedEdges)
+      template<class Edges, class... Allocators>
+      constexpr void process_edges(Edges& orderedEdges, const Allocators&... allocs)
       {
         constexpr bool sortWeights{!std::is_empty_v<edge_weight_type> && is_orderable_v<edge_weight_type>};
         constexpr bool clusterEdges{!std::is_empty_v<edge_weight_type> && !is_orderable_v<edge_weight_type>};
@@ -1117,7 +1166,7 @@ namespace sequoia
            
         for(size_type i{}; i<orderedEdges.num_partitions(); ++i)
         {
-          if constexpr(!direct_edge_init_v) m_Edges.add_slot();
+          if constexpr(!direct_edge_init_v) m_Edges.add_slot(allocs...);
           
           auto lowerIter{orderedEdges.cbegin_partition(i)}, upperIter{orderedEdges.cbegin_partition(i)};
           while(lowerIter != orderedEdges.cend_partition(i))
@@ -1377,12 +1426,12 @@ namespace sequoia
         }        
       }
 
-      template<class Processor> 
-      void copy_edges(const connectivity& in, Processor processor)
+      template<class Processor, class... Allocators> 
+      void copy_edges(const connectivity& in, Processor processor, const Allocators&... allocs)
       {
         for(size_type i{}; i<in.order(); ++i)
         {
-          m_Edges.add_slot();
+          m_Edges.add_slot(allocs...);
           for(auto inIter{in.cbegin_edges(i)}; inIter != in.cend_edges(i); ++inIter)
           {
             processor(i, in.cbegin_edges(i), inIter);
