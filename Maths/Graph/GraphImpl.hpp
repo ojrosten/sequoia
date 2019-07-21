@@ -296,8 +296,8 @@ namespace sequoia
 
       template
       <
-        class... Args
-        // std::enable_if_t<!is_allocator<typename variadic_traits<Args...>::head>, int> = 0
+        class... Args,
+        std::enable_if_t<(sizeof...(Args) == 0) || !is_allocator_v<typename variadic_traits<Args...>::head>, int> = 0
       >
       size_type add_node(Args&&... args)
       {
@@ -308,10 +308,11 @@ namespace sequoia
         return (this->order()-1);
       }
 
-      /*template
+      template
       <
         class Allocator,
-        class... Args
+        class... Args,
+        std::enable_if_t<is_allocator_v<Allocator>, int> = 0
       >
       size_type add_node(const Allocator& alloc, Args&&... args)
       {
@@ -320,20 +321,31 @@ namespace sequoia
         Connectivity::add_node(alloc);
         if constexpr (!emptyNodes) Nodes::add_node(std::forward<Args>(args)...);
         return (this->order()-1);
-        }*/
+      }
 
-      template<class... Args>
+      template
+      <
+        class... Args,
+        std::enable_if_t<(sizeof...(Args) == 0) || !is_allocator_v<typename variadic_traits<Args...>::head>, int> = 0
+      >
       size_type insert_node(const size_type pos, Args&&... args)
       {
-        reserve_nodes(this->order() + 1);
-        
-        const auto node{(pos < this->order()) ? pos : (this->order() - 1)};
-        if constexpr (!emptyNodes)
-        {
-          Nodes::insert_node(this->cbegin_node_weights() + pos, std::forward<Args>(args)...);
-        }
-        
+        const auto node{insert_node_impl(pos, std::forward<Args>(args)...)};
         Connectivity::insert_node(node);
+
+        return node;
+      }
+
+      template
+      <
+        class Allocator,
+        class... Args,
+        std::enable_if_t<is_allocator_v<Allocator>, int> = 0
+      >
+      size_type insert_node(const size_type pos, const Allocator& allocator, Args&&... args)
+      {
+        const auto node{insert_node_impl(pos, std::forward<Args>(args)...)};
+        Connectivity::insert_node(node, allocator);
 
         return node;
       }
@@ -426,6 +438,20 @@ namespace sequoia
         : Connectivity{edges},
           Nodes{}
       {}
+
+      template<class... Args>
+      size_type insert_node_impl(const size_type pos, Args&&... args)
+      {
+        reserve_nodes(this->order() + 1);
+        
+        const auto node{(pos < this->order()) ? pos : (this->order() - 1)};
+        if constexpr (!emptyNodes)
+        {
+          Nodes::insert_node(this->cbegin_node_weights() + pos, std::forward<Args>(args)...);
+        }
+
+        return node;
+      }
     };
   }
 }

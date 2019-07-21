@@ -1094,7 +1094,17 @@ namespace sequoia::unit_testing
       check_regular_semantics(LINE("Regular Semantics"), g, graph_t{{{}}, edge_partitions_allocator{}, edge_allocator{}, {{1.0, -1.0}}, node_allocator{}});
     }
 
-    g.add_node();
+    g.add_node(edge_allocator{});
+    if constexpr(std::is_empty_v<NodeWeight>)
+    {
+      check_equality(LINE(""), g, graph_t{{{}}, edge_partitions_allocator{}, edge_allocator{}});
+    }
+    else
+    {
+      using node_allocator = typename graph_t::node_weight_container_type::allocator_type;
+      check_equality(LINE(""), g, graph_t{{{}}, edge_partitions_allocator{}, edge_allocator{}, node_allocator{}});
+    }
+
     check_equality(LINE(""), g.edges_capacity(0), 0ul);
     check_equality(LINE(""), g.node_capacity(), 1ul);
     g.reserve_edges(0, 4);
@@ -1105,7 +1115,18 @@ namespace sequoia::unit_testing
 
     g.shrink_to_fit();
     check_equality(LINE("May fail if stl implementation doesn't actually shrink to fit!"), g.edges_capacity(0), 0ul);
-    check_equality(LINE("May fail if stl implementation doesn't actually shrink to fit!"), g.node_capacity(), 1ul);    
+    check_equality(LINE("May fail if stl implementation doesn't actually shrink to fit!"), g.node_capacity(), 1ul);
+
+    g.insert_node(0u, edge_allocator{});
+    if constexpr(std::is_empty_v<NodeWeight>)
+    {
+      check_equality(LINE(""), g, graph_t{{{}, {}}, edge_partitions_allocator{}, edge_allocator{}});
+    }
+    else
+    {
+      using node_allocator = typename graph_t::node_weight_container_type::allocator_type;
+      check_equality(LINE(""), g, graph_t{{{}, {}}, edge_partitions_allocator{}, edge_allocator{}, node_allocator{}});
+    }
   }
 
   // Generic Weighted

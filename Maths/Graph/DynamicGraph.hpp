@@ -101,6 +101,7 @@ namespace sequoia::maths
       >;
     
     using node_weight_type = NodeWeight;
+    using size_type = typename primitive_type::size_type;
     using edges_initializer = typename primitive_type::edges_initializer;
     
     using edge_partitions_allocator_type = typename edge_traits_type::edge_partitions_allocator_type;
@@ -264,9 +265,53 @@ namespace sequoia::maths
     graph_base& operator=(graph_base&&) noexcept = default;
 
     using primitive_type::swap_nodes;
+
+    template
+    <
+      class... Args,
+      std::enable_if_t<(sizeof...(Args) == 0) || !is_allocator_v<typename variadic_traits<Args...>::head>, int> = 0
+    >
+    size_type add_node(Args&&... args)
+    {
+      return primitive_type::add_node(std::forward<Args>(args)...);
+    }
+
+    template
+    <    
+      class EdgeAllocator = edge_allocator_type,
+      class... Args,
+      class EdgeStorage = typename edge_traits_type::edge_storage_type,
+      class EdgePartitionsAllocator = edge_partitions_allocator_type,
+      std::enable_if_t<!is_constructible_with_v<EdgeStorage, EdgePartitionsAllocator, EdgeAllocator>, int> = 0
+    >
+    size_type add_node(const EdgeAllocator& alloc, Args&&... args)
+    {
+      return primitive_type::add_node(alloc, std::forward<Args>(args)...);
+    }
     
-    using primitive_type::add_node;
-    using primitive_type::insert_node;
+    template
+    <
+      class... Args,
+      std::enable_if_t<(sizeof...(Args) == 0) || !is_allocator_v<typename variadic_traits<Args...>::head>, int> = 0
+    >
+    size_type insert_node(const size_type pos, Args&&... args)
+    {
+      return primitive_type::insert_node(pos, std::forward<Args>(args)...);
+    }
+
+    template
+    <      
+      class EdgeAllocator = edge_allocator_type,
+      class... Args,
+      class EdgeStorage = typename edge_traits_type::edge_storage_type,
+      class EdgePartitionsAllocator = edge_partitions_allocator_type,
+      std::enable_if_t<!is_constructible_with_v<EdgeStorage, EdgePartitionsAllocator, EdgeAllocator>, int> = 0
+    >
+    size_type insert_node(const size_type pos, const EdgeAllocator& allocator, Args&&... args)
+    {
+      return primitive_type::insert_node(pos, allocator, std::forward<Args>(args)...);
+    }
+
     using primitive_type::erase_node;
 
     using primitive_type::join;      
