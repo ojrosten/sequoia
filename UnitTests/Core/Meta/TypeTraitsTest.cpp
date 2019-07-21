@@ -23,7 +23,8 @@ namespace sequoia::unit_testing
     test_is_orderable();
     test_is_equal_to_comparable();
     test_is_not_equal_to_comparable();
-    test_is_container();    
+    test_is_container();
+    test_is_allocator();
     test_is_constructible_with();
     test_has_default_constructor();
     test_has_allocator_type();
@@ -594,6 +595,33 @@ namespace sequoia::unit_testing
       }()
     );
   }
+
+  void type_traits_test::test_is_allocator()
+  {
+    check(LINE(""), []() {
+        static_assert(std::is_same_v<std::false_type, is_allocator_t<int>>);
+        return true;
+      }()
+    );
+
+    check(LINE(""), []() {
+        static_assert(!is_allocator_v<int>);
+        return true;
+      }()
+    );
+
+    check(LINE(""), []() {
+        static_assert(std::is_same_v<std::true_type, is_allocator_t<std::allocator<int>>>);
+        return true;
+      }()
+    );
+
+    check(LINE(""), []() {
+        static_assert(is_allocator_v<std::allocator<int>>);
+        return true;
+      }()
+    );
+  }  
 
   void type_traits_test::test_has_default_constructor()
   {

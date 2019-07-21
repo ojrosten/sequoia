@@ -166,18 +166,30 @@ namespace sequoia
 
   // is_container
 
-  template<class T, class = void> struct is_container : std::false_type
-  {
-  };
+  template<class T, class = std::void_t<>> struct is_container : std::false_type
+  {};
 
   template<class T> struct is_container<T, std::void_t<decltype(std::begin(std::declval<T>()))>> : std::true_type
-  {
-  };
+  {};
 
   template<class T> constexpr bool is_container_v{is_container<T>::value};
 
   template<class T>
   using is_container_t = typename is_container<T>::type;
+
+  // is_allocator
+
+  template<class T, class = std::void_t<>> struct is_allocator : std::false_type
+  {};
+  
+  template<class T> struct is_allocator<T, std::void_t<decltype(std::declval<T>().allocate(0))>>
+    : std::true_type
+  {};
+
+  template<class T> constexpr bool is_allocator_v{is_allocator<T>::value};
+
+  template<class T>
+  using is_allocator_t = typename is_allocator<T>::type;
 
   // has_default_constructor
 
@@ -213,6 +225,8 @@ namespace sequoia
   template<class T, class... Args>
   using is_constructible_with_t = typename is_constructible_with<T, void, Args...>::type;
 
+  
+  
   // has_allocator_type
 
   template<class T, class = std::void_t<>>

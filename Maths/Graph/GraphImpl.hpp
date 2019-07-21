@@ -294,7 +294,11 @@ namespace sequoia
         Connectivity::shrink_to_fit();
       }
 
-      template<class... Args>
+      template
+      <
+        class... Args
+        // std::enable_if_t<!is_allocator<typename variadic_traits<Args...>::head>, int> = 0
+      >
       size_type add_node(Args&&... args)
       {
         reserve_nodes(this->order() + 1);
@@ -303,6 +307,20 @@ namespace sequoia
         if constexpr (!emptyNodes) Nodes::add_node(std::forward<Args>(args)...);
         return (this->order()-1);
       }
+
+      /*template
+      <
+        class Allocator,
+        class... Args
+      >
+      size_type add_node(const Allocator& alloc, Args&&... args)
+      {
+        reserve_nodes(this->order() + 1);
+        
+        Connectivity::add_node(alloc);
+        if constexpr (!emptyNodes) Nodes::add_node(std::forward<Args>(args)...);
+        return (this->order()-1);
+        }*/
 
       template<class... Args>
       size_type insert_node(const size_type pos, Args&&... args)
