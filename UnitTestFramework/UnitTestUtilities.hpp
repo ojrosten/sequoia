@@ -37,11 +37,11 @@ namespace sequoia::unit_testing
   };
 
   /*! \class test_allocator
-      \brief Similar to std::allocator but without certain copy-like constructors.
+      \brief Somwhat imilar to std::allocator but logs (de)allocations and is without certain copy-like constructors.
 
       Whereas std::allocator<T> allows construction from std::allocator<U> this 
-      possibility is excluded to ensure that constructors taking multiple allocators
-      do not confuse them internally.
+      possibility is excluded to ensure that constructors of classes taking multiple
+      allocators do not confuse them internally.
    */
 
   template<class T> class custom_allocator
@@ -51,25 +51,38 @@ namespace sequoia::unit_testing
     using size_type = std::size_t;
     using difference_type = std::ptrdiff_t;
     using propagate_on_container_move_assignment = std::true_type;
-    using is_always_equal = std::true_type;
+    using is_always_equal = std::false_type;
 
     constexpr custom_allocator() noexcept = default;
+
+    custom_allocator(int& allocCount, int& deallocCount)
+      : m_pAllocs{&allocCount}, m_pDeallocs{&deallocCount}
+    {}
+    
     constexpr custom_allocator(const custom_allocator&) = default;
 
     [[nodiscard]] T* allocate(std::size_t n)
     {
-      return static_cast<T*>(::operator new(n * sizeof(T)));
+      const auto ptr{static_cast<T*>(::operator new(n * sizeof(T)))};
+
+      if(m_pAllocs) ++(*m_pAllocs);
+      return ptr;
     }
 
     void deallocate(T* p, std::size_t n)
     {
       ::operator delete(p);
+      if(m_pDeallocs) ++(*m_pDeallocs);
     }
+
+    int counted_allocs() const noexcept { return m_pAllocs ? * m_pAllocs : 0; }
+
+    int counted_deallocs() const noexcept { return m_pDeallocs ? * m_pDeallocs : 0; }
 
     [[nodiscard]]
     friend bool operator==(const custom_allocator& lhs, const custom_allocator& rhs)
     {
-      return true;
+      return compare(lhs.m_pAllocs, rhs.m_pAllocs) && compare(lhs.m_pDeallocs, rhs.m_pDeallocs);
     }
 
     [[nodiscard]]
@@ -78,5 +91,11 @@ namespace sequoia::unit_testing
       return !(lhs == rhs);
     }
   private:
+    int *m_pAllocs{}, *m_pDeallocs{};
+
+    static bool compare(int* lhs, int* rhs)
+    {
+      return (!lhs && !rhs) || (lhs && rhs && (*lhs == *rhs));
+    }
   };  
 }

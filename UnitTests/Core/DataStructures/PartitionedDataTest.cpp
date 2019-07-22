@@ -590,15 +590,35 @@ namespace sequoia
       using prediction = std::initializer_list<std::initializer_list<int>>;
 
       // null; [0,2][1]
-      storage s{partitions_allocator{}}, t{{{0,2}, {1}}, partitions_allocator{}, allocator{}};
-      check_equivalence(LINE(""), s, prediction{});
-      check_equivalence(LINE(""), t, prediction{{0,2}, {1}});
+      int
+        sPartitionAllocCount{}, sAllocCount{}, sPartitionDeallocCount{}, sDeallocCount{},
+        tPartitionAllocCount{}, tAllocCount{}, tPartitionDeallocCount{}, tDeallocCount{};
 
-      check_regular_semantics(LINE("Regular semantics"), s, t, partitions_allocator{}, allocator{});
+      {
+        storage
+          s{partitions_allocator{sPartitionAllocCount, sPartitionDeallocCount}},
+          t{{{0,2}, {1}}, partitions_allocator{tPartitionAllocCount, tPartitionDeallocCount}, allocator{tAllocCount, tDeallocCount}};
 
-      s.add_slot(allocator{});
-      // []
-      check_equality(LINE(""), s, storage{{{}}, partitions_allocator{}, allocator{}});
+        check_equivalence(LINE(""), s, prediction{});
+        check_equivalence(LINE(""), t, prediction{{0,2}, {1}});
+        check_equality(LINE(""), sPartitionAllocCount, 0);
+        check_equality(LINE(""), sAllocCount, 0);
+        check_equality(LINE(""), tPartitionAllocCount, 2);
+        check_equality(LINE(""), tAllocCount, 3);
+
+        check_regular_semantics(LINE("Regular semantics"), s, t, partitions_allocator{}, allocator{});
+
+        s.add_slot(allocator{sAllocCount, sDeallocCount});
+        // []
+        check_equality(LINE(""), s, storage{{{}}, partitions_allocator{}, allocator{}});
+        check_equality(LINE(""), sPartitionAllocCount, 1);
+        check_equality(LINE(""), sAllocCount, 0);
+      }
+
+      check_equality(LINE(""), tPartitionDeallocCount, 2);
+      check_equality(LINE(""), tDeallocCount, 3);
+      check_equality(LINE(""), sPartitionDeallocCount, 1);
+      check_equality(LINE(""), sDeallocCount, 0);
     }
 
     template<class T, class SharingPolicy>
