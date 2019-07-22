@@ -66,6 +66,7 @@ namespace sequoia::unit_testing
       const auto ptr{static_cast<T*>(::operator new(n * sizeof(T)))};
 
       if(m_pAllocs) ++(*m_pAllocs);
+
       return ptr;
     }
 

@@ -589,12 +589,12 @@ namespace sequoia
       using allocator = typename storage::allocator_type;
       using prediction = std::initializer_list<std::initializer_list<int>>;
 
-      // null; [0,2][1]
       int
         sPartitionAllocCount{}, sAllocCount{}, sPartitionDeallocCount{}, sDeallocCount{},
         tPartitionAllocCount{}, tAllocCount{}, tPartitionDeallocCount{}, tDeallocCount{};
 
       {
+        // null; [0,2][1]
         storage
           s{partitions_allocator{sPartitionAllocCount, sPartitionDeallocCount}},
           t{{{0,2}, {1}}, partitions_allocator{tPartitionAllocCount, tPartitionDeallocCount}, allocator{tAllocCount, tDeallocCount}};
@@ -603,7 +603,7 @@ namespace sequoia
         check_equivalence(LINE(""), t, prediction{{0,2}, {1}});
         check_equality(LINE(""), sPartitionAllocCount, 0);
         check_equality(LINE(""), sAllocCount, 0);
-        check_equality(LINE(""), tPartitionAllocCount, 2);
+        check_equality(LINE("Only a single allocation necessary due to reservation"), tPartitionAllocCount, 1);
         check_equality(LINE(""), tAllocCount, 3);
 
         check_regular_semantics(LINE("Regular semantics"), s, t, partitions_allocator{}, allocator{});
@@ -615,7 +615,7 @@ namespace sequoia
         check_equality(LINE(""), sAllocCount, 0);
       }
 
-      check_equality(LINE(""), tPartitionDeallocCount, 2);
+      check_equality(LINE(""), tPartitionDeallocCount, 1);
       check_equality(LINE(""), tDeallocCount, 3);
       check_equality(LINE(""), sPartitionDeallocCount, 1);
       check_equality(LINE(""), sDeallocCount, 0);
@@ -631,16 +631,36 @@ namespace sequoia
       using partitions_allocator = typename storage::traits_type::partitions_allocator_type;
       using prediction = std::initializer_list<std::initializer_list<int>>;
 
-      // null; [0,2][1]
-      storage s{partitions_allocator{}, allocator{}}, t{{{0,2}, {1}}, partitions_allocator{}, allocator{}};
-      check_equivalence(LINE(""), s, prediction{});
-      check_equivalence(LINE(""), t, prediction{{0,2}, {1}});
+      int
+        sPartitionAllocCount{}, sAllocCount{}, sPartitionDeallocCount{}, sDeallocCount{},
+        tPartitionAllocCount{}, tAllocCount{}, tPartitionDeallocCount{}, tDeallocCount{};
 
-      check_regular_semantics(LINE("Regular semantics"), s, t, partitions_allocator{}, allocator{});
+      {
+        // null; [0,2][1]
+        storage
+          s{partitions_allocator{sPartitionAllocCount, sPartitionDeallocCount}, allocator{sAllocCount, sDeallocCount}},
+          t{{{0,2}, {1}}, partitions_allocator{tPartitionAllocCount, tPartitionDeallocCount}, allocator{tAllocCount, tDeallocCount}};
 
-      s.add_slot();
-      // []
-      check_equality(LINE(""), s, storage{{{}}, partitions_allocator{}, allocator{}});
+        check_equivalence(LINE(""), s, prediction{});
+        check_equivalence(LINE(""), t, prediction{{0,2}, {1}});
+        check_equality(LINE(""), sPartitionAllocCount, 0);
+        check_equality(LINE(""), sAllocCount, 0);
+        check_equality(LINE("Only a single allocation necessary due to reservation"), tPartitionAllocCount, 1);
+        check_equality(LINE(""), tAllocCount, 3);
+
+        check_regular_semantics(LINE("Regular semantics"), s, t, partitions_allocator{}, allocator{});
+
+        s.add_slot();
+        // []
+        check_equality(LINE(""), s, storage{{{}}, partitions_allocator{}, allocator{}});
+        check_equality(LINE(""), sPartitionAllocCount, 1);
+        check_equality(LINE(""), sAllocCount, 0);
+      }
+
+      //check_equality(LINE(""), tPartitionDeallocCount, 1);
+      //check_equality(LINE(""), tDeallocCount, 3);
+      //check_equality(LINE(""), sPartitionDeallocCount, 1);
+      //check_equality(LINE(""), sDeallocCount, 0);
     }
 
     template<template<class> class SharingPolicy>

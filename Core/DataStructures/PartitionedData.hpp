@@ -101,6 +101,7 @@ namespace sequoia
                        const allocator_type& allocator = allocator_type{})
         : m_Buckets(partitionsAllocator)
       {
+        m_Buckets.reserve(list.size());
         for(auto iter{list.begin()}; iter != list.end(); ++iter)
         { 
           add_slot(allocator);
@@ -639,7 +640,7 @@ namespace sequoia
       
       template<class PartitionsAllocator, class Allocator>
       constexpr contiguous_storage_base(const contiguous_storage_base& in, const PartitionsAllocator& partitionsAllocator, const Allocator& allocator)
-        : contiguous_storage_base(copy_constant<directCopy>{}, in, allocator, partitionsAllocator)
+        : contiguous_storage_base(copy_constant<directCopy>{}, in, partitionsAllocator, allocator)
       {};
       
       template<class PartitionsAllocator, class Allocator>
@@ -833,7 +834,7 @@ namespace sequoia
       }
 
       template<class Allocator, class PartitionsAllocator>
-      constexpr contiguous_storage_base(indirect_copy_type, const contiguous_storage_base& in, const Allocator& allocator, const PartitionsAllocator& partitionsAllocator)
+      constexpr contiguous_storage_base(indirect_copy_type, const contiguous_storage_base& in, const PartitionsAllocator& partitionsAllocator, const Allocator& allocator)
       : m_Partitions{in.m_Partitions, partitionsAllocator}, m_Storage(allocator)        
       {
         init(in.m_Storage);
@@ -848,13 +849,14 @@ namespace sequoia
         : m_Partitions{in.m_Partitions}, m_Storage{in.m_Storage, allocator}
       {};
 
-      template<class Allocator, class PartitionsAllocator>
-      constexpr contiguous_storage_base(direct_copy_type, const contiguous_storage_base& in , const Allocator& allocator, const PartitionsAllocator& partitionsAllocator)
+      template<class PartitionsAllocator, class Allocator>
+      constexpr contiguous_storage_base(direct_copy_type, const contiguous_storage_base& in, const PartitionsAllocator& partitionsAllocator, const Allocator& allocator)
         : m_Partitions{in.m_Partitions, partitionsAllocator}, m_Storage{in.m_Storage, allocator}
       {};
 
       void init(std::initializer_list<std::initializer_list<T>> list)
       {
+        m_Partitions.reserve(list.size());
         for(auto iter{list.begin()}; iter != list.end(); ++iter)
         {
           add_slot();
@@ -868,6 +870,7 @@ namespace sequoia
 
       void init(const container_type& c)
       {
+        m_Storage.reserve(c.size());
         partition_impl::data_duplicator<SharingPolicy> duplicator;
         for(const auto& elt : c)
         {
@@ -928,12 +931,12 @@ namespace sequoia
 
       void increment_partition_indices(const size_type first) noexcept
       {
-        m_Partitions.mutate(m_Partitions.begin() + first, m_Partitions.end(), [](const auto index){ return index + 1; });
+        m_Partitions.template mutate<false>(m_Partitions.begin() + first, m_Partitions.end(), [](const auto index){ return index + 1; });
       }
 
       void decrement_partition_indices(const size_type first) noexcept
       {
-        m_Partitions.mutate(m_Partitions.begin() + first, m_Partitions.end(), [](const auto index){ return index - 1; });
+        m_Partitions.template mutate<false>(m_Partitions.begin() + first, m_Partitions.end(), [](const auto index){ return index - 1; });
       }
 
       void check_range(const size_type index) const
