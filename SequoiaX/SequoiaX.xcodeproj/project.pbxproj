@@ -7,32 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		7E402F2C215D47940017F018 /* UnitTestMain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E402F22215D03100017F018 /* UnitTestMain.cpp */; };
-		7E402F46215D47E80017F018 /* TestGraphMeta.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E402F2D215D47E70017F018 /* TestGraphMeta.cpp */; };
-		7E402F47215D47E80017F018 /* TestEdgeInsertion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E402F2E215D47E70017F018 /* TestEdgeInsertion.cpp */; };
-		7E402F48215D47E80017F018 /* UnitTestDiagnostics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E402F2F215D47E70017F018 /* UnitTestDiagnostics.cpp */; };
-		7E402F49215D47E80017F018 /* TestExperimental.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E402F30215D47E70017F018 /* TestExperimental.cpp */; };
-		7E402F4A215D47E80017F018 /* TestAlgorithms.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E402F31215D47E70017F018 /* TestAlgorithms.cpp */; };
-		7E402F4B215D47E80017F018 /* TestGraphTraversals.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E402F32215D47E70017F018 /* TestGraphTraversals.cpp */; };
-		7E402F4C215D47E80017F018 /* TestProtectiveWrapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E402F33215D47E70017F018 /* TestProtectiveWrapper.cpp */; };
-		7E402F4D215D47E80017F018 /* TestIterator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E402F34215D47E70017F018 /* TestIterator.cpp */; };
-		7E402F4E215D47E80017F018 /* TestHeterogeneousStaticGraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E402F35215D47E70017F018 /* TestHeterogeneousStaticGraph.cpp */; };
-		7E402F4F215D47E80017F018 /* UnitTestRunner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E402F36215D47E70017F018 /* UnitTestRunner.cpp */; };
-		7E402F50215D47E80017F018 /* TestHeterogeneousNodeStorage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E402F37215D47E70017F018 /* TestHeterogeneousNodeStorage.cpp */; };
-		7E402F51215D47E80017F018 /* TestThreadingModels.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E402F38215D47E70017F018 /* TestThreadingModels.cpp */; };
-		7E402F52215D47E80017F018 /* TestStaticFixedTopology.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E402F39215D47E70017F018 /* TestStaticFixedTopology.cpp */; };
-		7E402F53215D47E80017F018 /* GraphTesterDiagnostics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E402F3A215D47E80017F018 /* GraphTesterDiagnostics.cpp */; };
-		7E402F54215D47E80017F018 /* TestGraphUpdate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E402F3B215D47E80017F018 /* TestGraphUpdate.cpp */; };
-		7E402F55215D47E80017F018 /* TestSubgraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E402F3C215D47E80017F018 /* TestSubgraph.cpp */; };
-		7E402F56215D47E80017F018 /* TestGraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E402F3D215D47E80017F018 /* TestGraph.cpp */; };
-		7E402F57215D47E80017F018 /* TestDataPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E402F3E215D47E80017F018 /* TestDataPool.cpp */; };
-		7E402F58215D47E80017F018 /* TestGraphInit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E402F3F215D47E80017F018 /* TestGraphInit.cpp */; };
-		7E402F59215D47E80017F018 /* TestStaticGraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E402F40215D47E80017F018 /* TestStaticGraph.cpp */; };
-		7E402F5A215D47E80017F018 /* TestFixedTopology.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E402F41215D47E80017F018 /* TestFixedTopology.cpp */; };
-		7E402F5B215D47E80017F018 /* TestPartitionedData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E402F42215D47E80017F018 /* TestPartitionedData.cpp */; };
-		7E402F5C215D47E80017F018 /* TestNodeStorage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E402F43215D47E80017F018 /* TestNodeStorage.cpp */; };
-		7E402F5D215D47E80017F018 /* TestSample.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E402F44215D47E80017F018 /* TestSample.cpp */; };
-		7E402F5E215D47E80017F018 /* TestEdges.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E402F45215D47E80017F018 /* TestEdges.cpp */; };
+		7E7198AE22E78CE400FF81BC /* UnitTestChamberMain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E7198AD22E78CE400FF81BC /* UnitTestChamberMain.cpp */; };
+		7E7198B122E78E2F00FF81BC /* UnitTestRunner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E7198B022E78E2F00FF81BC /* UnitTestRunner.cpp */; };
+		7E7198B322E78E7600FF81BC /* UnitTestDiagnostics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E7198B222E78E7600FF81BC /* UnitTestDiagnostics.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -53,37 +30,10 @@
 		7E402F18215D01E60017F018 /* Core */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Core; path = ../Core; sourceTree = "<group>"; };
 		7E402F19215D01FC0017F018 /* Experimental */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Experimental; path = ../Experimental; sourceTree = "<group>"; };
 		7E402F1A215D02080017F018 /* Maths */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Maths; path = ../Maths; sourceTree = "<group>"; };
-		7E402F1D215D02AA0017F018 /* Algorithms */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Algorithms; path = ../../UnitTests/Algorithms; sourceTree = "<group>"; };
-		7E402F1E215D02BF0017F018 /* Core */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Core; path = ../../UnitTests/Core; sourceTree = "<group>"; };
-		7E402F1F215D02CC0017F018 /* Experimental */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Experimental; path = ../../UnitTests/Experimental; sourceTree = "<group>"; };
-		7E402F20215D02D90017F018 /* Maths */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Maths; path = ../../UnitTests/Maths; sourceTree = "<group>"; };
-		7E402F21215D02EA0017F018 /* UnitTestUtilities */ = {isa = PBXFileReference; lastKnownFileType = folder; name = UnitTestUtilities; path = ../../UnitTests/UnitTestUtilities; sourceTree = "<group>"; };
-		7E402F22215D03100017F018 /* UnitTestMain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UnitTestMain.cpp; path = ../../UnitTests/UnitTestMain.cpp; sourceTree = "<group>"; };
-		7E402F2D215D47E70017F018 /* TestGraphMeta.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TestGraphMeta.cpp; path = ../UnitTests/Maths/Graph/TestGraphMeta.cpp; sourceTree = "<group>"; };
-		7E402F2E215D47E70017F018 /* TestEdgeInsertion.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TestEdgeInsertion.cpp; path = ../UnitTests/Maths/Graph/TestEdgeInsertion.cpp; sourceTree = "<group>"; };
-		7E402F2F215D47E70017F018 /* UnitTestDiagnostics.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = UnitTestDiagnostics.cpp; path = ../UnitTests/UnitTestUtilities/UnitTestDiagnostics.cpp; sourceTree = "<group>"; };
-		7E402F30215D47E70017F018 /* TestExperimental.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TestExperimental.cpp; path = ../UnitTests/Experimental/TestExperimental.cpp; sourceTree = "<group>"; };
-		7E402F31215D47E70017F018 /* TestAlgorithms.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TestAlgorithms.cpp; path = ../UnitTests/Algorithms/TestAlgorithms.cpp; sourceTree = "<group>"; };
-		7E402F32215D47E70017F018 /* TestGraphTraversals.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TestGraphTraversals.cpp; path = ../UnitTests/Maths/Graph/TestGraphTraversals.cpp; sourceTree = "<group>"; };
-		7E402F33215D47E70017F018 /* TestProtectiveWrapper.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TestProtectiveWrapper.cpp; path = ../UnitTests/Core/Utilities/TestProtectiveWrapper.cpp; sourceTree = "<group>"; };
-		7E402F34215D47E70017F018 /* TestIterator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TestIterator.cpp; path = ../UnitTests/Core/Utilities/TestIterator.cpp; sourceTree = "<group>"; };
-		7E402F35215D47E70017F018 /* TestHeterogeneousStaticGraph.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TestHeterogeneousStaticGraph.cpp; path = ../UnitTests/Maths/Graph/TestHeterogeneousStaticGraph.cpp; sourceTree = "<group>"; };
-		7E402F36215D47E70017F018 /* UnitTestRunner.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = UnitTestRunner.cpp; path = ../UnitTests/UnitTestUtilities/UnitTestRunner.cpp; sourceTree = "<group>"; };
-		7E402F37215D47E70017F018 /* TestHeterogeneousNodeStorage.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TestHeterogeneousNodeStorage.cpp; path = ../UnitTests/Maths/Graph/TestHeterogeneousNodeStorage.cpp; sourceTree = "<group>"; };
-		7E402F38215D47E70017F018 /* TestThreadingModels.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TestThreadingModels.cpp; path = ../UnitTests/Core/Concurrency/TestThreadingModels.cpp; sourceTree = "<group>"; };
-		7E402F39215D47E70017F018 /* TestStaticFixedTopology.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TestStaticFixedTopology.cpp; path = ../UnitTests/Maths/Graph/TestStaticFixedTopology.cpp; sourceTree = "<group>"; };
-		7E402F3A215D47E80017F018 /* GraphTesterDiagnostics.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = GraphTesterDiagnostics.cpp; path = ../UnitTests/Maths/Graph/GraphTesterDiagnostics.cpp; sourceTree = "<group>"; };
-		7E402F3B215D47E80017F018 /* TestGraphUpdate.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TestGraphUpdate.cpp; path = ../UnitTests/Maths/Graph/TestGraphUpdate.cpp; sourceTree = "<group>"; };
-		7E402F3C215D47E80017F018 /* TestSubgraph.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TestSubgraph.cpp; path = ../UnitTests/Maths/Graph/TestSubgraph.cpp; sourceTree = "<group>"; };
-		7E402F3D215D47E80017F018 /* TestGraph.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TestGraph.cpp; path = ../UnitTests/Maths/Graph/TestGraph.cpp; sourceTree = "<group>"; };
-		7E402F3E215D47E80017F018 /* TestDataPool.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TestDataPool.cpp; path = ../UnitTests/Core/DataSharing/TestDataPool.cpp; sourceTree = "<group>"; };
-		7E402F3F215D47E80017F018 /* TestGraphInit.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TestGraphInit.cpp; path = ../UnitTests/Maths/Graph/TestGraphInit.cpp; sourceTree = "<group>"; };
-		7E402F40215D47E80017F018 /* TestStaticGraph.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TestStaticGraph.cpp; path = ../UnitTests/Maths/Graph/TestStaticGraph.cpp; sourceTree = "<group>"; };
-		7E402F41215D47E80017F018 /* TestFixedTopology.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TestFixedTopology.cpp; path = ../UnitTests/Maths/Graph/TestFixedTopology.cpp; sourceTree = "<group>"; };
-		7E402F42215D47E80017F018 /* TestPartitionedData.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TestPartitionedData.cpp; path = ../UnitTests/Core/DataStructures/TestPartitionedData.cpp; sourceTree = "<group>"; };
-		7E402F43215D47E80017F018 /* TestNodeStorage.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TestNodeStorage.cpp; path = ../UnitTests/Maths/Graph/TestNodeStorage.cpp; sourceTree = "<group>"; };
-		7E402F44215D47E80017F018 /* TestSample.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TestSample.cpp; path = ../UnitTests/Maths/Statistics/TestSample.cpp; sourceTree = "<group>"; };
-		7E402F45215D47E80017F018 /* TestEdges.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = TestEdges.cpp; path = ../UnitTests/Maths/Graph/TestEdges.cpp; sourceTree = "<group>"; };
+		7E7198AD22E78CE400FF81BC /* UnitTestChamberMain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UnitTestChamberMain.cpp; path = ../../UnitTestChamber/UnitTestChamberMain.cpp; sourceTree = "<group>"; };
+		7E7198AF22E78D4F00FF81BC /* UnitTestFramework */ = {isa = PBXFileReference; lastKnownFileType = folder; name = UnitTestFramework; path = ../UnitTestFramework; sourceTree = "<group>"; };
+		7E7198B022E78E2F00FF81BC /* UnitTestRunner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UnitTestRunner.cpp; path = ../UnitTestFramework/UnitTestRunner.cpp; sourceTree = "<group>"; };
+		7E7198B222E78E7600FF81BC /* UnitTestDiagnostics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UnitTestDiagnostics.cpp; path = ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,32 +50,9 @@
 		7E402F04215D01510017F018 = {
 			isa = PBXGroup;
 			children = (
-				7E402F3A215D47E80017F018 /* GraphTesterDiagnostics.cpp */,
-				7E402F31215D47E70017F018 /* TestAlgorithms.cpp */,
-				7E402F3E215D47E80017F018 /* TestDataPool.cpp */,
-				7E402F2E215D47E70017F018 /* TestEdgeInsertion.cpp */,
-				7E402F45215D47E80017F018 /* TestEdges.cpp */,
-				7E402F30215D47E70017F018 /* TestExperimental.cpp */,
-				7E402F41215D47E80017F018 /* TestFixedTopology.cpp */,
-				7E402F3D215D47E80017F018 /* TestGraph.cpp */,
-				7E402F3F215D47E80017F018 /* TestGraphInit.cpp */,
-				7E402F2D215D47E70017F018 /* TestGraphMeta.cpp */,
-				7E402F32215D47E70017F018 /* TestGraphTraversals.cpp */,
-				7E402F3B215D47E80017F018 /* TestGraphUpdate.cpp */,
-				7E402F37215D47E70017F018 /* TestHeterogeneousNodeStorage.cpp */,
-				7E402F35215D47E70017F018 /* TestHeterogeneousStaticGraph.cpp */,
-				7E402F34215D47E70017F018 /* TestIterator.cpp */,
-				7E402F43215D47E80017F018 /* TestNodeStorage.cpp */,
-				7E402F42215D47E80017F018 /* TestPartitionedData.cpp */,
-				7E402F33215D47E70017F018 /* TestProtectiveWrapper.cpp */,
-				7E402F44215D47E80017F018 /* TestSample.cpp */,
-				7E402F39215D47E70017F018 /* TestStaticFixedTopology.cpp */,
-				7E402F40215D47E80017F018 /* TestStaticGraph.cpp */,
-				7E402F3C215D47E80017F018 /* TestSubgraph.cpp */,
-				7E402F38215D47E70017F018 /* TestThreadingModels.cpp */,
-				7E402F2F215D47E70017F018 /* UnitTestDiagnostics.cpp */,
-				7E402F36215D47E70017F018 /* UnitTestRunner.cpp */,
-				7E402F1C215D02800017F018 /* UnitTests */,
+				7E7198B222E78E7600FF81BC /* UnitTestDiagnostics.cpp */,
+				7E7198B022E78E2F00FF81BC /* UnitTestRunner.cpp */,
+				7E7198AF22E78D4F00FF81BC /* UnitTestFramework */,
 				7E402F1A215D02080017F018 /* Maths */,
 				7E402F19215D01FC0017F018 /* Experimental */,
 				7E402F18215D01E60017F018 /* Core */,
@@ -146,21 +73,9 @@
 		7E402F0F215D01510017F018 /* SequoiaX */ = {
 			isa = PBXGroup;
 			children = (
-				7E402F22215D03100017F018 /* UnitTestMain.cpp */,
+				7E7198AD22E78CE400FF81BC /* UnitTestChamberMain.cpp */,
 			);
 			path = SequoiaX;
-			sourceTree = "<group>";
-		};
-		7E402F1C215D02800017F018 /* UnitTests */ = {
-			isa = PBXGroup;
-			children = (
-				7E402F21215D02EA0017F018 /* UnitTestUtilities */,
-				7E402F20215D02D90017F018 /* Maths */,
-				7E402F1F215D02CC0017F018 /* Experimental */,
-				7E402F1E215D02BF0017F018 /* Core */,
-				7E402F1D215D02AA0017F018 /* Algorithms */,
-			);
-			path = UnitTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -219,32 +134,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7E402F46215D47E80017F018 /* TestGraphMeta.cpp in Sources */,
-				7E402F47215D47E80017F018 /* TestEdgeInsertion.cpp in Sources */,
-				7E402F48215D47E80017F018 /* UnitTestDiagnostics.cpp in Sources */,
-				7E402F49215D47E80017F018 /* TestExperimental.cpp in Sources */,
-				7E402F4A215D47E80017F018 /* TestAlgorithms.cpp in Sources */,
-				7E402F4B215D47E80017F018 /* TestGraphTraversals.cpp in Sources */,
-				7E402F4C215D47E80017F018 /* TestProtectiveWrapper.cpp in Sources */,
-				7E402F4D215D47E80017F018 /* TestIterator.cpp in Sources */,
-				7E402F4E215D47E80017F018 /* TestHeterogeneousStaticGraph.cpp in Sources */,
-				7E402F4F215D47E80017F018 /* UnitTestRunner.cpp in Sources */,
-				7E402F50215D47E80017F018 /* TestHeterogeneousNodeStorage.cpp in Sources */,
-				7E402F51215D47E80017F018 /* TestThreadingModels.cpp in Sources */,
-				7E402F52215D47E80017F018 /* TestStaticFixedTopology.cpp in Sources */,
-				7E402F53215D47E80017F018 /* GraphTesterDiagnostics.cpp in Sources */,
-				7E402F54215D47E80017F018 /* TestGraphUpdate.cpp in Sources */,
-				7E402F55215D47E80017F018 /* TestSubgraph.cpp in Sources */,
-				7E402F56215D47E80017F018 /* TestGraph.cpp in Sources */,
-				7E402F57215D47E80017F018 /* TestDataPool.cpp in Sources */,
-				7E402F58215D47E80017F018 /* TestGraphInit.cpp in Sources */,
-				7E402F59215D47E80017F018 /* TestStaticGraph.cpp in Sources */,
-				7E402F5A215D47E80017F018 /* TestFixedTopology.cpp in Sources */,
-				7E402F5B215D47E80017F018 /* TestPartitionedData.cpp in Sources */,
-				7E402F5C215D47E80017F018 /* TestNodeStorage.cpp in Sources */,
-				7E402F5D215D47E80017F018 /* TestSample.cpp in Sources */,
-				7E402F5E215D47E80017F018 /* TestEdges.cpp in Sources */,
-				7E402F2C215D47940017F018 /* UnitTestMain.cpp in Sources */,
+				7E7198AE22E78CE400FF81BC /* UnitTestChamberMain.cpp in Sources */,
+				7E7198B122E78E2F00FF81BC /* UnitTestRunner.cpp in Sources */,
+				7E7198B322E78E7600FF81BC /* UnitTestDiagnostics.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -374,7 +266,9 @@
 					"$(SRCROOT)/../Core/**",
 					"$(SRCROOT)/../Experimental/**",
 					"$(SRCROOT)/../Maths/**",
+					"$(SRCROOT)/../UnitTestFramework",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				OTHER_CPLUSPLUSFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -386,6 +280,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = X8L4UBD548;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
