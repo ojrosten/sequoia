@@ -614,7 +614,7 @@ namespace sequoia
       }
 
       [[nodiscard]]
-      friend constexpr bool operator!=(const contiguous_storage_base lhs, const contiguous_storage_base& rhs) noexcept
+      friend constexpr bool operator!=(const contiguous_storage_base& lhs, const contiguous_storage_base& rhs) noexcept
       {
         return !(lhs == rhs);
       }
@@ -821,7 +821,7 @@ namespace sequoia
 
       
       constexpr contiguous_storage_base(indirect_copy_type, const contiguous_storage_base& in)
-        : m_Partitions{in.m_Partitions}
+      : m_Partitions{in.m_Partitions}, m_Storage(in.m_Storage.get_allocator())
       {
         init(in.m_Storage);
       }

@@ -51,6 +51,7 @@ namespace sequoia::unit_testing
     using size_type = std::size_t;
     using difference_type = std::ptrdiff_t;
     using propagate_on_container_move_assignment = std::true_type;
+    using propagate_on_container_copy_assignment = std::true_type;
     using is_always_equal = std::false_type;
 
     constexpr custom_allocator() noexcept = default;
@@ -65,7 +66,7 @@ namespace sequoia::unit_testing
     {
       const auto ptr{static_cast<T*>(::operator new(n * sizeof(T)))};
 
-      if(m_pAllocs) ++(*m_pAllocs);
+      if(m_pAllocs && n) ++(*m_pAllocs);
 
       return ptr;
     }
@@ -73,7 +74,7 @@ namespace sequoia::unit_testing
     void deallocate(T* p, std::size_t n)
     {
       ::operator delete(p);
-      if(m_pDeallocs) ++(*m_pDeallocs);
+      if(m_pDeallocs && n) ++(*m_pDeallocs);
     }
 
     int counted_allocs() const noexcept { return m_pAllocs ? * m_pAllocs : 0; }
@@ -83,7 +84,7 @@ namespace sequoia::unit_testing
     [[nodiscard]]
     friend bool operator==(const custom_allocator& lhs, const custom_allocator& rhs)
     {
-      return compare(lhs.m_pAllocs, rhs.m_pAllocs) && compare(lhs.m_pDeallocs, rhs.m_pDeallocs);
+      return (lhs.m_pAllocs == rhs.m_pAllocs) && (lhs.m_pDeallocs == rhs.m_pDeallocs);
     }
 
     [[nodiscard]]
@@ -93,10 +94,5 @@ namespace sequoia::unit_testing
     }
   private:
     int *m_pAllocs{}, *m_pDeallocs{};
-
-    static bool compare(int* lhs, int* rhs)
-    {
-      return (!lhs && !rhs) || (lhs && rhs && (*lhs == *rhs));
-    }
   };  
 }

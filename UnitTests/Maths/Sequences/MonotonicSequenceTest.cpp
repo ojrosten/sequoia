@@ -149,12 +149,26 @@ namespace sequoia::unit_testing
     using allocator = custom_allocator<int>;
     using sequence = monotonic_sequence<int, std::less<int>, std::vector<int, allocator>>;
 
-    sequence s(allocator{});
-    check_equivalence(LINE(""), s, std::initializer_list<int>{});
+    int
+      sAllocCount{}, sDeallocCount{},
+      tAllocCount{}, tDeallocCount{};    
 
-    sequence t{{4, 3}, allocator{}};
-    check_equivalence(LINE(""), t, std::initializer_list<int>{4, 3});
+    {
+      sequence s(allocator{sAllocCount, sDeallocCount});
+      check_equivalence(LINE(""), s, std::initializer_list<int>{});
+      check_equality(LINE(""), sAllocCount, 0);
 
-    check_regular_semantics(LINE("Regular Semantics"), s, t, allocator{});
+      sequence t{{4, 3}, allocator{tAllocCount, tDeallocCount}};
+      check_equivalence(LINE(""), t, std::initializer_list<int>{4, 3});
+      check_equality(LINE(""), tAllocCount, 1);
+
+      check_regular_semantics(LINE("Regular Semantics"), s, t, allocator{});
+
+      check_equality(LINE(""), sAllocCount, 0);
+      check_equality(LINE(""), tAllocCount, 2);
+    }
+
+    check_equality(LINE(""), sDeallocCount, 0);
+    check_equality(LINE(""), tDeallocCount, 2);
   }
 }

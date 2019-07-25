@@ -650,6 +650,11 @@ namespace sequoia
 
         check_regular_semantics(LINE("Regular semantics"), s, t, partitions_allocator{}, allocator{});
 
+        check_equality(LINE(""), sPartitionAllocCount, 0);
+        check_equality(LINE(""), sAllocCount, 0);
+        check_equality(LINE("Partition Allocator should be propagated"), tPartitionAllocCount, 2);
+        check_equality(LINE("Allocation of elements should be done in a single hit"), tAllocCount, 4);
+
         s.add_slot();
         // []
         check_equality(LINE(""), s, storage{{{}}, partitions_allocator{}, allocator{}});
@@ -657,10 +662,10 @@ namespace sequoia
         check_equality(LINE(""), sAllocCount, 0);
       }
 
-      //check_equality(LINE(""), tPartitionDeallocCount, 1);
-      //check_equality(LINE(""), tDeallocCount, 3);
-      //check_equality(LINE(""), sPartitionDeallocCount, 1);
-      //check_equality(LINE(""), sDeallocCount, 0);
+      check_equality(LINE(""), tPartitionDeallocCount, 2);
+      check_equality(LINE(""), tDeallocCount, 4);
+      check_equality(LINE(""), sPartitionDeallocCount, 1);
+      check_equality(LINE(""), sDeallocCount, 0);
     }
 
     template<template<class> class SharingPolicy>
