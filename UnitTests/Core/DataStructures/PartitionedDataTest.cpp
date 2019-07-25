@@ -604,7 +604,7 @@ namespace sequoia
         check_equality(LINE(""), sPartitionAllocCount, 0);
         check_equality(LINE(""), sAllocCount, 0);
         check_equality(LINE("Only a single allocation necessary due to reservation"), tPartitionAllocCount, 1);
-        check_equality(LINE(""), tAllocCount, 3);
+        check_equality(LINE("Only a single allocation per bucket due to reservation"), tAllocCount, 2);
 
         check_regular_semantics(LINE("Regular semantics"), s, t, partitions_allocator{}, allocator{});
 
@@ -616,7 +616,7 @@ namespace sequoia
       }
 
       check_equality(LINE(""), tPartitionDeallocCount, 1);
-      check_equality(LINE(""), tDeallocCount, 3);
+      check_equality(LINE(""), tDeallocCount, 2);
       check_equality(LINE(""), sPartitionDeallocCount, 1);
       check_equality(LINE(""), sDeallocCount, 0);
     }
@@ -646,14 +646,14 @@ namespace sequoia
         check_equality(LINE(""), sPartitionAllocCount, 0);
         check_equality(LINE(""), sAllocCount, 0);
         check_equality(LINE("Only a single allocation necessary due to reservation"), tPartitionAllocCount, 1);
-        check_equality(LINE(""), tAllocCount, 3);
+        check_equality(LINE("Only a single allocation necessary due to reservation"), tAllocCount, 1);
 
         check_regular_semantics(LINE("Regular semantics"), s, t, partitions_allocator{}, allocator{});
 
         check_equality(LINE(""), sPartitionAllocCount, 0);
         check_equality(LINE(""), sAllocCount, 0);
         check_equality(LINE("Partition Allocator should be propagated"), tPartitionAllocCount, 2);
-        check_equality(LINE("Allocation of elements should be done in a single hit"), tAllocCount, 4);
+        check_equality(LINE("Allocation of elements should be done in a single hit"), tAllocCount, 2);
 
         s.add_slot();
         // []
@@ -663,7 +663,7 @@ namespace sequoia
       }
 
       check_equality(LINE(""), tPartitionDeallocCount, 2);
-      check_equality(LINE(""), tDeallocCount, 4);
+      check_equality(LINE(""), tDeallocCount, 2);
       check_equality(LINE(""), sPartitionDeallocCount, 1);
       check_equality(LINE(""), sDeallocCount, 0);
     }

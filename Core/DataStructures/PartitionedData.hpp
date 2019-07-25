@@ -105,7 +105,8 @@ namespace sequoia
         for(auto iter{list.begin()}; iter != list.end(); ++iter)
         { 
           add_slot(allocator);
-          const auto dist{std::distance(list.begin(), iter)};
+          const auto dist{std::distance(list.begin(), iter)};          
+          m_Buckets[dist].reserve(iter->size());
           for(const auto& element : (*iter))
           {
             push_back_to_partition(dist, element);
@@ -857,6 +858,7 @@ namespace sequoia
       void init(std::initializer_list<std::initializer_list<T>> list)
       {
         m_Partitions.reserve(list.size());
+        m_Storage.reserve(std::accumulate(list.begin(), list.end(), std::size_t{}, [](std::size_t n, auto l) { return n += l.size(); }));
         for(auto iter{list.begin()}; iter != list.end(); ++iter)
         {
           add_slot();
