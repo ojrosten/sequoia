@@ -151,7 +151,37 @@ namespace sequoia
       
       bucketed_storage& operator=(const bucketed_storage& in)
       {
-        bucketed_storage tmp{in};
+        auto getPartitionAlloc{
+          [](const bucketed_storage& in){
+            using propagation_t
+              = typename std::allocator_traits<partitions_allocator_type>::propagate_on_container_copy_assignment;
+            if constexpr(std::is_same_v<propagation_t, std::true_type>)
+            {
+              return in.m_Buckets.get_allocator();
+            }
+
+            return partitions_allocator_type{};
+          }
+        };
+
+        auto getAlloc{
+          [](const bucketed_storage& in){
+            using propagation_t
+              = typename std::allocator_traits<allocator_type>::propagate_on_container_copy_assignment;
+
+            if constexpr(std::is_same_v<propagation_t, std::true_type>)
+            {
+              if(!in.m_Buckets.empty())
+              {
+                return in.m_Buckets.front().get_allocator();
+              }
+            }
+
+            return allocator_type{};
+          }
+        };
+        
+        bucketed_storage tmp{in, getPartitionAlloc(in), getAlloc(in)};
         std::swap(tmp, *this);
         return *this;
       }
