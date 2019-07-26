@@ -608,17 +608,34 @@ namespace sequoia
 
         check_regular_semantics(LINE("Regular semantics"), s, t, partitions_allocator{}, allocator{});
 
+        check_equality(LINE(""), sPartitionAllocCount, 0);
+        check_equality(LINE(""), sAllocCount, 0);
+        check_equality(LINE("Partition Allocator should be propagated"), tPartitionAllocCount, 2);
+        check_equality(LINE("Allocation of elements should be done in a single hit per bucket"), tAllocCount, 4);
+
         s.add_slot(allocator{sAllocCount, sDeallocCount});
         // []
         check_equality(LINE(""), s, storage{{{}}, partitions_allocator{}, allocator{}});
         check_equality(LINE(""), sPartitionAllocCount, 1);
         check_equality(LINE(""), sAllocCount, 0);
-      }
 
-      check_equality(LINE(""), tPartitionDeallocCount, 1);
-      check_equality(LINE(""), tDeallocCount, 2);
-      check_equality(LINE(""), sPartitionDeallocCount, 1);
-      check_equality(LINE(""), sDeallocCount, 0);
+        // [3]
+        s.push_back_to_partition(0, 3);
+        check_equality(LINE(""), s, storage{{{3}}, partitions_allocator{}, allocator{}});
+        check_equality(LINE(""), sPartitionAllocCount, 1);
+        check_equality(LINE(""), sAllocCount, 1);
+
+        check_regular_semantics(LINE("Regular semantics"), s, t, partitions_allocator{}, allocator{});
+        check_equality(LINE("One copy and one move with propagation"), sPartitionAllocCount, 3);
+        check_equality(LINE("One copy and one move with propagation"), sAllocCount, 3);
+        check_equality(LINE("Partition Allocator should be propagated"), tPartitionAllocCount, 3);
+        check_equality(LINE("Allocation of elements should be done in a single hit per bucket"), tAllocCount, 6);
+      }
+      
+      check_equality(LINE(""), sPartitionDeallocCount, 3);
+      check_equality(LINE(""), sDeallocCount, 3);
+      check_equality(LINE(""), tPartitionDeallocCount, 3);
+      check_equality(LINE(""), tDeallocCount, 6);
     }
 
     template<class T, class SharingPolicy>
