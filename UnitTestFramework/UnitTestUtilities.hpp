@@ -44,14 +44,14 @@ namespace sequoia::unit_testing
       allocators do not confuse them internally.
    */
 
-  template<class T> class custom_allocator
+  template<class T, bool Propagate=true> class custom_allocator
   {
   public:
     using value_type = T;
     using size_type = std::size_t;
     using difference_type = std::ptrdiff_t;
-    using propagate_on_container_move_assignment = std::true_type;
-    using propagate_on_container_copy_assignment = std::true_type;
+    using propagate_on_container_move_assignment = std::bool_constant<Propagate>;
+    using propagate_on_container_copy_assignment = std::bool_constant<Propagate>;
     using is_always_equal = std::false_type;
 
     constexpr custom_allocator() noexcept = default;
