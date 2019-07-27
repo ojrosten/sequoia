@@ -310,7 +310,7 @@ namespace sequoia
       T w{std::move(z)};
       check_equality(combine_messages(description, "Move constructor"), logger, w, y);
 
-      z = [&x]() -> T { return x; }();
+      z = T{x};
       check_equality(combine_messages(description, "Move assignment"), logger, z, x);
 
       using std::swap;
