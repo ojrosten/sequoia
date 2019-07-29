@@ -102,7 +102,14 @@ namespace sequoia
         EquivChecker::check(message, logger, value, s, u...);
       
         return logger.failures() == previousFailures;
-      }      
+      }
+
+      template<class... Allocators>
+      constexpr bool do_swap() noexcept
+      {
+        return ((   std::allocator_traits<Allocators>::propagate_on_container_swap::value
+                 || std::allocator_traits<Allocators>::is_always_equal::value) && ... );
+      }
     }
 
     template<class Logger, class Iter, class PredictionIter>
@@ -313,10 +320,13 @@ namespace sequoia
       z = T{x};
       check_equality(combine_messages(description, "Move assignment"), logger, z, x);
 
-      using std::swap;
-      swap(w,z);
-      check_equality(combine_messages(description, "Swap"), logger, w, x);
-      check_equality(combine_messages(description, "Swap"), logger, z, y);
+      if constexpr (impl::do_swap<Allocators...>())
+      {
+        using std::swap;
+        swap(w,z);
+        check_equality(combine_messages(description, "Swap"), logger, w, x);
+        check_equality(combine_messages(description, "Swap"), logger, z, y);
+      }
 
       if constexpr(sizeof...(allocators) > 0)
       {

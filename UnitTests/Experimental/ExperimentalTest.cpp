@@ -10,6 +10,6 @@
 namespace sequoia::unit_testing
 {
   void experimental_test::run_tests()
-  {   
+  {
   }
 }
