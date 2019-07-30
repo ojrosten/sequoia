@@ -68,24 +68,24 @@ namespace sequoia
     struct equality_tag{};
     struct equivalence_tag{};
     struct weak_equivalence_tag{};
+
+    template<class T, class... U> std::string make_type_info()
+    {        
+      std::string info{demangle<T>()};
+      if constexpr(sizeof...(U) > 0)
+        info.append("\n;").append(make_type_info<U...>());
+
+      return info;
+    }
+
+    template<class T, class... U> std::string add_type_info(std::string_view description)
+    {
+      return combine_messages(description, "[" + make_type_info<T, U...>() + "]\n",
+                              description.empty() ? "" : (description.back() == '\n') ? "\n" : "\n\n");
+    }
     
     namespace impl
-    {
-      template<class T, class... U> std::string make_type_info()
-      {        
-        std::string info{demangle<T>()};
-        if constexpr(sizeof...(U) > 0)
-          info.append("\n;").append(make_type_info<U...>());
-
-        return info;
-      }
-      
-      template<class T, class... U> std::string add_type_info(std::string_view description)
-      {
-        return combine_messages(description, "[" + make_type_info<T, U...>() + "]\n",
-                                description.empty() ? "" : (description.back() == '\n') ? "\n" : "\n\n");
-      }
-            
+    {           
       template<class EquivChecker, class Logger, class T, class S, class... U>
       bool check(std::string_view description, Logger& logger, const T& value, const S& s, const U&... u)
       {
@@ -136,7 +136,7 @@ namespace sequoia
       
       if constexpr(is_equal_to_comparable_v<T>)
       {
-        sentinel s{logger, impl::add_type_info<T>(description)};
+        sentinel s{logger, add_type_info<T>(description)};
         s.log_check();
         if(!(prediction == value))
         {
@@ -153,7 +153,7 @@ namespace sequoia
       {
         if constexpr(is_not_equal_to_comparable_v<T>)
         {
-          sentinel s{logger, impl::add_type_info<T>(description)};
+          sentinel s{logger, add_type_info<T>(description)};
           s.log_check();
           if(prediction != value)
           {
@@ -163,7 +163,7 @@ namespace sequoia
 
         if constexpr(has_detailed_equality_checker_v<T>)
         {          
-          sentinel s{logger, impl::add_type_info<T>(description)};
+          sentinel s{logger, add_type_info<T>(description)};
           detailed_equality_checker<T>::check(description, logger, value, prediction);
         }
         else if constexpr(is_container_v<T>)
@@ -298,7 +298,7 @@ namespace sequoia
     template<class Logger, class T, class... Allocators>
     void check_regular_semantics(std::string_view description, Logger& logger, const T& x, const T& y, const Allocators&... allocators)
     {
-      typename Logger::sentinel s{logger, impl::add_type_info<T>(description)};
+      typename Logger::sentinel s{logger, add_type_info<T>(description)};
 
       if(!check(combine_messages(description, "Equality operator is inconsistent"), logger, x == x)) return;
       if(!check(combine_messages(description, "Inequality operator is inconsistent"), logger, !(x != x))) return;
@@ -341,7 +341,7 @@ namespace sequoia
     template<class Logger, class T, class... Allocators>
     void check_regular_semantics(std::string_view description, Logger& logger, T&& x, T&& y, const T& xClone, const T& yClone, const Allocators&... allocators)
     {
-      typename Logger::sentinel s{logger, impl::add_type_info<T>(description)};
+      typename Logger::sentinel s{logger, add_type_info<T>(description)};
 
       if(!check(combine_messages(description, "Equality operator is inconsistent"), logger, x == x)) return;
       if(!check(combine_messages(description, "Inequality operator is inconsistent"), logger, !(x != x))) return;
@@ -377,7 +377,7 @@ namespace sequoia
     template<class Logger, class T, class Mutator>
     void check_copy_consistency(std::string_view description, Logger& logger, T& target, const T& prediction, Mutator m)
     {
-      typename Logger::sentinel s{logger, impl::add_type_info<T>(description)};
+      typename Logger::sentinel s{logger, add_type_info<T>(description)};
 
       auto c{target};
       
