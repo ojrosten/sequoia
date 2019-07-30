@@ -131,6 +131,16 @@ namespace sequoia::data_structures::partition_impl
 
   //============================= Helper classes for copy constructor ===================================//
 
+  template<bool Direct>
+  struct copy_constant : std::bool_constant<Direct>
+  {};
+
+  using direct_copy_type   = copy_constant<true>;
+  using indirect_copy_type = copy_constant<false>;
+
+  template<class SharingPolicy, class T>
+  constexpr static bool direct_copy_v{std::is_same_v<SharingPolicy, data_sharing::independent<T>>};
+  
   template<class T> class data_duplicator;
     
   template<class T> class data_duplicator<data_sharing::independent<T>>

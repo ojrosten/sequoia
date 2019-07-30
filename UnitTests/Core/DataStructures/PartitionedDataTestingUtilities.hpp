@@ -148,15 +148,31 @@ namespace sequoia::unit_testing
   
   // Custom allocator traits
 
-  template<class T, class SharingPolicy> struct custom_bucketed_storage_traits
+  template
+  <
+    class T,
+    class SharingPolicy,    
+    bool PropagateCopy=true,
+    bool PropagateMove=true,
+    bool PropagateSwap=false
+  >
+  struct custom_bucketed_storage_traits
   {
     constexpr static bool throw_on_range_error{true};
 
-    template<class S> using buckets_type   = std::vector<S, custom_allocator<S>>; 
-    template<class S> using container_type = std::vector<S, custom_allocator<S>>; 
+    template<class S> using buckets_type   = std::vector<S, custom_allocator<S, PropagateCopy, PropagateMove, PropagateSwap>>; 
+    template<class S> using container_type = std::vector<S, custom_allocator<S, PropagateCopy, PropagateMove, PropagateSwap>>; 
   };
 
-  template<class T, class SharingPolicy> struct custom_contiguous_storage_traits
+  template
+  <
+    class T,
+    class SharingPolicy,    
+    bool PropagateCopy=true,
+    bool PropagateMove=true,
+    bool PropagateSwap=false
+  >
+  struct custom_contiguous_storage_traits
   {
     constexpr static bool static_storage_v{false};
     constexpr static bool throw_on_range_error{true};
@@ -167,11 +183,11 @@ namespace sequoia::unit_testing
       = maths::monotonic_sequence<
           partition_index_type,
           std::greater<partition_index_type>,
-          std::vector<partition_index_type, custom_allocator<partition_index_type>>
+          std::vector<partition_index_type, custom_allocator<partition_index_type, PropagateCopy, PropagateMove, PropagateSwap>>
         >;
     
     using partitions_allocator_type = typename partitions_type::allocator_type;
       
-    template<class S> using container_type = std::vector<S, custom_allocator<S>>;
+    template<class S> using container_type = std::vector<S, custom_allocator<S, PropagateCopy, PropagateMove, PropagateSwap>>;
   };
 }

@@ -114,13 +114,14 @@ namespace sequoia
       }
 
       bucketed_storage(const bucketed_storage& in)
-        : bucketed_storage(in, in.m_Buckets.get_allocator(), get_allocator(in))
+        : bucketed_storage(partition_impl::copy_constant<directCopy>{}, in)
       {}
 
-      bucketed_storage(const bucketed_storage& in, const partitions_allocator_type& partitionAllocator, const allocator_type& allocator) : m_Buckets(partitionAllocator)
+      bucketed_storage(const bucketed_storage& in, const partitions_allocator_type& partitionAllocator, const allocator_type& allocator)
+        : m_Buckets(partitionAllocator)
       {
         m_Buckets.reserve(in.m_Buckets.size());
-        
+
         partition_impl::data_duplicator<SharingPolicy> duplicator;
         for(auto i{in.m_Buckets.cbegin()}; i != in.m_Buckets.cend(); ++i)
         {
@@ -151,38 +152,89 @@ namespace sequoia
       
       bucketed_storage& operator=(const bucketed_storage& in)
       {
-        auto getPartitionAlloc{
-          [](const bucketed_storage& in){
-            using propagation_t
-              = typename std::allocator_traits<partitions_allocator_type>::propagate_on_container_copy_assignment;
-            if constexpr(std::is_same_v<propagation_t, std::true_type>)
-            {
-              return in.m_Buckets.get_allocator();
-            }
+        if constexpr(directCopy)
+        {
+          m_Buckets = in.m_Buckets;
+        }
+        else
+        {        
+          using partition_copy_propagation_t
+            = typename std::allocator_traits<partitions_allocator_type>::propagate_on_container_copy_assignment;
 
-            return partitions_allocator_type{};
-          }
-        };
+          using copy_propagation_t
+            = typename std::allocator_traits<allocator_type>::propagate_on_container_copy_assignment;
 
-        auto getAlloc{
-          [](const bucketed_storage& in){
-            using propagation_t
-              = typename std::allocator_traits<allocator_type>::propagate_on_container_copy_assignment;
+          using partition_move_propagation_t
+            = typename std::allocator_traits<partitions_allocator_type>::propagate_on_container_move_assignment;
 
-            if constexpr(std::is_same_v<propagation_t, std::true_type>)
-            {
-              if(!in.m_Buckets.empty())
+          using move_propagation_t
+            = typename std::allocator_traits<allocator_type>::propagate_on_container_move_assignment;
+
+          using partition_swap_propagation_t
+            = typename std::allocator_traits<partitions_allocator_type>::propagate_on_container_swap;
+
+          using swap_propagation_t
+            = typename std::allocator_traits<allocator_type>::propagate_on_container_swap;
+
+          constexpr bool copyConsistentWithSwap{
+                 (partition_copy_propagation_t::value == partition_swap_propagation_t::value)
+              && (copy_propagation_t::value == swap_propagation_t::value)};
+
+          constexpr bool copyConsistentWithMove{
+                 (partition_copy_propagation_t::value == partition_move_propagation_t::value)
+              && (copy_propagation_t::value == move_propagation_t::value)};
+
+          auto getPartitionAlloc{
+            [](const bucketed_storage& current, const bucketed_storage& in){           
+              if constexpr(partition_copy_propagation_t::value)
               {
-                return in.m_Buckets.front().get_allocator();
+                return in.m_Buckets.get_allocator();
+              }
+              else
+              {
+                return current.m_Buckets.get_allocator();
               }
             }
+          };
 
-            return allocator_type{};
-          }
-        };
+          auto getAlloc{
+            [](const bucketed_storage& current, const bucketed_storage& in){
+              if constexpr(copy_propagation_t::value)
+              {
+                if(!in.m_Buckets.empty())
+                {
+                  return in.m_Buckets.front().get_allocator();
+                }
+              }
+              else
+              {
+                if(!current.m_Buckets.empty())
+                {
+                  return current.m_Buckets.front().get_allocator();
+                }
+              }
+
+              return allocator_type{};
+            }
+          };
         
-        bucketed_storage tmp{in, getPartitionAlloc(in), getAlloc(in)};
-        std::swap(tmp, *this);
+          bucketed_storage tmp{in, getPartitionAlloc(*this, in), getAlloc(*this, in)};
+                
+          if constexpr (copyConsistentWithSwap)
+          {
+            std::swap(tmp, *this);
+          }
+          else if constexpr (copyConsistentWithMove)
+          {
+            *this = std::move(tmp);
+          }
+          else
+          {
+            static_assert(dependent_false<T>::value,
+              "Unable to propagate allocator(s) due to a combination of sharing data and incompatible propagation traits");
+          }
+        }
+        
         return *this;
       }
 
@@ -443,8 +495,17 @@ namespace sequoia
       }
     private:
       constexpr static auto npos{partition_iterator::npos};
+      constexpr static bool directCopy{partition_impl::direct_copy_v<SharingPolicy, T>};
 
       storage_type m_Buckets;
+
+      bucketed_storage(partition_impl::direct_copy_type, const bucketed_storage& in)
+        : m_Buckets{in.m_Buckets}
+      {}
+
+      bucketed_storage(partition_impl::indirect_copy_type, const bucketed_storage& in)
+        : bucketed_storage(in, in.m_Buckets.get_allocator(), get_allocator(in))
+      {}
 
       allocator_type get_allocator(const bucketed_storage& in)
       {
@@ -498,7 +559,7 @@ namespace sequoia
       {}
 
       constexpr contiguous_storage_base(const contiguous_storage_base& in)
-        : contiguous_storage_base(copy_constant<directCopy>{}, in)
+        : contiguous_storage_base(partition_impl::copy_constant<directCopy>{}, in)
       {}
 
       constexpr contiguous_storage_base(contiguous_storage_base&& in) noexcept = default;
@@ -676,7 +737,7 @@ namespace sequoia
       
       template<class PartitionsAllocator, class Allocator>
       constexpr contiguous_storage_base(const contiguous_storage_base& in, const PartitionsAllocator& partitionsAllocator, const Allocator& allocator)
-        : contiguous_storage_base(copy_constant<directCopy>{}, in, partitionsAllocator, allocator)
+        : contiguous_storage_base(partition_impl::copy_constant<directCopy>{}, in, partitionsAllocator, allocator)
       {};
       
       template<class PartitionsAllocator, class Allocator>
@@ -827,22 +888,15 @@ namespace sequoia
       {};
       
       using static_init_type  = init_constant<true>;
-      using dynamic_init_type = init_constant<false>;
-
-      template<bool Direct>
-      struct copy_constant : std::bool_constant<Direct>
-      {};
-
-      using direct_copy_type   = copy_constant<true>;
-      using indirect_copy_type = copy_constant<false>;
+      using dynamic_init_type = init_constant<false>;      
 
       constexpr static bool staticStorage{Traits::static_storage_v};
-      constexpr static bool directCopy{std::is_same_v<SharingPolicy, data_sharing::independent<T>>};
+      constexpr static bool directCopy{partition_impl::direct_copy_v<SharingPolicy, T>};
 
       using PartitionsType = typename Traits::partitions_type;
       constexpr static index_type npos{partition_iterator::npos};
 
-      PartitionsType m_Partitions; // TO DO, C++20: [[no_unique_address]]
+      PartitionsType m_Partitions;
       container_type m_Storage;
 
       constexpr contiguous_storage_base(static_init_type, std::initializer_list<std::initializer_list<T>> list)
@@ -855,7 +909,7 @@ namespace sequoia
         init(list);
       }
 
-      constexpr contiguous_storage_base(indirect_copy_type, const contiguous_storage_base& in)
+      constexpr contiguous_storage_base(partition_impl::indirect_copy_type, const contiguous_storage_base& in)
         : m_Partitions{in.m_Partitions}
         , m_Storage(in.m_Storage.get_allocator())
       {
@@ -863,7 +917,7 @@ namespace sequoia
       }
 
       template<class Allocator>
-      constexpr contiguous_storage_base(indirect_copy_type, const contiguous_storage_base& in, const Allocator& allocator)
+      constexpr contiguous_storage_base(partition_impl::indirect_copy_type, const contiguous_storage_base& in, const Allocator& allocator)
         : m_Partitions{in.m_Partitions}
         , m_Storage(allocator)        
       {
@@ -871,23 +925,23 @@ namespace sequoia
       }
 
       template<class Allocator, class PartitionsAllocator>
-      constexpr contiguous_storage_base(indirect_copy_type, const contiguous_storage_base& in, const PartitionsAllocator& partitionsAllocator, const Allocator& allocator)
+      constexpr contiguous_storage_base(partition_impl::indirect_copy_type, const contiguous_storage_base& in, const PartitionsAllocator& partitionsAllocator, const Allocator& allocator)
       : m_Partitions{in.m_Partitions, partitionsAllocator}, m_Storage(allocator)        
       {
         init(in.m_Storage);
       }      
 
-      constexpr contiguous_storage_base(direct_copy_type, const contiguous_storage_base& in)
+      constexpr contiguous_storage_base(partition_impl::direct_copy_type, const contiguous_storage_base& in)
         : m_Partitions{in.m_Partitions}, m_Storage{in.m_Storage}
       {}
 
       template<class Allocator>
-      constexpr contiguous_storage_base(direct_copy_type, const contiguous_storage_base& in, const Allocator& allocator)
+      constexpr contiguous_storage_base(partition_impl::direct_copy_type, const contiguous_storage_base& in, const Allocator& allocator)
         : m_Partitions{in.m_Partitions}, m_Storage{in.m_Storage, allocator}
       {};
 
       template<class PartitionsAllocator, class Allocator>
-      constexpr contiguous_storage_base(direct_copy_type, const contiguous_storage_base& in, const PartitionsAllocator& partitionsAllocator, const Allocator& allocator)
+      constexpr contiguous_storage_base(partition_impl::direct_copy_type, const contiguous_storage_base& in, const PartitionsAllocator& partitionsAllocator, const Allocator& allocator)
         : m_Partitions{in.m_Partitions, partitionsAllocator}, m_Storage{in.m_Storage, allocator}
       {};
 

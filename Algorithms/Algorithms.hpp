@@ -14,15 +14,24 @@
     parts of the library; many will be retired once C++20 arrives.
 */
 
+#include "TypeTraits.hpp"
+
 #include <functional>
 
 namespace sequoia
 {
-  template<class T> constexpr void swap(T& a, T&b)
+  template<class T> constexpr void swap(T& a, T& b)
   {
-    auto tmp{std::move(a)};
-    a = std::move(b);
-    b = std::move(tmp);
+    if constexpr (has_allocator_type_v<T>)
+    {
+      std::swap(a,b);
+    }
+    else
+    {
+      auto tmp{std::move(a)};
+      a = std::move(b);
+      b = std::move(tmp);
+    }
   }
   
   template<class Iter> constexpr void iter_swap(Iter a, Iter b)
