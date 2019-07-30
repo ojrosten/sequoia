@@ -359,10 +359,13 @@ namespace sequoia
       x = std::move(y);
       check_equality(combine_messages(description, "Move assignment"), logger, x, yClone);
 
-      using std::swap;
-      swap(z, x);
-      check_equality(combine_messages(description, "Swap"), logger, x, xClone);
-      check_equality(combine_messages(description, "Swap"), logger, z, yClone);
+      if constexpr (impl::do_swap<Allocators...>())
+      {
+        using std::swap;
+        swap(z, x);
+        check_equality(combine_messages(description, "Swap"), logger, x, xClone);
+        check_equality(combine_messages(description, "Swap"), logger, z, yClone);
+      }
 
       if constexpr(sizeof...(allocators) > 0)
       {
