@@ -37,7 +37,9 @@ namespace sequoia
 
       test_bucketed_allocation<int, independent<int>>();
       test_bucketed_allocation<int, shared<int>>();
-      test_bucketed_allocation_copy_no_propagation<int, independent<int>, true, true>();
+
+      //test_bucketed_allocation_copy_no_propagation<int, independent<int>, true, true>();
+      // --will fail static assert in impl of oeprator=
       test_bucketed_allocation_copy_no_propagation<int, independent<int>, true, false>();
       test_bucketed_allocation_copy_no_propagation<int, independent<int>, false, true>();
       test_bucketed_allocation_copy_no_propagation<int, independent<int>, false, false>();
@@ -46,6 +48,16 @@ namespace sequoia
       test_bucketed_allocation_copy_no_propagation<int, shared<int>, true, false>();
       test_bucketed_allocation_copy_no_propagation<int, shared<int>, false, true>();
       test_bucketed_allocation_copy_no_propagation<int, shared<int>, false, false>();
+
+      test_bucketed_allocation_move_no_propagation<int, independent<int>, true, true>();
+      test_bucketed_allocation_move_no_propagation<int, independent<int>, true, false>();
+      test_bucketed_allocation_move_no_propagation<int, independent<int>, false, true>();
+      test_bucketed_allocation_move_no_propagation<int, independent<int>, false, false>();
+
+      test_bucketed_allocation_move_no_propagation<int, shared<int>, true, true>();
+      test_bucketed_allocation_move_no_propagation<int, shared<int>, true, false>();
+      test_bucketed_allocation_move_no_propagation<int, shared<int>, false, true>();
+      test_bucketed_allocation_move_no_propagation<int, shared<int>, false, false>();
 
       test_contiguous_allocation<int, independent<int>>();
       test_contiguous_allocation<int, shared<int>>();
@@ -696,9 +708,50 @@ namespace sequoia
 
         s = t;
         check_equality(LINE(makeMessage("t-partition allocator not propagated")), sPartitionAllocCount, 2);
+        check_equality(LINE(makeMessage("t-allocator not propagated")), sAllocCount, 2);
         check_equality(LINE(makeMessage("t-partition allocator not propagated")), tPartitionAllocCount, 1);
+        check_equality(LINE(makeMessage("t-allocator not propagated")), tAllocCount, 2);
 
         check_regular_semantics(LINE(makeMessage("Regular semantics")), s, storage{}, partitions_allocator{uPartitionAllocCount, uPartitionDeallocCount}, allocator{uAllocCount, uDeallocCount});
+      }
+    }
+
+    template<class T, class SharingPolicy, bool PropagateCopy, bool PropagateSwap>
+    void partitioned_data_test::test_bucketed_allocation_move_no_propagation()
+    {
+      using namespace data_structures;
+
+      using storage = bucketed_storage<T, SharingPolicy, custom_bucketed_storage_traits<T, SharingPolicy, PropagateCopy, false, PropagateSwap>>;
+      using partitions_allocator = typename storage::partitions_allocator_type;
+      using allocator = typename storage::allocator_type;      
+      using prediction = std::initializer_list<std::initializer_list<int>>;
+
+      auto makeMessage{
+        [](std::string_view message) {
+          return add_type_info<storage>(message);
+        }
+      };
+
+      int
+        sPartitionAllocCount{}, sAllocCount{}, sPartitionDeallocCount{}, sDeallocCount{},
+        tPartitionAllocCount{}, tAllocCount{}, tPartitionDeallocCount{}, tDeallocCount{};
+
+      {
+        // []; [0,2][1]
+        storage
+          s{{{}}, partitions_allocator{sPartitionAllocCount, sPartitionDeallocCount}, allocator{sAllocCount, sDeallocCount}},
+          t{{{0,2}, {1}}, partitions_allocator{tPartitionAllocCount, tPartitionDeallocCount}, allocator{tAllocCount, tDeallocCount}};
+
+        check_equivalence(LINE(makeMessage("")), s, prediction{{}});
+        check_equivalence(LINE(makeMessage("")), t, prediction{{0,2}, {1}});
+        check_equality(LINE(makeMessage("")), sPartitionAllocCount, 1);
+        check_equality(LINE(makeMessage("")), sAllocCount, 0);
+        check_equality(LINE(makeMessage("Only a single allocation necessary due to reservation")), tPartitionAllocCount, 1);
+        check_equality(LINE(makeMessage("Only a single allocation per bucket due to reservation")), tAllocCount, 2);
+
+        s = std::move(t);
+        check_equality(LINE(makeMessage("t-partition allocator not propagated")), sPartitionAllocCount, 2);
+        check_equality(LINE(makeMessage("t-partition allocator not propagated")), tPartitionAllocCount, 1);
       }
     }
 

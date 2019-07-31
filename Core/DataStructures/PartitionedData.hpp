@@ -149,15 +149,12 @@ namespace sequoia
       }
 
       bucketed_storage& operator=(bucketed_storage&&)
-        noexcept((     std::allocator_traits<partitions_allocator_type>::propagate_on_container_move_assignment::value
-                             || std::allocator_traits<partitions_allocator_type>::is_always_equal::value)
-                          && (  std::allocator_traits<allocator_type>::propagate_on_container_move_assignment::value
-                             || std::allocator_traits<allocator_type>::is_always_equal::value))
+          noexcept(partition_impl::propagates_on_move_assignment_v<partitions_allocator_type, allocator_type>)
         = default;
       
       bucketed_storage& operator=(const bucketed_storage& in)
       {
-        if constexpr(directCopy)
+        if constexpr(directCopy && partition_impl::propagates_on_copy_assignment_v<partitions_allocator_type, allocator_type>)
         {
           m_Buckets = in.m_Buckets;
         }
