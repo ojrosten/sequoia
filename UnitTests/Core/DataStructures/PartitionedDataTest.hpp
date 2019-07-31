@@ -34,8 +34,8 @@ namespace sequoia::unit_testing
     template<class T, class SharingPolicy>
     void test_bucketed_allocation();
 
-    template<class T, class SharingPolicy>
-    void test_bucketed_allocation_propagation();
+    template<class T, class SharingPolicy, bool PropagateMove, bool PropagateSwap>
+    void test_bucketed_allocation_copy_no_propagation();
 
     template<class T, class SharingPolicy>
     void test_contiguous_allocation();

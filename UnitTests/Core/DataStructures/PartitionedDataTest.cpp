@@ -37,8 +37,15 @@ namespace sequoia
 
       test_bucketed_allocation<int, independent<int>>();
       test_bucketed_allocation<int, shared<int>>();
-      test_bucketed_allocation_propagation<int, independent<int>>();
-      test_bucketed_allocation_propagation<int, shared<int>>();
+      test_bucketed_allocation_copy_no_propagation<int, independent<int>, true, true>();
+      test_bucketed_allocation_copy_no_propagation<int, independent<int>, true, false>();
+      test_bucketed_allocation_copy_no_propagation<int, independent<int>, false, true>();
+      test_bucketed_allocation_copy_no_propagation<int, independent<int>, false, false>();
+      //test_bucketed_allocation_copy_no_propagation<int, shared<int>, true, true>();
+      // --will fail static assert in impl of oeprator=
+      test_bucketed_allocation_copy_no_propagation<int, shared<int>, true, false>();
+      test_bucketed_allocation_copy_no_propagation<int, shared<int>, false, true>();
+      test_bucketed_allocation_copy_no_propagation<int, shared<int>, false, false>();
 
       test_contiguous_allocation<int, independent<int>>();
       test_contiguous_allocation<int, shared<int>>();
@@ -653,14 +660,14 @@ namespace sequoia
       check_equality(LINE(makeMessage("")), uDeallocCount, 1);
     }
 
-    template<class T, class SharingPolicy>
-    void partitioned_data_test::test_bucketed_allocation_propagation()
+    template<class T, class SharingPolicy, bool PropagateMove, bool PropagateSwap>
+    void partitioned_data_test::test_bucketed_allocation_copy_no_propagation()
     {
       using namespace data_structures;
 
-      using storage = bucketed_storage<T, SharingPolicy, custom_bucketed_storage_traits<T, SharingPolicy, false>>;
+      using storage = bucketed_storage<T, SharingPolicy, custom_bucketed_storage_traits<T, SharingPolicy, false, PropagateMove, PropagateSwap>>;
       using partitions_allocator = typename storage::partitions_allocator_type;
-      using allocator = typename storage::allocator_type;
+      using allocator = typename storage::allocator_type;      
       using prediction = std::initializer_list<std::initializer_list<int>>;
 
       auto makeMessage{
@@ -691,6 +698,7 @@ namespace sequoia
         check_equality(LINE(makeMessage("t-partition allocator not propagated")), sPartitionAllocCount, 2);
         check_equality(LINE(makeMessage("t-partition allocator not propagated")), tPartitionAllocCount, 1);
 
+        check_regular_semantics(LINE(makeMessage("Regular semantics")), s, storage{}, partitions_allocator{uPartitionAllocCount, uPartitionDeallocCount}, allocator{uAllocCount, uDeallocCount});
       }
     }
 
