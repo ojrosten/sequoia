@@ -233,7 +233,7 @@ namespace sequoia
           else
           {
             static_assert(dependent_false<T>::value,
-              "Unable to propagate allocator(s) due to a combination of sharing data and incompatible propagation traits");
+              "Unable to propagate allocator(s) due to incompatible propagation traits");
           }
         }
         
