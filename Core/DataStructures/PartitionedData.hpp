@@ -222,13 +222,13 @@ namespace sequoia
         
           bucketed_storage tmp{in, getPartitionAlloc(*this, in), getAlloc(*this, in)};
                 
-          if constexpr (copyConsistentWithSwap)
-          {
-            std::swap(tmp, *this);
-          }
-          else if constexpr (copyConsistentWithMove)
+          if constexpr (copyConsistentWithMove)
           {
             *this = std::move(tmp);
+          }
+          else if constexpr (copyConsistentWithSwap)
+          {
+            std::swap(tmp, *this);
           }
           else
           {
@@ -262,7 +262,8 @@ namespace sequoia
       {
         if((i < num_partitions()) && (j < num_partitions()))
         {
-          std::swap(m_Buckets[i], m_Buckets[j]);
+          using std::swap;
+          swap(m_Buckets[i], m_Buckets[j]);
         }
         else if constexpr(throw_on_range_error)
         {

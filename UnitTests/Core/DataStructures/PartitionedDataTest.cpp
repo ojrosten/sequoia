@@ -60,6 +60,9 @@ namespace sequoia
       test_bucketed_allocation_move_no_propagation<int, shared<int>, false, false>();
 
       test_bucketed_allocation_swap_no_propagation<int, independent<int>, true, true>();
+      test_bucketed_allocation_swap_no_propagation<int, independent<int>, true, false>();
+      test_bucketed_allocation_swap_no_propagation<int, independent<int>, false, true>();
+      test_bucketed_allocation_swap_no_propagation<int, independent<int>, false, false>();
       
       test_contiguous_allocation<int, independent<int>>();
       test_contiguous_allocation<int, shared<int>>();
@@ -795,16 +798,18 @@ namespace sequoia
         s.add_slot();
         // [][]; []
 
+        check_equality(LINE(makeMessage("")), s, storage{{}, {}});
         check_equality(LINE(makeMessage("")), sPartitionAllocCount, 2);
-        
-        /*s.push_back_to_partition(0, 1);
-        // [1]; []
-
-        check_equality(LINE(makeMessage("")), s, storage{{1}});
-        check_equality(LINE(makeMessage("")), sPartitionAllocCount, 1);
-        check_equality(LINE(makeMessage("")), sAllocCount, 1);
         check_equality(LINE(makeMessage("")), tPartitionAllocCount, 1);
-        check_equality(LINE(makeMessage("")), tAllocCount, 0);*/
+        
+        s.push_back_to_partition(0, 1);
+        // [1][]; []
+
+        check_equality(LINE(makeMessage("")), s, storage{{1}, {}});
+        check_equality(LINE(makeMessage("")), sPartitionAllocCount, 2);        
+        check_equality(LINE(makeMessage("")), tPartitionAllocCount, 1);
+        check_equality(LINE(makeMessage("Non-propagation of allocator during swap is not transitive for a vector of vectors")), sAllocCount, 0);
+        check_equality(LINE(makeMessage("Non-propagation of allocator during swap is not transitive for a vector of vectors")), tAllocCount, 1);
       }
     }
 
