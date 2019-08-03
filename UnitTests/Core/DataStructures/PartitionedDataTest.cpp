@@ -59,6 +59,8 @@ namespace sequoia
       test_bucketed_allocation_move_no_propagation<int, shared<int>, false, true>();
       test_bucketed_allocation_move_no_propagation<int, shared<int>, false, false>();
 
+      test_bucketed_allocation_swap_no_propagation<int, independent<int>, true, true>();
+      
       test_contiguous_allocation<int, independent<int>>();
       test_contiguous_allocation<int, shared<int>>();
     }
@@ -752,6 +754,57 @@ namespace sequoia
         s = std::move(t);
         check_equality(LINE(makeMessage("t-partition allocator not propagated")), sPartitionAllocCount, 2);
         check_equality(LINE(makeMessage("t-partition allocator not propagated")), tPartitionAllocCount, 1);
+      }
+    }
+
+    template<class T, class SharingPolicy, bool PropagateCopy, bool PropagateMove>
+    void partitioned_data_test::test_bucketed_allocation_swap_no_propagation()
+    {
+      using namespace data_structures;
+
+      using storage = bucketed_storage<T, SharingPolicy, custom_bucketed_storage_traits<T, SharingPolicy, PropagateCopy, PropagateMove, false>>;
+      using partitions_allocator = typename storage::partitions_allocator_type;
+      using allocator = typename storage::allocator_type;      
+      using prediction = std::initializer_list<std::initializer_list<int>>;
+
+      auto makeMessage{
+        [](std::string_view message) {
+          return add_type_info<storage>(message);
+        }
+      };
+
+      int
+        sPartitionAllocCount{}, sAllocCount{}, sPartitionDeallocCount{}, sDeallocCount{},
+        tPartitionAllocCount{}, tAllocCount{}, tPartitionDeallocCount{}, tDeallocCount{};
+
+      {
+        // []; []
+        storage
+          s{{{}}, partitions_allocator{sPartitionAllocCount, sPartitionDeallocCount}, allocator{sAllocCount, sDeallocCount}},
+          t{{{}}, partitions_allocator{tPartitionAllocCount, tPartitionDeallocCount}, allocator{tAllocCount, tDeallocCount}};
+
+        check_equivalence(LINE(makeMessage("")), s, prediction{{}});
+        check_equivalence(LINE(makeMessage("")), t, prediction{{}});
+        check_equality(LINE(makeMessage("")), sPartitionAllocCount, 1);
+        check_equality(LINE(makeMessage("")), sAllocCount, 0);
+        check_equality(LINE(makeMessage("")), tPartitionAllocCount, 1);
+        check_equality(LINE(makeMessage("")), tAllocCount, 0);
+
+        swap(s,t);
+
+        s.add_slot();
+        // [][]; []
+
+        check_equality(LINE(makeMessage("")), sPartitionAllocCount, 2);
+        
+        /*s.push_back_to_partition(0, 1);
+        // [1]; []
+
+        check_equality(LINE(makeMessage("")), s, storage{{1}});
+        check_equality(LINE(makeMessage("")), sPartitionAllocCount, 1);
+        check_equality(LINE(makeMessage("")), sAllocCount, 1);
+        check_equality(LINE(makeMessage("")), tPartitionAllocCount, 1);
+        check_equality(LINE(makeMessage("")), tAllocCount, 0);*/
       }
     }
 

@@ -240,6 +240,12 @@ namespace sequoia
         return *this;
       }
 
+      void swap(bucketed_storage& other) // noexcept spec
+      {
+        using std::swap;
+        swap(m_Buckets, other.m_Buckets);
+      }
+
       [[nodiscard]]
       size_type size() const
       {
@@ -1246,5 +1252,11 @@ namespace sequoia
     {
       i = pred(*i) ? data.erase_from_partition(i) : std::next(i);
     }
+  }
+
+  template<class T, class SharingPolicy, class Traits>
+  void swap(data_structures::bucketed_storage<T, SharingPolicy, Traits>& lhs, data_structures::bucketed_storage<T, SharingPolicy, Traits>& rhs)
+  {
+    lhs.swap(rhs);
   }
 }
