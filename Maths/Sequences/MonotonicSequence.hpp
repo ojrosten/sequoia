@@ -11,23 +11,14 @@
     \brief Classes implementing the concept of a monotonic sequence.
  */
 
+#include "MonotonicSequenceDetails.hpp"
 #include "ArrayUtilities.hpp"
-#include "TypeTraits.hpp"
+#include "Algorithms.hpp"
 
 #include <stdexcept>
 
 namespace sequoia::maths
-{
-  namespace impl
-  {
-    template<class C> struct static_storage : std::false_type {};
-
-    template<class T, std::size_t N> struct static_storage<std::array<T, N>> : std::true_type
-    {
-      constexpr static std::size_t size() { return N; }
-    };
-  }
-  
+{  
   template<class T, class C, class Compare> class monotonic_sequence_base
   {
   public:
@@ -148,14 +139,20 @@ namespace sequoia::maths
     {}
 
     template<class Allocator>
-    constexpr monotonic_sequence_base(monotonic_sequence_base&& s, const Allocator& allocator) noexcept
+    constexpr monotonic_sequence_base(monotonic_sequence_base&& s, const Allocator& allocator)
       : m_Sequence{std::move(s.m_Sequence), allocator}
     {}
     
     ~monotonic_sequence_base() = default;
     
-    constexpr monotonic_sequence_base& operator=(const monotonic_sequence_base&)     = default;    
-    constexpr monotonic_sequence_base& operator=(monotonic_sequence_base&&) noexcept = default;
+    constexpr monotonic_sequence_base& operator=(const monotonic_sequence_base&) = default;    
+    constexpr monotonic_sequence_base& operator=(monotonic_sequence_base&&)      = default;
+
+    constexpr void swap(monotonic_sequence_base& other) noexcept(impl::noexcept_spec_v<C>)
+    {
+      using std::swap;
+      swap(m_Sequence, other.m_Sequence);
+    }
 
     void push_back(T v)
     {
@@ -271,6 +268,11 @@ namespace sequoia::maths
 
     monotonic_sequence& operator=(const monotonic_sequence&)     = default;
     monotonic_sequence& operator=(monotonic_sequence&&) noexcept = default;
+
+    friend void swap(monotonic_sequence& lhs, monotonic_sequence& rhs) noexcept(noexcept(lhs.swap(rhs)))
+    {
+      lhs.swap(rhs);
+    }
 
     using base_t::push_back;
     using base_t::insert;
