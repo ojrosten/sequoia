@@ -170,10 +170,16 @@ namespace sequoia::unit_testing
       check_equality(LINE(""), sAllocCount, 0);
       check_equality(LINE(""), tAllocCount, 2);
 
-      check_allocations(LINE(""), s, t, allocation_info<allocator>{sAlloc, tAlloc, {0, 1, 1}});
+      auto mutator{
+        [](sequence& seq){
+          const auto val{seq.empty() ? 0 : seq.back() - 1};
+          seq.push_back(val);
+        }
+      };
+      check_allocations(LINE(""), s, t, mutator, allocation_info<allocator>{sAlloc, tAlloc, {0, 1, 1, 1}});
     }
 
     check_equality(LINE(""), sDeallocCount, 0);
-    check_equality(LINE(""), tDeallocCount, 4);
+    check_equality(LINE(""), tDeallocCount, 5);
   }
 }
