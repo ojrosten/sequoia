@@ -79,13 +79,6 @@ int main(int argc, char** argv)
       }
     );
       
-    runner.add_test_family(
-      test_family{
-          "Partitioned Data",
-          partitioned_data_test{"Unit Test"}
-      }
-    );
-      
     runner.execute();
   }
   catch(const argument_error& e)

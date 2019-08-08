@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		7E688E5922F0CC03000A0EB7 /* PartitionedDataTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E688E5822F0CC03000A0EB7 /* PartitionedDataTest.cpp */; };
 		7E7198AE22E78CE400FF81BC /* UnitTestChamberMain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E7198AD22E78CE400FF81BC /* UnitTestChamberMain.cpp */; };
 		7E7198B122E78E2F00FF81BC /* UnitTestRunner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E7198B022E78E2F00FF81BC /* UnitTestRunner.cpp */; };
 		7E7198B322E78E7600FF81BC /* UnitTestDiagnostics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E7198B222E78E7600FF81BC /* UnitTestDiagnostics.cpp */; };
@@ -31,7 +30,6 @@
 		7E402F18215D01E60017F018 /* Core */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Core; path = ../Core; sourceTree = "<group>"; };
 		7E402F19215D01FC0017F018 /* Experimental */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Experimental; path = ../Experimental; sourceTree = "<group>"; };
 		7E402F1A215D02080017F018 /* Maths */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Maths; path = ../Maths; sourceTree = "<group>"; };
-		7E688E5822F0CC03000A0EB7 /* PartitionedDataTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PartitionedDataTest.cpp; path = ../UnitTests/Core/DataStructures/PartitionedDataTest.cpp; sourceTree = "<group>"; };
 		7E7198AD22E78CE400FF81BC /* UnitTestChamberMain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UnitTestChamberMain.cpp; path = ../../UnitTestChamber/UnitTestChamberMain.cpp; sourceTree = "<group>"; };
 		7E7198AF22E78D4F00FF81BC /* UnitTestFramework */ = {isa = PBXFileReference; lastKnownFileType = folder; name = UnitTestFramework; path = ../UnitTestFramework; sourceTree = "<group>"; };
 		7E7198B022E78E2F00FF81BC /* UnitTestRunner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UnitTestRunner.cpp; path = ../UnitTestFramework/UnitTestRunner.cpp; sourceTree = "<group>"; };
@@ -52,7 +50,6 @@
 		7E402F04215D01510017F018 = {
 			isa = PBXGroup;
 			children = (
-				7E688E5822F0CC03000A0EB7 /* PartitionedDataTest.cpp */,
 				7E7198B222E78E7600FF81BC /* UnitTestDiagnostics.cpp */,
 				7E7198B022E78E2F00FF81BC /* UnitTestRunner.cpp */,
 				7E7198AF22E78D4F00FF81BC /* UnitTestFramework */,
@@ -138,7 +135,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				7E7198AE22E78CE400FF81BC /* UnitTestChamberMain.cpp in Sources */,
-				7E688E5922F0CC03000A0EB7 /* PartitionedDataTest.cpp in Sources */,
 				7E7198B122E78E2F00FF81BC /* UnitTestRunner.cpp in Sources */,
 				7E7198B322E78E7600FF81BC /* UnitTestDiagnostics.cpp in Sources */,
 			);
