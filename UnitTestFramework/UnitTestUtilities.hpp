@@ -22,9 +22,14 @@ namespace sequoia::unit_testing
 
     constexpr int get() const noexcept { return m_i; }
 
-    constexpr friend bool operator==(const no_default_constructor& lhs, const no_default_constructor& rhs)
+    constexpr friend bool operator==(const no_default_constructor& lhs, const no_default_constructor& rhs) noexcept
     {
       return lhs.get() == rhs.get();
+    }
+
+    constexpr friend bool operator!=(const no_default_constructor& lhs, const no_default_constructor& rhs) noexcept
+    {
+      return !(lhs == rhs);
     }
 
     template<class Stream> friend Stream& operator<<(Stream& stream, const no_default_constructor& ndc)
