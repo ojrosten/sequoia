@@ -154,11 +154,14 @@ namespace sequoia::unit_testing
       tAllocCount{}, tDeallocCount{};    
 
     {
-      sequence s(allocator{sAllocCount, sDeallocCount});
+      allocator sAlloc{sAllocCount, sDeallocCount};
+      
+      sequence s(sAlloc);
       check_equivalence(LINE(""), s, std::initializer_list<int>{});
       check_equality(LINE(""), sAllocCount, 0);
 
-      sequence t{{4, 3}, allocator{tAllocCount, tDeallocCount}};
+      allocator tAlloc{tAllocCount, tDeallocCount};
+      sequence t{{4, 3}, tAlloc};
       check_equivalence(LINE(""), t, std::initializer_list<int>{4, 3});
       check_equality(LINE(""), tAllocCount, 1);
 
@@ -166,9 +169,11 @@ namespace sequoia::unit_testing
 
       check_equality(LINE(""), sAllocCount, 0);
       check_equality(LINE(""), tAllocCount, 2);
+
+      check_allocations(LINE(""), s, t, allocation_info<allocator>{sAlloc, tAlloc, {0, 1}});
     }
 
     check_equality(LINE(""), sDeallocCount, 0);
-    check_equality(LINE(""), tDeallocCount, 2);
+    check_equality(LINE(""), tDeallocCount, 3);
   }
 }

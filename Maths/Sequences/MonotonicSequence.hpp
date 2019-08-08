@@ -154,6 +154,11 @@ namespace sequoia::maths
       swap(m_Sequence, other.m_Sequence);
     }
 
+    auto get_allocator() const
+    {
+      return m_Sequence.get_allocator();
+    }
+
     void push_back(T v)
     {
       if(!m_Sequence.empty() && Compare{}(m_Sequence.back(), v))
@@ -201,7 +206,6 @@ namespace sequoia::maths
     {
       m_Sequence.clear();
     }
-
     
   private:
     using static_type = impl::static_storage<C>;
@@ -274,6 +278,11 @@ namespace sequoia::maths
       lhs.swap(rhs);
     }
 
+    allocator_type get_allocator() const
+    {
+      return base_t::get_allocator();
+    }
+    
     using base_t::push_back;
     using base_t::insert;
     using base_t::erase;
