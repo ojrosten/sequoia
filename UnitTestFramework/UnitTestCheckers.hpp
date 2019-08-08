@@ -376,7 +376,7 @@ namespace sequoia
 
     struct allocation_predictions
     {
-      int copy_x{}, copy_assign_y_to_x{};
+      int copy_x{}, copy_y{}, copy_assign_y_to_x{};
     };
 
     template<class Allocator>
@@ -394,12 +394,13 @@ namespace sequoia
       template<class Logger>
       void check_copy_x(std::string_view description, Logger& logger)
       {
-        typename Logger::sentinel s{logger, add_type_info<Allocator>(description)};
+        m_xCurrentCount = check_copy(description, logger, m_xAllocator, m_xCurrentCount, m_Predictions.copy_x, "(x)");
+      }
 
-        const auto prediction{m_xCurrentCount + m_Predictions.copy_x};        
-        m_xCurrentCount = m_xAllocator.counted_allocs();
-        
-        check_equality(combine_messages(description, "Copy construction"), logger, m_xCurrentCount, prediction);        
+      template<class Logger>
+      void check_copy_y(std::string_view description, Logger& logger)
+      {
+        m_yCurrentCount = check_copy(description, logger, m_yAllocator, m_yCurrentCount, m_Predictions.copy_y, "(y)");
       }
 
       template<class Logger>
@@ -429,23 +430,49 @@ namespace sequoia
       allocation_predictions m_Predictions;
       
       int m_xCurrentCount{}, m_yCurrentCount{};
+
+      template<class Logger>
+      static int check_copy(std::string_view description, Logger& logger, const Allocator& alloc, int current, const int predictionDelta, std::string designation)
+      {
+        typename Logger::sentinel s{logger, add_type_info<Allocator>(description)};
+
+        const auto prediction{current + predictionDelta};        
+        current = alloc.counted_allocs();
+
+        std::string message{"Copy construction allocations"};
+        message += designation;
+        check_equality(combine_messages(description, message), logger, current, prediction);
+
+        return current;
+      }
     };
 
     namespace impl
     {
       template<class Logger, class Allocator, class... Allocators>
-      void check_copy_allocation(std::string_view description, Logger& logger, allocation_info<Allocator> allocationInfo, const allocation_info<Allocators>&... moreInfo)
+      void check_copy_x_allocation(std::string_view description, Logger& logger, allocation_info<Allocator>& allocationInfo, allocation_info<Allocators>&... moreInfo)
       {
         allocationInfo.check_copy_x(description, logger);
 
         if constexpr (sizeof...(Allocators) > 0)
         {
-          check_copy_allocation(description, logger, moreInfo...); 
+          check_copy_x_allocation(description, logger, moreInfo...); 
+        }
+      }
+
+      template<class Logger, class Allocator, class... Allocators>
+      void check_copy_y_allocation(std::string_view description, Logger& logger, allocation_info<Allocator>& allocationInfo, allocation_info<Allocators>&... moreInfo)
+      {
+        allocationInfo.check_copy_y(description, logger);
+
+        if constexpr (sizeof...(Allocators) > 0)
+        {
+          check_copy_y_allocation(description, logger, moreInfo...); 
         }
       }
       
       template<class Logger, class Allocator, class... Allocators>
-      void check_copy_assign_allocation(std::string_view description, Logger& logger, allocation_info<Allocator> allocationInfo, const allocation_info<Allocators>&... moreInfo)
+      void check_copy_assign_allocation(std::string_view description, Logger& logger, allocation_info<Allocator>& allocationInfo, allocation_info<Allocators>&... moreInfo)
       {
         allocationInfo.check_copy_assign_y_to_x(description, logger);
 
@@ -457,16 +484,21 @@ namespace sequoia
     }
     
     template<class Logger, class T, class... Allocators>
-    void check_allocations(std::string_view description, Logger& logger, const T& x, const T& y, const allocation_info<Allocators>&... allocationInfo)
+    void check_allocations(std::string_view description, Logger& logger, const T& x, const T& y, allocation_info<Allocators>... allocationInfo)
     {
       typename Logger::sentinel s{logger, add_type_info<T>(description)};
       
       T z{x};
-      impl::check_copy_allocation(description, logger, allocationInfo...);  
+      impl::check_copy_x_allocation(description, logger, allocationInfo...);
       
       z = y;
-
       impl::check_copy_assign_allocation(description, logger, allocationInfo...);
+
+      T u{x}, v{y};
+      impl::check_copy_x_allocation(description, logger, allocationInfo...);
+      impl::check_copy_y_allocation(description, logger, allocationInfo...);
+
+      u = std::move(v);
     }
     
     template<class Logger, class T, class Mutator>
@@ -690,7 +722,7 @@ namespace sequoia
       }
 
       template<class T, class... Allocators>
-      void check_allocations(std::string_view description, const T& x, const T& y, const allocation_info<Allocators>&... allocationInfo)
+      void check_allocations(std::string_view description, const T& x, const T& y, allocation_info<Allocators>... allocationInfo)
       {
         unit_testing::check_allocations(description, m_Logger, x, y, allocationInfo...);
       }
