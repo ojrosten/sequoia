@@ -30,6 +30,7 @@ namespace sequoia::unit_testing
 
     void test_static_increasing_sequence();
 
+    template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
     void test_allocator();
   };
 }

@@ -256,7 +256,7 @@ namespace sequoia::maths
       : monotonic_sequence_base<T, C, Compare>{list, allocator}
     {}
 
-    monotonic_sequence(const monotonic_sequence&)     = default;
+    monotonic_sequence(const monotonic_sequence&) = default;
 
     monotonic_sequence(const monotonic_sequence& s, const allocator_type& allocator)
       : monotonic_sequence_base<T, C, Compare>{s, allocator}
@@ -270,8 +270,8 @@ namespace sequoia::maths
 
     ~monotonic_sequence() = default;
 
-    monotonic_sequence& operator=(const monotonic_sequence&)     = default;
-    monotonic_sequence& operator=(monotonic_sequence&&) noexcept = default;
+    monotonic_sequence& operator=(const monotonic_sequence&) = default;
+    monotonic_sequence& operator=(monotonic_sequence&&)      = default;
 
     friend void swap(monotonic_sequence& lhs, monotonic_sequence& rhs) noexcept(noexcept(lhs.swap(rhs)))
     {

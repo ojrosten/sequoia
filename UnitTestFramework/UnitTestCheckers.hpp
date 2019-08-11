@@ -440,8 +440,13 @@ namespace sequoia
       void check_move_assign_y_to_x(std::string_view description, Logger& logger)
       {
         typename Logger::sentinel s{logger, add_type_info<Allocator>(description)};
+
+        const bool copyLike{!std::allocator_traits<Allocator>::propagate_on_container_move_assignment::value
+              && (m_xAllocator != m_yAllocator)};
+
+        const int xIncrement{copyLike ? m_Predictions.copy_assign_y_to_x : 0};
         
-        const int xPrediction{m_xCurrentCount}, yPrediction{m_yCurrentCount};
+        const int xPrediction{m_xCurrentCount + xIncrement}, yPrediction{m_yCurrentCount};
 
         m_xCurrentCount = m_xAllocator.counted_allocs();
         m_yCurrentCount = m_yAllocator.counted_allocs();

@@ -17,7 +17,15 @@ namespace sequoia::unit_testing
     test_decreasing_sequence();
     test_static_decreasing_sequence();
     test_static_increasing_sequence();
-    test_allocator();
+
+    test_allocator<false, false, false>();
+    test_allocator<false, false, true>();
+    test_allocator<false, true, false>();
+    test_allocator<false, true, true>();
+    test_allocator<true, false, false>();
+    test_allocator<true, false, true>();
+    test_allocator<true, true, false>();
+    test_allocator<true, true, true>();
   }
 
   void monotonic_sequence_test::test_decreasing_sequence()
@@ -142,11 +150,12 @@ namespace sequoia::unit_testing
     check_equivalence(LINE(""), u, std::initializer_list<int>{2,3,3,4,4,5});
   }
 
+  template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
   void monotonic_sequence_test::test_allocator()
   {
     using namespace maths;
 
-    using allocator = custom_allocator<int>;
+    using allocator = custom_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>;
     using sequence = monotonic_sequence<int, std::less<int>, std::vector<int, allocator>>;
 
     int
@@ -165,11 +174,6 @@ namespace sequoia::unit_testing
       check_equivalence(LINE(""), t, std::initializer_list<int>{4, 3});
       check_equality(LINE(""), tAllocCount, 1);
 
-      check_regular_semantics(LINE("Regular Semantics"), s, t, allocator{});
-
-      check_equality(LINE(""), sAllocCount, 0);
-      check_equality(LINE(""), tAllocCount, 2);
-
       auto mutator{
         [](sequence& seq){
           const auto val{seq.empty() ? 0 : seq.back() - 1};
@@ -178,8 +182,5 @@ namespace sequoia::unit_testing
       };
       check_allocations(LINE(""), s, t, mutator, allocation_info<allocator>{sAlloc, tAlloc, {0, 1, 1, 1}});
     }
-
-    check_equality(LINE(""), sDeallocCount, 0);
-    check_equality(LINE(""), tDeallocCount, 5);
   }
 }
