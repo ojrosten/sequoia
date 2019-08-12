@@ -18,14 +18,7 @@ namespace sequoia::unit_testing
     test_static_decreasing_sequence();
     test_static_increasing_sequence();
 
-    test_allocator<false, false, false>();
-    test_allocator<false, false, true>();
-    test_allocator<false, true, false>();
-    test_allocator<false, true, true>();
-    test_allocator<true, false, false>();
-    test_allocator<true, false, true>();
-    test_allocator<true, true, false>();
-    test_allocator<true, true, true>();
+    allocation_tester<monotonic_sequence_test> t{*this};
   }
 
   void monotonic_sequence_test::test_decreasing_sequence()
@@ -151,7 +144,7 @@ namespace sequoia::unit_testing
   }
 
   template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-  void monotonic_sequence_test::test_allocator()
+  void monotonic_sequence_test::test_allocation()
   {
     using namespace maths;
 
