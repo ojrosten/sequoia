@@ -172,12 +172,88 @@ namespace sequoia::maths::graph_impl
 
     constexpr node_storage& operator=(const node_storage& in)
     {
-      auto tmp{in};
-      *this = std::move(tmp);
+      if(&in == this) return *this;
+
+      if constexpr(!has_allocator_type_v<node_weight_container_type>)
+      {
+        auto tmp{in};
+        *this = std::move(tmp);
+      }
+      else
+      {
+        using allocator = typename node_weight_container_type::allocator_type;
+
+        constexpr bool copyPropagation{
+            std::allocator_traits<allocator>::propagate_on_container_copy_assignment::value
+        };
+
+        constexpr bool alwaysEqual{
+          std::allocator_traits<allocator>::is_always_equal::value
+        };
+
+        if constexpr(direct_copy() && (copyPropagation || alwaysEqual))
+        {
+          m_NodeWeights = in.m_NodeWeights;
+        }
+        else
+        {
+          constexpr bool movePropagation{
+            std::allocator_traits<allocator>::propagate_on_container_move_assignment::value
+           };
+
+          constexpr bool swapPropagation{
+            std::allocator_traits<allocator>::propagate_on_container_swap::value
+          };          
+
+          constexpr bool copyConsistentWithSwap{alwaysEqual || (copyPropagation == swapPropagation)};
+
+          constexpr bool copyConsistentWithMove{alwaysEqual || (copyPropagation == movePropagation)};
+          
+          auto getAlloc{
+            [](const node_storage& current, const node_storage& in){           
+              if constexpr(copyPropagation)
+              {
+                return in.m_NodeWeights.get_allocator();
+              }
+              else
+              {
+                return current.m_NodeWeights.get_allocator();
+              }
+            }
+          };
+                
+          if constexpr (copyConsistentWithMove)
+          {            
+            node_storage tmp{in, getAlloc(*this, in)};
+            *this = std::move(tmp);
+          }
+          else if constexpr (copyConsistentWithSwap)
+          {            
+            node_storage tmp{in, getAlloc(*this, in)};
+            tmp.swap(*this);
+          }
+          else if constexpr(!copyPropagation)
+          {
+            static_assert(movePropagation);
+            m_NodeWeights = clone(in, m_NodeWeights.get_allocator());
+          }
+          else
+          {
+            static_assert(dependent_false<WeightMaker>::value,
+              "Unable to propagate allocator due to non-trivial copy construction combined with incompatible propagation traits");
+          }
+        }
+      }
+
       return *this;
     }    
 
-    constexpr node_storage& operator=(node_storage&&) noexcept = default;
+    constexpr node_storage& operator=(node_storage&&) = default;
+
+    constexpr void swap(node_storage& other) // noexcept spec
+    {
+      sequoia::swap(m_NodeWeights, other.m_NodeWeights);
+    }
 
     constexpr void swap_nodes(const size_type i, const size_type j)
     {
@@ -296,12 +372,12 @@ namespace sequoia::maths::graph_impl
     {}
 
     constexpr node_storage(indirect_copy_type, const node_storage& in)
-      : m_NodeWeights{clone(in)}
+      : m_NodeWeights{clone(in, in.m_NodeWeights.get_allocator())}
     {}
 
     template<class Allocator>
     constexpr node_storage(indirect_copy_type, const node_storage& in, const Allocator& allocator)
-      : m_NodeWeights(clone(in), allocator)
+      : m_NodeWeights{clone(in, allocator)}
     {}
   
     // helper methods
@@ -332,10 +408,11 @@ namespace sequoia::maths::graph_impl
       return nodeWeights;
     }
 
+    template<class... Allocs>
     [[nodiscard]]
-    node_weight_container_type clone(const node_storage& in)
+    node_weight_container_type clone(const node_storage& in, const Allocs&... allocs)
     {
-      node_weight_container_type nodeWeights{};
+      node_weight_container_type nodeWeights(allocs...);
       nodeWeights.reserve(in.m_NodeWeights.size());
       for(const auto& weight : in.m_NodeWeights)
       {

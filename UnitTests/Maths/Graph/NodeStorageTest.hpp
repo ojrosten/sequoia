@@ -16,6 +16,8 @@ namespace sequoia::unit_testing
   public:
     using unit_test::unit_test;
 
+    template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
+    void test_allocation();
   private:
     using unit_test::check_equality;
       
@@ -28,7 +30,7 @@ namespace sequoia::unit_testing
     
     void test_static_node_storage();
 
-    template<class Sharing>
-    void test_allocator();
+    template<class Sharing, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
+    void test_allocation_impl();
   };
 }

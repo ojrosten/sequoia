@@ -21,9 +21,8 @@ namespace sequoia:: unit_testing
     test_dynamic_node_storage<data_sharing::data_pool<double>>();
     
     test_static_node_storage();
-    
-    test_allocator<data_sharing::unpooled<int>>();
-    test_allocator<data_sharing::data_pool<int>>();
+
+    allocation_tester t{*this};
   }
 
   template<class Sharing>
@@ -117,16 +116,46 @@ namespace sequoia:: unit_testing
     check_regular_semantics(LINE("Regular semantics"), store, {4, 4, 9, 7});
   }
 
-  template<class Sharing>
-  void test_node_storage::test_allocator()
+  template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
+  void test_node_storage::test_allocation()
+  {   
+    test_allocation_impl<data_sharing::unpooled<int>, PropagateCopy, PropagateMove, PropagateSwap>();
+    test_allocation_impl<data_sharing::data_pool<int>, PropagateCopy, PropagateMove, PropagateSwap>();
+  }
+
+  template<class Sharing, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
+  void test_node_storage::test_allocation_impl()
   {
-    using namespace maths::graph_impl;
+    if constexpr(!(std::is_same_v<Sharing, data_sharing::data_pool<int>> && PropagateCopy &&!PropagateMove && !PropagateSwap))
+    {
     
-    using storage_t = node_storage_tester<weight_maker<Sharing>>;
-    using allocator_t = typename storage_t::allocator_type;
+      using namespace maths::graph_impl;
+    
+      using storage = node_storage_tester<weight_maker<Sharing>, PropagateCopy, PropagateMove, PropagateSwap>;
+      using allocator = typename storage::allocator_type;
 
-    storage_t s{allocator_t{}}, t{{1, 1, 0}, allocator_t{}};
+      int
+        sAllocCount{}, sDeallocCount{},
+        tAllocCount{}, tDeallocCount{};    
 
-    check_regular_semantics(LINE("Regular Semantics"), s, t, allocator_t{});
+      allocator sAlloc{sAllocCount, sDeallocCount};
+      
+      storage s(sAlloc);
+      check_equivalence(LINE(""), s, std::initializer_list<int>{});
+      check_equality(LINE(""), sAllocCount, 0);
+
+      allocator tAlloc{tAllocCount, tDeallocCount};
+      storage t{{1, 1, 0}, tAlloc};
+      check_equivalence(LINE(""), t, std::initializer_list<int>{1, 1, 0});
+      check_equality(LINE(""), tAllocCount, 1);
+
+      auto mutator{
+        [](storage& s){
+          s.add_node();
+        }
+      };
+
+      check_allocations(LINE(""), s, t, mutator, allocation_info<allocator>{sAlloc, tAlloc, {0, 1, 1, 1}});
+    }
   }
 }

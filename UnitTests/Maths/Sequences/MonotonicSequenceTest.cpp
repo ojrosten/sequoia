@@ -155,25 +155,23 @@ namespace sequoia::unit_testing
       sAllocCount{}, sDeallocCount{},
       tAllocCount{}, tDeallocCount{};    
 
-    {
-      allocator sAlloc{sAllocCount, sDeallocCount};
+    allocator sAlloc{sAllocCount, sDeallocCount};
       
-      sequence s(sAlloc);
-      check_equivalence(LINE(""), s, std::initializer_list<int>{});
-      check_equality(LINE(""), sAllocCount, 0);
+    sequence s(sAlloc);
+    check_equivalence(LINE(""), s, std::initializer_list<int>{});
+    check_equality(LINE(""), sAllocCount, 0);
 
-      allocator tAlloc{tAllocCount, tDeallocCount};
-      sequence t{{4, 3}, tAlloc};
-      check_equivalence(LINE(""), t, std::initializer_list<int>{4, 3});
-      check_equality(LINE(""), tAllocCount, 1);
+    allocator tAlloc{tAllocCount, tDeallocCount};
+    sequence t{{4, 3}, tAlloc};
+    check_equivalence(LINE(""), t, std::initializer_list<int>{4, 3});
+    check_equality(LINE(""), tAllocCount, 1);
 
-      auto mutator{
-        [](sequence& seq){
-          const auto val{seq.empty() ? 0 : seq.back() - 1};
-          seq.push_back(val);
-        }
-      };
-      check_allocations(LINE(""), s, t, mutator, allocation_info<allocator>{sAlloc, tAlloc, {0, 1, 1, 1}});
-    }
+    auto mutator{
+      [](sequence& seq){
+        const auto val{seq.empty() ? 0 : seq.back() - 1};
+        seq.push_back(val);
+      }
+    };
+    check_allocations(LINE(""), s, t, mutator, allocation_info<allocator>{sAlloc, tAlloc, {0, 1, 1, 1}});
   }
 }

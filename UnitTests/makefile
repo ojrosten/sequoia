@@ -14,6 +14,7 @@ CC := clang++
 CFLAGS := -Wall -std=c++2a -O0 -ferror-limit=1 \
 	  -Wno-missing-braces		       	   \
 	  -ftemplate-backtrace-limit=0	       \
+	  -D MINIMAL_GRAPH_TESTS				\
 	  $(patsubst %,-I%, $(UTSUBDIRS))      \
       $(patsubst %,-I%, $(LIBSUBDIRS))
 EXE := $(UTBUILDDIR)/UnitTest.exe

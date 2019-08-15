@@ -163,19 +163,20 @@ namespace sequoia::unit_testing
     }
   };
 
-  
+  template<bool PropagateCopy=true, bool PropagateMove=true, bool PropagateSwap=true>
   struct node_storage_traits
   {
     constexpr static bool throw_on_range_error{true};
     constexpr static bool static_storage_v{};
-    template<class S> using container_type = std::vector<S, custom_allocator<S>>;
+    template<class S> using container_type = std::vector<S, custom_allocator<S, PropagateCopy, PropagateMove, PropagateSwap>>;
   };
 
-  template<class WeightMaker>
-  class node_storage_tester : public maths::graph_impl::node_storage<WeightMaker, node_storage_traits>
+  template<class WeightMaker, bool PropagateCopy=true, bool PropagateMove=true, bool PropagateSwap=true>
+  class node_storage_tester
+    : public maths::graph_impl::node_storage<WeightMaker, node_storage_traits<PropagateCopy, PropagateMove, PropagateSwap>>
   {
   private:
-    using base_t = maths::graph_impl::node_storage<WeightMaker, node_storage_traits>;
+    using base_t = maths::graph_impl::node_storage<WeightMaker, node_storage_traits<PropagateCopy, PropagateMove, PropagateSwap>>;
     
   public:
     using allocator_type = typename base_t::node_weight_container_type::allocator_type;
@@ -220,16 +221,21 @@ namespace sequoia::unit_testing
     
     node_storage_tester& operator=(const node_storage_tester&) = default;
 
-    node_storage_tester& operator=(node_storage_tester&&) noexcept = default;
+    node_storage_tester& operator=(node_storage_tester&&) = default;
+
+    friend void swap(node_storage_tester& lhs, node_storage_tester& rhs)
+    {
+      lhs.swap(rhs);
+    }
     
-    using maths::graph_impl::node_storage<WeightMaker, node_storage_traits>::reserve;
-    using maths::graph_impl::node_storage<WeightMaker, node_storage_traits>::capacity;
-    using maths::graph_impl::node_storage<WeightMaker, node_storage_traits>::shrink_to_fit;
-    using maths::graph_impl::node_storage<WeightMaker, node_storage_traits>::add_node;
-    using maths::graph_impl::node_storage<WeightMaker, node_storage_traits>::insert_node;
-    using maths::graph_impl::node_storage<WeightMaker, node_storage_traits>::erase_node;
-    using maths::graph_impl::node_storage<WeightMaker, node_storage_traits>::erase_nodes;
-    using maths::graph_impl::node_storage<WeightMaker, node_storage_traits>::clear;
+    using base_t::reserve;
+    using base_t::capacity;
+    using base_t::shrink_to_fit;
+    using base_t::add_node;
+    using base_t::insert_node;
+    using base_t::erase_node;
+    using base_t::erase_nodes;
+    using base_t::clear;
   };
 
   template<class WeightMaker, std::size_t N>
@@ -240,15 +246,15 @@ namespace sequoia::unit_testing
   };
 
   
-  template<class WeightMaker>
-  struct detailed_equality_checker<node_storage_tester<WeightMaker>>
-    : public detailed_equality_checker<maths::graph_impl::node_storage<WeightMaker, node_storage_traits>>
+  template<class WeightMaker, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
+  struct detailed_equality_checker<node_storage_tester<WeightMaker, PropagateCopy, PropagateMove, PropagateSwap>>
+    : public detailed_equality_checker<maths::graph_impl::node_storage<WeightMaker, node_storage_traits<PropagateCopy, PropagateMove, PropagateSwap>>>
   {
   };
 
-  template<class WeightMaker>
-  struct equivalence_checker<node_storage_tester<WeightMaker>>
-    : public equivalence_checker<maths::graph_impl::node_storage<WeightMaker, node_storage_traits>>
+  template<class WeightMaker, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
+  struct equivalence_checker<node_storage_tester<WeightMaker, PropagateCopy, PropagateMove, PropagateSwap>>
+    : public equivalence_checker<maths::graph_impl::node_storage<WeightMaker, node_storage_traits<PropagateCopy, PropagateMove, PropagateSwap>>>
   {
   };
 
