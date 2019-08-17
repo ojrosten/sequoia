@@ -577,7 +577,7 @@ namespace sequoia
       constexpr contiguous_storage_base& operator=(const contiguous_storage_base& in)
       {
         contiguous_storage_base tmp{in};
-        sequoia::swap(tmp, *this);
+        *this = std::move(tmp);
         return *this;
       }
 
