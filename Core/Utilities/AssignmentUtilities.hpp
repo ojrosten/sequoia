@@ -15,8 +15,8 @@
 
 namespace sequoia::impl
 {
-  template<bool DefaultCopyable,class Container, class Cloner>
-  void assign(Container& to, const Container& from, [[maybe_unused]] Cloner cloner)
+  template<bool DefaultCopyable,class Container>
+  void assign(Container& to, const Container& from)
   {
     if constexpr(!has_allocator_type_v<Container>)
     {
@@ -71,15 +71,10 @@ namespace sequoia::impl
           Container tmp{from, getAlloc(to, from)};
           to = std::move(tmp);
         }
-        else if constexpr (copyConsistentWithSwap)
+        else if constexpr (copyConsistentWithSwap || !copyPropagation)
         {            
           Container tmp{from, getAlloc(to, from)};
           to.swap(tmp);
-        }
-        else if constexpr(!copyPropagation)
-        {
-          static_assert(movePropagation);
-          to = cloner(from, to.get_allocator());
         }
         else
         {
