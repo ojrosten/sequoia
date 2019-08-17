@@ -239,7 +239,7 @@ namespace sequoia::maths::graph_impl
           }
           else
           {
-            static_assert(dependent_false<WeightMaker>::value,
+            static_assert(dependent_false<allocator>::value,
               "Unable to propagate allocator due to non-trivial copy construction combined with incompatible propagation traits");
           }
         }
