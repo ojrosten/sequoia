@@ -250,7 +250,7 @@ namespace sequoia::maths::graph_impl
 
     constexpr node_storage& operator=(node_storage&&) = default;
 
-    constexpr void swap(node_storage& other) // noexcept spec
+    constexpr void swap(node_storage& other) noexcept(noexcept(sequoia::swap(m_NodeWeights, other.m_NodeWeights)))
     {
       sequoia::swap(m_NodeWeights, other.m_NodeWeights);
     }

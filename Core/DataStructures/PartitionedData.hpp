@@ -240,10 +240,9 @@ namespace sequoia
         return *this;
       }
 
-      void swap(bucketed_storage& other) // noexcept spec
+      void swap(bucketed_storage& other) noexcept(noexcept(std::swap(m_Buckets, other.m_Buckets)))
       {
-        using std::swap;
-        swap(m_Buckets, other.m_Buckets);
+        std::swap(m_Buckets, other.m_Buckets);
       }
 
       [[nodiscard]]
