@@ -18,6 +18,7 @@
  */
 
 #include "ArrayUtilities.hpp"
+#include "AssignmentUtilities.hpp"
 #include "Iterator.hpp"
 #include "ProtectiveWrapper.hpp"
 #include "Algorithms.hpp"
@@ -172,78 +173,26 @@ namespace sequoia::maths::graph_impl
 
     constexpr node_storage& operator=(const node_storage& in)
     {
-      if(&in == this) return *this;
-
-      if constexpr(!has_allocator_type_v<node_weight_container_type>)
+      if(&in != this)
       {
-        auto tmp{in};
-        *this = std::move(tmp);
-      }
-      else
-      {
-        using allocator = typename node_weight_container_type::allocator_type;
-
-        constexpr bool copyPropagation{
-            std::allocator_traits<allocator>::propagate_on_container_copy_assignment::value
-        };
-
-        constexpr bool alwaysEqual{
-          std::allocator_traits<allocator>::is_always_equal::value
-        };
-
-        if constexpr(direct_copy() && (copyPropagation || alwaysEqual))
+        if constexpr(!has_allocator_type_v<node_weight_container_type>)
         {
-          m_NodeWeights = in.m_NodeWeights;
+          auto tmp{in};
+          *this = std::move(tmp);
         }
         else
         {
-          constexpr bool movePropagation{
-            std::allocator_traits<allocator>::propagate_on_container_move_assignment::value
-           };
+          using allocator = typename node_weight_container_type::allocator_type;
 
-          constexpr bool swapPropagation{
-            std::allocator_traits<allocator>::propagate_on_container_swap::value
-          };          
-
-          constexpr bool copyConsistentWithSwap{alwaysEqual || (copyPropagation == swapPropagation)};
-
-          constexpr bool copyConsistentWithMove{alwaysEqual || (copyPropagation == movePropagation)};
-          
-          auto getAlloc{
-            [](const node_storage& current, const node_storage& in){           
-              if constexpr(copyPropagation)
-              {
-                return in.m_NodeWeights.get_allocator();
-              }
-              else
-              {
-                return current.m_NodeWeights.get_allocator();
-              }
+          auto cloner{
+            [this](const node_weight_container_type& in, const allocator& alloc){
+              return clone(in, alloc);
             }
           };
-                
-          if constexpr (copyConsistentWithMove)
-          {            
-            node_storage tmp{in, getAlloc(*this, in)};
-            *this = std::move(tmp);
-          }
-          else if constexpr (copyConsistentWithSwap)
-          {            
-            node_storage tmp{in, getAlloc(*this, in)};
-            tmp.swap(*this);
-          }
-          else if constexpr(!copyPropagation)
-          {
-            static_assert(movePropagation);
-            m_NodeWeights = clone(in, m_NodeWeights.get_allocator());
-          }
-          else
-          {
-            static_assert(dependent_false<allocator>::value,
-              "Unable to propagate allocator due to non-trivial copy construction combined with incompatible propagation traits");
-          }
+
+          sequoia::impl::assign<direct_copy()>(m_NodeWeights, in.m_NodeWeights, cloner);
         }
-      }
+      }      
 
       return *this;
     }    
@@ -372,12 +321,12 @@ namespace sequoia::maths::graph_impl
     {}
 
     constexpr node_storage(indirect_copy_type, const node_storage& in)
-      : m_NodeWeights{clone(in, in.m_NodeWeights.get_allocator())}
+      : m_NodeWeights{clone(in.m_NodeWeights, in.m_NodeWeights.get_allocator())}
     {}
 
     template<class Allocator>
     constexpr node_storage(indirect_copy_type, const node_storage& in, const Allocator& allocator)
-      : m_NodeWeights{clone(in, allocator)}
+    : m_NodeWeights{clone(in.m_NodeWeights, allocator)}
     {}
   
     // helper methods
@@ -408,13 +357,13 @@ namespace sequoia::maths::graph_impl
       return nodeWeights;
     }
 
-    template<class... Allocs>
+    template<class Allocator>
     [[nodiscard]]
-    node_weight_container_type clone(const node_storage& in, const Allocs&... allocs)
+    node_weight_container_type clone(const node_weight_container_type& from, const Allocator& alloc)
     {
-      node_weight_container_type nodeWeights(allocs...);
-      nodeWeights.reserve(in.m_NodeWeights.size());
-      for(const auto& weight : in.m_NodeWeights)
+      node_weight_container_type nodeWeights(alloc);
+      nodeWeights.reserve(from.size());
+      for(const auto& weight : from)
       {
         nodeWeights.emplace_back(make_node_weight(weight.get()));
       }
