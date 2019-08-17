@@ -174,24 +174,14 @@ namespace sequoia::maths::graph_impl
     constexpr node_storage& operator=(const node_storage& in)
     {
       if(&in != this)
-      {
-        if constexpr(!has_allocator_type_v<node_weight_container_type>)
-        {
-          auto tmp{in};
-          *this = std::move(tmp);
-        }
-        else
-        {
-          using allocator = typename node_weight_container_type::allocator_type;
+      {      
+        auto cloner{
+          [this](const node_weight_container_type& in, const auto& alloc){
+            return clone(in, alloc);
+          }
+        };
 
-          auto cloner{
-            [this](const node_weight_container_type& in, const allocator& alloc){
-              return clone(in, alloc);
-            }
-          };
-
-          sequoia::impl::assign<direct_copy()>(m_NodeWeights, in.m_NodeWeights, cloner);
-        }
+        sequoia::impl::assign<direct_copy()>(m_NodeWeights, in.m_NodeWeights, cloner);
       }      
 
       return *this;
