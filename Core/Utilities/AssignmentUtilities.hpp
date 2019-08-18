@@ -15,32 +15,28 @@
 
 namespace sequoia::impl
 {
-  template<bool DefaultCopyable,class Container>
-  void assign(Container& to, const Container& from)
+  struct assignment_helper
   {
-    if constexpr(!has_allocator_type_v<Container>)
+    template<class Container, class AllocGetter>
+    constexpr static void assign(Container& to, const Container& from, [[maybe_unused]] AllocGetter allocGetter)
     {
-      auto tmp{from};
-      to = std::move(tmp);
-    }
-    else
-    {
-      using allocator = typename Container::allocator_type;
-
-      constexpr bool copyPropagation{
-        std::allocator_traits<allocator>::propagate_on_container_copy_assignment::value
-      };
-
-      constexpr bool alwaysEqual{
-        std::allocator_traits<allocator>::is_always_equal::value
-      };
-
-      if constexpr(DefaultCopyable && (copyPropagation || alwaysEqual))
+      if constexpr(std::is_void_v<std::invoke_result_t<AllocGetter, Container>>)
       {
-        to = from;
+        auto tmp{from};
+        to = std::move(tmp);
       }
       else
       {
+        using allocator = std::invoke_result_t<AllocGetter, Container>;
+
+        constexpr bool copyPropagation{
+          std::allocator_traits<allocator>::propagate_on_container_copy_assignment::value
+        };
+
+        constexpr bool alwaysEqual{
+          std::allocator_traits<allocator>::is_always_equal::value
+        };
+
         constexpr bool movePropagation{
           std::allocator_traits<allocator>::propagate_on_container_move_assignment::value
         };
@@ -48,14 +44,14 @@ namespace sequoia::impl
         constexpr bool copyConsistentWithMove{alwaysEqual || (copyPropagation == movePropagation)};
 
         auto getAlloc{
-          [](const Container& to, const Container& from){           
+          [allocGetter](const Container& to, const Container& from){           
             if constexpr(copyPropagation)
             {
-              return from.get_allocator();
+              return allocGetter(from);
             }
             else
             {
-              return to.get_allocator();
+              return allocGetter(to);
             }
           }
         };
@@ -68,11 +64,13 @@ namespace sequoia::impl
         else
         {
           if constexpr(copyPropagation)
-            to = Container{tmp.get_allocator()};
+          {
+            to = Container{allocGetter(tmp)};
+          }
 
           to.swap(tmp);
         }
       }
     }
-  }
+  };
 }
