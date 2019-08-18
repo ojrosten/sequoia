@@ -45,14 +45,8 @@ namespace sequoia::impl
           std::allocator_traits<allocator>::propagate_on_container_move_assignment::value
         };
 
-        constexpr bool swapPropagation{
-          std::allocator_traits<allocator>::propagate_on_container_swap::value
-        };          
-
-        constexpr bool copyConsistentWithSwap{alwaysEqual || (copyPropagation == swapPropagation)};
-
         constexpr bool copyConsistentWithMove{alwaysEqual || (copyPropagation == movePropagation)};
-          
+
         auto getAlloc{
           [](const Container& to, const Container& from){           
             if constexpr(copyPropagation)
@@ -71,15 +65,15 @@ namespace sequoia::impl
           Container tmp{from, getAlloc(to, from)};
           to = std::move(tmp);
         }
-        else if constexpr (copyConsistentWithSwap || !copyPropagation)
-        {            
-          Container tmp{from, getAlloc(to, from)};
-          to.swap(tmp);
-        }
         else
         {
-          static_assert(dependent_false<allocator>::value,
-                        "Unable to propagate allocator due to non-trivial copy construction combined with incompatible propagation traits");
+          if constexpr(copyPropagation)
+          {
+            to = Container{from.get_allocator()};
+          }
+          
+          Container tmp{from, getAlloc(to, from)};
+          to.swap(tmp);
         }
       }
     }

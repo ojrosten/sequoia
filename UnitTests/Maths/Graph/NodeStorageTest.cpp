@@ -126,36 +126,33 @@ namespace sequoia:: unit_testing
   template<class Sharing, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
   void test_node_storage::test_allocation_impl()
   {
-    if constexpr(!(std::is_same_v<Sharing, data_sharing::data_pool<int>> && PropagateCopy &&!PropagateMove && !PropagateSwap))
-    {
     
-      using namespace maths::graph_impl;
+    using namespace maths::graph_impl;
     
-      using storage = node_storage_tester<weight_maker<Sharing>, PropagateCopy, PropagateMove, PropagateSwap>;
-      using allocator = typename storage::allocator_type;
+    using storage = node_storage_tester<weight_maker<Sharing>, PropagateCopy, PropagateMove, PropagateSwap>;
+    using allocator = typename storage::allocator_type;
 
-      int
-        sAllocCount{}, sDeallocCount{},
-        tAllocCount{}, tDeallocCount{};    
+    int
+      sAllocCount{}, sDeallocCount{},
+      tAllocCount{}, tDeallocCount{};    
 
-      allocator sAlloc{sAllocCount, sDeallocCount};
+    allocator sAlloc{sAllocCount, sDeallocCount};
       
-      storage s(sAlloc);
-      check_equivalence(LINE(""), s, std::initializer_list<int>{});
-      check_equality(LINE(""), sAllocCount, 0);
+    storage s(sAlloc);
+    check_equivalence(LINE(""), s, std::initializer_list<int>{});
+    check_equality(LINE(""), sAllocCount, 0);
 
-      allocator tAlloc{tAllocCount, tDeallocCount};
-      storage t{{1, 1, 0}, tAlloc};
-      check_equivalence(LINE(""), t, std::initializer_list<int>{1, 1, 0});
-      check_equality(LINE(""), tAllocCount, 1);
+    allocator tAlloc{tAllocCount, tDeallocCount};
+    storage t{{1, 1, 0}, tAlloc};
+    check_equivalence(LINE(""), t, std::initializer_list<int>{1, 1, 0});
+    check_equality(LINE(""), tAllocCount, 1);
 
-      auto mutator{
-        [](storage& s){
-          s.add_node();
-        }
-      };
+    auto mutator{
+      [](storage& s){
+        s.add_node();
+      }
+    };
 
-      check_allocations(LINE(""), s, t, mutator, allocation_info<allocator>{sAlloc, tAlloc, {0, 1, 1, 1}});
-    }
+    check_allocations(LINE(""), s, t, mutator, allocation_info<allocator>{sAlloc, tAlloc, {0, 1, 1, 1}});
   }
 }
