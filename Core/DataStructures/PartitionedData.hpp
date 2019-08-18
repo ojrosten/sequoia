@@ -172,16 +172,6 @@ namespace sequoia
           using move_propagation_t
             = typename std::allocator_traits<allocator_type>::propagate_on_container_move_assignment;
 
-          using partition_swap_propagation_t
-            = typename std::allocator_traits<partitions_allocator_type>::propagate_on_container_swap;
-
-          using swap_propagation_t
-            = typename std::allocator_traits<allocator_type>::propagate_on_container_swap;
-
-          constexpr bool copyConsistentWithSwap{
-                 (partition_copy_propagation_t::value == partition_swap_propagation_t::value)
-              && (copy_propagation_t::value == swap_propagation_t::value)};
-
           constexpr bool copyConsistentWithMove{
                  (partition_copy_propagation_t::value == partition_move_propagation_t::value)
               && (copy_propagation_t::value == move_propagation_t::value)};
@@ -220,20 +210,17 @@ namespace sequoia
             }
           };
         
-          bucketed_storage tmp{in, getPartitionAlloc(*this, in), getAlloc(*this, in)};
-                
+          bucketed_storage tmp{in, getPartitionAlloc(*this, in), getAlloc(*this, in)};               
           if constexpr (copyConsistentWithMove)
           {
             *this = std::move(tmp);
           }
-          else if constexpr (copyConsistentWithSwap)
-          {
-            tmp.swap(*this);
-          }
           else
           {
-            static_assert(dependent_false<T>::value,
-              "Unable to propagate allocator(s) due to incompatible propagation traits");
+            if constexpr (partition_copy_propagation_t::value)
+              *this = bucketed_storage(in.m_Buckets.get_allocator());
+                           
+            tmp.swap(*this);
           }
         }
         

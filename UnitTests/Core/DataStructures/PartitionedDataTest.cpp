@@ -38,13 +38,12 @@ namespace sequoia
       test_bucketed_allocation<int, independent<int>>();
       test_bucketed_allocation<int, shared<int>>();
 
-      //test_bucketed_allocation_copy_no_propagation<int, independent<int>, true, true>();
-      // --will fail static assert in impl of oeprator=
+      test_bucketed_allocation_copy_no_propagation<int, independent<int>, true, true>();
       test_bucketed_allocation_copy_no_propagation<int, independent<int>, true, false>();
       test_bucketed_allocation_copy_no_propagation<int, independent<int>, false, true>();
       test_bucketed_allocation_copy_no_propagation<int, independent<int>, false, false>();
-      //test_bucketed_allocation_copy_no_propagation<int, shared<int>, true, true>();
-      // --will fail static assert in impl of oeprator=
+
+      test_bucketed_allocation_copy_no_propagation<int, shared<int>, true, true>();
       test_bucketed_allocation_copy_no_propagation<int, shared<int>, true, false>();
       test_bucketed_allocation_copy_no_propagation<int, shared<int>, false, true>();
       test_bucketed_allocation_copy_no_propagation<int, shared<int>, false, false>();

@@ -59,20 +59,17 @@ namespace sequoia::impl
             }
           }
         };
-                
+        
+        Container tmp{from, getAlloc(to, from)};
         if constexpr (copyConsistentWithMove)
-        {            
-          Container tmp{from, getAlloc(to, from)};
+        {
           to = std::move(tmp);
         }
         else
         {
           if constexpr(copyPropagation)
-          {
             to = Container{from.get_allocator()};
-          }
-          
-          Container tmp{from, getAlloc(to, from)};
+
           to.swap(tmp);
         }
       }
