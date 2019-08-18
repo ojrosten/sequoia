@@ -68,7 +68,7 @@ namespace sequoia::impl
         else
         {
           if constexpr(copyPropagation)
-            to = Container{from.get_allocator()};
+            to = Container{tmp.get_allocator()};
 
           to.swap(tmp);
         }
