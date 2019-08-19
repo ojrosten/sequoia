@@ -16,11 +16,11 @@
 namespace sequoia::impl
 {
   struct assignment_helper
-  {
+  {    
     template<class Container, class AllocGetter>
     constexpr static void assign(Container& to, const Container& from, [[maybe_unused]] AllocGetter allocGetter)
     {
-      if constexpr(std::is_void_v<std::invoke_result_t<AllocGetter, Container>>)
+      if constexpr(naive_treatment<Container, AllocGetter>())
       {
         auto tmp{from};
         to = std::move(tmp);
@@ -33,15 +33,11 @@ namespace sequoia::impl
           std::allocator_traits<allocator>::propagate_on_container_copy_assignment::value
         };
 
-        constexpr bool alwaysEqual{
-          std::allocator_traits<allocator>::is_always_equal::value
-        };
-
         constexpr bool movePropagation{
           std::allocator_traits<allocator>::propagate_on_container_move_assignment::value
         };
 
-        constexpr bool copyConsistentWithMove{alwaysEqual || (copyPropagation == movePropagation)};
+        constexpr bool copyConsistentWithMove{copyPropagation == movePropagation};
 
         auto getAlloc{
           [allocGetter](const Container& to, const Container& from){           
@@ -70,6 +66,21 @@ namespace sequoia::impl
 
           to.swap(tmp);
         }
+      }
+    }
+
+  private:
+    template<class Container, class AllocGetter>
+    constexpr static bool naive_treatment()
+    {
+      using allocator = std::invoke_result_t<AllocGetter, Container>;
+      if constexpr(std::is_void_v<allocator>)
+      {
+        return true;
+      }
+      else
+      {
+        return std::allocator_traits<allocator>::is_always_equal::value;
       }
     }
   };
