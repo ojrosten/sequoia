@@ -512,14 +512,7 @@ namespace sequoia
     };
 
     namespace impl
-    {      
-      template<class Allocator, class... Allocators>
-      [[nodiscard]]
-      constexpr decltype(auto) unpack_allocators(const std::tuple<Allocators...>& allocs) noexcept
-      {
-        return std::get<Allocator>(allocs);
-      }
-
+    {
       template<class Logger, class Check, class Allocator, class... Allocators>
       void check_allocation(std::string_view description, Logger& logger, Check check, allocation_info<Allocator>& allocationInfo, allocation_info<Allocators>&... moreInfo)
       {
@@ -700,7 +693,7 @@ namespace sequoia
           [description, &logger, &x](auto&... info){
             std::tuple<Allocators...> allocs{};
             
-            T u{x, impl::unpack_allocators<Allocators>(allocs)...};
+            T u{x, std::get<Allocators>(allocs)...};
             check_equality(combine_messages(description, "Copy-like allocations"), logger, u, x);
             impl::check_copy_like_x_allocation(description, logger, allocs, info...);
 
@@ -710,7 +703,7 @@ namespace sequoia
 
         std::tuple<Allocators...> allocs{};
 
-        T v{make(allocationInfo...), impl::unpack_allocators<Allocators>(allocs)...};
+        T v{make(allocationInfo...), std::get<Allocators>(allocs)...};
         check_equality(combine_messages(description, "Move-like allocations"), logger, v, x);
         impl::check_move_like_x_allocation(description, logger, allocs, allocationInfo...);
 
