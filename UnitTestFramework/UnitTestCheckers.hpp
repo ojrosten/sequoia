@@ -515,7 +515,7 @@ namespace sequoia
     {      
       template<class Allocator, class... Allocators>
       [[nodiscard]]
-      constexpr decltype(auto) unpack_allocators(std::tuple<Allocators...>& allocs) noexcept
+      constexpr decltype(auto) unpack_allocators(const std::tuple<Allocators...>& allocs) noexcept
       {
         return std::get<Allocator>(allocs);
       }
@@ -715,7 +715,7 @@ namespace sequoia
         impl::check_move_like_x_allocation(description, logger, allocs, allocationInfo...);
 
         m(v);
-        impl::check_mutation_allocation(combine_messages(description, "mutations allocations"), logger, allocs, allocationInfo...);
+        impl::check_mutation_allocation(combine_messages(description, "mutation allocations after move-like construction"), logger, allocs, allocationInfo...);
       }
     }
     
