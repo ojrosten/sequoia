@@ -642,76 +642,83 @@ namespace sequoia
 
         check_allocation(description, logger, checker, allocators, allocationInfo, moreInfo...);
       }
-    }
+
+      template<class Logger, class T, class Mutator, class... Allocators, std::size_t... I>
+      void check_allocations(std::index_sequence<I...>, std::string_view description, Logger& logger, const T& x, const T& y, Mutator m, allocation_info<Allocators>... allocationInfo)
+      {
+        static_assert(sizeof...(Allocators) > 0);
+      
+        typename Logger::sentinel s{logger, add_type_info<T>(description)};
+
+        {
+          T z{x};
+          check_copy_x_allocation(combine_messages(description, "Copy allocations"), logger, allocationInfo...);
+      
+          z = y;
+          check_copy_assign_allocation(combine_messages(description, "Copy assign allocations"), logger, allocationInfo...);
+
+          T w{std::move(z)};
+          check_move_allocation(combine_messages(description, "Move allocations"), logger, allocationInfo...);
+        }
+
+        {
+          T u{x}, v{y};
+          check_copy_x_allocation(combine_messages(description, "Copy allocations"), logger, allocationInfo...);
+          check_copy_y_allocation(combine_messages(description, "Copy allocations"), logger, allocationInfo...);
+
+          u = std::move(v);
+          check_move_assign_allocation(combine_messages(description, "Move assign allocations"), logger, allocationInfo...);
+
+          m(u);
+          check_mutation_allocation<mutation_flavour::after_move_assign>(combine_messages(description, "mutation after move assignment allocations"), logger, allocationInfo...);
+      }
+
+        if constexpr(((   std::allocator_traits<Allocators>::propagate_on_container_swap::value
+                     || std::allocator_traits<Allocators>::is_always_equal::value) && ...))
+        {
+          T u{x}, v{y};
+          check_copy_x_allocation(combine_messages(description, "Copy allocations"), logger, allocationInfo...);
+          check_copy_y_allocation(combine_messages(description, "Copy allocations"), logger, allocationInfo...);
+
+          using std::swap;
+          swap(u, v);
+
+          m(u);
+          check_mutation_allocation<mutation_flavour::after_swap>(combine_messages(description, "mutation after swap allocations"), logger, allocationInfo...);
+        }
+
+        {
+          auto make{
+            [description, &logger, &x](auto&... info){
+              std::tuple<Allocators...> allocs{};
+            
+              T u{x, std::get<I>(allocs)...};
+              check_equality(combine_messages(description, "Copy-like allocations"), logger, u, x);
+              check_copy_like_x_allocation(description, logger, allocs, info...);
+
+              return u;
+            }
+          };
+
+          std::tuple<Allocators...> allocs{};
+
+          T v{make(allocationInfo...), std::get<I>(allocs)...};
+          check_equality(combine_messages(description, "Move-like allocations"), logger, v, x);
+          check_move_like_x_allocation(description, logger, allocs, allocationInfo...);
+
+          m(v);
+          check_mutation_allocation(combine_messages(description, "mutation allocations after move-like construction"), logger, allocs, allocationInfo...);
+        }
+      }
     
+    }
+
     template<class Logger, class T, class Mutator, class... Allocators>
     void check_allocations(std::string_view description, Logger& logger, const T& x, const T& y, Mutator m, allocation_info<Allocators>... allocationInfo)
     {
-      static_assert(sizeof...(Allocators) > 0);
-      
-      typename Logger::sentinel s{logger, add_type_info<T>(description)};
-
-      {
-        T z{x};
-        impl::check_copy_x_allocation(combine_messages(description, "Copy allocations"), logger, allocationInfo...);
-      
-        z = y;
-        impl::check_copy_assign_allocation(combine_messages(description, "Copy assign allocations"), logger, allocationInfo...);
-
-        T w{std::move(z)};
-        impl::check_move_allocation(combine_messages(description, "Move allocations"), logger, allocationInfo...);
-      }
-
-      {
-        T u{x}, v{y};
-        impl::check_copy_x_allocation(combine_messages(description, "Copy allocations"), logger, allocationInfo...);
-        impl::check_copy_y_allocation(combine_messages(description, "Copy allocations"), logger, allocationInfo...);
-
-        u = std::move(v);
-        impl::check_move_assign_allocation(combine_messages(description, "Move assign allocations"), logger, allocationInfo...);
-
-        m(u);
-        impl::check_mutation_allocation<mutation_flavour::after_move_assign>(combine_messages(description, "mutation after move assignment allocations"), logger, allocationInfo...);
-      }
-
-      if constexpr(((   std::allocator_traits<Allocators>::propagate_on_container_swap::value
-                     || std::allocator_traits<Allocators>::is_always_equal::value) && ...))
-      {
-        T u{x}, v{y};
-        impl::check_copy_x_allocation(combine_messages(description, "Copy allocations"), logger, allocationInfo...);
-        impl::check_copy_y_allocation(combine_messages(description, "Copy allocations"), logger, allocationInfo...);
-
-        using std::swap;
-        swap(u, v);
-
-        m(u);
-        impl::check_mutation_allocation<mutation_flavour::after_swap>(combine_messages(description, "mutation after swap allocations"), logger, allocationInfo...);
-      }
-
-      {
-        auto make{
-          [description, &logger, &x](auto&... info){
-            std::tuple<Allocators...> allocs{};
-            
-            T u{x, std::get<Allocators>(allocs)...};
-            check_equality(combine_messages(description, "Copy-like allocations"), logger, u, x);
-            impl::check_copy_like_x_allocation(description, logger, allocs, info...);
-
-            return u;
-          }
-        };
-
-        std::tuple<Allocators...> allocs{};
-
-        T v{make(allocationInfo...), std::get<Allocators>(allocs)...};
-        check_equality(combine_messages(description, "Move-like allocations"), logger, v, x);
-        impl::check_move_like_x_allocation(description, logger, allocs, allocationInfo...);
-
-        m(v);
-        impl::check_mutation_allocation(combine_messages(description, "mutation allocations after move-like construction"), logger, allocs, allocationInfo...);
-      }
+      impl::check_allocations(std::make_index_sequence<sizeof...(Allocators)>{}, description, logger, x, y, m , allocationInfo...);
     }
-    
+        
     template<class Logger, class T, class Mutator>
     void check_copy_consistency(std::string_view description, Logger& logger, T& target, const T& prediction, Mutator m)
     {
