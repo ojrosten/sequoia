@@ -547,7 +547,7 @@ namespace sequoia
 
       constexpr static bool throw_on_range_error{Traits::throw_on_range_error};
       
-      constexpr contiguous_storage_base() noexcept = default;
+      constexpr contiguous_storage_base() = default;
 
       constexpr contiguous_storage_base(std::initializer_list<std::initializer_list<T>> list)
         : contiguous_storage_base(init_constant<staticStorage>{}, list)
@@ -1131,7 +1131,7 @@ namespace sequoia
       using allocator_type            = typename container_type::allocator_type;
       using partitions_allocator_type = typename Traits::partitions_allocator_type;
 
-      contiguous_storage() noexcept = default;
+      contiguous_storage() = default;
 
       contiguous_storage(const partitions_allocator_type& partitionAllocator, const allocator_type& allocator) noexcept
         : contiguous_storage_base<T, SharingPolicy, Traits>(partitionAllocator, allocator)

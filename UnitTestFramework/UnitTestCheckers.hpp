@@ -389,8 +389,8 @@ namespace sequoia
         : m_xAllocator{xAlloc}
         , m_yAllocator{yAlloc}
         , m_Predictions{predictions}
-        , m_xCurrentCount{m_xAllocator.counted_allocs()}
-        , m_yCurrentCount{m_yAllocator.counted_allocs()}
+        , m_xCurrentCount{m_xAllocator.allocs()}
+        , m_yCurrentCount{m_yAllocator.allocs()}
       {}
 
       template<class Logger>
@@ -429,8 +429,8 @@ namespace sequoia
           xPrediction += m_Predictions.copy_assign_y_to_x;
         }
 
-        m_xCurrentCount = m_xAllocator.counted_allocs();
-        m_yCurrentCount = m_yAllocator.counted_allocs();
+        m_xCurrentCount = m_xAllocator.allocs();
+        m_yCurrentCount = m_yAllocator.allocs();
 
         check_equality(combine_messages(description, "Copy assignment x allocations"), logger, m_xCurrentCount, xPrediction);
         check_equality(combine_messages(description, "Copy assignment y allocations"), logger, m_yCurrentCount, yPrediction);
@@ -448,8 +448,8 @@ namespace sequoia
         
         const int xPrediction{m_xCurrentCount + xIncrement}, yPrediction{m_yCurrentCount};
 
-        m_xCurrentCount = m_xAllocator.counted_allocs();
-        m_yCurrentCount = m_yAllocator.counted_allocs();
+        m_xCurrentCount = m_xAllocator.allocs();
+        m_yCurrentCount = m_yAllocator.allocs();
 
         check_equality(combine_messages(description, "Move assignment x allocations"), logger, m_xCurrentCount, xPrediction);
         check_equality(combine_messages(description, "Move assignment y allocations"), logger, m_yCurrentCount, yPrediction);
@@ -481,8 +481,8 @@ namespace sequoia
           xPrediction += m_Predictions.mutation;
         }
 
-        m_xCurrentCount = m_xAllocator.counted_allocs();
-        m_yCurrentCount = m_yAllocator.counted_allocs();
+        m_xCurrentCount = m_xAllocator.allocs();
+        m_yCurrentCount = m_yAllocator.allocs();
 
         check_equality(combine_messages(description, "Mutation x allocations"), logger, m_xCurrentCount, xPrediction);
         check_equality(combine_messages(description, "Mutation y allocations"), logger, m_yCurrentCount, yPrediction);
@@ -503,7 +503,7 @@ namespace sequoia
         typename Logger::sentinel s{logger, add_type_info<Allocator>(description)};
 
         const auto prediction{current + predictionDelta};        
-        current = alloc.counted_allocs();
+        current = alloc.allocs();
         
         check_equality(std::move(description), logger, current, prediction);
 
@@ -513,6 +513,13 @@ namespace sequoia
 
     namespace impl
     {      
+      template<class Allocator, class... Allocators>
+      [[nodiscard]]
+      constexpr decltype(auto) unpack_allocators(std::tuple<Allocators...>& allocs) noexcept
+      {
+        return std::get<Allocator>(allocs);
+      }
+
       template<class Logger, class Check, class Allocator, class... Allocators>
       void check_allocation(std::string_view description, Logger& logger, Check check, allocation_info<Allocator>& allocationInfo, allocation_info<Allocators>&... moreInfo)
       {
@@ -521,6 +528,17 @@ namespace sequoia
         if constexpr (sizeof...(Allocators) > 0)
         {
           check_allocation(description, logger, moreInfo...); 
+        }
+      }
+
+      template<class Logger, class Check, class... AllAllocators, class Allocator, class... Allocators>
+      void check_allocation(std::string_view description, Logger& logger, Check check, const std::tuple<AllAllocators...>& allocators, allocation_info<Allocator>& allocationInfo, allocation_info<Allocators>&... moreInfo)
+      {
+        check(add_type_info<Allocator>(description), std::get<sizeof...(AllAllocators)-1-sizeof...(Allocators)>(allocators), allocationInfo);
+
+        if constexpr (sizeof...(Allocators) > 0)
+        {
+          check_allocation(description, logger, check, allocators, moreInfo...); 
         }
       }
       
@@ -596,38 +614,28 @@ namespace sequoia
         check_allocation(description, logger, checker, allocationInfo, moreInfo...);
       }
 
-      template<class Allocator, std::size_t N>
-      [[nodiscard]]
-      constexpr Allocator make_allocator(std::array<int, N>& allocs, std::array<int, N>& deallocs, std::size_t& index) noexcept
-      {
-        const auto i{index++};
-        return {allocs[i], deallocs[i]};
-      }
-
       template<class Logger, class Allocator, class... Allocators>
-      void check_copy_like_x_allocation(std::string_view description, Logger& logger, const std::array<int, 1+sizeof...(Allocators)>& allocs, allocation_info<Allocator>& allocationInfo, allocation_info<Allocators>&... moreInfo)
+      void check_copy_like_x_allocation(std::string_view description, Logger& logger, const std::tuple<Allocator, Allocators...>& allocators, allocation_info<Allocator>& allocationInfo, allocation_info<Allocators>&... moreInfo)
       {
-        std::size_t i{};
         auto checker{
-          [&i, &allocs, &logger](std::string_view message, auto& info){
-            check_equality(message, logger, allocs[i++], info.predictions().copy_x);
+          [&logger](std::string_view message, const auto& alloc, const auto& info){
+            check_equality(message, logger, alloc.allocs(), info.predictions().copy_x);
           }
         };
 
-        check_allocation(description, logger, checker, allocationInfo, moreInfo...);
+        check_allocation(description, logger, checker, allocators, allocationInfo, moreInfo...);
       }
 
       template<class Logger, class Allocator, class... Allocators>
-      void check_mutation_allocation(std::string_view description, Logger& logger, const std::array<int, 1+sizeof...(Allocators)>& allocs, allocation_info<Allocator>& allocationInfo, allocation_info<Allocators>&... moreInfo)
+      void check_mutation_allocation(std::string_view description, Logger& logger, const std::tuple<Allocator, Allocators...>& allocators, allocation_info<Allocator>& allocationInfo, allocation_info<Allocators>&... moreInfo)
       {
-        std::size_t i{};
         auto checker{
-          [&i, &allocs, &logger](std::string_view message, auto& info){
-            check_equality(message, logger, allocs[i++], info.predictions().mutation);
+          [&logger](std::string_view message, const auto& alloc, const auto& info){
+            check_equality(message, logger, alloc.allocs(), info.predictions().mutation);
           }
         };
 
-        check_allocation(description, logger, checker, allocationInfo, moreInfo...);
+        check_allocation(description, logger, checker, allocators, allocationInfo, moreInfo...);
       }
     }
     
@@ -678,10 +686,9 @@ namespace sequoia
       {
         auto make{
           [description, &logger, &x](auto&... info){
-            std::array<int, sizeof...(Allocators)> allocs{}, deallocs{};
-
-            std::size_t index{};
-            T u{x, impl::make_allocator<Allocators>(allocs, deallocs, index)...};
+            std::tuple<Allocators...> allocs{};
+            
+            T u{x, impl::unpack_allocators<Allocators>(allocs)...};
             check_equality(combine_messages(description, "Copy constructor using allocator"), logger, u, x);
             impl::check_copy_like_x_allocation(description, logger, allocs, info...);
 
@@ -689,14 +696,12 @@ namespace sequoia
           }
         };
 
-        make(allocationInfo...);
+        std::tuple<Allocators...> allocs{};
 
-        std::array<int, sizeof...(Allocators)> allocs{}, deallocs{};
+        T v{make(allocationInfo...), impl::unpack_allocators<Allocators>(allocs)...};
+        check_equality(combine_messages(description, "Move constructor using allocator"), logger, v, x);        
 
-        std::size_t index{};
-        T v{make(allocationInfo...), impl::make_allocator<Allocators>(allocs, deallocs, index)...};
-        check_equality(combine_messages(description, "Move constructor using allocator"), logger, v, x);
-        check_equality(combine_messages(description, "No allocations for move-like constructor"), logger, allocs, std::array<int, sizeof...(Allocators)>{});
+        //check_equality(combine_messages(description, "No allocations for move-like constructor"), logger, allocs, std::array<int, sizeof...(Allocators)>{});
 
         m(v);
         impl::check_mutation_allocation(description, logger, allocs, allocationInfo...);

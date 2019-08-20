@@ -11,7 +11,7 @@
     \brief Utilties for use in unit tests.
 */
 
-#include <cstddef>
+#include <memory>
 
 namespace sequoia::unit_testing
 {
@@ -61,10 +61,8 @@ namespace sequoia::unit_testing
     using propagate_on_container_swap            = std::bool_constant<PropagateSwap>;
     using is_always_equal = std::false_type;
 
-    constexpr custom_allocator() noexcept = default;
-
-    custom_allocator(int& allocCount, int& deallocCount)
-      : m_pAllocs{&allocCount}, m_pDeallocs{&deallocCount}
+    custom_allocator()
+      : m_pAllocs{std::make_shared<int>()}, m_pDeallocs{std::make_shared<int>()}
     {}
     
     constexpr custom_allocator(const custom_allocator&) = default;
@@ -73,7 +71,7 @@ namespace sequoia::unit_testing
     {
       const auto ptr{static_cast<T*>(::operator new(n * sizeof(T)))};
 
-      if(m_pAllocs && n) ++(*m_pAllocs);
+      if(n) ++(*m_pAllocs);
 
       return ptr;
     }
@@ -81,26 +79,28 @@ namespace sequoia::unit_testing
     void deallocate(T* p, std::size_t n)
     {
       ::operator delete(p);
-      if(m_pDeallocs && n) ++(*m_pDeallocs);
+      if(n) ++(*m_pDeallocs);
     }
 
-    int counted_allocs() const noexcept { return m_pAllocs ? * m_pAllocs : 0; }
+    int allocs() const noexcept { return *m_pAllocs; }
 
-    int counted_deallocs() const noexcept { return m_pDeallocs ? * m_pDeallocs : 0; }
+    int deallocs() const noexcept { return *m_pDeallocs; }
+
+    std::shared_ptr<int> preserve_dealloc_count() const noexcept { return m_pDeallocs; }
 
     [[nodiscard]]
-    friend bool operator==(const custom_allocator& lhs, const custom_allocator& rhs)
+    friend bool operator==(const custom_allocator& lhs, const custom_allocator& rhs) noexcept
     {
       return (lhs.m_pAllocs == rhs.m_pAllocs) && (lhs.m_pDeallocs == rhs.m_pDeallocs);
     }
 
     [[nodiscard]]
-    friend bool operator!=(const custom_allocator& lhs, const custom_allocator& rhs)
+    friend bool operator!=(const custom_allocator& lhs, const custom_allocator& rhs) noexcept
     {
       return !(lhs == rhs);
     }
   private:
-    int *m_pAllocs{}, *m_pDeallocs{};
+    std::shared_ptr<int> m_pAllocs{}, m_pDeallocs{};
   };
 
   template<class Test>

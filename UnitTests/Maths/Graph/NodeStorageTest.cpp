@@ -130,22 +130,18 @@ namespace sequoia:: unit_testing
     using namespace maths::graph_impl;
     
     using storage = node_storage_tester<weight_maker<Sharing>, PropagateCopy, PropagateMove, PropagateSwap>;
-    using allocator = typename storage::allocator_type;
+    using allocator = typename storage::allocator_type; 
 
-    int
-      sAllocCount{}, sDeallocCount{},
-      tAllocCount{}, tDeallocCount{};    
-
-    allocator sAlloc{sAllocCount, sDeallocCount};
+    allocator sAlloc{};
       
     storage s(sAlloc);
     check_equivalence(LINE(""), s, std::initializer_list<int>{});
-    check_equality(LINE(""), sAllocCount, 0);
+    check_equality(LINE(""), sAlloc.allocs(), 0);
 
-    allocator tAlloc{tAllocCount, tDeallocCount};
+    allocator tAlloc{};
     storage t{{1, 1, 0}, tAlloc};
     check_equivalence(LINE(""), t, std::initializer_list<int>{1, 1, 0});
-    check_equality(LINE(""), tAllocCount, 1);
+    check_equality(LINE(""), tAlloc.allocs(), 1);
 
     auto mutator{
       [](storage& s){

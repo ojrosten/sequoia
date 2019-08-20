@@ -151,20 +151,16 @@ namespace sequoia::unit_testing
     using allocator = custom_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>;
     using sequence = monotonic_sequence<int, std::less<int>, std::vector<int, allocator>>;
 
-    int
-      sAllocCount{}, sDeallocCount{},
-      tAllocCount{}, tDeallocCount{};    
-
-    allocator sAlloc{sAllocCount, sDeallocCount};
-      
+    allocator sAlloc{};
+    
     sequence s(sAlloc);
     check_equivalence(LINE(""), s, std::initializer_list<int>{});
-    check_equality(LINE(""), sAllocCount, 0);
+    check_equality(LINE(""), sAlloc.allocs(), 0);
 
-    allocator tAlloc{tAllocCount, tDeallocCount};
+    allocator tAlloc{};
     sequence t{{4, 3}, tAlloc};
     check_equivalence(LINE(""), t, std::initializer_list<int>{4, 3});
-    check_equality(LINE(""), tAllocCount, 1);
+    check_equality(LINE(""), tAlloc.allocs(), 1);
 
     auto mutator{
       [](sequence& seq){
