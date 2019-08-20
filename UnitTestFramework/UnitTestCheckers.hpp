@@ -627,6 +627,18 @@ namespace sequoia
       }
 
       template<class Logger, class Allocator, class... Allocators>
+      void check_move_like_x_allocation(std::string_view description, Logger& logger, const std::tuple<Allocator, Allocators...>& allocators, allocation_info<Allocator>& allocationInfo, allocation_info<Allocators>&... moreInfo)
+      {
+        auto checker{
+          [&logger](std::string_view message, const auto& alloc, const auto& info){
+            check_equality(message, logger, alloc.allocs(), 0);
+          }
+        };
+
+        check_allocation(description, logger, checker, allocators, allocationInfo, moreInfo...);
+      }
+
+      template<class Logger, class Allocator, class... Allocators>
       void check_mutation_allocation(std::string_view description, Logger& logger, const std::tuple<Allocator, Allocators...>& allocators, allocation_info<Allocator>& allocationInfo, allocation_info<Allocators>&... moreInfo)
       {
         auto checker{
@@ -648,39 +660,39 @@ namespace sequoia
 
       {
         T z{x};
-        impl::check_copy_x_allocation(description, logger, allocationInfo...);
+        impl::check_copy_x_allocation(combine_messages(description, "Copy allocations"), logger, allocationInfo...);
       
         z = y;
-        impl::check_copy_assign_allocation(description, logger, allocationInfo...);
+        impl::check_copy_assign_allocation(combine_messages(description, "Copy assign allocations"), logger, allocationInfo...);
 
         T w{std::move(z)};
-        impl::check_move_allocation(description, logger, allocationInfo...);
+        impl::check_move_allocation(combine_messages(description, "Move allocations"), logger, allocationInfo...);
       }
 
       {
         T u{x}, v{y};
-        impl::check_copy_x_allocation(description, logger, allocationInfo...);
-        impl::check_copy_y_allocation(description, logger, allocationInfo...);
+        impl::check_copy_x_allocation(combine_messages(description, "Copy allocations"), logger, allocationInfo...);
+        impl::check_copy_y_allocation(combine_messages(description, "Copy allocations"), logger, allocationInfo...);
 
         u = std::move(v);
-        impl::check_move_assign_allocation(description, logger, allocationInfo...);
+        impl::check_move_assign_allocation(combine_messages(description, "Move assign allocations"), logger, allocationInfo...);
 
         m(u);
-        impl::check_mutation_allocation<mutation_flavour::after_move_assign>(description, logger, allocationInfo...);
+        impl::check_mutation_allocation<mutation_flavour::after_move_assign>(combine_messages(description, "mutation after move assignment allocations"), logger, allocationInfo...);
       }
 
       if constexpr(((   std::allocator_traits<Allocators>::propagate_on_container_swap::value
                      || std::allocator_traits<Allocators>::is_always_equal::value) && ...))
       {
         T u{x}, v{y};
-        impl::check_copy_x_allocation(description, logger, allocationInfo...);
-        impl::check_copy_y_allocation(description, logger, allocationInfo...);
+        impl::check_copy_x_allocation(combine_messages(description, "Copy allocations"), logger, allocationInfo...);
+        impl::check_copy_y_allocation(combine_messages(description, "Copy allocations"), logger, allocationInfo...);
 
         using std::swap;
         swap(u, v);
 
         m(u);
-        impl::check_mutation_allocation<mutation_flavour::after_swap>(description, logger, allocationInfo...);
+        impl::check_mutation_allocation<mutation_flavour::after_swap>(combine_messages(description, "mutation after swap allocations"), logger, allocationInfo...);
       }
 
       {
@@ -689,7 +701,7 @@ namespace sequoia
             std::tuple<Allocators...> allocs{};
             
             T u{x, impl::unpack_allocators<Allocators>(allocs)...};
-            check_equality(combine_messages(description, "Copy constructor using allocator"), logger, u, x);
+            check_equality(combine_messages(description, "Copy-like allocations"), logger, u, x);
             impl::check_copy_like_x_allocation(description, logger, allocs, info...);
 
             return u;
@@ -699,12 +711,11 @@ namespace sequoia
         std::tuple<Allocators...> allocs{};
 
         T v{make(allocationInfo...), impl::unpack_allocators<Allocators>(allocs)...};
-        check_equality(combine_messages(description, "Move constructor using allocator"), logger, v, x);        
-
-        //check_equality(combine_messages(description, "No allocations for move-like constructor"), logger, allocs, std::array<int, sizeof...(Allocators)>{});
+        check_equality(combine_messages(description, "Move-like allocations"), logger, v, x);
+        impl::check_move_like_x_allocation(description, logger, allocs, allocationInfo...);
 
         m(v);
-        impl::check_mutation_allocation(description, logger, allocs, allocationInfo...);
+        impl::check_mutation_allocation(combine_messages(description, "mutations allocations"), logger, allocs, allocationInfo...);
       }
     }
     
