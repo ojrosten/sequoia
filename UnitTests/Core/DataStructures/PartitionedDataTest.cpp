@@ -652,6 +652,17 @@ namespace sequoia
         check_equality(LINE(makeMessage("")), uAlloc.allocs(), 0);
 
         allocator sAlloc{};
+        auto mutator{
+          [sAlloc](storage& s) {
+            s.add_slot(sAlloc);
+          }
+        };
+
+        check_allocations(LINE(""), s, t, mutator,
+                          allocation_info<partitions_allocator>{sPartAlloc, tPartAlloc, {0, 1, 1, 1}},
+                          allocation_info<allocator>{sAlloc, tAlloc, {0, 2, 2, 0}});
+
+        /*
         s.add_slot(sAlloc);
         // []
         check_equality(LINE(makeMessage("")), s, storage{{{}}, partitions_allocator{}, allocator{}});
@@ -671,6 +682,7 @@ namespace sequoia
         check_equality(LINE(makeMessage("Allocation of elements should be done in a single hit per bucket")), tAlloc.allocs(), 6);
         check_equality(LINE(makeMessage("One copy-like and one move-like construction each of which creates new buckets")), uPartAlloc.allocs(), 2);
         check_equality(LINE(makeMessage("One copy-like and one move-like construction which respectively copy/move elements into their buckets")), uAlloc.allocs(), 1);
+        */
       }
     }
 

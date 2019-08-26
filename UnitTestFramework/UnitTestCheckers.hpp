@@ -520,7 +520,7 @@ namespace sequoia
 
         if constexpr (sizeof...(Allocators) > 0)
         {
-          check_allocation(description, logger, moreInfo...); 
+          check_allocation(description, logger, check, moreInfo...); 
         }
       }
 
