@@ -257,9 +257,28 @@ namespace sequoia
         }        
       }
 
-      void add_slot(const allocator_type& allocator = allocator_type{})
+      void add_slot()
       {
-        m_Buckets.push_back(std::vector<held_type, allocator_type>(allocator));
+        if(!std::allocator_traits<allocator_type>::is_always_equal::value && !m_Buckets.empty())
+        {
+          m_Buckets.emplace_back(m_Buckets.back().get_allocator());
+        }
+        else
+        {
+          m_Buckets.emplace_back();
+        } 
+      }
+
+      void add_slot(const allocator_type& allocator)
+      {
+        if(   !std::allocator_traits<allocator_type>::is_always_equal::value
+           && !m_Buckets.empty()
+           && (allocator != m_Buckets.back().get_allocator()))
+        {
+          throw std::logic_error("Unable to introduce a second, distinct element allocator");
+        }
+        
+        m_Buckets.emplace_back(allocator);
       }
 
       void insert_slot(const size_type pos, const allocator_type& allocator = allocator_type{})

@@ -651,22 +651,34 @@ namespace sequoia
         check_equality(LINE(makeMessage("")), uPartAlloc.allocs(), 0);
         check_equality(LINE(makeMessage("")), uAlloc.allocs(), 0);
 
-        allocator sAlloc{};
+        auto partitionMaker{
+          [](storage& s) {
+            s.add_slot();
+          }
+        };
+
+        check_allocations(LINE(""), s, t, partitionMaker,
+                          allocation_info<partitions_allocator>{sPartAlloc, tPartAlloc, {0, 1, 1, 1}},
+                          allocation_info<allocator>{allocator{}, tAlloc, {0, 2, 2, 0}});
+        /*
         auto mutator{
-          [sAlloc](storage& s) {
-            s.add_slot(sAlloc);
+          [](storage& s) {
+            s.add_slot();
+            s.push_back_to_partition(s.num_partitions() - 1, 3);
           }
         };
 
         check_allocations(LINE(""), s, t, mutator,
                           allocation_info<partitions_allocator>{sPartAlloc, tPartAlloc, {0, 1, 1, 1}},
-                          allocation_info<allocator>{sAlloc, tAlloc, {0, 2, 2, 0}});
+                          allocation_info<allocator>{allocator{}, tAlloc, {0, 2, 2, 1}});
+        */
 
         /*
+        auto sPartAllocCount{};
         s.add_slot(sAlloc);
         // []
         check_equality(LINE(makeMessage("")), s, storage{{{}}, partitions_allocator{}, allocator{}});
-        check_equality(LINE(makeMessage("")), sPartAlloc.allocs(), 1);
+        check_equality(LINE(makeMessage("")), sPartitionAllocCount, 1);
         check_equality(LINE(makeMessage("")), sAlloc.allocs(), 0);
 
         // [3]
