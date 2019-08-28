@@ -678,42 +678,6 @@ namespace sequoia
         check_allocations(LINE(""), s, t, mutator,
                           allocation_info<partitions_allocator>{sPartAlloc, tPartAlloc, {1, 1, 1, 1, 1}},
                           allocation_info<allocator>{sAlloc, tAlloc, {0, 2, 2, 1, 0}});
-        
-        /*
-        auto mutator{
-          [](storage& s) {
-            s.add_slot();
-            s.push_back_to_partition(s.num_partitions() - 1, 3);
-          }
-        };
-
-        check_allocations(LINE(""), s, t, mutator,
-                          allocation_info<partitions_allocator>{sPartAlloc, tPartAlloc, {0, 1, 1, 1}},
-                          allocation_info<allocator>{allocator{}, tAlloc, {0, 2, 2, 1}});
-        */
-
-        /*
-        auto sPartAllocCount{};
-        s.add_slot(sAlloc);
-        // []
-        check_equality(LINE(makeMessage("")), s, storage{{{}}, partitions_allocator{}, allocator{}});
-        check_equality(LINE(makeMessage("")), sPartitionAllocCount, 1);
-        check_equality(LINE(makeMessage("")), sAlloc.allocs(), 0);
-
-        // [3]
-        s.push_back_to_partition(0, 3);
-        check_equality(LINE(makeMessage("")), s, storage{{{3}}, partitions_allocator{}, allocator{}});
-        check_equality(LINE(makeMessage("")), sPartAlloc.allocs(), 1);
-        check_equality(LINE(makeMessage("")), sAlloc.allocs(), 1);
-
-        check_regular_semantics(LINE(makeMessage("Regular semantics")), s, t, uPartAlloc, uAlloc);
-        check_equality(LINE(makeMessage("One copy and one move with propagation")), sPartAlloc.allocs(), 3);
-        check_equality(LINE(makeMessage("One copy and one move with propagation")), sAlloc.allocs(), 3);
-        check_equality(LINE(makeMessage("Partition Allocator should be propagated")), tPartAlloc.allocs(), 3);
-        check_equality(LINE(makeMessage("Allocation of elements should be done in a single hit per bucket")), tAlloc.allocs(), 6);
-        check_equality(LINE(makeMessage("One copy-like and one move-like construction each of which creates new buckets")), uPartAlloc.allocs(), 2);
-        check_equality(LINE(makeMessage("One copy-like and one move-like construction which respectively copy/move elements into their buckets")), uAlloc.allocs(), 1);
-        */
       }
     }
 
