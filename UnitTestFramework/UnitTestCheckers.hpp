@@ -376,7 +376,7 @@ namespace sequoia
 
     struct allocation_predictions
     {
-      int copy_x{}, copy_y{}, copy_assign_y_to_x{}, mutation{};
+      int copy_x{}, copy_y{}, copy_assign_y_to_x{}, mutation{}, move_like_x{};
     };
     
     enum class mutation_flavour {after_move_assign, after_swap};
@@ -624,7 +624,7 @@ namespace sequoia
       {
         auto checker{
           [&logger](std::string_view message, const auto& alloc, const auto& info){
-            check_equality(message, logger, alloc.allocs(), 0);
+            check_equality(message, logger, alloc.allocs(), info.predictions().move_like_x);
           }
         };
 
@@ -636,7 +636,7 @@ namespace sequoia
       {
         auto checker{
           [&logger](std::string_view message, const auto& alloc, const auto& info){
-            check_equality(message, logger, alloc.allocs(), info.predictions().mutation);
+            check_equality(message, logger, alloc.allocs(), info.predictions().mutation + info.predictions().move_like_x);
           }
         };
 
@@ -693,8 +693,8 @@ namespace sequoia
               std::tuple<Allocators...> allocs{};
             
               T u{x, std::get<I>(allocs)...};
-              check_equality(combine_messages(description, "Copy-like allocations"), logger, u, x);
-              check_copy_like_x_allocation(description, logger, allocs, info...);
+              check_equality(combine_messages(description, "Copy-like construction"), logger, u, x);
+              check_copy_like_x_allocation(combine_messages(description, "Copy-like allocations"), logger, allocs, info...);
 
               return u;
             }
@@ -703,8 +703,8 @@ namespace sequoia
           std::tuple<Allocators...> allocs{};
 
           T v{make(allocationInfo...), std::get<I>(allocs)...};
-          check_equality(combine_messages(description, "Move-like allocations"), logger, v, x);
-          check_move_like_x_allocation(description, logger, allocs, allocationInfo...);
+          check_equality(combine_messages(description, "Move-like construction"), logger, v, x);
+          check_move_like_x_allocation(combine_messages(description, "Move-like allocations"), logger, allocs, allocationInfo...);
 
           m(v);
           check_mutation_allocation(combine_messages(description, "mutation allocations after move-like construction"), logger, allocs, allocationInfo...);

@@ -144,7 +144,7 @@ namespace sequoia
         
         for(auto&& bucket : in.m_Buckets)
         {
-          m_Buckets.push_back(std::vector<held_type, allocator_type>(std::move(bucket), allocator));          
+          m_Buckets.emplace_back(std::move(bucket), allocator);
         }
       }
 

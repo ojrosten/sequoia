@@ -660,6 +660,25 @@ namespace sequoia
         check_allocations(LINE(""), s, t, partitionMaker,
                           allocation_info<partitions_allocator>{sPartAlloc, tPartAlloc, {0, 1, 1, 1}},
                           allocation_info<allocator>{allocator{}, tAlloc, {0, 2, 2, 0}});
+
+        allocator sAlloc{};
+
+        s.add_slot(sAlloc);
+        // []
+        
+        check_equality(LINE(makeMessage("")), s, storage{{{}}, partitions_allocator{}, allocator{}});
+
+        auto mutator{
+          [](storage& s) {
+            s.add_slot();
+            s.push_back_to_partition(s.num_partitions() - 1, 3);
+          }
+        };
+
+        check_allocations(LINE(""), s, t, mutator,
+                          allocation_info<partitions_allocator>{sPartAlloc, tPartAlloc, {1, 1, 1, 1, 1}},
+                          allocation_info<allocator>{sAlloc, tAlloc, {0, 2, 2, 1, 0}});
+        
         /*
         auto mutator{
           [](storage& s) {
