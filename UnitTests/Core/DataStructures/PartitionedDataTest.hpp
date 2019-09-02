@@ -16,6 +16,8 @@ namespace sequoia::unit_testing
   public:
     using unit_test::unit_test;
 
+    template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
+    void test_allocation();
   private:      
     void run_tests() override;
 
@@ -33,15 +35,6 @@ namespace sequoia::unit_testing
 
     template<class T, class SharingPolicy, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
     void test_bucketed_allocation();
-
-    template<class T, class SharingPolicy, bool PropagateMove, bool PropagateSwap>
-    void test_bucketed_allocation_copy_no_propagation();
-
-    template<class T, class SharingPolicy, bool PropagateCopy, bool PropagateSwap>
-    void test_bucketed_allocation_move_no_propagation();
-
-    template<class T, class SharingPolicy, bool PropagateCopy, bool PropagateMove>
-    void test_bucketed_allocation_swap_no_propagation();
 
     template<class T, class SharingPolicy>
     void test_contiguous_allocation();

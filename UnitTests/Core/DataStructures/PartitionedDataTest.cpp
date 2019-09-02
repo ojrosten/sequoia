@@ -35,46 +35,8 @@ namespace sequoia
       test_bucketed_capacity<int, independent<int>, false>();
       test_bucketed_capacity<int, shared<int>, false>();
 
-      test_bucketed_allocation<int, independent<int>, true, true, true>();
-      //test_bucketed_allocation<int, independent<int>, true, true, false>();
-      //test_bucketed_allocation<int, independent<int>, true, false, true>();
-      //test_bucketed_allocation<int, independent<int>, true, false, false>();
+      allocation_tester t{*this};
       
-      //test_bucketed_allocation<int, shared<int>, true, true, true>();
-      //test_bucketed_allocation<int, shared<int>, true, true, false>();
-      //test_bucketed_allocation<int, shared<int>, true, false, true>();
-      //test_bucketed_allocation<int, shared<int>, true, false, false>();
-      /*
-      test_bucketed_allocation_copy_no_propagation<int, independent<int>, true, true>();
-      test_bucketed_allocation_copy_no_propagation<int, independent<int>, true, false>();
-      test_bucketed_allocation_copy_no_propagation<int, independent<int>, false, true>();
-      test_bucketed_allocation_copy_no_propagation<int, independent<int>, false, false>();
-
-      test_bucketed_allocation_copy_no_propagation<int, shared<int>, true, true>();
-      test_bucketed_allocation_copy_no_propagation<int, shared<int>, true, false>();
-      test_bucketed_allocation_copy_no_propagation<int, shared<int>, false, true>();
-      test_bucketed_allocation_copy_no_propagation<int, shared<int>, false, false>();
-
-      test_bucketed_allocation_move_no_propagation<int, independent<int>, true, true>();
-      test_bucketed_allocation_move_no_propagation<int, independent<int>, true, false>();
-      test_bucketed_allocation_move_no_propagation<int, independent<int>, false, true>();
-      test_bucketed_allocation_move_no_propagation<int, independent<int>, false, false>();
-
-      test_bucketed_allocation_move_no_propagation<int, shared<int>, true, true>();
-      test_bucketed_allocation_move_no_propagation<int, shared<int>, true, false>();
-      test_bucketed_allocation_move_no_propagation<int, shared<int>, false, true>();
-      test_bucketed_allocation_move_no_propagation<int, shared<int>, false, false>();
-
-      test_bucketed_allocation_swap_no_propagation<int, independent<int>, true, true>();
-      test_bucketed_allocation_swap_no_propagation<int, independent<int>, true, false>();
-      test_bucketed_allocation_swap_no_propagation<int, independent<int>, false, true>();
-      test_bucketed_allocation_swap_no_propagation<int, independent<int>, false, false>();
-
-      test_bucketed_allocation_swap_no_propagation<int, shared<int>, true, true>();
-      test_bucketed_allocation_swap_no_propagation<int, shared<int>, true, false>();
-      test_bucketed_allocation_swap_no_propagation<int, shared<int>, false, true>();
-      test_bucketed_allocation_swap_no_propagation<int, shared<int>, false, false>();
-      */
       test_contiguous_allocation<int, independent<int>>();
       test_contiguous_allocation<int, shared<int>>();
     }
@@ -616,6 +578,15 @@ namespace sequoia
       return storage;
     }
 
+    template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
+    void partitioned_data_test::test_allocation()
+    {
+      using namespace data_sharing;
+
+      test_bucketed_allocation<int, independent<int>, PropagateCopy, PropagateMove, PropagateSwap>();
+      test_bucketed_allocation<int, shared<int>, PropagateCopy, PropagateMove, PropagateSwap>();
+    }
+
     template<class T, class SharingPolicy, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
     void partitioned_data_test::test_bucketed_allocation()
     {
@@ -685,143 +656,7 @@ namespace sequoia
                           allocation_info<allocator>{sAlloc, tAlloc, {0, 2, 2, 1, 0}});
       }
     }
-
-    template<class T, class SharingPolicy, bool PropagateMove, bool PropagateSwap>
-    void partitioned_data_test::test_bucketed_allocation_copy_no_propagation()
-    {
-      using namespace data_structures;
-
-      using storage = bucketed_storage<T, SharingPolicy, custom_bucketed_storage_traits<T, SharingPolicy, false, PropagateMove, PropagateSwap>>;
-      using partitions_allocator = typename storage::partitions_allocator_type;
-      using allocator = typename storage::allocator_type;      
-      using prediction = std::initializer_list<std::initializer_list<int>>;
-
-      auto makeMessage{
-        [](std::string_view message) {
-          return add_type_info<storage>(message);
-        }
-      };
-
-      int
-        sPartitionAllocCount{}, sAllocCount{}, sPartitionDeallocCount{}, sDeallocCount{},
-        tPartitionAllocCount{}, tAllocCount{}, tPartitionDeallocCount{}, tDeallocCount{},
-        uPartitionAllocCount{}, uAllocCount{}, uPartitionDeallocCount{}, uDeallocCount{};
-
-      {
-        // []; [0,2][1]
-        storage
-          s{{{}}, partitions_allocator{sPartitionAllocCount, sPartitionDeallocCount}, allocator{sAllocCount, sDeallocCount}},
-          t{{{0,2}, {1}}, partitions_allocator{tPartitionAllocCount, tPartitionDeallocCount}, allocator{tAllocCount, tDeallocCount}};
-
-        check_equivalence(LINE(makeMessage("")), s, prediction{{}});
-        check_equivalence(LINE(makeMessage("")), t, prediction{{0,2}, {1}});
-        check_equality(LINE(makeMessage("")), sPartitionAllocCount, 1);
-        check_equality(LINE(makeMessage("")), sAllocCount, 0);
-        check_equality(LINE(makeMessage("Only a single allocation necessary due to reservation")), tPartitionAllocCount, 1);
-        check_equality(LINE(makeMessage("Only a single allocation per bucket due to reservation")), tAllocCount, 2);
-
-        s = t;
-        check_equality(LINE(makeMessage("t-partition allocator not propagated")), sPartitionAllocCount, 2);
-        check_equality(LINE(makeMessage("t-allocator not propagated")), sAllocCount, 2);
-        check_equality(LINE(makeMessage("t-partition allocator not propagated")), tPartitionAllocCount, 1);
-        check_equality(LINE(makeMessage("t-allocator not propagated")), tAllocCount, 2);
-
-        check_regular_semantics(LINE(makeMessage("Regular semantics")), s, storage{}, partitions_allocator{uPartitionAllocCount, uPartitionDeallocCount}, allocator{uAllocCount, uDeallocCount});
-      }
-    }
-
-    template<class T, class SharingPolicy, bool PropagateCopy, bool PropagateSwap>
-    void partitioned_data_test::test_bucketed_allocation_move_no_propagation()
-    {
-      using namespace data_structures;
-
-      using storage = bucketed_storage<T, SharingPolicy, custom_bucketed_storage_traits<T, SharingPolicy, PropagateCopy, false, PropagateSwap>>;
-      using partitions_allocator = typename storage::partitions_allocator_type;
-      using allocator = typename storage::allocator_type;      
-      using prediction = std::initializer_list<std::initializer_list<int>>;
-
-      auto makeMessage{
-        [](std::string_view message) {
-          return add_type_info<storage>(message);
-        }
-      };
-
-      int
-        sPartitionAllocCount{}, sAllocCount{}, sPartitionDeallocCount{}, sDeallocCount{},
-        tPartitionAllocCount{}, tAllocCount{}, tPartitionDeallocCount{}, tDeallocCount{};
-
-      {
-        // []; [0,2][1]
-        storage
-          s{{{}}, partitions_allocator{sPartitionAllocCount, sPartitionDeallocCount}, allocator{sAllocCount, sDeallocCount}},
-          t{{{0,2}, {1}}, partitions_allocator{tPartitionAllocCount, tPartitionDeallocCount}, allocator{tAllocCount, tDeallocCount}};
-
-        check_equivalence(LINE(makeMessage("")), s, prediction{{}});
-        check_equivalence(LINE(makeMessage("")), t, prediction{{0,2}, {1}});
-        check_equality(LINE(makeMessage("")), sPartitionAllocCount, 1);
-        check_equality(LINE(makeMessage("")), sAllocCount, 0);
-        check_equality(LINE(makeMessage("Only a single allocation necessary due to reservation")), tPartitionAllocCount, 1);
-        check_equality(LINE(makeMessage("Only a single allocation per bucket due to reservation")), tAllocCount, 2);
-
-        s = std::move(t);
-        check_equality(LINE(makeMessage("t-partition allocator not propagated")), sPartitionAllocCount, 2);
-        check_equality(LINE(makeMessage("t-partition allocator not propagated")), tPartitionAllocCount, 1);
-      }
-    }
-
-    template<class T, class SharingPolicy, bool PropagateCopy, bool PropagateMove>
-    void partitioned_data_test::test_bucketed_allocation_swap_no_propagation()
-    {
-      using namespace data_structures;
-
-      using storage = bucketed_storage<T, SharingPolicy, custom_bucketed_storage_traits<T, SharingPolicy, PropagateCopy, PropagateMove, false>>;
-      using partitions_allocator = typename storage::partitions_allocator_type;
-      using allocator = typename storage::allocator_type;      
-      using prediction = std::initializer_list<std::initializer_list<int>>;
-
-      auto makeMessage{
-        [](std::string_view message) {
-          return add_type_info<storage>(message);
-        }
-      };
-
-      int
-        sPartitionAllocCount{}, sAllocCount{}, sPartitionDeallocCount{}, sDeallocCount{},
-        tPartitionAllocCount{}, tAllocCount{}, tPartitionDeallocCount{}, tDeallocCount{};
-
-      {
-        // []; []
-        storage
-          s{{{}}, partitions_allocator{sPartitionAllocCount, sPartitionDeallocCount}, allocator{sAllocCount, sDeallocCount}},
-          t{{{}}, partitions_allocator{tPartitionAllocCount, tPartitionDeallocCount}, allocator{tAllocCount, tDeallocCount}};
-
-        check_equivalence(LINE(makeMessage("")), s, prediction{{}});
-        check_equivalence(LINE(makeMessage("")), t, prediction{{}});
-        check_equality(LINE(makeMessage("")), sPartitionAllocCount, 1);
-        check_equality(LINE(makeMessage("")), sAllocCount, 0);
-        check_equality(LINE(makeMessage("")), tPartitionAllocCount, 1);
-        check_equality(LINE(makeMessage("")), tAllocCount, 0);
-
-        swap(s,t);
-
-        s.add_slot();
-        // [][]; []
-
-        check_equality(LINE(makeMessage("")), s, storage{{}, {}});
-        check_equality(LINE(makeMessage("")), sPartitionAllocCount, 2);
-        check_equality(LINE(makeMessage("")), tPartitionAllocCount, 1);
-        
-        s.push_back_to_partition(0, 1);
-        // [1][]; []
-
-        check_equality(LINE(makeMessage("")), s, storage{{1}, {}});
-        check_equality(LINE(makeMessage("")), sPartitionAllocCount, 2);        
-        check_equality(LINE(makeMessage("")), tPartitionAllocCount, 1);
-        check_equality(LINE(makeMessage("Non-propagation of allocator during swap is not transitive for a vector of vectors")), sAllocCount, 0);
-        check_equality(LINE(makeMessage("Non-propagation of allocator during swap is not transitive for a vector of vectors")), tAllocCount, 1);
-      }
-    }
-
+   
     template<class T, class SharingPolicy>
     void partitioned_data_test::test_contiguous_allocation()
     {
