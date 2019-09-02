@@ -161,7 +161,7 @@ namespace sequoia::unit_testing
     constexpr static bool throw_on_range_error{true};
 
     template<class S> using buckets_type   = std::vector<S, custom_allocator<S, PropagateCopy, PropagateMove, PropagateSwap>>; 
-    template<class S> using container_type = std::vector<S, custom_allocator<S, PropagateCopy, PropagateMove, PropagateSwap>>; 
+    template<class S> using container_type = std::vector<S, custom_allocator<S, true, true, true>>; 
   };
 
   template

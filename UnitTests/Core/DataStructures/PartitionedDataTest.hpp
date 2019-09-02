@@ -31,7 +31,7 @@ namespace sequoia::unit_testing
     template<class T, class SharingPolicy, bool ThrowOnRangeError>
     void test_bucketed_capacity();
 
-    template<class T, class SharingPolicy>
+    template<class T, class SharingPolicy, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
     void test_bucketed_allocation();
 
     template<class T, class SharingPolicy, bool PropagateMove, bool PropagateSwap>

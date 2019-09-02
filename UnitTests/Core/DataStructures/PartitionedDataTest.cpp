@@ -35,8 +35,15 @@ namespace sequoia
       test_bucketed_capacity<int, independent<int>, false>();
       test_bucketed_capacity<int, shared<int>, false>();
 
-      test_bucketed_allocation<int, independent<int>>();
-      test_bucketed_allocation<int, shared<int>>();
+      test_bucketed_allocation<int, independent<int>, true, true, true>();
+      //test_bucketed_allocation<int, independent<int>, true, true, false>();
+      //test_bucketed_allocation<int, independent<int>, true, false, true>();
+      //test_bucketed_allocation<int, independent<int>, true, false, false>();
+      
+      //test_bucketed_allocation<int, shared<int>, true, true, true>();
+      //test_bucketed_allocation<int, shared<int>, true, true, false>();
+      //test_bucketed_allocation<int, shared<int>, true, false, true>();
+      //test_bucketed_allocation<int, shared<int>, true, false, false>();
       /*
       test_bucketed_allocation_copy_no_propagation<int, independent<int>, true, true>();
       test_bucketed_allocation_copy_no_propagation<int, independent<int>, true, false>();
@@ -609,12 +616,12 @@ namespace sequoia
       return storage;
     }
 
-    template<class T, class SharingPolicy>
+    template<class T, class SharingPolicy, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
     void partitioned_data_test::test_bucketed_allocation()
     {
       using namespace data_structures;
 
-      using storage = bucketed_storage<T, SharingPolicy, custom_bucketed_storage_traits<T, SharingPolicy>>;
+      using storage = bucketed_storage<T, SharingPolicy, custom_bucketed_storage_traits<T, SharingPolicy, PropagateCopy, PropagateMove, PropagateSwap>>;
       using partitions_allocator = typename storage::partitions_allocator_type;
       using allocator = typename storage::allocator_type;
       using prediction = std::initializer_list<std::initializer_list<int>>;
@@ -640,26 +647,24 @@ namespace sequoia
         check_equality(LINE(makeMessage("Only a single allocation necessary due to reservation")), tPartAlloc.allocs(), 1);
         check_equality(LINE(makeMessage("Only a single allocation per bucket due to reservation")), tAlloc.allocs(), 2);
 
-        partitions_allocator uPartAlloc{};
-        allocator uAlloc{};
-
-        check_regular_semantics(LINE(makeMessage("Regular semantics")), s, t, uPartAlloc, uAlloc);
-
-        check_equality(LINE(makeMessage("")), sPartAlloc.allocs(), 0);
-        check_equality(LINE(makeMessage("Partition Allocator should be propagated")), tPartAlloc.allocs(), 2);
-        check_equality(LINE(makeMessage("Allocation of elements should be done in a single hit per bucket")), tAlloc.allocs(), 4);
-        check_equality(LINE(makeMessage("")), uPartAlloc.allocs(), 0);
-        check_equality(LINE(makeMessage("")), uAlloc.allocs(), 0);
-
         auto partitionMaker{
           [](storage& s) {
             s.add_slot();
           }
         };
 
+        auto allocGetter{
+          [&s](){
+            allocator a{};
+            if(!s.empty()) a = s.get_allocator(0);
+
+            return a;
+          }
+        };
+
         check_allocations(LINE(""), s, t, partitionMaker,
                           allocation_info<partitions_allocator>{sPartAlloc, tPartAlloc, {0, 1, 1, 1}},
-                          allocation_info<allocator>{allocator{}, tAlloc, {0, 2, 2, 0}});
+                          allocation_info<allocator>{allocGetter, tAlloc, {0, 2, 2, 0}});
 
         allocator sAlloc{};
 
@@ -669,8 +674,8 @@ namespace sequoia
         check_equality(LINE(makeMessage("")), s, storage{{{}}, partitions_allocator{}, allocator{}});
 
         auto mutator{
-          [](storage& s) {
-            s.add_slot();
+          [tAlloc](storage& s) {
+            s.add_slot(tAlloc);
             s.push_back_to_partition(s.num_partitions() - 1, 3);
           }
         };

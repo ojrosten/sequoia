@@ -221,7 +221,7 @@ namespace sequoia
       
       ~connectivity() = default;
 
-      constexpr connectivity& operator=(connectivity&&) noexcept = default;
+      constexpr connectivity& operator=(connectivity&&) = default;
       
       constexpr connectivity& operator=(const connectivity& in)
       {
