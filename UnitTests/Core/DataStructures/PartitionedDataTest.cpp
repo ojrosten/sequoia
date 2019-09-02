@@ -675,7 +675,7 @@ namespace sequoia
 
         auto mutator{
           [tAlloc](storage& s) {
-            s.add_slot(tAlloc);
+            s.add_slot(s.get_allocator(0));
             s.push_back_to_partition(s.num_partitions() - 1, 3);
           }
         };
