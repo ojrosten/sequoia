@@ -159,9 +159,16 @@ namespace sequoia
         return *this;
       }
 
-      void swap(bucketed_storage& other) noexcept(noexcept(std::swap(m_Buckets, other.m_Buckets)))
+      void swap(bucketed_storage& other)
+        noexcept(noexcept(std::swap(m_Buckets, other.m_Buckets)))
       {
         std::swap(m_Buckets, other.m_Buckets);
+      }
+
+      friend void swap(bucketed_storage& lhs, bucketed_storage& rhs)
+        noexcept(noexcept(lhs.swap(rhs)))
+      {
+        lhs.swap(rhs);
       }
 
       [[nodiscard]]
@@ -1202,11 +1209,5 @@ namespace sequoia
     {
       i = pred(*i) ? data.erase_from_partition(i) : std::next(i);
     }
-  }
-
-  template<class T, class SharingPolicy, class Traits>
-  void swap(data_structures::bucketed_storage<T, SharingPolicy, Traits>& lhs, data_structures::bucketed_storage<T, SharingPolicy, Traits>& rhs)
-  {
-    lhs.swap(rhs);
   }
 }
