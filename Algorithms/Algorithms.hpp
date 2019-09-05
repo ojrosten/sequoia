@@ -24,7 +24,8 @@ namespace sequoia
   {
     if constexpr (has_allocator_type_v<T>)
     {
-      std::swap(a,b);
+      using std::swap;
+      swap(a,b);
     }
     else
     {

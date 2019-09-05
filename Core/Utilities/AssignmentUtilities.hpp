@@ -17,51 +17,28 @@ namespace sequoia::impl
 {
   struct assignment_helper
   {    
-    template<class Container, class AllocGetter>
-    constexpr static void assign(Container& to, const Container& from, [[maybe_unused]] AllocGetter allocGetter)
+    template<class Container, class... AllocGetters>
+    constexpr static void assign(Container& to, const Container& from, [[maybe_unused]] AllocGetters... allocGetters)
     {
-      if constexpr(naive_treatment<Container, AllocGetter>())
+      if constexpr((naive_treatment<Container, AllocGetters>() && ...))
       {
         auto tmp{from};
         to = std::move(tmp);
       }
       else
       {
-        using allocator = std::invoke_result_t<AllocGetter, Container>;
-
-        constexpr bool copyPropagation{
-          std::allocator_traits<allocator>::propagate_on_container_copy_assignment::value
-        };
-
-        constexpr bool movePropagation{
-          std::allocator_traits<allocator>::propagate_on_container_move_assignment::value
-        };
-
-        constexpr bool copyConsistentWithMove{copyPropagation == movePropagation};
-
-        auto getAlloc{
-          [allocGetter](const Container& to, const Container& from){           
-            if constexpr(copyPropagation)
-            {
-              return allocGetter(from);
-            }
-            else
-            {
-              return allocGetter(to);
-            }
-          }
-        };
+        static_assert(consistency<Container, AllocGetters...>());
         
-        Container tmp{from, getAlloc(to, from)};
-        if constexpr (copyConsistentWithMove)
+        Container tmp{from, get_allocator(to, from, allocGetters)...};
+        if constexpr (copy_propagation<Container, AllocGetters...>() == move_propagation<Container, AllocGetters...>())
         {
           to = std::move(tmp);
         }
         else
         {
-          if constexpr(copyPropagation)
+          if constexpr(copy_propagation<Container, AllocGetters...>())
           {
-            to = Container{allocGetter(tmp)};
+            to = Container{allocGetters(tmp)...};
           }
 
           to.swap(tmp);
@@ -71,7 +48,7 @@ namespace sequoia::impl
 
   private:
     template<class Container, class AllocGetter>
-    constexpr static bool naive_treatment()
+    constexpr static bool naive_treatment() noexcept
     {
       using allocator = std::invoke_result_t<AllocGetter, Container>;
       if constexpr(std::is_void_v<allocator>)
@@ -82,6 +59,62 @@ namespace sequoia::impl
       {
         return std::allocator_traits<allocator>::is_always_equal::value;
       }
+    }
+
+    template<class Container, class AllocGetter, class... AllocGetters>
+    constexpr static bool consistency() noexcept
+    {
+      if constexpr(sizeof...(AllocGetters) > 0)
+      {
+        return (consistent<Container, AllocGetter, AllocGetters>() && ...);
+      }
+
+      return true;
+    }
+
+    template<class Container, class AllocGetterL, class AllocGetterR>
+    constexpr static bool consistent() noexcept
+    {
+      return (copy_propagation<Container, AllocGetterL>() == copy_propagation<Container, AllocGetterR>())
+          && (move_propagation<Container, AllocGetterL>() == move_propagation<Container, AllocGetterR>())
+          && (swap_propagation<Container, AllocGetterL>() == swap_propagation<Container, AllocGetterR>());
+    }
+
+    template<class Container, class AllocGetter>
+    static auto get_allocator(const Container& to, const Container& from, AllocGetter allocGetter)
+    {
+      if constexpr(copy_propagation<Container, AllocGetter>())
+      {
+        return allocGetter(from);
+      }
+      else
+      {
+        return allocGetter(to);
+      }
+    }
+
+    template<class Container, class AllocGetter, class... AllocGetters>
+    constexpr static bool copy_propagation() noexcept
+    {
+      using allocator = std::invoke_result_t<AllocGetter, Container>;
+      return std::allocator_traits<allocator>::propagate_on_container_copy_assignment::value
+        || std::allocator_traits<allocator>::is_always_equal::value;
+    }
+
+    template<class Container, class AllocGetter, class... AllocGetters>
+    constexpr static bool move_propagation() noexcept
+    {
+      using allocator = std::invoke_result_t<AllocGetter, Container>;
+      return std::allocator_traits<allocator>::propagate_on_container_move_assignment::value
+        || std::allocator_traits<allocator>::is_always_equal::value;
+    }
+
+    template<class Container, class AllocGetter, class... AllocGetters>
+    constexpr static bool swap_propagation() noexcept
+    {
+      using allocator = std::invoke_result_t<AllocGetter, Container>;
+      return std::allocator_traits<allocator>::propagate_on_container_swap::value
+        || std::allocator_traits<allocator>::is_always_equal::value;
     }
   };
 }

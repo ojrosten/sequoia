@@ -501,6 +501,8 @@ namespace sequoia
     template<class T, class SharingPolicy, class Traits>
     class contiguous_storage_base
     {
+      friend struct sequoia::impl::assignment_helper;
+      
     public:
       using value_type          = T;
       using sharing_policy_type = SharingPolicy;
@@ -527,17 +529,50 @@ namespace sequoia
         : contiguous_storage_base(partition_impl::copy_constant<directCopy>{}, in)
       {}
 
-      constexpr contiguous_storage_base(contiguous_storage_base&& in) noexcept = default;
+      constexpr contiguous_storage_base(contiguous_storage_base&&) noexcept = default;
 
-      constexpr contiguous_storage_base& operator=(contiguous_storage_base&&) noexcept = default;
+      constexpr contiguous_storage_base& operator=(contiguous_storage_base&&) = default;
       
       constexpr contiguous_storage_base& operator=(const contiguous_storage_base& in)
       {
-        contiguous_storage_base tmp{in};
-        *this = std::move(tmp);
+        if(&in != this)
+        {
+          auto partitionsAllocGetter{
+            [](const contiguous_storage_base& in){
+              if constexpr(has_allocator_type_v<PartitionsType>)
+              {
+                return in.m_Partitions.get_allocator();
+              }
+            }
+          };
+          auto allocGetter{
+            [](const contiguous_storage_base& in){
+              if constexpr(has_allocator_type_v<container_type>)
+              {
+                return in.m_Storage.get_allocator();
+              }
+            }
+          };
+
+          sequoia::impl::assignment_helper::assign(*this, in, partitionsAllocGetter, allocGetter);
+        }
+ 
         return *this;
       }
 
+      void swap(contiguous_storage_base& other)
+        noexcept(noexcept(sequoia::swap(m_Partitions, other.m_Partitions)) && noexcept(m_Storage, other.m_Storage))
+      {
+        sequoia::swap(m_Partitions, other.m_Partitions);
+        sequoia::swap(m_Storage, other.m_Storage);
+      }
+
+      friend void swap(contiguous_storage_base& lhs, contiguous_storage_base& rhs)
+        noexcept(noexcept(lhs.swap(rhs)))
+      {
+        lhs.swap(rhs);
+      }      
+ 
       [[nodiscard]]
       constexpr auto size() const noexcept { return m_Storage.size(); }
 
@@ -1125,8 +1160,20 @@ namespace sequoia
 
       ~contiguous_storage() = default;
 
-      contiguous_storage& operator=(const contiguous_storage&)     = default;
-      contiguous_storage& operator=(contiguous_storage&&) noexcept = default;
+      contiguous_storage& operator=(const contiguous_storage&) = default;
+      contiguous_storage& operator=(contiguous_storage&&)      = default;
+
+      void swap(contiguous_storage& other)
+        noexcept(noexcept(static_cast<base_t&>(*this).swap(other)))
+      {
+        static_cast<base_t&>(*this).swap(other);
+      }
+
+      friend void swap(contiguous_storage& lhs, contiguous_storage& rhs)
+        noexcept(noexcept(lhs.swap(rhs)))
+      {
+        lhs.swap(rhs);
+      }
 
       using base_t::add_slot;
       using base_t::insert_slot;

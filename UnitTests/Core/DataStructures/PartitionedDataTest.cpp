@@ -36,9 +36,6 @@ namespace sequoia
       test_bucketed_capacity<int, shared<int>, false>();
 
       allocation_tester t{*this};
-      
-      test_contiguous_allocation<int, independent<int>>();
-      test_contiguous_allocation<int, shared<int>>();
     }
     
     void partitioned_data_test::test_static_storage()
@@ -585,6 +582,9 @@ namespace sequoia
 
       test_bucketed_allocation<int, independent<int>, PropagateCopy, PropagateMove, PropagateSwap>();
       test_bucketed_allocation<int, shared<int>, PropagateCopy, PropagateMove, PropagateSwap>();
+
+      test_contiguous_allocation<int, independent<int>, PropagateCopy, PropagateMove, PropagateSwap>();
+      test_contiguous_allocation<int, shared<int>, PropagateCopy, PropagateMove, PropagateSwap>();
     }
 
     template<class T, class SharingPolicy, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
@@ -604,65 +604,64 @@ namespace sequoia
       };
 
       // null; [0,2][1]
-      {
-        partitions_allocator sPartAlloc{}, tPartAlloc{};
-        allocator tAlloc{};
+
+      partitions_allocator sPartAlloc{}, tPartAlloc{};
+      allocator tAlloc{};
       
-        storage
-          s{sPartAlloc},
-          t{{{0,2}, {1}}, tPartAlloc, tAlloc};
+      storage
+        s{sPartAlloc},
+        t{{{0,2}, {1}}, tPartAlloc, tAlloc};
 
-        check_equivalence(LINE(makeMessage("")), s, prediction{});
-        check_equivalence(LINE(makeMessage("")), t, prediction{{0,2}, {1}});
-        check_equality(LINE(makeMessage("")), sPartAlloc.allocs(), 0);
-        check_equality(LINE(makeMessage("Only a single allocation necessary due to reservation")), tPartAlloc.allocs(), 1);
-        check_equality(LINE(makeMessage("Only a single allocation per bucket due to reservation")), tAlloc.allocs(), 2);
+      check_equivalence(LINE(makeMessage("")), s, prediction{});
+      check_equivalence(LINE(makeMessage("")), t, prediction{{0,2}, {1}});
+      check_equality(LINE(makeMessage("")), sPartAlloc.allocs(), 0);
+      check_equality(LINE(makeMessage("Only a single allocation necessary due to reservation")), tPartAlloc.allocs(), 1);
+      check_equality(LINE(makeMessage("Only a single allocation per bucket due to reservation")), tAlloc.allocs(), 2);
 
-        auto partitionMaker{
-          [](storage& s) {
-            s.add_slot();
-          }
-        };
+      auto partitionMaker{
+        [](storage& s) {
+          s.add_slot();
+        }
+      };
 
-        auto allocGetter{
-          [&s](){
-            allocator a{};
-            if(!s.empty()) a = s.get_allocator(0);
+      auto allocGetter{
+        [&s](){
+          allocator a{};
+          if(!s.empty()) a = s.get_allocator(0);
 
-            return a;
-          }
-        };
+          return a;
+        }
+      };
 
-        check_allocations(LINE(""), s, t, partitionMaker,
-                          allocation_info<partitions_allocator>{sPartAlloc, tPartAlloc, {0, 1, 1, 1}},
-                          allocation_info<allocator>{allocGetter, tAlloc, {0, 2, 2, 0}});
+      check_allocations(LINE(""), s, t, partitionMaker,
+                        allocation_info<partitions_allocator>{sPartAlloc, tPartAlloc, {0, 1, 1, 1}},
+                        allocation_info<allocator>{allocGetter, tAlloc, {0, 2, 2, 0}});
 
-        allocator sAlloc{};
+      allocator sAlloc{};
 
-        s.add_slot(sAlloc);
-        // []
+      s.add_slot(sAlloc);
+      // []
         
-        check_equality(LINE(makeMessage("")), s, storage{{{}}, partitions_allocator{}, allocator{}});
+      check_equality(LINE(makeMessage("")), s, storage{{{}}, partitions_allocator{}, allocator{}});
 
-        auto mutator{
-          [tAlloc](storage& s) {
-            s.add_slot(s.get_allocator(0));
-            s.push_back_to_partition(s.num_partitions() - 1, 3);
-          }
-        };
+      auto mutator{
+        [tAlloc](storage& s) {
+          s.add_slot(s.get_allocator(0));
+          s.push_back_to_partition(s.num_partitions() - 1, 3);
+        }
+      };
 
-        check_allocations(LINE(""), s, t, mutator,
-                          allocation_info<partitions_allocator>{sPartAlloc, tPartAlloc, {1, 1, 1, 1, 1}},
-                          allocation_info<allocator>{sAlloc, tAlloc, {0, 2, 2, 1, 0}});
-      }
+      check_allocations(LINE(""), s, t, mutator,
+                        allocation_info<partitions_allocator>{sPartAlloc, tPartAlloc, {1, 1, 1, 1, 1}},
+                        allocation_info<allocator>{sAlloc, tAlloc, {0, 2, 2, 1, 0}});
     }
-   
-    template<class T, class SharingPolicy>
+  
+    template<class T, class SharingPolicy, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
     void partitioned_data_test::test_contiguous_allocation()
     {
       using namespace data_structures;
       
-      using storage = contiguous_storage<T, SharingPolicy, custom_contiguous_storage_traits<T, SharingPolicy>>;
+      using storage = contiguous_storage<T, SharingPolicy, custom_contiguous_storage_traits<T, SharingPolicy, PropagateCopy, PropagateMove, PropagateSwap>>;
       using allocator = typename storage::allocator_type;
       using partitions_allocator = typename storage::traits_type::partitions_allocator_type;
       using prediction = std::initializer_list<std::initializer_list<int>>;
@@ -676,59 +675,32 @@ namespace sequoia
       partitions_allocator sPartAlloc{}, tPartAlloc{};
       allocator sAlloc{}, tAlloc{};
 
-      {
-        // null; [0,2][1]
-        storage
-          s{sPartAlloc, sAlloc},
-          t{{{0,2}, {1}}, tPartAlloc, tAlloc};
+      // null; [0,2][1]
+      storage
+        s{sPartAlloc, sAlloc},
+        t{{{0,2}, {1}}, tPartAlloc, tAlloc};
 
-        check_equivalence(LINE(makeMessage("")), s, prediction{});
-        check_equivalence(LINE(makeMessage("")), t, prediction{{0,2}, {1}});
-        check_equality(LINE(makeMessage("")), sPartAlloc.allocs(), 0);
-        check_equality(LINE(makeMessage("")), sAlloc.allocs(), 0);
-        check_equality(LINE(makeMessage("Only a single allocation necessary due to reservation")), tPartAlloc.allocs(), 1);
-        check_equality(LINE(makeMessage("Only a single allocation necessary due to reservation")), tAlloc.allocs(), 1);
+      check_equivalence(LINE(makeMessage("")), s, prediction{});
+      check_equivalence(LINE(makeMessage("")), t, prediction{{0,2}, {1}});
+      check_equality(LINE(makeMessage("")), sPartAlloc.allocs(), 0);
+      check_equality(LINE(makeMessage("")), sAlloc.allocs(), 0);
+      check_equality(LINE(makeMessage("Only a single allocation necessary due to reservation")), tPartAlloc.allocs(), 1);
+      check_equality(LINE(makeMessage("Only a single allocation necessary due to reservation")), tAlloc.allocs(), 1);
 
-        partitions_allocator uPartAlloc{};
-        allocator uAlloc{};
+      auto partitionMaker{
+        [](storage& s) {
+          s.add_slot();
+        }
+      };
+        
+      check_allocations(LINE(add_type_info<storage>("")), s, t, partitionMaker,
+                        allocation_info<partitions_allocator>{sPartAlloc, tPartAlloc, {0, 1, 1, 1}},
+                        allocation_info<allocator>{sAlloc, tAlloc, {0, 1, 1, 0}});
 
-        check_regular_semantics(LINE(makeMessage("Regular semantics")), s, t, uPartAlloc, uAlloc);
+      s.add_slot();
+      // []
 
-        check_equality(LINE(makeMessage("")), sPartAlloc.allocs(), 0);
-        check_equality(LINE(makeMessage("")), sAlloc.allocs(), 0);
-        check_equality(LINE(makeMessage("Partition Allocator should be propagated")), tPartAlloc.allocs(), 2);
-        check_equality(LINE(makeMessage("Allocation of elements should be done in a single hit")), tAlloc.allocs(), 2);
-        check_equality(LINE(makeMessage("")), uPartAlloc.allocs(), 0);
-        check_equality(LINE(makeMessage("")), uAlloc.allocs(), 0);
-
-        s.add_slot();
-        // []
-        check_equality(LINE(makeMessage("")), s, storage{{{}}, partitions_allocator{}, allocator{}});
-        check_equality(LINE(makeMessage("")), sPartAlloc.allocs(), 1);
-        check_equality(LINE(makeMessage("")), sAlloc.allocs(), 0);
-
-        s.push_back_to_partition(0, 3);
-        // [3]
-        check_equality(LINE(makeMessage("")), s, storage{{{3}}, partitions_allocator{}, allocator{}});
-        check_equality(LINE(makeMessage("")), sPartAlloc.allocs(), 1);
-        check_equality(LINE(makeMessage("")), sAlloc.allocs(), 1);
-
-        check_regular_semantics(LINE(makeMessage("Regular semantics")), s, t, uPartAlloc, uAlloc);
-
-        check_equality(LINE(makeMessage("One copy and one move with propagation")), sPartAlloc.allocs(), 3);
-        check_equality(LINE(makeMessage("One copy and one move with propagation")), sAlloc.allocs(), 3);
-        check_equality(LINE(makeMessage("Partition Allocator should be propagated")), tPartAlloc.allocs(), 3);
-        check_equality(LINE(makeMessage("Allocator should be propagated")), tAlloc.allocs(), 3);
-        check_equality(LINE(makeMessage("")), uPartAlloc.allocs(), 1);
-        check_equality(LINE(makeMessage("")), uAlloc.allocs(), 1);
-      }
-
-    /*check_equality(LINE(makeMessage("")), tPartitionDeallocCount, 3);
-      check_equality(LINE(makeMessage("")), tDeallocCount, 3);
-      check_equality(LINE(makeMessage("")), sPartitionDeallocCount, 3);
-      check_equality(LINE(makeMessage("")), sDeallocCount, 3);
-      check_equality(LINE(makeMessage("")), uPartitionDeallocCount, 1);
-      check_equality(LINE(makeMessage("")), uDeallocCount, 1);*/
+      check_equality(LINE(makeMessage("")), s, storage{{{}}, partitions_allocator{}, allocator{}});
     }
 
     template<template<class> class SharingPolicy>
