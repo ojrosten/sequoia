@@ -311,9 +311,16 @@ namespace sequoia
         m_Edges.swap_partitions(i, j);
       }
 
+      template<class E=edge_storage_type, std::enable_if_t<has_global_element_allocator_v<E>,int> = 0>
       auto get_edge_allocator() const
       {
         return m_Edges.get_allocator();
+      }
+
+      template<class E=edge_storage_type, std::enable_if_t<has_individual_partition_allocators_v<E>,int> = 0>
+      auto get_edge_allocator(const size_type i) const
+      {
+        return m_Edges.get_allocator(i);
       }
 
       auto get_edge_partitions_allocator() const

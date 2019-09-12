@@ -89,8 +89,6 @@ namespace sequoia
       using reverse_partition_iterator       = reverse_partition_iterator<Traits, SharingPolicy, size_type>;
       using const_reverse_partition_iterator = const_reverse_partition_iterator<Traits, SharingPolicy, size_type>;
 
-      using individual_partition_allocators = std::true_type;
-
       constexpr static bool throw_on_range_error{Traits::throw_on_range_error};
 
       static_assert(std::allocator_traits<allocator_type>::is_always_equal::value
@@ -1144,8 +1142,6 @@ namespace sequoia
       using allocator_type            = typename container_type::allocator_type;
       using partitions_allocator_type = typename Traits::partitions_allocator_type;
 
-      using individual_partition_allocators = std::false_type;
-
       contiguous_storage() = default;
 
       contiguous_storage(const partitions_allocator_type& partitionAllocator, const allocator_type& allocator) noexcept
@@ -1280,21 +1276,35 @@ namespace sequoia
   struct has_partitions_allocator_type<T, std::void_t<typename T::partitions_allocator_type>> : std::true_type
   {};
 
-  template<class T> constexpr bool has_partitions_allocator_type_v = has_partitions_allocator_type<T>::value;
+  template<class T> constexpr bool has_partitions_allocator_type_v{has_partitions_allocator_type<T>::value};
 
   template<class T> using has_partitions_allocator_type_t = typename has_partitions_allocator_type<T>::type;
 
-  // has_individual_partition_allocator_type
+  // has_individual_partition_allocators
 
   template<class T, class = std::void_t<>>
-  struct has_individual_partition_allocators_type : std::false_type
+  struct has_individual_partition_allocators : std::false_type
   {};
 
   template<class T>
-  struct has_individual_partition_allocators_type<T, std::void_t<typename T::individual_partition_allocators>> : std::true_type
+  struct has_individual_partition_allocators<T, std::void_t<decltype(T{}.get_allocator(0))>> : std::true_type
   {};
 
-  template<class T> constexpr bool has_individual_partition_allocators_type_v = has_individual_partition_allocators_type<T>::value;
+  template<class T> constexpr bool has_individual_partition_allocators_v{has_individual_partition_allocators<T>::value};
 
-  template<class T> using has_individual_partition_allocators_type_t = typename has_individual_partition_allocators_type<T>::type;
+  template<class T> using has_individual_partition_allocators_t = typename has_individual_partition_allocators<T>::type;
+
+  // global element allocator
+
+  template<class T, class = std::void_t<>>
+  struct has_global_element_allocator : std::false_type
+  {};
+
+  template<class T>
+  struct has_global_element_allocator<T, std::void_t<decltype(T{}.get_allocator())>> : std::true_type
+  {};
+
+  template<class T> constexpr bool has_global_element_allocator_v{has_global_element_allocator<T>::value};
+
+  template<class T> using has_global_element_allocator_t = typename has_global_element_allocator<T>::type;
 }
