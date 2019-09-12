@@ -42,12 +42,14 @@ namespace sequoia::maths
   {
     constexpr static bool throw_on_range_error{true};
     constexpr static bool static_storage_v{};
+    constexpr static bool has_allocator{true};
     template<class S> using container_type = std::vector<S, std::allocator<S>>;
   };
 
   template<class NodeWeight, template <class> class NodeWeightPooling>
   struct node_weight_storage_traits<NodeWeight, NodeWeightPooling, true>
   {
+    constexpr static bool has_allocator{};
   };
   
   template
@@ -58,7 +60,8 @@ namespace sequoia::maths
     template <class> class EdgeWeightPooling,
     template <class> class NodeWeightPooling,
     template<graph_flavour, class, template<class> class> class EdgeStorageTraits,
-    template<class, template<class> class, bool> class NodeWeightStorageTraits
+    template<class, template<class> class, bool> class NodeWeightStorageTraits,
+    bool = !NodeWeightStorageTraits<NodeWeight, NodeWeightPooling, std::is_empty_v<NodeWeight>>::has_allocator
   >
   class graph_base : public
     graph_primitive
@@ -272,6 +275,9 @@ namespace sequoia::maths
       lhs.swap(rhs);
     }
 
+    using primitive_type::get_edge_partitions_allocator;
+    using primitive_type::get_edge_allocator;
+
     template
     <
       class... Args,
@@ -332,6 +338,62 @@ namespace sequoia::maths
     using primitive_type::shrink_to_fit;
       
     constexpr static graph_flavour flavour{GraphFlavour};
+  protected:
+    ~graph_base() = default;
+  };
+
+  template
+  <
+    graph_flavour GraphFlavour,      
+    class EdgeWeight,
+    class NodeWeight,      
+    template <class> class EdgeWeightPooling,
+    template <class> class NodeWeightPooling,
+    template<graph_flavour, class, template<class> class> class EdgeStorageTraits,
+    template<class, template<class> class, bool> class NodeWeightStorageTraits
+  >
+  class graph_base<
+    GraphFlavour,
+    EdgeWeight,
+    NodeWeight,
+    EdgeWeightPooling,
+    NodeWeightPooling,
+    EdgeStorageTraits,
+    NodeWeightStorageTraits,
+    false
+    > : public graph_base<
+                 GraphFlavour,
+                 EdgeWeight,
+                 NodeWeight,
+                 EdgeWeightPooling,
+                 NodeWeightPooling,
+                 EdgeStorageTraits,
+                 NodeWeightStorageTraits,
+                 true
+               >
+  {
+  public:
+    using graph_base<
+                 GraphFlavour,
+                 EdgeWeight,
+                 NodeWeight,
+                 EdgeWeightPooling,
+                 NodeWeightPooling,
+                 EdgeStorageTraits,
+                 NodeWeightStorageTraits,
+                 true
+      >:: graph_base;
+
+    using graph_base<
+            GraphFlavour,
+            EdgeWeight,
+            NodeWeight,
+            EdgeWeightPooling,
+            NodeWeightPooling,
+            EdgeStorageTraits,
+            NodeWeightStorageTraits,
+            true
+          >::get_node_allocator;
   protected:
     ~graph_base() = default;
   };

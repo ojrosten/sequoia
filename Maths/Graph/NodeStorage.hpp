@@ -54,7 +54,7 @@ namespace sequoia::maths::graph_impl
     constexpr proxy_dereference_policy& operator=(const proxy_dereference_policy&)     = default;
     constexpr proxy_dereference_policy& operator=(proxy_dereference_policy&&) noexcept = default;
   };
-                                  
+
   template<class WeightMaker, class Traits, bool=std::is_empty_v<typename WeightMaker::weight_proxy::value_type>>
   class node_storage : private WeightMaker
   {
