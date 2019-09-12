@@ -241,7 +241,6 @@ namespace sequoia
 
   template<class T> using has_allocator_type_t = typename has_allocator_type<T>::type;
 
-
   // dependent_false
   
   template<class T> struct dependent_false : std::false_type {};

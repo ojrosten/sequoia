@@ -77,8 +77,8 @@ namespace sequoia
       using bucket_type  = container_template<held_type>;
       using storage_type = buckets_template<bucket_type>;
     public:
-      using value_type               = T;
-      using size_type                = typename bucket_type::size_type;
+      using value_type                = T;
+      using size_type                 = typename bucket_type::size_type;
       using index_type                = size_type;
       using allocator_type            = typename bucket_type::allocator_type;
       using partitions_allocator_type = typename storage_type::allocator_type;
@@ -88,6 +88,8 @@ namespace sequoia
       using const_partition_iterator         = const_partition_iterator<Traits, SharingPolicy, size_type>;
       using reverse_partition_iterator       = reverse_partition_iterator<Traits, SharingPolicy, size_type>;
       using const_reverse_partition_iterator = const_reverse_partition_iterator<Traits, SharingPolicy, size_type>;
+
+      using individual_partition_allocators = std::true_type;
 
       constexpr static bool throw_on_range_error{Traits::throw_on_range_error};
 
@@ -527,51 +529,7 @@ namespace sequoia
 
       constexpr contiguous_storage_base(const contiguous_storage_base& in)
         : contiguous_storage_base(partition_impl::copy_constant<directCopy>{}, in)
-      {}
-
-      constexpr contiguous_storage_base(contiguous_storage_base&&) noexcept = default;
-
-      constexpr contiguous_storage_base& operator=(contiguous_storage_base&&) = default;
-      
-      constexpr contiguous_storage_base& operator=(const contiguous_storage_base& in)
-      {
-        if(&in != this)
-        {
-          auto partitionsAllocGetter{
-            [](const contiguous_storage_base& in){
-              if constexpr(has_allocator_type_v<PartitionsType>)
-              {
-                return in.m_Partitions.get_allocator();
-              }
-            }
-          };
-          auto allocGetter{
-            [](const contiguous_storage_base& in){
-              if constexpr(has_allocator_type_v<container_type>)
-              {
-                return in.m_Storage.get_allocator();
-              }
-            }
-          };
-
-          sequoia::impl::assignment_helper::assign(*this, in, partitionsAllocGetter, allocGetter);
-        }
- 
-        return *this;
-      }
-
-      void swap(contiguous_storage_base& other)
-        noexcept(noexcept(sequoia::swap(m_Partitions, other.m_Partitions)) && noexcept(m_Storage, other.m_Storage))
-      {
-        sequoia::swap(m_Partitions, other.m_Partitions);
-        sequoia::swap(m_Storage, other.m_Storage);
-      }
-
-      friend void swap(contiguous_storage_base& lhs, contiguous_storage_base& rhs)
-        noexcept(noexcept(lhs.swap(rhs)))
-      {
-        lhs.swap(rhs);
-      }      
+      {}    
  
       [[nodiscard]]
       constexpr auto size() const noexcept { return m_Storage.size(); }
@@ -716,6 +674,54 @@ namespace sequoia
         return !(lhs == rhs);
       }
     protected:
+      constexpr contiguous_storage_base(contiguous_storage_base&&) noexcept = default;
+
+      constexpr contiguous_storage_base& operator=(contiguous_storage_base&&) = default;
+      
+      constexpr contiguous_storage_base& operator=(const contiguous_storage_base& in)
+      {
+        if(&in != this)
+        {
+          auto partitionsAllocGetter{
+            [](const contiguous_storage_base& in){
+              if constexpr(has_allocator_type_v<PartitionsType>)
+              {
+                return in.m_Partitions.get_allocator();
+              }
+            }
+          };
+          auto allocGetter{
+            [](const contiguous_storage_base& in){
+              if constexpr(has_allocator_type_v<container_type>)
+              {
+                return in.m_Storage.get_allocator();
+              }
+            }
+          };
+
+          sequoia::impl::assignment_helper::assign(*this, in, partitionsAllocGetter, allocGetter);
+        }
+ 
+        return *this;
+      }
+
+      void swap(contiguous_storage_base& other)
+        noexcept(noexcept(sequoia::swap(m_Partitions, other.m_Partitions)) && noexcept(m_Storage, other.m_Storage))
+      {
+        sequoia::swap(m_Partitions, other.m_Partitions);
+        sequoia::swap(m_Storage, other.m_Storage);
+      }
+
+      auto get_allocator() const
+      {
+        return m_Storage.get_allocator();
+      }
+
+      auto get_partitions_allocator() const
+      {
+        return m_Partitions.get_allocator();
+      }
+      
       template<class Allocator>
       constexpr explicit contiguous_storage_base(const Allocator& allocator) noexcept
         : m_Storage(allocator)
@@ -785,6 +791,7 @@ namespace sequoia
         m_Storage.reserve(size);
       }
 
+      [[nodiscard]]
       index_type capacity() const noexcept
       {
         return m_Storage.capacity();
@@ -795,6 +802,7 @@ namespace sequoia
         m_Partitions.reserve(numPartitions);
       }
 
+      [[nodiscard]]
       index_type num_partitions_capacity() const noexcept
       {
         return m_Partitions.capacity();
@@ -1136,6 +1144,8 @@ namespace sequoia
       using allocator_type            = typename container_type::allocator_type;
       using partitions_allocator_type = typename Traits::partitions_allocator_type;
 
+      using individual_partition_allocators = std::false_type;
+
       contiguous_storage() = default;
 
       contiguous_storage(const partitions_allocator_type& partitionAllocator, const allocator_type& allocator) noexcept
@@ -1164,9 +1174,9 @@ namespace sequoia
       contiguous_storage& operator=(contiguous_storage&&)      = default;
 
       void swap(contiguous_storage& other)
-        noexcept(noexcept(static_cast<base_t&>(*this).swap(other)))
+        noexcept(noexcept(base_t::swap(other)))
       {
-        static_cast<base_t&>(*this).swap(other);
+        base_t::swap(other);
       }
 
       friend void swap(contiguous_storage& lhs, contiguous_storage& rhs)
@@ -1184,6 +1194,8 @@ namespace sequoia
       using base_t::reserve_partitions;
       using base_t::num_partitions_capacity;
       using base_t::shrink_to_fit;
+      using base_t::get_allocator;
+      using base_t::get_partitions_allocator;
       
       using base_t::clear;
       using base_t::push_back_to_partition;
@@ -1257,4 +1269,32 @@ namespace sequoia
       i = pred(*i) ? data.erase_from_partition(i) : std::next(i);
     }
   }
+
+  // has_partitions_allocator_type
+
+  template<class T, class = std::void_t<>>
+  struct has_partitions_allocator_type : std::false_type
+  {};
+
+  template<class T>
+  struct has_partitions_allocator_type<T, std::void_t<typename T::partitions_allocator_type>> : std::true_type
+  {};
+
+  template<class T> constexpr bool has_partitions_allocator_type_v = has_partitions_allocator_type<T>::value;
+
+  template<class T> using has_partitions_allocator_type_t = typename has_partitions_allocator_type<T>::type;
+
+  // has_individual_partition_allocator_type
+
+  template<class T, class = std::void_t<>>
+  struct has_individual_partition_allocators_type : std::false_type
+  {};
+
+  template<class T>
+  struct has_individual_partition_allocators_type<T, std::void_t<typename T::individual_partition_allocators>> : std::true_type
+  {};
+
+  template<class T> constexpr bool has_individual_partition_allocators_type_v = has_individual_partition_allocators_type<T>::value;
+
+  template<class T> using has_individual_partition_allocators_type_t = typename has_individual_partition_allocators_type<T>::type;
 }

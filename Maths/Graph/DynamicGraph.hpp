@@ -260,9 +260,9 @@ namespace sequoia::maths
       : primitive_type{std::move(in), edgePartitionsAllocator, edgeAllocator, nodeWeightAllocator}
     {}
     
-    graph_base& operator=(const graph_base&)     = default;
+    graph_base& operator=(const graph_base&) = default;
 
-    graph_base& operator=(graph_base&&) noexcept = default;
+    graph_base& operator=(graph_base&&) = default;
 
     using primitive_type::swap_nodes;
 

@@ -209,6 +209,11 @@ namespace sequoia::maths::graph_impl
         throw std::out_of_range("node_storage::swap - index out of range");
       }
     }
+
+    auto get_node_allocator() const
+    {
+      return m_NodeWeights.get_allocator();
+    }
         
     void reserve(const size_type newCapacity)
     {

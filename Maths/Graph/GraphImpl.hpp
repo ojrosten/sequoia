@@ -13,6 +13,7 @@
 
 #include "Connectivity.hpp"
 #include "HeterogeneousNodeDetails.hpp"
+#include "AssignmentUtilities.hpp"
 
 namespace sequoia
 {
@@ -22,8 +23,9 @@ namespace sequoia
     class graph_primitive : public Connectivity, public Nodes
     {
     private:
-      using node_weight_type = typename Nodes::weight_type;
+      friend struct sequoia::impl::assignment_helper;
 
+      using node_weight_type = typename Nodes::weight_type;
     public:
       using connectivity_type = Connectivity;
       using nodes_type        = Nodes;
@@ -194,19 +196,41 @@ namespace sequoia
       >
       constexpr graph_primitive(const graph_primitive& in, const EdgePartitionsAllocator& edgeParitionsAlloc, const EdgeAllocator& edgeAlloc, const NodeAllocator& nodeAlloc)
         : Connectivity{static_cast<const Connectivity&>(in), edgeParitionsAlloc, edgeAlloc}
-        , Nodes{static_cast<const Nodes&>(in, nodeAlloc)}
+        , Nodes{static_cast<const Nodes&>(in), nodeAlloc}
+      {}
+
+      template
+      <
+        class EdgePartitionsAllocator,
+        class NodeAllocator,
+        class N=node_weight_type,
+        std::enable_if_t<enableNodeAllocation<N>, int> = 0
+      >
+      constexpr graph_primitive(const graph_primitive& in, const EdgePartitionsAllocator& edgeParitionsAlloc, const NodeAllocator& nodeAlloc)
+        : Connectivity{static_cast<const Connectivity&>(in), edgeParitionsAlloc}
+        , Nodes{static_cast<const Nodes&>(in), nodeAlloc}
       {}
 
       template
       <
         class EdgePartitionsAllocator,
         class EdgeAllocator,
-        class NodeAllocator,
         class N=node_weight_type,
         std::enable_if_t<!enableNodeAllocation<N>, int> = 0
       >
       constexpr graph_primitive(const graph_primitive& in, const EdgePartitionsAllocator& edgeParitionsAlloc, const EdgeAllocator& edgeAlloc)
         : Connectivity{static_cast<const Connectivity&>(in), edgeParitionsAlloc, edgeAlloc}
+        , Nodes{static_cast<const Nodes&>(in)}
+      {}
+
+      template
+      <
+        class EdgePartitionsAllocator,
+        class N=node_weight_type,
+        std::enable_if_t<!enableNodeAllocation<N>, int> = 0
+      >
+      constexpr graph_primitive(const graph_primitive& in, const EdgePartitionsAllocator& edgeParitionsAlloc)
+        : Connectivity{static_cast<const Connectivity&>(in), edgeParitionsAlloc}
         , Nodes{static_cast<const Nodes&>(in)}
       {}
 
@@ -224,7 +248,19 @@ namespace sequoia
       >
       constexpr graph_primitive(graph_primitive&& in, const EdgePartitionsAllocator& edgeParitionsAlloc, const EdgeAllocator& edgeAlloc, const NodeAllocator& nodeAlloc)
         : Connectivity{static_cast<Connectivity&&>(in), edgeParitionsAlloc, edgeAlloc}
-        , Nodes{static_cast<Nodes&&>(in, nodeAlloc)}
+        , Nodes{static_cast<Nodes&&>(in), nodeAlloc}
+      {}
+
+      template
+      <
+        class EdgePartitionsAllocator,
+        class NodeAllocator,
+        class N=node_weight_type,
+        std::enable_if_t<enableNodeAllocation<N>, int> = 0
+      >
+      constexpr graph_primitive(graph_primitive&& in, const EdgePartitionsAllocator& edgeParitionsAlloc, const NodeAllocator& nodeAlloc)
+        : Connectivity{static_cast<Connectivity&&>(in), edgeParitionsAlloc}
+        , Nodes{static_cast<Nodes&&>(in), nodeAlloc}
       {}
 
       template
@@ -239,17 +275,71 @@ namespace sequoia
         : Connectivity{static_cast<Connectivity&&>(in), edgeParitionsAlloc, edgeAlloc}
         , Nodes{static_cast<Nodes&&>(in)}
       {}
+
+      template
+      <
+        class EdgePartitionsAllocator,
+        class NodeAllocator,
+        class N=node_weight_type,
+        std::enable_if_t<!enableNodeAllocation<N>, int> = 0
+      >
+      constexpr graph_primitive(graph_primitive&& in, const EdgePartitionsAllocator& edgeParitionsAlloc)
+        : Connectivity{static_cast<Connectivity&&>(in), edgeParitionsAlloc}
+        , Nodes{static_cast<Nodes&&>(in)}
+      {}
       
       ~graph_primitive() = default;
 
       constexpr graph_primitive& operator=(graph_primitive&&) noexcept = default;
       
       constexpr graph_primitive& operator=(const graph_primitive& in)
-      {
-        auto tmp{in};
-        *this = std::move(tmp);
+      {        
+        if(&in != this)
+        {
+          using edge_storage = typename Connectivity::edge_storage_type;
+
+          auto edgePartitionsAllocGetter{
+            [](const graph_primitive& in){
+              if constexpr(has_partitions_allocator_type_v<edge_storage>)
+              {
+                return in.get_edge_partitions_allocator();
+              }
+            }
+          };
+
+          auto edgeAllocGetter{
+            [](const graph_primitive& in){
+              if constexpr(has_individual_partition_allocators_type_v<edge_storage>)
+              {
+                if constexpr(!edge_storage::individual_partition_allocators::value)
+                {
+                  return in.get_edge_allocator();
+                }
+              }              
+            }
+          };
+
+          auto nodeAllocGetter{
+            [](const graph_primitive& in){
+              if constexpr(!heteroNodes && !emptyNodes)
+              {
+                using node_storage = typename Nodes::node_weight_container_type;
+                // Problem here!
+                if constexpr(has_allocator_type_v<node_storage>)
+                {
+                  return in.get_node_allocator();
+                }
+              }
+            }
+          };
+      
+          sequoia::impl::assignment_helper::assign(*this, in, edgePartitionsAllocGetter, edgeAllocGetter, nodeAllocGetter);
+        }
+        
         return *this;
       }
+
+      // TO DO swap
 
       constexpr void swap_nodes(size_type i, size_type j)
       {
@@ -369,6 +459,7 @@ namespace sequoia
       }
     private:
       constexpr static bool emptyNodes{std::is_empty_v<typename Nodes::weight_type>};
+      constexpr static bool heteroNodes{std::is_same_v<node_weight_type, graph_impl::heterogeneous_tag>};
       
       template<bool Hetero>
       struct node_init_constant : std::bool_constant<Hetero>
@@ -379,7 +470,7 @@ namespace sequoia
 
       constexpr static auto get_init_type()
       {
-        if constexpr(std::is_same_v<node_weight_type, graph_impl::heterogeneous_tag>)
+        if constexpr(heteroNodes)
         {
           return hetero_init_type{};
         }

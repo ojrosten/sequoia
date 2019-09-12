@@ -154,7 +154,7 @@ namespace sequoia::unit_testing
     class SharingPolicy,    
     bool PropagateCopy=true,
     bool PropagateMove=true,
-    bool PropagateSwap=false
+    bool PropagateSwap=true
   >
   struct custom_bucketed_storage_traits
   {
@@ -170,7 +170,7 @@ namespace sequoia::unit_testing
     class SharingPolicy,    
     bool PropagateCopy=true,
     bool PropagateMove=true,
-    bool PropagateSwap=false
+    bool PropagateSwap=true
   >
   struct custom_contiguous_storage_traits
   {
