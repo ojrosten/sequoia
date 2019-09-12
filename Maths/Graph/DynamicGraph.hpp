@@ -264,7 +264,13 @@ namespace sequoia::maths
 
     graph_base& operator=(graph_base&&) = default;
 
+    using primitive_type::swap;
     using primitive_type::swap_nodes;
+
+    friend void swap(graph_base& lhs, graph_base& rhs) noexcept(noexcept(lhs.swap(rhs)))
+    {
+      lhs.swap(rhs);
+    }
 
     template
     <

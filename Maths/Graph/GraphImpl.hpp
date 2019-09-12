@@ -324,7 +324,6 @@ namespace sequoia
               if constexpr(!heteroNodes && !emptyNodes)
               {
                 using node_storage = typename Nodes::node_weight_container_type;
-                // Problem here!
                 if constexpr(has_allocator_type_v<node_storage>)
                 {
                   return in.get_node_allocator();
@@ -339,7 +338,12 @@ namespace sequoia
         return *this;
       }
 
-      // TO DO swap
+      void swap(graph_primitive& other)
+        noexcept(noexcept(static_cast<Connectivity&>(*this).swap(other)) && noexcept(static_cast<Nodes&>(*this).swap(other)))        
+      {
+        static_cast<Connectivity&>(*this).swap(other);
+        static_cast<Nodes&>(*this).swap(other);
+      }
 
       constexpr void swap_nodes(size_type i, size_type j)
       {
