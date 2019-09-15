@@ -11,65 +11,18 @@
     \brief Helper for dealing with allocator propagation during copy assignment.
  */
 
+#include "Utilities.hpp"
+
 #include <memory>
 
 namespace sequoia::impl
 {
-  template<class X, template<class> class TypeToType>
-  constexpr std::size_t count_occurances() noexcept
-  {
-    return 0ul;
-  }
-
-  template<class X, template<class> class TypeToType, class T, class... Ts>
-  constexpr std::size_t count_occurances() noexcept
-  {
-    using type = typename TypeToType<T>::type;
-    return std::size_t{std::is_same_v<X, type> + count_occurances<X, TypeToType, Ts...>()};
-  }
-
-  template<std::size_t I, std::size_t Encountered, class Excluded, template<class> class TypeToType, class T, class... Ts>
-  constexpr std::size_t get_filter_index() noexcept
-  {
-    auto getter{
-      []() {
-        using type = typename TypeToType<T>::type;
-        if constexpr((!std::is_same_v<Excluded, type> && (Encountered == I)) || !sizeof...(Ts))
-        {
-          return 0ul;
-        }
-        else
-        {
-          constexpr auto count{std::is_same_v<Excluded, type> ? Encountered : Encountered + 1};
-
-          return 1ul + get_filter_index<I, count, Excluded, TypeToType, Ts...>();
-        }
-      }
-    };
-
-    return getter();
-  }
-
-  template<std::size_t I, class Excluded, template<class> class TypeToType, class... Ts>
-  auto get(const std::tuple<Ts...>& ts)
-  {
-    constexpr auto i{get_filter_index<I, 0, Excluded, TypeToType, Ts...>()};
-    return std::get<i>(ts);
-  }
-
-  template<class Excluded, template<class> class TypeToType, class Fn, class... Ts, std::size_t... I>
-  void filter(Fn f, std::index_sequence<I...>, Ts... t)
-  {
-    f(get<I, Excluded, TypeToType>(std::tuple<Ts...>(t...))...);
-  }
-
   template<class Excluded, template<class> class TypeToType, class Fn, class... Ts>
   void filter(Fn f, Ts... t)
-  {
-    constexpr auto N{sizeof...(Ts) - count_occurances<Excluded, TypeToType, Ts...>()};
-    filter<Excluded, TypeToType>(f, std::make_index_sequence<N>{}, t...);
+  {   
+    impl::filter(f, make_filtered_sequence<Excluded, TypeToType, Ts...>{}, t...);
   }
-
+  
   template<class Container>
   struct type_to_type
   {
