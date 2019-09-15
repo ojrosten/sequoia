@@ -11,6 +11,7 @@
 #include "MonotonicSequenceTest.hpp"
 
 #include "TypeTraitsTest.hpp"
+#include "UtilitiesTest.hpp"
 
 #include "ArrayUtilitiesTest.hpp"
 #include "ProtectiveWrapperTestingDiagnostics.hpp"
@@ -81,8 +82,9 @@ int main(int argc, char** argv)
 
     runner.add_test_family(
       test_family{
-        "Type Traits",
-        type_traits_test{"Unit Test"}
+        "Meta",
+        type_traits_test{"Type Traits"},
+        utilities_test{"Utilities"}
       }
     );
     
