@@ -626,7 +626,9 @@ namespace sequoia
 
           yMutator(u);
           check_mutation_allocation<mutation_flavour::after_move_assign>(combine_messages(description, "mutation after move assignment allocations"), logger, allocationInfo...);
-          }
+
+          check(combine_messages(description, "Mutation is not doing anything following copy constrution/broken value semantics"), logger, u != y);
+        }
 
         if constexpr(((   std::allocator_traits<Allocators>::propagate_on_container_swap::value
                        || std::allocator_traits<Allocators>::is_always_equal::value) && ...))
@@ -717,15 +719,15 @@ namespace sequoia
         {
           T v{y};
           yMutator(v);
-          check(combine_messages(description, "Copy constructor does not have value semantics"), logger, y == y);
-          check(combine_messages(description, "Mutation is not doing anything following copy constrution"), logger, v != y);
+
+          check(combine_messages(description, "Mutation is not doing anything following copy constrution/broken value semantics"), logger, v != y);
 
           v = y;
           check_equality(combine_messages(description, "Copy assignment"), logger, v, y);
 
           yMutator(v);
-          check(combine_messages(description, "Copy assignment does not have value semantics"), logger, y == y);
-          check(combine_messages(description, "Mutation is not doing anything following copy assignment"), logger, v != y);
+
+          check(combine_messages(description, "Mutation is not doing anything following copy assignment/ broken value semantics"), logger, v != y);
         }
       }
     }

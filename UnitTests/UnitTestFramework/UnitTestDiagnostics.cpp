@@ -193,6 +193,21 @@ namespace sequoia::unit_testing
       }
 
       {
+        using handle = std::shared_ptr<int>;
+        using beast = broken_copy_value_semantics<int, handle, custom_allocator<handle, true, true, true>>;
+        using allocator = beast::allocator_type;
+
+        auto m{
+          [](beast& b) {
+            *b.x.front() = 9;
+          }
+        };
+        
+        allocator a1{}, a2{};
+        check_regular_semantics(LINE("Broken copy value semantics"), beast{{1}, a1}, beast{{5,6}, a2}, m, allocation_info<allocator>{a1, a2, {1,1,1,1,1}});
+      }
+
+      {
         using beast = perfectly_normal_beast<int, custom_allocator<int, true, true, true>>;
         using allocator = beast::allocator_type;
 

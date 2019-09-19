@@ -476,11 +476,11 @@ namespace sequoia
       }
     };
 
-    template<class T=int, template<class> class Allocator=std::allocator>
+    template<class T=int, class Handle=std::shared_ptr<T>, class Allocator=std::allocator<Handle>>
     struct broken_copy_value_semantics
     {
-      using handle_type = std::shared_ptr<T>;      
-      using allocator_type = Allocator<handle_type>;
+      using handle_type = Handle;      
+      using allocator_type = Allocator;
 
       broken_copy_value_semantics(std::initializer_list<T> list, const allocator_type& alloc = allocator_type{})
         : x(alloc)
@@ -511,7 +511,7 @@ namespace sequoia
 
       broken_copy_value_semantics& operator=(broken_copy_value_semantics&&) noexcept = default;
       
-      std::vector<std::shared_ptr<int>, Allocator<std::shared_ptr<int>>> x{};
+      std::vector<handle_type, allocator_type> x{};
 
       friend bool operator==(const broken_copy_value_semantics& lhs, const broken_copy_value_semantics& rhs) noexcept
       {
@@ -533,11 +533,11 @@ namespace sequoia
       }
     };
 
-    template<class T=int, template<class> class Allocator=std::allocator>
+    template<class T=int, class Handle=std::shared_ptr<T>, class Allocator=std::allocator<Handle>>
     struct broken_copy_assignment_value_semantics
     {
-      using handle_type = std::shared_ptr<T>;      
-      using allocator_type = Allocator<handle_type>;
+      using handle_type = Handle;      
+      using allocator_type = Allocator;
 
       broken_copy_assignment_value_semantics(std::initializer_list<T> list, const allocator_type& alloc = allocator_type{})
         : x(alloc)
@@ -570,7 +570,7 @@ namespace sequoia
 
       broken_copy_assignment_value_semantics& operator=(broken_copy_assignment_value_semantics&&) noexcept = default;
       
-      std::vector<std::shared_ptr<int>, Allocator<std::shared_ptr<int>>> x{};
+      std::vector<handle_type, allocator_type> x{};
 
       friend bool operator==(const broken_copy_assignment_value_semantics& lhs, const broken_copy_assignment_value_semantics& rhs) noexcept
       {
