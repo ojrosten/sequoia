@@ -475,5 +475,121 @@ namespace sequoia
         return s;
       }
     };
+
+    template<class T=int, template<class> class Allocator=std::allocator>
+    struct broken_copy_value_semantics
+    {
+      using handle_type = std::shared_ptr<T>;      
+      using allocator_type = Allocator<handle_type>;
+
+      broken_copy_value_semantics(std::initializer_list<T> list, const allocator_type& alloc = allocator_type{})
+        : x(alloc)
+      {
+        x.reserve(list.size());
+        for(auto e : list)
+          x.emplace_back(std::make_shared<T>(e));
+      };
+
+      broken_copy_value_semantics(const broken_copy_value_semantics&) = default; // Broken!
+
+      broken_copy_value_semantics(const broken_copy_value_semantics& other, const allocator_type& alloc)
+        : x(alloc)
+      {
+        x.reserve(other.x.size());
+        for(auto e : other.x)
+        {
+          x.emplace_back(std::make_shared<T>(*e));
+        }
+      }
+
+      broken_copy_value_semantics(broken_copy_value_semantics&&) noexcept = default;
+
+      broken_copy_value_semantics(broken_copy_value_semantics&& other, const allocator_type& alloc)
+        : x(std::move(other.x), alloc) {}
+
+      broken_copy_value_semantics& operator=(const broken_copy_value_semantics&) = default;
+
+      broken_copy_value_semantics& operator=(broken_copy_value_semantics&&) noexcept = default;
+      
+      std::vector<std::shared_ptr<int>, Allocator<std::shared_ptr<int>>> x{};
+
+      friend bool operator==(const broken_copy_value_semantics& lhs, const broken_copy_value_semantics& rhs) noexcept
+      {
+        return std::equal(lhs.x.cbegin(), lhs.x.cend(), rhs.x.cbegin(), rhs.x.cend(), [](auto& l, auto& r){
+            return *l == *r;
+          });
+      }
+
+      friend bool operator!=(const broken_copy_value_semantics& lhs, const broken_copy_value_semantics& rhs) noexcept
+      {
+        return !(lhs == rhs);
+      }
+
+      template<class Stream>
+      friend Stream& operator<<(Stream& s, const broken_copy_value_semantics& b)
+      {
+        for(auto i : b.x) s << *i << ' ';
+        return s;
+      }
+    };
+
+    template<class T=int, template<class> class Allocator=std::allocator>
+    struct broken_copy_assignment_value_semantics
+    {
+      using handle_type = std::shared_ptr<T>;      
+      using allocator_type = Allocator<handle_type>;
+
+      broken_copy_assignment_value_semantics(std::initializer_list<T> list, const allocator_type& alloc = allocator_type{})
+        : x(alloc)
+      {
+        x.reserve(list.size());
+        for(auto e : list)
+          x.emplace_back(std::make_shared<T>(e));
+      };
+
+      broken_copy_assignment_value_semantics(const broken_copy_assignment_value_semantics& other)
+        : broken_copy_assignment_value_semantics(other, allocator_type{})
+      {}
+
+      broken_copy_assignment_value_semantics(const broken_copy_assignment_value_semantics& other, const allocator_type& alloc)
+        : x(alloc)
+      {
+        x.reserve(other.x.size());
+        for(auto e : other.x)
+        {
+          x.emplace_back(std::make_shared<T>(*e));
+        }
+      }
+
+      broken_copy_assignment_value_semantics(broken_copy_assignment_value_semantics&&) noexcept = default;
+
+      broken_copy_assignment_value_semantics(broken_copy_assignment_value_semantics&& other, const allocator_type& alloc)
+        : x(std::move(other.x), alloc) {}
+
+      broken_copy_assignment_value_semantics& operator=(const broken_copy_assignment_value_semantics&) = default;
+
+      broken_copy_assignment_value_semantics& operator=(broken_copy_assignment_value_semantics&&) noexcept = default;
+      
+      std::vector<std::shared_ptr<int>, Allocator<std::shared_ptr<int>>> x{};
+
+      friend bool operator==(const broken_copy_assignment_value_semantics& lhs, const broken_copy_assignment_value_semantics& rhs) noexcept
+      {
+        return std::equal(lhs.x.cbegin(), lhs.x.cend(), rhs.x.cbegin(), rhs.x.cend(), [](auto& l, auto& r){
+            return *l == *r;
+          });
+      }
+
+      friend bool operator!=(const broken_copy_assignment_value_semantics& lhs, const broken_copy_assignment_value_semantics& rhs) noexcept
+      {
+        return !(lhs == rhs);
+      }
+
+      template<class Stream>
+      friend Stream& operator<<(Stream& s, const broken_copy_assignment_value_semantics& b)
+      {
+        for(auto i : b.x) s << *i << ' ';
+        return s;
+      }
+    };
   }
 }
