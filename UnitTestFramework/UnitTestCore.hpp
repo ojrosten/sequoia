@@ -93,7 +93,7 @@ namespace sequoia::unit_testing
   inline std::string report_line(std::string file, const int line, const std::string_view message)
   {
     std::string s{std::move(file) + ", Line " + std::to_string(line)};
-    if(!message.empty()) (s += ":\n") += message;
+    if(!message.empty()) (s += ":\n\t") += message;
 
     return s;
   }

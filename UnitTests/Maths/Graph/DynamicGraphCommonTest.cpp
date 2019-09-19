@@ -1010,7 +1010,8 @@ namespace sequoia::unit_testing
         }
       }
     };
-    
+
+    // null
     graph_t g{maker()};
 
     check_equality(LINE(""), g.edges_capacity(), 0ul);
@@ -1029,6 +1030,15 @@ namespace sequoia::unit_testing
     if constexpr(std::is_empty_v<NodeWeight>)
     {
       check_regular_semantics(LINE("Regular Semantics"), g, graph_t{{{}}, edge_partitions_allocator{}, edge_allocator{}});
+
+      // x=====x
+      using edge_init_t = typename graph_t::edge_init_type;
+
+      graph_t g2{};
+
+      auto nodeMaker{
+        [](graph_t& g) { g.add_node(); }
+      };
     }
     else
     {

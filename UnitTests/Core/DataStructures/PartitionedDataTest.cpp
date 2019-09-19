@@ -633,7 +633,7 @@ namespace sequoia
         }
       };
 
-      check_allocations(LINE(""), s, t, partitionMaker,
+      check_regular_semantics(LINE("Regular Semantics"), s, t, partitionMaker,
                         allocation_info<partitions_allocator>{sPartAlloc, tPartAlloc, {0, 1, 1, 1}},
                         allocation_info<allocator>{allocGetter, tAlloc, {0, 2, 2, 0}});
 
@@ -651,7 +651,7 @@ namespace sequoia
         }
       };
 
-      check_allocations(LINE(""), s, t, mutator,
+      check_regular_semantics(LINE("Regular Semantics"), s, t, mutator,
                         allocation_info<partitions_allocator>{sPartAlloc, tPartAlloc, {1, 1, 1, 1, 1}},
                         allocation_info<allocator>{sAlloc, tAlloc, {0, 2, 2, 1, 0}});
     }
@@ -693,7 +693,7 @@ namespace sequoia
         }
       };
         
-      check_allocations(LINE(add_type_info<storage>("")), s, t, partitionMaker,
+      check_regular_semantics(LINE(add_type_info<storage>("Regular Semantics")), s, t, partitionMaker,
                         allocation_info<partitions_allocator>{sPartAlloc, tPartAlloc, {0, 1, 1, 1}},
                         allocation_info<allocator>{sAlloc, tAlloc, {0, 1, 1, 0}});
 

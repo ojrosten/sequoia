@@ -41,11 +41,14 @@ namespace sequoia
       void test_regular_semantics();   
     };
 
+    template<class T=int, class Allocator=std::allocator<int>>
     struct broken_equality
     {
-      using allocator_type = std::vector<int>::allocator_type;
+      using allocator_type = Allocator;
+
+      broken_equality(std::initializer_list<T> list) : x{list} {};
       
-      broken_equality(std::initializer_list<int> list) : x{list} {};
+      broken_equality(std::initializer_list<T> list, const allocator_type& alloc) : x{list, alloc} {};
 
       broken_equality(const broken_equality&) = default;
 
@@ -59,7 +62,7 @@ namespace sequoia
 
       broken_equality& operator=(broken_equality&&) noexcept = default;
       
-      std::vector<int> x{};
+      std::vector<T, Allocator> x{};
 
       friend bool operator==(const broken_equality& lhs, const broken_equality& rhs) noexcept
       {
@@ -79,11 +82,14 @@ namespace sequoia
       }
     };
 
+    template<class T=int, class Allocator=std::allocator<int>>
     struct broken_inequality
     {
-      using allocator_type = std::vector<int>::allocator_type;
+      using allocator_type = Allocator;
 
-      broken_inequality(std::initializer_list<int> list) : x{list} {};
+      broken_inequality(std::initializer_list<T> list) : x{list} {};
+
+      broken_inequality(std::initializer_list<T> list, const allocator_type& alloc) : x{list, alloc} {};
 
       broken_inequality(const broken_inequality&) = default;
 
@@ -97,7 +103,7 @@ namespace sequoia
 
       broken_inequality& operator=(broken_inequality&&) noexcept = default;
 
-      std::vector<int> x{};
+      std::vector<T, Allocator> x{};
 
       friend bool operator==(const broken_inequality& lhs, const broken_inequality& rhs) noexcept
       {
@@ -117,11 +123,14 @@ namespace sequoia
       }
     };
 
+    template<class T=int, class Allocator=std::allocator<int>>
     struct broken_copy
     {
-      using allocator_type = std::vector<int>::allocator_type;
+      using allocator_type = Allocator;
 
-      broken_copy(std::initializer_list<int> list) : x{list} {};
+      broken_copy(std::initializer_list<T> list) : x{list} {};
+
+      broken_copy(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {};
 
       broken_copy(const broken_copy&)
       {
@@ -139,7 +148,7 @@ namespace sequoia
 
       broken_copy& operator=(broken_copy&&) = default;
       
-      std::vector<int> x{};
+      std::vector<T, Allocator> x{};
 
       friend bool operator==(const broken_copy& lhs, const broken_copy& rhs) noexcept
       {
@@ -159,11 +168,14 @@ namespace sequoia
       }
     };
 
+    template<class T=int, class Allocator=std::allocator<int>>
     struct broken_copy_alloc
     {
-      using allocator_type = std::vector<int>::allocator_type;
+      using allocator_type = Allocator;
 
-      broken_copy_alloc(std::initializer_list<int> list) : x{list} {};
+      broken_copy_alloc(std::initializer_list<T> list) : x{list} {};
+
+      broken_copy_alloc(std::initializer_list<T> list, const allocator_type& alloc) : x{list, alloc} {};
 
       broken_copy_alloc(const broken_copy_alloc&) = default;
 
@@ -180,7 +192,7 @@ namespace sequoia
 
       broken_copy_alloc& operator=(broken_copy_alloc&&) = default;
       
-      std::vector<int> x{};
+      std::vector<T, Allocator> x{};
 
       friend bool operator==(const broken_copy_alloc& lhs, const broken_copy_alloc& rhs) noexcept
       {
@@ -200,11 +212,14 @@ namespace sequoia
       }
     };
 
+    template<class T=int, class Allocator=std::allocator<int>>
     struct broken_move
     {
-      using allocator_type = std::vector<int>::allocator_type;
+      using allocator_type = Allocator;
 
-      broken_move(std::initializer_list<int> list) : x{list} {};
+      broken_move(std::initializer_list<T> list) : x{list} {};
+
+      broken_move(std::initializer_list<T> list, const allocator_type& alloc) : x{list, alloc} {};
 
       broken_move(const broken_move&) = default;
 
@@ -222,7 +237,7 @@ namespace sequoia
 
       broken_move& operator=(broken_move&&) = default;
       
-      std::vector<int> x{};
+      std::vector<T, Allocator> x{};
 
       friend bool operator==(const broken_move& lhs, const broken_move& rhs) noexcept
       {
@@ -242,11 +257,14 @@ namespace sequoia
       }
     };
 
+    template<class T=int, class Allocator=std::allocator<int>>
     struct broken_move_alloc
     {
-      using allocator_type = std::vector<int>::allocator_type;
+      using allocator_type = Allocator;
 
-      broken_move_alloc(std::initializer_list<int> list) : x{list} {};
+      broken_move_alloc(std::initializer_list<T> list) : x{list} {};
+
+      broken_move_alloc(std::initializer_list<T> list, const allocator_type& alloc) : x{list, alloc} {};
 
       broken_move_alloc(const broken_move_alloc&) = default;
 
@@ -263,7 +281,7 @@ namespace sequoia
 
       broken_move_alloc& operator=(broken_move_alloc&&) = default;
       
-      std::vector<int> x{};
+      std::vector<T, Allocator> x{};
 
       friend bool operator==(const broken_move_alloc& lhs, const broken_move_alloc& rhs) noexcept
       {
@@ -283,11 +301,14 @@ namespace sequoia
       }
     };
 
+    template<class T=int, class Allocator=std::allocator<int>>
     struct broken_copy_assignment
     {
-      using allocator_type = std::vector<int>::allocator_type;
+      using allocator_type = Allocator;
 
       broken_copy_assignment(std::initializer_list<int> list) : x{list} {};
+
+      broken_copy_assignment(std::initializer_list<int> list, const allocator_type& alloc) : x{list, alloc} {};
 
       broken_copy_assignment(const broken_copy_assignment&) = default;
 
@@ -304,7 +325,7 @@ namespace sequoia
 
       broken_copy_assignment& operator=(broken_copy_assignment&&) = default;
       
-      std::vector<int> x{};
+      std::vector<T, Allocator> x{};
 
       friend bool operator==(const broken_copy_assignment& lhs, const broken_copy_assignment& rhs) noexcept
       {
@@ -324,11 +345,14 @@ namespace sequoia
       }
     };
 
+    template<class T=int, class Allocator=std::allocator<int>>
     struct broken_move_assignment
     {
-      using allocator_type = std::vector<int>::allocator_type;
+      using allocator_type = Allocator;
 
-      broken_move_assignment(std::initializer_list<int> list) : x{list} {};
+      broken_move_assignment(std::initializer_list<T> list) : x{list} {};
+
+      broken_move_assignment(std::initializer_list<T> list, const allocator_type& alloc) : x{list, alloc} {};
 
       broken_move_assignment(const broken_move_assignment&) = default;
 
@@ -345,7 +369,7 @@ namespace sequoia
         return *this;
       }
       
-      std::vector<int> x{};
+      std::vector<T, Allocator> x{};
 
       friend bool operator==(const broken_move_assignment& lhs, const broken_move_assignment& rhs) noexcept
       {
@@ -365,11 +389,14 @@ namespace sequoia
       }
     };
 
+    template<class T=int, class Allocator=std::allocator<int>>
     struct perfectly_normal_beast
     {
-      using allocator_type = std::vector<int>::allocator_type;
+      using allocator_type = Allocator;
 
-      perfectly_normal_beast(std::initializer_list<int> list) : x{list} {};
+      perfectly_normal_beast(std::initializer_list<T> list) : x{list} {};
+
+      perfectly_normal_beast(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {};
 
       perfectly_normal_beast(const perfectly_normal_beast&) = default;
 
@@ -383,7 +410,7 @@ namespace sequoia
 
       perfectly_normal_beast& operator=(perfectly_normal_beast&&) noexcept = default;
       
-      std::vector<int> x{};
+      std::vector<T, Allocator> x{};
 
       friend bool operator==(const perfectly_normal_beast& lhs, const perfectly_normal_beast& rhs) noexcept
       {

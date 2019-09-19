@@ -6,6 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "UnitTestDiagnostics.hpp"
+#include "UnitTestUtilities.hpp"
 
 #include <complex>
 
@@ -116,17 +117,88 @@ namespace sequoia::unit_testing
     check_regular_semantics(LINE(""), perfectly_normal_beast{1}, perfectly_normal_beast{3}, perfectly_normal_beast{2}, perfectly_normal_beast{3});
     check_regular_semantics(LINE(""), perfectly_normal_beast{1}, perfectly_normal_beast{2}, perfectly_normal_beast{3}, perfectly_normal_beast{2});
 
-    using allocator = std::vector<int>::allocator_type;
-    check_regular_semantics(LINE(""), broken_equality{1}, broken_equality{2}, allocator{});
-    check_regular_semantics(LINE(""), broken_inequality{1}, broken_inequality{2}, allocator{});
-    check_regular_semantics(LINE(""), broken_copy{1}, broken_copy{2}, allocator{});
-    check_regular_semantics(LINE(""), broken_copy_alloc{1}, broken_copy_alloc{2}, allocator{});
-    check_regular_semantics(LINE(""), broken_move{1}, broken_move{2}, allocator{});
-    check_regular_semantics(LINE(""), broken_move_alloc{1}, broken_move_alloc{2}, allocator{});
-    check_regular_semantics(LINE(""), broken_copy_assignment{1}, broken_copy_assignment{2}, allocator{});
-    check_regular_semantics(LINE(""), broken_move_assignment{1}, broken_move_assignment{2}, allocator{});
-    check_regular_semantics(LINE(""), perfectly_normal_beast{1}, perfectly_normal_beast{1}, allocator{});
+    {
+      auto mutator{
+        [](auto& b) {
+          b.x.push_back(1);
+        }
+      };
+      
+      {
+        using beast = broken_equality<int, custom_allocator<int, true, true, true>>;
+        using allocator = beast::allocator_type;
+        
+        allocator a1{}, a2{};
+        check_regular_semantics(LINE("Broken equality"), beast{{1}, a1}, beast{{5,6}, a2}, mutator, allocation_info<allocator>{a1, a2, {1,1,1,1,1}});
+      }
 
+      {
+        using beast = broken_inequality<int, custom_allocator<int, true, true, true>>;
+        using allocator = beast::allocator_type;
+        
+        allocator a1{}, a2{};
+        check_regular_semantics(LINE("Broken inequality"), beast{{1}, a1}, beast{{5,6}, a2}, mutator, allocation_info<allocator>{a1, a2, {1,1,1,1,1}});
+      }
+
+      {
+        using beast = broken_copy<int, custom_allocator<int, true, true, true>>;
+        using allocator = beast::allocator_type;
+        
+        allocator a1{}, a2{};
+        check_regular_semantics(LINE("Broken copy"), beast{{1}, a1}, beast{{5,6}, a2}, mutator, allocation_info<allocator>{a1, a2, {1,1,1,1,1}});
+      }
+
+      {
+        using beast = broken_copy_alloc<int, custom_allocator<int, true, true, true>>;
+        using allocator = beast::allocator_type;
+        
+        allocator a1{}, a2{};
+        check_regular_semantics(LINE("Broken copy alloc"), beast{{1}, a1}, beast{{5,6}, a2}, mutator, allocation_info<allocator>{a1, a2, {1,1,1,1,1}});
+      }
+
+      {
+        using beast = broken_move<int, custom_allocator<int, true, true, true>>;
+        using allocator = beast::allocator_type;
+        
+        allocator a1{}, a2{};
+        check_regular_semantics(LINE("Broken move"), beast{{1}, a1}, beast{{5,6}, a2}, mutator, allocation_info<allocator>{a1, a2, {1,1,1,1,1}});
+      }
+
+      {
+        using beast = broken_move_alloc<int, custom_allocator<int, true, true, true>>;
+        using allocator = beast::allocator_type;
+        
+        allocator a1{}, a2{};
+        check_regular_semantics(LINE("Broken move alloc"), beast{{1}, a1}, beast{{5,6}, a2}, mutator, allocation_info<allocator>{a1, a2, {1,1,1,1,1}});
+      }
+
+      {
+        using beast = broken_copy_assignment<int, custom_allocator<int, true, true, true>>;
+        using allocator = beast::allocator_type;
+        
+        allocator a1{}, a2{};
+        check_regular_semantics(LINE("Broken copy assignment"), beast{{1}, a1}, beast{{5,6}, a2}, mutator, allocation_info<allocator>{a1, a2, {1,1,1,1,1}});
+      }
+
+      {
+        using beast = broken_move_assignment<int, custom_allocator<int, true, true, true>>;
+        using allocator = beast::allocator_type;
+        
+        allocator a1{}, a2{};
+        check_regular_semantics(LINE("Broken move assignment"), beast{{1}, a1}, beast{{5,6}, a2}, mutator, allocation_info<allocator>{a1, a2, {1,1,1,1,1}});
+      }
+
+      {
+        using beast = perfectly_normal_beast<int, custom_allocator<int, true, true, true>>;
+        using allocator = beast::allocator_type;
+
+
+        allocator a1{}, a2{};
+        check_regular_semantics(LINE("Broken invariant"), beast{{1}, a1}, beast{{1}, a1}, mutator, allocation_info<allocator>{a1, a2, {0,0,0,1,0}});
+      }
+    }
+    
+    using allocator = std::vector<int>::allocator_type;
     check_regular_semantics(LINE(""), broken_equality{1}, broken_equality{2}, broken_equality{1}, broken_equality{2}, allocator{});
     check_regular_semantics(LINE(""), broken_inequality{1}, broken_inequality{2}, broken_inequality{1}, broken_inequality{2}, allocator{});
     check_regular_semantics(LINE(""), broken_move{1}, broken_move{2}, broken_move{1}, broken_move{2});
@@ -207,11 +279,26 @@ namespace sequoia::unit_testing
 
   void false_negative_diagnostics::test_regular_semantics()
   {
-    check_regular_semantics(LINE(""), perfectly_normal_beast{1}, perfectly_normal_beast{2});
-    check_regular_semantics(LINE(""), perfectly_normal_beast{1}, perfectly_normal_beast{2}, perfectly_normal_beast{1}, perfectly_normal_beast{2});
+    {
+      check_regular_semantics(LINE(""), perfectly_normal_beast{1}, perfectly_normal_beast{2});
+      check_regular_semantics(LINE(""), perfectly_normal_beast{1}, perfectly_normal_beast{2}, perfectly_normal_beast{1}, perfectly_normal_beast{2});
+    }
+
+    {
+      using beast = perfectly_normal_beast<int, custom_allocator<int, true, true, true>>;
+      using allocator = beast::allocator_type;
+
+      auto mutator{
+        [](beast& b) {
+          b.x.push_back(1);
+        }
+      };
+
+      allocator a1{}, a2{};
+      check_regular_semantics(LINE(""), beast{{1}, a1}, beast{{5,6}, a2}, mutator, allocation_info<allocator>{a1, a2, {1,1,1,1,1}});
+    }
 
     using allocator = std::vector<int>::allocator_type;
-    check_regular_semantics(LINE(""), perfectly_normal_beast{1}, perfectly_normal_beast{2}, allocator{});
     check_regular_semantics(LINE(""), perfectly_normal_beast{1}, perfectly_normal_beast{2}, perfectly_normal_beast{1}, perfectly_normal_beast{2}, allocator{});
   }
 }
