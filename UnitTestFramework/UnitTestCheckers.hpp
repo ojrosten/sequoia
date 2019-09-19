@@ -705,6 +705,14 @@ namespace sequoia
         z = T{x};
         check_equality(combine_messages(description, "Move assignment"), logger, z, x);
 
+        if constexpr (impl::do_swap<Allocators...>())
+        {
+          using std::swap;
+          swap(z, w);
+          check_equality(combine_messages(description, "Swap"), logger, z, y);
+          check_equality(combine_messages(description, "Swap"), logger, w, x);
+        }
+
         if constexpr(!nullMutator)
         {
           T v{y};

@@ -429,5 +429,51 @@ namespace sequoia
         return s;
       }
     };
+
+    template<class T=int, class Allocator=std::allocator<int>>
+    struct broken_swap
+    {
+      using allocator_type = Allocator;
+
+      broken_swap(std::initializer_list<T> list) : x{list} {};
+
+      broken_swap(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {};
+
+      broken_swap(const broken_swap&) = default;
+
+      broken_swap(const broken_swap& other, const allocator_type& alloc) : x(other.x, alloc) {}
+
+      broken_swap(broken_swap&&) noexcept = default;
+
+      broken_swap(broken_swap&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+
+      broken_swap& operator=(const broken_swap&) = default;
+
+      broken_swap& operator=(broken_swap&&) noexcept = default;
+
+      friend void swap(broken_swap&, broken_swap&) noexcept
+      {
+        // do nothing
+      }
+      
+      std::vector<T, Allocator> x{};
+
+      friend bool operator==(const broken_swap& lhs, const broken_swap& rhs) noexcept
+      {
+        return lhs.x == rhs.x;
+      }
+
+      friend bool operator!=(const broken_swap& lhs, const broken_swap& rhs) noexcept
+      {
+        return !(lhs == rhs);
+      }
+
+      template<class Stream>
+      friend Stream& operator<<(Stream& s, const broken_swap& b)
+      {
+        for(auto i : b.x) s << i << ' ';
+        return s;
+      }
+    };
   }
 }

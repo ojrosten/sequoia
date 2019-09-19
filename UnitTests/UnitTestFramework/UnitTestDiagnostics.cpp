@@ -101,21 +101,23 @@ namespace sequoia::unit_testing
 
   void false_positive_diagnostics::test_regular_semantics()
   {
-    check_regular_semantics(LINE(""), broken_equality{1}, broken_equality{2});
-    check_regular_semantics(LINE(""), broken_inequality{1}, broken_inequality{2});
-    check_regular_semantics(LINE(""), broken_copy{1}, broken_copy{2});
-    check_regular_semantics(LINE(""), broken_move{1}, broken_move{2});
-    check_regular_semantics(LINE(""), broken_copy_assignment{1}, broken_copy_assignment{2});
-    check_regular_semantics(LINE(""), broken_move_assignment{1}, broken_move_assignment{2});
-    check_regular_semantics(LINE(""), perfectly_normal_beast{1}, perfectly_normal_beast{1});
+    check_regular_semantics(LINE("Broken equality"), broken_equality{1}, broken_equality{2});
+    check_regular_semantics(LINE("Broken inequality"), broken_inequality{1}, broken_inequality{2});
+    check_regular_semantics(LINE("Broken copy"), broken_copy{1}, broken_copy{2});
+    check_regular_semantics(LINE("Broken move"), broken_move{1}, broken_move{2});
+    check_regular_semantics(LINE("Broken copy assignment"), broken_copy_assignment{1}, broken_copy_assignment{2});
+    check_regular_semantics(LINE("Broken move assignment"), broken_move_assignment{1}, broken_move_assignment{2});
+    check_regular_semantics(LINE("Broken swap"), broken_swap{1}, broken_swap{2});
+    check_regular_semantics(LINE("Broken check invariant"), perfectly_normal_beast{1}, perfectly_normal_beast{1});
 
-    check_regular_semantics(LINE(""), broken_equality{1}, broken_equality{2}, broken_equality{1}, broken_equality{2});
-    check_regular_semantics(LINE(""), broken_inequality{1}, broken_inequality{2}, broken_inequality{1}, broken_inequality{2});
-    check_regular_semantics(LINE(""), broken_move{1}, broken_move{2}, broken_move{1}, broken_move{2});
-    check_regular_semantics(LINE(""), broken_move_assignment{1}, broken_move_assignment{2}, broken_move_assignment{1}, broken_move_assignment{2});
-    check_regular_semantics(LINE(""), perfectly_normal_beast{1}, perfectly_normal_beast{1}, perfectly_normal_beast{1}, perfectly_normal_beast{1});
-    check_regular_semantics(LINE(""), perfectly_normal_beast{1}, perfectly_normal_beast{3}, perfectly_normal_beast{2}, perfectly_normal_beast{3});
-    check_regular_semantics(LINE(""), perfectly_normal_beast{1}, perfectly_normal_beast{2}, perfectly_normal_beast{3}, perfectly_normal_beast{2});
+    check_regular_semantics(LINE("Broken equality"), broken_equality{1}, broken_equality{2}, broken_equality{1}, broken_equality{2});
+    check_regular_semantics(LINE("Broken inequality"), broken_inequality{1}, broken_inequality{2}, broken_inequality{1}, broken_inequality{2});
+    check_regular_semantics(LINE("Broken move"), broken_move{1}, broken_move{2}, broken_move{1}, broken_move{2});
+    check_regular_semantics(LINE("Broken move"), broken_swap{1}, broken_swap{2}, broken_swap{1}, broken_swap{2});
+    check_regular_semantics(LINE("Broken move assignment"), broken_move_assignment{1}, broken_move_assignment{2}, broken_move_assignment{1}, broken_move_assignment{2});
+    check_regular_semantics(LINE("Broken check invariant"), perfectly_normal_beast{1}, perfectly_normal_beast{1}, perfectly_normal_beast{1}, perfectly_normal_beast{1});
+    check_regular_semantics(LINE("Broken check invariant"), perfectly_normal_beast{1}, perfectly_normal_beast{3}, perfectly_normal_beast{2}, perfectly_normal_beast{3});
+    check_regular_semantics(LINE("Broken check invariant"), perfectly_normal_beast{1}, perfectly_normal_beast{2}, perfectly_normal_beast{3}, perfectly_normal_beast{2});
 
     {
       auto mutator{
@@ -194,7 +196,7 @@ namespace sequoia::unit_testing
 
 
         allocator a1{}, a2{};
-        check_regular_semantics(LINE("Broken invariant"), beast{{1}, a1}, beast{{1}, a1}, mutator, allocation_info<allocator>{a1, a2, {0,0,0,1,0}});
+        check_regular_semantics(LINE("Broken check invariant"), beast{{1}, a1}, beast{{1}, a1}, mutator, allocation_info<allocator>{a1, a2, {0,0,0,1,0}});
       }
     }
     
