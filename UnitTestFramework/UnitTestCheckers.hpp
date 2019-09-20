@@ -778,21 +778,6 @@ namespace sequoia
         check_equality(combine_messages(description, "Move constructor using allocator"), logger, u, xClone);
       }
     }
-        
-    template<class Logger, class T, class Mutator>
-    void check_copy_consistency(std::string_view description, Logger& logger, T& target, const T& prediction, Mutator m)
-    {
-      typename Logger::sentinel s{logger, add_type_info<T>(description)};
-
-      auto c{target};
-      
-      m(target);
-      check_equality(combine_messages(description, "Mutation of target"), logger, target, prediction);
-
-      m(c);
-      check_equality(combine_messages(description, "Mutation of copy"), logger, c, prediction);
-      
-    }
 
     template<class T, class S>
     struct detailed_equality_checker<std::pair<T, S>>
@@ -1009,13 +994,6 @@ namespace sequoia
       void check_regular_semantics(std::string_view description, const T& x, const T& y, Mutator m, allocation_info<Allocators>... allocationInfo)
       {
         unit_testing::check_regular_semantics(description, m_Logger, x, y, m, allocationInfo...);
-      }
-
-      // retire!
-      template<class T, class Mutator>
-      void check_copy_consistency(std::string_view description, T& target, const T& prediction, Mutator m)
-      {
-        unit_testing::check_copy_consistency(description, m_Logger, target, prediction, std::move(m));
       }
       
       template<class F, class S>

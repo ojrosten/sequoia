@@ -66,7 +66,6 @@ namespace sequoia
     public:
       using graph_checker<unit_test_logger<test_mode::standard>>::check_equality;      
       using graph_checker<unit_test_logger<test_mode::standard>>::check_graph;
-      using graph_checker<unit_test_logger<test_mode::standard>>::check_copy_consistency;
 
     private:
       using GGraph = typename

@@ -43,11 +43,8 @@ namespace sequoia
             gr.set_edge_weight(gr.cbegin_edges(0) + 1, 3);
           }
         };
-
-        Graph prediction{{edge{1,0}, edge{1,3}}, {edge{0,3}, edge{0,0}}};
-        prediction.swap_edges(1, 0, 1);
         
-        m_Checker.check_copy_consistency(LINE("Copy consistency"), g, prediction, mutator);
+        m_Checker.check_regular_semantics(LINE("Regular semantics"), Graph{}, g, mutator);
       }
       
       template<class Graph>
