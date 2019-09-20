@@ -390,47 +390,6 @@ namespace sequoia
     };
 
     template<class T=int, class Allocator=std::allocator<int>>
-    struct perfectly_normal_beast
-    {
-      using allocator_type = Allocator;
-
-      perfectly_normal_beast(std::initializer_list<T> list) : x{list} {};
-
-      perfectly_normal_beast(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {};
-
-      perfectly_normal_beast(const perfectly_normal_beast&) = default;
-
-      perfectly_normal_beast(const perfectly_normal_beast& other, const allocator_type& alloc) : x(other.x, alloc) {}
-
-      perfectly_normal_beast(perfectly_normal_beast&&) noexcept = default;
-
-      perfectly_normal_beast(perfectly_normal_beast&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
-
-      perfectly_normal_beast& operator=(const perfectly_normal_beast&) = default;
-
-      perfectly_normal_beast& operator=(perfectly_normal_beast&&) noexcept = default;
-      
-      std::vector<T, Allocator> x{};
-
-      friend bool operator==(const perfectly_normal_beast& lhs, const perfectly_normal_beast& rhs) noexcept
-      {
-        return lhs.x == rhs.x;
-      }
-
-      friend bool operator!=(const perfectly_normal_beast& lhs, const perfectly_normal_beast& rhs) noexcept
-      {
-        return !(lhs == rhs);
-      }
-
-      template<class Stream>
-      friend Stream& operator<<(Stream& s, const perfectly_normal_beast& b)
-      {
-        for(auto i : b.x) s << i << ' ';
-        return s;
-      }
-    };
-
-    template<class T=int, class Allocator=std::allocator<int>>
     struct broken_swap
     {
       using allocator_type = Allocator;
@@ -507,7 +466,13 @@ namespace sequoia
       broken_copy_value_semantics(broken_copy_value_semantics&& other, const allocator_type& alloc)
         : x(std::move(other.x), alloc) {}
 
-      broken_copy_value_semantics& operator=(const broken_copy_value_semantics&) = default;
+      broken_copy_value_semantics& operator=(const broken_copy_value_semantics& other)
+      {
+        auto tmp{other};
+        *this = std::move(tmp);
+
+        return *this;
+      }
 
       broken_copy_value_semantics& operator=(broken_copy_value_semantics&&) noexcept = default;
       
@@ -548,7 +513,7 @@ namespace sequoia
       };
 
       broken_copy_assignment_value_semantics(const broken_copy_assignment_value_semantics& other)
-        : broken_copy_assignment_value_semantics(other, allocator_type{})
+        : broken_copy_assignment_value_semantics(other, other.x.get_allocator())
       {}
 
       broken_copy_assignment_value_semantics(const broken_copy_assignment_value_semantics& other, const allocator_type& alloc)
@@ -586,6 +551,112 @@ namespace sequoia
 
       template<class Stream>
       friend Stream& operator<<(Stream& s, const broken_copy_assignment_value_semantics& b)
+      {
+        for(auto i : b.x) s << *i << ' ';
+        return s;
+      }
+    };
+
+    template<class T=int, class Allocator=std::allocator<int>>
+    struct perfectly_normal_beast
+    {
+      using allocator_type = Allocator;
+
+      perfectly_normal_beast(std::initializer_list<T> list) : x{list} {};
+
+      perfectly_normal_beast(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {};
+
+      perfectly_normal_beast(const perfectly_normal_beast&) = default;
+
+      perfectly_normal_beast(const perfectly_normal_beast& other, const allocator_type& alloc) : x(other.x, alloc) {}
+
+      perfectly_normal_beast(perfectly_normal_beast&&) noexcept = default;
+
+      perfectly_normal_beast(perfectly_normal_beast&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+
+      perfectly_normal_beast& operator=(const perfectly_normal_beast&) = default;
+
+      perfectly_normal_beast& operator=(perfectly_normal_beast&&) noexcept = default;
+      
+      std::vector<T, Allocator> x{};
+
+      friend bool operator==(const perfectly_normal_beast& lhs, const perfectly_normal_beast& rhs) noexcept
+      {
+        return lhs.x == rhs.x;
+      }
+
+      friend bool operator!=(const perfectly_normal_beast& lhs, const perfectly_normal_beast& rhs) noexcept
+      {
+        return !(lhs == rhs);
+      }
+
+      template<class Stream>
+      friend Stream& operator<<(Stream& s, const perfectly_normal_beast& b)
+      {
+        for(auto i : b.x) s << i << ' ';
+        return s;
+      }
+    };
+
+    template<class T=int, class Handle=std::shared_ptr<T>, class Allocator=std::allocator<Handle>>
+    struct perfectly_sharing_beast
+    {
+      using handle_type = Handle;      
+      using allocator_type = Allocator;
+
+      perfectly_sharing_beast(std::initializer_list<T> list, const allocator_type& alloc = allocator_type{})
+        : x(alloc)
+      {
+        x.reserve(list.size());
+        for(auto e : list)
+          x.emplace_back(std::make_shared<T>(e));
+      };
+
+      perfectly_sharing_beast(const perfectly_sharing_beast& other)
+        : perfectly_sharing_beast(other, other.x.get_allocator())
+      {}
+
+      perfectly_sharing_beast(const perfectly_sharing_beast& other, const allocator_type& alloc)
+        : x(alloc)
+      {
+        x.reserve(other.x.size());
+        for(auto e : other.x)
+        {
+          x.emplace_back(std::make_shared<T>(*e));
+        }
+      }      
+
+      perfectly_sharing_beast(perfectly_sharing_beast&&) noexcept = default;
+
+      perfectly_sharing_beast(perfectly_sharing_beast&& other, const allocator_type& alloc)
+        : x(std::move(other.x), alloc) {}
+
+      perfectly_sharing_beast& operator=(const perfectly_sharing_beast& other)
+      {
+        auto tmp{other};
+        *this = std::move(tmp);
+
+        return *this;
+      }
+
+      perfectly_sharing_beast& operator=(perfectly_sharing_beast&&) noexcept = default;
+      
+      std::vector<handle_type, allocator_type> x{};
+
+      friend bool operator==(const perfectly_sharing_beast& lhs, const perfectly_sharing_beast& rhs) noexcept
+      {
+        return std::equal(lhs.x.cbegin(), lhs.x.cend(), rhs.x.cbegin(), rhs.x.cend(), [](auto& l, auto& r){
+            return *l == *r;
+          });
+      }
+
+      friend bool operator!=(const perfectly_sharing_beast& lhs, const perfectly_sharing_beast& rhs) noexcept
+      {
+        return !(lhs == rhs);
+      }
+
+      template<class Stream>
+      friend Stream& operator<<(Stream& s, const perfectly_sharing_beast& b)
       {
         for(auto i : b.x) s << *i << ' ';
         return s;
