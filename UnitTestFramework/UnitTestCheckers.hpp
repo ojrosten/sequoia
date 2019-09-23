@@ -237,7 +237,7 @@ namespace sequoia
  
     struct allocation_predictions
     {
-      int copy_x{}, copy_y{}, copy_assign_y_to_x{}, mutation{}, move_like_x{};
+      int copy_x{}, copy_y{}, copy_assign_y_to_x{}, mutation{};
     };
 
     template<class Allocator>

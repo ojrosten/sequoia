@@ -652,8 +652,8 @@ namespace sequoia
       };
 
       check_regular_semantics(LINE("Regular Semantics"), s, t, mutator,
-                        allocation_info<partitions_allocator>{sPartAlloc, tPartAlloc, {1, 1, 1, 1, 1}},
-                        allocation_info<allocator>{sAlloc, tAlloc, {0, 2, 2, 1, 0}});
+                        allocation_info<partitions_allocator>{sPartAlloc, tPartAlloc, {1, 1, 1, 1}},
+                        allocation_info<allocator>{sAlloc, tAlloc, {0, 2, 2, 1}});
     }
   
     template<class T, class SharingPolicy, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>

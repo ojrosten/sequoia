@@ -202,7 +202,7 @@ namespace sequoia::unit_testing::impl
   {
     auto checker{
       [&logger](std::string_view message, const auto& alloc, const auto& info){
-        check_equality(message, logger, alloc.allocs(), info.predictions().move_like_x);
+        check_equality(message, logger, alloc.allocs(), info.predictions().copy_x);
       }
     };
 
@@ -214,7 +214,7 @@ namespace sequoia::unit_testing::impl
   {
     auto checker{
       [&logger](std::string_view message, const auto& alloc, const auto& info){
-        check_equality(message, logger, alloc.allocs(), info.predictions().mutation + info.predictions().move_like_x);
+        check_equality(message, logger, alloc.allocs(), info.predictions().mutation + info.predictions().copy_x);
       }
     };
 
