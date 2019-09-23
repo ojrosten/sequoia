@@ -20,6 +20,8 @@ namespace sequoia::unit_testing
     test_relative_performance();
     test_mixed();
     test_regular_semantics();
+
+    test_regular_semantics_allocations<true, true, true>();
   }
 
   void false_positive_diagnostics::basic_tests()
@@ -120,73 +122,77 @@ namespace sequoia::unit_testing
     check_regular_semantics(LINE("Broken check invariant"), perfectly_normal_beast{1}, perfectly_normal_beast{1}, perfectly_normal_beast{1}, perfectly_normal_beast{1});
     check_regular_semantics(LINE("Broken check invariant"), perfectly_normal_beast{1}, perfectly_normal_beast{3}, perfectly_normal_beast{2}, perfectly_normal_beast{3});
     check_regular_semantics(LINE("Broken check invariant"), perfectly_normal_beast{1}, perfectly_normal_beast{2}, perfectly_normal_beast{3}, perfectly_normal_beast{2});
+  }
 
+  template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
+  void false_positive_diagnostics::test_regular_semantics_allocations()
+  {
     {
       auto mutator{
         [](auto& b) {
           b.x.push_back(1);
         }
       };
-      
+
       {
-        using beast = broken_equality<int, custom_allocator<int, true, true, true>>;
-        using allocator = beast::allocator_type;
+        using beast = broken_equality<int, custom_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
+        using allocator = typename beast::allocator_type;
         
         allocator a1{}, a2{};
         check_regular_semantics(LINE("Broken equality"), beast{{1}, a1}, beast{{5,6}, a2}, mutator, allocation_info<allocator>{a1, a2, {1,1,1,1,1}});
       }
 
       {
-        using beast = broken_inequality<int, custom_allocator<int, true, true, true>>;
-        using allocator = beast::allocator_type;
+        using beast = broken_inequality<int, custom_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
+        using allocator = typename beast::allocator_type;
         
         allocator a1{}, a2{};
         check_regular_semantics(LINE("Broken inequality"), beast{{1}, a1}, beast{{5,6}, a2}, mutator, allocation_info<allocator>{a1, a2, {1,1,1,1,1}});
       }
 
       {
-        using beast = broken_copy<int, custom_allocator<int, true, true, true>>;
-        using allocator = beast::allocator_type;
+        using beast = broken_copy<int, custom_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
+        using allocator = typename beast::allocator_type;
         
         allocator a1{}, a2{};
         check_regular_semantics(LINE("Broken copy"), beast{{1}, a1}, beast{{5,6}, a2}, mutator, allocation_info<allocator>{a1, a2, {1,1,1,1,1}});
       }
 
       {
-        using beast = broken_copy_alloc<int, custom_allocator<int, true, true, true>>;
-        using allocator = beast::allocator_type;
+        using beast = broken_copy_alloc<int, custom_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
+        using allocator = typename beast::allocator_type;
         
         allocator a1{}, a2{};
         check_regular_semantics(LINE("Broken copy alloc"), beast{{1}, a1}, beast{{5,6}, a2}, mutator, allocation_info<allocator>{a1, a2, {1,1,1,1,1}});
       }
 
       {
-        using beast = broken_move<int, custom_allocator<int, true, true, true>>;
-        using allocator = beast::allocator_type;
+        using beast = broken_move<int, custom_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
+        using allocator = typename beast::allocator_type;
         
         allocator a1{}, a2{};
         check_regular_semantics(LINE("Broken move"), beast{{1}, a1}, beast{{5,6}, a2}, mutator, allocation_info<allocator>{a1, a2, {1,1,1,1,1}});
       }
 
       {
-        using beast = broken_move_alloc<int, custom_allocator<int, true, true, true>>;
-        using allocator = beast::allocator_type;
+        using beast = broken_move_alloc<int, custom_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
+        using allocator = typename beast::allocator_type;
         
         allocator a1{}, a2{};
         check_regular_semantics(LINE("Broken move alloc"), beast{{1}, a1}, beast{{5,6}, a2}, mutator, allocation_info<allocator>{a1, a2, {1,1,1,1,1}});
       }
 
       {
-        using beast = broken_copy_assignment<int, custom_allocator<int, true, true, true>>;
-        using allocator = beast::allocator_type;
+        using beast = broken_copy_assignment<int, custom_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
+        using allocator = typename beast::allocator_type;
         
         allocator a1{}, a2{};
         check_regular_semantics(LINE("Broken copy assignment"), beast{{1}, a1}, beast{{5,6}, a2}, mutator, allocation_info<allocator>{a1, a2, {1,1,1,1,1}});
       }
 
       {
-        using beast = broken_move_assignment<int, custom_allocator<int, true, true, true>>;
-        using allocator = beast::allocator_type;
+        using beast = broken_move_assignment<int, custom_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
+        using allocator = typename beast::allocator_type;
         
         allocator a1{}, a2{};
         check_regular_semantics(LINE("Broken move assignment"), beast{{1}, a1}, beast{{5,6}, a2}, mutator, allocation_info<allocator>{a1, a2, {1,1,1,1,1}});
@@ -194,8 +200,8 @@ namespace sequoia::unit_testing
 
       {
         using handle = std::shared_ptr<int>;
-        using beast = broken_copy_value_semantics<int, handle, custom_allocator<handle, true, true, true>>;
-        using allocator = beast::allocator_type;
+        using beast = broken_copy_value_semantics<int, handle, custom_allocator<handle, PropagateCopy, PropagateMove, PropagateSwap>>;
+        using allocator = typename beast::allocator_type;
 
         auto m{
           [](beast& b) {
@@ -209,8 +215,8 @@ namespace sequoia::unit_testing
 
       {
         using handle = std::shared_ptr<int>;
-        using beast = broken_copy_assignment_value_semantics<int, handle, custom_allocator<handle, true, true, true>>;
-        using allocator = beast::allocator_type;
+        using beast = broken_copy_assignment_value_semantics<int, handle, custom_allocator<handle, PropagateCopy, PropagateMove, PropagateSwap>>;
+        using allocator = typename beast::allocator_type;
 
         auto m{
           [](beast& b) {
@@ -223,8 +229,8 @@ namespace sequoia::unit_testing
       }
 
       {
-        using beast = perfectly_normal_beast<int, custom_allocator<int, true, true, true>>;
-        using allocator = beast::allocator_type;
+        using beast = perfectly_normal_beast<int, custom_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
+        using allocator = typename beast::allocator_type;
 
 
         allocator a1{}, a2{};
@@ -232,8 +238,8 @@ namespace sequoia::unit_testing
       }
 
       {
-        using beast = perfectly_normal_beast<int, custom_allocator<int, true, true, true>>;
-        using allocator = beast::allocator_type;
+        using beast = perfectly_normal_beast<int, custom_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
+        using allocator = typename beast::allocator_type;
 
         {
           allocator a1{}, a2{};
@@ -259,8 +265,8 @@ namespace sequoia::unit_testing
 
       {
         using handle = std::shared_ptr<int>;
-        using beast = perfectly_sharing_beast<int, handle, custom_allocator<handle, true, true, true>>;
-        using allocator = beast::allocator_type;
+        using beast = perfectly_sharing_beast<int, handle, custom_allocator<handle, PropagateCopy, PropagateMove, PropagateSwap>>;
+        using allocator = typename beast::allocator_type;
 
         auto m{
           [](beast& b) {
@@ -308,6 +314,8 @@ namespace sequoia::unit_testing
     test_relative_performance();
     test_mixed();
     test_regular_semantics();
+
+    test_regular_semantics_allocations<true, true, true>();
   }
 
   void false_negative_diagnostics::basic_tests()
@@ -376,10 +384,14 @@ namespace sequoia::unit_testing
       check_regular_semantics(LINE(""), perfectly_normal_beast{1}, perfectly_normal_beast{2});
       check_regular_semantics(LINE(""), perfectly_normal_beast{1}, perfectly_normal_beast{2}, perfectly_normal_beast{1}, perfectly_normal_beast{2});
     }
+  }
 
+  template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
+  void false_negative_diagnostics::test_regular_semantics_allocations()
+  {
     {
-      using beast = perfectly_normal_beast<int, custom_allocator<int, true, true, true>>;
-      using allocator = beast::allocator_type;
+      using beast = perfectly_normal_beast<int, custom_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
+      using allocator = typename beast::allocator_type;
 
       auto mutator{
         [](beast& b) {
@@ -393,8 +405,8 @@ namespace sequoia::unit_testing
 
     {
       using handle = std::shared_ptr<int>;
-      using beast = perfectly_sharing_beast<int, handle, custom_allocator<handle, true, true, true>>;
-      using allocator = beast::allocator_type;
+      using beast = perfectly_sharing_beast<int, handle, custom_allocator<handle, PropagateCopy, PropagateMove, PropagateSwap>>;
+      using allocator = typename beast::allocator_type;
 
       auto m{
         [](beast& b) {

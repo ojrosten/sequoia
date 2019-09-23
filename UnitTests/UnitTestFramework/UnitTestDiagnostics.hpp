@@ -25,6 +25,9 @@ namespace sequoia
       void test_container_checks();
       void test_mixed();
       void test_regular_semantics();
+
+      template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
+      void test_regular_semantics_allocations();
     };
 
     class false_negative_diagnostics : public false_negative_test
@@ -38,7 +41,10 @@ namespace sequoia
       void test_relative_performance();
       void test_container_checks();
       void test_mixed();
-      void test_regular_semantics();   
+      void test_regular_semantics();
+
+      template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
+      void test_regular_semantics_allocations();
     };
 
     template<class T=int, class Allocator=std::allocator<int>>
