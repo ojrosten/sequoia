@@ -81,7 +81,7 @@ namespace sequoia
 
       broken_equality& operator=(const broken_equality&) = default;
 
-      broken_equality& operator=(broken_equality&&) noexcept = default;
+      broken_equality& operator=(broken_equality&&) = default;
       
       std::vector<T, Allocator> x{};
 
@@ -122,7 +122,7 @@ namespace sequoia
 
       broken_inequality& operator=(const broken_inequality&) = default;
 
-      broken_inequality& operator=(broken_inequality&&) noexcept = default;
+      broken_inequality& operator=(broken_inequality&&) = default;
 
       std::vector<T, Allocator> x{};
 
@@ -495,7 +495,7 @@ namespace sequoia
         return *this;
       }
 
-      broken_copy_value_semantics& operator=(broken_copy_value_semantics&&) noexcept = default;
+      broken_copy_value_semantics& operator=(broken_copy_value_semantics&&) = default;
       
       std::vector<handle_type, allocator_type> x{};
 
@@ -554,7 +554,7 @@ namespace sequoia
 
       broken_copy_assignment_value_semantics& operator=(const broken_copy_assignment_value_semantics&) = default;
 
-      broken_copy_assignment_value_semantics& operator=(broken_copy_assignment_value_semantics&&) noexcept = default;
+      broken_copy_assignment_value_semantics& operator=(broken_copy_assignment_value_semantics&&) = default;
       
       std::vector<handle_type, allocator_type> x{};
 
