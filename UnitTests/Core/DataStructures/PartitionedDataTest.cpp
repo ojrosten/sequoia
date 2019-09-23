@@ -35,7 +35,7 @@ namespace sequoia
       test_bucketed_capacity<int, independent<int>, false>();
       test_bucketed_capacity<int, shared<int>, false>();
 
-      allocation_tester t{*this};
+      do_allocation_tests(*this);
     }
     
     void partitioned_data_test::test_static_storage()

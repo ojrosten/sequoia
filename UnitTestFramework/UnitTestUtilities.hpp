@@ -104,21 +104,15 @@ namespace sequoia::unit_testing
   };
 
   template<class Test>
-  class allocation_tester
+  void do_allocation_tests(Test& test)
   {
-  public:
-    allocation_tester(Test& test) : m_Test{test}
-    {
-      m_Test.template test_allocation<false, false, false>();
-      m_Test.template test_allocation<false, false, true>();
-      m_Test.template test_allocation<false, true, false>();
-      m_Test.template test_allocation<false, true, true>();
-      m_Test.template test_allocation<true, false, false>();
-      m_Test.template test_allocation<true, false, true>();
-      m_Test.template test_allocation<true, true, false>();
-      m_Test.template test_allocation<true, true, true>();
-    }
-  private:
-    Test& m_Test;
-  };
+    test.template test_allocation<false, false, false>();
+    test.template test_allocation<false, false, true>();
+    test.template test_allocation<false, true, false>();
+    test.template test_allocation<false, true, true>();
+    test.template test_allocation<true, false, false>();
+    test.template test_allocation<true, false, true>();
+    test.template test_allocation<true, true, false>();
+    test.template test_allocation<true, true, true>();
+  }
 }

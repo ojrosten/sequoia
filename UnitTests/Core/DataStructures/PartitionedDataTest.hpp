@@ -15,10 +15,10 @@ namespace sequoia::unit_testing
   {
   public:
     using unit_test::unit_test;
+  private:    
+    template<class Test>
+    friend void do_allocation_tests(Test&);
 
-    template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-    void test_allocation();
-  private:      
     void run_tests() override;
 
     void test_storage();
@@ -38,6 +38,9 @@ namespace sequoia::unit_testing
 
     template<class T, class SharingPolicy, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
     void test_contiguous_allocation();
+    
+    template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
+    void test_allocation();
       
     template<class Traits, template<class> class SharingPolicy, template<class> class ReferencePolicy>
     void test_generic_iterator_properties();

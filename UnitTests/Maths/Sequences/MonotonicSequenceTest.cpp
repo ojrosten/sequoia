@@ -18,7 +18,7 @@ namespace sequoia::unit_testing
     test_static_decreasing_sequence();
     test_static_increasing_sequence();
 
-    allocation_tester<monotonic_sequence_test> t{*this};
+    do_allocation_tests(*this);
   }
 
   void monotonic_sequence_test::test_decreasing_sequence()

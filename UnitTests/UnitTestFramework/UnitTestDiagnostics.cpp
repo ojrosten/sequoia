@@ -315,7 +315,7 @@ namespace sequoia::unit_testing
     test_mixed();
     test_regular_semantics();
 
-    allocation_tester<false_negative_diagnostics> t{*this};
+    do_allocation_tests(*this);
   }
 
   void false_negative_diagnostics::basic_tests()

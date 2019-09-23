@@ -22,7 +22,7 @@ namespace sequoia:: unit_testing
     
     test_static_node_storage();
 
-    allocation_tester t{*this};
+    do_allocation_tests(*this);
   }
 
   template<class Sharing>

@@ -18,10 +18,12 @@ namespace sequoia
   {
     class false_positive_diagnostics : public false_positive_test
     {
-      friend allocation_tester<false_positive_diagnostics>;
     public:
       using false_positive_test::false_positive_test;
     private:
+      template<class Test>
+      friend void do_allocation_tests(Test&);
+
       void run_tests() override;
 
       void basic_tests();
@@ -39,10 +41,12 @@ namespace sequoia
 
     class false_negative_diagnostics : public false_negative_test
     {
-      friend allocation_tester<false_negative_diagnostics>;
     public:
       using false_negative_test::false_negative_test;
     private:
+      template<class Test>
+      friend void do_allocation_tests(Test&);
+
       void run_tests() override;
 
       void basic_tests();
