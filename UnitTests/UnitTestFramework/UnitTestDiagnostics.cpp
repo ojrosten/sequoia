@@ -315,7 +315,7 @@ namespace sequoia::unit_testing
     test_mixed();
     test_regular_semantics();
 
-    test_regular_semantics_allocations<true, true, true>();
+    allocation_tester<false_negative_diagnostics> t{*this};
   }
 
   void false_negative_diagnostics::basic_tests()
@@ -384,6 +384,12 @@ namespace sequoia::unit_testing
       check_regular_semantics(LINE(""), perfectly_normal_beast{1}, perfectly_normal_beast{2});
       check_regular_semantics(LINE(""), perfectly_normal_beast{1}, perfectly_normal_beast{2}, perfectly_normal_beast{1}, perfectly_normal_beast{2});
     }
+  }
+
+  template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
+  void false_negative_diagnostics::test_allocation()
+  {
+    test_regular_semantics_allocations<PropagateCopy, PropagateMove, PropagateSwap>();
   }
 
   template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>

@@ -8,6 +8,9 @@
 #pragma once
 
 #include "UnitTestCore.hpp"
+#include "UnitTestUtilities.hpp"
+
+#include "AssignmentUtilities.hpp"
 
 namespace sequoia
 {
@@ -15,6 +18,7 @@ namespace sequoia
   {
     class false_positive_diagnostics : public false_positive_test
     {
+      friend allocation_tester<false_positive_diagnostics>;
     public:
       using false_positive_test::false_positive_test;
     private:
@@ -27,11 +31,15 @@ namespace sequoia
       void test_regular_semantics();
 
       template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
+      void test_allocation();
+
+      template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
       void test_regular_semantics_allocations();
     };
 
     class false_negative_diagnostics : public false_negative_test
     {
+      friend allocation_tester<false_negative_diagnostics>;
     public:
       using false_negative_test::false_negative_test;
     private:
@@ -42,6 +50,9 @@ namespace sequoia
       void test_container_checks();
       void test_mixed();
       void test_regular_semantics();
+
+      template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
+      void test_allocation();
 
       template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
       void test_regular_semantics_allocations();
@@ -582,7 +593,18 @@ namespace sequoia
 
       perfectly_normal_beast& operator=(const perfectly_normal_beast&) = default;
 
-      perfectly_normal_beast& operator=(perfectly_normal_beast&&) noexcept = default;
+      perfectly_normal_beast& operator=(perfectly_normal_beast&&) = default;
+
+      void swap(perfectly_normal_beast& other) noexcept(noexcept(std::swap(x, other.x)))
+      {
+        std::swap(x, other.x);
+      }
+
+      friend void swap(perfectly_normal_beast& lhs, perfectly_normal_beast& rhs)
+        noexcept(noexcept(lhs.swap(rhs)))
+      {
+        lhs.swap(rhs);
+      }
       
       std::vector<T, Allocator> x{};
 
@@ -609,6 +631,9 @@ namespace sequoia
     {
       using handle_type = Handle;      
       using allocator_type = Allocator;
+
+      explicit perfectly_sharing_beast(const allocator_type& alloc) : x(alloc)
+      {}
 
       perfectly_sharing_beast(std::initializer_list<T> list, const allocator_type& alloc = allocator_type{})
         : x(alloc)
@@ -639,13 +664,32 @@ namespace sequoia
 
       perfectly_sharing_beast& operator=(const perfectly_sharing_beast& other)
       {
-        auto tmp{other};
-        *this = std::move(tmp);
+        if(&other != this)
+        {
+          auto allocGetter{
+            [](const  perfectly_sharing_beast& psb){
+              return psb.x.get_allocator();
+            }
+          };
+
+          sequoia::impl::assignment_helper::assign(*this, other, allocGetter);
+        }
 
         return *this;
       }
 
-      perfectly_sharing_beast& operator=(perfectly_sharing_beast&&) noexcept = default;
+      perfectly_sharing_beast& operator=(perfectly_sharing_beast&&) = default;
+
+      void swap(perfectly_sharing_beast& other) noexcept(noexcept(std::swap(x, other.x)))
+      {
+        std::swap(x, other.x);
+      }
+
+      friend void swap(perfectly_sharing_beast& lhs, perfectly_sharing_beast& rhs)
+        noexcept(noexcept(lhs.swap(rhs)))
+      {
+        lhs.swap(rhs);
+      }
       
       std::vector<handle_type, allocator_type> x{};
 
