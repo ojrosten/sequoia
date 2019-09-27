@@ -234,118 +234,46 @@ namespace sequoia
     {
       return impl::check_range(description, logger, weak_equivalence_tag{}, first, last, predictionFirst, predictionLast);      
     }
+
+    struct individual_allocation_predictions
+    {
+      int copy{}, mutation{};
+    };
  
     struct allocation_predictions
     {
-      int copy_x{}, copy_y{}, copy_assign_y_to_x{}, mutation{};
+      int copy_x{}, copy_y{}, copy_assign_y_to_x{}, y_mutation{};
     };
 
     template<class Allocator>
-    class allocation_info
+    class individual_allocation_info
     {
-    public:      
-      allocation_info(const Allocator& xAlloc, const Allocator& yAlloc, allocation_predictions predictions)
-        : allocation_info{variant{xAlloc}, variant{yAlloc}, std::move(predictions)}
+    public:
+      individual_allocation_info(const Allocator& alloc)
+        : individual_allocation_info{variant{alloc}}
       {}
 
       template<class Fn>
-      allocation_info(const Allocator& xAlloc, Fn yAllocGetter, allocation_predictions predictions)
-        : allocation_info{variant{xAlloc}, variant{std::move(yAllocGetter)}, std::move(predictions)}
-      {}
-
-      template<class Fn>
-      allocation_info(Fn xAllocGetter, const Allocator& yAlloc, allocation_predictions predictions)
-        : allocation_info{variant{std::move(xAllocGetter)}, variant{yAlloc}, std::move(predictions)}
-      {}
-
-      template<class Fn>
-      allocation_info(Fn xAllocGetter, Fn yAllocGetter, allocation_predictions predictions)
-        : allocation_info{variant{std::move(xAllocGetter)}, variant{std::move(yAllocGetter)}, std::move(predictions)}
+      individual_allocation_info(Fn allocGetter)
+        : individual_allocation_info{variant{std::move(allocGetter)}}
       {}
 
       template<class Logger>
-      void check_copy_x(std::string_view description, Logger& logger)
-      {
-        auto message{combine_messages(description, "Copy construction allocation (x)")};
-        m_xCurrentCount = check_construction(std::move(message), logger, m_xAllocator, m_xCurrentCount, m_Predictions.copy_x);
-      }
-
-      template<class Logger>
-      void check_copy_y(std::string_view description, Logger& logger)
-      {
-        auto message{combine_messages(description, "Copy construction allocation (y)")};
-        m_yCurrentCount = check_construction(std::move(message), logger, m_yAllocator, m_yCurrentCount, m_Predictions.copy_y);
-      }
-
-      template<class Logger>
-      void check_move(std::string_view description, Logger& logger)
-      {
-        auto message{combine_messages(description, "Move construction allocation")};
-        m_yCurrentCount = check_construction(std::move(message), logger, m_yAllocator, m_yCurrentCount, 0);
-      }
-
-      template<class Logger>
-      void check_copy_assign_y_to_x(std::string_view description, Logger& logger)
+      void check(std::string_view description, Logger& logger, const int prediction)
       {
         typename Logger::sentinel s{logger, add_type_info<Allocator>(description)};
+        const int current{count(m_Allocator)};
+
+        check_equality(std::move(description), logger, current - m_CurrentCount, prediction);
         
-        int xPrediction{}, yPrediction{};
-        if constexpr(std::allocator_traits<Allocator>::propagate_on_container_copy_assignment::value)
-        {
-          yPrediction = m_Predictions.copy_assign_y_to_x;
-        }
-        else
-        {
-          xPrediction = m_Predictions.copy_assign_y_to_x;
-        }
-
-        check(description, "Copy assignment x allocations", "Copy assignment y allocations", logger, xPrediction, yPrediction);
-      }
-
-      template<class Logger>
-      void check_move_assign_y_to_x(std::string_view description, Logger& logger)
-      {
-        typename Logger::sentinel s{logger, add_type_info<Allocator>(description)};
-
-        const bool copyLike{!std::allocator_traits<Allocator>::propagate_on_container_move_assignment::value
-            && (get(m_xAllocator) != get(m_yAllocator))};
-        
-        const int xPrediction{copyLike ? m_Predictions.copy_assign_y_to_x : 0}, yPrediction{};
-
-        check(description, "Move assignment x allocations", "Move assignment y allocations", logger, xPrediction, yPrediction);
-     }
-
-      template<mutation_flavour Flavour, class Logger>
-      void check_mutation(std::string_view description, Logger& logger)
-      {
-        typename Logger::sentinel s{logger, add_type_info<Allocator>(description)};
-
-        int xPrediction{}, yPrediction{};
-        constexpr bool pred{[](){
-            switch(Flavour)
-            {
-            case mutation_flavour::after_move_assign:
-              return std::allocator_traits<Allocator>::propagate_on_container_move_assignment::value;
-            case mutation_flavour::after_swap:
-              return std::allocator_traits<Allocator>::propagate_on_container_swap::value;
-            }
-          }()
-        };
-        
-        if constexpr(pred)
-        {
-          yPrediction = m_Predictions.mutation;
-        }
-        else
-        {
-          xPrediction = m_Predictions.mutation;
-        }
-
-        check(description, "Mutation x allocations", "Mutation y allocations", logger, xPrediction, yPrediction);
+        m_CurrentCount = current;
       }
 
       [[nodiscard]]
-      const allocation_predictions& predictions() const noexcept { return m_Predictions; }
+      Allocator get_allocator() const noexcept
+      {
+        return get(m_Allocator);
+      }
     private:
       using variant = std::variant<Allocator, std::function<Allocator()>>;
 
@@ -372,44 +300,158 @@ namespace sequoia
         return std::visit(alloc_getter{}, v).allocs();
       }
       
-      variant m_xAllocator, m_yAllocator;
+      variant m_Allocator;
       
-      allocation_predictions m_Predictions;
-      
-      int m_xCurrentCount{}, m_yCurrentCount{};
+      int m_CurrentCount{};
 
-      allocation_info(variant xAlloc, variant yAlloc, allocation_predictions predictions)
-        : m_xAllocator{std::move(xAlloc)}
-        , m_yAllocator{std::move(yAlloc)}
-        , m_Predictions{std::move(predictions)}
-        , m_xCurrentCount{count(m_xAllocator)}
-        , m_yCurrentCount{count(m_yAllocator)}
-      {} 
+      individual_allocation_info(variant alloc)
+        : m_Allocator{std::move(alloc)}
+        , m_CurrentCount{count(m_Allocator)}
+      {}
+    };
+
+    
+    template<class Logger, class Allocator>
+    void check_copy(std::string_view description, Logger& logger, individual_allocation_info<Allocator>& info, const int prediction)
+    {
+      auto message{combine_messages(description, "Copy construction allocation")};
+      info.check(std::move(description), logger, prediction);
+    }
+
+    template<class Logger, class Allocator>
+    void check_move(std::string_view description, Logger& logger, individual_allocation_info<Allocator>& info, const int prediction)
+    {
+      auto message{combine_messages(description, "Move construction allocation")};
+      info.check(std::move(description), logger, prediction);
+    }
+
+    template<class Logger, class Allocator>
+    void check_mutation(std::string_view description, Logger& logger, individual_allocation_info<Allocator>& info, const int prediction)
+    {
+      auto message{combine_messages(description, "Mutation allocation")};
+      info.check(std::move(description), logger, prediction);
+    }    
+
+
+    template<class Allocator>
+    class allocation_info
+    {
+    public:      
+      allocation_info(const Allocator& xAlloc, const Allocator& yAlloc, allocation_predictions predictions)
+        : m_xAllocator{xAlloc}, m_yAllocator{yAlloc}, m_Predictions{std::move(predictions)}
+      {}
+
+      template<class Fn>
+      allocation_info(const Allocator& xAlloc, Fn yAllocGetter, allocation_predictions predictions)
+        : m_xAllocator{xAlloc}, m_yAllocator{yAllocGetter}, m_Predictions{std::move(predictions)}
+      {}
+
+      template<class Fn>
+      allocation_info(Fn xAllocGetter, const Allocator& yAlloc, allocation_predictions predictions)
+        : m_xAllocator{xAllocGetter}, m_yAllocator{yAlloc}, m_Predictions{std::move(predictions)}
+      {}
+
+      template<class Fn>
+      allocation_info(Fn xAllocGetter, Fn yAllocGetter, allocation_predictions predictions)
+        : m_xAllocator{xAllocGetter}, m_yAllocator{yAllocGetter}, m_Predictions{std::move(predictions)}
+      {}
 
       template<class Logger>
-      static int check_construction(std::string description, Logger& logger, const variant& v, const int currentCount, const int deltaPrediction)
+      void check_copy_x(std::string_view description, Logger& logger)
       {
-        typename Logger::sentinel s{logger, add_type_info<Allocator>(description)};
-        const int current{count(v)};
-        
-        check_equality(std::move(description), logger, current - currentCount, deltaPrediction);
-
-        return current;
+        auto message{combine_messages(description, "(x)")};
+        check_copy(std::move(message), logger, m_xAllocator, m_Predictions.copy_x);
       }
 
       template<class Logger>
-      void check(std::string_view description, std::string_view xMessage, std::string_view yMessage, Logger& logger, const int xDeltaPrediction, const int yDeltaPrediction)
+      void check_copy_y(std::string_view description, Logger& logger)
       {
-        const int xCurrent{count(m_xAllocator)}, yCurrent{count(m_yAllocator)};
-        
-        const int xDeltaActual{xCurrent - m_xCurrentCount};
-        const int yDeltaActual{yCurrent - m_yCurrentCount};
-        
-        m_xCurrentCount = xCurrent;
-        m_yCurrentCount = yCurrent;
+        auto message{combine_messages(description, "(y)")};
+        check_copy(std::move(message), logger, m_yAllocator, m_Predictions.copy_y);
+      }
 
-        check_equality(combine_messages(description, xMessage), logger, xDeltaActual, xDeltaPrediction);
-        check_equality(combine_messages(description, yMessage), logger, yDeltaActual, yDeltaPrediction);
+      template<class Logger>
+      void check_move_y(std::string_view description, Logger& logger)
+      {
+        auto message{combine_messages(description, "(y)")};
+        check_move(std::move(message), logger, m_yAllocator, 0);
+      }
+
+      template<class Logger>
+      void check_copy_assign_y_to_x(std::string_view description, Logger& logger)
+      {
+        typename Logger::sentinel s{logger, add_type_info<Allocator>(description)};
+        
+        int xPrediction{}, yPrediction{};
+        if constexpr(std::allocator_traits<Allocator>::propagate_on_container_copy_assignment::value)
+        {
+          yPrediction = m_Predictions.copy_y;
+        }
+        else
+        {
+          xPrediction = m_Predictions.copy_assign_y_to_x;
+        }
+
+        check(description, "Copy assignment x allocations", "Copy assignment y allocations", logger, xPrediction, yPrediction);
+      }
+
+      template<class Logger>
+      void check_move_assign_y_to_x(std::string_view description, Logger& logger)
+      {
+        typename Logger::sentinel s{logger, add_type_info<Allocator>(description)};
+
+        const bool copyLike{!std::allocator_traits<Allocator>::propagate_on_container_move_assignment::value
+            && (m_xAllocator.get_allocator() != m_yAllocator.get_allocator())};
+        
+        const int xPrediction{copyLike ? m_Predictions.copy_y : 0}, yPrediction{};
+
+        check(description, "Move assignment x allocations", "Move assignment y allocations", logger, xPrediction, yPrediction);
+     }
+
+      template<mutation_flavour Flavour, class Logger>
+      void check_mutation(std::string_view description, Logger& logger)
+      {
+        typename Logger::sentinel s{logger, add_type_info<Allocator>(description)};
+
+        int xPrediction{}, yPrediction{};
+        constexpr bool pred{[](){
+            switch(Flavour)
+            {
+            case mutation_flavour::after_move_assign:
+              return std::allocator_traits<Allocator>::propagate_on_container_move_assignment::value;
+            case mutation_flavour::after_swap:
+              return std::allocator_traits<Allocator>::propagate_on_container_swap::value;
+            }
+          }()
+        };
+        
+        if constexpr(pred)
+        {
+          yPrediction = m_Predictions.y_mutation;
+        }
+        else
+        {
+          xPrediction = m_Predictions.y_mutation;
+        }
+
+        check(description, "Mutation x allocations", "Mutation y allocations", logger, xPrediction, yPrediction);
+      }
+
+
+      // retire this!
+      [[nodiscard]]
+      const allocation_predictions& predictions() const noexcept { return m_Predictions; }
+    private:
+
+      individual_allocation_info<Allocator> m_xAllocator, m_yAllocator;
+      
+      allocation_predictions m_Predictions;
+
+      template<class Logger>
+      void check(std::string_view description, std::string_view xMessage, std::string_view yMessage, Logger& logger, const int xPrediction, const int yPrediction)
+      {
+        m_xAllocator.check(combine_messages(description, xMessage), logger, xPrediction);
+        m_yAllocator.check(combine_messages(description, yMessage), logger, yPrediction);
       }
     };
 
