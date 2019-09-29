@@ -634,8 +634,8 @@ namespace sequoia
       };
 
       check_regular_semantics(LINE("Regular Semantics"), s, t, partitionMaker,
-                        allocation_info<partitions_allocator>{sPartAlloc, tPartAlloc, {0, 1, 1, 1}},
-                        allocation_info<allocator>{allocGetter, tAlloc, {0, 2, 2, 0}});
+                              allocation_info<partitions_allocator>{sPartAlloc, tPartAlloc, {0, 1, {1, 1}, 1}},
+                              allocation_info<allocator>{allocGetter, tAlloc, {0, 2, {2, 2}, 0}});
 
       allocator sAlloc{};
 
@@ -652,8 +652,8 @@ namespace sequoia
       };
 
       check_regular_semantics(LINE("Regular Semantics"), s, t, mutator,
-                        allocation_info<partitions_allocator>{sPartAlloc, tPartAlloc, {1, 1, 1, 1}},
-                        allocation_info<allocator>{sAlloc, tAlloc, {0, 2, 2, 1}});
+                              allocation_info<partitions_allocator>{sPartAlloc, tPartAlloc, {1, 1, {1, 1}, 1}},
+                              allocation_info<allocator>{sAlloc, tAlloc, {0, 2, {2, 2}, 1}});
     }
   
     template<class T, class SharingPolicy, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
@@ -694,8 +694,8 @@ namespace sequoia
       };
         
       check_regular_semantics(LINE(add_type_info<storage>("Regular Semantics")), s, t, partitionMaker,
-                        allocation_info<partitions_allocator>{sPartAlloc, tPartAlloc, {0, 1, 1, 1}},
-                        allocation_info<allocator>{sAlloc, tAlloc, {0, 1, 1, 0}});
+                              allocation_info<partitions_allocator>{sPartAlloc, tPartAlloc, {0, 1, {1, 1}, 1}},
+                              allocation_info<allocator>{sAlloc, tAlloc, {0, 1, {1, 1}, 0}});
 
       s.add_slot();
       // []

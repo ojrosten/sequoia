@@ -239,10 +239,25 @@ namespace sequoia
     {
       int copy{}, mutation{};
     };
+
+    struct assignment_allocation_predictions
+    {
+      assignment_allocation_predictions(int withPropagation, int withoutPropagation)
+        : with_propagation{withPropagation}, without_propagation{withoutPropagation}
+      {}
+      
+      int with_propagation{}, without_propagation{};
+    };
  
     struct allocation_predictions
     {
-      int copy_x{}, copy_y{}, copy_assign_y_to_x{}, y_mutation{};
+      allocation_predictions(int copyX, int copyY, assignment_allocation_predictions assignYtoX, int yMutation)
+        : copy_x{copyX}, copy_y{copyY}, assign_y_to_x{assignYtoX}, y_mutation{yMutation}
+      {}
+      
+      int copy_x{}, copy_y{};
+      assignment_allocation_predictions assign_y_to_x;
+      int y_mutation{};
     };
 
     template<class Allocator>
@@ -385,11 +400,11 @@ namespace sequoia
         int xPrediction{}, yPrediction{};
         if constexpr(std::allocator_traits<Allocator>::propagate_on_container_copy_assignment::value)
         {
-          yPrediction = m_Predictions.copy_y;
+          yPrediction = m_Predictions.assign_y_to_x.with_propagation;
         }
         else
         {
-          xPrediction = m_Predictions.copy_assign_y_to_x;
+          xPrediction = m_Predictions.assign_y_to_x.without_propagation;
         }
 
         check(description, "Copy assignment x allocations", "Copy assignment y allocations", logger, xPrediction, yPrediction);
@@ -403,7 +418,7 @@ namespace sequoia
         const bool copyLike{!std::allocator_traits<Allocator>::propagate_on_container_move_assignment::value
             && (m_xAllocator.get_allocator() != m_yAllocator.get_allocator())};
         
-        const int xPrediction{copyLike ? m_Predictions.copy_y : 0}, yPrediction{};
+        const int xPrediction{copyLike ? m_Predictions.assign_y_to_x.without_propagation : 0}, yPrediction{};
 
         check(description, "Move assignment x allocations", "Move assignment y allocations", logger, xPrediction, yPrediction);
      }

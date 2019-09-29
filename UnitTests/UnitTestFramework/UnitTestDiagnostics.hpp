@@ -67,9 +67,9 @@ namespace sequoia
     {
       using allocator_type = Allocator;
 
-      broken_equality(std::initializer_list<T> list) : x{list} {};
+      broken_equality(std::initializer_list<T> list) : x{list} {}
       
-      broken_equality(std::initializer_list<T> list, const allocator_type& alloc) : x{list, alloc} {};
+      broken_equality(std::initializer_list<T> list, const allocator_type& alloc) : x{list, alloc} {}
 
       broken_equality(const broken_equality&) = default;
 
@@ -108,9 +108,9 @@ namespace sequoia
     {
       using allocator_type = Allocator;
 
-      broken_inequality(std::initializer_list<T> list) : x{list} {};
+      broken_inequality(std::initializer_list<T> list) : x{list} {}
 
-      broken_inequality(std::initializer_list<T> list, const allocator_type& alloc) : x{list, alloc} {};
+      broken_inequality(std::initializer_list<T> list, const allocator_type& alloc) : x{list, alloc} {}
 
       broken_inequality(const broken_inequality&) = default;
 
@@ -149,9 +149,9 @@ namespace sequoia
     {
       using allocator_type = Allocator;
 
-      broken_copy(std::initializer_list<T> list) : x{list} {};
+      broken_copy(std::initializer_list<T> list) : x{list} {}
 
-      broken_copy(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {};
+      broken_copy(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {}
 
       broken_copy(const broken_copy&)
       {
@@ -194,9 +194,9 @@ namespace sequoia
     {
       using allocator_type = Allocator;
 
-      broken_copy_alloc(std::initializer_list<T> list) : x{list} {};
+      broken_copy_alloc(std::initializer_list<T> list) : x{list} {}
 
-      broken_copy_alloc(std::initializer_list<T> list, const allocator_type& alloc) : x{list, alloc} {};
+      broken_copy_alloc(std::initializer_list<T> list, const allocator_type& alloc) : x{list, alloc} {}
 
       broken_copy_alloc(const broken_copy_alloc&) = default;
 
@@ -238,9 +238,9 @@ namespace sequoia
     {
       using allocator_type = Allocator;
 
-      broken_move(std::initializer_list<T> list) : x{list} {};
+      broken_move(std::initializer_list<T> list) : x{list} {}
 
-      broken_move(std::initializer_list<T> list, const allocator_type& alloc) : x{list, alloc} {};
+      broken_move(std::initializer_list<T> list, const allocator_type& alloc) : x{list, alloc} {}
 
       broken_move(const broken_move&) = default;
 
@@ -283,9 +283,9 @@ namespace sequoia
     {
       using allocator_type = Allocator;
 
-      broken_move_alloc(std::initializer_list<T> list) : x{list} {};
+      broken_move_alloc(std::initializer_list<T> list) : x{list} {}
 
-      broken_move_alloc(std::initializer_list<T> list, const allocator_type& alloc) : x{list, alloc} {};
+      broken_move_alloc(std::initializer_list<T> list, const allocator_type& alloc) : x{list, alloc} {}
 
       broken_move_alloc(const broken_move_alloc&) = default;
 
@@ -327,9 +327,9 @@ namespace sequoia
     {
       using allocator_type = Allocator;
 
-      broken_copy_assignment(std::initializer_list<int> list) : x{list} {};
+      broken_copy_assignment(std::initializer_list<int> list) : x{list} {}
 
-      broken_copy_assignment(std::initializer_list<int> list, const allocator_type& alloc) : x{list, alloc} {};
+      broken_copy_assignment(std::initializer_list<int> list, const allocator_type& alloc) : x{list, alloc} {}
 
       broken_copy_assignment(const broken_copy_assignment&) = default;
 
@@ -371,9 +371,9 @@ namespace sequoia
     {
       using allocator_type = Allocator;
 
-      broken_move_assignment(std::initializer_list<T> list) : x{list} {};
+      broken_move_assignment(std::initializer_list<T> list) : x{list} {}
 
-      broken_move_assignment(std::initializer_list<T> list, const allocator_type& alloc) : x{list, alloc} {};
+      broken_move_assignment(std::initializer_list<T> list, const allocator_type& alloc) : x{list, alloc} {}
 
       broken_move_assignment(const broken_move_assignment&) = default;
 
@@ -415,9 +415,9 @@ namespace sequoia
     {
       using allocator_type = Allocator;
 
-      broken_swap(std::initializer_list<T> list) : x{list} {};
+      broken_swap(std::initializer_list<T> list) : x{list} {}
 
-      broken_swap(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {};
+      broken_swap(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {}
 
       broken_swap(const broken_swap&) = default;
 
@@ -583,9 +583,9 @@ namespace sequoia
     {
       using allocator_type = Allocator;
 
-      perfectly_normal_beast(std::initializer_list<T> list) : x{list} {};
+      perfectly_normal_beast(std::initializer_list<T> list) : x{list} {}
 
-      perfectly_normal_beast(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {};
+      perfectly_normal_beast(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {}
 
       perfectly_normal_beast(const perfectly_normal_beast&) = default;
 
@@ -713,6 +713,56 @@ namespace sequoia
       friend Stream& operator<<(Stream& s, const perfectly_sharing_beast& b)
       {
         for(auto i : b.x) s << *i << ' ';
+        return s;
+      }
+    };
+
+    template<class T=int, class Allocator=std::allocator<int>>
+    struct inefficient_copy
+    {
+      using allocator_type = Allocator;
+
+      inefficient_copy(std::initializer_list<T> list) : x{list} {}
+      
+      inefficient_copy(std::initializer_list<T> list, const allocator_type& alloc) : x{list, alloc} {}
+
+      inefficient_copy(const inefficient_copy& other)
+        : inefficient_copy(other, other.x.get_allocator())
+      {}
+
+      inefficient_copy(const inefficient_copy& other, const allocator_type& alloc)
+        : x(alloc)
+      {
+        x.reserve(1);
+        x.shrink_to_fit();
+        x.reserve(other.x.size());
+        std::copy(other.x.cbegin(), other.x.cend(), std::back_inserter(x));
+      }
+
+      inefficient_copy(inefficient_copy&&) noexcept = default;
+
+      inefficient_copy(inefficient_copy&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+
+      inefficient_copy& operator=(const inefficient_copy&) = default;
+
+      inefficient_copy& operator=(inefficient_copy&&) = default;
+      
+      std::vector<T, Allocator> x{};
+
+      friend bool operator==(const inefficient_copy& lhs, const inefficient_copy& rhs) noexcept
+      {
+        return lhs.x == rhs.x;
+      }
+
+      friend bool operator!=(const inefficient_copy& lhs, const inefficient_copy& rhs) noexcept
+      {
+        return !(lhs == rhs);
+      }
+
+      template<class Stream>
+      friend Stream& operator<<(Stream& s, const inefficient_copy& b)
+      {
+        for(auto i : b.x) s << i << ' ';
         return s;
       }
     };
