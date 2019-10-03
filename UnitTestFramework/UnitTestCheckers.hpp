@@ -237,7 +237,28 @@ namespace sequoia
 
     struct individual_allocation_predictions
     {
-      int copy{}, copy_like{}, move_like{}, mutation{};
+      individual_allocation_predictions(int copyPrediction, int mutationPrediction)
+        : copy{copyPrediction}          
+        , mutation{mutationPrediction}
+        , copy_like{copyPrediction}
+        , move_like{copyPrediction}
+      {}
+
+      individual_allocation_predictions(int copyPrediction, int mutationPrediction, int copyLikePrediction)
+        : copy{copyPrediction}          
+        , mutation{mutationPrediction}
+        , copy_like{copyLikePrediction}
+        , move_like{copyPrediction}
+      {}
+      
+      individual_allocation_predictions(int copyPrediction, int mutationPrediction, int copyLikePrediction, int moveLikePrediction)
+        : copy{copyPrediction}          
+        , mutation{mutationPrediction}
+        , copy_like{copyLikePrediction}
+        , move_like{moveLikePrediction}
+      {}
+      
+      int copy{}, mutation{}, copy_like{}, move_like{};
     };
 
     struct assignment_allocation_predictions
@@ -251,13 +272,13 @@ namespace sequoia
  
     struct allocation_predictions
     {
-      allocation_predictions(int copyX, int copyY, assignment_allocation_predictions assignYtoX, int yMutation)
-        : copy_x{copyX}, copy_y{copyY}, assign_y_to_x{assignYtoX}, y_mutation{yMutation}
+      allocation_predictions(int copyX, individual_allocation_predictions yPredictions, assignment_allocation_predictions assignYtoX)
+        : copy_x{copyX}, y{yPredictions}, assign_y_to_x{assignYtoX}
       {}
       
-      int copy_x{}, copy_y{};
+      int copy_x{};
+      individual_allocation_predictions y;
       assignment_allocation_predictions assign_y_to_x;
-      int y_mutation{};
     };
 
     template<class Allocator>
@@ -382,7 +403,7 @@ namespace sequoia
       void check_copy_y(std::string_view description, Logger& logger)
       {
         auto message{combine_messages(description, "(y)")};
-        check_copy(std::move(message), logger, m_yAllocator, m_Predictions.copy_y);
+        check_copy(std::move(message), logger, m_yAllocator, m_Predictions.y.copy);
       }
 
       template<class Logger>
@@ -442,11 +463,11 @@ namespace sequoia
         
         if constexpr(pred)
         {
-          yPrediction = m_Predictions.y_mutation;
+          yPrediction = m_Predictions.y.mutation;
         }
         else
         {
-          xPrediction = m_Predictions.y_mutation;
+          xPrediction = m_Predictions.y.mutation;
         }
 
         check(description, "Mutation x allocations", "Mutation y allocations", logger, xPrediction, yPrediction);
