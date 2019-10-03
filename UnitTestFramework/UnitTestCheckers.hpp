@@ -237,7 +237,7 @@ namespace sequoia
 
     struct individual_allocation_predictions
     {
-      int copy{}, mutation{};
+      int copy{}, copy_like{}, move_like{}, mutation{};
     };
 
     struct assignment_allocation_predictions
