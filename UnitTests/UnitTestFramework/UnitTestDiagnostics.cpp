@@ -440,12 +440,13 @@ namespace sequoia::unit_testing
 
       auto mutator{
         [](beast& b) {
+          b.x.reserve(3);
           b.x.push_back(1);
         }
       };
 
       allocator a1{}, a2{};
-      check_regular_semantics(LINE(""), beast{{1}, a1}, beast{{5,6}, a2}, mutator, allocation_info<allocator>{a1, a2, {2,{2,1, 2, 1}, {1,1}}});
+      check_regular_semantics(LINE(""), beast{{1}, a1}, beast{{5,6}, a2}, mutator, allocation_info<allocator>{a1, a2, {2, {2,1,2,1}, {1,1}}});
     }
 
     using allocator = std::vector<int>::allocator_type;

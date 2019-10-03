@@ -82,6 +82,11 @@ namespace sequoia
       broken_equality& operator=(const broken_equality&) = default;
 
       broken_equality& operator=(broken_equality&&) = default;
+
+      friend void swap(broken_equality& lhs, broken_equality& rhs)
+      {
+        std::swap(lhs.x, rhs.x);
+      }
       
       std::vector<T, Allocator> x{};
 
@@ -123,6 +128,11 @@ namespace sequoia
       broken_inequality& operator=(const broken_inequality&) = default;
 
       broken_inequality& operator=(broken_inequality&&) = default;
+
+      friend void swap(broken_inequality& lhs, broken_inequality& rhs)
+      {
+        std::swap(lhs.x, rhs.x);
+      }
 
       std::vector<T, Allocator> x{};
 
@@ -168,6 +178,11 @@ namespace sequoia
       broken_copy& operator=(const broken_copy&) = default;
 
       broken_copy& operator=(broken_copy&&) = default;
+
+      friend void swap(broken_copy& lhs, broken_copy& rhs)
+      {
+        std::swap(lhs.x, rhs.x);
+      }
       
       std::vector<T, Allocator> x{};
 
@@ -212,6 +227,11 @@ namespace sequoia
       broken_copy_alloc& operator=(const broken_copy_alloc&) = default;
 
       broken_copy_alloc& operator=(broken_copy_alloc&&) = default;
+
+      friend void swap(broken_copy_alloc& lhs, broken_copy_alloc& rhs)
+      {
+        std::swap(lhs.x, rhs.x);
+      }
       
       std::vector<T, Allocator> x{};
 
@@ -257,6 +277,11 @@ namespace sequoia
       broken_move& operator=(const broken_move&) = default;
 
       broken_move& operator=(broken_move&&) = default;
+
+      friend void swap(broken_move& lhs, broken_move& rhs)
+      {
+        std::swap(lhs.x, rhs.x);
+      }
       
       std::vector<T, Allocator> x{};
 
@@ -301,6 +326,11 @@ namespace sequoia
       broken_move_alloc& operator=(const broken_move_alloc&) = default;
 
       broken_move_alloc& operator=(broken_move_alloc&&) = default;
+
+      friend void swap(broken_move_alloc& lhs, broken_move_alloc& rhs)
+      {
+        std::swap(lhs.x, rhs.x);
+      }
       
       std::vector<T, Allocator> x{};
 
@@ -345,6 +375,11 @@ namespace sequoia
       }
 
       broken_copy_assignment& operator=(broken_copy_assignment&&) = default;
+
+      friend void swap(broken_copy_assignment& lhs, broken_copy_assignment& rhs)
+      {
+        std::swap(lhs.x, rhs.x);
+      }
       
       std::vector<T, Allocator> x{};
 
@@ -388,6 +423,11 @@ namespace sequoia
       broken_move_assignment& operator=(broken_move_assignment&&)
       {
         return *this;
+      }
+
+      friend void swap(broken_move_assignment& lhs, broken_move_assignment& rhs)
+      {
+        std::swap(lhs.x, rhs.x);
       }
       
       std::vector<T, Allocator> x{};
@@ -496,6 +536,11 @@ namespace sequoia
       }
 
       broken_copy_value_semantics& operator=(broken_copy_value_semantics&&) = default;
+
+      friend void swap(broken_copy_value_semantics& lhs, broken_copy_value_semantics& rhs)
+      {
+        std::swap(lhs.x, rhs.x);
+      }
       
       std::vector<handle_type, allocator_type> x{};
 
@@ -555,6 +600,11 @@ namespace sequoia
       broken_copy_assignment_value_semantics& operator=(const broken_copy_assignment_value_semantics&) = default;
 
       broken_copy_assignment_value_semantics& operator=(broken_copy_assignment_value_semantics&&) = default;
+
+      friend void swap(broken_copy_assignment_value_semantics& lhs, broken_copy_assignment_value_semantics& rhs)
+      {
+        std::swap(lhs.x, rhs.x);
+      }
       
       std::vector<handle_type, allocator_type> x{};
 
@@ -746,6 +796,11 @@ namespace sequoia
       inefficient_copy& operator=(const inefficient_copy&) = default;
 
       inefficient_copy& operator=(inefficient_copy&&) = default;
+
+      friend void swap(inefficient_copy& lhs, inefficient_copy& rhs)
+      {
+        std::swap(lhs.x, rhs.x);
+      }
       
       std::vector<T, Allocator> x{};
 
