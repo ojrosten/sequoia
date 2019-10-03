@@ -235,6 +235,37 @@ namespace sequoia::unit_testing
       }
 
       {
+        using beast = inefficient_copy<int, custom_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
+        using allocator = typename beast::allocator_type;
+
+        auto mutator{
+          [](beast& b) {
+            b.x.reserve(3);
+            b.x.push_back(1);
+          }
+        };
+
+        allocator a1{}, a2{};
+        check_regular_semantics(LINE(""), beast{{1}, a1}, beast{{5,6}, a2}, mutator, allocation_info<allocator>{a1, a2, {2, {3,1,1,1}, {1,1}}});
+        check_regular_semantics(LINE(""), beast{{1}, a1}, beast{{5,6}, a2}, mutator, allocation_info<allocator>{a1, a2, {3, {2,1,1,1}, {1,1}}});
+      }
+
+      {
+        using beast = inefficient_copy_like<int, custom_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
+        using allocator = typename beast::allocator_type;
+
+        auto mutator{
+          [](beast& b) {
+            b.x.reserve(3);
+            b.x.push_back(1);
+          }
+        };
+
+        allocator a1{}, a2{};
+        check_regular_semantics(LINE(""), beast{{1}, a1}, beast{{5,6}, a2}, mutator, allocation_info<allocator>{a1, a2, {1, {1,1,3,1}, {1,1}}});
+      }
+
+      {
         using beast = perfectly_normal_beast<int, custom_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
         using allocator = typename beast::allocator_type;
 
@@ -446,7 +477,22 @@ namespace sequoia::unit_testing
       };
 
       allocator a1{}, a2{};
-      check_regular_semantics(LINE(""), beast{{1}, a1}, beast{{5,6}, a2}, mutator, allocation_info<allocator>{a1, a2, {2, {2,1,2,1}, {1,1}}});
+      check_regular_semantics(LINE(""), beast{{1}, a1}, beast{{5,6}, a2}, mutator, allocation_info<allocator>{a1, a2, {2, {2,1,1,1}, {1,1}}});
+    }
+
+    {
+      using beast = inefficient_copy_like<int, custom_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
+      using allocator = typename beast::allocator_type;
+
+      auto mutator{
+        [](beast& b) {
+          b.x.reserve(3);
+          b.x.push_back(1);
+        }
+      };
+
+      allocator a1{}, a2{};
+      check_regular_semantics(LINE(""), beast{{1}, a1}, beast{{5,6}, a2}, mutator, allocation_info<allocator>{a1, a2, {1, {1,1,2,1}, {1,1}}});
     }
 
     using allocator = std::vector<int>::allocator_type;

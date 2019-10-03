@@ -776,18 +776,17 @@ namespace sequoia
       
       inefficient_copy(std::initializer_list<T> list, const allocator_type& alloc) : x{list, alloc} {}
 
-      inefficient_copy(const inefficient_copy& other)
-        : inefficient_copy(other, other.x.get_allocator())
-      {}
-
-      inefficient_copy(const inefficient_copy& other, const allocator_type& alloc)
-        : x(alloc)
+      inefficient_copy(const inefficient_copy& other) : x(other.x.get_allocator())
       {
         x.reserve(1);
         x.shrink_to_fit();
         x.reserve(other.x.size());
         std::copy(other.x.cbegin(), other.x.cend(), std::back_inserter(x));
       }
+
+      inefficient_copy(const inefficient_copy& other, const allocator_type& alloc)
+        : x(other.x, alloc)
+      {}
 
       inefficient_copy(inefficient_copy&&) noexcept = default;
 
@@ -816,6 +815,59 @@ namespace sequoia
 
       template<class Stream>
       friend Stream& operator<<(Stream& s, const inefficient_copy& b)
+      {
+        for(auto i : b.x) s << i << ' ';
+        return s;
+      }
+    };
+
+    template<class T=int, class Allocator=std::allocator<int>>
+    struct inefficient_copy_like
+    {
+      using allocator_type = Allocator;
+
+      inefficient_copy_like(std::initializer_list<T> list) : x{list} {}
+      
+      inefficient_copy_like(std::initializer_list<T> list, const allocator_type& alloc) : x{list, alloc} {}
+
+      inefficient_copy_like(const inefficient_copy_like&) = default;
+
+      inefficient_copy_like(const inefficient_copy_like& other, const allocator_type& alloc)
+        : x(alloc)
+      {
+        x.reserve(1);
+        x.shrink_to_fit();
+        x.reserve(other.x.size());
+        std::copy(other.x.cbegin(), other.x.cend(), std::back_inserter(x)); 
+      }
+
+      inefficient_copy_like(inefficient_copy_like&&) noexcept = default;
+
+      inefficient_copy_like(inefficient_copy_like&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+
+      inefficient_copy_like& operator=(const inefficient_copy_like&) = default;
+
+      inefficient_copy_like& operator=(inefficient_copy_like&&) = default;
+
+      friend void swap(inefficient_copy_like& lhs, inefficient_copy_like& rhs)
+      {
+        std::swap(lhs.x, rhs.x);
+      }
+      
+      std::vector<T, Allocator> x{};
+
+      friend bool operator==(const inefficient_copy_like& lhs, const inefficient_copy_like& rhs) noexcept
+      {
+        return lhs.x == rhs.x;
+      }
+
+      friend bool operator!=(const inefficient_copy_like& lhs, const inefficient_copy_like& rhs) noexcept
+      {
+        return !(lhs == rhs);
+      }
+
+      template<class Stream>
+      friend Stream& operator<<(Stream& s, const inefficient_copy_like& b)
       {
         for(auto i : b.x) s << i << ' ';
         return s;
