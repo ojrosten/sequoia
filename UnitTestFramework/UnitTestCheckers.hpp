@@ -346,29 +346,6 @@ namespace sequoia
       {}
     };
 
-    
-    template<class Logger, class Allocator>
-    void check_copy(std::string_view description, Logger& logger, individual_allocation_info<Allocator>& info, const int prediction)
-    {
-      auto message{combine_messages(description, "Copy construction allocation")};
-      info.check(std::move(description), logger, prediction);
-    }
-
-    template<class Logger, class Allocator>
-    void check_move(std::string_view description, Logger& logger, individual_allocation_info<Allocator>& info, const int prediction)
-    {
-      auto message{combine_messages(description, "Move construction allocation")};
-      info.check(std::move(description), logger, prediction);
-    }
-
-    template<class Logger, class Allocator>
-    void check_mutation(std::string_view description, Logger& logger, individual_allocation_info<Allocator>& info, const int prediction)
-    {
-      auto message{combine_messages(description, "Mutation allocation")};
-      info.check(std::move(description), logger, prediction);
-    }    
-
-
     template<class Allocator>
     class allocation_info
     {
@@ -395,22 +372,31 @@ namespace sequoia
       template<class Logger>
       void check_copy_x(std::string_view description, Logger& logger)
       {
-        auto message{combine_messages(description, "(x)")};
-        check_copy(std::move(message), logger, m_xAllocator, m_Predictions.copy_x);
+        impl::check_copy(description, "(x)", logger, m_xAllocator, m_Predictions.copy_x);
       }
 
       template<class Logger>
       void check_copy_y(std::string_view description, Logger& logger)
       {
-        auto message{combine_messages(description, "(y)")};
-        check_copy(std::move(message), logger, m_yAllocator, m_Predictions.y.copy);
+        impl::check_copy(description, "(y)", logger, m_yAllocator, m_Predictions.y.copy);
+      }
+
+      template<class Logger>
+      void check_copy_like_y(std::string_view description, Logger& logger)
+      {
+        impl::check_copy_like(description, "(y)", logger, m_xAllocator, m_Predictions.y.copy_like);
       }
 
       template<class Logger>
       void check_move_y(std::string_view description, Logger& logger)
       {
-        auto message{combine_messages(description, "(y)")};
-        check_move(std::move(message), logger, m_yAllocator, 0);
+        impl::check_move(description, "(y)", logger, m_yAllocator, 0);
+      }
+
+      template<class Logger>
+      void check_move_like_y(std::string_view description, Logger& logger)
+      {
+        impl::check_move_like(description, "(y)", logger, m_yAllocator, m_Predictions.y.move_like);
       }
 
       template<class Logger>
@@ -457,6 +443,8 @@ namespace sequoia
               return std::allocator_traits<Allocator>::propagate_on_container_move_assignment::value;
             case mutation_flavour::after_swap:
               return std::allocator_traits<Allocator>::propagate_on_container_swap::value;
+            case mutation_flavour::after_construction:
+              return true;
             }
           }()
         };
@@ -472,11 +460,10 @@ namespace sequoia
 
         check(description, "Mutation x allocations", "Mutation y allocations", logger, xPrediction, yPrediction);
       }
+      
+      Allocator get_x_allocator() const { return m_xAllocator.get_allocator(); }
 
-
-      // retire this!
-      [[nodiscard]]
-      const allocation_predictions& predictions() const noexcept { return m_Predictions; }
+      Allocator get_y_allocator() const { return m_yAllocator.get_allocator(); }
     private:
 
       individual_allocation_info<Allocator> m_xAllocator, m_yAllocator;

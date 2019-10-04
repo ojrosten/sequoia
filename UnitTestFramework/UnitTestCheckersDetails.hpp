@@ -29,11 +29,17 @@ namespace sequoia::unit_testing
   bool check(std::string_view description, Logger& logger, weak_equivalence_tag, const T& value, S&& s, U&&... u);
   
   template<class Logger, class T> bool check_equality(std::string_view description, Logger& logger, const T& value, const T& prediction);
+
+  struct individual_allocation_predictions;
+  struct allocation_predictions;
+
+  template<class Allocator>
+  class individual_allocation_info;
   
   template<class Allocator>
   class allocation_info;
     
-  enum class mutation_flavour {after_move_assign, after_swap};
+  enum class mutation_flavour {after_move_assign, after_swap, after_construction};
 }
 
 namespace sequoia::unit_testing::impl
@@ -90,6 +96,47 @@ namespace sequoia::unit_testing::impl
   }
 
   //================================ Allocation Checking ================================//
+
+  template<class Logger, class Allocator>
+  void check_allocation(std::string_view description, std::string_view detail, std::string_view suffix, Logger& logger, individual_allocation_info<Allocator>& info, const int prediction)
+  {
+    auto message{combine_messages(combine_messages(description, detail), suffix)};
+    info.check(std::move(message), logger, prediction);
+  }
+
+    
+  template<class Logger, class Allocator>
+  void check_copy(std::string_view description, std::string_view suffix, Logger& logger, individual_allocation_info<Allocator>& info, const int prediction)
+  {
+    check_allocation(description, "Copy construction allocation", suffix, logger, info, prediction);
+  }
+
+  template<class Logger, class Allocator>
+  void check_move(std::string_view description, std::string_view suffix, Logger& logger, individual_allocation_info<Allocator>& info, const int prediction)
+  {
+    check_allocation(description, "Move construction allocation", suffix, logger, info, prediction);
+  }
+
+  template<class Logger, class Allocator>
+  void check_copy_like(std::string_view description, std::string_view suffix, Logger& logger, individual_allocation_info<Allocator>& info, const int prediction)
+  {
+    check_allocation(description, "Copy-like construction allocation", suffix, logger, info, prediction);
+  }
+
+  template<class Logger, class Allocator>
+  void check_move_like(std::string_view description, std::string_view suffix, Logger& logger, individual_allocation_info<Allocator>& info, const int prediction)
+  {
+    check_allocation(description, "Move-like construction allocation", suffix, logger, info, prediction);
+  }
+
+  template<class Logger, class Allocator>
+  void check_mutation(std::string_view description, std::string_view suffix, Logger& logger, individual_allocation_info<Allocator>& info, const int prediction)
+  {
+    auto message{combine_messages(description, "Mutation allocation", suffix)};
+    info.check(std::move(description), logger, prediction);
+  }
+
+   //================================ Variadic Allocation Checking ================================//
 
   template<class Logger, class Check, class Allocator, class... Allocators>
   void check_allocation(std::string_view description, Logger& logger, Check check, allocation_info<Allocator>& allocationInfo, allocation_info<Allocators>&... moreInfo)
@@ -186,41 +233,27 @@ namespace sequoia::unit_testing::impl
   }
 
   template<class Logger, class Allocator, class... Allocators>
-  void check_copy_like_y_allocation(std::string_view description, Logger& logger, const std::tuple<Allocator, Allocators...>& allocators, allocation_info<Allocator>& allocationInfo, allocation_info<Allocators>&... moreInfo)
+  void check_copy_like_y_allocation(std::string_view description, Logger& logger, allocation_info<Allocator>& allocationInfo, allocation_info<Allocators>&... moreInfo)
   {
     auto checker{
-      [&logger](std::string_view message, const auto& alloc, const auto& info){
-        //[&logger](std::string_view message, auto& info){
-        check_equality(message, logger, alloc.allocs(), info.predictions().y.copy_like);
-        //        info.check_copy_like_x_allocation(message, logger, ?????);
-        }
-    };
-
-    check_allocation(description, logger, checker, allocators, allocationInfo, moreInfo...);
-  }
-
-  template<class Logger, class Allocator, class... Allocators>
-  void check_move_like_y_allocation(std::string_view description, Logger& logger, const std::tuple<Allocator, Allocators...>& allocators, allocation_info<Allocator>& allocationInfo, allocation_info<Allocators>&... moreInfo)
-  {
-    auto checker{
-      [&logger](std::string_view message, const auto& alloc, const auto& info){
-        check_equality(message, logger, alloc.allocs(), info.predictions().y.move_like);
+      [&logger](std::string_view message, auto& info){
+        info.check_copy_like_y(message, logger);
       }
     };
 
-    check_allocation(description, logger, checker, allocators, allocationInfo, moreInfo...);
+    check_allocation(description, logger, checker, allocationInfo, moreInfo...);
   }
 
   template<class Logger, class Allocator, class... Allocators>
-  void check_mutation_allocation(std::string_view description, Logger& logger, const std::tuple<Allocator, Allocators...>& allocators, allocation_info<Allocator>& allocationInfo, allocation_info<Allocators>&... moreInfo)
+  void check_move_like_y_allocation(std::string_view description, Logger& logger, allocation_info<Allocator>& allocationInfo, allocation_info<Allocators>&... moreInfo)
   {
     auto checker{
-      [&logger](std::string_view message, const auto& alloc, const auto& info){
-        check_equality(message, logger, alloc.allocs(), info.predictions().y.mutation + info.predictions().y.move_like);
+      [&logger](std::string_view message, auto& info){
+        info.check_move_like_y(message, logger);
       }
     };
 
-    check_allocation(description, logger, checker, allocators, allocationInfo, moreInfo...);
+    check_allocation(description, logger, checker, allocationInfo, moreInfo...);
   }
 
   struct null_mutator
@@ -228,16 +261,37 @@ namespace sequoia::unit_testing::impl
     template<class T> void operator()(T&) noexcept {};
   };
 
-  template<class Logger, class T, class Mutator, class... Allocators, std::size_t... I>
-  void check_allocations(std::index_sequence<I...>, std::string_view description, Logger& logger, const T& x, const T& y, Mutator yMutator, allocation_info<Allocators>... allocationInfo)
+  template<class Logger, class T, class Mutator, class... Allocators>
+  void check_like_allocations(std::string_view description, Logger& logger, const T& x, const T& y, Mutator yMutator, allocation_info<Allocators>... allocationInfo)
+  {
+    auto make{
+      [description, &logger, &y](auto&... info){
+        T u{y, info.get_x_allocator()...};
+        check_equality(combine_messages(description, "Copy-like construction"), logger, u, y);
+        check_copy_like_y_allocation(description, logger, info...);
+
+        return u;
+      }
+    };
+
+    T v{make(allocationInfo...), allocationInfo.get_y_allocator()...};
+    check_equality(combine_messages(description, "Move-like construction"), logger, v, y);    
+    check_move_like_y_allocation(description, logger, allocationInfo...);
+
+    yMutator(v);
+    check_mutation_allocation<mutation_flavour::after_construction>(combine_messages(description, "mutation allocations after move-like construction"), logger, allocationInfo...);
+  }
+
+  template<class Logger, class T, class Mutator, class... Allocators>
+  void check_allocations(std::string_view description, Logger& logger, const T& x, const T& y, Mutator yMutator, allocation_info<Allocators>... allocationInfo)
   {
     {
       T u{x}, v{y};
-      check_copy_x_allocation(combine_messages(description, "Copy allocations"), logger, allocationInfo...);
-      check_copy_y_allocation(combine_messages(description, "Copy allocations"), logger, allocationInfo...);
+      check_copy_x_allocation(description, logger, allocationInfo...);
+      check_copy_y_allocation(description, logger, allocationInfo...);
 
       u = std::move(v);
-      check_move_assign_allocation(combine_messages(description, "Move assign allocations"), logger, allocationInfo...);
+      check_move_assign_allocation(description, logger, allocationInfo...);
 
       yMutator(u);
       check_mutation_allocation<mutation_flavour::after_move_assign>(combine_messages(description, "mutation after move assignment allocations"), logger, allocationInfo...);
@@ -248,8 +302,8 @@ namespace sequoia::unit_testing::impl
     if constexpr(do_swap<Allocators...>())
     {
       T u{x}, v{y};
-      check_copy_x_allocation(combine_messages(description, "Copy allocations"), logger, allocationInfo...);
-      check_copy_y_allocation(combine_messages(description, "Copy allocations"), logger, allocationInfo...);
+      check_copy_x_allocation(description, logger, allocationInfo...);
+      check_copy_y_allocation(description, logger, allocationInfo...);
 
       using std::swap;
       swap(u, v);
@@ -258,31 +312,7 @@ namespace sequoia::unit_testing::impl
       check_mutation_allocation<mutation_flavour::after_swap>(combine_messages(description, "mutation after swap allocations"), logger, allocationInfo...);
     }
 
-    {
-      auto make{
-        [description, &logger, &y](auto&... info){
-          std::tuple<Allocators...> allocs{};
-
-          T u{y, std::get<I>(allocs)...};
-          check_equality(combine_messages(description, "Copy-like construction"), logger, u, y);
-          check_copy_like_y_allocation(combine_messages(description, "Copy-like allocations"), logger, allocs, info...);
-
-          return u;
-        }
-      };
-
-      std::tuple<Allocators...> allocs{};
-
-      
-      // What we want to do here is to construct new allocInfo, from the new allocators
-
-      T v{make(allocationInfo...), std::get<I>(allocs)...};
-      check_equality(combine_messages(description, "Move-like construction"), logger, v, y);
-      check_move_like_y_allocation(combine_messages(description, "Move-like allocations"), logger, allocs, allocationInfo...);
-
-      yMutator(v);
-      check_mutation_allocation(combine_messages(description, "mutation allocations after move-like construction"), logger, allocs, allocationInfo...);
-    }
+    check_like_allocations(description, logger, x, y, yMutator, allocationInfo...);
   }
 
   template<class Logger, class T, class Mutator, class... Allocators>
@@ -318,7 +348,7 @@ namespace sequoia::unit_testing::impl
 
     if constexpr(checkAllocs)
     {
-      check_allocations(std::make_index_sequence<sizeof...(Allocators)>{}, description, logger, x, y, yMutator, allocationInfo...);
+      check_allocations(description, logger, x, y, yMutator, allocationInfo...);
     }
 
     z = T{x};
