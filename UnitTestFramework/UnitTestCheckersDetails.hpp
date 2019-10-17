@@ -104,20 +104,20 @@ namespace sequoia::unit_testing::impl
 
     allocation_checker(const Container& x, const Container& y, allocation_info<Container, Allocator> info)
       : m_Info{std::move(info)}
-      , m_xCurrentCount{m_Info.count(x)}
-      , m_yCurrentCount{m_Info.count(y)}
+      , m_FirstCount{m_Info.count(x)}
+      , m_SecondCount{m_Info.count(y)}
     {}
 
     template<class Logger>
     void check_copy_x(std::string_view description, Logger& logger, const Container& container)
     {
-      m_xCurrentCount = check_copy(description, "(x)", logger, container, m_Info, m_xCurrentCount, m_Info.get_predictions().copy_x);
+      m_FirstCount = check_copy(description, "(x)", logger, container, m_Info, m_FirstCount, m_Info.get_predictions().copy_x);
     }
 
     template<class Logger>
     void check_copy_y(std::string_view description, Logger& logger, const Container& container)
     {
-      m_yCurrentCount = check_copy(description, "(y)", logger, container, m_Info, m_yCurrentCount, m_Info.get_predictions().y.copy);
+      m_SecondCount = check_copy(description, "(y)", logger, container, m_Info, m_SecondCount, m_Info.get_predictions().y.copy);
     }
 
     template<class Logger>
@@ -168,7 +168,7 @@ namespace sequoia::unit_testing::impl
     template<class Logger>
     void check_mutation(std::string_view description, Logger& logger, const Container& yContainer)
     {
-      m_xCurrentCount = check_allocation(description, "Mutation allocation after move-like construction", "", logger, yContainer, m_Info, m_xCurrentCount, m_Info.get_predictions().y.mutation);
+      m_FirstCount = check_allocation(description, "Mutation allocation after move-like construction", "", logger, yContainer, m_Info, m_FirstCount, m_Info.get_predictions().y.mutation);
     }
 
     template<mutation_flavour Flavour, class Logger>
@@ -206,7 +206,7 @@ namespace sequoia::unit_testing::impl
   private:
     allocation_info<Container, Allocator> m_Info;
       
-    int m_xCurrentCount{}, m_yCurrentCount{};
+    int m_FirstCount{}, m_SecondCount{};
 
     template<class Logger>
     [[nodiscard]]
@@ -227,8 +227,8 @@ namespace sequoia::unit_testing::impl
     {      
       typename Logger::sentinel s{logger, add_type_info<Allocator>(description)};
       
-      m_xCurrentCount = check_allocation(description, xMessage, "", logger, xContainer, m_Info, m_xCurrentCount, xPrediction);
-      m_yCurrentCount = check_allocation(description, yMessage, "", logger, yContainer, m_Info, m_yCurrentCount, yPrediction);
+      m_FirstCount = check_allocation(description, xMessage, "", logger, xContainer, m_Info, m_FirstCount, xPrediction);
+      m_SecondCount = check_allocation(description, yMessage, "", logger, yContainer, m_Info, m_SecondCount, yPrediction);
     }
 
     template<class Logger>
@@ -242,30 +242,30 @@ namespace sequoia::unit_testing::impl
     {
       if constexpr(std::allocator_traits<Allocator>::propagate_on_container_copy_assignment::value)
       {
-        m_yCurrentCount = check_allocation(description, "Move construction allocation", suffix, logger, container, info, m_yCurrentCount, prediction);
+        m_SecondCount = check_allocation(description, "Move construction allocation", suffix, logger, container, info, m_SecondCount, prediction);
       }
       else
       {
-        m_xCurrentCount = check_allocation(description, "Move construction allocation", suffix, logger, container, info, m_xCurrentCount, prediction);
+        m_FirstCount = check_allocation(description, "Move construction allocation", suffix, logger, container, info, m_FirstCount, prediction);
       }
     }
 
     template<class Logger>
     void check_copy_like(std::string_view description, std::string_view suffix, Logger& logger, const Container& container, allocation_info<Container, Allocator>& info, const int prediction)
     {
-      m_yCurrentCount = check_allocation(description, "Copy-like construction allocation", suffix, logger, container, info, m_yCurrentCount, prediction);
+      m_SecondCount = check_allocation(description, "Copy-like construction allocation", suffix, logger, container, info, m_SecondCount, prediction);
     }
 
     template<class Logger>
     void check_move_like(std::string_view description, std::string_view suffix, Logger& logger, const Container& container, allocation_info<Container, Allocator>& info, const int prediction)
     {
-      m_xCurrentCount = check_allocation(description, "Move-like construction allocation", suffix, logger, container, info, m_xCurrentCount, prediction);
+      m_FirstCount = check_allocation(description, "Move-like construction allocation", suffix, logger, container, info, m_FirstCount, prediction);
     }
 
     template<class Logger>
     void check_mutation(std::string_view description, std::string_view suffix, Logger& logger, const Container& container, allocation_info<Container, Allocator>& info, const int prediction)
     {
-      m_yCurrentCount = check_allocation(description, "Mutation allocation", suffix, logger, container, info, m_yCurrentCount, prediction);
+      m_SecondCount = check_allocation(description, "Mutation allocation", suffix, logger, container, info, m_SecondCount, prediction);
     }
   };
 
@@ -409,7 +409,7 @@ namespace sequoia::unit_testing::impl
     };
 
     Container v{make(checkers...), checkers.get_allocation_info().make_allocator()...};
-    // Remember to check if allocators equal
+
     check_equality(combine_messages(description, "Move-like construction"), logger, v, y);    
     check_move_like_y_allocation(description, logger, v, checkers...);
 

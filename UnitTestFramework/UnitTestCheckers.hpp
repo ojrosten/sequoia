@@ -58,15 +58,19 @@ namespace sequoia
 
     template<class T> struct weak_equivalence_checker;
 
-    template<class T, class=std::void_t<>> struct has_detailed_equality_checker : public std::false_type
+    template<class T, class=std::void_t<>>
+    struct has_detailed_equality_checker : public std::false_type
     {};
 
-    template<class T> struct has_detailed_equality_checker<T, std::void_t<decltype(detailed_equality_checker<T>{})>> : public std::true_type
+    template<class T>
+    struct has_detailed_equality_checker<T, std::void_t<decltype(detailed_equality_checker<T>{})>> : public std::true_type
     {};
 
     template<class T> constexpr bool has_detailed_equality_checker_v{has_detailed_equality_checker<T>::value};
 
-    template<class T, class... U> std::string make_type_info()
+    template<class T, class... U>
+    [[nodiscard]]
+    std::string make_type_info()
     {        
       std::string info{demangle<T>()};
       if constexpr(sizeof...(U) > 0)
@@ -75,7 +79,9 @@ namespace sequoia
       return info;
     }
 
-    template<class T, class... U> std::string add_type_info(std::string_view description)
+    template<class T, class... U>
+    [[nodiscard]]
+    std::string add_type_info(std::string_view description)
     {
       return combine_messages(description, "[" + make_type_info<T, U...>() + "]\n",
                               description.empty() ? "" : (description.back() == '\n') ? "\n" : "\n\n");
