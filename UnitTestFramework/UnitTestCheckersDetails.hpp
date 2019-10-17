@@ -36,7 +36,7 @@ namespace sequoia::unit_testing
   template<class Container, class Allocator>
   class allocation_info;
     
-  enum class mutation_flavour {after_move_assign, after_swap, after_construction};
+  enum class mutation_flavour {after_move_assign, after_swap};
 }
 
 namespace sequoia::unit_testing::impl
@@ -182,8 +182,6 @@ namespace sequoia::unit_testing::impl
               return std::allocator_traits<Allocator>::propagate_on_container_move_assignment::value;
             case mutation_flavour::after_swap:
               return std::allocator_traits<Allocator>::propagate_on_container_swap::value;
-            case mutation_flavour::after_construction:
-              return true;
             }
         }()
       };
