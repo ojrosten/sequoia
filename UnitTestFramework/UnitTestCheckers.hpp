@@ -281,207 +281,47 @@ namespace sequoia
       assignment_allocation_predictions assign_y_to_x;
     };
 
-    template<class Allocator>
-    class individual_allocation_info
+    template<class Container, class Allocator>
+    class allocation_info
     {
     public:
-      individual_allocation_info(const Allocator& alloc)
-        : individual_allocation_info{variant{alloc}}
-      {}
-
       template<class Fn>
-      individual_allocation_info(Fn allocGetter)
-        : individual_allocation_info{variant{std::move(allocGetter)}}
-      {}
-
-      template<class Logger>
-      void check(std::string_view description, Logger& logger, const int prediction)
+      allocation_info(Fn&& allocGetter, allocation_predictions predictions)
+        : m_AllocatorGetter{std::forward<Fn>(allocGetter)}
+        , m_Predictions{std::move(predictions)}
       {
-        typename Logger::sentinel s{logger, add_type_info<Allocator>(description)};
-        const int current{count(m_Allocator)};
-
-        check_equality(std::move(description), logger, current - m_CurrentCount, prediction);
-        
-        m_CurrentCount = current;
+        if(!m_AllocatorGetter)
+          throw std::logic_error("allocation_info must be supplied with a non-null function object");
       }
 
       [[nodiscard]]
-      Allocator get_allocator() const noexcept
+      const allocation_predictions& get_predictions() const noexcept
       {
-        return get(m_Allocator);
+        return m_Predictions;
       }
-    private:
-      using variant = std::variant<Allocator, std::function<Allocator()>>;
 
-      struct alloc_getter
+      [[nodiscard]]
+      int count(const Container& c) const noexcept
       {        
-        Allocator operator()(const Allocator& alloc) const
-        {
-          return alloc;
-        }
-
-        Allocator operator()(const std::function<Allocator()>& fn) const
-        {
-          return fn();
-        }
-      };
-
-      static Allocator get(const variant& v)
-      {
-        return std::visit(alloc_getter{}, v);
+        return m_AllocatorGetter(c).allocs();
       }
 
-      static int count(const variant& v)
+      template<class... Args>
+      Allocator make_allocator(Args&&... args) const
       {
-        return std::visit(alloc_getter{}, v).allocs();
+        return Allocator{std::forward<Args>(args)...};
       }
-      
-      variant m_Allocator;
-      
-      int m_CurrentCount{};
-
-      individual_allocation_info(variant alloc)
-        : m_Allocator{std::move(alloc)}
-        , m_CurrentCount{count(m_Allocator)}
-      {}
-    };
-
-    template<class Allocator>
-    class allocation_info
-    {
-    public:      
-      allocation_info(const Allocator& xAlloc, const Allocator& yAlloc, allocation_predictions predictions)
-        : m_xAllocator{xAlloc}, m_yAllocator{yAlloc}, m_Predictions{std::move(predictions)}
-      {}
-
-      template<class Fn>
-      allocation_info(const Allocator& xAlloc, Fn yAllocGetter, allocation_predictions predictions)
-        : m_xAllocator{xAlloc}, m_yAllocator{yAllocGetter}, m_Predictions{std::move(predictions)}
-      {}
-
-      template<class Fn>
-      allocation_info(Fn xAllocGetter, const Allocator& yAlloc, allocation_predictions predictions)
-        : m_xAllocator{xAllocGetter}, m_yAllocator{yAlloc}, m_Predictions{std::move(predictions)}
-      {}
-
-      template<class Fn>
-      allocation_info(Fn xAllocGetter, Fn yAllocGetter, allocation_predictions predictions)
-        : m_xAllocator{xAllocGetter}, m_yAllocator{yAllocGetter}, m_Predictions{std::move(predictions)}
-      {}
-
-      template<class Logger>
-      void check_copy_x(std::string_view description, Logger& logger)
-      {
-        impl::check_copy(description, "(x)", logger, m_xAllocator, m_Predictions.copy_x);
-      }
-
-      template<class Logger>
-      void check_copy_y(std::string_view description, Logger& logger)
-      {
-        impl::check_copy(description, "(y)", logger, m_yAllocator, m_Predictions.y.copy);
-      }
-
-      template<class Logger>
-      void check_copy_like_y(std::string_view description, Logger& logger)
-      {
-        impl::check_copy_like(description, "(y)", logger, m_xAllocator, m_Predictions.y.copy_like);
-      }
-
-      template<class Logger>
-      void check_move_y(std::string_view description, Logger& logger)
-      {
-        impl::check_move(description, "(y)", logger, m_yAllocator, 0);
-      }
-
-      template<class Logger>
-      void check_move_like_y(std::string_view description, Logger& logger)
-      {
-        impl::check_move_like(description, "(y)", logger, m_yAllocator, m_Predictions.y.move_like);
-      }
-
-      template<class Logger>
-      void check_copy_assign_y_to_x(std::string_view description, Logger& logger)
-      {
-        typename Logger::sentinel s{logger, add_type_info<Allocator>(description)};
-        
-        int xPrediction{}, yPrediction{};
-        if constexpr(std::allocator_traits<Allocator>::propagate_on_container_copy_assignment::value)
-        {
-          yPrediction = m_Predictions.assign_y_to_x.with_propagation;
-        }
-        else
-        {
-          xPrediction = m_Predictions.assign_y_to_x.without_propagation;
-        }
-
-        check(description, "Copy assignment x allocations", "Copy assignment y allocations", logger, xPrediction, yPrediction);
-      }
-
-      template<class Logger>
-      void check_move_assign_y_to_x(std::string_view description, Logger& logger)
-      {
-        typename Logger::sentinel s{logger, add_type_info<Allocator>(description)};
-
-        const bool copyLike{!std::allocator_traits<Allocator>::propagate_on_container_move_assignment::value
-            && (m_xAllocator.get_allocator() != m_yAllocator.get_allocator())};
-        
-        const int xPrediction{copyLike ? m_Predictions.assign_y_to_x.without_propagation : 0}, yPrediction{};
-
-        check(description, "Move assignment x allocations", "Move assignment y allocations", logger, xPrediction, yPrediction);
-     }
-
-      template<mutation_flavour Flavour, class Logger>
-      void check_mutation(std::string_view description, Logger& logger)
-      {
-        typename Logger::sentinel s{logger, add_type_info<Allocator>(description)};
-
-        int xPrediction{}, yPrediction{};
-        constexpr bool pred{[](){
-            switch(Flavour)
-            {
-            case mutation_flavour::after_move_assign:
-              return std::allocator_traits<Allocator>::propagate_on_container_move_assignment::value;
-            case mutation_flavour::after_swap:
-              return std::allocator_traits<Allocator>::propagate_on_container_swap::value;
-            case mutation_flavour::after_construction:
-              return true;
-            }
-          }()
-        };
-        
-        if constexpr(pred)
-        {
-          yPrediction = m_Predictions.y.mutation;
-        }
-        else
-        {
-          xPrediction = m_Predictions.y.mutation;
-        }
-
-        check(description, "Mutation x allocations", "Mutation y allocations", logger, xPrediction, yPrediction);
-      }
-      
-      Allocator get_x_allocator() const { return m_xAllocator.get_allocator(); }
-
-      Allocator get_y_allocator() const { return m_yAllocator.get_allocator(); }
     private:
+      using getter = std::function<Allocator(const Container&)>;
 
-      individual_allocation_info<Allocator> m_xAllocator, m_yAllocator;
-      
+      getter m_AllocatorGetter;      
       allocation_predictions m_Predictions;
-
-      template<class Logger>
-      void check(std::string_view description, std::string_view xMessage, std::string_view yMessage, Logger& logger, const int xPrediction, const int yPrediction)
-      {
-        m_xAllocator.check(combine_messages(description, xMessage), logger, xPrediction);
-        m_yAllocator.check(combine_messages(description, yMessage), logger, yPrediction);
-      }
     };
 
     template<class Logger, class T, class Mutator, class... Allocators>
-    void check_regular_semantics(std::string_view description, Logger& logger, const T& x, const T& y, Mutator yMutator, allocation_info<Allocators>... allocationInfo)
+    void check_regular_semantics(std::string_view description, Logger& logger, const T& x, const T& y, Mutator yMutator, allocation_info<T, Allocators>... allocationInfo)
     {
-      impl::check_regular_semantics(description, logger, x, y, yMutator, allocationInfo...);
+      impl::check_regular_semantics(description, logger, x, y, yMutator, impl::allocation_checker<T, Allocators>{x, y, allocationInfo}...);
     }
 
     template<class Logger, class T>
@@ -737,7 +577,7 @@ namespace sequoia
       }
 
       template<class T, class Mutator, class... Allocators>
-      void check_regular_semantics(std::string_view description, const T& x, const T& y, Mutator m, allocation_info<Allocators>... allocationInfo)
+      void check_regular_semantics(std::string_view description, const T& x, const T& y, Mutator m, allocation_info<T, Allocators>... allocationInfo)
       {
         unit_testing::check_regular_semantics(description, m_Logger, x, y, m, allocationInfo...);
       }
