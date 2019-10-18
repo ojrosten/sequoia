@@ -822,17 +822,17 @@ namespace sequoia
     };
 
     template<class T=int, class Allocator=std::allocator<int>>
-    struct inefficient_copy_like
+    struct inefficient_copy_alloc
     {
       using allocator_type = Allocator;
 
-      inefficient_copy_like(std::initializer_list<T> list) : x{list} {}
+      inefficient_copy_alloc(std::initializer_list<T> list) : x{list} {}
       
-      inefficient_copy_like(std::initializer_list<T> list, const allocator_type& alloc) : x{list, alloc} {}
+      inefficient_copy_alloc(std::initializer_list<T> list, const allocator_type& alloc) : x{list, alloc} {}
 
-      inefficient_copy_like(const inefficient_copy_like&) = default;
+      inefficient_copy_alloc(const inefficient_copy_alloc&) = default;
 
-      inefficient_copy_like(const inefficient_copy_like& other, const allocator_type& alloc)
+      inefficient_copy_alloc(const inefficient_copy_alloc& other, const allocator_type& alloc)
         : x(alloc)
       {
         x.reserve(1);
@@ -841,33 +841,82 @@ namespace sequoia
         std::copy(other.x.cbegin(), other.x.cend(), std::back_inserter(x)); 
       }
 
-      inefficient_copy_like(inefficient_copy_like&&) noexcept = default;
+      inefficient_copy_alloc(inefficient_copy_alloc&&) noexcept = default;
 
-      inefficient_copy_like(inefficient_copy_like&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+      inefficient_copy_alloc(inefficient_copy_alloc&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
 
-      inefficient_copy_like& operator=(const inefficient_copy_like&) = default;
+      inefficient_copy_alloc& operator=(const inefficient_copy_alloc&) = default;
 
-      inefficient_copy_like& operator=(inefficient_copy_like&&) = default;
+      inefficient_copy_alloc& operator=(inefficient_copy_alloc&&) = default;
 
-      friend void swap(inefficient_copy_like& lhs, inefficient_copy_like& rhs)
+      friend void swap(inefficient_copy_alloc& lhs, inefficient_copy_alloc& rhs)
       {
         std::swap(lhs.x, rhs.x);
       }
       
       std::vector<T, Allocator> x{};
 
-      friend bool operator==(const inefficient_copy_like& lhs, const inefficient_copy_like& rhs) noexcept
+      friend bool operator==(const inefficient_copy_alloc& lhs, const inefficient_copy_alloc& rhs) noexcept
       {
         return lhs.x == rhs.x;
       }
 
-      friend bool operator!=(const inefficient_copy_like& lhs, const inefficient_copy_like& rhs) noexcept
+      friend bool operator!=(const inefficient_copy_alloc& lhs, const inefficient_copy_alloc& rhs) noexcept
       {
         return !(lhs == rhs);
       }
 
       template<class Stream>
-      friend Stream& operator<<(Stream& s, const inefficient_copy_like& b)
+      friend Stream& operator<<(Stream& s, const inefficient_copy_alloc& b)
+      {
+        for(auto i : b.x) s << i << ' ';
+        return s;
+      }
+    };
+
+    template<class T=int, class Allocator=std::allocator<int>>
+    struct inefficient_move
+    {
+      using allocator_type = Allocator;
+
+      inefficient_move(std::initializer_list<T> list) : x{list} {}
+      
+      inefficient_move(std::initializer_list<T> list, const allocator_type& alloc) : x{list, alloc} {}
+
+      inefficient_move(const inefficient_move& other) = default;
+
+      inefficient_move(const inefficient_move& other, const allocator_type& alloc)
+        : x(other.x, alloc)
+      {}
+
+      inefficient_move(inefficient_move&& other) : x{other.x}
+      {}
+
+      inefficient_move(inefficient_move&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+
+      inefficient_move& operator=(const inefficient_move&) = default;
+
+      inefficient_move& operator=(inefficient_move&&) = default;
+
+      friend void swap(inefficient_move& lhs, inefficient_move& rhs)
+      {
+        std::swap(lhs.x, rhs.x);
+      }
+      
+      std::vector<T, Allocator> x{};
+
+      friend bool operator==(const inefficient_move& lhs, const inefficient_move& rhs) noexcept
+      {
+        return lhs.x == rhs.x;
+      }
+
+      friend bool operator!=(const inefficient_move& lhs, const inefficient_move& rhs) noexcept
+      {
+        return !(lhs == rhs);
+      }
+
+      template<class Stream>
+      friend Stream& operator<<(Stream& s, const inefficient_move& b)
       {
         for(auto i : b.x) s << i << ' ';
         return s;

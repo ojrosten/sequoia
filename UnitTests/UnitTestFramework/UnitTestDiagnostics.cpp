@@ -195,6 +195,14 @@ namespace sequoia::unit_testing
       }
 
       {
+        using beast = inefficient_move<int, custom_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
+        using allocator = typename beast::allocator_type;
+        
+        
+        check_regular_semantics(LINE("Broken move"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info<beast, allocator>{allocGetter, {1, {1,1}, {1,1}}});
+      }
+
+      {
         using beast = broken_copy_assignment<int, custom_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
         using allocator = typename beast::allocator_type;
         
@@ -257,7 +265,7 @@ namespace sequoia::unit_testing
       }
 
       {
-        using beast = inefficient_copy_like<int, custom_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
+        using beast = inefficient_copy_alloc<int, custom_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
         using allocator = typename beast::allocator_type;
 
         auto mutator{
@@ -493,7 +501,7 @@ namespace sequoia::unit_testing
     }
 
     {
-      using beast = inefficient_copy_like<int, custom_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
+      using beast = inefficient_copy_alloc<int, custom_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
       using allocator = typename beast::allocator_type;
 
       auto mutator{
