@@ -286,7 +286,7 @@ namespace sequoia::unit_testing::impl
   void check_copy_x_allocation(std::string_view description, Logger& logger, const Container& container, allocation_checker<Container, Allocator>& checker, allocation_checker<Container, Allocators>&... moreCheckers)
   {
     auto checkFn{
-      [&logger, &container](std::string_view message, allocation_checker<Container, Allocator>& checker){
+      [&logger, &container](std::string_view message, auto& checker){
         checker.check_copy_x(message, logger, container);
       }
     };
@@ -298,7 +298,7 @@ namespace sequoia::unit_testing::impl
   void check_copy_y_allocation(std::string_view description, Logger& logger, const Container& container, allocation_checker<Container, Allocator>& checker, allocation_checker<Container, Allocators>&... moreCheckers)
   {
     auto checkFn{
-      [&logger, &container](std::string_view message, allocation_checker<Container, Allocator>& checker){
+      [&logger, &container](std::string_view message, auto& checker){
         checker.check_copy_y(message, logger, container);
       }
     };
@@ -310,7 +310,7 @@ namespace sequoia::unit_testing::impl
   void check_move_y_allocation(std::string_view description, Logger& logger, const Container& container, allocation_checker<Container, Allocator>& checker, allocation_checker<Container, Allocators>&... moreCheckers)
   {
     auto checkFn{
-      [&logger, &container](std::string_view message, allocation_checker<Container, Allocator>& checker){
+      [&logger, &container](std::string_view message, auto& checker){
         checker.check_move_y(message, logger, container);
       }
     };
@@ -322,7 +322,7 @@ namespace sequoia::unit_testing::impl
   void check_copy_assign_allocation(std::string_view description, Logger& logger, const Container& xContainer, const Container& yContainer, allocation_checker<Container, Allocator>& checker, allocation_checker<Container, Allocators>&... moreCheckers)
   {
     auto checkFn{
-      [&logger, &xContainer, &yContainer](std::string_view message, allocation_checker<Container, Allocator>& checker){
+      [&logger, &xContainer, &yContainer](std::string_view message, auto& checker){
         checker.check_copy_assign_y_to_x(message, logger, xContainer, yContainer);
       }
     };
@@ -334,7 +334,7 @@ namespace sequoia::unit_testing::impl
   void check_move_assign_allocation(std::string_view description, Logger& logger, const Container& xContainer, const Container& yContainer, allocation_checker<Container, Allocator>& checker, allocation_checker<Container, Allocators>&... moreCheckers)
   {
     auto checkFn{
-      [&logger, &xContainer, &yContainer](std::string_view message, allocation_checker<Container, Allocator>& checker){
+      [&logger, &xContainer, &yContainer](std::string_view message, auto& checker){
         checker.check_move_assign_y_to_x(message, logger, xContainer, yContainer);
       }
     };
@@ -346,7 +346,7 @@ namespace sequoia::unit_testing::impl
   void check_mutation_allocation(std::string_view description, Logger& logger, const Container& xContainer, const Container& yContainer, allocation_checker<Container, Allocator>& checker, allocation_checker<Container, Allocators>&... moreCheckers)
   {
     auto checkFn{
-      [&logger, &xContainer, &yContainer](std::string_view message, allocation_checker<Container, Allocator>& checker){
+      [&logger, &xContainer, &yContainer](std::string_view message, auto& checker){
         checker.template check_mutation<Flavour>(message, logger, xContainer, yContainer);
       }
     };
@@ -358,7 +358,7 @@ namespace sequoia::unit_testing::impl
   void check_mutation_allocation(std::string_view description, Logger& logger, const Container& yContainer, allocation_checker<Container, Allocator>& checker, allocation_checker<Container, Allocators>&... moreCheckers)
   {
     auto checkFn{
-      [&logger, &yContainer](std::string_view message, allocation_checker<Container, Allocator>& checker){
+      [&logger, &yContainer](std::string_view message, auto& checker){
         checker.check_mutation(message, logger, yContainer);
       }
     };
@@ -370,7 +370,7 @@ namespace sequoia::unit_testing::impl
   void check_copy_alloc_y_allocation(std::string_view description, Logger& logger, const Container& container, allocation_checker<Container, Allocator>& checker, allocation_checker<Container, Allocators>&... moreCheckers)
   {
     auto checkFn{
-      [&logger, &container](std::string_view message, allocation_checker<Container, Allocator>& checker){
+      [&logger, &container](std::string_view message, auto& checker){
         checker.check_copy_alloc_y(message, logger, container);
       }
     };
@@ -382,7 +382,7 @@ namespace sequoia::unit_testing::impl
   void check_move_alloc_y_allocation(std::string_view description, Logger& logger, const Container& container, allocation_checker<Container, Allocator>& checker, allocation_checker<Container, Allocators>&... moreCheckers)
   {
     auto checkFn{
-      [&logger, &container](std::string_view message, allocation_checker<Container, Allocator>& checker){
+      [&logger, &container](std::string_view message, auto& checker){
         checker.check_move_alloc_y(message, logger, container);
       }
     };

@@ -147,7 +147,7 @@ namespace sequoia::unit_testing
       };
 
       {
-        using beast = broken_equality<int, custom_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
+        using beast = broken_equality<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
         using allocator = typename beast::allocator_type;
         
         
@@ -155,7 +155,7 @@ namespace sequoia::unit_testing
       }
 
       {
-        using beast = broken_inequality<int, custom_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
+        using beast = broken_inequality<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
         using allocator = typename beast::allocator_type;
         
         
@@ -163,7 +163,7 @@ namespace sequoia::unit_testing
       }
 
       {
-        using beast = broken_copy<int, custom_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
+        using beast = broken_copy<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
         using allocator = typename beast::allocator_type;
         
         
@@ -171,7 +171,7 @@ namespace sequoia::unit_testing
       }
 
       {
-        using beast = broken_copy_alloc<int, custom_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
+        using beast = broken_copy_alloc<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
         using allocator = typename beast::allocator_type;
         
         
@@ -179,7 +179,7 @@ namespace sequoia::unit_testing
       }
 
       {
-        using beast = broken_move<int, custom_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
+        using beast = broken_move<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
         using allocator = typename beast::allocator_type;
         
         
@@ -187,7 +187,7 @@ namespace sequoia::unit_testing
       }
 
       {
-        using beast = broken_move_alloc<int, custom_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
+        using beast = broken_move_alloc<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
         using allocator = typename beast::allocator_type;
         
         
@@ -195,7 +195,7 @@ namespace sequoia::unit_testing
       }
 
       {
-        using beast = inefficient_move<int, custom_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
+        using beast = inefficient_move<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
         using allocator = typename beast::allocator_type;
         
         
@@ -203,7 +203,7 @@ namespace sequoia::unit_testing
       }
 
       {
-        using beast = broken_copy_assignment<int, custom_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
+        using beast = broken_copy_assignment<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
         using allocator = typename beast::allocator_type;
         
         
@@ -211,7 +211,7 @@ namespace sequoia::unit_testing
       }
 
       {
-        using beast = broken_move_assignment<int, custom_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
+        using beast = broken_move_assignment<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
         using allocator = typename beast::allocator_type;
         
         
@@ -220,7 +220,7 @@ namespace sequoia::unit_testing
 
       {
         using handle = std::shared_ptr<int>;
-        using beast = broken_copy_value_semantics<int, handle, custom_allocator<handle, PropagateCopy, PropagateMove, PropagateSwap>>;
+        using beast = broken_copy_value_semantics<int, handle, shared_counting_allocator<handle, PropagateCopy, PropagateMove, PropagateSwap>>;
         using allocator = typename beast::allocator_type;
 
         auto m{
@@ -235,7 +235,7 @@ namespace sequoia::unit_testing
 
       {
         using handle = std::shared_ptr<int>;
-        using beast = broken_copy_assignment_value_semantics<int, handle, custom_allocator<handle, PropagateCopy, PropagateMove, PropagateSwap>>;
+        using beast = broken_copy_assignment_value_semantics<int, handle, shared_counting_allocator<handle, PropagateCopy, PropagateMove, PropagateSwap>>;
         using allocator = typename beast::allocator_type;
 
         auto m{
@@ -249,7 +249,7 @@ namespace sequoia::unit_testing
       }
 
       {
-        using beast = inefficient_copy<int, custom_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
+        using beast = inefficient_copy<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
         using allocator = typename beast::allocator_type;
 
         auto mutator{
@@ -265,7 +265,7 @@ namespace sequoia::unit_testing
       }
 
       {
-        using beast = inefficient_copy_alloc<int, custom_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
+        using beast = inefficient_copy_alloc<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
         using allocator = typename beast::allocator_type;
 
         auto mutator{
@@ -280,7 +280,7 @@ namespace sequoia::unit_testing
       }
 
       {
-        using beast = perfectly_normal_beast<int, custom_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
+        using beast = perfectly_normal_beast<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
         using allocator = typename beast::allocator_type;
 
 
@@ -289,7 +289,7 @@ namespace sequoia::unit_testing
       }
 
       {
-        using beast = perfectly_normal_beast<int, custom_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
+        using beast = perfectly_normal_beast<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
         using allocator = typename beast::allocator_type;
 
         {
@@ -302,7 +302,7 @@ namespace sequoia::unit_testing
         }
         {
           allocation_predictions predictions{1, {1,1}, {0,1}};
-          if constexpr(!std::allocator_traits<custom_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>::propagate_on_container_copy_assignment::value)
+          if constexpr(!std::allocator_traits<shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>::propagate_on_container_copy_assignment::value)
           {
             predictions = allocation_predictions{1, {1,1}, {1,0}};
           }
@@ -318,7 +318,7 @@ namespace sequoia::unit_testing
 
       {
         using handle = std::shared_ptr<int>;
-        using beast = perfectly_sharing_beast<int, handle, custom_allocator<handle, PropagateCopy, PropagateMove, PropagateSwap>>;
+        using beast = perfectly_sharing_beast<int, handle, shared_counting_allocator<handle, PropagateCopy, PropagateMove, PropagateSwap>>;
         using allocator = typename beast::allocator_type;
 
         auto m{
@@ -337,7 +337,7 @@ namespace sequoia::unit_testing
         }
         {
           allocation_predictions predictions{1, {1,0}, {0,1}};
-          if constexpr(!std::allocator_traits<custom_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>::propagate_on_container_copy_assignment::value)
+          if constexpr(!std::allocator_traits<shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>::propagate_on_container_copy_assignment::value)
           {
             predictions = allocation_predictions{1, {1,0}, {1,0}};
           }
@@ -457,7 +457,7 @@ namespace sequoia::unit_testing
     };
     
     {
-      using beast = perfectly_normal_beast<int, custom_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
+      using beast = perfectly_normal_beast<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
       using allocator = typename beast::allocator_type;
 
       auto mutator{
@@ -472,7 +472,7 @@ namespace sequoia::unit_testing
 
     {
       using handle = std::shared_ptr<int>;
-      using beast = perfectly_sharing_beast<int, handle, custom_allocator<handle, PropagateCopy, PropagateMove, PropagateSwap>>;
+      using beast = perfectly_sharing_beast<int, handle, shared_counting_allocator<handle, PropagateCopy, PropagateMove, PropagateSwap>>;
       using allocator = typename beast::allocator_type;
 
       auto m{
@@ -486,7 +486,7 @@ namespace sequoia::unit_testing
     }
 
     {
-      using beast = inefficient_copy<int, custom_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
+      using beast = inefficient_copy<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
       using allocator = typename beast::allocator_type;
 
       auto mutator{
@@ -501,7 +501,7 @@ namespace sequoia::unit_testing
     }
 
     {
-      using beast = inefficient_copy_alloc<int, custom_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
+      using beast = inefficient_copy_alloc<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
       using allocator = typename beast::allocator_type;
 
       auto mutator{
@@ -517,5 +517,32 @@ namespace sequoia::unit_testing
 
     using allocator = std::vector<int>::allocator_type;
     check_regular_semantics(LINE(""), perfectly_normal_beast{1}, perfectly_normal_beast{2}, perfectly_normal_beast{1}, perfectly_normal_beast{2}, allocator{});
-  }
+
+    {
+      using beast = doubly_normal_beast<int, double, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>, shared_counting_allocator<double, PropagateCopy, PropagateMove, PropagateSwap>>;
+      using xAllocator = typename beast::x_allocator_type;
+      using yAllocator = typename beast::y_allocator_type;
+
+      auto yAllocGetter{
+        [](const auto& beast){
+          return beast.y.get_allocator();
+        }
+      };
+      
+      auto mutator{
+        [](beast& b) {
+          b.x.push_back(1);
+          b.y.push_back(1);
+        }
+      };
+
+      
+      check_regular_semantics(LINE("")
+                              , beast{{1}, {1}, xAllocator{}, yAllocator{}}
+                              , beast{{5,6}, {5,6}, xAllocator{}, yAllocator{}}
+                              , mutator
+                              , allocation_info<beast, xAllocator>{allocGetter, {1, {1,1}, {1,1}}}
+                              , allocation_info<beast, yAllocator>{yAllocGetter, {1, {1,1}, {1,1}}});
+    }
+  }  
 }

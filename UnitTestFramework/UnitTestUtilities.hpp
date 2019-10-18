@@ -41,7 +41,7 @@ namespace sequoia::unit_testing
     int m_i{};
   };
 
-  /*! \class test_allocator
+  /*! \class shared_counting_allocator
       \brief Somwhat imilar to std::allocator but logs (de)allocations and is without certain copy-like constructors.
 
       Whereas std::allocator<T> allows construction from std::allocator<U> this 
@@ -50,7 +50,7 @@ namespace sequoia::unit_testing
    */
 
   template<class T, bool PropagateCopy=true, bool PropagateMove=true, bool PropagateSwap=false>
-  class custom_allocator
+  class shared_counting_allocator
   {
   public:
     using value_type = T;
@@ -61,11 +61,11 @@ namespace sequoia::unit_testing
     using propagate_on_container_swap            = std::bool_constant<PropagateSwap>;
     using is_always_equal = std::false_type;
 
-    custom_allocator()
+    shared_counting_allocator()
       : m_pAllocs{std::make_shared<int>()}, m_pDeallocs{std::make_shared<int>()}
     {}
     
-    constexpr custom_allocator(const custom_allocator&) = default;
+    constexpr shared_counting_allocator(const shared_counting_allocator&) = default;
 
     [[nodiscard]] T* allocate(std::size_t n)
     {
@@ -89,13 +89,13 @@ namespace sequoia::unit_testing
     std::shared_ptr<int> preserve_dealloc_count() const noexcept { return m_pDeallocs; }
 
     [[nodiscard]]
-    friend bool operator==(const custom_allocator& lhs, const custom_allocator& rhs) noexcept
+    friend bool operator==(const shared_counting_allocator& lhs, const shared_counting_allocator& rhs) noexcept
     {
       return (lhs.m_pAllocs == rhs.m_pAllocs) && (lhs.m_pDeallocs == rhs.m_pDeallocs);
     }
 
     [[nodiscard]]
-    friend bool operator!=(const custom_allocator& lhs, const custom_allocator& rhs) noexcept
+    friend bool operator!=(const shared_counting_allocator& lhs, const shared_counting_allocator& rhs) noexcept
     {
       return !(lhs == rhs);
     }

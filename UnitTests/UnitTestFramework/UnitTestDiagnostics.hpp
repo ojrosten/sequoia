@@ -922,5 +922,69 @@ namespace sequoia
         return s;
       }
     };
+
+    template<class T=int, class U=double, class xAllocator=std::allocator<T>, class yAllocator=std::allocator<U>>
+    struct doubly_normal_beast
+    {
+      using x_allocator_type = xAllocator;
+      using y_allocator_type = yAllocator;
+
+      doubly_normal_beast(std::initializer_list<T> xlist, std::initializer_list<U> ylist)
+        : x{xlist} , y{ylist}
+      {}
+
+      doubly_normal_beast(std::initializer_list<T> xlist, std::initializer_list<U> ylist, const x_allocator_type& a, const y_allocator_type& b)
+        : x(xlist, a), y(ylist,b)
+      {}
+
+      doubly_normal_beast(const doubly_normal_beast&) = default;
+
+      doubly_normal_beast(const doubly_normal_beast& other, const x_allocator_type& a, const y_allocator_type& b)
+        : x(other.x, a), y(other.y, b)
+      {}
+
+      doubly_normal_beast(doubly_normal_beast&&) noexcept = default;
+
+      doubly_normal_beast(doubly_normal_beast&& other, const x_allocator_type& a, const y_allocator_type& b)
+        : x(std::move(other.x), a), y(std::move(other.y), b)
+      {}
+
+      doubly_normal_beast& operator=(const doubly_normal_beast&) = default;
+
+      doubly_normal_beast& operator=(doubly_normal_beast&&) = default;
+
+      void swap(doubly_normal_beast& other) noexcept(noexcept(std::swap(x, other.x)) && noexcept(std::swap(y, other.y)))
+      {
+        std::swap(x, other.x);
+        std::swap(y, other.y);
+      }
+
+      friend void swap(doubly_normal_beast& lhs, doubly_normal_beast& rhs)
+        noexcept(noexcept(lhs.swap(rhs)))
+      {
+        lhs.swap(rhs);
+      }
+      
+      std::vector<T, xAllocator> x{};
+      std::vector<U, yAllocator> y{};
+
+      friend bool operator==(const doubly_normal_beast& lhs, const doubly_normal_beast& rhs) noexcept
+      {
+        return (lhs.x == rhs.x) && (rhs.x == lhs.x);
+      }
+
+      friend bool operator!=(const doubly_normal_beast& lhs, const doubly_normal_beast& rhs) noexcept
+      {
+        return !(lhs == rhs);
+      }
+
+      template<class Stream>
+      friend Stream& operator<<(Stream& s, const doubly_normal_beast& b)
+      {
+        for(auto i : b.x) s << i << ' ';
+        for(auto i : b.y) s << i << ' ';
+        return s;
+      }
+    };
   }
 }
