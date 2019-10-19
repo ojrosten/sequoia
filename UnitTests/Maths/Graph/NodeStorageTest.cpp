@@ -132,23 +132,26 @@ namespace sequoia:: unit_testing
     using storage = node_storage_tester<weight_maker<Sharing>, PropagateCopy, PropagateMove, PropagateSwap>;
     using allocator = typename storage::allocator_type; 
 
-    allocator sAlloc{};
-      
-    storage s(sAlloc);
+    storage s(allocator{});
     check_equivalence(LINE(""), s, std::initializer_list<int>{});
-    check_equality(LINE(""), sAlloc.allocs(), 0);
+    check_equality(LINE(""), s.get_node_allocator().allocs(), 0);
 
-    allocator tAlloc{};
-    storage t{{1, 1, 0}, tAlloc};
+    storage t{{1, 1, 0}, allocator{}};
     check_equivalence(LINE(""), t, std::initializer_list<int>{1, 1, 0});
-    check_equality(LINE(""), tAlloc.allocs(), 1);
+    check_equality(LINE(""), t.get_node_allocator().allocs(), 1);
 
+    auto getter{
+      [](const storage& s) {
+        return s.get_node_allocator();
+      }
+    };
+    
     auto mutator{
       [](storage& s){
         s.add_node();
       }
     };
 
-    check_regular_semantics(LINE("Regular Semantics"), s, t, mutator, allocation_info<allocator>{sAlloc, tAlloc, {0, {1,1}, {1,1}}});
+    check_regular_semantics(LINE("Regular Semantics"), s, t, mutator, allocation_info<storage, allocator>{getter, {0, {1,1}, {1,1}}});
   }
 }

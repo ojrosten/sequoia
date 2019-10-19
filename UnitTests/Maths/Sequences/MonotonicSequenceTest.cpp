@@ -148,19 +148,22 @@ namespace sequoia::unit_testing
   {
     using namespace maths;
 
-    using allocator = custom_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>;
+    using allocator = shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>;
     using sequence = monotonic_sequence<int, std::less<int>, std::vector<int, allocator>>;
-
-    allocator sAlloc{};
-    
-    sequence s(sAlloc);
+  
+    sequence s(allocator{});
     check_equivalence(LINE(""), s, std::initializer_list<int>{});
-    check_equality(LINE(""), sAlloc.allocs(), 0);
+    check_equality(LINE(""), s.get_allocator().allocs(), 0);
 
-    allocator tAlloc{};
-    sequence t{{4, 3}, tAlloc};
+    sequence t{{4, 3}, allocator{}};
     check_equivalence(LINE(""), t, std::initializer_list<int>{4, 3});
-    check_equality(LINE(""), tAlloc.allocs(), 1);
+    check_equality(LINE(""), t.get_allocator().allocs(), 1);
+
+    auto getter{
+      [](const sequence& s){
+        return s.get_allocator();
+      }
+    };
 
     auto mutator{
       [](sequence& seq){
@@ -168,6 +171,6 @@ namespace sequoia::unit_testing
         seq.push_back(val);
       }
     };
-    check_regular_semantics(LINE("Regular Semantics"), s, t, mutator, allocation_info<allocator>{sAlloc, tAlloc, {0, {1,1}, {1, 1}}});
+    check_regular_semantics(LINE("Regular Semantics"), s, t, mutator, allocation_info<sequence, allocator>{getter, {0, {1,1}, {1, 1}}});
   }
 }

@@ -168,7 +168,7 @@ namespace sequoia::unit_testing
   {
     constexpr static bool throw_on_range_error{true};
     constexpr static bool static_storage_v{};
-    template<class S> using container_type = std::vector<S, custom_allocator<S, PropagateCopy, PropagateMove, PropagateSwap>>;
+    template<class S> using container_type = std::vector<S, shared_counting_allocator<S, PropagateCopy, PropagateMove, PropagateSwap>>;
   };
 
   template<class WeightMaker, bool PropagateCopy=true, bool PropagateMove=true, bool PropagateSwap=true>
@@ -236,6 +236,7 @@ namespace sequoia::unit_testing
     using base_t::erase_node;
     using base_t::erase_nodes;
     using base_t::clear;
+    using base_t::get_node_allocator;
   };
 
   template<class WeightMaker, std::size_t N>

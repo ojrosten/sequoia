@@ -160,8 +160,8 @@ namespace sequoia::unit_testing
   {
     constexpr static bool throw_on_range_error{true};
 
-    template<class S> using buckets_type   = std::vector<S, custom_allocator<S, PropagateCopy, PropagateMove, PropagateSwap>>; 
-    template<class S> using container_type = std::vector<S, custom_allocator<S, true, true, true>>; 
+    template<class S> using buckets_type   = std::vector<S, shared_counting_allocator<S, PropagateCopy, PropagateMove, PropagateSwap>>; 
+    template<class S> using container_type = std::vector<S, shared_counting_allocator<S, true, true, true>>; 
   };
 
   template
@@ -183,11 +183,11 @@ namespace sequoia::unit_testing
       = maths::monotonic_sequence<
           partition_index_type,
           std::greater<partition_index_type>,
-          std::vector<partition_index_type, custom_allocator<partition_index_type, PropagateCopy, PropagateMove, PropagateSwap>>
+          std::vector<partition_index_type, shared_counting_allocator<partition_index_type, PropagateCopy, PropagateMove, PropagateSwap>>
         >;
     
     using partitions_allocator_type = typename partitions_type::allocator_type;
       
-    template<class S> using container_type = std::vector<S, custom_allocator<S, PropagateCopy, PropagateMove, PropagateSwap>>;
+    template<class S> using container_type = std::vector<S, shared_counting_allocator<S, PropagateCopy, PropagateMove, PropagateSwap>>;
   };
 }
