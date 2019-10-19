@@ -637,6 +637,8 @@ namespace sequoia
 
       perfectly_normal_beast(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {}
 
+      perfectly_normal_beast(const allocator_type& a) : x(a) {}
+
       perfectly_normal_beast(const perfectly_normal_beast&) = default;
 
       perfectly_normal_beast(const perfectly_normal_beast& other, const allocator_type& alloc) : x(other.x, alloc) {}

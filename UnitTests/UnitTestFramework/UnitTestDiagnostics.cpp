@@ -465,9 +465,10 @@ namespace sequoia::unit_testing
           b.x.push_back(1);
         }
       };
-
-      
+     
       check_regular_semantics(LINE(""), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info<beast, allocator>{allocGetter, {1, {1,1}, {1,1}}});
+
+      check_regular_semantics(LINE(""), beast(allocator{}), beast{{5,6}, allocator{}}, mutator, allocation_info<beast, allocator>{allocGetter, {0, {1,1}, {1,1}}});
     }
 
     {
