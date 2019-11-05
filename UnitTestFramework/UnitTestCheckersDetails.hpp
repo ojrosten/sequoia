@@ -35,8 +35,6 @@ namespace sequoia::unit_testing
   
   template<class Container, class Allocator>
   class allocation_info;
-    
-  enum class mutation_flavour {after_move_assign, after_swap};
 }
 
 namespace sequoia::unit_testing::impl
@@ -202,36 +200,22 @@ namespace sequoia::unit_testing::impl
       check_allocation(description, "Mutation allocation after move-like construction", "", logger, yContainer, m_Info, m_FirstCount, m_Info.get_predictions().y.mutation);
     }
 
-    template<mutation_flavour Flavour, class Logger>
-    void check_mutation(std::string_view description, Logger& logger, const Container& xContainer, const Container& yContainer) const
+    template<class Logger>
+    void check_mutation_after_swap(std::string_view description, Logger& logger, const Container& xContainer, const Container& yContainer) const
     {
       typename Logger::sentinel s{logger, add_type_info<Allocator>(description)};
 
-      constexpr bool pred{[](){
-          switch(Flavour)
-            {
-            case mutation_flavour::after_move_assign:
-              return std::allocator_traits<Allocator>::propagate_on_container_move_assignment::value;
-            case mutation_flavour::after_swap:
-              return std::allocator_traits<Allocator>::propagate_on_container_swap::value;
-            }
-        }()
-      };
-
       const auto prediction{m_Info.get_predictions().y.mutation};
-        
-      if constexpr(pred)
+      auto uCount{m_SecondCount}, vCount{m_FirstCount};
+      
+      if constexpr(std::allocator_traits<Allocator>::propagate_on_container_swap::value)
       {
-        check_allocation(description, "x allocations 1", "", logger, xContainer, m_Info, m_FirstCount, prediction);
-
-        check_allocation(description, "y allocations 1", "", logger, yContainer, m_Info, m_SecondCount, 0);
+        using std::swap;
+        swap(uCount, vCount);        
       }
-      else
-      {
-        check_allocation(description, "x allocations 2", "", logger, xContainer, m_Info, m_SecondCount, prediction);
 
-        check_allocation(description, "y allocations 2", "", logger, yContainer, m_Info, m_FirstCount, 0);
-      }
+      check_allocation(description, "x allocations", "", logger, xContainer, m_Info, uCount, prediction);
+      check_allocation(description, "y allocations", "", logger, yContainer, m_Info, vCount, 0);
     }     
 
     [[nodiscard]]
@@ -254,15 +238,6 @@ namespace sequoia::unit_testing::impl
       auto message{combine_messages(combine_messages(description, detail), suffix)};
 
       check_equality(std::move(message), logger, current - previous, prediction);
-    }
-
-    template<class Logger>
-    void check_combined_allocation(std::string_view description, std::string_view xMessage, std::string_view yMessage, Logger& logger, const Container& xContainer, const Container& yContainer, const int xPrediction, const int yPrediction) const
-    {      
-      typename Logger::sentinel s{logger, add_type_info<Allocator>(description)};
-      
-      check_allocation(description, xMessage, "", logger, xContainer, m_Info, m_FirstCount, xPrediction);
-      check_allocation(description, yMessage, "", logger, yContainer, m_Info, m_SecondCount, yPrediction);
     }
 
     template<class Logger>
@@ -376,12 +351,12 @@ namespace sequoia::unit_testing::impl
     check_allocation(description, logger, checkFn, checker, moreCheckers...);
   }
 
-  template<mutation_flavour Flavour, class Logger, class Container, class Allocator, class... Allocators>
+  template<class Logger, class Container, class Allocator, class... Allocators>
   void check_mutation_allocation(std::string_view description, Logger& logger, const Container& xContainer, const Container& yContainer, const allocation_checker<Container, Allocator>& checker, const allocation_checker<Container, Allocators>&... moreCheckers)
   {
     auto checkFn{
       [&logger, &xContainer, &yContainer](std::string_view message, auto& checker){
-        checker.template check_mutation<Flavour>(message, logger, xContainer, yContainer);
+        checker.check_mutation_after_swap(message, logger, xContainer, yContainer);
       }
     };
 
@@ -475,7 +450,7 @@ namespace sequoia::unit_testing::impl
   void check_mutation_after_swap(std::string_view description, Logger& logger, T& u, const T& v, const T& y, Mutator yMutator, allocation_checker<T, Allocators>... checkers)
   {
     yMutator(u);
-    check_mutation_allocation<mutation_flavour::after_swap>(combine_messages(description, "mutation after swap allocations"), logger, u, v, checkers...);
+    check_mutation_allocation(combine_messages(description, "mutation after swap allocations"), logger, u, v, checkers...);
 
     check(combine_messages(description, "Mutation is not doing anything following copy then swap"), logger, u != y);    
   }
