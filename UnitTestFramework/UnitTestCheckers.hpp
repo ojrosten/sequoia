@@ -317,6 +317,12 @@ namespace sequoia
       {
         return Allocator{std::forward<Args>(args)...};
       }
+
+      [[nodiscard]]
+      Allocator allocator(const Container& c) const
+      {
+        return m_AllocatorGetter(c);
+      }
     private:
       using getter = std::function<Allocator(const Container&)>;
 
