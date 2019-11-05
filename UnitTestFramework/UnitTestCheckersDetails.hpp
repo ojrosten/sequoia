@@ -470,11 +470,11 @@ namespace sequoia::unit_testing::impl
 
     Container v{make(checkers...), checkers.info().make_allocator()...};
 
-    check_equality(combine_messages(description, "Move-like construction"), logger, v, y);    
+    /*check_equality(combine_messages(description, "Move-like construction"), logger, v, y);    
     check_move_alloc_y_allocation(description, logger, v, checkers...);
 
     yMutator(v);
-    check_mutation_allocation(combine_messages(description, "mutation allocations after move-like construction"), logger, v, checkers...);
+    check_mutation_allocation(combine_messages(description, "mutation allocations after move-like construction"), logger, v, checkers...);*/
   }
 
   template<class Logger, class Container, class Mutator, class... Allocators>
@@ -507,7 +507,7 @@ namespace sequoia::unit_testing::impl
       check_swap_allocations(description, logger, u, v, y, yMutator, allocation_checker<Container, Allocators>{u, v, checkers.info()}...);
     }
     
-    //check_allocations(description, logger, y, yMutator, allocation_checker<Container, Allocators>{y, 0, checkers.info()}...);
+    check_allocations(description, logger, y, yMutator, allocation_checker<Container, Allocators>{y, 0, checkers.info()}...);
   }
 
   template<class Logger, class T, class Mutator, class... Allocators>
