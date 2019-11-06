@@ -438,19 +438,21 @@ namespace sequoia::unit_testing::impl
   }
 
   template<class Logger, class T, class Mutator, class... Allocators>
-  void check_mutation_after_move_assign(std::string_view description, Logger& logger, T& u, const T& y, Mutator yMutator, allocation_checker<T, Allocators>... checkers)
+  void check_mutation_after_move(std::string_view description, std::string_view moveType, Logger& logger, T& u, const T& y, Mutator yMutator, allocation_checker<T, Allocators>... checkers)
   {
     yMutator(u);
-    check_mutation_allocation(combine_messages(description, "mutation after move assignment allocations"), logger, u, checkers...);
+    auto mess{combine_messages("mutation after move", moveType)};
+    check_mutation_allocation(combine_messages(description, std::move(mess)), logger, u, checkers...);
 
-    check(combine_messages(description, "Mutation is not doing anything following copy then move assign"), logger, u != y);    
+    mess = combine_messages("Mutation is not doing anything following move", moveType);
+    check(combine_messages(description, std::move(mess)), logger, u != y);    
   }
   
   template<class Logger, class T, class Mutator, class... Allocators>
   void check_mutation_after_swap(std::string_view description, Logger& logger, T& u, const T& v, const T& y, Mutator yMutator, allocation_checker<T, Allocators>... checkers)
   {
     yMutator(u);
-    check_mutation_allocation(combine_messages(description, "mutation after swap allocations"), logger, u, v, checkers...);
+    check_mutation_allocation(combine_messages(description, "mutation after swap"), logger, u, v, checkers...);
 
     check(combine_messages(description, "Mutation is not doing anything following copy then swap"), logger, u != y);    
   }
@@ -470,11 +472,9 @@ namespace sequoia::unit_testing::impl
 
     Container v{make(checkers...), checkers.info().make_allocator()...};
 
-    /*check_equality(combine_messages(description, "Move-like construction"), logger, v, y);    
-    check_move_alloc_y_allocation(description, logger, v, checkers...);
-
-    yMutator(v);
-    check_mutation_allocation(combine_messages(description, "mutation allocations after move-like construction"), logger, v, checkers...);*/
+    check_equality(combine_messages(description, "Move-like construction"), logger, v, y);    
+    check_move_alloc_y_allocation(description, logger, v, allocation_checker<Container, Allocators>{checkers.info()}...);
+    check_mutation_after_move(description, "allocation assignment", logger, v, y, yMutator, allocation_checker<Container, Allocators>{v, 0, checkers.info()}...);
   }
 
   template<class Logger, class Container, class Mutator, class... Allocators>
@@ -497,7 +497,7 @@ namespace sequoia::unit_testing::impl
       // u = std::move(v) (= y)
       check_move_assign(description, logger, u, std::move(v), y, allocation_checker<Container, Allocators>{u, y, checkers.info()}...);
 
-      check_mutation_after_move_assign(description, logger, u, y, yMutator, allocation_checker<Container, Allocators>{u, 0, checkers.info()}...);
+      check_mutation_after_move(description, "assignment", logger, u, y, yMutator, allocation_checker<Container, Allocators>{u, 0, checkers.info()}...);
     }
 
     if constexpr(do_swap<Allocators...>())

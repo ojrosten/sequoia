@@ -21,7 +21,7 @@ namespace sequoia::unit_testing
     test_mixed();
     test_regular_semantics();
 
-    //do_allocation_tests(*this);
+    do_allocation_tests(*this);
   }
 
   void false_positive_diagnostics::basic_tests()
