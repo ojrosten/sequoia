@@ -144,7 +144,7 @@ namespace sequoia::unit_testing::impl
     template<class Logger>
     void check_move_y(std::string_view description, Logger& logger, const Container& container) const
     {
-      check_move(description, "(y)", logger, container, m_Info, 0);
+      check_allocation(description, "Move construction allocation", "(y)", logger, container, m_Info, m_SecondCount, 0);
     }
 
     template<class Logger>
@@ -244,19 +244,6 @@ namespace sequoia::unit_testing::impl
     static void check_copy(std::string_view description, std::string_view suffix, Logger& logger, const Container& container, const allocation_info<Container, Allocator>& info, const int previous, const int prediction)
     {
       check_allocation(description, "Copy construction allocation", suffix, logger, container, info, previous, prediction);
-    }
-
-    template<class Logger>
-    void check_move(std::string_view description, std::string_view suffix, Logger& logger, const Container& container, const allocation_info<Container, Allocator>& info, const int prediction) const
-    {
-      if constexpr(std::allocator_traits<Allocator>::propagate_on_container_copy_assignment::value)
-      {
-        check_allocation(description, "Move construction allocation", suffix, logger, container, info, m_SecondCount, prediction);
-      }
-      else
-      {
-        check_allocation(description, "Move construction allocation", suffix, logger, container, info, m_FirstCount, prediction);
-      }
     }
 
     template<class Logger>

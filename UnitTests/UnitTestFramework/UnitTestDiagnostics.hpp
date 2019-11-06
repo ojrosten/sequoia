@@ -891,8 +891,10 @@ namespace sequoia
         : x(other.x, alloc)
       {}
 
-      inefficient_move(inefficient_move&& other) : x{other.x}
-      {}
+      inefficient_move(inefficient_move&& other) : x{std::move(other.x)}
+      {
+        x.reserve(10);
+      }
 
       inefficient_move(inefficient_move&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
 
