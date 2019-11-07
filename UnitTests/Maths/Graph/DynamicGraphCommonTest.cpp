@@ -1031,6 +1031,7 @@ namespace sequoia::unit_testing
     {
       check_regular_semantics(LINE("Regular Semantics"), g, graph_t{{{}}, edge_partitions_allocator{}, edge_allocator{}});
 
+      /*
       // x=====x
       using edge_init_t = typename graph_t::edge_init_type;
 
@@ -1039,6 +1040,7 @@ namespace sequoia::unit_testing
       auto nodeMaker{
         [](graph_t& g) { g.add_node(); }
       };
+      */
     }
     else
     {

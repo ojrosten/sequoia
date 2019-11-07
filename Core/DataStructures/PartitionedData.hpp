@@ -70,6 +70,7 @@ namespace sequoia
     class bucketed_storage
     {
     private:
+      friend struct sequoia::impl::assignment_helper;
       template<class S> using buckets_template   = typename Traits::template buckets_type<S>;
       template<class S> using container_template = typename Traits::template container_type<S>;
         
@@ -443,6 +444,12 @@ namespace sequoia
       {
         return !(lhs == rhs);
       }
+    protected:
+      void reset(const partitions_allocator_type& partitionsAllocator) noexcept
+      {
+        const storage_type buckets(partitionsAllocator);
+        m_Buckets = buckets;
+      }
     private:
       constexpr static auto npos{partition_iterator::npos};
       constexpr static bool directCopy{partition_impl::direct_copy_v<SharingPolicy, T>};
@@ -701,6 +708,16 @@ namespace sequoia
         }
  
         return *this;
+      }
+
+      template<class PartitionsAllocator, class Allocator>
+      void reset(const PartitionsAllocator& partitionsAllocator, const Allocator& allocator) noexcept
+      {
+        const PartitionsType partitions(partitionsAllocator);
+        m_Partitions = partitions;
+
+        const container_type container{allocator};
+        m_Storage = container;
       }
 
       void swap(contiguous_storage_base& other)

@@ -484,6 +484,8 @@ namespace sequoia::unit_testing
         
       
       check_regular_semantics(LINE(""), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, m, allocation_info<beast, allocator>{allocGetter, {1, {1,0}, {1, 1}}});
+
+      check_regular_semantics(LINE(""), beast(allocator{}), beast{{5,6}, allocator{}}, m, allocation_info<beast, allocator>{allocGetter, {0, {1,0}, {1, 1}}});
     }
 
     {

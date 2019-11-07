@@ -189,13 +189,20 @@ namespace sequoia::maths::graph_impl
       }
  
       return *this;
-    }    
+    }
 
     constexpr node_storage& operator=(node_storage&&) = default;
 
     constexpr void swap(node_storage& other) noexcept(noexcept(sequoia::swap(m_NodeWeights, other.m_NodeWeights)))
     {
       sequoia::swap(m_NodeWeights, other.m_NodeWeights);
+    }
+
+    template<class Allocator>
+    void reset(const Allocator& allocator)
+    {
+      const node_weight_container_type storage(allocator);
+      m_NodeWeights = storage;
     }
 
     constexpr void swap_nodes(const size_type i, const size_type j)

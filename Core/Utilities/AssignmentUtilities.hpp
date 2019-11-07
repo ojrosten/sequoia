@@ -55,15 +55,19 @@ namespace sequoia::impl
         static_assert(consistency<Container, FilteredAllocGetters...>());
         
         Container tmp{from, get_allocator(to, from, allocGetters)...};
-        if constexpr (copy_propagation<Container, FilteredAllocGetters...>() == move_propagation<Container, FilteredAllocGetters...>())
+        constexpr bool
+          copyPropagation{copy_propagation<Container, FilteredAllocGetters...>()},
+          movePropagation{move_propagation<Container, FilteredAllocGetters...>()};
+        
+        if constexpr (movePropagation || !copyPropagation)
         {
           to = std::move(tmp);
         }
         else
         {
-          if constexpr(copy_propagation<Container, FilteredAllocGetters...>())
-          {
-            to = Container{allocGetters(tmp)...};
+          if constexpr(!swap_propagation<Container, FilteredAllocGetters...>())
+          {          
+            to.reset(allocGetters(tmp)...);
           }
 
           to.swap(tmp);
