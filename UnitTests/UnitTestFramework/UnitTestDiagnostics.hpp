@@ -771,7 +771,7 @@ namespace sequoia
       void reset(const allocator_type& alloc)
       {
         const std::vector<handle_type, allocator_type> v(alloc);
-        x = std::vector<handle_type, allocator_type>(alloc);
+        x = v;
       }
     };
 
