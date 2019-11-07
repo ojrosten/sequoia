@@ -199,7 +199,7 @@ namespace sequoia::maths::graph_impl
     }
 
     template<class Allocator>
-    void reset(const Allocator& allocator)
+    void reset(const Allocator& allocator) noexcept
     {
       const node_weight_container_type storage(allocator);
       m_NodeWeights = storage;
