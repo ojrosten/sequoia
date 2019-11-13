@@ -75,7 +75,8 @@ int main(int argc, char** argv)
       test_family{
         "Diagnostics",
         false_positive_diagnostics{"False Positive Diagnostics"},
-        false_negative_diagnostics{"False Negative Diagnostics"}
+        false_negative_diagnostics{"False Negative Diagnostics"},
+        partitioned_data_test{"Test"}
       }
     );
       

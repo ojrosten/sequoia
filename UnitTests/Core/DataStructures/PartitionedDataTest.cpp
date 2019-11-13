@@ -641,7 +641,7 @@ namespace sequoia
       using info = allocation_info<storage, allocator>;
 
       check_regular_semantics(LINE("Regular Semantics"), s, t, partitionMaker,
-        info{allocGetter, std::array<allocation_predictions, 2>{allocation_predictions{0, {1,1}, {1,1}}, allocation_predictions{0, {2,0}, {2,2}}}});
+        info{allocGetter, {allocation_predictions{0, {1,1}, {1,1}}, allocation_predictions{0, {2,0}, {2,2}}}});
 
       /*
       using outer_allocator = typename allocator::outer_allocator_type;

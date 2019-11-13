@@ -23,6 +23,7 @@ EXE := $(CHAMBERBUILDDIR)/UnitTestChamber.exe
 
 UTSRCS := UnitTestChamberMain.cpp
 UTSRCS += ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp
+UTSRCS += ../UnitTests/Core/DataStructures/PartitionedDataTest.cpp
 UTOBJS := $(addprefix $(CHAMBERBUILDDIR)/, $(UTSRCS:%.cpp=%.o))
 UTDEPS := $(addprefix $(CHAMBERBUILDDIR)/, $(UTSRCS:%.cpp=%.d))
 

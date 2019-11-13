@@ -131,8 +131,14 @@ namespace sequoia::unit_testing::impl
 
     allocation_info_base& operator=(const allocation_info_base&)     = default;
     allocation_info_base& operator=(allocation_info_base&&) noexcept = default;
-  private:
+
     using getter = std::function<Allocator(const Container&)>;
+
+    getter make_getter() const
+    {
+      return m_AllocatorGetter;
+    }
+  private:
 
     getter m_AllocatorGetter;
   };
@@ -165,7 +171,6 @@ namespace sequoia::unit_testing::impl
 
     [[nodiscard]]
     int second_count() const noexcept { return m_SecondCount; }
-
 
     template<class Logger>
     void check_copy_x(std::string_view description, Logger& logger, const Container& container) const
@@ -537,13 +542,11 @@ namespace sequoia::unit_testing::impl
       Container u{x}, v{y};
 
       check_swap_allocations(description, logger, u, v, y, yMutator, allocation_checker<Container, Allocators>{u, v, checkers.info()}...);
-    }
-    
-    check_allocations(description, logger, y, yMutator, allocation_checker<Container, Allocators>{y, 0, checkers.info()}...);
+    }    
   }
 
   template<class Logger, class T, class Mutator, class... Allocators>
-  void check_regular_semantics(std::string_view description, Logger& logger, const T& x, const T& y, Mutator yMutator, allocation_checker<T, Allocators>... checkers)
+  bool check_common_regular_semantics(std::string_view description, Logger& logger, const T& x, const T& y, Mutator yMutator, allocation_checker<T, Allocators>... checkers)
   {
     constexpr bool nullMutator{std::is_same_v<Mutator, null_mutator>};
     constexpr bool checkAllocs{sizeof...(Allocators) > 0};
@@ -551,10 +554,10 @@ namespace sequoia::unit_testing::impl
         
     typename Logger::sentinel s{logger, add_type_info<T>(description)};
 
-    if(!check(combine_messages(description, "Equality operator is inconsistent"), logger, x == x)) return;
-    if(!check(combine_messages(description, "Inequality operator is inconsistent"), logger, !(x != x))) return;
+    if(!check(combine_messages(description, "Equality operator is inconsistent"), logger, x == x)) return false;
+    if(!check(combine_messages(description, "Inequality operator is inconsistent"), logger, !(x != x))) return false;
 
-    if(!check(combine_messages(description, "Precondition - for checking regular semantics, x and y are assumed to be different"), logger, x != y)) return;
+    if(!check(combine_messages(description, "Precondition - for checking regular semantics, x and y are assumed to be different"), logger, x != y)) return false;
     
     T z{x};
     check_equality(combine_messages(description, "Copy constructor (x)"), logger, z, x);
@@ -570,11 +573,6 @@ namespace sequoia::unit_testing::impl
 
     // w = std::move(z)
     check_move_construction(description, logger, std::move(z), y, allocation_checker<T, Allocators>{z, 0, checkers.info()}...);
-
-    if constexpr(checkAllocs)
-    {
-      check_allocations(description, logger, x, y, yMutator, allocation_checker<T, Allocators>{x, y, checkers.info()}...);
-    }
 
     z = T{x};
     check_equality(combine_messages(description, "Move assignment"), logger, z, x);
@@ -602,11 +600,42 @@ namespace sequoia::unit_testing::impl
 
       check(combine_messages(description, "Mutation is not doing anything following copy assignment/ broken value semantics"), logger, v != y);
     }
+
+    if constexpr(checkAllocs)
+    {
+      check_allocations(description, logger, x, y, yMutator, allocation_checker<T, Allocators>{x, y, checkers.info()}...);
+    }
+
+    return true;
+  }
+
+  template<class Logger, class T, class Mutator, class... Allocators>
+  void check_regular_semantics(std::string_view description, Logger& logger, const T& x, const T& y, Mutator yMutator, allocation_checker<T, Allocators>... checkers)
+  {
+    typename Logger::sentinel s{logger, add_type_info<T>(description)};
+
+    if(check_common_regular_semantics(description, logger, x, y, yMutator, checkers...))
+    {
+      if constexpr (sizeof...(Allocators) > 0)
+      {
+        check_allocations(description, logger, y, yMutator, allocation_checker<T, Allocators>{y, 0, checkers.info()}...);
+      }
+    }
+  }
+
+  template<class Logger, class T, class Mutator, class... Allocators, std::size_t... I>
+  void check_regular_semantics(std::string_view description, Logger& logger, const T& x, const T& y, Mutator yMutator, allocation_checker<T, std::scoped_allocator_adaptor<Allocators...>> checker, std::index_sequence<I...>)
+  {
+    typename Logger::sentinel s{logger, add_type_info<T>(description)};
+
+    check_common_regular_semantics(description, logger, x, y, std::move(yMutator), allocation_checker{x, y, checker.info().template unpack<I>()}...);
+
+    // TO DO
   }
 
   template<class Logger, class T, class Mutator, class... Allocators>
   void check_regular_semantics(std::string_view description, Logger& logger, const T& x, const T& y, Mutator yMutator, allocation_checker<T, std::scoped_allocator_adaptor<Allocators...>> checker)
   {
-    // TO DO!
+    check_regular_semantics(description, logger, x, y, std::move(yMutator), std::move(checker), std::make_index_sequence<sizeof...(Allocators)>{});
   }
 }

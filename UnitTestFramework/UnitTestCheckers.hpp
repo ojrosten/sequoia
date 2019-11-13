@@ -322,7 +322,32 @@ namespace sequoia
         : base_t{std::forward<Fn>(allocGetter)}
         , m_Predictions{std::move(predictions)}
       {}
+
+      template<std::size_t I> auto unpack() const
+      {
+        auto scopedGetter{[getter=this->make_getter()](const Container& c){
+            return get<I>(getter(c));
+          }
+        };
+
+        using Alloc = decltype(scopedGetter(std::declval<Container>()));
+
+        return allocation_info<Container, Alloc>{scopedGetter, m_Predictions[I]};
+      }
     private:
+      template<std::size_t I, class... As>
+      static auto get(const std::scoped_allocator_adaptor<As...>& alloc)
+      {
+        if constexpr(I==0)
+        {
+          return alloc.outer_allocator();
+        }
+        else
+        {
+          return get<I-1>(alloc.inner_allocator());
+        }
+      }
+      
       std::array<allocation_predictions, N> m_Predictions;
     };
 
@@ -330,6 +355,12 @@ namespace sequoia
     void check_regular_semantics(std::string_view description, Logger& logger, const T& x, const T& y, Mutator yMutator, allocation_info<T, Allocators>... allocationInfo)
     {
       impl::check_regular_semantics(description, logger, x, y, yMutator, impl::allocation_checker<T, Allocators>{x, y, allocationInfo}...);
+    }
+
+    template<class Logger, class T, class Mutator, class... Allocators>
+    void check_regular_semantics(std::string_view description, Logger& logger, const T& x, const T& y, Mutator yMutator, allocation_info<T, std::scoped_allocator_adaptor<Allocators...>> allocationInfo)
+    {
+      impl::check_regular_semantics(description, logger, x, y, yMutator, impl::allocation_checker<T, std::scoped_allocator_adaptor<Allocators...>>{x, y, allocationInfo});
     }
 
     template<class Logger, class T>
@@ -588,6 +619,12 @@ namespace sequoia
       void check_regular_semantics(std::string_view description, const T& x, const T& y, Mutator m, allocation_info<T, Allocators>... allocationInfo)
       {
         unit_testing::check_regular_semantics(description, m_Logger, x, y, m, allocationInfo...);
+      }
+
+      template<class T, class Mutator, class... Allocators>
+      void check_regular_semantics(std::string_view description, const T& x, const T& y, Mutator m, allocation_info<T, std::scoped_allocator_adaptor<Allocators...>> allocationInfo)
+      {
+        unit_testing::check_regular_semantics(description, m_Logger, x, y, m, allocationInfo);
       }
       
       template<class F, class S>
