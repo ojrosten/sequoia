@@ -593,7 +593,6 @@ namespace sequoia
       using namespace data_structures;
 
       using storage = bucketed_storage<T, SharingPolicy, custom_bucketed_storage_traits<T, SharingPolicy, PropagateCopy, PropagateMove, PropagateSwap>>;
-      using partitions_allocator = typename storage::partitions_allocator_type;
       using allocator = typename storage::allocator_type;
       using prediction = std::initializer_list<std::initializer_list<int>>;
 
@@ -604,31 +603,28 @@ namespace sequoia
       };
 
       // null; [0,2][1]
-
-      partitions_allocator sPartAlloc{}, tPartAlloc{};
-      allocator tAlloc{};
       
       storage
-        s{partitions_allocator{}},
-        t{{{0,2}, {1}}, partitions_allocator{}, allocator{}};
+        s(allocator{}),
+        t{{{0,2}, {1}}, allocator{}};
 
-      auto partitionsAllocGetter{
+      auto outerAllocGetter{
         [](const storage& s) {
-          return s.get_partitions_allocator();
+          return s.get_allocator().outer_allocator();
         }        
       };
 
-      auto allocGetter{
-        [](const storage& s){
-          return s.empty() ? allocator{} : s.get_allocator(0);          
+      auto innerAllocGetter{
+        [](const storage& s) {
+          return s.get_allocator().inner_allocator().outer_allocator();
         }
       };
 
       check_equivalence(LINE(makeMessage("")), s, prediction{});
       check_equivalence(LINE(makeMessage("")), t, prediction{{0,2}, {1}});
-      check_equality(LINE(makeMessage("")), partitionsAllocGetter(s).allocs(), 0);
-      check_equality(LINE(makeMessage("Only a single allocation necessary due to reservation")), partitionsAllocGetter(t).allocs(), 1);
-      check_equality(LINE(makeMessage("Only a single allocation per bucket due to reservation")), allocGetter(t).allocs(), 2);
+      check_equality(LINE(makeMessage("")), outerAllocGetter(s).allocs(), 0);
+      check_equality(LINE(makeMessage("Only a single allocation necessary due to reservation")), outerAllocGetter(t).allocs(), 1);
+      check_equality(LINE(makeMessage("Only a single allocation per bucket due to reservation")), innerAllocGetter(t).allocs(), 2);
 
       auto partitionMaker{
         [](storage& s) {
@@ -636,10 +632,26 @@ namespace sequoia
         }
       };
 
-      check_regular_semantics(LINE("Regular Semantics"), s, t, partitionMaker,
-                              allocation_info<storage, partitions_allocator>{partitionsAllocGetter, {0, {1,1}, {1,1}}},
-                              allocation_info<storage, allocator>{allocGetter, {0, {2,0}, {2,2}}});
+      auto allocGetter{
+        [](const storage& s) {
+          return s.get_allocator();
+        }
+      };
 
+      using info = allocation_info<storage, allocator>;
+
+      check_regular_semantics(LINE("Regular Semantics"), s, t, partitionMaker,
+        info{allocGetter, std::array<allocation_predictions, 2>{allocation_predictions{0, {1,1}, {1,1}}, allocation_predictions{0, {2,0}, {2,2}}}});
+
+      /*
+      using outer_allocator = typename allocator::outer_allocator_type;
+      using inner_allocator = typename allocator::inner_allocator_type;
+
+      check_regular_semantics(LINE("Regular Semantics"), s, t, partitionMaker,
+                              allocation_info<storage, outer_allocator>{partitionsAllocGetter, {0, {1,1}, {1,1}}},
+                              allocation_info<storage, inner_allocator>{allocGetter, {0, {2,0}, {2,2}}});*/
+      
+      /*
       s.add_slot(allocator{});
       // []
         
@@ -655,6 +667,7 @@ namespace sequoia
       check_regular_semantics(LINE("Regular Semantics"), s, t, mutator,
                               allocation_info<storage, partitions_allocator>{partitionsAllocGetter, {1, {1,1}, {1,1}}},
                               allocation_info<storage, allocator>{allocGetter, {0, {2,1}, {2,2}}});
+      */
     }
   
     template<class T, class SharingPolicy, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>

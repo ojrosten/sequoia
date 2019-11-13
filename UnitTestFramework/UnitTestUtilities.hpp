@@ -42,7 +42,7 @@ namespace sequoia::unit_testing
   };
 
   /*! \class shared_counting_allocator
-      \brief Somwhat imilar to std::allocator but logs (de)allocations and is without certain copy-like constructors.
+      \brief Somewhat similar to std::allocator but logs (de)allocations and is without certain copy-like constructors.
 
       Whereas std::allocator<T> allows construction from std::allocator<U> this 
       possibility is excluded to ensure that constructors of classes taking multiple

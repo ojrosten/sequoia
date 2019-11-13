@@ -288,46 +288,42 @@ namespace sequoia
     };
 
     template<class Container, class Allocator>
-    class allocation_info
+    class allocation_info : public impl::allocation_info_base<Container, Allocator>
     {
+    private:
+      using base_t = impl::allocation_info_base<Container, Allocator>;
     public:
       template<class Fn>
       allocation_info(Fn&& allocGetter, allocation_predictions predictions)
-        : m_AllocatorGetter{std::forward<Fn>(allocGetter)}
+        : base_t{std::forward<Fn>(allocGetter)}
         , m_Predictions{std::move(predictions)}
-      {
-        if(!m_AllocatorGetter)
-          throw std::logic_error("allocation_info must be supplied with a non-null function object");
-      }
+      {}
 
       [[nodiscard]]
       const allocation_predictions& get_predictions() const noexcept
       {
         return m_Predictions;
       }
-
-      [[nodiscard]]
-      int count(const Container& c) const noexcept
-      {        
-        return m_AllocatorGetter(c).allocs();
-      }
-
-      template<class... Args>
-      Allocator make_allocator(Args&&... args) const
-      {
-        return Allocator{std::forward<Args>(args)...};
-      }
-
-      [[nodiscard]]
-      Allocator allocator(const Container& c) const
-      {
-        return m_AllocatorGetter(c);
-      }
     private:
-      using getter = std::function<Allocator(const Container&)>;
-
-      getter m_AllocatorGetter;      
       allocation_predictions m_Predictions;
+    };
+
+    template<class Container, class... Allocators>
+    class allocation_info<Container, std::scoped_allocator_adaptor<Allocators...>>
+      : public impl::allocation_info_base<Container, std::scoped_allocator_adaptor<Allocators...>>
+    {
+    private:
+      using base_t = impl::allocation_info_base<Container, std::scoped_allocator_adaptor<Allocators...>>;
+    public:
+      constexpr static auto N{sizeof...(Allocators)};
+
+      template<class Fn>
+      allocation_info(Fn&& allocGetter, std::array<allocation_predictions, N> predictions)
+        : base_t{std::forward<Fn>(allocGetter)}
+        , m_Predictions{std::move(predictions)}
+      {}
+    private:
+      std::array<allocation_predictions, N> m_Predictions;
     };
 
     template<class Logger, class T, class Mutator, class... Allocators>

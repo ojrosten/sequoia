@@ -12,6 +12,7 @@
 */
 
 #include "UnitTestLogger.hpp"
+#include <scoped_allocator>
 
 namespace sequoia::unit_testing
 {
@@ -91,6 +92,50 @@ namespace sequoia::unit_testing::impl
   }
 
   //================================ Allocation Checking ================================//
+
+  template<class Container, class Allocator>
+  class allocation_info_base
+  {
+  public:
+    template<class Fn>
+    explicit allocation_info_base(Fn&& allocGetter)
+      : m_AllocatorGetter{std::forward<Fn>(allocGetter)}
+    {
+      if(!m_AllocatorGetter)
+        throw std::logic_error("allocation_info must be supplied with a non-null function object");
+    }
+
+    allocation_info_base(const allocation_info_base&) = default;
+
+    [[nodiscard]]
+    int count(const Container& c) const noexcept
+    {        
+      return m_AllocatorGetter(c).allocs();
+    }
+
+    template<class... Args>
+    Allocator make_allocator(Args&&... args) const
+    {
+      return Allocator{std::forward<Args>(args)...};
+    }
+
+    [[nodiscard]]
+    Allocator allocator(const Container& c) const
+    {
+      return m_AllocatorGetter(c);
+    }
+  protected:
+    ~allocation_info_base() = default;
+
+    allocation_info_base(allocation_info_base&&) noexcept = default;
+
+    allocation_info_base& operator=(const allocation_info_base&)     = default;
+    allocation_info_base& operator=(allocation_info_base&&) noexcept = default;
+  private:
+    using getter = std::function<Allocator(const Container&)>;
+
+    getter m_AllocatorGetter;
+  };
 
   template<class Container, class Allocator>
   class allocation_checker
@@ -219,7 +264,7 @@ namespace sequoia::unit_testing::impl
     }     
 
     [[nodiscard]]
-    allocation_info<Container, Allocator> info() const noexcept
+    const allocation_info<Container, Allocator>& info() const noexcept
     {
       return m_Info;
     }
@@ -557,5 +602,11 @@ namespace sequoia::unit_testing::impl
 
       check(combine_messages(description, "Mutation is not doing anything following copy assignment/ broken value semantics"), logger, v != y);
     }
-  }  
+  }
+
+  template<class Logger, class T, class Mutator, class... Allocators>
+  void check_regular_semantics(std::string_view description, Logger& logger, const T& x, const T& y, Mutator yMutator, allocation_checker<T, std::scoped_allocator_adaptor<Allocators...>> checker)
+  {
+    // TO DO!
+  }
 }

@@ -61,9 +61,12 @@ namespace sequoia
     template<class T, class SharingPolicy> struct bucketed_storage_traits
     {
       constexpr static bool throw_on_range_error{true};
-
-      template<class S> using buckets_type   = std::vector<S, std::allocator<S>>; 
-      template<class S> using container_type = std::vector<S, std::allocator<S>>; 
+      
+      template<class S>
+      using container_type = std::vector<S>;
+      
+      template<class S>
+      using buckets_type = std::vector<std::vector<S>>;
     };
     
     template<class T, class SharingPolicy=data_sharing::independent<T>, class Traits=bucketed_storage_traits<T, SharingPolicy>>
@@ -71,19 +74,15 @@ namespace sequoia
     {
     private:
       friend struct sequoia::impl::assignment_helper;
-      template<class S> using buckets_template   = typename Traits::template buckets_type<S>;
-      template<class S> using container_template = typename Traits::template container_type<S>;
-        
+
       using held_type    = typename SharingPolicy::handle_type;
-      using bucket_type  = container_template<held_type>;
-      using storage_type = buckets_template<bucket_type>;
+      using storage_type = typename Traits::template buckets_type<held_type>;
     public:
-      using value_type                = T;
-      using size_type                 = typename bucket_type::size_type;
-      using index_type                = size_type;
-      using allocator_type            = typename bucket_type::allocator_type;
-      using partitions_allocator_type = typename storage_type::allocator_type;
-      using sharing_policy_type       = SharingPolicy;
+      using value_type           = T;
+      using size_type            = typename storage_type::size_type;
+      using index_type           = size_type;
+      using allocator_type       = typename storage_type::allocator_type;
+      using sharing_policy_type  = SharingPolicy;
 
       using partition_iterator               = partition_iterator<Traits, SharingPolicy, size_type>;
       using const_partition_iterator         = const_partition_iterator<Traits, SharingPolicy, size_type>;
@@ -92,23 +91,22 @@ namespace sequoia
 
       constexpr static bool throw_on_range_error{Traits::throw_on_range_error};
 
-      static_assert(std::allocator_traits<allocator_type>::is_always_equal::value
-                    || (std::allocator_traits<allocator_type>::propagate_on_container_copy_assignment::value && std::allocator_traits<allocator_type>::propagate_on_container_move_assignment::value && std::allocator_traits<allocator_type>::propagate_on_container_swap::value));
+      /*static_assert(std::allocator_traits<allocator_type>::is_always_equal::value
+        || (std::allocator_traits<allocator_type>::propagate_on_container_copy_assignment::value && std::allocator_traits<allocator_type>::propagate_on_container_move_assignment::value && std::allocator_traits<allocator_type>::propagate_on_container_swap::value));*/
       
-      bucketed_storage() noexcept(noexcept(partitions_allocator_type{})) = default;
+      bucketed_storage() noexcept(noexcept(allocator_type{})) = default;
 
-      explicit bucketed_storage(const partitions_allocator_type& partitionsAllocator) noexcept
-        : m_Buckets(partitionsAllocator) {}
+      explicit bucketed_storage(const allocator_type& allocator) noexcept
+        : m_Buckets(allocator) {}
 
       bucketed_storage(std::initializer_list<std::initializer_list<T>> list,
-                       const partitions_allocator_type& partitionsAllocator = partitions_allocator_type{},
                        const allocator_type& allocator = allocator_type{})
-        : m_Buckets(partitionsAllocator)
+        : m_Buckets(allocator)
       {
         m_Buckets.reserve(list.size());
         for(auto iter{list.begin()}; iter != list.end(); ++iter)
         { 
-          add_slot(allocator);
+          add_slot();
           const auto dist{std::distance(list.begin(), iter)};          
           m_Buckets[dist].reserve(iter->size());
           for(const auto& element : (*iter))
@@ -122,26 +120,30 @@ namespace sequoia
         : bucketed_storage(partition_impl::copy_constant<directCopy>{}, in)
       {}
 
-      bucketed_storage(const bucketed_storage& in, const partitions_allocator_type& partitionAllocator)
-        : bucketed_storage{in, partitionAllocator, [&in](int64_t i) { return in.m_Buckets[i].get_allocator();}}
-      {}
+     bucketed_storage(const bucketed_storage& in, const allocator_type& allocator)
+        : m_Buckets(allocator)
+      {
+        m_Buckets.reserve(in.m_Buckets.size());
 
-      bucketed_storage(const bucketed_storage& in, const partitions_allocator_type& partitionAllocator, const allocator_type& allocator)
-        : bucketed_storage{in, partitionAllocator, [allocator](int64_t) { return allocator; }}
-      {}
+        partition_impl::data_duplicator<SharingPolicy> duplicator;
+        for(auto i{in.m_Buckets.cbegin()}; i != in.m_Buckets.cend(); ++i)
+        {
+          const auto& bucket{*i};
+          const auto dist{std::distance(in.m_Buckets.cbegin(), i)};
+          add_slot();
+          m_Buckets.back().reserve(in.m_Buckets[dist].size());
+          for(const auto& elt : bucket)
+          {
+            m_Buckets.back().push_back(duplicator.duplicate(elt));
+          }
+        }
+      }
 
       bucketed_storage(bucketed_storage&& in) noexcept = default;
 
-      bucketed_storage(bucketed_storage&& in, const partitions_allocator_type& partitionsAllocator, const allocator_type& allocator)
-        : m_Buckets(partitionsAllocator)
-      {
-        m_Buckets.reserve(in.m_Buckets.size());
-        
-        for(auto&& bucket : in.m_Buckets)
-        {
-          m_Buckets.emplace_back(std::move(bucket), allocator);
-        }
-      }
+      bucketed_storage(bucketed_storage&& in, const allocator_type& allocator)
+        : m_Buckets(std::move(in).m_Buckets, allocator)
+      {}
 
       bucketed_storage& operator=(bucketed_storage&& in) = default;
       
@@ -151,7 +153,7 @@ namespace sequoia
         {
           auto allocGetter{
             [](const  bucketed_storage& s){
-              return s.get_partitions_allocator();
+              return s.get_allocator();
             }
           };
           sequoia::impl::assignment_helper::assign(*this, in, allocGetter);
@@ -203,31 +205,26 @@ namespace sequoia
         }        
       }
 
-      allocator_type get_allocator(const size_type i) const
-      {
-        return m_Buckets[i].get_allocator();
-      }
-
-      partitions_allocator_type get_partitions_allocator() const
+      allocator_type get_allocator() const
       {
         return m_Buckets.get_allocator();
       }
 
-      void add_slot(const allocator_type& allocator=allocator_type{})
+      void add_slot()
       {        
-        m_Buckets.emplace_back(allocator);
+        m_Buckets.emplace_back();
       }
 
-      void insert_slot(const size_type pos, const allocator_type& allocator = allocator_type{})
+      void insert_slot(const size_type pos)
       {
         if(pos < num_partitions())
         {
           auto iter{m_Buckets.begin() + pos};
-          m_Buckets.insert(iter, std::vector<held_type, allocator_type>(allocator));
+          m_Buckets.emplace(iter);
         }
         else
         {
-          add_slot(allocator);
+          add_slot();
         }
       }
 
@@ -444,12 +441,6 @@ namespace sequoia
       {
         return !(lhs == rhs);
       }
-    protected:
-      void reset(const partitions_allocator_type& partitionsAllocator) noexcept
-      {
-        const storage_type buckets(partitionsAllocator);
-        m_Buckets = buckets;
-      }
     private:
       constexpr static auto npos{partition_iterator::npos};
       constexpr static bool directCopy{partition_impl::direct_copy_v<SharingPolicy, T>};
@@ -464,24 +455,10 @@ namespace sequoia
         : bucketed_storage(in, in.m_Buckets.get_allocator())
       {}
 
-      template<class AllocGetter>
-      bucketed_storage(const bucketed_storage& in, const partitions_allocator_type& partitionAllocator, AllocGetter getter)
-        : m_Buckets(partitionAllocator)
+      void reset(const allocator_type& allocator) noexcept
       {
-        m_Buckets.reserve(in.m_Buckets.size());
-
-        partition_impl::data_duplicator<SharingPolicy> duplicator;
-        for(auto i{in.m_Buckets.cbegin()}; i != in.m_Buckets.cend(); ++i)
-        {
-          const auto& bucket{*i};
-          const auto dist{std::distance(in.m_Buckets.cbegin(), i)};
-          add_slot(getter(dist));
-          m_Buckets.back().reserve(in.m_Buckets[dist].size());
-          for(const auto& elt : bucket)
-          {
-            m_Buckets.back().push_back(duplicator.duplicate(elt));
-          }
-        }
+        const storage_type buckets(allocator);
+        m_Buckets = buckets;
       }
       
       void check_range(const size_type index) const

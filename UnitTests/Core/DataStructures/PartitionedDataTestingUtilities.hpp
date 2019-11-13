@@ -12,6 +12,8 @@
 
 #include "PartitionedData.hpp"
 
+#include <scoped_allocator>
+
 namespace sequoia::unit_testing
 {  
   namespace impl
@@ -160,8 +162,21 @@ namespace sequoia::unit_testing
   {
     constexpr static bool throw_on_range_error{true};
 
-    template<class S> using buckets_type   = std::vector<S, shared_counting_allocator<S, PropagateCopy, PropagateMove, PropagateSwap>>; 
-    template<class S> using container_type = std::vector<S, shared_counting_allocator<S, true, true, true>>; 
+    template<class S>
+    using allocator_template = shared_counting_allocator<S, PropagateCopy, PropagateMove, PropagateSwap>;
+
+    template<class S>
+    using allocator_type
+      = std::scoped_allocator_adaptor<
+          allocator_template<S>,
+          allocator_template<typename S::value_type>
+        >;
+
+    template<class S>
+    using container_type = std::vector<S, allocator_template<S>>;
+    
+    template<class S>
+    using buckets_type = std::vector<container_type<S>, allocator_type<container_type<S>>>;
   };
 
   template
