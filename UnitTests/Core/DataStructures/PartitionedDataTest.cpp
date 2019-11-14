@@ -610,13 +610,13 @@ namespace sequoia
 
       auto outerAllocGetter{
         [](const storage& s) {
-          return s.get_allocator().outer_allocator();
+          return s.get_allocator();
         }        
       };
 
       auto innerAllocGetter{
         [](const storage& s) {
-          return s.get_allocator().inner_allocator().outer_allocator();
+          return s.get_allocator().inner_allocator();
         }
       };
 

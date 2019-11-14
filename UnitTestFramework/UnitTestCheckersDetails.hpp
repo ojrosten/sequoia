@@ -628,7 +628,7 @@ namespace sequoia::unit_testing::impl
   {
     typename Logger::sentinel s{logger, add_type_info<T>(description)};
 
-    check_common_regular_semantics(description, logger, x, y, std::move(yMutator), allocation_checker{x, y, checker.info().template unpack<I>()}...);
+    check_common_regular_semantics(description, logger, x, y, yMutator, allocation_checker{x, y, checker.info().template unpack<I>()}...);
 
     // TO DO
   }

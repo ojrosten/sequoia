@@ -323,16 +323,29 @@ namespace sequoia
         , m_Predictions{std::move(predictions)}
       {}
 
-      template<std::size_t I> auto unpack() const
+      template<std::size_t I> decltype(auto) unpack() const
       {
-        auto scopedGetter{[getter=this->make_getter()](const Container& c){
-            return get<I>(getter(c));
-          }
-        };
+        if constexpr(I==0)
+        {
+          return *this;
+        }
+        else
+        {
+          auto scopedGetter{[getter=this->make_getter()](const Container& c){
+              return get<I>(getter(c));
+            }
+          };
 
-        using Alloc = decltype(scopedGetter(std::declval<Container>()));
+          using Alloc = decltype(scopedGetter(std::declval<Container>()));
 
-        return allocation_info<Container, Alloc>{scopedGetter, m_Predictions[I]};
+          return allocation_info<Container, Alloc>{scopedGetter, m_Predictions[I]};
+        }
+      }
+
+      [[nodiscard]]
+      const allocation_predictions& get_predictions() const noexcept
+      {
+        return m_Predictions[0];
       }
     private:
       template<std::size_t I, class... As>
