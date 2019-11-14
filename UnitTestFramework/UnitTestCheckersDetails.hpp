@@ -618,7 +618,7 @@ namespace sequoia::unit_testing::impl
     {
       if constexpr (sizeof...(Allocators) > 0)
       {
-        check_allocations(description, logger, y, yMutator, allocation_checker<T, Allocators>{y, 0, checkers.info()}...);
+        check_allocations(description, logger, y, yMutator, allocation_checker{y, 0, checkers.info()}...);
       }
     }
   }
