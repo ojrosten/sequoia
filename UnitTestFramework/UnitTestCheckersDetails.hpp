@@ -570,7 +570,7 @@ namespace sequoia::unit_testing::impl
   }
 
   template<class Logger, class T, class Mutator, class... Allocators>
-  bool check_common_regular_semantics(std::string_view description, Logger& logger, const T& x, const T& y, Mutator yMutator, allocation_checker<T, Allocators>... checkers)
+  bool check_regular_semantics(std::string_view description, Logger& logger, const T& x, const T& y, Mutator yMutator, allocation_checker<T, Allocators>... checkers)
   {
     constexpr bool nullMutator{std::is_same_v<Mutator, null_mutator>};
     constexpr bool checkAllocs{sizeof...(Allocators) > 0};
@@ -633,16 +633,10 @@ namespace sequoia::unit_testing::impl
     return true;
   }
 
-  template<class Logger, class T, class Mutator>
-  void check_regular_semantics(std::string_view description, Logger& logger, const T& x, const T& y, Mutator yMutator)
-  {
-    check_common_regular_semantics(description, logger, x, y, yMutator);
-  }
-
   template<class Logger, class T, class Mutator, class... Allocators, std::size_t... I>
   void check_regular_semantics(std::string_view description, Logger& logger, const T& x, const T& y, Mutator yMutator, std::tuple<allocation_checker<T, Allocators>...> checkers, std::index_sequence<I...>)
   {
-    check_common_regular_semantics(description, logger, x, y, std::move(yMutator), std::get<I>(checkers)...);
+    impl::check_regular_semantics(description, logger, x, y, std::move(yMutator), std::get<I>(checkers)...);
   }
 
   template<class Logger, class T, class Mutator, class... Allocators>
