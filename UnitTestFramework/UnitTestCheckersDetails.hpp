@@ -633,18 +633,10 @@ namespace sequoia::unit_testing::impl
     return true;
   }
 
-  template<class Logger, class T, class Mutator, class... Allocators>
-  void check_regular_semantics(std::string_view description, Logger& logger, const T& x, const T& y, Mutator yMutator, allocation_checker<T, Allocators>... checkers)
+  template<class Logger, class T, class Mutator>
+  void check_regular_semantics(std::string_view description, Logger& logger, const T& x, const T& y, Mutator yMutator)
   {
-    typename Logger::sentinel s{logger, add_type_info<T>(description)};
-
-    if(check_common_regular_semantics(description, logger, x, y, yMutator, checkers...))
-    {
-      if constexpr (sizeof...(Allocators) > 0)
-      {
-        //check_allocations(description, logger, y, yMutator, allocation_checker{y, 0, checkers.info()}...);
-      }
-    }
+    check_common_regular_semantics(description, logger, x, y, yMutator);
   }
 
   template<class Logger, class T, class Mutator, class... Allocators, std::size_t... I>
@@ -658,21 +650,4 @@ namespace sequoia::unit_testing::impl
   {
     check_regular_semantics(description, logger, x, y, std::move(yMutator), std::move(checkers), std::make_index_sequence<sizeof...(Allocators)>{});
   }
-
-  /*
-  template<class Logger, class T, class Mutator, class... Allocators, std::size_t... I>
-  void check_regular_semantics(std::string_view description, Logger& logger, const T& x, const T& y, Mutator yMutator, allocation_checker<T, std::scoped_allocator_adaptor<Allocators...>> checker, std::index_sequence<I...>)
-  {
-    typename Logger::sentinel s{logger, add_type_info<T>(description)};
-
-    check_common_regular_semantics(description, logger, x, y, yMutator, allocation_checker{x, y, checker.info().template unpack<I>()}...);
-
-    // TO DO
-  }
-
-  template<class Logger, class T, class Mutator, class... Allocators>
-  void check_regular_semantics(std::string_view description, Logger& logger, const T& x, const T& y, Mutator yMutator, allocation_checker<T, std::scoped_allocator_adaptor<Allocators...>> checker)
-  {
-    check_regular_semantics(description, logger, x, y, std::move(yMutator), std::move(checker), std::make_index_sequence<sizeof...(Allocators)>{});
-    }*/
 }
