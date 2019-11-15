@@ -288,7 +288,7 @@ namespace sequoia::unit_testing::impl
       auto message{combine_messages(combine_messages(description, detail), suffix)};
 
       check_equality(std::move(message), logger, current - previous, prediction);
-    }
+    }    
 
     template<class Logger>
     static void check_copy(std::string_view description, std::string_view suffix, Logger& logger, const Container& container, const allocation_info<Container, Allocator>& info, const int previous, const int prediction)
@@ -315,7 +315,29 @@ namespace sequoia::unit_testing::impl
     }
   };
 
-   //================================ Variadic Allocation Checking ================================//
+  template<class Container, class... Allocators, std::size_t... I>
+  [[nodiscard]]
+  auto make_allocation_checkers(const Container& x, const Container& y, const allocation_info<Container, std::scoped_allocator_adaptor<Allocators...>>& info, std::index_sequence<I...>)
+  {
+    return std::make_tuple(allocation_checker{x, y, info.template unpack<I>()}...);
+  }
+
+  template<class Container, class... Allocators>
+  [[nodiscard]]
+  auto make_allocation_checkers(const Container& x, const Container& y, const allocation_info<Container, std::scoped_allocator_adaptor<Allocators...>>& info)
+  {
+    return make_allocation_checkers(x, y, info, std::make_index_sequence<sizeof...(Allocators)>{});
+  }
+
+  template<class Container, class Allocator>
+  [[nodiscard]]
+  std::tuple<allocation_checker<Container, Allocator>>
+  make_allocation_checkers(const Container& x, const Container& y, const allocation_info<Container, Allocator>& info)
+  {
+    return {{x, y, info}};
+  }
+
+  //================================ Variadic Allocation Checking ================================//
 
   template<class Logger, class CheckFn, class Container, class Allocator, class... Allocators>
   void check_allocation(std::string_view description, Logger& logger, CheckFn check, const allocation_checker<Container, Allocator>& checker, const allocation_checker<Container, Allocators>&... moreCheckers)
@@ -542,7 +564,9 @@ namespace sequoia::unit_testing::impl
       Container u{x}, v{y};
 
       check_swap_allocations(description, logger, u, v, y, yMutator, allocation_checker<Container, Allocators>{u, v, checkers.info()}...);
-    }    
+    }
+
+    check_allocations(description, logger, y, yMutator, allocation_checker{y, 0, checkers.info()}...);
   }
 
   template<class Logger, class T, class Mutator, class... Allocators>
@@ -618,11 +642,24 @@ namespace sequoia::unit_testing::impl
     {
       if constexpr (sizeof...(Allocators) > 0)
       {
-        check_allocations(description, logger, y, yMutator, allocation_checker{y, 0, checkers.info()}...);
+        //check_allocations(description, logger, y, yMutator, allocation_checker{y, 0, checkers.info()}...);
       }
     }
   }
 
+  template<class Logger, class T, class Mutator, class... Allocators, std::size_t... I>
+  void check_regular_semantics(std::string_view description, Logger& logger, const T& x, const T& y, Mutator yMutator, std::tuple<allocation_checker<T, Allocators>...> checkers, std::index_sequence<I...>)
+  {
+    check_common_regular_semantics(description, logger, x, y, std::move(yMutator), std::get<I>(checkers)...);
+  }
+
+  template<class Logger, class T, class Mutator, class... Allocators>
+  void check_regular_semantics(std::string_view description, Logger& logger, const T& x, const T& y, Mutator yMutator, std::tuple<allocation_checker<T, Allocators>...> checkers)
+  {
+    check_regular_semantics(description, logger, x, y, std::move(yMutator), std::move(checkers), std::make_index_sequence<sizeof...(Allocators)>{});
+  }
+
+  /*
   template<class Logger, class T, class Mutator, class... Allocators, std::size_t... I>
   void check_regular_semantics(std::string_view description, Logger& logger, const T& x, const T& y, Mutator yMutator, allocation_checker<T, std::scoped_allocator_adaptor<Allocators...>> checker, std::index_sequence<I...>)
   {
@@ -637,5 +674,5 @@ namespace sequoia::unit_testing::impl
   void check_regular_semantics(std::string_view description, Logger& logger, const T& x, const T& y, Mutator yMutator, allocation_checker<T, std::scoped_allocator_adaptor<Allocators...>> checker)
   {
     check_regular_semantics(description, logger, x, y, std::move(yMutator), std::move(checker), std::make_index_sequence<sizeof...(Allocators)>{});
-  }
+    }*/
 }

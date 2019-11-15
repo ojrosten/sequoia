@@ -367,13 +367,7 @@ namespace sequoia
     template<class Logger, class T, class Mutator, class... Allocators>
     void check_regular_semantics(std::string_view description, Logger& logger, const T& x, const T& y, Mutator yMutator, allocation_info<T, Allocators>... allocationInfo)
     {
-      impl::check_regular_semantics(description, logger, x, y, yMutator, impl::allocation_checker<T, Allocators>{x, y, allocationInfo}...);
-    }
-
-    template<class Logger, class T, class Mutator, class... Allocators>
-    void check_regular_semantics(std::string_view description, Logger& logger, const T& x, const T& y, Mutator yMutator, allocation_info<T, std::scoped_allocator_adaptor<Allocators...>> allocationInfo)
-    {
-      impl::check_regular_semantics(description, logger, x, y, yMutator, impl::allocation_checker<T, std::scoped_allocator_adaptor<Allocators...>>{x, y, allocationInfo});
+      impl::check_regular_semantics(description, logger, x, y, std::move(yMutator), std::tuple_cat(impl::make_allocation_checkers(x, y, allocationInfo)...));
     }
 
     template<class Logger, class T>
@@ -632,12 +626,6 @@ namespace sequoia
       void check_regular_semantics(std::string_view description, const T& x, const T& y, Mutator m, allocation_info<T, Allocators>... allocationInfo)
       {
         unit_testing::check_regular_semantics(description, m_Logger, x, y, m, allocationInfo...);
-      }
-
-      template<class T, class Mutator, class... Allocators>
-      void check_regular_semantics(std::string_view description, const T& x, const T& y, Mutator m, allocation_info<T, std::scoped_allocator_adaptor<Allocators...>> allocationInfo)
-      {
-        unit_testing::check_regular_semantics(description, m_Logger, x, y, m, allocationInfo);
       }
       
       template<class F, class S>

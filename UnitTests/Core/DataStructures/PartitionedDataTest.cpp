@@ -625,7 +625,7 @@ namespace sequoia
       check_equality(LINE(makeMessage("")), outerAllocGetter(s).allocs(), 0);
       check_equality(LINE(makeMessage("Only a single allocation necessary due to reservation")), outerAllocGetter(t).allocs(), 1);
       check_equality(LINE(makeMessage("Only a single allocation per bucket due to reservation")), innerAllocGetter(t).allocs(), 2);
-
+      /*
       auto partitionMaker{
         [](storage& s) {
           s.add_slot();
@@ -642,7 +642,7 @@ namespace sequoia
 
       check_regular_semantics(LINE("Regular Semantics"), s, t, partitionMaker,
         info{allocGetter, {allocation_predictions{0, {1,1}, {1,1}}, allocation_predictions{0, {2,0}, {2,2}}}});
-
+      */
       /*
       using outer_allocator = typename allocator::outer_allocator_type;
       using inner_allocator = typename allocator::inner_allocator_type;
