@@ -55,7 +55,7 @@ namespace sequoia::impl
   template<class Fn, class... Ts, std::size_t... I>
   void filter(Fn f, std::index_sequence<I...>, Ts... t)
   {
-    f(get<I>(std::tuple<Ts...>(t...))...);
+    f(get<I>(std::tuple<Ts...>{t...})...);
   }
 }
 

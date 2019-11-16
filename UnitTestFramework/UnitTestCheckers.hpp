@@ -367,7 +367,12 @@ namespace sequoia
     template<class Logger, class T, class Mutator, class... Allocators>
     void check_regular_semantics(std::string_view description, Logger& logger, const T& x, const T& y, Mutator yMutator, allocation_info<T, Allocators>... allocationInfo)
     {
-      impl::check_regular_semantics(description, logger, x, y, std::move(yMutator), std::tuple_cat(impl::make_allocation_checkers(x, y, allocationInfo)...));
+      typename Logger::sentinel s{logger, add_type_info<T>(description)};
+      
+      if(impl::check_regular_semantics(description, logger, x, y, yMutator, std::tuple_cat(impl::make_allocation_checkers(allocationInfo, x, y)...)))
+      {
+        impl::check_para_constructor_allocations(description, logger, y, yMutator, allocationInfo...);
+      }
     }
 
     template<class Logger, class T>
