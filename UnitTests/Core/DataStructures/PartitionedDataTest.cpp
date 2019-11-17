@@ -683,8 +683,8 @@ namespace sequoia
 
       // null; [0,2][1]
       storage
-        s{partitions_allocator{}, allocator{}},
-        t{{{0,2}, {1}}, partitions_allocator{}, allocator{}};
+        s{allocator{}, partitions_allocator{}},
+        t{{{0,2}, {1}}, allocator{}, partitions_allocator{}};
 
       check_equivalence(LINE(makeMessage("")), s, prediction{});
       check_equivalence(LINE(makeMessage("")), t, prediction{{0,2}, {1}});
@@ -700,13 +700,13 @@ namespace sequoia
       };
         
       check_regular_semantics(LINE(add_type_info<storage>("Regular Semantics")), s, t, partitionMaker,
-                              allocation_info<storage, partitions_allocator>{partitionsAllocGetter, {0, {1,1}, {1, 1}}},
-                              allocation_info<storage, allocator>{allocGetter, {0, {1,0}, {1, 1}}});
+                              allocation_info<storage, allocator>{allocGetter, {0, {1,0}, {1, 1}}},
+                              allocation_info<storage, partitions_allocator>{partitionsAllocGetter, {0, {1,1}, {1, 1}}});
 
       s.add_slot();
       // []
 
-      check_equality(LINE(makeMessage("")), s, storage{{{}}, partitions_allocator{}, allocator{}});
+      check_equality(LINE(makeMessage("")), s, storage{{{}}, allocator{}, partitions_allocator{}});
     }
 
     template<template<class> class SharingPolicy>

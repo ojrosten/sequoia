@@ -994,6 +994,7 @@ namespace sequoia::unit_testing
       NodeWeightStorageTraits
   >::execute_operations()
   {
+    /*
     using edge_partitions_allocator = typename graph_t::edge_partitions_allocator_type;
     using edge_allocator = typename graph_t::edge_allocator_type;
 
@@ -1031,7 +1032,7 @@ namespace sequoia::unit_testing
     {
       check_regular_semantics(LINE("Regular Semantics"), g, graph_t{{{}}, edge_partitions_allocator{}, edge_allocator{}});
 
-      /*
+      
       // x=====x
       using edge_init_t = typename graph_t::edge_init_type;
 
@@ -1040,7 +1041,7 @@ namespace sequoia::unit_testing
       auto nodeMaker{
         [](graph_t& g) { g.add_node(); }
       };
-      */
+     
     }
     else
     {
@@ -1049,6 +1050,7 @@ namespace sequoia::unit_testing
 
       check_regular_semantics(LINE("Regular Semantics"), g, graph_t{{{}}, edge_partitions_allocator{}, edge_allocator{}, {{1.0, -1.0}}, node_allocator{}});
     }
+  */
   }
 
    template
@@ -1071,19 +1073,18 @@ namespace sequoia::unit_testing
       NodeWeightStorageTraits
   >::execute_operations()
   {
-    using edge_partitions_allocator = typename graph_t::edge_partitions_allocator_type;
     using edge_allocator = typename graph_t::edge_allocator_type;
 
     auto maker{
       [](){
         if constexpr(std::is_empty_v<NodeWeight>)
         {
-          return graph_t(edge_partitions_allocator{});
+          return graph_t(edge_allocator{});
         }
         else
         {
           using node_allocator = typename graph_t::node_weight_container_type::allocator_type;
-          return graph_t{edge_partitions_allocator{}, node_allocator{}};
+          return graph_t{edge_allocator{}, node_allocator{}};
         }
       }
     };
@@ -1096,25 +1097,25 @@ namespace sequoia::unit_testing
 
     if constexpr(std::is_empty_v<NodeWeight>)
     {
-      check_regular_semantics(LINE("Regular Semantics"), g, graph_t{{{}}, edge_partitions_allocator{}, edge_allocator{}});
+      check_regular_semantics(LINE("Regular Semantics"), g, graph_t{{{}}, edge_allocator{}});
     }
     else
     {
       using node_allocator = typename graph_t::node_weight_container_type::allocator_type;
-      check_regular_semantics(LINE("Regular Semantics"), g, graph_t{{{}}, edge_partitions_allocator{}, edge_allocator{}, node_allocator{}});
+      check_regular_semantics(LINE("Regular Semantics"), g, graph_t{{{}}, edge_allocator{}, node_allocator{}});
 
-      check_regular_semantics(LINE("Regular Semantics"), g, graph_t{{{}}, edge_partitions_allocator{}, edge_allocator{}, {{1.0, -1.0}}, node_allocator{}});
+      check_regular_semantics(LINE("Regular Semantics"), g, graph_t{{{}}, edge_allocator{}, {{1.0, -1.0}}, node_allocator{}});
     }
 
     g.add_node(edge_allocator{});
     if constexpr(std::is_empty_v<NodeWeight>)
     {
-      check_equality(LINE(""), g, graph_t{{{}}, edge_partitions_allocator{}, edge_allocator{}});
+      check_equality(LINE(""), g, graph_t{{{}}, edge_allocator{}});
     }
     else
     {
       using node_allocator = typename graph_t::node_weight_container_type::allocator_type;
-      check_equality(LINE(""), g, graph_t{{{}}, edge_partitions_allocator{}, edge_allocator{}, node_allocator{}});
+      check_equality(LINE(""), g, graph_t{{{}}, edge_allocator{}, node_allocator{}});
     }
 
     check_equality(LINE(""), g.edges_capacity(0), 0ul);
@@ -1132,12 +1133,12 @@ namespace sequoia::unit_testing
     g.insert_node(0u, edge_allocator{});
     if constexpr(std::is_empty_v<NodeWeight>)
     {
-      check_equality(LINE(""), g, graph_t{{{}, {}}, edge_partitions_allocator{}, edge_allocator{}});
+      check_equality(LINE(""), g, graph_t{{{}, {}}, edge_allocator{}});
     }
     else
     {
       using node_allocator = typename graph_t::node_weight_container_type::allocator_type;
-      check_equality(LINE(""), g, graph_t{{{}, {}}, edge_partitions_allocator{}, edge_allocator{}, node_allocator{}});
+      check_equality(LINE(""), g, graph_t{{{}, {}}, edge_allocator{}, node_allocator{}});
     }
   }
 

@@ -11,6 +11,7 @@
     \brief Implementation for the storage of graph edges.
  */
 
+#include "DataStructuresTypeTraits.hpp"
 #include "GraphDetails.hpp"
 #include "Algorithms.hpp"
 #include "TypeTraits.hpp"
@@ -34,6 +35,8 @@ namespace sequoia
 
   namespace maths
   {
+    struct partitions_allocator_tag{};
+    
     template
     <      
       directed_flavour Directedness,     
@@ -220,7 +223,7 @@ namespace sequoia
       constexpr connectivity(connectivity&& c, const Allocator& a, const Allocators&... as)
         : m_Edges{std::move(c.m_Edges), a, as...}
       {}
-      
+
       ~connectivity() = default;
 
       constexpr connectivity& operator=(connectivity&&) = default;
@@ -310,20 +313,14 @@ namespace sequoia
         
         m_Edges.swap_partitions(i, j);
       }
-
-      template<class E=edge_storage_type, std::enable_if_t<has_global_element_allocator_v<E>,int> = 0>
+      
       auto get_edge_allocator() const
       {
         return m_Edges.get_allocator();
       }
 
-      template<class E=edge_storage_type, std::enable_if_t<has_individual_partition_allocators_v<E>,int> = 0>
-      auto get_edge_allocator(const size_type i) const
-      {
-        return m_Edges.get_allocator(i);
-      }
-
-      auto get_edge_partitions_allocator() const
+      template<std::enable_if_t<has_partitions_allocator_type_v<edge_storage_type>, int> = 0>
+      auto get_edge_allocator(partitions_allocator_tag) const
       {
         return m_Edges.get_partitions_allocator();
       }
@@ -390,16 +387,14 @@ namespace sequoia
         return m_Edges.end_partition(node);
       }
 
-      template<class... Allocators>
-      void add_node(const Allocators&... as)
+      void add_node()
       {        
-        m_Edges.add_slot(as...);
+        m_Edges.add_slot();
       }
 
-      template<class... Allocators>
-      void insert_node(const size_type node, const Allocators&... as)
+      void insert_node(const size_type node)
       {
-        m_Edges.insert_slot(node, as...);
+        m_Edges.insert_slot(node);
         fix_edge_data(node,
                       [](const auto targetNode, const auto node) { return targetNode >= node; },
                       [](const auto index) { return index + 1; });

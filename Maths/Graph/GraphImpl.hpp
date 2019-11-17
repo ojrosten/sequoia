@@ -309,10 +309,7 @@ namespace sequoia
 
           auto edgeAllocGetter{
             [](const graph_primitive& in){
-              if constexpr(has_global_element_allocator_v<edge_storage>)
-              {
-                return in.get_edge_allocator();
-              }            
+              return in.get_edge_allocator();
             }
           };
 
