@@ -633,10 +633,9 @@ namespace sequoia
       };
 
       using info = allocation_info<storage, allocator>;
-      using counts = allocation_predictions;
 
       check_regular_semantics(LINE("Regular Semantics"), s, t, partitionMaker,
-                              info{allocGetter, {counts{0, {1,1}, {1,1}}, counts{0, {2,0}, {2,2}}}});
+                              info{allocGetter, {{0, {1,1}, {1,1}}, {0, {2,0}, {2,2}}}});
       
       s.add_slot();
       // []
@@ -651,7 +650,7 @@ namespace sequoia
       };
 
       check_regular_semantics(LINE("Regular Semantics"), s, t, mutator,
-                              info{allocGetter, {counts{1, {1,1}, {1,1}}, counts{0, {2,1}, {2,2}}}});
+                              info{allocGetter, {{1, {1,1}, {1,1}}, {0, {2,1}, {2,2}}}});
     }
   
     template<class T, class SharingPolicy, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>

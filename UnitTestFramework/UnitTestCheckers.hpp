@@ -13,6 +13,7 @@
 
 #include "UnitTestCheckersDetails.hpp"
 
+#include "ArrayUtilities.hpp"
 #include "StatisticalAlgorithms.hpp"
 
 #include <chrono>
@@ -318,9 +319,9 @@ namespace sequoia
       constexpr static auto N{sizeof...(Allocators)};
 
       template<class Fn>
-      allocation_info(Fn&& allocGetter, std::array<allocation_predictions, N> predictions)
+      allocation_info(Fn&& allocGetter, std::initializer_list<allocation_predictions> predictions)
         : base_t{std::forward<Fn>(allocGetter)}
-        , m_Predictions{std::move(predictions)}
+        , m_Predictions{utilities::to_array<allocation_predictions, N>(predictions)}
       {}
 
       template<std::size_t I> decltype(auto) unpack() const

@@ -24,7 +24,17 @@ namespace sequoia::utilities
     [[nodiscard]]
     constexpr T to_element(std::initializer_list<InitType> l, const std::size_t i, Fn fn)
     {
-      return fn((i < l.size()) ? *(l.begin() + i) : InitType{});
+      if constexpr(std::is_default_constructible_v<InitType>)
+      {
+        return fn((i < l.size()) ? *(l.begin() + i) : InitType{});
+      }
+      else
+      {
+        if(i > l.size())
+          throw std::logic_error("Insuffucient arguments to initialize an array of objects which cannot be default constructed.");
+
+        return fn(*(l.begin() + i));
+      }
     }
     
     template<class T, std::size_t N, class InitType, std::size_t... I, class Fn>
@@ -38,7 +48,7 @@ namespace sequoia::utilities
   template<class T> struct identity_transform
   {
     [[nodiscard]]
-    constexpr T operator()(const T& t) const
+    constexpr const T& operator()(const T& t) const
     {
       return t;
     }
