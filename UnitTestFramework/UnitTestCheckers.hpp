@@ -246,25 +246,25 @@ namespace sequoia
       individual_allocation_predictions(int copyPrediction, int mutationPrediction)
         : copy{copyPrediction}          
         , mutation{mutationPrediction}
-        , copy_alloc{copyPrediction}
-        , move_alloc{copyPrediction}
+        , para_copy{copyPrediction}
+        , para_move{copyPrediction}
       {}
 
       individual_allocation_predictions(int copyPrediction, int mutationPrediction, int copyLikePrediction)
         : copy{copyPrediction}          
         , mutation{mutationPrediction}
-        , copy_alloc{copyLikePrediction}
-        , move_alloc{copyPrediction}
+        , para_copy{copyLikePrediction}
+        , para_move{copyPrediction}
       {}
       
       individual_allocation_predictions(int copyPrediction, int mutationPrediction, int copyLikePrediction, int moveLikePrediction)
         : copy{copyPrediction}          
         , mutation{mutationPrediction}
-        , copy_alloc{copyLikePrediction}
-        , move_alloc{moveLikePrediction}
+        , para_copy{copyLikePrediction}
+        , para_move{moveLikePrediction}
       {}
       
-      int copy{}, mutation{}, copy_alloc{}, move_alloc{};
+      int copy{}, mutation{}, para_copy{}, para_move{};
     };
 
     struct assignment_allocation_predictions
