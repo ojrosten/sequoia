@@ -314,6 +314,18 @@ namespace sequoia::unit_testing::impl
       check_allocation(description, "Mutation allocation", suffix, logger, container, info, m_SecondCount, prediction);
     }
   };
+  
+  template<class Fn, class... Ts, std::size_t... I>
+  void unpack_invoke(const std::tuple<Ts...>& t, Fn&& fn, std::index_sequence<I...>)
+  {
+    fn(std::get<I>(t)...);
+  }
+
+  template<class Fn, class... Ts>
+  void unpack_invoke(const std::tuple<Ts...>& t, Fn&& fn)
+  {
+    unpack_invoke(t, std::forward<Fn>(fn), std::make_index_sequence<sizeof...(Ts)>{});
+  }
 
   template<class Container, class... Allocators, class... Args, std::size_t... I>
   [[nodiscard]]
@@ -445,17 +457,16 @@ namespace sequoia::unit_testing::impl
 
     check_allocation(description, logger, checkFn, checker, moreCheckers...);
   }
-
-  template<class Logger, class Container, class... Allocators, std::size_t... I>
-  void check_para_copy_y_allocation(std::string_view description, Logger& logger, const Container& container, std::tuple<allocation_checker<Container, Allocators>...> checkers, std::index_sequence<I...>)
-  {
-    check_para_copy_y_allocation(description, logger, container, std::get<I>(checkers)...);
-  }
   
   template<class Logger, class Container, class... Allocators>
   void check_para_copy_y_allocation(std::string_view description, Logger& logger, const Container& container, std::tuple<allocation_checker<Container, Allocators>...> checkers)
   {
-    check_para_copy_y_allocation(description, logger, container, std::move(checkers), std::make_index_sequence<sizeof...(Allocators)>{});
+    auto fn{[description,&logger,&container](auto&&... checkers){
+        check_para_copy_y_allocation(description, logger, container, std::forward<decltype(checkers)>(checkers)...);
+      }
+    };
+
+    unpack_invoke(checkers, fn);    
   }
 
   template<class Logger, class Container, class Allocator, class... Allocators>
