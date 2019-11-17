@@ -316,15 +316,15 @@ namespace sequoia::unit_testing::impl
   };
   
   template<class Fn, class... Ts, std::size_t... I>
-  void unpack_invoke(const std::tuple<Ts...>& t, Fn&& fn, std::index_sequence<I...>)
+  decltype(auto) unpack_invoke(const std::tuple<Ts...>& t, Fn&& fn, std::index_sequence<I...>)
   {
-    fn(std::get<I>(t)...);
+    return fn(std::get<I>(t)...);
   }
 
   template<class Fn, class... Ts>
-  void unpack_invoke(const std::tuple<Ts...>& t, Fn&& fn)
+  decltype(auto) unpack_invoke(const std::tuple<Ts...>& t, Fn&& fn)
   {
-    unpack_invoke(t, std::forward<Fn>(fn), std::make_index_sequence<sizeof...(Ts)>{});
+    return unpack_invoke(t, std::forward<Fn>(fn), std::make_index_sequence<sizeof...(Ts)>{});
   }
 
   template<class Container, class... Allocators, class... Args, std::size_t... I>
@@ -689,6 +689,12 @@ namespace sequoia::unit_testing::impl
   template<class Logger, class T, class Mutator, class... Allocators>
   bool check_regular_semantics(std::string_view description, Logger& logger, const T& x, const T& y, Mutator yMutator, std::tuple<allocation_checker<T, Allocators>...> checkers)
   {
-    return check_regular_semantics(description, logger, x, y, std::move(yMutator), std::move(checkers), std::make_index_sequence<sizeof...(Allocators)>{});
+    auto fn{
+      [description,&logger,&x,&y,m=std::move(yMutator)](auto&&... checkers){
+        return impl::check_regular_semantics(description, logger, x, y, m, std::forward<decltype(checkers)>(checkers)...);
+      }
+    };
+
+    return unpack_invoke(checkers, fn);
   }
 }
