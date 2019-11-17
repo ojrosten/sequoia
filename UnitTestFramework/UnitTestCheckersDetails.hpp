@@ -466,7 +466,7 @@ namespace sequoia::unit_testing::impl
       }
     };
 
-    unpack_invoke(checkers, fn);    
+    unpack_invoke(checkers, fn);
   }
 
   template<class Logger, class Container, class Allocator, class... Allocators>
@@ -480,17 +480,16 @@ namespace sequoia::unit_testing::impl
 
     check_allocation(description, logger, checkFn, checker, moreCheckers...);
   }
-
-  template<class Logger, class Container, class... Allocators, std::size_t... I>
-  void check_para_move_y_allocation(std::string_view description, Logger& logger, const Container& container, std::tuple<allocation_checker<Container, Allocators>...> checkers, std::index_sequence<I...>)
-  {
-    check_para_move_y_allocation(description, logger, container, std::get<I>(checkers)...);
-  }
   
   template<class Logger, class Container, class... Allocators>
   void check_para_move_y_allocation(std::string_view description, Logger& logger, const Container& container, std::tuple<allocation_checker<Container, Allocators>...> checkers)
   {
-    check_para_move_y_allocation(description, logger, container, std::move(checkers), std::make_index_sequence<sizeof...(Allocators)>{});
+    auto fn{[description,&logger,&container](auto&&... checkers){
+        check_para_move_y_allocation(description, logger, container, std::forward<decltype(checkers)>(checkers)...);
+      }
+    };
+
+    unpack_invoke(checkers, fn);    
   }
 
   struct null_mutator
