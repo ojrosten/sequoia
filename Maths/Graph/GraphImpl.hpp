@@ -89,98 +89,122 @@ namespace sequoia
 
       template
       <
-        class EdgePartitionsAllocator,
-        class NodeAllocator,
-        class N=node_weight_type,
-        std::enable_if_t<enableNodeAllocation<N>, int>  = 0
-      >
-      constexpr graph_primitive(const EdgePartitionsAllocator& edgeParitionsAlloc, const NodeAllocator& nodeAlloc)
-        : Connectivity(edgeParitionsAlloc)
-        , Nodes(nodeAlloc)
-      {}
-
-      template
-      <
-        class EdgePartitionsAllocator,
         class EdgeAllocator,
         class NodeAllocator,
         class N=node_weight_type,
         std::enable_if_t<enableNodeAllocation<N>, int>  = 0
       >
-      constexpr graph_primitive(const EdgePartitionsAllocator& edgeParitionsAlloc, const EdgeAllocator& edgeAlloc, const NodeAllocator& nodeAlloc)
-        : Connectivity(edgeParitionsAlloc, edgeAlloc)
+      constexpr graph_primitive(const EdgeAllocator& edgeAlloc, const NodeAllocator& nodeAlloc)
+        : Connectivity(edgeAlloc)
+        , Nodes(nodeAlloc)
+      {}
+
+      template
+      <        
+        class EdgeAllocator,
+        class EdgePartitionsAllocator,
+        class NodeAllocator,
+        class N=node_weight_type,
+        std::enable_if_t<enableNodeAllocation<N>, int>  = 0
+      >
+      constexpr graph_primitive(const EdgeAllocator& edgeAlloc, const EdgePartitionsAllocator& edgeParitionsAlloc, const NodeAllocator& nodeAlloc)
+        : Connectivity(edgeAlloc, edgeParitionsAlloc)
         , Nodes(nodeAlloc)
       {}
 
       template
       <
-        class EdgePartitionsAllocator,
-        class N=node_weight_type,
-        std::enable_if_t<!enableNodeAllocation<N>, int>  = 0
-      >
-      constexpr graph_primitive(const EdgePartitionsAllocator& edgeParitionsAlloc)
-        : Connectivity(edgeParitionsAlloc)
-      {}
-
-      template
-      <
-        class EdgePartitionsAllocator,
         class EdgeAllocator,
         class N=node_weight_type,
         std::enable_if_t<!enableNodeAllocation<N>, int>  = 0
       >
-      constexpr graph_primitive(const EdgePartitionsAllocator& edgeParitionsAlloc, const EdgeAllocator& edgeAlloc)
-        : Connectivity(edgeParitionsAlloc, edgeAlloc)
+      constexpr graph_primitive(const EdgeAllocator& edgeAlloc)
+        : Connectivity(edgeAlloc)
       {}
 
       template
       <
+        class EdgeAllocator,
         class EdgePartitionsAllocator,
+        class N=node_weight_type,
+        std::enable_if_t<!enableNodeAllocation<N>, int>  = 0
+      >
+      constexpr graph_primitive(const EdgeAllocator& edgeAlloc, const EdgePartitionsAllocator& edgeParitionsAlloc)
+        : Connectivity(edgeAlloc, edgeParitionsAlloc)
+      {}
+
+      template
+      <        
         class EdgeAllocator,
         class NodeAllocator,
         class N=node_weight_type,
         std::enable_if_t<enableNodeAllocation<N>, int> = 0
       >
-      constexpr graph_primitive(edges_initializer edges, const EdgePartitionsAllocator& edgeParitionsAlloc, const EdgeAllocator& edgeAlloc, std::initializer_list<node_weight_type> nodeWeights, const NodeAllocator& nodeAlloc)
-        : Connectivity{edges, edgeParitionsAlloc, edgeAlloc}
+      constexpr graph_primitive(edges_initializer edges, const EdgeAllocator& edgeAlloc, std::initializer_list<node_weight_type> nodeWeights, const NodeAllocator& nodeAlloc)
+        : Connectivity{edges, edgeAlloc}
+        , Nodes{nodeWeights, nodeAlloc}
+      {}
+
+      template
+      <        
+        class EdgeAllocator,
+        class EdgePartitionsAllocator,
+        class NodeAllocator,
+        class N=node_weight_type,
+        std::enable_if_t<enableNodeAllocation<N>, int> = 0
+      >
+      constexpr graph_primitive(edges_initializer edges, const EdgeAllocator& edgeAlloc, const EdgePartitionsAllocator& edgeParitionsAlloc, std::initializer_list<node_weight_type> nodeWeights, const NodeAllocator& nodeAlloc)
+        : Connectivity{edges, edgeAlloc, edgeParitionsAlloc}
         , Nodes{nodeWeights, nodeAlloc}
       {}
 
       template
       <
-        class EdgePartitionsAllocator,
         class EdgeAllocator,
+        class EdgePartitionsAllocator,
         class... NodeWeights,
         class N=node_weight_type,
         std::enable_if_t<std::is_same_v<N, graph_impl::heterogeneous_tag>, int> = 0
       >
-      constexpr graph_primitive(edges_initializer edges, const EdgePartitionsAllocator& edgeParitionsAlloc, const EdgeAllocator& edgeAlloc, NodeWeights&&... nodeWeights)
-        : Connectivity{edges, edgeParitionsAlloc, edgeAlloc}
+      constexpr graph_primitive(edges_initializer edges, const EdgeAllocator& edgeAlloc, const EdgePartitionsAllocator& edgeParitionsAlloc, NodeWeights&&... nodeWeights)
+        : Connectivity{edges, edgeAlloc, edgeParitionsAlloc}
         , Nodes{std::forward<NodeWeights>(nodeWeights)...}
       {}
 
       template
       <
-        class EdgePartitionsAllocator,
         class EdgeAllocator,
         class NodeAllocator,
         class N=node_weight_type,
         std::enable_if_t<enableNodeAllocation<N>, int> = 0
       >
-      constexpr graph_primitive(edges_initializer edges, const EdgePartitionsAllocator& edgeParitionsAlloc, const EdgeAllocator& edgeAlloc, const NodeAllocator& nodeAlloc)
-        : Connectivity{edges, edgeParitionsAlloc, edgeAlloc}
+      constexpr graph_primitive(edges_initializer edges, const EdgeAllocator& edgeAlloc, const NodeAllocator& nodeAlloc)
+        : Connectivity{edges, edgeAlloc}
+        , Nodes(edges.size(), nodeAlloc)
+      {}
+      
+      template
+      <
+        class EdgeAllocator,
+        class EdgePartitionsAllocator,
+        class NodeAllocator,
+        class N=node_weight_type,
+        std::enable_if_t<enableNodeAllocation<N>, int> = 0
+      >
+      constexpr graph_primitive(edges_initializer edges, const EdgeAllocator& edgeAlloc, const EdgePartitionsAllocator& edgeParitionsAlloc, const NodeAllocator& nodeAlloc)
+        : Connectivity{edges, edgeAlloc, edgeParitionsAlloc}
         , Nodes(edges.size(), nodeAlloc)
       {}
 
       template
       <
-        class EdgePartitionsAllocator,
         class EdgeAllocator,
+        class EdgePartitionsAllocator,
         class N=node_weight_type,
         std::enable_if_t<!enableNodeAllocation<N>, int> = 0
       >
-      constexpr graph_primitive(edges_initializer edges, const EdgePartitionsAllocator& edgeParitionsAlloc, const EdgeAllocator& edgeAlloc)
-        : Connectivity{edges, edgeParitionsAlloc, edgeAlloc}
+      constexpr graph_primitive(edges_initializer edges, const EdgeAllocator& edgeAlloc, const EdgePartitionsAllocator& edgeParitionsAlloc)
+        : Connectivity{edges, edgeAlloc, edgeParitionsAlloc}
         , Nodes{}
       {}
 
@@ -201,36 +225,36 @@ namespace sequoia
 
       template
       <
-        class EdgePartitionsAllocator,
+        class EdgeAllocator,
         class NodeAllocator,
         class N=node_weight_type,
         std::enable_if_t<enableNodeAllocation<N>, int> = 0
       >
-      constexpr graph_primitive(const graph_primitive& in, const EdgePartitionsAllocator& edgeParitionsAlloc, const NodeAllocator& nodeAlloc)
-        : Connectivity{static_cast<const Connectivity&>(in), edgeParitionsAlloc}
+      constexpr graph_primitive(const graph_primitive& in, const EdgeAllocator& edgeAlloc, const NodeAllocator& nodeAlloc)
+        : Connectivity{static_cast<const Connectivity&>(in), edgeAlloc}
         , Nodes{static_cast<const Nodes&>(in), nodeAlloc}
       {}
 
       template
-      <
-        class EdgePartitionsAllocator,
+      <        
         class EdgeAllocator,
+        class EdgePartitionsAllocator,
         class N=node_weight_type,
         std::enable_if_t<!enableNodeAllocation<N>, int> = 0
       >
-      constexpr graph_primitive(const graph_primitive& in, const EdgePartitionsAllocator& edgeParitionsAlloc, const EdgeAllocator& edgeAlloc)
-        : Connectivity{static_cast<const Connectivity&>(in), edgeParitionsAlloc, edgeAlloc}
+      constexpr graph_primitive(const graph_primitive& in, const EdgeAllocator& edgeAlloc, const EdgePartitionsAllocator& edgeParitionsAlloc)
+        : Connectivity{static_cast<const Connectivity&>(in), edgeAlloc, edgeParitionsAlloc}
         , Nodes{static_cast<const Nodes&>(in)}
       {}
 
       template
       <
-        class EdgePartitionsAllocator,
+        class EdgeAllocator,
         class N=node_weight_type,
         std::enable_if_t<!enableNodeAllocation<N>, int> = 0
       >
-      constexpr graph_primitive(const graph_primitive& in, const EdgePartitionsAllocator& edgeParitionsAlloc)
-        : Connectivity{static_cast<const Connectivity&>(in), edgeParitionsAlloc}
+      constexpr graph_primitive(const graph_primitive& in, const EdgeAllocator& edgeAlloc)
+        : Connectivity{static_cast<const Connectivity&>(in), edgeAlloc}
         , Nodes{static_cast<const Nodes&>(in)}
       {}
 
@@ -239,52 +263,52 @@ namespace sequoia
       // Move-like constructors with allocators
 
       template
-      <
-        class EdgePartitionsAllocator,
+      <        
         class EdgeAllocator,
-        class NodeAllocator,
-        class N=node_weight_type,
-        std::enable_if_t<enableNodeAllocation<N>, int> = 0
-      >
-      constexpr graph_primitive(graph_primitive&& in, const EdgePartitionsAllocator& edgeParitionsAlloc, const EdgeAllocator& edgeAlloc, const NodeAllocator& nodeAlloc)
-        : Connectivity{static_cast<Connectivity&&>(in), edgeParitionsAlloc, edgeAlloc}
-        , Nodes{static_cast<Nodes&&>(in), nodeAlloc}
-      {}
-
-      template
-      <
         class EdgePartitionsAllocator,
         class NodeAllocator,
         class N=node_weight_type,
         std::enable_if_t<enableNodeAllocation<N>, int> = 0
       >
-      constexpr graph_primitive(graph_primitive&& in, const EdgePartitionsAllocator& edgeParitionsAlloc, const NodeAllocator& nodeAlloc)
-        : Connectivity{static_cast<Connectivity&&>(in), edgeParitionsAlloc}
+      constexpr graph_primitive(graph_primitive&& in, const EdgeAllocator& edgeAlloc, const EdgePartitionsAllocator& edgeParitionsAlloc, const NodeAllocator& nodeAlloc)
+        : Connectivity{static_cast<Connectivity&&>(in), edgeAlloc, edgeParitionsAlloc}
         , Nodes{static_cast<Nodes&&>(in), nodeAlloc}
       {}
 
       template
       <
-        class EdgePartitionsAllocator,
         class EdgeAllocator,
+        class NodeAllocator,
+        class N=node_weight_type,
+        std::enable_if_t<enableNodeAllocation<N>, int> = 0
+      >
+      constexpr graph_primitive(graph_primitive&& in, const EdgeAllocator& edgeAlloc, const NodeAllocator& nodeAlloc)
+        : Connectivity{static_cast<Connectivity&&>(in), edgeAlloc}
+        , Nodes{static_cast<Nodes&&>(in), nodeAlloc}
+      {}
+
+      template
+      <        
+        class EdgeAllocator,
+        class EdgePartitionsAllocator,
         class NodeAllocator,
         class N=node_weight_type,
         std::enable_if_t<!enableNodeAllocation<N>, int> = 0
       >
-      constexpr graph_primitive(graph_primitive&& in, const EdgePartitionsAllocator& edgeParitionsAlloc, const EdgeAllocator& edgeAlloc)
-        : Connectivity{static_cast<Connectivity&&>(in), edgeParitionsAlloc, edgeAlloc}
+      constexpr graph_primitive(graph_primitive&& in, const EdgeAllocator& edgeAlloc, const EdgePartitionsAllocator& edgeParitionsAlloc)
+        : Connectivity{static_cast<Connectivity&&>(in), edgeAlloc, edgeParitionsAlloc}
         , Nodes{static_cast<Nodes&&>(in)}
       {}
 
       template
       <
-        class EdgePartitionsAllocator,
+        class EdgeAllocator,
         class NodeAllocator,
         class N=node_weight_type,
         std::enable_if_t<!enableNodeAllocation<N>, int> = 0
       >
-      constexpr graph_primitive(graph_primitive&& in, const EdgePartitionsAllocator& edgeParitionsAlloc)
-        : Connectivity{static_cast<Connectivity&&>(in), edgeParitionsAlloc}
+      constexpr graph_primitive(graph_primitive&& in, const EdgeAllocator& edgeAlloc)
+        : Connectivity{static_cast<Connectivity&&>(in), edgeAlloc}
         , Nodes{static_cast<Nodes&&>(in)}
       {}
       
@@ -302,7 +326,7 @@ namespace sequoia
             [](const graph_primitive& in){
               if constexpr(has_partitions_allocator_type_v<edge_storage>)
               {
-                return in.get_edge_partitions_allocator();
+                return in.get_edge_allocator(partitions_allocator_tag{});
               }
             }
           };
@@ -382,11 +406,7 @@ namespace sequoia
         Connectivity::shrink_to_fit();
       }
 
-      template
-      <
-        class... Args,
-        std::enable_if_t<(sizeof...(Args) == 0) || !is_allocator_v<typename variadic_traits<Args...>::head>, int> = 0
-      >
+      template<class... Args>
       size_type add_node(Args&&... args)
       {
         reserve_nodes(this->order() + 1);
@@ -396,44 +416,11 @@ namespace sequoia
         return (this->order()-1);
       }
 
-      template
-      <
-        class Allocator,
-        class... Args,
-        std::enable_if_t<is_allocator_v<Allocator>, int> = 0
-      >
-      size_type add_node(const Allocator& alloc, Args&&... args)
-      {
-        reserve_nodes(this->order() + 1);
-        
-        Connectivity::add_node(alloc);
-        if constexpr (!emptyNodes) Nodes::add_node(std::forward<Args>(args)...);
-        return (this->order()-1);
-      }
-
-      template
-      <
-        class... Args,
-        std::enable_if_t<(sizeof...(Args) == 0) || !is_allocator_v<typename variadic_traits<Args...>::head>, int> = 0
-      >
+      template<class... Args>
       size_type insert_node(const size_type pos, Args&&... args)
       {
         const auto node{insert_node_impl(pos, std::forward<Args>(args)...)};
         Connectivity::insert_node(node);
-
-        return node;
-      }
-
-      template
-      <
-        class Allocator,
-        class... Args,
-        std::enable_if_t<is_allocator_v<Allocator>, int> = 0
-      >
-      size_type insert_node(const size_type pos, const Allocator& allocator, Args&&... args)
-      {
-        const auto node{insert_node_impl(pos, std::forward<Args>(args)...)};
-        Connectivity::insert_node(node, allocator);
 
         return node;
       }

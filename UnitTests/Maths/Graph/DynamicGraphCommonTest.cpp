@@ -994,6 +994,7 @@ namespace sequoia::unit_testing
       NodeWeightStorageTraits
   >::execute_operations()
   {
+
     /*
     using edge_partitions_allocator = typename graph_t::edge_partitions_allocator_type;
     using edge_allocator = typename graph_t::edge_allocator_type;
@@ -1050,7 +1051,7 @@ namespace sequoia::unit_testing
 
       check_regular_semantics(LINE("Regular Semantics"), g, graph_t{{{}}, edge_partitions_allocator{}, edge_allocator{}, {{1.0, -1.0}}, node_allocator{}});
     }
-  */
+    */
   }
 
    template
@@ -1107,7 +1108,7 @@ namespace sequoia::unit_testing
       check_regular_semantics(LINE("Regular Semantics"), g, graph_t{{{}}, edge_allocator{}, {{1.0, -1.0}}, node_allocator{}});
     }
 
-    g.add_node(edge_allocator{});
+    g.add_node();
     if constexpr(std::is_empty_v<NodeWeight>)
     {
       check_equality(LINE(""), g, graph_t{{{}}, edge_allocator{}});
@@ -1130,7 +1131,7 @@ namespace sequoia::unit_testing
     check_equality(LINE("May fail if stl implementation doesn't actually shrink to fit!"), g.edges_capacity(0), 0ul);
     check_equality(LINE("May fail if stl implementation doesn't actually shrink to fit!"), g.node_capacity(), 1ul);
 
-    g.insert_node(0u, edge_allocator{});
+    g.insert_node(0u);
     if constexpr(std::is_empty_v<NodeWeight>)
     {
       check_equality(LINE(""), g, graph_t{{{}, {}}, edge_allocator{}});
