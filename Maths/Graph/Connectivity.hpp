@@ -231,16 +231,7 @@ namespace sequoia
       constexpr connectivity& operator=(const connectivity& in)
       {
         if(&in != this)
-        {
-          auto partitionsAllocGetter{
-            [](const connectivity& in){
-              if constexpr(has_partitions_allocator_type_v<edge_storage_type>)
-              {
-                return in.m_Edges.get_partitions_allocator();
-              }
-            }
-          };
-          
+        {          
           auto allocGetter{
             [](const connectivity& in){
               if constexpr(has_allocator_type_v<edge_storage_type>)
@@ -250,7 +241,16 @@ namespace sequoia
             }
           };
 
-          sequoia::impl::assignment_helper::assign(*this, in, partitionsAllocGetter, allocGetter);
+          auto partitionsAllocGetter{
+            [](const connectivity& in){
+              if constexpr(has_partitions_allocator_type_v<edge_storage_type>)
+              {
+                return in.m_Edges.get_partitions_allocator();
+              }
+            }
+          };
+
+          sequoia::impl::assignment_helper::assign(*this, in, allocGetter, partitionsAllocGetter);
         }
 
         return *this;

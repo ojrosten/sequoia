@@ -177,7 +177,7 @@ namespace sequoia::maths
       class N                       = NodeWeight,
       std::enable_if_t<std::is_empty_v<N>, int> = 0
     >
-    graph_base(edges_initializer edges, const EdgePartitionsAllocator& edgePartitionsAllocator, const EdgeAllocator& edgeAllocator)
+    graph_base(edges_initializer edges, const EdgeAllocator& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator)
       : primitive_type{edges, edgeAllocator, edgePartitionsAllocator}
     {}
 

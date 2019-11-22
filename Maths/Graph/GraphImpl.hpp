@@ -322,18 +322,18 @@ namespace sequoia
         {
           using edge_storage = typename Connectivity::edge_storage_type;
 
+          auto edgeAllocGetter{
+            [](const graph_primitive& in){
+              return in.get_edge_allocator();
+            }
+          };
+
           auto edgePartitionsAllocGetter{
             [](const graph_primitive& in){
               if constexpr(has_partitions_allocator_type_v<edge_storage>)
               {
                 return in.get_edge_allocator(partitions_allocator_tag{});
               }
-            }
-          };
-
-          auto edgeAllocGetter{
-            [](const graph_primitive& in){
-              return in.get_edge_allocator();
             }
           };
 
@@ -350,7 +350,7 @@ namespace sequoia
             }
           };
       
-          sequoia::impl::assignment_helper::assign(*this, in, edgePartitionsAllocGetter, edgeAllocGetter, nodeAllocGetter);
+          sequoia::impl::assignment_helper::assign(*this, in, edgeAllocGetter, edgePartitionsAllocGetter, nodeAllocGetter);
         }
         
         return *this;
