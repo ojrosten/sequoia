@@ -40,11 +40,6 @@ $(CHAMBERBUILDDIR)/%.o : %.cpp
 $(UTBUILDDIR)/%.o : %.cpp
 	$(CC) $(CFLAGS) -MMD -c $< -o $@
 
-
--include $(UTDEPS)
--include $(LIBDEPS)
-
-
 .PHONY subdirs : $(BUILDSUBDIRS)
 	-mkdir $(BUILDDIR)
 	-mkdir $(UTBUILDDIR)
