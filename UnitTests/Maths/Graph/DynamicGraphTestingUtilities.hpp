@@ -147,6 +147,21 @@ namespace sequoia::unit_testing
     constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::agnostic};
   };
 
+  template<class NodeWeight, template <class> class NodeWeightPooling, bool=std::is_empty_v<NodeWeight>>
+  struct custom_node_weight_storage_traits
+  {
+    constexpr static bool throw_on_range_error{true};
+    constexpr static bool static_storage_v{};
+    constexpr static bool has_allocator{true};
+    template<class S> using container_type = std::vector<S, shared_counting_allocator<S, true, true, true>>;
+  };
+
+  template<class NodeWeight, template <class> class NodeWeightPooling>
+  struct custom_node_weight_storage_traits<NodeWeight, NodeWeightPooling, true>
+  {
+    constexpr static bool has_allocator{};
+  };
+
   // Meta
 
   [[nodiscard]]
@@ -365,9 +380,9 @@ namespace sequoia::unit_testing
       if constexpr(!std::is_empty_v<EdgeWeight> && !std::is_empty_v<NodeWeight>)
       {
         #ifndef MINIMAL_GRAPH_TESTS              
-          TemplateTestClass<GraphType, EdgeWeight, NodeWeight, unpooled, data_pool, EdgeStorage, maths::node_weight_storage_traits> test1;  
-          TemplateTestClass<GraphType, EdgeWeight, NodeWeight, data_pool, unpooled, EdgeStorage, maths::node_weight_storage_traits> test2;
-          TemplateTestClass<GraphType, EdgeWeight, NodeWeight, data_pool, data_pool, EdgeStorage, maths::node_weight_storage_traits> test3;
+          TemplateTestClass<GraphType, EdgeWeight, NodeWeight, unpooled, data_pool, EdgeStorage, NodeStorage> test1;  
+          TemplateTestClass<GraphType, EdgeWeight, NodeWeight, data_pool, unpooled, EdgeStorage, NodeStorage> test2;
+          TemplateTestClass<GraphType, EdgeWeight, NodeWeight, data_pool, data_pool, EdgeStorage, NodeStorage> test3;
 
           run_graph_test(test1);
           run_graph_test(test2);
