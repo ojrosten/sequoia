@@ -23,31 +23,31 @@ namespace sequoia::unit_testing
       graph_test_helper<null_weight, null_weight> helper{};
       
       helper.run_tests<generic_graph_operations>(*this);
-      helper.run_storage_tests<custom_allocator_contiguous_edge_storage_traits, graph_contiguous_memory>(*this);
-      helper.run_storage_tests<custom_allocator_bucketed_edge_storage_traits, graph_bucketed_memory>(*this);
+      helper.run_storage_tests<custom_allocator_contiguous_edge_storage_traits, node_weight_storage_traits, graph_contiguous_memory>(*this);
+      helper.run_storage_tests<custom_allocator_bucketed_edge_storage_traits, node_weight_storage_traits, graph_bucketed_memory>(*this);
     }
       
     {
       graph_test_helper<int, complex<double>>  helper{};
       
       helper.run_tests<generic_weighted_graph_tests>(*this);
-      helper.run_storage_tests<custom_allocator_contiguous_edge_storage_traits, graph_contiguous_memory>(*this);
-      helper.run_storage_tests<custom_allocator_bucketed_edge_storage_traits, graph_bucketed_memory>(*this);
+      helper.run_storage_tests<custom_allocator_contiguous_edge_storage_traits, node_weight_storage_traits, graph_contiguous_memory>(*this);
+      helper.run_storage_tests<custom_allocator_bucketed_edge_storage_traits, node_weight_storage_traits, graph_bucketed_memory>(*this);
     }
 
     {
       graph_test_helper<complex<int>, complex<double>>  helper{};
       helper.run_tests<generic_weighted_graph_tests>(*this);
-      helper.run_storage_tests<custom_allocator_contiguous_edge_storage_traits, graph_contiguous_memory>(*this);
-      helper.run_storage_tests<custom_allocator_bucketed_edge_storage_traits, graph_bucketed_memory>(*this);
+      helper.run_storage_tests<custom_allocator_contiguous_edge_storage_traits, node_weight_storage_traits, graph_contiguous_memory>(*this);
+      helper.run_storage_tests<custom_allocator_bucketed_edge_storage_traits, node_weight_storage_traits, graph_bucketed_memory>(*this);
     }
 
     {
       graph_test_helper<std::vector<int>, std::vector<complex<double>>>  helper{};
       
       helper.run_tests<generic_weighted_graph_tests>(*this);
-      helper.run_storage_tests<custom_allocator_contiguous_edge_storage_traits, graph_contiguous_memory>(*this);
-      helper.run_storage_tests<custom_allocator_bucketed_edge_storage_traits, graph_bucketed_memory>(*this);
+      helper.run_storage_tests<custom_allocator_contiguous_edge_storage_traits, node_weight_storage_traits, graph_contiguous_memory>(*this);
+      helper.run_storage_tests<custom_allocator_bucketed_edge_storage_traits, node_weight_storage_traits, graph_bucketed_memory>(*this);
     }
   }
 
@@ -1027,15 +1027,13 @@ namespace sequoia::unit_testing
     g.shrink_to_fit();
     check_equality(LINE("May fail if stl implementation doesn't actually shrink to fit!"), g.edges_capacity(), 0ul);
     check_equality(LINE("May fail if stl implementation doesn't actually shrink to fit!"), g.node_capacity(), 0ul);
+      
+    // x----x
+    using edge_init_t = typename graph_t::edge_init_type;
 
     if constexpr(std::is_empty_v<NodeWeight>)
     {
       check_regular_semantics(LINE("Regular Semantics"), g, graph_t{{{}}, edge_allocator{}, edge_partitions_allocator{}});
-
-      
-      // x----x
-      using edge_init_t = typename graph_t::edge_init_type;
-
       graph_t g2{};
 
       auto nodeMaker{
@@ -1073,6 +1071,43 @@ namespace sequoia::unit_testing
       check_regular_semantics(LINE("Regular Semantics"), g, graph_t{{{}}, edge_allocator{}, edge_partitions_allocator{}, node_allocator{}});
 
       check_regular_semantics(LINE("Regular Semantics"), g, graph_t{{{}}, edge_allocator{}, edge_partitions_allocator{}, {{1.0, -1.0}}, node_allocator{}});
+
+      /*
+      graph_t g2{};
+
+      auto nodeMaker{
+        [](graph_t& g) { g.add_node(); }
+      };
+
+      auto allocGetter{
+        [](const graph_t& g) { return g.get_edge_allocator(); }
+      };
+
+      auto partitionAllocGetter{
+        [](const graph_t& g) { return g.get_edge_allocator(partitions_allocator_tag{}); }
+      };
+
+      auto nodeAllocGetter{
+        [](const graph_t& g) { return g.get_node_allocator(); }
+      };
+
+      if constexpr (GraphFlavour == graph_flavour::directed)
+      {
+        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{1}}, {}}, nodeMaker, allocation_info{allocGetter, {0, {1, 0}, {1, 1}}}, allocation_info{partitionAllocGetter, {0, {1, 1}, {1, 1}}}, allocation_info{nodeAllocGetter, {0, {1, 1}, {1, 1}}});
+      }
+      else if constexpr(GraphFlavour == graph_flavour::undirected)
+      {
+        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{1}}, {edge_init_t{0}}}, nodeMaker, allocation_info{allocGetter, {0, {1, 0}, {1, 1}}}, allocation_info{partitionAllocGetter, {0, {1, 1}, {1, 1}}}, allocation_info{nodeAllocGetter, {0, {1, 1}, {1, 1}}});
+      }
+      else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
+      {
+        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{0,1,0}}, {edge_init_t{0,1,0}}}, nodeMaker, allocation_info{allocGetter, {0, {1, 0}, {1, 1}}}, allocation_info{partitionAllocGetter, {0, {1, 1}, {1, 1}}}, allocation_info{nodeAllocGetter, {0, {1, 1}, {1, 1}}});
+      }
+      else
+      {
+        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{1,0}}, {edge_init_t{0,0}}}, nodeMaker, allocation_info{allocGetter, {0, {1, 0}, {1, 1}}}, allocation_info{partitionAllocGetter, {0, {1, 1}, {1, 1}}}, allocation_info{nodeAllocGetter, {0, {1, 1}, {1, 1}}});
+      }
+      */
     }
   }
 
