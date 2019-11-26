@@ -527,7 +527,7 @@ namespace sequoia::unit_testing
       using yAllocator = typename beast::y_allocator_type;
 
       auto yAllocGetter{
-        [](const auto& beast){
+        [](const beast& beast){
           return beast.y.get_allocator();
         }
       };
@@ -538,14 +538,13 @@ namespace sequoia::unit_testing
           b.y.push_back(1);
         }
       };
-
       
       check_regular_semantics(LINE("")
                               , beast{{1}, {1}, xAllocator{}, yAllocator{}}
                               , beast{{5,6}, {5,6}, xAllocator{}, yAllocator{}}
                               , mutator
                               , allocation_info<beast, xAllocator>{allocGetter, {1, {1,1}, {1,1}}}
-                              , allocation_info<beast, yAllocator>{yAllocGetter, {1, {1,1}, {1,1}}});
+                              , allocation_info{yAllocGetter, {1, {1,1}, {1,1}}});
     }
   }  
 }

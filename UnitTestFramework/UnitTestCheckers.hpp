@@ -294,6 +294,9 @@ namespace sequoia
     private:
       using base_t = impl::allocation_info_base<Container, Allocator>;
     public:
+      using container_type = Container;
+      using allocator_type = Allocator;
+      
       template<class Fn>
       allocation_info(Fn&& allocGetter, allocation_predictions predictions)
         : base_t{std::forward<Fn>(allocGetter)}
@@ -317,6 +320,9 @@ namespace sequoia
       using base_t = impl::allocation_info_base<Container, std::scoped_allocator_adaptor<Allocators...>>;
     public:
       constexpr static auto N{sizeof...(Allocators)};
+
+      using container_type = Container;
+      using allocator_type = std::scoped_allocator_adaptor<Allocators...>;
 
       template<class Fn>
       allocation_info(Fn&& allocGetter, std::initializer_list<allocation_predictions> predictions)
@@ -364,6 +370,21 @@ namespace sequoia
       
       std::array<allocation_predictions, N> m_Predictions;
     };
+
+    template<class F> struct function_signature;
+
+    template<class R, class L, class T>
+    struct function_signature<R(L::*) (T) const>
+    {
+      using ret = R;
+      using arg = T;
+    };
+
+    template<class Fn>
+    allocation_info(Fn&& allocGetter, allocation_predictions predictions)
+      -> allocation_info<std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::arg>, std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::ret>>;
+    
+    
 
     template<class Logger, class T, class Mutator, class... Allocators>
     void check_regular_semantics(std::string_view description, Logger& logger, const T& x, const T& y, Mutator yMutator, allocation_info<T, Allocators>... allocationInfo)
