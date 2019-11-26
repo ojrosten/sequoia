@@ -69,4 +69,48 @@ namespace sequoia
 
   template<class Excluded, template<class> class TypeToType, class... Ts>
   using make_filtered_sequence = typename filtered_sequence<Excluded, TypeToType, Ts...>::type;
+
+  template<class F> struct function_signature;
+
+  template<class R, class L, class T>
+  struct function_signature<R(L::*) (T)>
+  {
+    using ret = R;
+    using arg = T;
+  };
+  
+  template<class R, class L, class T>
+  struct function_signature<R(L::*) (T) const>
+  {
+    using ret = R;
+    using arg = T;
+  };
+
+  template<class R, class L, class T>
+  struct function_signature<R(L::*) (T) noexcept>
+  {
+    using ret = R;
+    using arg = T;
+  };
+
+  template<class R, class L, class T>
+  struct function_signature<R(L::*) (T) const noexcept>
+  {
+    using ret = R;
+    using arg = T;
+  };
+
+  template<class R, class T>
+  struct function_signature<R(*) (T)>
+  {
+    using ret = R;
+    using arg = T;
+  };
+
+  template<class R, class T>
+  struct function_signature<R(*) (T) noexcept>
+  {
+    using ret = R;
+    using arg = T;
+  };
 }

@@ -10,7 +10,7 @@
 #include "UnitTestCore.hpp"
 
 namespace sequoia::unit_testing
-{
+{  
   class utilities_test : public unit_test
   {
   public:
@@ -20,5 +20,7 @@ namespace sequoia::unit_testing
     void run_tests() override;
 
     void test_filtered_sequence();
+
+    void test_function_signature();
   };
 }
