@@ -410,6 +410,12 @@ namespace sequoia::maths
                  true
       >:: graph_base;
 
+    graph_base(const graph_base&) = default;
+    graph_base(graph_base&&) noexcept = default;
+
+    graph_base& operator=(const graph_base&) = default;
+    graph_base& operator=(graph_base&&) noexcept = default;
+
     using graph_base<
             GraphFlavour,
             EdgeWeight,
@@ -472,6 +478,12 @@ namespace sequoia::maths
          EdgeStorageTraits,
          NodeWeightStorageTraits
       >::graph_base;
+
+    graph(const graph&) = default;
+    graph(graph&&) noexcept = default;
+
+    graph& operator=(const graph&) = default;
+    graph& operator=(graph&&) = default;
 
     using base::sort_edges;
     using base::swap_edges;

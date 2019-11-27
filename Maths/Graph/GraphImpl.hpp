@@ -116,7 +116,9 @@ namespace sequoia
       <
         class EdgeAllocator,
         class N=node_weight_type,
-        std::enable_if_t<!enableNodeAllocation<N>, int>  = 0
+        std::enable_if_t<
+             !enableNodeAllocation<N>
+          && !std::is_same_v<std::decay_t<EdgeAllocator>, graph_primitive>, int>  = 0
       >
       constexpr graph_primitive(const EdgeAllocator& edgeAlloc)
         : Connectivity(edgeAlloc)

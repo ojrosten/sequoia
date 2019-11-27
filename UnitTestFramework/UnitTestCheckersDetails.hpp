@@ -175,7 +175,6 @@ namespace sequoia::unit_testing::impl
     template<class Logger>
     void check_copy_x(std::string_view description, Logger& logger, const Container& container) const
     {
-      // Sort out propagation for Copy Construction!
       check_copy(description, "(x)", logger, container, m_Info, m_SecondCount, m_Info.get_predictions().copy_x);
     }
 
