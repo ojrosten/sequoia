@@ -870,6 +870,12 @@ namespace sequoia
       {
         return edge_copy_constant<direct_edge_init_v || (EdgeTraits::shared_edge_v && protectiveEdgeWeightProxy)>{};
       }      
+
+      template<bool HasAlloc>
+      struct has_partitions_alloc_constant : std::bool_constant<HasAlloc> {};
+
+      using has_partitions_alloc_type = has_partitions_alloc_constant<true>;
+      using no_partitions_alloc_type = has_partitions_alloc_constant<false>;
       
       static constexpr bool protectiveEdgeWeightProxy{
         std::is_same_v<typename edge_type::weight_proxy_type, utilities::protective_wrapper<edge_weight_type>>
@@ -953,7 +959,18 @@ namespace sequoia
       {}
 
       constexpr connectivity(indirect_edge_copy_type, const connectivity& in)
-        : m_Edges{}
+        : connectivity(has_partitions_alloc_constant<has_partitions_allocator_type_v<edge_storage_type>>{}, in)
+      {}
+
+      constexpr connectivity(has_partitions_alloc_type, const connectivity& in)
+        : m_Edges(std::allocator_traits<decltype(m_Edges.get_allocator())>::select_on_container_copy_construction(in.m_Edges.get_allocator()),
+                  std::allocator_traits<decltype(m_Edges.get_partitions_allocator())>::select_on_container_copy_construction(in.m_Edges.get_partitions_allocator()))
+      {
+        copy_edges(in);
+      }
+
+      constexpr connectivity(no_partitions_alloc_type, const connectivity& in)
+        : m_Edges(std::allocator_traits<decltype(m_Edges.get_allocator())>::select_on_container_copy_construction(in.m_Edges.get_allocator()))
       {
         copy_edges(in);
       }
@@ -965,7 +982,8 @@ namespace sequoia
         std::enable_if_t<std::is_constructible_v<edge_storage_type, EdgeAllocator, PartitionAllocator>, int> = 0
       >
       constexpr connectivity(indirect_edge_copy_type, const connectivity& in, const EdgeAllocator& edgeAllocator, const PartitionAllocator& partitionAllocator)
-        : m_Edges(edgeAllocator, partitionAllocator)
+        : m_Edges(std::allocator_traits<EdgeAllocator>::select_on_container_copy_construction(edgeAllocator),
+                  std::allocator_traits<PartitionAllocator>::select_on_container_copy_construction(partitionAllocator))
       {
          copy_edges(in);
       }
@@ -976,7 +994,7 @@ namespace sequoia
         std::enable_if_t<std::is_constructible_v<edge_storage_type, EdgeAllocator>, int> = 0
       >
       constexpr connectivity(indirect_edge_copy_type, const connectivity& in, const EdgeAllocator& edgeAllocator)
-        : m_Edges(edgeAllocator)
+        : m_Edges(std::allocator_traits<EdgeAllocator>::select_on_container_copy_construction(edgeAllocator))
       {
          copy_edges(in);
       }
