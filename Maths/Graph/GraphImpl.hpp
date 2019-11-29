@@ -220,8 +220,8 @@ namespace sequoia
         class N=node_weight_type,
         std::enable_if_t<enableNodeAllocation<N>, int> = 0
       >
-      constexpr graph_primitive(const graph_primitive& in, const EdgePartitionsAllocator& edgeParitionsAlloc, const EdgeAllocator& edgeAlloc, const NodeAllocator& nodeAlloc)
-        : Connectivity{static_cast<const Connectivity&>(in), edgeParitionsAlloc, edgeAlloc}
+      constexpr graph_primitive(const graph_primitive& in, const EdgeAllocator& edgeAlloc, const EdgePartitionsAllocator& edgeParitionsAlloc, const NodeAllocator& nodeAlloc)
+        : Connectivity{static_cast<const Connectivity&>(in), edgeAlloc, edgeParitionsAlloc}
         , Nodes{static_cast<const Nodes&>(in), nodeAlloc}
       {}
 
