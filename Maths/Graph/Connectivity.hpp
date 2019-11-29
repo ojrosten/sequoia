@@ -960,26 +960,25 @@ namespace sequoia
 
       template
       <
+        class EdgeAllocator,
         class PartitionAllocator,
-        class... EdgeAllocators,
-        std::enable_if_t<is_constructible_with_v<edge_storage_type, PartitionAllocator, EdgeAllocators...>, int> = 0
+        std::enable_if_t<std::is_constructible_v<edge_storage_type, EdgeAllocator, PartitionAllocator>, int> = 0
       >
-      constexpr connectivity(indirect_edge_copy_type, const connectivity& in, const PartitionAllocator& partitionAllocator, const EdgeAllocators&... edgeAllocators)
-        : m_Edges(partitionAllocator, edgeAllocators...)
+      constexpr connectivity(indirect_edge_copy_type, const connectivity& in, const EdgeAllocator& edgeAllocator, const PartitionAllocator& partitionAllocator)
+        : m_Edges(edgeAllocator, partitionAllocator)
       {
          copy_edges(in);
       }
 
       template
       <
-        class PartitionAllocator,
-        class... EdgeAllocators,
-        std::enable_if_t<!is_constructible_with_v<edge_storage_type, PartitionAllocator, EdgeAllocators...>, int> = 0
+        class EdgeAllocator,
+        std::enable_if_t<std::is_constructible_v<edge_storage_type, EdgeAllocator>, int> = 0
       >
-      constexpr connectivity(indirect_edge_copy_type, const connectivity& in, const PartitionAllocator& partitionAllocator, const EdgeAllocators&... edgeAllocators)
-        : m_Edges(partitionAllocator)
+      constexpr connectivity(indirect_edge_copy_type, const connectivity& in, const EdgeAllocator& edgeAllocator)
+        : m_Edges(edgeAllocator)
       {
-         copy_edges(in, edgeAllocators...);
+         copy_edges(in);
       }
       
       // helper methods
@@ -1467,12 +1466,22 @@ namespace sequoia
         }        
       }
 
-      template<class Processor, class... Allocators> 
-      void copy_edges(const connectivity& in, Processor processor, const Allocators&... allocs)
+      template<class Processor> 
+      void copy_edges(const connectivity& in, Processor processor)
       {
+        reserve_nodes(in.m_Edges.num_partitions());
+        if constexpr(!graph_impl::has_reservable_partitions_v<edge_storage_type>)
+        {
+          reserve_edges(in.m_Edges.size());
+        }
         for(size_type i{}; i<in.order(); ++i)
         {
-          m_Edges.add_slot(allocs...);
+          m_Edges.add_slot();          
+          if constexpr(graph_impl::has_reservable_partitions_v<edge_storage_type>)
+          {
+            using std::distance;
+            reserve_edges(i, distance(in.cbegin_edges(i), in.cend_edges(i)));
+          }
           for(auto inIter{in.cbegin_edges(i)}; inIter != in.cend_edges(i); ++inIter)
           {
             processor(i, in.cbegin_edges(i), inIter);
