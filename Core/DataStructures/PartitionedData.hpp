@@ -118,7 +118,7 @@ namespace sequoia
       {}
 
      bucketed_storage(const bucketed_storage& in, const allocator_type& allocator)
-        : m_Buckets(allocator)
+       : m_Buckets(std::allocator_traits<allocator_type>::select_on_container_copy_construction(allocator))
       {
         m_Buckets.reserve(in.m_Buckets.size());
 
@@ -909,39 +909,40 @@ namespace sequoia
       }
 
       constexpr contiguous_storage_base(partition_impl::indirect_copy_type, const contiguous_storage_base& in)
-        : m_Partitions{in.m_Partitions}
-        , m_Storage(in.m_Storage.get_allocator())
-      {
-        init(in.m_Storage);
-      }
+        : contiguous_storage_base(partition_impl::indirect_copy_type{}, in, in.m_Storage.get_allocator())
+      {}
 
       template<class Allocator>
       constexpr contiguous_storage_base(partition_impl::indirect_copy_type, const contiguous_storage_base& in, const Allocator& allocator)
         : m_Partitions{in.m_Partitions}
-        , m_Storage(allocator)        
+        , m_Storage(std::allocator_traits<Allocator>::select_on_container_copy_construction(allocator))
       {
         init(in.m_Storage);
       }
 
       template<class Allocator, class PartitionsAllocator>
       constexpr contiguous_storage_base(partition_impl::indirect_copy_type, const contiguous_storage_base& in, const Allocator& allocator, const PartitionsAllocator& partitionsAllocator)
-      : m_Partitions{in.m_Partitions, partitionsAllocator}, m_Storage(allocator)        
+        : m_Partitions{in.m_Partitions, partitionsAllocator}
+        , m_Storage(std::allocator_traits<Allocator>::select_on_container_copy_construction(allocator))        
       {
         init(in.m_Storage);
       }      
 
       constexpr contiguous_storage_base(partition_impl::direct_copy_type, const contiguous_storage_base& in)
-        : m_Partitions{in.m_Partitions}, m_Storage{in.m_Storage}
+        : m_Partitions{in.m_Partitions}
+        , m_Storage{in.m_Storage}
       {}
 
       template<class Allocator>
       constexpr contiguous_storage_base(partition_impl::direct_copy_type, const contiguous_storage_base& in, const Allocator& allocator)
-        : m_Partitions{in.m_Partitions}, m_Storage{in.m_Storage, allocator}
+        : m_Partitions{in.m_Partitions}
+        , m_Storage{in.m_Storage, allocator}
       {};
 
       template<class Allocator, class PartitionsAllocator>
       constexpr contiguous_storage_base(partition_impl::direct_copy_type, const contiguous_storage_base& in, const Allocator& allocator, const PartitionsAllocator& partitionsAllocator)
-        : m_Partitions{in.m_Partitions, partitionsAllocator}, m_Storage{in.m_Storage, allocator}
+        : m_Partitions{in.m_Partitions, partitionsAllocator}
+        , m_Storage{in.m_Storage, allocator}
       {};
 
       void init(std::initializer_list<std::initializer_list<T>> list)
