@@ -374,7 +374,11 @@ namespace sequoia
 
     template<class Fn>
     allocation_info(Fn&& allocGetter, allocation_predictions predictions)
-      -> allocation_info<std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::arg>, std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::ret>>;    
+      -> allocation_info<std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::arg>, std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::ret>>;
+
+    template<class Fn>
+    allocation_info(Fn&& allocGetter, std::initializer_list<allocation_predictions> predictions)
+      -> allocation_info<std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::arg>, std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::ret>>;
 
     template<class Logger, class T, class Mutator, class... Allocators>
     void check_regular_semantics(std::string_view description, Logger& logger, const T& x, const T& y, Mutator yMutator, allocation_info<T, Allocators>... allocationInfo)

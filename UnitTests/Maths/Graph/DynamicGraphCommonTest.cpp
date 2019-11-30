@@ -1196,6 +1196,74 @@ namespace sequoia::unit_testing
       using node_allocator = typename graph_t::node_weight_container_type::allocator_type;
       check_equality(LINE(""), g, graph_t{{{}, {}}, edge_allocator{}, node_allocator{}});
     }
+
+    // x----x
+    using edge_init_t = typename graph_t::edge_init_type;
+    using namespace maths;
+    using edge_allocator = typename graph_t::edge_allocator_type;
+
+    if constexpr(std::is_empty_v<NodeWeight>)
+    {
+      graph_t g2{};
+
+      auto nodeMaker{
+        [](graph_t& g) { g.add_node(); }
+      };
+
+      auto allocGetter{
+        [](const graph_t& g) { return g.get_edge_allocator(); }
+      };
+
+      if constexpr (GraphFlavour == graph_flavour::directed)
+      {
+        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{1}}, {}}, nodeMaker, allocation_info{allocGetter, {{0, {1, 1}, {1, 1}}, {0, {1, 0}, {1, 1}}}});
+      }
+      else if constexpr(GraphFlavour == graph_flavour::undirected)
+      {
+        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{1}}, {edge_init_t{0}}}, nodeMaker, allocation_info{allocGetter, {{0, {1, 1}, {1, 1}}, {0, {1, 0}, {1, 1}}}});
+      }
+      else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
+      {
+        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{0,1,0}}, {edge_init_t{0,1,0}}}, nodeMaker, allocation_info{allocGetter, {{0, {1, 1}, {1, 1}}, {0, {1, 0}, {1, 1}}}});
+      }
+      else
+      {
+        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{1,0}}, {edge_init_t{0,0}}}, nodeMaker, allocation_info{allocGetter, {{0, {1, 1}, {1, 1}}, {0, {1, 0}, {1, 1}}}});
+      }
+    }
+    else
+    {
+      graph_t g2{};
+
+      auto nodeMaker{
+        [](graph_t& g) { g.add_node(); }
+      };
+
+      auto allocGetter{
+        [](const graph_t& g) { return g.get_edge_allocator(); }
+      };
+
+      auto nodeAllocGetter{
+        [](const graph_t& g) { return g.get_node_allocator(); }
+      };
+
+      if constexpr (GraphFlavour == graph_flavour::directed)
+      {
+        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{1}}, {}}, nodeMaker, allocation_info{allocGetter, {{0, {1, 1}, {1, 1}}, {0, {1, 0}, {1, 1}}}}, allocation_info{nodeAllocGetter, {0, {1, 1}, {1, 1}}});
+      }
+      else if constexpr(GraphFlavour == graph_flavour::undirected)
+      {
+        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{1}}, {edge_init_t{0}}}, nodeMaker, allocation_info{allocGetter, {{0, {1, 1}, {1, 1}}, {0, {1, 0}, {1, 1}}}}, allocation_info{nodeAllocGetter, {0, {1, 1}, {1, 1}}});
+      }
+      else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
+      {
+        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{0,1,0}}, {edge_init_t{0,1,0}}}, nodeMaker, allocation_info{allocGetter, {{0, {1, 1}, {1, 1}}, {0, {1, 0}, {1, 1}}}}, allocation_info{nodeAllocGetter, {0, {1, 1}, {1, 1}}});
+      }
+      else
+      {
+        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{1,0}}, {edge_init_t{0,0}}}, nodeMaker, allocation_info{allocGetter, {{0, {1, 1}, {1, 1}}, {0, {1, 0}, {1, 1}}}}, allocation_info{nodeAllocGetter, {0, {1, 1}, {1, 1}}});
+      }
+    }
   }
 
   // Generic Weighted

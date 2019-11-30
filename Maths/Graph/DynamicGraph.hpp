@@ -138,7 +138,7 @@ namespace sequoia::maths
       class EdgeStorage             = typename edge_traits_type::edge_storage_type,
       class EdgePartitionsAllocator = typename EdgeStorage::partitions_allocator_type,
       class N                       = NodeWeight,      
-      std::enable_if_t<std::is_empty_v<N>, int> = 0
+      std::enable_if_t<std::is_empty_v<N> && !std::is_convertible_v<EdgeAllocator&, graph_base&>, int> = 0
     >
     graph_base(const EdgeAllocator& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator)
       : primitive_type(edgeAllocator, edgePartitionsAllocator)
@@ -151,7 +151,7 @@ namespace sequoia::maths
       class EdgePartitionsAllocator = typename EdgeStorage::partitions_allocator_type,
       class N                       = node_storage_type,
       class NodeWeightAllocator     = typename graph_impl::node_allocator_generator<N>::allocator_type,      
-      std::enable_if_t<!std::is_empty_v<N>, int> = 0
+      std::enable_if_t<!std::is_empty_v<N> && !std::is_convertible_v<EdgeAllocator&, graph_base&>, int> = 0
     >
     graph_base(const EdgeAllocator& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator, const NodeWeightAllocator& nodeWeightAllocator)
       : primitive_type(edgeAllocator, edgePartitionsAllocator, nodeWeightAllocator)
@@ -247,7 +247,7 @@ namespace sequoia::maths
       std::enable_if_t<std::is_empty_v<N>, int> = 0
     >
     graph_base(const graph_base& in, const EdgeAllocator& edgeAllocator)
-      : primitive_type{in, edgeAllocator, edgeAllocator}
+      : primitive_type{in, edgeAllocator}
     {}
 
     template

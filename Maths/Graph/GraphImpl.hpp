@@ -105,7 +105,7 @@ namespace sequoia
         class EdgePartitionsAllocator,
         class NodeAllocator,
         class N=node_weight_type,
-        std::enable_if_t<enableNodeAllocation<N>, int>  = 0
+        std::enable_if_t<enableNodeAllocation<N> && !std::is_convertible_v<EdgeAllocator&, graph_primitive&>, int>  = 0
       >
       constexpr graph_primitive(const EdgeAllocator& edgeAlloc, const EdgePartitionsAllocator& edgeParitionsAlloc, const NodeAllocator& nodeAlloc)
         : Connectivity(edgeAlloc, edgeParitionsAlloc)
@@ -129,7 +129,7 @@ namespace sequoia
         class EdgeAllocator,
         class EdgePartitionsAllocator,
         class N=node_weight_type,
-        std::enable_if_t<!enableNodeAllocation<N>, int>  = 0
+        std::enable_if_t<!enableNodeAllocation<N> && !std::is_convertible_v<EdgeAllocator&, graph_primitive&>, int>  = 0
       >
       constexpr graph_primitive(const EdgeAllocator& edgeAlloc, const EdgePartitionsAllocator& edgeParitionsAlloc)
         : Connectivity(edgeAlloc, edgeParitionsAlloc)
