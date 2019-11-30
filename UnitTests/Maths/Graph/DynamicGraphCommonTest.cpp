@@ -1216,19 +1216,19 @@ namespace sequoia::unit_testing
 
       if constexpr (GraphFlavour == graph_flavour::directed)
       {
-        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{1}}, {}}, nodeMaker, allocation_info{allocGetter, {{0, {1, 1}, {1, 1}}, {0, {1, 0}, {1, 1}}}});
+        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{1}}, {}}, nodeMaker, allocation_info{allocGetter, {{0, {1, 1}, {1, 1}}, {0, {2, 0}, {2, 2}}}});
       }
       else if constexpr(GraphFlavour == graph_flavour::undirected)
       {
-        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{1}}, {edge_init_t{0}}}, nodeMaker, allocation_info{allocGetter, {{0, {1, 1}, {1, 1}}, {0, {1, 0}, {1, 1}}}});
+        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{1}}, {edge_init_t{0}}}, nodeMaker, allocation_info{allocGetter, {{0, {1, 1}, {1, 1}}, {0, {2, 0}, {2, 2}}}});
       }
       else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
       {
-        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{0,1,0}}, {edge_init_t{0,1,0}}}, nodeMaker, allocation_info{allocGetter, {{0, {1, 1}, {1, 1}}, {0, {1, 0}, {1, 1}}}});
+        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{0,1,0}}, {edge_init_t{0,1,0}}}, nodeMaker, allocation_info{allocGetter, {{0, {1, 1}, {1, 1}}, {0, {2, 0}, {2, 2}}}});
       }
       else
       {
-        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{1,0}}, {edge_init_t{0,0}}}, nodeMaker, allocation_info{allocGetter, {{0, {1, 1}, {1, 1}}, {0, {1, 0}, {1, 1}}}});
+        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{1,0}}, {edge_init_t{0,0}}}, nodeMaker, allocation_info{allocGetter, {{0, {1, 1}, {1, 1}}, {0, {2, 0}, {2, 2}}}});
       }
     }
     else
@@ -1249,19 +1249,19 @@ namespace sequoia::unit_testing
 
       if constexpr (GraphFlavour == graph_flavour::directed)
       {
-        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{1}}, {}}, nodeMaker, allocation_info{allocGetter, {{0, {1, 1}, {1, 1}}, {0, {1, 0}, {1, 1}}}}, allocation_info{nodeAllocGetter, {0, {1, 1}, {1, 1}}});
+        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{1}}, {}}, nodeMaker, allocation_info{allocGetter, {{0, {1, 1}, {1, 1}}, {0, {2, 0}, {2, 2}}}}, allocation_info{nodeAllocGetter, {0, {1, 1}, {1, 1}}});
       }
       else if constexpr(GraphFlavour == graph_flavour::undirected)
       {
-        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{1}}, {edge_init_t{0}}}, nodeMaker, allocation_info{allocGetter, {{0, {1, 1}, {1, 1}}, {0, {1, 0}, {1, 1}}}}, allocation_info{nodeAllocGetter, {0, {1, 1}, {1, 1}}});
+        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{1}}, {edge_init_t{0}}}, nodeMaker, allocation_info{allocGetter, {{0, {1, 1}, {1, 1}}, {0, {2, 0}, {2, 2}}}}, allocation_info{nodeAllocGetter, {0, {1, 1}, {1, 1}}});
       }
       else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
       {
-        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{0,1,0}}, {edge_init_t{0,1,0}}}, nodeMaker, allocation_info{allocGetter, {{0, {1, 1}, {1, 1}}, {0, {1, 0}, {1, 1}}}}, allocation_info{nodeAllocGetter, {0, {1, 1}, {1, 1}}});
+        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{0,1,0}}, {edge_init_t{0,1,0}}}, nodeMaker, allocation_info{allocGetter, {{0, {1, 1}, {1, 1}}, {0, {2, 0}, {2, 2}}}}, allocation_info{nodeAllocGetter, {0, {1, 1}, {1, 1}}});
       }
       else
       {
-        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{1,0}}, {edge_init_t{0,0}}}, nodeMaker, allocation_info{allocGetter, {{0, {1, 1}, {1, 1}}, {0, {1, 0}, {1, 1}}}}, allocation_info{nodeAllocGetter, {0, {1, 1}, {1, 1}}});
+        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{1,0}}, {edge_init_t{0,0}}}, nodeMaker, allocation_info{allocGetter, {{0, {1, 1}, {1, 1}}, {0, {2, 0}, {2, 2}}}}, allocation_info{nodeAllocGetter, {0, {1, 1}, {1, 1}}});
       }
     }
   }
