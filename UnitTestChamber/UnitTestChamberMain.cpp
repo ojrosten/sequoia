@@ -11,6 +11,7 @@
 #include "MonotonicSequenceTest.hpp"
 
 #include "TypeTraitsTest.hpp"
+#include "UtilitiesTest.hpp"
 
 #include "ArrayUtilitiesTest.hpp"
 #include "ProtectiveWrapperTestingDiagnostics.hpp"
@@ -75,9 +76,7 @@ int main(int argc, char** argv)
       test_family{
         "Diagnostics",
         false_positive_diagnostics{"False Positive Diagnostics"},
-        false_negative_diagnostics{"False Negative Diagnostics"},
-          //partitioned_data_test{"Test"}
-          test_graph{"Test"}
+        false_negative_diagnostics{"False Negative Diagnostics"}
       }
     );
       

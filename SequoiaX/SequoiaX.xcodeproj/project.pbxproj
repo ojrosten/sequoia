@@ -10,7 +10,6 @@
 		7E7198AE22E78CE400FF81BC /* UnitTestChamberMain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E7198AD22E78CE400FF81BC /* UnitTestChamberMain.cpp */; };
 		7E7198B122E78E2F00FF81BC /* UnitTestRunner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E7198B022E78E2F00FF81BC /* UnitTestRunner.cpp */; };
 		7E7198B322E78E7600FF81BC /* UnitTestDiagnostics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E7198B222E78E7600FF81BC /* UnitTestDiagnostics.cpp */; };
-		7EA80EA6237C95A80054BCBD /* PartitionedDataTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7EA80EA5237C95A80054BCBD /* PartitionedDataTest.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -35,7 +34,6 @@
 		7E7198AF22E78D4F00FF81BC /* UnitTestFramework */ = {isa = PBXFileReference; lastKnownFileType = folder; name = UnitTestFramework; path = ../UnitTestFramework; sourceTree = "<group>"; };
 		7E7198B022E78E2F00FF81BC /* UnitTestRunner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UnitTestRunner.cpp; path = ../UnitTestFramework/UnitTestRunner.cpp; sourceTree = "<group>"; };
 		7E7198B222E78E7600FF81BC /* UnitTestDiagnostics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UnitTestDiagnostics.cpp; path = ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp; sourceTree = "<group>"; };
-		7EA80EA5237C95A80054BCBD /* PartitionedDataTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PartitionedDataTest.cpp; path = ../UnitTests/Core/DataStructures/PartitionedDataTest.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,7 +50,6 @@
 		7E402F04215D01510017F018 = {
 			isa = PBXGroup;
 			children = (
-				7EA80EA5237C95A80054BCBD /* PartitionedDataTest.cpp */,
 				7E7198B222E78E7600FF81BC /* UnitTestDiagnostics.cpp */,
 				7E7198B022E78E2F00FF81BC /* UnitTestRunner.cpp */,
 				7E7198AF22E78D4F00FF81BC /* UnitTestFramework */,
@@ -138,7 +135,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				7E7198AE22E78CE400FF81BC /* UnitTestChamberMain.cpp in Sources */,
-				7EA80EA6237C95A80054BCBD /* PartitionedDataTest.cpp in Sources */,
 				7E7198B122E78E2F00FF81BC /* UnitTestRunner.cpp in Sources */,
 				7E7198B322E78E7600FF81BC /* UnitTestDiagnostics.cpp in Sources */,
 			);
@@ -264,6 +260,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = X8L4UBD548;
+				GCC_GENERATE_TEST_COVERAGE_FILES = NO;
 				"HEADER_SEARCH_PATHS[arch=*]" = (
 					"$(SRCROOT)/../UnitTests/**",
 					"$(SRCROOT)/../Algorithms/**",
@@ -274,6 +271,10 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				OTHER_CPLUSPLUSFLAGS = "";
+				"OTHER_CPLUSPLUSFLAGS[arch=*]" = (
+					"-D",
+					MINIMAL_GRAPH_TESTS,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -284,6 +285,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = X8L4UBD548;
+				GCC_GENERATE_TEST_COVERAGE_FILES = NO;
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

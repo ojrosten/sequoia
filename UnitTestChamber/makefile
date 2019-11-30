@@ -16,14 +16,12 @@ CC := clang++
 CFLAGS := -Wall -std=c++2a -O0 -ferror-limit=1 \
 	  -Wno-missing-braces		       	   \
 	  -ftemplate-backtrace-limit=0	       \
-	  -D MINIMAL_GRAPH_TESTS			   \
 	  $(patsubst %,-I%, $(UTSUBDIRS))      \
       $(patsubst %,-I%, $(LIBSUBDIRS))
 EXE := $(CHAMBERBUILDDIR)/UnitTestChamber.exe
 
 UTSRCS := UnitTestChamberMain.cpp
 UTSRCS += ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp
-UTSRCS += ../UnitTests/Maths/Graph/DynamicGraphCommonTest.cpp
 UTOBJS := $(addprefix $(CHAMBERBUILDDIR)/, $(UTSRCS:%.cpp=%.o))
 UTDEPS := $(addprefix $(CHAMBERBUILDDIR)/, $(UTSRCS:%.cpp=%.d))
 
