@@ -449,11 +449,11 @@ namespace sequoia
         check_equality(combine_messages(description, "Swap"), logger, z, yClone);
       }
 
-         /*if constexpr(sizeof...(allocators) > 0)
+      if constexpr(sizeof...(Allocators) > 0)
       {
-        T u{std::move(x), allocators...};
+        T u{std::move(x), allocationInfo.make_allocator()...};
         check_equality(combine_messages(description, "Move constructor using allocator"), logger, u, xClone);
-        }*/
+      }
     }
 
     template<class T, class S>
