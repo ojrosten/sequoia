@@ -408,13 +408,13 @@ namespace sequoia
       -> move_only_allocation_info<std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::arg>, std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::ret>>;
 
     template<class Logger, class T, class Mutator, class... Allocators>
-    void check_regular_semantics(std::string_view description, Logger& logger, const T& x, const T& y, Mutator yMutator, allocation_info<T, Allocators>... allocationInfo)
+    void check_regular_semantics(std::string_view description, Logger& logger, const T& x, const T& y, Mutator yMutator, allocation_info<T, Allocators>... info)
     {
       typename Logger::sentinel s{logger, add_type_info<T>(description)};
       
-      if(impl::check_regular_semantics(description, logger, x, y, yMutator, std::tuple_cat(impl::make_allocation_checkers(allocationInfo, x, y)...)))
+      if(impl::check_regular_semantics(description, logger, x, y, yMutator, std::tuple_cat(impl::make_allocation_checkers(info, x, y)...)))
       {
-        impl::check_para_constructor_allocations(description, logger, y, yMutator, allocationInfo...);
+        impl::check_para_constructor_allocations(description, logger, y, yMutator, info...);
       }
     }
 
@@ -425,7 +425,7 @@ namespace sequoia
     }
 
     template<class Logger, class T, class... Allocators>
-    void check_regular_semantics(std::string_view description, Logger& logger, T&& x, T&& y, const T& xClone, const T& yClone, move_only_allocation_info<T, Allocators>... allocationInfo)
+    void check_regular_semantics(std::string_view description, Logger& logger, T&& x, T&& y, const T& xClone, const T& yClone, move_only_allocation_info<T, Allocators>... info)
     {
       typename Logger::sentinel s{logger, add_type_info<T>(description)};
 
@@ -451,8 +451,9 @@ namespace sequoia
 
       if constexpr(sizeof...(Allocators) > 0)
       {
-        T u{std::move(x), allocationInfo.make_allocator()...};
-        check_equality(combine_messages(description, "Move constructor using allocator"), logger, u, xClone);
+        T u{std::move(y), info.make_allocator()...};
+        check_para_move_y_allocation(description, logger, u, std::tuple_cat(make_allocation_checkers(info)...));
+        check_equality(combine_messages(description, "Move constructor using allocator"), logger, u, yClone);
       }
     }
 
@@ -662,15 +663,15 @@ namespace sequoia
       }
 
       template<class T, class... Allocators>
-      void check_regular_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone, move_only_allocation_info<T, Allocators>... allocationInfo)
+      void check_regular_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone, move_only_allocation_info<T, Allocators>... info)
       {
-        unit_testing::check_regular_semantics(description, m_Logger, std::move(x), std::move(y), xClone, yClone, allocationInfo...);
+        unit_testing::check_regular_semantics(description, m_Logger, std::move(x), std::move(y), xClone, yClone, info...);
       }
 
       template<class T, class Mutator, class... Allocators>
-      void check_regular_semantics(std::string_view description, const T& x, const T& y, Mutator m, allocation_info<T, Allocators>... allocationInfo)
+      void check_regular_semantics(std::string_view description, const T& x, const T& y, Mutator m, allocation_info<T, Allocators>... info)
       {
-        unit_testing::check_regular_semantics(description, m_Logger, x, y, m, allocationInfo...);
+        unit_testing::check_regular_semantics(description, m_Logger, x, y, m, info...);
       }
       
       template<class F, class S>
