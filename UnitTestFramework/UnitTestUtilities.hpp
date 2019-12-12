@@ -115,4 +115,13 @@ namespace sequoia::unit_testing
     test.template test_allocation<true, true, false>();
     test.template test_allocation<true, true, true>();
   }
+
+  template<class Test>
+  void do_move_only_allocation_tests(Test& test)
+  {
+    test.template test_move_only_allocation<false, false>();
+    test.template test_move_only_allocation<false, true>();
+    test.template test_move_only_allocation<true, false>();
+    test.template test_move_only_allocation<true, true>();
+  }
 }

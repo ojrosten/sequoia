@@ -289,32 +289,38 @@ namespace sequoia
       assignment_allocation_predictions assign_y_to_x;
     };
 
-    template<class Container, class Allocator>
+    struct move_only_allocation_predictions
+    {
+      int para_move{};
+    };
+
+    template<class Container, class Allocator, class Predictions>
     class allocation_info : public impl::allocation_info_base<Container, Allocator>
     {
     private:
       using base_t = impl::allocation_info_base<Container, Allocator>;
     public:
-      using container_type = Container;
-      using allocator_type = Allocator;
+      using container_type   = Container;
+      using allocator_type   = Allocator;
+      using predictions_type = Predictions;
       
       template<class Fn>
-      allocation_info(Fn&& allocGetter, allocation_predictions predictions)
+      allocation_info(Fn&& allocGetter, Predictions predictions)
         : base_t{std::forward<Fn>(allocGetter)}
         , m_Predictions{std::move(predictions)}
       {}
 
       [[nodiscard]]
-      const allocation_predictions& get_predictions() const noexcept
+      const Predictions& get_predictions() const noexcept
       {
         return m_Predictions;
       }
     private:
-      allocation_predictions m_Predictions;
+      Predictions m_Predictions;
     };
 
-    template<class Container, class... Allocators>
-    class allocation_info<Container, std::scoped_allocator_adaptor<Allocators...>>
+    template<class Container, class... Allocators, class Predictions>
+    class allocation_info<Container, std::scoped_allocator_adaptor<Allocators...>, Predictions>
       : public impl::allocation_info_base<Container, std::scoped_allocator_adaptor<Allocators...>>
     {
     private:
@@ -322,13 +328,14 @@ namespace sequoia
     public:
       constexpr static auto N{sizeof...(Allocators)};
 
-      using container_type = Container;
-      using allocator_type = std::scoped_allocator_adaptor<Allocators...>;
+      using container_type   = Container;
+      using allocator_type   = std::scoped_allocator_adaptor<Allocators...>;
+      using predictions_type = Predictions;
 
       template<class Fn>
-      allocation_info(Fn&& allocGetter, std::initializer_list<allocation_predictions> predictions)
+      allocation_info(Fn&& allocGetter, std::initializer_list<Predictions> predictions)
         : base_t{std::forward<Fn>(allocGetter)}
-        , m_Predictions{utilities::to_array<allocation_predictions, N>(predictions)}
+        , m_Predictions{utilities::to_array<Predictions, N>(predictions)}
       {}
 
       template<std::size_t I> decltype(auto) unpack() const
@@ -369,16 +376,36 @@ namespace sequoia
         }
       }
       
-      std::array<allocation_predictions, N> m_Predictions;
+      std::array<Predictions, N> m_Predictions;
+    };
+
+    template<class Fn, class Predictions>
+    allocation_info(Fn&& allocGetter, Predictions predictions)
+      -> allocation_info<std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::arg>, std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::ret>, Predictions>;
+
+    template<class Fn, class Predictions>
+    allocation_info(Fn&& allocGetter, std::initializer_list<Predictions> predictions)
+      -> allocation_info<std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::arg>, std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::ret>, Predictions>;
+
+    // Done through inheritance rather than a using declaration
+    // in order to make use of CTAD. A shame argument deduction
+    // can't be used for using declarations...
+    
+    template<class Container, class Allocator>
+    class move_only_allocation_info
+      : public allocation_info<Container, Allocator, move_only_allocation_predictions>
+    {
+    public:
+      using allocation_info<Container, Allocator, move_only_allocation_predictions>::allocation_info;
     };
 
     template<class Fn>
-    allocation_info(Fn&& allocGetter, allocation_predictions predictions)
-      -> allocation_info<std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::arg>, std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::ret>>;
+    move_only_allocation_info(Fn&& allocGetter, move_only_allocation_predictions predictions)
+      -> move_only_allocation_info<std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::arg>, std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::ret>>;
 
     template<class Fn>
-    allocation_info(Fn&& allocGetter, std::initializer_list<allocation_predictions> predictions)
-      -> allocation_info<std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::arg>, std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::ret>>;
+    move_only_allocation_info(Fn&& allocGetter, std::initializer_list<move_only_allocation_predictions> predictions)
+      -> move_only_allocation_info<std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::arg>, std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::ret>>;
 
     template<class Logger, class T, class Mutator, class... Allocators>
     void check_regular_semantics(std::string_view description, Logger& logger, const T& x, const T& y, Mutator yMutator, allocation_info<T, Allocators>... allocationInfo)
@@ -398,14 +425,11 @@ namespace sequoia
     }
 
     template<class Logger, class T, class... Allocators>
-    void check_regular_semantics(std::string_view description, Logger& logger, T&& x, T&& y, const T& xClone, const T& yClone, const Allocators&... allocators)
+    void check_regular_semantics(std::string_view description, Logger& logger, T&& x, T&& y, const T& xClone, const T& yClone, move_only_allocation_info<T, Allocators>... allocationInfo)
     {
       typename Logger::sentinel s{logger, add_type_info<T>(description)};
 
-      if(!check(combine_messages(description, "Equality operator is inconsistent"), logger, x == x)) return;
-      if(!check(combine_messages(description, "Inequality operator is inconsistent"), logger, !(x != x))) return;
-
-      if(!check(combine_messages(description, "Precondition - for checking regular semantics, x and y are assumed to be different"), logger, x != y)) return;
+      if(!impl::check_regular_preconditions(description, logger, x, y)) return;
 
       if(!check(combine_messages(description, "Precondition - for checking regular semantics, x and xClone are assumed to be equal"), logger, x == xClone)) return;
 
@@ -425,11 +449,11 @@ namespace sequoia
         check_equality(combine_messages(description, "Swap"), logger, z, yClone);
       }
 
-      if constexpr(sizeof...(allocators) > 0)
+         /*if constexpr(sizeof...(allocators) > 0)
       {
         T u{std::move(x), allocators...};
         check_equality(combine_messages(description, "Move constructor using allocator"), logger, u, xClone);
-      }
+        }*/
     }
 
     template<class T, class S>
@@ -638,9 +662,9 @@ namespace sequoia
       }
 
       template<class T, class... Allocators>
-      void check_regular_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone, const Allocators&... allocators)
+      void check_regular_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone, move_only_allocation_info<T, Allocators>... allocationInfo)
       {
-        unit_testing::check_regular_semantics(description, m_Logger, std::move(x), std::move(y), xClone, yClone, allocators...);
+        unit_testing::check_regular_semantics(description, m_Logger, std::move(x), std::move(y), xClone, yClone, allocationInfo...);
       }
 
       template<class T, class Mutator, class... Allocators>

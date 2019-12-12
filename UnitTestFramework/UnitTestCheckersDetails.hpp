@@ -34,7 +34,7 @@ namespace sequoia::unit_testing
   struct individual_allocation_predictions;
   struct allocation_predictions;
   
-  template<class Container, class Allocator>
+  template<class Container, class Allocator, class Predictions=allocation_predictions>
   class allocation_info;
 }
 
@@ -615,6 +615,17 @@ namespace sequoia::unit_testing::impl
     }
   }
 
+  template<class Logger, class T>
+  bool check_regular_preconditions(std::string_view description, Logger& logger, const T& x, const T& y)
+  {
+    if(!check(combine_messages(description, "Equality operator is inconsistent"), logger, x == x)) return false;
+    if(!check(combine_messages(description, "Inequality operator is inconsistent"), logger, !(x != x))) return false;
+
+    if(!check(combine_messages(description, "Precondition - for checking regular semantics, x and y are assumed to be different"), logger, x != y)) return false;
+
+    return true;
+  }
+  
   template<class Logger, class T, class Mutator, class... Allocators>
   bool check_regular_semantics(std::string_view description, Logger& logger, const T& x, const T& y, Mutator yMutator, allocation_checker<T, Allocators>... checkers)
   {
@@ -624,11 +635,8 @@ namespace sequoia::unit_testing::impl
         
     typename Logger::sentinel s{logger, add_type_info<T>(description)};
 
-    if(!check(combine_messages(description, "Equality operator is inconsistent"), logger, x == x)) return false;
-    if(!check(combine_messages(description, "Inequality operator is inconsistent"), logger, !(x != x))) return false;
-
-    if(!check(combine_messages(description, "Precondition - for checking regular semantics, x and y are assumed to be different"), logger, x != y)) return false;
-    
+    if(!check_regular_preconditions(description, logger, x, y)) return false;
+        
     T z{x};
     check_equality(combine_messages(description, "Copy constructor (x)"), logger, z, x);
     check(combine_messages(description, "Equality operator"), logger, z == x);
