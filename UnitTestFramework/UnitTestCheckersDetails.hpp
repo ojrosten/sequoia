@@ -317,7 +317,7 @@ namespace sequoia::unit_testing::impl
     template<class Logger>
     void check_para_move(std::string_view description, std::string_view suffix, Logger& logger, const Container& container, const alloc_info& info, const int prediction) const
     {
-      check_allocation(description, "Para copy construction allocation", suffix, logger, container, info, m_FirstCount, prediction);
+      check_allocation(description, "Para move construction allocation", suffix, logger, container, info, m_FirstCount, prediction);
     }
 
     template<class Logger>
