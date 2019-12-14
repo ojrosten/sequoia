@@ -441,19 +441,29 @@ namespace sequoia
       x = std::move(y);
       check_equality(combine_messages(description, "Move assignment"), logger, x, yClone);
 
+      auto allocChecker{
+        [](std::string_view description, Logger& logger, T&& y, const T& yClone, const auto&... info){
+          if constexpr(sizeof...(Allocators) > 0)
+          {
+            T u{std::move(y), info.make_allocator()...};
+            check_para_move_y_allocation(description, logger, u, std::tuple_cat(make_allocation_checkers(info)...));
+            check_equality(combine_messages(description, "Move constructor using allocator"), logger, u, yClone);
+          }
+        }
+      };
+
       if constexpr (impl::do_swap<Allocators...>())
       {
         using std::swap;
         swap(z, x);
         check_equality(combine_messages(description, "Swap"), logger, x, xClone);
         check_equality(combine_messages(description, "Swap"), logger, z, yClone);
-      }
 
-      if constexpr(sizeof...(Allocators) > 0)
+        allocChecker(description, logger, std::move(z), yClone, info...);
+      }
+      else
       {
-        T u{std::move(y), info.make_allocator()...};
-        check_para_move_y_allocation(description, logger, u, std::tuple_cat(make_allocation_checkers(info)...));
-        check_equality(combine_messages(description, "Move constructor using allocator"), logger, u, yClone);
+        allocChecker(description, logger, std::move(x), yClone, info...);
       }
     }
 
