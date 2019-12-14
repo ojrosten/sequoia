@@ -24,6 +24,9 @@ namespace sequoia
       template<class Test>
       friend void do_allocation_tests(Test&);
 
+      template<class Test>
+      friend void do_move_only_allocation_tests(Test&);
+
       void run_tests() override;
 
       void basic_tests();
@@ -37,6 +40,12 @@ namespace sequoia
 
       template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
       void test_regular_semantics_allocations();
+
+      template<bool PropagateMove, bool PropagateSwap>
+      void test_move_only_allocation();
+
+      template<bool PropagateMove, bool PropagateSwap>
+      void test_move_only_semantics_allocations();
     };
 
     class false_negative_diagnostics : public false_negative_test
@@ -47,6 +56,9 @@ namespace sequoia
       template<class Test>
       friend void do_allocation_tests(Test&);
 
+      template<class Test>
+      friend void do_move_only_allocation_tests(Test&);
+
       void run_tests() override;
 
       void basic_tests();
@@ -60,6 +72,12 @@ namespace sequoia
 
       template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
       void test_regular_semantics_allocations();
+
+      template<bool PropagateMove, bool PropagateSwap>
+      void test_move_only_allocation();
+
+      template<bool PropagateMove, bool PropagateSwap>
+      void test_move_only_semantics_allocations();
     };
 
     template<class T=int, class Allocator=std::allocator<int>>

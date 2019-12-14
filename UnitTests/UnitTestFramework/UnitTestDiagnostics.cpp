@@ -14,7 +14,6 @@ namespace sequoia::unit_testing
 {
   void false_positive_diagnostics::run_tests()
   {
-      
     basic_tests();
     test_container_checks();
     test_relative_performance();
@@ -22,6 +21,7 @@ namespace sequoia::unit_testing
     test_regular_semantics();
 
     do_allocation_tests(*this);
+    do_move_only_allocation_tests(*this);
   }
 
   void false_positive_diagnostics::basic_tests()
@@ -128,6 +128,12 @@ namespace sequoia::unit_testing
   void false_positive_diagnostics::test_allocation()
   {
     test_regular_semantics_allocations<PropagateCopy, PropagateMove, PropagateSwap>();
+  }
+
+  template<bool PropagateMove, bool PropagateSwap>
+  void false_positive_diagnostics::test_move_only_allocation()
+  {
+    test_move_only_semantics_allocations<PropagateMove, PropagateSwap>();
   }
 
   template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
@@ -350,16 +356,36 @@ namespace sequoia::unit_testing
           check_regular_semantics(LINE("Incorrect mutation allocs"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, m, allocation_info<beast, allocator>{allocGetter, {1, {1,1}, {1,1}}});
         }
       }
-    }
-    
-    using allocator = std::vector<int>::allocator_type;
-    check_regular_semantics(LINE(""), broken_equality{1}, broken_equality{2}, broken_equality{1}, broken_equality{2}, allocator{});
-    check_regular_semantics(LINE(""), broken_inequality{1}, broken_inequality{2}, broken_inequality{1}, broken_inequality{2}, allocator{});
+    }    
+  }
+
+  template<bool PropagateMove, bool PropagateSwap>
+  void false_positive_diagnostics::test_move_only_semantics_allocations()
+  {
+    check_regular_semantics(LINE(""), broken_equality{1}, broken_equality{2}, broken_equality{1}, broken_equality{2});
+
+    check_regular_semantics(LINE(""), broken_inequality{1}, broken_inequality{2}, broken_inequality{1}, broken_inequality{2});
+
     check_regular_semantics(LINE(""), broken_move{1}, broken_move{2}, broken_move{1}, broken_move{2});
-    check_regular_semantics(LINE(""), broken_move_assignment{1}, broken_move_assignment{2}, broken_move_assignment{1}, broken_move_assignment{2}, allocator{});
-    check_regular_semantics(LINE(""), perfectly_normal_beast{1}, perfectly_normal_beast{1}, perfectly_normal_beast{1}, perfectly_normal_beast{1}, allocator{});
-    check_regular_semantics(LINE(""), perfectly_normal_beast{1}, perfectly_normal_beast{3}, perfectly_normal_beast{2}, perfectly_normal_beast{3}, allocator{});
-    check_regular_semantics(LINE(""), perfectly_normal_beast{1}, perfectly_normal_beast{2}, perfectly_normal_beast{3}, perfectly_normal_beast{2}, allocator{});
+
+    check_regular_semantics(LINE(""), broken_move_assignment{1}, broken_move_assignment{2}, broken_move_assignment{1}, broken_move_assignment{2});
+
+    check_regular_semantics(LINE(""), perfectly_normal_beast{1}, perfectly_normal_beast{1}, perfectly_normal_beast{1}, perfectly_normal_beast{1});
+
+    check_regular_semantics(LINE(""), perfectly_normal_beast{1}, perfectly_normal_beast{3}, perfectly_normal_beast{2}, perfectly_normal_beast{3});
+
+    check_regular_semantics(LINE(""), perfectly_normal_beast{1}, perfectly_normal_beast{2}, perfectly_normal_beast{3}, perfectly_normal_beast{2});
+
+    {
+      using beast = perfectly_normal_beast<int, shared_counting_allocator<int, true, PropagateMove, PropagateSwap>>;
+      auto allocGetter{
+        [](const beast& beast){
+          return beast.x.get_allocator();
+        }
+      };
+      
+      check_regular_semantics(LINE(""), beast{1}, beast{2}, beast{1}, beast{2}, move_only_allocation_info{allocGetter, move_only_allocation_predictions{0}});
+    }
   }
 
   void false_negative_diagnostics::run_tests()
@@ -371,6 +397,7 @@ namespace sequoia::unit_testing
     test_regular_semantics();
 
     do_allocation_tests(*this);
+    do_move_only_allocation_tests(*this);
   }
 
   void false_negative_diagnostics::basic_tests()
@@ -447,6 +474,12 @@ namespace sequoia::unit_testing
     test_regular_semantics_allocations<PropagateCopy, PropagateMove, PropagateSwap>();
   }
 
+  template<bool PropagateMove, bool PropagateSwap>
+  void false_negative_diagnostics::test_move_only_allocation()
+  {
+    test_move_only_semantics_allocations<PropagateMove, PropagateSwap>();
+  }
+
   template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
   void false_negative_diagnostics::test_regular_semantics_allocations()
   {
@@ -518,9 +551,7 @@ namespace sequoia::unit_testing
       check_regular_semantics(LINE(""), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info<beast, allocator>{allocGetter, {1, {1,1,2,1}, {1,1}}});
     }
 
-    using allocator = std::vector<int>::allocator_type;
-    check_regular_semantics(LINE(""), perfectly_normal_beast{1}, perfectly_normal_beast{2}, perfectly_normal_beast{1}, perfectly_normal_beast{2}, allocator{});
-
+    
     {
       using beast = doubly_normal_beast<int, double, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>, shared_counting_allocator<double, PropagateCopy, PropagateMove, PropagateSwap>>;
       using xAllocator = typename beast::x_allocator_type;
@@ -546,5 +577,20 @@ namespace sequoia::unit_testing
                               , allocation_info<beast, xAllocator>{allocGetter, {1, {1,1}, {1,1}}}
                               , allocation_info{yAllocGetter, {1, {1,1}, {1,1}}});
     }
-  }  
+  }
+
+  template<bool PropagateMove, bool PropagateSwap>
+  void false_negative_diagnostics::test_move_only_semantics_allocations()
+  {
+    {
+      using beast = perfectly_normal_beast<int, shared_counting_allocator<int, true, PropagateMove, PropagateSwap>>;
+      auto allocGetter{
+        [](const beast& beast){
+          return beast.x.get_allocator();
+        }
+      };
+
+      check_regular_semantics(LINE(""), beast{1}, beast{2}, beast{1}, beast{2}, move_only_allocation_info{allocGetter, move_only_allocation_predictions{1}});
+    }
+  }
 }
