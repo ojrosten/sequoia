@@ -379,13 +379,13 @@ namespace sequoia
       std::array<Predictions, N> m_Predictions;
     };
 
-    template<class Fn, class Predictions>
-    allocation_info(Fn&& allocGetter, Predictions predictions)
-      -> allocation_info<std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::arg>, std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::ret>, Predictions>;
+    template<class Fn>
+    allocation_info(Fn&& allocGetter, allocation_predictions predictions)
+      -> allocation_info<std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::arg>, std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::ret>>;
 
-    template<class Fn, class Predictions>
-    allocation_info(Fn&& allocGetter, std::initializer_list<Predictions> predictions)
-      -> allocation_info<std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::arg>, std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::ret>, Predictions>;
+    template<class Fn>
+    allocation_info(Fn&& allocGetter, std::initializer_list<allocation_predictions> predictions)
+      -> allocation_info<std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::arg>, std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::ret>>;
 
     // Done through inheritance rather than a using declaration
     // in order to make use of CTAD. A shame argument deduction
