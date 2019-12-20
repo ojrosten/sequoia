@@ -90,16 +90,12 @@ namespace sequoia::utilities
   };  
 
   /*! \class iterator
-      \brief An iterator with policies controlling dereferncing and auxiliary data.
+      \brief An iterator with policies controlling dereferencing and auxiliary data.
 
       The DereferencePolicy allows customisation of the various dereferencing operators. In principle
       it is therefore possible that deferencing will not return a reference. This is forbidden
       in the case that the underlying iterator is non-const since the semantics could then
       be rather confusing. However, for const iterators this is tacitly allowed.
-
-      The iterator may
-      also hold extra (auxiliary) data, controlled via the AuxiliaryDataPolicy.
-
    */
 
   template<class Iterator, class DereferencePolicy>

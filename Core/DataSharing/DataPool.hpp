@@ -12,7 +12,10 @@
 
  */
 
+#include "SharingPolicies.hpp"
+
 #include "Utilities/ProtectiveWrapper.hpp"
+#include "Utilities/Iterator.hpp"
 
 #include <vector>
 #include <memory>
@@ -32,39 +35,84 @@ namespace sequoia::data_sharing
     {
       return proxy{std::forward<Args>(args)...};
     }
+
+    [[nodiscard]]
+    friend constexpr bool operator==(const unpooled& lhs, const unpooled& rhs) noexcept
+    {
+      return true;
+    }
+
+    [[nodiscard]]
+    friend constexpr bool operator!=(const unpooled& lhs, const unpooled& rhs) noexcept
+    {
+      return !(lhs == rhs);
+    }
   private:
   };
-    
-  template<class T> class data_pool
+
+  namespace impl
   {
+    template<class Wrapper>
+    struct pool_deref_policy
+    {
+      using value_type = typename Wrapper::value_type;
+      using pointer    = const value_type*;
+      using reference  = const value_type&;
+      using proxy      = std::pair<reference, long>;
+
+    protected:
+      using handle_type = std::shared_ptr<Wrapper>;
+
+      pool_deref_policy() = default;
+      pool_deref_policy(const pool_deref_policy&)     = default;
+      pool_deref_policy(pool_deref_policy&&) noexcept = default;
+      pool_deref_policy& operator=(const pool_deref_policy&)     = default;
+      pool_deref_policy& operator=(pool_deref_policy&&) noexcept = default;
+
+      [[nodiscard]]
+      static proxy get(const handle_type& ptr)
+      {
+        return {ptr->get(), ptr.use_count() - 1};
+      }
+    };
+
+    template<class Iterator, class Wrapper>
+    using pool_iterator = utilities::iterator<Iterator, pool_deref_policy<Wrapper>>;
+  }
+
+  template<class T, template<class> class Allocator=std::allocator> class data_pool
+  {
+    friend class data_wrapper;
   public:
     static_assert(!std::is_empty_v<T>, "Makes no sense to pool an empty weight!");
-      
-    class handle
+
+    class data_wrapper
     {
       friend class data_pool;
         
     public:
-      template<class... Args> handle(data_pool& pool, Args&&... args) : m_pPool{&pool}, m_Data{std::forward<Args>(args)...} {}        
+      using value_type = T;
+  
+      template<class... Args> data_wrapper(data_pool& pool, Args&&... args) : m_pPool{&pool}, m_Data{std::forward<Args>(args)...} {}
 
       [[nodiscard]]
       const T& get() const noexcept { return m_Data; }
 
       template<class... Args>
-      std::shared_ptr<handle> set(Args&&... args)
+      std::shared_ptr<data_wrapper> set(Args&&... args)
       {
-        return m_pPool->make_handle(std::forward<Args>(args)...);
+        return m_pPool->make_data_wrapper(std::forward<Args>(args)...);
       }
 
     private:        
       data_pool* m_pPool{};
       T m_Data;
 
-      handle(const handle&) = delete;
-      handle(handle&&) noexcept = default;
+      data_wrapper(const data_wrapper&) = delete;
+      data_wrapper(data_wrapper&&) noexcept = default;
 
-      handle& operator=(const handle&) = delete;
-      handle& operator=(handle&&) noexcept = default;
+      data_wrapper& operator=(const data_wrapper&) = delete;
+      data_wrapper& operator=(data_wrapper&&) noexcept = default;
     };
       
     class proxy
@@ -108,30 +156,66 @@ namespace sequoia::data_sharing
       [[nodiscard]]
       friend bool operator!=(const proxy& lhs, const proxy& rhs) noexcept
       {
-        return lhs != rhs;
+        return !(lhs == rhs);
       }
     private:
-      std::shared_ptr<handle> m_Handle;
+      std::shared_ptr<data_wrapper> m_Handle;
 
-      proxy(const std::shared_ptr<handle>& ptr) : m_Handle{ptr} {}
+      proxy(const std::shared_ptr<data_wrapper>& ptr) : m_Handle{ptr} {}
     };
 
-    friend class handle;
-      
+  private:   
+    using wrapper_handle = std::shared_ptr<data_wrapper>;
+  public:
+    using allocator_type = Allocator<wrapper_handle>;
+  private:
+    using container = std::vector<wrapper_handle, allocator_type>;
+  public:
+    using const_iterator         = impl::pool_iterator<typename container::const_iterator, data_wrapper>;
+    using const_reverse_iterator = impl::pool_iterator<typename container::const_reverse_iterator, data_wrapper>;
+
     data_pool() = default;
+
+    data_pool(const allocator_type& alloc) : m_Data(alloc)
+    {}
 
     data_pool(const data_pool&) = delete;
 
-    data_pool(data_pool&& in) noexcept : data_pool()
+    data_pool(data_pool&& other) noexcept : data_pool()
     {
-      swap(*this, in);
+      swap(*this, other);
+    }
+
+    data_pool(data_pool&& other, const allocator_type& alloc) : m_Data(alloc)
+    {
+      if constexpr(!std::allocator_traits<allocator_type>::propagate_on_container_move_assignment::value)
+      {
+        *this = std::move(other);
+      }
+      else if constexpr(std::allocator_traits<allocator_type>::is_always_equal::value)
+      {
+        swap(*this, other);
+      }
+      else
+      {
+        m_Data.reserve(other.m_Data.size());
+        std::copy(other.m_Data.cbegin(), other.m_Data.cend(), std::back_inserter(m_Data));
+
+        for(auto& pData : m_Data) pData->m_pPool = this;
+        other.m_Data.clear();
+      }
     }
 
     data_pool& operator=(const data_pool&) = delete;
 
-    data_pool& operator=(data_pool&& in) noexcept
+    data_pool& operator=(data_pool&& other) noexcept
     {
-      swap(*this, in);
+      if(&other != this)
+      {
+        m_Data = std::move(other.m_Data);
+        for(auto& pData : m_Data) pData->m_pPool = this;
+      }
+
       return *this;
     }
 
@@ -142,9 +226,56 @@ namespace sequoia::data_sharing
       for(auto& pData : rhs.m_Data) pData->m_pPool = &rhs;
     }
 
-    // may also want to count number of times items are used
+    [[nodiscard]]
+    friend bool operator==(const data_pool& lhs, const data_pool& rhs) noexcept
+    {
+      return std::equal(lhs.m_Data.cbegin(), lhs.m_Data.cend(), rhs.m_Data.cbegin(), rhs.m_Data.cend(),
+                        [](const wrapper_handle& l, const wrapper_handle& r){
+                          return l->get() == r->get();
+                        });
+    }
+
+    [[nodiscard]]
+    friend bool operator!=(const data_pool& lhs, const data_pool& rhs)
+    {
+      return !(lhs == rhs);
+    }
+
+    [[nodiscard]]
+    bool empty() const noexcept { return m_Data.empty(); }
+
     [[nodiscard]]
     std::size_t size() const noexcept { return m_Data.size(); }
+
+    [[nodiscard]]
+    const_iterator begin() const noexcept { return const_iterator{m_Data.begin()}; }
+
+    [[nodiscard]]
+    const_iterator end() const noexcept { return const_iterator{m_Data.end()}; }
+
+    [[nodiscard]]
+    const_iterator cbegin() const noexcept { return const_iterator{m_Data.cbegin()}; }
+
+    [[nodiscard]]
+    const_iterator cend() const noexcept { return const_iterator{m_Data.cend()}; }
+
+    [[nodiscard]]
+    const_reverse_iterator rbegin() const noexcept { return const_reverse_iterator{m_Data.rbegin()}; }
+
+    [[nodiscard]]
+    const_reverse_iterator rend() const noexcept { return const_reverse_iterator{m_Data.rend()}; }
+
+    [[nodiscard]]
+    const_reverse_iterator crbegin() const noexcept { return const_reverse_iterator{m_Data.crbegin()}; }
+
+    [[nodiscard]]
+    const_reverse_iterator crend() const noexcept { return const_reverse_iterator{m_Data.crend()}; }
+
+    [[nodiscard]]
+    allocator_type get_allocator() const
+    {
+      return m_Data.get_allocator();
+    }
 
     template<class... Args>
     [[nodiscard]] proxy make(Args&&... args)
@@ -153,7 +284,7 @@ namespace sequoia::data_sharing
       const auto found = std::find_if(m_Data.begin(), m_Data.end(), [&nascent](const auto& pData) { return pData->get() == nascent;});
       if(found == m_Data.end())
       {
-        m_Data.emplace_back(std::make_shared<handle>(*this, nascent));
+        m_Data.emplace_back(std::make_shared<data_wrapper>(*this, nascent));
         return {m_Data.back()};
       }
       else
@@ -168,15 +299,18 @@ namespace sequoia::data_sharing
     }
 
   private:
-    std::vector<std::shared_ptr<handle>> m_Data;
+    container m_Data;
 
-    template<class... Args> std::shared_ptr<handle> make_handle(Args&&... args)
+    template<class... Args> wrapper_handle make_data_wrapper(Args&&... args)
     {
       const T nascent{std::forward<Args>(args)...};
-      const auto found = std::find_if(m_Data.begin(), m_Data.end(), [&nascent](const auto& pData) { return pData->get() == nascent;});
+      const auto found{
+        std::find_if(m_Data.begin(), m_Data.end(), [&nascent](const auto& pData) { return pData->get() == nascent;})
+      };
+
       if(found == m_Data.end())
       {
-        m_Data.emplace_back(std::make_shared<handle>(*this, nascent));
+        m_Data.emplace_back(std::make_shared<data_wrapper>(*this, nascent));
         return m_Data.back();
       }
       else

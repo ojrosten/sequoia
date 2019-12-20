@@ -62,8 +62,7 @@ namespace sequoia::data_sharing
     static const T* get_ptr(const handle_type& ptr)
     {
       return &*ptr;
-    }  
-  private:
+    }
   };
 
   template<class T>
@@ -93,6 +92,5 @@ namespace sequoia::data_sharing
 
     [[nodiscard]]
     static constexpr const T* get_ptr(const T& in) noexcept { return &in; }
-  private:
   };
 }

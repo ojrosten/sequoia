@@ -86,7 +86,13 @@ namespace sequoia::unit_testing
     static_assert(std::is_same_v<std::size_t, typename static_edge_index_type_generator<255, 65535, true>::index_type>);
   }
   
-  template<maths::graph_flavour GraphFlavour, class EdgeWeight, template<class> class EdgeWeightStorage, template<class, template<class> class, class, class> class EdgeType>
+  template
+  <
+    maths::graph_flavour GraphFlavour,
+    class EdgeWeight,
+    template<class, template<class> class...> class EdgeWeightStorage,
+    template<class, template<class> class, class, class> class EdgeType
+  >
   void test_graph_meta::test_undirected_unshared()
   {
     using namespace maths;
@@ -102,7 +108,13 @@ namespace sequoia::unit_testing
     static_assert(std::is_same_v<edge_t, EdgeType<EdgeWeight, sharing_v_to_type<false>::template policy, proxy, std::size_t>>, "");
   }
 
-  template<maths::graph_flavour GraphFlavour, class EdgeWeight, template<class> class EdgeWeightStorage, template<class, template<class> class, class, class> class EdgeType>
+  template
+  <
+    maths::graph_flavour GraphFlavour,
+    class EdgeWeight,
+    template<class, template<class> class...> class EdgeWeightStorage,
+    template<class, template<class> class, class, class> class EdgeType
+  >
   void test_graph_meta::test_undirected_shared()
   {
     using namespace maths;
@@ -119,7 +131,8 @@ namespace sequoia::unit_testing
   }
 
 
-  template<
+  template
+  <
     maths::graph_flavour GraphFlavour,
     template<class, template<class> class, class, class> class EdgeType
   >
@@ -146,9 +159,10 @@ namespace sequoia::unit_testing
     test_undirected_unshared<GraphFlavour, std::vector<int>, data_sharing::data_pool, EdgeType>();
   }
 
-  template<
+  template
+  <
     class EdgeWeight,
-    template<class> class EdgeWeightStorage
+    template<class, template<class> class...> class EdgeWeightStorage
   >
   void test_graph_meta::test_directed_impl()
   {
@@ -163,9 +177,10 @@ namespace sequoia::unit_testing
     static_assert(std::is_same_v<edge_t, partial_edge<EdgeWeight, sharing_v_to_type<false>::template policy, proxy>>, "");
   }
 
-  template<
+  template
+  <
     class EdgeWeight,
-    template<class> class EdgeWeightStorage
+    template<class, template<class> class...> class EdgeWeightStorage
   >
   void test_graph_meta::test_directed_embedded_impl()
   {

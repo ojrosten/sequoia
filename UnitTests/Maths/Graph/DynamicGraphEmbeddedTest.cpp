@@ -50,10 +50,10 @@ namespace sequoia
       maths::graph_flavour GraphFlavour,      
       class EdgeWeight,
       class NodeWeight,      
-      template <class> class EdgeWeightPooling,
-      template <class> class NodeWeightPooling,
-      template <maths::graph_flavour, class, template<class> class> class EdgeStorageTraits,
-      template <class, template<class> class, bool> class NodeWeightStorageTraits
+      template <class, template<class> class...> class EdgeWeightPooling,
+      template <class, template<class> class...> class NodeWeightPooling,
+      template <maths::graph_flavour, class, template<class, template<class> class...> class> class EdgeStorageTraits,
+      template <class, template<class, template<class> class...> class, bool> class NodeWeightStorageTraits
     >
     void generic_edge_insertions
     <
@@ -193,10 +193,10 @@ namespace sequoia
       maths::graph_flavour GraphFlavour,      
       class EdgeWeight,
       class NodeWeight,      
-      template <class> class EdgeWeightPooling,
-      template <class> class NodeWeightPooling,
-      template <maths::graph_flavour, class, template<class> class> class EdgeStorageTraits,
-      template <class, template<class> class, bool> class NodeWeightStorageTraits
+      template <class, template<class> class...> class EdgeWeightPooling,
+      template <class, template<class> class...> class NodeWeightPooling,
+      template <maths::graph_flavour, class, template<class, template<class> class...> class> class EdgeStorageTraits,
+      template <class, template<class, template<class> class...> class, bool> class NodeWeightStorageTraits
     >
     void generic_weighted_edge_insertions
     <

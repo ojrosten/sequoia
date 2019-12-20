@@ -500,6 +500,19 @@ namespace sequoia
         check_tuple_elements(description, logger, value, prediction);
       }
     };
+
+    template<class S, class T>
+    struct equivalence_checker<std::pair<S, T>>
+    {
+      template<class Logger, class U, class V>
+      static void check(std::string_view description, Logger& logger, const std::pair<S, T>& value, const std::pair<U, V>& prediction)
+      {
+        static_assert(std::is_same_v<std::decay_t<S>, std::decay_t<U>> && std::is_same_v<std::decay_t<T>, std::decay_t<V>>);
+        
+        check_equality(combine_messages(description, "First element of pair is incorrent"), logger, value.first, prediction.first);
+        check_equality(combine_messages(description, "First element of pair is incorrect"), logger, value.second, prediction.second);
+      }
+    };
     
     template<class R> struct performance_results
     {

@@ -8,6 +8,7 @@
 #pragma once
 
 #include "UnitTestCore.hpp"
+#include "UnitTestUtilities.hpp"
 
 #include "DataPool.hpp"
 
@@ -18,11 +19,25 @@ namespace sequoia::unit_testing
   public:
     using unit_test::unit_test;
   private:
-    void run_tests();
+    template<class Test>
+    friend void do_move_only_allocation_tests(Test&); 
+
+    void run_tests() override;
+
     void test_pooled();
     void test_multi_pools();
     void test_unpooled();
 
     data_sharing::data_pool<int> make_int_pool(const int val);
+
+    template<bool PropagateMove, bool PropagateSwap>
+    void test_move_only_allocation();
+
+    template<bool PropagateMove, bool PropagateSwap>
+    struct allocator_generator
+    {
+      template<class T>
+      using allocator = shared_counting_allocator<T, true, PropagateMove, PropagateSwap>;
+    };
   };
 }

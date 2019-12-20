@@ -46,6 +46,16 @@ namespace sequoia::unit_testing
 
     constexpr scaling_dereference_policy(const value_type scale) : m_Scale{scale} {}
     constexpr scaling_dereference_policy(const scaling_dereference_policy&) = default;
+
+    [[nodiscard]]
+    constexpr value_type scale() const noexcept { return m_Scale; }
+  protected:
+    constexpr scaling_dereference_policy(scaling_dereference_policy&&) = default;
+
+    ~scaling_dereference_policy() = default;
+
+    constexpr scaling_dereference_policy& operator=(const scaling_dereference_policy&) = default;
+    constexpr scaling_dereference_policy& operator=(scaling_dereference_policy&&)      = default;
     
     [[nodiscard]]
     constexpr proxy get(typename std::iterator_traits<Iterator>::reference ref) const noexcept
@@ -55,17 +65,6 @@ namespace sequoia::unit_testing
 
     [[nodiscard]]
     static constexpr pointer get_ptr(reference ref) noexcept { return &ref; }
-
-    [[nodiscard]]
-    constexpr value_type scale() const noexcept { return m_Scale; }
-  protected:    
-    constexpr scaling_dereference_policy(scaling_dereference_policy&&)      = default;
-
-    ~scaling_dereference_policy() = default;
-
-    constexpr scaling_dereference_policy& operator=(const scaling_dereference_policy&) = default;
-    constexpr scaling_dereference_policy& operator=(scaling_dereference_policy&&)      = default;
-
   private:
     value_type m_Scale{1};
   };

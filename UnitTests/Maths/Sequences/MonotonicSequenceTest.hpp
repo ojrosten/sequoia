@@ -20,7 +20,7 @@ namespace sequoia::unit_testing
 
   private:
     template<class Test>
-    friend void do_allocation_tests(Test&);   
+    friend void do_allocation_tests(Test&);
 
     template<bool Check>
     constexpr static maths::static_monotonic_sequence<int, 6, std::greater<int>> make_sequence();

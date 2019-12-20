@@ -30,8 +30,8 @@ namespace sequoia::maths::graph_impl
   <        
     graph_flavour GraphFlavour,
     class EdgeWeight,
-    template <class> class EdgeWeightPooling,
-    template<graph_flavour, class, template<class> class> class EdgeStorageTraits,
+    template <class, template<class> class...> class EdgeWeightPooling,
+    template<graph_flavour, class, template<class, template<class> class...> class> class EdgeStorageTraits,
     class IndexType
   >
   struct dynamic_edge_traits : public

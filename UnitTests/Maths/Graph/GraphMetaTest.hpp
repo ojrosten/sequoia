@@ -36,7 +36,7 @@ namespace sequoia::unit_testing
     template<
       maths::graph_flavour GraphFlavour,
       class EdgeWeight,
-      template<class> class EdgeWeightStorage,
+      template<class, template<class> class...> class EdgeWeightStorage,
       template<class, template<class> class, class, class> class EdgeType
     >
     void test_undirected_unshared();
@@ -44,20 +44,20 @@ namespace sequoia::unit_testing
     template<
       maths::graph_flavour GraphFlavour,
       class EdgeWeight,
-      template<class> class EdgeWeightStorage,
+      template<class, template<class> class...> class EdgeWeightStorage,
       template<class, template<class> class, class, class> class EdgeType
     >
     void test_undirected_shared();
 
     template<
       class EdgeWeight,
-      template<class> class EdgeWeightStorage
+      template<class, template<class> class...> class EdgeWeightStorage
     >
     void test_directed_impl();
 
     template<
       class EdgeWeight,
-      template<class> class EdgeWeightStorage
+      template<class, template<class> class...> class EdgeWeightStorage
     >
     void test_directed_embedded_impl();
 
@@ -67,15 +67,15 @@ namespace sequoia::unit_testing
   template<class T> struct wrapper
   {
     T val{};
+
+    [[nodiscard]] friend constexpr bool operator==(const wrapper& lhs, const wrapper& rhs) noexcept
+    {
+      return lhs.val == rhs.val;
+    }
+
+    [[nodiscard]] friend constexpr bool operator!=(const wrapper& lhs, const wrapper& rhs) noexcept
+    {
+      return !(lhs == rhs);
+    }
   };
-
-  template<class T> constexpr bool operator==(const wrapper<T>& lhs, const wrapper<T>& rhs) noexcept
-  {
-    return lhs.val == rhs.val;
-  }
-
-  template<class T> constexpr bool operator!=(const wrapper<T>& lhs, const wrapper<T>& rhs) noexcept
-  {
-    return !(lhs == rhs);
-  }
 }
