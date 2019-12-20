@@ -80,7 +80,7 @@ namespace sequoia::data_sharing
     using pool_iterator = utilities::iterator<Iterator, pool_deref_policy<Wrapper>>;
   }
 
-  template<class T, template<class> class Allocator=std::allocator> class data_pool
+  template<class T, class Allocator=std::allocator<T>> class data_pool
   {
     friend class data_wrapper;
   public:
@@ -167,7 +167,7 @@ namespace sequoia::data_sharing
   private:   
     using wrapper_handle = std::shared_ptr<data_wrapper>;
   public:
-    using allocator_type = Allocator<wrapper_handle>;
+    using allocator_type = typename std::allocator_traits<Allocator>::template rebind_alloc<wrapper_handle>;
   private:
     using container = std::vector<wrapper_handle, allocator_type>;
   public:

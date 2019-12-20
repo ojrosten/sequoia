@@ -90,7 +90,7 @@ namespace sequoia::unit_testing
   <
     maths::graph_flavour GraphFlavour,
     class EdgeWeight,
-    template<class, template<class> class...> class EdgeWeightStorage,
+    template<class...> class EdgeWeightStorage,
     template<class, template<class> class, class, class> class EdgeType
   >
   void test_graph_meta::test_undirected_unshared()
@@ -112,7 +112,7 @@ namespace sequoia::unit_testing
   <
     maths::graph_flavour GraphFlavour,
     class EdgeWeight,
-    template<class, template<class> class...> class EdgeWeightStorage,
+    template<class...> class EdgeWeightStorage,
     template<class, template<class> class, class, class> class EdgeType
   >
   void test_graph_meta::test_undirected_shared()
@@ -162,7 +162,7 @@ namespace sequoia::unit_testing
   template
   <
     class EdgeWeight,
-    template<class, template<class> class...> class EdgeWeightStorage
+    template<class...> class EdgeWeightStorage
   >
   void test_graph_meta::test_directed_impl()
   {
@@ -180,7 +180,7 @@ namespace sequoia::unit_testing
   template
   <
     class EdgeWeight,
-    template<class, template<class> class...> class EdgeWeightStorage
+    template<class...> class EdgeWeightStorage
   >
   void test_graph_meta::test_directed_embedded_impl()
   {

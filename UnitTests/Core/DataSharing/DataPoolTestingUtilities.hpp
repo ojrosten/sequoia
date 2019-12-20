@@ -11,7 +11,7 @@
 
 namespace sequoia::unit_testing
 {
-  template<class T, template<class> class Allocator>
+  template<class T, class Allocator>
   struct weak_equivalence_checker<data_sharing::data_pool<T, Allocator>>
   {
     using type = data_sharing::data_pool<T, Allocator>;

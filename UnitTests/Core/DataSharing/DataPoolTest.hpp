@@ -8,7 +8,6 @@
 #pragma once
 
 #include "UnitTestCore.hpp"
-#include "UnitTestUtilities.hpp"
 
 #include "DataPool.hpp"
 
@@ -32,12 +31,5 @@ namespace sequoia::unit_testing
 
     template<bool PropagateMove, bool PropagateSwap>
     void test_move_only_allocation();
-
-    template<bool PropagateMove, bool PropagateSwap>
-    struct allocator_generator
-    {
-      template<class T>
-      using allocator = shared_counting_allocator<T, true, PropagateMove, PropagateSwap>;
-    };
   };
 }

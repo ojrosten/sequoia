@@ -55,10 +55,10 @@ namespace sequoia
       maths::graph_flavour GraphFlavour,
       class EdgeWeight,
       class NodeWeight,      
-      template <class, template<class> class...> class EdgeWeightPooling,
-      template <class, template<class> class...> class NodeWeightPooling,
-      template <maths::graph_flavour, class, template<class, template<class> class...> class> class EdgeStorageTraits,
-      template <class, template<class, template<class> class...> class, bool> class NodeWeightStorageTraits
+      template <class...> class EdgeWeightPooling,
+      template <class...> class NodeWeightPooling,
+      template <maths::graph_flavour, class, template<class...> class> class EdgeStorageTraits,
+      template <class, template<class...> class, bool> class NodeWeightStorageTraits
     >
     class generic_fixed_topology_tests
       : public graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>

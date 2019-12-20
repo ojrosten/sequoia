@@ -52,10 +52,10 @@ namespace sequoia::unit_testing
     maths::graph_flavour GraphFlavour,
     class EdgeWeight,
     class NodeWeight,      
-    template <class, template<class> class...> class EdgeWeightPooling,
-    template <class, template<class> class...> class NodeWeightPooling,
-    template <maths::graph_flavour, class, template<class, template<class> class...> class> class EdgeStorageTraits,
-    template <class, template<class, template<class> class...> class, bool> class NodeWeightStorageTraits
+    template <class...> class EdgeWeightPooling,
+    template <class...> class NodeWeightPooling,
+    template <maths::graph_flavour, class, template<class...> class> class EdgeStorageTraits,
+    template <class, template<class...> class, bool> class NodeWeightStorageTraits
   >
   auto test_update<
     GraphFlavour,
@@ -97,10 +97,10 @@ namespace sequoia::unit_testing
     maths::graph_flavour GraphFlavour,
     class EdgeWeight,
     class NodeWeight,      
-    template <class, template<class> class...> class EdgeWeightPooling,
-    template <class, template<class> class...> class NodeWeightPooling,
-    template <maths::graph_flavour, class, template<class, template<class> class...> class> class EdgeStorageTraits,
-    template <class, template<class, template<class> class...> class, bool> class NodeWeightStorageTraits
+    template <class...> class EdgeWeightPooling,
+    template <class...> class NodeWeightPooling,
+    template <maths::graph_flavour, class, template<class...> class> class EdgeStorageTraits,
+    template <class, template<class...> class, bool> class NodeWeightStorageTraits
   >
   void test_update<
     GraphFlavour,
@@ -174,10 +174,10 @@ namespace sequoia::unit_testing
     maths::graph_flavour GraphFlavour,
     class EdgeWeight,
     class NodeWeight,      
-    template <class, template<class> class...> class EdgeWeightPooling,
-    template <class, template<class> class...> class NodeWeightPooling,
-    template <maths::graph_flavour, class, template<class, template<class> class...> class> class EdgeStorageTraits,
-    template <class, template<class, template<class> class...> class, bool> class NodeWeightStorageTraits
+    template <class...> class EdgeWeightPooling,
+    template <class...> class NodeWeightPooling,
+    template <maths::graph_flavour, class, template<class...> class> class EdgeStorageTraits,
+    template <class, template<class...> class, bool> class NodeWeightStorageTraits
   >
   void test_update<
     GraphFlavour,
@@ -375,10 +375,10 @@ namespace sequoia::unit_testing
     maths::graph_flavour GraphFlavour,
     class EdgeWeight,
     class NodeWeight,      
-    template <class, template<class> class...> class EdgeWeightPooling,
-    template <class, template<class> class...> class NodeWeightPooling,
-    template <maths::graph_flavour, class, template<class, template<class> class...> class> class EdgeStorageTraits,
-    template <class, template<class, template<class> class...> class, bool> class NodeWeightStorageTraits
+    template <class...> class EdgeWeightPooling,
+    template <class...> class NodeWeightPooling,
+    template <maths::graph_flavour, class, template<class...> class> class EdgeStorageTraits,
+    template <class, template<class...> class, bool> class NodeWeightStorageTraits
   >
   void test_update<
     GraphFlavour,
@@ -521,10 +521,10 @@ namespace sequoia::unit_testing
     maths::graph_flavour GraphFlavour,
     class EdgeWeight,
     class NodeWeight,      
-    template <class, template<class> class...> class EdgeWeightPooling,
-    template <class, template<class> class...> class NodeWeightPooling,
-    template <maths::graph_flavour, class, template<class, template<class> class...> class> class EdgeStorageTraits,
-    template <class, template<class, template<class> class...> class, bool> class NodeWeightStorageTraits
+    template <class...> class EdgeWeightPooling,
+    template <class...> class NodeWeightPooling,
+    template <maths::graph_flavour, class, template<class...> class> class EdgeStorageTraits,
+    template <class, template<class...> class, bool> class NodeWeightStorageTraits
   >
   void test_update<
     GraphFlavour,
@@ -727,10 +727,10 @@ namespace sequoia::unit_testing
     maths::graph_flavour GraphFlavour,
     class EdgeWeight,
     class NodeWeight,      
-    template <class, template<class> class...> class EdgeWeightPooling,
-    template <class, template<class> class...> class NodeWeightPooling,
-    template <maths::graph_flavour, class, template<class, template<class> class...> class> class EdgeStorageTraits,
-    template <class, template<class, template<class> class...> class, bool> class NodeWeightStorageTraits
+    template <class...> class EdgeWeightPooling,
+    template <class...> class NodeWeightPooling,
+    template <maths::graph_flavour, class, template<class...> class> class EdgeStorageTraits,
+    template <class, template<class...> class, bool> class NodeWeightStorageTraits
   >
   void test_update<
     GraphFlavour,
@@ -764,10 +764,10 @@ namespace sequoia::unit_testing
     maths::graph_flavour GraphFlavour,
     class EdgeWeight,
     class NodeWeight,      
-    template <class, template<class> class...> class EdgeWeightPooling,
-    template <class, template<class> class...> class NodeWeightPooling,
-    template <maths::graph_flavour, class, template<class, template<class> class...> class> class EdgeStorageTraits,
-    template <class, template<class, template<class> class...> class, bool> class NodeWeightStorageTraits
+    template <class...> class EdgeWeightPooling,
+    template <class...> class NodeWeightPooling,
+    template <maths::graph_flavour, class, template<class...> class> class EdgeStorageTraits,
+    template <class, template<class...> class, bool> class NodeWeightStorageTraits
   >
   void test_bf_update<
     GraphFlavour,
@@ -932,10 +932,10 @@ namespace sequoia::unit_testing
     maths::graph_flavour GraphFlavour,
     class EdgeWeight,
     class NodeWeight,      
-    template <class, template<class> class...> class EdgeWeightPooling,
-    template <class, template<class> class...> class NodeWeightPooling,
-    template <maths::graph_flavour, class, template<class, template<class> class...> class> class EdgeStorageTraits,
-    template <class, template<class, template<class> class...> class, bool> class NodeWeightStorageTraits
+    template <class...> class EdgeWeightPooling,
+    template <class...> class NodeWeightPooling,
+    template <maths::graph_flavour, class, template<class...> class> class EdgeStorageTraits,
+    template <class, template<class...> class, bool> class NodeWeightStorageTraits
   >
   void test_bf_update<
     GraphFlavour,

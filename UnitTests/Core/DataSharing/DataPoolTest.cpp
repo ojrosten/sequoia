@@ -8,6 +8,8 @@
 #include "DataPoolTest.hpp"
 #include "DataPoolTestingUtilities.hpp"
 
+#include "UnitTestUtilities.hpp"
+
 namespace sequoia::unit_testing
 {
   void data_pool_test::run_tests()
@@ -202,7 +204,7 @@ namespace sequoia::unit_testing
   void data_pool_test::test_move_only_allocation()
   {
     using namespace data_sharing;
-    using pool_t = data_pool<int, allocator_generator<PropagateMove, PropagateSwap>::template allocator>;
+    using pool_t = data_pool<int, shared_counting_allocator<int, true, PropagateMove, PropagateSwap>>;
     using prediction_t = typename weak_equivalence_checker<pool_t>::prediction_type;
 
     pool_t pool{};
