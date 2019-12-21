@@ -29,8 +29,8 @@ namespace sequoia
       class NodeWeight,      
       class EdgeWeightPooling,
       class NodeWeightPooling,
-      template<maths::graph_flavour, class, class> class EdgeStorageTraits,
-      template<class, class, bool> class NodeWeightStorageTraits
+      class EdgeStorageTraits,
+      class NodeWeightStorageTraits
     >
     class generic_graph_operations
       : public graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>
@@ -56,8 +56,8 @@ namespace sequoia
       class NodeWeight,      
       class EdgeWeightPooling,
       class NodeWeightPooling,
-      template<maths::graph_flavour, class, class> class EdgeStorageTraits,
-      template<class, class, bool> class NodeWeightStorageTraits
+      class EdgeStorageTraits,
+      class NodeWeightStorageTraits
     >
     class generic_weighted_graph_tests
       : public graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>
@@ -87,8 +87,8 @@ namespace sequoia
       class NodeWeight,      
       class EdgeWeightPooling,
       class NodeWeightPooling,
-      template <maths::graph_flavour, class, class> class EdgeStorageTraits,
-      template <class, class, bool> class NodeWeightStorageTraits
+      class EdgeStorageTraits,
+      class NodeWeightStorageTraits
     >
     class graph_contiguous_memory
       : public graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>
@@ -114,8 +114,8 @@ namespace sequoia
       class NodeWeight,      
       class EdgeWeightPooling,
       class NodeWeightPooling,
-      template <maths::graph_flavour, class, class> class EdgeStorageTraits,
-      template <class, class, bool> class NodeWeightStorageTraits
+      class EdgeStorageTraits,
+      class NodeWeightStorageTraits
     >
     class graph_bucketed_memory
       : public graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>

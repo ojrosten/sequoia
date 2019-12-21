@@ -26,8 +26,8 @@ namespace sequoia::unit_testing
     class NodeWeight,      
     class EdgeWeightPooling,
     class NodeWeightPooling,
-    template<maths::graph_flavour, class, class> class EdgeStorageTraits,
-    template<class, class, bool> class NodeWeightStorageTraits
+    class EdgeStorageTraits,
+    class NodeWeightStorageTraits
   >
   struct detailed_equality_checker<maths::graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>>
     : impl::graph_detailed_equality_checker<maths::graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>>
@@ -40,8 +40,8 @@ namespace sequoia::unit_testing
     class NodeWeight,      
     class EdgeWeightPooling,
     class NodeWeightPooling,
-    template<maths::graph_flavour, class, class> class EdgeStorageTraits,
-    template<class, class, bool> class NodeWeightStorageTraits
+    class EdgeStorageTraits,
+    class NodeWeightStorageTraits
   >
   struct detailed_equality_checker<maths::embedded_graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>>
     : impl::graph_detailed_equality_checker<maths::embedded_graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>>
@@ -56,8 +56,8 @@ namespace sequoia::unit_testing
     class NodeWeight,      
     class EdgeWeightPooling,
     class NodeWeightPooling,
-    template<maths::graph_flavour, class, class> class EdgeStorageTraits,
-    template<class, class, bool> class NodeWeightStorageTraits
+    class EdgeStorageTraits,
+    class NodeWeightStorageTraits
   >
   struct equivalence_checker<maths::graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>>
     : impl::graph_equivalence_checker<maths::graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>>
@@ -70,8 +70,8 @@ namespace sequoia::unit_testing
     class NodeWeight,      
     class EdgeWeightPooling,
     class NodeWeightPooling,
-    template<maths::graph_flavour, class, class> class EdgeStorageTraits,
-    template<class, class, bool> class NodeWeightStorageTraits
+    class EdgeStorageTraits,
+    class NodeWeightStorageTraits
   >
   struct equivalence_checker<maths::embedded_graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>>
     : impl::graph_equivalence_checker<maths::embedded_graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>>
@@ -86,8 +86,8 @@ namespace sequoia::unit_testing
     class NodeWeight,      
     class EdgeWeightPooling,
     class NodeWeightPooling,
-    template<maths::graph_flavour, class, class> class EdgeStorageTraits,
-    template<class, class, bool> class NodeWeightStorageTraits
+    class EdgeStorageTraits,
+    class NodeWeightStorageTraits
   >
   struct weak_equivalence_checker<maths::embedded_graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>>
     : impl::graph_weak_equivalence_checker<maths::embedded_graph<Directedness, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>>
@@ -180,8 +180,8 @@ namespace sequoia::unit_testing
     class NodeWeight,      
     class EdgeWeightPooling,
     class NodeWeightStorage,
-    template<maths::graph_flavour, class, class> class EdgeStorageTraits,
-    template<class, class, bool> class NodeWeightStorageTraits,
+    class EdgeStorageTraits,
+    class NodeWeightStorageTraits,
     bool=embedded(GraphFlavour)
   >
   struct graph_type_generator
@@ -196,8 +196,8 @@ namespace sequoia::unit_testing
     class NodeWeight,      
     class EdgeWeightPooling,
     class NodeWeightPooling,
-    template<maths::graph_flavour, class, class> class EdgeStorageTraits,
-    template<class, class, bool> class NodeWeightStorageTraits
+    class EdgeStorageTraits,
+    class NodeWeightStorageTraits
   >
   struct graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits, true>
   {
@@ -213,8 +213,8 @@ namespace sequoia::unit_testing
     class NodeWeight,      
     class EdgeWeightPooling,
     class NodeWeightPooling,
-    template<maths::graph_flavour, class, class> class EdgeStorageTraits,
-    template<class, class, bool> class NodeWeightStorageTraits,
+    class EdgeStorageTraits,
+    class NodeWeightStorageTraits,
     class Logger=unit_test_logger<test_mode::standard>
   >
   class graph_operations : protected graph_checker<Logger>
@@ -250,12 +250,7 @@ namespace sequoia::unit_testing
       template
       <
         maths::graph_flavour,
-        class,
-        class,
-        class,
-        class,
-        template <maths::graph_flavour, class, class> class,
-        template <class, class, bool> class
+        class...
       >
       class TemplateTestClass,
       class Test
@@ -279,17 +274,12 @@ namespace sequoia::unit_testing
       
     template
     <
-      template<maths::graph_flavour, class, class> class EdgeStorage,
-      template <class, class, bool> class NodeStorage,
+      template <maths::graph_flavour, class, class> class EdgeStorageTraits,
+      template <class, class, bool> class NodeStorageTraits,
       template
       <
         maths::graph_flavour,
-        class,
-        class,
-        class,
-        class,
-        template <maths::graph_flavour, class, class> class,
-        template <class, class, bool> class
+        class...
       >
       class TemplateTestClass,
       class Test
@@ -299,12 +289,12 @@ namespace sequoia::unit_testing
       using flavour = maths::graph_flavour;
       sentry<Test> s{unitTest, m_Summary};
       
-      graph_storage_tests<flavour::undirected, EdgeStorage, NodeStorage, TemplateTestClass>();
+      graph_storage_tests<flavour::undirected, EdgeStorageTraits, NodeStorageTraits, TemplateTestClass>();
       if constexpr (!minimal_graph_tests())
       {
-        graph_storage_tests<flavour::undirected_embedded, EdgeStorage, NodeStorage, TemplateTestClass>();
-        graph_storage_tests<flavour::directed,            EdgeStorage, NodeStorage, TemplateTestClass>();
-        graph_storage_tests<flavour::directed_embedded,   EdgeStorage, NodeStorage, TemplateTestClass>();
+        graph_storage_tests<flavour::undirected_embedded, EdgeStorageTraits, NodeStorageTraits, TemplateTestClass>();
+        graph_storage_tests<flavour::directed,            EdgeStorageTraits, NodeStorageTraits, TemplateTestClass>();
+        graph_storage_tests<flavour::directed_embedded,   EdgeStorageTraits, NodeStorageTraits, TemplateTestClass>();
       }
     }
       
@@ -314,12 +304,7 @@ namespace sequoia::unit_testing
       template
       <
         maths::graph_flavour,
-        class,
-        class,
-        class,
-        class,
-        template <maths::graph_flavour, class, class> class,
-        template <class, class, bool> class
+        class...
       >
       class TemplateTestClass,
       class Test
@@ -358,17 +343,12 @@ namespace sequoia::unit_testing
     template
     <
       maths::graph_flavour GraphType,
-      template <maths::graph_flavour, class, class> class EdgeStorage,
-      template <class, class, bool> class NodeStorage,
+      template <maths::graph_flavour, class, class> class EdgeStorageTraits,
+      template <class, class, bool> class NodeStorageTraits,
       template
       <
         maths::graph_flavour,
-        class,
-        class,
-        class,
-        class,
-        template <maths::graph_flavour, class, class> class,
-        template <class, class, bool> class
+        class...
       >
       class TemplateTestClass
     >
@@ -376,16 +356,16 @@ namespace sequoia::unit_testing
     {
       using namespace data_sharing;
 
-      TemplateTestClass<GraphType, EdgeWeight, NodeWeight, unpooled<EdgeWeight>, unpooled<NodeWeight>, EdgeStorage, NodeStorage> test;
+      TemplateTestClass<GraphType, EdgeWeight, NodeWeight, unpooled<EdgeWeight>, unpooled<NodeWeight>, EdgeStorageTraits<GraphType, EdgeWeight, unpooled<EdgeWeight>>, NodeStorageTraits<NodeWeight, unpooled<NodeWeight>, std::is_empty_v<NodeWeight>>> test;
       run_graph_test(test);
  
       if constexpr(!std::is_empty_v<EdgeWeight> && !std::is_empty_v<NodeWeight>)
       {
         if constexpr(!minimal_graph_tests())
         {
-          TemplateTestClass<GraphType, EdgeWeight, NodeWeight, unpooled<EdgeWeight>, data_pool<NodeWeight>, EdgeStorage, NodeStorage> test1;  
-          TemplateTestClass<GraphType, EdgeWeight, NodeWeight, data_pool<EdgeWeight>, unpooled<NodeWeight>, EdgeStorage, NodeStorage> test2;
-          TemplateTestClass<GraphType, EdgeWeight, NodeWeight, data_pool<EdgeWeight>, data_pool<NodeWeight>, EdgeStorage, NodeStorage> test3;
+          TemplateTestClass<GraphType, EdgeWeight, NodeWeight, unpooled<EdgeWeight>, data_pool<NodeWeight>, EdgeStorageTraits<GraphType, EdgeWeight, unpooled<EdgeWeight>>, NodeStorageTraits<NodeWeight, data_pool<NodeWeight>, std::is_empty_v<NodeWeight>>> test1;  
+          TemplateTestClass<GraphType, EdgeWeight, NodeWeight, data_pool<EdgeWeight>, unpooled<NodeWeight>, EdgeStorageTraits<GraphType, EdgeWeight, data_pool<EdgeWeight>>, NodeStorageTraits<NodeWeight, unpooled<NodeWeight>, std::is_empty_v<NodeWeight>>> test2;
+          TemplateTestClass<GraphType, EdgeWeight, NodeWeight, data_pool<EdgeWeight>, data_pool<NodeWeight>, EdgeStorageTraits<GraphType, EdgeWeight, data_pool<EdgeWeight>>, NodeStorageTraits<NodeWeight, data_pool<NodeWeight>, std::is_empty_v<NodeWeight>>> test3;
 
           run_graph_test(test1);
           run_graph_test(test2);
@@ -394,12 +374,12 @@ namespace sequoia::unit_testing
       }
       else if constexpr(!std::is_empty_v<EdgeWeight>)
       {
-        TemplateTestClass<GraphType, EdgeWeight, NodeWeight, data_pool<EdgeWeight>, unpooled<NodeWeight>, EdgeStorage, maths::node_weight_storage_traits> test;
+        TemplateTestClass<GraphType, EdgeWeight, NodeWeight, data_pool<EdgeWeight>, unpooled<NodeWeight>, EdgeStorageTraits<GraphType, EdgeWeight, data_pool<EdgeWeight>>, NodeStorageTraits<NodeWeight, unpooled<NodeWeight>, std::is_empty_v<NodeWeight>>> test;
         run_graph_test(test);
       }
       else if constexpr(!std::is_empty_v<NodeWeight>)
       {
-        TemplateTestClass<GraphType, EdgeWeight, NodeWeight, unpooled<EdgeWeight>, data_pool<NodeWeight>, EdgeStorage, maths::node_weight_storage_traits> test;
+        TemplateTestClass<GraphType, EdgeWeight, NodeWeight, unpooled<EdgeWeight>, data_pool<NodeWeight>, EdgeStorageTraits<GraphType, EdgeWeight, unpooled<EdgeWeight>>, NodeStorageTraits<NodeWeight, data_pool<NodeWeight>, std::is_empty_v<NodeWeight>>> test;
         run_graph_test(test);
       }
     }
@@ -410,12 +390,7 @@ namespace sequoia::unit_testing
       template
       <
         maths::graph_flavour,
-        class,
-        class,
-        class,
-        class,
-        template <maths::graph_flavour, class, class> class,
-        template <class, class, bool> class
+        class...
       >
       class TemplateTestClass
     >

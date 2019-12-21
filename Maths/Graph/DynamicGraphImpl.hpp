@@ -16,6 +16,20 @@
 
 namespace sequoia::maths::graph_impl
 {
+  template<directed_flavour F>
+  [[nodiscard]]
+  constexpr graph_flavour to_graph_flavour() noexcept
+  {
+    return F == directed_flavour::directed ? graph_flavour::directed : graph_flavour::undirected;
+  }
+
+  template<directed_flavour F>
+  [[nodiscard]]
+  constexpr graph_flavour to_embedded_graph_flavour() noexcept
+  {
+    return F == directed_flavour::directed ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded;
+  }
+  
   template<class NodeStorage, bool=std::is_empty_v<typename NodeStorage::weight_type>>
   struct node_allocator_generator
   {
@@ -31,7 +45,7 @@ namespace sequoia::maths::graph_impl
     graph_flavour GraphFlavour,
     class EdgeWeight,
     class EdgeWeightPooling,
-    template<graph_flavour, class, class> class EdgeStorageTraits,
+    class EdgeStorageTraits,
     class IndexType
   >
   struct dynamic_edge_traits : public
@@ -41,7 +55,7 @@ namespace sequoia::maths::graph_impl
       EdgeWeight,
       EdgeWeightPooling,
       IndexType,
-      EdgeStorageTraits<GraphFlavour, EdgeWeight, EdgeWeightPooling>::edge_sharing
+      EdgeStorageTraits::edge_sharing
     >
   {
     using edge_type_gen =
@@ -51,7 +65,7 @@ namespace sequoia::maths::graph_impl
         EdgeWeight,
         EdgeWeightPooling,
         IndexType,
-        EdgeStorageTraits<GraphFlavour, EdgeWeight, EdgeWeightPooling>::edge_sharing
+        EdgeStorageTraits::edge_sharing
       >;
     
     using edge_type = typename edge_type_gen::edge_type;
@@ -61,10 +75,10 @@ namespace sequoia::maths::graph_impl
       = typename shared_edge_v_to_policy<shared_edge_v>::template edge_storage_sharing_policy<edge_type>;
 
     using edge_storage_traits
-      = typename EdgeStorageTraits<GraphFlavour, EdgeWeight, EdgeWeightPooling>::template traits_type<edge_type, edge_storage_sharing_policy>;
+      = typename EdgeStorageTraits::template traits_type<edge_type, edge_storage_sharing_policy>;
 
     using edge_storage_type
-      = typename EdgeStorageTraits<GraphFlavour, EdgeWeight, EdgeWeightPooling>::template storage_type<edge_type, edge_storage_sharing_policy, edge_storage_traits>;
+      = typename EdgeStorageTraits::template storage_type<edge_type, edge_storage_sharing_policy, edge_storage_traits>;
 
     using edge_allocator_type = typename edge_storage_type::allocator_type;
 

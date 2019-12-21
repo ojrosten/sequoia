@@ -20,7 +20,6 @@ namespace sequoia
   {
     template <class> struct shared;
     template <class> struct independent;
-    template <class> class unpooled;
   }
 
   namespace data_structures

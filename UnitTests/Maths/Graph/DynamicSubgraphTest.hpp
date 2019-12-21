@@ -27,8 +27,8 @@ namespace sequoia::unit_testing
     class NodeWeight,      
     class EdgeWeightPooling,
     class NodeWeightPooling,
-    template <maths::graph_flavour, class, class> class EdgeStorageTraits,
-    template <class, class, bool> class NodeWeightStorageTraits
+    class EdgeStorageTraits,
+    class NodeWeightStorageTraits
   >
   class generic_subgraph_tests
     : public graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>

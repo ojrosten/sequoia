@@ -27,8 +27,8 @@ namespace sequoia::unit_testing
     class NodeWeight,    
     class EdgeWeightPooling,
     class NodeWeightPooling,
-    template <maths::graph_flavour, class, class> class EdgeStorageTraits,
-    template <class, class, bool> class NodeWeightStorageTraits
+    class EdgeStorageTraits,
+    class NodeWeightStorageTraits
   >
   class dynamic_graph_false_positives
     : public graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits, unit_test_logger<test_mode::false_positive>>

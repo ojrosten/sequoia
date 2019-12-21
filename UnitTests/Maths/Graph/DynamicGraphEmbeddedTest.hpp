@@ -29,8 +29,8 @@ namespace sequoia
       class NodeWeight,      
       class EdgeWeightPooling,
       class NodeWeightPooling,
-      template <maths::graph_flavour, class, class> class EdgeStorageTraits,
-      template <class, class, bool> class NodeWeightStorageTraits
+      class EdgeStorageTraits,
+      class NodeWeightStorageTraits
     >
     class generic_edge_insertions
       : public graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>
@@ -56,8 +56,8 @@ namespace sequoia
       class NodeWeight,      
       class EdgeWeightPooling,
       class NodeWeightPooling,
-      template <maths::graph_flavour, class, class> class EdgeStorageTraits,
-      template <class, class, bool> class NodeWeightStorageTraits
+      class EdgeStorageTraits,
+      class NodeWeightStorageTraits
     >
     class generic_weighted_edge_insertions
       : public graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>

@@ -23,6 +23,7 @@ namespace sequoia::unit_testing
       
     void operator()(const std::size_t index) { m_Order.push_back(index); }
 
+    [[nodiscard]]
     const std::vector<std::size_t>& order() const noexcept { return m_Order; }
   private:
     std::vector<std::size_t> m_Order;
@@ -44,17 +45,18 @@ namespace sequoia::unit_testing
       m_Order.emplace_back(iter.partition_index(), static_cast<std::size_t>(pos));
     }
 
+    [[nodiscard]]
     const result_type& order() const noexcept { return m_Order; }
   private:    
     result_type m_Order;
     const G& m_Graph;
     
-    template<class I> auto dist(std::true_type, I iter)
+    template<class I> [[nodiscard]] auto dist(std::true_type, I iter)
     {
       return distance(m_Graph.crbegin_edges(iter.partition_index()), iter);
     }
 
-    template<class I> auto dist(std::false_type, I iter)
+    template<class I> [[nodiscard]] auto dist(std::false_type, I iter)
     {
       return distance(m_Graph.cbegin_edges(iter.partition_index()), iter);
     }
@@ -94,8 +96,8 @@ namespace sequoia::unit_testing
     class NodeWeight,      
     class EdgeWeightPooling,
     class NodeWeightPooling,
-    template <maths::graph_flavour, class, class> class EdgeStorageTraits,
-    template <class, class, bool> class NodeWeightStorageTraits
+    class EdgeStorageTraits,
+    class NodeWeightStorageTraits
   >
   class tracker_test
     : public graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>
@@ -149,8 +151,8 @@ namespace sequoia::unit_testing
       class NodeWeight,      
       class EdgeWeightPooling,
       class NodeWeightPooling,
-      template <maths::graph_flavour, class, class> class EdgeStorageTraits,
-      template <class, class, bool> class NodeWeightStorageTraits
+      class EdgeStorageTraits,
+      class NodeWeightStorageTraits
     >
     class test_priority_traversal :
       public graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>
@@ -193,8 +195,8 @@ namespace sequoia::unit_testing
       class NodeWeight,      
       class EdgeWeightPooling,
       class NodeWeightPooling,
-      template <maths::graph_flavour, class, class> class EdgeStorageTraits,
-      template <class, class, bool> class NodeWeightStorageTraits
+      class EdgeStorageTraits,
+      class NodeWeightStorageTraits
     >
     class test_weighted_BFS_tasks
       : public graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>

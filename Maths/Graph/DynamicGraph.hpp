@@ -59,9 +59,9 @@ namespace sequoia::maths
     class NodeWeight,      
     class EdgeWeightPooling,
     class NodeWeightPooling,
-    template<graph_flavour, class, class> class EdgeStorageTraits,
-    template<class, class, bool> class NodeWeightStorageTraits,
-    bool = !NodeWeightStorageTraits<NodeWeight, NodeWeightPooling, std::is_empty_v<NodeWeight>>::has_allocator
+    class EdgeStorageTraits,
+    class NodeWeightStorageTraits,
+    bool = !NodeWeightStorageTraits::has_allocator
   >
   class graph_base : public
     graph_primitive
@@ -75,7 +75,7 @@ namespace sequoia::maths
       graph_impl::node_storage
       <     
         graph_impl::weight_maker<NodeWeightPooling>,
-        NodeWeightStorageTraits<NodeWeight, NodeWeightPooling, std::is_empty_v<NodeWeight>>
+        NodeWeightStorageTraits
       >
     >
   {
@@ -85,7 +85,7 @@ namespace sequoia::maths
       = graph_impl::node_storage
         <
           graph_impl::weight_maker<NodeWeightPooling>,
-          NodeWeightStorageTraits<NodeWeight, NodeWeightPooling, std::is_empty_v<NodeWeight>>
+          NodeWeightStorageTraits
         >; 
   public:
     using primitive_type =
@@ -100,7 +100,7 @@ namespace sequoia::maths
         graph_impl::node_storage
         <
           graph_impl::weight_maker<NodeWeightPooling>,
-          NodeWeightStorageTraits<NodeWeight, NodeWeightPooling, std::is_empty_v<NodeWeight>>
+          NodeWeightStorageTraits
         >
       >;
     
@@ -375,8 +375,8 @@ namespace sequoia::maths
     class NodeWeight,      
     class EdgeWeightPooling,
     class NodeWeightPooling,
-    template<graph_flavour, class, class> class EdgeStorageTraits,
-    template<class, class, bool> class NodeWeightStorageTraits
+    class EdgeStorageTraits,
+    class NodeWeightStorageTraits
   >
   class graph_base<
     GraphFlavour,
@@ -437,13 +437,13 @@ namespace sequoia::maths
     class NodeWeight,      
     class EdgeWeightPooling=data_sharing::unpooled<EdgeWeight>,
     class NodeWeightPooling=data_sharing::unpooled<NodeWeight>,
-    template<graph_flavour, class, class> class EdgeStorageTraits = bucketed_edge_storage_traits,
-    template<class, class, bool> class NodeWeightStorageTraits = node_weight_storage_traits
+    class EdgeStorageTraits = bucketed_edge_storage_traits<graph_impl::to_graph_flavour<Directedness>(), EdgeWeight, EdgeWeightPooling>,
+    class NodeWeightStorageTraits = node_weight_storage_traits<NodeWeight, NodeWeightPooling>
   >
   class graph final : public
     graph_base
     <
-      (Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected,      
+      graph_impl::to_graph_flavour<Directedness>(),      
       EdgeWeight,
       NodeWeight,      
       EdgeWeightPooling,
@@ -456,13 +456,13 @@ namespace sequoia::maths
     using base =
       graph_base
       <
-        (Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected,      
-         EdgeWeight,
-         NodeWeight,     
-         EdgeWeightPooling,
-         NodeWeightPooling,
-         EdgeStorageTraits,
-         NodeWeightStorageTraits
+        graph_impl::to_graph_flavour<Directedness>(),
+        EdgeWeight,
+        NodeWeight,     
+        EdgeWeightPooling,
+        NodeWeightPooling,
+        EdgeStorageTraits,
+        NodeWeightStorageTraits
       >;
   public:
     using node_weight_type = NodeWeight;
@@ -470,13 +470,13 @@ namespace sequoia::maths
     using
       graph_base
       <
-        (Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected,      
-         EdgeWeight,
-         NodeWeight, 
-         EdgeWeightPooling,
-         NodeWeightPooling,
-         EdgeStorageTraits,
-         NodeWeightStorageTraits
+        graph_impl::to_graph_flavour<Directedness>(),      
+        EdgeWeight,
+        NodeWeight, 
+        EdgeWeightPooling,
+        NodeWeightPooling,
+        EdgeStorageTraits,
+        NodeWeightStorageTraits
       >::graph_base;
 
     graph(const graph&) = default;
@@ -496,13 +496,13 @@ namespace sequoia::maths
     class NodeWeight,      
     class EdgeWeightPooling=data_sharing::unpooled<EdgeWeight>,
     class NodeWeightPooling=data_sharing::unpooled<NodeWeight>,
-    template<graph_flavour, class, class> class EdgeStorageTraits=bucketed_edge_storage_traits,
-    template<class, class, bool> class NodeWeightStorageTraits=node_weight_storage_traits
+    class EdgeStorageTraits=bucketed_edge_storage_traits<graph_impl::to_embedded_graph_flavour<Directedness>(), EdgeWeight, EdgeWeightPooling>,
+    class NodeWeightStorageTraits=node_weight_storage_traits<NodeWeight, NodeWeightPooling>
   >
   class embedded_graph final : public
     graph_base
     <
-      (Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded,      
+      graph_impl::to_embedded_graph_flavour<Directedness>(),      
       EdgeWeight,
       NodeWeight,     
       EdgeWeightPooling,
@@ -511,19 +511,13 @@ namespace sequoia::maths
       NodeWeightStorageTraits
     >
     {
-    private:
-      [[nodiscard]]
-      static constexpr graph_flavour to_graph_flavour() noexcept
-      {
-        return (Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded;
-      }
     public:
       using node_weight_type = NodeWeight;
       
       using
         graph_base
         <
-         (Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded,      
+          graph_impl::to_embedded_graph_flavour<Directedness>(),      
           EdgeWeight,
           NodeWeight,      
           EdgeWeightPooling,
@@ -535,7 +529,7 @@ namespace sequoia::maths
       using base_type =
         graph_base
         <
-          (Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded,      
+          graph_impl::to_embedded_graph_flavour<Directedness>(),      
           EdgeWeight,
           NodeWeight,     
           EdgeWeightPooling,
