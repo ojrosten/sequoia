@@ -87,10 +87,10 @@ namespace sequoia
       maths::graph_flavour GraphFlavour,      
       class EdgeWeight,
       class NodeWeight,      
-      template <class...> class EdgeWeightPooling,
-      template <class...> class NodeWeightPooling,
-      template <maths::graph_flavour, class, template<class...> class> class EdgeStorageTraits,
-      template <class, template<class...> class, bool> class NodeWeightStorageTraits
+      class EdgeWeightPooling,
+      class NodeWeightPooling,
+      template <maths::graph_flavour, class, class> class EdgeStorageTraits,
+      template <class, class, bool> class NodeWeightStorageTraits
     >
     class test_update
       : public graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>
@@ -135,10 +135,10 @@ namespace sequoia
       maths::graph_flavour GraphFlavour,
       class EdgeWeight,
       class NodeWeight,      
-      template <class...> class EdgeWeightPooling,
-      template <class...> class NodeWeightPooling,
-      template <maths::graph_flavour, class, template<class...> class> class EdgeStorageTraits,
-      template <class, template<class...> class, bool> class NodeWeightStorageTraits
+      class EdgeWeightPooling,
+      class NodeWeightPooling,
+      template <maths::graph_flavour, class, class> class EdgeStorageTraits,
+      template <class, class, bool> class NodeWeightStorageTraits
     >
     class test_bf_update
       : public graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>

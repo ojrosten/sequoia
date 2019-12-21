@@ -58,10 +58,10 @@ namespace sequoia::unit_testing
     maths::graph_flavour GraphFlavour,
     class EdgeWeight,
     class NodeWeight,      
-    template<class...> class EdgeWeightPooling,
-    template<class...> class NodeWeightPooling,
-    template <maths::graph_flavour, class, template<class...> class> class EdgeStorageTraits,
-    template <class, template<class...> class, bool> class NodeWeightStorageTraits
+    class EdgeWeightPooling,
+    class NodeWeightPooling,
+    template <maths::graph_flavour, class, class> class EdgeStorageTraits,
+    template <class, class, bool> class NodeWeightStorageTraits
   >
   void generic_graph_operations<
       GraphFlavour,    
@@ -979,10 +979,10 @@ namespace sequoia::unit_testing
     maths::graph_flavour GraphFlavour,
     class EdgeWeight,
     class NodeWeight,      
-    template<class...> class EdgeWeightPooling,
-    template<class...> class NodeWeightPooling,
-    template <maths::graph_flavour, class, template<class...> class> class EdgeStorageTraits,
-    template <class, template<class...> class, bool> class NodeWeightStorageTraits
+    class EdgeWeightPooling,
+    class NodeWeightPooling,
+    template <maths::graph_flavour, class, class> class EdgeStorageTraits,
+    template <class, class, bool> class NodeWeightStorageTraits
   >
   void graph_contiguous_memory<
       GraphFlavour,
@@ -1114,10 +1114,10 @@ namespace sequoia::unit_testing
     maths::graph_flavour GraphFlavour,
     class EdgeWeight,
     class NodeWeight,      
-    template<class...> class EdgeWeightPooling,
-    template<class...> class NodeWeightPooling,
-     template <maths::graph_flavour, class, template<class...> class> class EdgeStorageTraits,
-    template <class, template<class...> class, bool> class NodeWeightStorageTraits
+    class EdgeWeightPooling,
+    class NodeWeightPooling,
+     template <maths::graph_flavour, class, class> class EdgeStorageTraits,
+    template <class, class, bool> class NodeWeightStorageTraits
   >
   void graph_bucketed_memory<
       GraphFlavour,
@@ -1273,10 +1273,10 @@ namespace sequoia::unit_testing
     maths::graph_flavour GraphFlavour,
     class EdgeWeight,
     class NodeWeight,      
-    template<class...> class EdgeWeightPooling,
-    template<class...> class NodeWeightPooling,
-    template <maths::graph_flavour, class, template<class...> class> class EdgeStorageTraits,
-    template <class, template<class...> class, bool> class NodeWeightStorageTraits
+    class EdgeWeightPooling,
+    class NodeWeightPooling,
+    template <maths::graph_flavour, class, class> class EdgeStorageTraits,
+    template <class, class, bool> class NodeWeightStorageTraits
   >
   void generic_weighted_graph_tests<
       GraphFlavour,
@@ -1295,7 +1295,7 @@ namespace sequoia::unit_testing
     using edge_weight_t    = typename graph_t::edge_weight_type;
     using node_weight_t    = typename graph_t::node_weight_type;
 
-    constexpr bool edgeDataPool{std::is_same_v<EdgeWeightPooling<int>, data_sharing::data_pool<int>>};
+    constexpr bool edgeDataPool{std::is_same_v<EdgeWeightPooling, data_sharing::data_pool<EdgeWeight>>};
     
     graph_t graph;
 

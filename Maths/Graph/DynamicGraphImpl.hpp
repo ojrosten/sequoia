@@ -30,8 +30,8 @@ namespace sequoia::maths::graph_impl
   <        
     graph_flavour GraphFlavour,
     class EdgeWeight,
-    template <class...> class EdgeWeightPooling,
-    template<graph_flavour, class, template<class...> class> class EdgeStorageTraits,
+    class EdgeWeightPooling,
+    template<graph_flavour, class, class> class EdgeStorageTraits,
     class IndexType
   >
   struct dynamic_edge_traits : public
@@ -66,7 +66,7 @@ namespace sequoia::maths::graph_impl
     using edge_storage_type
       = typename EdgeStorageTraits<GraphFlavour, EdgeWeight, EdgeWeightPooling>::template storage_type<edge_type, edge_storage_sharing_policy, edge_storage_traits>;
 
-    using edge_allocator_type            = typename edge_storage_type::allocator_type;
+    using edge_allocator_type = typename edge_storage_type::allocator_type;
 
     constexpr static bool mutual_info_v{GraphFlavour != graph_flavour::directed};
 

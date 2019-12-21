@@ -23,7 +23,8 @@ namespace sequoia::unit_testing
 
     void test_weight_makers();
 
-    template<
+    template
+    <
       maths::graph_flavour GraphFlavour,
       template<class, template<class> class, class, class> class EdgeType
     >
@@ -33,31 +34,35 @@ namespace sequoia::unit_testing
     
     void test_directed_embedded();
         
-    template<
+    template
+    <
       maths::graph_flavour GraphFlavour,
       class EdgeWeight,
-      template<class...> class EdgeWeightStorage,
+      class EdgeWeightPooling,
       template<class, template<class> class, class, class> class EdgeType
     >
     void test_undirected_unshared();
 
-    template<
+    template
+    <
       maths::graph_flavour GraphFlavour,
       class EdgeWeight,
-      template<class...> class EdgeWeightStorage,
+      class EdgeWeightPooling,
       template<class, template<class> class, class, class> class EdgeType
     >
     void test_undirected_shared();
 
-    template<
+    template
+    <
       class EdgeWeight,
-      template<class...> class EdgeWeightStorage
+      class EdgeWeightPooling
     >
     void test_directed_impl();
 
-    template<
+    template
+    <
       class EdgeWeight,
-      template<class...> class EdgeWeightStorage
+      class EdgeWeightPooling
     >
     void test_directed_embedded_impl();
 

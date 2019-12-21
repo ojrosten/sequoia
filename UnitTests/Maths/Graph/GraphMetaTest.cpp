@@ -90,7 +90,7 @@ namespace sequoia::unit_testing
   <
     maths::graph_flavour GraphFlavour,
     class EdgeWeight,
-    template<class...> class EdgeWeightStorage,
+    class EdgeWeightPooling,
     template<class, template<class> class, class, class> class EdgeType
   >
   void test_graph_meta::test_undirected_unshared()
@@ -99,12 +99,12 @@ namespace sequoia::unit_testing
     using namespace graph_impl;
     using namespace data_structures;
     
-    static_assert(!big_proxy<EdgeWeight, EdgeWeightStorage>());
-    static_assert(!sharing_traits<GraphFlavour, edge_sharing_preference::independent, EdgeWeight, EdgeWeightStorage>::shared_weight_v);
+    static_assert(!big_proxy<EdgeWeight, EdgeWeightPooling>());
+    static_assert(!sharing_traits<GraphFlavour, edge_sharing_preference::independent, EdgeWeight, EdgeWeightPooling>::shared_weight_v);
       
-    using gen_t = dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeWeightStorage, contiguous_edge_storage_traits, std::size_t>;
+    using gen_t = dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeWeightPooling, contiguous_edge_storage_traits, std::size_t>;
     using edge_t = typename gen_t::edge_type;
-    using proxy = typename EdgeWeightStorage<EdgeWeight>::proxy;
+    using proxy = typename EdgeWeightPooling::proxy;
     static_assert(std::is_same_v<edge_t, EdgeType<EdgeWeight, sharing_v_to_type<false>::template policy, proxy, std::size_t>>, "");
   }
 
@@ -112,7 +112,7 @@ namespace sequoia::unit_testing
   <
     maths::graph_flavour GraphFlavour,
     class EdgeWeight,
-    template<class...> class EdgeWeightStorage,
+    class EdgeWeightPooling,
     template<class, template<class> class, class, class> class EdgeType
   >
   void test_graph_meta::test_undirected_shared()
@@ -121,12 +121,12 @@ namespace sequoia::unit_testing
     using namespace graph_impl;
     using namespace data_structures;
     
-    static_assert(big_proxy<EdgeWeight, EdgeWeightStorage>());
-    static_assert(sharing_traits<GraphFlavour, edge_sharing_preference::agnostic, EdgeWeight, EdgeWeightStorage>::shared_weight_v);
+    static_assert(big_proxy<EdgeWeight, EdgeWeightPooling>());
+    static_assert(sharing_traits<GraphFlavour, edge_sharing_preference::agnostic, EdgeWeight, EdgeWeightPooling>::shared_weight_v);
       
-    using gen_t = dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeWeightStorage, contiguous_edge_storage_traits, std::size_t>;
+    using gen_t = dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeWeightPooling, contiguous_edge_storage_traits, std::size_t>;
     using edge_t = typename gen_t::edge_type;
-    using proxy = typename EdgeWeightStorage<EdgeWeight>::proxy;
+    using proxy = typename EdgeWeightPooling::proxy;
     static_assert(std::is_same_v<edge_t, EdgeType<EdgeWeight, sharing_v_to_type<true>::template policy, proxy, std::size_t>>, "");
   }
 
@@ -138,31 +138,31 @@ namespace sequoia::unit_testing
   >
   void test_graph_meta::test_undirected()
   {    
-    test_undirected_unshared<GraphFlavour, int, data_sharing::unpooled, EdgeType>();
-    test_undirected_unshared<GraphFlavour, int, data_sharing::data_pool, EdgeType>();
-    test_undirected_unshared<GraphFlavour, wrapper<int>, data_sharing::unpooled, EdgeType>();
-    test_undirected_unshared<GraphFlavour, wrapper<int>, data_sharing::data_pool, EdgeType>();
+    test_undirected_unshared<GraphFlavour, int, data_sharing::unpooled<int>, EdgeType>();
+    test_undirected_unshared<GraphFlavour, int, data_sharing::data_pool<int>, EdgeType>();
+    test_undirected_unshared<GraphFlavour, wrapper<int>, data_sharing::unpooled<wrapper<int>>, EdgeType>();
+    test_undirected_unshared<GraphFlavour, wrapper<int>, data_sharing::data_pool<wrapper<int>>, EdgeType>();
 
-    test_undirected_unshared<GraphFlavour, double, data_sharing::unpooled, EdgeType>();
-    test_undirected_unshared<GraphFlavour, double, data_sharing::data_pool, EdgeType>();
-    test_undirected_unshared<GraphFlavour, wrapper<double>, data_sharing::unpooled, EdgeType>();
-    test_undirected_unshared<GraphFlavour, wrapper<double>, data_sharing::data_pool, EdgeType>();
+    test_undirected_unshared<GraphFlavour, double, data_sharing::unpooled<double>, EdgeType>();
+    test_undirected_unshared<GraphFlavour, double, data_sharing::data_pool<double>, EdgeType>();
+    test_undirected_unshared<GraphFlavour, wrapper<double>, data_sharing::unpooled<wrapper<double>>, EdgeType>();
+    test_undirected_unshared<GraphFlavour, wrapper<double>, data_sharing::data_pool<wrapper<double>>, EdgeType>();
 
-    test_undirected_unshared<GraphFlavour, std::tuple<double, double>, data_sharing::unpooled, EdgeType>();
-    test_undirected_unshared<GraphFlavour, std::tuple<double, double>, data_sharing::data_pool, EdgeType>();
+    test_undirected_unshared<GraphFlavour, std::tuple<double, double>, data_sharing::unpooled<std::tuple<double, double>>, EdgeType>();
+    test_undirected_unshared<GraphFlavour, std::tuple<double, double>, data_sharing::data_pool<std::tuple<double, double>>, EdgeType>();
 
-    test_undirected_shared<GraphFlavour, std::tuple<double, double, double>, data_sharing::unpooled, EdgeType>();
+    test_undirected_shared<GraphFlavour, std::tuple<double, double, double>, data_sharing::unpooled<std::tuple<double, double, double>>, EdgeType>();
     // For the data pool, the sizeof the proxy is just the size of a shared_ptr
-    test_undirected_unshared<GraphFlavour, std::tuple<double, double, double>, data_sharing::data_pool, EdgeType>();
+    test_undirected_unshared<GraphFlavour, std::tuple<double, double, double>, data_sharing::data_pool<std::tuple<double, double, double>>, EdgeType>();
 
-    test_undirected_shared<GraphFlavour, std::vector<int>, data_sharing::unpooled, EdgeType>();
-    test_undirected_unshared<GraphFlavour, std::vector<int>, data_sharing::data_pool, EdgeType>();
+    test_undirected_shared<GraphFlavour, std::vector<int>, data_sharing::unpooled<std::vector<int>>, EdgeType>();
+    test_undirected_unshared<GraphFlavour, std::vector<int>, data_sharing::data_pool<std::vector<int>>, EdgeType>();
   }
 
   template
   <
     class EdgeWeight,
-    template<class...> class EdgeWeightStorage
+    class EdgeWeightPooling
   >
   void test_graph_meta::test_directed_impl()
   {
@@ -171,16 +171,16 @@ namespace sequoia::unit_testing
     using namespace data_structures;
     using namespace data_sharing;
 
-    using gen_t = dynamic_edge_traits<graph_flavour::directed, EdgeWeight, EdgeWeightStorage, contiguous_edge_storage_traits, std::size_t>;
+    using gen_t = dynamic_edge_traits<graph_flavour::directed, EdgeWeight, EdgeWeightPooling, contiguous_edge_storage_traits, std::size_t>;
     using edge_t = typename gen_t::edge_type;
-    using proxy = typename EdgeWeightStorage<EdgeWeight>::proxy;
+    using proxy = typename EdgeWeightPooling::proxy;
     static_assert(std::is_same_v<edge_t, partial_edge<EdgeWeight, sharing_v_to_type<false>::template policy, proxy>>, "");
   }
 
   template
   <
     class EdgeWeight,
-    template<class...> class EdgeWeightStorage
+    class EdgeWeightPooling
   >
   void test_graph_meta::test_directed_embedded_impl()
   {
@@ -189,9 +189,9 @@ namespace sequoia::unit_testing
     using namespace data_structures;
     using namespace data_sharing;
 
-    using gen_t = dynamic_edge_traits<graph_flavour::directed_embedded, EdgeWeight, EdgeWeightStorage, contiguous_edge_storage_traits, std::size_t>;
+    using gen_t = dynamic_edge_traits<graph_flavour::directed_embedded, EdgeWeight, EdgeWeightPooling, contiguous_edge_storage_traits, std::size_t>;
     using edge_t = typename gen_t::edge_type;
-    using proxy = typename EdgeWeightStorage<EdgeWeight>::proxy;
+    using proxy = typename EdgeWeightPooling::proxy;
     static_assert(std::is_same_v<edge_t, edge<EdgeWeight, proxy>>, "");
   }
 
@@ -199,11 +199,11 @@ namespace sequoia::unit_testing
   {
     using namespace maths;
 
-    test_directed_impl<int, data_sharing::unpooled>();
-    test_directed_impl<int, data_sharing::data_pool>();
+    test_directed_impl<int, data_sharing::unpooled<int>>();
+    test_directed_impl<int, data_sharing::data_pool<int>>();
 
-    test_directed_impl<std::tuple<double,double,double>, data_sharing::unpooled>();
-    test_directed_impl<std::tuple<double,double,double>, data_sharing::data_pool>();
+    test_directed_impl<std::tuple<double,double,double>, data_sharing::unpooled<std::tuple<double,double,double>>>();
+    test_directed_impl<std::tuple<double,double,double>, data_sharing::data_pool<std::tuple<double,double,double>>>();
   }
 
 
@@ -211,10 +211,10 @@ namespace sequoia::unit_testing
   {
     using namespace maths;
 
-    test_directed_embedded_impl<int, data_sharing::unpooled>();
-    test_directed_embedded_impl<int, data_sharing::data_pool>();
+    test_directed_embedded_impl<int, data_sharing::unpooled<int>>();
+    test_directed_embedded_impl<int, data_sharing::data_pool<int>>();
 
-    test_directed_embedded_impl<std::tuple<double,double,double>, data_sharing::unpooled>();
-    test_directed_embedded_impl<std::tuple<double,double,double>, data_sharing::data_pool>();
+    test_directed_embedded_impl<std::tuple<double,double,double>, data_sharing::unpooled<std::tuple<double,double,double>>>();
+    test_directed_embedded_impl<std::tuple<double,double,double>, data_sharing::data_pool<std::tuple<double,double,double>>>();
   }  
 }

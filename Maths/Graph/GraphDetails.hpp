@@ -32,6 +32,7 @@ namespace sequoia
   {
     enum class directed_flavour { undirected, directed };
 
+    [[nodiscard]]
     constexpr bool directed(const directed_flavour directedness) noexcept
     {
       return directedness == directed_flavour::directed;
@@ -39,11 +40,13 @@ namespace sequoia
 
     enum class graph_flavour {undirected, undirected_embedded, directed, directed_embedded};
 
+    [[nodiscard]]
     constexpr bool undirected(const graph_flavour flavour) noexcept
     {
       return (flavour == graph_flavour::undirected) || ( flavour == graph_flavour::undirected_embedded);
     }
 
+    [[nodiscard]]
     constexpr directed_flavour to_directedness(const graph_flavour gf) noexcept
     {
       return ((gf == graph_flavour::directed) || (gf == graph_flavour::directed_embedded)) ? directed_flavour::directed : directed_flavour::undirected;
@@ -52,7 +55,8 @@ namespace sequoia
     enum class edge_sharing_preference {agnostic, shared_edge, shared_weight, independent};
 
     namespace graph_impl
-    {      
+    {
+      [[nodiscard]]
       constexpr std::size_t num_static_edges(const graph_flavour flavour, const std::size_t size) noexcept
       {
         return (flavour != graph_flavour::directed) ? 2*size : size;
@@ -74,14 +78,14 @@ namespace sequoia
 
       // Edge Weight Wrapper
 
-      template<class EdgeWeight, template <class...> class EdgeWeightPooling, bool=std::is_empty_v<EdgeWeight>>
+      template<class EdgeWeight, class EdgeWeightPooling, bool=std::is_empty_v<EdgeWeight>>
       struct edge_weight_wrapper
       {
-        using proxy = typename EdgeWeightPooling<EdgeWeight>::proxy;
+        using proxy = typename EdgeWeightPooling::proxy;
       };
 
 
-      template<class EdgeWeight, template <class...> class EdgeWeightPooling>
+      template<class EdgeWeight, class EdgeWeightPooling>
       struct edge_weight_wrapper<EdgeWeight, EdgeWeightPooling, true>
       {
         using proxy = typename utilities::protective_wrapper<EdgeWeight>;
@@ -89,7 +93,7 @@ namespace sequoia
       
       // Edge (Weight) Sharing      
        
-      template<class EdgeWeight, template <class...> class EdgeWeightPooling>
+      template<class EdgeWeight, class EdgeWeightPooling>
       constexpr bool big_proxy() noexcept
       {        
         // 2 * sizeof(proxy) > 2 * sizeof(proxy*) + sizeof(proxy)
@@ -97,7 +101,7 @@ namespace sequoia
           > 2*sizeof(typename edge_weight_wrapper<EdgeWeight,EdgeWeightPooling>::proxy*);
       }
 
-      template<class EdgeWeight, template <class...> class EdgeWeightPooling>
+      template<class EdgeWeight, class EdgeWeightPooling>
       constexpr bool copy_constructible_proxy() noexcept
       {
         using proxy = typename edge_weight_wrapper<EdgeWeight, EdgeWeightPooling>::proxy;
@@ -109,7 +113,7 @@ namespace sequoia
         graph_flavour GraphFlavour,
         edge_sharing_preference SharingPreference,
         class EdgeWeight,
-        template <class...> class EdgeWeightPooling
+        class EdgeWeightPooling
       >
       struct sharing_traits
       {
@@ -186,7 +190,7 @@ namespace sequoia
       <
         graph_flavour GraphFlavour,
         class EdgeWeight,
-        template <class...> class EdgeWeightPooling,
+        class EdgeWeightPooling,
         class IndexType,
         edge_sharing_preference SharingPreference,
         bool SharedEdge=sharing_traits<GraphFlavour, SharingPreference, EdgeWeight, EdgeWeightPooling>::shared_edge_v
@@ -208,7 +212,7 @@ namespace sequoia
       template
       <
         class EdgeWeight,
-        template <class...> class EdgeWeightPooling,
+        class EdgeWeightPooling,
         class IndexType,
         edge_sharing_preference SharingPreference,
         bool SharedEdge
@@ -237,7 +241,7 @@ namespace sequoia
       template
       <
         class EdgeWeight,
-        template <class...> class EdgeWeightPooling,
+        class EdgeWeightPooling,
         class IndexType,
         edge_sharing_preference SharingPreference
       >
@@ -259,7 +263,7 @@ namespace sequoia
       template
       <
         class EdgeWeight,        
-        template <class...> class EdgeWeightPooling,
+        class EdgeWeightPooling,
         class IndexType,
         edge_sharing_preference SharingPreference
       >
