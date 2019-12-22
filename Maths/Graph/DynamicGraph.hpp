@@ -19,7 +19,6 @@
 
 namespace sequoia::maths
 {
-  template<graph_flavour GraphFlavour, class EdgeWeight, class EdgeWeightPooling>
   struct contiguous_edge_storage_traits
   {
     template <class T, class Sharing, class Traits> using storage_type = data_structures::contiguous_storage<T, Sharing, Traits>;
@@ -28,7 +27,6 @@ namespace sequoia::maths
     constexpr static edge_sharing_preference edge_sharing{edge_sharing_preference::agnostic};
   };
 
-  template<graph_flavour GraphFlavour, class EdgeWeight, class EdgeWeightPooling>
   struct bucketed_edge_storage_traits
   {
     template <class T, class Sharing, class Traits> using storage_type = data_structures::bucketed_storage<T, Sharing, Traits>;
@@ -37,7 +35,7 @@ namespace sequoia::maths
     constexpr static edge_sharing_preference edge_sharing{edge_sharing_preference::agnostic};
   };
 
-  template<class NodeWeight, class NodeWeightPooling, bool=std::is_empty_v<NodeWeight>>
+  template<class NodeWeight, bool=std::is_empty_v<NodeWeight>>
   struct node_weight_storage_traits
   {
     constexpr static bool throw_on_range_error{true};
@@ -46,8 +44,8 @@ namespace sequoia::maths
     template<class S> using container_type = std::vector<S, std::allocator<S>>;
   };
 
-  template<class NodeWeight, class NodeWeightPooling>
-  struct node_weight_storage_traits<NodeWeight, NodeWeightPooling, true>
+  template<class NodeWeight>
+  struct node_weight_storage_traits<NodeWeight, true>
   {
     constexpr static bool has_allocator{};
   };
@@ -437,8 +435,8 @@ namespace sequoia::maths
     class NodeWeight,      
     class EdgeWeightPooling=data_sharing::unpooled<EdgeWeight>,
     class NodeWeightPooling=data_sharing::unpooled<NodeWeight>,
-    class EdgeStorageTraits = bucketed_edge_storage_traits<graph_impl::to_graph_flavour<Directedness>(), EdgeWeight, EdgeWeightPooling>,
-    class NodeWeightStorageTraits = node_weight_storage_traits<NodeWeight, NodeWeightPooling>
+    class EdgeStorageTraits = bucketed_edge_storage_traits,
+    class NodeWeightStorageTraits = node_weight_storage_traits<NodeWeight>
   >
   class graph final : public
     graph_base
@@ -496,8 +494,8 @@ namespace sequoia::maths
     class NodeWeight,      
     class EdgeWeightPooling=data_sharing::unpooled<EdgeWeight>,
     class NodeWeightPooling=data_sharing::unpooled<NodeWeight>,
-    class EdgeStorageTraits=bucketed_edge_storage_traits<graph_impl::to_embedded_graph_flavour<Directedness>(), EdgeWeight, EdgeWeightPooling>,
-    class NodeWeightStorageTraits=node_weight_storage_traits<NodeWeight, NodeWeightPooling>
+    class EdgeStorageTraits=bucketed_edge_storage_traits,
+    class NodeWeightStorageTraits=node_weight_storage_traits<NodeWeight>
   >
   class embedded_graph final : public
     graph_base
