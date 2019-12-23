@@ -257,8 +257,8 @@ namespace sequoia
       e2.target_node(1);
       check_equality(LINE("Change target"), e2, edge_t{4, 1});
 
-      e2.host_node(3);
-      check_equality(LINE("Change host"), e2, edge_t{3, 1});      
+      e2.soure_node(3);
+      check_equality(LINE("Change soure"), e2, edge_t{3, 1});      
       
       check_regular_semantics(LINE("Standard semantics"), e2, e1);
       
@@ -268,11 +268,11 @@ namespace sequoia
 
       check_regular_semantics(LINE("Standard semantics"), e4, e3);
 
-      // Changing host / target node for inverted edge implicitly changes host
+      // Changing soure / target node for inverted edge implicitly changes soure
       e4.target_node(9);
       check_equality(LINE(""), e4, edge_t{9, inversion_constant<true>{}});
 
-      e4.host_node(4);
+      e4.soure_node(4);
       check_equality(LINE(""), e4, edge_t{4, inversion_constant<true>{}});
     }    
 
@@ -297,7 +297,7 @@ namespace sequoia
         e1.target_node(10);
         check_equality(LINE("Change target"), e1, edge_t{0, 10, 2.3});
 
-        e1.host_node(5);
+        e1.soure_node(5);
         check_equality(LINE("Change target"), e1, edge_t{5, 10, 2.3});
 
         check_regular_semantics(LINE("Standard semantics"), e2, e1);
@@ -332,8 +332,8 @@ namespace sequoia
         e1.weight(vector<int>{3, 2});
         check_equality(LINE("Change weight"), e1, edge_t{0, 0, vector<int>{3, 2}});
 
-        e1.host_node(2);
-        check_equality(LINE("Change host, no induced change in target"), e1, edge_t{2, 0, vector<int>{3, 2}});
+        e1.soure_node(2);
+        check_equality(LINE("Change soure, no induced change in target"), e1, edge_t{2, 0, vector<int>{3, 2}});
         
         check_regular_semantics(LINE("Standard semantics"), e2, e1);
       }
@@ -353,8 +353,8 @@ namespace sequoia
       edge_t e{3, 4, 1};
       check_equality(LINE("Construction"), e, edge_t{3, 4, 1});
 
-      e.host_node(4);
-      check_equality(LINE("Change host"), e, edge_t{4, 4, 1});
+      e.soure_node(4);
+      check_equality(LINE("Change soure"), e, edge_t{4, 4, 1});
 
       e.target_node(5);
       check_equality(LINE("Change target"), e, edge_t{4, 5, 1});
@@ -365,11 +365,11 @@ namespace sequoia
       edge_t e1{7, inversion_constant<true>{}, 9};
       check_equality(LINE("Construction"), e1, edge_t{7, inversion_constant<true>{}, 9});
 
-      e1.host_node(6);
-      check_equality(LINE("Change host"), e1, edge_t{6, inversion_constant<true>{}, 9});
+      e1.soure_node(6);
+      check_equality(LINE("Change soure"), e1, edge_t{6, inversion_constant<true>{}, 9});
 
       e1.target_node(8);
-      check_equality(LINE("Induced change to host"), e1, edge_t{8, inversion_constant<true>{}, 9});
+      check_equality(LINE("Induced change to soure"), e1, edge_t{8, inversion_constant<true>{}, 9});
 
       check_regular_semantics(LINE("Standard semantics"), e1, e);
 
@@ -389,11 +389,11 @@ namespace sequoia
       edge_t e2{4, inversion_constant<true>{}, 1, 1.1};
       check_equality(LINE(""), e2, edge_t{4, inversion_constant<true>{}, 1, 1.1});
 
-      e2.host_node(8);
-      check_equality(LINE("Change host"), e2, edge_t{8, inversion_constant<true>{}, 1, 1.1});
+      e2.soure_node(8);
+      check_equality(LINE("Change soure"), e2, edge_t{8, inversion_constant<true>{}, 1, 1.1});
 
       e2.target_node(7);
-      check_equality(LINE("Induced change host"), e2, edge_t{7, inversion_constant<true>{}, 1, 1.1});
+      check_equality(LINE("Induced change soure"), e2, edge_t{7, inversion_constant<true>{}, 1, 1.1});
 
       e2.complementary_index(4);
       check_equality(LINE("Change complementary index"), e2, edge_t{7, inversion_constant<true>{}, 4, 1.1});
@@ -416,8 +416,8 @@ namespace sequoia
         edge_t e{10, 11, 0, -1.2};
         check_equality(LINE("Construction"), e, edge_t{10, 11, 0, -1.2});
 
-        e.host_node(9);
-        check_equality(LINE("Change host node"), e, edge_t{9, 11, 0, -1.2});
+        e.soure_node(9);
+        check_equality(LINE("Change soure node"), e, edge_t{9, 11, 0, -1.2});
 
         e.weight(5.2);
         check_equality(LINE("Change weight"), e, edge_t{9, 11, 0, 5.2});
@@ -431,8 +431,8 @@ namespace sequoia
         edge_t e2{6, inversion_constant<true>{}, 4, 0.0};
         check_equality(LINE("Construction"), e2, edge_t{6, inversion_constant<true>{}, 4, 0.0});
 
-        e2.host_node(5);
-        check_equality(LINE("Change host node, inducing change in target"), e2, edge_t{5, inversion_constant<true>{}, 4, 0.0});
+        e2.soure_node(5);
+        check_equality(LINE("Change soure node, inducing change in target"), e2, edge_t{5, inversion_constant<true>{}, 4, 0.0});
         check_regular_semantics(LINE("Standard semantics"), e2, e);
 
         edge_t e3{8, inversion_constant<false>{}, 3, e};

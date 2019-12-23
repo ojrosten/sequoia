@@ -24,7 +24,7 @@ namespace sequoia
 
   namespace data_structures
   {
-    template <class, std::size_t, std::size_t, class> class static_contiguous_storage;
+    template <class, std::size_t, std::size_t, class> class static_partitioned_sequence;
   }
   
   namespace maths

@@ -32,9 +32,9 @@ namespace sequoia::unit_testing
     }
   
     template<class Logger, class Edge, class Prediction>
-    void check_host(std::string_view description, Logger& logger, const Edge& edge, const Prediction& prediction)
+    void check_soure(std::string_view description, Logger& logger, const Edge& edge, const Prediction& prediction)
     {
-      check_equality(combine_messages(description, "Host node incorrect"), logger, edge.host_node(), prediction.host_node());
+      check_equality(combine_messages(description, "Host node incorrect"), logger, edge.soure_node(), prediction.soure_node());
       check_equality(combine_messages(description, "Inversion flag incorrect"), logger, edge.inverted(), prediction.inverted()); 
 
     }
@@ -130,7 +130,7 @@ namespace sequoia::unit_testing
     static void check(std::string_view description, Logger& logger, const type& edge, const type& prediction)
     {
       impl::check_partial(description, logger, edge, prediction);
-      impl::check_host(description, logger, edge, prediction);
+      impl::check_soure(description, logger, edge, prediction);
     }
   };
 
@@ -148,7 +148,7 @@ namespace sequoia::unit_testing
     static void check(std::string_view description, Logger& logger, const type& edge, const maths::edge<Weight, OtherWProxy, IndexType>& prediction)
     {
       impl::check_partial(description, logger, edge, prediction);
-      impl::check_host(description, logger, edge, prediction);
+      impl::check_soure(description, logger, edge, prediction);
     }
   };
 
@@ -168,7 +168,7 @@ namespace sequoia::unit_testing
     {
       impl::check_partial(description, logger, edge, prediction);
       impl::check_complementary(description, logger, edge, prediction);
-      impl::check_host(description, logger, edge, prediction);
+      impl::check_soure(description, logger, edge, prediction);
     }
   };
 
@@ -188,7 +188,7 @@ namespace sequoia::unit_testing
     {
       impl::check_partial(description, logger, edge, prediction);
       impl::check_complementary(description, logger, edge, prediction);
-      impl::check_host(description, logger, edge, prediction);
+      impl::check_soure(description, logger, edge, prediction);
     }
   };
   
@@ -206,7 +206,7 @@ namespace sequoia::unit_testing
     static void check(std::string_view description, Logger& logger, const type& edge, const PredictionType& prediction)
     {
       impl::check_partial(description, logger, edge, prediction);
-      impl::check_host(description, logger, edge, prediction);
+      impl::check_soure(description, logger, edge, prediction);
     }
   };
 }

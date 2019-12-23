@@ -32,7 +32,7 @@ namespace sequoia::unit_testing
     using namespace data_structures;
 
     static_assert(has_reservable_partitions_v<bucketed_storage<int>>);
-    static_assert(!has_reservable_partitions_v<contiguous_storage<int>>);
+    static_assert(!has_reservable_partitions_v<partitioned_sequence<int>>);
   }
 
   void test_graph_meta::test_weight_makers()

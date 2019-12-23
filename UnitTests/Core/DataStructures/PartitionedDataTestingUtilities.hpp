@@ -100,9 +100,9 @@ namespace sequoia::unit_testing
   };
 
   template<class T, class SharingPolicy, class Traits>
-  struct detailed_equality_checker<data_structures::contiguous_storage<T, SharingPolicy, Traits>>
+  struct detailed_equality_checker<data_structures::partitioned_sequence<T, SharingPolicy, Traits>>
   {
-    using type = data_structures::contiguous_storage<T, SharingPolicy, Traits>;
+    using type = data_structures::partitioned_sequence<T, SharingPolicy, Traits>;
     
     template<class Logger>
     static void check(std::string_view description, Logger& logger, const type& data, const type& prediction)
@@ -112,9 +112,9 @@ namespace sequoia::unit_testing
   };
 
   template<class T, class SharingPolicy, class Traits>
-  struct equivalence_checker<data_structures::contiguous_storage<T, SharingPolicy, Traits>>
+  struct equivalence_checker<data_structures::partitioned_sequence<T, SharingPolicy, Traits>>
   {
-    using type = data_structures::contiguous_storage<T, SharingPolicy, Traits>;
+    using type = data_structures::partitioned_sequence<T, SharingPolicy, Traits>;
     using equivalent_type = std::initializer_list<std::initializer_list<T>>;
     
     template<class Logger>
@@ -125,9 +125,9 @@ namespace sequoia::unit_testing
   };
 
   template<class T, std::size_t Npartitions, std::size_t Nelements, class IndexType>
-  struct detailed_equality_checker<data_structures::static_contiguous_storage<T, Npartitions, Nelements, IndexType>>
+  struct detailed_equality_checker<data_structures::static_partitioned_sequence<T, Npartitions, Nelements, IndexType>>
   {
-    using type = data_structures::static_contiguous_storage<T, Npartitions, Nelements, IndexType>;
+    using type = data_structures::static_partitioned_sequence<T, Npartitions, Nelements, IndexType>;
     
     template<class Logger>
     static void check(std::string_view description, Logger& logger, const type& data, const type& prediction)
@@ -137,9 +137,9 @@ namespace sequoia::unit_testing
   };
 
   template<class T, std::size_t Npartitions, std::size_t Nelements, class IndexType>
-  struct equivalence_checker<data_structures::static_contiguous_storage<T, Npartitions, Nelements, IndexType>>
+  struct equivalence_checker<data_structures::static_partitioned_sequence<T, Npartitions, Nelements, IndexType>>
   {
-    using type = data_structures::static_contiguous_storage<T, Npartitions, Nelements, IndexType>;
+    using type = data_structures::static_partitioned_sequence<T, Npartitions, Nelements, IndexType>;
     
     template<class Logger>
     static void check(std::string_view description, Logger& logger, const type& data, std::initializer_list<std::initializer_list<T>> prediction)
@@ -187,7 +187,7 @@ namespace sequoia::unit_testing
     bool PropagateMove=true,
     bool PropagateSwap=true
   >
-  struct custom_contiguous_storage_traits
+  struct custom_partitioned_sequence_traits
   {
     constexpr static bool static_storage_v{false};
     constexpr static bool throw_on_range_error{true};

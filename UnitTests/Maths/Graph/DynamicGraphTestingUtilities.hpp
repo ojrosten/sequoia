@@ -97,8 +97,8 @@ namespace sequoia::unit_testing
   
   struct independent_contiguous_edge_storage_traits
   {
-    template <class T, class Sharing, class Traits> using storage_type = data_structures::contiguous_storage<T, Sharing, Traits>;
-    template <class T, class Sharing> using traits_type = data_structures::contiguous_storage_traits<T, Sharing>;
+    template <class T, class Sharing, class Traits> using storage_type = data_structures::partitioned_sequence<T, Sharing, Traits>;
+    template <class T, class Sharing> using traits_type = data_structures::partitioned_sequence_traits<T, Sharing>;
 
     constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::independent};
   };
@@ -113,8 +113,8 @@ namespace sequoia::unit_testing
 
   struct shared_weight_contiguous_edge_storage_traits
   {
-    template <class T, class Sharing, class Traits> using storage_type = data_structures::contiguous_storage<T, Sharing, Traits>;
-    template <class T, class Sharing> using traits_type = data_structures::contiguous_storage_traits<T, Sharing>;
+    template <class T, class Sharing, class Traits> using storage_type = data_structures::partitioned_sequence<T, Sharing, Traits>;
+    template <class T, class Sharing> using traits_type = data_structures::partitioned_sequence_traits<T, Sharing>;
 
     constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::shared_weight};
   };
@@ -129,8 +129,8 @@ namespace sequoia::unit_testing
 
   struct custom_allocator_contiguous_edge_storage_traits
   {
-    template <class T, class Sharing, class Traits> using storage_type = data_structures::contiguous_storage<T, Sharing, Traits>;
-    template <class T, class Sharing> using traits_type = custom_contiguous_storage_traits<T, Sharing>;
+    template <class T, class Sharing, class Traits> using storage_type = data_structures::partitioned_sequence<T, Sharing, Traits>;
+    template <class T, class Sharing> using traits_type = custom_partitioned_sequence_traits<T, Sharing>;
 
     constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::agnostic};
   };

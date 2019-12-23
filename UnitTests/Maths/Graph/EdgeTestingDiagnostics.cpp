@@ -148,13 +148,13 @@ namespace sequoia::unit_testing
 
     using edge_t = edge<null_weight, utilities::protective_wrapper<null_weight>>;
 
-    check_equality(LINE("Differing targets, identical hosts"), edge_t{0,0}, edge_t{0,1});
-    check_equality(LINE("Differing targets, identical hosts"), edge_t{4,1}, edge_t{4,0});
+    check_equality(LINE("Differing targets, identical soures"), edge_t{0,0}, edge_t{0,1});
+    check_equality(LINE("Differing targets, identical soures"), edge_t{4,1}, edge_t{4,0});
 
-    check_equality(LINE("Differing hosts, identical targets"), edge_t{0,0}, edge_t{1,0});
-    check_equality(LINE("Differing hosts, identical targets"), edge_t{1,8}, edge_t{0,8});
+    check_equality(LINE("Differing soures, identical targets"), edge_t{0,0}, edge_t{1,0});
+    check_equality(LINE("Differing soures, identical targets"), edge_t{1,8}, edge_t{0,8});
 
-    check_equality(LINE("Differing hosts and targets"), edge_t{0,1}, edge_t{1,0});
+    check_equality(LINE("Differing soures and targets"), edge_t{0,1}, edge_t{1,0});
 
     check_equality(LINE("Differing inversion flag"), edge_t{0, inversion_constant<true>{}}, edge_t{0, inversion_constant<false>{}});
   }
@@ -166,24 +166,24 @@ namespace sequoia::unit_testing
 
     using edge_t = edge<double, utilities::protective_wrapper<double>>;
 
-    check_equality(LINE("Differing targets, identical hosts and weight"), edge_t{0,0,0.0}, edge_t{0,1,0.0});
-    check_equality(LINE("Differing targets, identical host and weights"), edge_t{0,10,0.0}, edge_t{1,10,0.0});
-    check_equality(LINE("Differing targets, identical host and weights"), edge_t{0,20,5.0}, edge_t{1,20,5.0});
+    check_equality(LINE("Differing targets, identical soures and weight"), edge_t{0,0,0.0}, edge_t{0,1,0.0});
+    check_equality(LINE("Differing targets, identical soure and weights"), edge_t{0,10,0.0}, edge_t{1,10,0.0});
+    check_equality(LINE("Differing targets, identical soure and weights"), edge_t{0,20,5.0}, edge_t{1,20,5.0});
     check_equality(LINE("Differing inversion flag"), edge_t{0, inversion_constant<true>{}, 0.0}, edge_t{0, inversion_constant<false>{}, 0.0});
     
-    check_equality(LINE("Differing hosts, identical targets and weights"), edge_t{0,0,0.0}, edge_t{0,1,0.0});
-    check_equality(LINE("Differing hosts, identical targets and weights"), edge_t{3,0,0.0}, edge_t{3,1,0.0});
-    check_equality(LINE("Differing hosts, identical targets and weights"), edge_t{4,0,-7.0}, edge_t{4,1,-7.0});
+    check_equality(LINE("Differing soures, identical targets and weights"), edge_t{0,0,0.0}, edge_t{0,1,0.0});
+    check_equality(LINE("Differing soures, identical targets and weights"), edge_t{3,0,0.0}, edge_t{3,1,0.0});
+    check_equality(LINE("Differing soures, identical targets and weights"), edge_t{4,0,-7.0}, edge_t{4,1,-7.0});
 
-    check_equality(LINE("Differing weights, identical targets and hosts"), edge_t{0,0,0.0}, edge_t{0,0,1.0});
-    check_equality(LINE("Differing weights, identical targets and hosts"), edge_t{3,0,0.0}, edge_t{3,0,1.0});
-    check_equality(LINE("Differing weights, identical targets and hosts"), edge_t{3,4,0.0}, edge_t{3,4,1.0});
+    check_equality(LINE("Differing weights, identical targets and soures"), edge_t{0,0,0.0}, edge_t{0,0,1.0});
+    check_equality(LINE("Differing weights, identical targets and soures"), edge_t{3,0,0.0}, edge_t{3,0,1.0});
+    check_equality(LINE("Differing weights, identical targets and soures"), edge_t{3,4,0.0}, edge_t{3,4,1.0});
 
-    check_equality(LINE("Differing targets and hosts, identical weights"), edge_t{0,1,0.0}, edge_t{1,0,0.0});
-    check_equality(LINE("Differing targets and weights, identical hosts"), edge_t{0,1,6.0}, edge_t{2,1,5.0});
-    check_equality(LINE("Differing hosts and weights, identical targets"), edge_t{0,1,4.0}, edge_t{0,3,5.0});
+    check_equality(LINE("Differing targets and soures, identical weights"), edge_t{0,1,0.0}, edge_t{1,0,0.0});
+    check_equality(LINE("Differing targets and weights, identical soures"), edge_t{0,1,6.0}, edge_t{2,1,5.0});
+    check_equality(LINE("Differing soures and weights, identical targets"), edge_t{0,1,4.0}, edge_t{0,3,5.0});
 
-    check_equality(LINE("Differing targets, hosts and weights"), edge_t{0,1,2.0}, edge_t{1,0,5.0});
+    check_equality(LINE("Differing targets, soures and weights"), edge_t{0,1,2.0}, edge_t{1,0,5.0});
   }
 
   void test_edge_false_positives::test_plain_embedded_edge()
@@ -193,24 +193,24 @@ namespace sequoia::unit_testing
 
     using edge_t = embedded_edge<null_weight, independent, utilities::protective_wrapper<null_weight>>;
 
-    check_equality(LINE("Differing targets, identical hosts and complementary indices"), edge_t{0,0,0}, edge_t{0,1,0});
-    check_equality(LINE("Differing targets, identical host and complementary indices"), edge_t{0,10,0}, edge_t{1,10,0});
-    check_equality(LINE("Differing targets, identical host and complementary indices"), edge_t{0,0,20}, edge_t{1,0,20});
+    check_equality(LINE("Differing targets, identical soures and complementary indices"), edge_t{0,0,0}, edge_t{0,1,0});
+    check_equality(LINE("Differing targets, identical soure and complementary indices"), edge_t{0,10,0}, edge_t{1,10,0});
+    check_equality(LINE("Differing targets, identical soure and complementary indices"), edge_t{0,0,20}, edge_t{1,0,20});
     check_equality(LINE("Differing inversion flag"), edge_t{0, inversion_constant<true>{}, 0}, edge_t{0, inversion_constant<false>{}, 0});
 
-    check_equality(LINE("Differing hosts, identical targets and complementary indices"), edge_t{0,0,0}, edge_t{0,1,0});
-    check_equality(LINE("Differing hosts, identical targets and complementary indices"), edge_t{3,0,0}, edge_t{3,1,0});
-    check_equality(LINE("Differing hosts, identical targets and complementary indices"), edge_t{4,0,7}, edge_t{4,1,7});
+    check_equality(LINE("Differing soures, identical targets and complementary indices"), edge_t{0,0,0}, edge_t{0,1,0});
+    check_equality(LINE("Differing soures, identical targets and complementary indices"), edge_t{3,0,0}, edge_t{3,1,0});
+    check_equality(LINE("Differing soures, identical targets and complementary indices"), edge_t{4,0,7}, edge_t{4,1,7});
 
-    check_equality(LINE("Differing complementary indicess, identical targets and hosts"), edge_t{0,0,0}, edge_t{0,0,1});
-    check_equality(LINE("Differing complementary indicess, identical targets and hosts"), edge_t{3,0,0}, edge_t{3,0,1});
-    check_equality(LINE("Differing complementary indicess, identical targets and hosts"), edge_t{3,4,0}, edge_t{3,4,1});
+    check_equality(LINE("Differing complementary indicess, identical targets and soures"), edge_t{0,0,0}, edge_t{0,0,1});
+    check_equality(LINE("Differing complementary indicess, identical targets and soures"), edge_t{3,0,0}, edge_t{3,0,1});
+    check_equality(LINE("Differing complementary indicess, identical targets and soures"), edge_t{3,4,0}, edge_t{3,4,1});
 
-    check_equality(LINE("Differing targets and hosts, identical complementary indices"), edge_t{0,1,0}, edge_t{1,0,0});
-    check_equality(LINE("Differing targets and complementary indices, identical hosts"), edge_t{0,1,6}, edge_t{2,1,5});
-    check_equality(LINE("Differing hosts and complementary indices, identical targets"), edge_t{0,1,4}, edge_t{0,3,5});
+    check_equality(LINE("Differing targets and soures, identical complementary indices"), edge_t{0,1,0}, edge_t{1,0,0});
+    check_equality(LINE("Differing targets and complementary indices, identical soures"), edge_t{0,1,6}, edge_t{2,1,5});
+    check_equality(LINE("Differing soures and complementary indices, identical targets"), edge_t{0,1,4}, edge_t{0,3,5});
 
-    check_equality(LINE("Differing targets, hosts and complementary indicess"), edge_t{0,1,2}, edge_t{2,0,1});
+    check_equality(LINE("Differing targets, soures and complementary indicess"), edge_t{0,1,2}, edge_t{2,0,1});
   }
   
   void test_edge_false_positives::test_embedded_edge_indep_weight()
@@ -220,10 +220,10 @@ namespace sequoia::unit_testing
 
     using edge_t = embedded_edge<double, independent, utilities::protective_wrapper<double>>;
 
-    check_equality(LINE("Differing targets, identical hosts, complementary indices and weights"), edge_t{0,0,0,0.0}, edge_t{0,1,0,0.0});
-    check_equality(LINE("Differing hosts, identical targets, complementary indices and weights"), edge_t{1,0,0,0.0}, edge_t{0,0,0,0.0});
-    check_equality(LINE("Differing complementary indices, identical hosts, targets and weights"), edge_t{0,0,0,0.0}, edge_t{0,0,1,0.0});
-    check_equality(LINE("Differing weights, identical hosts, targets, complementary indices"), edge_t{0,0,0,0.0}, edge_t{0,0,0,1.0});
+    check_equality(LINE("Differing targets, identical soures, complementary indices and weights"), edge_t{0,0,0,0.0}, edge_t{0,1,0,0.0});
+    check_equality(LINE("Differing soures, identical targets, complementary indices and weights"), edge_t{1,0,0,0.0}, edge_t{0,0,0,0.0});
+    check_equality(LINE("Differing complementary indices, identical soures, targets and weights"), edge_t{0,0,0,0.0}, edge_t{0,0,1,0.0});
+    check_equality(LINE("Differing weights, identical soures, targets, complementary indices"), edge_t{0,0,0,0.0}, edge_t{0,0,0,1.0});
     check_equality(LINE("Differing inversion flag"), edge_t{0, inversion_constant<true>{}, 0, 0.0}, edge_t{0, inversion_constant<false>{}, 0, 0.0});
 
   }
@@ -235,10 +235,10 @@ namespace sequoia::unit_testing
 
     using edge_t = embedded_edge<double, shared, utilities::protective_wrapper<double>>;
 
-    check_equality(LINE("Differing targets, identical hosts, complementary indices and weights"), edge_t{0,0,0,0.0}, edge_t{0,1,0,0.0});
-    check_equality(LINE("Differing hosts, identical targets, complementary indices and weights"), edge_t{1,0,0,0.0}, edge_t{0,0,0,0.0});
-    check_equality(LINE("Differing complementary indices, identical hosts, targets and weights"), edge_t{0,0,0,0.0}, edge_t{0,0,1,0.0});
-    check_equality(LINE("Differing weights, identical hosts, targets, complementary indices"), edge_t{0,0,0,0.0}, edge_t{0,0,0,1.0});
+    check_equality(LINE("Differing targets, identical soures, complementary indices and weights"), edge_t{0,0,0,0.0}, edge_t{0,1,0,0.0});
+    check_equality(LINE("Differing soures, identical targets, complementary indices and weights"), edge_t{1,0,0,0.0}, edge_t{0,0,0,0.0});
+    check_equality(LINE("Differing complementary indices, identical soures, targets and weights"), edge_t{0,0,0,0.0}, edge_t{0,0,1,0.0});
+    check_equality(LINE("Differing weights, identical soures, targets, complementary indices"), edge_t{0,0,0,0.0}, edge_t{0,0,0,1.0});
     check_equality(LINE("Differing inversion flag"), edge_t{0, inversion_constant<true>{}, 0, 0.0}, edge_t{0, inversion_constant<false>{}, 0, 0.0});
   }
 }

@@ -45,7 +45,7 @@ namespace sequoia
       {
         using prediction_t = std::initializer_list<std::initializer_list<int>>;
         
-        using storage_t = static_contiguous_storage<int, 1, 1>;
+        using storage_t = static_partitioned_sequence<int, 1, 1>;
         storage_t storage{{5}};
         check_equivalence(LINE(""), storage, prediction_t{{5}});
         
@@ -62,7 +62,7 @@ namespace sequoia
       {
         using prediction_t = std::initializer_list<std::initializer_list<double>>;
         
-        using storage_t = static_contiguous_storage<double, 3, 6>;
+        using storage_t = static_partitioned_sequence<double, 3, 6>;
         storage_t storage{{1.2, 1.1}, {2.6, -7.8}, {0.0, -9.3}};
         check_equivalence(LINE(""), storage, prediction_t{{1.2, 1.1}, {2.6, -7.8}, {0.0, -9.3}});
 
@@ -75,7 +75,7 @@ namespace sequoia
       {
         using prediction_t = std::initializer_list<std::initializer_list<double>>;
         
-        using storage_t = static_contiguous_storage<double, 2, 6>;   
+        using storage_t = static_partitioned_sequence<double, 2, 6>;   
         storage_t storage{{0.2,0.3,-0.4}, {0.8,-1.1,-1.4}}, storage2{{0.2,0.3}, {-0.4, 0.8,-1.1,-1.4}};
         
         check_equivalence(LINE(""), storage, prediction_t{{0.2,0.3,-0.4}, {0.8,-1.1,-1.4}});
@@ -89,14 +89,14 @@ namespace sequoia
         using prediction_t = std::initializer_list<std::initializer_list<ndc>>;
 
         {
-          using storage_t = static_contiguous_storage<no_default_constructor, 1, 1>;      
+          using storage_t = static_partitioned_sequence<no_default_constructor, 1, 1>;      
           constexpr storage_t storage{{ndc{1}}};
           
           check_equivalence(LINE(""), storage, prediction_t{{ndc{1}}});
         }
 
         {
-          using storage_t = static_contiguous_storage<no_default_constructor, 3, 5>;
+          using storage_t = static_partitioned_sequence<no_default_constructor, 3, 5>;
           constexpr storage_t storage2{{ndc{1}, ndc{1}}, {ndc{0}}, {ndc{2}, ndc{4}}};
           check_equivalence(LINE(""), storage2, prediction_t{{ndc{1}, ndc{1}}, {ndc{0}}, {ndc{2}, ndc{4}}});
         }
@@ -110,7 +110,7 @@ namespace sequoia
 
       {
         auto storage1 = test_generic_storage<bucketed_storage<int, shared<int>>>();
-        auto storage2 = test_generic_storage<contiguous_storage<int,shared<int>>>();
+        auto storage2 = test_generic_storage<partitioned_sequence<int,shared<int>>>();
 
         check(LINE(""), isomorphic(storage1, storage2));
         check(LINE(""), isomorphic(storage2, storage1));
@@ -118,7 +118,7 @@ namespace sequoia
 
       {
         auto storage1 = test_generic_storage<bucketed_storage<int, independent<int>>>();
-        auto storage2 = test_generic_storage<contiguous_storage<int, independent<int>>>();
+        auto storage2 = test_generic_storage<partitioned_sequence<int, independent<int>>>();
 
         check(LINE(""), isomorphic(storage1, storage2));
       }  
@@ -658,7 +658,7 @@ namespace sequoia
     {
       using namespace data_structures;
       
-      using storage = contiguous_storage<T, SharingPolicy, custom_contiguous_storage_traits<T, SharingPolicy, PropagateCopy, PropagateMove, PropagateSwap>>;
+      using storage = partitioned_sequence<T, SharingPolicy, custom_partitioned_sequence_traits<T, SharingPolicy, PropagateCopy, PropagateMove, PropagateSwap>>;
       using allocator = typename storage::allocator_type;
       using partitions_allocator = typename storage::traits_type::partitions_allocator_type;
       using prediction = std::initializer_list<std::initializer_list<int>>;
@@ -800,7 +800,7 @@ namespace sequoia
     {
       using namespace data_structures;
        
-      contiguous_storage<T, SharingPolicy> s{};
+      partitioned_sequence<T, SharingPolicy> s{};
       check_equality(LINE(""), s.capacity(), 0ul);
       check_equality(LINE(""), s.num_partitions_capacity(), 0ul);
 

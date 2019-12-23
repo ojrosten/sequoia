@@ -309,7 +309,7 @@ namespace sequoia::maths::graph_impl
               {
                 const bool loop{[iter](const std::size_t currentNodeIndex){
                     if constexpr (G::flavour == graph_flavour::directed_embedded)
-                      return iter->target_node() == iter->host_node();
+                      return iter->target_node() == iter->soure_node();
                     else
                       return iter->target_node() == currentNodeIndex;
                   }(nodeIndex)
@@ -324,7 +324,7 @@ namespace sequoia::maths::graph_impl
                   }
                   else
                   {
-                    if(iter->host_node() != nodeIndex) continue;
+                    if(iter->soure_node() != nodeIndex) continue;
                   }
 
                   edge_functor_processor<EFTF>::process(taskProcessingModel, std::forward<EFTF>(edgeFirstTraversalFunctor), iter);
