@@ -462,24 +462,33 @@ namespace sequoia
         allocChecker(description, logger, std::move(x), yClone, info...);
       }
     }
+    
+    template<class S, class T, class U, class V>
+    struct equivalence_checker<std::pair<S, T>, std::pair<U, V>>
+    {      
+      static_assert(std::is_same_v<std::decay_t<S>, std::decay_t<U>> && std::is_same_v<std::decay_t<T>, std::decay_t<V>>);
 
-    template<class T, class S>
-    struct detailed_equality_checker<std::pair<T, S>>
-    {
       template<class Logger>
-      static void check(std::string_view description, Logger& logger, const std::pair<T, S>& value, const std::pair<T,S>& prediction)
-      {
+      static void check(std::string_view description, Logger& logger, const std::pair<S, T>& value, const std::pair<U, V>& prediction)
+      {      
         check_equality(combine_messages(description, "First element of pair is incorrent"), logger, value.first, prediction.first);
         check_equality(combine_messages(description, "First element of pair is incorrect"), logger, value.second, prediction.second);
       }
     };
 
-    template<class... T>
-    struct detailed_equality_checker<std::tuple<T...>>
-    {     
+    template<class T, class S>
+    struct detailed_equality_checker<std::pair<T, S>> : equivalence_checker<std::pair<T, S>, std::pair<T, S>>
+    {};
+
+    template<class... T, class... U>
+    struct equivalence_checker<std::tuple<T...>, std::tuple<U...>>
+    {
+      static_assert(sizeof...(T) == sizeof...(U));
+      static_assert((std::is_same_v<std::decay_t<T>, std::decay_t<U>> && ...));
+      
     private:
       template<class Logger, std::size_t I = 0>
-      static void check_tuple_elements(std::string_view description, Logger& logger, const std::tuple<T...>& value, const std::tuple<T...>& prediction)
+      static void check_tuple_elements(std::string_view description, Logger& logger, const std::tuple<T...>& value, const std::tuple<U...>& prediction)
       {
         if constexpr(I < sizeof...(T))
         {
@@ -497,20 +506,11 @@ namespace sequoia
       }
     };
 
-    template<class S, class T, class U, class V>
-    struct equivalence_checker<std::pair<S, T>, std::pair<U, V>>
-    {      
-      static_assert(std::is_same_v<std::decay_t<S>, std::decay_t<U>> && std::is_same_v<std::decay_t<T>, std::decay_t<V>>);
-
-      template<class Logger>
-      static void check(std::string_view description, Logger& logger, const std::pair<S, T>& value, const std::pair<U, V>& prediction)
-      {
-        
-        check_equality(combine_messages(description, "First element of pair is incorrent"), logger, value.first, prediction.first);
-        check_equality(combine_messages(description, "First element of pair is incorrect"), logger, value.second, prediction.second);
-      }
-    };
+    template<class... T>
+    struct detailed_equality_checker<std::tuple<T...>> : equivalence_checker<std::tuple<T...>, std::tuple<T...>>
+    {};
     
+
     template<class R> struct performance_results
     {
       std::vector<std::future<R>> fast_futures, slow_futures;
