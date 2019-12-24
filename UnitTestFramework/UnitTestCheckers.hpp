@@ -56,10 +56,6 @@ namespace sequoia
 
     template<class T> struct detailed_equality_checker;
 
-    template<class T> struct equivalence_checker;
-
-    template<class T> struct weak_equivalence_checker;
-
     template<class T, class=std::void_t<>>
     struct has_detailed_equality_checker : public std::false_type
     {};
@@ -160,13 +156,13 @@ namespace sequoia
     template<class Logger, class T, class S, class... U>
     bool check(std::string_view description, Logger& logger, equivalence_tag, const T& value, S&& s, U&&... u)
     {
-      return impl::check<equivalence_checker<T>>(description, logger, value, std::forward<S>(s), std::forward<U>(u)...);      
+      return impl::check<impl::equivalence_checker_t<T, S, U...>>(description, logger, value, std::forward<S>(s), std::forward<U>(u)...);
     }
 
     template<class Logger, class T, class S, class... U>
     bool check(std::string_view description, Logger& logger, weak_equivalence_tag, const T& value, S&& s, U&&... u)
     {
-      return impl::check<weak_equivalence_checker<T>>(description, logger, value, std::forward<S>(s), std::forward<U>(u)...);
+      return impl::check<impl::weak_equivalence_checker_t<T, S, U...>>(description, logger, value, std::forward<S>(s), std::forward<U>(u)...);
     }
     
     template<class Logger, class T> bool check_equality(std::string_view description, Logger& logger, const T& value, const T& prediction)
@@ -501,13 +497,14 @@ namespace sequoia
       }
     };
 
-    template<class S, class T>
-    struct equivalence_checker<std::pair<S, T>>
-    {
-      template<class Logger, class U, class V>
+    template<class S, class T, class U, class V>
+    struct equivalence_checker<std::pair<S, T>, std::pair<U, V>>
+    {      
+      static_assert(std::is_same_v<std::decay_t<S>, std::decay_t<U>> && std::is_same_v<std::decay_t<T>, std::decay_t<V>>);
+
+      template<class Logger>
       static void check(std::string_view description, Logger& logger, const std::pair<S, T>& value, const std::pair<U, V>& prediction)
       {
-        static_assert(std::is_same_v<std::decay_t<S>, std::decay_t<U>> && std::is_same_v<std::decay_t<T>, std::decay_t<V>>);
         
         check_equality(combine_messages(description, "First element of pair is incorrent"), logger, value.first, prediction.first);
         check_equality(combine_messages(description, "First element of pair is incorrect"), logger, value.second, prediction.second);

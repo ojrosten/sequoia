@@ -19,6 +19,9 @@ namespace sequoia::unit_testing
   template<class T, class... U> std::string make_type_info();
   template<class T, class... U> std::string add_type_info(std::string_view description);
 
+  template<class T, class... Us> struct equivalence_checker;
+  template<class T, class... Us> struct weak_equivalence_checker;
+
   struct equality_tag{};
   struct equivalence_tag{};
   struct weak_equivalence_tag{};
@@ -41,6 +44,36 @@ namespace sequoia::unit_testing
 
 namespace sequoia::unit_testing::impl
 {
+  template<class T, class, class... Us>
+  struct equivalence_checker_generator
+  {
+    using type = equivalence_checker<T>;
+  };
+
+  template<class T, class... Us>
+  struct equivalence_checker_generator<T, std::void_t<decltype(equivalence_checker<T, std::decay_t<Us>...>{})>, Us...>
+  {
+    using type = equivalence_checker<T, std::decay_t<Us>...>;
+  };
+
+  template<class T, class... Us>
+  using equivalence_checker_t = typename equivalence_checker_generator<T, void, Us...>::type;
+
+  template<class T, class, class... Us>
+  struct weak_equivalence_checker_generator
+  {
+    using type = weak_equivalence_checker<T>;
+  };
+
+  template<class T, class... Us>
+  struct weak_equivalence_checker_generator<T, std::void_t<decltype(weak_equivalence_checker<T, std::decay_t<Us>...>{})>, Us...>
+  {
+    using type = weak_equivalence_checker<T, std::decay_t<Us>...>;
+  };
+
+  template<class T, class... Us>
+  using weak_equivalence_checker_t = typename weak_equivalence_checker_generator<T, void, Us...>::type;
+  
   template<class EquivChecker, class Logger, class T, class S, class... U>
   bool check(std::string_view description, Logger& logger, const T& value, const S& s, const U&... u)
   {
