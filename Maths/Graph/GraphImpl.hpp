@@ -43,7 +43,11 @@ namespace sequoia
         static_assert(std::is_empty_v<node_weight_type> || std::is_default_constructible_v<node_weight_type>);
       }
       
-      template<class N=node_weight_type, class=std::enable_if_t<!std::is_empty_v<N> && !std::is_same_v<N, graph_impl::heterogeneous_tag>>>
+      template
+      <
+        class N=node_weight_type,
+        std::enable_if_t<!std::is_empty_v<N> && !std::is_same_v<N, graph_impl::heterogeneous_tag>, int> = 0
+      >
       constexpr graph_primitive(edges_initializer edges, std::initializer_list<N> nodeWeights)
         : graph_primitive(homo_init_type{}, edges, nodeWeights)
       {
@@ -51,7 +55,12 @@ namespace sequoia
           throw std::logic_error("Node weight initializer and edges top-level initializer must be of same size");
       }
 
-      template<class... NodeWeights, class N=node_weight_type, class=std::enable_if_t<std::is_same_v<N, graph_impl::heterogeneous_tag>>>
+      template
+      <
+        class... NodeWeights,
+        class N=node_weight_type,
+        std::enable_if_t<std::is_same_v<N, graph_impl::heterogeneous_tag>, int> = 0
+      >
       constexpr graph_primitive(edges_initializer edges, NodeWeights&&... nodeWeights)
         : graph_primitive(hetero_init_type{}, edges, std::forward<NodeWeights>(nodeWeights)...)
       {}
@@ -116,9 +125,13 @@ namespace sequoia
       <
         class EdgeAllocator,
         class N=node_weight_type,
-        std::enable_if_t<
+        std::enable_if_t
+        <
              !enableNodeAllocation<N>
-          && !std::is_same_v<std::decay_t<EdgeAllocator>, graph_primitive>, int>  = 0
+          && !std::is_same_v<std::decay_t<EdgeAllocator>, graph_primitive>
+          ,
+          int
+        >  = 0
       >
       constexpr graph_primitive(const EdgeAllocator& edgeAlloc)
         : Connectivity(edgeAlloc)

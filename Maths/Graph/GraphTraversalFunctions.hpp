@@ -25,7 +25,7 @@ namespace sequoia::maths
     class NFAE = null_functor,
     class EFTF = null_functor,
     class ESTF = null_functor,
-    class = std::enable_if_t<G::directedness != directed_flavour::directed>
+    std::enable_if_t<G::directedness != directed_flavour::directed, int> = 0
   >
   constexpr auto breadth_first_search(const G& graph, const bool findDisconnectedPieces = true,
                  const std::size_t start = 0,
@@ -55,7 +55,7 @@ namespace sequoia::maths
     class NFBE = null_functor,
     class NFAE = null_functor,
     class EFTF = null_functor,
-    class = std::enable_if_t<G::directedness == directed_flavour::directed>
+    std::enable_if_t<G::directedness == directed_flavour::directed, int> = 0
   >
   constexpr auto breadth_first_search(const G& graph, const bool findDisconnectedPieces = true,
                  const std::size_t start = 0,
@@ -85,7 +85,7 @@ namespace sequoia::maths
     class NFAE = null_functor,
     class EFTF = null_functor,
     class ESTF = null_functor,
-    class = std::enable_if_t<G::directedness != directed_flavour::directed>
+    std::enable_if_t<G::directedness != directed_flavour::directed, int> = 0
   >
   constexpr auto depth_first_search(const G& graph, const bool findDisconnectedPieces = true,
                  const std::size_t start = 0,
@@ -115,7 +115,7 @@ namespace sequoia::maths
     class NFBE = null_functor,
     class NFAE = null_functor,
     class EFTF = null_functor,
-    class = std::enable_if_t<G::directedness == directed_flavour::directed>
+    std::enable_if_t<G::directedness == directed_flavour::directed, int> = 0
   >
   constexpr auto depth_first_search(const G& graph, const bool findDisconnectedPieces = true,
                  const std::size_t start = 0,
@@ -146,7 +146,7 @@ namespace sequoia::maths
     class EFTF = null_functor,
     class ESTF = null_functor,
     class QCompare = graph_impl::node_comparer<G, std::less<typename G::node_weight_type>>,
-    class = std::enable_if_t<G::directedness != directed_flavour::directed>
+    std::enable_if_t<G::directedness != directed_flavour::directed, int> = 0
   >
   constexpr auto priority_search(const G& graph, const bool findDisconnectedPieces = true,
                  const std::size_t start = 0,
@@ -177,7 +177,7 @@ namespace sequoia::maths
     class NFAE = null_functor,
     class EFTF = null_functor,
     class QCompare = graph_impl::node_comparer<G, std::less<typename G::node_weight_type>>,
-    class = std::enable_if_t<G::directedness == directed_flavour::directed>
+    std::enable_if_t<G::directedness == directed_flavour::directed, int> = 0
   >
   constexpr auto priority_search(const G& graph, const bool findDisconnectedPieces = true,
                  const std::size_t start = 0,

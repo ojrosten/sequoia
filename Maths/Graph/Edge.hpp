@@ -139,12 +139,16 @@ namespace sequoia
     protected:
       ~weighting() = default;
       
-      template<
+      template
+      <
         class... Args,
-        class=std::enable_if_t<
-                   !resolve_to_copy_constructor_v<weighting, Args...>
-                && !is_base_of_head_v<weighting, Args...>
-              >
+        std::enable_if_t
+        <
+             !resolve_to_copy_constructor_v<weighting, Args...>
+          && !is_base_of_head_v<weighting, Args...>
+          ,
+          int
+        > = 0
       >
       constexpr explicit weighting(Args&&... args) : m_Weight{wrapped_weight::make(std::forward<Args>(args)...)}
       {}
@@ -230,7 +234,7 @@ namespace sequoia
       template
       <
         class... Args,
-        class=typename std::enable_if_t<!resolve_to_copy_constructor_v<partial_edge_base, Args...>>
+        std::enable_if_t<!resolve_to_copy_constructor_v<partial_edge_base, Args...>, int> = 0
       >
       constexpr explicit partial_edge_base(const index_type target, Args&&... args)
         : edge_base<IndexType>{target}
@@ -312,7 +316,7 @@ namespace sequoia
       template
       <
         class... Args,
-        class=typename std::enable_if_t<!resolve_to_copy_constructor_v<decorated_edge_base, Args...>>
+        std::enable_if_t<!resolve_to_copy_constructor_v<decorated_edge_base, Args...>, int> = 0
       >
       constexpr decorated_edge_base(const index_type target, const index_type auxIndex, Args&&... args)
         : partial_edge_base<Weight, WeightSharingPolicy, WeightProxy, IndexType>{target, std::forward<Args>(args)...}
@@ -409,7 +413,7 @@ namespace sequoia
       template
       <
         class... Args,
-        class=typename std::enable_if_t<!resolve_to_copy_constructor_v<edge, Args...>>
+        std::enable_if_t<!resolve_to_copy_constructor_v<edge, Args...>, int> = 0
       >
       constexpr edge(const index_type soure, const index_type target, Args&&... args)
         : decorated_edge_base<Weight, data_sharing::independent, WeightProxy, IndexType>{target, soure, std::forward<Args>(args)...}
@@ -478,7 +482,7 @@ namespace sequoia
       template
       <
         class... Args,
-        class=typename std::enable_if_t<!resolve_to_copy_constructor_v<embedded_edge, Args...>>
+        std::enable_if_t<!resolve_to_copy_constructor_v<embedded_edge, Args...>, int> = 0
       >
       constexpr embedded_edge(const index_type soure, const index_type target, const index_type auxIndex, Args&&... args)
         : decorated_edge_base<Weight, WeightSharingPolicy, WeightProxy, IndexType>{target, auxIndex, std::forward<Args>(args)...}

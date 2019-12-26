@@ -255,13 +255,13 @@ namespace sequoia::concurrency
   public:
     using return_type = R;
       
-    template<bool B=MultiPipeline, class=std::enable_if_t<!B>>
+    template<bool B=MultiPipeline, std::enable_if_t<!B, int> = 0>
     explicit thread_pool(const std::size_t numThreads)        
     {
       make_pool(numThreads);
     }
 
-    template<bool B=MultiPipeline, class=std::enable_if_t<B>>
+    template<bool B=MultiPipeline, std::enable_if_t<B, int> = 0>
     thread_pool(const std::size_t numThreads, const std::size_t pushCycles = 46)
       : impl::queue_details<R, MultiPipeline>{pushCycles}
       , m_Queues(numThreads)

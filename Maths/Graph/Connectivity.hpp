@@ -345,32 +345,28 @@ namespace sequoia
         return m_Edges.num_partitions_capacity();
       }
 
-      template<class T=edge_storage_type>
-      std::enable_if_t<graph_impl::has_reservable_partitions_v<T>>
-      reserve_edges(const edge_index_type partition, const edge_index_type size)
+      template<class T=edge_storage_type, std::enable_if_t<graph_impl::has_reservable_partitions_v<T>, int> = 0>      
+      void reserve_edges(const edge_index_type partition, const edge_index_type size)
       {
         m_Edges.reserve_partition(partition, size);
       }
 
-      template<class T=edge_storage_type>
-      std::enable_if_t<!graph_impl::has_reservable_partitions_v<T>>
-      reserve_edges(const edge_index_type size)
+      template<class T=edge_storage_type, std::enable_if_t<!graph_impl::has_reservable_partitions_v<T>, int> = 0>
+      void reserve_edges(const edge_index_type size)
       {
         m_Edges.reserve(size);
       }
 
-      template<class T=edge_storage_type>
+      template<class T=edge_storage_type, std::enable_if_t<graph_impl::has_reservable_partitions_v<T>, int> = 0>
       [[nodiscard]]
-      std::enable_if_t<graph_impl::has_reservable_partitions_v<T>, size_type>
-      edges_capacity(const edge_index_type partition) const
+      size_type edges_capacity(const edge_index_type partition) const
       {
         return m_Edges.partition_capacity(partition);
       }
 
-      template<class T=edge_storage_type>
+      template<class T=edge_storage_type, std::enable_if_t<!graph_impl::has_reservable_partitions_v<T>, int> = 0>
       [[nodiscard]]
-      std::enable_if_t<!graph_impl::has_reservable_partitions_v<T>, size_type>
-      edges_capacity() const noexcept
+      size_type edges_capacity() const noexcept
       {
         return m_Edges.capacity();
       }
