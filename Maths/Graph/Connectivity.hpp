@@ -938,7 +938,7 @@ namespace sequoia
       <        
         class EdgeAllocator,
         class PartitionAllocator,
-        std::enable_if_t<is_constructible_with_v<edge_storage_type, EdgeAllocator, PartitionAllocator>, int> = 0
+        std::enable_if_t<std::is_constructible_v<edge_storage_type, EdgeAllocator, PartitionAllocator>, int> = 0
       >
       constexpr connectivity(indirect_edge_init_type, init_t edges, const EdgeAllocator& edgeAllocator, const PartitionAllocator& partitionAllocator)
         : m_Edges(edgeAllocator, partitionAllocator)

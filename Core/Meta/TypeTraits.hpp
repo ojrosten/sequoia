@@ -207,26 +207,6 @@ namespace sequoia
   template<class T>
   using has_default_constructor_t = typename has_default_constructor<T>::type;
 
-  // is_constructible_with
-
-  template<class T, class, class... Args>
-  struct is_constructible_with : std::false_type
-  {};
-
-  template<class T, class... Args>
-  struct is_constructible_with<T, std::void_t<decltype(T(Args{}...))>, Args...> : std::true_type
-  {};
-  
-  template<class T, class... Args>
-  constexpr bool is_constructible_with_v{
-    is_constructible_with<T, void, Args...>::value
-  };
-
-  template<class T, class... Args>
-  using is_constructible_with_t = typename is_constructible_with<T, void, Args...>::type;
-
-  
-  
   // has_allocator_type
 
   template<class T, class = std::void_t<>>
