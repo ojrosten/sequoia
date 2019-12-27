@@ -63,6 +63,16 @@ namespace sequoia::data_sharing
     {
       return &*ptr;
     }
+
+  protected:
+    shared() noexcept = default;
+    shared(const shared&) noexcept = default;
+    shared(shared&&)      noexcept = default;
+
+    ~shared() noexcept = default;
+
+    shared& operator=(const shared&) noexcept = default;
+    shared& operator=(shared&&)      noexcept = default;
   };
 
   template<class T>
@@ -92,5 +102,15 @@ namespace sequoia::data_sharing
 
     [[nodiscard]]
     static constexpr const T* get_ptr(const T& in) noexcept { return &in; }
+
+  protected:
+    independent() noexcept = default;
+    independent(const independent&) noexcept = default;
+    independent(independent&&)      noexcept = default;
+
+    ~independent() noexcept = default;
+
+    independent& operator=(const independent&) noexcept = default;
+    independent& operator=(independent&&)      noexcept = default;
   };
 }
