@@ -1,4 +1,5 @@
-BUILDDIR := ../build/native
+BUILDROOT := ../build/native
+BUILDDIR := $(BUILDROOT)/AllUnitTests
 LIBDIRS := ../Core ../Maths ../Experimental ../Algorithms ../UnitTestFramework
 UTBUILDDIR := $(BUILDDIR)/UnitTests
 
@@ -18,7 +19,7 @@ CFLAGS := -Wall -std=c++2a -O0 -ferror-limit=1 \
 	  $(PREPROP)						   \
 	  $(patsubst %,-I%, $(UTSUBDIRS))      \
       $(patsubst %,-I%, $(LIBSUBDIRS))
-EXE := $(UTBUILDDIR)/UnitTest.exe
+EXE := $(BUILDDIR)/UnitTest.exe
 
 UTSRCS := $(shell find . -name '*.cpp')
 UTOBJS := $(addprefix $(UTBUILDDIR)/, $(UTSRCS:%.cpp=%.o))
@@ -39,6 +40,7 @@ $(UTBUILDDIR)/%.o : %.cpp
 -include $(LIBDEPS)
 
 .PHONY subdirs : $(BUILDSUBDIRS)
+	-mkdir $(BUILDROOT)
 	-mkdir $(BUILDDIR)
 	-mkdir $(UTBUILDDIR)
 	-mkdir $^

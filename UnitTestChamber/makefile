@@ -1,8 +1,8 @@
-BUILDDIR := ../build/native
+BUILDROOT := ../build/native
+BUILDDIR := $(BUILDROOT)/UnitTestChamber
 LIBDIRS := ../Core ../Maths ../Experimental ../Algorithms ../UnitTestFramework
 UTBUILDDIR := $(BUILDDIR)/UnitTests
 UTDIR = ../UnitTests
-CHAMBERBUILDDIR := $(BUILDDIR)/UnitTestChamber
 
 UTSUBDIRS := $(filter-out ../UnitTests, $(shell find $(UTDIR) -type d))
 LIBSUBDIRS := $(shell find $(LIBDIRS) -type d)
@@ -18,12 +18,12 @@ CFLAGS := -Wall -std=c++2a -O0 -ferror-limit=1 \
 	  -ftemplate-backtrace-limit=0	       \
 	  $(patsubst %,-I%, $(UTSUBDIRS))      \
       $(patsubst %,-I%, $(LIBSUBDIRS))
-EXE := $(CHAMBERBUILDDIR)/UnitTestChamber.exe
+EXE := $(BUILDDIR)/UnitTestChamber.exe
 
 UTSRCS := UnitTestChamberMain.cpp
 UTSRCS += ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp
-UTOBJS := $(addprefix $(CHAMBERBUILDDIR)/, $(UTSRCS:%.cpp=%.o))
-UTDEPS := $(addprefix $(CHAMBERBUILDDIR)/, $(UTSRCS:%.cpp=%.d))
+UTOBJS := $(addprefix $(UTBUILDDIR)/, $(UTSRCS:%.cpp=%.o))
+UTDEPS := $(addprefix $(UTBUILDDIR)/, $(UTSRCS:%.cpp=%.d))
 
 LIBSRCS := $(shell find $(LIBSUBDIRS) -name '*.cpp')
 LIBOBJS := $(addprefix $(UTBUILDDIR)/, $(LIBSRCS:%.cpp=%.o))
@@ -43,6 +43,7 @@ $(UTBUILDDIR)/%.o : %.cpp
 
 
 .PHONY subdirs : $(BUILDSUBDIRS)
+	-mkdir $(BUILDROOT)
 	-mkdir $(BUILDDIR)
 	-mkdir $(UTBUILDDIR)
 	-mkdir $(CHAMBERBUILDDIR)
