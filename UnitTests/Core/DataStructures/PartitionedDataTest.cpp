@@ -52,7 +52,7 @@ namespace sequoia
         storage_t storage2{{3}};
         check_equivalence(LINE(""), storage, prediction_t{{5}});
 
-        check_regular_semantics(LINE("Regular Semantics"), storage, storage2);
+        check_regular_semantics(LINE(""), storage, storage2);
 
         auto iter = storage.begin_partition(0);
         *iter = 4;
@@ -69,7 +69,7 @@ namespace sequoia
         storage_t storage2{{1.2}, {1.1, 2.6, -7.8}, {0.0, -9.3}};
         check_equivalence(LINE(""), storage2, prediction_t{{1.2}, {1.1, 2.6, -7.8}, {0.0, -9.3}});
 
-        check_regular_semantics(LINE("Regular Semantics"), storage, storage2);
+        check_regular_semantics(LINE(""), storage, storage2);
       }
 
       {
@@ -81,7 +81,7 @@ namespace sequoia
         check_equivalence(LINE(""), storage, prediction_t{{0.2,0.3,-0.4}, {0.8,-1.1,-1.4}});
         check_equivalence(LINE(""), storage2, prediction_t{{0.2,0.3}, {-0.4, 0.8,-1.1,-1.4}});
 
-        check_regular_semantics(LINE("Regular Semantics"), storage, storage2);
+        check_regular_semantics(LINE(""), storage, storage2);
       }
 
       {
@@ -634,7 +634,7 @@ namespace sequoia
 
       using info = allocation_info<storage, allocator>;
 
-      check_regular_semantics(LINE("Regular Semantics"), s, t, partitionMaker,
+      check_regular_semantics(LINE(""), s, t, partitionMaker,
                               info{allocGetter, {{0, {1,1}, {1,1}}, {0, {2,0}, {2,2}}}});
       
       s.add_slot();
@@ -649,7 +649,7 @@ namespace sequoia
         }
       };
 
-      check_regular_semantics(LINE("Regular Semantics"), s, t, mutator,
+      check_regular_semantics(LINE(""), s, t, mutator,
                               info{allocGetter, {{1, {1,1}, {1,1}}, {0, {2,1}, {2,2}}}});
     }
   
@@ -699,7 +699,7 @@ namespace sequoia
         }
       };
         
-      check_regular_semantics(LINE(add_type_info<storage>("Regular Semantics")), s, t, partitionMaker,
+      check_regular_semantics(LINE(add_type_info<storage>("")), s, t, partitionMaker,
                               allocation_info<storage, allocator>{allocGetter, {0, {1,0}, {1, 1}}},
                               allocation_info<storage, partitions_allocator>{partitionsAllocGetter, {0, {1,1}, {1, 1}}});
 

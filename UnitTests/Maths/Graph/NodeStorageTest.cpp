@@ -152,6 +152,6 @@ namespace sequoia:: unit_testing
       }
     };
 
-    check_regular_semantics(LINE("Regular Semantics"), s, t, mutator, allocation_info<storage, allocator>{getter, {0, {1,1}, {1,1}}});
+    check_regular_semantics(LINE(""), s, t, mutator, allocation_info<storage, allocator>{getter, {0, {1,1}, {1,1}}});
   }
 }

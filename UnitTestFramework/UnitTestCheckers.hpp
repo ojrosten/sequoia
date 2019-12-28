@@ -673,25 +673,25 @@ namespace sequoia
       template<class T>
       void check_regular_semantics(std::string_view description, const T& x, const T& y)
       {
-        unit_testing::check_regular_semantics(description, m_Logger, x, y);
+        unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), m_Logger, x, y);
       }
 
       template<class T, class Mutator>
       void check_regular_semantics(std::string_view description, const T& x, const T& y, Mutator m)
       {
-        unit_testing::check_regular_semantics(description, m_Logger, x, y, m);
+        unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), m_Logger, x, y, m);
       }
 
       template<class T, class... Allocators>
       void check_regular_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone, move_only_allocation_info<T, Allocators>... info)
       {
-        unit_testing::check_regular_semantics(description, m_Logger, std::move(x), std::move(y), xClone, yClone, info...);
+        unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), m_Logger, std::move(x), std::move(y), xClone, yClone, info...);
       }
 
       template<class T, class Mutator, class... Allocators>
       void check_regular_semantics(std::string_view description, const T& x, const T& y, Mutator m, allocation_info<T, Allocators>... info)
       {
-        unit_testing::check_regular_semantics(description, m_Logger, x, y, m, info...);
+        unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), m_Logger, x, y, m, info...);
       }
       
       template<class F, class S>

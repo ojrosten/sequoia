@@ -1033,7 +1033,7 @@ namespace sequoia::unit_testing
 
     if constexpr(std::is_empty_v<NodeWeight>)
     {
-      check_regular_semantics(LINE("Regular Semantics"), g, graph_t{{{}}, edge_allocator{}, edge_partitions_allocator{}});
+      check_regular_semantics(LINE(""), g, graph_t{{{}}, edge_allocator{}, edge_partitions_allocator{}});
       graph_t g2{};
 
       auto nodeMaker{
@@ -1050,27 +1050,27 @@ namespace sequoia::unit_testing
 
       if constexpr (GraphFlavour == graph_flavour::directed)
       {
-        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{1}}, {}}, nodeMaker, allocation_info{allocGetter, {0, {1, 0}, {1, 1}}}, allocation_info{partitionAllocGetter, {0, {1, 1}, {1, 1}}});
+        check_regular_semantics(LINE(""), g2, graph_t{{edge_init_t{1}}, {}}, nodeMaker, allocation_info{allocGetter, {0, {1, 0}, {1, 1}}}, allocation_info{partitionAllocGetter, {0, {1, 1}, {1, 1}}});
       }
       else if constexpr(GraphFlavour == graph_flavour::undirected)
       {
-        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{1}}, {edge_init_t{0}}}, nodeMaker, allocation_info{allocGetter, {0, {1, 0}, {1, 1}}}, allocation_info{partitionAllocGetter, {0, {1, 1}, {1, 1}}});
+        check_regular_semantics(LINE(""), g2, graph_t{{edge_init_t{1}}, {edge_init_t{0}}}, nodeMaker, allocation_info{allocGetter, {0, {1, 0}, {1, 1}}}, allocation_info{partitionAllocGetter, {0, {1, 1}, {1, 1}}});
       }
       else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
       {
-        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{0,1,0}}, {edge_init_t{0,1,0}}}, nodeMaker, allocation_info{allocGetter, {0, {1, 0}, {1, 1}}}, allocation_info{partitionAllocGetter, {0, {1, 1}, {1, 1}}});
+        check_regular_semantics(LINE(""), g2, graph_t{{edge_init_t{0,1,0}}, {edge_init_t{0,1,0}}}, nodeMaker, allocation_info{allocGetter, {0, {1, 0}, {1, 1}}}, allocation_info{partitionAllocGetter, {0, {1, 1}, {1, 1}}});
       }
       else
       {
-        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{1,0}}, {edge_init_t{0,0}}}, nodeMaker, allocation_info{allocGetter, {0, {1, 0}, {1, 1}}}, allocation_info{partitionAllocGetter, {0, {1, 1}, {1, 1}}});
+        check_regular_semantics(LINE(""), g2, graph_t{{edge_init_t{1,0}}, {edge_init_t{0,0}}}, nodeMaker, allocation_info{allocGetter, {0, {1, 0}, {1, 1}}}, allocation_info{partitionAllocGetter, {0, {1, 1}, {1, 1}}});
       }
     }
     else
     {
       using node_allocator = typename graph_t::node_weight_container_type::allocator_type;
-      check_regular_semantics(LINE("Regular Semantics"), g, graph_t{{{}}, edge_allocator{}, edge_partitions_allocator{}, node_allocator{}});
+      check_regular_semantics(LINE(""), g, graph_t{{{}}, edge_allocator{}, edge_partitions_allocator{}, node_allocator{}});
 
-      check_regular_semantics(LINE("Regular Semantics"), g, graph_t{{{}}, edge_allocator{}, edge_partitions_allocator{}, {{1.0, -1.0}}, node_allocator{}});
+      check_regular_semantics(LINE(""), g, graph_t{{{}}, edge_allocator{}, edge_partitions_allocator{}, {{1.0, -1.0}}, node_allocator{}});
 
       graph_t g2{};
 
@@ -1092,19 +1092,19 @@ namespace sequoia::unit_testing
 
       if constexpr (GraphFlavour == graph_flavour::directed)
       {
-        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{1}}, {}}, nodeMaker, allocation_info{allocGetter, {0, {1, 0}, {1, 1}}}, allocation_info{partitionAllocGetter, {0, {1, 1}, {1, 1}}}, allocation_info{nodeAllocGetter, {0, {1, 1}, {1, 1}}});
+        check_regular_semantics(LINE(""), g2, graph_t{{edge_init_t{1}}, {}}, nodeMaker, allocation_info{allocGetter, {0, {1, 0}, {1, 1}}}, allocation_info{partitionAllocGetter, {0, {1, 1}, {1, 1}}}, allocation_info{nodeAllocGetter, {0, {1, 1}, {1, 1}}});
       }
       else if constexpr(GraphFlavour == graph_flavour::undirected)
       {
-        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{1}}, {edge_init_t{0}}}, nodeMaker, allocation_info{allocGetter, {0, {1, 0}, {1, 1}}}, allocation_info{partitionAllocGetter, {0, {1, 1}, {1, 1}}}, allocation_info{nodeAllocGetter, {0, {1, 1}, {1, 1}}});
+        check_regular_semantics(LINE(""), g2, graph_t{{edge_init_t{1}}, {edge_init_t{0}}}, nodeMaker, allocation_info{allocGetter, {0, {1, 0}, {1, 1}}}, allocation_info{partitionAllocGetter, {0, {1, 1}, {1, 1}}}, allocation_info{nodeAllocGetter, {0, {1, 1}, {1, 1}}});
       }
       else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
       {
-        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{0,1,0}}, {edge_init_t{0,1,0}}}, nodeMaker, allocation_info{allocGetter, {0, {1, 0}, {1, 1}}}, allocation_info{partitionAllocGetter, {0, {1, 1}, {1, 1}}}, allocation_info{nodeAllocGetter, {0, {1, 1}, {1, 1}}});
+        check_regular_semantics(LINE(""), g2, graph_t{{edge_init_t{0,1,0}}, {edge_init_t{0,1,0}}}, nodeMaker, allocation_info{allocGetter, {0, {1, 0}, {1, 1}}}, allocation_info{partitionAllocGetter, {0, {1, 1}, {1, 1}}}, allocation_info{nodeAllocGetter, {0, {1, 1}, {1, 1}}});
       }
       else
       {
-        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{1,0}}, {edge_init_t{0,0}}}, nodeMaker, allocation_info{allocGetter, {0, {1, 0}, {1, 1}}}, allocation_info{partitionAllocGetter, {0, {1, 1}, {1, 1}}}, allocation_info{nodeAllocGetter, {0, {1, 1}, {1, 1}}});
+        check_regular_semantics(LINE(""), g2, graph_t{{edge_init_t{1,0}}, {edge_init_t{0,0}}}, nodeMaker, allocation_info{allocGetter, {0, {1, 0}, {1, 1}}}, allocation_info{partitionAllocGetter, {0, {1, 1}, {1, 1}}}, allocation_info{nodeAllocGetter, {0, {1, 1}, {1, 1}}});
       }
     }
   }
@@ -1153,14 +1153,14 @@ namespace sequoia::unit_testing
 
     if constexpr(std::is_empty_v<NodeWeight>)
     {
-      check_regular_semantics(LINE("Regular Semantics"), g, graph_t{{{}}, edge_allocator{}});
+      check_regular_semantics(LINE(""), g, graph_t{{{}}, edge_allocator{}});
     }
     else
     {
       using node_allocator = typename graph_t::node_weight_container_type::allocator_type;
-      check_regular_semantics(LINE("Regular Semantics"), g, graph_t{{{}}, edge_allocator{}, node_allocator{}});
+      check_regular_semantics(LINE(""), g, graph_t{{{}}, edge_allocator{}, node_allocator{}});
 
-      check_regular_semantics(LINE("Regular Semantics"), g, graph_t{{{}}, edge_allocator{}, {{1.0, -1.0}}, node_allocator{}});
+      check_regular_semantics(LINE(""), g, graph_t{{{}}, edge_allocator{}, {{1.0, -1.0}}, node_allocator{}});
     }
 
     g.add_node();
@@ -1216,19 +1216,19 @@ namespace sequoia::unit_testing
 
       if constexpr (GraphFlavour == graph_flavour::directed)
       {
-        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{1}}, {}}, nodeMaker, allocation_info{allocGetter, {{0, {1, 1}, {1, 1}}, {0, {1, 0}, {1, 1}}}});
+        check_regular_semantics(LINE(""), g2, graph_t{{edge_init_t{1}}, {}}, nodeMaker, allocation_info{allocGetter, {{0, {1, 1}, {1, 1}}, {0, {1, 0}, {1, 1}}}});
       }
       else if constexpr(GraphFlavour == graph_flavour::undirected)
       {
-        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{1}}, {edge_init_t{0}}}, nodeMaker, allocation_info{allocGetter, {{0, {1, 1}, {1, 1}}, {0, {2, 0}, {2, 2}}}});
+        check_regular_semantics(LINE(""), g2, graph_t{{edge_init_t{1}}, {edge_init_t{0}}}, nodeMaker, allocation_info{allocGetter, {{0, {1, 1}, {1, 1}}, {0, {2, 0}, {2, 2}}}});
       }
       else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
       {
-        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{0,1,0}}, {edge_init_t{0,1,0}}}, nodeMaker, allocation_info{allocGetter, {{0, {1, 1}, {1, 1}}, {0, {2, 0}, {2, 2}}}});
+        check_regular_semantics(LINE(""), g2, graph_t{{edge_init_t{0,1,0}}, {edge_init_t{0,1,0}}}, nodeMaker, allocation_info{allocGetter, {{0, {1, 1}, {1, 1}}, {0, {2, 0}, {2, 2}}}});
       }
       else
       {
-        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{1,0}}, {edge_init_t{0,0}}}, nodeMaker, allocation_info{allocGetter, {{0, {1, 1}, {1, 1}}, {0, {2, 0}, {2, 2}}}});
+        check_regular_semantics(LINE(""), g2, graph_t{{edge_init_t{1,0}}, {edge_init_t{0,0}}}, nodeMaker, allocation_info{allocGetter, {{0, {1, 1}, {1, 1}}, {0, {2, 0}, {2, 2}}}});
       }
     }
     else
@@ -1249,19 +1249,19 @@ namespace sequoia::unit_testing
 
       if constexpr (GraphFlavour == graph_flavour::directed)
       {
-        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{1}}, {}}, nodeMaker, allocation_info{allocGetter, {{0, {1, 1}, {1, 1}}, {0, {1, 0}, {1, 1}}}}, allocation_info{nodeAllocGetter, {0, {1, 1}, {1, 1}}});
+        check_regular_semantics(LINE(""), g2, graph_t{{edge_init_t{1}}, {}}, nodeMaker, allocation_info{allocGetter, {{0, {1, 1}, {1, 1}}, {0, {1, 0}, {1, 1}}}}, allocation_info{nodeAllocGetter, {0, {1, 1}, {1, 1}}});
       }
       else if constexpr(GraphFlavour == graph_flavour::undirected)
       {
-        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{1}}, {edge_init_t{0}}}, nodeMaker, allocation_info{allocGetter, {{0, {1, 1}, {1, 1}}, {0, {2, 0}, {2, 2}}}}, allocation_info{nodeAllocGetter, {0, {1, 1}, {1, 1}}});
+        check_regular_semantics(LINE(""), g2, graph_t{{edge_init_t{1}}, {edge_init_t{0}}}, nodeMaker, allocation_info{allocGetter, {{0, {1, 1}, {1, 1}}, {0, {2, 0}, {2, 2}}}}, allocation_info{nodeAllocGetter, {0, {1, 1}, {1, 1}}});
       }
       else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
       {
-        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{0,1,0}}, {edge_init_t{0,1,0}}}, nodeMaker, allocation_info{allocGetter, {{0, {1, 1}, {1, 1}}, {0, {2, 0}, {2, 2}}}}, allocation_info{nodeAllocGetter, {0, {1, 1}, {1, 1}}});
+        check_regular_semantics(LINE(""), g2, graph_t{{edge_init_t{0,1,0}}, {edge_init_t{0,1,0}}}, nodeMaker, allocation_info{allocGetter, {{0, {1, 1}, {1, 1}}, {0, {2, 0}, {2, 2}}}}, allocation_info{nodeAllocGetter, {0, {1, 1}, {1, 1}}});
       }
       else
       {
-        check_regular_semantics(LINE("Regular Semantics"), g2, graph_t{{edge_init_t{1,0}}, {edge_init_t{0,0}}}, nodeMaker, allocation_info{allocGetter, {{0, {1, 1}, {1, 1}}, {0, {2, 0}, {2, 2}}}}, allocation_info{nodeAllocGetter, {0, {1, 1}, {1, 1}}});
+        check_regular_semantics(LINE(""), g2, graph_t{{edge_init_t{1,0}}, {edge_init_t{0,0}}}, nodeMaker, allocation_info{allocGetter, {{0, {1, 1}, {1, 1}}, {0, {2, 0}, {2, 2}}}}, allocation_info{nodeAllocGetter, {0, {1, 1}, {1, 1}}});
       }
     }
   }

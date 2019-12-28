@@ -32,7 +32,7 @@ namespace sequoia::unit_testing
     
     check_equivalence(LINE(""), s, std::initializer_list<int>{});
     check_equivalence(LINE(""), t, std::initializer_list<int>{1});
-    check_regular_semantics(LINE("Regular Semantics"), s, t);
+    check_regular_semantics(LINE(""), s, t);
 
     check_exception_thrown<std::logic_error>(LINE(""), [&t](){ t.push_back(2); });
     check_equivalence(LINE("Invariant violated by attempted push_back"), t, std::initializer_list<int>{1});
@@ -61,7 +61,7 @@ namespace sequoia::unit_testing
     // 4 ; 2,1
 
     check_equivalence(LINE(""), s, std::initializer_list<int>{4});
-    check_regular_semantics(LINE("Regular Semantics"), s, t);
+    check_regular_semantics(LINE(""), s, t);
 
     t.erase(t.begin(), t.end());
     // 4 ; -
@@ -101,7 +101,7 @@ namespace sequoia::unit_testing
     check_exception_thrown<std::logic_error>(LINE("Invariant violated by initialization"), [](){ static_monotonic_sequence<double, 2> s{1,2}; });
 
     constexpr static_monotonic_sequence<double, 2> s{5.1, 3.8}, t{-3.4, -4.4};
-    check_regular_semantics(LINE("Regular Semantics"), s, t);
+    check_regular_semantics(LINE(""), s, t);
   }
 
   template<bool Check>
@@ -134,7 +134,7 @@ namespace sequoia::unit_testing
         t.mutate(t.begin()+1, t.begin()+3,[](const int i){ return i*2;});});
     
     check_equivalence(LINE(""), t, std::initializer_list<int>{2,2,2,3,3,3});
-    check_regular_semantics(LINE("Regular Semantics"), s, t);
+    check_regular_semantics(LINE(""), s, t);
 
     static_monotonic_sequence<int, 6, std::greater<int>> u{2,3,3,4,4,5};
     check_exception_thrown<std::logic_error>(LINE(""), [&u](){
@@ -171,6 +171,6 @@ namespace sequoia::unit_testing
         seq.push_back(val);
       }
     };
-    check_regular_semantics(LINE("Regular Semantics"), s, t, mutator, allocation_info<sequence, allocator>{getter, {0, {1, 1}, {1, 1}}});
+    check_regular_semantics(LINE(""), s, t, mutator, allocation_info<sequence, allocator>{getter, {0, {1, 1}, {1, 1}}});
   }
 }
