@@ -38,8 +38,8 @@ namespace sequoia::unit_testing
     check_equality(LINE(""), std::tuple<int, double, float>{4, 3.4, -9.2f}, std::tuple<int, double, float>{4, 0.0, -9.2f});
     check_equality(LINE(""), std::tuple<int, double, float>{4, 3.4, -9.2f}, std::tuple<int, double, float>{4, 3.4, -0.0f});
 
-    check_equality_within_tolerance(LINE(""), 3.0, 5.0, 1.0);
-    check_equality_within_tolerance(LINE(""), 7.0, 5.0, 1.0);
+    check_approx_equality(LINE(""), 3.0, 5.0, within_tolerance{1.0});
+    check_approx_equality(LINE(""), 7.0, 5.0, within_tolerance{1.0});
 
     check_exception_thrown<std::runtime_error>(LINE("Exception expected but nothing thrown"), [](){});
     check_exception_thrown<std::runtime_error>(LINE("Exception thrown but of wrong type"), [](){ throw std::logic_error("Error"); });
@@ -407,8 +407,11 @@ namespace sequoia::unit_testing
     check_equality(LINE(""), 5, 5);
     check_equality(LINE(""), 5.0, 5.0);
 
-    check_equality_within_tolerance(LINE(""), 4.5, 5.0, 1.0);
-    check_equality_within_tolerance(LINE(""), 5.5, 5.0, 1.0);
+    check_approx_equality(LINE(""), 4.5, 5.0, within_tolerance{1.0});
+    check_approx_equality(LINE(""), 5.5, 5.0, within_tolerance{1.0});
+
+    check_approx_equality(LINE(""), 4.5, 5.0, within_tolerance{0.5});
+    check_approx_equality(LINE(""), 5.5, 5.0, within_tolerance{0.5});
 
     check_equality(LINE(""), std::pair<int, double>{5, 7.8}, std::pair<int, double>{5, 7.8});
 

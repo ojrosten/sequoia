@@ -187,11 +187,24 @@ namespace sequoia
       return check_equality(description, logger, value, true);
     }
 
-    template<class Logger, class T>
-    bool check_equality_within_tolerance(std::string_view description, Logger& logger, const T& value, const T& prediction, const T& tol)
+
+    template<class T>
+    class within_tolerance
     {
-      auto message{combine_messages(description, "Check using tolerance of " + std::to_string(tol))};
-      return check(std::move(message), logger, (value > prediction - tol) && (value < prediction + tol));
+      T m_Tol{};
+    public:
+      constexpr explicit within_tolerance(T tol) : m_Tol{tol} {};
+
+      constexpr bool operator()(const T& value, const T& prediction) const noexcept
+      {
+        return  (value >= prediction - m_Tol) && (value <= prediction + m_Tol);
+      }        
+    };
+
+    template<class Logger, class T, class Compare>
+    bool check_approx_equality(std::string_view description, Logger& logger, const T& value, const T& prediction, Compare compare)
+    {
+      return check(description, logger, compare(value, prediction));
     }
 
     template<class Logger, class E, class Fn>
@@ -647,10 +660,10 @@ namespace sequoia
         return unit_testing::check_weak_equivalence(description, m_Logger, value, std::forward<S>(s), std::forward<U>(u)...);
       }
       
-      template<class T>
-      bool check_equality_within_tolerance(std::string_view description, const T prediction, const T value, const T tol)
+      template<class T, class Compare>
+      bool check_approx_equality(std::string_view description, const T& prediction, const T& value, Compare compare)
       {
-        return unit_testing::check_equality_within_tolerance(description, m_Logger, value, prediction, tol);
+        return unit_testing::check_approx_equality(description, m_Logger, value, prediction, std::move(compare));
       }
 
       bool check(std::string_view description, const bool value)
