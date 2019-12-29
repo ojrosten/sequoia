@@ -110,7 +110,7 @@ namespace sequoia::unit_testing
     ~unit_test_logger() = default;
       
     unit_test_logger(const unit_test_logger&)            = delete;
-    unit_test_logger(unit_test_logger&&)                 = default;
+    unit_test_logger(unit_test_logger&&) noexcept        = default;
     unit_test_logger& operator=(const unit_test_logger&) = delete;
     unit_test_logger& operator=(unit_test_logger&&)      = delete;
 
@@ -140,8 +140,11 @@ namespace sequoia::unit_testing
             const bool failure{((Mode == test_mode::false_positive) && !logger.failures()) || ((Mode == test_mode::false_negative) && logger.failures())};
             if(failure)
             {
-              const std::string message{(Mode == test_mode::false_positive) ? logger.current_message() : ""};
-              logger.log_diagnostic_failure(message);
+              std::string message{
+                (Mode == test_mode::false_positive) ? combine_messages("\tFalse Positive Failure:", logger.current_message(), "\n") : ""
+              };
+
+              logger.log_diagnostic_failure(std::move(message));
             }
             logger.reset_failures();
           }

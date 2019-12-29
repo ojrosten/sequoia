@@ -25,11 +25,11 @@ namespace sequoia::unit_testing
 
     const std::string& name() const noexcept { return m_Name; }
   protected:
-    test(const test&) = default;
-    test(test&&)      = default;
+    test(const test&)     = default;
+    test(test&&) noexcept = default;
 
-    test& operator=(const test&) = default;
-    test& operator=(test&&)      = default;
+    test& operator=(const test&)     = default;
+    test& operator=(test&&) noexcept = default;
       
   private:
     std::string m_Name;

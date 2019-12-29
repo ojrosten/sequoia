@@ -81,8 +81,7 @@ namespace sequoia
     [[nodiscard]]
     std::string add_type_info(std::string_view description)
     {
-      return combine_messages(description, "[" + make_type_info<T, U...>() + "]\n",
-                              description.empty() ? "" : (description.back() == '\n') ? "\n" : "\n\n");
+      return combine_messages(description, "[" + make_type_info<T, U...>() + "]\n", description.empty() ? "" : "\n");
     }
     
 
