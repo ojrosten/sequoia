@@ -47,7 +47,7 @@ namespace sequoia::unit_testing
     
     std::vector<test_family> m_Families;
     std::map<std::string, std::function<void (const arg_list&)>> m_FunctionMap;
-    std::set<std::string> m_SpecificTests{};
+    std::map<std::string, bool> m_SpecificTests{};
     std::vector<nascent_test> m_NewFiles{};
     
     bool m_Asynchronous{}, m_Verbose{}, m_Pause{};
@@ -61,6 +61,8 @@ namespace sequoia::unit_testing
     void run_diagnostics();
 
     void run_tests();
+
+    void check_for_missing_tests();
 
     enum class file_comparison {failed, same, different};
 

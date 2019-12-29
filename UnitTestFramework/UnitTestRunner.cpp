@@ -240,7 +240,7 @@ namespace sequoia::unit_testing
     m_FunctionMap.emplace("test", [this](const arg_list& argList) {          
         if(argList.size() == 1)
         {
-          m_SpecificTests.insert(argList.front());
+          m_SpecificTests.emplace(argList.front(), false);
         }
         else
         {
@@ -308,10 +308,22 @@ namespace sequoia::unit_testing
     
   void unit_test_runner::add_test_family(test_family&& f)
   {
-    if(m_SpecificTests.empty() || (m_SpecificTests.find(std::string{f.name()}) != m_SpecificTests.end()))
-    {
-      m_Families.emplace_back(std::move(f));
-    }
+    auto process{
+      [&specificTests=m_SpecificTests,&f](){
+        if(specificTests.empty()) return true;
+
+        auto i{specificTests.find(std::string{f.name()})};
+        if(i != specificTests.end())
+        {
+          i->second = true;
+          return true;
+        }
+
+        return false;
+      }
+    };
+
+    if(process()) m_Families.emplace_back(std::move(f));
   }
 
   log_summary unit_test_runner::process_family(const std::vector<log_summary>& summaries)
@@ -326,6 +338,17 @@ namespace sequoia::unit_testing
     if(!m_Verbose) std::cout << familySummary.summarize("    ", log_verbosity::failure_messages);
 
     return familySummary;
+  }
+
+  void unit_test_runner::check_for_missing_tests()
+  {
+    for(const auto& test : m_SpecificTests)
+    {
+      if(!test.second)
+      {
+        std::cout << warning("Test '" + test.first + "' not found\n");
+      }
+    }
   }
                        
   void unit_test_runner::execute()
@@ -416,7 +439,7 @@ namespace sequoia::unit_testing
       }
     }
   }
-  
+
   void unit_test_runner::run_tests()
   {
     if(!m_Families.empty() && (m_NewFiles.empty() || !m_SpecificTests.empty()))
@@ -447,9 +470,10 @@ namespace sequoia::unit_testing
           summary += process_family(res.second.get());
         }        
       }
-
       std::cout <<  "-----Grand Totals-----\n";
       std::cout << summary.summarize("", log_verbosity::absent_checks);
     }
+
+    check_for_missing_tests();
   }
 }
