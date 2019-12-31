@@ -122,10 +122,12 @@ namespace sequoia::unit_testing
       sentinel(unit_test_logger& logger, std::string_view message)
         : m_Logger{logger}
       {
-        if(!logger.depth()) logger.current_message(message);
-        
-        if(diagnostic(Mode) && !logger.depth()) logger.log_check();
-        
+        if(!logger.depth())
+        {
+          logger.current_message(message);
+          logger.log_top_level_check();
+        }
+
         logger.increment_depth();
       }
 
@@ -133,21 +135,25 @@ namespace sequoia::unit_testing
       {
         auto& logger{m_Logger.get()};
         logger.decrement_depth();
-        if constexpr (diagnostic(Mode))
-        {
-          if(!logger.depth())
-          {
-            const bool failure{((Mode == test_mode::false_positive) && !logger.failures()) || ((Mode == test_mode::false_negative) && logger.failures())};
-            if(failure)
-            {
-              std::string message{
-                (Mode == test_mode::false_positive) ? combine_messages("\tFalse Positive Failure:", logger.current_message(), "\n") : ""
-              };
 
-              logger.log_diagnostic_failure(std::move(message));
-            }
-            logger.reset_failures();
+        if(!logger.depth())
+        {
+          const bool failure{
+            ((Mode == test_mode::false_positive) && !logger.failures()) || ((Mode != test_mode::false_positive) && logger.failures())
+          };
+
+          if(failure)
+          {
+            auto message{
+              [&logger](){
+                return (Mode == test_mode::false_positive)
+                  ? combine_messages("\tFalse Positive Failure:", logger.current_message(), "\n") : "";                
+              }
+            };
+
+            logger.log_top_level_failure(message());
           }
+          logger.reset_failures();
         }
 
         if(!logger.depth()) logger.exceptions_detected_by_sentinel(std::uncaught_exceptions());
@@ -161,7 +167,7 @@ namespace sequoia::unit_testing
 
       void log_performance_check()
       {
-        if(!diagnostic(Mode)) m_Logger.get().log_performance_check();
+        m_Logger.get().log_performance_check();
       }
 
       void log_check()
@@ -202,16 +208,19 @@ namespace sequoia::unit_testing
     std::size_t failures() const noexcept { return m_Failures; }
 
     [[nodiscard]]
-    std::size_t performance_failures() const noexcept { return m_PerformanceFailures; }     
+    std::size_t top_level_failures() const noexcept { return m_TopLevelFailures; }
 
     [[nodiscard]]
-    std::size_t diagnostic_failures() const noexcept { return m_DiagnosticFailures; }
+    std::size_t performance_failures() const noexcept { return m_PerformanceFailures; }
 
     [[nodiscard]]
     std::size_t critical_failures() const noexcept { return m_CriticalFailures; }
 
     [[nodiscard]]
-    std::size_t checks() const noexcept { return m_Checks; }
+    std::size_t top_level_checks() const noexcept { return m_TopLevelChecks; }
+
+    [[nodiscard]]
+    std::size_t deep_checks() const noexcept { return m_Checks; }
 
     [[nodiscard]]
     std::size_t performance_checks() const noexcept { return m_PerformanceChecks; } 
@@ -238,12 +247,13 @@ namespace sequoia::unit_testing
       
     std::size_t
       m_Failures{},
+      m_TopLevelFailures{},
       m_PerformanceFailures{},
+      m_CriticalFailures{},
+      m_TopLevelChecks{},
       m_Checks{},
       m_PerformanceChecks{},
-      m_Depth{},
-      m_DiagnosticFailures{},
-      m_CriticalFailures{};
+      m_Depth{};
 
     [[nodiscard]]
     std::size_t depth() const noexcept { return m_Depth; }
@@ -254,6 +264,8 @@ namespace sequoia::unit_testing
 
     void log_check() noexcept { ++m_Checks; }
 
+    void log_top_level_check() noexcept { ++m_TopLevelChecks; }
+
     void log_performance_check() noexcept
     {
       log_check();
@@ -262,9 +274,9 @@ namespace sequoia::unit_testing
 
     void reset_failures() noexcept { m_Failures = 0u; }
 
-    void log_diagnostic_failure(std::string_view message)
+    void log_top_level_failure(std::string_view message)
     {
-      ++m_DiagnosticFailures;
+      ++m_TopLevelFailures;
       m_Messages.append(message).append("\n");
     }
 
@@ -298,18 +310,24 @@ namespace sequoia::unit_testing
       switch(Mode)
       {
       case test_mode::standard:
-        m_StandardFailures    = logger.failures() - logger.performance_failures();
-        m_PerformanceFailures = logger.performance_failures();
-        m_Checks              = logger.checks() - logger.performance_checks();
-        m_PerformanceChecks   = logger.performance_checks();
+        m_StandardTopLevelFailures    = logger.top_level_failures() - logger.performance_failures();
+        m_StandardDeepFailures        = logger.failures() - logger.performance_failures();
+        m_StandardPerformanceFailures = logger.performance_failures();
+        m_StandardTopLevelChecks      = logger.top_level_checks() - logger.performance_checks();
+        m_StandardDeepChecks          = logger.deep_checks() - logger.performance_checks();
+        m_StandardPerformanceChecks   = logger.performance_checks();
         break;
       case test_mode::false_negative:
-        m_FalseNegativeFailures = logger.diagnostic_failures();
-        m_FalseNegativeChecks   = logger.checks();
+        m_FalseNegativeFailures            = logger.top_level_failures() - logger.performance_failures();
+        m_FalseNegativePerformanceFailures = logger.performance_failures();
+        m_FalseNegativeChecks              = logger.top_level_checks() - logger.performance_checks();
+        m_FalseNegativePerformanceChecks   = logger.performance_checks();
         break;
-      case test_mode::false_positive:
-        m_FalsePositiveFailures = logger.diagnostic_failures();
-        m_FalsePositiveChecks   = logger.checks();
+      case test_mode::false_positive:        
+        m_FalsePositivePerformanceFailures = logger.performance_checks() - logger.performance_failures();
+        m_FalsePositiveFailures            = logger.top_level_failures() - m_FalsePositivePerformanceFailures;
+        m_FalsePositiveChecks              = logger.top_level_checks() - logger.performance_checks();
+        m_FalsePositivePerformanceChecks   = logger.performance_checks();
         break;
       }
 
@@ -321,9 +339,12 @@ namespace sequoia::unit_testing
       log_summary clean{""};
       std::swap(*this, clean);
     }
+    /*
+    [[nodiscard]]
+    std::size_t standard_top_level_checks() const noexcept { return m_StandardTopLevelChecks; }
 
     [[nodiscard]]
-    std::size_t checks() const noexcept { return m_Checks; }
+    std::size_t standard_deep_checks() const noexcept { return m_StandardDeepChecks; }
 
     [[nodiscard]]
     std::size_t performance_checks() const noexcept { return m_PerformanceChecks; }
@@ -335,7 +356,10 @@ namespace sequoia::unit_testing
     std::size_t false_positive_checks() const noexcept { return m_FalsePositiveChecks; }
 
     [[nodiscard]]
-    std::size_t standard_failures() const noexcept { return m_StandardFailures; }
+    std::size_t standard_deep_failures() const noexcept { return m_StandardDeepFailures; }
+
+    [[nodiscard]]
+    std::size_t standard_top_level_failures() const noexcept { return m_StandardTopLevelFailures; }
 
     [[nodiscard]]
     std::size_t performance_failures() const noexcept { return m_PerformanceFailures; }
@@ -345,9 +369,10 @@ namespace sequoia::unit_testing
 
     [[nodiscard]]
     std::size_t false_positive_failures() const noexcept { return m_FalsePositiveFailures; }
-
+ 
     [[nodiscard]]
     std::size_t critical_failures() const noexcept { return m_CriticalFailures; }
+    */
 
     [[nodiscard]]
     std::string current_message() const
@@ -357,19 +382,28 @@ namespace sequoia::unit_testing
       
     log_summary& operator+=(const log_summary& rhs)
     {
-      m_Message               += rhs.m_Message;
-      m_Checks                += rhs.m_Checks;
-      m_PerformanceChecks     += rhs.m_PerformanceChecks;
-      m_FalseNegativeChecks   += rhs.m_FalseNegativeChecks;
-      m_FalsePositiveChecks   += rhs.m_FalsePositiveChecks;
-      m_StandardFailures      += rhs.m_StandardFailures;
-      m_PerformanceFailures   += rhs.m_PerformanceFailures;
-      m_FalseNegativeFailures += rhs.m_FalseNegativeFailures;
-      m_FalsePositiveFailures += rhs.m_FalsePositiveFailures;
-      m_CriticalFailures      += rhs.m_CriticalFailures;
-      m_ExceptionsInFlight    += rhs.m_ExceptionsInFlight;
+      m_Message                        += rhs.m_Message;
+
+      m_StandardTopLevelChecks         += rhs.m_StandardTopLevelChecks;
+      m_StandardDeepChecks             += rhs.m_StandardDeepChecks;
+      m_StandardPerformanceChecks      += rhs.m_StandardPerformanceChecks;
+      m_FalseNegativeChecks            += rhs.m_FalseNegativeChecks;
+      m_FalsePositiveChecks            += rhs.m_FalsePositiveChecks;
+      m_FalseNegativePerformanceChecks += rhs.m_FalseNegativePerformanceChecks;
+      m_FalsePositivePerformanceChecks += rhs.m_FalsePositivePerformanceChecks;
+      
+      m_StandardTopLevelFailures         += rhs.m_StandardTopLevelFailures;
+      m_StandardDeepFailures             += rhs.m_StandardDeepFailures;
+      m_StandardPerformanceFailures      += rhs.m_StandardPerformanceFailures;
+      m_FalseNegativeFailures            += rhs.m_FalseNegativeFailures;
+      m_FalsePositiveFailures            += rhs.m_FalsePositiveFailures;
+      m_FalseNegativePerformanceFailures += rhs.m_FalseNegativePerformanceFailures;
+      m_FalsePositivePerformanceFailures += rhs.m_FalsePositivePerformanceFailures;
+      
+      m_CriticalFailures   += rhs.m_CriticalFailures;
+      m_ExceptionsInFlight += rhs.m_ExceptionsInFlight;
         
-      m_CurrentMessage         = rhs.m_CurrentMessage;
+      m_CurrentMessage      = rhs.m_CurrentMessage;
 
       return *this;
     }
@@ -378,22 +412,29 @@ namespace sequoia::unit_testing
     const std::string& name() const noexcept { return m_Name; }
     
     [[nodiscard]]
-    std::string summarize(std::string_view checkNumsPrefix, const log_verbosity suppression ) const
+    std::string summarize(std::string_view checkNumsPrefix, const log_verbosity suppression) const
     {
-      std::array<std::string, 4> summaries{
-        std::string{checkNumsPrefix}.append("Standard Checks:"),
-        std::string{checkNumsPrefix}.append("Performance Checks:"),
+      constexpr std::size_t entries{6};
+      
+      std::array<std::string, entries> summaries{
+        std::string{checkNumsPrefix}.append("Standard Top Level Checks:"),
+                                       //std::string{checkNumsPrefix}.append("Deep Checks:"),
+        std::string{checkNumsPrefix}.append("Standard Performance Checks:"),
         std::string{checkNumsPrefix}.append("False Negative Checks:"),
-        std::string{checkNumsPrefix}.append("False Positive Checks:")
+        std::string{checkNumsPrefix}.append("False Negative Performance Checks:"),
+        std::string{checkNumsPrefix}.append("False Positive Checks:"),
+        std::string{checkNumsPrefix}.append("False Positive PerformanceChecks:")
       };
 
       pad_right(summaries.begin(), summaries.end(), "  ");
 
-      std::array<std::string, 4> checkNums{
-        std::to_string(checks()),
-        std::to_string(performance_checks()),
-        std::to_string(false_negative_checks()),
-        std::to_string(false_positive_checks())
+      std::array<std::string, entries> checkNums{
+        std::to_string(m_StandardTopLevelChecks),
+        std::to_string(m_StandardPerformanceChecks),
+        std::to_string(m_FalseNegativeChecks),
+        std::to_string(m_FalseNegativePerformanceChecks),
+        std::to_string(m_FalsePositiveChecks),
+        std::to_string(m_FalsePositivePerformanceChecks)
       };
 
       constexpr std::size_t minChars{8};
@@ -401,21 +442,23 @@ namespace sequoia::unit_testing
 
       const auto len{10u - std::min(std::size_t{minChars}, checkNums.front().size())};
         
-      for(int i{}; i<4; ++i)
+      for(int i{}; i<entries; ++i)
       {
         summaries[i].append(checkNums[i] + ";").append(len, ' ').append("Failures: ");
       }
 
-      std::array<std::string, 4> failures{
-        std::to_string(standard_failures()),
-        std::to_string(performance_failures()),
-        std::to_string(false_negative_failures()),
-        std::to_string(false_positive_failures())
+      std::array<std::string, entries> failures{
+        std::to_string(m_StandardTopLevelFailures),
+        std::to_string(m_StandardPerformanceFailures),
+        std::to_string(m_FalseNegativeFailures),
+        std::to_string(m_FalseNegativePerformanceFailures),
+        std::to_string(m_FalsePositiveFailures),
+        std::to_string(m_FalsePositivePerformanceFailures),
       };
 
       pad_left(failures.begin(), failures.end(), 2);
 
-      for(int i{}; i<4; ++i)
+      for(int i{}; i < entries; ++i)
       {
         summaries[i] += failures[i];
       }
@@ -431,23 +474,25 @@ namespace sequoia::unit_testing
       }
       else
       {
-        const std::array<std::size_t, 4> numbers{
-          checks(),
-          performance_checks(),
-          false_negative_checks(),
-          false_positive_checks()
+        const std::array<std::size_t, entries> checks{
+          m_StandardTopLevelChecks,
+          m_StandardPerformanceChecks,
+          m_FalseNegativeChecks,
+          m_FalseNegativePerformanceChecks,
+          m_FalsePositiveChecks,
+          m_FalsePositivePerformanceChecks
         };
 
-        for(int i{}; i<4; ++i)
+        for(int i{}; i<entries; ++i)
         {
             
-          if(numbers[i]) summary += summaries[i] += "\n";
+          if(checks[i]) summary += summaries[i] += "\n";
         }
       }
 
       if(m_CriticalFailures)
       {
-        (summary += "Critical Failures:  ") += std::to_string(critical_failures()) += "\n";
+        (summary += "Critical Failures:  ") += std::to_string(m_CriticalFailures) += "\n";
       }
 
       if((suppression & log_verbosity::failure_messages) == log_verbosity::failure_messages)
@@ -466,14 +511,20 @@ namespace sequoia::unit_testing
   private:
     std::string m_Name, m_Message, m_CurrentMessage;
     std::size_t
-      m_Checks{},
-      m_PerformanceChecks{},
+      m_StandardTopLevelChecks{},
+      m_StandardDeepChecks{},
+      m_StandardPerformanceChecks{},
       m_FalseNegativeChecks{},
       m_FalsePositiveChecks{},
-      m_StandardFailures{},
-      m_PerformanceFailures{},
+      m_FalseNegativePerformanceChecks{},
+      m_FalsePositivePerformanceChecks{},
+      m_StandardTopLevelFailures{},
+      m_StandardDeepFailures{},
+      m_StandardPerformanceFailures{},
       m_FalseNegativeFailures{},
       m_FalsePositiveFailures{},
+      m_FalseNegativePerformanceFailures{},
+      m_FalsePositivePerformanceFailures{},
       m_CriticalFailures{};
 
     int m_ExceptionsInFlight{};
