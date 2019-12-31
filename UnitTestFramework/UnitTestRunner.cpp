@@ -69,6 +69,9 @@ namespace sequoia::unit_testing
       summaries[i] += failures[i];
     }
 
+    if(log.standard_top_level_checks())
+      summaries.front().append("  [Deep checks: " + std::to_string(log.standard_deep_checks()) + "]");
+
     std::string summary{log.name().empty() ? "" : log.name() + ":\n"};
 
     if((suppression & log_verbosity::absent_checks) == log_verbosity::absent_checks)
