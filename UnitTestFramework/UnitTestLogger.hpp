@@ -99,9 +99,6 @@ namespace sequoia::unit_testing
 
   enum class test_mode { standard, false_positive, false_negative };
 
-  [[nodiscard]]
-  inline constexpr bool diagnostic(const test_mode mode) noexcept { return (mode != test_mode::standard ); }
-    
   template<test_mode Mode>
   class unit_test_logger
   {
