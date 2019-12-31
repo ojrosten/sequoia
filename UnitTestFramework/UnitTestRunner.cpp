@@ -18,6 +18,93 @@ namespace sequoia::unit_testing
   const std::map<std::string, std::size_t> unit_test_runner::s_ArgCount{
     {"create", 2}
   };
+
+  std::string summarize(const log_summary& log, std::string_view prefix, const log_verbosity suppression)
+  {
+    constexpr std::size_t entries{6};
+
+    std::array<std::string, entries> summaries{
+      std::string{prefix}.append("Standard Top Level Checks:"),
+      std::string{prefix}.append("Standard Performance Checks:"),
+      std::string{prefix}.append("False Negative Checks:"),
+      std::string{prefix}.append("False Negative Performance Checks:"),
+      std::string{prefix}.append("False Positive Checks:"),
+      std::string{prefix}.append("False Positive PerformanceChecks:")
+    };
+
+    pad_right(summaries.begin(), summaries.end(), "  ");
+
+    std::array<std::string, entries> checkNums{
+      std::to_string(log.standard_top_level_checks()),
+      std::to_string(log.standard_performance_checks()),
+      std::to_string(log.false_negative_checks()),
+      std::to_string(log.false_negative_performance_checks()),
+      std::to_string(log.false_positive_checks()),
+      std::to_string(log.false_positive_performance_checks())
+    };
+
+    constexpr std::size_t minChars{8};
+    pad_left(checkNums.begin(), checkNums.end(), minChars);
+
+    const auto len{10u - std::min(std::size_t{minChars}, checkNums.front().size())};
+        
+    for(int i{}; i<entries; ++i)
+    {
+      summaries[i].append(checkNums[i] + ";").append(len, ' ').append("Failures: ");
+    }
+
+    std::array<std::string, entries> failures{
+      std::to_string(log.standard_top_level_failures()),
+      std::to_string(log.standard_performance_failures()),
+      std::to_string(log.false_negative_failures()),
+      std::to_string(log.false_negative_performance_failures()),
+      std::to_string(log.false_positive_failures()),
+      std::to_string(log.false_positive_performance_failures())
+    };
+
+    pad_left(failures.begin(), failures.end(), 2);
+
+    for(int i{}; i < entries; ++i)
+    {
+      summaries[i] += failures[i];
+    }
+
+    std::string summary{log.name().empty() ? "" : log.name() + ":\n"};
+
+    if((suppression & log_verbosity::absent_checks) == log_verbosity::absent_checks)
+    {
+      std::for_each(std::cbegin(summaries), std::cend(summaries), [&summary](const std::string& s){
+          (summary += s) += "\n";
+        }
+      );
+    }
+    else
+    {
+      const std::array<std::size_t, entries> checks{
+        log.standard_top_level_checks(),
+        log.standard_performance_checks(),
+        log.false_negative_checks(),
+        log.false_negative_performance_checks(),
+        log.false_positive_checks(),
+        log.false_positive_performance_checks()
+      };
+
+      for(int i{}; i<entries; ++i)
+      {            
+        if(checks[i]) summary += summaries[i] += "\n";
+      }
+    }
+
+    if(log.critical_failures())
+    {
+      (summary += "Critical Failures:  ") += std::to_string(log.critical_failures()) += "\n";
+    }
+
+    if((suppression & log_verbosity::failure_messages) == log_verbosity::failure_messages)
+      summary += log.message();
+
+    return summary;
+  }
   
   std::string unit_test_runner::to_camel_case(std::string text)
   {
@@ -331,11 +418,11 @@ namespace sequoia::unit_testing
     log_summary familySummary{};
     for(const auto& s : summaries)
     {
-      if(m_Verbose) std::cout << "    " << s.summarize("        ", log_verbosity::failure_messages);
+      if(m_Verbose) std::cout << "    " << summarize(s, "        ", log_verbosity::failure_messages);
       familySummary += s;
     }
           
-    if(!m_Verbose) std::cout << familySummary.summarize("    ", log_verbosity::failure_messages);
+    if(!m_Verbose) std::cout << summarize(familySummary, "    ", log_verbosity::failure_messages);
 
     return familySummary;
   }
@@ -471,7 +558,7 @@ namespace sequoia::unit_testing
         }        
       }
       std::cout <<  "-----Grand Totals-----\n";
-      std::cout << summary.summarize("", log_verbosity::absent_checks);
+      std::cout << summarize(summary, "", log_verbosity::absent_checks);
     }
 
     check_for_missing_tests();

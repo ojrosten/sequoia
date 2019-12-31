@@ -21,7 +21,10 @@ namespace sequoia::unit_testing
   {
     using std::runtime_error::runtime_error;
   };
-  
+
+  [[nodiscard]]
+  std::string summarize(const log_summary& log, std::string_view prefix, const log_verbosity suppression);
+
   class unit_test_runner
   {
   public:

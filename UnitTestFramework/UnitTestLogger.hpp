@@ -298,9 +298,7 @@ namespace sequoia::unit_testing
   class log_summary
   {
   public:
-    log_summary(std::string_view name="") : m_Name{name}
-    {
-    }
+    log_summary(std::string_view name="") : m_Name{name} {}
       
     template<test_mode Mode> log_summary(std::string_view name, const unit_test_logger<Mode>& logger)
       : m_Name{name}
@@ -339,7 +337,7 @@ namespace sequoia::unit_testing
       log_summary clean{""};
       std::swap(*this, clean);
     }
-    /*
+
     [[nodiscard]]
     std::size_t standard_top_level_checks() const noexcept { return m_StandardTopLevelChecks; }
 
@@ -347,13 +345,19 @@ namespace sequoia::unit_testing
     std::size_t standard_deep_checks() const noexcept { return m_StandardDeepChecks; }
 
     [[nodiscard]]
-    std::size_t performance_checks() const noexcept { return m_PerformanceChecks; }
+    std::size_t standard_performance_checks() const noexcept { return m_StandardPerformanceChecks; }
 
     [[nodiscard]]
     std::size_t false_negative_checks() const noexcept { return m_FalseNegativeChecks; }
 
     [[nodiscard]]
+    std::size_t false_negative_performance_checks() const noexcept { return m_FalseNegativePerformanceChecks; }
+
+    [[nodiscard]]
     std::size_t false_positive_checks() const noexcept { return m_FalsePositiveChecks; }
+
+    [[nodiscard]]
+    std::size_t false_positive_performance_checks() const noexcept { return m_FalsePositivePerformanceChecks; }
 
     [[nodiscard]]
     std::size_t standard_deep_failures() const noexcept { return m_StandardDeepFailures; }
@@ -362,17 +366,22 @@ namespace sequoia::unit_testing
     std::size_t standard_top_level_failures() const noexcept { return m_StandardTopLevelFailures; }
 
     [[nodiscard]]
-    std::size_t performance_failures() const noexcept { return m_PerformanceFailures; }
+    std::size_t standard_performance_failures() const noexcept { return m_StandardPerformanceFailures; }
 
     [[nodiscard]]
     std::size_t false_negative_failures() const noexcept { return m_FalseNegativeFailures; }
 
     [[nodiscard]]
+    std::size_t false_negative_performance_failures() const noexcept { return m_FalseNegativePerformanceFailures; }
+
+    [[nodiscard]]
     std::size_t false_positive_failures() const noexcept { return m_FalsePositiveFailures; }
+
+    [[nodiscard]]
+    std::size_t false_positive_performance_failures() const noexcept { return m_FalsePositivePerformanceFailures; }
  
     [[nodiscard]]
     std::size_t critical_failures() const noexcept { return m_CriticalFailures; }
-    */
 
     [[nodiscard]]
     std::string current_message() const
@@ -410,96 +419,9 @@ namespace sequoia::unit_testing
 
     [[nodiscard]]
     const std::string& name() const noexcept { return m_Name; }
-    
+
     [[nodiscard]]
-    std::string summarize(std::string_view checkNumsPrefix, const log_verbosity suppression) const
-    {
-      constexpr std::size_t entries{6};
-      
-      std::array<std::string, entries> summaries{
-        std::string{checkNumsPrefix}.append("Standard Top Level Checks:"),
-                                       //std::string{checkNumsPrefix}.append("Deep Checks:"),
-        std::string{checkNumsPrefix}.append("Standard Performance Checks:"),
-        std::string{checkNumsPrefix}.append("False Negative Checks:"),
-        std::string{checkNumsPrefix}.append("False Negative Performance Checks:"),
-        std::string{checkNumsPrefix}.append("False Positive Checks:"),
-        std::string{checkNumsPrefix}.append("False Positive PerformanceChecks:")
-      };
-
-      pad_right(summaries.begin(), summaries.end(), "  ");
-
-      std::array<std::string, entries> checkNums{
-        std::to_string(m_StandardTopLevelChecks),
-        std::to_string(m_StandardPerformanceChecks),
-        std::to_string(m_FalseNegativeChecks),
-        std::to_string(m_FalseNegativePerformanceChecks),
-        std::to_string(m_FalsePositiveChecks),
-        std::to_string(m_FalsePositivePerformanceChecks)
-      };
-
-      constexpr std::size_t minChars{8};
-      pad_left(checkNums.begin(), checkNums.end(), minChars);
-
-      const auto len{10u - std::min(std::size_t{minChars}, checkNums.front().size())};
-        
-      for(int i{}; i<entries; ++i)
-      {
-        summaries[i].append(checkNums[i] + ";").append(len, ' ').append("Failures: ");
-      }
-
-      std::array<std::string, entries> failures{
-        std::to_string(m_StandardTopLevelFailures),
-        std::to_string(m_StandardPerformanceFailures),
-        std::to_string(m_FalseNegativeFailures),
-        std::to_string(m_FalseNegativePerformanceFailures),
-        std::to_string(m_FalsePositiveFailures),
-        std::to_string(m_FalsePositivePerformanceFailures),
-      };
-
-      pad_left(failures.begin(), failures.end(), 2);
-
-      for(int i{}; i < entries; ++i)
-      {
-        summaries[i] += failures[i];
-      }
-
-      std::string summary{m_Name.empty() ? "" : m_Name + ":\n"};
-
-      if((suppression & log_verbosity::absent_checks) == log_verbosity::absent_checks)
-      {
-        std::for_each(std::cbegin(summaries), std::cend(summaries), [&summary](const std::string& s){
-            (summary += s) += "\n";
-          }
-        );
-      }
-      else
-      {
-        const std::array<std::size_t, entries> checks{
-          m_StandardTopLevelChecks,
-          m_StandardPerformanceChecks,
-          m_FalseNegativeChecks,
-          m_FalseNegativePerformanceChecks,
-          m_FalsePositiveChecks,
-          m_FalsePositivePerformanceChecks
-        };
-
-        for(int i{}; i<entries; ++i)
-        {
-            
-          if(checks[i]) summary += summaries[i] += "\n";
-        }
-      }
-
-      if(m_CriticalFailures)
-      {
-        (summary += "Critical Failures:  ") += std::to_string(m_CriticalFailures) += "\n";
-      }
-
-      if((suppression & log_verbosity::failure_messages) == log_verbosity::failure_messages)
-        summary += m_Message;
-
-      return summary;
-    }
+    const std::string& message() const noexcept { return m_Message; }
 
     [[nodiscard]]
     friend log_summary operator+(const log_summary& lhs, const log_summary& rhs)
