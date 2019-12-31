@@ -172,7 +172,7 @@ namespace sequoia::unit_testing
 
       void log_check()
       {
-        if(!diagnostic(Mode)) m_Logger.get().log_check();
+        m_Logger.get().log_check();
       }
     private:
       std::reference_wrapper<unit_test_logger> m_Logger;
