@@ -61,41 +61,6 @@ namespace sequoia::unit_testing
       return typeid(T).name();
     #endif
   }
-  
-  template<class Iter> void pad_right(Iter begin, Iter end, std::string_view suffix)
-  {
-    auto maxIter{
-      std::max_element(begin, end, [](const std::string& lhs, const std::string& rhs) {
-          return lhs.size() < rhs.size();
-        }
-      )
-    };
-
-    const auto maxChars{maxIter->size()};
-
-    for(; begin != end; ++begin)
-    {
-      auto& s{*begin};
-      s += std::string(maxChars - s.size(), ' ') += std::string{suffix};
-    }
-  }  
-      
-  template<class Iter> void pad_left(Iter begin, Iter end, const std::size_t minChars)
-  {
-    auto maxIter{std::max_element(begin, end, [](const std::string& lhs, const std::string& rhs) {
-          return lhs.size() < rhs.size();
-        }
-      )
-    };
-
-    const auto maxChars{std::max(maxIter->size(), minChars)};
-
-    for(; begin != end; ++begin)
-    {
-      auto& s{*begin};
-      s = std::string(maxChars - s.size(), ' ') + s;
-    }
-  }
 
   enum class test_mode { standard, false_positive, false_negative };
 
