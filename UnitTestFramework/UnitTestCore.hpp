@@ -39,7 +39,7 @@ namespace sequoia::unit_testing
   class basic_test : public test, protected Checker
   {
   public:      
-    basic_test(std::string_view name) : test{name} {}
+    explicit basic_test(std::string_view name) : test{name} {}
       
     log_summary execute() override
     {        

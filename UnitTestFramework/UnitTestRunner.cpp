@@ -104,7 +104,7 @@ namespace sequoia::unit_testing
     }
 
     if((suppression & log_verbosity::failure_messages) == log_verbosity::failure_messages)
-      summary += log.message();
+      summary += log.failure_messages();
 
     return summary;
   }
@@ -157,6 +157,12 @@ namespace sequoia::unit_testing
   std::string unit_test_runner::report_arg_num(const std::size_t n)
   {
     return (std::to_string(n) += ((n==1) ? " was" : " were")) += " provided\n";
+  }
+
+  void unit_test_runner::check_zero_args(std::string_view message, const arg_list& argList)
+  {
+    if(!argList.empty())
+      throw argument_error{error(message).append(" requires no arguments, but ").append(report_arg_num(argList.size()))};
   }
 
   void unit_test_runner::replace_all(std::string& text, std::string_view from, const std::string& to)
@@ -352,38 +358,26 @@ namespace sequoia::unit_testing
     );
 
     m_FunctionMap.emplace("-async", [this](const arg_list& argList) {
-        if(argList.empty())
-        {
-          m_Asynchronous = true;
-        }
-        else
-        {
-          throw argument_error{error("-async requires no arguments, but ").append(report_arg_num(argList.size()))};
-        }
+        check_zero_args("-asyn", argList);
+        m_Asynchronous = true;
       }
     );
 
     m_FunctionMap.emplace("-v", [this](const arg_list& argList) {
-        if(argList.empty())
-        {
-          m_Verbose = true;
-        }
-        else
-        {
-          throw argument_error{error("-v requires no arguments, but ").append(report_arg_num(argList.size()))};
-        }
+        check_zero_args("-v", argList);
+        m_Verbose = true;
       }
     );
 
     m_FunctionMap.emplace("-pause", [this](const arg_list& argList) {
-        if(argList.empty())
-        {
-          m_Pause = true;
-        }
-        else
-        {
-          throw argument_error{error("-pause requires no arguments, but ").append(report_arg_num(argList.size()))};
-        }
+        check_zero_args("-pause", argList);
+        m_Pause = true;
+      }
+    );
+
+    m_FunctionMap.emplace("-recovery", [](const arg_list& argList) {
+        check_zero_args("-recovery", argList);
+        output_manager::recovery_file("../output/Recovery/Recovery.txt");
       }
     );
   }

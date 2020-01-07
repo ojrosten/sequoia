@@ -113,6 +113,8 @@ namespace sequoia::unit_testing
 
     static std::string report_arg_num(const std::size_t n);
 
+    static void check_zero_args(std::string_view message, const arg_list& argList);
+
     static void replace_all(std::string& text, std::string_view from, const std::string& to);
 
     static bool file_exists(const std::string& path);

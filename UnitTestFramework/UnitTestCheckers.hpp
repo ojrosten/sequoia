@@ -483,8 +483,8 @@ namespace sequoia
       template<class Logger>
       static void check(std::string_view description, Logger& logger, const std::pair<S, T>& value, const std::pair<U, V>& prediction)
       {      
-        check_equality(combine_messages(description, "First element of pair is incorrent"), logger, value.first, prediction.first);
-        check_equality(combine_messages(description, "First element of pair is incorrect"), logger, value.second, prediction.second);
+        check_equality(combine_messages(description, "First element of pair is incorrect"), logger, value.first, prediction.first);
+        check_equality(combine_messages(description, "Second element of pair is incorrect"), logger, value.second, prediction.second);
       }
     };
 
@@ -725,10 +725,10 @@ namespace sequoia
         return log_summary{prefix, m_Logger};
       }
     protected:
-      checker(checker&&)            = default;      
-      ~checker()                    = default;
+      checker(checker&&) noexcept = default;
+      ~checker()                  = default;
       
-      checker& operator=(checker&&) = default;
+      checker& operator=(checker&&) = delete;
 
       void log_critical_failure(std::string_view message) { m_Logger.log_critical_failure(message); }
       
@@ -739,8 +739,6 @@ namespace sequoia
 
       [[nodiscard]]
       std::size_t failures() const noexcept { return m_Logger.failures(); }
-            
-      void post_message(std::string_view message) { m_Logger.post_message(message); }
 
       [[nodiscard]]
       const std::string& current_message() const noexcept{ return m_Logger.current_message(); }

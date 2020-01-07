@@ -62,15 +62,24 @@ namespace sequoia::unit_testing
     #endif
   }
 
+  // TO DO: use std::filesystem when available
+  class output_manager
+  {
+    inline static std::string st_RecoveryFile{};
+  public:
+    static void recovery_file(std::string_view recoveryFile) { st_RecoveryFile = std::string{recoveryFile}; }
+
+    static std::string_view recovery_file() noexcept { return st_RecoveryFile; }
+  };
+
   enum class test_mode { standard, false_positive, false_negative };
 
   template<test_mode Mode>
   class unit_test_logger
   {
   public:
-    unit_test_logger()  = default;
-    ~unit_test_logger() = default;
-      
+    unit_test_logger() = default;
+
     unit_test_logger(const unit_test_logger&)            = delete;
     unit_test_logger(unit_test_logger&&) noexcept        = default;
     unit_test_logger& operator=(const unit_test_logger&) = delete;
@@ -88,6 +97,12 @@ namespace sequoia::unit_testing
         {
           logger.current_message(message);
           logger.log_top_level_check();
+
+          if(auto file{output_manager::recovery_file()}; !file.empty())
+          {
+            if(std::ofstream of{file.data()})
+              of << "Check started:\n" << message << "\n";
+          }
         }
 
         logger.increment_depth();
@@ -116,6 +131,12 @@ namespace sequoia::unit_testing
             logger.log_top_level_failure(message());
           }
           logger.reset_failures();
+
+          if(auto file{output_manager::recovery_file()}; !file.empty())
+          {
+            if(std::ofstream of{file.data(), std::ios_base::app})
+              of << "Check ended\n";
+          }
         }
 
         if(!logger.depth()) logger.exceptions_detected_by_sentinel(std::uncaught_exceptions());
@@ -144,8 +165,21 @@ namespace sequoia::unit_testing
     {
       ++m_Failures;
       m_CurrentMessage = message;
-      if constexpr (Mode != test_mode::false_positive) m_Messages.append(m_CurrentMessage).append("\n");
-      if(std::ofstream of{m_RecoveryFile}) of << m_Messages;
+
+      auto append{
+        [&currentMessage{m_CurrentMessage}](std::string& output) {
+          output.append(currentMessage).append("\n");
+        }
+      };
+
+      if constexpr (Mode != test_mode::false_positive)
+      {
+        append(m_FailureMessages);
+      }
+      else
+      {
+        append(m_VersionedOutput);
+      }
     }
 
     void log_performance_failure(std::string_view message)
@@ -157,13 +191,12 @@ namespace sequoia::unit_testing
     void log_critical_failure(std::string_view message)
     {
       ++m_CriticalFailures;
-      m_Messages.append(message).append("\n");
-      if(std::ofstream of{m_RecoveryFile}) of << m_Messages;
-    }
-
-    void post_message(std::string_view message)
-    {
-      m_Messages.append(message);
+      m_FailureMessages.append(message).append("\n");
+      if(auto file{output_manager::recovery_file()}; !file.empty())
+      {
+        if(std::ofstream of{file.data(), std::ios_base::app})
+          of << "\nCritical Failure:\n" << message << "\n";
+      }
     }
 
     [[nodiscard]]
@@ -188,10 +221,13 @@ namespace sequoia::unit_testing
     std::size_t performance_checks() const noexcept { return m_PerformanceChecks; } 
 
     [[nodiscard]]
-    const std::string& messages() const noexcept{ return m_Messages; }
+    const std::string& failure_messages() const noexcept{ return m_FailureMessages; }
 
     [[nodiscard]]
     const std::string& current_message() const noexcept { return m_CurrentMessage; }
+
+    [[nodiscard]]
+    const std::string& versioned_output() const noexcept { return m_VersionedOutput; }
 
     void exceptions_detected_by_sentinel(const int n) { m_ExceptionsInFlight = n; }
 
@@ -199,11 +235,9 @@ namespace sequoia::unit_testing
     int exceptions_detected_by_sentinel() const noexcept { return m_ExceptionsInFlight; }
   private:
     std::string
-      m_Messages,
-      m_CurrentMessage;
-
-    // TO DO: use std::filesystem once supported!
-    std::string m_RecoveryFile{"../output/Recovery.txt"};
+      m_FailureMessages,
+      m_CurrentMessage,
+      m_VersionedOutput;
 
     int m_ExceptionsInFlight{};
       
@@ -239,13 +273,12 @@ namespace sequoia::unit_testing
     void log_top_level_failure(std::string_view message)
     {
       ++m_TopLevelFailures;
-      m_Messages.append(message).append("\n");
+      m_FailureMessages.append(message).append("\n");
     }
 
     void current_message(std::string_view message)
     {
       m_CurrentMessage = message;
-      if(std::ofstream of{m_RecoveryFile}) of << m_CurrentMessage;            
     }
   };
 
@@ -264,7 +297,7 @@ namespace sequoia::unit_testing
       
     template<test_mode Mode> log_summary(std::string_view name, const unit_test_logger<Mode>& logger)
       : m_Name{name}
-      , m_Message{logger.messages()}
+      , m_FailureMessages{logger.failure_messages()}
       , m_CurrentMessage{logger.current_message()}
     {
       switch(Mode)
@@ -353,7 +386,7 @@ namespace sequoia::unit_testing
       
     log_summary& operator+=(const log_summary& rhs)
     {
-      m_Message                        += rhs.m_Message;
+      m_FailureMessages                += rhs.m_FailureMessages;
 
       m_StandardTopLevelChecks         += rhs.m_StandardTopLevelChecks;
       m_StandardDeepChecks             += rhs.m_StandardDeepChecks;
@@ -383,7 +416,7 @@ namespace sequoia::unit_testing
     const std::string& name() const noexcept { return m_Name; }
 
     [[nodiscard]]
-    const std::string& message() const noexcept { return m_Message; }
+    const std::string& failure_messages() const noexcept { return m_FailureMessages; }
 
     [[nodiscard]]
     friend log_summary operator+(const log_summary& lhs, const log_summary& rhs)
@@ -393,7 +426,7 @@ namespace sequoia::unit_testing
       return s;
     }
   private:
-    std::string m_Name, m_Message, m_CurrentMessage;
+    std::string m_Name, m_FailureMessages, m_CurrentMessage, m_VersionedOutput;
     std::size_t
       m_StandardTopLevelChecks{},
       m_StandardDeepChecks{},
