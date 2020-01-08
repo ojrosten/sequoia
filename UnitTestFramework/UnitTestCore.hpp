@@ -18,19 +18,20 @@ namespace sequoia::unit_testing
   class test
   {
   public:
-    test(std::string_view name) : m_Name{name} {}
+    explicit test(std::string_view name) : m_Name{name} {}
+
     virtual ~test() = default;
 
     virtual log_summary execute() = 0;
 
-    const std::string& name() const noexcept { return m_Name; }
+    std::string_view name() const noexcept { return m_Name; }
   protected:
+    
     test(const test&)     = default;
     test(test&&) noexcept = default;
 
     test& operator=(const test&)     = default;
     test& operator=(test&&) noexcept = default;
-      
   private:
     std::string m_Name;
   };
@@ -40,7 +41,7 @@ namespace sequoia::unit_testing
   {
   public:      
     explicit basic_test(std::string_view name) : test{name} {}
-      
+    
     log_summary execute() override
     {        
       try
@@ -58,7 +59,7 @@ namespace sequoia::unit_testing
 
       return Checker::summary(name());
     }
-  protected:
+  protected:    
     virtual void run_tests() = 0;
 
     virtual std::string current_message() const { return std::string{Checker::current_message()}; }
@@ -87,9 +88,9 @@ namespace sequoia::unit_testing
   };
 
   using unit_test = basic_test<unit_test_logger<test_mode::standard>>;
+  using false_negative_test = basic_test<unit_test_logger<test_mode::false_negative>>;
   using false_positive_test = basic_test<unit_test_logger<test_mode::false_positive>>;
-  using false_negative_test = basic_test<unit_test_logger<test_mode::false_negative>>;    
-    
+
   inline std::string report_line(std::string file, const int line, const std::string_view message)
   {
     std::string s{std::move(file) + ", Line " + std::to_string(line)};

@@ -221,13 +221,13 @@ namespace sequoia::unit_testing
     std::size_t performance_checks() const noexcept { return m_PerformanceChecks; } 
 
     [[nodiscard]]
-    const std::string& failure_messages() const noexcept{ return m_FailureMessages; }
+    std::string_view failure_messages() const noexcept{ return m_FailureMessages; }
 
     [[nodiscard]]
-    const std::string& current_message() const noexcept { return m_CurrentMessage; }
+    std::string_view current_message() const noexcept { return m_CurrentMessage; }
 
     [[nodiscard]]
-    const std::string& versioned_output() const noexcept { return m_VersionedOutput; }
+    std::string_view versioned_output() const noexcept { return m_VersionedOutput; }
 
     void exceptions_detected_by_sentinel(const int n) { m_ExceptionsInFlight = n; }
 
@@ -293,8 +293,8 @@ namespace sequoia::unit_testing
   class log_summary
   {
   public:
-    log_summary(std::string_view name="") : m_Name{name} {}
-      
+    explicit log_summary(std::string_view name="") : m_Name{name} {}
+
     template<test_mode Mode> log_summary(std::string_view name, const unit_test_logger<Mode>& logger)
       : m_Name{name}
       , m_FailureMessages{logger.failure_messages()}
@@ -324,6 +324,7 @@ namespace sequoia::unit_testing
         break;
       }
 
+      m_VersionedOutput = logger. versioned_output();
       m_CriticalFailures = logger.critical_failures();
     }
 
@@ -379,6 +380,9 @@ namespace sequoia::unit_testing
     std::size_t critical_failures() const noexcept { return m_CriticalFailures; }
 
     [[nodiscard]]
+    std::string_view versioned_output() const noexcept { return m_VersionedOutput; }
+
+    [[nodiscard]]
     std::string current_message() const
     {
       return m_Name.empty() ?  m_CurrentMessage : '[' + m_Name + "]\n\t" + m_CurrentMessage;
@@ -406,6 +410,7 @@ namespace sequoia::unit_testing
       
       m_CriticalFailures   += rhs.m_CriticalFailures;
       m_ExceptionsInFlight += rhs.m_ExceptionsInFlight;
+      m_VersionedOutput    += rhs.m_VersionedOutput;
         
       m_CurrentMessage      = rhs.m_CurrentMessage;
 
@@ -413,10 +418,10 @@ namespace sequoia::unit_testing
     }
 
     [[nodiscard]]
-    const std::string& name() const noexcept { return m_Name; }
+    std::string_view name() const noexcept { return m_Name; }
 
     [[nodiscard]]
-    const std::string& failure_messages() const noexcept { return m_FailureMessages; }
+    std::string_view failure_messages() const noexcept { return m_FailureMessages; }
 
     [[nodiscard]]
     friend log_summary operator+(const log_summary& lhs, const log_summary& rhs)

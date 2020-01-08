@@ -17,7 +17,7 @@
 
 namespace sequoia::unit_testing
 {
-    template<class Iter> void pad_right(Iter begin, Iter end, std::string_view suffix)
+  template<class Iter> void pad_right(Iter begin, Iter end, std::string_view suffix)
   {
     auto maxIter{
       std::max_element(begin, end, [](const std::string& lhs, const std::string& rhs) {
@@ -102,9 +102,10 @@ namespace sequoia::unit_testing
 
     void check_for_missing_tests();
 
+    void check_argument_consistency();
+
     enum class file_comparison {failed, same, different};
 
-    
     static std::string to_camel_case(std::string text);
     
     static std::string warning(std::string_view message);

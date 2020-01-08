@@ -116,7 +116,8 @@ namespace sequoia
           auto message{messageGenerator("==", "false")};
           if constexpr(!delegate)
           {
-            message.append("\t" + to_string(value) +  " differs from " + to_string(prediction) + "\n\n");
+            message.append("\tPredicted: " + to_string(prediction) + "\n");
+            message.append("\tObtained : " + to_string(value) + "\n\n");
           }
           logger.log_failure(message);
         }
@@ -206,15 +207,16 @@ namespace sequoia
       return check(description, logger, compare(value, prediction));
     }
 
-    template<class Logger, class E, class Fn>
+    template<class E, class Logger, class Fn>
     bool check_exception_thrown(std::string_view description, Logger& logger, Fn&& function)
     {
-      typename Logger::sentinel r{logger, description};
+      const std::string message{"\t" + add_type_info<E>(description)};
+      typename Logger::sentinel r{logger, message};
       r.log_check();
       try
       {
         function();
-        logger.log_failure(combine_messages(description, "\tNo exception thrown\n", "\n"));
+        logger.log_failure(combine_messages(message, "No exception thrown\n"));
         return false;
       }
       catch(E&)
@@ -223,12 +225,12 @@ namespace sequoia
       }
       catch(std::exception& e)
       {
-        logger.log_failure(combine_messages(description, std::string{"\tUnexpected exception thrown -\""} + e.what() + "\"\n", "\n"));
+        logger.log_failure(combine_messages(message, std::string{"Unexpected exception thrown - \""} + e.what() + "\"\n"));
         return false;
       }
       catch(...)
       {
-        logger.log_failure(combine_messages(description, "\tUnknown exception thrown\n", "\n"));
+        logger.log_failure(combine_messages(message, "Unknown exception thrown\n"));
         return false;
       }
     }
@@ -483,8 +485,8 @@ namespace sequoia
       template<class Logger>
       static void check(std::string_view description, Logger& logger, const std::pair<S, T>& value, const std::pair<U, V>& prediction)
       {      
-        check_equality(combine_messages(description, "First element of pair is incorrect"), logger, value.first, prediction.first);
-        check_equality(combine_messages(description, "Second element of pair is incorrect"), logger, value.second, prediction.second);
+        check_equality(combine_messages(description, "First element of pair is incorrect", "\n"), logger, value.first, prediction.first);
+        check_equality(combine_messages(description, "Second element of pair is incorrect", "\n"), logger, value.second, prediction.second);
       }
     };
 
@@ -504,8 +506,8 @@ namespace sequoia
       {
         if constexpr(I < sizeof...(T))
         {
-          const std::string message{std::to_string(I) + "th element of tuple incorrect"};
-          check_equality(combine_messages(description, message), logger, std::get<I>(value), std::get<I>(prediction));
+          const std::string message{"Element " + std::to_string(I) + " of tuple incorrect"};
+          check_equality(combine_messages(description, message, "\n"), logger, std::get<I>(value), std::get<I>(prediction));
           check_tuple_elements<Logger, I+1>(description, logger, value, prediction);
         }
       }
@@ -673,7 +675,7 @@ namespace sequoia
       template<class E, class Fn>
       bool check_exception_thrown(std::string_view description, Fn&& function)
       {
-        return unit_testing::check_exception_thrown<Logger, E, Fn>(description, m_Logger, std::forward<Fn>(function));
+        return unit_testing::check_exception_thrown<E>(description, m_Logger, std::forward<Fn>(function));
       }
 
       template<class Iter, class PredictionIter>
@@ -741,7 +743,7 @@ namespace sequoia
       std::size_t failures() const noexcept { return m_Logger.failures(); }
 
       [[nodiscard]]
-      const std::string& current_message() const noexcept{ return m_Logger.current_message(); }
+      std::string_view current_message() const noexcept{ return m_Logger.current_message(); }
 
       [[nodiscard]]
       int exceptions_detected_by_sentinel() const noexcept { return m_Logger.exceptions_detected_by_sentinel(); }

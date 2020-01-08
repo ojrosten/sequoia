@@ -28,19 +28,52 @@ namespace sequoia::unit_testing
     std::vector<log_summary> execute()
     {
       std::vector<log_summary> summaries{};
+      bool write{};
       for(auto& pTest : m_Tests)
       {
         summaries.push_back(pTest->execute());
+        if(!summaries.back().versioned_output().empty()) write = true;
+      }
+
+      if(write)
+      {
+        if(auto filename{false_positive_filename()}; !filename.empty())
+        {
+          if(std::ofstream file{filename.data()})
+          {           
+            for(const auto& s : summaries)
+            {           
+              file << s.versioned_output().data();
+            }
+          }
+          else
+          {
+            throw std::runtime_error{std::string{"Unable to open versioned file "}.append(filename).append(" for writing\n")};
+          }
+        }
       }
 
       return summaries;
     }
 
     [[nodiscard]]
-    std::string_view name() const noexcept { return m_Name; }      
+    std::string_view name() const noexcept { return m_Name; }
+
   private:
     std::vector<std::unique_ptr<test>> m_Tests{};
     std::string m_Name;
+
+    [[nodiscard]]
+    std::string false_positive_filename()
+    {
+      std::string name{m_Name};
+      for(auto& c : name)
+      {
+        if(c == ' ') c = '_';
+      }
+    
+      return std::string{"../output/DiagnosticsOutput/"}.append(std::move(name)).append("_FPOutput.txt");
+    }
 
     template<class Test, class... Tests>
     void register_tests(Test&& t, Tests&&... tests)

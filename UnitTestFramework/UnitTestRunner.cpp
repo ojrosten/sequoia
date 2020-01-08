@@ -72,7 +72,7 @@ namespace sequoia::unit_testing
     if(log.standard_top_level_checks())
       summaries.front().append("  [Deep checks: " + std::to_string(log.standard_deep_checks()) + "]");
 
-    std::string summary{log.name().empty() ? "" : log.name() + ":\n"};
+    std::string summary{log.name().empty() ? "" : std::string{log.name()}.append(":\n")};
 
     if((suppression & log_verbosity::absent_checks) == log_verbosity::absent_checks)
     {
@@ -327,7 +327,8 @@ namespace sequoia::unit_testing
       std::cout << "Please hit enter to continue...\n";
       while(std::cin.get() != '\n'){}
     }
-        
+
+    check_argument_consistency();   
     run_diagnostics();
   }
 
@@ -363,8 +364,8 @@ namespace sequoia::unit_testing
       }
     );
 
-    m_FunctionMap.emplace("-v", [this](const arg_list& argList) {
-        check_zero_args("-v", argList);
+    m_FunctionMap.emplace("-verbose", [this](const arg_list& argList) {
+        check_zero_args("-verbose", argList);
         m_Verbose = true;
       }
     );
@@ -380,6 +381,12 @@ namespace sequoia::unit_testing
         output_manager::recovery_file("../output/Recovery/Recovery.txt");
       }
     );
+  }
+
+  void unit_test_runner::check_argument_consistency()
+  {
+    if(m_Asynchronous && !output_manager::recovery_file().empty())
+      throw argument_error{error("Can't run asynchronously in recovery mode\n")};
   }
 
   void unit_test_runner::run_diagnostics()

@@ -43,6 +43,7 @@ namespace sequoia::unit_testing
 
     check_exception_thrown<std::runtime_error>(LINE("Exception expected but nothing thrown"), [](){});
     check_exception_thrown<std::runtime_error>(LINE("Exception thrown but of wrong type"), [](){ throw std::logic_error("Error"); });
+    check_exception_thrown<std::runtime_error>(LINE("Exception thrown but of unknown type"), [](){ throw 1; });
   }
 
   void false_positive_diagnostics::test_container_checks()
