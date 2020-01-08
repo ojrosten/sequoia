@@ -1,0 +1,670 @@
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	[sequoia::maths::graph<(sequoia::maths::directed_flavour)0, sequoia::unit_testing::null_weight, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::unit_testing::null_weight, true> >]
+	operator== returned false
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	[sequoia::maths::graph<(sequoia::maths::directed_flavour)0, sequoia::unit_testing::null_weight, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::unit_testing::null_weight, true> >]
+	operator!= returned true
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)0, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)0, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::maths::graph_impl::weight_maker<sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, true> >]
+	operator== returned false
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)0, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)0, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::maths::graph_impl::weight_maker<sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, true> >]
+	operator!= returned true
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	Connectivity orders different
+	[unsigned long]
+	operator== returned false
+	Predicted: 1
+	Obtained : 0
+
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 52:
+	Check false positive: empty graph versus single node with loop
+	[sequoia::maths::graph<(sequoia::maths::directed_flavour)0, sequoia::unit_testing::null_weight, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::unit_testing::null_weight, true> >]
+	operator== returned false
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 52:
+	Check false positive: empty graph versus single node with loop
+	[sequoia::maths::graph<(sequoia::maths::directed_flavour)0, sequoia::unit_testing::null_weight, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::unit_testing::null_weight, true> >]
+	operator!= returned true
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 52:
+	Check false positive: empty graph versus single node with loop
+	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)0, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)0, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::maths::graph_impl::weight_maker<sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, true> >]
+	operator== returned false
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 52:
+	Check false positive: empty graph versus single node with loop
+	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)0, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)0, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::maths::graph_impl::weight_maker<sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, true> >]
+	operator!= returned true
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 52:
+	Check false positive: empty graph versus single node with loop
+	Connectivity sizes different
+	[unsigned long]
+	operator== returned false
+	Predicted: 1
+	Obtained : 0
+
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 52:
+	Check false positive: empty graph versus single node with loop
+	Connectivity orders different
+	[unsigned long]
+	operator== returned false
+	Predicted: 1
+	Obtained : 0
+
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	[sequoia::maths::graph<(sequoia::maths::directed_flavour)0, sequoia::unit_testing::null_weight, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::unit_testing::null_weight, true> >]
+	operator== returned false
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	[sequoia::maths::graph<(sequoia::maths::directed_flavour)0, sequoia::unit_testing::null_weight, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::unit_testing::null_weight, true> >]
+	operator!= returned true
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)0, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)0, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::maths::graph_impl::weight_maker<sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, true> >]
+	operator== returned false
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)0, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)0, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::maths::graph_impl::weight_maker<sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, true> >]
+	operator!= returned true
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	Connectivity orders different
+	[unsigned long]
+	operator== returned false
+	Predicted: 1
+	Obtained : 0
+
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 52:
+	Check false positive: empty graph versus single node with loop
+	[sequoia::maths::graph<(sequoia::maths::directed_flavour)0, sequoia::unit_testing::null_weight, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::unit_testing::null_weight, true> >]
+	operator== returned false
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 52:
+	Check false positive: empty graph versus single node with loop
+	[sequoia::maths::graph<(sequoia::maths::directed_flavour)0, sequoia::unit_testing::null_weight, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::unit_testing::null_weight, true> >]
+	operator!= returned true
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 52:
+	Check false positive: empty graph versus single node with loop
+	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)0, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)0, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::maths::graph_impl::weight_maker<sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, true> >]
+	operator== returned false
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 52:
+	Check false positive: empty graph versus single node with loop
+	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)0, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)0, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::maths::graph_impl::weight_maker<sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, true> >]
+	operator!= returned true
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 52:
+	Check false positive: empty graph versus single node with loop
+	Connectivity sizes different
+	[unsigned long]
+	operator== returned false
+	Predicted: 1
+	Obtained : 0
+
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 52:
+	Check false positive: empty graph versus single node with loop
+	Connectivity orders different
+	[unsigned long]
+	operator== returned false
+	Predicted: 1
+	Obtained : 0
+
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)0, sequoia::unit_testing::null_weight, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::unit_testing::null_weight, true> >]
+	operator== returned false
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)0, sequoia::unit_testing::null_weight, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::unit_testing::null_weight, true> >]
+	operator!= returned true
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)0, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)1, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::maths::graph_impl::weight_maker<sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, true> >]
+	operator== returned false
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)0, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)1, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::maths::graph_impl::weight_maker<sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, true> >]
+	operator!= returned true
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	Connectivity orders different
+	[unsigned long]
+	operator== returned false
+	Predicted: 1
+	Obtained : 0
+
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 60:
+	Check false positive: empty graph versus single node with loop
+	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)0, sequoia::unit_testing::null_weight, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::unit_testing::null_weight, true> >]
+	operator== returned false
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 60:
+	Check false positive: empty graph versus single node with loop
+	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)0, sequoia::unit_testing::null_weight, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::unit_testing::null_weight, true> >]
+	operator!= returned true
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 60:
+	Check false positive: empty graph versus single node with loop
+	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)0, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)1, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::maths::graph_impl::weight_maker<sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, true> >]
+	operator== returned false
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 60:
+	Check false positive: empty graph versus single node with loop
+	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)0, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)1, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::maths::graph_impl::weight_maker<sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, true> >]
+	operator!= returned true
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 60:
+	Check false positive: empty graph versus single node with loop
+	Connectivity sizes different
+	[unsigned long]
+	operator== returned false
+	Predicted: 1
+	Obtained : 0
+
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 60:
+	Check false positive: empty graph versus single node with loop
+	Connectivity orders different
+	[unsigned long]
+	operator== returned false
+	Predicted: 1
+	Obtained : 0
+
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)0, sequoia::unit_testing::null_weight, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::unit_testing::null_weight, true> >]
+	operator== returned false
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)0, sequoia::unit_testing::null_weight, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::unit_testing::null_weight, true> >]
+	operator!= returned true
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)0, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)1, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::maths::graph_impl::weight_maker<sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, true> >]
+	operator== returned false
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)0, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)1, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::maths::graph_impl::weight_maker<sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, true> >]
+	operator!= returned true
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	Connectivity orders different
+	[unsigned long]
+	operator== returned false
+	Predicted: 1
+	Obtained : 0
+
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 60:
+	Check false positive: empty graph versus single node with loop
+	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)0, sequoia::unit_testing::null_weight, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::unit_testing::null_weight, true> >]
+	operator== returned false
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 60:
+	Check false positive: empty graph versus single node with loop
+	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)0, sequoia::unit_testing::null_weight, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::unit_testing::null_weight, true> >]
+	operator!= returned true
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 60:
+	Check false positive: empty graph versus single node with loop
+	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)0, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)1, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::maths::graph_impl::weight_maker<sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, true> >]
+	operator== returned false
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 60:
+	Check false positive: empty graph versus single node with loop
+	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)0, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)1, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::maths::graph_impl::weight_maker<sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, true> >]
+	operator!= returned true
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 60:
+	Check false positive: empty graph versus single node with loop
+	Connectivity sizes different
+	[unsigned long]
+	operator== returned false
+	Predicted: 1
+	Obtained : 0
+
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 60:
+	Check false positive: empty graph versus single node with loop
+	Connectivity orders different
+	[unsigned long]
+	operator== returned false
+	Predicted: 1
+	Obtained : 0
+
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	[sequoia::maths::graph<(sequoia::maths::directed_flavour)1, sequoia::unit_testing::null_weight, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::unit_testing::null_weight, true> >]
+	operator== returned false
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	[sequoia::maths::graph<(sequoia::maths::directed_flavour)1, sequoia::unit_testing::null_weight, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::unit_testing::null_weight, true> >]
+	operator!= returned true
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)2, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::maths::graph_impl::weight_maker<sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, true> >]
+	operator== returned false
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)2, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::maths::graph_impl::weight_maker<sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, true> >]
+	operator!= returned true
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	Connectivity orders different
+	[unsigned long]
+	operator== returned false
+	Predicted: 1
+	Obtained : 0
+
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 48:
+	Check false positive: empty graph versus single node with loop
+	[sequoia::maths::graph<(sequoia::maths::directed_flavour)1, sequoia::unit_testing::null_weight, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::unit_testing::null_weight, true> >]
+	operator== returned false
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 48:
+	Check false positive: empty graph versus single node with loop
+	[sequoia::maths::graph<(sequoia::maths::directed_flavour)1, sequoia::unit_testing::null_weight, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::unit_testing::null_weight, true> >]
+	operator!= returned true
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 48:
+	Check false positive: empty graph versus single node with loop
+	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)2, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::maths::graph_impl::weight_maker<sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, true> >]
+	operator== returned false
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 48:
+	Check false positive: empty graph versus single node with loop
+	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)2, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::maths::graph_impl::weight_maker<sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, true> >]
+	operator!= returned true
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 48:
+	Check false positive: empty graph versus single node with loop
+	Connectivity sizes different
+	[unsigned long]
+	operator== returned false
+	Predicted: 1
+	Obtained : 0
+
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 48:
+	Check false positive: empty graph versus single node with loop
+	Connectivity orders different
+	[unsigned long]
+	operator== returned false
+	Predicted: 1
+	Obtained : 0
+
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	[sequoia::maths::graph<(sequoia::maths::directed_flavour)1, sequoia::unit_testing::null_weight, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::unit_testing::null_weight, true> >]
+	operator== returned false
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	[sequoia::maths::graph<(sequoia::maths::directed_flavour)1, sequoia::unit_testing::null_weight, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::unit_testing::null_weight, true> >]
+	operator!= returned true
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)2, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::maths::graph_impl::weight_maker<sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, true> >]
+	operator== returned false
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)2, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::maths::graph_impl::weight_maker<sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, true> >]
+	operator!= returned true
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	Connectivity orders different
+	[unsigned long]
+	operator== returned false
+	Predicted: 1
+	Obtained : 0
+
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 48:
+	Check false positive: empty graph versus single node with loop
+	[sequoia::maths::graph<(sequoia::maths::directed_flavour)1, sequoia::unit_testing::null_weight, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::unit_testing::null_weight, true> >]
+	operator== returned false
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 48:
+	Check false positive: empty graph versus single node with loop
+	[sequoia::maths::graph<(sequoia::maths::directed_flavour)1, sequoia::unit_testing::null_weight, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::unit_testing::null_weight, true> >]
+	operator!= returned true
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 48:
+	Check false positive: empty graph versus single node with loop
+	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)2, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::maths::graph_impl::weight_maker<sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, true> >]
+	operator== returned false
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 48:
+	Check false positive: empty graph versus single node with loop
+	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)2, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::maths::graph_impl::weight_maker<sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, true> >]
+	operator!= returned true
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 48:
+	Check false positive: empty graph versus single node with loop
+	Connectivity sizes different
+	[unsigned long]
+	operator== returned false
+	Predicted: 1
+	Obtained : 0
+
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 48:
+	Check false positive: empty graph versus single node with loop
+	Connectivity orders different
+	[unsigned long]
+	operator== returned false
+	Predicted: 1
+	Obtained : 0
+
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)1, sequoia::unit_testing::null_weight, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::unit_testing::null_weight, true> >]
+	operator== returned false
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)1, sequoia::unit_testing::null_weight, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::unit_testing::null_weight, true> >]
+	operator!= returned true
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)3, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::maths::graph_impl::weight_maker<sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, true> >]
+	operator== returned false
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)3, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::maths::graph_impl::weight_maker<sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, true> >]
+	operator!= returned true
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	Connectivity orders different
+	[unsigned long]
+	operator== returned false
+	Predicted: 1
+	Obtained : 0
+
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 56:
+	Check false positive: empty graph versus single node with loop
+	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)1, sequoia::unit_testing::null_weight, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::unit_testing::null_weight, true> >]
+	operator== returned false
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 56:
+	Check false positive: empty graph versus single node with loop
+	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)1, sequoia::unit_testing::null_weight, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::unit_testing::null_weight, true> >]
+	operator!= returned true
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 56:
+	Check false positive: empty graph versus single node with loop
+	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)3, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::maths::graph_impl::weight_maker<sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, true> >]
+	operator== returned false
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 56:
+	Check false positive: empty graph versus single node with loop
+	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)3, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::maths::graph_impl::weight_maker<sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, true> >]
+	operator!= returned true
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 56:
+	Check false positive: empty graph versus single node with loop
+	Connectivity sizes different
+	[unsigned long]
+	operator== returned false
+	Predicted: 1
+	Obtained : 0
+
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 56:
+	Check false positive: empty graph versus single node with loop
+	Connectivity orders different
+	[unsigned long]
+	operator== returned false
+	Predicted: 1
+	Obtained : 0
+
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)1, sequoia::unit_testing::null_weight, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::unit_testing::null_weight, true> >]
+	operator== returned false
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)1, sequoia::unit_testing::null_weight, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::unit_testing::null_weight, true> >]
+	operator!= returned true
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)3, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::maths::graph_impl::weight_maker<sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, true> >]
+	operator== returned false
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)3, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::maths::graph_impl::weight_maker<sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, true> >]
+	operator!= returned true
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	Connectivity orders different
+	[unsigned long]
+	operator== returned false
+	Predicted: 1
+	Obtained : 0
+
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 56:
+	Check false positive: empty graph versus single node with loop
+	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)1, sequoia::unit_testing::null_weight, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::unit_testing::null_weight, true> >]
+	operator== returned false
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 56:
+	Check false positive: empty graph versus single node with loop
+	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)1, sequoia::unit_testing::null_weight, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::unit_testing::null_weight, true> >]
+	operator!= returned true
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 56:
+	Check false positive: empty graph versus single node with loop
+	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)3, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::maths::graph_impl::weight_maker<sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, true> >]
+	operator== returned false
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 56:
+	Check false positive: empty graph versus single node with loop
+	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)3, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::maths::graph_impl::weight_maker<sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, true> >]
+	operator!= returned true
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 56:
+	Check false positive: empty graph versus single node with loop
+	Connectivity sizes different
+	[unsigned long]
+	operator== returned false
+	Predicted: 1
+	Obtained : 0
+
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 56:
+	Check false positive: empty graph versus single node with loop
+	Connectivity orders different
+	[unsigned long]
+	operator== returned false
+	Predicted: 1
+	Obtained : 0
+
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)1, sequoia::unit_testing::null_weight, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::unit_testing::independent_contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::unit_testing::null_weight, true> >]
+	operator== returned false
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)1, sequoia::unit_testing::null_weight, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::unit_testing::independent_contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::unit_testing::null_weight, true> >]
+	operator!= returned true
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)3, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::unit_testing::independent_contiguous_edge_storage_traits, unsigned long>, sequoia::maths::graph_impl::weight_maker<sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, true> >]
+	operator== returned false
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)3, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::unit_testing::independent_contiguous_edge_storage_traits, unsigned long>, sequoia::maths::graph_impl::weight_maker<sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, true> >]
+	operator!= returned true
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	Connectivity orders different
+	[unsigned long]
+	operator== returned false
+	Predicted: 1
+	Obtained : 0
+
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 56:
+	Check false positive: empty graph versus single node with loop
+	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)1, sequoia::unit_testing::null_weight, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::unit_testing::independent_contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::unit_testing::null_weight, true> >]
+	operator== returned false
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 56:
+	Check false positive: empty graph versus single node with loop
+	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)1, sequoia::unit_testing::null_weight, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::unit_testing::independent_contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::unit_testing::null_weight, true> >]
+	operator!= returned true
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 56:
+	Check false positive: empty graph versus single node with loop
+	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)3, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::unit_testing::independent_contiguous_edge_storage_traits, unsigned long>, sequoia::maths::graph_impl::weight_maker<sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, true> >]
+	operator== returned false
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 56:
+	Check false positive: empty graph versus single node with loop
+	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)3, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::unit_testing::independent_contiguous_edge_storage_traits, unsigned long>, sequoia::maths::graph_impl::weight_maker<sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, true> >]
+	operator!= returned true
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 56:
+	Check false positive: empty graph versus single node with loop
+	Connectivity sizes different
+	[unsigned long]
+	operator== returned false
+	Predicted: 1
+	Obtained : 0
+
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 56:
+	Check false positive: empty graph versus single node with loop
+	Connectivity orders different
+	[unsigned long]
+	operator== returned false
+	Predicted: 1
+	Obtained : 0
+
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)1, sequoia::unit_testing::null_weight, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::unit_testing::independent_bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::unit_testing::null_weight, true> >]
+	operator== returned false
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)1, sequoia::unit_testing::null_weight, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::unit_testing::independent_bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::unit_testing::null_weight, true> >]
+	operator!= returned true
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)3, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::unit_testing::independent_bucketed_edge_storage_traits, unsigned long>, sequoia::maths::graph_impl::weight_maker<sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, true> >]
+	operator== returned false
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)3, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::unit_testing::independent_bucketed_edge_storage_traits, unsigned long>, sequoia::maths::graph_impl::weight_maker<sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, true> >]
+	operator!= returned true
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
+	Check false positive: empty graph versus single node
+	Connectivity orders different
+	[unsigned long]
+	operator== returned false
+	Predicted: 1
+	Obtained : 0
+
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 56:
+	Check false positive: empty graph versus single node with loop
+	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)1, sequoia::unit_testing::null_weight, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::unit_testing::independent_bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::unit_testing::null_weight, true> >]
+	operator== returned false
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 56:
+	Check false positive: empty graph versus single node with loop
+	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)1, sequoia::unit_testing::null_weight, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::unit_testing::independent_bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::unit_testing::null_weight, true> >]
+	operator!= returned true
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 56:
+	Check false positive: empty graph versus single node with loop
+	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)3, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::unit_testing::independent_bucketed_edge_storage_traits, unsigned long>, sequoia::maths::graph_impl::weight_maker<sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, true> >]
+	operator== returned false
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 56:
+	Check false positive: empty graph versus single node with loop
+	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)3, sequoia::unit_testing::null_weight, sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, sequoia::unit_testing::independent_bucketed_edge_storage_traits, unsigned long>, sequoia::maths::graph_impl::weight_maker<sequoia::data_sharing::unpooled<sequoia::unit_testing::null_weight>, true> >]
+	operator!= returned true
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 56:
+	Check false positive: empty graph versus single node with loop
+	Connectivity sizes different
+	[unsigned long]
+	operator== returned false
+	Predicted: 1
+	Obtained : 0
+
+
+	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 56:
+	Check false positive: empty graph versus single node with loop
+	Connectivity orders different
+	[unsigned long]
+	operator== returned false
+	Predicted: 1
+	Obtained : 0
+
+
