@@ -102,7 +102,7 @@ namespace sequoia
       
       auto messageGenerator{
         [description](std::string op, std::string retVal){
-          const std::string info{"\t[" + demangle<T>() + "]\n\toperator" + std::move(op) + " returned " + std::move(retVal) + "\n"};            
+          const std::string info{add_type_info<T>("") + "\toperator" + std::move(op) + " returned " + std::move(retVal) + "\n"};
           return description.empty() ? info : std::string{"\t"}.append(description).append("\n" + info);
         }
       };
