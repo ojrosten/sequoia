@@ -304,18 +304,18 @@
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 72:
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
-	Fast Task duration: 0.00135358s +- 3 * 7.93404e-05
-	Slow Task duration: 0.00139989s +- 3 * 1.10073e-05 [1.03421; (2, 2)]
+	Fast Task duration: 0.00138076s +- 3 * 4.09507e-05
+	Slow Task duration: 0.00130823s +- 3 * 0.0001309 [0.947471; (2, 2)]
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 76:
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
-	Fast Task duration: 0.00133706s +- 3 * 4.5788e-05
-	Slow Task duration: 0.00128512s +- 3 * 0.000110162 [0.96115; (2, 3)]
+	Fast Task duration: 0.00128206s +- 3 * 6.41773e-05
+	Slow Task duration: 0.0012672s +- 3 * 0.000133119 [0.988407; (2, 3)]
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 80:
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
-	Fast Task duration: 0.00139483s +- 3 * 3.20033e-06
-	Slow Task duration: 0.00481401s +- 3 * 0.000474208 [3.45133; (2, 2.5)]
+	Fast Task duration: 0.00130617s +- 3 * 0.00012458
+	Slow Task duration: 0.00469414s +- 3 * 0.000354445 [3.59383; (2, 2.5)]
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 96
 	[std::__1::tuple<std::__1::vector<std::__1::pair<int, float>, std::__1::allocator<std::__1::pair<int, float> > >, std::__1::set<double, std::__1::less<double>, std::__1::allocator<double> >, std::__1::complex<double> >]
@@ -5469,4 +5469,374 @@
 	Obtained : 1
 	Predicted: 0
 
+
+	False Positive Failure:
+	UnitTestFramework/UnitTestDiagnostics.cpp, Line 406
+	[bool]
+
+	False Positive Failure:
+	UnitTestFramework/UnitTestDiagnostics.cpp, Line 408
+	[int]
+
+	False Positive Failure:
+	UnitTestFramework/UnitTestDiagnostics.cpp, Line 409
+	[double]
+
+	False Positive Failure:
+	UnitTestFramework/UnitTestDiagnostics.cpp, Line 411
+	[bool]
+
+	False Positive Failure:
+	UnitTestFramework/UnitTestDiagnostics.cpp, Line 412
+	[bool]
+
+	False Positive Failure:
+	UnitTestFramework/UnitTestDiagnostics.cpp, Line 414
+	[bool]
+
+	False Positive Failure:
+	UnitTestFramework/UnitTestDiagnostics.cpp, Line 415
+	[bool]
+
+	False Positive Failure:
+	UnitTestFramework/UnitTestDiagnostics.cpp, Line 417
+	[std::__1::pair<int, double>]
+
+	False Positive Failure:
+	UnitTestFramework/UnitTestDiagnostics.cpp, Line 417
+	[std::__1::pair<int, double>]
+
+	False Positive Failure:
+	UnitTestFramework/UnitTestDiagnostics.cpp, Line 417
+	[std::__1::pair<int, double>]
+
+	False Positive Failure:
+	UnitTestFramework/UnitTestDiagnostics.cpp, Line 419
+	[std::__1::tuple<int, double, float>]
+
+	False Positive Failure:
+	UnitTestFramework/UnitTestDiagnostics.cpp, Line 419
+	[std::__1::tuple<int, double, float>]
+
+	False Positive Failure:
+	UnitTestFramework/UnitTestDiagnostics.cpp, Line 419
+	[std::__1::tuple<int, double, float>]
+
+	False Positive Failure:
+		UnitTestFramework/UnitTestDiagnostics.cpp, Line 421
+	[std::runtime_error]
+
+	False Positive Failure:
+	UnitTestFramework/UnitTestDiagnostics.cpp, Line 428:
+	Empty vector check which should pass
+	[std::__1::vector<double, std::__1::allocator<double> >]
+
+	False Positive Failure:
+	UnitTestFramework/UnitTestDiagnostics.cpp, Line 428:
+	Empty vector check which should pass
+	[std::__1::vector<double, std::__1::allocator<double> >]
+
+	False Positive Failure:
+	UnitTestFramework/UnitTestDiagnostics.cpp, Line 428:
+	Empty vector check which should pass
+	False Positive Failure:
+	UnitTestFramework/UnitTestDiagnostics.cpp, Line 429:
+	One element vector check which should pass
+	[std::__1::vector<double, std::__1::allocator<double> >]
+
+	False Positive Failure:
+	UnitTestFramework/UnitTestDiagnostics.cpp, Line 429:
+	One element vector check which should pass
+	[std::__1::vector<double, std::__1::allocator<double> >]
+
+	False Positive Failure:
+	UnitTestFramework/UnitTestDiagnostics.cpp, Line 429:
+	One element vector check which should pass
+	False Positive Failure:
+	UnitTestFramework/UnitTestDiagnostics.cpp, Line 430:
+	Multi-element vector comparison which should pass
+	[std::__1::vector<double, std::__1::allocator<double> >]
+
+	False Positive Failure:
+	UnitTestFramework/UnitTestDiagnostics.cpp, Line 430:
+	Multi-element vector comparison which should pass
+	[std::__1::vector<double, std::__1::allocator<double> >]
+
+	False Positive Failure:
+	UnitTestFramework/UnitTestDiagnostics.cpp, Line 430:
+	Multi-element vector comparison which should pass
+	False Positive Failure:
+	UnitTestFramework/UnitTestDiagnostics.cpp, Line 434:
+	Iterators demarcate identical elements
+	False Positive Failure:
+		UnitTestFramework/UnitTestDiagnostics.cpp, Line 450:
+	Performance Test which should pass
+	Fast Task duration: 0.00122482s +- 3 * 9.72121e-05
+	Slow Task duration: 0.00243354s +- 3 * 0.000169487 [1.98685; (1.9, 2.1)]
+
+	False Positive Failure:
+		UnitTestFramework/UnitTestDiagnostics.cpp, Line 451:
+	Performance Test which should pass
+	Fast Task duration: 0.00126552s +- 3 * 0.00012809
+	Slow Task duration: 0.00420396s +- 3 * 0.000263651 [3.32193; (3.9, 4.1)]
+
+	False Positive Failure:
+	UnitTestFramework/UnitTestDiagnostics.cpp, Line 464
+	[std::__1::tuple<std::__1::vector<std::__1::pair<int, float>, std::__1::allocator<std::__1::pair<int, float> > >, std::__1::set<double, std::__1::less<double>, std::__1::allocator<double> >, std::__1::complex<double> >]
+
+	False Positive Failure:
+	UnitTestFramework/UnitTestDiagnostics.cpp, Line 464
+	[std::__1::tuple<std::__1::vector<std::__1::pair<int, float>, std::__1::allocator<std::__1::pair<int, float> > >, std::__1::set<double, std::__1::less<double>, std::__1::allocator<double> >, std::__1::complex<double> >]
+
+	False Positive Failure:
+	UnitTestFramework/UnitTestDiagnostics.cpp, Line 464
+	[std::__1::tuple<std::__1::vector<std::__1::pair<int, float>, std::__1::allocator<std::__1::pair<int, float> > >, std::__1::set<double, std::__1::less<double>, std::__1::allocator<double> >, std::__1::complex<double> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 470
+	[sequoia::unit_testing::perfectly_normal_beast<int, std::__1::allocator<int> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 471
+	[sequoia::unit_testing::perfectly_normal_beast<int, std::__1::allocator<int> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 506
+	[sequoia::unit_testing::perfectly_normal_beast<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, false> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 508
+	[sequoia::unit_testing::perfectly_normal_beast<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, false> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 523
+	[sequoia::unit_testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, false, false> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 525
+	[sequoia::unit_testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, false, false> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 540
+	[sequoia::unit_testing::inefficient_copy<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, false> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 555
+	[sequoia::unit_testing::inefficient_copy_alloc<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, false> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 577
+	[sequoia::unit_testing::doubly_normal_beast<int, double, sequoia::unit_testing::shared_counting_allocator<int, false, false, false>, sequoia::unit_testing::shared_counting_allocator<double, false, false, false> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 506
+	[sequoia::unit_testing::perfectly_normal_beast<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, true> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 508
+	[sequoia::unit_testing::perfectly_normal_beast<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, true> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 523
+	[sequoia::unit_testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, false, true> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 525
+	[sequoia::unit_testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, false, true> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 540
+	[sequoia::unit_testing::inefficient_copy<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, true> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 555
+	[sequoia::unit_testing::inefficient_copy_alloc<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, true> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 577
+	[sequoia::unit_testing::doubly_normal_beast<int, double, sequoia::unit_testing::shared_counting_allocator<int, false, false, true>, sequoia::unit_testing::shared_counting_allocator<double, false, false, true> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 506
+	[sequoia::unit_testing::perfectly_normal_beast<int, sequoia::unit_testing::shared_counting_allocator<int, false, true, false> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 508
+	[sequoia::unit_testing::perfectly_normal_beast<int, sequoia::unit_testing::shared_counting_allocator<int, false, true, false> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 523
+	[sequoia::unit_testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, true, false> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 525
+	[sequoia::unit_testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, true, false> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 540
+	[sequoia::unit_testing::inefficient_copy<int, sequoia::unit_testing::shared_counting_allocator<int, false, true, false> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 555
+	[sequoia::unit_testing::inefficient_copy_alloc<int, sequoia::unit_testing::shared_counting_allocator<int, false, true, false> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 577
+	[sequoia::unit_testing::doubly_normal_beast<int, double, sequoia::unit_testing::shared_counting_allocator<int, false, true, false>, sequoia::unit_testing::shared_counting_allocator<double, false, true, false> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 506
+	[sequoia::unit_testing::perfectly_normal_beast<int, sequoia::unit_testing::shared_counting_allocator<int, false, true, true> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 508
+	[sequoia::unit_testing::perfectly_normal_beast<int, sequoia::unit_testing::shared_counting_allocator<int, false, true, true> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 523
+	[sequoia::unit_testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, true, true> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 525
+	[sequoia::unit_testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, true, true> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 540
+	[sequoia::unit_testing::inefficient_copy<int, sequoia::unit_testing::shared_counting_allocator<int, false, true, true> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 555
+	[sequoia::unit_testing::inefficient_copy_alloc<int, sequoia::unit_testing::shared_counting_allocator<int, false, true, true> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 577
+	[sequoia::unit_testing::doubly_normal_beast<int, double, sequoia::unit_testing::shared_counting_allocator<int, false, true, true>, sequoia::unit_testing::shared_counting_allocator<double, false, true, true> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 506
+	[sequoia::unit_testing::perfectly_normal_beast<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, false> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 508
+	[sequoia::unit_testing::perfectly_normal_beast<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, false> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 523
+	[sequoia::unit_testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, false, false> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 525
+	[sequoia::unit_testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, false, false> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 540
+	[sequoia::unit_testing::inefficient_copy<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, false> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 555
+	[sequoia::unit_testing::inefficient_copy_alloc<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, false> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 577
+	[sequoia::unit_testing::doubly_normal_beast<int, double, sequoia::unit_testing::shared_counting_allocator<int, true, false, false>, sequoia::unit_testing::shared_counting_allocator<double, true, false, false> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 506
+	[sequoia::unit_testing::perfectly_normal_beast<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, true> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 508
+	[sequoia::unit_testing::perfectly_normal_beast<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, true> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 523
+	[sequoia::unit_testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, false, true> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 525
+	[sequoia::unit_testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, false, true> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 540
+	[sequoia::unit_testing::inefficient_copy<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, true> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 555
+	[sequoia::unit_testing::inefficient_copy_alloc<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, true> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 577
+	[sequoia::unit_testing::doubly_normal_beast<int, double, sequoia::unit_testing::shared_counting_allocator<int, true, false, true>, sequoia::unit_testing::shared_counting_allocator<double, true, false, true> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 506
+	[sequoia::unit_testing::perfectly_normal_beast<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, false> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 508
+	[sequoia::unit_testing::perfectly_normal_beast<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, false> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 523
+	[sequoia::unit_testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, true, false> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 525
+	[sequoia::unit_testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, true, false> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 540
+	[sequoia::unit_testing::inefficient_copy<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, false> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 555
+	[sequoia::unit_testing::inefficient_copy_alloc<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, false> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 577
+	[sequoia::unit_testing::doubly_normal_beast<int, double, sequoia::unit_testing::shared_counting_allocator<int, true, true, false>, sequoia::unit_testing::shared_counting_allocator<double, true, true, false> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 506
+	[sequoia::unit_testing::perfectly_normal_beast<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, true> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 508
+	[sequoia::unit_testing::perfectly_normal_beast<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, true> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 523
+	[sequoia::unit_testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, true, true> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 525
+	[sequoia::unit_testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, true, true> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 540
+	[sequoia::unit_testing::inefficient_copy<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, true> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 555
+	[sequoia::unit_testing::inefficient_copy_alloc<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, true> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 577
+	[sequoia::unit_testing::doubly_normal_beast<int, double, sequoia::unit_testing::shared_counting_allocator<int, true, true, true>, sequoia::unit_testing::shared_counting_allocator<double, true, true, true> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 597
+	[sequoia::unit_testing::perfectly_normal_beast<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, false> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 597
+	[sequoia::unit_testing::perfectly_normal_beast<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, true> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 597
+	[sequoia::unit_testing::perfectly_normal_beast<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, false> >]
+
+	False Positive Failure:
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 597
+	[sequoia::unit_testing::perfectly_normal_beast<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, true> >]
 

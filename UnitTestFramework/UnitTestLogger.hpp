@@ -116,20 +116,26 @@ namespace sequoia::unit_testing
         if(!logger.depth())
         {
           const bool failure{
-            ((Mode == test_mode::false_positive) && !logger.failures()) || ((Mode != test_mode::false_positive) && logger.failures())
+               ((Mode == test_mode::false_positive) && !logger.failures())
+            || ((Mode != test_mode::false_positive) &&  logger.failures())
+          };
+
+          auto messageMaker{
+            [&logger](){
+              return combine_messages("\tFalse Positive Failure:", logger.current_message(), "\n");
+            }
           };
 
           if(failure)
           {
-            auto message{
-              [&logger](){
-                return (Mode == test_mode::false_positive)
-                  ? combine_messages("\tFalse Positive Failure:", logger.current_message(), "\n") : "";                
-              }
-            };
-
-            logger.log_top_level_failure(message());
+            logger.log_top_level_failure((Mode == test_mode::false_positive) ? messageMaker() : "");
           }
+          else if constexpr(Mode == test_mode::false_negative)
+          {
+            logger.append_to_versioned_output(messageMaker().append("\n"));
+          }
+
+          
           logger.reset_failures();
 
           if(auto file{output_manager::recovery_file()}; !file.empty())
@@ -279,6 +285,11 @@ namespace sequoia::unit_testing
     void current_message(std::string_view message)
     {
       m_CurrentMessage = message;
+    }
+
+    void append_to_versioned_output(std::string message)
+    {
+      m_VersionedOutput.append(message);
     }
   };
 
