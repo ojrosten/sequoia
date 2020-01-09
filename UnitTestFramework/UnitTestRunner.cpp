@@ -159,10 +159,23 @@ namespace sequoia::unit_testing
     return (std::to_string(n) += ((n==1) ? " was" : " were")) += " provided\n";
   }
 
-  void unit_test_runner::check_zero_args(std::string_view message, const arg_list& argList)
+  argument_error unit_test_runner::generate_argument_error(std::string_view option, const arg_list& argList, const std::size_t num, std::string_view expectedArgs)
+  {
+    std::string mess{error(option).append(" requires ").append(std::to_string(num) + " argument")};
+    if(num != 1) mess.append("s");
+
+    if(!expectedArgs.empty())
+      mess.append(" [" + std::string{expectedArgs} + "]");
+
+    mess.append(", but ").append(report_arg_num(argList.size()));
+
+    return argument_error{mess};
+  }
+
+  void unit_test_runner::check_zero_args(std::string_view option, const arg_list& argList)
   {
     if(!argList.empty())
-      throw argument_error{error(message).append(" requires no arguments, but ").append(report_arg_num(argList.size()))};
+      throw generate_argument_error(option, argList, 0, "");
   }
 
   void unit_test_runner::replace_all(std::string& text, std::string_view from, const std::string& to)
@@ -313,7 +326,8 @@ namespace sequoia::unit_testing
         auto found{m_FunctionMap.find(key)};
         if(found != m_FunctionMap.end())
         {
-          found->second(remainingArgs);
+          auto [option, fn]{*found};
+          fn(option, remainingArgs);
         }
         else
         {
@@ -334,51 +348,57 @@ namespace sequoia::unit_testing
 
   void unit_test_runner::build_map()
   {
-    m_FunctionMap.emplace("test", [this](const arg_list& argList) {          
+    m_FunctionMap.emplace("test", [this](std::string_view option, const arg_list& argList) {          
         if(argList.size() == 1)
         {
           m_SpecificTests.emplace(argList.front(), false);
         }
         else
         {
-          throw argument_error{error("'test' requires one argument [test_name], but ").append(report_arg_num(argList.size()))};
+          throw generate_argument_error(option, argList, 1, "test_name");
         }
       }
     );
 
-    m_FunctionMap.emplace("create", [this](const arg_list& argList) {          
+    m_FunctionMap.emplace("create", [this](std::string_view option, const arg_list& argList) {          
         if(argList.size() == 2)
         {          
           m_NewFiles.push_back(nascent_test{argList[0], argList[1]});
         }
         else
         {
-          throw argument_error{error("'create' requires two arguments [directory, class_name], but ").append(report_arg_num(argList.size()))};
+          throw generate_argument_error(option, argList, 2, "directory, class_name");
         }
       }
     );
 
-    m_FunctionMap.emplace("-async", [this](const arg_list& argList) {
-        check_zero_args("-asyn", argList);
+    m_FunctionMap.emplace("--async", [this](std::string_view option, const arg_list& argList) {
+        check_zero_args(option, argList);
         m_Asynchronous = true;
       }
     );
 
-    m_FunctionMap.emplace("-verbose", [this](const arg_list& argList) {
-        check_zero_args("-verbose", argList);
+    m_FunctionMap.emplace("--verbose", [this](std::string_view option, const arg_list& argList) {
+        check_zero_args(option, argList);
         m_Verbose = true;
       }
     );
 
-    m_FunctionMap.emplace("-pause", [this](const arg_list& argList) {
-        check_zero_args("-pause", argList);
+    m_FunctionMap.emplace("--pause", [this](std::string_view option, const arg_list& argList) {
+        check_zero_args(option, argList);
         m_Pause = true;
       }
     );
 
-    m_FunctionMap.emplace("-recovery", [](const arg_list& argList) {
-        check_zero_args("-recovery", argList);
+    m_FunctionMap.emplace("--recovery", [](std::string_view option, const arg_list& argList) {
+        check_zero_args(option, argList);
         output_manager::recovery_file("../output/Recovery/Recovery.txt");
+      }
+    );
+
+    m_FunctionMap.emplace("--nofiles", [this](std::string_view option, const arg_list& argList) {
+        check_zero_args(option, argList);
+        m_WriteFiles = false;
       }
     );
   }
@@ -542,7 +562,7 @@ namespace sequoia::unit_testing
         for(auto& family : m_Families)
         {
           std::cout << family.name() << ":\n";
-          summary += process_family(family.execute());
+          summary += process_family(family.execute(m_WriteFiles));
         }
       }
       else
@@ -552,7 +572,8 @@ namespace sequoia::unit_testing
 
         for(auto& family : m_Families)
         {
-          results.emplace_back(family.name(), std::async([&family](){ return family.execute(); }));
+          results.emplace_back(family.name(),
+            std::async([&family, write{m_WriteFiles}](){ return family.execute(write); }));
         }
 
         for(auto& res : results)

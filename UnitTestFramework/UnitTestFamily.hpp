@@ -25,17 +25,17 @@ namespace sequoia::unit_testing
       register_tests(std::forward<Tests>(tests)...);
     }
 
-    std::vector<log_summary> execute()
+    std::vector<log_summary> execute(const bool writeFiles)
     {
       std::vector<log_summary> summaries{};
-      bool write{};
+      bool dataToWrite{};
       for(auto& pTest : m_Tests)
       {
         summaries.push_back(pTest->execute());
-        if(!summaries.back().versioned_output().empty()) write = true;
+        if(!summaries.back().versioned_output().empty()) dataToWrite = true;
       }
 
-      if(write)
+      if(writeFiles && dataToWrite)
       {
         if(auto filename{false_positive_filename()}; !filename.empty())
         {

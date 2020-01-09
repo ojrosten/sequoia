@@ -84,11 +84,11 @@ namespace sequoia::unit_testing
     const static std::map<std::string, std::size_t> s_ArgCount;
     
     std::vector<test_family> m_Families;
-    std::map<std::string, std::function<void (const arg_list&)>> m_FunctionMap;
+    std::map<std::string, std::function<void (std::string_view, const arg_list&)>> m_FunctionMap;
     std::map<std::string, bool> m_SpecificTests{};
     std::vector<nascent_test> m_NewFiles{};
     
-    bool m_Asynchronous{}, m_Verbose{}, m_Pause{};
+    bool m_Asynchronous{}, m_Verbose{}, m_Pause{}, m_WriteFiles{true};
 
     const static std::array<std::string, 5> st_TestNameStubs;
 
@@ -114,7 +114,9 @@ namespace sequoia::unit_testing
 
     static std::string report_arg_num(const std::size_t n);
 
-    static void check_zero_args(std::string_view message, const arg_list& argList);
+    static argument_error generate_argument_error(std::string_view option, const arg_list& argList, const std::size_t num, std::string_view expectedArgs);
+
+    static void check_zero_args(std::string_view option, const arg_list& argList);
 
     static void replace_all(std::string& text, std::string_view from, const std::string& to);
 
