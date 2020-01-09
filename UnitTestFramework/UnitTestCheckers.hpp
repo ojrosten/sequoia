@@ -116,8 +116,8 @@ namespace sequoia
           auto message{messageGenerator("==", "false")};
           if constexpr(!delegate)
           {
-            message.append("\tPredicted: " + to_string(prediction) + "\n");
-            message.append("\tObtained : " + to_string(value) + "\n\n");
+            message.append("\tObtained : " + to_string(value) + "\n");
+            message.append("\tPredicted: " + to_string(prediction) + "\n\n");
           }
           logger.log_failure(message);
         }

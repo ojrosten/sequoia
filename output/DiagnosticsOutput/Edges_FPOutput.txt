@@ -12,8 +12,8 @@
 	Differing target indices Target node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 44:
@@ -30,9 +30,9 @@
 	Differing target indices Target node incorrect
 	[unsigned char]
 	operator== returned false
-	Predicted: ÿ
 	Obtained : 
 
+	Predicted: ÿ
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 54:
@@ -49,8 +49,8 @@
 	Differing targets, identical weights Target node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 55:
@@ -67,8 +67,8 @@
 	Differing targets, identical weights Target node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 56:
@@ -85,8 +85,8 @@
 	Identical targets, differeing weights Weight incorrect
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 57:
@@ -103,184 +103,184 @@
 	Identical targets, differeing weights Weight incorrect
 	[int]
 	operator== returned false
-	Predicted: 6
 	Obtained : 5
-
-
-	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 58:
-	Differing targets and weights
-	[sequoia::maths::partial_edge<int, sequoia::data_sharing::independent, sequoia::utilities::protective_wrapper<int, false>, unsigned long>]
-	operator== returned false
-
-	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 58:
-	Differing targets and weights
-	[sequoia::maths::partial_edge<int, sequoia::data_sharing::independent, sequoia::utilities::protective_wrapper<int, false>, unsigned long>]
-	operator!= returned true
-
-	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 58:
-	Differing targets and weights Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Predicted: 1
-	Obtained : 0
-
-
-	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 58:
-	Differing targets and weights Weight incorrect
-	[int]
-	operator== returned false
-	Predicted: 1
-	Obtained : 0
-
-
-	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 59:
-	Differing targets and weights
-	[sequoia::maths::partial_edge<int, sequoia::data_sharing::independent, sequoia::utilities::protective_wrapper<int, false>, unsigned long>]
-	operator== returned false
-
-	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 59:
-	Differing targets and weights
-	[sequoia::maths::partial_edge<int, sequoia::data_sharing::independent, sequoia::utilities::protective_wrapper<int, false>, unsigned long>]
-	operator!= returned true
-
-	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 59:
-	Differing targets and weights Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Predicted: 2
-	Obtained : 0
-
-
-	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 59:
-	Differing targets and weights Weight incorrect
-	[int]
-	operator== returned false
-	Predicted: 3
-	Obtained : 1
-
-
-	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 69:
-	Differing targets, identical weights
-	[sequoia::maths::partial_edge<int, sequoia::data_sharing::shared, sequoia::utilities::protective_wrapper<int, false>, unsigned long>]
-	operator== returned false
-
-	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 69:
-	Differing targets, identical weights
-	[sequoia::maths::partial_edge<int, sequoia::data_sharing::shared, sequoia::utilities::protective_wrapper<int, false>, unsigned long>]
-	operator!= returned true
-
-	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 69:
-	Differing targets, identical weights Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Predicted: 1
-	Obtained : 0
-
-
-	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 70:
-	Differing targets, identical weights
-	[sequoia::maths::partial_edge<int, sequoia::data_sharing::shared, sequoia::utilities::protective_wrapper<int, false>, unsigned long>]
-	operator== returned false
-
-	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 70:
-	Differing targets, identical weights
-	[sequoia::maths::partial_edge<int, sequoia::data_sharing::shared, sequoia::utilities::protective_wrapper<int, false>, unsigned long>]
-	operator!= returned true
-
-	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 70:
-	Differing targets, identical weights Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Predicted: 1
-	Obtained : 0
-
-
-	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 71:
-	Identical targets, differeing weights
-	[sequoia::maths::partial_edge<int, sequoia::data_sharing::shared, sequoia::utilities::protective_wrapper<int, false>, unsigned long>]
-	operator== returned false
-
-	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 71:
-	Identical targets, differeing weights
-	[sequoia::maths::partial_edge<int, sequoia::data_sharing::shared, sequoia::utilities::protective_wrapper<int, false>, unsigned long>]
-	operator!= returned true
-
-	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 71:
-	Identical targets, differeing weights Weight incorrect
-	[int]
-	operator== returned false
-	Predicted: 1
-	Obtained : 0
-
-
-	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 72:
-	Identical targets, differeing weights
-	[sequoia::maths::partial_edge<int, sequoia::data_sharing::shared, sequoia::utilities::protective_wrapper<int, false>, unsigned long>]
-	operator== returned false
-
-	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 72:
-	Identical targets, differeing weights
-	[sequoia::maths::partial_edge<int, sequoia::data_sharing::shared, sequoia::utilities::protective_wrapper<int, false>, unsigned long>]
-	operator!= returned true
-
-	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 72:
-	Identical targets, differeing weights Weight incorrect
-	[int]
-	operator== returned false
 	Predicted: 6
-	Obtained : 5
 
 
-	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 73:
+	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 58:
 	Differing targets and weights
-	[sequoia::maths::partial_edge<int, sequoia::data_sharing::shared, sequoia::utilities::protective_wrapper<int, false>, unsigned long>]
+	[sequoia::maths::partial_edge<int, sequoia::data_sharing::independent, sequoia::utilities::protective_wrapper<int, false>, unsigned long>]
 	operator== returned false
 
-	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 73:
+	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 58:
 	Differing targets and weights
-	[sequoia::maths::partial_edge<int, sequoia::data_sharing::shared, sequoia::utilities::protective_wrapper<int, false>, unsigned long>]
+	[sequoia::maths::partial_edge<int, sequoia::data_sharing::independent, sequoia::utilities::protective_wrapper<int, false>, unsigned long>]
 	operator!= returned true
 
-	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 73:
+	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 58:
 	Differing targets and weights Target node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
-	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 73:
+	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 58:
 	Differing targets and weights Weight incorrect
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
-	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 74:
+	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 59:
 	Differing targets and weights
-	[sequoia::maths::partial_edge<int, sequoia::data_sharing::shared, sequoia::utilities::protective_wrapper<int, false>, unsigned long>]
+	[sequoia::maths::partial_edge<int, sequoia::data_sharing::independent, sequoia::utilities::protective_wrapper<int, false>, unsigned long>]
 	operator== returned false
 
-	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 74:
+	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 59:
 	Differing targets and weights
-	[sequoia::maths::partial_edge<int, sequoia::data_sharing::shared, sequoia::utilities::protective_wrapper<int, false>, unsigned long>]
+	[sequoia::maths::partial_edge<int, sequoia::data_sharing::independent, sequoia::utilities::protective_wrapper<int, false>, unsigned long>]
 	operator!= returned true
 
-	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 74:
+	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 59:
 	Differing targets and weights Target node incorrect
 	[unsigned long]
 	operator== returned false
+	Obtained : 0
 	Predicted: 2
+
+
+	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 59:
+	Differing targets and weights Weight incorrect
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 3
+
+
+	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 69:
+	Differing targets, identical weights
+	[sequoia::maths::partial_edge<int, sequoia::data_sharing::shared, sequoia::utilities::protective_wrapper<int, false>, unsigned long>]
+	operator== returned false
+
+	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 69:
+	Differing targets, identical weights
+	[sequoia::maths::partial_edge<int, sequoia::data_sharing::shared, sequoia::utilities::protective_wrapper<int, false>, unsigned long>]
+	operator!= returned true
+
+	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 69:
+	Differing targets, identical weights Target node incorrect
+	[unsigned long]
+	operator== returned false
 	Obtained : 0
+	Predicted: 1
+
+
+	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 70:
+	Differing targets, identical weights
+	[sequoia::maths::partial_edge<int, sequoia::data_sharing::shared, sequoia::utilities::protective_wrapper<int, false>, unsigned long>]
+	operator== returned false
+
+	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 70:
+	Differing targets, identical weights
+	[sequoia::maths::partial_edge<int, sequoia::data_sharing::shared, sequoia::utilities::protective_wrapper<int, false>, unsigned long>]
+	operator!= returned true
+
+	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 70:
+	Differing targets, identical weights Target node incorrect
+	[unsigned long]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+
+	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 71:
+	Identical targets, differeing weights
+	[sequoia::maths::partial_edge<int, sequoia::data_sharing::shared, sequoia::utilities::protective_wrapper<int, false>, unsigned long>]
+	operator== returned false
+
+	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 71:
+	Identical targets, differeing weights
+	[sequoia::maths::partial_edge<int, sequoia::data_sharing::shared, sequoia::utilities::protective_wrapper<int, false>, unsigned long>]
+	operator!= returned true
+
+	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 71:
+	Identical targets, differeing weights Weight incorrect
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+
+	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 72:
+	Identical targets, differeing weights
+	[sequoia::maths::partial_edge<int, sequoia::data_sharing::shared, sequoia::utilities::protective_wrapper<int, false>, unsigned long>]
+	operator== returned false
+
+	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 72:
+	Identical targets, differeing weights
+	[sequoia::maths::partial_edge<int, sequoia::data_sharing::shared, sequoia::utilities::protective_wrapper<int, false>, unsigned long>]
+	operator!= returned true
+
+	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 72:
+	Identical targets, differeing weights Weight incorrect
+	[int]
+	operator== returned false
+	Obtained : 5
+	Predicted: 6
+
+
+	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 73:
+	Differing targets and weights
+	[sequoia::maths::partial_edge<int, sequoia::data_sharing::shared, sequoia::utilities::protective_wrapper<int, false>, unsigned long>]
+	operator== returned false
+
+	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 73:
+	Differing targets and weights
+	[sequoia::maths::partial_edge<int, sequoia::data_sharing::shared, sequoia::utilities::protective_wrapper<int, false>, unsigned long>]
+	operator!= returned true
+
+	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 73:
+	Differing targets and weights Target node incorrect
+	[unsigned long]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+
+	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 73:
+	Differing targets and weights Weight incorrect
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+
+	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 74:
+	Differing targets and weights
+	[sequoia::maths::partial_edge<int, sequoia::data_sharing::shared, sequoia::utilities::protective_wrapper<int, false>, unsigned long>]
+	operator== returned false
+
+	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 74:
+	Differing targets and weights
+	[sequoia::maths::partial_edge<int, sequoia::data_sharing::shared, sequoia::utilities::protective_wrapper<int, false>, unsigned long>]
+	operator!= returned true
+
+	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 74:
+	Differing targets and weights Target node incorrect
+	[unsigned long]
+	operator== returned false
+	Obtained : 0
+	Predicted: 2
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 74:
 	Differing targets and weights Weight incorrect
 	[int]
 	operator== returned false
-	Predicted: 3
 	Obtained : 1
+	Predicted: 3
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 84:
@@ -297,8 +297,8 @@
 	Differing targets, identical complementary indices Target node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 85:
@@ -315,8 +315,8 @@
 	Differing targets, identical complementary indices Target node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 86:
@@ -333,8 +333,8 @@
 	Identical targets, differeing complementary indices Weight incorrect
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 87:
@@ -351,8 +351,8 @@
 	Identical targets, differeing complementary indices Weight incorrect
 	[int]
 	operator== returned false
-	Predicted: 6
 	Obtained : 5
+	Predicted: 6
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 88:
@@ -369,16 +369,16 @@
 	Differing targets and complementary indices Target node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 88:
 	Differing targets and complementary indices Weight incorrect
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 89:
@@ -395,52 +395,52 @@
 	Differing targets and complementary indices Target node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 89:
 	Differing targets and complementary indices Weight incorrect
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
-
-
-	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 99:
-	Differing targets, identical complementary indices and weights
-	[sequoia::maths::embedded_partial_edge<double, sequoia::data_sharing::independent, sequoia::utilities::protective_wrapper<double, false>, unsigned long>]
-	operator== returned false
-
-	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 99:
-	Differing targets, identical complementary indices and weights
-	[sequoia::maths::embedded_partial_edge<double, sequoia::data_sharing::independent, sequoia::utilities::protective_wrapper<double, false>, unsigned long>]
-	operator!= returned true
-
-	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 99:
-	Differing targets, identical complementary indices and weights Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Predicted: 1
-	Obtained : 0
-
-
-	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 100:
-	Differing targets, identical complementary indices and weights
-	[sequoia::maths::embedded_partial_edge<double, sequoia::data_sharing::independent, sequoia::utilities::protective_wrapper<double, false>, unsigned long>]
-	operator== returned false
-
-	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 100:
-	Differing targets, identical complementary indices and weights
-	[sequoia::maths::embedded_partial_edge<double, sequoia::data_sharing::independent, sequoia::utilities::protective_wrapper<double, false>, unsigned long>]
-	operator!= returned true
-
-	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 100:
-	Differing targets, identical complementary indices and weights Target node incorrect
-	[unsigned long]
-	operator== returned false
 	Predicted: 0
+
+
+	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 99:
+	Differing targets, identical complementary indices and weights
+	[sequoia::maths::embedded_partial_edge<double, sequoia::data_sharing::independent, sequoia::utilities::protective_wrapper<double, false>, unsigned long>]
+	operator== returned false
+
+	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 99:
+	Differing targets, identical complementary indices and weights
+	[sequoia::maths::embedded_partial_edge<double, sequoia::data_sharing::independent, sequoia::utilities::protective_wrapper<double, false>, unsigned long>]
+	operator!= returned true
+
+	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 99:
+	Differing targets, identical complementary indices and weights Target node incorrect
+	[unsigned long]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+
+	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 100:
+	Differing targets, identical complementary indices and weights
+	[sequoia::maths::embedded_partial_edge<double, sequoia::data_sharing::independent, sequoia::utilities::protective_wrapper<double, false>, unsigned long>]
+	operator== returned false
+
+	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 100:
+	Differing targets, identical complementary indices and weights
+	[sequoia::maths::embedded_partial_edge<double, sequoia::data_sharing::independent, sequoia::utilities::protective_wrapper<double, false>, unsigned long>]
+	operator!= returned true
+
+	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 100:
+	Differing targets, identical complementary indices and weights Target node incorrect
+	[unsigned long]
+	operator== returned false
 	Obtained : 1
+	Predicted: 0
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 101:
@@ -457,8 +457,8 @@
 	Differing targets, identical complementary indices and weights Target node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 103:
@@ -475,8 +475,8 @@
 	Differing complementary indices, identical targets and weights Complementary index incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 104:
@@ -493,8 +493,8 @@
 	Differing complementary indices, identical targets and weights Complementary index incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 105:
@@ -511,8 +511,8 @@
 	Differing complementary indices, identical targets and weights Complementary index incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 107:
@@ -529,8 +529,8 @@
 	Differing weights, identical targets and complementary indices Weight incorrect
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 108:
@@ -547,8 +547,8 @@
 	Differing weights, identical targets and complementary indices Weight incorrect
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 109:
@@ -565,8 +565,8 @@
 	Differing weights, identical targets and complementary indices Weight incorrect
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 111:
@@ -583,16 +583,16 @@
 	Differing targets and complementary indices, identical weights Target node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 111:
 	Differing targets and complementary indices, identical weights Complementary index incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 112:
@@ -609,16 +609,16 @@
 	Differing targets and weights, identical complementary indices Target node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 2
 	Obtained : 0
+	Predicted: 2
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 112:
 	Differing targets and weights, identical complementary indices Weight incorrect
 	[double]
 	operator== returned false
-	Predicted: 5
 	Obtained : 6
+	Predicted: 5
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 113:
@@ -635,16 +635,16 @@
 	Differing complementary indices and weights, identical targets Weight incorrect
 	[double]
 	operator== returned false
-	Predicted: 5
 	Obtained : 4
+	Predicted: 5
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 113:
 	Differing complementary indices and weights, identical targets Complementary index incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 3
 	Obtained : 1
+	Predicted: 3
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 115:
@@ -661,24 +661,24 @@
 	Differing targets, complementary indices and weights Target node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 115:
 	Differing targets, complementary indices and weights Weight incorrect
 	[double]
 	operator== returned false
-	Predicted: 5
 	Obtained : 2
+	Predicted: 5
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 115:
 	Differing targets, complementary indices and weights Complementary index incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 125:
@@ -695,8 +695,8 @@
 	Differing targets, identical complementary indices and weights Target node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 126:
@@ -713,8 +713,8 @@
 	Differing targets, identical complementary indices and weights Target node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 127:
@@ -731,8 +731,8 @@
 	Differing targets, identical complementary indices and weights Target node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 129:
@@ -749,8 +749,8 @@
 	Differing complementary indices, identical targets and weights Complementary index incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 130:
@@ -767,8 +767,8 @@
 	Differing complementary indices, identical targets and weights Complementary index incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 131:
@@ -785,8 +785,8 @@
 	Differing complementary indices, identical targets and weights Complementary index incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 133:
@@ -803,8 +803,8 @@
 	Differing weights, identical targets and complementary indices Weight incorrect
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 134:
@@ -821,8 +821,8 @@
 	Differing weights, identical targets and complementary indices Weight incorrect
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 135:
@@ -839,8 +839,8 @@
 	Differing weights, identical targets and complementary indices Weight incorrect
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 137:
@@ -857,16 +857,16 @@
 	Differing targets and complementary indices, identical weights Target node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 137:
 	Differing targets and complementary indices, identical weights Complementary index incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 138:
@@ -883,16 +883,16 @@
 	Differing targets and weights, identical complementary indices Target node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 2
 	Obtained : 0
+	Predicted: 2
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 138:
 	Differing targets and weights, identical complementary indices Weight incorrect
 	[double]
 	operator== returned false
-	Predicted: 5
 	Obtained : 6
+	Predicted: 5
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 139:
@@ -909,16 +909,16 @@
 	Differing complementary indices and weights, identical targets Weight incorrect
 	[double]
 	operator== returned false
-	Predicted: 5
 	Obtained : 4
+	Predicted: 5
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 139:
 	Differing complementary indices and weights, identical targets Complementary index incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 3
 	Obtained : 1
+	Predicted: 3
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 141:
@@ -935,24 +935,24 @@
 	Differing targets, complementary indices and weights Target node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 141:
 	Differing targets, complementary indices and weights Weight incorrect
 	[double]
 	operator== returned false
-	Predicted: 5
 	Obtained : 2
+	Predicted: 5
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 141:
 	Differing targets, complementary indices and weights Complementary index incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 151:
@@ -969,8 +969,8 @@
 	Differing targets, identical soures Target node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 152:
@@ -987,8 +987,8 @@
 	Differing targets, identical soures Target node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 154:
@@ -1005,8 +1005,8 @@
 	Differing soures, identical targets Host node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 155:
@@ -1023,8 +1023,8 @@
 	Differing soures, identical targets Host node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 157:
@@ -1041,16 +1041,16 @@
 	Differing soures and targets Target node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 157:
 	Differing soures and targets Host node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 159:
@@ -1067,8 +1067,8 @@
 	Differing inversion flag Inversion flag incorrect
 	[bool]
 	operator== returned false
-	Predicted: false
 	Obtained : true
+	Predicted: false
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 169:
@@ -1085,8 +1085,8 @@
 	Differing targets, identical soures and weight Target node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 170:
@@ -1103,8 +1103,8 @@
 	Differing targets, identical soure and weights Host node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 171:
@@ -1121,8 +1121,8 @@
 	Differing targets, identical soure and weights Host node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 172:
@@ -1139,8 +1139,8 @@
 	Differing inversion flag Inversion flag incorrect
 	[bool]
 	operator== returned false
-	Predicted: false
 	Obtained : true
+	Predicted: false
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 174:
@@ -1157,8 +1157,8 @@
 	Differing soures, identical targets and weights Target node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 175:
@@ -1175,8 +1175,8 @@
 	Differing soures, identical targets and weights Target node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 176:
@@ -1193,8 +1193,8 @@
 	Differing soures, identical targets and weights Target node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 178:
@@ -1211,8 +1211,8 @@
 	Differing weights, identical targets and soures Weight incorrect
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 179:
@@ -1229,8 +1229,8 @@
 	Differing weights, identical targets and soures Weight incorrect
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 180:
@@ -1247,8 +1247,8 @@
 	Differing weights, identical targets and soures Weight incorrect
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 182:
@@ -1265,16 +1265,16 @@
 	Differing targets and soures, identical weights Target node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 182:
 	Differing targets and soures, identical weights Host node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 183:
@@ -1291,16 +1291,16 @@
 	Differing targets and weights, identical soures Weight incorrect
 	[double]
 	operator== returned false
-	Predicted: 5
 	Obtained : 6
+	Predicted: 5
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 183:
 	Differing targets and weights, identical soures Host node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 2
 	Obtained : 0
+	Predicted: 2
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 184:
@@ -1317,16 +1317,16 @@
 	Differing soures and weights, identical targets Target node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 3
 	Obtained : 1
+	Predicted: 3
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 184:
 	Differing soures and weights, identical targets Weight incorrect
 	[double]
 	operator== returned false
-	Predicted: 5
 	Obtained : 4
+	Predicted: 5
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 186:
@@ -1343,24 +1343,24 @@
 	Differing targets, soures and weights Target node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 186:
 	Differing targets, soures and weights Weight incorrect
 	[double]
 	operator== returned false
-	Predicted: 5
 	Obtained : 2
+	Predicted: 5
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 186:
 	Differing targets, soures and weights Host node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 196:
@@ -1377,8 +1377,8 @@
 	Differing targets, identical soures and complementary indices Target node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 197:
@@ -1395,8 +1395,8 @@
 	Differing targets, identical soure and complementary indices Host node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 198:
@@ -1413,8 +1413,8 @@
 	Differing targets, identical soure and complementary indices Host node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 199:
@@ -1431,8 +1431,8 @@
 	Differing inversion flag Inversion flag incorrect
 	[bool]
 	operator== returned false
-	Predicted: false
 	Obtained : true
+	Predicted: false
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 201:
@@ -1449,8 +1449,8 @@
 	Differing soures, identical targets and complementary indices Target node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 202:
@@ -1467,8 +1467,8 @@
 	Differing soures, identical targets and complementary indices Target node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 203:
@@ -1485,8 +1485,8 @@
 	Differing soures, identical targets and complementary indices Target node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 205:
@@ -1503,8 +1503,8 @@
 	Differing complementary indicess, identical targets and soures Complementary index incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 206:
@@ -1521,8 +1521,8 @@
 	Differing complementary indicess, identical targets and soures Complementary index incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 207:
@@ -1539,8 +1539,8 @@
 	Differing complementary indicess, identical targets and soures Complementary index incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 209:
@@ -1557,16 +1557,16 @@
 	Differing targets and soures, identical complementary indices Target node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 209:
 	Differing targets and soures, identical complementary indices Host node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 210:
@@ -1583,16 +1583,16 @@
 	Differing targets and complementary indices, identical soures Complementary index incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 5
 	Obtained : 6
+	Predicted: 5
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 210:
 	Differing targets and complementary indices, identical soures Host node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 2
 	Obtained : 0
+	Predicted: 2
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 211:
@@ -1609,16 +1609,16 @@
 	Differing soures and complementary indices, identical targets Target node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 3
 	Obtained : 1
+	Predicted: 3
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 211:
 	Differing soures and complementary indices, identical targets Complementary index incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 5
 	Obtained : 4
+	Predicted: 5
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 213:
@@ -1635,24 +1635,24 @@
 	Differing targets, soures and complementary indicess Target node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 213:
 	Differing targets, soures and complementary indicess Complementary index incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 213:
 	Differing targets, soures and complementary indicess Host node incorrect
 	[unsigned long]
 	operator== returned false
+	Obtained : 0
 	Predicted: 2
-	Obtained : 0
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 223:
@@ -1669,8 +1669,8 @@
 	Differing targets, identical soures, complementary indices and weights Target node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 224:
@@ -1687,8 +1687,8 @@
 	Differing soures, identical targets, complementary indices and weights Host node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 225:
@@ -1705,8 +1705,8 @@
 	Differing complementary indices, identical soures, targets and weights Complementary index incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 226:
@@ -1723,8 +1723,8 @@
 	Differing weights, identical soures, targets, complementary indices Weight incorrect
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 227:
@@ -1741,8 +1741,8 @@
 	Differing inversion flag Inversion flag incorrect
 	[bool]
 	operator== returned false
-	Predicted: false
 	Obtained : true
+	Predicted: false
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 238:
@@ -1759,8 +1759,8 @@
 	Differing targets, identical soures, complementary indices and weights Target node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 239:
@@ -1777,8 +1777,8 @@
 	Differing soures, identical targets, complementary indices and weights Host node incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 240:
@@ -1795,8 +1795,8 @@
 	Differing complementary indices, identical soures, targets and weights Complementary index incorrect
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 241:
@@ -1813,8 +1813,8 @@
 	Differing weights, identical soures, targets, complementary indices Weight incorrect
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/EdgeTestingDiagnostics.cpp, Line 242:
@@ -1831,7 +1831,7 @@
 	Differing inversion flag Inversion flag incorrect
 	[bool]
 	operator== returned false
-	Predicted: false
 	Obtained : true
+	Predicted: false
 
 

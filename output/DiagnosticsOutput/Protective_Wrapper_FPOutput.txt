@@ -9,8 +9,8 @@
 	Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 24
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 32
@@ -32,8 +32,8 @@
 	Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 32 container size wrong
 	[long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 35
@@ -56,8 +56,8 @@
 
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 38
@@ -80,8 +80,8 @@
 
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 46
@@ -95,7 +95,7 @@
 	Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 46
 	[sequoia::unit_testing::data]
 	operator== returned false
-	Predicted: 12
 	Obtained : 00
+	Predicted: 12
 
 

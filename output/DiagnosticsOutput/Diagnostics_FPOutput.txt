@@ -1,22 +1,22 @@
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 29
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 31
 	[int]
 	operator== returned false
-	Predicted: 4
 	Obtained : 5
+	Predicted: 4
 
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 32
 	[double]
 	operator== returned false
-	Predicted: 5.6
 	Obtained : 6.5
+	Predicted: 5.6
 
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 34
@@ -31,8 +31,8 @@
 	Second element of pair is incorrect
 	[double]
 	operator== returned false
-	Predicted: -7.8
 	Obtained : 7.8
+	Predicted: -7.8
 
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 35
@@ -47,8 +47,8 @@
 	First element of pair is incorrect
 	[int]
 	operator== returned false
-	Predicted: -5
 	Obtained : 5
+	Predicted: -5
 
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 37
@@ -63,8 +63,8 @@
 	Element 0 of tuple incorrect
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 4
+	Predicted: 0
 
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 38
@@ -79,8 +79,8 @@
 	Element 1 of tuple incorrect
 	[double]
 	operator== returned false
-	Predicted: 0
 	Obtained : 3.4
+	Predicted: 0
 
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 39
@@ -95,22 +95,22 @@
 	Element 2 of tuple incorrect
 	[float]
 	operator== returned false
-	Predicted: -0
 	Obtained : -9.2
+	Predicted: -0
 
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 41
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 42
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 44:
@@ -142,8 +142,8 @@
 	Empty vector check which should fail container size wrong
 	[long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 52:
@@ -161,8 +161,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 53:
@@ -179,8 +179,8 @@
 	One element vector check which should fail due to differing sizes container size wrong
 	[long]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 54:
@@ -198,8 +198,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 4
 	Obtained : 5
+	Predicted: 4
 
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 55:
@@ -217,8 +217,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 56:
@@ -236,8 +236,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 3.3
 	Obtained : 3.2
+	Predicted: 3.3
 
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 57:
@@ -254,16 +254,16 @@
 	Multi-element vector comparison which should fail due to different sizes container size wrong
 	[long]
 	operator== returned false
-	Predicted: 2
 	Obtained : 3
+	Predicted: 2
 
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 61:
 	Iterators demarcate differing number of elements container size wrong
 	[long]
 	operator== returned false
-	Predicted: 6
 	Obtained : 4
+	Predicted: 6
 
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 62:
@@ -271,8 +271,8 @@
 
 	[float]
 	operator== returned false
-	Predicted: 1.1
 	Obtained : -4.3
+	Predicted: 1.1
 
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 62:
@@ -280,8 +280,8 @@
 
 	[float]
 	operator== returned false
-	Predicted: -4.3
 	Obtained : 2.8
+	Predicted: -4.3
 
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 62:
@@ -289,8 +289,8 @@
 
 	[float]
 	operator== returned false
-	Predicted: 2.8
 	Obtained : 6.2
+	Predicted: 2.8
 
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 62:
@@ -298,24 +298,24 @@
 
 	[float]
 	operator== returned false
-	Predicted: 6.2
 	Obtained : 7.3
+	Predicted: 6.2
 
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 72:
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
-	Fast Task duration: 0.00136151s +- 3 * 8.39431e-05
-	Slow Task duration: 0.00139254s +- 3 * 1.84645e-05 [1.02279; (2, 2)]
+	Fast Task duration: 0.00135358s +- 3 * 7.93404e-05
+	Slow Task duration: 0.00139989s +- 3 * 1.10073e-05 [1.03421; (2, 2)]
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 76:
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
-	Fast Task duration: 0.00134061s +- 3 * 4.10263e-05
-	Slow Task duration: 0.00134045s +- 3 * 5.89126e-05 [0.999881; (2, 3)]
+	Fast Task duration: 0.00133706s +- 3 * 4.5788e-05
+	Slow Task duration: 0.00128512s +- 3 * 0.000110162 [0.96115; (2, 3)]
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 80:
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
-	Fast Task duration: 0.0013651s +- 3 * 5.75918e-05
-	Slow Task duration: 0.00501385s +- 3 * 0.000193368 [3.67289; (2, 2.5)]
+	Fast Task duration: 0.00139483s +- 3 * 3.20033e-06
+	Slow Task duration: 0.00481401s +- 3 * 0.000474208 [3.45133; (2, 2.5)]
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 96
 	[std::__1::tuple<std::__1::vector<std::__1::pair<int, float>, std::__1::allocator<std::__1::pair<int, float> > >, std::__1::set<double, std::__1::less<double>, std::__1::allocator<double> >, std::__1::complex<double> >]
@@ -353,8 +353,8 @@
 	First element of pair is incorrect
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 101
@@ -380,280 +380,280 @@
 
 	[double]
 	operator== returned false
-	Predicted: 3.4
 	Obtained : 3.3
+	Predicted: 3.4
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 107:
 	Broken equality Equality operator is inconsistent
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 108:
 	Broken inequality Equality operator is inconsistent
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 109:
 	Broken copy Copy constructor (x)
 	[sequoia::unit_testing::broken_copy<int, std::__1::allocator<int> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 109:
 	Broken copy Equality operator
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 109:
 	Broken copy Move assignment
 	[sequoia::unit_testing::broken_copy<int, std::__1::allocator<int> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 109:
 	Broken copy Swap
 	[sequoia::unit_testing::broken_copy<int, std::__1::allocator<int> >]
 	operator== returned false
+	Obtained : 
 	Predicted: 2 
-	Obtained : 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 109:
 	Broken copy Swap
 	[sequoia::unit_testing::broken_copy<int, std::__1::allocator<int> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 110:
 	Broken move Move constructor
 	[sequoia::unit_testing::broken_move<int, std::__1::allocator<int> >]
 	operator== returned false
-	Predicted: 2 
 	Obtained : 
+	Predicted: 2 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 111:
 	Broken copy assignment Copy assignment (from y)
 	[sequoia::unit_testing::broken_copy_assignment<int, std::__1::allocator<int> >]
 	operator== returned false
-	Predicted: 2 
 	Obtained : 1 
+	Predicted: 2 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 111:
 	Broken copy assignment Inequality operator
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 111:
 	Broken copy assignment Move constructor
 	[sequoia::unit_testing::broken_copy_assignment<int, std::__1::allocator<int> >]
 	operator== returned false
-	Predicted: 2 
 	Obtained : 1 
+	Predicted: 2 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 112:
 	Broken move assignment Move assignment
 	[sequoia::unit_testing::broken_move_assignment<int, std::__1::allocator<int> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 112:
 	Broken move assignment Swap
 	[sequoia::unit_testing::broken_move_assignment<int, std::__1::allocator<int> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
-
-
-	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 113:
-	Broken swap Swap
-	[sequoia::unit_testing::broken_swap<int, std::__1::allocator<int> >]
-	operator== returned false
-	Predicted: 2 
-	Obtained : 1 
-
-
-	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 113:
-	Broken swap Swap
-	[sequoia::unit_testing::broken_swap<int, std::__1::allocator<int> >]
-	operator== returned false
 	Predicted: 1 
+
+
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 113:
+	Broken swap Swap
+	[sequoia::unit_testing::broken_swap<int, std::__1::allocator<int> >]
+	operator== returned false
+	Obtained : 1 
+	Predicted: 2 
+
+
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 113:
+	Broken swap Swap
+	[sequoia::unit_testing::broken_swap<int, std::__1::allocator<int> >]
+	operator== returned false
 	Obtained : 2 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 114:
 	Broken copy value semantics Mutation is not doing anything following copy constrution/broken value semantics
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 114:
 	Broken copy value semantics Mutation is not doing anything following copy assignment/ broken value semantics
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 115:
 	Broken copy assignment value semantics Mutation is not doing anything following copy assignment/ broken value semantics
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 116:
 	Broken check invariant Precondition - for checking regular semantics, x and y are assumed to be different
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 118:
 	Broken equality Equality operator is inconsistent
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 119:
 	Broken inequality Equality operator is inconsistent
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 120:
 	Broken move Move constructor
 	[sequoia::unit_testing::broken_move<int, std::__1::allocator<int> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 120:
 	Broken move Swap
 	[sequoia::unit_testing::broken_move<int, std::__1::allocator<int> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
-
-
-	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 121:
-	Broken move Swap
-	[sequoia::unit_testing::broken_swap<int, std::__1::allocator<int> >]
-	operator== returned false
 	Predicted: 1 
-	Obtained : 2 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 121:
 	Broken move Swap
 	[sequoia::unit_testing::broken_swap<int, std::__1::allocator<int> >]
 	operator== returned false
-	Predicted: 2 
+	Obtained : 2 
+	Predicted: 1 
+
+
+	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 121:
+	Broken move Swap
+	[sequoia::unit_testing::broken_swap<int, std::__1::allocator<int> >]
+	operator== returned false
 	Obtained : 1 
+	Predicted: 2 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 122:
 	Broken move assignment Move assignment
 	[sequoia::unit_testing::broken_move_assignment<int, std::__1::allocator<int> >]
 	operator== returned false
-	Predicted: 2 
 	Obtained : 
+	Predicted: 2 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 122:
 	Broken move assignment Swap
 	[sequoia::unit_testing::broken_move_assignment<int, std::__1::allocator<int> >]
 	operator== returned false
-	Predicted: 2 
 	Obtained : 
+	Predicted: 2 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 123:
 	Broken check invariant Precondition - for checking regular semantics, x and y are assumed to be different
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 124:
 	Broken check invariant Precondition - for checking regular semantics, x and xClone are assumed to be equal
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 125:
 	Broken check invariant Precondition - for checking regular semantics, x and xClone are assumed to be equal
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 161:
 	Broken equality Equality operator is inconsistent
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 169:
 	Broken inequality Equality operator is inconsistent
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
 	Broken copy Copy constructor (x)
 	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, false> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
 	Broken copy Equality operator
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
@@ -662,16 +662,16 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : -1
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
 	Broken copy Move assignment
 	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, false> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
@@ -680,8 +680,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : -1
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
@@ -690,16 +690,16 @@
 	Copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : -1
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
 	Broken copy Move assignment (from y)
 	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, false> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
@@ -708,16 +708,16 @@
 	Move assignment x allocations
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 185:
 	Broken copy alloc Copy-like construction
 	[sequoia::unit_testing::broken_copy_alloc<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, false> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 185:
@@ -726,16 +726,16 @@
 	Para copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 185:
 	Broken copy alloc Move-like construction
 	[sequoia::unit_testing::broken_copy_alloc<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, false> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 185:
@@ -744,16 +744,16 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 193:
 	Broken move Move constructor
 	[sequoia::unit_testing::broken_move<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, false> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 193:
@@ -762,16 +762,16 @@
 	Move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : -3
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 193:
 	Broken move Move-like construction
 	[sequoia::unit_testing::broken_move<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, false> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 193:
@@ -780,16 +780,16 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 201:
 	Broken move alloc Move-like construction
 	[sequoia::unit_testing::broken_move_alloc<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, false> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 201:
@@ -798,8 +798,8 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 209:
@@ -808,16 +808,16 @@
 	Move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 217:
 	Broken copy assignment Copy assignment (from y)
 	[sequoia::unit_testing::broken_copy_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, false> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 1 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 217:
@@ -826,48 +826,48 @@
 	Copy assignment x allocations
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 217:
 	Broken copy assignment Inequality operator
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 217:
 	Broken copy assignment Move constructor
 	[sequoia::unit_testing::broken_copy_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, false> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 1 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 217:
 	Broken copy assignment Copy assignment
 	[sequoia::unit_testing::broken_copy_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, false> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 5 6 1 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 225:
 	Broken move assignment Move assignment
 	[sequoia::unit_testing::broken_move_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, false> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 225:
 	Broken move assignment Move assignment (from y)
 	[sequoia::unit_testing::broken_move_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, false> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 1 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 225:
@@ -876,8 +876,8 @@
 	Move assignment x allocations
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
@@ -886,64 +886,64 @@
 	Copy assignment y allocations
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
 	Broken copy value semantics Mutation is not doing anything following copy constrution/broken value semantics
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
 	Broken copy value semantics Mutation is not doing anything following copy assignment/ broken value semantics
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
 	Broken copy value semantics Mutation is not doing anything following move assignment
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
 	Broken copy value semantics Mutation is not doing anything following move allocation assignment
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 255:
 	Broken copy assignment value semantics Mutation is not doing anything following copy assignment/ broken value semantics
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 255:
 	Broken copy assignment value semantics Mutation is not doing anything following move assignment
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 255:
 	Broken copy assignment value semantics Mutation is not doing anything following move allocation assignment
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 270
@@ -951,8 +951,8 @@
 	Copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 3
 	Obtained : 2
+	Predicted: 3
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 271
@@ -960,8 +960,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 3
 	Obtained : 2
+	Predicted: 3
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 271
@@ -969,8 +969,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 3
 	Obtained : 2
+	Predicted: 3
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 286
@@ -978,16 +978,16 @@
 	Para copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 3
 	Obtained : 2
+	Predicted: 3
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 295:
 	Broken check invariant Precondition - for checking regular semantics, x and y are assumed to be different
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 304:
@@ -996,8 +996,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 304:
@@ -1006,8 +1006,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 308:
@@ -1016,8 +1016,8 @@
 	Copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 308:
@@ -1026,8 +1026,8 @@
 	Para copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 308:
@@ -1036,8 +1036,8 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 318:
@@ -1046,8 +1046,8 @@
 	Copy assignment x allocations
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 318:
@@ -1056,8 +1056,8 @@
 	Move assignment x allocations
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 322:
@@ -1066,8 +1066,8 @@
 	Mutation allocation after move-like construction
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 322:
@@ -1076,8 +1076,8 @@
 	Mutation allocation after move-like construction
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 339:
@@ -1086,8 +1086,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 339:
@@ -1096,8 +1096,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 343:
@@ -1106,8 +1106,8 @@
 	Copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 343:
@@ -1116,8 +1116,8 @@
 	Para copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 343:
@@ -1126,8 +1126,8 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 353:
@@ -1136,8 +1136,8 @@
 	Copy assignment x allocations
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 353:
@@ -1146,8 +1146,8 @@
 	Move assignment x allocations
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 357:
@@ -1156,8 +1156,8 @@
 	Mutation allocation after move-like construction
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 357:
@@ -1166,40 +1166,40 @@
 	Mutation allocation after move-like construction
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 161:
 	Broken equality Equality operator is inconsistent
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 169:
 	Broken inequality Equality operator is inconsistent
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
 	Broken copy Copy constructor (x)
 	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, true> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
 	Broken copy Equality operator
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
@@ -1208,32 +1208,32 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : -1
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
 	Broken copy Move assignment
 	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, true> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
 	Broken copy Swap
 	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, true> >]
 	operator== returned false
+	Obtained : 
 	Predicted: 5 6 
-	Obtained : 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
 	Broken copy Swap
 	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, true> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
@@ -1242,8 +1242,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : -1
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
@@ -1252,16 +1252,16 @@
 	Copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : -1
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
 	Broken copy Move assignment (from y)
 	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, true> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
@@ -1270,16 +1270,16 @@
 	Move assignment x allocations
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 185:
 	Broken copy alloc Copy-like construction
 	[sequoia::unit_testing::broken_copy_alloc<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, true> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 185:
@@ -1288,16 +1288,16 @@
 	Para copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 185:
 	Broken copy alloc Move-like construction
 	[sequoia::unit_testing::broken_copy_alloc<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, true> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 185:
@@ -1306,16 +1306,16 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 193:
 	Broken move Move constructor
 	[sequoia::unit_testing::broken_move<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, true> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 193:
@@ -1324,16 +1324,16 @@
 	Move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : -3
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 193:
 	Broken move Move-like construction
 	[sequoia::unit_testing::broken_move<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, true> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 193:
@@ -1342,16 +1342,16 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 201:
 	Broken move alloc Move-like construction
 	[sequoia::unit_testing::broken_move_alloc<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, true> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 201:
@@ -1360,8 +1360,8 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 209:
@@ -1370,16 +1370,16 @@
 	Move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 217:
 	Broken copy assignment Copy assignment (from y)
 	[sequoia::unit_testing::broken_copy_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, true> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 1 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 217:
@@ -1388,56 +1388,56 @@
 	Copy assignment x allocations
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 217:
 	Broken copy assignment Inequality operator
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 217:
 	Broken copy assignment Move constructor
 	[sequoia::unit_testing::broken_copy_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, true> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 1 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 217:
 	Broken copy assignment Copy assignment
 	[sequoia::unit_testing::broken_copy_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, true> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 5 6 1 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 225:
 	Broken move assignment Move assignment
 	[sequoia::unit_testing::broken_move_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, true> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 225:
 	Broken move assignment Swap
 	[sequoia::unit_testing::broken_move_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, true> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 225:
 	Broken move assignment Move assignment (from y)
 	[sequoia::unit_testing::broken_move_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, true> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 1 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 225:
@@ -1446,8 +1446,8 @@
 	Move assignment x allocations
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
@@ -1456,80 +1456,80 @@
 	Copy assignment y allocations
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
 	Broken copy value semantics Mutation is not doing anything following copy constrution/broken value semantics
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
 	Broken copy value semantics Mutation is not doing anything following copy assignment/ broken value semantics
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
 	Broken copy value semantics Mutation is not doing anything following move assignment
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
 	Broken copy value semantics Mutation is not doing anything following copy then swap
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
 	Broken copy value semantics Mutation is not doing anything following move allocation assignment
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 255:
 	Broken copy assignment value semantics Mutation is not doing anything following copy assignment/ broken value semantics
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 255:
 	Broken copy assignment value semantics Mutation is not doing anything following move assignment
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 255:
 	Broken copy assignment value semantics Mutation is not doing anything following copy then swap
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 255:
 	Broken copy assignment value semantics Mutation is not doing anything following move allocation assignment
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 270
@@ -1537,8 +1537,8 @@
 	Copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 3
 	Obtained : 2
+	Predicted: 3
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 271
@@ -1546,8 +1546,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 3
 	Obtained : 2
+	Predicted: 3
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 271
@@ -1555,8 +1555,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 3
 	Obtained : 2
+	Predicted: 3
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 286
@@ -1564,16 +1564,16 @@
 	Para copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 3
 	Obtained : 2
+	Predicted: 3
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 295:
 	Broken check invariant Precondition - for checking regular semantics, x and y are assumed to be different
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 304:
@@ -1582,8 +1582,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 304:
@@ -1592,8 +1592,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 308:
@@ -1602,8 +1602,8 @@
 	Copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 308:
@@ -1612,8 +1612,8 @@
 	Para copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 308:
@@ -1622,8 +1622,8 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 318:
@@ -1632,8 +1632,8 @@
 	Copy assignment x allocations
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 318:
@@ -1642,8 +1642,8 @@
 	Move assignment x allocations
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 322:
@@ -1652,8 +1652,8 @@
 	Mutation allocation after move-like construction
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 322:
@@ -1662,8 +1662,8 @@
 	x allocations
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 322:
@@ -1672,8 +1672,8 @@
 	Mutation allocation after move-like construction
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 339:
@@ -1682,8 +1682,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 339:
@@ -1692,8 +1692,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 343:
@@ -1702,8 +1702,8 @@
 	Copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 343:
@@ -1712,8 +1712,8 @@
 	Para copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 343:
@@ -1722,8 +1722,8 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 353:
@@ -1732,8 +1732,8 @@
 	Copy assignment x allocations
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 353:
@@ -1742,8 +1742,8 @@
 	Move assignment x allocations
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 357:
@@ -1752,8 +1752,8 @@
 	Mutation allocation after move-like construction
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 357:
@@ -1762,8 +1762,8 @@
 	x allocations
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 357:
@@ -1772,40 +1772,40 @@
 	Mutation allocation after move-like construction
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 161:
 	Broken equality Equality operator is inconsistent
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 169:
 	Broken inequality Equality operator is inconsistent
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
 	Broken copy Copy constructor (x)
 	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, false, true, false> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
 	Broken copy Equality operator
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
@@ -1814,16 +1814,16 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : -1
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
 	Broken copy Move assignment
 	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, false, true, false> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
@@ -1832,8 +1832,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : -1
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
@@ -1842,16 +1842,16 @@
 	Copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : -1
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
 	Broken copy Move assignment (from y)
 	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, false, true, false> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
@@ -1860,16 +1860,16 @@
 	Move assignment x allocations
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : -1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 185:
 	Broken copy alloc Copy-like construction
 	[sequoia::unit_testing::broken_copy_alloc<int, sequoia::unit_testing::shared_counting_allocator<int, false, true, false> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 185:
@@ -1878,16 +1878,16 @@
 	Para copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 185:
 	Broken copy alloc Move-like construction
 	[sequoia::unit_testing::broken_copy_alloc<int, sequoia::unit_testing::shared_counting_allocator<int, false, true, false> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 185:
@@ -1896,16 +1896,16 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 193:
 	Broken move Move constructor
 	[sequoia::unit_testing::broken_move<int, sequoia::unit_testing::shared_counting_allocator<int, false, true, false> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 193:
@@ -1914,16 +1914,16 @@
 	Move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : -3
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 193:
 	Broken move Move-like construction
 	[sequoia::unit_testing::broken_move<int, sequoia::unit_testing::shared_counting_allocator<int, false, true, false> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 193:
@@ -1932,16 +1932,16 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 201:
 	Broken move alloc Move-like construction
 	[sequoia::unit_testing::broken_move_alloc<int, sequoia::unit_testing::shared_counting_allocator<int, false, true, false> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 201:
@@ -1950,8 +1950,8 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 209:
@@ -1960,16 +1960,16 @@
 	Move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 217:
 	Broken copy assignment Copy assignment (from y)
 	[sequoia::unit_testing::broken_copy_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, false, true, false> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 1 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 217:
@@ -1978,48 +1978,48 @@
 	Copy assignment x allocations
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 217:
 	Broken copy assignment Inequality operator
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 217:
 	Broken copy assignment Move constructor
 	[sequoia::unit_testing::broken_copy_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, false, true, false> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 1 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 217:
 	Broken copy assignment Copy assignment
 	[sequoia::unit_testing::broken_copy_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, false, true, false> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 5 6 1 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 225:
 	Broken move assignment Move assignment
 	[sequoia::unit_testing::broken_move_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, false, true, false> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 225:
 	Broken move assignment Move assignment (from y)
 	[sequoia::unit_testing::broken_move_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, false, true, false> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 1 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 225:
@@ -2028,8 +2028,8 @@
 	Move assignment x allocations
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
@@ -2038,8 +2038,8 @@
 	Copy assignment x allocations
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
@@ -2048,64 +2048,64 @@
 	Copy assignment y allocations
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
 	Broken copy value semantics Mutation is not doing anything following copy constrution/broken value semantics
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
 	Broken copy value semantics Mutation is not doing anything following copy assignment/ broken value semantics
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
 	Broken copy value semantics Mutation is not doing anything following move assignment
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
 	Broken copy value semantics Mutation is not doing anything following move allocation assignment
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 255:
 	Broken copy assignment value semantics Mutation is not doing anything following copy assignment/ broken value semantics
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 255:
 	Broken copy assignment value semantics Mutation is not doing anything following move assignment
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 255:
 	Broken copy assignment value semantics Mutation is not doing anything following move allocation assignment
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 270
@@ -2113,8 +2113,8 @@
 	Copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 3
 	Obtained : 2
+	Predicted: 3
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 271
@@ -2122,8 +2122,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 3
 	Obtained : 2
+	Predicted: 3
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 271
@@ -2131,8 +2131,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 3
 	Obtained : 2
+	Predicted: 3
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 286
@@ -2140,16 +2140,16 @@
 	Para copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 3
 	Obtained : 2
+	Predicted: 3
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 295:
 	Broken check invariant Precondition - for checking regular semantics, x and y are assumed to be different
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 304:
@@ -2158,8 +2158,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 304:
@@ -2168,8 +2168,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 308:
@@ -2178,8 +2178,8 @@
 	Copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 308:
@@ -2188,8 +2188,8 @@
 	Para copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 308:
@@ -2198,8 +2198,8 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 318:
@@ -2208,8 +2208,8 @@
 	Copy assignment x allocations
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 322:
@@ -2218,8 +2218,8 @@
 	Mutation allocation after move-like construction
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 322:
@@ -2228,8 +2228,8 @@
 	Mutation allocation after move-like construction
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 339:
@@ -2238,8 +2238,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 339:
@@ -2248,8 +2248,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 343:
@@ -2258,8 +2258,8 @@
 	Copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 343:
@@ -2268,8 +2268,8 @@
 	Para copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 343:
@@ -2278,8 +2278,8 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 353:
@@ -2288,8 +2288,8 @@
 	Copy assignment x allocations
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 357:
@@ -2298,8 +2298,8 @@
 	Mutation allocation after move-like construction
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 357:
@@ -2308,40 +2308,40 @@
 	Mutation allocation after move-like construction
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 161:
 	Broken equality Equality operator is inconsistent
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 169:
 	Broken inequality Equality operator is inconsistent
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
 	Broken copy Copy constructor (x)
 	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, false, true, true> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
 	Broken copy Equality operator
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
@@ -2350,32 +2350,32 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : -1
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
 	Broken copy Move assignment
 	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, false, true, true> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
 	Broken copy Swap
 	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, false, true, true> >]
 	operator== returned false
+	Obtained : 
 	Predicted: 5 6 
-	Obtained : 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
 	Broken copy Swap
 	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, false, true, true> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
@@ -2384,8 +2384,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : -1
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
@@ -2394,16 +2394,16 @@
 	Copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : -1
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
 	Broken copy Move assignment (from y)
 	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, false, true, true> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
@@ -2412,16 +2412,16 @@
 	Move assignment x allocations
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : -1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 185:
 	Broken copy alloc Copy-like construction
 	[sequoia::unit_testing::broken_copy_alloc<int, sequoia::unit_testing::shared_counting_allocator<int, false, true, true> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 185:
@@ -2430,16 +2430,16 @@
 	Para copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 185:
 	Broken copy alloc Move-like construction
 	[sequoia::unit_testing::broken_copy_alloc<int, sequoia::unit_testing::shared_counting_allocator<int, false, true, true> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 185:
@@ -2448,16 +2448,16 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 193:
 	Broken move Move constructor
 	[sequoia::unit_testing::broken_move<int, sequoia::unit_testing::shared_counting_allocator<int, false, true, true> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 193:
@@ -2466,16 +2466,16 @@
 	Move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : -3
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 193:
 	Broken move Move-like construction
 	[sequoia::unit_testing::broken_move<int, sequoia::unit_testing::shared_counting_allocator<int, false, true, true> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 193:
@@ -2484,16 +2484,16 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 201:
 	Broken move alloc Move-like construction
 	[sequoia::unit_testing::broken_move_alloc<int, sequoia::unit_testing::shared_counting_allocator<int, false, true, true> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 201:
@@ -2502,8 +2502,8 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 209:
@@ -2512,16 +2512,16 @@
 	Move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 217:
 	Broken copy assignment Copy assignment (from y)
 	[sequoia::unit_testing::broken_copy_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, false, true, true> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 1 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 217:
@@ -2530,56 +2530,56 @@
 	Copy assignment x allocations
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 217:
 	Broken copy assignment Inequality operator
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 217:
 	Broken copy assignment Move constructor
 	[sequoia::unit_testing::broken_copy_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, false, true, true> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 1 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 217:
 	Broken copy assignment Copy assignment
 	[sequoia::unit_testing::broken_copy_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, false, true, true> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 5 6 1 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 225:
 	Broken move assignment Move assignment
 	[sequoia::unit_testing::broken_move_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, false, true, true> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 225:
 	Broken move assignment Swap
 	[sequoia::unit_testing::broken_move_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, false, true, true> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 225:
 	Broken move assignment Move assignment (from y)
 	[sequoia::unit_testing::broken_move_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, false, true, true> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 1 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
@@ -2588,8 +2588,8 @@
 	Copy assignment x allocations
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
@@ -2598,80 +2598,80 @@
 	Copy assignment y allocations
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
 	Broken copy value semantics Mutation is not doing anything following copy constrution/broken value semantics
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
 	Broken copy value semantics Mutation is not doing anything following copy assignment/ broken value semantics
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
 	Broken copy value semantics Mutation is not doing anything following move assignment
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
 	Broken copy value semantics Mutation is not doing anything following copy then swap
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
 	Broken copy value semantics Mutation is not doing anything following move allocation assignment
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 255:
 	Broken copy assignment value semantics Mutation is not doing anything following copy assignment/ broken value semantics
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 255:
 	Broken copy assignment value semantics Mutation is not doing anything following move assignment
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 255:
 	Broken copy assignment value semantics Mutation is not doing anything following copy then swap
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 255:
 	Broken copy assignment value semantics Mutation is not doing anything following move allocation assignment
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 270
@@ -2679,8 +2679,8 @@
 	Copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 3
 	Obtained : 2
+	Predicted: 3
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 271
@@ -2688,8 +2688,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 3
 	Obtained : 2
+	Predicted: 3
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 271
@@ -2697,8 +2697,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 3
 	Obtained : 2
+	Predicted: 3
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 286
@@ -2706,16 +2706,16 @@
 	Para copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 3
 	Obtained : 2
+	Predicted: 3
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 295:
 	Broken check invariant Precondition - for checking regular semantics, x and y are assumed to be different
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 304:
@@ -2724,8 +2724,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 304:
@@ -2734,8 +2734,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 308:
@@ -2744,8 +2744,8 @@
 	Copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 308:
@@ -2754,8 +2754,8 @@
 	Para copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 308:
@@ -2764,8 +2764,8 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 318:
@@ -2774,8 +2774,8 @@
 	Copy assignment x allocations
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 322:
@@ -2784,8 +2784,8 @@
 	Mutation allocation after move-like construction
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 322:
@@ -2794,8 +2794,8 @@
 	x allocations
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 322:
@@ -2804,8 +2804,8 @@
 	Mutation allocation after move-like construction
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 339:
@@ -2814,8 +2814,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 339:
@@ -2824,8 +2824,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 343:
@@ -2834,8 +2834,8 @@
 	Copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 343:
@@ -2844,8 +2844,8 @@
 	Para copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 343:
@@ -2854,8 +2854,8 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 353:
@@ -2864,8 +2864,8 @@
 	Copy assignment x allocations
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 357:
@@ -2874,8 +2874,8 @@
 	Mutation allocation after move-like construction
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 357:
@@ -2884,8 +2884,8 @@
 	x allocations
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 357:
@@ -2894,40 +2894,40 @@
 	Mutation allocation after move-like construction
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 161:
 	Broken equality Equality operator is inconsistent
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 169:
 	Broken inequality Equality operator is inconsistent
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
 	Broken copy Copy constructor (x)
 	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, false> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
 	Broken copy Equality operator
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
@@ -2936,16 +2936,16 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : -1
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
 	Broken copy Move assignment
 	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, false> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
@@ -2954,8 +2954,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : -1
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
@@ -2964,16 +2964,16 @@
 	Copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : -4
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
 	Broken copy Move assignment (from y)
 	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, false> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
@@ -2982,16 +2982,16 @@
 	Move assignment x allocations
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 185:
 	Broken copy alloc Copy-like construction
 	[sequoia::unit_testing::broken_copy_alloc<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, false> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 185:
@@ -3000,16 +3000,16 @@
 	Para copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 185:
 	Broken copy alloc Move-like construction
 	[sequoia::unit_testing::broken_copy_alloc<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, false> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 185:
@@ -3018,16 +3018,16 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 193:
 	Broken move Move constructor
 	[sequoia::unit_testing::broken_move<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, false> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 193:
@@ -3036,16 +3036,16 @@
 	Move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : -2
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 193:
 	Broken move Move-like construction
 	[sequoia::unit_testing::broken_move<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, false> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 193:
@@ -3054,16 +3054,16 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 201:
 	Broken move alloc Move-like construction
 	[sequoia::unit_testing::broken_move_alloc<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, false> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 201:
@@ -3072,8 +3072,8 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 209:
@@ -3082,16 +3082,16 @@
 	Move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 217:
 	Broken copy assignment Copy assignment (from y)
 	[sequoia::unit_testing::broken_copy_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, false> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 1 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 217:
@@ -3100,48 +3100,48 @@
 	Copy assignment y allocations
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 217:
 	Broken copy assignment Inequality operator
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 217:
 	Broken copy assignment Move constructor
 	[sequoia::unit_testing::broken_copy_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, false> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 1 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 217:
 	Broken copy assignment Copy assignment
 	[sequoia::unit_testing::broken_copy_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, false> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 5 6 1 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 225:
 	Broken move assignment Move assignment
 	[sequoia::unit_testing::broken_move_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, false> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 225:
 	Broken move assignment Move assignment (from y)
 	[sequoia::unit_testing::broken_move_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, false> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 1 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 225:
@@ -3150,8 +3150,8 @@
 	Move assignment x allocations
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
@@ -3160,64 +3160,64 @@
 	Copy assignment x allocations
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
 	Broken copy value semantics Mutation is not doing anything following copy constrution/broken value semantics
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
 	Broken copy value semantics Mutation is not doing anything following copy assignment/ broken value semantics
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
 	Broken copy value semantics Mutation is not doing anything following move assignment
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
 	Broken copy value semantics Mutation is not doing anything following move allocation assignment
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 255:
 	Broken copy assignment value semantics Mutation is not doing anything following copy assignment/ broken value semantics
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 255:
 	Broken copy assignment value semantics Mutation is not doing anything following move assignment
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 255:
 	Broken copy assignment value semantics Mutation is not doing anything following move allocation assignment
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 270
@@ -3225,8 +3225,8 @@
 	Copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 3
 	Obtained : 2
+	Predicted: 3
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 271
@@ -3234,8 +3234,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 3
 	Obtained : 2
+	Predicted: 3
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 271
@@ -3243,8 +3243,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 3
 	Obtained : 2
+	Predicted: 3
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 286
@@ -3252,16 +3252,16 @@
 	Para copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 3
 	Obtained : 2
+	Predicted: 3
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 295:
 	Broken check invariant Precondition - for checking regular semantics, x and y are assumed to be different
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 304:
@@ -3270,8 +3270,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 304:
@@ -3280,8 +3280,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 308:
@@ -3290,8 +3290,8 @@
 	Copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 308:
@@ -3300,8 +3300,8 @@
 	Para copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 308:
@@ -3310,8 +3310,8 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 318:
@@ -3320,8 +3320,8 @@
 	Copy assignment x allocations
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 318:
@@ -3330,8 +3330,8 @@
 	Copy assignment y allocations
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 322:
@@ -3340,8 +3340,8 @@
 	Mutation allocation after move-like construction
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 322:
@@ -3350,8 +3350,8 @@
 	Mutation allocation after move-like construction
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 339:
@@ -3360,8 +3360,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 339:
@@ -3370,8 +3370,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 343:
@@ -3380,8 +3380,8 @@
 	Copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 343:
@@ -3390,8 +3390,8 @@
 	Para copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 343:
@@ -3400,8 +3400,8 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 353:
@@ -3410,8 +3410,8 @@
 	Copy assignment x allocations
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 353:
@@ -3420,8 +3420,8 @@
 	Copy assignment y allocations
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 357:
@@ -3430,8 +3430,8 @@
 	Mutation allocation after move-like construction
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 357:
@@ -3440,40 +3440,40 @@
 	Mutation allocation after move-like construction
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 161:
 	Broken equality Equality operator is inconsistent
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 169:
 	Broken inequality Equality operator is inconsistent
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
 	Broken copy Copy constructor (x)
 	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, true> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
 	Broken copy Equality operator
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
@@ -3482,32 +3482,32 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : -1
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
 	Broken copy Move assignment
 	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, true> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
 	Broken copy Swap
 	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, true> >]
 	operator== returned false
+	Obtained : 
 	Predicted: 5 6 
-	Obtained : 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
 	Broken copy Swap
 	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, true> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
@@ -3516,8 +3516,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : -1
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
@@ -3526,16 +3526,16 @@
 	Copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : -4
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
 	Broken copy Move assignment (from y)
 	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, true> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
@@ -3544,16 +3544,16 @@
 	Move assignment x allocations
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 185:
 	Broken copy alloc Copy-like construction
 	[sequoia::unit_testing::broken_copy_alloc<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, true> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 185:
@@ -3562,16 +3562,16 @@
 	Para copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 185:
 	Broken copy alloc Move-like construction
 	[sequoia::unit_testing::broken_copy_alloc<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, true> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 185:
@@ -3580,16 +3580,16 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 193:
 	Broken move Move constructor
 	[sequoia::unit_testing::broken_move<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, true> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 193:
@@ -3598,16 +3598,16 @@
 	Move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : -2
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 193:
 	Broken move Move-like construction
 	[sequoia::unit_testing::broken_move<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, true> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 193:
@@ -3616,16 +3616,16 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 201:
 	Broken move alloc Move-like construction
 	[sequoia::unit_testing::broken_move_alloc<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, true> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 201:
@@ -3634,8 +3634,8 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 209:
@@ -3644,16 +3644,16 @@
 	Move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 217:
 	Broken copy assignment Copy assignment (from y)
 	[sequoia::unit_testing::broken_copy_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, true> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 1 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 217:
@@ -3662,56 +3662,56 @@
 	Copy assignment y allocations
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 217:
 	Broken copy assignment Inequality operator
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 217:
 	Broken copy assignment Move constructor
 	[sequoia::unit_testing::broken_copy_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, true> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 1 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 217:
 	Broken copy assignment Copy assignment
 	[sequoia::unit_testing::broken_copy_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, true> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 5 6 1 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 225:
 	Broken move assignment Move assignment
 	[sequoia::unit_testing::broken_move_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, true> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 225:
 	Broken move assignment Swap
 	[sequoia::unit_testing::broken_move_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, true> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 225:
 	Broken move assignment Move assignment (from y)
 	[sequoia::unit_testing::broken_move_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, true> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 1 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 225:
@@ -3720,8 +3720,8 @@
 	Move assignment x allocations
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
@@ -3730,80 +3730,80 @@
 	Copy assignment x allocations
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
 	Broken copy value semantics Mutation is not doing anything following copy constrution/broken value semantics
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
 	Broken copy value semantics Mutation is not doing anything following copy assignment/ broken value semantics
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
 	Broken copy value semantics Mutation is not doing anything following move assignment
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
 	Broken copy value semantics Mutation is not doing anything following copy then swap
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
 	Broken copy value semantics Mutation is not doing anything following move allocation assignment
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 255:
 	Broken copy assignment value semantics Mutation is not doing anything following copy assignment/ broken value semantics
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 255:
 	Broken copy assignment value semantics Mutation is not doing anything following move assignment
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 255:
 	Broken copy assignment value semantics Mutation is not doing anything following copy then swap
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 255:
 	Broken copy assignment value semantics Mutation is not doing anything following move allocation assignment
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 270
@@ -3811,8 +3811,8 @@
 	Copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 3
 	Obtained : 2
+	Predicted: 3
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 271
@@ -3820,8 +3820,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 3
 	Obtained : 2
+	Predicted: 3
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 271
@@ -3829,8 +3829,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 3
 	Obtained : 2
+	Predicted: 3
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 286
@@ -3838,16 +3838,16 @@
 	Para copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 3
 	Obtained : 2
+	Predicted: 3
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 295:
 	Broken check invariant Precondition - for checking regular semantics, x and y are assumed to be different
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 304:
@@ -3856,8 +3856,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 304:
@@ -3866,8 +3866,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 308:
@@ -3876,8 +3876,8 @@
 	Copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 308:
@@ -3886,8 +3886,8 @@
 	Para copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 308:
@@ -3896,8 +3896,8 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 318:
@@ -3906,8 +3906,8 @@
 	Copy assignment x allocations
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 318:
@@ -3916,8 +3916,8 @@
 	Copy assignment y allocations
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 322:
@@ -3926,8 +3926,8 @@
 	Mutation allocation after move-like construction
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 322:
@@ -3936,8 +3936,8 @@
 	x allocations
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 322:
@@ -3946,8 +3946,8 @@
 	Mutation allocation after move-like construction
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 339:
@@ -3956,8 +3956,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 339:
@@ -3966,8 +3966,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 343:
@@ -3976,8 +3976,8 @@
 	Copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 343:
@@ -3986,8 +3986,8 @@
 	Para copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 343:
@@ -3996,8 +3996,8 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 353:
@@ -4006,8 +4006,8 @@
 	Copy assignment x allocations
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 353:
@@ -4016,8 +4016,8 @@
 	Copy assignment y allocations
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 357:
@@ -4026,8 +4026,8 @@
 	Mutation allocation after move-like construction
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 357:
@@ -4036,8 +4036,8 @@
 	x allocations
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 357:
@@ -4046,40 +4046,40 @@
 	Mutation allocation after move-like construction
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 161:
 	Broken equality Equality operator is inconsistent
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 169:
 	Broken inequality Equality operator is inconsistent
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
 	Broken copy Copy constructor (x)
 	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, false> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
 	Broken copy Equality operator
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
@@ -4088,16 +4088,16 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : -1
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
 	Broken copy Move assignment
 	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, false> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
@@ -4106,8 +4106,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : -1
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
@@ -4116,16 +4116,16 @@
 	Copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : -4
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
 	Broken copy Move assignment (from y)
 	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, false> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
@@ -4134,16 +4134,16 @@
 	Move assignment x allocations
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : -4
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 185:
 	Broken copy alloc Copy-like construction
 	[sequoia::unit_testing::broken_copy_alloc<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, false> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 185:
@@ -4152,16 +4152,16 @@
 	Para copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 185:
 	Broken copy alloc Move-like construction
 	[sequoia::unit_testing::broken_copy_alloc<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, false> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 185:
@@ -4170,16 +4170,16 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 193:
 	Broken move Move constructor
 	[sequoia::unit_testing::broken_move<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, false> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 193:
@@ -4188,16 +4188,16 @@
 	Move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : -2
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 193:
 	Broken move Move-like construction
 	[sequoia::unit_testing::broken_move<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, false> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 193:
@@ -4206,16 +4206,16 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 201:
 	Broken move alloc Move-like construction
 	[sequoia::unit_testing::broken_move_alloc<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, false> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 201:
@@ -4224,8 +4224,8 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 209:
@@ -4234,16 +4234,16 @@
 	Move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 217:
 	Broken copy assignment Copy assignment (from y)
 	[sequoia::unit_testing::broken_copy_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, false> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 1 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 217:
@@ -4252,48 +4252,48 @@
 	Copy assignment y allocations
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 217:
 	Broken copy assignment Inequality operator
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 217:
 	Broken copy assignment Move constructor
 	[sequoia::unit_testing::broken_copy_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, false> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 1 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 217:
 	Broken copy assignment Copy assignment
 	[sequoia::unit_testing::broken_copy_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, false> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 5 6 1 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 225:
 	Broken move assignment Move assignment
 	[sequoia::unit_testing::broken_move_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, false> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 225:
 	Broken move assignment Move assignment (from y)
 	[sequoia::unit_testing::broken_move_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, false> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 1 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 225:
@@ -4302,64 +4302,64 @@
 	Move assignment x allocations
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : -1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
 	Broken copy value semantics Mutation is not doing anything following copy constrution/broken value semantics
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
 	Broken copy value semantics Mutation is not doing anything following copy assignment/ broken value semantics
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
 	Broken copy value semantics Mutation is not doing anything following move assignment
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
 	Broken copy value semantics Mutation is not doing anything following move allocation assignment
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 255:
 	Broken copy assignment value semantics Mutation is not doing anything following copy assignment/ broken value semantics
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 255:
 	Broken copy assignment value semantics Mutation is not doing anything following move assignment
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 255:
 	Broken copy assignment value semantics Mutation is not doing anything following move allocation assignment
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 270
@@ -4367,8 +4367,8 @@
 	Copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 3
 	Obtained : 2
+	Predicted: 3
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 271
@@ -4376,8 +4376,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 3
 	Obtained : 2
+	Predicted: 3
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 271
@@ -4385,8 +4385,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 3
 	Obtained : 2
+	Predicted: 3
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 286
@@ -4394,16 +4394,16 @@
 	Para copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 3
 	Obtained : 2
+	Predicted: 3
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 295:
 	Broken check invariant Precondition - for checking regular semantics, x and y are assumed to be different
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 304:
@@ -4412,8 +4412,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 304:
@@ -4422,8 +4422,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 308:
@@ -4432,8 +4432,8 @@
 	Copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 308:
@@ -4442,8 +4442,8 @@
 	Para copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 308:
@@ -4452,8 +4452,8 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 318:
@@ -4462,8 +4462,8 @@
 	Copy assignment x allocations
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 318:
@@ -4472,8 +4472,8 @@
 	Copy assignment y allocations
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 322:
@@ -4482,8 +4482,8 @@
 	Mutation allocation after move-like construction
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 322:
@@ -4492,8 +4492,8 @@
 	Mutation allocation after move-like construction
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 339:
@@ -4502,8 +4502,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 339:
@@ -4512,8 +4512,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 343:
@@ -4522,8 +4522,8 @@
 	Copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 343:
@@ -4532,8 +4532,8 @@
 	Para copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 343:
@@ -4542,8 +4542,8 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 353:
@@ -4552,8 +4552,8 @@
 	Copy assignment x allocations
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 353:
@@ -4562,8 +4562,8 @@
 	Copy assignment y allocations
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 357:
@@ -4572,8 +4572,8 @@
 	Mutation allocation after move-like construction
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 357:
@@ -4582,40 +4582,40 @@
 	Mutation allocation after move-like construction
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 161:
 	Broken equality Equality operator is inconsistent
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 169:
 	Broken inequality Equality operator is inconsistent
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
 	Broken copy Copy constructor (x)
 	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, true> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
 	Broken copy Equality operator
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
@@ -4624,32 +4624,32 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : -1
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
 	Broken copy Move assignment
 	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, true> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
 	Broken copy Swap
 	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, true> >]
 	operator== returned false
+	Obtained : 
 	Predicted: 5 6 
-	Obtained : 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
 	Broken copy Swap
 	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, true> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
@@ -4658,8 +4658,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : -1
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
@@ -4668,16 +4668,16 @@
 	Copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : -4
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
 	Broken copy Move assignment (from y)
 	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, true> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
@@ -4686,16 +4686,16 @@
 	Move assignment x allocations
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : -4
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 185:
 	Broken copy alloc Copy-like construction
 	[sequoia::unit_testing::broken_copy_alloc<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, true> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 185:
@@ -4704,16 +4704,16 @@
 	Para copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 185:
 	Broken copy alloc Move-like construction
 	[sequoia::unit_testing::broken_copy_alloc<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, true> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 185:
@@ -4722,16 +4722,16 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 193:
 	Broken move Move constructor
 	[sequoia::unit_testing::broken_move<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, true> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 193:
@@ -4740,16 +4740,16 @@
 	Move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : -2
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 193:
 	Broken move Move-like construction
 	[sequoia::unit_testing::broken_move<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, true> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 193:
@@ -4758,16 +4758,16 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 201:
 	Broken move alloc Move-like construction
 	[sequoia::unit_testing::broken_move_alloc<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, true> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 201:
@@ -4776,8 +4776,8 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 209:
@@ -4786,16 +4786,16 @@
 	Move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 217:
 	Broken copy assignment Copy assignment (from y)
 	[sequoia::unit_testing::broken_copy_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, true> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 1 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 217:
@@ -4804,56 +4804,56 @@
 	Copy assignment y allocations
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 217:
 	Broken copy assignment Inequality operator
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 217:
 	Broken copy assignment Move constructor
 	[sequoia::unit_testing::broken_copy_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, true> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 1 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 217:
 	Broken copy assignment Copy assignment
 	[sequoia::unit_testing::broken_copy_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, true> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 5 6 1 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 225:
 	Broken move assignment Move assignment
 	[sequoia::unit_testing::broken_move_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, true> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 225:
 	Broken move assignment Swap
 	[sequoia::unit_testing::broken_move_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, true> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 225:
 	Broken move assignment Move assignment (from y)
 	[sequoia::unit_testing::broken_move_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, true> >]
 	operator== returned false
-	Predicted: 5 6 
 	Obtained : 1 
+	Predicted: 5 6 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 225:
@@ -4862,80 +4862,80 @@
 	Move assignment x allocations
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : -2
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
 	Broken copy value semantics Mutation is not doing anything following copy constrution/broken value semantics
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
 	Broken copy value semantics Mutation is not doing anything following copy assignment/ broken value semantics
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
 	Broken copy value semantics Mutation is not doing anything following move assignment
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
 	Broken copy value semantics Mutation is not doing anything following copy then swap
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 240:
 	Broken copy value semantics Mutation is not doing anything following move allocation assignment
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 255:
 	Broken copy assignment value semantics Mutation is not doing anything following copy assignment/ broken value semantics
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 255:
 	Broken copy assignment value semantics Mutation is not doing anything following move assignment
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 255:
 	Broken copy assignment value semantics Mutation is not doing anything following copy then swap
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 255:
 	Broken copy assignment value semantics Mutation is not doing anything following move allocation assignment
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 270
@@ -4943,8 +4943,8 @@
 	Copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 3
 	Obtained : 2
+	Predicted: 3
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 271
@@ -4952,8 +4952,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 3
 	Obtained : 2
+	Predicted: 3
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 271
@@ -4961,8 +4961,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 3
 	Obtained : 2
+	Predicted: 3
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 286
@@ -4970,16 +4970,16 @@
 	Para copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 3
 	Obtained : 2
+	Predicted: 3
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 295:
 	Broken check invariant Precondition - for checking regular semantics, x and y are assumed to be different
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 304:
@@ -4988,8 +4988,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 304:
@@ -4998,8 +4998,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 308:
@@ -5008,8 +5008,8 @@
 	Copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 308:
@@ -5018,8 +5018,8 @@
 	Para copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 308:
@@ -5028,8 +5028,8 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 318:
@@ -5038,8 +5038,8 @@
 	Copy assignment x allocations
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 318:
@@ -5048,8 +5048,8 @@
 	Copy assignment y allocations
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 322:
@@ -5058,8 +5058,8 @@
 	Mutation allocation after move-like construction
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 322:
@@ -5068,8 +5068,8 @@
 	x allocations
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 322:
@@ -5078,8 +5078,8 @@
 	Mutation allocation after move-like construction
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 339:
@@ -5088,8 +5088,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 339:
@@ -5098,8 +5098,8 @@
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 343:
@@ -5108,8 +5108,8 @@
 	Copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 343:
@@ -5118,8 +5118,8 @@
 	Para copy construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 343:
@@ -5128,8 +5128,8 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 353:
@@ -5138,8 +5138,8 @@
 	Copy assignment x allocations
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 353:
@@ -5148,8 +5148,8 @@
 	Copy assignment y allocations
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 357:
@@ -5158,8 +5158,8 @@
 	Mutation allocation after move-like construction
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 357:
@@ -5168,8 +5168,8 @@
 	x allocations
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 357:
@@ -5178,71 +5178,71 @@
 	Mutation allocation after move-like construction
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 366 Equality operator is inconsistent
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 368 Equality operator is inconsistent
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 370 Move constructor
 	[sequoia::unit_testing::broken_move<int, std::__1::allocator<int> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 370 Swap
 	[sequoia::unit_testing::broken_move<int, std::__1::allocator<int> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 372 Move assignment
 	[sequoia::unit_testing::broken_move_assignment<int, std::__1::allocator<int> >]
 	operator== returned false
-	Predicted: 2 
 	Obtained : 
+	Predicted: 2 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 372 Swap
 	[sequoia::unit_testing::broken_move_assignment<int, std::__1::allocator<int> >]
 	operator== returned false
-	Predicted: 2 
 	Obtained : 
+	Predicted: 2 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 374 Precondition - for checking regular semantics, x and y are assumed to be different
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 376 Precondition - for checking regular semantics, x and xClone are assumed to be equal
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 378 Precondition - for checking regular semantics, x and xClone are assumed to be equal
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 388
@@ -5250,71 +5250,71 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 366 Equality operator is inconsistent
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 368 Equality operator is inconsistent
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 370 Move constructor
 	[sequoia::unit_testing::broken_move<int, std::__1::allocator<int> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 370 Swap
 	[sequoia::unit_testing::broken_move<int, std::__1::allocator<int> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 372 Move assignment
 	[sequoia::unit_testing::broken_move_assignment<int, std::__1::allocator<int> >]
 	operator== returned false
-	Predicted: 2 
 	Obtained : 
+	Predicted: 2 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 372 Swap
 	[sequoia::unit_testing::broken_move_assignment<int, std::__1::allocator<int> >]
 	operator== returned false
-	Predicted: 2 
 	Obtained : 
+	Predicted: 2 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 374 Precondition - for checking regular semantics, x and y are assumed to be different
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 376 Precondition - for checking regular semantics, x and xClone are assumed to be equal
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 378 Precondition - for checking regular semantics, x and xClone are assumed to be equal
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 388
@@ -5322,71 +5322,71 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 366 Equality operator is inconsistent
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 368 Equality operator is inconsistent
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 370 Move constructor
 	[sequoia::unit_testing::broken_move<int, std::__1::allocator<int> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 370 Swap
 	[sequoia::unit_testing::broken_move<int, std::__1::allocator<int> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 372 Move assignment
 	[sequoia::unit_testing::broken_move_assignment<int, std::__1::allocator<int> >]
 	operator== returned false
-	Predicted: 2 
 	Obtained : 
+	Predicted: 2 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 372 Swap
 	[sequoia::unit_testing::broken_move_assignment<int, std::__1::allocator<int> >]
 	operator== returned false
-	Predicted: 2 
 	Obtained : 
+	Predicted: 2 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 374 Precondition - for checking regular semantics, x and y are assumed to be different
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 376 Precondition - for checking regular semantics, x and xClone are assumed to be equal
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 378 Precondition - for checking regular semantics, x and xClone are assumed to be equal
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 388
@@ -5394,71 +5394,71 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 366 Equality operator is inconsistent
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 368 Equality operator is inconsistent
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 370 Move constructor
 	[sequoia::unit_testing::broken_move<int, std::__1::allocator<int> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 370 Swap
 	[sequoia::unit_testing::broken_move<int, std::__1::allocator<int> >]
 	operator== returned false
-	Predicted: 1 
 	Obtained : 
+	Predicted: 1 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 372 Move assignment
 	[sequoia::unit_testing::broken_move_assignment<int, std::__1::allocator<int> >]
 	operator== returned false
-	Predicted: 2 
 	Obtained : 
+	Predicted: 2 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 372 Swap
 	[sequoia::unit_testing::broken_move_assignment<int, std::__1::allocator<int> >]
 	operator== returned false
-	Predicted: 2 
 	Obtained : 
+	Predicted: 2 
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 374 Precondition - for checking regular semantics, x and y are assumed to be different
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 376 Precondition - for checking regular semantics, x and xClone are assumed to be equal
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 378 Precondition - for checking regular semantics, x and xClone are assumed to be equal
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 388
@@ -5466,7 +5466,7 @@
 	Para move construction allocation (y)
 	[int]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 

@@ -23,8 +23,8 @@
 	Connectivity orders different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 52:
@@ -52,8 +52,8 @@
 	Connectivity sizes different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 52:
@@ -61,8 +61,8 @@
 	Connectivity orders different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
@@ -90,8 +90,8 @@
 	Connectivity orders different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 52:
@@ -119,8 +119,8 @@
 	Connectivity sizes different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 52:
@@ -128,8 +128,8 @@
 	Connectivity orders different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
@@ -157,8 +157,8 @@
 	Connectivity orders different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 60:
@@ -186,8 +186,8 @@
 	Connectivity sizes different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 60:
@@ -195,8 +195,8 @@
 	Connectivity orders different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
@@ -224,8 +224,8 @@
 	Connectivity orders different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 60:
@@ -253,8 +253,8 @@
 	Connectivity sizes different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 60:
@@ -262,8 +262,8 @@
 	Connectivity orders different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
@@ -291,8 +291,8 @@
 	Connectivity orders different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 48:
@@ -320,8 +320,8 @@
 	Connectivity sizes different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 48:
@@ -329,8 +329,8 @@
 	Connectivity orders different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
@@ -358,8 +358,8 @@
 	Connectivity orders different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 48:
@@ -387,8 +387,8 @@
 	Connectivity sizes different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 48:
@@ -396,8 +396,8 @@
 	Connectivity orders different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
@@ -425,8 +425,8 @@
 	Connectivity orders different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 56:
@@ -454,8 +454,8 @@
 	Connectivity sizes different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 56:
@@ -463,8 +463,8 @@
 	Connectivity orders different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
@@ -492,8 +492,8 @@
 	Connectivity orders different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 56:
@@ -521,8 +521,8 @@
 	Connectivity sizes different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 56:
@@ -530,8 +530,8 @@
 	Connectivity orders different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
@@ -559,8 +559,8 @@
 	Connectivity orders different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 56:
@@ -588,8 +588,8 @@
 	Connectivity sizes different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 56:
@@ -597,8 +597,8 @@
 	Connectivity orders different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 43:
@@ -626,8 +626,8 @@
 	Connectivity orders different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 56:
@@ -655,8 +655,8 @@
 	Connectivity sizes different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 56:
@@ -664,7 +664,7 @@
 	Connectivity orders different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 

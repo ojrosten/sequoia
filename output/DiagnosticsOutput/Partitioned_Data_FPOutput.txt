@@ -7,8 +7,8 @@
 	Number of elements
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 48:
@@ -20,8 +20,8 @@
 	Number of partitions
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 49:
@@ -33,8 +33,8 @@
 	Number of elements
 	[unsigned long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 49:
@@ -46,8 +46,8 @@
 	Partition 0: iterator container size wrong
 	[long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 49:
@@ -59,8 +59,8 @@
 	Partition 0: riterator container size wrong
 	[long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 50:
@@ -73,8 +73,8 @@
 
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 50:
@@ -87,8 +87,8 @@
 
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 51:
@@ -100,8 +100,8 @@
 	Number of partitions
 	[unsigned long]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 52:
@@ -113,8 +113,8 @@
 	Number of partitions
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
@@ -128,15 +128,15 @@
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54 Size different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54 Number of partitions different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
@@ -151,48 +151,48 @@
 
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55 Partition 0 r_iterator (const) element 0
 
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55 Partition 0 c_iterator element 0
 
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55 Partition 0 cr_iterator element 0
 
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55 Partition 0 iterator element 0
 
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55 Partition 0 r_iterator element 0
 
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
@@ -206,276 +206,276 @@
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56 Number of partitions different
 	[unsigned long]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58:
 	Size 0 should not compare equal to 1
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 59:
 	Size 1 should not compare equal to 0
 	[unsigned long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
 	[unsigned long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 63
 	[unsigned long]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 66
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 67
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 68
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 69
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 70
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 72
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 73
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 74
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 78
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 79
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 80
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 82
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 84
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 85
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 86
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 91
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 92
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 95
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 96
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 97
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 100
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 101
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 104
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 48:
@@ -487,8 +487,8 @@
 	Number of elements
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 48:
@@ -500,8 +500,8 @@
 	Number of partitions
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 49:
@@ -513,8 +513,8 @@
 	Number of elements
 	[unsigned long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 49:
@@ -526,8 +526,8 @@
 	Partition 0: iterator container size wrong
 	[long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 49:
@@ -539,8 +539,8 @@
 	Partition 0: riterator container size wrong
 	[long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 50:
@@ -553,8 +553,8 @@
 
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 50:
@@ -567,8 +567,8 @@
 
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 51:
@@ -580,8 +580,8 @@
 	Number of partitions
 	[unsigned long]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 52:
@@ -593,8 +593,8 @@
 	Number of partitions
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
@@ -608,15 +608,15 @@
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54 Size different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54 Number of partitions different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
@@ -631,48 +631,48 @@
 
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55 Partition 0 r_iterator (const) element 0
 
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55 Partition 0 c_iterator element 0
 
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55 Partition 0 cr_iterator element 0
 
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55 Partition 0 iterator element 0
 
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55 Partition 0 r_iterator element 0
 
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
@@ -686,276 +686,276 @@
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56 Number of partitions different
 	[unsigned long]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58:
 	Size 0 should not compare equal to 1
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 59:
 	Size 1 should not compare equal to 0
 	[unsigned long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
 	[unsigned long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 63
 	[unsigned long]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 66
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 67
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 68
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 69
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 70
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 72
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 73
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 74
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 78
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 79
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 80
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 82
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 84
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 85
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 86
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 91
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 92
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 95
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 96
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 97
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 100
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 101
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 104
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 48:
@@ -967,8 +967,8 @@
 	Number of elements
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 48:
@@ -980,8 +980,8 @@
 	Number of partitions
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 49:
@@ -993,8 +993,8 @@
 	Number of elements
 	[unsigned long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 49:
@@ -1006,8 +1006,8 @@
 	Partition 0: iterator container size wrong
 	[long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 49:
@@ -1019,8 +1019,8 @@
 	Partition 0: riterator container size wrong
 	[long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 50:
@@ -1033,8 +1033,8 @@
 
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 50:
@@ -1047,8 +1047,8 @@
 
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 51:
@@ -1060,8 +1060,8 @@
 	Number of partitions
 	[unsigned long]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 52:
@@ -1073,8 +1073,8 @@
 	Number of partitions
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
@@ -1088,15 +1088,15 @@
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54 Size different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54 Number of partitions different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
@@ -1111,48 +1111,48 @@
 
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55 Partition 0 r_iterator (const) element 0
 
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55 Partition 0 c_iterator element 0
 
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55 Partition 0 cr_iterator element 0
 
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55 Partition 0 iterator element 0
 
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55 Partition 0 r_iterator element 0
 
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
@@ -1166,276 +1166,276 @@
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56 Number of partitions different
 	[unsigned long]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58:
 	Size 0 should not compare equal to 1
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 59:
 	Size 1 should not compare equal to 0
 	[unsigned long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
 	[unsigned long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 63
 	[unsigned long]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 66
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 67
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 68
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 69
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 70
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 72
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 73
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 74
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 78
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 79
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 80
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 82
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 84
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 85
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 86
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 91
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 92
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 95
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 96
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 97
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 100
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 101
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 104
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 48:
@@ -1447,8 +1447,8 @@
 	Number of elements
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 48:
@@ -1460,8 +1460,8 @@
 	Number of partitions
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 49:
@@ -1473,8 +1473,8 @@
 	Number of elements
 	[unsigned long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 49:
@@ -1486,8 +1486,8 @@
 	Partition 0: iterator container size wrong
 	[long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 49:
@@ -1499,8 +1499,8 @@
 	Partition 0: riterator container size wrong
 	[long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 50:
@@ -1513,8 +1513,8 @@
 
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 50:
@@ -1527,8 +1527,8 @@
 
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 51:
@@ -1540,8 +1540,8 @@
 	Number of partitions
 	[unsigned long]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 52:
@@ -1553,8 +1553,8 @@
 	Number of partitions
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
@@ -1568,15 +1568,15 @@
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54 Size different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54 Number of partitions different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
@@ -1591,48 +1591,48 @@
 
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55 Partition 0 r_iterator (const) element 0
 
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55 Partition 0 c_iterator element 0
 
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55 Partition 0 cr_iterator element 0
 
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55 Partition 0 iterator element 0
 
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55 Partition 0 r_iterator element 0
 
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
@@ -1646,276 +1646,276 @@
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56 Number of partitions different
 	[unsigned long]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58:
 	Size 0 should not compare equal to 1
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 59:
 	Size 1 should not compare equal to 0
 	[unsigned long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
 	[unsigned long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 63
 	[unsigned long]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 66
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 67
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 68
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 69
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 70
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 72
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 73
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 74
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 78
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 79
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 80
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 82
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 84
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 85
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 86
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 91
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 92
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 95
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 96
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 97
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 100
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 101
 	[int]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 104
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 48:
@@ -1927,8 +1927,8 @@
 	Number of elements
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 48:
@@ -1940,8 +1940,8 @@
 	Number of partitions
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 49:
@@ -1953,8 +1953,8 @@
 	Number of elements
 	[unsigned long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 49:
@@ -1966,8 +1966,8 @@
 	Partition 0: iterator container size wrong
 	[long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 49:
@@ -1979,8 +1979,8 @@
 	Partition 0: riterator container size wrong
 	[long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 50:
@@ -2016,8 +2016,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 50:
@@ -2053,8 +2053,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 51:
@@ -2066,8 +2066,8 @@
 	Number of partitions
 	[unsigned long]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 52:
@@ -2079,8 +2079,8 @@
 	Number of partitions
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
@@ -2094,15 +2094,15 @@
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54 Size different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54 Number of partitions different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
@@ -2128,8 +2128,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55 Partition 0 r_iterator (const) element 0
@@ -2147,8 +2147,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55 Partition 0 c_iterator element 0
@@ -2166,8 +2166,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55 Partition 0 cr_iterator element 0
@@ -2185,8 +2185,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55 Partition 0 iterator element 0
@@ -2204,8 +2204,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55 Partition 0 r_iterator element 0
@@ -2223,8 +2223,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
@@ -2238,52 +2238,52 @@
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56 Number of partitions different
 	[unsigned long]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58:
 	Size 0 should not compare equal to 1
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 59:
 	Size 1 should not compare equal to 0
 	[unsigned long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
 	[unsigned long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 63
 	[unsigned long]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 66
@@ -2298,8 +2298,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 67
@@ -2314,8 +2314,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 68
@@ -2330,8 +2330,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 69
@@ -2346,8 +2346,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 70
@@ -2362,8 +2362,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 72
@@ -2378,8 +2378,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 73
@@ -2394,8 +2394,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 74
@@ -2410,8 +2410,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75
@@ -2426,8 +2426,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76
@@ -2442,8 +2442,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 78
@@ -2458,8 +2458,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 79
@@ -2474,8 +2474,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 80
@@ -2490,8 +2490,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81
@@ -2506,8 +2506,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 82
@@ -2522,8 +2522,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 84
@@ -2538,8 +2538,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 85
@@ -2554,8 +2554,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 86
@@ -2570,8 +2570,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87
@@ -2586,8 +2586,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88
@@ -2602,8 +2602,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 91
@@ -2618,8 +2618,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 92
@@ -2634,8 +2634,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93
@@ -2650,8 +2650,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 95
@@ -2666,8 +2666,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 96
@@ -2682,8 +2682,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 97
@@ -2698,8 +2698,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
@@ -2714,8 +2714,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 100
@@ -2730,8 +2730,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 101
@@ -2746,8 +2746,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103
@@ -2762,8 +2762,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 104
@@ -2778,8 +2778,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105
@@ -2794,8 +2794,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 48:
@@ -2807,8 +2807,8 @@
 	Number of elements
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 48:
@@ -2820,8 +2820,8 @@
 	Number of partitions
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 49:
@@ -2833,8 +2833,8 @@
 	Number of elements
 	[unsigned long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 49:
@@ -2846,8 +2846,8 @@
 	Partition 0: iterator container size wrong
 	[long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 49:
@@ -2859,8 +2859,8 @@
 	Partition 0: riterator container size wrong
 	[long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 50:
@@ -2896,8 +2896,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 50:
@@ -2933,8 +2933,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 51:
@@ -2946,8 +2946,8 @@
 	Number of partitions
 	[unsigned long]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 52:
@@ -2959,8 +2959,8 @@
 	Number of partitions
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
@@ -2974,15 +2974,15 @@
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54 Size different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54 Number of partitions different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
@@ -3008,8 +3008,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55 Partition 0 r_iterator (const) element 0
@@ -3027,8 +3027,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55 Partition 0 c_iterator element 0
@@ -3046,8 +3046,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55 Partition 0 cr_iterator element 0
@@ -3065,8 +3065,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55 Partition 0 iterator element 0
@@ -3084,8 +3084,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55 Partition 0 r_iterator element 0
@@ -3103,8 +3103,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
@@ -3118,52 +3118,52 @@
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56 Number of partitions different
 	[unsigned long]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58:
 	Size 0 should not compare equal to 1
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 59:
 	Size 1 should not compare equal to 0
 	[unsigned long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
 	[unsigned long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 63
 	[unsigned long]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 66
@@ -3178,8 +3178,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 67
@@ -3194,8 +3194,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 68
@@ -3210,8 +3210,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 69
@@ -3226,8 +3226,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 70
@@ -3242,8 +3242,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 72
@@ -3258,8 +3258,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 73
@@ -3274,8 +3274,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 74
@@ -3290,8 +3290,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75
@@ -3306,8 +3306,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76
@@ -3322,8 +3322,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 78
@@ -3338,8 +3338,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 79
@@ -3354,8 +3354,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 80
@@ -3370,8 +3370,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81
@@ -3386,8 +3386,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 82
@@ -3402,8 +3402,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 84
@@ -3418,8 +3418,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 85
@@ -3434,8 +3434,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 86
@@ -3450,8 +3450,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87
@@ -3466,8 +3466,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88
@@ -3482,8 +3482,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 91
@@ -3498,8 +3498,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 92
@@ -3514,8 +3514,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93
@@ -3530,8 +3530,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 95
@@ -3546,8 +3546,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 96
@@ -3562,8 +3562,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 97
@@ -3578,8 +3578,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
@@ -3594,8 +3594,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 100
@@ -3610,8 +3610,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 101
@@ -3626,8 +3626,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103
@@ -3642,8 +3642,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 104
@@ -3658,8 +3658,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105
@@ -3674,8 +3674,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 48:
@@ -3687,8 +3687,8 @@
 	Number of elements
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 48:
@@ -3700,8 +3700,8 @@
 	Number of partitions
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 49:
@@ -3713,8 +3713,8 @@
 	Number of elements
 	[unsigned long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 49:
@@ -3726,8 +3726,8 @@
 	Partition 0: iterator container size wrong
 	[long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 49:
@@ -3739,8 +3739,8 @@
 	Partition 0: riterator container size wrong
 	[long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 50:
@@ -3776,8 +3776,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 50:
@@ -3813,8 +3813,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 51:
@@ -3826,8 +3826,8 @@
 	Number of partitions
 	[unsigned long]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 52:
@@ -3839,8 +3839,8 @@
 	Number of partitions
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
@@ -3854,15 +3854,15 @@
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54 Size different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54 Number of partitions different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
@@ -3888,8 +3888,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55 Partition 0 r_iterator (const) element 0
@@ -3907,8 +3907,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55 Partition 0 c_iterator element 0
@@ -3926,8 +3926,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55 Partition 0 cr_iterator element 0
@@ -3945,8 +3945,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55 Partition 0 iterator element 0
@@ -3964,8 +3964,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55 Partition 0 r_iterator element 0
@@ -3983,8 +3983,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
@@ -3998,52 +3998,52 @@
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56 Number of partitions different
 	[unsigned long]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58:
 	Size 0 should not compare equal to 1
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 59:
 	Size 1 should not compare equal to 0
 	[unsigned long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
 	[unsigned long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 63
 	[unsigned long]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 66
@@ -4058,8 +4058,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 67
@@ -4074,8 +4074,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 68
@@ -4090,8 +4090,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 69
@@ -4106,8 +4106,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 70
@@ -4122,8 +4122,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 72
@@ -4138,8 +4138,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 73
@@ -4154,8 +4154,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 74
@@ -4170,8 +4170,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75
@@ -4186,8 +4186,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76
@@ -4202,8 +4202,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 78
@@ -4218,8 +4218,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 79
@@ -4234,8 +4234,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 80
@@ -4250,8 +4250,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81
@@ -4266,8 +4266,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 82
@@ -4282,8 +4282,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 84
@@ -4298,8 +4298,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 85
@@ -4314,8 +4314,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 86
@@ -4330,8 +4330,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87
@@ -4346,8 +4346,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88
@@ -4362,8 +4362,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 91
@@ -4378,8 +4378,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 92
@@ -4394,8 +4394,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93
@@ -4410,8 +4410,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 95
@@ -4426,8 +4426,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 96
@@ -4442,8 +4442,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 97
@@ -4458,8 +4458,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
@@ -4474,8 +4474,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 100
@@ -4490,8 +4490,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 101
@@ -4506,8 +4506,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103
@@ -4522,8 +4522,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 104
@@ -4538,8 +4538,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105
@@ -4554,8 +4554,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 48:
@@ -4567,8 +4567,8 @@
 	Number of elements
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 48:
@@ -4580,8 +4580,8 @@
 	Number of partitions
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 49:
@@ -4593,8 +4593,8 @@
 	Number of elements
 	[unsigned long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 49:
@@ -4606,8 +4606,8 @@
 	Partition 0: iterator container size wrong
 	[long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 49:
@@ -4619,8 +4619,8 @@
 	Partition 0: riterator container size wrong
 	[long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 50:
@@ -4656,8 +4656,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 50:
@@ -4693,8 +4693,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 51:
@@ -4706,8 +4706,8 @@
 	Number of partitions
 	[unsigned long]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 52:
@@ -4719,8 +4719,8 @@
 	Number of partitions
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
@@ -4734,15 +4734,15 @@
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54 Size different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54 Number of partitions different
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
@@ -4768,8 +4768,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55 Partition 0 r_iterator (const) element 0
@@ -4787,8 +4787,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55 Partition 0 c_iterator element 0
@@ -4806,8 +4806,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55 Partition 0 cr_iterator element 0
@@ -4825,8 +4825,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55 Partition 0 iterator element 0
@@ -4844,8 +4844,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55 Partition 0 r_iterator element 0
@@ -4863,8 +4863,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
@@ -4878,52 +4878,52 @@
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56 Number of partitions different
 	[unsigned long]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58:
 	Size 0 should not compare equal to 1
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 59:
 	Size 1 should not compare equal to 0
 	[unsigned long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
 	[unsigned long]
 	operator== returned false
-	Predicted: 0
 	Obtained : 1
+	Predicted: 0
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 63
 	[unsigned long]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 66
@@ -4938,8 +4938,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 67
@@ -4954,8 +4954,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 68
@@ -4970,8 +4970,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 69
@@ -4986,8 +4986,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 70
@@ -5002,8 +5002,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 72
@@ -5018,8 +5018,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 73
@@ -5034,8 +5034,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 74
@@ -5050,8 +5050,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75
@@ -5066,8 +5066,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76
@@ -5082,8 +5082,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 78
@@ -5098,8 +5098,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 79
@@ -5114,8 +5114,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 80
@@ -5130,8 +5130,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81
@@ -5146,8 +5146,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 82
@@ -5162,8 +5162,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 84
@@ -5178,8 +5178,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 85
@@ -5194,8 +5194,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 86
@@ -5210,8 +5210,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87
@@ -5226,8 +5226,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88
@@ -5242,8 +5242,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 91
@@ -5258,8 +5258,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 92
@@ -5274,8 +5274,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93
@@ -5290,8 +5290,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 95
@@ -5306,8 +5306,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 96
@@ -5322,8 +5322,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 97
@@ -5338,8 +5338,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
@@ -5354,8 +5354,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 100
@@ -5370,8 +5370,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 101
@@ -5386,8 +5386,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 2
 	Obtained : 1
+	Predicted: 2
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103
@@ -5402,8 +5402,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 104
@@ -5418,8 +5418,8 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105
@@ -5434,7 +5434,7 @@
 
 	[double]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 

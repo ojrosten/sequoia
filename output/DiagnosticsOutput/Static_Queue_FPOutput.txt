@@ -2,16 +2,16 @@
 	Empty queue must be empty
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 26:
 	Empty queue must have size zero
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 36:
@@ -28,32 +28,32 @@
 	Empty queue versus populated queue Inconsistent emptiness
 	[bool]
 	operator== returned false
-	Predicted: false
 	Obtained : true
+	Predicted: false
 
 
 	Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 36:
 	Empty queue versus populated queue Inconsistent size
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 36:
 	Empty queue versus populated queue Hidden state
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 36:
 	Empty queue versus populated queue Hidden state, symmetry of operator==
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 39:
@@ -70,32 +70,32 @@
 	Differing elements Inconsistent front element
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 39:
 	Differing elements Inconsistent back element
 	[int]
 	operator== returned false
-	Predicted: 1
 	Obtained : 2
+	Predicted: 1
 
 
 	Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 39:
 	Differing elements Hidden state
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 39:
 	Differing elements Hidden state, symmetry of operator==
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 42:
@@ -112,31 +112,31 @@
 	Empty queue versus populated queue Inconsistent emptiness
 	[bool]
 	operator== returned false
-	Predicted: false
 	Obtained : true
+	Predicted: false
 
 
 	Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 42:
 	Empty queue versus populated queue Inconsistent size
 	[unsigned long]
 	operator== returned false
-	Predicted: 1
 	Obtained : 0
+	Predicted: 1
 
 
 	Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 42:
 	Empty queue versus populated queue Hidden state
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
 	Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 42:
 	Empty queue versus populated queue Hidden state, symmetry of operator==
 	[bool]
 	operator== returned false
-	Predicted: true
 	Obtained : false
+	Predicted: true
 
 
