@@ -136,7 +136,52 @@ namespace sequoia::unit_testing
     return text;
   }
 
-  const std::array<std::string, 5> unit_test_runner::st_TestNameStubs {
+  std::vector<std::vector<std::string>> parse(int argc, char** argv, const std::map<std::string, std::size_t>& multipleArgCounts)
+  {
+    std::vector<std::vector<std::string>> options;
+    for(int i{1}; i<argc; ++i)
+    {
+      std::string arg{argv[i]};
+      if(!arg.empty())
+      {
+        const bool append{[&arg, &options, &multipleArgCounts](){
+            if((arg.front() != '-') && !options.empty())
+            {
+              const auto& lastOption{options.back()};
+              if(!lastOption.empty())
+              {
+                if(auto found{multipleArgCounts.find(lastOption.front())}; found != multipleArgCounts.end())
+                {
+                  if(lastOption.size() <= found->second)
+                    return true;
+                }
+                else if(lastOption.size() == 1)
+                {
+                  const auto& lastOption{options.back().front()};
+                  if(!lastOption.empty() && (lastOption.front() != '-'))
+                    return true;
+                }
+              }
+            }
+            return false;
+          }()
+        };
+                       
+        if(append)
+        {
+          options.back().push_back(arg);
+        }
+        else
+        {
+          options.push_back({{arg}});
+        }
+      }
+    }
+
+    return options;
+  }
+
+  const std::array<std::string_view, 5> unit_test_runner::st_TestNameStubs {
     "TestingUtilities.hpp",
     "TestingDiagnostics.hpp",
     "TestingDiagnostics.cpp",
@@ -194,9 +239,9 @@ namespace sequoia::unit_testing
     return static_cast<bool>(std::ifstream{path});    
   }
 
-  auto unit_test_runner::compare_files(const std::string& referenceFile, const std::string& generatedFile) -> file_comparison
+  auto unit_test_runner::compare_files(std::string_view referenceFile, std::string_view generatedFile) -> file_comparison
   {
-    std::ifstream file1{referenceFile}, file2{generatedFile};
+    std::ifstream file1{referenceFile.data()}, file2{generatedFile.data()};
     if(!file1) warning("unable to open file ").append(referenceFile).append("\n");
     if(!file2) warning("unable to open file ").append(generatedFile).append("\n");
     
@@ -212,7 +257,7 @@ namespace sequoia::unit_testing
     return file_comparison::failed;
   }
 
-  void unit_test_runner::compare_files(const nascent_test& data, const std::string& partName)
+  void unit_test_runner::compare_files(const nascent_test& data, std::string_view partName)
   {
     const auto referenceFile{std::string{"../output/UnitTestCreationDiagnostics/" + to_camel_case(data.class_name)}.append(partName)};
     const auto generatedFile{std::string{"../aux_files/UnitTestCodeTemplates/ReferenceExamples/" + to_camel_case(data.class_name)}.append(partName)};

@@ -60,7 +60,7 @@
 #include "ExperimentalTest.hpp"
 
 #include "UnitTestDiagnostics.hpp"
-
+#include "UnitTestRunnerTest.hpp"
 #include "UnitTestRunner.hpp"
 
 int main(int argc, char** argv)
@@ -76,7 +76,8 @@ int main(int argc, char** argv)
       test_family{
         "Diagnostics",
         false_positive_diagnostics{"False Positive Diagnostics"},
-        false_negative_diagnostics{"False Negative Diagnostics"}
+        false_negative_diagnostics{"False Negative Diagnostics"},
+        unit_test_runner_test{"Unit Test Runner"}
       }
     );
 

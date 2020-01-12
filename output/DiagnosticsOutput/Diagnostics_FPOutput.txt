@@ -304,18 +304,18 @@
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 72:
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
-	Fast Task duration: 0.00138076s +- 3 * 4.09507e-05
-	Slow Task duration: 0.00130823s +- 3 * 0.0001309 [0.947471; (2, 2)]
+	Fast Task duration: 0.00139345s +- 3 * 4.07289e-06
+	Slow Task duration: 0.00134106s +- 3 * 0.000116267 [0.9624; (2, 2)]
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 76:
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
-	Fast Task duration: 0.00128206s +- 3 * 6.41773e-05
-	Slow Task duration: 0.0012672s +- 3 * 0.000133119 [0.988407; (2, 3)]
+	Fast Task duration: 0.00128062s +- 3 * 0.00012216
+	Slow Task duration: 0.00133958s +- 3 * 4.97032e-05 [1.04604; (2, 3)]
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 80:
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
-	Fast Task duration: 0.00130617s +- 3 * 0.00012458
-	Slow Task duration: 0.00469414s +- 3 * 0.000354445 [3.59383; (2, 2.5)]
+	Fast Task duration: 0.00135187s +- 3 * 8.07134e-05
+	Slow Task duration: 0.0044159s +- 3 * 0.000449007 [3.26651; (2, 2.5)]
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 96
 	[std::__1::tuple<std::__1::vector<std::__1::pair<int, float>, std::__1::allocator<std::__1::pair<int, float> > >, std::__1::set<double, std::__1::less<double>, std::__1::allocator<double> >, std::__1::complex<double> >]
@@ -5503,22 +5503,6 @@
 	[std::__1::pair<int, double>]
 
 	False Positive Failure:
-	UnitTestFramework/UnitTestDiagnostics.cpp, Line 417
-	[std::__1::pair<int, double>]
-
-	False Positive Failure:
-	UnitTestFramework/UnitTestDiagnostics.cpp, Line 417
-	[std::__1::pair<int, double>]
-
-	False Positive Failure:
-	UnitTestFramework/UnitTestDiagnostics.cpp, Line 419
-	[std::__1::tuple<int, double, float>]
-
-	False Positive Failure:
-	UnitTestFramework/UnitTestDiagnostics.cpp, Line 419
-	[std::__1::tuple<int, double, float>]
-
-	False Positive Failure:
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 419
 	[std::__1::tuple<int, double, float>]
 
@@ -5532,29 +5516,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 
 	False Positive Failure:
-	UnitTestFramework/UnitTestDiagnostics.cpp, Line 428:
-	Empty vector check which should pass
-	[std::__1::vector<double, std::__1::allocator<double> >]
-
-	False Positive Failure:
-	UnitTestFramework/UnitTestDiagnostics.cpp, Line 428:
-	Empty vector check which should pass
-	False Positive Failure:
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 429:
 	One element vector check which should pass
-	[std::__1::vector<double, std::__1::allocator<double> >]
-
-	False Positive Failure:
-	UnitTestFramework/UnitTestDiagnostics.cpp, Line 429:
-	One element vector check which should pass
-	[std::__1::vector<double, std::__1::allocator<double> >]
-
-	False Positive Failure:
-	UnitTestFramework/UnitTestDiagnostics.cpp, Line 429:
-	One element vector check which should pass
-	False Positive Failure:
-	UnitTestFramework/UnitTestDiagnostics.cpp, Line 430:
-	Multi-element vector comparison which should pass
 	[std::__1::vector<double, std::__1::allocator<double> >]
 
 	False Positive Failure:
@@ -5562,31 +5525,14 @@
 	Multi-element vector comparison which should pass
 	[std::__1::vector<double, std::__1::allocator<double> >]
 
-	False Positive Failure:
-	UnitTestFramework/UnitTestDiagnostics.cpp, Line 430:
-	Multi-element vector comparison which should pass
 	False Positive Failure:
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 434:
 	Iterators demarcate identical elements
 	False Positive Failure:
-		UnitTestFramework/UnitTestDiagnostics.cpp, Line 450:
-	Performance Test which should pass
-	Fast Task duration: 0.00122482s +- 3 * 9.72121e-05
-	Slow Task duration: 0.00243354s +- 3 * 0.000169487 [1.98685; (1.9, 2.1)]
-
-	False Positive Failure:
 		UnitTestFramework/UnitTestDiagnostics.cpp, Line 451:
 	Performance Test which should pass
-	Fast Task duration: 0.00126552s +- 3 * 0.00012809
-	Slow Task duration: 0.00420396s +- 3 * 0.000263651 [3.32193; (3.9, 4.1)]
-
-	False Positive Failure:
-	UnitTestFramework/UnitTestDiagnostics.cpp, Line 464
-	[std::__1::tuple<std::__1::vector<std::__1::pair<int, float>, std::__1::allocator<std::__1::pair<int, float> > >, std::__1::set<double, std::__1::less<double>, std::__1::allocator<double> >, std::__1::complex<double> >]
-
-	False Positive Failure:
-	UnitTestFramework/UnitTestDiagnostics.cpp, Line 464
-	[std::__1::tuple<std::__1::vector<std::__1::pair<int, float>, std::__1::allocator<std::__1::pair<int, float> > >, std::__1::set<double, std::__1::less<double>, std::__1::allocator<double> >, std::__1::complex<double> >]
+	Fast Task duration: 0.00122485s +- 3 * 9.57375e-05
+	Slow Task duration: 0.00442394s +- 3 * 0.000407209 [3.61181; (3.9, 4.1)]
 
 	False Positive Failure:
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 464

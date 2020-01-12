@@ -96,7 +96,8 @@ namespace sequoia
       static_assert(delegate || is_serializable_v<T> || is_equal_to_comparable_v<T>,
                     "Provide either a specialization of detailed_equality_checker or string_maker and/or operator==");
       
-      using sentinel = typename Logger::sentinel;
+      using sentinel = typename Logger::sentinel;      
+      sentinel s{logger, add_type_info<T>(description)};
 
       const auto priorFailures{logger.failures()};
       
@@ -109,7 +110,6 @@ namespace sequoia
       
       if constexpr(is_equal_to_comparable_v<T>)
       {
-        sentinel s{logger, add_type_info<T>(description)};
         s.log_check();
         if(!(prediction == value))
         {
@@ -127,7 +127,6 @@ namespace sequoia
       {
         if constexpr(is_not_equal_to_comparable_v<T>)
         {
-          sentinel s{logger, add_type_info<T>(description)};
           s.log_check();
           if(prediction != value)
           {
@@ -136,8 +135,7 @@ namespace sequoia
         }
 
         if constexpr(has_detailed_equality_checker_v<T>)
-        {          
-          sentinel s{logger, add_type_info<T>(description)};
+        {
           detailed_equality_checker<T>::check(description, logger, value, prediction);
         }
         else if constexpr(is_container_v<T>)

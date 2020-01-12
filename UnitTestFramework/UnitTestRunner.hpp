@@ -60,6 +60,16 @@ namespace sequoia::unit_testing
   [[nodiscard]]
   std::string summarize(const log_summary& log, std::string_view prefix, const log_verbosity suppression);
 
+  struct commandline_option_info
+  {
+    std::vector<std::string> parameters;
+    std::string alias;
+  };
+
+  [[nodiscard]]
+  std::vector<std::vector<std::string>>
+  parse(int argc, char** argv, const std::map<std::string, std::size_t>& multipleArgCounts=std::map<std::string, std::size_t>{});
+
   class unit_test_runner
   {
   public:
@@ -90,7 +100,7 @@ namespace sequoia::unit_testing
     
     bool m_Asynchronous{}, m_Verbose{}, m_Pause{}, m_WriteFiles{true};
 
-    const static std::array<std::string, 5> st_TestNameStubs;
+    const static std::array<std::string_view, 5> st_TestNameStubs;
 
     log_summary process_family(const std::vector<log_summary>& summaries);
 
@@ -127,13 +137,15 @@ namespace sequoia::unit_testing
 
     static void create_file(const nascent_test& data, std::string_view partName, const bool overwrite);
 
-    static auto compare_files(const std::string& referenceFile, const std::string& generatedFile) -> file_comparison;
+    static auto compare_files(std::string_view referenceFile, std::string_view generatedFile) -> file_comparison;
 
     template<class Iter>
     static void compare_files(Iter beginFiles, Iter endFiles, std::string_view message);
 
-    static void compare_files(const nascent_test& data, const std::string& partName);
+    static void compare_files(const nascent_test& data, std::string_view partName);
 
     static void false_positive_check(const nascent_test& data);
+    
+    static void argument_processing_diagnostics();
   };
 }
