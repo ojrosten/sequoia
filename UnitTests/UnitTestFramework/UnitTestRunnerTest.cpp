@@ -35,6 +35,16 @@ namespace sequoia::unit_testing
     }
 
     {
+      std::array<char*, 2> a{new char[4]{"foo"}, new char[8]{"--asyng"}};
+      
+      check_exception_thrown<std::runtime_error>(LINE("Unexpected argument"), [&](){
+          return parse(2, &a[0], info{{"--async",{}}});
+        });
+
+      for(auto e : a) delete e;
+    }
+
+    {
       std::array<char*, 3> a{new char[4]{"foo"}, new char[5]{"test"}, new char[5]{"case"}};
       
       check_equality(LINE(""), parse(3, &a[0], info{{"test",{{"case"}}}}), args{{{"test"}, {"case"}}});
