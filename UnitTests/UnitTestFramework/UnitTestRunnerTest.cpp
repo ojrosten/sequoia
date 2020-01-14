@@ -43,6 +43,16 @@ namespace sequoia::unit_testing
     }
 
     {
+      std::array<char*, 2> a{new char[4]{"foo"}, new char[5]{"test"}};
+
+      check_exception_thrown<std::runtime_error>(LINE("Final argument missing"), [&a](){
+          return parse(2, &a[0], info{{"test",{{"case"}}}});
+        });
+
+      for(auto e : a) delete e;
+    }
+
+    {
       std::array<char*, 4> a{
         new char[4]{"foo"},
         new char[7]{"create"},
