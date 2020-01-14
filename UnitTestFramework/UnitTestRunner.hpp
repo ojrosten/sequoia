@@ -68,7 +68,7 @@ namespace sequoia::unit_testing
 
   [[nodiscard]]
   std::vector<std::vector<std::string>>
-  parse(int argc, char** argv, const std::map<std::string, std::size_t>& multipleArgCounts=std::map<std::string, std::size_t>{});
+  parse(int argc, char** argv, const std::map<std::string, commandline_option_info>& info);
 
   class unit_test_runner
   {

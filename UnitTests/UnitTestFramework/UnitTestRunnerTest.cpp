@@ -19,16 +19,54 @@ namespace sequoia::unit_testing
   void unit_test_runner_test::test_parser()
   {
     using args = std::vector<std::vector<std::string>>;
+    using info = std::map<std::string, commandline_option_info>;
     
     {
-      const auto parsed{parse(0, nullptr)};
+      const auto parsed{parse(0, nullptr, info{})};
       check_equality(LINE(""), parsed, args{});
     }
 
     {
-      std::array<char*, 2> a{new char[4]{"foo"}, new char[5]{"test"}};
+      std::array<char*, 2> a{new char[4]{"foo"}, new char[8]{"--async"}};
       
-      check_equality(LINE(""), parse(2, &a[0]), args{{"test"}});
+      check_equality(LINE(""), parse(2, &a[0], info{{"--async",{}}}), args{{"--async"}});
+
+      for(auto e : a) delete e;
+    }
+
+    {
+      std::array<char*, 3> a{new char[4]{"foo"}, new char[5]{"test"}, new char[5]{"case"}};
+      
+      check_equality(LINE(""), parse(3, &a[0], info{{"test",{{"case"}}}}), args{{{"test"}, {"case"}}});
+
+      for(auto e : a) delete e;
+    }
+
+    {
+      std::array<char*, 4> a{
+        new char[4]{"foo"},
+        new char[7]{"create"},
+        new char[6]{"class"},
+        new char[4]{"dir"}
+      };
+      
+      check_equality(LINE(""), parse(4, &a[0], info{{"create",{{"class_name", "directory"}}}})
+                     , args{{{"create"}, {"class"}, {"dir"}}});
+
+      for(auto e : a) delete e;
+    }
+
+    {
+      std::array<char*, 5> a{
+        new char[4]{"foo"},
+        new char[8]{"--async"},
+        new char[7]{"create"},
+        new char[6]{"class"},
+        new char[4]{"dir"}
+      };
+      
+      check_equality(LINE(""), parse(5, &a[0], info{{"create",{{"class_name", "directory"}}}, {"--async", {}}})
+                     , args{{{"--async"}}, {{"create"}, {"class"}, {"dir"}}});
 
       for(auto e : a) delete e;
     }

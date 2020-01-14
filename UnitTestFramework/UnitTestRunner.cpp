@@ -136,47 +136,37 @@ namespace sequoia::unit_testing
     return text;
   }
 
-  std::vector<std::vector<std::string>> parse(int argc, char** argv, const std::map<std::string, std::size_t>& multipleArgCounts)
+  std::vector<std::vector<std::string>> parse(int argc, char** argv, const std::map<std::string, commandline_option_info>& info)
   {
     std::vector<std::vector<std::string>> options;
+
+    auto infoIter{info.end()};
     for(int i{1}; i<argc; ++i)
     {
       std::string arg{argv[i]};
       if(!arg.empty())
-      {
-        const bool append{[&arg, &options, &multipleArgCounts](){
-            if((arg.front() != '-') && !options.empty())
-            {
-              const auto& lastOption{options.back()};
-              if(!lastOption.empty())
-              {
-                if(auto found{multipleArgCounts.find(lastOption.front())}; found != multipleArgCounts.end())
-                {
-                  if(lastOption.size() <= found->second)
-                    return true;
-                }
-                else if(lastOption.size() == 1)
-                {
-                  const auto& lastOption{options.back().front()};
-                  if(!lastOption.empty() && (lastOption.front() != '-'))
-                    return true;
-                }
-              }
-            }
-            return false;
-          }()
-        };
-                       
-        if(append)
+      {        
+        if(infoIter == info.end())
         {
-          options.back().push_back(arg);
+          infoIter = info.find(arg);
+          if(infoIter == info.end())
+            throw std::runtime_error("\n Error: unrecognized option '" + arg + "'");
+
+          options.push_back({{arg}});
+          if(infoIter->second.parameters.empty())
+            infoIter = info.end();
         }
         else
         {
-          options.push_back({{arg}});
+          options.back().push_back(arg);
+          if(options.back().size() == infoIter->second.parameters.size() + 1)
+            infoIter = info.end();
         }
       }
     }
+
+    if(!options.empty() && (infoIter != info.end()) && (options.back().size() != infoIter->second.parameters.size() + 1))
+      throw std::runtime_error("\n Error: expected " + std::to_string(infoIter->second.parameters.size()) + " arguments but found only " + std::to_string(options.back().size() - 1));
 
     return options;
   }
