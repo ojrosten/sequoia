@@ -33,6 +33,12 @@ namespace sequoia::unit_testing
     }
 
     {
+      commandline_arguments<4, 3> a{"foo", "-a"};
+      
+      check_equality(LINE(""), parse(2, a.get(), info{{"--async", {{}, {"-a"}}}}), args{{"--async"}});
+    }
+
+    {
       commandline_arguments<4, 8> a{"foo", "--asyng"};
       
       check_exception_thrown<std::runtime_error>(LINE("Unexpected argument"), [&a](){

@@ -150,7 +150,17 @@ namespace sequoia::unit_testing
         {
           infoIter = info.find(arg);
           if(infoIter == info.end())
-            throw std::runtime_error("\n Error: unrecognized option '" + arg + "'");
+          {
+            infoIter = std::find_if(info.begin(), info.end(), [&arg](const auto& e) {
+                const auto& aliases{e.second.aliases};
+                return std::find(aliases.begin(), aliases.end(), arg) != aliases.end();
+              });
+
+            if(infoIter == info.end())
+              throw std::runtime_error("\n Error: unrecognized option '" + arg + "'");
+
+            arg = infoIter->first;
+          }
 
           options.push_back({{arg}});
           if(infoIter->second.parameters.empty())

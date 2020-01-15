@@ -63,7 +63,7 @@ namespace sequoia::unit_testing
   struct commandline_option_info
   {
     std::vector<std::string> parameters;
-    std::string alias;
+    std::vector<std::string> aliases;
   };
 
   [[nodiscard]]
