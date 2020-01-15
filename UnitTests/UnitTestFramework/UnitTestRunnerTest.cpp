@@ -39,6 +39,12 @@ namespace sequoia::unit_testing
     }
 
     {
+      commandline_arguments<4, 3> a{"foo", "-a"};
+      
+      check_equality(LINE(""), parse(2, a.get(), info{{"--async", {{}, {"-as", "-a"}}}}), args{{"--async"}});
+    }
+
+    {
       commandline_arguments<4, 8> a{"foo", "--asyng"};
       
       check_exception_thrown<std::runtime_error>(LINE("Unexpected argument"), [&a](){
@@ -47,9 +53,23 @@ namespace sequoia::unit_testing
     }
 
     {
+      commandline_arguments<4, 3> a{"foo", "-a"};
+      
+      check_exception_thrown<std::runtime_error>(LINE("Unexpected argument"), [&a](){
+          return parse(2, a.get(), info{{"--async",{{}, {"-as"}}}});
+        });
+    }
+
+    {
       commandline_arguments<4, 5, 5> a{"foo", "test", "case"};
       
       check_equality(LINE(""), parse(3, a.get(), info{{"test",{{"case"}}}}), args{{{"test"}, {"case"}}});
+    }
+
+    {
+      commandline_arguments<4, 2, 5> a{"foo", "t", "case"};
+      
+      check_equality(LINE(""), parse(3, a.get(), info{{"test",{{"case"}, {"t"}}}}), args{{{"test"}, {"case"}}});
     }
 
     {
