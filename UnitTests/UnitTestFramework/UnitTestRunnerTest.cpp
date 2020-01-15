@@ -18,6 +18,8 @@ namespace sequoia::unit_testing
 
   void unit_test_runner_test::test_parser()
   {
+    commandline_arguments<2, 3, 4> c{"a", "bc", "ert"};
+    
     using args = std::vector<std::vector<std::string>>;
     using info = std::map<std::string, commandline_option_info>;
     
@@ -27,68 +29,56 @@ namespace sequoia::unit_testing
     }
 
     {
-      std::array<char*, 2> a{new char[4]{"foo"}, new char[8]{"--async"}};
+      commandline_arguments<4, 8> a{"foo", "--async"};
       
-      check_equality(LINE(""), parse(2, &a[0], info{{"--async",{}}}), args{{"--async"}});
-
-      for(auto e : a) delete e;
+      check_equality(LINE(""), parse(2, a.get(), info{{"--async",{}}}), args{{"--async"}});
     }
 
     {
-      std::array<char*, 2> a{new char[4]{"foo"}, new char[8]{"--asyng"}};
+      commandline_arguments<4, 8> a{"foo", "--asyng"};
       
-      check_exception_thrown<std::runtime_error>(LINE("Unexpected argument"), [&](){
-          return parse(2, &a[0], info{{"--async",{}}});
+      check_exception_thrown<std::runtime_error>(LINE("Unexpected argument"), [&a](){
+          return parse(2, a.get(), info{{"--async",{}}});
         });
-
-      for(auto e : a) delete e;
     }
 
     {
-      std::array<char*, 3> a{new char[4]{"foo"}, new char[5]{"test"}, new char[5]{"case"}};
+      commandline_arguments<4, 5, 5> a{"foo", "test", "case"};
       
-      check_equality(LINE(""), parse(3, &a[0], info{{"test",{{"case"}}}}), args{{{"test"}, {"case"}}});
-
-      for(auto e : a) delete e;
+      check_equality(LINE(""), parse(3, a.get(), info{{"test",{{"case"}}}}), args{{{"test"}, {"case"}}});
     }
 
     {
-      std::array<char*, 2> a{new char[4]{"foo"}, new char[5]{"test"}};
+      commandline_arguments<4, 5> a{"foo", "test"};
 
       check_exception_thrown<std::runtime_error>(LINE("Final argument missing"), [&a](){
-          return parse(2, &a[0], info{{"test",{{"case"}}}});
+          return parse(2, a.get(), info{{"test",{{"case"}}}});
         });
-
-      for(auto e : a) delete e;
     }
 
     {
-      std::array<char*, 4> a{
-        new char[4]{"foo"},
-        new char[7]{"create"},
-        new char[6]{"class"},
-        new char[4]{"dir"}
+      commandline_arguments<4, 7, 6, 4>  a{
+        "foo",
+        "create",
+        "class",
+        "dir"
       };
       
-      check_equality(LINE(""), parse(4, &a[0], info{{"create",{{"class_name", "directory"}}}})
+      check_equality(LINE(""), parse(4, a.get(), info{{"create",{{"class_name", "directory"}}}})
                      , args{{{"create"}, {"class"}, {"dir"}}});
-
-      for(auto e : a) delete e;
     }
 
     {
-      std::array<char*, 5> a{
-        new char[4]{"foo"},
-        new char[8]{"--async"},
-        new char[7]{"create"},
-        new char[6]{"class"},
-        new char[4]{"dir"}
+      commandline_arguments<4, 8, 7, 6, 4> a{
+        "foo",
+        "--async",
+        "create",
+        "class",
+        "dir"
       };
       
-      check_equality(LINE(""), parse(5, &a[0], info{{"create",{{"class_name", "directory"}}}, {"--async", {}}})
+      check_equality(LINE(""), parse(5, a.get(), info{{"create",{{"class_name", "directory"}}}, {"--async", {}}})
                      , args{{{"--async"}}, {{"create"}, {"class"}, {"dir"}}});
-
-      for(auto e : a) delete e;
     }
   }
 }
