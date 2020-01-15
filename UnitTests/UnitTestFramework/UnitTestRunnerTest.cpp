@@ -17,9 +17,7 @@ namespace sequoia::unit_testing
   }
 
   void unit_test_runner_test::test_parser()
-  {
-    commandline_arguments<2, 3, 4> c{"a", "bc", "ert"};
-    
+  {    
     using args = std::vector<std::vector<std::string>>;
     using info = std::map<std::string, commandline_option_info>;
     

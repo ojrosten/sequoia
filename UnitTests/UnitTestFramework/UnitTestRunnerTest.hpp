@@ -15,12 +15,11 @@ namespace sequoia::unit_testing
   class commandline_arguments
   {
   public:
-    template<std::size_t... M>
     commandline_arguments(char const(&...args)[Ns])
       : m_Args{(char*)args...}
     {}
 
-    char** get() noexcept { return &m_Args[0]; }
+    char** get() noexcept  { return &m_Args[0]; }
   private:
     std::array<char*, sizeof...(Ns)> m_Args;
   };
