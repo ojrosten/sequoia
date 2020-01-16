@@ -157,7 +157,7 @@ namespace sequoia::unit_testing
               });
 
             if(infoIter == info.end())
-              throw std::runtime_error("\n Error: unrecognized option '" + arg + "'");
+              throw std::runtime_error{error("unrecognized option '" + arg + "'")};
 
             arg = infoIter->first;
           }
@@ -176,7 +176,21 @@ namespace sequoia::unit_testing
     }
 
     if(!options.empty() && (infoIter != info.end()) && (options.back().size() != infoIter->second.parameters.size() + 1))
-      throw std::runtime_error("\n Error: expected " + std::to_string(infoIter->second.parameters.size()) + " arguments but found only " + std::to_string(options.back().size() - 1));
+    {
+      const auto& params{infoIter->second.parameters};
+      const auto expected{params.size()};
+      std::string mess{error("expected " + std::to_string(expected) + pluralize(expected, "argument") + ", [")};
+      for(auto i{params.begin()}; i != params.end(); ++i)
+      {
+        mess.append(*i);
+        if(std::distance(i, params.end()) > 1) mess.append(", ");
+      }
+
+      const auto actual{options.back().size() - 1};
+      mess.append("], but found " + std::to_string(actual) + pluralize(actual, "argument"));
+      
+      throw std::runtime_error{mess};
+    }
 
     return options;
   }
@@ -194,7 +208,7 @@ namespace sequoia::unit_testing
     return std::string{"\n  Warning: "}.append(message);
   }
 
-  std::string unit_test_runner::error(std::string_view message)
+  std::string error(std::string_view message)
   {
     return std::string{"\n  Error: "}.append(message);
   }

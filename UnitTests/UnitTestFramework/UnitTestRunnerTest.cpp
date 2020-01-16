@@ -105,4 +105,23 @@ namespace sequoia::unit_testing
                      , args{{{"--async"}}, {{"create"}, {"class"}, {"dir"}}});
     }
   }
+
+  void unit_test_runner_false_positive_test::run_tests()
+  {
+    test_parser();
+  }
+
+  void unit_test_runner_false_positive_test::test_parser()
+  {
+    using info = std::map<std::string, commandline_option_info>;
+    
+    {
+      commandline_arguments<4, 5> a{"foo", "test"};
+
+      check_exception_thrown<int>(LINE("Final argument missing"), [&a](){
+          return parse(2, a.get(), info{{"test",{{"case"}}}});
+        });
+    }
+    
+  }
 }

@@ -34,4 +34,14 @@ namespace sequoia::unit_testing
 
     void test_parser();
   };
+
+  class unit_test_runner_false_positive_test : public false_positive_test
+  {
+  public:
+    using false_positive_test::false_positive_test;
+  private:
+    void run_tests() override;
+
+    void test_parser();
+  };
 }

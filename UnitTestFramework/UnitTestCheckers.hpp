@@ -208,7 +208,7 @@ namespace sequoia
     template<class E, class Logger, class Fn>
     bool check_exception_thrown(std::string_view description, Logger& logger, Fn&& function)
     {
-      const std::string message{"\t" + add_type_info<E>(description)};
+      const std::string message{"\t" + add_type_info<E>(combine_messages(description, "Expected Exception Type:", "\n"))};
       typename Logger::sentinel r{logger, message};
       r.log_check();
       try
@@ -223,7 +223,7 @@ namespace sequoia
       }
       catch(std::exception& e)
       {
-        logger.log_failure(combine_messages(message, std::string{"Unexpected exception thrown - \""} + e.what() + "\"\n"));
+        logger.log_failure(combine_messages(message, std::string{"Unexpected exception thrown (caught by std::exception&):\n\t\""} + e.what() + "\"\n"));
         return false;
       }
       catch(...)

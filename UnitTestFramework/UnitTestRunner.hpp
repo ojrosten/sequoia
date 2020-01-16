@@ -57,6 +57,10 @@ namespace sequoia::unit_testing
     using std::runtime_error::runtime_error;
   };
 
+
+  [[nodiscard]]
+  std::string error(std::string_view message);
+
   [[nodiscard]]
   std::string summarize(const log_summary& log, std::string_view prefix, const log_verbosity suppression);
 
@@ -119,8 +123,6 @@ namespace sequoia::unit_testing
     static std::string to_camel_case(std::string text);
     
     static std::string warning(std::string_view message);
-
-    static std::string error(std::string_view message);
 
     static std::string report_arg_num(const std::size_t n);
 

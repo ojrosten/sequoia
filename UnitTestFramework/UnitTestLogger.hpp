@@ -25,6 +25,13 @@
 namespace sequoia::unit_testing
 {
   [[nodiscard]]
+  inline std::string pluralize(const std::size_t n, std::string_view sv)
+  {
+    const std::string s{sv};
+    return (n==1) ? " " + s : " " + s + "s";
+  }
+  
+  [[nodiscard]]
   inline std::string combine_messages(std::string_view s1, std::string_view s2, std::string_view sep=" ")
   {
     std::string mess{};
@@ -461,12 +468,5 @@ namespace sequoia::unit_testing
       m_CriticalFailures{};
 
     int m_ExceptionsInFlight{};
-
-    [[nodiscard]]
-    static std::string pluralize(const std::size_t n, std::string_view sv)
-    {
-      const std::string s{sv};
-      return (n==1) ? " " + s : " " + s + "s";
-    }
   };
 }

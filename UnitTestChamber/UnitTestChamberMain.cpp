@@ -77,6 +77,7 @@ int main(int argc, char** argv)
         "Diagnostics",
         false_positive_diagnostics{"False Positive Diagnostics"},
         false_negative_diagnostics{"False Negative Diagnostics"},
+        unit_test_runner_false_positive_test{"Unit Test Runner False Positive Test"},
         unit_test_runner_test{"Unit Test Runner"}
       }
     );
