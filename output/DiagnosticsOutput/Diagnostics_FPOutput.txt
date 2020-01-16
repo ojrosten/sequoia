@@ -115,16 +115,20 @@
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 44:
 	Exception expected but nothing thrown
+	Expected Exception Type:
 	[std::runtime_error]
 	No exception thrown
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 45:
 	Exception thrown but of wrong type
+	Expected Exception Type:
 	[std::runtime_error]
-	Unexpected exception thrown - "Error"
+	Unexpected exception thrown (caught by std::exception&):
+	"Error"
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 46:
 	Exception thrown but of unknown type
+	Expected Exception Type:
 	[std::runtime_error]
 	Unknown exception thrown
 
@@ -304,18 +308,18 @@
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 72:
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
-	Fast Task duration: 0.00139345s +- 3 * 4.07289e-06
-	Slow Task duration: 0.00134106s +- 3 * 0.000116267 [0.9624; (2, 2)]
+	Fast Task duration: 0.00138486s +- 3 * 1.33895e-05
+	Slow Task duration: 0.00138799s +- 3 * 1.1863e-05 [1.00226; (2, 2)]
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 76:
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
-	Fast Task duration: 0.00128062s +- 3 * 0.00012216
-	Slow Task duration: 0.00133958s +- 3 * 4.97032e-05 [1.04604; (2, 3)]
+	Fast Task duration: 0.00134826s +- 3 * 0.000139338
+	Slow Task duration: 0.00135361s +- 3 * 5.35457e-05 [1.00397; (2, 3)]
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 80:
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
-	Fast Task duration: 0.00135187s +- 3 * 8.07134e-05
-	Slow Task duration: 0.0044159s +- 3 * 0.000449007 [3.26651; (2, 2.5)]
+	Fast Task duration: 0.00122915s +- 3 * 0.000138149
+	Slow Task duration: 0.00452538s +- 3 * 0.000514318 [3.68171; (2, 2.5)]
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 96
 	[std::__1::tuple<std::__1::vector<std::__1::pair<int, float>, std::__1::allocator<std::__1::pair<int, float> > >, std::__1::set<double, std::__1::less<double>, std::__1::allocator<double> >, std::__1::complex<double> >]
@@ -5508,6 +5512,7 @@
 
 	False Positive Failure:
 		UnitTestFramework/UnitTestDiagnostics.cpp, Line 421
+	Expected Exception Type:
 	[std::runtime_error]
 
 	False Positive Failure:
@@ -5529,10 +5534,16 @@
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 434:
 	Iterators demarcate identical elements
 	False Positive Failure:
+		UnitTestFramework/UnitTestDiagnostics.cpp, Line 450:
+	Performance Test which should pass
+	Fast Task duration: 0.00117602s +- 3 * 0.000120492
+	Slow Task duration: 0.00222996s +- 3 * 0.000211511 [1.8962; (1.9, 2.1)]
+
+	False Positive Failure:
 		UnitTestFramework/UnitTestDiagnostics.cpp, Line 451:
 	Performance Test which should pass
-	Fast Task duration: 0.00122485s +- 3 * 9.57375e-05
-	Slow Task duration: 0.00442394s +- 3 * 0.000407209 [3.61181; (3.9, 4.1)]
+	Fast Task duration: 0.00117914s +- 3 * 9.83775e-05
+	Slow Task duration: 0.00443859s +- 3 * 0.000387091 [3.76425; (3.9, 4.1)]
 
 	False Positive Failure:
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 464
@@ -5785,4 +5796,12 @@
 	False Positive Failure:
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 597
 	[sequoia::unit_testing::perfectly_normal_beast<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, true> >]
+
+	UnitTestFramework/UnitTestRunnerTest.cpp, Line 121:
+	Final argument missing
+	Expected Exception Type:
+	[int]
+	Unexpected exception thrown (caught by std::exception&):
+	"
+  Error: expected 1 argument, [case], but found 0 arguments"
 
