@@ -25,10 +25,10 @@
 namespace sequoia::unit_testing
 {
   [[nodiscard]]
-  inline std::string pluralize(const std::size_t n, std::string_view sv)
+  inline std::string pluralize(const std::size_t n, std::string_view noun, std::string_view prefix=" ")
   {
-    const std::string s{sv};
-    return (n==1) ? " " + s : " " + s + "s";
+    auto s{std::string{prefix}.append(noun)};
+    return (n==1) ? s : s.append("s");
   }
   
   [[nodiscard]]
