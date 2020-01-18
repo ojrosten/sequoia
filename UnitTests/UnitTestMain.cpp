@@ -230,10 +230,6 @@ int main(int argc, char** argv)
  
     runner.execute();
   }
-  catch(const argument_error& e)
-  {
-    std::cout << e.what();
-  }
   catch(const std::exception& e)
   {
     std::cout << e.what();

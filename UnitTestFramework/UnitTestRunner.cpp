@@ -15,10 +15,6 @@
 
 namespace sequoia::unit_testing
 {
-  const std::map<std::string, std::size_t> unit_test_runner::s_ArgCount{
-    {"create", 2}
-  };
-
   std::string summarize(const log_summary& log, std::string_view prefix, const log_verbosity suppression)
   {
     constexpr std::size_t entries{6};
@@ -136,9 +132,15 @@ namespace sequoia::unit_testing
     return text;
   }
 
-  std::vector<std::vector<std::string>> parse(int argc, char** argv, const std::map<std::string, commandline_option_info>& info)
+  [[nodiscard]]
+  std::string error(std::string_view message)
   {
-    std::vector<std::vector<std::string>> options;
+    return std::string{"\n  Error: "}.append(message);
+  }
+
+  std::vector<commandline_operation> parse(int argc, char** argv, const std::map<std::string, commandline_option_info>& info)
+  {
+    std::vector<commandline_operation> operations;
 
     auto infoIter{info.end()};
     for(int i{1}; i<argc; ++i)
@@ -162,20 +164,21 @@ namespace sequoia::unit_testing
             arg = infoIter->first;
           }
 
-          options.push_back({{arg}});
+          operations.push_back(commandline_operation{infoIter->second.fn});
           if(infoIter->second.parameters.empty())
             infoIter = info.end();
         }
         else
         {
-          options.back().push_back(arg);
-          if(options.back().size() == infoIter->second.parameters.size() + 1)
+          auto& params{operations.back().parameters};
+          params.push_back(arg);
+          if(params.size() == infoIter->second.parameters.size())
             infoIter = info.end();
         }
       }
     }
 
-    if(!options.empty() && (infoIter != info.end()) && (options.back().size() != infoIter->second.parameters.size() + 1))
+    if(!operations.empty() && (infoIter != info.end()) && (operations.back().parameters.size() != infoIter->second.parameters.size()))
     {
       const auto& params{infoIter->second.parameters};
       const auto expected{params.size()};
@@ -186,13 +189,13 @@ namespace sequoia::unit_testing
         if(std::distance(i, params.end()) > 1) mess.append(", ");
       }
 
-      const auto actual{options.back().size() - 1};
+      const auto actual{operations.back().parameters.size()};
       mess.append("], but found " + std::to_string(actual) + pluralize(actual, "argument"));
       
       throw std::runtime_error{mess};
     }
 
-    return options;
+    return operations;
   }
 
   const std::array<std::string_view, 5> unit_test_runner::st_TestNameStubs {
@@ -206,35 +209,6 @@ namespace sequoia::unit_testing
   std::string unit_test_runner::warning(std::string_view message)
   {
     return std::string{"\n  Warning: "}.append(message);
-  }
-
-  std::string error(std::string_view message)
-  {
-    return std::string{"\n  Error: "}.append(message);
-  }
-
-  std::string unit_test_runner::report_arg_num(const std::size_t n)
-  {
-    return (std::to_string(n) += ((n==1) ? " was" : " were")) += " provided\n";
-  }
-
-  argument_error unit_test_runner::generate_argument_error(std::string_view option, const arg_list& argList, const std::size_t num, std::string_view expectedArgs)
-  {
-    std::string mess{error(option).append(" requires ").append(std::to_string(num) + " argument")};
-    if(num != 1) mess.append("s");
-
-    if(!expectedArgs.empty())
-      mess.append(" [" + std::string{expectedArgs} + "]");
-
-    mess.append(", but ").append(report_arg_num(argList.size()));
-
-    return argument_error{mess};
-  }
-
-  void unit_test_runner::check_zero_args(std::string_view option, const arg_list& argList)
-  {
-    if(!argList.empty())
-      throw generate_argument_error(option, argList, 0, "");
   }
 
   void unit_test_runner::replace_all(std::string& text, std::string_view from, const std::string& to)
@@ -332,37 +306,21 @@ namespace sequoia::unit_testing
   }
 
   unit_test_runner::unit_test_runner(int argc, char** argv)
-  {
-    build_map();
+  {    
+    const auto operations{parse(argc, argv, {
+          {"test", {{"test_name"}, {"t"}, [this](const arg_list& args){ m_SpecificTests.emplace(args.front(), false); }} },
+          {"create",{{"class_name", "directory"}, {"c"}, [this](const arg_list& args) { m_NewFiles.push_back(nascent_test{args[0], args[1]}); }} },
+          {"--async",    {{}, {"-a"}, [this](const arg_list& args) { m_Asynchronous = true; }} },
+          {"--verbose",  {{}, {"-v"}, [this](const arg_list& args) { m_Verbose = true; }} },
+          {"--recovery", {{}, {"-r"}, [](const arg_list& args) { output_manager::recovery_file("../output/Recovery/Recovery.txt"); }} },
+          {"--nofiles",  {{}, {"-n"}, [this](const arg_list& args) {  m_WriteFiles = false; }} },
+          {"--pause",    {{}, {"-p"}, [this](const arg_list& args) { m_Pause = true; }} }
+        })
+    };
     
-    const auto options{parse(argc, argv, {
-          {"test", {{"test_name"}, {"t"}}},
-          {"create",{{"class_name", "directory"}, {"c"}}},
-          {"--async",    {{}, {"-a"}}},
-          {"--verbose",  {{}, {"-v"}}},
-          {"--recovery", {{}, {"-r"}}},
-          {"--nofiles",  {{}, {"-n"}}},
-          {"--pause",    {{}, {"-p"}}}
-        })};
-    
-    for(const auto& argList : options)
+    for(const auto& ops : operations)
     {
-      if(!argList.empty())
-      {          
-        const std::string& key{argList.front()};
-        arg_list remainingArgs(argList.size() - 1);
-        std::copy(argList.begin() + 1, argList.end(), remainingArgs.begin());
-        auto found{m_FunctionMap.find(key)};
-        if(found != m_FunctionMap.end())
-        {
-          auto [option, fn]{*found};
-          fn(option, remainingArgs);
-        }
-        else
-        {
-          throw argument_error{(error("argument \'") += key).append("\' not recognized\n\n")};
-        }
-      }
+      ops.fn(ops.parameters);
     }
 
     if(m_Pause)
@@ -375,67 +333,10 @@ namespace sequoia::unit_testing
     run_diagnostics();
   }
 
-  void unit_test_runner::build_map()
-  {
-    m_FunctionMap.emplace("test", [this](std::string_view option, const arg_list& argList) {          
-        if(argList.size() == 1)
-        {
-          m_SpecificTests.emplace(argList.front(), false);
-        }
-        else
-        {
-          throw generate_argument_error(option, argList, 1, "test_name");
-        }
-      }
-    );
-
-    m_FunctionMap.emplace("create", [this](std::string_view option, const arg_list& argList) {          
-        if(argList.size() == 2)
-        {          
-          m_NewFiles.push_back(nascent_test{argList[0], argList[1]});
-        }
-        else
-        {
-          throw generate_argument_error(option, argList, 2, "directory, class_name");
-        }
-      }
-    );
-
-    m_FunctionMap.emplace("--async", [this](std::string_view option, const arg_list& argList) {
-        check_zero_args(option, argList);
-        m_Asynchronous = true;
-      }
-    );
-
-    m_FunctionMap.emplace("--verbose", [this](std::string_view option, const arg_list& argList) {
-        check_zero_args(option, argList);
-        m_Verbose = true;
-      }
-    );
-
-    m_FunctionMap.emplace("--pause", [this](std::string_view option, const arg_list& argList) {
-        check_zero_args(option, argList);
-        m_Pause = true;
-      }
-    );
-
-    m_FunctionMap.emplace("--recovery", [](std::string_view option, const arg_list& argList) {
-        check_zero_args(option, argList);
-        output_manager::recovery_file("../output/Recovery/Recovery.txt");
-      }
-    );
-
-    m_FunctionMap.emplace("--nofiles", [this](std::string_view option, const arg_list& argList) {
-        check_zero_args(option, argList);
-        m_WriteFiles = false;
-      }
-    );
-  }
-
   void unit_test_runner::check_argument_consistency()
   {
     if(m_Asynchronous && !output_manager::recovery_file().empty())
-      throw argument_error{error("Can't run asynchronously in recovery mode\n")};
+      throw std::runtime_error{error("Can't run asynchronously in recovery mode\n")};
   }
 
   void unit_test_runner::run_diagnostics()

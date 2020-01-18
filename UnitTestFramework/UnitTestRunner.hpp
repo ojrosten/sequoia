@@ -51,12 +51,6 @@ namespace sequoia::unit_testing
       s = std::string(maxChars - s.size(), ' ') + s;
     }
   }
-  
-  struct argument_error : std::runtime_error
-  {
-    using std::runtime_error::runtime_error;
-  };
-
 
   [[nodiscard]]
   std::string error(std::string_view message);
@@ -64,14 +58,23 @@ namespace sequoia::unit_testing
   [[nodiscard]]
   std::string summarize(const log_summary& log, std::string_view prefix, const log_verbosity suppression);
 
+  using commandline_function = std::function<void (const std::vector<std::string>&)>;
+  
   struct commandline_option_info
-  {
+  {    
     std::vector<std::string> parameters;
     std::vector<std::string> aliases;
+    commandline_function fn{};
+  };
+
+  struct commandline_operation
+  {
+    commandline_function fn{};
+    std::vector<std::string> parameters;
   };
 
   [[nodiscard]]
-  std::vector<std::vector<std::string>>
+  std::vector<commandline_operation>
   parse(int argc, char** argv, const std::map<std::string, commandline_option_info>& info);
 
   class unit_test_runner
@@ -94,11 +97,8 @@ namespace sequoia::unit_testing
       
       std::string directory, qualified_class_name, class_name;
     };
-
-    const static std::map<std::string, std::size_t> s_ArgCount;
     
     std::vector<test_family> m_Families;
-    std::map<std::string, std::function<void (std::string_view, const arg_list&)>> m_FunctionMap;
     std::map<std::string, bool> m_SpecificTests{};
     std::vector<nascent_test> m_NewFiles{};
     
@@ -107,8 +107,6 @@ namespace sequoia::unit_testing
     const static std::array<std::string_view, 5> st_TestNameStubs;
 
     log_summary process_family(const std::vector<log_summary>& summaries);
-
-    void build_map();
 
     void run_diagnostics();
 
@@ -123,12 +121,6 @@ namespace sequoia::unit_testing
     static std::string to_camel_case(std::string text);
     
     static std::string warning(std::string_view message);
-
-    static std::string report_arg_num(const std::size_t n);
-
-    static argument_error generate_argument_error(std::string_view option, const arg_list& argList, const std::size_t num, std::string_view expectedArgs);
-
-    static void check_zero_args(std::string_view option, const arg_list& argList);
 
     static void replace_all(std::string& text, std::string_view from, const std::string& to);
 
