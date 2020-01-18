@@ -335,47 +335,17 @@ namespace sequoia::unit_testing
   {
     build_map();
     
-    std::vector<arg_list> args;
-    for(int i{1}; i<argc; ++i)
-    {
-      std::string arg{argv[i]};
-      if(!arg.empty())
-      {
-        const bool append{[&arg, &args](){
-            if((arg.front() != '-') && !args.empty())
-            {
-              const auto& lastList{args.back()};
-              if(!lastList.empty())
-              {
-                if(auto found{s_ArgCount.find(lastList.front())}; found != s_ArgCount.end())
-                {
-                  if(lastList.size() <= found->second)
-                    return true;
-                }
-                else if(lastList.size() == 1)
-                {
-                  const auto& lastString{args.back().front()};
-                  if(!lastString.empty() && (lastString.front() != '-'))
-                    return true;
-                }
-              }
-            }
-            return false;
-          }()
-        };
-                       
-        if(append)
-        {
-          args.back().push_back(arg);
-        }
-        else
-        {
-          args.push_back(arg_list{{arg}});
-        }
-      }
-    }
+    const auto options{parse(argc, argv, {
+          {"test", {{"test_name"}, {"t"}}},
+          {"create",{{"class_name", "directory"}, {"c"}}},
+          {"--async",    {{}, {"-a"}}},
+          {"--verbose",  {{}, {"-v"}}},
+          {"--recovery", {{}, {"-r"}}},
+          {"--nofiles",  {{}, {"-n"}}},
+          {"--pause",    {{}, {"-p"}}}
+        })};
     
-    for(const auto& argList : args)
+    for(const auto& argList : options)
     {
       if(!argList.empty())
       {          

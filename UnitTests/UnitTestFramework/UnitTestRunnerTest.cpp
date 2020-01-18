@@ -129,7 +129,7 @@ namespace sequoia::unit_testing
       
       check_exception_thrown<int>(LINE("Unexpected argument"), [&a](){
           return parse(2, a.get(), info{{"--async",{}}});
-        });
+        });      
     }
   }
 }
