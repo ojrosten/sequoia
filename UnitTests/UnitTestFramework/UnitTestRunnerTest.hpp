@@ -17,12 +17,14 @@ namespace sequoia::unit_testing
   struct weak_equivalence_checker<commandline_operation>
   {
     using type = commandline_operation;
-    using weak_type = std::vector<std::string>;
 
     template<class Logger>
-    static void check(std::string_view description, Logger& logger, const type& operations, const weak_type& prediction)
+    static void check(std::string_view description, Logger& logger, const type& operation, const type& prediction)
     {
-      check_equality(description, logger, operations.parameters, prediction);
+      const bool consistent{((operation.fn != nullptr) && (prediction.fn != nullptr))
+          || ((operation.fn == nullptr) && (prediction.fn == nullptr))};
+      unit_testing::check(combine_messages(description, "Existence of function objects differes"), logger, consistent);
+      check_equality(combine_messages(description, "Operation Parameters differ"), logger, operation.parameters, prediction.parameters);
     }
   };
   
@@ -30,13 +32,17 @@ namespace sequoia::unit_testing
   struct weak_equivalence_checker<std::vector<commandline_operation>>
   {
     using type = std::vector<commandline_operation>;
-    using weak_type = std::vector<std::vector<std::string>>;
 
     template<class Logger>
-    static void check(std::string_view description, Logger& logger, const type& operations, const weak_type& prediction)
+    static void check(std::string_view description, Logger& logger, const type& operations, const type& prediction)
     {
       check_range_weak_equivalence(description, logger, std::begin(operations), std::end(operations), std::begin(prediction), std::end(prediction));
     }
+  };
+
+  struct function_object
+  {
+    void operator()(const std::vector<std::string>& args) const noexcept { }
   };
   
   template<std::size_t... Ns>

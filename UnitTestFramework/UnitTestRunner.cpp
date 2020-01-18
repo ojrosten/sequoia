@@ -308,13 +308,13 @@ namespace sequoia::unit_testing
   unit_test_runner::unit_test_runner(int argc, char** argv)
   {    
     const auto operations{parse(argc, argv, {
-          {"test", {{"test_name"}, {"t"}, [this](const arg_list& args){ m_SpecificTests.emplace(args.front(), false); }} },
-          {"create",{{"class_name", "directory"}, {"c"}, [this](const arg_list& args) { m_NewFiles.push_back(nascent_test{args[0], args[1]}); }} },
-          {"--async",    {{}, {"-a"}, [this](const arg_list& args) { m_Asynchronous = true; }} },
-          {"--verbose",  {{}, {"-v"}, [this](const arg_list& args) { m_Verbose = true; }} },
-          {"--recovery", {{}, {"-r"}, [](const arg_list& args) { output_manager::recovery_file("../output/Recovery/Recovery.txt"); }} },
-          {"--nofiles",  {{}, {"-n"}, [this](const arg_list& args) {  m_WriteFiles = false; }} },
-          {"--pause",    {{}, {"-p"}, [this](const arg_list& args) { m_Pause = true; }} }
+          {"test",       {[this](const arg_list& args) { m_SpecificTests.emplace(args.front(), false); },         {"test_name"}, {"t"}} },
+          {"create",     {[this](const arg_list& args) { m_NewFiles.push_back(nascent_test{args[0], args[1]}); }, {"class_name", "directory"}, {"c"} } },
+          {"--async",    {[this](const arg_list& args) { m_Asynchronous = true; }, {}, {"-a"}} },
+          {"--verbose",  {[this](const arg_list& args) { m_Verbose = true; },      {}, {"-v"} } },          
+          {"--nofiles",  {[this](const arg_list& args) {  m_WriteFiles = false; }, {}, {"-n"} } },
+          {"--pause",    {[this](const arg_list& args) { m_Pause = true; },        {}, {"-p"} } },
+          {"--recovery", {[](const arg_list& args)     { output_manager::recovery_file("../output/Recovery/Recovery.txt"); }, {}, {"-r"}} }
         })
     };
     

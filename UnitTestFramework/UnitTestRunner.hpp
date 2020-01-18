@@ -62,9 +62,9 @@ namespace sequoia::unit_testing
   
   struct commandline_option_info
   {    
+    commandline_function fn{};
     std::vector<std::string> parameters;
     std::vector<std::string> aliases;
-    commandline_function fn{};
   };
 
   struct commandline_operation
