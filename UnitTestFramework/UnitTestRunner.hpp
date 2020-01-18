@@ -118,13 +118,16 @@ namespace sequoia::unit_testing
 
     enum class file_comparison {failed, same, different};
 
+    [[nodiscard]]
     static std::string to_camel_case(std::string text);
-    
+
+    [[nodiscard]]
     static std::string warning(std::string_view message);
 
     static void replace_all(std::string& text, std::string_view from, const std::string& to);
 
-    static bool file_exists(const std::string& path);
+    [[nodiscard]]
+    static bool file_exists(const std::string& path) noexcept;
 
     template<class Iter>
     static void create_files(Iter beginFiles, Iter endFiles, std::string_view message, const bool overwrite);

@@ -221,7 +221,7 @@ namespace sequoia::unit_testing
     }
   }
 
-  bool unit_test_runner::file_exists(const std::string& path)
+  bool unit_test_runner::file_exists(const std::string& path) noexcept
   {
     // use filesystem when available!
     return static_cast<bool>(std::ifstream{path});    
