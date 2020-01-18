@@ -132,5 +132,13 @@ namespace sequoia::unit_testing
           return parse(2, a.get(), info{{"--async", {fo{}}}});
         });      
     }
+
+    {
+      commandline_arguments<4, 8> a{"foo", "--async"};
+      
+      check_exception_thrown<int>(LINE("No bound function object"), [&a](){
+          return parse(2, a.get(), info{{"--async", {nullptr}}});
+        });      
+    }
   }
 }

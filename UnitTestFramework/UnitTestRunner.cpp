@@ -164,6 +164,9 @@ namespace sequoia::unit_testing
             arg = infoIter->first;
           }
 
+          if(!infoIter->second.fn)
+            throw std::logic_error{error("Commandline option not bound to a function object")};
+
           operations.push_back(commandline_operation{infoIter->second.fn});
           if(infoIter->second.parameters.empty())
             infoIter = info.end();
