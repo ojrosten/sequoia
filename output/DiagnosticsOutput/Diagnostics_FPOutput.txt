@@ -308,18 +308,13 @@
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 72:
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
-	Fast Task duration: 0.00127167s +- 3 * 0.000154395
-	Slow Task duration: 0.00127094s +- 3 * 0.000137937 [0.999425; (2, 2)]
+	Fast Task duration: 0.00131805s +- 3 * 8.11498e-05
+	Slow Task duration: 0.00139112s +- 3 * 5.67628e-05 [1.05544; (2, 2)]
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 76:
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
-	Fast Task duration: 0.00132339s +- 3 * 4.12331e-05
-	Slow Task duration: 0.00133789s +- 3 * 4.47266e-05 [1.01096; (2, 3)]
-
-	UnitTestFramework/UnitTestDiagnostics.cpp, Line 80:
-	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
-	Fast Task duration: 0.00136152s +- 3 * 4.59633e-05
-	Slow Task duration: 0.00481124s +- 3 * 0.000482108 [3.53373; (2, 2.5)]
+	Fast Task duration: 0.00121477s +- 3 * 6.91726e-05
+	Slow Task duration: 0.00124649s +- 3 * 0.000106234 [1.02612; (2, 3)]
 
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 96
 	[std::__1::tuple<std::__1::vector<std::__1::pair<int, float>, std::__1::allocator<std::__1::pair<int, float> > >, std::__1::set<double, std::__1::less<double>, std::__1::allocator<double> >, std::__1::complex<double> >]
@@ -5536,14 +5531,14 @@
 	False Positive Failure:
 		UnitTestFramework/UnitTestDiagnostics.cpp, Line 450:
 	Performance Test which should pass
-	Fast Task duration: 0.00119781s +- 3 * 7.80455e-05
-	Slow Task duration: 0.00232168s +- 3 * 0.000235806 [1.93827; (1.9, 2.1)]
+	Fast Task duration: 0.0014305s +- 3 * 0.00019053
+	Slow Task duration: 0.00245166s +- 3 * 0.000467972 [1.71385; (1.9, 2.1)]
 
 	False Positive Failure:
 		UnitTestFramework/UnitTestDiagnostics.cpp, Line 451:
 	Performance Test which should pass
-	Fast Task duration: 0.00120215s +- 3 * 9.87749e-05
-	Slow Task duration: 0.00414268s +- 3 * 0.000100566 [3.44605; (3.9, 4.1)]
+	Fast Task duration: 0.00127533s +- 3 * 0.00017659
+	Slow Task duration: 0.0043635s +- 3 * 0.000360439 [3.42148; (3.9, 4.1)]
 
 	False Positive Failure:
 	UnitTestFramework/UnitTestDiagnostics.cpp, Line 464
@@ -5796,28 +5791,4 @@
 	False Positive Failure:
 	Regular Semantics UnitTestFramework/UnitTestDiagnostics.cpp, Line 597
 	[sequoia::unit_testing::perfectly_normal_beast<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, true> >]
-
-	UnitTestFramework/UnitTestRunnerTest.cpp, Line 126:
-	Final argument missing
-	Expected Exception Type:
-	[int]
-	Unexpected exception thrown (caught by std::exception&):
-	"
-  Error: expected 1 argument, [case], but found 0 arguments"
-
-	UnitTestFramework/UnitTestRunnerTest.cpp, Line 135:
-	Unexpected argument
-	Expected Exception Type:
-	[int]
-	Unexpected exception thrown (caught by std::exception&):
-	"
-  Error: unrecognized option '--asyng'"
-
-	UnitTestFramework/UnitTestRunnerTest.cpp, Line 143:
-	No bound function object
-	Expected Exception Type:
-	[int]
-	Unexpected exception thrown (caught by std::exception&):
-	"
-  Error: Commandline option not bound to a function object"
 

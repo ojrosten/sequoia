@@ -5,18 +5,16 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "UnitTestRunnerTest.hpp"
-
-#include "UnitTestRunner.hpp"
+#include "CommandLineArgumentsTest.hpp"
 
 namespace sequoia::unit_testing
 {
-  void unit_test_runner_test::run_tests()
+  void commandline_arguments_test::run_tests()
   {
     test_parser();
   }
 
-  void unit_test_runner_test::test_parser()
+  void commandline_arguments_test::test_parser()
   {
     using namespace sequoia::parsing::commandline;
     
@@ -108,12 +106,12 @@ namespace sequoia::unit_testing
     }
   }
 
-  void unit_test_runner_false_positive_test::run_tests()
+  void commandline_arguments_false_positive_test::run_tests()
   {
     test_parser();
   }
 
-  void unit_test_runner_false_positive_test::test_parser()
+  void commandline_arguments_false_positive_test::test_parser()
   {
     using namespace sequoia::parsing::commandline;
 

@@ -7,11 +7,11 @@
 
 #pragma once
 
-#include "UnitTestRunnerTestingUtilities.hpp"
+#include "CommandLineArgumentsTestingUtilities.hpp"
 
 namespace sequoia::unit_testing
 {  
-  class unit_test_runner_test : public unit_test
+  class commandline_arguments_test : public unit_test
   {
   public:
     using unit_test::unit_test;
@@ -21,7 +21,7 @@ namespace sequoia::unit_testing
     void test_parser();
   };
 
-  class unit_test_runner_false_positive_test : public false_positive_test
+  class commandline_arguments_false_positive_test : public false_positive_test
   {
   public:
     using false_positive_test::false_positive_test;

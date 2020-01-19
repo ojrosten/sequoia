@@ -1,0 +1,24 @@
+	Parsing/CommandLineArgumentsTest.cpp, Line 124:
+	Final argument missing
+	Expected Exception Type:
+	[int]
+	Unexpected exception thrown (caught by std::exception&):
+	"
+  Error: expected 1 argument, [case], but found 0 arguments"
+
+	Parsing/CommandLineArgumentsTest.cpp, Line 133:
+	Unexpected argument
+	Expected Exception Type:
+	[int]
+	Unexpected exception thrown (caught by std::exception&):
+	"
+  Error: unrecognized option '--asyng'"
+
+	Parsing/CommandLineArgumentsTest.cpp, Line 141:
+	No bound function object
+	Expected Exception Type:
+	[int]
+	Unexpected exception thrown (caught by std::exception&):
+	"
+  Error: Commandline option not bound to a function object"
+

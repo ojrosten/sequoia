@@ -57,10 +57,12 @@
 
 #include "StaticGraphTraversalsTest.hpp"
 
+#include "CommandLineArgumentsTest.hpp"
+
 #include "ExperimentalTest.hpp"
 
 #include "UnitTestDiagnostics.hpp"
-#include "UnitTestRunnerTest.hpp"
+
 #include "UnitTestRunner.hpp"
 
 int main(int argc, char** argv)
@@ -76,9 +78,15 @@ int main(int argc, char** argv)
       test_family{
         "Diagnostics",
         false_positive_diagnostics{"False Positive Diagnostics"},
-        false_negative_diagnostics{"False Negative Diagnostics"},
-        unit_test_runner_false_positive_test{"Unit Test Runner False Positive Test"},
-        unit_test_runner_test{"Unit Test Runner"}
+        false_negative_diagnostics{"False Negative Diagnostics"}
+      }
+    );
+
+    runner.add_test_family(
+      test_family{
+        "CommandLine Arguments",
+        commandline_arguments_test{"Unit Test"},
+        commandline_arguments_false_positive_test{"False Positive Test"}
       }
     );
 
