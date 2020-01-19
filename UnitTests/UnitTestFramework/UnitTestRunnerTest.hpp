@@ -10,13 +10,14 @@
 #include "UnitTestCore.hpp"
 
 #include "UnitTestRunner.hpp"
+#include "CommandLineArguments.hpp"
 
 namespace sequoia::unit_testing
 {
   template<>
-  struct weak_equivalence_checker<commandline_operation>
+  struct weak_equivalence_checker<sequoia::parsing::commandline::operation>
   {
-    using type = commandline_operation;
+    using type = sequoia::parsing::commandline::operation;
 
     template<class Logger>
     static void check(std::string_view description, Logger& logger, const type& operation, const type& prediction)
@@ -29,9 +30,9 @@ namespace sequoia::unit_testing
   };
   
   template<>
-  struct weak_equivalence_checker<std::vector<commandline_operation>>
+  struct weak_equivalence_checker<std::vector<sequoia::parsing::commandline::operation>>
   {
-    using type = std::vector<commandline_operation>;
+    using type = std::vector<sequoia::parsing::commandline::operation>;
 
     template<class Logger>
     static void check(std::string_view description, Logger& logger, const type& operations, const type& prediction)
@@ -42,7 +43,7 @@ namespace sequoia::unit_testing
 
   struct function_object
   {
-    void operator()(const std::vector<std::string>& args) const noexcept { }
+    void operator()(const std::vector<std::string>& args) const noexcept {}
   };
   
   template<std::size_t... Ns>

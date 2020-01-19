@@ -23,14 +23,7 @@
 #endif
 
 namespace sequoia::unit_testing
-{
-  [[nodiscard]]
-  inline std::string pluralize(const std::size_t n, std::string_view noun, std::string_view prefix=" ")
-  {
-    auto s{std::string{prefix}.append(noun)};
-    return (n==1) ? s : s.append("s");
-  }
-  
+{  
   [[nodiscard]]
   inline std::string combine_messages(std::string_view s1, std::string_view s2, std::string_view sep=" ")
   {

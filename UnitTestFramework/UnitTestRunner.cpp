@@ -6,6 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "UnitTestRunner.hpp"
+#include "CommandLineArguments.hpp"
 
 #include <map>
 #include <iostream>
@@ -15,6 +16,8 @@
 
 namespace sequoia::unit_testing
 {
+  using parsing::commandline::warning;
+  
   std::string summarize(const log_summary& log, std::string_view prefix, const log_verbosity suppression)
   {
     constexpr std::size_t entries{6};
@@ -132,88 +135,13 @@ namespace sequoia::unit_testing
     return text;
   }
 
-  [[nodiscard]]
-  std::string error(std::string_view message, std::string_view prefix)
-  {
-    return std::string{prefix}.append("Error: ").append(message);
-  }
-
-  [[nodiscard]]
-  std::vector<commandline_operation> parse(int argc, char** argv, const std::map<std::string, commandline_option_info>& info)
-  {
-    std::vector<commandline_operation> operations;
-
-    auto infoIter{info.end()};
-    for(int i{1}; i<argc; ++i)
-    {
-      std::string arg{argv[i]};
-      if(!arg.empty())
-      {        
-        if(infoIter == info.end())
-        {
-          infoIter = info.find(arg);
-          if(infoIter == info.end())
-          {
-            infoIter = std::find_if(info.begin(), info.end(), [&arg](const auto& e) {
-                const auto& aliases{e.second.aliases};
-                return std::find(aliases.begin(), aliases.end(), arg) != aliases.end();
-              });
-
-            if(infoIter == info.end())
-              throw std::runtime_error{error("unrecognized option '" + arg + "'")};
-
-            arg = infoIter->first;
-          }
-
-          if(!infoIter->second.fn)
-            throw std::logic_error{error("Commandline option not bound to a function object")};
-
-          operations.push_back(commandline_operation{infoIter->second.fn});
-          if(infoIter->second.parameters.empty())
-            infoIter = info.end();
-        }
-        else
-        {
-          auto& params{operations.back().parameters};
-          params.push_back(arg);
-          if(params.size() == infoIter->second.parameters.size())
-            infoIter = info.end();
-        }
-      }
-    }
-
-    if(!operations.empty() && (infoIter != info.end()) && (operations.back().parameters.size() != infoIter->second.parameters.size()))
-    {
-      const auto& params{infoIter->second.parameters};
-      const auto expected{params.size()};
-      std::string mess{error("expected " + std::to_string(expected) + pluralize(expected, "argument") + ", [")};
-      for(auto i{params.begin()}; i != params.end(); ++i)
-      {
-        mess.append(*i);
-        if(std::distance(i, params.end()) > 1) mess.append(", ");
-      }
-
-      const auto actual{operations.back().parameters.size()};
-      mess.append("], but found " + std::to_string(actual) + pluralize(actual, "argument"));
-      
-      throw std::runtime_error{mess};
-    }
-
-    return operations;
-  }
-
   const std::array<std::string_view, 5> unit_test_runner::st_TestNameStubs {
     "TestingUtilities.hpp",
     "TestingDiagnostics.hpp",
     "TestingDiagnostics.cpp",
     "Test.hpp",
     "Test.cpp"
-  };
-
-  std::string unit_test_runner::warning(std::string_view message)
-  {
-    return std::string{"\n  Warning: "}.append(message);
-  }
+  };  
 
   void unit_test_runner::replace_all(std::string& text, std::string_view from, const std::string& to)
   {
@@ -232,7 +160,7 @@ namespace sequoia::unit_testing
   }
 
   auto unit_test_runner::compare_files(std::string_view referenceFile, std::string_view generatedFile) -> file_comparison
-  {
+  {    
     std::ifstream file1{referenceFile.data()}, file2{generatedFile.data()};
     if(!file1) warning("unable to open file ").append(referenceFile).append("\n");
     if(!file2) warning("unable to open file ").append(generatedFile).append("\n");
@@ -311,16 +239,16 @@ namespace sequoia::unit_testing
 
   unit_test_runner::unit_test_runner(int argc, char** argv)
   {
-    using arg_list = std::vector<std::string>;
+    using namespace parsing::commandline;
 
     const auto operations{parse(argc, argv, {
-          {"test",       {[this](const arg_list& args) { m_SpecificTests.emplace(args.front(), false); },         {"test_name"}, {"t"}} },
-          {"create",     {[this](const arg_list& args) { m_NewFiles.push_back(nascent_test{args[0], args[1]}); }, {"class_name", "directory"}, {"c"} } },
-          {"--async",    {[this](const arg_list& args) { m_Asynchronous = true; }, {}, {"-a"}} },
-          {"--verbose",  {[this](const arg_list& args) { m_Verbose = true; },      {}, {"-v"} } },          
-          {"--nofiles",  {[this](const arg_list& args) {  m_WriteFiles = false; }, {}, {"-n"} } },
-          {"--pause",    {[this](const arg_list& args) { m_Pause = true; },        {}, {"-p"} } },
-          {"--recovery", {[](const arg_list& args)     { output_manager::recovery_file("../output/Recovery/Recovery.txt"); }, {}, {"-r"}} }
+          {"test",       {[this](const param_list& args) { m_SpecificTests.emplace(args.front(), false); },         {"test_name"}, {"t"}} },
+          {"create",     {[this](const param_list& args) { m_NewFiles.push_back(nascent_test{args[0], args[1]}); }, {"class_name", "directory"}, {"c"} } },
+          {"--async",    {[this](const param_list& args) { m_Asynchronous = true; }, {}, {"-a"}} },
+          {"--verbose",  {[this](const param_list& args) { m_Verbose = true; },      {}, {"-v"} } },          
+          {"--nofiles",  {[this](const param_list& args) {  m_WriteFiles = false; }, {}, {"-n"} } },
+          {"--pause",    {[this](const param_list& args) { m_Pause = true; },        {}, {"-p"} } },
+          {"--recovery", {[]    (const param_list& args) { output_manager::recovery_file("../output/Recovery/Recovery.txt"); }, {}, {"-r"}} }
         })
     };
     
@@ -341,6 +269,8 @@ namespace sequoia::unit_testing
 
   void unit_test_runner::check_argument_consistency()
   {
+    using parsing::commandline::error;
+
     if(m_Asynchronous && !output_manager::recovery_file().empty())
       throw std::runtime_error{error("Can't run asynchronously in recovery mode\n")};
   }

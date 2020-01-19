@@ -18,8 +18,10 @@ namespace sequoia::unit_testing
 
   void unit_test_runner_test::test_parser()
   {
-    using ops = std::vector<commandline_operation>;
-    using info = std::map<std::string, commandline_option_info>;
+    using namespace sequoia::parsing::commandline;
+    
+    using ops = std::vector<operation>;
+    using info = std::map<std::string, option_info>;
     using fo = function_object;
     
     {
@@ -113,7 +115,9 @@ namespace sequoia::unit_testing
 
   void unit_test_runner_false_positive_test::test_parser()
   {
-    using info = std::map<std::string, commandline_option_info>;
+    using namespace sequoia::parsing::commandline;
+
+    using info = std::map<std::string, option_info>;
     using fo = function_object;
     
     {

@@ -1,6 +1,6 @@
 BUILDROOT := ../build/native
 BUILDDIR := $(BUILDROOT)/AllUnitTests
-LIBDIRS := ../Core ../Maths ../Experimental ../Algorithms ../UnitTestFramework
+LIBDIRS := ../Core ../Maths ../Experimental ../Algorithms ../Parsing ../UnitTestFramework
 UTBUILDDIR := $(BUILDDIR)/UnitTests
 
 UTSUBDIRS := $(filter-out ., $(shell find . -type d))

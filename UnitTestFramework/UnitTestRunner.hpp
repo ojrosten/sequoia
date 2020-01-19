@@ -53,29 +53,7 @@ namespace sequoia::unit_testing
   }
 
   [[nodiscard]]
-  std::string error(std::string_view message, std::string_view prefix="\n  ");
-
-  [[nodiscard]]
   std::string summarize(const log_summary& log, std::string_view prefix, const log_verbosity suppression);
-
-  using commandline_function = std::function<void (const std::vector<std::string>&)>;
-  
-  struct commandline_option_info
-  {    
-    commandline_function fn{};
-    std::vector<std::string> parameters;
-    std::vector<std::string> aliases;
-  };
-
-  struct commandline_operation
-  {
-    commandline_function fn{};
-    std::vector<std::string> parameters;
-  };
-
-  [[nodiscard]]
-  std::vector<commandline_operation>
-  parse(int argc, char** argv, const std::map<std::string, commandline_option_info>& info);
 
   class unit_test_runner
   {
@@ -95,7 +73,7 @@ namespace sequoia::unit_testing
       
       std::string directory, qualified_class_name, class_name;
     };
-    
+
     std::vector<test_family> m_Families;
     std::map<std::string, bool> m_SpecificTests{};
     std::vector<nascent_test> m_NewFiles{};
@@ -117,10 +95,7 @@ namespace sequoia::unit_testing
     enum class file_comparison {failed, same, different};
 
     [[nodiscard]]
-    static std::string to_camel_case(std::string text);
-
-    [[nodiscard]]
-    static std::string warning(std::string_view message);
+    static std::string to_camel_case(std::string text);    
 
     static void replace_all(std::string& text, std::string_view from, const std::string& to);
 
