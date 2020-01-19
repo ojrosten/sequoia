@@ -7,59 +7,10 @@
 
 #pragma once
 
-#include "UnitTestCore.hpp"
-
-#include "UnitTestRunner.hpp"
-#include "CommandLineArguments.hpp"
+#include "UnitTestRunnerTestingUtilities.hpp"
 
 namespace sequoia::unit_testing
-{
-  template<>
-  struct weak_equivalence_checker<sequoia::parsing::commandline::operation>
-  {
-    using type = sequoia::parsing::commandline::operation;
-
-    template<class Logger>
-    static void check(std::string_view description, Logger& logger, const type& operation, const type& prediction)
-    {
-      const bool consistent{((operation.fn != nullptr) && (prediction.fn != nullptr))
-          || ((operation.fn == nullptr) && (prediction.fn == nullptr))};
-      unit_testing::check(combine_messages(description, "Existence of function objects differes"), logger, consistent);
-      check_equality(combine_messages(description, "Operation Parameters differ"), logger, operation.parameters, prediction.parameters);
-    }
-  };
-  
-  template<>
-  struct weak_equivalence_checker<std::vector<sequoia::parsing::commandline::operation>>
-  {
-    using type = std::vector<sequoia::parsing::commandline::operation>;
-
-    template<class Logger>
-    static void check(std::string_view description, Logger& logger, const type& operations, const type& prediction)
-    {
-      check_range_weak_equivalence(description, logger, std::begin(operations), std::end(operations), std::begin(prediction), std::end(prediction));
-    }
-  };
-
-  struct function_object
-  {
-    void operator()(const std::vector<std::string>& args) const noexcept {}
-  };
-  
-  template<std::size_t... Ns>
-  class commandline_arguments
-  {
-  public:
-    commandline_arguments(char const(&...args)[Ns])
-      : m_Args{(char*)args...}
-    {}
-
-    [[nodiscard]]
-    char** get() noexcept { return &m_Args[0]; }
-  private:
-    std::array<char*, sizeof...(Ns)> m_Args;
-  };
-  
+{  
   class unit_test_runner_test : public unit_test
   {
   public:
