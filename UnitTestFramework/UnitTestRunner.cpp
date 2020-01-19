@@ -133,11 +133,12 @@ namespace sequoia::unit_testing
   }
 
   [[nodiscard]]
-  std::string error(std::string_view message)
+  std::string error(std::string_view message, std::string_view prefix)
   {
-    return std::string{"\n  Error: "}.append(message);
+    return std::string{prefix}.append("Error: ").append(message);
   }
 
+  [[nodiscard]]
   std::vector<commandline_operation> parse(int argc, char** argv, const std::map<std::string, commandline_option_info>& info)
   {
     std::vector<commandline_operation> operations;
@@ -309,7 +310,9 @@ namespace sequoia::unit_testing
   }
 
   unit_test_runner::unit_test_runner(int argc, char** argv)
-  {    
+  {
+    using arg_list = std::vector<std::string>;
+
     const auto operations{parse(argc, argv, {
           {"test",       {[this](const arg_list& args) { m_SpecificTests.emplace(args.front(), false); },         {"test_name"}, {"t"}} },
           {"create",     {[this](const arg_list& args) { m_NewFiles.push_back(nascent_test{args[0], args[1]}); }, {"class_name", "directory"}, {"c"} } },

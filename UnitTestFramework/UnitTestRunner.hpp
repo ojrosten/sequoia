@@ -53,7 +53,7 @@ namespace sequoia::unit_testing
   }
 
   [[nodiscard]]
-  std::string error(std::string_view message);
+  std::string error(std::string_view message, std::string_view prefix="\n  ");
 
   [[nodiscard]]
   std::string summarize(const log_summary& log, std::string_view prefix, const log_verbosity suppression);
@@ -89,8 +89,6 @@ namespace sequoia::unit_testing
 
     void execute();
   private:
-    using arg_list = std::vector<std::string>;
-
     struct nascent_test
     {
       nascent_test(std::string dir, std::string qualifiedName);
