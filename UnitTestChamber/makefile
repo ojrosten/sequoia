@@ -21,9 +21,9 @@ CFLAGS := -Wall -std=c++2a -O0 -ferror-limit=1 \
 EXE := $(BUILDDIR)/UnitTestChamber.exe
 
 UTSRCS := UnitTestChamberMain.cpp
-UTSRCS += ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp
-UTSRCS += ../UnitTests/Parsing/CommandLineArgumentsTest.cpp
-UTSRCS += ../UnitTests/Parsing/CommandLineArgumentsDiagnostics.cpp
+UTSRCS += $(shell find $(UTDIR)/UnitTestFramework -name '*.cpp')
+UTSRCS += $(shell find $(UTDIR)/Parsing -name '*.cpp')
+
 UTOBJS := $(addprefix $(UTBUILDDIR)/, $(UTSRCS:%.cpp=%.o))
 UTDEPS := $(addprefix $(UTBUILDDIR)/, $(UTSRCS:%.cpp=%.d))
 
