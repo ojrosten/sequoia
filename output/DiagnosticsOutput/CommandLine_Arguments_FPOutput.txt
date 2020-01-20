@@ -1,4 +1,4 @@
-	Parsing/CommandLineArgumentsTest.cpp, Line 124:
+	../UnitTests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 27:
 	Final argument missing
 	Expected Exception Type:
 	[int]
@@ -6,7 +6,7 @@
 	"
   Error: expected 1 argument, [case], but found 0 arguments"
 
-	Parsing/CommandLineArgumentsTest.cpp, Line 133:
+	../UnitTests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 36:
 	Unexpected argument
 	Expected Exception Type:
 	[int]
@@ -14,7 +14,7 @@
 	"
   Error: unrecognized option '--asyng'"
 
-	Parsing/CommandLineArgumentsTest.cpp, Line 141:
+	../UnitTests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 44:
 	No bound function object
 	Expected Exception Type:
 	[int]

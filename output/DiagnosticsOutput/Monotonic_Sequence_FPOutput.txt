@@ -1,4 +1,4 @@
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 19:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 19:
 	Empty sequence inequivalent to a single value
 	Comparison performed using:
 	[sequoia::unit_testing::equivalence_checker<sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > > >]
@@ -11,7 +11,7 @@
 	Predicted: 1
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 20:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 20:
 	Non-empty sequence inequivalent to empty list
 	Comparison performed using:
 	[sequoia::unit_testing::equivalence_checker<sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > > >]
@@ -24,7 +24,7 @@
 	Predicted: 0
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 21:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 21:
 	Sequence of size one inequivalent to list with different value
 	Comparison performed using:
 	[sequoia::unit_testing::equivalence_checker<sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > > >]
@@ -38,17 +38,17 @@
 	Predicted: 2
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 22:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 22:
 	Empty/non-empty sequences should compare different
 	[sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > >]
 	operator== returned false
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 22:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 22:
 	Empty/non-empty sequences should compare different
 	[sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > >]
 	operator!= returned true
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 22:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 22:
 	Empty/non-empty sequences should compare different Size incorrect
 	[unsigned long]
 	operator== returned false
@@ -56,7 +56,7 @@
 	Predicted: 1
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 24:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 24:
 	Empty sequence should not report as non-empty
 	[bool]
 	operator== returned false
@@ -64,7 +64,7 @@
 	Predicted: true
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 25:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 25:
 	Non-empty sequence should not report as empty
 	[bool]
 	operator== returned false
@@ -72,7 +72,7 @@
 	Predicted: true
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 27:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 27:
 	Empty sequence should not report non-zero size
 	[unsigned long]
 	operator== returned false
@@ -80,7 +80,7 @@
 	Predicted: 1
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 28:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 28:
 	Non-Eepty sequence should not report zero size
 	[unsigned long]
 	operator== returned false
@@ -88,7 +88,7 @@
 	Predicted: 0
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 30:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 30:
 	Back element equal to 1 should not report as 2
 	[int]
 	operator== returned false
@@ -96,7 +96,7 @@
 	Predicted: 2
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 31:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 31:
 	Front element equal to 1 should not report as 2
 	[int]
 	operator== returned false
@@ -104,7 +104,7 @@
 	Predicted: 2
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 32:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 32:
 	Zeroth element equal to 1 should not report as 2
 	[int]
 	operator== returned false
@@ -112,7 +112,7 @@
 	Predicted: 2
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 33:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 33:
 	begin() pointing to 1 should not dereference as 2
 	[int]
 	operator== returned false
@@ -120,7 +120,7 @@
 	Predicted: 2
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 34:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 34:
 	cbegin() pointing to 1 should not dereference as 2
 	[int]
 	operator== returned false
@@ -128,7 +128,7 @@
 	Predicted: 2
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 35:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 35:
 	rbegin() pointing to 1 should not dereference as 2
 	[int]
 	operator== returned false
@@ -136,7 +136,7 @@
 	Predicted: 2
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 36:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 36:
 	crbegin() pointing to 1 should not dereference as 2
 	[int]
 	operator== returned false
@@ -144,17 +144,17 @@
 	Predicted: 2
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 41:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 41:
 	Sequences of size 1 with different elements should compare different
 	[sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > >]
 	operator== returned false
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 41:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 41:
 	Sequences of size 1 with different elements should compare different
 	[sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > >]
 	operator!= returned true
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 41:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 41:
 	Sequences of size 1 with different elements should compare different Back element wrong
 	[int]
 	operator== returned false
@@ -162,7 +162,7 @@
 	Predicted: 1
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 41:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 41:
 	Sequences of size 1 with different elements should compare different Front element wrong
 	[int]
 	operator== returned false
@@ -170,7 +170,7 @@
 	Predicted: 1
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 41:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 41:
 	Sequences of size 1 with different elements should compare different Dereferenced iterator wrong for index 0
 	[int]
 	operator== returned false
@@ -178,7 +178,7 @@
 	Predicted: 1
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 41:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 41:
 	Sequences of size 1 with different elements should compare different Dereferenced citerator wrong for index 0
 	[int]
 	operator== returned false
@@ -186,7 +186,7 @@
 	Predicted: 1
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 41:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 41:
 	Sequences of size 1 with different elements should compare different operator[] wrong for index 0
 	[int]
 	operator== returned false
@@ -194,7 +194,7 @@
 	Predicted: 1
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 41:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 41:
 	Sequences of size 1 with different elements should compare different Dereferenced riterator wrong for index 0
 	[int]
 	operator== returned false
@@ -202,7 +202,7 @@
 	Predicted: 1
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 41:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 41:
 	Sequences of size 1 with different elements should compare different Dereferenced criterator wrong for index 0
 	[int]
 	operator== returned false
@@ -210,17 +210,17 @@
 	Predicted: 1
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 46:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 46:
 	Sequences of different sizes should compare different
 	[sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > >]
 	operator== returned false
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 46:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 46:
 	Sequences of different sizes should compare different
 	[sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > >]
 	operator!= returned true
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 46:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 46:
 	Sequences of different sizes should compare different Size incorrect
 	[unsigned long]
 	operator== returned false
@@ -228,7 +228,7 @@
 	Predicted: 1
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 51:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 51:
 	Back element equal to 0 should not report as 1
 	[int]
 	operator== returned false
@@ -236,7 +236,7 @@
 	Predicted: 1
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 52:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 52:
 	Front element equal to 0 should not report as 1
 	[int]
 	operator== returned false
@@ -244,7 +244,7 @@
 	Predicted: 0
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 53:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 53:
 	Zeroth element equal to 1 should not report as 1
 	[int]
 	operator== returned false
@@ -252,7 +252,7 @@
 	Predicted: 0
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 54:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 54:
 	First element equal to 0 should not report as 1
 	[int]
 	operator== returned false
@@ -260,7 +260,7 @@
 	Predicted: 1
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 55:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 55:
 	begin() pointing to 1 should not dereference as 0
 	[int]
 	operator== returned false
@@ -268,7 +268,7 @@
 	Predicted: 0
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 56:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 56:
 	cbegin() pointing to 1 should not dereference as 0
 	[int]
 	operator== returned false
@@ -276,7 +276,7 @@
 	Predicted: 0
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 57:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 57:
 	rbegin() pointing to 0 should not dereference as 1
 	[int]
 	operator== returned false
@@ -284,7 +284,7 @@
 	Predicted: 1
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 58:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 58:
 	crbegin() pointing to 0 should not dereference as 1
 	[int]
 	operator== returned false
@@ -292,7 +292,7 @@
 	Predicted: 1
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 59:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 59:
 	iterator pointing to 0 should not dereference as 1
 	[int]
 	operator== returned false
@@ -300,7 +300,7 @@
 	Predicted: 1
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 60:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 60:
 	citerator pointing to 0 should not dereference as 1
 	[int]
 	operator== returned false
@@ -308,7 +308,7 @@
 	Predicted: 1
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 61:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 61:
 	riterator pointing to 1 should not dereference as 0
 	[int]
 	operator== returned false
@@ -316,7 +316,7 @@
 	Predicted: 0
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 62:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 62:
 	criterator pointing to 1 should not dereference as 0
 	[int]
 	operator== returned false
@@ -324,7 +324,7 @@
 	Predicted: 0
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 64:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 64:
 	Inequivalent sequences of size two
 	Comparison performed using:
 	[sequoia::unit_testing::equivalence_checker<sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > > >]
@@ -338,7 +338,7 @@
 	Predicted: 1
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 65:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 65:
 	Inequivalent sequences of size two
 	Comparison performed using:
 	[sequoia::unit_testing::equivalence_checker<sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > > >]
@@ -352,17 +352,17 @@
 	Predicted: 1
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 66:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 66:
 	Sequences of size 2 with different elements should compare different
 	[sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > >]
 	operator== returned false
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 66:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 66:
 	Sequences of size 2 with different elements should compare different
 	[sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > >]
 	operator!= returned true
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 66:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 66:
 	Sequences of size 2 with different elements should compare different Back element wrong
 	[int]
 	operator== returned false
@@ -370,7 +370,7 @@
 	Predicted: 0
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 66:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 66:
 	Sequences of size 2 with different elements should compare different Front element wrong
 	[int]
 	operator== returned false
@@ -378,7 +378,7 @@
 	Predicted: 1
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 66:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 66:
 	Sequences of size 2 with different elements should compare different Dereferenced iterator wrong for index 0
 	[int]
 	operator== returned false
@@ -386,7 +386,7 @@
 	Predicted: 1
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 66:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 66:
 	Sequences of size 2 with different elements should compare different Dereferenced citerator wrong for index 0
 	[int]
 	operator== returned false
@@ -394,7 +394,7 @@
 	Predicted: 1
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 66:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 66:
 	Sequences of size 2 with different elements should compare different operator[] wrong for index 0
 	[int]
 	operator== returned false
@@ -402,7 +402,7 @@
 	Predicted: 1
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 66:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 66:
 	Sequences of size 2 with different elements should compare different Dereferenced riterator wrong for index 0
 	[int]
 	operator== returned false
@@ -410,7 +410,7 @@
 	Predicted: 1
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 66:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 66:
 	Sequences of size 2 with different elements should compare different Dereferenced criterator wrong for index 0
 	[int]
 	operator== returned false
@@ -418,7 +418,7 @@
 	Predicted: 1
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 66:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 66:
 	Sequences of size 2 with different elements should compare different Dereferenced iterator wrong for index 1
 	[int]
 	operator== returned false
@@ -426,7 +426,7 @@
 	Predicted: 0
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 66:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 66:
 	Sequences of size 2 with different elements should compare different Dereferenced citerator wrong for index 1
 	[int]
 	operator== returned false
@@ -434,7 +434,7 @@
 	Predicted: 0
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 66:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 66:
 	Sequences of size 2 with different elements should compare different operator[] wrong for index 1
 	[int]
 	operator== returned false
@@ -442,7 +442,7 @@
 	Predicted: 0
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 66:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 66:
 	Sequences of size 2 with different elements should compare different Dereferenced riterator wrong for index 1
 	[int]
 	operator== returned false
@@ -450,7 +450,7 @@
 	Predicted: 1
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 66:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 66:
 	Sequences of size 2 with different elements should compare different Dereferenced criterator wrong for index 1
 	[int]
 	operator== returned false
@@ -458,17 +458,17 @@
 	Predicted: 1
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 71:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 71:
 	Sequences of size 2 with different final elements should compare different
 	[sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > >]
 	operator== returned false
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 71:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 71:
 	Sequences of size 2 with different final elements should compare different
 	[sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > >]
 	operator!= returned true
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 71:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 71:
 	Sequences of size 2 with different final elements should compare different Back element wrong
 	[int]
 	operator== returned false
@@ -476,7 +476,7 @@
 	Predicted: 0
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 71:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 71:
 	Sequences of size 2 with different final elements should compare different Dereferenced iterator wrong for index 1
 	[int]
 	operator== returned false
@@ -484,7 +484,7 @@
 	Predicted: 0
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 71:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 71:
 	Sequences of size 2 with different final elements should compare different Dereferenced citerator wrong for index 1
 	[int]
 	operator== returned false
@@ -492,7 +492,7 @@
 	Predicted: 0
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 71:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 71:
 	Sequences of size 2 with different final elements should compare different operator[] wrong for index 1
 	[int]
 	operator== returned false
@@ -500,17 +500,17 @@
 	Predicted: 0
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 76:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 76:
 	Sequences of size 2 with different first elements should compare different
 	[sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > >]
 	operator== returned false
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 76:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 76:
 	Sequences of size 2 with different first elements should compare different
 	[sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > >]
 	operator!= returned true
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 76:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 76:
 	Sequences of size 2 with different first elements should compare different Front element wrong
 	[int]
 	operator== returned false
@@ -518,7 +518,7 @@
 	Predicted: 5
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 76:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 76:
 	Sequences of size 2 with different first elements should compare different Dereferenced iterator wrong for index 0
 	[int]
 	operator== returned false
@@ -526,7 +526,7 @@
 	Predicted: 5
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 76:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 76:
 	Sequences of size 2 with different first elements should compare different Dereferenced citerator wrong for index 0
 	[int]
 	operator== returned false
@@ -534,7 +534,7 @@
 	Predicted: 5
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 76:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 76:
 	Sequences of size 2 with different first elements should compare different operator[] wrong for index 0
 	[int]
 	operator== returned false
@@ -542,7 +542,7 @@
 	Predicted: 5
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 76:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 76:
 	Sequences of size 2 with different first elements should compare different Dereferenced riterator wrong for index 0
 	[int]
 	operator== returned false
@@ -550,7 +550,7 @@
 	Predicted: 5
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 76:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 76:
 	Sequences of size 2 with different first elements should compare different Dereferenced criterator wrong for index 0
 	[int]
 	operator== returned false
@@ -558,7 +558,7 @@
 	Predicted: 5
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 76:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 76:
 	Sequences of size 2 with different first elements should compare different Dereferenced riterator wrong for index 1
 	[int]
 	operator== returned false
@@ -566,7 +566,7 @@
 	Predicted: 5
 
 
-	Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 76:
+	../UnitTests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 76:
 	Sequences of size 2 with different first elements should compare different Dereferenced criterator wrong for index 1
 	[int]
 	operator== returned false
