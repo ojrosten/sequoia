@@ -10,11 +10,11 @@
 #include "CommandLineArgumentsTestingUtilities.hpp"
 
 namespace sequoia::unit_testing
-{  
-  class commandline_arguments_test : public unit_test
+{
+  class commandline_arguments_false_positive_test : public false_positive_test
   {
   public:
-    using unit_test::unit_test;
+    using false_positive_test::false_positive_test;
   private:
     void run_tests() override;
 

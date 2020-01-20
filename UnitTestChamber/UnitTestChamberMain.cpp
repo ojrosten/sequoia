@@ -57,6 +57,7 @@
 
 #include "StaticGraphTraversalsTest.hpp"
 
+#include "CommandLineArgumentsDiagnostics.hpp"
 #include "CommandLineArgumentsTest.hpp"
 
 #include "ExperimentalTest.hpp"
