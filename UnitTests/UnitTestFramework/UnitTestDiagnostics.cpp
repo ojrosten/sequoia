@@ -57,6 +57,9 @@ namespace sequoia::unit_testing
 
     check_range(LINE("Iterators demarcate differing number of elements"), refs.cbegin(), refs.cend(), ans.cbegin(), ans.cend());
     check_range(LINE("Iterators demarcate differing elements"), refs.cbegin(), refs.cend(), ans.cbegin(), ans.cbegin() + 4);
+
+    using namespace std::string_literals;
+    check_equality(LINE("Differing strings"), "what?!"s, "Hello, World!"s);
   }
 
   void false_positive_diagnostics::test_relative_performance()
@@ -109,7 +112,8 @@ namespace sequoia::unit_testing
     check_regular_semantics(LINE("Broken move assignment"), broken_move_assignment{1}, broken_move_assignment{2});
     check_regular_semantics(LINE("Broken swap"), broken_swap{1}, broken_swap{2});
     check_regular_semantics(LINE("Broken copy value semantics"), broken_copy_value_semantics{1}, broken_copy_value_semantics{2}, [](auto& b){ *b.x.front() = 3; });
-    check_regular_semantics(LINE("Broken copy assignment value semantics"), broken_copy_assignment_value_semantics{1}, broken_copy_assignment_value_semantics{2}, [](auto& b){ *b.x.front() = 3; });
+    check_regular_semantics(LINE("Broken copy assignment value semantics"),
+                            broken_copy_assignment_value_semantics{1}, broken_copy_assignment_value_semantics{2}, [](auto& b){ *b.x.front() = 3; });
     check_regular_semantics(LINE("Broken check invariant"), perfectly_normal_beast{1}, perfectly_normal_beast{1});
 
     check_regular_semantics(LINE("Broken equality"), broken_equality{1}, broken_equality{2}, broken_equality{1}, broken_equality{2});
@@ -162,6 +166,8 @@ namespace sequoia::unit_testing
     std::vector<float> refs{-4.3, 2.8, 6.2, 7.3}, ans{1.1, -4.3, 2.8, 6.2, 8.4, 7.3};
       
     check_range(LINE("Iterators demarcate identical elements"), refs.cbegin(), refs.cbegin()+3, ans.cbegin()+1, ans.cbegin()+4);
+
+    check_equality(LINE("Differing strings"), std::string{"Hello, World!"}, std::string{"Hello, World!"});
   }
     
   void false_negative_diagnostics::test_relative_performance()

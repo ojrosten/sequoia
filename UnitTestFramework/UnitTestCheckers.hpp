@@ -28,22 +28,32 @@ namespace sequoia
 {
   namespace unit_testing
   {
-    template<class T, class=std::void_t<>> struct is_serializable : public std::false_type
+    template<class T, class=std::void_t<>>
+    struct is_serializable : public std::false_type
     {};
 
-    // Seems to be a bug here for clang-1000.11.45.5 since decltype returns std::stringstream, whatever T!
-    template<class T> struct is_serializable<T, std::void_t<decltype(std::stringstream{} << std::declval<T>())>> : public std::true_type
+    // This makelval hack is to work around a bug in the XCode 10.2 stl implementation:
+    // ostream line 1036. Without this, e.g. decltype(std::stringstream{} << std::vector<int>{})
+    // deduces stringstream&
+    template<class T>
+    std::add_lvalue_reference_t<T> makelval() noexcept;
+    
+    template<class T>
+    struct is_serializable<T, std::void_t<decltype(makelval<std::stringstream>() << std::declval<T>())>>
+      : public std::true_type
     {};
 
     template<class T> constexpr bool is_serializable_v{is_serializable<T>::value};
 
-    template<class T, class=std::enable_if_t<is_serializable_v<T>>>
+    template<class T>
     struct string_maker
     {
+      static_assert(is_serializable_v<T>);
+      
       [[nodiscard]]
       static std::string make(const T& val)
       {        
-        std::ostringstream os;
+        std::ostringstream os{};
         os << std::boolalpha << val;
         return os.str();
       }
@@ -91,7 +101,7 @@ namespace sequoia
     template<class Logger, class T>
     bool check(std::string_view description, Logger& logger, equality_tag, const T& value, const T& prediction)
     {
-      constexpr bool delegate{has_detailed_equality_checker_v<T> || is_container_v<T>};
+      constexpr bool delegate{has_detailed_equality_checker_v<T> || (is_container_v<T> && !is_serializable_v<T>)};
        
       static_assert(delegate || is_serializable_v<T> || is_equal_to_comparable_v<T>,
                     "Provide either a specialization of detailed_equality_checker or string_maker and/or operator==");
@@ -103,8 +113,8 @@ namespace sequoia
       
       auto messageGenerator{
         [description](std::string op, std::string retVal){
-          const std::string info{add_type_info<T>("") + "\toperator" + std::move(op) + " returned " + std::move(retVal) + "\n"};
-          return description.empty() ? info : std::string{"\t"}.append(description).append("\n" + info);
+          std::string info{add_type_info<T>("") + "\toperator" + std::move(op) + " returned " + std::move(retVal) + "\n"};
+          return description.empty() ? std::move(info) : std::string{"\t"}.append(description).append("\n" + std::move(info));
         }
       };
       
@@ -116,8 +126,15 @@ namespace sequoia
           auto message{messageGenerator("==", "false")};
           if constexpr(!delegate)
           {
-            message.append("\tObtained : " + to_string(value) + "\n");
-            message.append("\tPredicted: " + to_string(prediction) + "\n\n");
+            if constexpr(is_serializable_v<T>)
+            {
+              message.append("\tObtained : " + to_string(value) + "\n");
+              message.append("\tPredicted: " + to_string(prediction) + "\n\n");
+            }
+            else
+            {
+              static_assert(dependent_false<T>::value, "Type is not serializable");
+            }
           }
           logger.log_failure(message);
         }
@@ -144,7 +161,7 @@ namespace sequoia
         }      
         else
         {
-          static_assert(dependent_false<T>::value, "Unable to check the details for input type");
+          static_assert(dependent_false<T>::value, "Unable to check detailed equality for Type");
         }
       }
 

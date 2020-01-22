@@ -81,7 +81,7 @@ namespace sequoia::unit_testing::impl
 
     const std::string message{
       add_type_info<S, U...>(
-                             combine_messages(description, "Comparison performed using:\n\t[" + demangle<EquivChecker>() + "]\n\tWith equivalent types:", "\n"))
+        combine_messages(description, "Comparison performed using:\n\t[" + demangle<EquivChecker>() + "]\n\tWith equivalent types:", "\n"))
     };
       
     sentinel r{logger, message};
@@ -107,7 +107,7 @@ namespace sequoia::unit_testing::impl
 
     using std::distance;
     const auto predictedSize{distance(predictionFirst, predictionLast)};
-    if(check_equality(combine_messages(description, "container size wrong"), logger, distance(first, last), predictedSize))
+    if(check_equality(combine_messages(description, "Container size wrong", "\n"), logger, distance(first, last), predictedSize))
     {
       auto predictionIter{predictionFirst};
       auto iter{first};
