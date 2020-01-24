@@ -16,15 +16,32 @@
 
 namespace sequoia::unit_testing
 {
+  template <class, template<class...> class T, class... Args>
+  struct template_class_is_instantiable : std::false_type
+  {};
+
+  template <template<class...> class T, class... Args>
+  struct template_class_is_instantiable<std::void_t<decltype(T<Args...>{})>, T, Args...>
+    : std::true_type
+  {};
+
+  template <template<class...> class T, class... Args>
+  constexpr bool template_class_is_instantiable_v{template_class_is_instantiable<std::void_t<>, T, Args...>::value};
+
   template<class T, class... U> std::string make_type_info();
   template<class T, class... U> std::string add_type_info(std::string_view description);
 
+  template<class T> struct detailed_equality_checker;
   template<class T, class... Us> struct equivalence_checker;
   template<class T, class... Us> struct weak_equivalence_checker;
 
   struct equality_tag{};
   struct equivalence_tag{};
   struct weak_equivalence_tag{};
+  
+  template<class T> constexpr bool has_equivalence_checker_v{template_class_is_instantiable_v<equivalence_checker, T>};
+  template<class T> constexpr bool has_weak_equivalence_checker_v{template_class_is_instantiable_v<weak_equivalence_checker, T>};
+  template<class T> constexpr bool has_detailed_equality_checker_v{template_class_is_instantiable_v<detailed_equality_checker, T>};
 
   template<class Logger, class T, class S, class... U>
   bool check(std::string_view description, Logger& logger, equivalence_tag, const T& value, S&& s, U&&... u);
@@ -86,7 +103,7 @@ namespace sequoia::unit_testing::impl
       
     sentinel r{logger, message};
     const auto previousFailures{logger.failures()};
-
+    
     EquivChecker::check(message, logger, value, s, u...);
       
     return logger.failures() == previousFailures;

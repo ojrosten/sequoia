@@ -26,18 +26,6 @@ namespace sequoia::unit_testing
       check_equality(combine_messages(description, "Operation Parameters differ"), logger, operation.parameters, prediction.parameters);
     }
   };
-  
-  template<>
-  struct weak_equivalence_checker<std::vector<parsing::commandline::operation>>
-  {
-    using type = std::vector<parsing::commandline::operation>;
-
-    template<class Logger>
-    static void check(std::string_view description, Logger& logger, const type& operations, const type& prediction)
-    {
-      check_range_weak_equivalence(description, logger, std::begin(operations), std::end(operations), std::begin(prediction), std::end(prediction));
-    }
-  };
 
   struct function_object
   {

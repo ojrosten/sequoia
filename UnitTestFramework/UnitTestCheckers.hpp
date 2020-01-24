@@ -64,18 +64,6 @@ namespace sequoia
       return string_maker<T>::make(value);
     }
 
-    template<class T> struct detailed_equality_checker;
-
-    template<class T, class=std::void_t<>>
-    struct has_detailed_equality_checker : public std::false_type
-    {};
-
-    template<class T>
-    struct has_detailed_equality_checker<T, std::void_t<decltype(detailed_equality_checker<T>{})>> : public std::true_type
-    {};
-
-    template<class T> constexpr bool has_detailed_equality_checker_v{has_detailed_equality_checker<T>::value};
-
     template<class T, class... U>
     [[nodiscard]]
     std::string make_type_info()
@@ -93,7 +81,6 @@ namespace sequoia
     {
       return combine_messages(description, "[" + make_type_info<T, U...>() + "]\n", description.empty() ? "" : "\n");
     }
-    
 
     template<class Logger, class Iter, class PredictionIter>
     bool check_range(std::string_view description, Logger& logger, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast);
@@ -171,13 +158,35 @@ namespace sequoia
     template<class Logger, class T, class S, class... U>
     bool check(std::string_view description, Logger& logger, equivalence_tag, const T& value, S&& s, U&&... u)
     {
-      return impl::check<impl::equivalence_checker_t<T, S, U...>>(description, logger, value, std::forward<S>(s), std::forward<U>(u)...);
+      if constexpr(template_class_is_instantiable_v<impl::equivalence_checker_t, T, S, U...>)
+      {      
+        return impl::check<impl::equivalence_checker_t<T, S, U...>>(description, logger, value, std::forward<S>(s), std::forward<U>(u)...);
+      }
+      else if constexpr(is_container_v<T> && (sizeof...(U) == 0))
+      {
+        return check_range_equivalence(description, logger, std::begin(value), std::end(value), std::begin(std::forward<S>(s)), std::end(std::forward<S>(s)));
+      }
+      else
+      {
+        static_assert(dependent_false<T>::value, "Unable to find an appropriate specialization of the equivalence_checker");
+      }
     }
 
     template<class Logger, class T, class S, class... U>
     bool check(std::string_view description, Logger& logger, weak_equivalence_tag, const T& value, S&& s, U&&... u)
     {
-      return impl::check<impl::weak_equivalence_checker_t<T, S, U...>>(description, logger, value, std::forward<S>(s), std::forward<U>(u)...);
+      if constexpr(template_class_is_instantiable_v<impl::weak_equivalence_checker_t, T, S, U...>)
+      {      
+        return impl::check<impl::weak_equivalence_checker_t<T, S, U...>>(description, logger, value, std::forward<S>(s), std::forward<U>(u)...);
+      }
+      else if constexpr(is_container_v<T> && (sizeof...(U) == 0))
+      {
+        return check_range_weak_equivalence(description, logger, std::begin(value), std::end(value), std::begin(std::forward<S>(s)), std::end(std::forward<S>(s)));
+      }
+      else
+      {
+        static_assert(dependent_false<T>::value, "Unable to find an appropriate specialization of the weak_equivalence_checker");
+      }
     }
     
     template<class Logger, class T> bool check_equality(std::string_view description, Logger& logger, const T& value, const T& prediction)
