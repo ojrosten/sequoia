@@ -17,9 +17,9 @@ namespace sequoia::unit_testing
     using string_type = std::basic_string<Char, Traits, Allocator>;
     
     template<class Logger, std::size_t N>
-    static bool check(std::string_view description, Logger& logger, const string_type& s, char const (&prediction)[N])
+    static void check(std::string_view description, Logger& logger, const string_type& s, char const (&prediction)[N])
     {
-      return false;
+      check_equality(description, logger, std::string_view(s), std::string_view(prediction));
     }
   };
 }

@@ -1,33 +1,33 @@
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 26
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 28
 	[bool]
 	operator== returned false
 	Obtained : false
 	Predicted: true
 
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 28
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 30
 	[int]
 	operator== returned false
 	Obtained : 5
 	Predicted: 4
 
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 29
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 31
 	[double]
 	operator== returned false
 	Obtained : 6.5
 	Predicted: 5.6
 
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 31
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 33
 	[std::__1::pair<int, double>]
 	operator== returned false
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 31
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 33
 	[std::__1::pair<int, double>]
 	operator!= returned true
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 31
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 33
 	Second element of pair is incorrect
 	[double]
 	operator== returned false
@@ -35,15 +35,15 @@
 	Predicted: -7.8
 
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 32
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 34
 	[std::__1::pair<int, double>]
 	operator== returned false
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 32
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 34
 	[std::__1::pair<int, double>]
 	operator!= returned true
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 32
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 34
 	First element of pair is incorrect
 	[int]
 	operator== returned false
@@ -51,15 +51,15 @@
 	Predicted: -5
 
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 34
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 36
 	[std::__1::tuple<int, double, float>]
 	operator== returned false
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 34
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 36
 	[std::__1::tuple<int, double, float>]
 	operator!= returned true
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 34
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 36
 	Element 0 of tuple incorrect
 	[int]
 	operator== returned false
@@ -67,15 +67,15 @@
 	Predicted: 0
 
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 35
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 37
 	[std::__1::tuple<int, double, float>]
 	operator== returned false
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 35
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 37
 	[std::__1::tuple<int, double, float>]
 	operator!= returned true
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 35
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 37
 	Element 1 of tuple incorrect
 	[double]
 	operator== returned false
@@ -83,15 +83,15 @@
 	Predicted: 0
 
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 36
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 38
 	[std::__1::tuple<int, double, float>]
 	operator== returned false
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 36
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 38
 	[std::__1::tuple<int, double, float>]
 	operator!= returned true
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 36
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 38
 	Element 2 of tuple incorrect
 	[float]
 	operator== returned false
@@ -99,50 +99,50 @@
 	Predicted: -0
 
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 38
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 40
 	[bool]
 	operator== returned false
 	Obtained : false
 	Predicted: true
 
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 39
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 41
 	[bool]
 	operator== returned false
 	Obtained : false
 	Predicted: true
 
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 41:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 43:
 	Exception expected but nothing thrown
 	Expected Exception Type:
 	[std::runtime_error]
 	No exception thrown
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 42:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 44:
 	Exception thrown but of wrong type
 	Expected Exception Type:
 	[std::runtime_error]
 	Unexpected exception thrown (caught by std::exception&):
 	"Error"
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 43:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 45:
 	Exception thrown but of unknown type
 	Expected Exception Type:
 	[std::runtime_error]
 	Unknown exception thrown
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 48:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 50:
 	Empty vector check which should fail
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 48:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 50:
 	Empty vector check which should fail
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 48:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 50:
 	Empty vector check which should fail
 	Container size wrong
 	[long]
@@ -151,17 +151,17 @@
 	Predicted: 1
 
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 49:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 51:
 	One element vector check which should fail due to wrong value
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 49:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 51:
 	One element vector check which should fail due to wrong value
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 49:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 51:
 	One element vector check which should fail due to wrong value element 0
 
 	[double]
@@ -170,17 +170,17 @@
 	Predicted: 2
 
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 50:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 52:
 	One element vector check which should fail due to differing sizes
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 50:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 52:
 	One element vector check which should fail due to differing sizes
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 50:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 52:
 	One element vector check which should fail due to differing sizes
 	Container size wrong
 	[long]
@@ -189,17 +189,17 @@
 	Predicted: 2
 
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 51:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 53:
 	Multi-element vector comparison which should fail due to last element
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 51:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 53:
 	Multi-element vector comparison which should fail due to last element
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 51:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 53:
 	Multi-element vector comparison which should fail due to last element element 1
 
 	[double]
@@ -208,17 +208,17 @@
 	Predicted: 4
 
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 52:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 54:
 	Multi-element vector comparison which should fail due to first element
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 52:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 54:
 	Multi-element vector comparison which should fail due to first element
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 52:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 54:
 	Multi-element vector comparison which should fail due to first element element 0
 
 	[double]
@@ -227,17 +227,17 @@
 	Predicted: 0
 
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 53:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 55:
 	Multi-element vector comparison which should fail due to middle element
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 53:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 55:
 	Multi-element vector comparison which should fail due to middle element
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 53:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 55:
 	Multi-element vector comparison which should fail due to middle element element 2
 
 	[double]
@@ -246,17 +246,17 @@
 	Predicted: 3.3
 
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 54:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 56:
 	Multi-element vector comparison which should fail due to different sizes
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 54:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 56:
 	Multi-element vector comparison which should fail due to different sizes
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 54:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 56:
 	Multi-element vector comparison which should fail due to different sizes
 	Container size wrong
 	[long]
@@ -265,7 +265,7 @@
 	Predicted: 2
 
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 58:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 60:
 	Iterators demarcate differing number of elements
 	Container size wrong
 	[long]
@@ -274,7 +274,7 @@
 	Predicted: 6
 
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 59:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 61:
 	Iterators demarcate differing elements element 0
 
 	[float]
@@ -283,7 +283,7 @@
 	Predicted: 1.1
 
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 59:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 61:
 	Iterators demarcate differing elements element 1
 
 	[float]
@@ -292,7 +292,7 @@
 	Predicted: -4.3
 
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 59:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 61:
 	Iterators demarcate differing elements element 2
 
 	[float]
@@ -301,7 +301,7 @@
 	Predicted: 2.8
 
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 59:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 61:
 	Iterators demarcate differing elements element 3
 
 	[float]
@@ -310,7 +310,7 @@
 	Predicted: 6.2
 
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 62:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 64:
 	Differing strings
 	[std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >]
 	operator== returned false
@@ -318,52 +318,52 @@
 	Predicted: Hello, World!
 
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 72:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 74:
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
-	Fast Task duration: 0.0013315s +- 3 * 4.67964e-05
-	Slow Task duration: 0.00132099s +- 3 * 4.03203e-05 [0.992109; (2, 2)]
+	Fast Task duration: 0.0013869s +- 3 * 2.24924e-05
+	Slow Task duration: 0.00138639s +- 3 * 3.37178e-05 [0.99963; (2, 2)]
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 76:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 78:
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
-	Fast Task duration: 0.00138779s +- 3 * 7.89148e-06
-	Slow Task duration: 0.00139183s +- 3 * 4.00206e-06 [1.00291; (2, 3)]
+	Fast Task duration: 0.00138509s +- 3 * 9.98731e-06
+	Slow Task duration: 0.00138437s +- 3 * 1.20418e-05 [0.99948; (2, 3)]
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 80:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 82:
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
-	Fast Task duration: 0.00138297s +- 3 * 3.84199e-05
-	Slow Task duration: 0.00489683s +- 3 * 0.000388715 [3.54082; (2, 2.5)]
+	Fast Task duration: 0.001383s +- 3 * 3.87681e-05
+	Slow Task duration: 0.00497672s +- 3 * 0.000310286 [3.5985; (2, 2.5)]
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 96
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 98
 	[std::__1::tuple<std::__1::vector<std::__1::pair<int, float>, std::__1::allocator<std::__1::pair<int, float> > >, std::__1::set<double, std::__1::less<double>, std::__1::allocator<double> >, std::__1::complex<double> >]
 	operator== returned false
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 96
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 98
 	[std::__1::tuple<std::__1::vector<std::__1::pair<int, float>, std::__1::allocator<std::__1::pair<int, float> > >, std::__1::set<double, std::__1::less<double>, std::__1::allocator<double> >, std::__1::complex<double> >]
 	operator!= returned true
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 96
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 98
 	Element 0 of tuple incorrect
 	[std::__1::vector<std::__1::pair<int, float>, std::__1::allocator<std::__1::pair<int, float> > >]
 	operator== returned false
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 96
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 98
 	Element 0 of tuple incorrect
 	[std::__1::vector<std::__1::pair<int, float>, std::__1::allocator<std::__1::pair<int, float> > >]
 	operator!= returned true
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 96
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 98
 	Element 0 of tuple incorrect element 0
 
 	[std::__1::pair<int, float>]
 	operator== returned false
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 96
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 98
 	Element 0 of tuple incorrect element 0
 
 	[std::__1::pair<int, float>]
 	operator!= returned true
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 96
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 98
 	Element 0 of tuple incorrect element 0
 
 	First element of pair is incorrect
@@ -373,25 +373,25 @@
 	Predicted: 2
 
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 101
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 103
 	[std::__1::tuple<std::__1::vector<std::__1::pair<int, float>, std::__1::allocator<std::__1::pair<int, float> > >, std::__1::set<double, std::__1::less<double>, std::__1::allocator<double> >, std::__1::complex<double> >]
 	operator== returned false
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 101
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 103
 	[std::__1::tuple<std::__1::vector<std::__1::pair<int, float>, std::__1::allocator<std::__1::pair<int, float> > >, std::__1::set<double, std::__1::less<double>, std::__1::allocator<double> >, std::__1::complex<double> >]
 	operator!= returned true
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 101
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 103
 	Element 1 of tuple incorrect
 	[std::__1::set<double, std::__1::less<double>, std::__1::allocator<double> >]
 	operator== returned false
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 101
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 103
 	Element 1 of tuple incorrect
 	[std::__1::set<double, std::__1::less<double>, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 101
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 103
 	Element 1 of tuple incorrect element 2
 
 	[double]
@@ -400,7 +400,7 @@
 	Predicted: 3.4
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 107:
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 109:
 	Broken equality Equality operator is inconsistent
 	[bool]
 	operator== returned false
@@ -408,7 +408,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 108:
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 110:
 	Broken inequality Equality operator is inconsistent
 	[bool]
 	operator== returned false
@@ -416,7 +416,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 109:
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 111:
 	Broken copy Copy constructor (x)
 	[sequoia::unit_testing::broken_copy<int, std::__1::allocator<int> >]
 	operator== returned false
@@ -424,7 +424,7 @@
 	Predicted: 1 
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 109:
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 111:
 	Broken copy Equality operator
 	[bool]
 	operator== returned false
@@ -432,7 +432,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 109:
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 111:
 	Broken copy Move assignment
 	[sequoia::unit_testing::broken_copy<int, std::__1::allocator<int> >]
 	operator== returned false
@@ -440,7 +440,7 @@
 	Predicted: 1 
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 109:
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 111:
 	Broken copy Swap
 	[sequoia::unit_testing::broken_copy<int, std::__1::allocator<int> >]
 	operator== returned false
@@ -448,7 +448,7 @@
 	Predicted: 2 
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 109:
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 111:
 	Broken copy Swap
 	[sequoia::unit_testing::broken_copy<int, std::__1::allocator<int> >]
 	operator== returned false
@@ -456,7 +456,7 @@
 	Predicted: 1 
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 110:
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 112:
 	Broken move Move constructor
 	[sequoia::unit_testing::broken_move<int, std::__1::allocator<int> >]
 	operator== returned false
@@ -464,7 +464,7 @@
 	Predicted: 2 
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 111:
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 113:
 	Broken copy assignment Copy assignment (from y)
 	[sequoia::unit_testing::broken_copy_assignment<int, std::__1::allocator<int> >]
 	operator== returned false
@@ -472,7 +472,7 @@
 	Predicted: 2 
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 111:
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 113:
 	Broken copy assignment Inequality operator
 	[bool]
 	operator== returned false
@@ -480,7 +480,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 111:
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 113:
 	Broken copy assignment Move constructor
 	[sequoia::unit_testing::broken_copy_assignment<int, std::__1::allocator<int> >]
 	operator== returned false
@@ -488,7 +488,7 @@
 	Predicted: 2 
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 112:
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 114:
 	Broken move assignment Move assignment
 	[sequoia::unit_testing::broken_move_assignment<int, std::__1::allocator<int> >]
 	operator== returned false
@@ -496,7 +496,7 @@
 	Predicted: 1 
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 112:
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 114:
 	Broken move assignment Swap
 	[sequoia::unit_testing::broken_move_assignment<int, std::__1::allocator<int> >]
 	operator== returned false
@@ -504,7 +504,7 @@
 	Predicted: 1 
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 113:
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 115:
 	Broken swap Swap
 	[sequoia::unit_testing::broken_swap<int, std::__1::allocator<int> >]
 	operator== returned false
@@ -512,7 +512,7 @@
 	Predicted: 2 
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 113:
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 115:
 	Broken swap Swap
 	[sequoia::unit_testing::broken_swap<int, std::__1::allocator<int> >]
 	operator== returned false
@@ -520,7 +520,7 @@
 	Predicted: 1 
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 114:
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 116:
 	Broken copy value semantics Mutation is not doing anything following copy constrution/broken value semantics
 	[bool]
 	operator== returned false
@@ -528,7 +528,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 114:
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 116:
 	Broken copy value semantics Mutation is not doing anything following copy assignment/ broken value semantics
 	[bool]
 	operator== returned false
@@ -536,7 +536,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 115:
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 117:
 	Broken copy assignment value semantics Mutation is not doing anything following copy assignment/ broken value semantics
 	[bool]
 	operator== returned false
@@ -544,7 +544,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 117:
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 119:
 	Broken check invariant Precondition - for checking regular semantics, x and y are assumed to be different
 	[bool]
 	operator== returned false
@@ -552,7 +552,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 119:
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 121:
 	Broken equality Equality operator is inconsistent
 	[bool]
 	operator== returned false
@@ -560,7 +560,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 120:
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 122:
 	Broken inequality Equality operator is inconsistent
 	[bool]
 	operator== returned false
@@ -568,7 +568,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 121:
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 123:
 	Broken move Move constructor
 	[sequoia::unit_testing::broken_move<int, std::__1::allocator<int> >]
 	operator== returned false
@@ -576,7 +576,7 @@
 	Predicted: 1 
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 121:
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 123:
 	Broken move Swap
 	[sequoia::unit_testing::broken_move<int, std::__1::allocator<int> >]
 	operator== returned false
@@ -584,7 +584,7 @@
 	Predicted: 1 
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 122:
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 124:
 	Broken move Swap
 	[sequoia::unit_testing::broken_swap<int, std::__1::allocator<int> >]
 	operator== returned false
@@ -592,7 +592,7 @@
 	Predicted: 1 
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 122:
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 124:
 	Broken move Swap
 	[sequoia::unit_testing::broken_swap<int, std::__1::allocator<int> >]
 	operator== returned false
@@ -600,7 +600,7 @@
 	Predicted: 2 
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 123:
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 125:
 	Broken move assignment Move assignment
 	[sequoia::unit_testing::broken_move_assignment<int, std::__1::allocator<int> >]
 	operator== returned false
@@ -608,7 +608,7 @@
 	Predicted: 2 
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 123:
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 125:
 	Broken move assignment Swap
 	[sequoia::unit_testing::broken_move_assignment<int, std::__1::allocator<int> >]
 	operator== returned false
@@ -616,7 +616,7 @@
 	Predicted: 2 
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 124:
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 126:
 	Broken check invariant Precondition - for checking regular semantics, x and y are assumed to be different
 	[bool]
 	operator== returned false
@@ -624,7 +624,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 125:
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 127:
 	Broken check invariant Precondition - for checking regular semantics, x and xClone are assumed to be equal
 	[bool]
 	operator== returned false
@@ -632,12 +632,24 @@
 	Predicted: true
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 126:
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 128:
 	Broken check invariant Precondition - for checking regular semantics, x and xClone are assumed to be equal
 	[bool]
 	operator== returned false
 	Obtained : false
 	Predicted: true
+
+
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 133
+	Comparison performed using:
+	[sequoia::unit_testing::equivalence_checker<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >]
+	With equivalent types:
+	[char [3]]
+
+	[std::__1::basic_string_view<char, std::__1::char_traits<char> >]
+	operator== returned false
+	Obtained : foo
+	Predicted: fo
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 52:
@@ -5487,92 +5499,99 @@
 
 
 	False Positive Failure:
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 140
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 154
 	[bool]
 
 	False Positive Failure:
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 142
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 156
 	[int]
 
 	False Positive Failure:
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 143
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 157
 	[double]
 
 	False Positive Failure:
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 145
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 159
 	[bool]
 
 	False Positive Failure:
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 146
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 160
 	[bool]
 
 	False Positive Failure:
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 148
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 162
 	[bool]
 
 	False Positive Failure:
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 149
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 163
 	[bool]
 
 	False Positive Failure:
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 151
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 165
 	[std::__1::pair<int, double>]
 
 	False Positive Failure:
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 153
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 167
 	[std::__1::tuple<int, double, float>]
 
 	False Positive Failure:
-		../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 155
+		../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 169
 	Expected Exception Type:
 	[std::runtime_error]
 
 	False Positive Failure:
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 162:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 176:
 	Empty vector check which should pass
 	[std::__1::vector<double, std::__1::allocator<double> >]
 
 	False Positive Failure:
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 163:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
 	One element vector check which should pass
 	[std::__1::vector<double, std::__1::allocator<double> >]
 
 	False Positive Failure:
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 164:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 178:
 	Multi-element vector comparison which should pass
 	[std::__1::vector<double, std::__1::allocator<double> >]
 
 	False Positive Failure:
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 168:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 182:
 	Iterators demarcate identical elements
 	False Positive Failure:
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 170:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 184:
 	Differing strings
 	[std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >]
 
 	False Positive Failure:
-		../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 186:
+		../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 200:
 	Performance Test which should pass
-	Fast Task duration: 0.0013878s +- 3 * 1.11741e-05
-	Slow Task duration: 0.00263116s +- 3 * 1.12974e-05 [1.89592; (1.9, 2.1)]
+	Fast Task duration: 0.00112838s +- 3 * 9.84493e-05
+	Slow Task duration: 0.00239927s +- 3 * 0.000208506 [2.1263; (1.9, 2.1)]
 
 	False Positive Failure:
-		../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 187:
+		../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 201:
 	Performance Test which should pass
-	Fast Task duration: 0.00140775s +- 3 * 3.40305e-05
-	Slow Task duration: 0.00515434s +- 3 * 3.78199e-05 [3.66141; (3.9, 4.1)]
+	Fast Task duration: 0.00116717s +- 3 * 0.000133386
+	Slow Task duration: 0.00430241s +- 3 * 0.000316979 [3.68619; (3.9, 4.1)]
 
 	False Positive Failure:
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 200
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 214
 	[std::__1::tuple<std::__1::vector<std::__1::pair<int, float>, std::__1::allocator<std::__1::pair<int, float> > >, std::__1::set<double, std::__1::less<double>, std::__1::allocator<double> >, std::__1::complex<double> >]
 
 	False Positive Failure:
-	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 206
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 220
 	[sequoia::unit_testing::perfectly_normal_beast<int, std::__1::allocator<int> >]
 
 	False Positive Failure:
-	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 207
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 221
 	[sequoia::unit_testing::perfectly_normal_beast<int, std::__1::allocator<int> >]
+
+	False Positive Failure:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 227
+	Comparison performed using:
+	[sequoia::unit_testing::equivalence_checker<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >]
+	With equivalent types:
+	[char [4]]
 
 	False Positive Failure:
 	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 320

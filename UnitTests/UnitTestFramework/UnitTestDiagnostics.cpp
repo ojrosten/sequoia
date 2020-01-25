@@ -19,6 +19,8 @@ namespace sequoia::unit_testing
     test_relative_performance();
     test_mixed();
     test_regular_semantics();
+    test_equivalence_checks();
+    test_weak_equivalence_checks();
   }
 
   void false_positive_diagnostics::basic_tests()
@@ -125,6 +127,16 @@ namespace sequoia::unit_testing
     check_regular_semantics(LINE("Broken check invariant"), perfectly_normal_beast{1}, perfectly_normal_beast{3}, perfectly_normal_beast{2}, perfectly_normal_beast{3});
     check_regular_semantics(LINE("Broken check invariant"), perfectly_normal_beast{1}, perfectly_normal_beast{2}, perfectly_normal_beast{3}, perfectly_normal_beast{2});
   }
+
+  void false_positive_diagnostics::test_equivalence_checks()
+  {
+    check_equivalence(LINE(""), std::string{"foo"}, "fo");
+  }
+
+  void false_positive_diagnostics::test_weak_equivalence_checks()
+  {
+  }
+  
 
   void false_negative_diagnostics::run_tests()
   {
