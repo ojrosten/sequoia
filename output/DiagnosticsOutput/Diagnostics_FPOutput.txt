@@ -320,18 +320,18 @@
 
 	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 74:
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
-	Fast Task duration: 0.00127192s +- 3 * 7.41814e-05
-	Slow Task duration: 0.00127569s +- 3 * 0.000116945 [1.00296; (2, 2)]
+	Fast Task duration: 0.00134418s +- 3 * 5.37902e-05
+	Slow Task duration: 0.00137112s +- 3 * 3.87676e-05 [1.02004; (2, 2)]
 
 	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 78:
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
-	Fast Task duration: 0.00137108s +- 3 * 4.55783e-05
-	Slow Task duration: 0.0013684s +- 3 * 2.98105e-05 [0.99805; (2, 3)]
+	Fast Task duration: 0.00128775s +- 3 * 0.000106504
+	Slow Task duration: 0.00133196s +- 3 * 6.83858e-05 [1.03433; (2, 3)]
 
 	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 82:
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
-	Fast Task duration: 0.00134509s +- 3 * 4.43496e-05
-	Slow Task duration: 0.00497492s +- 3 * 0.000244519 [3.69857; (2, 2.5)]
+	Fast Task duration: 0.00126115s +- 3 * 0.00015333
+	Slow Task duration: 0.00477571s +- 3 * 0.000530198 [3.78678; (2, 2.5)]
 
 	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 98
 	[std::__1::tuple<std::__1::vector<std::__1::pair<int, float>, std::__1::allocator<std::__1::pair<int, float> > >, std::__1::set<double, std::__1::less<double>, std::__1::allocator<double> >, std::__1::complex<double> >]
@@ -650,6 +650,21 @@
 	operator== returned false
 	Obtained : foo
 	Predicted: fo
+
+
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 135
+	[std::__1::vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > >]
+	element 1
+
+	Comparison performed using:
+	[sequoia::unit_testing::equivalence_checker<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >]
+	With equivalent types:
+	[std::__1::basic_string_view<char, std::__1::char_traits<char> >]
+
+	[std::__1::basic_string_view<char, std::__1::char_traits<char> >]
+	operator== returned false
+	Obtained : b
+	Predicted: c
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 52:
@@ -5565,14 +5580,14 @@
 	False Positive Failure:
 		../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 202:
 	Performance Test which should pass
-	Fast Task duration: 0.00112427s +- 3 * 0.000109144
-	Slow Task duration: 0.00218483s +- 3 * 0.000165278 [1.94332; (1.9, 2.1)]
+	Fast Task duration: 0.00138184s +- 3 * 1.13298e-05
+	Slow Task duration: 0.00258418s +- 3 * 5.3092e-05 [1.87011; (1.9, 2.1)]
 
 	False Positive Failure:
 		../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 203:
 	Performance Test which should pass
-	Fast Task duration: 0.00115853s +- 3 * 0.000134739
-	Slow Task duration: 0.00418747s +- 3 * 0.000176973 [3.61446; (3.9, 4.1)]
+	Fast Task duration: 0.00128684s +- 3 * 0.000143571
+	Slow Task duration: 0.00482948s +- 3 * 0.000442726 [3.75299; (3.9, 4.1)]
 
 	False Positive Failure:
 	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 216
@@ -5595,6 +5610,8 @@
 
 	False Positive Failure:
 	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 231
+	[std::__1::vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > >]
+
 	False Positive Failure:
 	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 320
 	[sequoia::unit_testing::perfectly_normal_beast<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, false> >]

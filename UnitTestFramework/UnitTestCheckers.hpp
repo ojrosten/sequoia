@@ -174,7 +174,7 @@ namespace sequoia
       }
       else if constexpr(is_container_v<T> && (sizeof...(U) == 0))
       {
-        return check_range_equivalence(description, logger, std::begin(value), std::end(value), std::begin(std::forward<S>(s)), std::end(std::forward<S>(s)));
+        return check_range_equivalence(add_type_info<T>(description), logger, std::begin(value), std::end(value), std::begin(std::forward<S>(s)), std::end(std::forward<S>(s)));
       }
       else
       {
@@ -191,7 +191,7 @@ namespace sequoia
       }
       else if constexpr(is_container_v<T> && (sizeof...(U) == 0))
       {
-        return check_range_weak_equivalence(description, logger, std::begin(value), std::end(value), std::begin(std::forward<S>(s)), std::end(std::forward<S>(s)));
+        return check_range_weak_equivalence(add_type_info<T>(description), logger, std::begin(value), std::end(value), std::begin(std::forward<S>(s)), std::end(std::forward<S>(s)));
       }
       else
       {
