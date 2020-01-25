@@ -19,7 +19,13 @@ namespace sequoia::unit_testing
     template<class Logger, std::size_t N>
     static void check(std::string_view description, Logger& logger, const string_type& s, char const (&prediction)[N])
     {
-      check_equality(description, logger, std::string_view(s), std::string_view(prediction));
+      check_equality(description, logger, std::string_view{s}, std::string_view{prediction});
+    }
+
+    template<class Logger>
+    static void check(std::string_view description, Logger& logger, const string_type& s, std::basic_string_view<Char, Traits> prediction)
+    {
+      check_equality(description, logger, std::string_view{s}, prediction);
     }
   };
 }

@@ -320,18 +320,18 @@
 
 	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 74:
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
-	Fast Task duration: 0.0013869s +- 3 * 2.24924e-05
-	Slow Task duration: 0.00138639s +- 3 * 3.37178e-05 [0.99963; (2, 2)]
+	Fast Task duration: 0.00127192s +- 3 * 7.41814e-05
+	Slow Task duration: 0.00127569s +- 3 * 0.000116945 [1.00296; (2, 2)]
 
 	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 78:
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
-	Fast Task duration: 0.00138509s +- 3 * 9.98731e-06
-	Slow Task duration: 0.00138437s +- 3 * 1.20418e-05 [0.99948; (2, 3)]
+	Fast Task duration: 0.00137108s +- 3 * 4.55783e-05
+	Slow Task duration: 0.0013684s +- 3 * 2.98105e-05 [0.99805; (2, 3)]
 
 	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 82:
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
-	Fast Task duration: 0.001383s +- 3 * 3.87681e-05
-	Slow Task duration: 0.00497672s +- 3 * 0.000310286 [3.5985; (2, 2.5)]
+	Fast Task duration: 0.00134509s +- 3 * 4.43496e-05
+	Slow Task duration: 0.00497492s +- 3 * 0.000244519 [3.69857; (2, 2.5)]
 
 	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 98
 	[std::__1::tuple<std::__1::vector<std::__1::pair<int, float>, std::__1::allocator<std::__1::pair<int, float> > >, std::__1::set<double, std::__1::less<double>, std::__1::allocator<double> >, std::__1::complex<double> >]
@@ -5499,23 +5499,19 @@
 
 
 	False Positive Failure:
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 154
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 156
 	[bool]
 
 	False Positive Failure:
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 156
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 158
 	[int]
 
 	False Positive Failure:
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 157
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 159
 	[double]
 
 	False Positive Failure:
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 159
-	[bool]
-
-	False Positive Failure:
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 160
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 161
 	[bool]
 
 	False Positive Failure:
@@ -5523,76 +5519,82 @@
 	[bool]
 
 	False Positive Failure:
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 163
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 164
 	[bool]
 
 	False Positive Failure:
 	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 165
-	[std::__1::pair<int, double>]
+	[bool]
 
 	False Positive Failure:
 	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 167
+	[std::__1::pair<int, double>]
+
+	False Positive Failure:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 169
 	[std::__1::tuple<int, double, float>]
 
 	False Positive Failure:
-		../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 169
+		../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 171
 	Expected Exception Type:
 	[std::runtime_error]
 
 	False Positive Failure:
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 176:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 178:
 	Empty vector check which should pass
 	[std::__1::vector<double, std::__1::allocator<double> >]
 
 	False Positive Failure:
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 177:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 179:
 	One element vector check which should pass
 	[std::__1::vector<double, std::__1::allocator<double> >]
 
 	False Positive Failure:
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 178:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 180:
 	Multi-element vector comparison which should pass
 	[std::__1::vector<double, std::__1::allocator<double> >]
 
 	False Positive Failure:
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 182:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 184:
 	Iterators demarcate identical elements
 	False Positive Failure:
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 184:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 186:
 	Differing strings
 	[std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >]
 
 	False Positive Failure:
-		../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 200:
+		../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 202:
 	Performance Test which should pass
-	Fast Task duration: 0.00112838s +- 3 * 9.84493e-05
-	Slow Task duration: 0.00239927s +- 3 * 0.000208506 [2.1263; (1.9, 2.1)]
+	Fast Task duration: 0.00112427s +- 3 * 0.000109144
+	Slow Task duration: 0.00218483s +- 3 * 0.000165278 [1.94332; (1.9, 2.1)]
 
 	False Positive Failure:
-		../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 201:
+		../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 203:
 	Performance Test which should pass
-	Fast Task duration: 0.00116717s +- 3 * 0.000133386
-	Slow Task duration: 0.00430241s +- 3 * 0.000316979 [3.68619; (3.9, 4.1)]
+	Fast Task duration: 0.00115853s +- 3 * 0.000134739
+	Slow Task duration: 0.00418747s +- 3 * 0.000176973 [3.61446; (3.9, 4.1)]
 
 	False Positive Failure:
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 214
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 216
 	[std::__1::tuple<std::__1::vector<std::__1::pair<int, float>, std::__1::allocator<std::__1::pair<int, float> > >, std::__1::set<double, std::__1::less<double>, std::__1::allocator<double> >, std::__1::complex<double> >]
 
 	False Positive Failure:
-	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 220
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 222
 	[sequoia::unit_testing::perfectly_normal_beast<int, std::__1::allocator<int> >]
 
 	False Positive Failure:
-	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 221
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 223
 	[sequoia::unit_testing::perfectly_normal_beast<int, std::__1::allocator<int> >]
 
 	False Positive Failure:
-	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 227
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 229
 	Comparison performed using:
 	[sequoia::unit_testing::equivalence_checker<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >]
 	With equivalent types:
 	[char [4]]
 
+	False Positive Failure:
+	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 231
 	False Positive Failure:
 	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 320
 	[sequoia::unit_testing::perfectly_normal_beast<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, false> >]

@@ -131,6 +131,8 @@ namespace sequoia::unit_testing
   void false_positive_diagnostics::test_equivalence_checks()
   {
     check_equivalence(LINE(""), std::string{"foo"}, "fo");
+
+    check_equivalence(LINE(""), std::vector<std::string>{{"a"}, {"b"}}, std::initializer_list<std::string_view>{"a", "c"});
   }
 
   void false_positive_diagnostics::test_weak_equivalence_checks()
@@ -225,6 +227,8 @@ namespace sequoia::unit_testing
   void false_negative_diagnostics::test_equivalence_checks()
   {
     check_equivalence(LINE(""), std::string{"foo"}, "foo");
+
+    check_equivalence(LINE(""), std::vector<std::string>{{"a"}, {"b"}}, std::initializer_list<std::string_view>{"a", "b"});
   }
 
   void false_negative_diagnostics::test_weak_equivalence_checks()
