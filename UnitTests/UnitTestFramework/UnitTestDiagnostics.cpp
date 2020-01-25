@@ -12,6 +12,16 @@
 
 namespace sequoia::unit_testing
 {
+  template<class T>
+  struct weak_equivalence_checker<perfectly_normal_beast<T>>
+  {
+    template<class Logger>
+    static void check(std::string_view description, Logger& logger, const perfectly_normal_beast<T>& beast, std::initializer_list<T> prediction)
+    {
+      check_range(description, logger, std::begin(beast.x), std::end(beast.x), std::begin(prediction), std::end(prediction));
+    }
+  };
+  
   void false_positive_diagnostics::run_tests()
   {
     basic_tests();
@@ -137,6 +147,11 @@ namespace sequoia::unit_testing
 
   void false_positive_diagnostics::test_weak_equivalence_checks()
   {
+    using beast = perfectly_normal_beast<int>;
+    check_weak_equivalence(LINE(""), beast{1, 2}, std::initializer_list<int>{1, 1});
+
+    using prediction = std::initializer_list<std::initializer_list<int>>;
+    check_weak_equivalence(LINE(""), std::vector<beast>{{1, 2}, {3, 4}}, prediction{{1, 2}, {3, 5}});
   }
   
 
@@ -233,6 +248,10 @@ namespace sequoia::unit_testing
 
   void false_negative_diagnostics::test_weak_equivalence_checks()
   {
+    using beast = perfectly_normal_beast<int>;
+    check_weak_equivalence(LINE(""), beast{1, 2}, std::initializer_list<int>{1, 2});
 
+    using prediction = std::initializer_list<std::initializer_list<int>>;
+    check_weak_equivalence(LINE(""), std::vector<beast>{{1, 2}, {3, 4}}, prediction{{1, 2}, {3, 4}});
   }
 }
