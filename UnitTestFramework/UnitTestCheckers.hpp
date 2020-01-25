@@ -59,8 +59,18 @@ namespace sequoia
       }
     };
 
+    template<class T, class=std::void_t<>>
+    struct has_string_maker : std::false_type {};
+
+    template<class T>
+    struct has_string_maker<T, std::void_t<decltype(string_maker<T>{})>> : std::true_type {};
+
+    template<class T>
+    constexpr bool has_string_maker_v{has_string_maker<T>::value};
+
     template<class T> [[nodiscard]] std::string to_string(const T& value)
     {
+      static_assert(has_string_maker_v<T>);
       return string_maker<T>::make(value);
     }
 
@@ -113,7 +123,7 @@ namespace sequoia
           auto message{messageGenerator("==", "false")};
           if constexpr(!delegate)
           {
-            if constexpr(is_serializable_v<T>)
+            if constexpr(has_string_maker_v<T>)
             {
               message.append("\tObtained : " + to_string(value) + "\n");
               message.append("\tPredicted: " + to_string(prediction) + "\n\n");
@@ -158,9 +168,9 @@ namespace sequoia
     template<class Logger, class T, class S, class... U>
     bool check(std::string_view description, Logger& logger, equivalence_tag, const T& value, S&& s, U&&... u)
     {
-      if constexpr(template_class_is_instantiable_v<impl::equivalence_checker_t, T, S, U...>)
+      if constexpr(template_class_is_instantiable_v<equivalence_checker, T>)
       {      
-        return impl::check<impl::equivalence_checker_t<T, S, U...>>(description, logger, value, std::forward<S>(s), std::forward<U>(u)...);
+        return impl::check<equivalence_checker<T>>(description, logger, value, std::forward<S>(s), std::forward<U>(u)...);
       }
       else if constexpr(is_container_v<T> && (sizeof...(U) == 0))
       {
@@ -175,9 +185,9 @@ namespace sequoia
     template<class Logger, class T, class S, class... U>
     bool check(std::string_view description, Logger& logger, weak_equivalence_tag, const T& value, S&& s, U&&... u)
     {
-      if constexpr(template_class_is_instantiable_v<impl::weak_equivalence_checker_t, T, S, U...>)
+      if constexpr(template_class_is_instantiable_v<weak_equivalence_checker, T>)
       {      
-        return impl::check<impl::weak_equivalence_checker_t<T, S, U...>>(description, logger, value, std::forward<S>(s), std::forward<U>(u)...);
+        return impl::check<weak_equivalence_checker<T>>(description, logger, value, std::forward<S>(s), std::forward<U>(u)...);
       }
       else if constexpr(is_container_v<T> && (sizeof...(U) == 0))
       {
@@ -501,31 +511,28 @@ namespace sequoia
       }
     }
     
-    template<class S, class T, class U, class V>
-    struct equivalence_checker<std::pair<S, T>, std::pair<U, V>>
-    {      
-      static_assert(std::is_same_v<std::decay_t<S>, std::decay_t<U>> && std::is_same_v<std::decay_t<T>, std::decay_t<V>>);
-
-      template<class Logger>
+    template<class S, class T>
+    struct equivalence_checker<std::pair<S, T>>
+    {
+      template<class Logger, class U, class V>
       static void check(std::string_view description, Logger& logger, const std::pair<S, T>& value, const std::pair<U, V>& prediction)
-      {      
+      {        
+        static_assert(std::is_same_v<std::decay_t<S>, std::decay_t<U>> && std::is_same_v<std::decay_t<T>, std::decay_t<V>>);
+
         check_equality(combine_messages(description, "First element of pair is incorrect", "\n"), logger, value.first, prediction.first);
         check_equality(combine_messages(description, "Second element of pair is incorrect", "\n"), logger, value.second, prediction.second);
       }
     };
 
     template<class T, class S>
-    struct detailed_equality_checker<std::pair<T, S>> : equivalence_checker<std::pair<T, S>, std::pair<T, S>>
+    struct detailed_equality_checker<std::pair<T, S>> : equivalence_checker<std::pair<T, S>>
     {};
 
-    template<class... T, class... U>
-    struct equivalence_checker<std::tuple<T...>, std::tuple<U...>>
+    template<class... T>
+    struct equivalence_checker<std::tuple<T...>>
     {
-      static_assert(sizeof...(T) == sizeof...(U));
-      static_assert((std::is_same_v<std::decay_t<T>, std::decay_t<U>> && ...));
-      
     private:
-      template<class Logger, std::size_t I = 0>
+      template<class Logger, std::size_t I = 0, class... U>
       static void check_tuple_elements(std::string_view description, Logger& logger, const std::tuple<T...>& value, const std::tuple<U...>& prediction)
       {
         if constexpr(I < sizeof...(T))
@@ -535,17 +542,20 @@ namespace sequoia
           check_tuple_elements<Logger, I+1>(description, logger, value, prediction);
         }
       }
-        
+      
     public:
-      template<class Logger>
-      static void check(std::string_view description, Logger& logger, const std::tuple<T...>& value, const std::tuple<T...>& prediction)
-      {
+      template<class Logger, class... U>
+      static void check(std::string_view description, Logger& logger, const std::tuple<T...>& value, const std::tuple<U...>& prediction)
+      {        
+        static_assert(sizeof...(T) == sizeof...(U));
+        static_assert((std::is_same_v<std::decay_t<T>, std::decay_t<U>> && ...));      
+
         check_tuple_elements(description, logger, value, prediction);
       }
     };
 
     template<class... T>
-    struct detailed_equality_checker<std::tuple<T...>> : equivalence_checker<std::tuple<T...>, std::tuple<T...>>
+    struct detailed_equality_checker<std::tuple<T...>> : equivalence_checker<std::tuple<T...>>
     {};
     
 

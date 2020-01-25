@@ -303,6 +303,7 @@ namespace sequoia
       {
       public:
         using weight_proxy = typename WeightPooling::proxy;
+        using weight_type = typename weight_proxy::value_type;
 
         template<class... Args>
         [[nodiscard]]
@@ -318,6 +319,7 @@ namespace sequoia
       {
       public:
         using weight_proxy = typename WeightPooling::proxy;
+        using weight_type = typename weight_proxy::value_type;
 
         template<class... Args>
         [[nodiscard]]

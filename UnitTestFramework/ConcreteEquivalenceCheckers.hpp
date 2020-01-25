@@ -1,0 +1,25 @@
+////////////////////////////////////////////////////////////////////
+//                 Copyright Oliver Rosten 2020.                  //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
+#pragma once
+
+#include "UnitTestCheckers.hpp"
+
+namespace sequoia::unit_testing
+{
+  template<class Char, class Traits, class Allocator>
+  struct equivalence_checker<std::basic_string<Char, Traits, Allocator>>
+  {
+    using string_type = std::basic_string<Char, Traits, Allocator>;
+    
+    template<class Logger, std::size_t N>
+    static bool check(std::string_view description, Logger& logger, const string_type& s, char const (&prediction)[N])
+    {
+      return false;
+    }
+  };
+}

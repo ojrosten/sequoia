@@ -38,5 +38,7 @@ namespace sequoia:: unit_testing
     void test_container_checks();
     void test_mixed();
     void test_regular_semantics();
+    void test_equivalence_checks();
+    void test_weak_equivalence_checks();
   };
 }

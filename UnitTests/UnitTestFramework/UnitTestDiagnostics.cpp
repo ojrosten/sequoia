@@ -133,6 +133,8 @@ namespace sequoia::unit_testing
     test_relative_performance();
     test_mixed();
     test_regular_semantics();
+    test_equivalence_checks();
+    test_weak_equivalence_checks();
   }
 
   void false_negative_diagnostics::basic_tests()
@@ -206,5 +208,15 @@ namespace sequoia::unit_testing
       check_regular_semantics(LINE(""), perfectly_normal_beast{1}, perfectly_normal_beast{2});
       check_regular_semantics(LINE(""), perfectly_normal_beast{1}, perfectly_normal_beast{2}, perfectly_normal_beast{1}, perfectly_normal_beast{2});
     }
+  }
+
+  void false_negative_diagnostics::test_equivalence_checks()
+  {
+    check_equivalence(LINE(""), std::string{"foo"}, "foo");
+  }
+
+  void false_negative_diagnostics::test_weak_equivalence_checks()
+  {
+
   }
 }
