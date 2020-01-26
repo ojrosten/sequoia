@@ -111,6 +111,54 @@ namespace sequoia::unit_testing
   };
 
   template<class T=int, class Allocator=std::allocator<int>>
+  struct inefficient_equality
+  {
+    using allocator_type = Allocator;
+
+    inefficient_equality(std::initializer_list<T> list) : x{list} {}
+      
+    inefficient_equality(std::initializer_list<T> list, const allocator_type& alloc) : x{list, alloc} {}
+
+    inefficient_equality(const inefficient_equality&) = default;
+
+    inefficient_equality(const inefficient_equality& other, const allocator_type& alloc) : x(other.x, alloc) {}
+
+    inefficient_equality(inefficient_equality&&) noexcept = default;
+
+    inefficient_equality(inefficient_equality&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+
+    inefficient_equality& operator=(const inefficient_equality&) = default;
+
+    inefficient_equality& operator=(inefficient_equality&&) = default;
+
+    friend void swap(inefficient_equality& lhs, inefficient_equality& rhs)
+    {
+      std::swap(lhs.x, rhs.x);
+    }
+      
+    std::vector<T, Allocator> x{};
+
+    [[nodiscard]]
+    friend bool operator==(const inefficient_equality lhs, const inefficient_equality& rhs) noexcept
+    {
+      return lhs.x == rhs.x;
+    }
+
+    [[nodiscard]]
+    friend bool operator!=(const inefficient_equality& lhs, const inefficient_equality& rhs) noexcept
+    {
+      return lhs.x != rhs.x;
+    }
+
+    template<class Stream>
+    friend Stream& operator<<(Stream& s, const inefficient_equality& b)
+    {
+      for(auto i : b.x) s << i << ' ';
+      return s;
+    }
+  };
+
+  template<class T=int, class Allocator=std::allocator<int>>
   struct broken_copy
   {
     using allocator_type = Allocator;
