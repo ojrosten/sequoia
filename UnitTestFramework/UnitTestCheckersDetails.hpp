@@ -194,6 +194,12 @@ namespace sequoia::unit_testing::impl
     int second_count() const noexcept { return m_SecondCount; }
 
     template<class Logger>
+    void check_no_allocation(std::string_view description, Logger& logger, const Container& container) const
+    {
+      check_allocation(description, "", "", logger, container, m_Info, m_FirstCount, 0);
+    }
+
+    template<class Logger>
     void check_copy_x(std::string_view description, Logger& logger, const Container& container) const
     {
       check_copy(description, "(x)", logger, container, m_Info, m_SecondCount, m_Info.get_predictions().copy_x);
@@ -392,6 +398,18 @@ namespace sequoia::unit_testing::impl
     {
       check_allocation(description, logger, check, moreCheckers...); 
     }
+  }
+
+  template<class Logger, class Container, class Allocator, class... Allocators>
+  void check_no_allocation(std::string_view description, Logger& logger, const Container& container, const allocation_checker<Container, Allocator>& checker, const allocation_checker<Container, Allocators>&... moreCheckers)
+  {
+    auto checkFn{
+      [&logger, &container](std::string_view message, auto& checker){
+        checker.check_no_allocation(message, logger, container);
+      }
+    };
+
+    check_allocation(description, logger, checkFn, checker, moreCheckers...);
   }
 
   template<class Logger, class Container, class Allocator, class... Allocators>
@@ -648,11 +666,21 @@ namespace sequoia::unit_testing::impl
     }
   }
 
-  template<class Logger, class T>
-  bool check_regular_preconditions(std::string_view description, Logger& logger, const T& x, const T& y)
+  template<class Logger, class T, class... Allocators>
+  bool check_regular_preconditions(std::string_view description, Logger& logger, const T& x, const T& y, allocation_checker<T, Allocators>... checkers)
   {
-    if(!check(combine_messages(description, "Equality operator is inconsistent"), logger, x == x)) return false;
+    constexpr bool checkAllocs{sizeof...(Allocators) > 0};
+    if(!check(combine_messages(description, "Equality operator is inconsistent"), logger, x == x))      return false;
+    if constexpr (checkAllocs)
+    {
+      check_no_allocation(combine_messages(description, "no allocation for operator=="), logger, x, checkers...);
+    }
+    
     if(!check(combine_messages(description, "Inequality operator is inconsistent"), logger, !(x != x))) return false;
+    if constexpr (checkAllocs)
+    {
+      check_no_allocation(combine_messages(description, "no allocation for operator!="), logger, x, checkers...);
+    }
 
     if(!check(combine_messages(description, "Precondition - for checking regular semantics, x and y are assumed to be different"), logger, x != y)) return false;
 
@@ -668,15 +696,16 @@ namespace sequoia::unit_testing::impl
         
     typename Logger::sentinel s{logger, add_type_info<T>(description)};
 
-    if(!check_regular_preconditions(description, logger, x, y)) return false;
+    if(!check_regular_preconditions(description, logger, x, y, allocation_checker<T, Allocators>{x, checkers.first_count(), checkers.info()}...))
+      return false;
         
     T z{x};
-    check_equality(combine_messages(description, "Copy constructor (x)"), logger, z, x);
-    check(combine_messages(description, "Equality operator"), logger, z == x);
     if constexpr(checkAllocs)
     {
       check_copy_x_allocation(description, logger, z, allocation_checker<T, Allocators>{z, checkers.first_count(), checkers.info()}...);
-    }
+    }    
+    check_equality(combine_messages(description, "Copy constructor (x)"), logger, z, x);
+    check(combine_messages(description, "Equality operator"), logger, z == x);
 
     // z = y
     check_copy_assign(description, logger, z, y, allocation_checker<T, Allocators>{z, y, checkers.info()}...);

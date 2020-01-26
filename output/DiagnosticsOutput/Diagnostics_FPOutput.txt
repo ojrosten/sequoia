@@ -320,18 +320,18 @@
 
 	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 84:
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
-	Fast Task duration: 0.0012756s +- 3 * 5.67742e-05
-	Slow Task duration: 0.00130155s +- 3 * 6.95648e-05 [1.02035; (2, 2)]
+	Fast Task duration: 0.0013824s +- 3 * 1.22679e-05
+	Slow Task duration: 0.00139862s +- 3 * 1.79685e-05 [1.01173; (2, 2)]
 
 	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 88:
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
-	Fast Task duration: 0.00136672s +- 3 * 3.4994e-05
-	Slow Task duration: 0.00136348s +- 3 * 3.79745e-05 [0.997632; (2, 3)]
+	Fast Task duration: 0.00134342s +- 3 * 4.70559e-05
+	Slow Task duration: 0.00129236s +- 3 * 0.000124672 [0.961991; (2, 3)]
 
 	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 92:
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
-	Fast Task duration: 0.00134381s +- 3 * 0.00011646
-	Slow Task duration: 0.00494734s +- 3 * 0.000471185 [3.68156; (2, 2.5)]
+	Fast Task duration: 0.00132418s +- 3 * 0.000108661
+	Slow Task duration: 0.00492537s +- 3 * 0.000496082 [3.71957; (2, 2.5)]
 
 	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 108
 	[std::__1::tuple<std::__1::vector<std::__1::pair<int, float>, std::__1::allocator<std::__1::pair<int, float> > >, std::__1::set<double, std::__1::less<double>, std::__1::allocator<double> >, std::__1::complex<double> >]
@@ -713,12 +713,32 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 68:
+	Broken equality no allocation for operator==
+	[sequoia::unit_testing::shared_counting_allocator<int, false, false, false>]
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 68:
+	Broken equality no allocation for operator!=
+	[sequoia::unit_testing::shared_counting_allocator<int, false, false, false>]
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 68:
 	Broken equality
 	[sequoia::unit_testing::shared_counting_allocator<int, false, false, false>]
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Obtained : 4
+	Obtained : 2
 	Predicted: 1
 
 
@@ -730,6 +750,16 @@
 	operator== returned false
 	Obtained : 1
 	Predicted: 0
+
+
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 77:
+	Broken copy
+	[sequoia::unit_testing::shared_counting_allocator<int, false, false, false>]
+	Copy construction allocation (x)
+	[int]
+	operator== returned false
+	Obtained : -1
+	Predicted: 1
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 77:
@@ -746,16 +776,6 @@
 	operator== returned false
 	Obtained : false
 	Predicted: true
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 77:
-	Broken copy
-	[sequoia::unit_testing::shared_counting_allocator<int, false, false, false>]
-	Copy construction allocation (x)
-	[int]
-	operator== returned false
-	Obtained : -1
-	Predicted: 1
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 77:
@@ -1279,12 +1299,32 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 68:
+	Broken equality no allocation for operator==
+	[sequoia::unit_testing::shared_counting_allocator<int, false, false, true>]
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 68:
+	Broken equality no allocation for operator!=
+	[sequoia::unit_testing::shared_counting_allocator<int, false, false, true>]
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 68:
 	Broken equality
 	[sequoia::unit_testing::shared_counting_allocator<int, false, false, true>]
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Obtained : 4
+	Obtained : 2
 	Predicted: 1
 
 
@@ -1296,6 +1336,16 @@
 	operator== returned false
 	Obtained : 1
 	Predicted: 0
+
+
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 77:
+	Broken copy
+	[sequoia::unit_testing::shared_counting_allocator<int, false, false, true>]
+	Copy construction allocation (x)
+	[int]
+	operator== returned false
+	Obtained : -1
+	Predicted: 1
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 77:
@@ -1312,16 +1362,6 @@
 	operator== returned false
 	Obtained : false
 	Predicted: true
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 77:
-	Broken copy
-	[sequoia::unit_testing::shared_counting_allocator<int, false, false, true>]
-	Copy construction allocation (x)
-	[int]
-	operator== returned false
-	Obtained : -1
-	Predicted: 1
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 77:
@@ -1905,12 +1945,32 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 68:
+	Broken equality no allocation for operator==
+	[sequoia::unit_testing::shared_counting_allocator<int, false, true, false>]
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 68:
+	Broken equality no allocation for operator!=
+	[sequoia::unit_testing::shared_counting_allocator<int, false, true, false>]
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 68:
 	Broken equality
 	[sequoia::unit_testing::shared_counting_allocator<int, false, true, false>]
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Obtained : 4
+	Obtained : 2
 	Predicted: 1
 
 
@@ -1935,6 +1995,16 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 77:
+	Broken copy
+	[sequoia::unit_testing::shared_counting_allocator<int, false, true, false>]
+	Copy construction allocation (x)
+	[int]
+	operator== returned false
+	Obtained : -1
+	Predicted: 1
+
+
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 77:
 	Broken copy Copy constructor (x)
 	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, false, true, false> >]
 	operator== returned false
@@ -1948,16 +2018,6 @@
 	operator== returned false
 	Obtained : false
 	Predicted: true
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 77:
-	Broken copy
-	[sequoia::unit_testing::shared_counting_allocator<int, false, true, false>]
-	Copy construction allocation (x)
-	[int]
-	operator== returned false
-	Obtained : -1
-	Predicted: 1
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 77:
@@ -2471,12 +2531,32 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 68:
+	Broken equality no allocation for operator==
+	[sequoia::unit_testing::shared_counting_allocator<int, false, true, true>]
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 68:
+	Broken equality no allocation for operator!=
+	[sequoia::unit_testing::shared_counting_allocator<int, false, true, true>]
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 68:
 	Broken equality
 	[sequoia::unit_testing::shared_counting_allocator<int, false, true, true>]
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Obtained : 4
+	Obtained : 2
 	Predicted: 1
 
 
@@ -2501,6 +2581,16 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 77:
+	Broken copy
+	[sequoia::unit_testing::shared_counting_allocator<int, false, true, true>]
+	Copy construction allocation (x)
+	[int]
+	operator== returned false
+	Obtained : -1
+	Predicted: 1
+
+
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 77:
 	Broken copy Copy constructor (x)
 	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, false, true, true> >]
 	operator== returned false
@@ -2514,16 +2604,6 @@
 	operator== returned false
 	Obtained : false
 	Predicted: true
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 77:
-	Broken copy
-	[sequoia::unit_testing::shared_counting_allocator<int, false, true, true>]
-	Copy construction allocation (x)
-	[int]
-	operator== returned false
-	Obtained : -1
-	Predicted: 1
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 77:
@@ -3087,12 +3167,32 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 68:
+	Broken equality no allocation for operator==
+	[sequoia::unit_testing::shared_counting_allocator<int, true, false, false>]
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 68:
+	Broken equality no allocation for operator!=
+	[sequoia::unit_testing::shared_counting_allocator<int, true, false, false>]
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 68:
 	Broken equality
 	[sequoia::unit_testing::shared_counting_allocator<int, true, false, false>]
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Obtained : 4
+	Obtained : 2
 	Predicted: 1
 
 
@@ -3127,6 +3227,16 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 77:
+	Broken copy
+	[sequoia::unit_testing::shared_counting_allocator<int, true, false, false>]
+	Copy construction allocation (x)
+	[int]
+	operator== returned false
+	Obtained : -1
+	Predicted: 1
+
+
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 77:
 	Broken copy Copy constructor (x)
 	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, false> >]
 	operator== returned false
@@ -3140,16 +3250,6 @@
 	operator== returned false
 	Obtained : false
 	Predicted: true
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 77:
-	Broken copy
-	[sequoia::unit_testing::shared_counting_allocator<int, true, false, false>]
-	Copy construction allocation (x)
-	[int]
-	operator== returned false
-	Obtained : -1
-	Predicted: 1
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 77:
@@ -3673,12 +3773,32 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 68:
+	Broken equality no allocation for operator==
+	[sequoia::unit_testing::shared_counting_allocator<int, true, false, true>]
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 68:
+	Broken equality no allocation for operator!=
+	[sequoia::unit_testing::shared_counting_allocator<int, true, false, true>]
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 68:
 	Broken equality
 	[sequoia::unit_testing::shared_counting_allocator<int, true, false, true>]
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Obtained : 4
+	Obtained : 2
 	Predicted: 1
 
 
@@ -3713,6 +3833,16 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 77:
+	Broken copy
+	[sequoia::unit_testing::shared_counting_allocator<int, true, false, true>]
+	Copy construction allocation (x)
+	[int]
+	operator== returned false
+	Obtained : -1
+	Predicted: 1
+
+
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 77:
 	Broken copy Copy constructor (x)
 	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, true> >]
 	operator== returned false
@@ -3726,16 +3856,6 @@
 	operator== returned false
 	Obtained : false
 	Predicted: true
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 77:
-	Broken copy
-	[sequoia::unit_testing::shared_counting_allocator<int, true, false, true>]
-	Copy construction allocation (x)
-	[int]
-	operator== returned false
-	Obtained : -1
-	Predicted: 1
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 77:
@@ -4319,12 +4439,32 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 68:
+	Broken equality no allocation for operator==
+	[sequoia::unit_testing::shared_counting_allocator<int, true, true, false>]
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 68:
+	Broken equality no allocation for operator!=
+	[sequoia::unit_testing::shared_counting_allocator<int, true, true, false>]
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 68:
 	Broken equality
 	[sequoia::unit_testing::shared_counting_allocator<int, true, true, false>]
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Obtained : 4
+	Obtained : 2
 	Predicted: 1
 
 
@@ -4369,6 +4509,16 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 77:
+	Broken copy
+	[sequoia::unit_testing::shared_counting_allocator<int, true, true, false>]
+	Copy construction allocation (x)
+	[int]
+	operator== returned false
+	Obtained : -1
+	Predicted: 1
+
+
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 77:
 	Broken copy Copy constructor (x)
 	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, false> >]
 	operator== returned false
@@ -4382,16 +4532,6 @@
 	operator== returned false
 	Obtained : false
 	Predicted: true
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 77:
-	Broken copy
-	[sequoia::unit_testing::shared_counting_allocator<int, true, true, false>]
-	Copy construction allocation (x)
-	[int]
-	operator== returned false
-	Obtained : -1
-	Predicted: 1
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 77:
@@ -4905,12 +5045,32 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 68:
+	Broken equality no allocation for operator==
+	[sequoia::unit_testing::shared_counting_allocator<int, true, true, true>]
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 68:
+	Broken equality no allocation for operator!=
+	[sequoia::unit_testing::shared_counting_allocator<int, true, true, true>]
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 68:
 	Broken equality
 	[sequoia::unit_testing::shared_counting_allocator<int, true, true, true>]
 	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Obtained : 4
+	Obtained : 2
 	Predicted: 1
 
 
@@ -4955,6 +5115,16 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 77:
+	Broken copy
+	[sequoia::unit_testing::shared_counting_allocator<int, true, true, true>]
+	Copy construction allocation (x)
+	[int]
+	operator== returned false
+	Obtained : -1
+	Predicted: 1
+
+
+	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 77:
 	Broken copy Copy constructor (x)
 	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, true> >]
 	operator== returned false
@@ -4968,16 +5138,6 @@
 	operator== returned false
 	Obtained : false
 	Predicted: true
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 77:
-	Broken copy
-	[sequoia::unit_testing::shared_counting_allocator<int, true, true, true>]
-	Copy construction allocation (x)
-	[int]
-	operator== returned false
-	Obtained : -1
-	Predicted: 1
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp, Line 77:
@@ -5889,14 +6049,14 @@
 	False Positive Failure:
 		../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 217:
 	Performance Test which should pass
-	Fast Task duration: 0.00117319s +- 3 * 0.000105419
-	Slow Task duration: 0.00234681s +- 3 * 0.000276843 [2.00037; (1.9, 2.1)]
+	Fast Task duration: 0.00123473s +- 3 * 6.78588e-05
+	Slow Task duration: 0.00222459s +- 3 * 0.000206982 [1.80169; (1.9, 2.1)]
 
 	False Positive Failure:
 		../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 218:
 	Performance Test which should pass
-	Fast Task duration: 0.00114092s +- 3 * 9.66252e-05
-	Slow Task duration: 0.00417549s +- 3 * 0.000200071 [3.65976; (3.9, 4.1)]
+	Fast Task duration: 0.00125765s +- 3 * 0.000272534
+	Slow Task duration: 0.00439115s +- 3 * 0.000453109 [3.49155; (3.9, 4.1)]
 
 	False Positive Failure:
 	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 231
