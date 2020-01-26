@@ -11,7 +11,7 @@
     \brief Core functionality for the unit testing framework.
 */
 
-#include "ConcreteEquivalenceCheckers.hpp"
+#include "ConcreteEqualityCheckers.hpp"
 
 namespace sequoia::unit_testing
 {        
