@@ -43,7 +43,9 @@ namespace sequoia::unit_testing
     explicit basic_test(std::string_view name) : test{name} {}
     
     log_summary execute() override
-    {        
+    {
+      using namespace std::chrono;
+      const steady_clock::time_point time{steady_clock::now()};
       try
       {
         run_tests();
@@ -57,7 +59,7 @@ namespace sequoia::unit_testing
         Checker::log_critical_failure(make_message("Unknown", ""));
       }
 
-      return Checker::summary(name());
+      return Checker::summary(name(), steady_clock::now() - time);
     }
   protected:    
     virtual void run_tests() = 0;

@@ -18,17 +18,17 @@ namespace sequoia::unit_testing
 {
   using parsing::commandline::warning;
   
-  std::string summarize(const log_summary& log, std::string_view prefix, const log_verbosity suppression)
+  std::string summarize(const log_summary& log, std::string_view indent, const log_verbosity suppression)
   {
     constexpr std::size_t entries{6};
 
     std::array<std::string, entries> summaries{
-      std::string{prefix}.append("Standard Top Level Checks:"),
-      std::string{prefix}.append("Standard Performance Checks:"),
-      std::string{prefix}.append("False Negative Checks:"),
-      std::string{prefix}.append("False Negative Performance Checks:"),
-      std::string{prefix}.append("False Positive Checks:"),
-      std::string{prefix}.append("False Positive PerformanceChecks:")
+      std::string{indent}.append("\tStandard Top Level Checks:"),
+      std::string{indent}.append("\tStandard Performance Checks:"),
+      std::string{indent}.append("\tFalse Negative Checks:"),
+      std::string{indent}.append("\tFalse Negative Performance Checks:"),
+      std::string{indent}.append("\tFalse Positive Checks:"),
+      std::string{indent}.append("\tFalse Positive PerformanceChecks:")
     };
 
     pad_right(summaries.begin(), summaries.end(), "  ");
@@ -71,7 +71,10 @@ namespace sequoia::unit_testing
     if(log.standard_top_level_checks())
       summaries.front().append("  [Deep checks: " + std::to_string(log.standard_deep_checks()) + "]");
 
-    std::string summary{log.name().empty() ? "" : std::string{log.name()}.append(":\n")};
+    using namespace std::chrono;
+    std::string summary{"["
+        + std::to_string(duration_cast<milliseconds>(log.execution_time()).count()) + "ms]\n"};
+    summary.append(log.name().empty() ? "" : std::string{"\t"}.append(log.name()).append(":\n"));
 
     if((suppression & log_verbosity::absent_checks) == log_verbosity::absent_checks)
     {
@@ -308,11 +311,11 @@ namespace sequoia::unit_testing
     log_summary familySummary{};
     for(const auto& s : summaries)
     {
-      if(m_Verbose) std::cout << "    " << summarize(s, "        ", log_verbosity::failure_messages);
+      if(m_Verbose) std::cout << summarize(s, "\t", log_verbosity::failure_messages);
       familySummary += s;
     }
           
-    if(!m_Verbose) std::cout << summarize(familySummary, "    ", log_verbosity::failure_messages);
+    if(!m_Verbose) std::cout << summarize(familySummary, "", log_verbosity::failure_messages);
 
     return familySummary;
   }
@@ -449,7 +452,7 @@ namespace sequoia::unit_testing
           summary += process_family(res.second.get());
         }
       }
-      std::cout <<  "-----Grand Totals-----\n";
+      std::cout <<  "\n-----------Grand Totals-----------\n";
       std::cout << summarize(summary, "", log_verbosity::absent_checks);
     }
 

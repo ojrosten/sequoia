@@ -304,12 +304,15 @@ namespace sequoia::unit_testing
   class log_summary
   {
   public:
+    using duration = std::chrono::steady_clock::duration;
+    
     explicit log_summary(std::string_view name="") : m_Name{name} {}
 
-    template<test_mode Mode> log_summary(std::string_view name, const unit_test_logger<Mode>& logger)
+    template<test_mode Mode> log_summary(std::string_view name, const unit_test_logger<Mode>& logger, const duration delta)
       : m_Name{name}
       , m_FailureMessages{logger.failure_messages()}
       , m_CurrentMessage{logger.current_message()}
+      , m_Duration{delta}
     {
       switch(Mode)
       {
@@ -398,6 +401,9 @@ namespace sequoia::unit_testing
     {
       return m_Name.empty() ?  m_CurrentMessage : '[' + m_Name + "]\n\t" + m_CurrentMessage;
     }
+
+    [[nodiscard]]
+    duration execution_time() const noexcept { return m_Duration; }
       
     log_summary& operator+=(const log_summary& rhs)
     {
@@ -422,8 +428,10 @@ namespace sequoia::unit_testing
       m_CriticalFailures   += rhs.m_CriticalFailures;
       m_ExceptionsInFlight += rhs.m_ExceptionsInFlight;
       m_VersionedOutput    += rhs.m_VersionedOutput;
+      m_Duration           += rhs.m_Duration;
         
       m_CurrentMessage      = rhs.m_CurrentMessage;
+
 
       return *this;
     }
@@ -461,5 +469,7 @@ namespace sequoia::unit_testing
       m_CriticalFailures{};
 
     int m_ExceptionsInFlight{};
+
+    duration m_Duration{};
   };
 }

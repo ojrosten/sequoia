@@ -728,9 +728,9 @@ namespace sequoia
         return os;
       }
 
-      log_summary summary(std::string_view prefix) const
+      log_summary summary(std::string_view prefix, const log_summary::duration delta) const
       {
-        return log_summary{prefix, m_Logger};
+        return log_summary{prefix, m_Logger, delta};
       }
     protected:
       checker(checker&&) noexcept = default;
