@@ -25,14 +25,34 @@ namespace sequoia::unit_testing
       register_tests(std::forward<Tests>(tests)...);
     }
 
-    std::vector<log_summary> execute(const bool writeFiles)
+    [[nodiscard]]
+    std::vector<log_summary> execute(const bool writeFiles, const bool asynchronous)
     {
       std::vector<log_summary> summaries{};
       bool dataToWrite{};
-      for(auto& pTest : m_Tests)
+
+      if(!asynchronous)
       {
-        summaries.push_back(pTest->execute());
-        if(!summaries.back().versioned_output().empty()) dataToWrite = true;
+        for(auto& pTest : m_Tests)
+        {
+          summaries.push_back(pTest->execute());
+          if(!summaries.back().versioned_output().empty()) dataToWrite = true;
+        }
+      }
+      else
+      {
+        std::vector<std::future<log_summary>> results{};
+        for(auto& pTest : m_Tests)
+        {
+          results.emplace_back(std::async([&pTest](){
+                return pTest->execute(); }));
+        }
+
+        for(auto& res : results)
+        {
+          summaries.push_back(res.get());
+          if(!summaries.back().versioned_output().empty()) dataToWrite = true;
+        } 
       }
 
       if(writeFiles && dataToWrite)

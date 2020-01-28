@@ -428,25 +428,26 @@ namespace sequoia::unit_testing
         for(auto& family : m_Families)
         {
           std::cout << family.name() << ":\n";
-          summary += process_family(family.execute(m_WriteFiles));
+          summary += process_family(family.execute(m_WriteFiles, false));
         }
       }
       else
       {
         std::cout << "\n\t--Using asynchronous execution\n\n";
-        std::vector<std::pair<std::string, std::future<std::vector<log_summary>>>> results;
+        std::vector<std::pair<std::string, std::future<std::vector<log_summary>>>> results{};
 
         for(auto& family : m_Families)
         {
           results.emplace_back(family.name(),
-            std::async([&family, write{m_WriteFiles}](){ return family.execute(write); }));
+            std::async([&family, write{m_WriteFiles}](){
+                return family.execute(write, true); }));
         }
 
         for(auto& res : results)
         {
           std::cout << res.first << ":\n";
           summary += process_family(res.second.get());
-        }        
+        }
       }
       std::cout <<  "-----Grand Totals-----\n";
       std::cout << summarize(summary, "", log_verbosity::absent_checks);
