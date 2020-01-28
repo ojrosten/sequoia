@@ -45,5 +45,13 @@ namespace sequoia::unit_testing
           return parse(2, a.get(), info{{"--async", {nullptr}}});
         });      
     }
+
+    {
+      commandline_arguments<4, 4> a{"foo", "-ac"};
+      
+      check_exception_thrown<int>(LINE("Unexpected argument"), [&a](){
+          return parse(2, a.get(), info{{"--async", {fo{}, {}, {"-a"}}}});
+        });
+    }
   }
 }

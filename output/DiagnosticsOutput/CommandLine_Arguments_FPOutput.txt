@@ -22,3 +22,11 @@
 	"
   Error: Commandline option not bound to a function object"
 
+	../UnitTests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 52:
+	Unexpected argument
+	Expected Exception Type:
+	[int]
+	Unexpected exception thrown (caught by std::exception&):
+	"
+  Error: unrecognized option '-ac'"
+

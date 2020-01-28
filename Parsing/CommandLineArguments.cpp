@@ -33,7 +33,7 @@ namespace sequoia::parsing::commandline
   {
     std::vector<operation> operations;
 
-    auto infoIter{info.end()};
+    auto infoIter{info.end()};        
     for(int i{1}; i<argc; ++i)
     {
       std::string arg{argv[i]};
@@ -41,26 +41,53 @@ namespace sequoia::parsing::commandline
       {        
         if(infoIter == info.end())
         {
+          auto processOption{
+            [&operations, &info, &arg](auto infoIter){
+              if(infoIter == info.end())
+                throw std::runtime_error{error("unrecognized option '" + arg + "'")};
+
+              if(!infoIter->second.fn)
+                throw std::logic_error{error("Commandline option not bound to a function object")};
+
+              operations.push_back(operation{infoIter->second.fn});
+              if(infoIter->second.parameters.empty())
+                infoIter = info.end();
+
+              return infoIter;
+            }
+          };
+          
           infoIter = info.find(arg);
           if(infoIter == info.end())
-          {
+          {            
             infoIter = std::find_if(info.begin(), info.end(), [&arg](const auto& e) {
                 const auto& aliases{e.second.aliases};
                 return std::find(aliases.begin(), aliases.end(), arg) != aliases.end();
               });
 
-            if(infoIter == info.end())
-              throw std::runtime_error{error("unrecognized option '" + arg + "'")};
+            if((infoIter == info.end()) && (arg.size() > 2) && (arg[0] == '-') && (arg[1] != ' '))
+            {
+              for(auto i{arg.cbegin() + 1}; i != arg.cend(); ++i)
+              {
+                const auto c{*i};
+                if(c != '-')
+                {
+                  const auto alias{std::string{'-'} + c};
 
-            arg = infoIter->first;
+                  infoIter = std::find_if(info.begin(), info.end(), [&alias](const auto& e) {
+                      const auto& aliases{e.second.aliases};
+                      return std::find(aliases.begin(), aliases.end(), alias) != aliases.end();
+                    });
+
+                  processOption(infoIter);
+                }
+              }
+
+              if(infoIter != info.end()) break;
+            }
           }
 
-          if(!infoIter->second.fn)
-            throw std::logic_error{error("Commandline option not bound to a function object")};
-
-          operations.push_back(operation{infoIter->second.fn});
-          if(infoIter->second.parameters.empty())
-            infoIter = info.end();
+          infoIter = processOption(infoIter);
         }
         else
         {
