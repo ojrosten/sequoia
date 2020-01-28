@@ -433,7 +433,7 @@ namespace sequoia::unit_testing
       }
       else
       {
-        std::cout << "Using asynchronous execution\n";
+        std::cout << "\n\t--Using asynchronous execution\n\n";
         std::vector<std::pair<std::string, std::future<std::vector<log_summary>>>> results;
 
         for(auto& family : m_Families)
