@@ -45,7 +45,7 @@ namespace sequoia::unit_testing
     log_summary execute() override
     {
       using namespace std::chrono;
-      const steady_clock::time_point time{steady_clock::now()};
+      const auto time{steady_clock::now()};
       try
       {
         run_tests();

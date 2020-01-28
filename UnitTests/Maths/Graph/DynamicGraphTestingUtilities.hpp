@@ -221,12 +221,14 @@ namespace sequoia::unit_testing
     
     log_summary run()
     {
+      using namespace std::chrono;
+      const auto time{steady_clock::now()}; 
       execute_operations();
 
-      return this->summary("");
+      return this->summary("", steady_clock::now() - time);
     }
 
-    log_summary get_summary() const { return this->summary(""); }
+    log_summary get_summary() const { return this->summary("", log_summary::duration{}); }
       
   protected:
     virtual void execute_operations() = 0;

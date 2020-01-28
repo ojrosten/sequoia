@@ -43,7 +43,8 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::independent<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
-	Partition 0: iterator container size wrong
+	Partition 0: iterator
+	Container size wrong
 	[long]
 	operator== returned false
 	Obtained : 1
@@ -56,7 +57,8 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::independent<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
-	Partition 0: riterator container size wrong
+	Partition 0: riterator
+	Container size wrong
 	[long]
 	operator== returned false
 	Obtained : 1
@@ -523,7 +525,8 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::shared<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
-	Partition 0: iterator container size wrong
+	Partition 0: iterator
+	Container size wrong
 	[long]
 	operator== returned false
 	Obtained : 1
@@ -536,7 +539,8 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::shared<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
-	Partition 0: riterator container size wrong
+	Partition 0: riterator
+	Container size wrong
 	[long]
 	operator== returned false
 	Obtained : 1
@@ -1003,7 +1007,8 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::independent<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
-	Partition 0: iterator container size wrong
+	Partition 0: iterator
+	Container size wrong
 	[long]
 	operator== returned false
 	Obtained : 1
@@ -1016,7 +1021,8 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::independent<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
-	Partition 0: riterator container size wrong
+	Partition 0: riterator
+	Container size wrong
 	[long]
 	operator== returned false
 	Obtained : 1
@@ -1483,7 +1489,8 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::shared<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
-	Partition 0: iterator container size wrong
+	Partition 0: iterator
+	Container size wrong
 	[long]
 	operator== returned false
 	Obtained : 1
@@ -1496,7 +1503,8 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::shared<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
-	Partition 0: riterator container size wrong
+	Partition 0: riterator
+	Container size wrong
 	[long]
 	operator== returned false
 	Obtained : 1
@@ -1963,7 +1971,8 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: iterator container size wrong
+	Partition 0: iterator
+	Container size wrong
 	[long]
 	operator== returned false
 	Obtained : 1
@@ -1976,7 +1985,8 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: riterator container size wrong
+	Partition 0: riterator
+	Container size wrong
 	[long]
 	operator== returned false
 	Obtained : 1
@@ -2843,7 +2853,8 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: iterator container size wrong
+	Partition 0: iterator
+	Container size wrong
 	[long]
 	operator== returned false
 	Obtained : 1
@@ -2856,7 +2867,8 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: riterator container size wrong
+	Partition 0: riterator
+	Container size wrong
 	[long]
 	operator== returned false
 	Obtained : 1
@@ -3723,7 +3735,8 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: iterator container size wrong
+	Partition 0: iterator
+	Container size wrong
 	[long]
 	operator== returned false
 	Obtained : 1
@@ -3736,7 +3749,8 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: riterator container size wrong
+	Partition 0: riterator
+	Container size wrong
 	[long]
 	operator== returned false
 	Obtained : 1
@@ -4603,7 +4617,8 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: iterator container size wrong
+	Partition 0: iterator
+	Container size wrong
 	[long]
 	operator== returned false
 	Obtained : 1
@@ -4616,7 +4631,8 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: riterator container size wrong
+	Partition 0: riterator
+	Container size wrong
 	[long]
 	operator== returned false
 	Obtained : 1

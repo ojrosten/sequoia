@@ -286,7 +286,7 @@ namespace sequoia::unit_testing
   protected:
     virtual std::string current_message() const override
     {
-      const log_summary s{this->summary("") + m_AccumulatedSummaries};
+      const log_summary s{this->summary("", log_summary::duration{}) + m_AccumulatedSummaries};
       return s.current_message();
     }
   private:

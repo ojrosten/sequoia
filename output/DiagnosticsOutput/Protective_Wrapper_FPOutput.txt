@@ -29,7 +29,8 @@
 	[std::__1::vector<int, std::__1::allocator<int> >]
 	operator!= returned true
 
-	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 32 container size wrong
+	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 32
+	Container size wrong
 	[long]
 	operator== returned false
 	Obtained : 0

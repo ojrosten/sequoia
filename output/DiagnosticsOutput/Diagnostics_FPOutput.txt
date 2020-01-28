@@ -320,18 +320,18 @@
 
 	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 84:
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
-	Fast Task duration: 0.001526s +- 3 * 0.000246665
-	Slow Task duration: 0.00164256s +- 3 * 1.15747e-06 [1.07638; (2, 2)]
+	Fast Task duration: 0.00133602s +- 3 * 6.77244e-05
+	Slow Task duration: 0.00131426s +- 3 * 0.000137985 [0.983711; (2, 2)]
 
 	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 88:
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
-	Fast Task duration: 0.00163913s +- 3 * 1.15302e-05
-	Slow Task duration: 0.00161841s +- 3 * 3.07838e-05 [0.987359; (2, 3)]
+	Fast Task duration: 0.00129336s +- 3 * 0.000155856
+	Slow Task duration: 0.00132415s +- 3 * 3.88389e-05 [1.0238; (2, 3)]
 
 	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 92:
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
-	Fast Task duration: 0.00161657s +- 3 * 3.24326e-05
-	Slow Task duration: 0.00533978s +- 3 * 0.00111591 [3.30316; (2, 2.5)]
+	Fast Task duration: 0.00134584s +- 3 * 4.4701e-05
+	Slow Task duration: 0.00513752s +- 3 * 2.80956e-05 [3.81732; (2, 2.5)]
 
 	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 108
 	[std::__1::tuple<std::__1::vector<std::__1::pair<int, float>, std::__1::allocator<std::__1::pair<int, float> > >, std::__1::set<double, std::__1::less<double>, std::__1::allocator<double> >, std::__1::complex<double> >]
@@ -6049,14 +6049,14 @@
 	False Positive Failure:
 		../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 217:
 	Performance Test which should pass
-	Fast Task duration: 0.00116423s +- 3 * 0.000124469
-	Slow Task duration: 0.00240216s +- 3 * 0.000372352 [2.06331; (1.8, 2.1)]
+	Fast Task duration: 0.00114108s +- 3 * 0.000113496
+	Slow Task duration: 0.00215348s +- 3 * 0.000132311 [1.88722; (1.8, 2.1)]
 
 	False Positive Failure:
 		../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 218:
 	Performance Test which should pass
-	Fast Task duration: 0.00133487s +- 3 * 0.000217683
-	Slow Task duration: 0.00427364s +- 3 * 0.000284132 [3.20154; (3.6, 4.1)]
+	Fast Task duration: 0.0011445s +- 3 * 9.57212e-05
+	Slow Task duration: 0.00417448s +- 3 * 8.38209e-05 [3.64742; (3.6, 4.1)]
 
 	False Positive Failure:
 	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 231

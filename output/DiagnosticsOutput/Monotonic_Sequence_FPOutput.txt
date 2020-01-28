@@ -4,7 +4,8 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > > >]
 	With equivalent types:
 	[std::initializer_list<int>]
-	container size wrong
+
+	Container size wrong
 	[long]
 	operator== returned false
 	Obtained : 0
@@ -17,7 +18,8 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > > >]
 	With equivalent types:
 	[std::initializer_list<int>]
-	container size wrong
+
+	Container size wrong
 	[long]
 	operator== returned false
 	Obtained : 1
