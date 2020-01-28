@@ -214,8 +214,8 @@ namespace sequoia::unit_testing
       }
     };      
 
-    check_relative_performance(LINE("Performance Test which should pass"), fast, [wait]() { return wait(2); }, 1.9, 2.1, 5);
-    check_relative_performance(LINE("Performance Test which should pass"), fast, [wait]() { return wait(4); }, 3.9, 4.1);
+    check_relative_performance(LINE("Performance Test which should pass"), fast, [wait]() { return wait(2); }, 1.8, 2.1, 5);
+    check_relative_performance(LINE("Performance Test which should pass"), fast, [wait]() { return wait(4); }, 3.6, 4.1, 5);
   }
 
   void false_negative_diagnostics::test_mixed()

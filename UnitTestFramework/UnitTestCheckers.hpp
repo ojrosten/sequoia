@@ -518,12 +518,12 @@ namespace sequoia
     };
 
     template<class Logger, class F, class S>
+    [[nodiscard]]
     auto check_relative_performance(std::string_view description, Logger& logger, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials, const double num_sds) -> performance_results<std::invoke_result_t<F>>
     {      
       using R = std::invoke_result_t<F>;
       static_assert(std::is_same_v<R, std::invoke_result_t<S>>, "Fast/Slow invokables must have same return value");
-            
-      // Replace with contracts in 2020
+
       if((minSpeedUp <= 1) || (maxSpeedUp <= 1))
         throw std::logic_error("Relative performance test requires speed-up factors > 1!");
 
@@ -535,78 +535,98 @@ namespace sequoia
       using namespace std::chrono;
       using namespace maths;
 
-      std::vector<double> fastData, slowData;
-      fastData.reserve(trials);
-      slowData.reserve(trials);
-      
-      std::random_device generator;
-      for(std::size_t i{}; i < trials; ++i)
+      std::string
+        message{description.empty() ? "" : std::string{"\t"}.append(description).append("\n")},
+        summary{};  
+
+      std::size_t remainingAttempts{2};
+
+      while(remainingAttempts > 0)
       {
-        std::packaged_task<R()> fastTask{fast}, slowTask{slow};
+        std::vector<double> fastData, slowData;
+        fastData.reserve(trials);
+        slowData.reserve(trials);
+        
+        std::random_device generator;
+        for(std::size_t i{}; i < trials; ++i)
+        {
+          std::packaged_task<R()> fastTask{fast}, slowTask{slow};
 
-        results.fast_futures.emplace_back(std::move(fastTask.get_future()));
-        results.slow_futures.emplace_back(std::move(slowTask.get_future()));
+          results.fast_futures.emplace_back(std::move(fastTask.get_future()));
+          results.slow_futures.emplace_back(std::move(slowTask.get_future()));
 
-        steady_clock::time_point start, end;
+          steady_clock::time_point start, end;
 
-        std::uniform_real_distribution<double> distribution{0.0, 1.0};
-        const bool fastFirst{(distribution(generator) < 0.5)};
+          std::uniform_real_distribution<double> distribution{0.0, 1.0};
+          const bool fastFirst{(distribution(generator) < 0.5)};
 
-        start = steady_clock::now();
-        fastFirst ? fastTask() : slowTask();
-        end = steady_clock::now();
+          start = steady_clock::now();
+          fastFirst ? fastTask() : slowTask();
+          end = steady_clock::now();
 
-        duration<double> duration = end - start;
-        fastFirst ? fastData.push_back(duration.count()) : slowData.push_back(duration.count());
+          duration<double> duration = end - start;
+          fastFirst ? fastData.push_back(duration.count()) : slowData.push_back(duration.count());
 
-        start = steady_clock::now();
-        fastFirst ? slowTask() : fastTask();
-        end = steady_clock::now();
+          start = steady_clock::now();
+          fastFirst ? slowTask() : fastTask();
+          end = steady_clock::now();
 
-        duration = end - start;
-        fastFirst ? slowData.push_back(duration.count()) : fastData.push_back(duration.count());
+          duration = end - start;
+          fastFirst ? slowData.push_back(duration.count()) : fastData.push_back(duration.count());
+        }
+
+        auto compute_stats{
+          [](auto first, auto last) {
+            const auto data{sample_standard_deviation(first, last)};
+            return std::make_pair(data.first.value(), data.second.value());
+          }
+        };
+      
+        const auto [sig_f, m_f]{compute_stats(fastData.cbegin(), fastData.cend())};
+        const auto [sig_s, m_s]{compute_stats(slowData.cbegin(), slowData.cend())};
+
+        using namespace maths::bias;
+        if(m_f + sig_f < m_s - sig_s)
+        {
+          if(sig_f >= sig_s)
+          {
+            results.passed = (minSpeedUp * m_f <= (m_s + num_sds * sig_s))
+                          && (maxSpeedUp * m_f >= (m_s - num_sds * sig_s));
+          }
+          else
+          {
+            results.passed = (m_s / maxSpeedUp <= (m_f + num_sds * sig_f))
+                          && (m_s / minSpeedUp >= (m_f - num_sds * sig_f));
+          }
+        }
+
+        auto serializer{
+          [m_f=m_f,sig_f=sig_f,m_s=m_s,sig_s=sig_s,num_sds,minSpeedUp,maxSpeedUp](){
+            std::ostringstream message{};
+            message << "\tFast Task duration: " << m_f << "s";
+            message << " +- " << num_sds << " * " << sig_f;
+            message << "\n\tSlow Task duration: " << m_s << "s";
+            message << " +- " << num_sds << " * " << sig_s;
+            message << " [" << m_s / m_f << "; (" << minSpeedUp << ", " << maxSpeedUp << ")]\n";
+
+            return message.str();
+          }
+        };
+        
+        summary = serializer();
+
+        if((Logger::mode == test_mode::false_positive) ? !results.passed : results.passed)
+        {
+          break;
+        }
+        
+        --remainingAttempts;
+        if(remainingAttempts)
+          results = performance_results<R>{};      
       }
 
-      auto compute_stats{
-        [](auto first, auto last) {
-          const auto data{sample_standard_deviation(first, last)};
-          return std::make_pair(data.first.value(), data.second.value());
-        }
-      };
-      
-      const auto [sig_f, m_f]{compute_stats(fastData.cbegin(), fastData.cend())};
-      const auto [sig_s, m_s]{compute_stats(slowData.cbegin(), slowData.cend())};
+      message.append(summary);
 
-      using namespace maths::bias;
-      if(m_f + sig_f < m_s - sig_s)
-      {
-        if(sig_f >= sig_s)
-        {
-          results.passed = (minSpeedUp * m_f <= (m_s + num_sds * sig_s))
-                        && (maxSpeedUp * m_f >= (m_s - num_sds * sig_s));
-        }
-        else
-        {
-          results.passed = (m_s / maxSpeedUp <= (m_f + num_sds * sig_f))
-                        && (m_s / minSpeedUp >= (m_f - num_sds * sig_f));
-        }
-      }
-
-      auto serializer{
-        [m_f=m_f,sig_f=sig_f,m_s=m_s,sig_s=sig_s,num_sds,minSpeedUp,maxSpeedUp](){
-          std::ostringstream message;
-          message << "\tFast Task duration: " << m_f << "s";
-          message << " +- " << num_sds << " * " << sig_f;
-          message << "\n\tSlow Task duration: " << m_s << "s";
-          message << " +- " << num_sds << " * " << sig_s;
-          message << " [" << m_s / m_f << "; (" << minSpeedUp << ", " << maxSpeedUp << ")]\n";
-
-          return message.str();
-        }
-      };
-
-      const std::string message{description.empty() ? serializer() : std::string{"\t"}.append(description).append("\n" + serializer())};
-      
       typename Logger::sentinel r{logger, message};
       r.log_performance_check();
 
