@@ -228,7 +228,7 @@ namespace sequoia::unit_testing
       return this->summary("", steady_clock::now() - time);
     }
 
-    log_summary get_summary() const { return this->summary("", log_summary::duration{}); }
+    log_summary recover_summary() const { return this->summary("", log_summary::duration{}); }
       
   protected:
     virtual void execute_operations() = 0;
@@ -412,7 +412,7 @@ namespace sequoia::unit_testing
       }
       catch(...)
       {
-        m_Summary += test.get_summary();
+        m_Summary += test.recover_summary();
         throw;
       }
     }
