@@ -72,9 +72,15 @@ namespace sequoia::unit_testing
       summaries.front().append("  [Deep checks: " + std::to_string(log.standard_deep_checks()) + "]");
 
     using namespace std::chrono;
-    std::string summary{"["
-        + std::to_string(duration_cast<milliseconds>(log.execution_time()).count()) + "ms]\n"};
-    summary.append(log.name().empty() ? "" : std::string{"\t"}.append(log.name()).append(":\n"));
+    auto reportTime{
+      [&log](){
+        const auto count{duration_cast<milliseconds>(log.execution_time()).count()};
+        return std::string{"["}.append(std::to_string(count)).append("ms]\n");
+      }
+    };
+    
+    std::string summary{log.name().empty() ? reportTime()
+        : std::string{"\t"}.append(log.name()).append(":\n\t").append(reportTime())};
 
     if((suppression & log_verbosity::absent_checks) == log_verbosity::absent_checks)
     {
