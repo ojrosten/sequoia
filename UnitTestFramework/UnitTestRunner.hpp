@@ -53,6 +53,9 @@ namespace sequoia::unit_testing
   }
 
   [[nodiscard]]
+  std::string report_time(const log_summary& log);
+
+  [[nodiscard]]
   std::string summarize(const log_summary& log, std::string_view prefix, const log_verbosity suppression);
 
   class unit_test_runner
@@ -95,7 +98,7 @@ namespace sequoia::unit_testing
     enum class file_comparison {failed, same, different};
 
     [[nodiscard]]
-    static std::string to_camel_case(std::string text);    
+    static std::string to_camel_case(std::string text);
 
     static void replace_all(std::string& text, std::string_view from, const std::string& to);
 

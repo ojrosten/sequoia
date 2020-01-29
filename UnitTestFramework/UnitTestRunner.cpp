@@ -17,6 +17,13 @@
 namespace sequoia::unit_testing
 {
   using parsing::commandline::warning;
+
+  std::string report_time(const log_summary& log)
+  {
+    using namespace std::chrono;
+    const auto count{duration_cast<milliseconds>(log.execution_time()).count()};
+    return std::string{"["}.append(std::to_string(count)).append("ms]\n");
+  }
   
   std::string summarize(const log_summary& log, std::string_view indent, const log_verbosity suppression)
   {
@@ -70,17 +77,9 @@ namespace sequoia::unit_testing
 
     if(log.standard_top_level_checks())
       summaries.front().append("  [Deep checks: " + std::to_string(log.standard_deep_checks()) + "]");
-
-    using namespace std::chrono;
-    auto reportTime{
-      [&log](){
-        const auto count{duration_cast<milliseconds>(log.execution_time()).count()};
-        return std::string{"["}.append(std::to_string(count)).append("ms]\n");
-      }
-    };
     
-    std::string summary{log.name().empty() ? reportTime()
-        : std::string{"\t"}.append(log.name()).append(":\n\t").append(reportTime())};
+    std::string summary{log.name().empty() ? report_time(log)
+        : std::string{"\t"}.append(log.name()).append(":\n\t").append(report_time(log))};
 
     if((suppression & log_verbosity::absent_checks) == log_verbosity::absent_checks)
     {
@@ -315,13 +314,23 @@ namespace sequoia::unit_testing
   log_summary unit_test_runner::process_family(const std::vector<log_summary>& summaries)
   {
     log_summary familySummary{};
+    std::string output{};
     for(const auto& s : summaries)
     {
-      if(m_Verbose) std::cout << summarize(s, "\t", log_verbosity::failure_messages);
+      if(m_Verbose) output += summarize(s, "\t", log_verbosity::failure_messages);
       familySummary += s;
     }
           
-    if(!m_Verbose) std::cout << summarize(familySummary, "", log_verbosity::failure_messages);
+    if(m_Verbose)
+    {
+      output.insert(0, report_time(familySummary));
+    }
+    else
+    {
+      output += summarize(familySummary, "", log_verbosity::failure_messages);
+    }
+
+    std::cout << output;
 
     return familySummary;
   }
