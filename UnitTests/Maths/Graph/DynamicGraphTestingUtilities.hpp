@@ -221,11 +221,9 @@ namespace sequoia::unit_testing
     
     log_summary run()
     {
-      using namespace std::chrono;
-      const auto time{steady_clock::now()}; 
       execute_operations();
 
-      return this->summary("", steady_clock::now() - time);
+      return this->summary("", log_summary::duration{});
     }
 
     log_summary recover_summary() const { return this->summary("", log_summary::duration{}); }
@@ -330,13 +328,6 @@ namespace sequoia::unit_testing
       Test& m_UnitTest;
       log_summary& m_Summary;
     };
-
-    template<class Test>
-    void finish(Test& unitTest)
-    {
-      unitTest.merge(m_Summary);   
-      m_Summary.clear();
-    }
 
     template
     <
