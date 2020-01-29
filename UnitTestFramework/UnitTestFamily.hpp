@@ -20,61 +20,13 @@ namespace sequoia::unit_testing
   {
   public:
     template<class... Tests>
-    test_family(std::string_view name, Tests&&... tests) : m_Name{name}
+    explicit test_family(std::string_view name, Tests&&... tests) : m_Name{name}
     {
       register_tests(std::forward<Tests>(tests)...);
     }
 
     [[nodiscard]]
-    std::vector<log_summary> execute(const bool writeFiles, const bool asynchronous)
-    {
-      std::vector<log_summary> summaries{};
-      bool dataToWrite{};
-
-      if(!asynchronous)
-      {
-        for(auto& pTest : m_Tests)
-        {
-          summaries.push_back(pTest->execute());
-          if(!summaries.back().versioned_output().empty()) dataToWrite = true;
-        }
-      }
-      else
-      {
-        std::vector<std::future<log_summary>> results{};
-        for(auto& pTest : m_Tests)
-        {
-          results.emplace_back(std::async([&pTest](){
-                return pTest->execute(); }));
-        }
-
-        for(auto& res : results)
-        {
-          summaries.push_back(res.get());
-          if(!summaries.back().versioned_output().empty()) dataToWrite = true;
-        } 
-      }
-
-      if(writeFiles && dataToWrite)
-      {
-        if(auto filename{false_positive_filename()}; !filename.empty())
-        {
-          if(std::ofstream file{filename.data()})
-          {           
-            for(const auto& s : summaries)
-            {           
-              file << s.versioned_output().data();
-            }
-          }
-          else
-          {
-            throw std::runtime_error{std::string{"Unable to open versioned file "}.append(filename).append(" for writing\n")};
-          }
-        }
-      }
-
-      return summaries;
-    }
+    std::vector<log_summary> execute(const bool writeFiles, const bool asynchronous);
 
     [[nodiscard]]
     std::string_view name() const noexcept { return m_Name; }
@@ -84,24 +36,14 @@ namespace sequoia::unit_testing
     std::string m_Name;
 
     [[nodiscard]]
-    std::string false_positive_filename()
-    {
-      std::string name{m_Name};
-      for(auto& c : name)
-      {
-        if(c == ' ') c = '_';
-      }
-    
-      return std::string{"../output/DiagnosticsOutput/"}.append(std::move(name)).append("_FPOutput.txt");
-    }
+    std::string false_positive_filename();
 
     template<class Test, class... Tests>
     void register_tests(Test&& t, Tests&&... tests)
     {
       m_Tests.emplace_back(std::make_unique<Test>(std::forward<Test>(t)));
-      register_tests(std::forward<Tests>(tests)...);
+      if constexpr (sizeof...(Tests) > 0)
+        register_tests(std::forward<Tests>(tests)...);
     }
-
-    void register_tests() {}
   };
 }
