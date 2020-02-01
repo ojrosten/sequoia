@@ -19,6 +19,25 @@ namespace sequoia::unit_testing
   class test_family
   {
   public:
+    struct results
+    {
+      results(log_summary::duration t, std::vector<log_summary> l)
+        : execution_time{t}, logs{std::move(l)}
+      {}
+      
+      log_summary::duration execution_time{};
+      std::vector<log_summary> logs;
+    };
+
+    struct summary
+    {
+      explicit summary(log_summary::duration t) : execution_time{t}
+      {}
+      
+      log_summary::duration execution_time{};
+      log_summary log;
+    };
+    
     template<class... Tests>
     explicit test_family(std::string_view name, Tests&&... tests) : m_Name{name}
     {
@@ -26,7 +45,7 @@ namespace sequoia::unit_testing
     }
 
     [[nodiscard]]
-    std::vector<log_summary> execute(const bool writeFiles, const bool asynchronous);
+    auto execute(const bool writeFiles, const bool asynchronous) -> results ;
 
     [[nodiscard]]
     std::string_view name() const noexcept { return m_Name; }

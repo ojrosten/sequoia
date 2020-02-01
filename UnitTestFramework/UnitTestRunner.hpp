@@ -14,6 +14,7 @@
 #include "UnitTestFamily.hpp"
 
 #include <map>
+#include <optional>
 
 namespace sequoia::unit_testing
 {
@@ -52,12 +53,6 @@ namespace sequoia::unit_testing
     }
   }
 
-  [[nodiscard]]
-  std::string report_time(const log_summary& log);
-
-  [[nodiscard]]
-  std::string summarize(const log_summary& log, std::string_view prefix, const log_verbosity suppression);
-
   class unit_test_runner
   {
   public:
@@ -85,7 +80,7 @@ namespace sequoia::unit_testing
 
     const static std::array<std::string_view, 5> st_TestNameStubs;
 
-    log_summary process_family(const std::vector<log_summary>& summaries);
+    test_family::summary process_family(const test_family::results& results);
 
     void run_diagnostics();
 

@@ -9,8 +9,11 @@
 
 namespace sequoia::unit_testing
 {
-  std::vector<log_summary> test_family::execute(const bool writeFiles, const bool asynchronous)
+  auto test_family::execute(const bool writeFiles, const bool asynchronous) -> results 
   {
+    using namespace std::chrono;
+    const auto time{steady_clock::now()};
+    
     std::vector<log_summary> summaries{};
     bool dataToWrite{};
 
@@ -56,7 +59,7 @@ namespace sequoia::unit_testing
       }
     }
 
-    return summaries;
+    return {steady_clock::now() - time, std::move(summaries)};
   }
 
   std::string test_family::false_positive_filename()

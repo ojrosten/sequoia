@@ -18,102 +18,146 @@ namespace sequoia::unit_testing
 {
   using parsing::commandline::warning;
 
-  std::string report_time(const log_summary& log)
+  namespace
   {
-    using namespace std::chrono;
-    const auto count{duration_cast<milliseconds>(log.execution_time()).count()};
-    return std::string{"["}.append(std::to_string(count)).append("ms]\n");
-  }
-  
-  std::string summarize(const log_summary& log, std::string_view indent, const log_verbosity suppression)
-  {
-    constexpr std::size_t entries{6};
-
-    std::array<std::string, entries> summaries{
-      std::string{indent}.append("\tStandard Top Level Checks:"),
-      std::string{indent}.append("\tStandard Performance Checks:"),
-      std::string{indent}.append("\tFalse Negative Checks:"),
-      std::string{indent}.append("\tFalse Negative Performance Checks:"),
-      std::string{indent}.append("\tFalse Positive Checks:"),
-      std::string{indent}.append("\tFalse Positive PerformanceChecks:")
-    };
-
-    pad_right(summaries.begin(), summaries.end(), "  ");
-
-    std::array<std::string, entries> checkNums{
-      std::to_string(log.standard_top_level_checks()),
-      std::to_string(log.standard_performance_checks()),
-      std::to_string(log.false_negative_checks()),
-      std::to_string(log.false_negative_performance_checks()),
-      std::to_string(log.false_positive_checks()),
-      std::to_string(log.false_positive_performance_checks())
-    };
-
-    constexpr std::size_t minChars{8};
-    pad_left(checkNums.begin(), checkNums.end(), minChars);
-
-    const auto len{10u - std::min(std::size_t{minChars}, checkNums.front().size())};
-        
-    for(int i{}; i<entries; ++i)
-    {
-      summaries[i].append(checkNums[i] + ";").append(len, ' ').append("Failures: ");
-    }
-
-    std::array<std::string, entries> failures{
-      std::to_string(log.standard_top_level_failures()),
-      std::to_string(log.standard_performance_failures()),
-      std::to_string(log.false_negative_failures()),
-      std::to_string(log.false_negative_performance_failures()),
-      std::to_string(log.false_positive_failures()),
-      std::to_string(log.false_positive_performance_failures())
-    };
-
-    pad_left(failures.begin(), failures.end(), 2);
-
-    for(int i{}; i < entries; ++i)
-    {
-      summaries[i] += failures[i];
-    }
-
-    if(log.standard_top_level_checks())
-      summaries.front().append("  [Deep checks: " + std::to_string(log.standard_deep_checks()) + "]");
+    using opt_duration = std::optional<log_summary::duration>;
     
-    std::string summary{log.name().empty() ? report_time(log)
-        : std::string{"\t"}.append(log.name()).append(":\n\t").append(report_time(log))};
-
-    if((suppression & log_verbosity::absent_checks) == log_verbosity::absent_checks)
+    [[nodiscard]]
+    std::string stringify(const log_summary::duration& d)
     {
-      std::for_each(std::cbegin(summaries), std::cend(summaries), [&summary](const std::string& s){
-          (summary += s) += "\n";
-        }
-      );
+      using namespace std::chrono;
+      const auto count{duration_cast<milliseconds>(d).count()};
+      return std::to_string(count);
     }
-    else
+
+    [[nodiscard]]
+    std::string report_time(const log_summary& log, const opt_duration duration)
     {
-      const std::array<std::size_t, entries> checks{
-        log.standard_top_level_checks(),
-        log.standard_performance_checks(),
-        log.false_negative_checks(),
-        log.false_negative_performance_checks(),
-        log.false_positive_checks(),
-        log.false_positive_performance_checks()
+      auto mess{std::string{"["}};
+      if(duration) mess.append(stringify(*duration)).append(" (");
+
+      mess.append(stringify(log.execution_time()));
+
+      if(duration) mess.append(")");
+      
+      return mess.append("ms]\n");
+    }
+
+    [[nodiscard]]
+    std::string report_time(const test_family::summary& s)
+    {
+      return report_time(s.log, s.execution_time);
+    }
+
+    [[nodiscard]]
+    std::string summarize(const log_summary& log, const opt_duration duration, std::string_view indent, const log_verbosity suppression)
+    {
+      constexpr std::size_t entries{6};
+
+      std::array<std::string, entries> summaries{
+        std::string{indent}.append("\tStandard Top Level Checks:"),
+        std::string{indent}.append("\tStandard Performance Checks:"),
+        std::string{indent}.append("\tFalse Negative Checks:"),
+        std::string{indent}.append("\tFalse Negative Performance Checks:"),
+        std::string{indent}.append("\tFalse Positive Checks:"),
+        std::string{indent}.append("\tFalse Positive PerformanceChecks:")
       };
 
+      pad_right(summaries.begin(), summaries.end(), "  ");
+
+      std::array<std::string, entries> checkNums{
+        std::to_string(log.standard_top_level_checks()),
+        std::to_string(log.standard_performance_checks()),
+        std::to_string(log.false_negative_checks()),
+        std::to_string(log.false_negative_performance_checks()),
+        std::to_string(log.false_positive_checks()),
+        std::to_string(log.false_positive_performance_checks())
+      };
+
+      constexpr std::size_t minChars{8};
+      pad_left(checkNums.begin(), checkNums.end(), minChars);
+
+      const auto len{10u - std::min(std::size_t{minChars}, checkNums.front().size())};
+        
       for(int i{}; i<entries; ++i)
-      {            
-        if(checks[i]) summary += summaries[i] += "\n";
+      {
+        summaries[i].append(checkNums[i] + ";").append(len, ' ').append("Failures: ");
       }
+
+      std::array<std::string, entries> failures{
+        std::to_string(log.standard_top_level_failures()),
+        std::to_string(log.standard_performance_failures()),
+        std::to_string(log.false_negative_failures()),
+        std::to_string(log.false_negative_performance_failures()),
+        std::to_string(log.false_positive_failures()),
+        std::to_string(log.false_positive_performance_failures())
+      };
+
+      pad_left(failures.begin(), failures.end(), 2);
+
+      for(int i{}; i < entries; ++i)
+      {
+        summaries[i] += failures[i];
+      }
+
+      if(log.standard_top_level_checks())
+        summaries.front().append("  [Deep checks: " + std::to_string(log.standard_deep_checks()) + "]");
+
+      auto dur{
+        [&log, &duration](){
+          return report_time(log, duration);
+        }
+      };
+    
+      std::string summary{log.name().empty() ? dur()
+          : std::string{"\t"}.append(log.name()).append(":\n\t").append(dur())};
+
+      if((suppression & log_verbosity::absent_checks) == log_verbosity::absent_checks)
+      {
+        std::for_each(std::cbegin(summaries), std::cend(summaries), [&summary](const std::string& s){
+            (summary += s) += "\n";
+          }
+        );
+      }
+      else
+      {
+        const std::array<std::size_t, entries> checks{
+          log.standard_top_level_checks(),
+          log.standard_performance_checks(),
+          log.false_negative_checks(),
+          log.false_negative_performance_checks(),
+          log.false_positive_checks(),
+          log.false_positive_performance_checks()
+        };
+
+        for(int i{}; i<entries; ++i)
+        {            
+          if(checks[i]) summary += summaries[i] += "\n";
+        }
+      }
+
+      if(log.critical_failures())
+      {
+        (summary += "Critical Failures:  ") += std::to_string(log.critical_failures()) += "\n";
+      }
+
+      if((suppression & log_verbosity::failure_messages) == log_verbosity::failure_messages)
+        summary += log.failure_messages();
+
+      return summary;
     }
 
-    if(log.critical_failures())
+    [[nodiscard]]
+    std::string summarize(const test_family::summary& summary, std::string_view indent, const log_verbosity suppression)
     {
-      (summary += "Critical Failures:  ") += std::to_string(log.critical_failures()) += "\n";
+      return summarize(summary.log, summary.execution_time, indent, suppression);
     }
 
-    if((suppression & log_verbosity::failure_messages) == log_verbosity::failure_messages)
-      summary += log.failure_messages();
-
-    return summary;
+    [[nodiscard]]
+    std::string summarize(const log_summary& log, std::string_view indent, const log_verbosity suppression)
+    {
+      return summarize(log, std::nullopt, indent, suppression);
+    }
   }
   
   std::string unit_test_runner::to_camel_case(std::string text)
@@ -311,14 +355,14 @@ namespace sequoia::unit_testing
     if(process()) m_Families.emplace_back(std::move(f));
   }
 
-  log_summary unit_test_runner::process_family(const std::vector<log_summary>& summaries)
+  test_family::summary unit_test_runner::process_family(const test_family::results& results)
   {
-    log_summary familySummary{};
+    test_family::summary familySummary{results.execution_time};
     std::string output{};
-    for(const auto& s : summaries)
+    for(const auto& s : results.logs)
     {
       if(m_Verbose) output += summarize(s, "\t", log_verbosity::failure_messages);
-      familySummary += s;
+      familySummary.log += s;
     }
           
     if(m_Verbose)
@@ -437,6 +481,9 @@ namespace sequoia::unit_testing
 
   void unit_test_runner::run_tests()
   {
+    using namespace std::chrono;
+    const auto time{steady_clock::now()};
+
     if(!m_Families.empty() && (m_NewFiles.empty() || !m_SpecificTests.empty()))
     {
       std::cout << "Running unit tests...\n";
@@ -446,13 +493,13 @@ namespace sequoia::unit_testing
         for(auto& family : m_Families)
         {
           std::cout << family.name() << ":\n";
-          summary += process_family(family.execute(m_WriteFiles, false));
+          summary += process_family(family.execute(m_WriteFiles, false)).log;
         }
       }
       else
       {
         std::cout << "\n\t--Using asynchronous execution\n\n";
-        std::vector<std::pair<std::string, std::future<std::vector<log_summary>>>> results{};
+        std::vector<std::pair<std::string, std::future<test_family::results>>> results{};
 
         for(auto& family : m_Families)
         {
@@ -464,11 +511,11 @@ namespace sequoia::unit_testing
         for(auto& res : results)
         {
           std::cout << res.first << ":\n";
-          summary += process_family(res.second.get());
+          summary += process_family(res.second.get()).log;
         }
       }
       std::cout <<  "\n-----------Grand Totals-----------\n";
-      std::cout << summarize(summary, "", log_verbosity::absent_checks);
+      std::cout << summarize(summary, steady_clock::now() - time, "", log_verbosity::absent_checks);
     }
 
     check_for_missing_tests();
