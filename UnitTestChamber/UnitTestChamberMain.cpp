@@ -75,6 +75,7 @@ int main(int argc, char** argv)
   try
   {
     unit_test_runner runner{argc, argv};
+    const concurrency_flavour asynchronous{runner.asynchronous() ? concurrency_flavour::async : concurrency_flavour::serial};
   
     runner.add_test_family(
       test_family{
@@ -91,6 +92,13 @@ int main(int argc, char** argv)
         "CommandLine Arguments",
         commandline_arguments_test{"Unit Test"},
         commandline_arguments_false_positive_test{"False Positive Test"}
+      }
+    );
+
+    runner.add_test_family(
+      test_family{
+        "Graph",
+        test_graph_false_positives{"Graph false positive diagnostics", asynchronous}
       }
     );
       

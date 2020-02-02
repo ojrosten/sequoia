@@ -36,11 +36,9 @@ namespace sequoia::unit_testing
   >::execute_operations()
   {
     using namespace maths;
-    using edge_init_t = typename graph_t::edge_init_type; 
+    using edge_init_t = typename graph_t::edge_init_type;
 
     graph_t network{};
-
-    check_equality(LINE("Check false positive: empty graph versus single node"), network, {{}});
 
     std::string message{"Check false positive: empty graph versus single node with loop"};
     if constexpr (GraphFlavour == graph_flavour::directed)

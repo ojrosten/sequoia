@@ -292,7 +292,7 @@ namespace sequoia::unit_testing
 
     void report_async_exception(std::string_view sv)
     {
-      check(combine_messages("Exception thrown during asynchronous execution of graph test:", sv, "\n"), false);
+      check(combine_messages("Exception thrown during asynchronous execution of graph test:", sv, "\n"), Logger::mode == test_mode::false_positive);
     }
   protected:
     virtual std::string current_message() const override

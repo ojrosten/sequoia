@@ -21,6 +21,7 @@ CFLAGS := -Wall -std=c++2a -O0 -ferror-limit=1 \
 EXE := $(BUILDDIR)/UnitTestChamber.exe
 
 UTSRCS := UnitTestChamberMain.cpp
+UTSRCS += $(UTDIR)/Maths/Graph/DynamicGraphTestingDiagnostics.cpp
 UTSRCS += $(shell find $(UTDIR)/UnitTestFramework -name '*.cpp')
 UTSRCS += $(shell find $(UTDIR)/Parsing -name '*.cpp')
 
