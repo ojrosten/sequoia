@@ -64,6 +64,9 @@ namespace sequoia::unit_testing
     void add_test_family(test_family&& f);
 
     void execute();
+
+    [[nodiscard]]
+    bool asynchronous() const noexcept { return m_Asynchronous; }
   private:
     struct nascent_test
     {

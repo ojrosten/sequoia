@@ -14,17 +14,17 @@ namespace sequoia::unit_testing
     test_prs_details();
 
     {
-      graph_test_helper<null_weight, null_weight> helper;
+      graph_test_helper<null_weight, null_weight> helper{concurrent_execution()};
       helper.run_tests<tracker_test>(*this);
     }
 
     {
-      graph_test_helper<null_weight, int> helper;
+      graph_test_helper<null_weight, int> helper{concurrent_execution()};
       helper.run_tests<test_weighted_BFS_tasks>(*this);
     }
       
     {
-      graph_test_helper<null_weight, int> helper;
+      graph_test_helper<null_weight, int> helper{concurrent_execution()};
       helper.run_tests<test_priority_traversal>(*this);
     }
   }

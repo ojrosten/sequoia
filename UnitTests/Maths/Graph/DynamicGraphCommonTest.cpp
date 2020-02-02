@@ -20,7 +20,7 @@ namespace sequoia::unit_testing
     struct null_weight {};
       
     {
-      graph_test_helper<null_weight, null_weight> helper{};
+      graph_test_helper<null_weight, null_weight> helper{concurrent_execution()};
       
       helper.run_tests<generic_graph_operations>(*this);
       helper.run_storage_tests<custom_allocator_contiguous_edge_storage_traits, custom_node_weight_storage_traits, graph_contiguous_memory>(*this);
@@ -28,7 +28,7 @@ namespace sequoia::unit_testing
     }
       
     {
-      graph_test_helper<int, complex<double>>  helper{};
+      graph_test_helper<int, complex<double>>  helper{concurrent_execution()};
       
       helper.run_tests<generic_weighted_graph_tests>(*this);
       helper.run_storage_tests<custom_allocator_contiguous_edge_storage_traits, custom_node_weight_storage_traits, graph_contiguous_memory>(*this);
@@ -36,14 +36,14 @@ namespace sequoia::unit_testing
     }
 
     {
-      graph_test_helper<complex<int>, complex<double>>  helper{};
+      graph_test_helper<complex<int>, complex<double>>  helper{concurrent_execution()};
       helper.run_tests<generic_weighted_graph_tests>(*this);
       helper.run_storage_tests<custom_allocator_contiguous_edge_storage_traits, custom_node_weight_storage_traits, graph_contiguous_memory>(*this);
       helper.run_storage_tests<custom_allocator_bucketed_edge_storage_traits, custom_node_weight_storage_traits, graph_bucketed_memory>(*this);
     }
 
     {
-      graph_test_helper<std::vector<int>, std::vector<complex<double>>>  helper{};
+      graph_test_helper<std::vector<int>, std::vector<complex<double>>>  helper{concurrent_execution()};
       
       helper.run_tests<generic_weighted_graph_tests>(*this);
       helper.run_storage_tests<custom_allocator_contiguous_edge_storage_traits, custom_node_weight_storage_traits, graph_contiguous_memory>(*this);

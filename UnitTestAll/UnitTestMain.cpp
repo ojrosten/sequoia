@@ -75,6 +75,8 @@ int main(int argc, char** argv)
   try
   {
     unit_test_runner runner{argc, argv};
+    //const concurrency_flavour asynchronous{runner.asynchronous() ? concurrency_flavour::async : concurrency_flavour::serial};
+    const concurrency_flavour asynchronous{concurrency_flavour::serial};
   
     runner.add_test_family(
       test_family{
@@ -211,25 +213,25 @@ int main(int argc, char** argv)
     runner.add_test_family(
       test_family{
         "Graph",
-        test_graph_false_positives{"Graph false positive diagnostics"},
-        test_graph_meta("Meta Tests"),
-        test_graph_init("Dynamic Graph Init"),        
-        test_static_graph{"Static Graph Init"},
-        test_heterogeneous_static_graph{"Heterogeneous Static Graphs"},
-        test_graph{"Dynmaic Graph Common Tests"},
-        test_fixed_topology{"Dynamic Graph Fixed Topology"},
-        test_static_fixed_topology{"Static Graph Manipulations"},
-        test_edge_insertion{"Edge Insertions"}  
+        test_graph_false_positives{"Graph false positive diagnostics", asynchronous},
+        test_graph_meta("Meta Tests", asynchronous),
+        test_graph_init("Dynamic Graph Init", asynchronous),        
+        test_static_graph{"Static Graph Init", asynchronous},
+        test_heterogeneous_static_graph{"Heterogeneous Static Graphs", asynchronous},
+        test_graph{"Dynmaic Graph Common Tests", asynchronous},
+        test_fixed_topology{"Dynamic Graph Fixed Topology", asynchronous},
+        test_static_fixed_topology{"Static Graph Manipulations", asynchronous},
+        test_edge_insertion{"Edge Insertions", asynchronous}  
       }
     );
 
     runner.add_test_family(
       test_family{
         "Graph Algorithms",
-        test_graph_traversals{"Traversals"},
-        test_static_graph_traversals{"Static Graph Traversals"},
-        test_graph_update{"Updates"},
-        test_subgraph{"Subgraph"}
+        test_graph_traversals{"Traversals", asynchronous},
+        test_static_graph_traversals{"Static Graph Traversals", asynchronous},
+        test_graph_update{"Updates", asynchronous},
+        test_subgraph{"Subgraph", asynchronous}
       }
     );
 

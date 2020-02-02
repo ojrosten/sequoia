@@ -11,7 +11,7 @@ namespace sequoia::unit_testing
 {
   void test_graph_false_positives::run_tests()
   {    
-    graph_test_helper<null_weight, null_weight> helper;
+    graph_test_helper<null_weight, null_weight> helper{concurrent_execution()};
     helper.run_tests<dynamic_graph_false_positives>(*this);
   }
 

@@ -263,16 +263,23 @@ namespace sequoia::unit_testing
     }
   };
 
+  enum class concurrency_flavour { serial, async};
+
   template<class Logger>
   class graph_basic_test : public basic_test<Logger, graph_checker<Logger>>
   {
   public:
-    using basic_test<Logger, graph_checker<Logger>>::basic_test;
     using basic_test<Logger, graph_checker<Logger>>::check_exception_thrown;
     using basic_test<Logger, graph_checker<Logger>>::check_equality;
     using basic_test<Logger, graph_checker<Logger>>::check_graph;
     using basic_test<Logger, graph_checker<Logger>>::check_regular_semantics;
+    using basic_test<Logger, graph_checker<Logger>>::check;
 
+    graph_basic_test(std::string_view name, concurrency_flavour flavour)
+      : basic_test<Logger, graph_checker<Logger>>{name}
+      , m_ConcurrencyFlavour{flavour}
+    {}
+    
     log_summary execute() override
     {        
       return base_t::execute() + m_AccumulatedSummaries;
@@ -283,16 +290,24 @@ namespace sequoia::unit_testing
       m_AccumulatedSummaries += summary;
     }
 
+    void report_async_exception(std::string_view sv)
+    {
+      check(combine_messages("Exception thrown during asynchronous execution of graph test:", sv, "\n"), false);
+    }
   protected:
     virtual std::string current_message() const override
     {
       const log_summary s{this->summary("", log_summary::duration{}) + m_AccumulatedSummaries};
       return s.current_message();
     }
+
+    [[nodiscard]]
+    concurrency_flavour concurrent_execution() const noexcept { return m_ConcurrencyFlavour; }
   private:
     using base_t = basic_test<Logger, graph_checker<Logger>>;
       
     log_summary m_AccumulatedSummaries{};
+    concurrency_flavour m_ConcurrencyFlavour{};
   };
 
   using graph_unit_test = graph_basic_test<unit_test_logger<test_mode::standard>>;

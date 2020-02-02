@@ -35,12 +35,12 @@ namespace sequoia::unit_testing
   void test_graph_update::run_tests()
   {
     {
-      graph_test_helper<std::vector<double>, std::vector<int>> helper{};
+      graph_test_helper<std::vector<double>, std::vector<int>> helper{concurrent_execution()};
       helper.run_tests<test_bf_update>(*this);
     }
 
     {
-      graph_test_helper<size_t, size_t> helper;
+      graph_test_helper<size_t, size_t> helper{concurrent_execution()};
       helper.run_tests<test_update>(*this);
     }
   }

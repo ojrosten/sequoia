@@ -14,6 +14,7 @@
 #include "PartitionedDataTestingUtilities.hpp"
 
 #include "DynamicGraph.hpp"
+#include "Utilities.hpp"
 
 namespace sequoia::unit_testing
 {
@@ -232,12 +233,17 @@ namespace sequoia::unit_testing
     virtual void execute_operations() = 0;
   };
 
-  
   template <class EdgeWeight, class NodeWeight>
   class graph_test_helper
   {
   public:
-    graph_test_helper() = default;
+    explicit graph_test_helper(concurrency_flavour flavour)
+    {
+      if(flavour == concurrency_flavour::async)
+      {
+        m_Summary = std::vector<std::future<log_summary>>{};
+      }
+    }
       
     template
     <
@@ -312,21 +318,48 @@ namespace sequoia::unit_testing
     }
       
   private:
-    log_summary m_Summary{};
+    using summary = std::variant<log_summary, std::vector<std::future<log_summary>>>;
+    summary m_Summary;
 
     template<class Test>
     class sentry
     {
     public:
-      sentry(Test& unitTest, log_summary& summary) : m_UnitTest{unitTest},  m_Summary{summary} {}
+      sentry(Test& unitTest, summary& s) : m_UnitTest{unitTest},  m_Summary{s} {}
+
       ~sentry()
       {
-        m_UnitTest.merge(m_Summary);   
-        m_Summary.clear();
+        std::visit(
+            sequoia::variant_visitor{
+              [&test{m_UnitTest}](log_summary& s){
+                test.merge(s);   
+                s.clear();
+              },
+              [&test{m_UnitTest}](std::vector<std::future<log_summary>>& s){
+                try
+                {
+                  for(auto&& f : s)
+                  {
+                    test.merge(f.get());
+                  }
+                }
+                catch(const std::exception& e)
+                {
+                  test.report_async_exception(combine_messages(test.name(), e.what(), "\n"));
+                }
+                catch(...)
+                {
+                  test.report_async_exception(combine_messages(test.name(), "Unknown exception", "\n"));
+                }
+
+                s.clear();
+              }
+            }
+            , m_Summary);
       }
     private:
       Test& m_UnitTest;
-      log_summary& m_Summary;
+      summary& m_Summary;
     };
 
     template
@@ -345,31 +378,29 @@ namespace sequoia::unit_testing
     {
       using namespace data_sharing;
 
-      TemplateTestClass<GraphType, EdgeWeight, NodeWeight, unpooled<EdgeWeight>, unpooled<NodeWeight>, EdgeStorageTraits, NodeStorageTraits> test;
-      run_graph_test(test);
+      using testuu = TemplateTestClass<GraphType, EdgeWeight, NodeWeight, unpooled<EdgeWeight>, unpooled<NodeWeight>, EdgeStorageTraits, NodeStorageTraits>;
+      using testud = TemplateTestClass<GraphType, EdgeWeight, NodeWeight, unpooled<EdgeWeight>, data_pool<NodeWeight>, EdgeStorageTraits, NodeStorageTraits>;  
+      using testdu = TemplateTestClass<GraphType, EdgeWeight, NodeWeight, data_pool<EdgeWeight>, unpooled<NodeWeight>, EdgeStorageTraits, NodeStorageTraits>;
+      using testdd = TemplateTestClass<GraphType, EdgeWeight, NodeWeight, data_pool<EdgeWeight>, data_pool<NodeWeight>, EdgeStorageTraits, NodeStorageTraits>;
+
+      run_graph_test(testuu{});
  
       if constexpr(!std::is_empty_v<EdgeWeight> && !std::is_empty_v<NodeWeight>)
       {
         if constexpr(!minimal_graph_tests())
-        {
-          TemplateTestClass<GraphType, EdgeWeight, NodeWeight, unpooled<EdgeWeight>, data_pool<NodeWeight>, EdgeStorageTraits, NodeStorageTraits> test1;  
-          TemplateTestClass<GraphType, EdgeWeight, NodeWeight, data_pool<EdgeWeight>, unpooled<NodeWeight>, EdgeStorageTraits, NodeStorageTraits> test2;
-          TemplateTestClass<GraphType, EdgeWeight, NodeWeight, data_pool<EdgeWeight>, data_pool<NodeWeight>, EdgeStorageTraits, NodeStorageTraits> test3;
-
-          run_graph_test(test1);
-          run_graph_test(test2);
-          run_graph_test(test3);
+        {     
+          run_graph_test(testud{});
+          run_graph_test(testdu{});
+          run_graph_test(testdd{});
         }
       }
       else if constexpr(!std::is_empty_v<EdgeWeight>)
       {
-        TemplateTestClass<GraphType, EdgeWeight, NodeWeight, data_pool<EdgeWeight>, unpooled<NodeWeight>, EdgeStorageTraits, NodeStorageTraits> test;
-        run_graph_test(test);
+        run_graph_test(testdu{});
       }
       else if constexpr(!std::is_empty_v<NodeWeight>)
       {
-        TemplateTestClass<GraphType, EdgeWeight, NodeWeight, unpooled<EdgeWeight>, data_pool<NodeWeight>, EdgeStorageTraits, NodeStorageTraits> test;
-        run_graph_test(test);
+        run_graph_test(testud{});
       }
     }
       
@@ -395,15 +426,27 @@ namespace sequoia::unit_testing
     }
 
     template<class Test>
-    void run_graph_test(Test& test)
+    void run_graph_test(Test&& test)
     {
       try
       {
-        m_Summary += test.run();
+        std::visit(
+            variant_visitor{
+              [test{std::move(test)}](log_summary& s) mutable { s += test.run(); },
+              [test{std::move(test)}] (std::vector<std::future<log_summary>>& s) mutable {
+                s.emplace_back(std::async([test{std::move(test)}]() mutable { return test.run(); }));
+              }
+            }
+            , m_Summary);
       }
       catch(...)
       {
-        m_Summary += test.recover_summary();
+        if(std::holds_alternative<log_summary>(m_Summary))
+        {
+          auto& s{std::get<log_summary>(m_Summary)};
+          s += test.recover_summary();
+        }
+
         throw;
       }
     }

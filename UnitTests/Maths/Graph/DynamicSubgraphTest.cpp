@@ -18,12 +18,12 @@ namespace sequoia::unit_testing
     using std::complex;
     
     {
-      graph_test_helper<int, complex<double>>  helper{};
+      graph_test_helper<int, complex<double>>  helper{concurrent_execution()};
       helper.run_tests<generic_subgraph_tests>(*this);
     }
 
     {
-      graph_test_helper<complex<int>, complex<double>>  helper{};
+      graph_test_helper<complex<int>, complex<double>>  helper{concurrent_execution()};
       helper.run_tests<generic_subgraph_tests>(*this);
     }
   }

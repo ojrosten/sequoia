@@ -15,6 +15,7 @@ namespace sequoia::unit_testing
     const auto time{steady_clock::now()};
     
     std::vector<log_summary> summaries{};
+    summaries.reserve(m_Tests.size());
     bool dataToWrite{};
 
     if(!asynchronous)
@@ -28,6 +29,7 @@ namespace sequoia::unit_testing
     else
     {
       std::vector<std::future<log_summary>> results{};
+      results.reserve(m_Tests.size());
       for(auto& pTest : m_Tests)
       {
         results.emplace_back(std::async([&pTest](){

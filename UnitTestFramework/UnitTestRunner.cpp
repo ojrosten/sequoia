@@ -500,6 +500,7 @@ namespace sequoia::unit_testing
       {
         std::cout << "\n\t--Using asynchronous execution\n\n";
         std::vector<std::pair<std::string, std::future<test_family::results>>> results{};
+        results.reserve(m_Families.size());
 
         for(auto& family : m_Families)
         {

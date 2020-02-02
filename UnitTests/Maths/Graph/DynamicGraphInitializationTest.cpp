@@ -18,42 +18,42 @@ namespace sequoia
       using namespace maths;
 
       {
-        graph_test_helper<null_weight, null_weight> helper{};
+        graph_test_helper<null_weight, null_weight> helper{concurrent_execution()};
         helper.run_tests<test_initialization>(*this);
       }
 
       {
-        graph_test_helper<int, null_weight> helper{};
+        graph_test_helper<int, null_weight> helper{concurrent_execution()};
         helper.run_tests<test_initialization>(*this);
       }
 
       {
-        graph_test_helper<unsortable, null_weight> helper{};
+        graph_test_helper<unsortable, null_weight> helper{concurrent_execution()};
         helper.run_tests<test_initialization>(*this);
       }
 
       {
-        graph_test_helper<big_unsortable, null_weight> helper{};
+        graph_test_helper<big_unsortable, null_weight> helper{concurrent_execution()};
         helper.run_tests<test_initialization>(*this);
       }
 
       {
-        graph_test_helper<null_weight, int> helper{};
+        graph_test_helper<null_weight, int> helper{concurrent_execution()};
         helper.run_tests<test_initialization>(*this);
       }
 
       {
-        graph_test_helper<int, int> helper{};
+        graph_test_helper<int, int> helper{concurrent_execution()};
         helper.run_tests<test_initialization>(*this);
       }
 
       {
-        graph_test_helper<unsortable, int> helper{};
+        graph_test_helper<unsortable, int> helper{concurrent_execution()};
         helper.run_tests<test_initialization>(*this);
       }
 
       {
-        graph_test_helper<big_unsortable, int> helper{};
+        graph_test_helper<big_unsortable, int> helper{concurrent_execution()};
         helper.run_tests<test_initialization>(*this);
       }
     }

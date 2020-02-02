@@ -14,12 +14,12 @@ namespace sequoia::unit_testing
     using namespace maths;
 
     {
-      graph_test_helper<int, null_weight> helper{};
+      graph_test_helper<int, null_weight> helper{concurrent_execution()};
       helper.run_tests<generic_fixed_topology_tests>(*this);
     }
 
     {
-      graph_test_helper<int, int> helper{};
+      graph_test_helper<int, int> helper{concurrent_execution()};
       helper.run_tests<generic_fixed_topology_tests>(*this);
     }
   }

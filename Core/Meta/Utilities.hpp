@@ -47,7 +47,7 @@ namespace sequoia::impl
   };   
 
   template<std::size_t I, class... Ts>
-  auto get(const std::tuple<Ts...>& ts)
+  decltype(auto) get(const std::tuple<Ts...>& ts)
   {
     return std::get<I>(ts);
   }
@@ -113,4 +113,7 @@ namespace sequoia
     using ret = R;
     using arg = T;
   };
+
+  template<class... Ts> struct variant_visitor : Ts... { using Ts::operator()...; };
+  template<class... Ts> variant_visitor(Ts...) -> variant_visitor<Ts...>;
 }
