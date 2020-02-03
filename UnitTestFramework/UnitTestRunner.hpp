@@ -66,8 +66,8 @@ namespace sequoia::unit_testing
     void execute();
 
     [[nodiscard]]
-    bool asynchronous() const noexcept { return m_Asynchronous; }
-  private:
+    concurrency_mode concurrency() const noexcept { return m_ConcurrencyMode; }
+  private:    
     struct nascent_test
     {
       nascent_test(std::string dir, std::string qualifiedName);
@@ -79,11 +79,17 @@ namespace sequoia::unit_testing
     std::map<std::string, bool> m_SpecificTests{};
     std::vector<nascent_test> m_NewFiles{};
     
-    bool m_Asynchronous{}, m_Verbose{}, m_Pause{}, m_WriteFiles{true};
+    bool m_Verbose{}, m_Pause{}, m_WriteFiles{true};
+
+    concurrency_mode m_ConcurrencyMode{concurrency_mode::serial};
 
     const static std::array<std::string_view, 5> st_TestNameStubs;
 
+    [[nodiscard]]
     test_family::summary process_family(const test_family::results& results);
+
+    [[nodiscard]]
+    bool concurrent_execution() const noexcept { return m_ConcurrencyMode != concurrency_mode::serial; }
 
     void run_diagnostics();
 
@@ -97,6 +103,9 @@ namespace sequoia::unit_testing
 
     [[nodiscard]]
     static std::string to_camel_case(std::string text);
+
+    [[nodiscard]]
+    static std::string stringify(concurrency_mode mode);
 
     static void replace_all(std::string& text, std::string_view from, const std::string& to);
 

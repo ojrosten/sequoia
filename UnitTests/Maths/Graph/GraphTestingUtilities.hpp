@@ -263,8 +263,6 @@ namespace sequoia::unit_testing
     }
   };
 
-  enum class concurrency_flavour { serial, async};
-
   template<class Logger>
   class graph_basic_test : public basic_test<Logger, graph_checker<Logger>>
   {
@@ -275,9 +273,9 @@ namespace sequoia::unit_testing
     using basic_test<Logger, graph_checker<Logger>>::check_regular_semantics;
     using basic_test<Logger, graph_checker<Logger>>::check;
 
-    graph_basic_test(std::string_view name, concurrency_flavour flavour)
+    graph_basic_test(std::string_view name, concurrency_mode mode)
       : basic_test<Logger, graph_checker<Logger>>{name}
-      , m_ConcurrencyFlavour{flavour}
+      , m_ConcurrencyMode{mode}
     {}
     
     log_summary execute() override
@@ -302,12 +300,12 @@ namespace sequoia::unit_testing
     }
 
     [[nodiscard]]
-    concurrency_flavour concurrent_execution() const noexcept { return m_ConcurrencyFlavour; }
+    concurrency_mode concurrent_execution() const noexcept { return m_ConcurrencyMode; }
   private:
     using base_t = basic_test<Logger, graph_checker<Logger>>;
       
     log_summary m_AccumulatedSummaries{};
-    concurrency_flavour m_ConcurrencyFlavour{};
+    concurrency_mode m_ConcurrencyMode{};
   };
 
   using graph_unit_test = graph_basic_test<unit_test_logger<test_mode::standard>>;

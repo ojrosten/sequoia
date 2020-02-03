@@ -159,7 +159,8 @@ namespace sequoia::unit_testing
       return summarize(log, std::nullopt, indent, suppression);
     }
   }
-  
+
+  [[nodiscard]]
   std::string unit_test_runner::to_camel_case(std::string text)
   {
     if(!text.empty())
@@ -185,6 +186,21 @@ namespace sequoia::unit_testing
     }
 
     return text;
+  }
+
+  [[nodiscard]] std::string unit_test_runner::stringify(concurrency_mode mode)
+  {
+    switch(mode)
+    {
+    case concurrency_mode::serial:
+      return "Serial";
+    case concurrency_mode::family:
+      return "Family";
+    case concurrency_mode::test:
+      return "Test";
+    case concurrency_mode::deep:
+      return "Deep";
+    }
   }
 
   const std::array<std::string_view, 5> unit_test_runner::st_TestNameStubs {
@@ -294,13 +310,24 @@ namespace sequoia::unit_testing
     using namespace parsing::commandline;
 
     const auto operations{parse(argc, argv, {
-          {"test",       {[this](const param_list& args) { m_SpecificTests.emplace(args.front(), false); },         {"test_name"}, {"t"}} },
-          {"create",     {[this](const param_list& args) { m_NewFiles.push_back(nascent_test{args[0], args[1]}); }, {"class_name", "directory"}, {"c"} } },
-          {"--async",    {[this](const param_list& args) { m_Asynchronous = true; }, {}, {"-a"}} },
-          {"--verbose",  {[this](const param_list& args) { m_Verbose = true; },      {}, {"-v"} } },          
-          {"--nofiles",  {[this](const param_list& args) {  m_WriteFiles = false; }, {}, {"-n"} } },
-          {"--pause",    {[this](const param_list& args) { m_Pause = true; },        {}, {"-p"} } },
-          {"--recovery", {[]    (const param_list& args) { output_manager::recovery_file("../output/Recovery/Recovery.txt"); }, {}, {"-r"}} }
+          {"test",       {[this](const param_list& args) {
+                m_SpecificTests.emplace(args.front(), false);
+              },         {"test_name"}, {"t"}} },
+          {"create",     {[this](const param_list& args) {
+                m_NewFiles.push_back(nascent_test{args[0], args[1]});
+              }, {"class_name", "directory"}, {"c"} } },
+          {"--async",    {[this](const param_list& args) {
+                m_ConcurrencyMode = concurrency_mode::family;
+              }, {}, {"-a"}} },
+          {"--async-depth", {[this](const param_list& args) {
+                const int i{std::clamp(std::stoi(args.front()), 0, 2)};
+                m_ConcurrencyMode = static_cast<concurrency_mode>(i);
+              }, {"depth [0-2]"}, {"-ad"}} },
+          {"--verbose",  {[this](const param_list& args) { m_Verbose = true; },     {}, {"-v"} } },          
+          {"--nofiles",  {[this](const param_list& args) { m_WriteFiles = false; }, {}, {"-n"} } },
+          {"--pause",    {[this](const param_list& args) { m_Pause = true; },       {}, {"-p"} } },
+          {"--recovery", {[]    (const param_list& args) {
+                output_manager::recovery_file("../output/Recovery/Recovery.txt"); }, {}, {"-r"}} }
         })
     };
     
@@ -323,7 +350,7 @@ namespace sequoia::unit_testing
   {
     using parsing::commandline::error;
 
-    if(m_Asynchronous && !output_manager::recovery_file().empty())
+    if(concurrent_execution() && !output_manager::recovery_file().empty())
       throw std::runtime_error{error("Can't run asynchronously in recovery mode\n")};
   }
 
@@ -488,25 +515,25 @@ namespace sequoia::unit_testing
     {
       std::cout << "Running unit tests...\n";
       log_summary summary{};
-      if(!m_Asynchronous)
+      if(!concurrent_execution())
       {
         for(auto& family : m_Families)
         {
           std::cout << family.name() << ":\n";
-          summary += process_family(family.execute(m_WriteFiles, false)).log;
+          summary += process_family(family.execute(m_WriteFiles, m_ConcurrencyMode)).log;
         }
       }
       else
       {
-        std::cout << "\n\t--Using asynchronous execution\n\n";
+        std::cout << "\n\t--Using asynchronous execution, level: " << stringify(m_ConcurrencyMode) << "\n\n";
         std::vector<std::pair<std::string, std::future<test_family::results>>> results{};
         results.reserve(m_Families.size());
 
         for(auto& family : m_Families)
         {
           results.emplace_back(family.name(),
-            std::async([&family, write{m_WriteFiles}](){
-                return family.execute(write, true); }));
+            std::async([&family, write{m_WriteFiles}, mode{m_ConcurrencyMode}](){
+                return family.execute(write, mode); }));
         }
 
         for(auto& res : results)

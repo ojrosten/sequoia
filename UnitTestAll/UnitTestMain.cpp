@@ -75,8 +75,7 @@ int main(int argc, char** argv)
   try
   {
     unit_test_runner runner{argc, argv};
-    //const concurrency_flavour asynchronous{runner.asynchronous() ? concurrency_flavour::async : concurrency_flavour::serial};
-    const concurrency_flavour asynchronous{concurrency_flavour::serial};
+    const auto mode{runner.concurrency()};
   
     runner.add_test_family(
       test_family{
@@ -213,25 +212,25 @@ int main(int argc, char** argv)
     runner.add_test_family(
       test_family{
         "Graph",
-        test_graph_false_positives{"Graph false positive diagnostics", asynchronous},
-        test_graph_meta("Meta Tests", asynchronous),
-        test_graph_init("Dynamic Graph Init", asynchronous),        
-        test_static_graph{"Static Graph Init", asynchronous},
-        test_heterogeneous_static_graph{"Heterogeneous Static Graphs", asynchronous},
-        test_graph{"Dynmaic Graph Common Tests", asynchronous},
-        test_fixed_topology{"Dynamic Graph Fixed Topology", asynchronous},
-        test_static_fixed_topology{"Static Graph Manipulations", asynchronous},
-        test_edge_insertion{"Edge Insertions", asynchronous}  
+        test_graph_false_positives{"Graph false positive diagnostics", mode},
+        test_graph_meta("Meta Tests", mode),
+        test_graph_init("Dynamic Graph Init", mode),        
+        test_static_graph{"Static Graph Init", mode},
+        test_heterogeneous_static_graph{"Heterogeneous Static Graphs", mode},
+        test_graph{"Dynmaic Graph Common Tests", mode},
+        test_fixed_topology{"Dynamic Graph Fixed Topology", mode},
+        test_static_fixed_topology{"Static Graph Manipulations", mode},
+        test_edge_insertion{"Edge Insertions", mode}  
       }
     );
 
     runner.add_test_family(
       test_family{
         "Graph Algorithms",
-        test_graph_traversals{"Traversals", asynchronous},
-        test_static_graph_traversals{"Static Graph Traversals", asynchronous},
-        test_graph_update{"Updates", asynchronous},
-        test_subgraph{"Subgraph", asynchronous}
+        test_graph_traversals{"Traversals", mode},
+        test_static_graph_traversals{"Static Graph Traversals", mode},
+        test_graph_update{"Updates", mode},
+        test_subgraph{"Subgraph", mode}
       }
     );
 

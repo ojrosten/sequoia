@@ -9,7 +9,7 @@
 
 namespace sequoia::unit_testing
 {
-  auto test_family::execute(const bool writeFiles, const bool asynchronous) -> results 
+  auto test_family::execute(const bool writeFiles, const concurrency_mode mode) -> results 
   {
     using namespace std::chrono;
     const auto time{steady_clock::now()};
@@ -18,7 +18,7 @@ namespace sequoia::unit_testing
     summaries.reserve(m_Tests.size());
     bool dataToWrite{};
 
-    if(!asynchronous)
+    if(mode < concurrency_mode::test)
     {
       for(auto& pTest : m_Tests)
       {

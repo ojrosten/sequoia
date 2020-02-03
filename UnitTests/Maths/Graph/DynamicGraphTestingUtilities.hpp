@@ -237,9 +237,9 @@ namespace sequoia::unit_testing
   class graph_test_helper
   {
   public:
-    explicit graph_test_helper(concurrency_flavour flavour)
+    explicit graph_test_helper(concurrency_mode mode)
     {
-      if(flavour == concurrency_flavour::async)
+      if(mode == concurrency_mode::deep)
       {
         m_Summary = std::vector<std::future<log_summary>>{};
       }

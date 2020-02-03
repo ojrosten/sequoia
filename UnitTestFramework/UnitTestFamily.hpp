@@ -45,7 +45,7 @@ namespace sequoia::unit_testing
     }
 
     [[nodiscard]]
-    auto execute(const bool writeFiles, const bool asynchronous) -> results ;
+    auto execute(const bool writeFiles, const concurrency_mode mode) -> results ;
 
     [[nodiscard]]
     std::string_view name() const noexcept { return m_Name; }
