@@ -317,15 +317,16 @@ namespace sequoia::unit_testing
                 m_NewFiles.push_back(nascent_test{args[0], args[1]});
               }, {"class_name", "directory"}, {"c"} } },
           {"--async",    {[this](const param_list& args) {
-                m_ConcurrencyMode = concurrency_mode::family;
+                if(m_ConcurrencyMode == concurrency_mode::serial)
+                  m_ConcurrencyMode = concurrency_mode::family;
               }, {}, {"-a"}} },
           {"--async-depth", {[this](const param_list& args) {
                 const int i{std::clamp(std::stoi(args.front()), 0, 2)};
                 m_ConcurrencyMode = static_cast<concurrency_mode>(i);
               }, {"depth [0-2]"}, {"-ad"}} },
-          {"--verbose",  {[this](const param_list& args) { m_Verbose = true; },     {}, {"-v"} } },          
+          {"--verbose",  {[this](const param_list& args) { m_Verbose    = true; },  {}, {"-v"} } },          
           {"--nofiles",  {[this](const param_list& args) { m_WriteFiles = false; }, {}, {"-n"} } },
-          {"--pause",    {[this](const param_list& args) { m_Pause = true; },       {}, {"-p"} } },
+          {"--pause",    {[this](const param_list& args) { m_Pause      = true; },  {}, {"-p"} } },
           {"--recovery", {[]    (const param_list& args) {
                 output_manager::recovery_file("../output/Recovery/Recovery.txt"); }, {}, {"-r"}} }
         })

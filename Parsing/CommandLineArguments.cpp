@@ -67,9 +67,9 @@ namespace sequoia::parsing::commandline
 
             if((infoIter == info.end()) && (arg.size() > 2) && (arg[0] == '-') && (arg[1] != ' '))
             {
-              for(auto i{arg.cbegin() + 1}; i != arg.cend(); ++i)
+              for(auto j{arg.cbegin() + 1}; j != arg.cend(); ++j)
               {
-                const auto c{*i};
+                const auto c{*j};
                 if(c != '-')
                 {
                   const auto alias{std::string{'-'} + c};
@@ -83,7 +83,11 @@ namespace sequoia::parsing::commandline
                 }
               }
 
-              if(infoIter != info.end()) break;
+              if(infoIter != info.end())
+              {
+                infoIter = info.end();
+                continue;
+              }
             }
           }
 

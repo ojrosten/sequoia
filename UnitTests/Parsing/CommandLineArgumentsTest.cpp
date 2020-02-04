@@ -75,6 +75,13 @@ namespace sequoia::unit_testing
     }
 
     {
+      commandline_arguments<4, 4, 3> a{"foo", "-av", "-p"};
+      
+      check_weak_equivalence(LINE(""), parse(3, a.get(),
+        info{{"--async", {fo{}, {}, {"-a"}}}, {"--verbose", {fo{}, {}, {"-v"}}}, {"--pause", {fo{}, {}, {"-p"}}}}), ops{{fo{}}, {fo{}}, {fo{}}});
+    }
+
+    {
       commandline_arguments<4, 4> a{"foo", "-ac"};
       
       check_exception_thrown<std::runtime_error>(LINE("Unexpected argument"), [&a](){
