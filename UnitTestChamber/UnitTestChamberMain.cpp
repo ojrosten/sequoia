@@ -4,7 +4,7 @@
 //    (See accompanying file LICENSE.md or copy at                //
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
-/*
+
 #include "AlgorithmsTest.hpp"
 #include "StatisticalAlgorithmsTest.hpp"
 #include "MonotonicSequenceTestingDiagnostics.hpp"
@@ -56,11 +56,11 @@
 #include "DynamicSubgraphTest.hpp"
 
 #include "StaticGraphTraversalsTest.hpp"
-*/
+
 #include "CommandLineArgumentsDiagnostics.hpp"
 #include "CommandLineArgumentsTest.hpp"
 
-//#include "ExperimentalTest.hpp"
+#include "ExperimentalTest.hpp"
 
 #include "UnitTestDiagnostics.hpp"
 #include "UnitTestAllocatorDiagnostics.hpp"
