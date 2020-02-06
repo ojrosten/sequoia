@@ -12,18 +12,21 @@
 
 namespace sequoia::unit_testing
 {
-  class allocator_false_positive_diagnostics : public false_positive_test
+  class allocator_false_positive_diagnostics final : public false_positive_test
   {
   public:
     using false_positive_test::false_positive_test;
+
+    [[nodiscard]]
+    std::string_view source_file_name() const noexcept final;
   private:
+    void run_tests() final;
+
     template<class Test>
     friend void do_allocation_tests(Test&);
 
     template<class Test>
     friend void do_move_only_allocation_tests(Test&);
-
-    void run_tests() override;
 
     template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
     void test_allocation();
@@ -38,18 +41,21 @@ namespace sequoia::unit_testing
     void test_move_only_semantics_allocations();
   };
 
-  class allocator_false_negative_diagnostics : public false_negative_test
+  class allocator_false_negative_diagnostics final : public false_negative_test
   {
   public:
     using false_negative_test::false_negative_test;
+
+    [[nodiscard]]
+    std::string_view source_file_name() const noexcept final;
   private:
+    void run_tests() final;
+
     template<class Test>
     friend void do_allocation_tests(Test&);
 
     template<class Test>
     friend void do_move_only_allocation_tests(Test&);
-
-    void run_tests() override;
 
     template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
     void test_allocation();

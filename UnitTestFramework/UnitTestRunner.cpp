@@ -311,8 +311,11 @@ namespace sequoia::unit_testing
 
     const auto operations{parse(argc, argv, {
           {"test",       {[this](const param_list& args) {
-                m_SpecificTests.emplace(args.front(), false);
-              },         {"test_name"}, {"t"}} },
+                m_SelectedFamilies.emplace(args.front(), false);
+              },         {"test_family_name"}, {"t"}} },
+          {"source",       {[this](const param_list& args) {
+                m_SelectedSources.emplace(args.front(), false);
+              },         {"source_file_name"}, {"s"}} },
           {"create",     {[this](const param_list& args) {
                 m_NewFiles.push_back(nascent_test{args[0], args[1]});
               }, {"class_name", "directory"}, {"c"} } },
@@ -362,27 +365,22 @@ namespace sequoia::unit_testing
     compare_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(), "  Comparing files against reference files...\n");
     false_positive_check(diagnosticFiles.front());
   }
-    
-  void unit_test_runner::add_test_family(test_family&& f)
+
+  bool unit_test_runner::mark_family(std::string_view name)
   {
-    auto process{
-      [&specificTests=m_SpecificTests,&f](){
-        if(specificTests.empty()) return true;
+    if(m_SelectedFamilies.empty()) return true;
 
-        auto i{specificTests.find(std::string{f.name()})};
-        if(i != specificTests.end())
-        {
-          i->second = true;
-          return true;
-        }
+    auto i{m_SelectedFamilies.find(name)};
+    if(i != m_SelectedFamilies.end())
+    {
+      i->second = true;
+      return true;
+    }
 
-        return false;
-      }
-    };
+    return false;
+  }  
 
-    if(process()) m_Families.emplace_back(std::move(f));
-  }
-
+  [[nodiscard]]
   test_family::summary unit_test_runner::process_family(const test_family::results& results)
   {
     test_family::summary familySummary{results.execution_time};
@@ -409,11 +407,19 @@ namespace sequoia::unit_testing
 
   void unit_test_runner::check_for_missing_tests()
   {
-    for(const auto& test : m_SpecificTests)
+    for(const auto& test : m_SelectedFamilies)
     {
       if(!test.second)
       {
-        std::cout << warning("Test '" + test.first + "' not found\n");
+        std::cout << warning("Test Family '" + test.first + "' not found\n");
+      }
+    }
+
+    for(const auto& test : m_SelectedSources)
+    {
+      if(!test.second)
+      {
+        std::cout << warning("Test File '" + test.first + "' not found\n");
       }
     }
   }
@@ -512,7 +518,7 @@ namespace sequoia::unit_testing
     using namespace std::chrono;
     const auto time{steady_clock::now()};
 
-    if(!m_Families.empty() && (m_NewFiles.empty() || !m_SpecificTests.empty()))
+    if(!m_Families.empty() && (m_NewFiles.empty() || !m_SelectedFamilies.empty()))
     {
       std::cout << "Running unit tests...\n";
       log_summary summary{};

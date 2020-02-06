@@ -81,8 +81,8 @@ int main(int argc, char** argv)
       test_family{
         "Diagnostics",
         false_positive_diagnostics{"False Positive Diagnostics"},
-        allocator_false_positive_diagnostics{"False Positive Diagnostics"},
-        false_negative_diagnostics{"Allocator False Negative Diagnostics"},
+        allocator_false_positive_diagnostics{"Allocator False Positive Diagnostics"},
+        false_negative_diagnostics{"False Negative Diagnostics"},
         allocator_false_negative_diagnostics{"Allocator False Negative Diagnostics"}
       }
     );

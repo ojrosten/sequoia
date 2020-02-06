@@ -4,7 +4,7 @@
 //    (See accompanying file LICENSE.md or copy at                //
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
-
+/*
 #include "AlgorithmsTest.hpp"
 #include "StatisticalAlgorithmsTest.hpp"
 #include "MonotonicSequenceTestingDiagnostics.hpp"
@@ -56,16 +56,18 @@
 #include "DynamicSubgraphTest.hpp"
 
 #include "StaticGraphTraversalsTest.hpp"
-
+*/
 #include "CommandLineArgumentsDiagnostics.hpp"
 #include "CommandLineArgumentsTest.hpp"
 
-#include "ExperimentalTest.hpp"
+//#include "ExperimentalTest.hpp"
 
 #include "UnitTestDiagnostics.hpp"
 #include "UnitTestAllocatorDiagnostics.hpp"
 
 #include "UnitTestRunner.hpp"
+
+#include <iostream>
 
 int main(int argc, char** argv)
 {
@@ -77,21 +79,17 @@ int main(int argc, char** argv)
     unit_test_runner runner{argc, argv};
   
     runner.add_test_family(
-      test_family{
-        "Diagnostics",
-        false_positive_diagnostics{"False Positive Diagnostics"},
-        allocator_false_positive_diagnostics{"False Positive Diagnostics"},
-        false_negative_diagnostics{"Allocator False Negative Diagnostics"},
-        allocator_false_negative_diagnostics{"Allocator False Negative Diagnostics"}
-      }
+      "Diagnostics",
+      false_positive_diagnostics{"False Positive Diagnostics"},
+      allocator_false_positive_diagnostics{"Alloctor False Positive Diagnostics"},
+      false_negative_diagnostics{"False Negative Diagnostics"},
+      allocator_false_negative_diagnostics{"Allocator False Negative Diagnostics"}
     );
 
     runner.add_test_family(
-      test_family{
-        "CommandLine Arguments",
-        commandline_arguments_test{"Unit Test"},
-        commandline_arguments_false_positive_test{"False Positive Test"}
-      }
+      "CommandLine Arguments",
+      commandline_arguments_test{"Unit Test"},
+      commandline_arguments_false_positive_test{"False Positive Test"}
     );
       
     runner.execute();

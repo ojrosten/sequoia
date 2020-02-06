@@ -34,6 +34,9 @@ namespace sequoia::unit_testing
     virtual log_summary execute() = 0;
 
     [[nodiscard]]
+    virtual std::string_view source_file_name() const noexcept = 0;
+
+    [[nodiscard]]
     std::string_view name() const noexcept { return m_Name; }
   protected:
     

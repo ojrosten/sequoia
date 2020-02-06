@@ -11,12 +11,15 @@
 
 namespace sequoia::unit_testing
 {
-  class commandline_arguments_false_positive_test : public false_positive_test
+  class commandline_arguments_false_positive_test final : public false_positive_test
   {
   public:
     using false_positive_test::false_positive_test;
+
+    [[nodiscard]]
+    std::string_view source_file_name() const noexcept final;
   private:
-    void run_tests() override;
+    void run_tests() final;
 
     void test_parser();
   };

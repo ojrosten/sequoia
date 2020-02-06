@@ -10,6 +10,12 @@
 
 namespace sequoia::unit_testing
 {
+  [[nodiscard]]
+  std::string_view allocator_false_positive_diagnostics::source_file_name() const noexcept
+  {
+    return __FILE__;
+  }
+  
   void allocator_false_positive_diagnostics::run_tests()
   {
     do_allocation_tests(*this);
@@ -287,6 +293,12 @@ namespace sequoia::unit_testing
       
       check_regular_semantics(LINE(""), beast{1}, beast{2}, beast{1}, beast{2}, move_only_allocation_info{allocGetter, move_only_allocation_predictions{0}});
     }
+  }
+
+  [[nodiscard]]
+  std::string_view allocator_false_negative_diagnostics::source_file_name() const noexcept
+  {
+    return __FILE__;
   }
 
   void allocator_false_negative_diagnostics::run_tests()

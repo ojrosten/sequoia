@@ -12,12 +12,15 @@
 
 namespace sequoia:: unit_testing
 {
-  class false_positive_diagnostics : public false_positive_test
+  class false_positive_diagnostics final : public false_positive_test
   {
   public:
     using false_positive_test::false_positive_test;
+
+    [[nodiscard]]
+    std::string_view source_file_name() const noexcept final;
   private:
-    void run_tests() override;
+    void run_tests() final;
 
     void basic_tests();
     void test_relative_performance();
@@ -28,12 +31,15 @@ namespace sequoia:: unit_testing
     void test_weak_equivalence_checks();
   };
 
-  class false_negative_diagnostics : public false_negative_test
+  class false_negative_diagnostics final : public false_negative_test
   {
   public:
     using false_negative_test::false_negative_test;
+
+    [[nodiscard]]
+    std::string_view source_file_name() const noexcept final;
   private:
-    void run_tests() override;
+    void run_tests() final;
 
     void basic_tests();
     void test_relative_performance();

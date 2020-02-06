@@ -41,7 +41,17 @@ namespace sequoia::unit_testing
     template<class... Tests>
     explicit test_family(std::string_view name, Tests&&... tests) : m_Name{name}
     {
-      register_tests(std::forward<Tests>(tests)...);
+      if constexpr(sizeof...(Tests) > 0)
+      {
+        m_Tests.reserve(sizeof...(tests));
+        register_tests(std::forward<Tests>(tests)...);
+      }
+    }
+
+    template<class Test>
+    void add_test(Test&& test)
+    {
+      m_Tests.emplace_back(std::make_unique<Test>(std::forward<Test>(test)));
     }
 
     [[nodiscard]]
@@ -50,6 +60,8 @@ namespace sequoia::unit_testing
     [[nodiscard]]
     std::string_view name() const noexcept { return m_Name; }
 
+    [[nodiscard]]
+    bool empty() const noexcept { return m_Tests.empty(); }
   private:
     std::vector<std::unique_ptr<test>> m_Tests{};
     std::string m_Name;
@@ -61,6 +73,7 @@ namespace sequoia::unit_testing
     void register_tests(Test&& t, Tests&&... tests)
     {
       m_Tests.emplace_back(std::make_unique<Test>(std::forward<Test>(t)));
+
       if constexpr (sizeof...(Tests) > 0)
         register_tests(std::forward<Tests>(tests)...);
     }

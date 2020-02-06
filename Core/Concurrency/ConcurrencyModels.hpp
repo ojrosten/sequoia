@@ -25,8 +25,6 @@
 #include <condition_variable>
 #include <future>
 
-#include <iostream>
-
 #include "TypeTraits.hpp"
 
 namespace sequoia::concurrency

@@ -21,6 +21,13 @@ namespace sequoia::unit_testing
       check_range(description, logger, std::begin(beast.x), std::end(beast.x), std::begin(prediction), std::end(prediction));
     }
   };
+
+  
+  [[nodiscard]]
+  std::string_view false_positive_diagnostics::source_file_name() const noexcept
+  {
+    return __FILE__;
+  }
   
   void false_positive_diagnostics::run_tests()
   {
@@ -153,7 +160,12 @@ namespace sequoia::unit_testing
     using prediction = std::initializer_list<std::initializer_list<int>>;
     check_weak_equivalence(LINE(""), std::vector<beast>{{1, 2}, {3, 4}}, prediction{{1, 2}, {3, 5}});
   }
-  
+
+  [[nodiscard]]
+  std::string_view false_negative_diagnostics::source_file_name() const noexcept
+  {
+    return __FILE__;
+  }
 
   void false_negative_diagnostics::run_tests()
   {
