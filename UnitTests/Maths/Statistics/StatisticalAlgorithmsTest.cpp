@@ -11,6 +11,12 @@
 
 namespace sequoia::unit_testing
 {
+  [[nodiscard]]
+  std::string_view statistical_algorithms_test::source_file_name() const noexcept
+  {
+    return __FILE__;
+  }
+
   void statistical_algorithms_test::run_tests()
   {
     using namespace sequoia::maths;

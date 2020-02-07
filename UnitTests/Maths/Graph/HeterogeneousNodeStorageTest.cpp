@@ -9,6 +9,12 @@
 
 namespace sequoia::unit_testing
 {
+  [[nodiscard]]
+  std::string_view test_heterogeneous_node_storage::source_file_name() const noexcept
+  {
+    return __FILE__;
+  }
+
   constexpr auto test_heterogeneous_node_storage::make_storage() -> storage_tester<float, int>
   {
     storage_tester<float, int> s{};

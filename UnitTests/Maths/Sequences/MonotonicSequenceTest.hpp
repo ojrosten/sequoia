@@ -13,20 +13,22 @@
 
 namespace sequoia::unit_testing
 {
-  class monotonic_sequence_test : public unit_test
+  class monotonic_sequence_test final : public unit_test
   {
   public:
     using unit_test::unit_test;
 
-  private:
+    [[nodiscard]]
+    std::string_view source_file_name() const noexcept final;
+  private:    
+    void run_tests() final;
+
     template<class Test>
     friend void do_allocation_tests(Test&);
 
     template<bool Check>
     constexpr static maths::static_monotonic_sequence<int, 6, std::greater<int>> make_sequence();
     
-    void run_tests() override;
-
     void test_decreasing_sequence();
 
     void test_static_decreasing_sequence();

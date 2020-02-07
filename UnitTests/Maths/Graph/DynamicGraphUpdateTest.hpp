@@ -18,12 +18,15 @@ namespace sequoia
 {
   namespace unit_testing
   {
-    class test_graph_update : public graph_unit_test
+    class test_graph_update final : public graph_unit_test
     {
     public:
       using graph_unit_test::graph_unit_test;
+
+      [[nodiscard]]
+    std::string_view source_file_name() const noexcept final;
     private:
-      void run_tests();
+      void run_tests() final;
     };
 
     template<class G>

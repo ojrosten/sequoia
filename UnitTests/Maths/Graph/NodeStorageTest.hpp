@@ -11,17 +11,20 @@
 
 namespace sequoia::unit_testing
 {
-  class test_node_storage : public unit_test
+  class test_node_storage final : public unit_test
   {
   public:
     using unit_test::unit_test;
+
+    [[nodiscard]]
+    std::string_view source_file_name() const noexcept final;
   private:
     template<class Test>
     friend void do_allocation_tests(Test&);
 
     using unit_test::check_equality;
       
-    void run_tests() override;
+    void run_tests() final;
 
     struct null_weight{};
 

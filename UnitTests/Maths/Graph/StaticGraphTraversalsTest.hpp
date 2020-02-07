@@ -11,13 +11,15 @@
 
 namespace sequoia::unit_testing
 {
-  class test_static_graph_traversals : public graph_unit_test
+  class test_static_graph_traversals final : public graph_unit_test
   {
   public:
     using graph_unit_test::graph_unit_test;
 
+    [[nodiscard]]
+    std::string_view source_file_name() const noexcept final;
   private:
-    void run_tests() override;
+    void run_tests() final;
 
     constexpr static auto topological_sort();
 

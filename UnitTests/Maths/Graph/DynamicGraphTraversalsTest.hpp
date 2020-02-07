@@ -67,7 +67,7 @@ namespace sequoia::unit_testing
     f.clear();     
   }
 
-  template<> inline void clear<maths::null_functor>(maths::null_functor&) {};
+  inline void clear(maths::null_functor&) {}
     
   template<class F, class... Fn>
   void clear(F& f, Fn&... fn)
@@ -76,15 +76,17 @@ namespace sequoia::unit_testing
     clear(fn...);
   }
 
-  class test_graph_traversals : public graph_unit_test
+  class test_graph_traversals final : public graph_unit_test
   {
   public:
     using graph_unit_test::graph_unit_test;
-
+    
+    [[nodiscard]]
+    std::string_view source_file_name() const noexcept final;
   private:      
     struct null_weight {};
 
-    void run_tests();
+    void run_tests() final;
 
     void test_prs_details();
   };

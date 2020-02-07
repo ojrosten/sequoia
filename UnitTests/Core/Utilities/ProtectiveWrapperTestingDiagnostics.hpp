@@ -9,13 +9,15 @@
 
 namespace sequoia::unit_testing
 {
-  class protective_wrapper_false_positive_test : public false_positive_test
+  class protective_wrapper_false_positive_test final : public false_positive_test
   {
   public:
     using false_positive_test::false_positive_test;    
-    
-  private:    
-    void run_tests() override;
+
+    [[nodiscard]]
+    std::string_view source_file_name() const noexcept final;
+  private:
+    void run_tests() final;
 
     void test_basic_type();
 

@@ -11,6 +11,12 @@ namespace sequoia
 {
   namespace unit_testing
   {
+    [[nodiscard]]
+    std::string_view test_edge_insertion::source_file_name() const noexcept
+    {
+      return __FILE__;
+    }
+    
     void test_edge_insertion::run_tests()
     {
       using namespace maths;

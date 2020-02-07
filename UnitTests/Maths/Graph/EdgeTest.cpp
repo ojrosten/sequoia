@@ -20,6 +20,13 @@ namespace sequoia
 {
   namespace unit_testing
   {
+
+    [[nodiscard]]
+    std::string_view test_edges::source_file_name() const noexcept
+    {
+      return __FILE__;
+    }
+
     void test_edges::run_tests()
     {
       test_plain_partial_edge();      

@@ -10,7 +10,13 @@
 #include "DynamicGraph.hpp"
 
 namespace sequoia::unit_testing
-{  
+{
+  [[nodiscard]]
+  std::string_view test_graph_meta::source_file_name() const noexcept
+  {
+    return __FILE__;
+  }
+
   void test_graph_meta::run_tests()
   {
     using namespace maths;

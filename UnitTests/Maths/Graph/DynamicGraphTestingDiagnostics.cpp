@@ -9,6 +9,12 @@
 
 namespace sequoia::unit_testing
 {
+  [[nodiscard]]
+  std::string_view test_graph_false_positives::source_file_name() const noexcept
+  {
+    return __FILE__;
+  }
+
   void test_graph_false_positives::run_tests()
   {    
     graph_test_helper<null_weight, null_weight> helper{concurrent_execution()};

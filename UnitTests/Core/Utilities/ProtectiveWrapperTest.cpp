@@ -19,7 +19,13 @@ namespace sequoia::unit_testing
 
     return d;
   }
-  
+
+  [[nodiscard]]
+  std::string_view protective_wrapper_test::source_file_name() const noexcept
+  {
+    return __FILE__;
+  }
+
   void protective_wrapper_test::run_tests()
   {
     test_basic_type();

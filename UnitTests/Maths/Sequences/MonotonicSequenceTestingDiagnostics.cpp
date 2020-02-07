@@ -9,6 +9,12 @@
 
 namespace sequoia::unit_testing
 {
+  [[nodiscard]]
+  std::string_view monotonic_sequence_false_positive_test::source_file_name() const noexcept
+  {
+    return __FILE__;
+  }
+
   void monotonic_sequence_false_positive_test::run_tests()
   {
     using namespace sequoia::maths;

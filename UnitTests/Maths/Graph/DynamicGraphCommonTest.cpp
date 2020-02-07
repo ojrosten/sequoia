@@ -11,6 +11,12 @@
 
 namespace sequoia::unit_testing
 {
+  [[nodiscard]]
+  std::string_view test_graph::source_file_name() const noexcept
+  {
+    return __FILE__;
+  }
+
   void test_graph::run_tests()
   {
     using std::complex;

@@ -14,7 +14,13 @@
 namespace sequoia
 {
   namespace unit_testing
-  {    
+  {
+    [[nodiscard]]
+    std::string_view partitioned_data_test::source_file_name() const noexcept
+    {
+      return __FILE__;
+    }
+
     void partitioned_data_test::run_tests()
     {
       using namespace data_sharing;

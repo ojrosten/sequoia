@@ -10,6 +10,12 @@
 
 namespace sequoia::unit_testing
 {
+  [[nodiscard]]
+  std::string_view threading_models_test::source_file_name() const noexcept
+  {
+    return __FILE__;
+  }
+
   void threading_models_test::run_tests()
   {
     using namespace concurrency;

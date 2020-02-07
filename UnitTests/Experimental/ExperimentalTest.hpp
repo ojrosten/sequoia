@@ -11,11 +11,14 @@
 
 namespace sequoia::unit_testing
 {    
-  class experimental_test : public unit_test
+  class experimental_test final : public unit_test
   {      
   public:
     using unit_test::unit_test;
+
+    [[nodiscard]]
+    std::string_view source_file_name() const noexcept final;
   private:
-    void run_tests();
+    void run_tests() final;
   };
 }

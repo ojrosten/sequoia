@@ -12,6 +12,12 @@
 
 namespace sequoia::unit_testing
 {
+  [[nodiscard]]
+  std::string_view iterator_test::source_file_name() const noexcept
+  {
+    return __FILE__;
+  }
+
   void iterator_test::run_tests()
   {
     test_iterator();

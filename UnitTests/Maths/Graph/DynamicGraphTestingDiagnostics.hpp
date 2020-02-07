@@ -11,13 +11,15 @@
 
 namespace sequoia::unit_testing
 {
-  class test_graph_false_positives : public graph_false_positive_test
+  class test_graph_false_positives final : public graph_false_positive_test
   {
   public:
-    using  graph_false_positive_test::graph_false_positive_test;
+    using graph_false_positive_test::graph_false_positive_test;
 
+    [[nodiscard]]
+    std::string_view source_file_name() const noexcept final;
   private:
-    void run_tests() override;
+    void run_tests() final;
   };
 
   template

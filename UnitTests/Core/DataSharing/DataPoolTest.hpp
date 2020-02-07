@@ -13,15 +13,18 @@
 
 namespace sequoia::unit_testing
 {
-  class data_pool_test : public unit_test
+  class data_pool_test final : public unit_test
   {
   public:
     using unit_test::unit_test;
+
+    [[nodiscard]]
+    std::string_view source_file_name() const noexcept final;
   private:
+    void run_tests() final;
+
     template<class Test>
     friend void do_move_only_allocation_tests(Test&); 
-
-    void run_tests() override;
 
     void test_pooled();
     void test_multi_pools();

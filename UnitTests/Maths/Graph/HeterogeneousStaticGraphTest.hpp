@@ -11,13 +11,15 @@
 
 namespace sequoia::unit_testing
 {    
-  class test_heterogeneous_static_graph : public graph_unit_test
+  class test_heterogeneous_static_graph final : public graph_unit_test
   {
   public:
     using graph_unit_test::graph_unit_test;
 
+    [[nodiscard]]
+    std::string_view source_file_name() const noexcept final;
   private:
-    void run_tests() override;
+    void run_tests() final;
     
     constexpr static auto make_undirected_graph();
     constexpr static auto make_directed_graph();
@@ -31,7 +33,7 @@ namespace sequoia::unit_testing
 
     struct function_object
     {
-      int operator()(int i) const noexcept { return i*=2;}
+      constexpr int operator()(int i) const noexcept { return i*=2;}
     };
   };
 }

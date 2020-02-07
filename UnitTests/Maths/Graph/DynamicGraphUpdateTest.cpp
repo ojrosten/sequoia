@@ -31,6 +31,11 @@ namespace sequoia::unit_testing
     return std::make_tuple(node, targ, nthConnection);
   }
 
+  [[nodiscard]]
+  std::string_view test_graph_update::source_file_name() const noexcept
+  {
+    return __FILE__;
+  }
   
   void test_graph_update::run_tests()
   {

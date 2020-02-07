@@ -9,6 +9,12 @@
 
 namespace sequoia::unit_testing
 {
+  [[nodiscard]]
+  std::string_view test_graph_traversals::source_file_name() const noexcept
+  {
+    return __FILE__;
+  }
+
   void test_graph_traversals::run_tests()
   {
     test_prs_details();

@@ -4,15 +4,17 @@
 
 namespace sequoia::unit_testing
 {
-  class test_edge_false_positives : public false_positive_test
+  class test_edge_false_positives final : public false_positive_test
   {
   public:
     using false_positive_test::false_positive_test;    
-    
+
+    [[nodiscard]]
+    std::string_view source_file_name() const noexcept final;
   private:
     struct null_weight{};
     
-    void run_tests() override;
+    void run_tests() final;
     
     void test_plain_partial_edge();
     void test_partial_edge_indep_weight();

@@ -13,15 +13,17 @@ namespace sequoia
 {
   namespace unit_testing
   {    
-    class test_edges : public unit_test
+    class test_edges final : public unit_test
     {
     public:
       using unit_test::unit_test;
 
+      [[nodiscard]]
+      std::string_view source_file_name() const noexcept final;
     private:      
       struct null_weight{};
       
-      void run_tests() override;
+      void run_tests() final;
 
       void test_plain_partial_edge();
       void test_partial_edge_indep_weight();

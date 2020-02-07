@@ -12,6 +12,12 @@
 
 namespace sequoia::unit_testing
 {
+  [[nodiscard]]
+  std::string_view data_pool_test::source_file_name() const noexcept
+  {
+    return __FILE__;
+  }
+
   void data_pool_test::run_tests()
   {
     test_pooled();

@@ -9,6 +9,12 @@
 
 namespace sequoia::unit_testing
 {
+  [[nodiscard]]
+  std::string_view protective_wrapper_false_positive_test::source_file_name() const noexcept
+  {
+    return __FILE__;
+  }
+
   void protective_wrapper_false_positive_test::run_tests()
   {
     test_basic_type();

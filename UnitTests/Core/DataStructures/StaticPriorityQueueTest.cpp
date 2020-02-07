@@ -12,6 +12,12 @@
 
 namespace sequoia::unit_testing
 {
+  [[nodiscard]]
+  std::string_view test_static_priority_queue::source_file_name() const noexcept
+  {
+    return __FILE__;
+  }
+  
   void test_static_priority_queue::run_tests()
   {
     check_depth_0();

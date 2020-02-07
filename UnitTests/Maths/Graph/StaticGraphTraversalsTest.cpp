@@ -12,6 +12,12 @@
 
 namespace sequoia::unit_testing
 {
+  [[nodiscard]]
+  std::string_view test_static_graph_traversals::source_file_name() const noexcept
+  {
+    return __FILE__;
+  }
+
   constexpr auto test_static_graph_traversals::topological_sort()
   {
     using namespace maths;

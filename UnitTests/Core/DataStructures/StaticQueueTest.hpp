@@ -11,12 +11,15 @@
 
 namespace sequoia::unit_testing
 {
-  class test_static_queue : public unit_test
+  class test_static_queue final : public unit_test
   {
   public:
     using unit_test::unit_test;
+
+    [[nodiscard]]
+    std::string_view source_file_name() const noexcept final;
   private:
-    void run_tests() override;
+    void run_tests() final;
 
     void check_depth_0();
     void check_depth_1();

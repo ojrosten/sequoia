@@ -15,6 +15,12 @@
 
 namespace sequoia:: unit_testing
 {
+  [[nodiscard]]
+  std::string_view test_node_storage::source_file_name() const noexcept
+  {
+    return __FILE__;
+  }
+
   void test_node_storage::run_tests()
   {
     test_dynamic_node_storage<data_sharing::unpooled<double>>();

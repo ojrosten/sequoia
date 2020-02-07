@@ -11,6 +11,12 @@
 
 namespace sequoia::unit_testing
 {
+  [[nodiscard]]
+  std::string_view test_heterogeneous_static_graph::source_file_name() const noexcept
+  {
+    return __FILE__;
+  }
+
   void test_heterogeneous_static_graph::run_tests()
   {
     test_generic_undirected();

@@ -18,6 +18,12 @@ namespace sequoia::unit_testing
   double f(int) { return 1.0; }
   double g(int) noexcept { return 1.0; }
 
+  [[nodiscard]]
+  std::string_view utilities_test::source_file_name() const noexcept
+  {
+    return __FILE__;
+  }
+
   void utilities_test::run_tests()
   {
     test_filtered_sequence();

@@ -14,13 +14,15 @@ namespace sequoia
 {
   namespace unit_testing
   {    
-    class test_fixed_topology : public graph_unit_test
+    class test_fixed_topology final : public graph_unit_test
     {
     public:
       using graph_unit_test::graph_unit_test;
 
+      [[nodiscard]]
+      std::string_view source_file_name() const noexcept final;
     private:
-      void run_tests() override;
+      void run_tests() final;
     };
 
     template<maths::graph_flavour GraphFlavour>

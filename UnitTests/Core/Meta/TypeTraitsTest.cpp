@@ -12,7 +12,13 @@
 #include <complex>
 
 namespace sequoia::unit_testing
-{  
+{
+  [[nodiscard]]
+  std::string_view type_traits_test::source_file_name() const noexcept
+  {
+    return __FILE__;
+  }
+
   void type_traits_test::run_tests()
   {
     test_variadic_traits();

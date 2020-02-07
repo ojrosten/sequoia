@@ -9,6 +9,12 @@
 
 namespace sequoia::unit_testing
 {
+  [[nodiscard]]
+  std::string_view test_fixed_topology::source_file_name() const noexcept
+  {
+    return __FILE__;
+  }
+  
   void test_fixed_topology::run_tests()
   {
     using namespace maths;

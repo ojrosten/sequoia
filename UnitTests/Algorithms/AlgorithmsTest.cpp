@@ -41,6 +41,12 @@ namespace sequoia
       return a;
     }
 
+    [[nodiscard]]
+    std::string_view algorithms_test::source_file_name() const noexcept
+    {
+      return __FILE__;
+    }
+
     void algorithms_test::run_tests()
     {
       sort_basic_type();

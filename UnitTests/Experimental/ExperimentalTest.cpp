@@ -9,6 +9,12 @@
 
 namespace sequoia::unit_testing
 {
+  [[nodiscard]]
+  std::string_view experimental_test::source_file_name() const noexcept
+  {
+    return __FILE__;
+  }
+
   void experimental_test::run_tests()
   {
   }

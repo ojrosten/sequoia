@@ -11,7 +11,13 @@
 #include "StaticGraph.hpp"
 
 namespace sequoia::unit_testing
-{  
+{
+  [[nodiscard]]
+  std::string_view test_static_graph::source_file_name() const noexcept
+  {
+    return __FILE__;
+  }
+
   void test_static_graph::run_tests()
   {
     test_generic_undirected<null_weight,null_weight>();

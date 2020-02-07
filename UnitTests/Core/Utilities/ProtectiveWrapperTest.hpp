@@ -11,13 +11,15 @@
 
 namespace sequoia::unit_testing
 {
-  class protective_wrapper_test : public unit_test
+  class protective_wrapper_test final : public unit_test
   {
   public:
     using unit_test::unit_test;
 
+    [[nodiscard]]
+    std::string_view source_file_name() const noexcept final;
   private:
-    void run_tests();
+    void run_tests() final;
 
     void test_basic_type();
 

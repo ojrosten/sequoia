@@ -11,7 +11,13 @@
 #include "ArrayUtilities.hpp"
 
 namespace sequoia::unit_testing
-{  
+{
+  [[nodiscard]]
+  std::string_view array_utilities_test::source_file_name() const noexcept
+  {
+    return __FILE__;
+  }
+
   void array_utilities_test::run_tests()
   {
     using namespace utilities;

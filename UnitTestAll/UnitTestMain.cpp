@@ -67,6 +67,8 @@
 
 #include "UnitTestRunner.hpp"
 
+#include <iostream>
+
 int main(int argc, char** argv)
 {
   using namespace sequoia;
@@ -78,167 +80,127 @@ int main(int argc, char** argv)
     const auto mode{runner.concurrency()};
   
     runner.add_test_family(
-      test_family{
-        "Diagnostics",
-        false_positive_diagnostics{"False Positive Diagnostics"},
-        allocator_false_positive_diagnostics{"Allocator False Positive Diagnostics"},
-        false_negative_diagnostics{"False Negative Diagnostics"},
-        allocator_false_negative_diagnostics{"Allocator False Negative Diagnostics"}
-      }
+      "Diagnostics",
+      false_positive_diagnostics{"False Positive Diagnostics"},
+      allocator_false_positive_diagnostics{"Allocator False Positive Diagnostics"},
+      false_negative_diagnostics{"False Negative Diagnostics"},
+      allocator_false_negative_diagnostics{"Allocator False Negative Diagnostics"}
     );
 
     runner.add_test_family(
-      test_family{
-        "CommandLine Arguments",
-        commandline_arguments_test{"Unit Test"},
-        commandline_arguments_false_positive_test{"False Positive Test"}
-      }
+      "CommandLine Arguments",
+      commandline_arguments_test{"Unit Test"},
+      commandline_arguments_false_positive_test{"False Positive Test"}
     );
 
     runner.add_test_family(
-      test_family{
-        "Meta",
-        type_traits_test{"Type Traits"},
-        utilities_test{"Utilities"}
-      }
+      "Meta",
+      type_traits_test{"Type Traits"},
+      utilities_test{"Utilities"}
     );
     
     runner.add_test_family(
-      test_family{
-        "Algorithms",
-        algorithms_test{"Unit Test"}
-      }
+      "Algorithms",
+      algorithms_test{"Unit Test"}
     );
   
     runner.add_test_family(
-      test_family{
-        "Statistical Algorithms",
-        statistical_algorithms_test{"Unit Test"}
-      }
+      "Statistical Algorithms",
+      statistical_algorithms_test{"Unit Test"}
     );
 
     runner.add_test_family(
-      test_family{
-        "Monotonic Sequence",
-        monotonic_sequence_false_positive_test{"False Positive Diagnostics"},
-        monotonic_sequence_test{"Unit Test"}
-      }
+      "Monotonic Sequence",
+      monotonic_sequence_false_positive_test{"False Positive Diagnostics"},
+      monotonic_sequence_test{"Unit Test"}
     );
 
     runner.add_test_family(
-      test_family{
-        "Array Utilities",
-        array_utilities_test{"Unit Test"}
-      }
+      "Array Utilities",
+      array_utilities_test{"Unit Test"}
     );
     
     runner.add_test_family(
-      test_family{
         "Iterator",
         iterator_test{"Unit Test"}
-      }
     );
 
     runner.add_test_family(
-      test_family{
-        "Protective Wrapper",
-        protective_wrapper_false_positive_test{"False Positive Diagnostics"},
-        protective_wrapper_test{"Unit Test"}
-      }
+      "Protective Wrapper",
+      protective_wrapper_false_positive_test{"False Positive Diagnostics"},
+      protective_wrapper_test{"Unit Test"}
     );    
 
     runner.add_test_family(
-      test_family{
-        "Data Pool",
-        data_pool_test{"Unit Test"}
-      }
+      "Data Pool",
+      data_pool_test{"Unit Test"}
     );
 
     runner.add_test_family(
-      test_family{
-        "Concurrency Models",
-        threading_models_test{"Unit Test"}
-      }
+      "Concurrency Models",
+      threading_models_test{"Unit Test"}
     );
 
     runner.add_test_family(
-      test_family{
-        "Partitioned Data",
-        partitioned_data_false_positive_test{"False Positive Diagnostics"},
-        partitioned_data_test{"Unit Test"}
-      }
+      "Partitioned Data",
+      partitioned_data_false_positive_test{"False Positive Diagnostics"},
+      partitioned_data_test{"Unit Test"}
     );
 
     runner.add_test_family(
-      test_family{
-        "Static Stack",
-        test_static_stack_false_positives{"False Positive Diagnostics"},
-        test_static_stack{"Unit Test"}
-      }
+      "Static Stack",
+      test_static_stack_false_positives{"False Positive Diagnostics"},
+      test_static_stack{"Unit Test"}
     );
 
     runner.add_test_family(
-      test_family{
-        "Static Queue",
-        test_static_queue_false_positives{"False Positive Diagnostics"},
-        test_static_queue{"Unit Test"}
-      }
+      "Static Queue",
+      test_static_queue_false_positives{"False Positive Diagnostics"},
+      test_static_queue{"Unit Test"}
     );
 
     runner.add_test_family(
-      test_family{
-        "Static Priority Queue",
-        test_static_priority_queue_false_positives{"False Positive Diagnostics"},
-        test_static_priority_queue{"Unit Test"}
-      }
+      "Static Priority Queue",
+      test_static_priority_queue_false_positives{"False Positive Diagnostics"},
+      test_static_priority_queue{"Unit Test"}
     );
   
     runner.add_test_family(
-      test_family{
-        "Edges",
-        test_edge_false_positives{"False positive diagnostics"},
-        test_edges{"Unit Test"}
-      }
+      "Edges",
+      test_edge_false_positives{"False positive diagnostics"},
+      test_edges{"Unit Test"}
     );
 
     runner.add_test_family(
-      test_family{
-        "Node Storage",
-        test_node_storage{"Dynamic and Static"},
-        test_heterogeneous_node_storage{"Heterogeneuous"}
-      }
+      "Node Storage",
+      test_node_storage{"Dynamic and Static"},
+      test_heterogeneous_node_storage{"Heterogeneuous"}
     );
 
     runner.add_test_family(
-      test_family{
-        "Graph",
-        test_graph_false_positives{"Graph false positive diagnostics", mode},
-        test_graph_meta("Meta Tests", mode),
-        test_graph_init("Dynamic Graph Init", mode),        
-        test_static_graph{"Static Graph Init", mode},
-        test_heterogeneous_static_graph{"Heterogeneous Static Graphs", mode},
-        test_graph{"Dynmaic Graph Common Tests", mode},
-        test_fixed_topology{"Dynamic Graph Fixed Topology", mode},
-        test_static_fixed_topology{"Static Graph Manipulations", mode},
-        test_edge_insertion{"Edge Insertions", mode}  
-      }
+      "Graph",
+      test_graph_false_positives{"Graph false positive diagnostics", mode},
+      test_graph_meta("Meta Tests", mode),
+      test_graph_init("Dynamic Graph Init", mode),        
+      test_static_graph{"Static Graph Init", mode},
+      test_heterogeneous_static_graph{"Heterogeneous Static Graphs", mode},
+      test_graph{"Dynmaic Graph Common Tests", mode},
+      test_fixed_topology{"Dynamic Graph Fixed Topology", mode},
+      test_static_fixed_topology{"Static Graph Manipulations", mode},
+      test_edge_insertion{"Edge Insertions", mode}  
     );
 
     runner.add_test_family(
-      test_family{
-        "Graph Algorithms",
-        test_graph_traversals{"Traversals", mode},
-        test_static_graph_traversals{"Static Graph Traversals", mode},
-        test_graph_update{"Updates", mode},
-        test_subgraph{"Subgraph", mode}
-      }
+      "Graph Algorithms",
+      test_graph_traversals{"Traversals", mode},
+      test_static_graph_traversals{"Static Graph Traversals", mode},
+      test_graph_update{"Updates", mode},
+      test_subgraph{"Subgraph", mode}
     );
 
     runner.add_test_family(
-      test_family{
-        "Experimental",
-        experimental_test{"Unit Test"}
-      }
+      "Experimental",
+      experimental_test{"Unit Test"}
     );
  
     runner.execute();

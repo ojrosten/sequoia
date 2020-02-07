@@ -11,13 +11,15 @@
 
 namespace sequoia::unit_testing
 {
-  class test_graph_meta : public graph_unit_test
+  class test_graph_meta final : public graph_unit_test
   {
   public:
     using graph_unit_test::graph_unit_test;
 
+    [[nodiscard]]
+    std::string_view source_file_name() const noexcept final;
   private:
-    void run_tests() override;
+    void run_tests() final;
 
     void test_method_detectors();
 
