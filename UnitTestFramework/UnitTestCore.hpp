@@ -49,7 +49,7 @@ namespace sequoia::unit_testing
     std::string m_Name;
   };
     
-  template<class Logger, class Checker=checker<Logger, performance_extender<Logger>, allocator_extender<Logger>>>
+  template<class Logger, class Checker>
   class basic_test : public test, protected Checker
   {
   public:      
@@ -63,7 +63,7 @@ namespace sequoia::unit_testing
       {
         run_tests();
       }
-      catch(std::exception& e)
+      catch(const std::exception& e)
       {         
         Checker::log_critical_failure(make_message("Unexpected", e.what()));
       }
@@ -87,9 +87,12 @@ namespace sequoia::unit_testing
     }
   };
 
-  using unit_test           = basic_test<unit_test_logger<test_mode::standard>>;
-  using false_negative_test = basic_test<unit_test_logger<test_mode::false_negative>>;
-  using false_positive_test = basic_test<unit_test_logger<test_mode::false_positive>>;
+  template<class Logger>
+  using basic_checker = checker<Logger, allocator_extender<Logger>, performance_extender<Logger>>;
+
+  using unit_test           = basic_test<unit_test_logger<test_mode::standard>,       basic_checker<unit_test_logger<test_mode::standard>>>;
+  using false_negative_test = basic_test<unit_test_logger<test_mode::false_negative>, basic_checker<unit_test_logger<test_mode::false_negative>>>;
+  using false_positive_test = basic_test<unit_test_logger<test_mode::false_positive>, basic_checker<unit_test_logger<test_mode::false_positive>>>;
 
   [[nodiscard]]
   std::string report_line(std::string file, const int line, const std::string_view message);
