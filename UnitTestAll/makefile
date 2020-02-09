@@ -1,14 +1,16 @@
-BUILDROOT := ../build/native
-BUILDDIR := $(BUILDROOT)/UnitTestAll
-LIBDIRS := ../Core ../Maths ../Experimental ../Algorithms ../Parsing ../UnitTestFramework
+BUILDROOT  := ../build/native
+BUILDDIR   := $(BUILDROOT)/UnitTestAll
+LIBDIRS    := ../Core ../Maths ../Experimental ../Algorithms ../Parsing ../UnitTestFramework
 UTBUILDDIR := $(BUILDDIR)/UnitTests
-UTDIR = ../UnitTests
+UTDIR      := ../UnitTests
 
-UTSUBDIRS := $(filter-out ../UnitTests, $(shell find $(UTDIR) -type d))
+UTSUBDIRS  := $(filter-out ../UnitTests, $(shell find $(UTDIR) -type d))
 LIBSUBDIRS := $(shell find $(LIBDIRS) -type d)
 
 BUILDSUBDIRS := $(addprefix $(UTBUILDDIR)/, $(UTSUBDIRS))
 BUILDSUBDIRS += $(addprefix $(UTBUILDDIR)/, $(LIBSUBDIRS))
+
+.PHONY: all clean subdirs
 
 CC := clang++
 PREPROP :=
@@ -37,15 +39,13 @@ $(EXE) : $(UTOBJS) $(LIBOBJS)
 $(UTBUILDDIR)/%.o : %.cpp
 	$(CC) $(CFLAGS) -MMD -c $< -o $@
 
-
 -include $(UTDEPS)
 -include $(LIBDEPS)
 
-.PHONY subdirs : $(BUILDSUBDIRS)
-	-mkdir $(BUILDROOT)
+subdirs : 
 	-mkdir $(BUILDDIR)
 	-mkdir $(UTBUILDDIR)
-	-mkdir $^
+	-mkdir $(BUILDSUBDIRS)
 
 clean :
 	rm -r $(BUILDDIR)

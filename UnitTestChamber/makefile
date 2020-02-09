@@ -1,14 +1,16 @@
-BUILDROOT := ../build/native
-BUILDDIR := $(BUILDROOT)/UnitTestChamber
-LIBDIRS := ../Core ../Maths ../Experimental ../Algorithms ../Parsing ../UnitTestFramework
-UTBUILDDIR := $(BUILDDIR)/UnitTests
-UTDIR = ../UnitTests
+BUILDROOT    := ../build/native
+BUILDDIR     := $(BUILDROOT)/UnitTestChamber
+LIBDIRS      := ../Core ../Maths ../Experimental ../Algorithms ../Parsing ../UnitTestFramework
+UTBUILDDIR   := $(BUILDDIR)/UnitTests
+UTDIR        := ../UnitTests
 
-UTSUBDIRS := $(filter-out ../UnitTests, $(shell find $(UTDIR) -type d))
+UTSUBDIRS  := $(filter-out ../UnitTests, $(shell find $(UTDIR) -type d))
 LIBSUBDIRS := $(shell find $(LIBDIRS) -type d)
 
 BUILDSUBDIRS := $(addprefix $(UTBUILDDIR)/, $(UTSUBDIRS))
 BUILDSUBDIRS += $(addprefix $(UTBUILDDIR)/, $(LIBSUBDIRS))
+
+.PHONY: all clean subdirs
 
 CC := clang++
 #CC := g++
@@ -18,7 +20,9 @@ CFLAGS := -Wall -std=c++2a -O0 -ferror-limit=1 \
 	  -ftemplate-backtrace-limit=0	       \
 	  $(patsubst %,-I%, $(UTSUBDIRS))      \
       $(patsubst %,-I%, $(LIBSUBDIRS))
-EXE := $(BUILDDIR)/UnitTestChamber.exe
+
+OUTPUT := $(BUILDDIR)/UnitTestChamberOutput.txt
+EXE    := $(BUILDDIR)/UnitTestChamber.exe
 
 UTSRCS := UnitTestChamberMain.cpp
 UTSRCS += $(shell find $(UTDIR)/UnitTestFramework -name '*.cpp')
@@ -34,22 +38,17 @@ LIBDEPS := $(addprefix $(UTBUILDDIR)/, $(LIBSRCS:%.cpp=%.d))
 $(EXE) : $(UTOBJS) $(LIBOBJS)
 	$(CC) $(CFLAGS) $^ -o $@
 
-$(CHAMBERBUILDDIR)/%.o : %.cpp
-	$(CC) $(CFLAGS) -MMD -c $< -o $@
-
-$(UTBUILDDIR)/%.o : %.cpp
-	$(CC) $(CFLAGS) -MMD -c $< -o $@
-
 -include $(UTDEPS)
 -include $(LIBDEPS)
 
+$(UTBUILDDIR)/%.o : %.cpp
+	$(CC) $(CFLAGS) -MMD -c $< -o $@
+#	echo "$<"
 
-.PHONY subdirs : $(BUILDSUBDIRS)
-	-mkdir $(BUILDROOT)
+subdirs : 
 	-mkdir $(BUILDDIR)
 	-mkdir $(UTBUILDDIR)
-	-mkdir $(CHAMBERBUILDDIR)
-	-mkdir $^
+	-mkdir $(BUILDSUBDIRS)
 
 clean :
 	rm -r $(BUILDDIR)
