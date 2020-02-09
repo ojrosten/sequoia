@@ -688,18 +688,6 @@ namespace sequoia
       {
         return unit_testing::check_range(description, logger(), first, last, predictionFirst, predictionLast);
       }
-      /*
-      template<class T>
-      void check_regular_semantics(std::string_view description, const T& x, const T& y)
-      {
-        unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), logger(), x, y);
-      }
-
-      template<class T, class Mutator>
-      void check_regular_semantics(std::string_view description, const T& x, const T& y, Mutator m)
-      {
-        unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), logger(), x, y, m);
-        }*/
 
       template<class Stream>
       friend Stream& operator<<(Stream& os, const checker& checker)

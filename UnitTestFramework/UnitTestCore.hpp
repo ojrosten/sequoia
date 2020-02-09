@@ -87,7 +87,7 @@ namespace sequoia::unit_testing
     }
   };
 
-  using unit_test = basic_test<unit_test_logger<test_mode::standard>>;
+  using unit_test           = basic_test<unit_test_logger<test_mode::standard>>;
   using false_negative_test = basic_test<unit_test_logger<test_mode::false_negative>>;
   using false_positive_test = basic_test<unit_test_logger<test_mode::false_positive>>;
 
