@@ -638,30 +638,6 @@ namespace sequoia
       return results;
     }
 
-    template<class Logger>
-    class performance_extender
-    {
-    public:
-      performance_extender(Logger& logger) : m_Logger{logger} {}
-
-      performance_extender(const performance_extender&)            = delete;
-      performance_extender& operator=(const performance_extender&) = delete;
-
-      template<class F, class S>
-      auto check_relative_performance(std::string_view description, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials=5, const double num_sds=3)
-        -> performance_results<std::invoke_result_t<F>>
-      {
-        return unit_testing::check_relative_performance(description, m_Logger, fast, slow, minSpeedUp, maxSpeedUp, trials, num_sds);
-      }
-    protected:
-      performance_extender(performance_extender&&) noexcept = default;
-      ~performance_extender() = default;
-
-      performance_extender& operator=(performance_extender&&) noexcept = default;
-    private:
-      Logger& m_Logger;
-    };
-
     template<class Logger, class... Extenders>
     class checker : private Logger, public Extenders...
     {
@@ -712,7 +688,7 @@ namespace sequoia
       {
         return unit_testing::check_range(description, logger(), first, last, predictionFirst, predictionLast);
       }
-
+      /*
       template<class T>
       void check_regular_semantics(std::string_view description, const T& x, const T& y)
       {
@@ -723,19 +699,7 @@ namespace sequoia
       void check_regular_semantics(std::string_view description, const T& x, const T& y, Mutator m)
       {
         unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), logger(), x, y, m);
-      }
-
-      template<class T, class... Allocators>
-      void check_regular_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone, move_only_allocation_info<T, Allocators>... info)
-      {
-        unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), logger(), std::move(x), std::move(y), xClone, yClone, info...);
-      }
-
-      template<class T, class Mutator, class... Allocators>
-      void check_regular_semantics(std::string_view description, const T& x, const T& y, Mutator m, allocation_info<T, Allocators>... info)
-      {
-        unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), logger(), x, y, m, info...);
-      }
+        }*/
 
       template<class Stream>
       friend Stream& operator<<(Stream& os, const checker& checker)
@@ -784,6 +748,100 @@ namespace sequoia
       {
         return static_cast<const Logger&>(*this);
       }
-    };    
+    };
+
+    template<class Logger>
+    class performance_extender
+    {
+    public:
+      performance_extender(Logger& logger) : m_Logger{logger} {}
+
+      performance_extender(const performance_extender&)            = delete;
+      performance_extender& operator=(const performance_extender&) = delete;
+
+      template<class F, class S>
+      auto check_relative_performance(std::string_view description, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials=5, const double num_sds=3)
+        -> performance_results<std::invoke_result_t<F>>
+      {
+        return unit_testing::check_relative_performance(description, m_Logger, fast, slow, minSpeedUp, maxSpeedUp, trials, num_sds);
+      }
+    protected:
+      performance_extender(performance_extender&&) noexcept = default;
+      ~performance_extender() = default;
+
+      performance_extender& operator=(performance_extender&&) noexcept = default;
+    private:
+      Logger& m_Logger;
+    };
+
+    template<class Logger>
+    class regular_extender
+    {
+    public:
+      regular_extender(Logger& logger) : m_Logger{logger} {}
+
+      regular_extender(const regular_extender&)            = delete;
+      regular_extender& operator=(const regular_extender&) = delete;
+
+      template<class T>
+      void check_regular_semantics(std::string_view description, const T& x, const T& y)
+      {
+        unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), m_Logger, x, y);
+      }
+
+      template<class T, class Mutator>
+      void check_regular_semantics(std::string_view description, const T& x, const T& y, Mutator m)
+      {
+        unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), m_Logger, x, y, m);
+      }     
+    protected:
+       regular_extender(regular_extender&&) noexcept = default;
+      ~regular_extender() = default;
+
+      regular_extender& operator=(regular_extender&&) noexcept = default;
+    private:
+      Logger& m_Logger;
+    };
+
+    template<class Logger>
+    class allocator_extender
+    {
+    public:
+      allocator_extender(Logger& logger) : m_Logger{logger} {}
+
+      allocator_extender(const allocator_extender&)            = delete;
+      allocator_extender& operator=(const allocator_extender&) = delete;
+
+      template<class T>
+      void check_regular_semantics(std::string_view description, const T& x, const T& y)
+      {
+        unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), m_Logger, x, y);
+      }
+
+      template<class T, class Mutator>
+      void check_regular_semantics(std::string_view description, const T& x, const T& y, Mutator m)
+      {
+        unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), m_Logger, x, y, m);
+      }
+
+      template<class T, class... Allocators>
+      void check_regular_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone, move_only_allocation_info<T, Allocators>... info)
+      {
+        unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), m_Logger, std::move(x), std::move(y), xClone, yClone, info...);
+      }
+
+      template<class T, class Mutator, class... Allocators>
+      void check_regular_semantics(std::string_view description, const T& x, const T& y, Mutator m, allocation_info<T, Allocators>... info)
+      {
+        unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), m_Logger, x, y, m, info...);
+      }
+    protected:
+       allocator_extender(allocator_extender&&) noexcept = default;
+      ~allocator_extender() = default;
+
+      allocator_extender& operator=(allocator_extender&&) noexcept = default;
+    private:
+      Logger& m_Logger;
+    };
   }
 }
