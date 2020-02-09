@@ -637,100 +637,116 @@ namespace sequoia
 
       return results;
     }
-    
 
     template<class Logger>
-    class checker
+    class performance_extender
+    {
+    public:
+      performance_extender(Logger& logger) : m_Logger{logger} {}
+
+      performance_extender(const performance_extender&)            = delete;
+      performance_extender& operator=(const performance_extender&) = delete;
+
+      template<class F, class S>
+      auto check_relative_performance(std::string_view description, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials=5, const double num_sds=3)
+        -> performance_results<std::invoke_result_t<F>>
+      {
+        return unit_testing::check_relative_performance(description, m_Logger, fast, slow, minSpeedUp, maxSpeedUp, trials, num_sds);
+      }
+    protected:
+      performance_extender(performance_extender&&) noexcept = default;
+      ~performance_extender() = default;
+
+      performance_extender& operator=(performance_extender&&) noexcept = default;
+    private:
+      Logger& m_Logger;
+    };
+
+    template<class Logger, class... Extenders>
+    class checker : private Logger, public Extenders...
     {
     public:
       constexpr static test_mode mode{Logger::mode};
       
-      checker() = default;
+      checker() : Extenders{logger()}... {}
       
       checker(const checker&)            = delete;
       checker& operator=(const checker&) = delete;
 
       template<class T> bool check_equality(std::string_view description, const T& value, const T& prediction)
       {
-        return unit_testing::check_equality(description, m_Logger, value, prediction);
+        return unit_testing::check_equality(description, logger(), value, prediction);
       }
 
       template<class T, class S, class... U>
       bool check_equivalence(std::string_view description, const T& value, S&& s, U&&... u)
       {
-        return unit_testing::check_equivalence(description, m_Logger, value, std::forward<S>(s), std::forward<U>(u)...);
+        return unit_testing::check_equivalence(description, logger(), value, std::forward<S>(s), std::forward<U>(u)...);
       }
 
       template<class T, class S, class... U>
       bool check_weak_equivalence(std::string_view description, const T& value, S&& s, U&&... u)
       {
-        return unit_testing::check_weak_equivalence(description, m_Logger, value, std::forward<S>(s), std::forward<U>(u)...);
+        return unit_testing::check_weak_equivalence(description, logger(), value, std::forward<S>(s), std::forward<U>(u)...);
       }
       
       template<class T, class Compare>
       bool check_approx_equality(std::string_view description, const T& prediction, const T& value, Compare compare)
       {
-        return unit_testing::check_approx_equality(description, m_Logger, value, prediction, std::move(compare));
+        return unit_testing::check_approx_equality(description, logger(), value, prediction, std::move(compare));
       }
 
       bool check(std::string_view description, const bool value)
       {
-        return unit_testing::check(description, m_Logger, value);
+        return unit_testing::check(description, logger(), value);
       }
 
       template<class E, class Fn>
       bool check_exception_thrown(std::string_view description, Fn&& function)
       {
-        return unit_testing::check_exception_thrown<E>(description, m_Logger, std::forward<Fn>(function));
+        return unit_testing::check_exception_thrown<E>(description, logger(), std::forward<Fn>(function));
       }
 
       template<class Iter, class PredictionIter>
       bool check_range(std::string_view description, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
       {
-        return unit_testing::check_range(description, m_Logger, first, last, predictionFirst, predictionLast);
+        return unit_testing::check_range(description, logger(), first, last, predictionFirst, predictionLast);
       }
 
       template<class T>
       void check_regular_semantics(std::string_view description, const T& x, const T& y)
       {
-        unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), m_Logger, x, y);
+        unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), logger(), x, y);
       }
 
       template<class T, class Mutator>
       void check_regular_semantics(std::string_view description, const T& x, const T& y, Mutator m)
       {
-        unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), m_Logger, x, y, m);
+        unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), logger(), x, y, m);
       }
 
       template<class T, class... Allocators>
       void check_regular_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone, move_only_allocation_info<T, Allocators>... info)
       {
-        unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), m_Logger, std::move(x), std::move(y), xClone, yClone, info...);
+        unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), logger(), std::move(x), std::move(y), xClone, yClone, info...);
       }
 
       template<class T, class Mutator, class... Allocators>
       void check_regular_semantics(std::string_view description, const T& x, const T& y, Mutator m, allocation_info<T, Allocators>... info)
       {
-        unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), m_Logger, x, y, m, info...);
-      }
-      
-      template<class F, class S>
-      auto check_relative_performance(std::string_view description, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials=5, const double num_sds=3)
-        -> performance_results<decltype(fast())>
-      {
-        return unit_testing::check_relative_performance(description, m_Logger, fast, slow, minSpeedUp, maxSpeedUp, trials, num_sds);
+        unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), logger(), x, y, m, info...);
       }
 
       template<class Stream>
       friend Stream& operator<<(Stream& os, const checker& checker)
       {
-        os << checker.m_Logger;
+        os << checker.logger();
         return os;
       }
 
       log_summary summary(std::string_view prefix, const log_summary::duration delta) const
       {
-        return log_summary{prefix, m_Logger, delta};
+        return log_summary{prefix, logger(), delta};
       }
     protected:
       checker(checker&&) noexcept = default;
@@ -738,28 +754,36 @@ namespace sequoia
       
       checker& operator=(checker&&) = delete;
 
-      void log_critical_failure(std::string_view message) { m_Logger.log_critical_failure(message); }
+      void log_critical_failure(std::string_view message) { logger().log_critical_failure(message); }
       
-      void log_failure(std::string_view message) { m_Logger.log_failure(message); }
+      void log_failure(std::string_view message) { logger().log_failure(message); }
 
       [[nodiscard]]
-      std::size_t checks() const noexcept { return m_Logger.checks(); }
+      std::size_t checks() const noexcept { return logger().checks(); }
 
       [[nodiscard]]
-      std::size_t failures() const noexcept { return m_Logger.failures(); }
+      std::size_t failures() const noexcept { return logger().failures(); }
 
       [[nodiscard]]
-      std::string_view current_message() const noexcept{ return m_Logger.current_message(); }
+      std::string_view current_message() const noexcept{ return logger().current_message(); }
 
       [[nodiscard]]
-      int exceptions_detected_by_sentinel() const noexcept { return m_Logger.exceptions_detected_by_sentinel(); }
+      int exceptions_detected_by_sentinel() const noexcept { return logger().exceptions_detected_by_sentinel(); }
 
       typename Logger::sentinel make_sentinel(std::string_view message)
       {
-        return {m_Logger, message};
+        return {logger(), message};
       }
     private:
-      Logger m_Logger;      
+      Logger& logger()
+      {
+        return static_cast<Logger&>(*this);
+      }
+
+      const Logger& logger() const
+      {
+        return static_cast<const Logger&>(*this);
+      }
     };    
   }
 }

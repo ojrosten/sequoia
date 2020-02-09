@@ -49,7 +49,7 @@ namespace sequoia::unit_testing
     std::string m_Name;
   };
     
-  template<class Logger, class Checker=checker<Logger>>
+  template<class Logger, class Checker=checker<Logger, performance_extender<Logger>>>
   class basic_test : public test, protected Checker
   {
   public:      

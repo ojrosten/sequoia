@@ -211,19 +211,19 @@ namespace sequoia::unit_testing
   }
 
   template<class Logger>
-  class graph_checker : protected checker<Logger>
+  class graph_checker : protected checker<Logger, performance_extender<Logger>>
   {
   public:      
-    using checker<Logger>::check_equality;
-    using checker<Logger>::check;
-    using checker<Logger>::check_exception_thrown;
-    using checker<Logger>::check_equivalence;
-    using checker<Logger>::check_regular_semantics;
+    using checker<Logger, performance_extender<Logger>>::check_equality;
+    using checker<Logger, performance_extender<Logger>>::check;
+    using checker<Logger, performance_extender<Logger>>::check_exception_thrown;
+    using checker<Logger, performance_extender<Logger>>::check_equivalence;
+    using checker<Logger, performance_extender<Logger>>::check_regular_semantics;
 
     template<class G, class... NodeWeights, class E=typename G::edge_init_type>
     void check_graph(std::string_view description, const G& graph, std::initializer_list<std::initializer_list<E>> edges, const std::tuple<NodeWeights...>& nodeWeights)
     {
-      checker<Logger>::check_equivalence(description, graph, std::move(edges), nodeWeights);
+      checker<Logger, performance_extender<Logger>>::check_equivalence(description, graph, std::move(edges), nodeWeights);
     }
 
     template<
@@ -236,11 +236,11 @@ namespace sequoia::unit_testing
     {
       if constexpr(impl::use_weak_equiv_v<typename G::edge_type>)
       {
-        checker<Logger>::check_weak_equivalence(description, graph, edges, nodeWeights);
+        checker<Logger, performance_extender<Logger>>::check_weak_equivalence(description, graph, edges, nodeWeights);
       }
       else
       {
-        checker<Logger>::check_equivalence(description, graph, edges, nodeWeights);
+        checker<Logger, performance_extender<Logger>>::check_equivalence(description, graph, edges, nodeWeights);
       }
     }
 
@@ -254,11 +254,11 @@ namespace sequoia::unit_testing
     {
       if constexpr(impl::use_weak_equiv_v<typename G::edge_type>)
       {
-        checker<Logger>::check_weak_equivalence(description, graph, std::move(edges));
+        checker<Logger, performance_extender<Logger>>::check_weak_equivalence(description, graph, std::move(edges));
       }
       else
       {
-        checker<Logger>::check_equivalence(description, graph, std::move(edges));
+        checker<Logger, performance_extender<Logger>>::check_equivalence(description, graph, std::move(edges));
       }
     }
   };
