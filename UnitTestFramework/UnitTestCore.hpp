@@ -87,17 +87,20 @@ namespace sequoia::unit_testing
     }
   };
 
-  template<class Logger>
-  using basic_checker = checker<Logger, allocator_extender<Logger>, performance_extender<Logger>>;
+  template<test_mode mode>
+  using regular_checker = checker<unit_test_logger<mode>, regular_extender<unit_test_logger<mode>>>;
+  
+  template<test_mode mode>
+  using regular_test = basic_test<unit_test_logger<mode>, regular_checker<mode>>;
 
-  using unit_test           = basic_test<unit_test_logger<test_mode::standard>,       basic_checker<unit_test_logger<test_mode::standard>>>;
-  using false_negative_test = basic_test<unit_test_logger<test_mode::false_negative>, basic_checker<unit_test_logger<test_mode::false_negative>>>;
-  using false_positive_test = basic_test<unit_test_logger<test_mode::false_positive>, basic_checker<unit_test_logger<test_mode::false_positive>>>;
+  using unit_test           = regular_test<test_mode::standard>;
+  using false_negative_test = regular_test<test_mode::false_negative>;
+  using false_positive_test = regular_test<test_mode::false_positive>;
+
+  enum class concurrency_mode{ serial=-1, family, test, deep};
 
   [[nodiscard]]
   std::string report_line(std::string file, const int line, const std::string_view message);
-  
-  enum class concurrency_mode{ serial=-1, family, test, deep};
 
   #define LINE(message) report_line(__FILE__, __LINE__, message)    
 }

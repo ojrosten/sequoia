@@ -8,6 +8,8 @@
 #include "UnitTestDiagnostics.hpp"
 #include "UnitTestDiagnosticsUtilities.hpp"
 
+#include "UnitTestUtilities.hpp"
+
 #include <complex>
 
 namespace sequoia::unit_testing
@@ -33,7 +35,6 @@ namespace sequoia::unit_testing
   {
     basic_tests();
     test_container_checks();
-    test_relative_performance();
     test_mixed();
     test_regular_semantics();
     test_equivalence_checks();
@@ -79,26 +80,6 @@ namespace sequoia::unit_testing
 
     using namespace std::string_literals;
     check_equality(LINE("Differing strings"), "what?!"s, "Hello, World!"s);
-  }
-
-  void false_positive_diagnostics::test_relative_performance()
-  {
-    auto wait{[](const size_t millisecs) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(millisecs));
-      }
-    };
-
-    check_relative_performance(LINE("Performance Test for which fast task is too slow, [1, (2.0, 2.0)"),
-                               [wait]() { return wait(1); },
-                               [wait]() { return wait(1); }, 2.0, 2.0);
-      
-    check_relative_performance(LINE("Performance Test for which fast task is too slow [1, (2.0, 3.0)"),
-                               [wait]() { return wait(1); },
-                               [wait]() { return wait(1); }, 2.0, 3.0);
-      
-    check_relative_performance(LINE("Performance Test for which fast task is too fast [4, (2.0, 2.5)]"),
-                               [wait]() { return wait(1); },
-                               [wait]() { return wait(4); }, 2.0, 2.5);      
   }
 
   void false_positive_diagnostics::test_mixed()
@@ -171,7 +152,6 @@ namespace sequoia::unit_testing
   {
     basic_tests();
     test_container_checks();
-    test_relative_performance();
     test_mixed();
     test_regular_semantics();
     test_equivalence_checks();
@@ -211,23 +191,6 @@ namespace sequoia::unit_testing
     check_range(LINE("Iterators demarcate identical elements"), refs.cbegin(), refs.cbegin()+3, ans.cbegin()+1, ans.cbegin()+4);
 
     check_equality(LINE("Differing strings"), std::string{"Hello, World!"}, std::string{"Hello, World!"});
-  }
-    
-  void false_negative_diagnostics::test_relative_performance()
-  {
-      
-    auto wait{[](const size_t millisecs) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(millisecs));
-      }
-    };
-
-    auto fast{[wait]() {
-        return wait(1);
-      }
-    };      
-
-    check_relative_performance(LINE("Performance Test which should pass"), fast, [wait]() { return wait(2); }, 1.8, 2.1, 5);
-    check_relative_performance(LINE("Performance Test which should pass"), fast, [wait]() { return wait(4); }, 3.6, 4.1, 5);
   }
 
   void false_negative_diagnostics::test_mixed()

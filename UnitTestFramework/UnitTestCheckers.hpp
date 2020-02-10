@@ -511,133 +511,6 @@ namespace sequoia
       }
     }    
 
-    template<class R> struct performance_results
-    {
-      std::vector<std::future<R>> fast_futures, slow_futures;
-      bool passed{};
-    };
-
-    template<class Logger, class F, class S>
-    [[nodiscard]]
-    auto check_relative_performance(std::string_view description, Logger& logger, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials, const double num_sds) -> performance_results<std::invoke_result_t<F>>
-    {      
-      using R = std::invoke_result_t<F>;
-      static_assert(std::is_same_v<R, std::invoke_result_t<S>>, "Fast/Slow invokables must have same return value");
-
-      if((minSpeedUp <= 1) || (maxSpeedUp <= 1))
-        throw std::logic_error("Relative performance test requires speed-up factors > 1!");
-
-      if(minSpeedUp > maxSpeedUp)
-        throw std::logic_error("maxSpeedUp must be >= minSpeedUp");      
-      
-      performance_results<R> results;      
-      
-      using namespace std::chrono;
-      using namespace maths;
-
-      std::string
-        message{description.empty() ? "" : std::string{"\t"}.append(description).append("\n")},
-        summary{};  
-
-      std::size_t remainingAttempts{2};
-
-      while(remainingAttempts > 0)
-      {
-        std::vector<double> fastData, slowData;
-        fastData.reserve(trials);
-        slowData.reserve(trials);
-        
-        std::random_device generator;
-        for(std::size_t i{}; i < trials; ++i)
-        {
-          std::packaged_task<R()> fastTask{fast}, slowTask{slow};
-
-          results.fast_futures.emplace_back(std::move(fastTask.get_future()));
-          results.slow_futures.emplace_back(std::move(slowTask.get_future()));
-
-          steady_clock::time_point start, end;
-
-          std::uniform_real_distribution<double> distribution{0.0, 1.0};
-          const bool fastFirst{(distribution(generator) < 0.5)};
-
-          start = steady_clock::now();
-          fastFirst ? fastTask() : slowTask();
-          end = steady_clock::now();
-
-          duration<double> duration = end - start;
-          fastFirst ? fastData.push_back(duration.count()) : slowData.push_back(duration.count());
-
-          start = steady_clock::now();
-          fastFirst ? slowTask() : fastTask();
-          end = steady_clock::now();
-
-          duration = end - start;
-          fastFirst ? slowData.push_back(duration.count()) : fastData.push_back(duration.count());
-        }
-
-        auto compute_stats{
-          [](auto first, auto last) {
-            const auto data{sample_standard_deviation(first, last)};
-            return std::make_pair(data.first.value(), data.second.value());
-          }
-        };
-      
-        const auto [sig_f, m_f]{compute_stats(fastData.cbegin(), fastData.cend())};
-        const auto [sig_s, m_s]{compute_stats(slowData.cbegin(), slowData.cend())};
-
-        using namespace maths::bias;
-        if(m_f + sig_f < m_s - sig_s)
-        {
-          if(sig_f >= sig_s)
-          {
-            results.passed = (minSpeedUp * m_f <= (m_s + num_sds * sig_s))
-                          && (maxSpeedUp * m_f >= (m_s - num_sds * sig_s));
-          }
-          else
-          {
-            results.passed = (m_s / maxSpeedUp <= (m_f + num_sds * sig_f))
-                          && (m_s / minSpeedUp >= (m_f - num_sds * sig_f));
-          }
-        }
-
-        auto serializer{
-          [m_f=m_f,sig_f=sig_f,m_s=m_s,sig_s=sig_s,num_sds,minSpeedUp,maxSpeedUp](){
-            std::ostringstream message{};
-            message << "\tFast Task duration: " << m_f << "s";
-            message << " +- " << num_sds << " * " << sig_f;
-            message << "\n\tSlow Task duration: " << m_s << "s";
-            message << " +- " << num_sds << " * " << sig_s;
-            message << " [" << m_s / m_f << "; (" << minSpeedUp << ", " << maxSpeedUp << ")]\n";
-
-            return message.str();
-          }
-        };
-        
-        summary = serializer();
-
-        if((Logger::mode == test_mode::false_positive) ? !results.passed : results.passed)
-        {
-          break;
-        }
-        
-        --remainingAttempts;
-        if(remainingAttempts)
-          results = performance_results<R>{};      
-      }
-
-      message.append(summary);
-
-      typename Logger::sentinel r{logger, message};
-      r.log_performance_check();
-
-      if(!results.passed)
-      {        
-        logger.log_performance_failure(message);
-      }
-
-      return results;
-    }
-
     template<class Logger, class... Extenders>
     class checker : private Logger, public Extenders...
     {
@@ -739,30 +612,6 @@ namespace sequoia
     };
 
     template<class Logger>
-    class performance_extender
-    {
-    public:
-      performance_extender(Logger& logger) : m_Logger{logger} {}
-
-      performance_extender(const performance_extender&)            = delete;
-      performance_extender& operator=(const performance_extender&) = delete;
-
-      template<class F, class S>
-      auto check_relative_performance(std::string_view description, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials=5, const double num_sds=3)
-        -> performance_results<std::invoke_result_t<F>>
-      {
-        return unit_testing::check_relative_performance(description, m_Logger, fast, slow, minSpeedUp, maxSpeedUp, trials, num_sds);
-      }
-    protected:
-      performance_extender(performance_extender&&) noexcept = default;
-      ~performance_extender() = default;
-
-      performance_extender& operator=(performance_extender&&) noexcept = default;
-    private:
-      Logger& m_Logger;
-    };
-
-    template<class Logger>
     class regular_extender
     {
     public:
@@ -771,63 +620,28 @@ namespace sequoia
       regular_extender(const regular_extender&)            = delete;
       regular_extender& operator=(const regular_extender&) = delete;
 
-      template<class T>
+      template<class T/*, std::enable_if_t<std::is_copy_constructible_v<T>, int> = 0*/>
       void check_regular_semantics(std::string_view description, const T& x, const T& y)
       {
         unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), m_Logger, x, y);
       }
 
-      template<class T, class Mutator>
+      template<class T, class Mutator/*, std::enable_if_t<std::is_copy_constructible_v<T>, int> = 0*/>
       void check_regular_semantics(std::string_view description, const T& x, const T& y, Mutator m)
       {
         unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), m_Logger, x, y, m);
-      }     
+      }
+
+      template<class T, class... Allocators/*, std::enable_if_t<!std::is_copy_constructible_v<T>, int> = 0*/>
+      void check_regular_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone)
+      {
+        unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), m_Logger, std::move(x), std::move(y), xClone, yClone);
+      }
     protected:
        regular_extender(regular_extender&&) noexcept = default;
       ~regular_extender() = default;
 
       regular_extender& operator=(regular_extender&&) noexcept = default;
-    private:
-      Logger& m_Logger;
-    };
-
-    template<class Logger>
-    class allocator_extender
-    {
-    public:
-      allocator_extender(Logger& logger) : m_Logger{logger} {}
-
-      allocator_extender(const allocator_extender&)            = delete;
-      allocator_extender& operator=(const allocator_extender&) = delete;
-
-      template<class T>
-      void check_regular_semantics(std::string_view description, const T& x, const T& y)
-      {
-        unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), m_Logger, x, y);
-      }
-
-      template<class T, class Mutator>
-      void check_regular_semantics(std::string_view description, const T& x, const T& y, Mutator m)
-      {
-        unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), m_Logger, x, y, m);
-      }
-
-      template<class T, class... Allocators>
-      void check_regular_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone, move_only_allocation_info<T, Allocators>... info)
-      {
-        unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), m_Logger, std::move(x), std::move(y), xClone, yClone, info...);
-      }
-
-      template<class T, class Mutator, class... Allocators>
-      void check_regular_semantics(std::string_view description, const T& x, const T& y, Mutator m, allocation_info<T, Allocators>... info)
-      {
-        unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), m_Logger, x, y, m, info...);
-      }
-    protected:
-       allocator_extender(allocator_extender&&) noexcept = default;
-      ~allocator_extender() = default;
-
-      allocator_extender& operator=(allocator_extender&&) noexcept = default;
     private:
       Logger& m_Logger;
     };

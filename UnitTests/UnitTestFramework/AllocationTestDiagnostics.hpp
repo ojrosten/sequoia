@@ -7,66 +7,45 @@
 
 #pragma once
 
-#include "UnitTestCore.hpp"
-#include "UnitTestUtilities.hpp"
+#include "AllocationTestCore.hpp"
 
 namespace sequoia::unit_testing
 {
-  class allocator_false_positive_diagnostics final : public false_positive_test
+  class allocation_false_positive_diagnostics final : public allocation_false_positive_test
   {
   public:
-    using false_positive_test::false_positive_test;
+    using allocation_false_positive_test::allocation_false_positive_test;
 
     [[nodiscard]]
     std::string_view source_file_name() const noexcept final;
   private:
+    friend allocation_false_positive_test;
+    
     void run_tests() final;
-
-    template<class Test>
-    friend void do_allocation_tests(Test&);
-
-    template<class Test>
-    friend void do_move_only_allocation_tests(Test&);
 
     template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
     void test_allocation();
 
     template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
     void test_regular_semantics();
-
-    template<bool PropagateMove, bool PropagateSwap>
-    void test_move_only_allocation();
-
-    template<bool PropagateMove, bool PropagateSwap>
-    void test_move_only_semantics_allocations();
   };
 
-  class allocator_false_negative_diagnostics final : public false_negative_test
+  class allocation_false_negative_diagnostics final : public allocation_false_negative_test
   {
   public:
-    using false_negative_test::false_negative_test;
+    using allocation_false_negative_test::allocation_false_negative_test;
 
     [[nodiscard]]
     std::string_view source_file_name() const noexcept final;
   private:
+    friend allocation_false_negative_test;
+    
     void run_tests() final;
-
-    template<class Test>
-    friend void do_allocation_tests(Test&);
-
-    template<class Test>
-    friend void do_move_only_allocation_tests(Test&);
 
     template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
     void test_allocation();
 
     template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
     void test_regular_semantics();
-
-    template<bool PropagateMove, bool PropagateSwap>
-    void test_move_only_allocation();
-
-    template<bool PropagateMove, bool PropagateSwap>
-    void test_move_only_semantics_allocations();
   };
 }

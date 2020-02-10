@@ -8,7 +8,6 @@
 #pragma once
 
 #include "UnitTestCore.hpp"
-#include "UnitTestUtilities.hpp"
 
 namespace sequoia:: unit_testing
 {
@@ -23,7 +22,6 @@ namespace sequoia:: unit_testing
     void run_tests() final;
 
     void basic_tests();
-    void test_relative_performance();
     void test_container_checks();
     void test_mixed();
     void test_regular_semantics();
@@ -42,7 +40,6 @@ namespace sequoia:: unit_testing
     void run_tests() final;
 
     void basic_tests();
-    void test_relative_performance();
     void test_container_checks();
     void test_mixed();
     void test_regular_semantics();
