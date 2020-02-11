@@ -253,11 +253,11 @@ namespace sequoia
         logger.log_failure(combine_messages(message, "No exception thrown\n"));
         return false;
       }
-      catch(E&)
+      catch(const E&)
       {
         return true;
       }
-      catch(std::exception& e)
+      catch(const std::exception& e)
       {
         logger.log_failure(combine_messages(message, std::string{"Unexpected exception thrown (caught by std::exception&):\n\t\""} + e.what() + "\"\n"));
         return false;
