@@ -29,7 +29,7 @@ namespace sequoia::unit_testing
 
   struct function_object
   {
-    void operator()(const std::vector<std::string>& args) const noexcept {}
+    void operator()(const std::vector<std::string>&) const noexcept {}
   };
   
   template<std::size_t... Ns>

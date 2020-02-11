@@ -79,7 +79,7 @@ namespace sequoia::unit_testing
 
       const auto len{10u - std::min(std::size_t{minChars}, checkNums.front().size())};
         
-      for(int i{}; i<entries; ++i)
+      for(std::size_t i{}; i<entries; ++i)
       {
         summaries[i].append(checkNums[i] + ";").append(len, ' ').append("Failures: ");
       }
@@ -95,7 +95,7 @@ namespace sequoia::unit_testing
 
       pad_left(failures.begin(), failures.end(), 2);
 
-      for(int i{}; i < entries; ++i)
+      for(std::size_t i{}; i < entries; ++i)
       {
         summaries[i] += failures[i];
       }
@@ -130,7 +130,7 @@ namespace sequoia::unit_testing
           log.false_positive_performance_checks()
         };
 
-        for(int i{}; i<entries; ++i)
+        for(std::size_t i{}; i<entries; ++i)
         {            
           if(checks[i]) summary += summaries[i] += "\n";
         }
@@ -319,7 +319,7 @@ namespace sequoia::unit_testing
           {"create",     {[this](const param_list& args) {
                 m_NewFiles.push_back(nascent_test{args[0], args[1]});
               }, {"class_name", "directory"}, {"c"} } },
-          {"--async",    {[this](const param_list& args) {
+          {"--async",    {[this](const param_list&) {
                 if(m_ConcurrencyMode == concurrency_mode::serial)
                   m_ConcurrencyMode = concurrency_mode::family;
               }, {}, {"-a"}} },
@@ -327,10 +327,10 @@ namespace sequoia::unit_testing
                 const int i{std::clamp(std::stoi(args.front()), 0, 2)};
                 m_ConcurrencyMode = static_cast<concurrency_mode>(i);
               }, {"depth [0-2]"}, {"-ad"}} },
-          {"--verbose",  {[this](const param_list& args) { m_Verbose    = true; },  {}, {"-v"} } },          
-          {"--nofiles",  {[this](const param_list& args) { m_WriteFiles = false; }, {}, {"-n"} } },
-          {"--pause",    {[this](const param_list& args) { m_Pause      = true; },  {}, {"-p"} } },
-          {"--recovery", {[]    (const param_list& args) {
+          {"--verbose",  {[this](const param_list&) { m_Verbose    = true; },  {}, {"-v"} } },          
+          {"--nofiles",  {[this](const param_list&) { m_WriteFiles = false; }, {}, {"-n"} } },
+          {"--pause",    {[this](const param_list&) { m_Pause      = true; },  {}, {"-p"} } },
+          {"--recovery", {[]    (const param_list&) {
                 output_manager::recovery_file("../output/Recovery/Recovery.txt"); }, {}, {"-r"}} }
         })
     };

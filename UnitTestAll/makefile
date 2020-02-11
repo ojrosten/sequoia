@@ -16,7 +16,7 @@ CC := clang++
 PREPROP :=
 #PREPROP += -D MINIMAL_GRAPH_TESTS
 #CC := g++
-CFLAGS := -Wall -std=c++2a -O0 -ferror-limit=1 \
+CFLAGS := -Wall -Wextra -Wpedantic -std=c++2a -O0 -ferror-limit=1 \
 	  -Wno-missing-braces		       	   \
 	  -ftemplate-backtrace-limit=0	       \
 	  $(PREPROP)						   \

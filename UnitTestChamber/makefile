@@ -15,7 +15,7 @@ BUILDSUBDIRS += $(addprefix $(UTBUILDDIR)/, $(LIBSUBDIRS))
 CC := clang++
 #CC := g++
 # -D MINIMAL_GRAPH_TESTS
-CFLAGS := -Wall -std=c++2a -O0 -ferror-limit=1 \
+CFLAGS := -Wall -Wextra -Wpedantic -std=c++2a -O0 -ferror-limit=1 \
 	  -Wno-missing-braces		       	   \
 	  -ftemplate-backtrace-limit=0	       \
 	  $(patsubst %,-I%, $(UTSUBDIRS))      \
