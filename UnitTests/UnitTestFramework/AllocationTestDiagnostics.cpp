@@ -16,6 +16,11 @@ namespace sequoia::unit_testing
     return __FILE__;
   }
 
+  void allocation_false_positive_diagnostics::run_tests()
+  {
+    do_allocation_tests(*this);
+  }
+
   template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
   void allocation_false_positive_diagnostics::test_allocation()
   {
@@ -258,6 +263,11 @@ namespace sequoia::unit_testing
   std::string_view allocation_false_negative_diagnostics::source_file_name() const noexcept
   {
     return __FILE__;
+  }
+
+  void allocation_false_negative_diagnostics::run_tests()
+  {
+    do_allocation_tests(*this);
   }
 
   template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>

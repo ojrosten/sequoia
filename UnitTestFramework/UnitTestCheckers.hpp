@@ -520,7 +520,8 @@ namespace sequoia
       checker() : Extenders{logger()}... {}
       
       checker(const checker&)            = delete;
-      checker& operator=(const checker&) = delete;
+      checker& operator=(const checker&) = delete;      
+      checker& operator=(checker&&)      = delete;
 
       template<class T> bool check_equality(std::string_view description, const T& value, const T& prediction)
       {
@@ -574,10 +575,12 @@ namespace sequoia
         return log_summary{prefix, logger(), delta};
       }
     protected:
-      checker(checker&&) noexcept = default;
+      checker(checker&& other) noexcept
+        : Logger{static_cast<Logger&&>(other)}
+        , Extenders{logger()}...
+      {}
+
       ~checker()                  = default;
-      
-      checker& operator=(checker&&) = delete;
 
       void log_critical_failure(std::string_view message) { logger().log_critical_failure(message); }
       

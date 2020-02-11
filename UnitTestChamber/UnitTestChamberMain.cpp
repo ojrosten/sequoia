@@ -91,7 +91,7 @@ int main(int argc, char** argv)
       false_negative_diagnostics{"False Negative Diagnostics"},
       performance_false_negative_diagnostics{"Performance False Negative Diagnostics"},
       allocation_false_negative_diagnostics{"Allocation False Negative Diagnostics"},
-      move_only_allocation_false_negative_diagnostics{"Moce-Only Allocation False Negative Diagnostics"}
+      move_only_allocation_false_negative_diagnostics{"Move-Only Allocation False Negative Diagnostics"}
     );
 
     runner.add_test_family(

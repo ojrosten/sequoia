@@ -10,9 +10,11 @@
 		7E7198AE22E78CE400FF81BC /* UnitTestChamberMain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E7198AD22E78CE400FF81BC /* UnitTestChamberMain.cpp */; };
 		7E7198B122E78E2F00FF81BC /* UnitTestRunner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E7198B022E78E2F00FF81BC /* UnitTestRunner.cpp */; };
 		7E7198B322E78E7600FF81BC /* UnitTestDiagnostics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E7198B222E78E7600FF81BC /* UnitTestDiagnostics.cpp */; };
-		7EDFEB3623E76C4E001308B7 /* DynamicGraphTestingDiagnostics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7EDFEB3523E76C4E001308B7 /* DynamicGraphTestingDiagnostics.cpp */; };
+		7EA3701E23F34D1100627EC4 /* CommandLineArguments.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7EA3701C23F34D1100627EC4 /* CommandLineArguments.cpp */; };
+		7EA3702323F34DC800627EC4 /* UnitTestCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7EA3702123F34DC800627EC4 /* UnitTestCore.cpp */; };
+		7EA3702423F34DC800627EC4 /* UnitTestFamily.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7EA3702223F34DC800627EC4 /* UnitTestFamily.cpp */; };
+		7EA3702623F34DD900627EC4 /* PerformanceTestDiagnostics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7EA3702523F34DD900627EC4 /* PerformanceTestDiagnostics.cpp */; };
 		7EDFEB3823E76C9F001308B7 /* CommandLineArgumentsDiagnostics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7EDFEB3723E76C9F001308B7 /* CommandLineArgumentsDiagnostics.cpp */; };
-		7EDFEB4323E76E45001308B7 /* UnitTestAllocatorDiagnostics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7EDFEB4223E76E44001308B7 /* UnitTestAllocatorDiagnostics.cpp */; };
 		7EDFEB4523E76ECC001308B7 /* CommandLineArgumentsTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7EDFEB4423E76ECC001308B7 /* CommandLineArgumentsTest.cpp */; };
 /* End PBXBuildFile section */
 
@@ -38,11 +40,12 @@
 		7E7198AF22E78D4F00FF81BC /* UnitTestFramework */ = {isa = PBXFileReference; lastKnownFileType = folder; name = UnitTestFramework; path = ../UnitTestFramework; sourceTree = "<group>"; };
 		7E7198B022E78E2F00FF81BC /* UnitTestRunner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UnitTestRunner.cpp; path = ../UnitTestFramework/UnitTestRunner.cpp; sourceTree = "<group>"; };
 		7E7198B222E78E7600FF81BC /* UnitTestDiagnostics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UnitTestDiagnostics.cpp; path = ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp; sourceTree = "<group>"; };
-		7EDFEB3523E76C4E001308B7 /* DynamicGraphTestingDiagnostics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DynamicGraphTestingDiagnostics.cpp; path = ../UnitTests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp; sourceTree = "<group>"; };
+		7EA3701C23F34D1100627EC4 /* CommandLineArguments.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CommandLineArguments.cpp; path = ../Parsing/CommandLineArguments.cpp; sourceTree = "<group>"; };
+		7EA3702023F34D7F00627EC4 /* Parsing */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Parsing; path = ../Parsing; sourceTree = "<group>"; };
+		7EA3702123F34DC800627EC4 /* UnitTestCore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UnitTestCore.cpp; path = ../UnitTestFramework/UnitTestCore.cpp; sourceTree = "<group>"; };
+		7EA3702223F34DC800627EC4 /* UnitTestFamily.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UnitTestFamily.cpp; path = ../UnitTestFramework/UnitTestFamily.cpp; sourceTree = "<group>"; };
+		7EA3702523F34DD900627EC4 /* PerformanceTestDiagnostics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PerformanceTestDiagnostics.cpp; path = ../UnitTests/UnitTestFramework/PerformanceTestDiagnostics.cpp; sourceTree = "<group>"; };
 		7EDFEB3723E76C9F001308B7 /* CommandLineArgumentsDiagnostics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CommandLineArgumentsDiagnostics.cpp; path = ../UnitTests/Parsing/CommandLineArgumentsDiagnostics.cpp; sourceTree = "<group>"; };
-		7EDFEB4023E76D77001308B7 /* CommandLineArguments.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CommandLineArguments.hpp; sourceTree = "<group>"; };
-		7EDFEB4123E76D77001308B7 /* CommandLineArguments.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CommandLineArguments.cpp; sourceTree = "<group>"; };
-		7EDFEB4223E76E44001308B7 /* UnitTestAllocatorDiagnostics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UnitTestAllocatorDiagnostics.cpp; path = ../UnitTests/UnitTestFramework/UnitTestAllocatorDiagnostics.cpp; sourceTree = "<group>"; };
 		7EDFEB4423E76ECC001308B7 /* CommandLineArgumentsTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CommandLineArgumentsTest.cpp; path = ../UnitTests/Parsing/CommandLineArgumentsTest.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -60,13 +63,15 @@
 		7E402F04215D01510017F018 = {
 			isa = PBXGroup;
 			children = (
+				7EA3702523F34DD900627EC4 /* PerformanceTestDiagnostics.cpp */,
+				7EA3702123F34DC800627EC4 /* UnitTestCore.cpp */,
+				7EA3702223F34DC800627EC4 /* UnitTestFamily.cpp */,
+				7EA3701C23F34D1100627EC4 /* CommandLineArguments.cpp */,
 				7EDFEB4423E76ECC001308B7 /* CommandLineArgumentsTest.cpp */,
-				7EDFEB4223E76E44001308B7 /* UnitTestAllocatorDiagnostics.cpp */,
 				7EDFEB3723E76C9F001308B7 /* CommandLineArgumentsDiagnostics.cpp */,
-				7EDFEB3523E76C4E001308B7 /* DynamicGraphTestingDiagnostics.cpp */,
 				7E7198B222E78E7600FF81BC /* UnitTestDiagnostics.cpp */,
 				7E7198B022E78E2F00FF81BC /* UnitTestRunner.cpp */,
-				7EDFEB3F23E76D77001308B7 /* Parsing */,
+				7EA3702023F34D7F00627EC4 /* Parsing */,
 				7E7198AF22E78D4F00FF81BC /* UnitTestFramework */,
 				7E402F1A215D02080017F018 /* Maths */,
 				7E402F19215D01FC0017F018 /* Experimental */,
@@ -91,15 +96,6 @@
 				7E7198AD22E78CE400FF81BC /* UnitTestChamberMain.cpp */,
 			);
 			path = SequoiaX;
-			sourceTree = "<group>";
-		};
-		7EDFEB3F23E76D77001308B7 /* Parsing */ = {
-			isa = PBXGroup;
-			children = (
-				7EDFEB4023E76D77001308B7 /* CommandLineArguments.hpp */,
-				7EDFEB4123E76D77001308B7 /* CommandLineArguments.cpp */,
-			);
-			path = Parsing;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -160,11 +156,13 @@
 			files = (
 				7E7198AE22E78CE400FF81BC /* UnitTestChamberMain.cpp in Sources */,
 				7E7198B122E78E2F00FF81BC /* UnitTestRunner.cpp in Sources */,
+				7EA3702323F34DC800627EC4 /* UnitTestCore.cpp in Sources */,
 				7EDFEB4523E76ECC001308B7 /* CommandLineArgumentsTest.cpp in Sources */,
+				7EA3702423F34DC800627EC4 /* UnitTestFamily.cpp in Sources */,
 				7E7198B322E78E7600FF81BC /* UnitTestDiagnostics.cpp in Sources */,
 				7EDFEB3823E76C9F001308B7 /* CommandLineArgumentsDiagnostics.cpp in Sources */,
-				7EDFEB4323E76E45001308B7 /* UnitTestAllocatorDiagnostics.cpp in Sources */,
-				7EDFEB3623E76C4E001308B7 /* DynamicGraphTestingDiagnostics.cpp in Sources */,
+				7EA3702623F34DD900627EC4 /* PerformanceTestDiagnostics.cpp in Sources */,
+				7EA3701E23F34D1100627EC4 /* CommandLineArguments.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -295,7 +293,8 @@
 					"$(SRCROOT)/../Core/**",
 					"$(SRCROOT)/../Experimental/**",
 					"$(SRCROOT)/../Maths/**",
-					"$(SRCROOT)/../UnitTestFramework",
+					"$(SRCROOT)/../UnitTestFramework/**",
+					"$(SRCROOT)/../Parsing/**",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				OTHER_CPLUSPLUSFLAGS = "";

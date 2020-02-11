@@ -64,7 +64,7 @@ namespace sequoia::unit_testing
     void add_test_family(std::string_view name, Test&& test, Tests&&... tests)
     {
       if(m_SelectedSources.empty())
-      {      
+      {
         if(mark_family(name))
         {
           m_Families.emplace_back(name, std::forward<Test>(test), std::forward<Tests>(tests)...);

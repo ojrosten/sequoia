@@ -54,6 +54,11 @@ namespace sequoia::unit_testing
   {
   public:      
     explicit basic_test(std::string_view name) : test{name} {}
+
+    basic_test(const basic_test&) = delete;
+
+    basic_test& operator=(const basic_test&) = delete;
+    basic_test& operator=(basic_test&&)      = delete;
     
     log_summary execute() override
     {
@@ -74,7 +79,9 @@ namespace sequoia::unit_testing
 
       return Checker::summary(name(), steady_clock::now() - time);
     }
-  protected:    
+  protected:
+    basic_test(basic_test&&) noexcept = default;
+    
     virtual void run_tests() = 0;
 
     [[nodiscard]]

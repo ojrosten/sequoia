@@ -25,8 +25,8 @@ namespace sequoia::unit_testing
     auto wait{[](const size_t millisecs) {
         std::this_thread::sleep_for(std::chrono::milliseconds(millisecs));
       }
-    };
-
+    };    
+    
     check_relative_performance(LINE("Performance Test for which fast task is too slow, [1, (2.0, 2.0)"),
                                [wait]() { return wait(1); },
                                [wait]() { return wait(1); }, 2.0, 2.0);

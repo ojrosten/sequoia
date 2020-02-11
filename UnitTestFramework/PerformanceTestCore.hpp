@@ -142,7 +142,7 @@ namespace sequoia::unit_testing
       return results;
   }
 
-    template<class Logger>
+  template<class Logger>
   class performance_extender
   {
   public:
