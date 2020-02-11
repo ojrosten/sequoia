@@ -148,9 +148,12 @@ namespace sequoia::unit_testing
   public:
     performance_extender(Logger& logger) : m_Logger{logger} {}
 
-    performance_extender(const performance_extender&)            = delete;
-    performance_extender& operator=(const performance_extender&) = delete;
+    performance_extender(const performance_extender&)     = delete;
+    performance_extender(performance_extender&&) noexcept = delete;
 
+    performance_extender& operator=(const performance_extender&)     = delete;    
+    performance_extender& operator=(performance_extender&&) noexcept = delete;
+ 
     template<class F, class S>
     auto check_relative_performance(std::string_view description, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials=5, const double num_sds=3)
       -> performance_results<std::invoke_result_t<F>>
@@ -158,10 +161,8 @@ namespace sequoia::unit_testing
       return unit_testing::check_relative_performance(description, m_Logger, fast, slow, minSpeedUp, maxSpeedUp, trials, num_sds);
     }
   protected:
-    performance_extender(performance_extender&&) noexcept = default;
     ~performance_extender() = default;
 
-    performance_extender& operator=(performance_extender&&) noexcept = default;
   private:
     Logger& m_Logger;
   };

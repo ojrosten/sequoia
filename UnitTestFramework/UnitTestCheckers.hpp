@@ -515,6 +515,9 @@ namespace sequoia
     class checker : private Logger, public Extenders...
     {
     public:
+      static_assert(((sizeof(Extenders) == sizeof(Logger*)) && ...),
+                    "The state of any Extenders must comprise precisely a reference to a Logger");
+      
       constexpr static test_mode mode{Logger::mode};
       
       checker() : Extenders{logger()}... {}
@@ -580,7 +583,7 @@ namespace sequoia
         , Extenders{logger()}...
       {}
 
-      ~checker()                  = default;
+      ~checker() = default;
 
       void log_critical_failure(std::string_view message) { logger().log_critical_failure(message); }
       

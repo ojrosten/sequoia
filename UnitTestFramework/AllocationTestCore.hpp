@@ -23,8 +23,11 @@ namespace sequoia::unit_testing
   public:
     allocation_extender(Logger& logger) : m_Logger{logger} {}
 
-    allocation_extender(const allocation_extender&)            = delete;
-    allocation_extender& operator=(const allocation_extender&) = delete;
+    allocation_extender(const allocation_extender&)     = delete;    
+    allocation_extender(allocation_extender&&) noexcept = delete;
+
+    allocation_extender& operator=(const allocation_extender&)     = delete;       
+    allocation_extender& operator=(allocation_extender&&) noexcept = delete;
 
     template<class T, class... Allocators/*, std::enable_if_t<!std::is_copy_constructible_v<T>, int> = 0*/>
     void check_regular_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone, move_only_allocation_info<T, Allocators>... info)
@@ -38,10 +41,8 @@ namespace sequoia::unit_testing
       unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), m_Logger, x, y, m, info...);
     }
   protected:
-    allocation_extender(allocation_extender&&) noexcept = default;
     ~allocation_extender() = default;
 
-    allocation_extender& operator=(allocation_extender&&) noexcept = default;
   private:
     Logger& m_Logger;
   };
