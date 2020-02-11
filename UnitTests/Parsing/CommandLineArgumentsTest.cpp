@@ -35,26 +35,26 @@ namespace sequoia::unit_testing
     {
       commandline_arguments<4, 8> a{"foo", "--async"};
       
-      check_weak_equivalence(LINE(""), parse(2, a.get(), info{{"--async", {fo{}}}}), ops{{fo{}}});
+      check_weak_equivalence(LINE(""), parse(2, a.get(), info{{"--async", {fo{}, {}, {}}}}), ops{{fo{}, {}}});
     }
 
     {
       commandline_arguments<4, 3> a{"foo", "-a"};
       
-      check_weak_equivalence(LINE(""), parse(2, a.get(), info{{"--async", {fo{}, {}, {"-a"}}}}), ops{{fo{}}});
+      check_weak_equivalence(LINE(""), parse(2, a.get(), info{{"--async", {fo{}, {}, {"-a"}}}}), ops{{fo{}, {}}});
     }
 
     {
       commandline_arguments<4, 3> a{"foo", "-a"};
       
-      check_weak_equivalence(LINE(""), parse(2, a.get(), info{{"--async", {fo{}, {}, {"-as", "-a"}}}}), ops{{fo{}}});
+      check_weak_equivalence(LINE(""), parse(2, a.get(), info{{"--async", {fo{}, {}, {"-as", "-a"}}}}), ops{{fo{}, {}}});
     }
 
     {
       commandline_arguments<4, 8> a{"foo", "--asyng"};
       
       check_exception_thrown<std::runtime_error>(LINE("Unexpected argument"), [&a](){
-          return parse(2, a.get(), info{{"--async", {fo{}}}});
+          return parse(2, a.get(), info{{"--async", {fo{}, {}, {}}}});
         });
     }
 
@@ -70,21 +70,21 @@ namespace sequoia::unit_testing
       commandline_arguments<4, 4> a{"foo", "-av"};
       
       check_weak_equivalence(LINE(""), parse(2, a.get(),
-        info{{"--async", {fo{}, {}, {"-a"}}}, {"--verbose", {fo{}, {}, {"-v"}}}}), ops{{fo{}}, {fo{}}});
+                             info{{"--async", {fo{}, {}, {"-a"}}}, {"--verbose", {fo{}, {}, {"-v"}}}}), ops{{fo{}, {}}, {fo{}, {}}});
     }
 
     {
       commandline_arguments<4, 5> a{"foo", "-a-v"};
       
       check_weak_equivalence(LINE(""), parse(2, a.get(),
-        info{{"--async", {fo{}, {}, {"-a"}}}, {"--verbose", {fo{}, {}, {"-v"}}}}), ops{{fo{}}, {fo{}}});
+                             info{{"--async", {fo{}, {}, {"-a"}}}, {"--verbose", {fo{}, {}, {"-v"}}}}), ops{{fo{}, {}}, {fo{}, {}}});
     }
 
     {
       commandline_arguments<4, 4, 3> a{"foo", "-av", "-p"};
       
       check_weak_equivalence(LINE(""), parse(3, a.get(),
-        info{{"--async", {fo{}, {}, {"-a"}}}, {"--verbose", {fo{}, {}, {"-v"}}}, {"--pause", {fo{}, {}, {"-p"}}}}), ops{{fo{}}, {fo{}}, {fo{}}});
+                             info{{"--async", {fo{}, {}, {"-a"}}}, {"--verbose", {fo{}, {}, {"-v"}}}, {"--pause", {fo{}, {}, {"-p"}}}}), ops{{fo{}, {}}, {fo{}, {}}, {fo{}, {}}});
     }
 
     {
@@ -111,7 +111,7 @@ namespace sequoia::unit_testing
       commandline_arguments<4, 5> a{"foo", "test"};
 
       check_exception_thrown<std::runtime_error>(LINE("Final argument missing"), [&a](){
-          return parse(2, a.get(), info{{"test", {fo{}, {"case"}}}});
+          return parse(2, a.get(), info{{"test", {fo{}, {"case"}, {}}}});
         });
     }
 
@@ -123,7 +123,7 @@ namespace sequoia::unit_testing
         "dir"
       };
       
-      check_weak_equivalence(LINE(""), parse(4, a.get(), info{{"create", {fo{}, {"class_name", "directory"}}}})
+      check_weak_equivalence(LINE(""), parse(4, a.get(), info{{"create", {fo{}, {"class_name", "directory"}, {}}}})
                              , ops{{fo{}, {"class", "dir"}}});
     }
 
@@ -136,8 +136,9 @@ namespace sequoia::unit_testing
         "dir"
       };
       
-      check_weak_equivalence(LINE(""), parse(5, a.get(), info{{"create", {fo{}, {"class_name", "directory"}}}, {"--async", {fo{}}}})
-                             , ops{{fo{}}, {fo{}, {"class", "dir"}}});
+      check_weak_equivalence(LINE(""), parse(5, a.get(),
+                             info{{"create", {fo{}, {"class_name", "directory"}, {}}}, {"--async", {fo{}, {}, {}}}}),
+                             ops{{fo{}, {}}, {fo{}, {"class", "dir"}}});
     }
   }
 }
