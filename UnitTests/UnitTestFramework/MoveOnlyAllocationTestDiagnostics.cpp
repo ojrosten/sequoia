@@ -16,11 +16,6 @@ namespace sequoia::unit_testing
     return __FILE__;
   }
 
-  void move_only_allocation_false_positive_diagnostics::run_tests()
-  {
-    do_allocation_tests(*this);
-  }
-
   template<bool PropagateMove, bool PropagateSwap>
   void move_only_allocation_false_positive_diagnostics::test_allocation()
   {
@@ -62,11 +57,6 @@ namespace sequoia::unit_testing
   std::string_view move_only_allocation_false_negative_diagnostics::source_file_name() const noexcept
   {
     return __FILE__;
-  }
-
-  void move_only_allocation_false_negative_diagnostics::run_tests()
-  {
-    do_allocation_tests(*this);
   }
 
   template<bool PropagateMove, bool PropagateSwap>

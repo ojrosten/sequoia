@@ -46,50 +46,60 @@ namespace sequoia::unit_testing
     Logger& m_Logger;
   };
   
-  template<class Logger, allocation_test_flavour Flavour>
+  template<class Logger, allocation_test_flavour Flavour, class Test>
   class basic_allocation_test : public basic_test<Logger, checker<Logger, allocation_extender<Logger>>>
   {
   public:
-    using basic_test<Logger, checker<Logger, allocation_extender<Logger>>>::basic_test;
+    basic_allocation_test(std::string_view name, Test& test)
+      : basic_test<Logger, checker<Logger, allocation_extender<Logger>>>{name}
+      , m_Test{test}
+    {}
 
   protected:
-    template<class Test>
-    static void do_allocation_tests(Test& test)
+    void run_tests() final
+    {
+      do_allocation_tests();
+    }
+
+    void do_allocation_tests()
     {
       if constexpr(Flavour == allocation_test_flavour::standard)
       {
-        test.template test_allocation<false, false, false>();
-        test.template test_allocation<false, false, true>();
-        test.template test_allocation<false, true, false>();
-        test.template test_allocation<false, true, true>();
-        test.template test_allocation<true, false, false>();
-        test.template test_allocation<true, false, true>();
-        test.template test_allocation<true, true, false>();
-        test.template test_allocation<true, true, true>();
+        m_Test.template test_allocation<false, false, false>();
+        m_Test.template test_allocation<false, false, true>();
+        m_Test.template test_allocation<false, true, false>();
+        m_Test.template test_allocation<false, true, true>();
+        m_Test.template test_allocation<true, false, false>();
+        m_Test.template test_allocation<true, false, true>();
+        m_Test.template test_allocation<true, true, false>();
+        m_Test.template test_allocation<true, true, true>();
       }
       else
       {
-        test.template test_allocation<false, false>();
-        test.template test_allocation<false, true>();
-        test.template test_allocation<true, false>();
-        test.template test_allocation<true, true>();
+        m_Test.template test_allocation<false, false>();
+        m_Test.template test_allocation<false, true>();
+        m_Test.template test_allocation<true, false>();
+        m_Test.template test_allocation<true, true>();
       }
     }
+
+  private:
+    Test& m_Test;
   };
    
-  template<test_mode Mode>
-  using regular_allocation_test = basic_allocation_test<unit_test_logger<Mode>, allocation_test_flavour::standard>;
+  template<test_mode Mode, class Test>
+  using regular_allocation_test = basic_allocation_test<unit_test_logger<Mode>, allocation_test_flavour::standard, Test>;
 
-  using allocation_test                = regular_allocation_test<test_mode::standard>;
-  using allocation_false_negative_test = regular_allocation_test<test_mode::false_negative>;
-  using allocation_false_positive_test = regular_allocation_test<test_mode::false_positive>;
+  template<class Test> using allocation_test                = regular_allocation_test<test_mode::standard, Test>;
+  template<class Test> using allocation_false_negative_test = regular_allocation_test<test_mode::false_negative, Test>;
+  template<class Test> using allocation_false_positive_test = regular_allocation_test<test_mode::false_positive, Test>;
 
-  template<test_mode Mode>
-  using regular_move_only_allocation_test = basic_allocation_test<unit_test_logger<Mode>, allocation_test_flavour::move_only>;
+  template<test_mode Mode, class Test>
+  using regular_move_only_allocation_test = basic_allocation_test<unit_test_logger<Mode>, allocation_test_flavour::move_only, Test>;
 
-  using move_only_allocation_test                = regular_move_only_allocation_test<test_mode::standard>;
-  using move_only_allocation_false_negative_test = regular_move_only_allocation_test<test_mode::false_negative>;
-  using move_only_allocation_false_positive_test = regular_move_only_allocation_test<test_mode::false_positive>;
+  template<class Test> using move_only_allocation_test                = regular_move_only_allocation_test<test_mode::standard, Test>;
+  template<class Test> using move_only_allocation_false_negative_test = regular_move_only_allocation_test<test_mode::false_negative, Test>;
+  template<class Test> using move_only_allocation_false_positive_test = regular_move_only_allocation_test<test_mode::false_positive, Test>;
 
   /*! \class shared_counting_allocator
       \brief Somewhat similar to std::allocator but logs (de)allocations and is without certain copy-like constructors.

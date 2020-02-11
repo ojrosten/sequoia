@@ -12,40 +12,40 @@
 
 namespace sequoia::unit_testing
 {
-  class move_only_allocation_false_positive_diagnostics final : public move_only_allocation_false_positive_test
+  class move_only_allocation_false_positive_diagnostics final
+    : public move_only_allocation_false_positive_test<move_only_allocation_false_positive_diagnostics>
   {
   public:    
-    using move_only_allocation_false_positive_test::move_only_allocation_false_positive_test;
+    move_only_allocation_false_positive_diagnostics(std::string_view name)
+      : move_only_allocation_false_positive_test<move_only_allocation_false_positive_diagnostics>{name, *this}
+    {}
 
     [[nodiscard]]
     std::string_view source_file_name() const noexcept final;
-  private:
-    friend move_only_allocation_false_positive_test;
-    
-    void run_tests() final;
 
     template<bool PropagateMove, bool PropagateSwap>
     void test_allocation();
+  private:
 
     template<bool PropagateMove, bool PropagateSwap>
     void test_move_only_semantics_allocations();
   };
 
-  class move_only_allocation_false_negative_diagnostics final : public move_only_allocation_false_negative_test
+  class move_only_allocation_false_negative_diagnostics final
+    : public move_only_allocation_false_negative_test<move_only_allocation_false_negative_diagnostics>
   {
   public:
-    using move_only_allocation_false_negative_test::move_only_allocation_false_negative_test;
+    move_only_allocation_false_negative_diagnostics(std::string_view name)
+      : move_only_allocation_false_negative_test<move_only_allocation_false_negative_diagnostics>{name, *this}
+    {}
 
     [[nodiscard]]
     std::string_view source_file_name() const noexcept final;
-  private:
-    friend move_only_allocation_false_negative_test;
-    
-    void run_tests() final;
 
     template<bool PropagateMove, bool PropagateSwap>
     void test_allocation();
-
+  private:
+    
     template<bool PropagateMove, bool PropagateSwap>
     void test_move_only_semantics_allocations();
   };
