@@ -29,13 +29,13 @@ namespace sequoia::unit_testing
     allocation_extender& operator=(const allocation_extender&)     = delete;       
     allocation_extender& operator=(allocation_extender&&) noexcept = delete;
 
-    template<class T, class... Allocators/*, std::enable_if_t<!std::is_copy_constructible_v<T>, int> = 0*/>
+    template<class T, class... Allocators, std::enable_if_t<!std::is_copy_constructible_v<T>, int> = 0>
     void check_regular_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone, move_only_allocation_info<T, Allocators>... info)
     {
       unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), m_Logger, std::move(x), std::move(y), xClone, yClone, info...);
     }
 
-    template<class T, class Mutator, class... Allocators/*, std::enable_if_t<std::is_copy_constructible_v<T>, int> = 0*/>
+    template<class T, class Mutator, class... Allocators, std::enable_if_t<std::is_copy_constructible_v<T>, int> = 0>
     void check_regular_semantics(std::string_view description, const T& x, const T& y, Mutator m, allocation_info<T, Allocators>... info)
     {
       unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), m_Logger, x, y, m, info...);

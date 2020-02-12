@@ -8,8 +8,6 @@
 #include "UnitTestDiagnostics.hpp"
 #include "UnitTestDiagnosticsUtilities.hpp"
 
-#include "UnitTestUtilities.hpp"
-
 #include <complex>
 
 namespace sequoia::unit_testing
@@ -115,15 +113,6 @@ namespace sequoia::unit_testing
     check_regular_semantics(LINE("Broken copy assignment value semantics"),
                             broken_copy_assignment_value_semantics{1}, broken_copy_assignment_value_semantics{2}, [](auto& b){ *b.x.front() = 3; });
     check_regular_semantics(LINE("Broken check invariant"), perfectly_normal_beast{1}, perfectly_normal_beast{1});
-
-    check_regular_semantics(LINE("Broken equality"), broken_equality{1}, broken_equality{2}, broken_equality{1}, broken_equality{2});
-    check_regular_semantics(LINE("Broken inequality"), broken_inequality{1}, broken_inequality{2}, broken_inequality{1}, broken_inequality{2});
-    check_regular_semantics(LINE("Broken move"), broken_move{1}, broken_move{2}, broken_move{1}, broken_move{2});
-    check_regular_semantics(LINE("Broken move"), broken_swap{1}, broken_swap{2}, broken_swap{1}, broken_swap{2});
-    check_regular_semantics(LINE("Broken move assignment"), broken_move_assignment{1}, broken_move_assignment{2}, broken_move_assignment{1}, broken_move_assignment{2});
-    check_regular_semantics(LINE("Broken check invariant"), perfectly_normal_beast{1}, perfectly_normal_beast{1}, perfectly_normal_beast{1}, perfectly_normal_beast{1});
-    check_regular_semantics(LINE("Broken check invariant"), perfectly_normal_beast{1}, perfectly_normal_beast{3}, perfectly_normal_beast{2}, perfectly_normal_beast{3});
-    check_regular_semantics(LINE("Broken check invariant"), perfectly_normal_beast{1}, perfectly_normal_beast{2}, perfectly_normal_beast{3}, perfectly_normal_beast{2});
   }
 
   void false_positive_diagnostics::test_equivalence_checks()
@@ -208,10 +197,7 @@ namespace sequoia::unit_testing
 
   void false_negative_diagnostics::test_regular_semantics()
   {
-    {
-      check_regular_semantics(LINE(""), perfectly_normal_beast{1}, perfectly_normal_beast{2});
-      check_regular_semantics(LINE(""), perfectly_normal_beast{1}, perfectly_normal_beast{2}, perfectly_normal_beast{1}, perfectly_normal_beast{2});
-    }
+    check_regular_semantics(LINE(""), perfectly_normal_beast{1}, perfectly_normal_beast{2});
   }
 
   void false_negative_diagnostics::test_equivalence_checks()

@@ -65,6 +65,7 @@
 #include "CommandLineArgumentsTest.hpp"
 
 #include "UnitTestDiagnostics.hpp"
+#include "MoveOnlyTestDiagnostics.hpp"
 #include "PerformanceTestDiagnostics.hpp"
 #include "AllocationTestDiagnostics.hpp"
 #include "MoveOnlyAllocationTestDiagnostics.hpp"
@@ -85,10 +86,12 @@ int main(int argc, char** argv)
     runner.add_test_family(
       "Diagnostics",
       false_positive_diagnostics{"False Positive Diagnostics"},
+      move_only_false_positive_diagnostics{"Move-Only False Positive Diagnostics"},
       performance_false_positive_diagnostics{"Performance False Positive Diagnostics"},
       allocation_false_positive_diagnostics{"Alloction False Positive Diagnostics"},
       move_only_allocation_false_positive_diagnostics{"Move-Only Alloction False Positive Diagnostics"},
       false_negative_diagnostics{"False Negative Diagnostics"},
+      move_only_false_negative_diagnostics{"Move-Only False Negative Diagnostics"},
       performance_false_negative_diagnostics{"Performance False Negative Diagnostics"},
       allocation_false_negative_diagnostics{"Allocation False Negative Diagnostics"},
       move_only_allocation_false_negative_diagnostics{"Move-Only Allocation False Negative Diagnostics"}

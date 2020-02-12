@@ -5,8 +5,8 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "UnitTestDiagnosticsUtilities.hpp"
 #include "MoveOnlyAllocationTestDiagnostics.hpp"
+#include "MoveOnlyTestDiagnosticUtilities.hpp"
 
 namespace sequoia::unit_testing
 {
@@ -30,22 +30,22 @@ namespace sequoia::unit_testing
   template<bool PropagateMove, bool PropagateSwap>
   void move_only_allocation_false_positive_diagnostics::test_move_only_semantics_allocations()
   {
-    check_regular_semantics(LINE(""), broken_equality{1}, broken_equality{2}, broken_equality{1}, broken_equality{2});
+    check_regular_semantics(LINE(""), move_only_broken_equality{1}, move_only_broken_equality{2}, move_only_broken_equality{1}, move_only_broken_equality{2});
 
-    check_regular_semantics(LINE(""), broken_inequality{1}, broken_inequality{2}, broken_inequality{1}, broken_inequality{2});
+    check_regular_semantics(LINE(""), move_only_broken_inequality{1}, move_only_broken_inequality{2}, move_only_broken_inequality{1}, move_only_broken_inequality{2});
 
-    check_regular_semantics(LINE(""), broken_move{1}, broken_move{2}, broken_move{1}, broken_move{2});
+    check_regular_semantics(LINE(""), move_only_broken_move{1}, move_only_broken_move{2}, move_only_broken_move{1}, move_only_broken_move{2});
 
-    check_regular_semantics(LINE(""), broken_move_assignment{1}, broken_move_assignment{2}, broken_move_assignment{1}, broken_move_assignment{2});
+    check_regular_semantics(LINE(""), move_only_broken_move_assignment{1}, move_only_broken_move_assignment{2}, move_only_broken_move_assignment{1}, move_only_broken_move_assignment{2});
 
-    check_regular_semantics(LINE(""), perfectly_normal_beast{1}, perfectly_normal_beast{1}, perfectly_normal_beast{1}, perfectly_normal_beast{1});
+    check_regular_semantics(LINE(""), move_only_beast{1}, move_only_beast{1}, move_only_beast{1}, move_only_beast{1});
 
-    check_regular_semantics(LINE(""), perfectly_normal_beast{1}, perfectly_normal_beast{3}, perfectly_normal_beast{2}, perfectly_normal_beast{3});
+    check_regular_semantics(LINE(""), move_only_beast{1}, move_only_beast{3}, move_only_beast{2}, move_only_beast{3});
 
-    check_regular_semantics(LINE(""), perfectly_normal_beast{1}, perfectly_normal_beast{2}, perfectly_normal_beast{3}, perfectly_normal_beast{2});
+    check_regular_semantics(LINE(""), move_only_beast{1}, move_only_beast{2}, move_only_beast{3}, move_only_beast{2});
 
     {
-      using beast = perfectly_normal_beast<int, shared_counting_allocator<int, true, PropagateMove, PropagateSwap>>;
+      using beast = move_only_beast<int, shared_counting_allocator<int, true, PropagateMove, PropagateSwap>>;
       auto allocGetter{
         [](const beast& beast){
           return beast.x.get_allocator();
@@ -77,7 +77,7 @@ namespace sequoia::unit_testing
   void move_only_allocation_false_negative_diagnostics::test_move_only_semantics_allocations()
   {
     {
-      using beast = perfectly_normal_beast<int, shared_counting_allocator<int, true, PropagateMove, PropagateSwap>>;
+      using beast = move_only_beast<int, shared_counting_allocator<int, true, PropagateMove, PropagateSwap>>;
       auto allocGetter{
         [](const beast& beast){
           return beast.x.get_allocator();

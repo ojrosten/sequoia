@@ -626,19 +626,19 @@ namespace sequoia
       regular_extender(const regular_extender&)            = delete;
       regular_extender& operator=(const regular_extender&) = delete;
 
-      template<class T/*, std::enable_if_t<std::is_copy_constructible_v<T>, int> = 0*/>
+      template<class T, std::enable_if_t<std::is_copy_constructible_v<T>, int> = 0>
       void check_regular_semantics(std::string_view description, const T& x, const T& y)
       {
         unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), m_Logger, x, y);
       }
 
-      template<class T, class Mutator/*, std::enable_if_t<std::is_copy_constructible_v<T>, int> = 0*/>
+      template<class T, class Mutator, std::enable_if_t<std::is_copy_constructible_v<T>, int> = 0>
       void check_regular_semantics(std::string_view description, const T& x, const T& y, Mutator m)
       {
         unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), m_Logger, x, y, m);
       }
 
-      template<class T, class... Allocators/*, std::enable_if_t<!std::is_copy_constructible_v<T>, int> = 0*/>
+      template<class T, class... Allocators, std::enable_if_t<!std::is_copy_constructible_v<T>, int> = 0>
       void check_regular_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone)
       {
         unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), m_Logger, std::move(x), std::move(y), xClone, yClone);
