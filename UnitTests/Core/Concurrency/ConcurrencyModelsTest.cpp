@@ -21,9 +21,6 @@ namespace sequoia::unit_testing
     using namespace concurrency;
 
     test_task_queue();
-
-    test_waiting_task(std::chrono::milliseconds{10});
-    test_waiting_task_return(std::chrono::milliseconds{10});
     
     test_exceptions<thread_pool<void>, std::runtime_error>(LINE("pool_2"), 2u);
     test_exceptions<thread_pool<void, false>, std::runtime_error>(LINE("pool_2M"), 2u);
@@ -94,150 +91,6 @@ namespace sequoia::unit_testing
     }
   }
 
-  void threading_models_test::test_waiting_task(const std::chrono::milliseconds millisecs)
-  {
-    using namespace concurrency;
-
-    {
-      auto threadPoolFn{[this, millisecs](){
-          waiting_task<thread_pool<void>>(2u, millisecs, 2u);
-        }
-      };
-
-      auto threadPoolMonoFn{[this, millisecs](){
-          waiting_task<thread_pool<void, false>>(2u, millisecs, 2u);
-        }
-      };
-
-      auto nullThreadFn{[this, millisecs]() { waiting_task<serial<void>>(2u, millisecs); }};
-
-      auto asyncFn{[this, millisecs]() { waiting_task<asynchronous<void>>(2u, millisecs); }};
-
-      check_relative_performance(LINE("Two Waiting tasks; pool_2/null"), threadPoolFn, nullThreadFn, 1.9, 2.1);
-      check_relative_performance(LINE("Two Waiting tasks; pool_2M/null"), threadPoolMonoFn, nullThreadFn, 1.9, 2.1);
-      check_relative_performance(LINE("Two Waiting tasks; async/null"), asyncFn, nullThreadFn, 1.9, 2.1);
-    }
-
-    {
-      auto threadPoolFn{[this, millisecs](){
-          waiting_task<thread_pool<void>>(4u, millisecs, 2u);
-        }
-      };
-
-      auto threadPoolMonoFn{[this, millisecs](){
-          waiting_task<thread_pool<void, false>>(4u, millisecs, 2u);
-        }
-      };
-
-      auto nullThreadFn{[this, millisecs]() { waiting_task<serial<void>>(4u, millisecs); }};
-
-      check_relative_performance(LINE("Four Waiting tasks; pool_2/null"), threadPoolFn, nullThreadFn, 1.9, 2.1);
-      check_relative_performance(LINE("Four Waiting tasks; pool_2M/null"), threadPoolMonoFn, nullThreadFn, 1.9, 2.1);
-    }
-
-    {
-      auto threadPoolFn{[this, millisecs](){
-          waiting_task<thread_pool<void>>(4u, millisecs, 4u);
-        }
-      };
-
-       auto threadPoolMonoFn{[this, millisecs](){
-           waiting_task<thread_pool<void, false>>(4u, millisecs, 4u);
-        }
-      };
-
-      auto nullThreadFn{[this, millisecs]() { waiting_task<serial<void>>(4u, millisecs); }};
-
-      check_relative_performance(LINE("Four Waiting tasks; pool_4/null"), threadPoolFn, nullThreadFn, 3.9, 4.1);
-      check_relative_performance(LINE("Four Waiting tasks; pool_4M/null"), threadPoolMonoFn, nullThreadFn, 3.9, 4.1);
-    }
-  }
-
-  void threading_models_test::test_waiting_task_return(const std::chrono::milliseconds millisecs)
-  {
-    using namespace concurrency;
-
-    {
-      auto threadPoolFn{[this, millisecs](){
-          return waiting_task_return<thread_pool<int>>(2u, millisecs, 2u);
-        }
-      };
-
-      auto threadPoolMonoFn{[this, millisecs](){
-          return waiting_task_return<thread_pool<int, false>>(2u, millisecs, 2u);
-        }
-      };
-
-      auto nullThreadFn{[this, millisecs]() { return waiting_task_return<serial<int>>(2u, millisecs); }};
-
-      auto asyncFn{[this, millisecs]() { return waiting_task_return<asynchronous<int>>(2u, millisecs); }};
-
-      auto futures{check_relative_performance(LINE("Two Waiting tasks; pool_2/null"), threadPoolFn, nullThreadFn, 1.9, 2.1)};
-      check_return_values(LINE("pool_2"), std::move(futures));
-
-          
-      futures = check_relative_performance(LINE("Two Waiting tasks; pool_2M/null"), threadPoolMonoFn, nullThreadFn, 1.9, 2.1);
-      check_return_values(LINE("pool_2M"), std::move(futures));
-
-      futures = check_relative_performance(LINE("Two Waiting tasks; async/null"), asyncFn, nullThreadFn, 1.9, 2.1);
-      check_return_values(LINE("async"), std::move(futures));
-    }
-  }
-
-  void threading_models_test::check_return_values(std::string_view message, performance_results<std::vector<int>>&& futures)
-  {
-    for(auto& f : futures.fast_futures)
-    {
-      auto results{f.get()};
-      if(check_equality(LINE(message), results.size(), 2ul))
-      {
-        check_equality(LINE(message), results[0], 0);
-        check_equality(LINE(message), results[1], 1);
-      }
-    }
-
-    for(auto& f : futures.slow_futures)
-    {
-      auto results{f.get()};
-      if(check_equality(LINE(message), results.size(), 2ul))
-      {
-        check_equality(LINE(message), results[0], 0);
-        check_equality(LINE(message), results[1], 1);
-      }
-    }
-  }
-
-  template<class ThreadModel, class... Args>
-  void threading_models_test::waiting_task(const std::size_t nTasks, const std::chrono::milliseconds millisecs, Args&&... args)
-  {
-    ThreadModel model{std::forward<Args>(args)...};
-    
-    for(int i{}; i < nTasks; ++i)
-    {
-      model.push(Wait{millisecs});
-    }
-
-    model.get();
-  }
-
-  template<class ThreadModel, class... Args>
-  std::vector<int> threading_models_test::waiting_task_return(const std::size_t nTasks, const std::chrono::milliseconds millisecs, Args&&... args)
-  {
-    ThreadModel model{std::forward<Args>(args)...};
-    
-    for(int i{}; i < nTasks; ++i)
-    {
-      model.push([millisecs, i]() {
-          Wait wait{millisecs};
-          wait();
-          return i;
-        }
-      );
-    }
-
-    return model.get();
-  }
-
   template<class ThreadModel, class Exception, class... Args>
   void threading_models_test::test_exceptions(std::string_view message, Args&&... args)
   {
@@ -254,12 +107,12 @@ namespace sequoia::unit_testing
   {
     Model threadModel;
 
-    UpdatableFunctor functor;
+    updatable u;
 
-    threadModel.push(functor, 0);
+    threadModel.push(u, 0);
 
     threadModel.get();
 	
-    check_equality(LINE(""), functor.get_data(), std::vector<int>{0});
+    check_equality(LINE(""), u.get_data(), std::vector<int>{0});
   }    
 }

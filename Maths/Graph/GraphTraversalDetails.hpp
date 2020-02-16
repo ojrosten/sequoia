@@ -97,7 +97,7 @@ namespace sequoia::maths::graph_impl
     using bitset = std::array<bool, G::order()>;
 
     [[nodiscard]]
-    constexpr static bitset make_bitset(const G& g)
+    constexpr static bitset make_bitset(const G&)
     {
       return bitset{};
     }
@@ -139,21 +139,21 @@ namespace sequoia::maths::graph_impl
   struct node_functor_processor<null_functor>
   {
     template<class ProcessingModel, class... Args>
-    constexpr static void process(ProcessingModel& model, null_functor nodeFunctor, Args... args) {}
+    constexpr static void process(ProcessingModel&, null_functor, Args...) {}
   };
 
   template<>
   struct node_functor_processor<null_functor&>
   {
     template<class ProcessingModel, class... Args>
-    constexpr static void process(ProcessingModel& model, null_functor nodeFunctor, Args... args) {}
+    constexpr static void process(ProcessingModel&, null_functor, Args...) {}
   };
 
   template<>
   struct node_functor_processor<const null_functor&>
   {
     template<class ProcessingModel, class... Args>
-    constexpr static void process(ProcessingModel& model, null_functor nodeFunctor, Args... args) {}
+    constexpr static void process(ProcessingModel&, null_functor, Args...) {}
   };
 
   template<class EdgeFunctor>
@@ -170,21 +170,21 @@ namespace sequoia::maths::graph_impl
   struct edge_functor_processor<null_functor>
   {
     template<class ProcessingModel, class... Args>
-    constexpr static void process(ProcessingModel& model, null_functor edgeFunctor, Args... args) {}
+    constexpr static void process(ProcessingModel&, null_functor, Args...) {}
   };
 
   template<>
   struct edge_functor_processor<null_functor&>
   {
     template<class ProcessingModel, class... Args>
-    constexpr static void process(ProcessingModel& model, null_functor edgeFunctor, Args... args) {}
+    constexpr static void process(ProcessingModel&, null_functor, Args...) {}
   };
 
   template<>
   struct edge_functor_processor<const null_functor&>
   {
     template<class ProcessingModel, class... Args>
-    constexpr static void process(ProcessingModel& model, null_functor edgeFunctor, Args... args) {}
+    constexpr static void process(ProcessingModel&, null_functor, Args...) {}
   };
 
   template<class G, class = void> struct comp_index_detector : std::false_type
@@ -205,9 +205,11 @@ namespace sequoia::maths::graph_impl
     constexpr static bool loop_matched(Iter begin, Iter current)
     {
       if constexpr (comp_index_detector_v<G>)
-        {
-          return (current->complementary_index() < distance(begin, current));
-        }
+      {
+        using index_type = typename G::edge_index_type;
+        const auto dist{static_cast<index_type>(distance(begin, current))};
+        return (current->complementary_index() < dist);
+      }
       else
       {
         for(auto i{begin}; i != current; ++i)
@@ -228,7 +230,7 @@ namespace sequoia::maths::graph_impl
   public:
     template<class Iter>
     [[nodiscard]]
-    constexpr bool loop_matched(Iter begin, Iter current) noexcept
+    constexpr bool loop_matched(Iter, Iter) noexcept
     {
       m_Matched = !m_Matched;
       return m_Matched;
@@ -309,7 +311,7 @@ namespace sequoia::maths::graph_impl
               {
                 const bool loop{[iter](const std::size_t currentNodeIndex){
                     if constexpr (G::flavour == graph_flavour::directed_embedded)
-                      return iter->target_node() == iter->soure_node();
+                      return iter->target_node() == iter->source_node();
                     else
                       return iter->target_node() == currentNodeIndex;
                   }(nodeIndex)
@@ -324,7 +326,7 @@ namespace sequoia::maths::graph_impl
                   }
                   else
                   {
-                    if(iter->soure_node() != nodeIndex) continue;
+                    if(iter->source_node() != nodeIndex) continue;
                   }
 
                   edge_functor_processor<EFTF>::process(taskProcessingModel, std::forward<EFTF>(edgeFirstTraversalFunctor), iter);

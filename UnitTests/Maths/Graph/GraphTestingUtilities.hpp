@@ -15,6 +15,8 @@
 #include "DataPool.hpp"
 #include "GraphImpl.hpp"
 
+#include "PerformanceTestCore.hpp"
+
 namespace sequoia::unit_testing
 {
   namespace impl
@@ -210,17 +212,17 @@ namespace sequoia::unit_testing
     return flavour != maths::graph_flavour::directed;
   }
 
-  template<class Logger>
-  class graph_checker : protected checker<Logger, performance_extender<Logger>, allocator_extender<Logger>>
+  template<class Logger, class... Extenders>
+  class graph_checker : public checker<Logger, Extenders...>
   {
   public:
-    using checker_t = checker<Logger, performance_extender<Logger>, allocator_extender<Logger>>;
-    
-    using checker_t::check_equality;
-    using checker_t::check;
-    using checker_t::check_exception_thrown;
-    using checker_t::check_equivalence;
-    using checker_t::check_regular_semantics;
+    using checker_t = checker<Logger, Extenders...>;
+
+    using checker<Logger, Extenders...>::checker;
+    graph_checker(const graph_checker&) = delete;
+
+    graph_checker& operator=(const graph_checker&) = delete;
+    graph_checker& operator=(graph_checker&&)      = delete;
 
     template<class G, class... NodeWeights, class E=typename G::edge_init_type>
     void check_graph(std::string_view description, const G& graph, std::initializer_list<std::initializer_list<E>> edges, const std::tuple<NodeWeights...>& nodeWeights)
@@ -263,20 +265,26 @@ namespace sequoia::unit_testing
         checker_t::check_equivalence(description, graph, std::move(edges));
       }
     }
+  protected:
+    graph_checker(graph_checker&&) noexcept = default;
+
+    ~graph_checker() = default;
   };
 
-  template<class Logger>
-  class graph_basic_test : public basic_test<Logger, graph_checker<Logger>>
+  template<class Logger, class... Extenders>
+  class graph_basic_test : public basic_test<Logger, graph_checker<Logger, Extenders...>>
   {
   public:
-    using basic_test<Logger, graph_checker<Logger>>::check_exception_thrown;
-    using basic_test<Logger, graph_checker<Logger>>::check_equality;
-    using basic_test<Logger, graph_checker<Logger>>::check_graph;
-    using basic_test<Logger, graph_checker<Logger>>::check_regular_semantics;
-    using basic_test<Logger, graph_checker<Logger>>::check;
+    using base_t = basic_test<Logger, graph_checker<Logger, Extenders...>>;
+    
+    using base_t::check_exception_thrown;
+    using base_t::check_equality;
+    using base_t::check_graph;
+    using base_t::check_regular_semantics;
+    using base_t::check;
 
     graph_basic_test(std::string_view name, concurrency_mode mode)
-      : basic_test<Logger, graph_checker<Logger>>{name}
+      : basic_test<Logger, graph_checker<Logger, Extenders...>>{name}
       , m_ConcurrencyMode{mode}
     {}
     
@@ -295,6 +303,7 @@ namespace sequoia::unit_testing
       check(combine_messages("Exception thrown during asynchronous execution of graph test:", sv, "\n"), Logger::mode == test_mode::false_positive);
     }
   protected:
+    [[nodiscard]]
     virtual std::string current_message() const override
     {
       const log_summary s{this->summary("", log_summary::duration{}) + m_AccumulatedSummaries};
@@ -304,24 +313,28 @@ namespace sequoia::unit_testing
     [[nodiscard]]
     concurrency_mode concurrent_execution() const noexcept { return m_ConcurrencyMode; }
   private:
-    using base_t = basic_test<Logger, graph_checker<Logger>>;
       
     log_summary m_AccumulatedSummaries{};
     concurrency_mode m_ConcurrencyMode{};
   };
 
-  using graph_unit_test = graph_basic_test<unit_test_logger<test_mode::standard>>;
-  using graph_false_positive_test = graph_basic_test<unit_test_logger<test_mode::false_positive>>;    
+  template<test_mode mode>
+  using regular_graph_test = graph_basic_test<unit_test_logger<mode>, regular_extender<unit_test_logger<mode>>>;
+
+  using graph_unit_test = regular_graph_test<test_mode::standard>;
+  using graph_false_positive_test = regular_graph_test<test_mode::false_positive>;    
        
   struct unsortable
   {
     int x{};
 
+    [[nodiscard]]
     friend constexpr bool operator==(const unsortable& lhs, const unsortable& rhs) noexcept
     {
       return lhs.x == rhs.x;
     }
 
+    [[nodiscard]]
     friend constexpr bool operator!=(const unsortable& lhs, const unsortable& rhs) noexcept
     {
       return !(lhs == rhs);

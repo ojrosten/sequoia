@@ -8,8 +8,6 @@
 #include "DataPoolTest.hpp"
 #include "DataPoolTestingUtilities.hpp"
 
-#include "UnitTestUtilities.hpp"
-
 namespace sequoia::unit_testing
 {
   [[nodiscard]]
@@ -23,8 +21,6 @@ namespace sequoia::unit_testing
     test_pooled();
     test_multi_pools();
     test_unpooled();
-
-    do_move_only_allocation_tests(*this);
   }
 
   data_sharing::data_pool<int> data_pool_test::make_int_pool(const int val)
@@ -204,32 +200,5 @@ namespace sequoia::unit_testing
     using namespace data_sharing;
     constexpr auto x = unpooled<double>::make(3.0);
     check_equality(LINE(""), x.get(), 3.0);
-  }
-
-  template<bool PropagateMove, bool PropagateSwap>
-  void data_pool_test::test_move_only_allocation()
-  {
-    using namespace data_sharing;
-    using pool_t = data_pool<int, shared_counting_allocator<int, true, PropagateMove, PropagateSwap>>;
-    using prediction_t = typename weak_equivalence_checker<pool_t>::prediction_type;
-
-    pool_t pool{};
-    auto elt{pool.make(-1)};
-    check_weak_equivalence(LINE(""), pool, prediction_t{{-1, 1}});
-    check_equality(LINE(""), elt.get(), -1);
-
-    pool_t clonePool{};
-    auto cloneElt{clonePool.make(-1)};
-    check_weak_equivalence(LINE(""), clonePool, prediction_t{{-1, 1}});
-    check_equality(LINE(""), cloneElt.get(), -1);
-
-    auto allocGetter{
-      [](const pool_t& pool){
-        return pool.get_allocator();
-      }
-    };
-
-    check_regular_semantics(LINE(""), pool_t{}, std::move(clonePool), pool_t{}, pool,
-                            move_only_allocation_info{allocGetter, move_only_allocation_predictions{1}});
   }
 }

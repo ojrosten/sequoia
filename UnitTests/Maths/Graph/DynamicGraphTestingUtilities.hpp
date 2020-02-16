@@ -128,37 +128,6 @@ namespace sequoia::unit_testing
     constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::shared_weight};
   };
 
-  struct custom_allocator_contiguous_edge_storage_traits
-  {
-    template <class T, class Sharing, class Traits> using storage_type = data_structures::partitioned_sequence<T, Sharing, Traits>;
-    template <class T, class Sharing> using traits_type = custom_partitioned_sequence_traits<T, Sharing>;
-
-    constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::agnostic};
-  };
-
-  struct custom_allocator_bucketed_edge_storage_traits
-  {
-    template <class T, class Sharing, class Traits> using storage_type = data_structures::bucketed_storage<T, Sharing, Traits>;
-    template <class T, class Sharing> using traits_type = custom_bucketed_storage_traits<T, Sharing>;
-
-    constexpr static maths::edge_sharing_preference edge_sharing{maths::edge_sharing_preference::agnostic};
-  };
-
-  template<class NodeWeight, bool=std::is_empty_v<NodeWeight>>
-  struct custom_node_weight_storage_traits
-  {
-    constexpr static bool throw_on_range_error{true};
-    constexpr static bool static_storage_v{};
-    constexpr static bool has_allocator{true};
-    template<class S> using container_type = std::vector<S, shared_counting_allocator<S, true, true, true>>;
-  };
-
-  template<class NodeWeight>
-  struct custom_node_weight_storage_traits<NodeWeight, true>
-  {
-    constexpr static bool has_allocator{};
-  };
-
   // Meta
 
   [[nodiscard]]
@@ -210,15 +179,21 @@ namespace sequoia::unit_testing
     class NodeWeightPooling,
     class EdgeStorageTraits,
     class NodeWeightStorageTraits,
-    class Logger=unit_test_logger<test_mode::standard>
+    class Logger,
+    class... Extenders
   >
-  class graph_operations : protected graph_checker<Logger>
+  class basic_graph_operations : protected graph_checker<Logger, Extenders...>
   {
   public:
     using graph_type = typename graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>::graph_type;   
-    
-    using graph_checker<Logger>::check_equality;
-    using graph_checker<Logger>::check_regular_semantics;
+
+    using checker_t = graph_checker<Logger, Extenders...>;
+
+    basic_graph_operations() = default;
+    basic_graph_operations(const basic_graph_operations&) = delete;
+
+    basic_graph_operations& operator=(const basic_graph_operations&) = delete;
+    basic_graph_operations& operator=(basic_graph_operations&&)      = delete;
     
     log_summary run()
     {
@@ -230,9 +205,51 @@ namespace sequoia::unit_testing
     log_summary recover_summary() const { return this->summary("", log_summary::duration{}); }
       
   protected:
+    basic_graph_operations(basic_graph_operations&&) = default;
+    ~basic_graph_operations() = default;
+    
     virtual void execute_operations() = 0;
   };
 
+  template
+  <
+    maths::graph_flavour GraphFlavour,      
+    class EdgeWeight,
+    class NodeWeight,      
+    class EdgeWeightPooling,
+    class NodeWeightPooling,
+    class EdgeStorageTraits,
+    class NodeWeightStorageTraits,
+    test_mode Mode
+  >
+  using regular_graph_operations
+  = basic_graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits, unit_test_logger<Mode>, regular_extender<unit_test_logger<Mode>>>;
+
+  template
+  <
+    maths::graph_flavour GraphFlavour,      
+    class EdgeWeight,
+    class NodeWeight,      
+    class EdgeWeightPooling,
+    class NodeWeightPooling,
+    class EdgeStorageTraits,
+    class NodeWeightStorageTraits
+  >
+  using graph_operations = regular_graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits, test_mode::standard>;
+
+  template
+  <
+    maths::graph_flavour GraphFlavour,      
+    class EdgeWeight,
+    class NodeWeight,      
+    class EdgeWeightPooling,
+    class NodeWeightPooling,
+    class EdgeStorageTraits,
+    class NodeWeightStorageTraits
+  >
+  using false_positive_graph_operations = regular_graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits, test_mode::false_positive>;
+  
+  
   template <class EdgeWeight, class NodeWeight>
   class graph_test_helper
   {

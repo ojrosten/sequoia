@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////
-//                 Copyright Oliver Rosten 2018.                  //
+//                 Copyright Oliver Rosten 2020.                  //
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
 //    (See accompanying file LICENSE.md or copy at                //
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
@@ -7,26 +7,23 @@
 
 #pragma once
 
-#include "UnitTestCore.hpp"
+#include "AllocationTestCore.hpp"
 
 #include "DataPool.hpp"
 
 namespace sequoia::unit_testing
 {
-  class data_pool_test final : public unit_test
+  class data_pool_allocation_test final : public move_only_allocation_test
   {
   public:
-    using unit_test::unit_test;
+    using move_only_allocation_test::move_only_allocation_test;
 
     [[nodiscard]]
     std::string_view source_file_name() const noexcept final;
+
+    template<bool PropagateMove, bool PropagateSwap>
+    void test_allocation();
   private:
     void run_tests() final;
-
-    void test_pooled();
-    void test_multi_pools();
-    void test_unpooled();
-
-    data_sharing::data_pool<int> make_int_pool(const int val);
   };
 }

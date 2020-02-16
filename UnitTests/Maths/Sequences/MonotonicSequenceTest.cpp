@@ -8,8 +8,6 @@
 #include "MonotonicSequenceTest.hpp"
 #include "MonotonicSequenceTestingUtilities.hpp"
 
-#include "UnitTestUtilities.hpp"
-
 namespace sequoia::unit_testing
 {
   [[nodiscard]]
@@ -23,8 +21,6 @@ namespace sequoia::unit_testing
     test_decreasing_sequence();
     test_static_decreasing_sequence();
     test_static_increasing_sequence();
-
-    do_allocation_tests(*this);
   }
 
   void monotonic_sequence_test::test_decreasing_sequence()
@@ -147,36 +143,5 @@ namespace sequoia::unit_testing
         u.mutate(u.begin()+1, u.begin()+4,[](const int i){ return i*2;});});
 
     check_equivalence(LINE(""), u, std::initializer_list<int>{2,3,3,4,4,5});
-  }
-
-  template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-  void monotonic_sequence_test::test_allocation()
-  {
-    using namespace maths;
-
-    using allocator = shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>;
-    using sequence = monotonic_sequence<int, std::less<int>, std::vector<int, allocator>>;
-  
-    sequence s(allocator{});
-    check_equivalence(LINE(""), s, std::initializer_list<int>{});
-    check_equality(LINE(""), s.get_allocator().allocs(), 0);
-
-    sequence t{{4, 3}, allocator{}};
-    check_equivalence(LINE(""), t, std::initializer_list<int>{4, 3});
-    check_equality(LINE(""), t.get_allocator().allocs(), 1);
-
-    auto getter{
-      [](const sequence& s){
-        return s.get_allocator();
-      }
-    };
-
-    auto mutator{
-      [](sequence& seq){
-        const auto val{seq.empty() ? 0 : seq.back() - 1};
-        seq.push_back(val);
-      }
-    };
-    check_regular_semantics(LINE(""), s, t, mutator, allocation_info<sequence, allocator>{getter, {0, {1, 1}, {1, 1}}});
-  }
+  }  
 }

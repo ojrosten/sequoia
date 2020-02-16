@@ -66,8 +66,13 @@ namespace sequoia
       : public graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>
     {
     public:
-      using graph_checker<unit_test_logger<test_mode::standard>>::check_equality;      
-      using graph_checker<unit_test_logger<test_mode::standard>>::check_graph;
+      using base_t = graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>;
+
+      using checker_t = typename base_t::checker_t;
+      
+      using checker_t::check_equality;      
+      using checker_t::check_graph;
+      using checker_t::check_regular_semantics;
 
     private:
       using GGraph = typename

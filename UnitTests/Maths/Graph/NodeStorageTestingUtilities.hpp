@@ -7,8 +7,7 @@
 
 #pragma once
 
-#include "UnitTestCore.hpp"
-#include "UnitTestUtilities.hpp"
+#include "AllocationTestCore.hpp"
 
 #include "NodeStorage.hpp"
 #include "StaticNodeStorage.hpp"
@@ -40,7 +39,7 @@ namespace sequoia::unit_testing
       using type = Nodes;
       
       template<class Logger>
-      static void check(std::string_view description, Logger& logger, const Nodes& nodes, const Nodes& prediction)
+      static void check(std::string_view, Logger&, const Nodes&, const Nodes&)
       {
       }
     };
@@ -69,9 +68,9 @@ namespace sequoia::unit_testing
       using equivalent_type = std::initializer_list<typename type::weight_type>;
 
       template<class Logger>
-      static void check(std::string_view description, Logger& logger, const Nodes& nodes, equivalent_type prediction)
+      static void check(std::string_view description, Logger& logger, const Nodes& nodes, equivalent_type)
       {
-        unit_testing::check(combine_messages(description, "Node storage should have zero size for empty node weights"), logger, !prediction.size());
+        unit_testing::check(combine_messages(description, "Node storage should have zero size for empty node weights"), logger, nodes.empty());
       }
     };
   }

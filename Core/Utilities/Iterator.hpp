@@ -32,7 +32,7 @@ namespace sequoia::utilities
     constexpr null_data_policy& operator=(null_data_policy&&) noexcept = default;
 
     [[nodiscard]]
-    friend constexpr bool operator==(const null_data_policy& lhs, const null_data_policy& rhs) noexcept
+    friend constexpr bool operator==(const null_data_policy&, const null_data_policy&) noexcept
     {
       return true;
     }

@@ -301,7 +301,7 @@ namespace sequoia::maths::graph_impl
     node_weight_container_type m_NodeWeights;
 
     // constructors impl
-    constexpr node_storage(std::true_type, const size_type n)
+    constexpr node_storage(std::true_type, const size_type)
       : m_NodeWeights{make_default_array(std::make_index_sequence<Traits::num_elements_v>{})} {}
 
     constexpr node_storage(std::false_type, const size_type n)
@@ -396,7 +396,7 @@ namespace sequoia::maths::graph_impl
     }        
 
     [[nodiscard]]
-    constexpr weight_proxy_type make_default_element(const std::size_t i)
+    constexpr weight_proxy_type make_default_element(const std::size_t)
     {
       return weight_proxy_type{weight_type{}};
     }
@@ -420,7 +420,7 @@ namespace sequoia::maths::graph_impl
     constexpr node_storage() noexcept = default;
 
     [[nodiscard]]
-    constexpr friend bool operator==(const node_storage& lhs, const node_storage& rhs) noexcept { return true;}
+    constexpr friend bool operator==(const node_storage&, const node_storage&) noexcept { return true;}
 
     [[nodiscard]]
     constexpr friend bool operator!=(const node_storage& lhs, const node_storage& rhs) noexcept { return !(lhs == rhs);}

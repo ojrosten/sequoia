@@ -5,11 +5,11 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-/*
 #include "AlgorithmsTest.hpp"
 #include "StatisticalAlgorithmsTest.hpp"
 #include "MonotonicSequenceTestingDiagnostics.hpp"
 #include "MonotonicSequenceTest.hpp"
+#include "MonotonicSequenceAllocationTest.hpp"
 
 #include "TypeTraitsTest.hpp"
 #include "UtilitiesTest.hpp"
@@ -20,8 +20,10 @@
 #include "IteratorTest.hpp"
 
 #include "DataPoolTest.hpp"
+#include "DataPoolAllocationTest.hpp"
 
 #include "ConcurrencyModelsTest.hpp"
+#include "ConcurrencyModelsPerformanceTest.hpp"
 
 #include "PartitionedDataTest.hpp"
 #include "PartitionedDataTestingDiagnostics.hpp"
@@ -37,13 +39,17 @@
 #include "EdgeTestingDiagnostics.hpp"
 
 #include "NodeStorageTest.hpp"
+#include "NodeStorageAllocationTest.hpp"
 #include "HeterogeneousNodeStorageTest.hpp"
 
 #include "GraphMetaTest.hpp"
 
 #include "DynamicGraphTestingDiagnostics.hpp"
 #include "DynamicGraphInitializationTest.hpp"
-#include "DynamicGraphCommonTest.hpp"
+#include "DynamicGraphUnweightedTest.hpp"
+#include "DynamicGraphWeightedTest.hpp"
+#include "DynamicGraphUnweightedAllocationTest.hpp"
+#include "DynamicGraphWeightedAllocationTest.hpp"
 #include "DynamicGraphEmbeddedTest.hpp"
 #include "DynamicGraphFixedTopologyTest.hpp"
 
@@ -59,7 +65,6 @@
 #include "StaticGraphTraversalsTest.hpp"
 
 #include "ExperimentalTest.hpp"
-*/
 
 #include "CommandLineArgumentsDiagnostics.hpp"
 #include "CommandLineArgumentsTest.hpp"

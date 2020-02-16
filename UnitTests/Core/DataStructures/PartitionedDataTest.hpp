@@ -18,10 +18,7 @@ namespace sequoia::unit_testing
 
     [[nodiscard]]
     std::string_view source_file_name() const noexcept final;
-  private:    
-    template<class Test>
-    friend void do_allocation_tests(Test&);
-
+  private:
     void run_tests() final;
 
     void test_storage();
@@ -35,15 +32,6 @@ namespace sequoia::unit_testing
 
     template<class T, class SharingPolicy, bool ThrowOnRangeError>
     void test_bucketed_capacity();
-
-    template<class T, class SharingPolicy, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-    void test_bucketed_allocation();
-
-    template<class T, class SharingPolicy, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-    void test_contiguous_allocation();
-    
-    template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
-    void test_allocation();
       
     template<class Traits, template<class> class SharingPolicy, template<class> class ReferencePolicy>
     void test_generic_iterator_properties();

@@ -20,7 +20,7 @@
 
     1. A non-trivial weight;
 
-    2. A record of the 'soure' node, from which the edge points to its target;
+    2. A record of the 'source' node, from which the edge points to its target;
 
     3. An index recording the location on the target node into which the edge is
     embedded.
@@ -392,7 +392,7 @@ namespace sequoia
     template<bool Inverted> constexpr bool inversion_v{inversion_constant<Inverted>::value};
 
     /*! \class edge
-        \brief Stores the soure node as well as the target node and an optional weight.
+        \brief Stores the source node as well as the target node and an optional weight.
       
      */
     
@@ -415,10 +415,10 @@ namespace sequoia
         class... Args,
         std::enable_if_t<!resolve_to_copy_constructor_v<edge, Args...>, int> = 0
       >
-      constexpr edge(const index_type soure, const index_type target, Args&&... args)
-        : decorated_edge_base<Weight, data_sharing::independent, WeightProxy, IndexType>{target, soure, std::forward<Args>(args)...}
+      constexpr edge(const index_type source, const index_type target, Args&&... args)
+        : decorated_edge_base<Weight, data_sharing::independent, WeightProxy, IndexType>{target, source, std::forward<Args>(args)...}
       {
-        if(soure == npos) throw std::runtime_error("Cannot initialize full edge using max value of index");
+        if(source == npos) throw std::runtime_error("Cannot initialize full edge using max value of index");
       }
 
       template
@@ -440,15 +440,15 @@ namespace sequoia
       constexpr edge& operator=(edge&&)          = default;
 
       [[nodiscard]]
-      constexpr index_type soure_node() const noexcept
+      constexpr index_type source_node() const noexcept
       {
         return this->auxiliary_index() < npos ? this->auxiliary_index() : this->target_node();
       }
       
-      constexpr void soure_node(const index_type soure) noexcept
+      constexpr void source_node(const index_type source) noexcept
       {
-        if(!inverted()) this->auxiliary_index(soure);
-        else            this->target_node(soure);
+        if(!inverted()) this->auxiliary_index(source);
+        else            this->target_node(source);
       }
 
       [[nodiscard]]
@@ -484,11 +484,11 @@ namespace sequoia
         class... Args,
         std::enable_if_t<!resolve_to_copy_constructor_v<embedded_edge, Args...>, int> = 0
       >
-      constexpr embedded_edge(const index_type soure, const index_type target, const index_type auxIndex, Args&&... args)
+      constexpr embedded_edge(const index_type source, const index_type target, const index_type auxIndex, Args&&... args)
         : decorated_edge_base<Weight, WeightSharingPolicy, WeightProxy, IndexType>{target, auxIndex, std::forward<Args>(args)...}
-        , m_HostIndex{soure}
+        , m_HostIndex{source}
       {
-        if(soure == npos) throw std::runtime_error("Cannot initialize full edge using max value of index");
+        if(source == npos) throw std::runtime_error("Cannot initialize full edge using max value of index");
       }
 
       template
@@ -519,12 +519,12 @@ namespace sequoia
       constexpr void complementary_index(const index_type auxIndex) noexcept { return this->auxiliary_index(auxIndex); }
 
       [[nodiscard]]
-      constexpr index_type soure_node() const noexcept { return !inverted() ? m_HostIndex : this->target_node(); }
+      constexpr index_type source_node() const noexcept { return !inverted() ? m_HostIndex : this->target_node(); }
       
-      constexpr void soure_node(const index_type soure) noexcept
+      constexpr void source_node(const index_type source) noexcept
       {
-        if(!inverted()) m_HostIndex = soure;
-        else            this->target_node(soure);
+        if(!inverted()) m_HostIndex = source;
+        else            this->target_node(source);
       }
 
       [[nodiscard]]
@@ -533,7 +533,7 @@ namespace sequoia
       [[nodiscard]]
       friend constexpr bool operator==(const embedded_edge& lhs, const embedded_edge& rhs)
       {
-        return (lhs.soure_node() == rhs.soure_node())
+        return (lhs.source_node() == rhs.source_node())
           && (lhs.inverted() == rhs.inverted())
           && (static_cast<const decorated_edge_base<Weight, WeightSharingPolicy, WeightProxy, IndexType>&>(lhs) ==
               static_cast<const decorated_edge_base<Weight, WeightSharingPolicy, WeightProxy, IndexType>&>(rhs));

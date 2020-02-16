@@ -99,24 +99,17 @@ namespace sequoia
       : public graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>
     {
     private:
-      using graph_t =
-        typename graph_operations
-        <
-          GraphFlavour,      
-          EdgeWeight,
-          NodeWeight,      
-          EdgeWeightPooling,
-          NodeWeightPooling,
-          EdgeStorageTraits,
-          NodeWeightStorageTraits
-        >::graph_type;
+      using base_t = graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>;
+
+      using graph_t = typename base_t::graph_type;
+      using checker_t = typename base_t::checker_t;
 
       using ei_t = typename graph_t::edge_init_type;
 
       using flavour = maths::graph_flavour;
 
-      using checker<unit_test_logger<test_mode::standard>>::check_equality;
-      using checker<unit_test_logger<test_mode::standard>>::check_range;
+      using checker_t::check_equality;
+      using checker_t::check_range;
 
       static constexpr bool undirected{maths::undirected(GraphFlavour)};
 
@@ -147,24 +140,17 @@ namespace sequoia
       : public graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>
     {
     private:
-      using graph_t =
-        typename graph_operations
-        <
-          GraphFlavour,      
-          EdgeWeight,
-          NodeWeight,      
-          EdgeWeightPooling,
-          NodeWeightPooling,
-          EdgeStorageTraits,
-          NodeWeightStorageTraits
-        >::graph_type;
+      using base_t = graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>;
+      
+      using graph_t = typename base_t::graph_type;
+      using checker_t = typename base_t::checker_t;
 
       using ei_t = typename graph_t::edge_init_type;
       using ew_t = std::vector<double>;
       
-      using checker<unit_test_logger<test_mode::standard>>::check_equality;
-      using checker<unit_test_logger<test_mode::standard>>::check_exception_thrown;
-      using checker<unit_test_logger<test_mode::standard>>::check_range;
+      using checker_t::check_equality;
+      using checker_t::check_exception_thrown;
+      using checker_t::check_range;
       
       void execute_operations() override;
 

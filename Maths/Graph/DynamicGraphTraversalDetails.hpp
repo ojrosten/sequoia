@@ -62,7 +62,7 @@ namespace sequoia::maths::graph_impl
   struct queue_constructor<G, std::stack<std::size_t, Container>>
   {
     [[nodiscard]]
-    static auto make(const G& g)
+    static auto make(const G&)
     {
       return std::stack<std::size_t, Container>{};
     }
@@ -72,7 +72,7 @@ namespace sequoia::maths::graph_impl
   struct queue_constructor<G, std::queue<std::size_t, Container>>
   {
     [[nodiscard]]
-    static auto make(const G& g)
+    static auto make(const G&)
     {
       return std::queue<std::size_t, Container>{};
     }

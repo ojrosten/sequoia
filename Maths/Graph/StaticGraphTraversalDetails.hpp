@@ -61,7 +61,7 @@ namespace sequoia::maths::graph_impl
   template <class G>
   struct queue_constructor<G, data_structures::static_stack<std::size_t, G::order()>>
   {
-    constexpr static auto make(const G& g)
+    constexpr static auto make(const G&)
     {
       return data_structures::static_stack<std::size_t, G::order()>{};
     }
@@ -71,7 +71,7 @@ namespace sequoia::maths::graph_impl
   struct queue_constructor<G, data_structures::static_queue<std::size_t, G::order()>>
   {
     [[nodiscard]]
-    constexpr static auto make(const G& g)
+    constexpr static auto make(const G&)
     {
       return data_structures::static_queue<std::size_t, G::order()>{};
     }

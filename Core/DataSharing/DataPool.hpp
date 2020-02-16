@@ -37,7 +37,7 @@ namespace sequoia::data_sharing
     }
 
     [[nodiscard]]
-    friend constexpr bool operator==(const unpooled& lhs, const unpooled& rhs) noexcept
+    friend constexpr bool operator==(const unpooled&, const unpooled&) noexcept
     {
       return true;
     }

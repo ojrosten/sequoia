@@ -69,7 +69,6 @@ namespace sequoia
       using base_t = graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>;
       
       using graph_t = typename base_t::graph_type;
-
       
       void execute_operations() override
       {
@@ -81,6 +80,7 @@ namespace sequoia
       using base_t::check_equality;      
       using base_t::check_graph;
       using base_t::check_equivalence;
+      using base_t::check_regular_semantics;
     };
   }
 }

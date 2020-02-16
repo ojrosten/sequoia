@@ -23,36 +23,13 @@ namespace sequoia::unit_testing
 
     void test_task_queue();
 
-    void test_waiting_task(const std::chrono::milliseconds millisecs);
-    void test_waiting_task_return(const std::chrono::milliseconds millisecs);
-
-    template<class ThreadModel, class... Args>
-    void waiting_task(const std::size_t nTasks, const std::chrono::milliseconds millisecs, Args&&... args);
-
-    template<class ThreadModel, class... Args>
-    std::vector<int> waiting_task_return(const std::size_t nTasks, const std::chrono::milliseconds millisecs, Args&&... args);
-
-    void check_return_values(std::string_view message, performance_results<std::vector<int>>&& futures);        
-
     template<class ThreadModel, class Exception, class... Args>
     void test_exceptions(std::string_view message, Args&&... args);
 
     template<class Model> void test_functor_update();
   };
 
-  class Wait
-  {
-    std::chrono::milliseconds m_Wait;
-  public:      
-    Wait(const std::chrono::milliseconds millisecs) : m_Wait{millisecs} {}
-      
-    void operator()() const
-    {
-      std::this_thread::sleep_for(m_Wait);
-    }
-  };
-
-  class UpdatableFunctor
+  class updatable
   {
   public:
     void operator()(const int x)

@@ -49,7 +49,7 @@ namespace sequoia::parsing::commandline
               if(!infoIter->second.fn)
                 throw std::logic_error{error("Commandline option not bound to a function object")};
 
-              operations.push_back(operation{infoIter->second.fn});
+              operations.push_back(operation{infoIter->second.fn, {}});
               if(infoIter->second.parameters.empty())
                 infoIter = info.end();
 

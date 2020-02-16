@@ -8,7 +8,7 @@
 #pragma once
 
 #include "GraphTraversalTestingUtilities.hpp"
-#include "DynamicGraphTestingUtilities.hpp"
+#include "DynamicGraphPerformanceTestingUtilities.hpp"
 
 #include "ConcurrencyModels.hpp"
 
@@ -16,7 +16,7 @@
 
 namespace sequoia::unit_testing
 {
-  class NodeTracker
+  class node_tracker
   {
   public:
     void clear() noexcept { m_Order.clear(); }
@@ -30,12 +30,12 @@ namespace sequoia::unit_testing
   };
 
   template<class G, class T>
-  class EdgeTracker
+  class edge_tracker
   {
   public:
     using result_type = std::vector<std::pair<std::size_t, std::size_t>>;
       
-    EdgeTracker(const G& graph) : m_Graph(graph) {}
+    edge_tracker(const G& graph) : m_Graph(graph) {}
       
     void clear() noexcept { m_Order.clear(); }
 
@@ -105,14 +105,16 @@ namespace sequoia::unit_testing
     : public graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>
   {
   private:
-    using Connectivity = typename
-      graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>::graph_type;
+    using base_t = graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>;
+    
+    using graph_t   = typename base_t::graph_type;
+    using checker_t = typename base_t::checker_t;
 
     using edge_results = std::vector<std::pair<std::size_t, std::size_t>>;
 
-    using graph_checker<unit_test_logger<test_mode::standard>>::check_equality;      
-    using graph_checker<unit_test_logger<test_mode::standard>>::check_exception_thrown;
-    using graph_checker<unit_test_logger<test_mode::standard>>::check;
+    using checker_t::check_equality;      
+    using checker_t::check_exception_thrown;
+    using checker_t::check;
       
     void execute_operations() override
     {        
@@ -132,13 +134,13 @@ namespace sequoia::unit_testing
 
     // true_types correspond BFS
     template<class NTracker, class ETracker, class ETracker2>
-    void test_square_graph(const NTracker& tracker, const ETracker& eTracker, const ETracker2& eTracker2, const std::size_t start, const bool mutualInfo, std::true_type);
+    void test_square_graph(const NTracker& tracker, const ETracker& eTracker, const ETracker2& eTracker2, const std::size_t start, const bool, std::true_type);
 
     template<class NTracker, class ETracker>
     void test_square_graph(const NTracker& tracker, const ETracker& eTracker, const std::size_t start, const bool mutualInfo, std::true_type);
 
     template<class NTracker, class ETracker, class ETracker2>
-    void test_square_graph(const NTracker& tracker, const ETracker& eTracker, const ETracker2& eTracker2, const std::size_t start, const bool mutualInfo, std::false_type);
+    void test_square_graph(const NTracker& tracker, const ETracker& eTracker, const ETracker2& eTracker2, const std::size_t start, const bool, std::false_type);
 
     template<class NTracker, class ETracker>
     void test_square_graph(const NTracker& tracker, const ETracker& eTracker, const std::size_t start, const bool mutualInfo, std::false_type);
@@ -161,21 +163,15 @@ namespace sequoia::unit_testing
     {
     private:
       using UndirectedType = std::bool_constant<maths::undirected(GraphFlavour)>;
-      using graph_t = typename
-        graph_operations
-        <
-          GraphFlavour,
-          EdgeWeight,
-          NodeWeight,
-          EdgeWeightPooling,
-          NodeWeightPooling,
-          EdgeStorageTraits,
-          NodeWeightStorageTraits
-        >::graph_type;
 
-      using graph_checker<unit_test_logger<test_mode::standard>>::check_equality;      
-      using graph_checker<unit_test_logger<test_mode::standard>>::check_exception_thrown;
-      using graph_checker<unit_test_logger<test_mode::standard>>::check;
+      using base_t = graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>;
+      
+      using graph_t = typename base_t::graph_type;
+      using checker_t = typename base_t::checker_t;
+
+      using checker_t::check_equality;      
+      using checker_t::check_exception_thrown;
+      using checker_t::check;
       
       void execute_operations() override
       {
@@ -201,25 +197,19 @@ namespace sequoia::unit_testing
       class NodeWeightStorageTraits
     >
     class test_weighted_BFS_tasks
-      : public graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>
+      : public graph_performance_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>
     {
     private:
       using UndirectedType = std::bool_constant<maths::undirected(GraphFlavour)>;
-      using graph_t = typename
-        graph_operations
-        <
-          GraphFlavour,
-          EdgeWeight,
-          NodeWeight,
-          EdgeWeightPooling,
-          NodeWeightPooling,
-          EdgeStorageTraits,
-          NodeWeightStorageTraits
-        >::graph_type;
 
-      using graph_checker<unit_test_logger<test_mode::standard>>::check_equality;      
-      using graph_checker<unit_test_logger<test_mode::standard>>::check_relative_performance;
-      using graph_checker<unit_test_logger<test_mode::standard>>::check;
+      using base_t = graph_performance_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>;
+
+      using graph_t   = typename base_t::graph_type;
+      using checker_t = typename base_t::checker_t;
+
+      using checker_t::check_equality;      
+      using checker_t::check_relative_performance;
+      using checker_t::check;
       
       void execute_operations() override
       {

@@ -105,9 +105,9 @@ namespace sequoia::unit_testing
       }
     };
 
-    Connectivity network;
-    NodeTracker discovery, discovery2;
-    EdgeTracker<Connectivity, Traverser> edgeDiscovery{network}, edgeDiscovery2{network};
+    graph_t network;
+    node_tracker discovery, discovery2;
+    edge_tracker<graph_t, Traverser> edgeDiscovery{network}, edgeDiscovery2{network};
 
     if constexpr(undirected)
     {
@@ -476,7 +476,7 @@ namespace sequoia::unit_testing
     EdgeWeightPooling,
     NodeWeightPooling,
     EdgeStorageTraits,
-    NodeWeightStorageTraits>::test_square_graph(const NTracker& tracker, const ETracker& eTracker, const ETracker2& eTracker2, const std::size_t start, const bool mutualInfo, std::true_type)
+    NodeWeightStorageTraits>::test_square_graph(const NTracker& tracker, const ETracker& eTracker, const ETracker2& eTracker2, const std::size_t start, const bool, std::true_type)
   {
     std::vector<std::size_t> expected;
     edge_results edgeAnswers, edgeAnswers2;
@@ -551,7 +551,7 @@ namespace sequoia::unit_testing
     EdgeWeightPooling,
     NodeWeightPooling,
     EdgeStorageTraits,
-    NodeWeightStorageTraits>::test_square_graph(const NTracker& tracker, const ETracker& eTracker, const ETracker2& eTracker2, const std::size_t start, const bool mutualInfo, std::false_type)
+    NodeWeightStorageTraits>::test_square_graph(const NTracker& tracker, const ETracker& eTracker, const ETracker2& eTracker2, const std::size_t start, const bool, std::false_type)
   {
     std::vector<std::size_t> expected;
     edge_results edgeAnswers, edgeAnswers2;
@@ -631,7 +631,7 @@ namespace sequoia::unit_testing
   {
     auto graph{generate_test_graph()};
 
-    NodeTracker tracker;
+    node_tracker tracker;
     maths::priority_search(graph, false, 0, tracker);
 
     auto order = tracker.order();
