@@ -1,35 +1,35 @@
-	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 24
+	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 30
 	[sequoia::utilities::protective_wrapper<int, false>]
 	operator== returned false
 
-	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 24
+	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 30
 	[sequoia::utilities::protective_wrapper<int, false>]
 	operator!= returned true
 
-	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 24
+	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 30
 	[int]
 	operator== returned false
 	Obtained : 1
 	Predicted: 0
 
 
-	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 32
+	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 38
 	[sequoia::utilities::protective_wrapper<std::__1::vector<int, std::__1::allocator<int> >, false>]
 	operator== returned false
 
-	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 32
+	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 38
 	[sequoia::utilities::protective_wrapper<std::__1::vector<int, std::__1::allocator<int> >, false>]
 	operator!= returned true
 
-	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 32
+	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 38
 	[std::__1::vector<int, std::__1::allocator<int> >]
 	operator== returned false
 
-	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 32
+	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 38
 	[std::__1::vector<int, std::__1::allocator<int> >]
 	operator!= returned true
 
-	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 32
+	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 38
 	Container size wrong
 	[long]
 	operator== returned false
@@ -37,23 +37,23 @@
 	Predicted: 1
 
 
-	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 35
+	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 41
 	[sequoia::utilities::protective_wrapper<std::__1::vector<int, std::__1::allocator<int> >, false>]
 	operator== returned false
 
-	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 35
+	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 41
 	[sequoia::utilities::protective_wrapper<std::__1::vector<int, std::__1::allocator<int> >, false>]
 	operator!= returned true
 
-	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 35
+	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 41
 	[std::__1::vector<int, std::__1::allocator<int> >]
 	operator== returned false
 
-	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 35
+	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 41
 	[std::__1::vector<int, std::__1::allocator<int> >]
 	operator!= returned true
 
-	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 35 element 0
+	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 41 element 0
 
 	[int]
 	operator== returned false
@@ -61,23 +61,23 @@
 	Predicted: 1
 
 
-	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 38
+	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 44
 	[sequoia::utilities::protective_wrapper<std::__1::vector<int, std::__1::allocator<int> >, false>]
 	operator== returned false
 
-	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 38
+	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 44
 	[sequoia::utilities::protective_wrapper<std::__1::vector<int, std::__1::allocator<int> >, false>]
 	operator!= returned true
 
-	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 38
+	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 44
 	[std::__1::vector<int, std::__1::allocator<int> >]
 	operator== returned false
 
-	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 38
+	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 44
 	[std::__1::vector<int, std::__1::allocator<int> >]
 	operator!= returned true
 
-	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 38 element 0
+	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 44 element 0
 
 	[int]
 	operator== returned false
@@ -85,15 +85,15 @@
 	Predicted: 1
 
 
-	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 46
+	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 52
 	[sequoia::utilities::protective_wrapper<sequoia::unit_testing::data, false>]
 	operator== returned false
 
-	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 46
+	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 52
 	[sequoia::utilities::protective_wrapper<sequoia::unit_testing::data, false>]
 	operator!= returned true
 
-	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 46
+	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 52
 	[sequoia::unit_testing::data]
 	operator== returned false
 	Obtained : 00

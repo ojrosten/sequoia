@@ -683,18 +683,18 @@
 
 	../UnitTests/UnitTestFramework/PerformanceTestDiagnostics.cpp, Line 30:
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
-	Fast Task duration: 0.00132986s +- 3 * 6.69578e-05
-	Slow Task duration: 0.00135638s +- 3 * 3.77148e-05 [1.01994; (2, 2)]
+	Fast Task duration: 0.00138974s +- 3 * 1.32873e-05
+	Slow Task duration: 0.00138584s +- 3 * 9.35181e-06 [0.9972; (2, 2)]
 
 	../UnitTests/UnitTestFramework/PerformanceTestDiagnostics.cpp, Line 34:
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
-	Fast Task duration: 0.00131394s +- 3 * 3.82193e-05
-	Slow Task duration: 0.00129897s +- 3 * 1.43761e-05 [0.988612; (2, 3)]
+	Fast Task duration: 0.0013593s +- 3 * 5.645e-05
+	Slow Task duration: 0.00134893s +- 3 * 5.04671e-05 [0.992376; (2, 3)]
 
 	../UnitTests/UnitTestFramework/PerformanceTestDiagnostics.cpp, Line 38:
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
-	Fast Task duration: 0.00130978s +- 3 * 0.000134087
-	Slow Task duration: 0.00589602s +- 3 * 0.00167419 [4.50155; (2, 2.5)]
+	Fast Task duration: 0.00138404s +- 3 * 1.39835e-05
+	Slow Task duration: 0.00502966s +- 3 * 0.000242835 [3.63405; (2, 2.5)]
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 51:
 	Broken equality Equality operator is inconsistent
@@ -6083,14 +6083,14 @@
 	False Positive Failure:
 		../UnitTests/UnitTestFramework/PerformanceTestDiagnostics.cpp, Line 67:
 	Performance Test which should pass
-	Fast Task duration: 0.00115887s +- 3 * 0.000101205
-	Slow Task duration: 0.00222288s +- 3 * 9.25646e-05 [1.91814; (1.8, 2.1)]
+	Fast Task duration: 0.00121703s +- 3 * 0.000112217
+	Slow Task duration: 0.00215678s +- 3 * 5.39375e-05 [1.77217; (1.8, 2.1)]
 
 	False Positive Failure:
 		../UnitTests/UnitTestFramework/PerformanceTestDiagnostics.cpp, Line 68:
 	Performance Test which should pass
-	Fast Task duration: 0.00111796s +- 3 * 0.000105963
-	Slow Task duration: 0.00431551s +- 3 * 0.000341771 [3.86016; (3.6, 4.1)]
+	Fast Task duration: 0.00115527s +- 3 * 5.29914e-05
+	Slow Task duration: 0.00450101s +- 3 * 0.000459313 [3.89608; (3.6, 4.1)]
 
 	False Positive Failure:
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 298
