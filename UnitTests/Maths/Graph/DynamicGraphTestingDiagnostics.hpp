@@ -41,7 +41,7 @@ namespace sequoia::unit_testing
     using base_t = false_positive_graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>;
       
     using graph_t = typename base_t::graph_type;
-    using checker_t = typename base_t::checker_t;
+    using checker_t = typename base_t::checker_type;
 
     using checker_t::check_equality;      
     using checker_t::check_exception_thrown;

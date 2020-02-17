@@ -102,7 +102,7 @@ namespace sequoia
       using base_t = graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>;
 
       using graph_t = typename base_t::graph_type;
-      using checker_t = typename base_t::checker_t;
+      using checker_t = typename base_t::checker_type;
 
       using ei_t = typename graph_t::edge_init_type;
 
@@ -143,7 +143,7 @@ namespace sequoia
       using base_t = graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>;
       
       using graph_t = typename base_t::graph_type;
-      using checker_t = typename base_t::checker_t;
+      using checker_t = typename base_t::checker_type;
 
       using ei_t = typename graph_t::edge_init_type;
       using ew_t = std::vector<double>;

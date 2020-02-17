@@ -8,7 +8,6 @@
 #pragma once
 
 #include "AllocationTestCore.hpp"
-#include "UnitTestUtilities.hpp"
 
 namespace sequoia::unit_testing
 {

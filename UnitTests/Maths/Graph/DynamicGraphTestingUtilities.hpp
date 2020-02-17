@@ -187,7 +187,7 @@ namespace sequoia::unit_testing
   public:
     using graph_type = typename graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>::graph_type;   
 
-    using checker_t = graph_checker<Logger, Extenders...>;
+    using checker_type = graph_checker<Logger, Extenders...>;
 
     basic_graph_operations() = default;
     basic_graph_operations(const basic_graph_operations&) = delete;

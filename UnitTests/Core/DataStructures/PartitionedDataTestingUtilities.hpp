@@ -8,7 +8,6 @@
 #pragma once
 
 #include "UnitTestCore.hpp"
-#include "UnitTestUtilities.hpp"
 
 #include "PartitionedData.hpp"
 
