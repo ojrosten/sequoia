@@ -42,12 +42,6 @@ namespace sequoia::unit_testing
   template<class T> constexpr bool has_equivalence_checker_v{template_class_is_instantiable_v<equivalence_checker, T>};
   template<class T> constexpr bool has_weak_equivalence_checker_v{template_class_is_instantiable_v<weak_equivalence_checker, T>};
   template<class T> constexpr bool has_detailed_equality_checker_v{template_class_is_instantiable_v<detailed_equality_checker, T>};
-
-  template<class Logger, class T, class S, class... U>
-  bool check(std::string_view description, Logger& logger, equivalence_tag, const T& value, S&& s, U&&... u);
-
-  template<class Logger, class T, class S, class... U>
-  bool check(std::string_view description, Logger& logger, weak_equivalence_tag, const T& value, S&& s, U&&... u);
   
   template<class Logger, class T> bool check_equality(std::string_view description, Logger& logger, const T& value, const T& prediction);
 

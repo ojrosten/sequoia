@@ -99,7 +99,7 @@ namespace sequoia
     bool check(std::string_view description, Logger& logger, equality_tag, const T& value, const T& prediction)
     {
       constexpr bool delegate{has_detailed_equality_checker_v<T> || (is_container_v<T> && !is_serializable_v<T>)};
-       
+
       static_assert(delegate || is_serializable_v<T> || is_equal_to_comparable_v<T>,
                     "Provide either a specialization of detailed_equality_checker or string_maker and/or operator==");
       
@@ -220,20 +220,6 @@ namespace sequoia
     {
       return check_equality(description, logger, value, true);
     }
-
-
-    template<class T>
-    class within_tolerance
-    {
-      T m_Tol{};
-    public:
-      constexpr explicit within_tolerance(T tol) : m_Tol{tol} {};
-
-      constexpr bool operator()(const T& value, const T& prediction) const noexcept
-      {
-        return  (value >= prediction - m_Tol) && (value <= prediction + m_Tol);
-      }        
-    };
 
     template<class E, class Logger, class Fn>
     bool check_exception_thrown(std::string_view description, Logger& logger, Fn&& function)

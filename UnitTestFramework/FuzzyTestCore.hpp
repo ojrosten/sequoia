@@ -54,5 +54,19 @@ namespace sequoia::unit_testing
 
   using fuzzy_test                = basic_fuzzy_test<test_mode::standard>;
   using fuzzy_false_negative_test = basic_fuzzy_test<test_mode::false_negative>;
-  using fuzzy_false_positive_test = basic_fuzzy_test<test_mode::false_positive>;  
+  using fuzzy_false_positive_test = basic_fuzzy_test<test_mode::false_positive>;
+
+  template<class T>
+  class within_tolerance
+  {
+    T m_Tol{};
+  public:
+    constexpr explicit within_tolerance(T tol) : m_Tol{std::move(tol)} {};
+
+    [[nodiscard]]
+    constexpr bool operator()(const T& value, const T& prediction) const noexcept
+    {
+      return  (value >= prediction - m_Tol) && (value <= prediction + m_Tol);
+    }        
+  };
 }
