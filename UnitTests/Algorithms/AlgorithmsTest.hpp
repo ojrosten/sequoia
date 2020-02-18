@@ -11,10 +11,10 @@
 
 namespace sequoia::unit_testing
 {
-  class algorithms_test final : public unit_test
+  class algorithms_test final : public free_test
   {
   public:
-    using unit_test::unit_test;
+    using free_test::free_test;
     
     [[nodiscard]]
     std::string_view source_file_name() const noexcept final;

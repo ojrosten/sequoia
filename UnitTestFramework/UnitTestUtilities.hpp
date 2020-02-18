@@ -11,8 +11,6 @@
     \brief Utilties for use in unit tests.
 */
 
-#include <memory>
-
 namespace sequoia::unit_testing
 {
   class no_default_constructor
@@ -20,19 +18,23 @@ namespace sequoia::unit_testing
   public:
     constexpr explicit no_default_constructor(int i) : m_i{i} {}
 
+    [[nodiscard]]
     constexpr int get() const noexcept { return m_i; }
 
+    [[nodiscard]]
     constexpr friend bool operator==(const no_default_constructor& lhs, const no_default_constructor& rhs) noexcept
     {
       return lhs.get() == rhs.get();
     }
 
+    [[nodiscard]]
     constexpr friend bool operator!=(const no_default_constructor& lhs, const no_default_constructor& rhs) noexcept
     {
       return !(lhs == rhs);
     }
 
-    template<class Stream> friend Stream& operator<<(Stream& stream, const no_default_constructor& ndc)
+    template<class Stream>
+    friend Stream& operator<<(Stream& stream, const no_default_constructor& ndc)
     {
       stream << ndc.get();
       return stream;

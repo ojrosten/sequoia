@@ -235,12 +235,6 @@ namespace sequoia
       }        
     };
 
-    template<class Logger, class T, class Compare>
-    bool check_approx_equality(std::string_view description, Logger& logger, const T& value, const T& prediction, Compare compare)
-    {
-      return check(description, logger, compare(value, prediction));
-    }
-
     template<class E, class Logger, class Fn>
     bool check_exception_thrown(std::string_view description, Logger& logger, Fn&& function)
     {
@@ -542,12 +536,6 @@ namespace sequoia
       {
         return unit_testing::check_weak_equivalence(description, logger(), value, std::forward<S>(s), std::forward<U>(u)...);
       }
-      
-      template<class T, class Compare>
-      bool check_approx_equality(std::string_view description, const T& prediction, const T& value, Compare compare)
-      {
-        return unit_testing::check_approx_equality(description, logger(), value, prediction, std::move(compare));
-      }
 
       bool check(std::string_view description, const bool value)
       {
@@ -615,41 +603,6 @@ namespace sequoia
       {
         return static_cast<const Logger&>(*this);
       }
-    };
-
-    template<class Logger>
-    class regular_extender
-    {
-    public:
-      regular_extender(Logger& logger) : m_Logger{logger} {}
-
-      regular_extender(const regular_extender&)            = delete;
-      regular_extender& operator=(const regular_extender&) = delete;
-
-      template<class T, std::enable_if_t<std::is_copy_constructible_v<T>, int> = 0>
-      void check_regular_semantics(std::string_view description, const T& x, const T& y)
-      {
-        unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), m_Logger, x, y);
-      }
-
-      template<class T, class Mutator, std::enable_if_t<std::is_copy_constructible_v<T>, int> = 0>
-      void check_regular_semantics(std::string_view description, const T& x, const T& y, Mutator m)
-      {
-        unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), m_Logger, x, y, m);
-      }
-
-      template<class T, class... Allocators, std::enable_if_t<!std::is_copy_constructible_v<T>, int> = 0>
-      void check_regular_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone)
-      {
-        unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), m_Logger, std::move(x), std::move(y), xClone, yClone);
-      }
-    protected:
-       regular_extender(regular_extender&&) noexcept = default;
-      ~regular_extender() = default;
-
-      regular_extender& operator=(regular_extender&&) noexcept = default;
-    private:
-      Logger& m_Logger;
     };
   }
 }

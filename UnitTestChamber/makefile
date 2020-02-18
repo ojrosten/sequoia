@@ -1,6 +1,6 @@
 BUILDROOT    := ../build/native
 BUILDDIR     := $(BUILDROOT)/UnitTestChamber
-LIBDIRS      := ../Core ../Maths ../Experimental ../Algorithms ../Parsing ../UnitTestFramework
+LIBDIRS      := ../Core ../Maths ../Experimental ../Algorithms ../Parsing ../UnitTestFramework ../UnitTestCommon
 UTBUILDDIR   := $(BUILDDIR)/UnitTests
 UTDIR        := ../UnitTests
 

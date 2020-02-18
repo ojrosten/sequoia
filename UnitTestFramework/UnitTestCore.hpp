@@ -8,92 +8,47 @@
 #pragma once
 
 /*! \file UnitTestCore.hpp
-    \brief Core functionality for the unit testing framework.
+    \brief Extension for testing of regular semantics.
 */
 
-#include "ConcreteEqualityCheckers.hpp"
+#include "FreeTestCore.hpp"
 
 namespace sequoia::unit_testing
 {
-  namespace impl
-  {
-    [[nodiscard]]
-    std::string format(std::string_view s);
-
-    [[nodiscard]]
-    std::string make_message(std::string_view tag, std::string_view currentMessage, std::string_view exceptionMessage, const bool exceptionsDetected);
-  }
-  
-  class test
+  template<class Logger>
+  class regular_extender
   {
   public:
-    explicit test(std::string_view name) : m_Name{name} {}
+    explicit regular_extender(Logger& logger) : m_Logger{logger} {}
 
-    virtual ~test() = default;
+    regular_extender(const regular_extender&)            = delete;
+    regular_extender& operator=(const regular_extender&) = delete;
+    regular_extender& operator=(regular_extender&&) = delete;
 
-    virtual log_summary execute() = 0;
+    template<class T, std::enable_if_t<std::is_copy_constructible_v<T>, int> = 0>
+    void check_regular_semantics(std::string_view description, const T& x, const T& y)
+    {
+      unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), m_Logger, x, y);
+    }
 
-    [[nodiscard]]
-    virtual std::string_view source_file_name() const noexcept = 0;
+    template<class T, class Mutator, std::enable_if_t<std::is_copy_constructible_v<T>, int> = 0>
+    void check_regular_semantics(std::string_view description, const T& x, const T& y, Mutator m)
+    {
+      unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), m_Logger, x, y, m);
+    }
 
-    [[nodiscard]]
-    std::string_view name() const noexcept { return m_Name; }
+    template<class T, class... Allocators, std::enable_if_t<!std::is_copy_constructible_v<T>, int> = 0>
+    void check_regular_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone)
+    {
+      unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), m_Logger, std::move(x), std::move(y), xClone, yClone);
+    }
   protected:
-    
-    test(const test&)     = default;
-    test(test&&) noexcept = default;
-
-    test& operator=(const test&)     = default;
-    test& operator=(test&&) noexcept = default;
+    regular_extender(regular_extender&&) noexcept = default;
+    ~regular_extender() = default;
   private:
-    std::string m_Name;
+    Logger& m_Logger;
   };
-    
-  template<class Logger, class Checker>
-  class basic_test : public test, protected Checker
-  {
-  public:      
-    explicit basic_test(std::string_view name) : test{name} {}
-
-    basic_test(const basic_test&) = delete;
-
-    basic_test& operator=(const basic_test&) = delete;
-    basic_test& operator=(basic_test&&)      = delete;
-    
-    log_summary execute() override
-    {
-      using namespace std::chrono;
-      const auto time{steady_clock::now()};
-      try
-      {
-        run_tests();
-      }
-      catch(const std::exception& e)
-      {         
-        Checker::log_critical_failure(make_message("Unexpected", e.what()));
-      }
-      catch(...)
-      {
-        Checker::log_critical_failure(make_message("Unknown", ""));
-      }
-
-      return Checker::summary(name(), steady_clock::now() - time);
-    }
-  protected:
-    basic_test(basic_test&&) noexcept = default;
-    
-    virtual void run_tests() = 0;
-
-    [[nodiscard]]
-    virtual std::string current_message() const { return std::string{Checker::current_message()}; }
-
-    [[nodiscard]]
-    std::string make_message(std::string_view tag, std::string_view exceptionMessage) const
-    {
-      return impl::make_message(tag, current_message(), exceptionMessage, Checker::exceptions_detected_by_sentinel());
-    }
-  };
-
+  
   template<test_mode mode>
   using regular_checker = checker<unit_test_logger<mode>, regular_extender<unit_test_logger<mode>>>;
   
@@ -102,12 +57,5 @@ namespace sequoia::unit_testing
 
   using unit_test           = regular_test<test_mode::standard>;
   using false_negative_test = regular_test<test_mode::false_negative>;
-  using false_positive_test = regular_test<test_mode::false_positive>;
-
-  enum class concurrency_mode{ serial=-1, family, test, deep};
-
-  [[nodiscard]]
-  std::string report_line(std::string file, const int line, const std::string_view message);
-
-  #define LINE(message) report_line(__FILE__, __LINE__, message)    
+  using false_positive_test = regular_test<test_mode::false_positive>;  
 }
