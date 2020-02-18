@@ -15,10 +15,29 @@
 
 namespace sequoia::unit_testing
 {
+  namespace impl
+  {
+    template<class Compare>
+    struct fuzzy_compare
+    {
+      explicit fuzzy_compare(Compare c) : compare{std::move(c)} {}
+      
+      Compare compare;
+    };
+  }
+  
   template<class Logger, class T, class Compare>
-  bool check_approx_equality(std::string_view description, Logger& logger, const T& value, const T& prediction, Compare compare)
+  bool check_approx_equality(std::string_view description, Logger& logger, Compare compare, const T& value, const T& prediction)
   {
     return check(description, logger, compare(value, prediction));
+  }
+
+
+  // TO DO: put in impl namespace
+  template<class Logger, class Compare, class T>
+  bool check(std::string_view description, Logger& logger, impl::fuzzy_compare<Compare> c, const T& value, const T& prediction)
+  {
+    return check_approx_equality(description, logger, std::move(c.compare), value, prediction);
   }
 
   template<class Logger>
@@ -34,9 +53,15 @@ namespace sequoia::unit_testing
     fuzzy_extender& operator=(fuzzy_extender&&)      = delete;
 
     template<class T, class Compare>
-    bool check_approx_equality(std::string_view description, const T& prediction, const T& value, Compare compare)
+    bool check_approx_equality(std::string_view description, Compare compare, const T& prediction, const T& value)
     {
-      return unit_testing::check_approx_equality(description, m_Logger, value, prediction, std::move(compare));
+      return unit_testing::check_approx_equality(description, m_Logger, std::move(compare), value, prediction);
+    }
+
+    template<class Iter, class PredictionIter, class Compare>
+    bool check_range_approx(std::string_view description, Compare compare, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
+    {
+      return impl::check_range(description, m_Logger, impl::fuzzy_compare{compare}, first, last, predictionFirst, predictionLast);      
     }
 
   protected:
@@ -61,6 +86,8 @@ namespace sequoia::unit_testing
   {
     T m_Tol{};
   public:
+    using value_type = T;
+    
     constexpr explicit within_tolerance(T tol) : m_Tol{std::move(tol)} {};
 
     [[nodiscard]]

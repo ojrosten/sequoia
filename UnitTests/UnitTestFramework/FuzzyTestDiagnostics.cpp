@@ -22,8 +22,8 @@ namespace sequoia::unit_testing
 
   void fuzzy_false_positive_diagnostics::basic_tests()
   {  
-    check_approx_equality(LINE(""), 3.0, 5.0, within_tolerance{1.0});
-    check_approx_equality(LINE(""), 7.0, 5.0, within_tolerance{1.0});
+    check_approx_equality(LINE(""), within_tolerance{1.0}, 3.0, 5.0);
+    check_approx_equality(LINE(""), within_tolerance{1.0}, 7.0, 5.0);
   }
 
 
@@ -40,10 +40,10 @@ namespace sequoia::unit_testing
 
   void fuzzy_false_negative_diagnostics::basic_tests()
   {
-    check_approx_equality(LINE(""), 4.5, 5.0, within_tolerance{1.0});
-    check_approx_equality(LINE(""), 5.5, 5.0, within_tolerance{1.0});
+    check_approx_equality(LINE(""), within_tolerance{1.0}, 4.5, 5.0);
+    check_approx_equality(LINE(""), within_tolerance{1.0}, 5.5, 5.0);
 
-    check_approx_equality(LINE(""), 4.5, 5.0, within_tolerance{0.5});
-    check_approx_equality(LINE(""), 5.5, 5.0, within_tolerance{0.5});
+    check_approx_equality(LINE(""), within_tolerance{0.5}, 4.5, 5.0);
+    check_approx_equality(LINE(""), within_tolerance{0.5}, 5.5, 5.0);
   }
 }

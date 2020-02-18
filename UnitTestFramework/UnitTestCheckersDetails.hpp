@@ -74,6 +74,7 @@ namespace sequoia::unit_testing::impl
   }
 
   template<class... Allocators>
+  [[nodiscard]]
   constexpr bool do_swap() noexcept
   {
     return ((   std::allocator_traits<Allocators>::propagate_on_container_swap::value
