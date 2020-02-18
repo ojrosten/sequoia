@@ -23,7 +23,7 @@ namespace sequoia::unit_testing
 
   template<class Logger, class F, class S>
   [[nodiscard]]
-  auto check_relative_performance(std::string_view description, Logger& logger, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials, const double num_sds) -> performance_results<std::invoke_result_t<F>>
+  auto check_relative_performance(std::string_view description, Logger& logger, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials, const double num_sds, const std::size_t maxAttempts) -> performance_results<std::invoke_result_t<F>>
   {      
     using R = std::invoke_result_t<F>;
     static_assert(std::is_same_v<R, std::invoke_result_t<S>>, "Fast/Slow invokables must have same return value");
@@ -43,7 +43,7 @@ namespace sequoia::unit_testing
       message{description.empty() ? "" : std::string{"\t"}.append(description).append("\n")},
       summary{};  
 
-      std::size_t remainingAttempts{2};
+      std::size_t remainingAttempts{maxAttempts};
 
       while(remainingAttempts > 0)
       {
@@ -52,7 +52,8 @@ namespace sequoia::unit_testing
         slowData.reserve(trials);
         
         std::random_device generator;
-        for(std::size_t i{}; i < trials; ++i)
+        const auto adjustedTrials{trials*(maxAttempts - remainingAttempts + 1)};
+        for(std::size_t i{}; i < adjustedTrials; ++i)
         {
           std::packaged_task<R()> fastTask{fast}, slowTask{slow};
 
@@ -155,10 +156,10 @@ namespace sequoia::unit_testing
     performance_extender& operator=(performance_extender&&)      = delete;
  
     template<class F, class S>
-    auto check_relative_performance(std::string_view description, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials=5, const double num_sds=3)
+    auto check_relative_performance(std::string_view description, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials=5, const double num_sds=4)
       -> performance_results<std::invoke_result_t<F>>
     {
-      return unit_testing::check_relative_performance(description, m_Logger, fast, slow, minSpeedUp, maxSpeedUp, trials, num_sds);
+      return unit_testing::check_relative_performance(description, m_Logger, fast, slow, minSpeedUp, maxSpeedUp, trials, num_sds, 2);
     }
   protected:
     ~performance_extender() = default;
