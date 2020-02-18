@@ -19,6 +19,7 @@ namespace sequoia::unit_testing
   {
     basic_tests();
     range_tests();
+    container_tests();
   }
 
   void fuzzy_false_positive_diagnostics::basic_tests()
@@ -36,6 +37,11 @@ namespace sequoia::unit_testing
     check_range_approx(LINE(""), within_tolerance{0.5}, v.cbegin(), v.cend(), p.cbegin(), p.cend());
   }
 
+  void fuzzy_false_positive_diagnostics::container_tests()
+  {
+    check_approx_equality(LINE(""), within_tolerance{0.5}, std::vector<double>{2.2, -1.0}, std::vector<double>{2.1, -1.8});
+  }
+
   [[nodiscard]]
   std::string_view fuzzy_false_negative_diagnostics::source_file_name() const noexcept
   {
@@ -46,6 +52,7 @@ namespace sequoia::unit_testing
   {
     basic_tests();
     range_tests();
+    container_tests();
   }
 
   void fuzzy_false_negative_diagnostics::basic_tests()
@@ -61,5 +68,10 @@ namespace sequoia::unit_testing
   {
     std::vector<double> v{0.5, 0.6}, p{0, 1.0};
     check_range_approx(LINE(""), within_tolerance{0.5}, v.cbegin(), v.cend(), p.cbegin(), p.cend());
+  }
+
+  void fuzzy_false_negative_diagnostics::container_tests()
+  {
+    check_approx_equality(LINE(""), within_tolerance{0.5}, std::vector<double>{2.2, -1.0}, std::vector<double>{2.1, -1.1});
   }
 }

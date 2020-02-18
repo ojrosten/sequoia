@@ -23,6 +23,7 @@ namespace sequoia:: unit_testing
 
     void basic_tests();
     void range_tests();
+    void container_tests();
   };
 
   class fuzzy_false_negative_diagnostics final : public fuzzy_false_negative_test
@@ -37,5 +38,6 @@ namespace sequoia:: unit_testing
 
     void basic_tests();
     void range_tests();
+    void container_tests();
   };
 }

@@ -24,12 +24,30 @@ namespace sequoia::unit_testing
       
       Compare compare;
     };
+
+    template<class Compare, class T, class=std::void_t<>>
+    struct compares_type : std::false_type
+    {};
+
+    template<class Compare, class T>
+    struct compares_type<Compare, T, std::void_t<std::invoke_result_t<Compare, T, T>>>
+      : std::true_type
+    {};
+
+    template<class Compare, class T>
+    constexpr bool compares_type_v{compares_type<Compare, T>::value};
   }
   
   template<class Logger, class T, class Compare>
   bool check_approx_equality(std::string_view description, Logger& logger, Compare compare, const T& value, const T& prediction)
   {
     return check(description, logger, compare(value, prediction));
+  }
+
+  template<class Logger, class Iter, class PredictionIter, class Compare>
+  bool check_range_approx(std::string_view description, Logger& logger, Compare compare, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
+  {
+    return impl::check_range(description, logger, impl::fuzzy_compare{compare}, first, last, predictionFirst, predictionLast);      
   }
 
 
@@ -53,15 +71,26 @@ namespace sequoia::unit_testing
     fuzzy_extender& operator=(fuzzy_extender&&)      = delete;
 
     template<class T, class Compare>
-    bool check_approx_equality(std::string_view description, Compare compare, const T& prediction, const T& value)
+    bool check_approx_equality(std::string_view description, Compare compare, const T& value, const T& prediction)
     {
-      return unit_testing::check_approx_equality(description, m_Logger, std::move(compare), value, prediction);
+      if constexpr(impl::compares_type_v<Compare, T>)
+      {
+        return unit_testing::check_approx_equality(description, m_Logger, std::move(compare), value, prediction);
+      }
+      else if constexpr(is_container_v<T> && impl::compares_type_v<Compare, decltype(*prediction.begin())>)
+      {
+        return check_range_approx(description, std::move(compare), value.begin(), value.end(), prediction.begin(), prediction.end());
+      }
+      else
+      {
+        static_assert(dependent_false<T>::value, "Compare cannot consume T");
+      }
     }
 
     template<class Iter, class PredictionIter, class Compare>
     bool check_range_approx(std::string_view description, Compare compare, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
     {
-      return impl::check_range(description, m_Logger, impl::fuzzy_compare{compare}, first, last, predictionFirst, predictionLast);      
+      return unit_testing::check_range_approx(description, m_Logger, std::move(compare), first, last, predictionFirst, predictionLast);      
     }
 
   protected:
