@@ -40,6 +40,9 @@ namespace sequoia::unit_testing
   void fuzzy_false_positive_diagnostics::container_tests()
   {
     check_approx_equality(LINE(""), within_tolerance{0.5}, std::vector<double>{2.2, -1.0}, std::vector<double>{2.1, -1.8});
+
+    using comp_t = std::vector<std::vector<double>>;
+    check_approx_equality(LINE(""), within_tolerance{0.5}, comp_t{{2.2, -1.0}, {5.1}}, comp_t{{2.1, -1.1}, {3.7}});
   }
 
   [[nodiscard]]
@@ -73,5 +76,8 @@ namespace sequoia::unit_testing
   void fuzzy_false_negative_diagnostics::container_tests()
   {
     check_approx_equality(LINE(""), within_tolerance{0.5}, std::vector<double>{2.2, -1.0}, std::vector<double>{2.1, -1.1});
+
+    using comp_t = std::vector<std::vector<double>>;
+    check_approx_equality(LINE(""), within_tolerance{0.5}, comp_t{{2.2, -1.0}, {5.1}}, comp_t{{2.1, -1.1}, {4.7}});
   }
 }

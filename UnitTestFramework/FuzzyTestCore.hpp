@@ -37,19 +37,29 @@ namespace sequoia::unit_testing
     template<class Compare, class T>
     constexpr bool compares_type_v{compares_type<Compare, T>::value};
   }
-  
-  template<class Logger, class T, class Compare>
-  bool check_approx_equality(std::string_view description, Logger& logger, Compare compare, const T& value, const T& prediction)
-  {
-    return check(description, logger, compare(value, prediction));
-  }
 
   template<class Logger, class Iter, class PredictionIter, class Compare>
   bool check_range_approx(std::string_view description, Logger& logger, Compare compare, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
   {
     return impl::check_range(description, logger, impl::fuzzy_compare{compare}, first, last, predictionFirst, predictionLast);      
   }
-
+  
+  template<class Logger, class T, class Compare>
+  bool check_approx_equality(std::string_view description, Logger& logger, Compare compare, const T& value, const T& prediction)
+  {
+    if constexpr(impl::compares_type_v<Compare, T>)
+    {
+      return check(description, logger, compare(value, prediction));
+    }
+    else if constexpr(is_container_v<T>)
+    {
+      return check_range_approx(description, logger, std::move(compare), value.begin(), value.end(), prediction.begin(), prediction.end());
+    }
+    else
+    {
+      static_assert(dependent_false<T>::value, "Compare cannot consume T directly nor interpret as a range");
+    }
+  }
 
   // TO DO: put in impl namespace
   template<class Logger, class Compare, class T>
@@ -73,18 +83,7 @@ namespace sequoia::unit_testing
     template<class T, class Compare>
     bool check_approx_equality(std::string_view description, Compare compare, const T& value, const T& prediction)
     {
-      if constexpr(impl::compares_type_v<Compare, T>)
-      {
-        return unit_testing::check_approx_equality(description, m_Logger, std::move(compare), value, prediction);
-      }
-      else if constexpr(is_container_v<T> && impl::compares_type_v<Compare, decltype(*prediction.begin())>)
-      {
-        return check_range_approx(description, std::move(compare), value.begin(), value.end(), prediction.begin(), prediction.end());
-      }
-      else
-      {
-        static_assert(dependent_false<T>::value, "Compare cannot consume T");
-      }
+      return unit_testing::check_approx_equality(description, m_Logger, std::move(compare), value, prediction);      
     }
 
     template<class Iter, class PredictionIter, class Compare>
