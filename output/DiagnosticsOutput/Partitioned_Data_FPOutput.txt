@@ -71,7 +71,8 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::independent<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
-	Partition 0: iterator element 0
+	Partition 0: iterator
+	element 0
 
 	[int]
 	operator== returned false
@@ -85,7 +86,8 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::independent<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
-	Partition 0: riterator element 0
+	Partition 0: riterator
+	element 0
 
 	[int]
 	operator== returned false
@@ -149,7 +151,8 @@
 	[sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::independent<int> > >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const) element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const)
+	element 0
 
 	[int]
 	operator== returned false
@@ -157,7 +160,8 @@
 	Predicted: 2
 
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const) element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const)
+	element 0
 
 	[int]
 	operator== returned false
@@ -165,7 +169,8 @@
 	Predicted: 2
 
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator
+	element 0
 
 	[int]
 	operator== returned false
@@ -173,7 +178,8 @@
 	Predicted: 2
 
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator
+	element 0
 
 	[int]
 	operator== returned false
@@ -181,7 +187,8 @@
 	Predicted: 2
 
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator
+	element 0
 
 	[int]
 	operator== returned false
@@ -189,7 +196,8 @@
 	Predicted: 2
 
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator
+	element 0
 
 	[int]
 	operator== returned false
@@ -553,7 +561,8 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::shared<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
-	Partition 0: iterator element 0
+	Partition 0: iterator
+	element 0
 
 	[int]
 	operator== returned false
@@ -567,7 +576,8 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::shared<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
-	Partition 0: riterator element 0
+	Partition 0: riterator
+	element 0
 
 	[int]
 	operator== returned false
@@ -631,7 +641,8 @@
 	[sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::shared<int> > >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const) element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const)
+	element 0
 
 	[int]
 	operator== returned false
@@ -639,7 +650,8 @@
 	Predicted: 2
 
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const) element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const)
+	element 0
 
 	[int]
 	operator== returned false
@@ -647,7 +659,8 @@
 	Predicted: 2
 
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator
+	element 0
 
 	[int]
 	operator== returned false
@@ -655,7 +668,8 @@
 	Predicted: 2
 
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator
+	element 0
 
 	[int]
 	operator== returned false
@@ -663,7 +677,8 @@
 	Predicted: 2
 
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator
+	element 0
 
 	[int]
 	operator== returned false
@@ -671,7 +686,8 @@
 	Predicted: 2
 
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator
+	element 0
 
 	[int]
 	operator== returned false
@@ -1035,7 +1051,8 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::independent<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
-	Partition 0: iterator element 0
+	Partition 0: iterator
+	element 0
 
 	[int]
 	operator== returned false
@@ -1049,7 +1066,8 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::independent<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
-	Partition 0: riterator element 0
+	Partition 0: riterator
+	element 0
 
 	[int]
 	operator== returned false
@@ -1113,7 +1131,8 @@
 	[sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::independent<int> > >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const) element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const)
+	element 0
 
 	[int]
 	operator== returned false
@@ -1121,7 +1140,8 @@
 	Predicted: 2
 
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const) element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const)
+	element 0
 
 	[int]
 	operator== returned false
@@ -1129,7 +1149,8 @@
 	Predicted: 2
 
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator
+	element 0
 
 	[int]
 	operator== returned false
@@ -1137,7 +1158,8 @@
 	Predicted: 2
 
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator
+	element 0
 
 	[int]
 	operator== returned false
@@ -1145,7 +1167,8 @@
 	Predicted: 2
 
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator
+	element 0
 
 	[int]
 	operator== returned false
@@ -1153,7 +1176,8 @@
 	Predicted: 2
 
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator
+	element 0
 
 	[int]
 	operator== returned false
@@ -1517,7 +1541,8 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::shared<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
-	Partition 0: iterator element 0
+	Partition 0: iterator
+	element 0
 
 	[int]
 	operator== returned false
@@ -1531,7 +1556,8 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::shared<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
-	Partition 0: riterator element 0
+	Partition 0: riterator
+	element 0
 
 	[int]
 	operator== returned false
@@ -1595,7 +1621,8 @@
 	[sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::shared<int> > >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const) element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const)
+	element 0
 
 	[int]
 	operator== returned false
@@ -1603,7 +1630,8 @@
 	Predicted: 2
 
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const) element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const)
+	element 0
 
 	[int]
 	operator== returned false
@@ -1611,7 +1639,8 @@
 	Predicted: 2
 
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator
+	element 0
 
 	[int]
 	operator== returned false
@@ -1619,7 +1648,8 @@
 	Predicted: 2
 
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator
+	element 0
 
 	[int]
 	operator== returned false
@@ -1627,7 +1657,8 @@
 	Predicted: 2
 
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator
+	element 0
 
 	[int]
 	operator== returned false
@@ -1635,7 +1666,8 @@
 	Predicted: 2
 
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator
+	element 0
 
 	[int]
 	operator== returned false
@@ -1999,7 +2031,8 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: iterator element 0
+	Partition 0: iterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
@@ -2010,7 +2043,8 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: iterator element 0
+	Partition 0: iterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
@@ -2021,7 +2055,9 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: iterator element 0
+	Partition 0: iterator
+	element 0
+
 	element 0
 
 	[double]
@@ -2036,7 +2072,8 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: riterator element 0
+	Partition 0: riterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
@@ -2047,7 +2084,8 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: riterator element 0
+	Partition 0: riterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
@@ -2058,7 +2096,9 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: riterator element 0
+	Partition 0: riterator
+	element 0
+
 	element 0
 
 	[double]
@@ -2123,17 +2163,21 @@
 	[sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const) element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const)
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const) element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const)
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const) element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const)
+	element 0
+
 	element 0
 
 	[double]
@@ -2142,17 +2186,21 @@
 	Predicted: 2
 
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const) element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const)
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const) element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const)
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const) element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const)
+	element 0
+
 	element 0
 
 	[double]
@@ -2161,17 +2209,21 @@
 	Predicted: 2
 
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator
+	element 0
+
 	element 0
 
 	[double]
@@ -2180,17 +2232,21 @@
 	Predicted: 2
 
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator
+	element 0
+
 	element 0
 
 	[double]
@@ -2199,17 +2255,21 @@
 	Predicted: 2
 
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator
+	element 0
+
 	element 0
 
 	[double]
@@ -2218,17 +2278,21 @@
 	Predicted: 2
 
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator
+	element 0
+
 	element 0
 
 	[double]
@@ -2304,7 +2368,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 72 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 72
+	element 0
 
 	[double]
 	operator== returned false
@@ -2320,7 +2385,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 73 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 73
+	element 0
 
 	[double]
 	operator== returned false
@@ -2336,7 +2402,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 74 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 74
+	element 0
 
 	[double]
 	operator== returned false
@@ -2352,7 +2419,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75
+	element 0
 
 	[double]
 	operator== returned false
@@ -2368,7 +2436,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76
+	element 0
 
 	[double]
 	operator== returned false
@@ -2384,7 +2453,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 78 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 78
+	element 0
 
 	[double]
 	operator== returned false
@@ -2400,7 +2470,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 79 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 79
+	element 0
 
 	[double]
 	operator== returned false
@@ -2416,7 +2487,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 80 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 80
+	element 0
 
 	[double]
 	operator== returned false
@@ -2432,7 +2504,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81
+	element 0
 
 	[double]
 	operator== returned false
@@ -2448,7 +2521,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 82 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 82
+	element 0
 
 	[double]
 	operator== returned false
@@ -2464,7 +2538,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 84 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 84
+	element 0
 
 	[double]
 	operator== returned false
@@ -2480,7 +2555,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 85 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 85
+	element 0
 
 	[double]
 	operator== returned false
@@ -2496,7 +2572,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 86 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 86
+	element 0
 
 	[double]
 	operator== returned false
@@ -2512,7 +2589,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87
+	element 0
 
 	[double]
 	operator== returned false
@@ -2528,7 +2606,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88
+	element 0
 
 	[double]
 	operator== returned false
@@ -2544,7 +2623,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 90 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 90
+	element 0
 
 	[double]
 	operator== returned false
@@ -2560,7 +2640,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 91 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 91
+	element 0
 
 	[double]
 	operator== returned false
@@ -2576,7 +2657,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 92 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 92
+	element 0
 
 	[double]
 	operator== returned false
@@ -2592,7 +2674,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93
+	element 0
 
 	[double]
 	operator== returned false
@@ -2608,7 +2691,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 94 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 94
+	element 0
 
 	[double]
 	operator== returned false
@@ -2624,7 +2708,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 97 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 97
+	element 0
 
 	[double]
 	operator== returned false
@@ -2640,7 +2725,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 98 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 98
+	element 0
 
 	[double]
 	operator== returned false
@@ -2656,7 +2742,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
+	element 0
 
 	[double]
 	operator== returned false
@@ -2672,7 +2759,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 101 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 101
+	element 0
 
 	[double]
 	operator== returned false
@@ -2688,7 +2776,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 102 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 102
+	element 0
 
 	[double]
 	operator== returned false
@@ -2704,7 +2793,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103
+	element 0
 
 	[double]
 	operator== returned false
@@ -2720,7 +2810,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105
+	element 0
 
 	[double]
 	operator== returned false
@@ -2736,7 +2827,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 106 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 106
+	element 0
 
 	[double]
 	operator== returned false
@@ -2752,7 +2844,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 107 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 107
+	element 0
 
 	[double]
 	operator== returned false
@@ -2768,7 +2861,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 109 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 109
+	element 0
 
 	[double]
 	operator== returned false
@@ -2784,7 +2878,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 110 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 110
+	element 0
 
 	[double]
 	operator== returned false
@@ -2800,7 +2895,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 111 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 111
+	element 0
 
 	[double]
 	operator== returned false
@@ -2881,7 +2977,8 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: iterator element 0
+	Partition 0: iterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
@@ -2892,7 +2989,8 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: iterator element 0
+	Partition 0: iterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
@@ -2903,7 +3001,9 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: iterator element 0
+	Partition 0: iterator
+	element 0
+
 	element 0
 
 	[double]
@@ -2918,7 +3018,8 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: riterator element 0
+	Partition 0: riterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
@@ -2929,7 +3030,8 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: riterator element 0
+	Partition 0: riterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
@@ -2940,7 +3042,9 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: riterator element 0
+	Partition 0: riterator
+	element 0
+
 	element 0
 
 	[double]
@@ -3005,17 +3109,21 @@
 	[sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const) element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const)
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const) element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const)
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const) element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const)
+	element 0
+
 	element 0
 
 	[double]
@@ -3024,17 +3132,21 @@
 	Predicted: 2
 
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const) element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const)
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const) element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const)
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const) element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const)
+	element 0
+
 	element 0
 
 	[double]
@@ -3043,17 +3155,21 @@
 	Predicted: 2
 
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator
+	element 0
+
 	element 0
 
 	[double]
@@ -3062,17 +3178,21 @@
 	Predicted: 2
 
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator
+	element 0
+
 	element 0
 
 	[double]
@@ -3081,17 +3201,21 @@
 	Predicted: 2
 
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator
+	element 0
+
 	element 0
 
 	[double]
@@ -3100,17 +3224,21 @@
 	Predicted: 2
 
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator
+	element 0
+
 	element 0
 
 	[double]
@@ -3186,7 +3314,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 72 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 72
+	element 0
 
 	[double]
 	operator== returned false
@@ -3202,7 +3331,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 73 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 73
+	element 0
 
 	[double]
 	operator== returned false
@@ -3218,7 +3348,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 74 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 74
+	element 0
 
 	[double]
 	operator== returned false
@@ -3234,7 +3365,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75
+	element 0
 
 	[double]
 	operator== returned false
@@ -3250,7 +3382,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76
+	element 0
 
 	[double]
 	operator== returned false
@@ -3266,7 +3399,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 78 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 78
+	element 0
 
 	[double]
 	operator== returned false
@@ -3282,7 +3416,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 79 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 79
+	element 0
 
 	[double]
 	operator== returned false
@@ -3298,7 +3433,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 80 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 80
+	element 0
 
 	[double]
 	operator== returned false
@@ -3314,7 +3450,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81
+	element 0
 
 	[double]
 	operator== returned false
@@ -3330,7 +3467,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 82 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 82
+	element 0
 
 	[double]
 	operator== returned false
@@ -3346,7 +3484,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 84 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 84
+	element 0
 
 	[double]
 	operator== returned false
@@ -3362,7 +3501,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 85 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 85
+	element 0
 
 	[double]
 	operator== returned false
@@ -3378,7 +3518,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 86 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 86
+	element 0
 
 	[double]
 	operator== returned false
@@ -3394,7 +3535,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87
+	element 0
 
 	[double]
 	operator== returned false
@@ -3410,7 +3552,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88
+	element 0
 
 	[double]
 	operator== returned false
@@ -3426,7 +3569,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 90 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 90
+	element 0
 
 	[double]
 	operator== returned false
@@ -3442,7 +3586,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 91 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 91
+	element 0
 
 	[double]
 	operator== returned false
@@ -3458,7 +3603,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 92 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 92
+	element 0
 
 	[double]
 	operator== returned false
@@ -3474,7 +3620,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93
+	element 0
 
 	[double]
 	operator== returned false
@@ -3490,7 +3637,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 94 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 94
+	element 0
 
 	[double]
 	operator== returned false
@@ -3506,7 +3654,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 97 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 97
+	element 0
 
 	[double]
 	operator== returned false
@@ -3522,7 +3671,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 98 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 98
+	element 0
 
 	[double]
 	operator== returned false
@@ -3538,7 +3688,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
+	element 0
 
 	[double]
 	operator== returned false
@@ -3554,7 +3705,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 101 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 101
+	element 0
 
 	[double]
 	operator== returned false
@@ -3570,7 +3722,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 102 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 102
+	element 0
 
 	[double]
 	operator== returned false
@@ -3586,7 +3739,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103
+	element 0
 
 	[double]
 	operator== returned false
@@ -3602,7 +3756,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105
+	element 0
 
 	[double]
 	operator== returned false
@@ -3618,7 +3773,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 106 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 106
+	element 0
 
 	[double]
 	operator== returned false
@@ -3634,7 +3790,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 107 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 107
+	element 0
 
 	[double]
 	operator== returned false
@@ -3650,7 +3807,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 109 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 109
+	element 0
 
 	[double]
 	operator== returned false
@@ -3666,7 +3824,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 110 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 110
+	element 0
 
 	[double]
 	operator== returned false
@@ -3682,7 +3841,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 111 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 111
+	element 0
 
 	[double]
 	operator== returned false
@@ -3763,7 +3923,8 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: iterator element 0
+	Partition 0: iterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
@@ -3774,7 +3935,8 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: iterator element 0
+	Partition 0: iterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
@@ -3785,7 +3947,9 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: iterator element 0
+	Partition 0: iterator
+	element 0
+
 	element 0
 
 	[double]
@@ -3800,7 +3964,8 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: riterator element 0
+	Partition 0: riterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
@@ -3811,7 +3976,8 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: riterator element 0
+	Partition 0: riterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
@@ -3822,7 +3988,9 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: riterator element 0
+	Partition 0: riterator
+	element 0
+
 	element 0
 
 	[double]
@@ -3887,17 +4055,21 @@
 	[sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const) element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const)
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const) element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const)
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const) element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const)
+	element 0
+
 	element 0
 
 	[double]
@@ -3906,17 +4078,21 @@
 	Predicted: 2
 
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const) element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const)
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const) element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const)
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const) element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const)
+	element 0
+
 	element 0
 
 	[double]
@@ -3925,17 +4101,21 @@
 	Predicted: 2
 
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator
+	element 0
+
 	element 0
 
 	[double]
@@ -3944,17 +4124,21 @@
 	Predicted: 2
 
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator
+	element 0
+
 	element 0
 
 	[double]
@@ -3963,17 +4147,21 @@
 	Predicted: 2
 
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator
+	element 0
+
 	element 0
 
 	[double]
@@ -3982,17 +4170,21 @@
 	Predicted: 2
 
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator
+	element 0
+
 	element 0
 
 	[double]
@@ -4068,7 +4260,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 72 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 72
+	element 0
 
 	[double]
 	operator== returned false
@@ -4084,7 +4277,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 73 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 73
+	element 0
 
 	[double]
 	operator== returned false
@@ -4100,7 +4294,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 74 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 74
+	element 0
 
 	[double]
 	operator== returned false
@@ -4116,7 +4311,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75
+	element 0
 
 	[double]
 	operator== returned false
@@ -4132,7 +4328,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76
+	element 0
 
 	[double]
 	operator== returned false
@@ -4148,7 +4345,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 78 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 78
+	element 0
 
 	[double]
 	operator== returned false
@@ -4164,7 +4362,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 79 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 79
+	element 0
 
 	[double]
 	operator== returned false
@@ -4180,7 +4379,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 80 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 80
+	element 0
 
 	[double]
 	operator== returned false
@@ -4196,7 +4396,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81
+	element 0
 
 	[double]
 	operator== returned false
@@ -4212,7 +4413,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 82 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 82
+	element 0
 
 	[double]
 	operator== returned false
@@ -4228,7 +4430,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 84 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 84
+	element 0
 
 	[double]
 	operator== returned false
@@ -4244,7 +4447,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 85 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 85
+	element 0
 
 	[double]
 	operator== returned false
@@ -4260,7 +4464,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 86 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 86
+	element 0
 
 	[double]
 	operator== returned false
@@ -4276,7 +4481,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87
+	element 0
 
 	[double]
 	operator== returned false
@@ -4292,7 +4498,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88
+	element 0
 
 	[double]
 	operator== returned false
@@ -4308,7 +4515,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 90 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 90
+	element 0
 
 	[double]
 	operator== returned false
@@ -4324,7 +4532,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 91 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 91
+	element 0
 
 	[double]
 	operator== returned false
@@ -4340,7 +4549,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 92 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 92
+	element 0
 
 	[double]
 	operator== returned false
@@ -4356,7 +4566,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93
+	element 0
 
 	[double]
 	operator== returned false
@@ -4372,7 +4583,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 94 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 94
+	element 0
 
 	[double]
 	operator== returned false
@@ -4388,7 +4600,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 97 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 97
+	element 0
 
 	[double]
 	operator== returned false
@@ -4404,7 +4617,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 98 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 98
+	element 0
 
 	[double]
 	operator== returned false
@@ -4420,7 +4634,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
+	element 0
 
 	[double]
 	operator== returned false
@@ -4436,7 +4651,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 101 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 101
+	element 0
 
 	[double]
 	operator== returned false
@@ -4452,7 +4668,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 102 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 102
+	element 0
 
 	[double]
 	operator== returned false
@@ -4468,7 +4685,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103
+	element 0
 
 	[double]
 	operator== returned false
@@ -4484,7 +4702,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105
+	element 0
 
 	[double]
 	operator== returned false
@@ -4500,7 +4719,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 106 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 106
+	element 0
 
 	[double]
 	operator== returned false
@@ -4516,7 +4736,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 107 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 107
+	element 0
 
 	[double]
 	operator== returned false
@@ -4532,7 +4753,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 109 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 109
+	element 0
 
 	[double]
 	operator== returned false
@@ -4548,7 +4770,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 110 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 110
+	element 0
 
 	[double]
 	operator== returned false
@@ -4564,7 +4787,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 111 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 111
+	element 0
 
 	[double]
 	operator== returned false
@@ -4645,7 +4869,8 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: iterator element 0
+	Partition 0: iterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
@@ -4656,7 +4881,8 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: iterator element 0
+	Partition 0: iterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
@@ -4667,7 +4893,9 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: iterator element 0
+	Partition 0: iterator
+	element 0
+
 	element 0
 
 	[double]
@@ -4682,7 +4910,8 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: riterator element 0
+	Partition 0: riterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
@@ -4693,7 +4922,8 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: riterator element 0
+	Partition 0: riterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
@@ -4704,7 +4934,9 @@
 	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: riterator element 0
+	Partition 0: riterator
+	element 0
+
 	element 0
 
 	[double]
@@ -4769,17 +5001,21 @@
 	[sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const) element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const)
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const) element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const)
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const) element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const)
+	element 0
+
 	element 0
 
 	[double]
@@ -4788,17 +5024,21 @@
 	Predicted: 2
 
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const) element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const)
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const) element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const)
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const) element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const)
+	element 0
+
 	element 0
 
 	[double]
@@ -4807,17 +5047,21 @@
 	Predicted: 2
 
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator
+	element 0
+
 	element 0
 
 	[double]
@@ -4826,17 +5070,21 @@
 	Predicted: 2
 
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator
+	element 0
+
 	element 0
 
 	[double]
@@ -4845,17 +5093,21 @@
 	Predicted: 2
 
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator
+	element 0
+
 	element 0
 
 	[double]
@@ -4864,17 +5116,21 @@
 	Predicted: 2
 
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator
+	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator
+	element 0
+
 	element 0
 
 	[double]
@@ -4950,7 +5206,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 72 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 72
+	element 0
 
 	[double]
 	operator== returned false
@@ -4966,7 +5223,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 73 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 73
+	element 0
 
 	[double]
 	operator== returned false
@@ -4982,7 +5240,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 74 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 74
+	element 0
 
 	[double]
 	operator== returned false
@@ -4998,7 +5257,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75
+	element 0
 
 	[double]
 	operator== returned false
@@ -5014,7 +5274,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76
+	element 0
 
 	[double]
 	operator== returned false
@@ -5030,7 +5291,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 78 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 78
+	element 0
 
 	[double]
 	operator== returned false
@@ -5046,7 +5308,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 79 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 79
+	element 0
 
 	[double]
 	operator== returned false
@@ -5062,7 +5325,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 80 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 80
+	element 0
 
 	[double]
 	operator== returned false
@@ -5078,7 +5342,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81
+	element 0
 
 	[double]
 	operator== returned false
@@ -5094,7 +5359,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 82 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 82
+	element 0
 
 	[double]
 	operator== returned false
@@ -5110,7 +5376,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 84 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 84
+	element 0
 
 	[double]
 	operator== returned false
@@ -5126,7 +5393,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 85 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 85
+	element 0
 
 	[double]
 	operator== returned false
@@ -5142,7 +5410,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 86 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 86
+	element 0
 
 	[double]
 	operator== returned false
@@ -5158,7 +5427,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87
+	element 0
 
 	[double]
 	operator== returned false
@@ -5174,7 +5444,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88
+	element 0
 
 	[double]
 	operator== returned false
@@ -5190,7 +5461,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 90 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 90
+	element 0
 
 	[double]
 	operator== returned false
@@ -5206,7 +5478,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 91 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 91
+	element 0
 
 	[double]
 	operator== returned false
@@ -5222,7 +5495,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 92 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 92
+	element 0
 
 	[double]
 	operator== returned false
@@ -5238,7 +5512,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93
+	element 0
 
 	[double]
 	operator== returned false
@@ -5254,7 +5529,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 94 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 94
+	element 0
 
 	[double]
 	operator== returned false
@@ -5270,7 +5546,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 97 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 97
+	element 0
 
 	[double]
 	operator== returned false
@@ -5286,7 +5563,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 98 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 98
+	element 0
 
 	[double]
 	operator== returned false
@@ -5302,7 +5580,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
+	element 0
 
 	[double]
 	operator== returned false
@@ -5318,7 +5597,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 101 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 101
+	element 0
 
 	[double]
 	operator== returned false
@@ -5334,7 +5614,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 102 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 102
+	element 0
 
 	[double]
 	operator== returned false
@@ -5350,7 +5631,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103
+	element 0
 
 	[double]
 	operator== returned false
@@ -5366,7 +5648,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105
+	element 0
 
 	[double]
 	operator== returned false
@@ -5382,7 +5665,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 106 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 106
+	element 0
 
 	[double]
 	operator== returned false
@@ -5398,7 +5682,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 107 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 107
+	element 0
 
 	[double]
 	operator== returned false
@@ -5414,7 +5699,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 109 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 109
+	element 0
 
 	[double]
 	operator== returned false
@@ -5430,7 +5716,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 110 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 110
+	element 0
 
 	[double]
 	operator== returned false
@@ -5446,7 +5733,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 111 element 0
+	../UnitTests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 111
+	element 0
 
 	[double]
 	operator== returned false

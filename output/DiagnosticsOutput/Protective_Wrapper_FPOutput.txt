@@ -53,7 +53,8 @@
 	[std::__1::vector<int, std::__1::allocator<int> >]
 	operator!= returned true
 
-	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 41 element 0
+	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 41
+	element 0
 
 	[int]
 	operator== returned false
@@ -77,7 +78,8 @@
 	[std::__1::vector<int, std::__1::allocator<int> >]
 	operator!= returned true
 
-	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 44 element 0
+	../UnitTests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 44
+	element 0
 
 	[int]
 	operator== returned false
