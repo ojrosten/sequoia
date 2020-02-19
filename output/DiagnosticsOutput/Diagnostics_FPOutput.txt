@@ -148,7 +148,8 @@
 	operator!= returned true
 
 	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 64:
-	One element vector check which should fail due to wrong value element 0
+	One element vector check which should fail due to wrong value
+	element 0
 
 	[double]
 	operator== returned false
@@ -186,7 +187,8 @@
 	operator!= returned true
 
 	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 66:
-	Multi-element vector comparison which should fail due to last element element 1
+	Multi-element vector comparison which should fail due to last element
+	element 1
 
 	[double]
 	operator== returned false
@@ -205,7 +207,8 @@
 	operator!= returned true
 
 	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 67:
-	Multi-element vector comparison which should fail due to first element element 0
+	Multi-element vector comparison which should fail due to first element
+	element 0
 
 	[double]
 	operator== returned false
@@ -224,7 +227,8 @@
 	operator!= returned true
 
 	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 68:
-	Multi-element vector comparison which should fail due to middle element element 2
+	Multi-element vector comparison which should fail due to middle element
+	element 2
 
 	[double]
 	operator== returned false
@@ -261,7 +265,8 @@
 
 
 	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 74:
-	Iterators demarcate differing elements element 0
+	Iterators demarcate differing elements
+	element 0
 
 	[float]
 	operator== returned false
@@ -270,7 +275,8 @@
 
 
 	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 74:
-	Iterators demarcate differing elements element 1
+	Iterators demarcate differing elements
+	element 1
 
 	[float]
 	operator== returned false
@@ -279,7 +285,8 @@
 
 
 	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 74:
-	Iterators demarcate differing elements element 2
+	Iterators demarcate differing elements
+	element 2
 
 	[float]
 	operator== returned false
@@ -288,7 +295,8 @@
 
 
 	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 74:
-	Iterators demarcate differing elements element 3
+	Iterators demarcate differing elements
+	element 3
 
 	[float]
 	operator== returned false
@@ -323,19 +331,22 @@
 	operator!= returned true
 
 	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 91
-	Element 0 of tuple incorrect element 0
+	Element 0 of tuple incorrect
+	element 0
 
 	[std::__1::pair<int, float>]
 	operator== returned false
 
 	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 91
-	Element 0 of tuple incorrect element 0
+	Element 0 of tuple incorrect
+	element 0
 
 	[std::__1::pair<int, float>]
 	operator!= returned true
 
 	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 91
-	Element 0 of tuple incorrect element 0
+	Element 0 of tuple incorrect
+	element 0
 
 	First element of pair is incorrect
 	[int]
@@ -363,7 +374,8 @@
 	operator!= returned true
 
 	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 96
-	Element 1 of tuple incorrect element 2
+	Element 1 of tuple incorrect
+	element 2
 
 	[double]
 	operator== returned false
@@ -537,6 +549,7 @@
 
 	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 119
 	[std::__1::vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > >]
+
 	element 1
 
 	Comparison performed using:
@@ -555,6 +568,7 @@
 	[sequoia::unit_testing::weak_equivalence_checker<sequoia::unit_testing::perfectly_normal_beast<int, std::__1::allocator<int> > >]
 	With equivalent types:
 	[std::initializer_list<int>]
+
 	element 1
 
 	[int]
@@ -565,12 +579,14 @@
 
 	../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp, Line 128
 	[std::__1::vector<sequoia::unit_testing::perfectly_normal_beast<int, std::__1::allocator<int> >, std::__1::allocator<sequoia::unit_testing::perfectly_normal_beast<int, std::__1::allocator<int> > > >]
+
 	element 1
 
 	Comparison performed using:
 	[sequoia::unit_testing::weak_equivalence_checker<sequoia::unit_testing::perfectly_normal_beast<int, std::__1::allocator<int> > >]
 	With equivalent types:
 	[std::initializer_list<int>]
+
 	element 1
 
 	[int]
@@ -669,18 +685,18 @@
 
 	../UnitTests/UnitTestFramework/PerformanceTestDiagnostics.cpp, Line 30:
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
-	Fast Task duration: 0.0013631s +- 4 * 5.24132e-05
-	Slow Task duration: 0.00131753s +- 4 * 0.000121568 [0.966566; (2, 2)]
+	Fast Task duration: 0.00139346s +- 4 * 1.62358e-05
+	Slow Task duration: 0.00138331s +- 4 * 9.67762e-06 [0.99272; (2, 2)]
 
 	../UnitTests/UnitTestFramework/PerformanceTestDiagnostics.cpp, Line 34:
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
-	Fast Task duration: 0.00134934s +- 4 * 4.62132e-05
-	Slow Task duration: 0.00134184s +- 4 * 3.93905e-05 [0.994438; (2, 3)]
+	Fast Task duration: 0.0013761s +- 4 * 4.44162e-05
+	Slow Task duration: 0.00136098s +- 4 * 3.60344e-05 [0.989016; (2, 3)]
 
 	../UnitTests/UnitTestFramework/PerformanceTestDiagnostics.cpp, Line 38:
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
-	Fast Task duration: 0.00121137s +- 4 * 0.000121436
-	Slow Task duration: 0.00446642s +- 4 * 0.000490997 [3.68708; (2, 2.5)]
+	Fast Task duration: 0.00137245s +- 4 * 5.11057e-05
+	Slow Task duration: 0.0047698s +- 4 * 0.000428405 [3.47539; (2, 2.5)]
 
 	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 27
 	[double]
@@ -699,25 +715,30 @@
 	Predicted: 2
 
 
-	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 38 element 0
+	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 38
+	element 0
 
 	[double]
 	Obtained : 0.5
 	Predicted: -0.1 +/- 0.5
 
-	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 41 element 1
+	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 41
+	element 1
 
 	[double]
 	Obtained : 0.6
 	Predicted: 1.2 +/- 0.5
 
-	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 46 element 1
+	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 46
+	element 1
 
 	[double]
 	Obtained : -1
 	Predicted: -1.8 +/- 0.5
 
-	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 49 element 1
+	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 49
+	element 1
+
 	element 0
 
 	[double]
@@ -6095,14 +6116,14 @@
 	False Positive Failure:
 		../UnitTests/UnitTestFramework/PerformanceTestDiagnostics.cpp, Line 67:
 	Performance Test which should pass
-	Fast Task duration: 0.0012486s +- 4 * 0.000146749
-	Slow Task duration: 0.00220154s +- 4 * 7.81902e-05 [1.7632; (1.8, 2.1)]
+	Fast Task duration: 0.00121227s +- 4 * 0.000104611
+	Slow Task duration: 0.00221986s +- 4 * 0.000176954 [1.83117; (1.8, 2.1)]
 
 	False Positive Failure:
 		../UnitTests/UnitTestFramework/PerformanceTestDiagnostics.cpp, Line 68:
 	Performance Test which should pass
-	Fast Task duration: 0.00124326s +- 4 * 7.96883e-05
-	Slow Task duration: 0.00419664s +- 4 * 0.000154105 [3.37552; (3.6, 4.1)]
+	Fast Task duration: 0.00115126s +- 4 * 0.000160482
+	Slow Task duration: 0.00414461s +- 4 * 0.000119101 [3.60006; (3.6, 4.1)]
 
 	False Positive Failure:
 	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 67

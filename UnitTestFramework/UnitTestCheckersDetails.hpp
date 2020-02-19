@@ -96,7 +96,7 @@ namespace sequoia::unit_testing::impl
       for(; predictionIter != predictionLast; ++predictionIter, ++iter)
       {
         std::string dist{std::to_string(std::distance(predictionFirst, predictionIter)).append("\n")};
-        if(!check(combine_messages(description, "element ").append(std::move(dist)), logger, tag, *iter, *predictionIter)) equal = false;
+        if(!check(combine_messages(description, "element ", "\n").append(std::move(dist)), logger, tag, *iter, *predictionIter)) equal = false;
       }
     }
     else
