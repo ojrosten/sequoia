@@ -68,10 +68,18 @@ namespace sequoia
     template<class T>
     constexpr bool has_string_maker_v{has_string_maker<T>::value};
 
-    template<class T> [[nodiscard]] std::string to_string(const T& value)
+    template<class T>
+    [[nodiscard]] std::string to_string(const T& value)
     {
-      static_assert(has_string_maker_v<T>);
-      return string_maker<T>::make(value);
+      if constexpr(has_string_maker_v<T>)
+      {
+        return string_maker<T>::make(value);
+      }
+      else
+      {
+        // Use this mechanism to generate type-info in the error message
+        static_assert(dependent_false<T>::value, "Type is not serializable");
+      }
     }
 
     template<class T, class... U>
@@ -110,7 +118,10 @@ namespace sequoia
       
       auto messageGenerator{
         [description](std::string op, std::string retVal){
-          std::string info{add_type_info<T>("") + "\toperator" + std::move(op) + " returned " + std::move(retVal) + "\n"};
+          std::string info{add_type_info<T>("")
+              .append("\toperator").append(std::move(op))
+              .append(" returned ").append(std::move(retVal)).append("\n")
+          };
           return description.empty() ? std::move(info) : std::string{"\t"}.append(description).append("\n" + std::move(info));
         }
       };
@@ -123,15 +134,8 @@ namespace sequoia
           auto message{messageGenerator("==", "false")};
           if constexpr(!delegate)
           {
-            if constexpr(has_string_maker_v<T>)
-            {
-              message.append("\tObtained : " + to_string(value) + "\n");
-              message.append("\tPredicted: " + to_string(prediction) + "\n\n");
-            }
-            else
-            {
-              static_assert(dependent_false<T>::value, "Type is not serializable");
-            }
+            message.append("\tObtained : " + to_string(value) + "\n");
+            message.append("\tPredicted: " + to_string(prediction) + "\n\n");           
           }
           logger.log_failure(message);
         }

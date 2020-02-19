@@ -36,6 +36,18 @@ namespace sequoia::unit_testing
 
     template<class Compare, class T>
     constexpr bool compares_type_v{compares_type<Compare, T>::value};
+
+    template<class Compare, class T, class=std::void_t<>>
+    struct reports_for_type : std::false_type
+    {};
+
+    template<class Compare, class T>
+    struct reports_for_type<Compare, T, std::void_t<decltype(std::declval<Compare>().report(std::declval<T>(), std::declval<T>()))>>
+      : std::true_type
+    {};
+
+    template<class Compare, class T>
+    constexpr bool reports_for_type_v{reports_for_type<Compare, T>::value};
   }
 
   template<class Logger, class Iter, class PredictionIter, class Compare>
@@ -47,9 +59,38 @@ namespace sequoia::unit_testing
   template<class Logger, class T, class Compare>
   bool check_approx_equality(std::string_view description, Logger& logger, Compare compare, const T& value, const T& prediction)
   {
+    using sentinel = typename Logger::sentinel;      
+    sentinel s{logger, add_type_info<T>(description)};
+
     if constexpr(impl::compares_type_v<Compare, T>)
     {
-      return check(description, logger, compare(value, prediction));
+      const auto priorFailures{logger.failures()};
+
+      s.log_check();
+      if(!compare(prediction, value))
+      {
+        std::string message{};
+        if(!description.empty())
+          message.append("\t").append(description).append("\n");
+        
+        message.append(add_type_info<T>(""));
+        if constexpr(impl::reports_for_type_v<Compare, T>)
+        {
+          message.append(compare.report(value, prediction));
+        }
+        else
+        {
+          message.append("\tFuzzy comparison failed\n\tObtained : ")
+            .append(to_string(value))
+            .append("\n\tPredicted: ")
+            .append(to_string(prediction))
+            .append("\n\n");         
+        }
+
+        logger.log_failure(message);
+      }
+
+      return logger.failures() == priorFailures;
     }
     else if constexpr(is_container_v<T>)
     {
@@ -121,7 +162,22 @@ namespace sequoia::unit_testing
     [[nodiscard]]
     constexpr bool operator()(const T& value, const T& prediction) const noexcept
     {
-      return  (value >= prediction - m_Tol) && (value <= prediction + m_Tol);
-    }        
+      using std::abs;
+      return abs(value - prediction) <= m_Tol;
+    }
+
+    [[nodiscard]]
+    std::string report(const T& value, const T& prediction) const
+    {
+      std::string mess{"\tObtained : " };
+      mess.append(to_string(value))
+        .append("\n\tPredicted: ")
+        .append(to_string(prediction))              
+        .append(" +/- ")
+        .append(to_string(m_Tol))
+        .append("\n");
+
+      return mess;
+    }
   };
 }

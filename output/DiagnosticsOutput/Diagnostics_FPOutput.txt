@@ -669,65 +669,60 @@
 
 	../UnitTests/UnitTestFramework/PerformanceTestDiagnostics.cpp, Line 30:
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
-	Fast Task duration: 0.0012733s +- 4 * 0.000171744
-	Slow Task duration: 0.00131855s +- 4 * 0.000147931 [1.03554; (2, 2)]
+	Fast Task duration: 0.0013631s +- 4 * 5.24132e-05
+	Slow Task duration: 0.00131753s +- 4 * 0.000121568 [0.966566; (2, 2)]
 
 	../UnitTests/UnitTestFramework/PerformanceTestDiagnostics.cpp, Line 34:
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
-	Fast Task duration: 0.00137187s +- 4 * 4.30791e-05
-	Slow Task duration: 0.00136045s +- 4 * 4.53458e-05 [0.991677; (2, 3)]
+	Fast Task duration: 0.00134934s +- 4 * 4.62132e-05
+	Slow Task duration: 0.00134184s +- 4 * 3.93905e-05 [0.994438; (2, 3)]
 
 	../UnitTests/UnitTestFramework/PerformanceTestDiagnostics.cpp, Line 38:
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
-	Fast Task duration: 0.00131424s +- 4 * 8.05677e-05
-	Slow Task duration: 0.00491046s +- 4 * 0.000492761 [3.73634; (2, 2.5)]
+	Fast Task duration: 0.00121137s +- 4 * 0.000121436
+	Slow Task duration: 0.00446642s +- 4 * 0.000490997 [3.68708; (2, 2.5)]
 
 	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 27
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
+	[double]
+	Obtained : 3
+	Predicted: 5 +/- 1
 
 	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 28
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
+	[double]
+	Obtained : 7
+	Predicted: 5 +/- 1
+
+	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 30
+	[double]
+	Fuzzy comparison failed
+	Obtained : 1
+	Predicted: 2
 
 
-	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 34 element 0
+	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 38 element 0
 
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
+	[double]
+	Obtained : 0.5
+	Predicted: -0.1 +/- 0.5
 
+	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 41 element 1
 
-	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 37 element 1
+	[double]
+	Obtained : 0.6
+	Predicted: 1.2 +/- 0.5
 
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
+	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 46 element 1
 
+	[double]
+	Obtained : -1
+	Predicted: -1.8 +/- 0.5
 
-	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 42 element 1
-
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
-
-	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 45 element 1
+	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 49 element 1
 	element 0
 
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
+	[double]
+	Obtained : 5.1
+	Predicted: 3.7 +/- 0.5
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 51:
 	Broken equality Equality operator is inconsistent
@@ -6100,37 +6095,41 @@
 	False Positive Failure:
 		../UnitTests/UnitTestFramework/PerformanceTestDiagnostics.cpp, Line 67:
 	Performance Test which should pass
-	Fast Task duration: 0.00115842s +- 4 * 9.49433e-05
-	Slow Task duration: 0.00227052s +- 4 * 0.000194741 [1.96001; (1.8, 2.1)]
+	Fast Task duration: 0.0012486s +- 4 * 0.000146749
+	Slow Task duration: 0.00220154s +- 4 * 7.81902e-05 [1.7632; (1.8, 2.1)]
 
 	False Positive Failure:
 		../UnitTests/UnitTestFramework/PerformanceTestDiagnostics.cpp, Line 68:
 	Performance Test which should pass
-	Fast Task duration: 0.00108248s +- 4 * 4.19681e-05
-	Slow Task duration: 0.00433632s +- 4 * 0.000409248 [4.00593; (3.6, 4.1)]
-
-	False Positive Failure:
-	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 63
-	[bool]
-
-	False Positive Failure:
-	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 64
-	[bool]
-
-	False Positive Failure:
-	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 66
-	[bool]
+	Fast Task duration: 0.00124326s +- 4 * 7.96883e-05
+	Slow Task duration: 0.00419664s +- 4 * 0.000154105 [3.37552; (3.6, 4.1)]
 
 	False Positive Failure:
 	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 67
-	[bool]
+	[double]
 
 	False Positive Failure:
-	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 73
+	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 68
+	[double]
+
 	False Positive Failure:
-	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 78
+	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 70
+	[double]
+
 	False Positive Failure:
-	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 81
+	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 71
+	[double]
+
+	False Positive Failure:
+	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 77
+	False Positive Failure:
+	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 82
+	[std::__1::vector<double, std::__1::allocator<double> >]
+
+	False Positive Failure:
+	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 85
+	[std::__1::vector<std::__1::vector<double, std::__1::allocator<double> >, std::__1::allocator<std::__1::vector<double, std::__1::allocator<double> > > >]
+
 	False Positive Failure:
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 298
 	[sequoia::unit_testing::perfectly_normal_beast<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, false> >]
