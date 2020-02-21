@@ -26,7 +26,7 @@ namespace sequoia::unit_testing
     check_regular_semantics(LINE("Broken equality"),  move_only_broken_equality{1},  move_only_broken_equality{2},  move_only_broken_equality{1},  move_only_broken_equality{2});
     check_regular_semantics(LINE("Broken inequality"),  move_only_broken_inequality{1},  move_only_broken_inequality{2},  move_only_broken_inequality{1},  move_only_broken_inequality{2});
     check_regular_semantics(LINE("Broken move"),  move_only_broken_move{1},  move_only_broken_move{2},  move_only_broken_move{1},  move_only_broken_move{2});
-    check_regular_semantics(LINE("Broken move"),  move_only_broken_swap{1},  move_only_broken_swap{2},  move_only_broken_swap{1},  move_only_broken_swap{2});
+    check_regular_semantics(LINE("Broken swap"),  move_only_broken_swap{1},  move_only_broken_swap{2},  move_only_broken_swap{1},  move_only_broken_swap{2});
     check_regular_semantics(LINE("Broken move assignment"), move_only_broken_move_assignment{1}, move_only_broken_move_assignment{2}, move_only_broken_move_assignment{1}, move_only_broken_move_assignment{2});
     check_regular_semantics(LINE("Broken check invariant"), move_only_beast{1}, move_only_beast{1}, move_only_beast{1}, move_only_beast{1});
     check_regular_semantics(LINE("Broken check invariant"), move_only_beast{1}, move_only_beast{3}, move_only_beast{2}, move_only_beast{3});

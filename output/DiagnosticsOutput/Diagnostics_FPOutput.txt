@@ -628,7 +628,7 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyTestDiagnostics.cpp, Line 29:
-	Broken move Swap
+	Broken swap Swap
 	[sequoia::unit_testing::move_only_broken_swap<int, std::__1::allocator<int> >]
 	operator== returned false
 	Obtained : 2 
@@ -636,7 +636,15 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyTestDiagnostics.cpp, Line 29:
-	Broken move Swap
+	Broken swap Swap
+	[sequoia::unit_testing::move_only_broken_swap<int, std::__1::allocator<int> >]
+	operator== returned false
+	Obtained : 1 
+	Predicted: 2 
+
+
+	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyTestDiagnostics.cpp, Line 29:
+	Broken swap Post condition: y restored
 	[sequoia::unit_testing::move_only_broken_swap<int, std::__1::allocator<int> >]
 	operator== returned false
 	Obtained : 1 
@@ -685,18 +693,18 @@
 
 	../UnitTests/UnitTestFramework/PerformanceTestDiagnostics.cpp, Line 30:
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
-	Fast Task duration: 0.00139346s +- 4 * 1.62358e-05
-	Slow Task duration: 0.00138331s +- 4 * 9.67762e-06 [0.99272; (2, 2)]
+	Fast Task duration: 0.00138898s +- 4 * 5.00217e-06
+	Slow Task duration: 0.00138231s +- 4 * 1.04286e-05 [0.995197; (2, 2)]
 
 	../UnitTests/UnitTestFramework/PerformanceTestDiagnostics.cpp, Line 34:
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
-	Fast Task duration: 0.0013761s +- 4 * 4.44162e-05
-	Slow Task duration: 0.00136098s +- 4 * 3.60344e-05 [0.989016; (2, 3)]
+	Fast Task duration: 0.00134248s +- 4 * 6.32164e-05
+	Slow Task duration: 0.00132735s +- 4 * 3.96626e-05 [0.988732; (2, 3)]
 
 	../UnitTests/UnitTestFramework/PerformanceTestDiagnostics.cpp, Line 38:
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
-	Fast Task duration: 0.00137245s +- 4 * 5.11057e-05
-	Slow Task duration: 0.0047698s +- 4 * 0.000428405 [3.47539; (2, 2.5)]
+	Fast Task duration: 0.00128275s +- 4 * 0.000142153
+	Slow Task duration: 0.0047945s +- 4 * 0.00053844 [3.73767; (2, 2.5)]
 
 	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 27
 	[double]
@@ -762,7 +770,7 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 67:
-	Broken equality no allocation for operator==
+	Broken equality no allocation for operator== no allocation for operator==
 	[sequoia::unit_testing::shared_counting_allocator<int, false, false, false>]
 
 	[int]
@@ -772,7 +780,7 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 67:
-	Broken equality no allocation for operator!=
+	Broken equality no allocation for operator!= no allocation for operator!=
 	[sequoia::unit_testing::shared_counting_allocator<int, false, false, false>]
 
 	[int]
@@ -1348,7 +1356,7 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 67:
-	Broken equality no allocation for operator==
+	Broken equality no allocation for operator== no allocation for operator==
 	[sequoia::unit_testing::shared_counting_allocator<int, false, false, true>]
 
 	[int]
@@ -1358,7 +1366,7 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 67:
-	Broken equality no allocation for operator!=
+	Broken equality no allocation for operator!= no allocation for operator!=
 	[sequoia::unit_testing::shared_counting_allocator<int, false, false, true>]
 
 	[int]
@@ -1994,7 +2002,7 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 67:
-	Broken equality no allocation for operator==
+	Broken equality no allocation for operator== no allocation for operator==
 	[sequoia::unit_testing::shared_counting_allocator<int, false, true, false>]
 
 	[int]
@@ -2004,7 +2012,7 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 67:
-	Broken equality no allocation for operator!=
+	Broken equality no allocation for operator!= no allocation for operator!=
 	[sequoia::unit_testing::shared_counting_allocator<int, false, true, false>]
 
 	[int]
@@ -2580,7 +2588,7 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 67:
-	Broken equality no allocation for operator==
+	Broken equality no allocation for operator== no allocation for operator==
 	[sequoia::unit_testing::shared_counting_allocator<int, false, true, true>]
 
 	[int]
@@ -2590,7 +2598,7 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 67:
-	Broken equality no allocation for operator!=
+	Broken equality no allocation for operator!= no allocation for operator!=
 	[sequoia::unit_testing::shared_counting_allocator<int, false, true, true>]
 
 	[int]
@@ -3216,7 +3224,7 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 67:
-	Broken equality no allocation for operator==
+	Broken equality no allocation for operator== no allocation for operator==
 	[sequoia::unit_testing::shared_counting_allocator<int, true, false, false>]
 
 	[int]
@@ -3226,7 +3234,7 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 67:
-	Broken equality no allocation for operator!=
+	Broken equality no allocation for operator!= no allocation for operator!=
 	[sequoia::unit_testing::shared_counting_allocator<int, true, false, false>]
 
 	[int]
@@ -3822,7 +3830,7 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 67:
-	Broken equality no allocation for operator==
+	Broken equality no allocation for operator== no allocation for operator==
 	[sequoia::unit_testing::shared_counting_allocator<int, true, false, true>]
 
 	[int]
@@ -3832,7 +3840,7 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 67:
-	Broken equality no allocation for operator!=
+	Broken equality no allocation for operator!= no allocation for operator!=
 	[sequoia::unit_testing::shared_counting_allocator<int, true, false, true>]
 
 	[int]
@@ -4488,7 +4496,7 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 67:
-	Broken equality no allocation for operator==
+	Broken equality no allocation for operator== no allocation for operator==
 	[sequoia::unit_testing::shared_counting_allocator<int, true, true, false>]
 
 	[int]
@@ -4498,7 +4506,7 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 67:
-	Broken equality no allocation for operator!=
+	Broken equality no allocation for operator!= no allocation for operator!=
 	[sequoia::unit_testing::shared_counting_allocator<int, true, true, false>]
 
 	[int]
@@ -5094,7 +5102,7 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 67:
-	Broken equality no allocation for operator==
+	Broken equality no allocation for operator== no allocation for operator==
 	[sequoia::unit_testing::shared_counting_allocator<int, true, true, true>]
 
 	[int]
@@ -5104,7 +5112,7 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 67:
-	Broken equality no allocation for operator!=
+	Broken equality no allocation for operator!= no allocation for operator!=
 	[sequoia::unit_testing::shared_counting_allocator<int, true, true, true>]
 
 	[int]
@@ -6116,14 +6124,14 @@
 	False Positive Failure:
 		../UnitTests/UnitTestFramework/PerformanceTestDiagnostics.cpp, Line 67:
 	Performance Test which should pass
-	Fast Task duration: 0.00121227s +- 4 * 0.000104611
-	Slow Task duration: 0.00221986s +- 4 * 0.000176954 [1.83117; (1.8, 2.1)]
+	Fast Task duration: 0.00120613s +- 4 * 0.000116858
+	Slow Task duration: 0.00233643s +- 4 * 0.000138268 [1.93714; (1.8, 2.1)]
 
 	False Positive Failure:
 		../UnitTests/UnitTestFramework/PerformanceTestDiagnostics.cpp, Line 68:
 	Performance Test which should pass
-	Fast Task duration: 0.00115126s +- 4 * 0.000160482
-	Slow Task duration: 0.00414461s +- 4 * 0.000119101 [3.60006; (3.6, 4.1)]
+	Fast Task duration: 0.00115052s +- 4 * 0.000101632
+	Slow Task duration: 0.00412578s +- 4 * 9.09384e-05 [3.586; (3.6, 4.1)]
 
 	False Positive Failure:
 	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 67

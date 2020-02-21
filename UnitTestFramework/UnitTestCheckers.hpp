@@ -440,16 +440,22 @@ namespace sequoia
     {
       typename Logger::sentinel s{logger, add_type_info<T>(description)};
       
-      if(impl::check_regular_semantics(description, logger, x, y, yMutator, std::tuple_cat(impl::make_allocation_checkers(info, x, y)...)))
+      if(impl::check_regular_semantics(description, logger, impl::regular_allocation_actions{}, x, y, yMutator, std::tuple_cat(impl::make_allocation_checkers(info, x, y)...)))
       {
         impl::check_para_constructor_allocations(description, logger, y, yMutator, info...);
       }
     }
 
+    template<class Logger, class T, class Mutator>
+    void check_regular_semantics(std::string_view description, Logger& logger, const T& x, const T& y, Mutator yMutator)
+    {
+      impl::check_regular_semantics(description, logger, impl::regular_default_actions{}, x, y, yMutator);
+    }
+    
     template<class Logger, class T>
     void check_regular_semantics(std::string_view description, Logger& logger, const T& x, const T& y)
     {
-      impl::check_regular_semantics(description, logger, x, y, impl::null_mutator{});
+      impl::check_regular_semantics(description, logger, impl::regular_default_actions{}, x, y, impl::null_mutator{});
     }
 
     template<class Logger, class T, class... Allocators>
@@ -457,43 +463,17 @@ namespace sequoia
     {
       typename Logger::sentinel s{logger, add_type_info<T>(description)};
 
-      if(!impl::check_regular_preconditions(description, logger, x, y)) return;
-
-      if(!check(combine_messages(description, "Precondition - for checking regular semantics, x and xClone are assumed to be equal"), logger, x == xClone)) return;
-
-      if(!check(combine_messages(description, "Precondition - for checking regular semantics, y and yClone are assumed to be equal"), logger, y == yClone)) return;
-
-      T z{std::move(x)};
-      check_equality(combine_messages(description, "Move constructor"), logger, z, xClone);
-        
-      x = std::move(y);
-      check_equality(combine_messages(description, "Move assignment"), logger, x, yClone);
-
-      auto allocChecker{
-        [](std::string_view description, Logger& logger, T&& y, const T& yClone, const auto&... info){
-          if constexpr(sizeof...(Allocators) > 0)
-          {
-            T u{std::move(y), info.make_allocator()...};
-            check_para_move_y_allocation(description, logger, u, std::tuple_cat(make_allocation_checkers(info)...));
-            check_equality(combine_messages(description, "Move constructor using allocator"), logger, u, yClone);
-          }
-        }
-      };
-
-      if constexpr (impl::do_swap<Allocators...>())
+      if(impl::check_regular_semantics(description, logger, impl::regular_allocation_actions{}, std::forward<T>(x), std::forward<T>(y), xClone, yClone, std::tuple_cat(impl::make_allocation_checkers(info, x, y)...)))
       {
-        using std::swap;
-        swap(z, x);
-        check_equality(combine_messages(description, "Swap"), logger, x, xClone);
-        check_equality(combine_messages(description, "Swap"), logger, z, yClone);
+        impl::check_para_constructor_allocations(description, logger, std::forward<T>(y), yClone, info...);
+      }
+    }
 
-        allocChecker(description, logger, std::move(z), yClone, info...);
-      }
-      else
-      {
-        allocChecker(description, logger, std::move(x), yClone, info...);
-      }
-    }    
+    template<class Logger, class T, class... Allocators>
+    void check_regular_semantics(std::string_view description, Logger& logger, T&& x, T&& y, const T& xClone, const T& yClone)
+    {
+      impl::check_regular_semantics(description, logger, impl::regular_default_actions{}, std::forward<T>(x), std::forward<T>(y), xClone, yClone);
+    }
 
     template<class Logger, class... Extenders>
     class checker : private Logger, public Extenders...
