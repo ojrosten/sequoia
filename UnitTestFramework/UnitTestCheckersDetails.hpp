@@ -678,7 +678,7 @@ namespace sequoia::unit_testing::impl
   }
 
   template<class Logger, class Actions, class T, class... Allocators, class... Predictions>
-  bool check_regular_preconditions(std::string_view description, Logger& logger, const Actions& actions, const T& x, const T& y, const allocation_checker<T, Allocators, Predictions>&... checkers)
+  bool check_preconditions(std::string_view description, Logger& logger, const Actions& actions, const T& x, const T& y, const allocation_checker<T, Allocators, Predictions>&... checkers)
   {
     if(!check(combine_messages(description, "Equality operator is inconsistent"), logger, x == x))
       return false;
@@ -716,12 +716,6 @@ namespace sequoia::unit_testing::impl
     constexpr static bool has_post_copy_assign_action{};
     constexpr static bool has_post_move_action{};
     constexpr static bool has_post_move_assign_action{};
-
-    template<class Logger, class Actions, class T>
-    static bool check_regular_preconditions(std::string_view description, Logger& logger, const Actions& actions, const T& x, const T& y)
-    {
-      return impl::check_regular_preconditions(description, logger, actions, x, y);
-    }
   };
 
   struct regular_allocation_actions : pre_condition_actions
@@ -732,13 +726,6 @@ namespace sequoia::unit_testing::impl
     constexpr static bool has_post_copy_assign_action{true};
     constexpr static bool has_post_move_action{true};
     constexpr static bool has_post_move_assign_action{true};
-
-    template<class Logger, class Actions, class T, class... Allocators, class... Predictions>
-    static bool check_regular_preconditions(std::string_view description, Logger& logger, const Actions& actions, const T& x, const T& y, allocation_checker<T, Allocators, Predictions>... checkers)
-    {
-      return impl::check_regular_preconditions(description, logger, actions, x, y, allocation_checker<T, Allocators, Predictions>{x, checkers.first_count(), checkers.info()}...);
-    }
-
     
     template<class Logger, class T, class... Allocators, class... Predictions>
     static void post_equality_action(std::string_view description, Logger& logger, const T& x, const T&, const allocation_checker<T, Allocators, Predictions>&... checkers)
@@ -763,7 +750,7 @@ namespace sequoia::unit_testing::impl
     typename Logger::sentinel s{logger, add_type_info<T>(description)};
     
     // Preconditions
-    if(!actions.check_regular_preconditions(description, logger, actions, x, y, allocation_checker<T, Allocators>{x, checkers.first_count(), checkers.info()}...))
+    if(!check_preconditions(description, logger, actions, x, y, allocation_checker<T, Allocators>{x, checkers.first_count(), checkers.info()}...))
       return false;
         
     T z{x};
@@ -824,7 +811,7 @@ namespace sequoia::unit_testing::impl
     typename Logger::sentinel s{logger, add_type_info<T>(description)};
 
     // Preconditions
-    if(!actions.check_regular_preconditions(description, logger, actions, x, y, allocation_checker<T, Allocators, move_only_allocation_predictions>{x, checkers.first_count(), checkers.info()}...))
+    if(!check_preconditions(description, logger, actions, x, y, allocation_checker<T, Allocators, move_only_allocation_predictions>{x, checkers.first_count(), checkers.info()}...))
       return false;
 
     //if(!impl::check_regular_preconditions(description, logger, x, y)) return;
