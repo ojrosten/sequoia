@@ -871,7 +871,7 @@ namespace sequoia::unit_testing::impl
     typename Logger::sentinel s{logger, add_type_info<T>(description)};
 
     // Preconditions
-    if(!check_preconditions(description, logger, actions, x, y, allocation_checker<T, Allocators, move_only_allocation_predictions>{x, checkers.first_count(), checkers.info()}...))
+    if(!check_preconditions(description, logger, actions, x, y, checkers...))
       return false;
 
     if(!check(combine_messages(description, "Precondition - for checking regular semantics, x and xClone are assumed to be equal"), logger, x == xClone)) return false;
