@@ -449,13 +449,13 @@ namespace sequoia
     template<class Logger, class T, class Mutator>
     void check_regular_semantics(std::string_view description, Logger& logger, const T& x, const T& y, Mutator yMutator)
     {
-      impl::check_regular_semantics(description, logger, impl::regular_default_actions{}, x, y, yMutator);
+      impl::check_regular_semantics(description, logger, impl::default_actions{}, x, y, yMutator);
     }
     
     template<class Logger, class T>
     void check_regular_semantics(std::string_view description, Logger& logger, const T& x, const T& y)
     {
-      impl::check_regular_semantics(description, logger, impl::regular_default_actions{}, x, y, impl::null_mutator{});
+      impl::check_regular_semantics(description, logger, impl::default_actions{}, x, y, impl::null_mutator{});
     }
 
     template<class Logger, class T, class... Allocators>
@@ -463,7 +463,7 @@ namespace sequoia
     {
       typename Logger::sentinel s{logger, add_type_info<T>(description)};
 
-      if(impl::check_regular_semantics(description, logger, impl::regular_allocation_actions{}, std::forward<T>(x), std::forward<T>(y), xClone, yClone, std::tuple_cat(impl::make_allocation_checkers(info, x, y)...)))
+      if(impl::check_regular_semantics(description, logger, impl::move_only_allocation_actions{}, std::forward<T>(x), std::forward<T>(y), xClone, yClone, std::tuple_cat(impl::make_allocation_checkers(info, x, y)...)))
       {
         impl::check_para_constructor_allocations(description, logger, std::forward<T>(y), yClone, info...);
       }
@@ -472,7 +472,7 @@ namespace sequoia
     template<class Logger, class T, class... Allocators>
     void check_regular_semantics(std::string_view description, Logger& logger, T&& x, T&& y, const T& xClone, const T& yClone)
     {
-      impl::check_regular_semantics(description, logger, impl::regular_default_actions{}, std::forward<T>(x), std::forward<T>(y), xClone, yClone);
+      impl::check_regular_semantics(description, logger, impl::default_actions{}, std::forward<T>(x), std::forward<T>(y), xClone, yClone);
     }
 
     template<class Logger, class... Extenders>

@@ -708,25 +708,8 @@ namespace sequoia::unit_testing::impl
     }
   };
 
-  struct regular_default_actions : pre_condition_actions
+  struct allocation_actions : pre_condition_actions
   {
-    constexpr static bool has_post_equality_action{};
-    constexpr static bool has_post_nequality_action{};
-    constexpr static bool has_post_copy_action{};
-    constexpr static bool has_post_copy_assign_action{};
-    constexpr static bool has_post_move_action{};
-    constexpr static bool has_post_move_assign_action{};
-  };
-
-  struct regular_allocation_actions : pre_condition_actions
-  {
-    constexpr static bool has_post_equality_action{true};
-    constexpr static bool has_post_nequality_action{true};
-    constexpr static bool has_post_copy_action{true};
-    constexpr static bool has_post_copy_assign_action{true};
-    constexpr static bool has_post_move_action{true};
-    constexpr static bool has_post_move_assign_action{true};
-    
     template<class Logger, class T, class... Allocators, class... Predictions>
     static void post_equality_action(std::string_view description, Logger& logger, const T& x, const T&, const allocation_checker<T, Allocators, Predictions>&... checkers)
     {
@@ -738,6 +721,42 @@ namespace sequoia::unit_testing::impl
     {
       check_no_allocation(combine_messages(description, "no allocation for operator!="), logger, x, checkers...);
     }
+
+    template<class Logger, class T, class... Allocators, class... Predictions>
+    static void post_copy_action(std::string_view description, Logger& logger, const T& xCopy, const allocation_checker<T, Allocators, Predictions>&... checkers)
+    {
+       check_copy_x_allocation(description, logger, xCopy, allocation_checker<T, Allocators>{xCopy, checkers.first_count(), checkers.info()}...);
+    }
+  };
+
+  struct default_actions : pre_condition_actions
+  {
+    constexpr static bool has_post_equality_action{};
+    constexpr static bool has_post_nequality_action{};
+    constexpr static bool has_post_copy_action{};
+    constexpr static bool has_post_copy_assign_action{};
+    constexpr static bool has_post_move_action{};
+    constexpr static bool has_post_move_assign_action{};
+  };
+
+  struct regular_allocation_actions : allocation_actions
+  {
+    constexpr static bool has_post_equality_action{true};
+    constexpr static bool has_post_nequality_action{true};
+    constexpr static bool has_post_copy_action{true};
+    constexpr static bool has_post_copy_assign_action{true};
+    constexpr static bool has_post_move_action{true};
+    constexpr static bool has_post_move_assign_action{true};
+  };
+
+  struct move_only_allocation_actions : allocation_actions
+  {
+    constexpr static bool has_post_equality_action{true};
+    constexpr static bool has_post_nequality_action{true};
+    constexpr static bool has_post_copy_action{};
+    constexpr static bool has_post_copy_assign_action{};
+    constexpr static bool has_post_move_action{true};
+    constexpr static bool has_post_move_assign_action{true};
   };
   
   template<class Logger, class Actions, class T, class Mutator, class... Allocators>
@@ -754,9 +773,9 @@ namespace sequoia::unit_testing::impl
       return false;
         
     T z{x};
-    if constexpr(checkAllocs)
+    if constexpr(Actions::has_post_copy_action)
     {
-      check_copy_x_allocation(description, logger, z, allocation_checker<T, Allocators>{z, checkers.first_count(), checkers.info()}...);
+      actions.post_copy_action(description, logger, z, checkers...);
     }    
     check_equality(combine_messages(description, "Copy constructor (x)"), logger, z, x);
     check(combine_messages(description, "Equality operator"), logger, z == x);
@@ -814,10 +833,6 @@ namespace sequoia::unit_testing::impl
     if(!check_preconditions(description, logger, actions, x, y, allocation_checker<T, Allocators, move_only_allocation_predictions>{x, checkers.first_count(), checkers.info()}...))
       return false;
 
-    //if(!impl::check_regular_preconditions(description, logger, x, y)) return;
-
-      
-    // Pull inside precondition checking
     if(!check(combine_messages(description, "Precondition - for checking regular semantics, x and xClone are assumed to be equal"), logger, x == xClone)) return false;
 
     if(!check(combine_messages(description, "Precondition - for checking regular semantics, y and yClone are assumed to be equal"), logger, y == yClone)) return false;
