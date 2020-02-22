@@ -753,6 +753,12 @@ namespace sequoia::unit_testing::impl
     {
       check_move_y_allocation(description, logger, y, checkers...);
     }
+
+    template<class Logger, class T, class Mutator, class... Allocators, class... Predictions>
+    static void additional_action(std::string_view description, Logger& logger, const T& x, const T& y, Mutator yMutator, const allocation_checker<T, Allocators, Predictions>&... checkers)
+    {
+      check_allocations(description, logger, x, y, std::move(yMutator), allocation_checker<T, Allocators, Predictions>{x, y, checkers.info()}...);
+    }
   };
 
   struct default_actions : pre_condition_actions
@@ -763,6 +769,7 @@ namespace sequoia::unit_testing::impl
     constexpr static bool has_post_copy_assign_action{};
     constexpr static bool has_post_move_action{};
     constexpr static bool has_post_move_assign_action{};
+    constexpr static bool has_additional_action{};
   };
 
   struct regular_allocation_actions : allocation_actions
@@ -773,6 +780,7 @@ namespace sequoia::unit_testing::impl
     constexpr static bool has_post_copy_assign_action{true};
     constexpr static bool has_post_move_action{true};
     constexpr static bool has_post_move_assign_action{true};
+    constexpr static bool has_additional_action{true};
   };
 
   struct move_only_allocation_actions : allocation_actions
@@ -783,6 +791,7 @@ namespace sequoia::unit_testing::impl
     constexpr static bool has_post_copy_assign_action{};
     constexpr static bool has_post_move_action{true};
     constexpr static bool has_post_move_assign_action{true};
+    constexpr static bool has_additional_action{};
   };
   
   template<class Logger, class Actions, class T, class Mutator, class... Allocators>
@@ -842,9 +851,9 @@ namespace sequoia::unit_testing::impl
       check(combine_messages(description, "Mutation is not doing anything following copy assignment/ broken value semantics"), logger, v != y);
     }
 
-    if constexpr(checkAllocs)
+    if constexpr(Actions::has_additional_action)
     {
-      check_allocations(description, logger, x, y, yMutator, allocation_checker<T, Allocators>{x, y, checkers.info()}...);
+      actions.additional_action(description, logger, x, y, yMutator, checkers...);
     }
 
     return true;
@@ -886,7 +895,7 @@ namespace sequoia::unit_testing::impl
     return check_equality(combine_messages(description, "Post condition: y restored"), logger, y, yClone);
   }
 
-    template<class Logger, class Actions, class T, class Mutator, class... Allocators>
+  template<class Logger, class Actions, class T, class Mutator, class... Allocators>
   bool check_regular_semantics(std::string_view description, Logger& logger, const Actions& actions, const T& x, const T& y, Mutator yMutator, std::tuple<allocation_checker<T, Allocators>...> checkers)
   {
     auto fn{
