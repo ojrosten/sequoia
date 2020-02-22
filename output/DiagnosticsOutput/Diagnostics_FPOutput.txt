@@ -693,18 +693,18 @@
 
 	../UnitTests/UnitTestFramework/PerformanceTestDiagnostics.cpp, Line 30:
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
-	Fast Task duration: 0.00138535s +- 4 * 1.47193e-05
-	Slow Task duration: 0.00134965s +- 4 * 0.000112075 [0.974229; (2, 2)]
+	Fast Task duration: 0.00130862s +- 4 * 0.000155801
+	Slow Task duration: 0.00134109s +- 4 * 0.000142095 [1.02481; (2, 2)]
 
 	../UnitTests/UnitTestFramework/PerformanceTestDiagnostics.cpp, Line 34:
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
-	Fast Task duration: 0.00133625s +- 4 * 4.57874e-05
-	Slow Task duration: 0.00134738s +- 4 * 5.85647e-05 [1.00833; (2, 3)]
+	Fast Task duration: 0.00123042s +- 4 * 0.000186801
+	Slow Task duration: 0.00133297s +- 4 * 0.000305404 [1.08334; (2, 3)]
 
 	../UnitTests/UnitTestFramework/PerformanceTestDiagnostics.cpp, Line 38:
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
-	Fast Task duration: 0.00137162s +- 4 * 4.8168e-05
-	Slow Task duration: 0.00482148s +- 4 * 0.000491179 [3.51516; (2, 2.5)]
+	Fast Task duration: 0.00118708s +- 4 * 9.71809e-05
+	Slow Task duration: 0.00417074s +- 4 * 0.000214201 [3.51345; (2, 2.5)]
 
 	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 27
 	[double]
@@ -6124,14 +6124,14 @@
 	False Positive Failure:
 		../UnitTests/UnitTestFramework/PerformanceTestDiagnostics.cpp, Line 67:
 	Performance Test which should pass
-	Fast Task duration: 0.00117381s +- 4 * 0.000109281
-	Slow Task duration: 0.00224051s +- 4 * 0.000220073 [1.90874; (1.8, 2.1)]
+	Fast Task duration: 0.00136302s +- 4 * 0.000391456
+	Slow Task duration: 0.00218838s +- 4 * 0.000117879 [1.60554; (1.8, 2.1)]
 
 	False Positive Failure:
 		../UnitTests/UnitTestFramework/PerformanceTestDiagnostics.cpp, Line 68:
 	Performance Test which should pass
-	Fast Task duration: 0.00119412s +- 4 * 0.000146295
-	Slow Task duration: 0.00438384s +- 4 * 0.000410322 [3.67119; (3.6, 4.1)]
+	Fast Task duration: 0.00120191s +- 4 * 8.63188e-05
+	Slow Task duration: 0.00457228s +- 4 * 0.000404055 [3.80417; (3.6, 4.1)]
 
 	False Positive Failure:
 	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 67

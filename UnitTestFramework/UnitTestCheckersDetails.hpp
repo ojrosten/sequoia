@@ -694,6 +694,12 @@ namespace sequoia::unit_testing::impl
   template<class Logger, class Actions, class T, class... Allocators, class... Predictions>
   bool check_preconditions(std::string_view description, Logger& logger, const Actions& actions, const T& x, const T& y, const allocation_checker<T, Allocators, Predictions>&... checkers)
   {
+    return do_check_preconditions(description, logger, actions, x, y, allocation_checker<T, Allocators, Predictions>{x, checkers.first_count(), checkers.info()}...);
+  }
+
+  template<class Logger, class Actions, class T, class... Allocators, class... Predictions>
+  bool do_check_preconditions(std::string_view description, Logger& logger, const Actions& actions, const T& x, const T& y, allocation_checker<T, Allocators, Predictions>... checkers)
+  {
     if(!check(combine_messages(description, "Equality operator is inconsistent"), logger, x == x))
       return false;
 
@@ -804,7 +810,7 @@ namespace sequoia::unit_testing::impl
     typename Logger::sentinel s{logger, add_type_info<T>(description)};
     
     // Preconditions
-    if(!check_preconditions(description, logger, actions, x, y, allocation_checker<T, Allocators>{x, checkers.first_count(), checkers.info()}...))
+    if(!check_preconditions(description, logger, actions, x, y, checkers...))
       return false;
         
     T z{x};
