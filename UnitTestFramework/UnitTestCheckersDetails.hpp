@@ -76,14 +76,6 @@ namespace sequoia::unit_testing::impl
     return logger.failures() == previousFailures;
   }
 
-  template<class... Allocators>
-  [[nodiscard]]
-  constexpr bool do_swap() noexcept
-  {
-    return ((   std::allocator_traits<Allocators>::propagate_on_container_swap::value
-             || std::allocator_traits<Allocators>::is_always_equal::value) && ... );
-  }
-
   template<class Logger, class Tag, class Iter, class PredictionIter>
   bool check_range(std::string_view description, Logger& logger, Tag tag, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
   {
@@ -349,6 +341,23 @@ namespace sequoia::unit_testing::impl
     {
       check_allocation(description, "Mutation allocation", suffix, logger, container, info, m_SecondCount, prediction);
     }
+  };
+
+  template<class...>
+  struct do_swap;
+  
+  template<class T, class... Allocators, class... Predictions>
+  struct do_swap<allocation_checker<T, Allocators, Predictions>...>
+  {
+    constexpr static bool value{
+      ((   std::allocator_traits<Allocators>::propagate_on_container_swap::value
+           || std::allocator_traits<Allocators>::is_always_equal::value) && ...) };
+  };
+
+  template<>
+  struct do_swap<>
+  {
+    constexpr static bool value{true};
   };
   
   template<class Fn, class... Ts, std::size_t... I>
@@ -683,7 +692,7 @@ namespace sequoia::unit_testing::impl
       check_mutation_after_move(description, "assignment", logger, u, y, yMutator, allocation_checker<Container, Allocators>{u, 0, checkers.info()}...);
     }
 
-    if constexpr(do_swap<Allocators...>())
+    if constexpr(do_swap<allocation_checker<Container, Allocators>...>::value)
     {
       Container u{x}, v{y};
 
@@ -800,40 +809,35 @@ namespace sequoia::unit_testing::impl
     constexpr static bool has_additional_action{};
   };
   
-  template<class Logger, class Actions, class T, class Mutator, class... Allocators>
-  bool check_regular_semantics(std::string_view description, Logger& logger, const Actions& actions, const T& x, const T& y, Mutator yMutator, allocation_checker<T, Allocators, allocation_predictions>... checkers)
-  {
-    constexpr bool nullMutator{std::is_same_v<Mutator, null_mutator>};
-    constexpr bool checkAllocs{sizeof...(Allocators) > 0};
-    static_assert(!checkAllocs || !nullMutator);
-        
+  template<class Logger, class Actions, class T, class Mutator, class... Args>
+  bool check_regular_semantics(std::string_view description, Logger& logger, const Actions& actions, const T& x, const T& y, Mutator yMutator, const Args&... args)
+  {        
     typename Logger::sentinel s{logger, add_type_info<T>(description)};
     
     // Preconditions
-    if(!check_preconditions(description, logger, actions, x, y, checkers...))
+    if(!check_preconditions(description, logger, actions, x, y, args...))
       return false;
         
     T z{x};
     if constexpr(Actions::has_post_copy_action)
     {
-      actions.post_copy_action(description, logger, z, checkers...);
+      actions.post_copy_action(description, logger, z, args...);
     }    
     check_equality(combine_messages(description, "Copy constructor (x)"), logger, z, x);
     check(combine_messages(description, "Equality operator"), logger, z == x);
 
     // z = y
-    check_copy_assign(description, logger, actions, z, y, checkers...);
+    check_copy_assign(description, logger, actions, z, y, args...);
     check(combine_messages(description, "Inequality operator"), logger, z != x);
 
     // move construction
-    check_move_construction(description, logger, actions, std::move(z), y, checkers...);
+    check_move_construction(description, logger, actions, std::move(z), y, args...);
 
     // move assign
     z = T{x};
     check_equality(combine_messages(description, "Move assignment"), logger, z, x);
 
-    /// do_swap
-    if constexpr (impl::do_swap<Allocators...>())
+    if constexpr (do_swap<Args...>::value)
     {
       using std::swap;
       T w{y};
@@ -842,7 +846,7 @@ namespace sequoia::unit_testing::impl
       check_equality(combine_messages(description, "Swap"), logger, w, x);
     }
 
-    if constexpr(!nullMutator)
+    if constexpr(!std::is_same_v<std::decay_t<Mutator>, null_mutator>)
     {
       T v{y};
       yMutator(v);
@@ -859,19 +863,19 @@ namespace sequoia::unit_testing::impl
 
     if constexpr(Actions::has_additional_action)
     {
-      actions.additional_action(description, logger, x, y, yMutator, checkers...);
+      actions.additional_action(description, logger, x, y, yMutator, args...);
     }
 
     return true;
   }
 
-  template<class Logger, class Actions, class T, class... Allocators>
-  bool check_regular_semantics(std::string_view description, Logger& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, allocation_checker<T, Allocators, move_only_allocation_predictions>... checkers)
+  template<class Logger, class Actions, class T, class... Args>
+  bool check_regular_semantics(std::string_view description, Logger& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, const Args&... args)
   {
     typename Logger::sentinel s{logger, add_type_info<T>(description)};
 
     // Preconditions
-    if(!check_preconditions(description, logger, actions, x, y, checkers...))
+    if(!check_preconditions(description, logger, actions, x, y, args...))
       return false;
 
     if(!check(combine_messages(description, "Precondition - for checking regular semantics, x and xClone are assumed to be equal"), logger, x == xClone)) return false;
@@ -884,7 +888,7 @@ namespace sequoia::unit_testing::impl
     x = std::move(y);
     check_equality(combine_messages(description, "Move assignment"), logger, x, yClone);
 
-    if constexpr (impl::do_swap<Allocators...>())
+    if constexpr (do_swap<Args...>::value)
     {
       using std::swap;
       swap(z, x);
