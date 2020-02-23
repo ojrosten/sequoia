@@ -155,7 +155,7 @@ namespace sequoia::unit_testing::impl
 
 
   template<class Logger, class Actions, class T, class... Args>
-  void do_check_copy_assign(std::string_view description, Logger& logger, const Actions& actions, T& z, const T& y,const Args&... args)
+  void do_check_copy_assign(std::string_view description, Logger& logger, const Actions& actions, T& z, const T& y, const Args&... args)
   {
     z = y;
     check_equality(combine_messages(description, "Copy assignment (from y)"), logger, z, y);

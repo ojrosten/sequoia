@@ -478,18 +478,6 @@ namespace sequoia::unit_testing::impl
     do_check_move_construction(description, logger, actions, std::forward<T>(z), y, allocation_checker<T, Allocators, Predictions>{z, 0, checkers.info()}...);
   }
 
-  template<class Logger, class Actions, class T, class... Allocators, class... Predictions>
-  void do_check_move_construction(std::string_view description, Logger& logger, const Actions& actions, T&& z, const T& y, allocation_checker<T, Allocators, Predictions>... checkers)
-  {
-    const T w{std::move(z)};
-    check_equality(combine_messages(description, "Move constructor"), logger, w, y);
-
-    if constexpr(Actions::has_post_move_action)
-    {
-      actions.post_move_action(description, logger, w, allocation_checker<T, Allocators, Predictions>{w, checkers.first_count(), checkers.info()}...);
-    }
-  }
-
   template<class Logger, class T, class... Allocators>
   void check_move_assign(std::string_view description, Logger& logger, T& u, T&& v, const T& y, allocation_checker<T, Allocators>... checkers)
   {
@@ -633,7 +621,7 @@ namespace sequoia::unit_testing::impl
     template<class Logger, class T, class... Allocators, class... Predictions>
     static void post_move_action(std::string_view description, Logger& logger, const T& y, const allocation_checker<T, Allocators, Predictions>&... checkers)
     {
-      check_move_y_allocation(description, logger, y, checkers...);
+      check_move_y_allocation(description, logger, y, allocation_checker<T, Allocators, Predictions>{y, checkers.first_count(), checkers.info()}...);
     }
 
     template<class Logger, class T, class Mutator, class... Allocators, class... Predictions>
