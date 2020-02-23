@@ -50,11 +50,11 @@ namespace sequoia::unit_testing
     static void check_tuple_elements(std::string_view description, Logger& logger, const std::tuple<T...>& value, const std::tuple<U...>& prediction)
     {
       if constexpr(I < sizeof...(T))
-                    {
-                      const std::string message{"Element " + std::to_string(I) + " of tuple incorrect"};
-                      check_equality(combine_messages(description, message, "\n"), logger, std::get<I>(value), std::get<I>(prediction));
-                      check_tuple_elements<Logger, I+1>(description, logger, value, prediction);
-                    }
+      {
+        const std::string message{"Element " + std::to_string(I) + " of tuple incorrect"};
+        check_equality(combine_messages(description, message, "\n"), logger, std::get<I>(value), std::get<I>(prediction));
+        check_tuple_elements<Logger, I+1>(description, logger, value, prediction);
+      }
     }
       
   public:

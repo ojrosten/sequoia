@@ -12,6 +12,7 @@
 */
 
 #include "UnitTestCore.hpp"
+#include "AllocationCheckers.hpp"
 
 namespace sequoia::unit_testing
 {
