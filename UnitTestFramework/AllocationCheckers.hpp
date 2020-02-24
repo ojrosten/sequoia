@@ -148,9 +148,9 @@ namespace sequoia::unit_testing
   };
 
   // Done through inheritance rather than a using declaration
-  // in order to make use of CTAD. A shame argument deduction
-  // can't be used for using declarations...
-    
+  // in order to make use of CTAD. Should be able to revert
+  // to using in C++20...
+
   template<class Container, class Allocator>
   class allocation_info
     : public basic_allocation_info<Container, Allocator, allocation_predictions>
