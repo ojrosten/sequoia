@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file UnitTestCheckers.hpp
+/*! \file AllocationCheckers.hpp
     \brief Utilties for performing allocation checks within the unit testing framework.
 */
 
@@ -62,13 +62,8 @@ namespace sequoia::unit_testing
     assignment_allocation_predictions assign_y_to_x;
   };
 
-  struct move_only_allocation_predictions
-  {
-    int para_move{};
-  };
-
   template<class Container, class Allocator, class Predictions>
-  class allocation_info : public impl::allocation_info_base<Container, Allocator>
+  class basic_allocation_info : public impl::allocation_info_base<Container, Allocator>
   {
   private:
     using base_t = impl::allocation_info_base<Container, Allocator>;
@@ -78,7 +73,7 @@ namespace sequoia::unit_testing
     using predictions_type = Predictions;
       
     template<class Fn>
-    allocation_info(Fn&& allocGetter, Predictions predictions)
+    basic_allocation_info(Fn&& allocGetter, Predictions predictions)
       : base_t{std::forward<Fn>(allocGetter)}
       , m_Predictions{std::move(predictions)}
     {}
@@ -93,7 +88,7 @@ namespace sequoia::unit_testing
   };
 
   template<class Container, class... Allocators, class Predictions>
-  class allocation_info<Container, std::scoped_allocator_adaptor<Allocators...>, Predictions>
+  class basic_allocation_info<Container, std::scoped_allocator_adaptor<Allocators...>, Predictions>
     : public impl::allocation_info_base<Container, std::scoped_allocator_adaptor<Allocators...>>
   {
   private:
@@ -106,7 +101,7 @@ namespace sequoia::unit_testing
     using predictions_type = Predictions;
 
     template<class Fn>
-    allocation_info(Fn&& allocGetter, std::initializer_list<Predictions> predictions)
+    basic_allocation_info(Fn&& allocGetter, std::initializer_list<Predictions> predictions)
       : base_t{std::forward<Fn>(allocGetter)}
       , m_Predictions{utilities::to_array<Predictions, N>(predictions)}
     {}
@@ -126,7 +121,7 @@ namespace sequoia::unit_testing
 
         using Alloc = decltype(scopedGetter(std::declval<Container>()));
 
-        return allocation_info<Container, Alloc>{scopedGetter, m_Predictions[I]};
+        return basic_allocation_info<Container, Alloc, Predictions>{scopedGetter, m_Predictions[I]};
       }
     }
 
@@ -152,6 +147,18 @@ namespace sequoia::unit_testing
     std::array<Predictions, N> m_Predictions;
   };
 
+  // Done through inheritance rather than a using declaration
+  // in order to make use of CTAD. A shame argument deduction
+  // can't be used for using declarations...
+    
+  template<class Container, class Allocator>
+  class allocation_info
+    : public basic_allocation_info<Container, Allocator, allocation_predictions>
+  {
+  public:
+    using basic_allocation_info<Container, Allocator, allocation_predictions>::basic_allocation_info;
+  };
+
   template<class Fn>
   allocation_info(Fn&& allocGetter, allocation_predictions predictions)
     -> allocation_info<std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::arg>, std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::ret>>;
@@ -159,27 +166,7 @@ namespace sequoia::unit_testing
   template<class Fn>
   allocation_info(Fn&& allocGetter, std::initializer_list<allocation_predictions> predictions)
     -> allocation_info<std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::arg>, std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::ret>>;
-
-  // Done through inheritance rather than a using declaration
-  // in order to make use of CTAD. A shame argument deduction
-  // can't be used for using declarations...
     
-  template<class Container, class Allocator>
-  class move_only_allocation_info
-    : public allocation_info<Container, Allocator, move_only_allocation_predictions>
-  {
-  public:
-    using allocation_info<Container, Allocator, move_only_allocation_predictions>::allocation_info;
-  };
-
-  template<class Fn>
-  move_only_allocation_info(Fn&& allocGetter, move_only_allocation_predictions predictions)
-    -> move_only_allocation_info<std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::arg>, std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::ret>>;
-
-  template<class Fn>
-  move_only_allocation_info(Fn&& allocGetter, std::initializer_list<move_only_allocation_predictions> predictions)
-    -> move_only_allocation_info<std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::arg>, std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::ret>>;
-
   template<class Logger, class T, class Mutator, class... Allocators>
   void check_regular_semantics(std::string_view description, Logger& logger, const T& x, const T& y, Mutator yMutator, allocation_info<T, Allocators>... info)
   {
@@ -188,17 +175,6 @@ namespace sequoia::unit_testing
     if(impl::check_regular_semantics(description, logger, impl::regular_allocation_actions{}, x, y, yMutator, std::tuple_cat(impl::make_allocation_checkers(info, x, y)...)))
     {
       impl::check_para_constructor_allocations(description, logger, y, yMutator, info...);
-    }
-  }
-
-  template<class Logger, class T, class... Allocators>
-  void check_regular_semantics(std::string_view description, Logger& logger, T&& x, T&& y, const T& xClone, const T& yClone, move_only_allocation_info<T, Allocators>... info)
-  {
-    typename Logger::sentinel s{logger, add_type_info<T>(description)};
-
-    if(impl::check_regular_semantics(description, logger, impl::move_only_allocation_actions{}, std::forward<T>(x), std::forward<T>(y), xClone, yClone, std::tuple_cat(impl::make_allocation_checkers(info, x, y)...)))
-    {
-      impl::check_para_constructor_allocations(description, logger, std::forward<T>(y), yClone, info...);
     }
   }
 }

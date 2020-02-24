@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "AllocationTestCore.hpp"
+#include "MoveOnlyAllocationTestCore.hpp"
 
 #include "DataPool.hpp"
 
