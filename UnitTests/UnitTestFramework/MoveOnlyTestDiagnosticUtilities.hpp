@@ -219,7 +219,7 @@ namespace sequoia::unit_testing
 
     move_only_broken_swap& operator=(const move_only_broken_swap&) = delete;
 
-    move_only_broken_swap& operator=(move_only_broken_swap&&) noexcept = default;
+    move_only_broken_swap& operator=(move_only_broken_swap&&) = default;
 
     friend void swap(move_only_broken_swap&, move_only_broken_swap&) noexcept
     {

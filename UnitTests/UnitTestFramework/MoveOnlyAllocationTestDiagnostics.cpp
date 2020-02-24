@@ -65,6 +65,19 @@ namespace sequoia::unit_testing
       
       check_regular_semantics(LINE(""), beast{1}, beast{2}, beast{1}, beast{2}, move_only_allocation_info{allocGetter, move_only_allocation_predictions{1}});
     }
+
+    
+    if constexpr(PropagateSwap)
+    {
+      using beast = move_only_broken_swap<int, shared_counting_allocator<int, true, PropagateMove, PropagateSwap>>;
+      auto allocGetter{
+        [](const beast& beast){
+          return beast.x.get_allocator();
+        }
+      };
+      
+      check_regular_semantics(LINE(""), beast{1}, beast{2}, beast{1}, beast{2}, move_only_allocation_info{allocGetter, move_only_allocation_predictions{1}});
+    }
   }
 
   [[nodiscard]]
