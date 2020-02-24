@@ -173,6 +173,24 @@ namespace sequoia::unit_testing::impl
   }
 
   template<class Logger, class Actions, class T, class... Args>
+  void do_check_move_assign(std::string_view description, Logger& logger, const Actions& actions, T& z, T&& y, const T& yClone, const Args&... args)
+  {
+    z = std::move(y);
+    check_equality(combine_messages(description, "Move assignment (from y)"), logger, z, yClone);
+
+    if constexpr(Actions::has_post_move_assign_action)
+    {
+      actions.post_move_assign_action(description, logger, z, args...);
+    }
+  }
+  
+  template<class Logger, class Actions, class T>
+  void check_move_assign(std::string_view description, Logger& logger, const Actions& actions, T& z, T&& y, const T& yClone)
+  {
+    do_check_move_assign(description, logger, actions, z, std::forward<T>(y), yClone);   
+  }
+
+  template<class Logger, class Actions, class T, class... Args>
   void do_check_move_construction(std::string_view description, Logger& logger, const Actions& actions, T&& z, const T& y, const Args&... args)
   {
     const T w{std::move(z)};
@@ -203,7 +221,7 @@ namespace sequoia::unit_testing::impl
     if constexpr(Actions::has_post_copy_action)
     {
       actions.post_copy_action(description, logger, z, args...);
-    }    
+    }
     check_equality(combine_messages(description, "Copy constructor (x)"), logger, z, x);
     check(combine_messages(description, "Equality operator"), logger, z == x);
 
@@ -264,6 +282,10 @@ namespace sequoia::unit_testing::impl
     if(!check(combine_messages(description, "Precondition - for checking regular semantics, y and yClone are assumed to be equal"), logger, y == yClone)) return false;
 
     T z{std::move(x)};
+    if constexpr(Actions::has_post_move_action)
+    {
+      actions.post_move_action(description, logger, z, args...);
+    }
     check_equality(combine_messages(description, "Move constructor"), logger, z, xClone);
         
     x = std::move(y);

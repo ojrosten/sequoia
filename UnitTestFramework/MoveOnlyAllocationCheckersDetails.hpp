@@ -24,6 +24,12 @@ namespace sequoia::unit_testing::impl
     constexpr static bool has_post_move_action{true};
     constexpr static bool has_post_move_assign_action{true};
     constexpr static bool has_additional_action{};
+
+    template<class Logger, class Container, class... Allocators, class... Predictions>
+    static void post_move_action(std::string_view description, Logger& logger, const Container& x, const allocation_checker<Container, Allocators, Predictions>&... checkers)
+    {
+      check_no_allocation(description, logger, x, allocation_checker<Container, Allocators, Predictions>{x, checkers.first_count(), checkers.info()}...);
+    }
   };
 
   template<class Logger, class Actions, class T, class... Allocators>

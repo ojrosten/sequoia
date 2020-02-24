@@ -7,11 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7E337EAF240475AF00546066 /* FreeTestCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E337EAE240475AF00546066 /* FreeTestCore.cpp */; };
+		7E337EB4240475D900546066 /* MoveOnlyAllocationTestDiagnostics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E337EB0240475D800546066 /* MoveOnlyAllocationTestDiagnostics.cpp */; };
+		7E337EB5240475D900546066 /* AllocationTestDiagnostics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E337EB1240475D800546066 /* AllocationTestDiagnostics.cpp */; };
+		7E337EB6240475D900546066 /* FuzzyTestDiagnostics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E337EB2240475D900546066 /* FuzzyTestDiagnostics.cpp */; };
+		7E337EB7240475D900546066 /* MoveOnlyTestDiagnostics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E337EB3240475D900546066 /* MoveOnlyTestDiagnostics.cpp */; };
 		7E7198AE22E78CE400FF81BC /* UnitTestChamberMain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E7198AD22E78CE400FF81BC /* UnitTestChamberMain.cpp */; };
 		7E7198B122E78E2F00FF81BC /* UnitTestRunner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E7198B022E78E2F00FF81BC /* UnitTestRunner.cpp */; };
 		7E7198B322E78E7600FF81BC /* UnitTestDiagnostics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7E7198B222E78E7600FF81BC /* UnitTestDiagnostics.cpp */; };
 		7EA3701E23F34D1100627EC4 /* CommandLineArguments.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7EA3701C23F34D1100627EC4 /* CommandLineArguments.cpp */; };
-		7EA3702323F34DC800627EC4 /* UnitTestCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7EA3702123F34DC800627EC4 /* UnitTestCore.cpp */; };
 		7EA3702423F34DC800627EC4 /* UnitTestFamily.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7EA3702223F34DC800627EC4 /* UnitTestFamily.cpp */; };
 		7EA3702623F34DD900627EC4 /* PerformanceTestDiagnostics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7EA3702523F34DD900627EC4 /* PerformanceTestDiagnostics.cpp */; };
 		7EDFEB3823E76C9F001308B7 /* CommandLineArgumentsDiagnostics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7EDFEB3723E76C9F001308B7 /* CommandLineArgumentsDiagnostics.cpp */; };
@@ -31,6 +35,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		7E337EAE240475AF00546066 /* FreeTestCore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FreeTestCore.cpp; path = ../UnitTestFramework/FreeTestCore.cpp; sourceTree = "<group>"; };
+		7E337EB0240475D800546066 /* MoveOnlyAllocationTestDiagnostics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MoveOnlyAllocationTestDiagnostics.cpp; path = ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp; sourceTree = "<group>"; };
+		7E337EB1240475D800546066 /* AllocationTestDiagnostics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AllocationTestDiagnostics.cpp; path = ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp; sourceTree = "<group>"; };
+		7E337EB2240475D900546066 /* FuzzyTestDiagnostics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FuzzyTestDiagnostics.cpp; path = ../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp; sourceTree = "<group>"; };
+		7E337EB3240475D900546066 /* MoveOnlyTestDiagnostics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MoveOnlyTestDiagnostics.cpp; path = ../UnitTests/UnitTestFramework/MoveOnlyTestDiagnostics.cpp; sourceTree = "<group>"; };
 		7E402F0D215D01510017F018 /* SequoiaX */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SequoiaX; sourceTree = BUILT_PRODUCTS_DIR; };
 		7E402F17215D01CE0017F018 /* Algorithms */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Algorithms; path = ../Algorithms; sourceTree = "<group>"; };
 		7E402F18215D01E60017F018 /* Core */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Core; path = ../Core; sourceTree = "<group>"; };
@@ -42,7 +51,6 @@
 		7E7198B222E78E7600FF81BC /* UnitTestDiagnostics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UnitTestDiagnostics.cpp; path = ../UnitTests/UnitTestFramework/UnitTestDiagnostics.cpp; sourceTree = "<group>"; };
 		7EA3701C23F34D1100627EC4 /* CommandLineArguments.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CommandLineArguments.cpp; path = ../Parsing/CommandLineArguments.cpp; sourceTree = "<group>"; };
 		7EA3702023F34D7F00627EC4 /* Parsing */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Parsing; path = ../Parsing; sourceTree = "<group>"; };
-		7EA3702123F34DC800627EC4 /* UnitTestCore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UnitTestCore.cpp; path = ../UnitTestFramework/UnitTestCore.cpp; sourceTree = "<group>"; };
 		7EA3702223F34DC800627EC4 /* UnitTestFamily.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = UnitTestFamily.cpp; path = ../UnitTestFramework/UnitTestFamily.cpp; sourceTree = "<group>"; };
 		7EA3702523F34DD900627EC4 /* PerformanceTestDiagnostics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PerformanceTestDiagnostics.cpp; path = ../UnitTests/UnitTestFramework/PerformanceTestDiagnostics.cpp; sourceTree = "<group>"; };
 		7EDFEB3723E76C9F001308B7 /* CommandLineArgumentsDiagnostics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CommandLineArgumentsDiagnostics.cpp; path = ../UnitTests/Parsing/CommandLineArgumentsDiagnostics.cpp; sourceTree = "<group>"; };
@@ -63,8 +71,12 @@
 		7E402F04215D01510017F018 = {
 			isa = PBXGroup;
 			children = (
+				7E337EB1240475D800546066 /* AllocationTestDiagnostics.cpp */,
+				7E337EB2240475D900546066 /* FuzzyTestDiagnostics.cpp */,
+				7E337EB0240475D800546066 /* MoveOnlyAllocationTestDiagnostics.cpp */,
+				7E337EB3240475D900546066 /* MoveOnlyTestDiagnostics.cpp */,
+				7E337EAE240475AF00546066 /* FreeTestCore.cpp */,
 				7EA3702523F34DD900627EC4 /* PerformanceTestDiagnostics.cpp */,
-				7EA3702123F34DC800627EC4 /* UnitTestCore.cpp */,
 				7EA3702223F34DC800627EC4 /* UnitTestFamily.cpp */,
 				7EA3701C23F34D1100627EC4 /* CommandLineArguments.cpp */,
 				7EDFEB4423E76ECC001308B7 /* CommandLineArgumentsTest.cpp */,
@@ -155,12 +167,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				7E7198AE22E78CE400FF81BC /* UnitTestChamberMain.cpp in Sources */,
+				7E337EB5240475D900546066 /* AllocationTestDiagnostics.cpp in Sources */,
 				7E7198B122E78E2F00FF81BC /* UnitTestRunner.cpp in Sources */,
-				7EA3702323F34DC800627EC4 /* UnitTestCore.cpp in Sources */,
 				7EDFEB4523E76ECC001308B7 /* CommandLineArgumentsTest.cpp in Sources */,
+				7E337EB7240475D900546066 /* MoveOnlyTestDiagnostics.cpp in Sources */,
 				7EA3702423F34DC800627EC4 /* UnitTestFamily.cpp in Sources */,
 				7E7198B322E78E7600FF81BC /* UnitTestDiagnostics.cpp in Sources */,
+				7E337EAF240475AF00546066 /* FreeTestCore.cpp in Sources */,
 				7EDFEB3823E76C9F001308B7 /* CommandLineArgumentsDiagnostics.cpp in Sources */,
+				7E337EB4240475D900546066 /* MoveOnlyAllocationTestDiagnostics.cpp in Sources */,
+				7E337EB6240475D900546066 /* FuzzyTestDiagnostics.cpp in Sources */,
 				7EA3702623F34DD900627EC4 /* PerformanceTestDiagnostics.cpp in Sources */,
 				7EA3701E23F34D1100627EC4 /* CommandLineArguments.cpp in Sources */,
 			);
@@ -295,6 +311,7 @@
 					"$(SRCROOT)/../Maths/**",
 					"$(SRCROOT)/../UnitTestFramework/**",
 					"$(SRCROOT)/../Parsing/**",
+					"$(SRCROOT)/../UnitTestCommon/**",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				OTHER_CPLUSPLUSFLAGS = "";
