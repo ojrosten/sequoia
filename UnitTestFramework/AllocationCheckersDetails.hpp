@@ -219,7 +219,7 @@ namespace sequoia::unit_testing::impl
     }     
 
     [[nodiscard]]
-    const alloc_info info() const noexcept
+    const alloc_info& info() const noexcept
     {
       return m_Info;
     }
