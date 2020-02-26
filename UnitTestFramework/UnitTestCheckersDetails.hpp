@@ -11,40 +11,7 @@
     \brief Implementation details for performing checks within the unit testing framework.
 */
 
-#include "UnitTestLogger.hpp"
-#include <scoped_allocator>
-
-namespace sequoia::unit_testing
-{
-  template <class, template<class...> class T, class... Args>
-  struct template_class_is_instantiable : std::false_type
-  {};
-
-  template <template<class...> class T, class... Args>
-  struct template_class_is_instantiable<std::void_t<decltype(T<Args...>{})>, T, Args...>
-    : std::true_type
-  {};
-
-  template <template<class...> class T, class... Args>
-  constexpr bool template_class_is_instantiable_v{template_class_is_instantiable<std::void_t<>, T, Args...>::value};
-
-  template<class T, class... U> std::string make_type_info();
-  template<class T, class... U> std::string add_type_info(std::string_view description);
-
-  template<class T> struct detailed_equality_checker;
-  template<class T, class... Us> struct equivalence_checker;
-  template<class T, class... Us> struct weak_equivalence_checker;
-
-  struct equality_tag{};
-  struct equivalence_tag{};
-  struct weak_equivalence_tag{};
-  
-  template<class T> constexpr bool has_equivalence_checker_v{template_class_is_instantiable_v<equivalence_checker, T>};
-  template<class T> constexpr bool has_weak_equivalence_checker_v{template_class_is_instantiable_v<weak_equivalence_checker, T>};
-  template<class T> constexpr bool has_detailed_equality_checker_v{template_class_is_instantiable_v<detailed_equality_checker, T>};
-  
-  template<class Logger, class T> bool check_equality(std::string_view description, Logger& logger, const T& value, const T& prediction);
-}
+#include "FreeTestCheckersDetails.hpp"
 
 namespace sequoia::unit_testing::impl
 {
@@ -80,51 +47,6 @@ namespace sequoia::unit_testing::impl
     constexpr static bool has_additional_action{};
   };
  
-
-  template<class EquivChecker, class Logger, class T, class S, class... U>
-  bool check(std::string_view description, Logger& logger, const T& value, const S& s, const U&... u)
-  {
-    using sentinel = typename Logger::sentinel;
-
-    const std::string message{
-      add_type_info<S, U...>(
-        combine_messages(description, "Comparison performed using:\n\t[" + demangle<EquivChecker>() + "]\n\tWith equivalent types:", "\n"))
-    };
-      
-    sentinel r{logger, message};
-    const auto previousFailures{logger.failures()};
-    
-    EquivChecker::check(message, logger, value, s, u...);
-      
-    return logger.failures() == previousFailures;
-  }
-
-  template<class Logger, class Tag, class Iter, class PredictionIter>
-  bool check_range(std::string_view description, Logger& logger, Tag tag, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
-  {
-    typename Logger::sentinel r{logger, description};
-    bool equal{true};
-
-    using std::distance;
-    const auto predictedSize{distance(predictionFirst, predictionLast)};
-    if(check_equality(combine_messages(description, "Container size wrong", "\n"), logger, distance(first, last), predictedSize))
-    {
-      auto predictionIter{predictionFirst};
-      auto iter{first};
-      for(; predictionIter != predictionLast; ++predictionIter, ++iter)
-      {
-        std::string dist{std::to_string(std::distance(predictionFirst, predictionIter)).append("\n")};
-        if(!check(combine_messages(description, "element ", "\n").append(std::move(dist)), logger, tag, *iter, *predictionIter)) equal = false;
-      }
-    }
-    else
-    {
-      equal = false;
-    }
-      
-    return equal;
-  }
-
   template<class Logger, class Actions, class T, class... Args>
   bool do_check_preconditions(std::string_view description, Logger& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
   {

@@ -9,6 +9,8 @@
 
 #include "UnitTestCore.hpp"
 
+#include <vector>
+
 namespace sequoia::unit_testing
 {
   template<class T=int, class Allocator=std::allocator<int>>

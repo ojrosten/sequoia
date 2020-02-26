@@ -12,11 +12,10 @@
 */
 
 #include "UnitTestCheckersDetails.hpp"
+#include <scoped_allocator>
 
 namespace sequoia::unit_testing
 {
-  struct individual_allocation_predictions;
-  struct allocation_predictions;
   struct move_only_allocation_predictions;
   
   template<class Container, class Allocator, class Predictions>

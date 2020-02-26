@@ -7,6 +7,8 @@
 
 #include "FuzzyTestDiagnostics.hpp"
 
+#include <vector>
+
 namespace sequoia::unit_testing
 {
   [[nodiscard]]

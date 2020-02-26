@@ -13,6 +13,7 @@
 #include <fstream>
 #include <sstream>
 #include <cctype>
+#include <optional>
 
 namespace sequoia::unit_testing
 {

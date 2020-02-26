@@ -14,7 +14,8 @@
 #include "PartitionedDataTestingUtilities.hpp"
 
 #include "DynamicGraph.hpp"
-#include "Utilities.hpp"
+
+#include <variant>
 
 namespace sequoia::unit_testing
 {

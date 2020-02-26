@@ -14,6 +14,9 @@
 #include "UnitTestCheckers.hpp"
 #include "AllocationCheckersDetails.hpp"
 
+#include "ArrayUtilities.hpp"
+#include "Utilities.hpp"
+
 namespace sequoia::unit_testing
 {
   struct individual_allocation_predictions

@@ -534,9 +534,9 @@ namespace sequoia::unit_testing
     {
       x.reserve(other.x.size());
       for(auto e : other.x)
-        {
-          x.emplace_back(std::make_shared<T>(*e));
-        }
+      {
+        x.emplace_back(std::make_shared<T>(*e));
+      }
     }
 
     broken_copy_value_semantics(broken_copy_value_semantics&&) noexcept = default;
@@ -606,9 +606,9 @@ namespace sequoia::unit_testing
     {
       x.reserve(other.x.size());
       for(auto e : other.x)
-        {
-          x.emplace_back(std::make_shared<T>(*e));
-        }
+      {
+        x.emplace_back(std::make_shared<T>(*e));
+      }
     }
 
     broken_copy_assignment_value_semantics(broken_copy_assignment_value_semantics&&) noexcept = default;
@@ -731,10 +731,10 @@ namespace sequoia::unit_testing
     {
       x.reserve(other.x.size());
       for(auto e : other.x)
-        {
-          x.emplace_back(std::make_shared<T>(*e));
-        }
-    }      
+      {
+        x.emplace_back(std::make_shared<T>(*e));
+      }
+    } 
 
     perfectly_sharing_beast(perfectly_sharing_beast&&) noexcept = default;
 
@@ -744,15 +744,15 @@ namespace sequoia::unit_testing
     perfectly_sharing_beast& operator=(const perfectly_sharing_beast& other)
     {
       if(&other != this)
-        {
-          auto allocGetter{
-            [](const  perfectly_sharing_beast& psb){
-              return psb.x.get_allocator();
-            }
-          };
+      {
+        auto allocGetter{
+          [](const  perfectly_sharing_beast& psb){
+            return psb.x.get_allocator();
+          }
+        };
 
-          sequoia::impl::assignment_helper::assign(*this, other, allocGetter);
-        }
+        sequoia::impl::assignment_helper::assign(*this, other, allocGetter);
+      }
 
       return *this;
     }

@@ -8,6 +8,8 @@
 #include "UnitTestDiagnosticsUtilities.hpp"
 #include "AllocationTestDiagnostics.hpp"
 
+#include <vector>
+
 namespace sequoia::unit_testing
 {
   [[nodiscard]]

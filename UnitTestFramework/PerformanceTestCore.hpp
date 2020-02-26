@@ -12,6 +12,11 @@
 */
 
 #include "UnitTestCore.hpp"
+#include "StatisticalAlgorithms.hpp"
+
+#include <chrono>
+#include <random>
+#include <future>
 
 namespace sequoia::unit_testing
 {

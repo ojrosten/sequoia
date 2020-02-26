@@ -13,6 +13,8 @@
 
 #include "UnitTestCore.hpp"
 
+#include <cmath>
+
 namespace sequoia::unit_testing
 {
   namespace impl

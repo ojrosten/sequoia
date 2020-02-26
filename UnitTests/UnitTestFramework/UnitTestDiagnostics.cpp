@@ -9,6 +9,8 @@
 #include "UnitTestDiagnosticsUtilities.hpp"
 
 #include <complex>
+#include <vector>
+#include <set>
 
 namespace sequoia::unit_testing
 {

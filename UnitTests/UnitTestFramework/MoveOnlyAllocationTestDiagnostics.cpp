@@ -8,6 +8,8 @@
 #include "MoveOnlyAllocationTestDiagnostics.hpp"
 #include "MoveOnlyTestDiagnosticUtilities.hpp"
 
+#include <vector>
+
 namespace sequoia::unit_testing
 {
   [[nodiscard]]
@@ -30,20 +32,6 @@ namespace sequoia::unit_testing
   template<bool PropagateMove, bool PropagateSwap>
   void move_only_allocation_false_positive_diagnostics::test_move_only_semantics_allocations()
   {
-    check_regular_semantics(LINE(""), move_only_broken_equality{1}, move_only_broken_equality{2}, move_only_broken_equality{1}, move_only_broken_equality{2});
-
-    check_regular_semantics(LINE(""), move_only_broken_inequality{1}, move_only_broken_inequality{2}, move_only_broken_inequality{1}, move_only_broken_inequality{2});
-
-    check_regular_semantics(LINE(""), move_only_broken_move{1}, move_only_broken_move{2}, move_only_broken_move{1}, move_only_broken_move{2});
-
-    check_regular_semantics(LINE(""), move_only_broken_move_assignment{1}, move_only_broken_move_assignment{2}, move_only_broken_move_assignment{1}, move_only_broken_move_assignment{2});
-
-    check_regular_semantics(LINE(""), move_only_beast{1}, move_only_beast{1}, move_only_beast{1}, move_only_beast{1});
-
-    check_regular_semantics(LINE(""), move_only_beast{1}, move_only_beast{3}, move_only_beast{2}, move_only_beast{3});
-
-    check_regular_semantics(LINE(""), move_only_beast{1}, move_only_beast{2}, move_only_beast{3}, move_only_beast{2});
-
     {
       using beast = move_only_beast<int, shared_counting_allocator<int, true, PropagateMove, PropagateSwap>>;
       auto allocGetter{
@@ -89,6 +77,8 @@ namespace sequoia::unit_testing
       
       check_regular_semantics(LINE(""), beast{1}, beast{2}, beast{1}, beast{2}, move_only_allocation_info{allocGetter, move_only_allocation_predictions{1}});
     }
+
+    // Inefficient move & move assign
   }
 
   [[nodiscard]]
