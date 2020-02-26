@@ -10,6 +10,9 @@
 #include "TypeTraits.hpp"
 
 #include <complex>
+#include <set>
+#include <vector>
+#include <thread>
 
 namespace sequoia::unit_testing
 {

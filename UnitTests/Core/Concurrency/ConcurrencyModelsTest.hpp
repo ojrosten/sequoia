@@ -9,6 +9,8 @@
 
 #include "UnitTestCore.hpp"
 
+#include <vector>
+
 namespace sequoia::unit_testing
 {
   class threading_models_test final : public unit_test

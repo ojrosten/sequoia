@@ -15,7 +15,7 @@
 #include "ArrayUtilities.hpp"
 #include "Algorithms.hpp"
 
-#include <stdexcept>
+#include <vector>
 
 namespace sequoia::maths
 {  

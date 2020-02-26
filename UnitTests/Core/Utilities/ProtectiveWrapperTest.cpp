@@ -8,6 +8,8 @@
 #include "ProtectiveWrapperTest.hpp"
 #include "ProtectiveWrapperTestingUtilities.hpp"
 
+#include <vector>
+
 namespace sequoia::unit_testing
 {
   // a+1, b*2
