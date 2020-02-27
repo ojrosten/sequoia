@@ -8,10 +8,11 @@
 #pragma once
 
 /*! \file UnitTestCheckers.hpp
-    \brief Utilties for performing checks within the unit testing framework.
+    \brief Utilities for performing checks within the unit testing framework.
 */
 
-#include "UnitTestCheckers.hpp"
+#include "FreeTestCheckers.hpp"
+#include "MoveOnlyTestCheckersDetails.hpp"
 
 namespace sequoia::unit_testing
 {

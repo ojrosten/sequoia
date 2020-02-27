@@ -12,6 +12,7 @@
 */
 
 #include "AllocationCheckersDetails.hpp"
+#include "MoveOnlyTestCheckersDetails.hpp"
 
 namespace sequoia::unit_testing::impl
 {
