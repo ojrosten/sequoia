@@ -931,7 +931,7 @@ namespace sequoia::unit_testing
 
     inefficient_move(inefficient_move&& other) : x{std::move(other.x)}
     {
-      x.reserve(10);
+      x.reserve(x.capacity() + 10);
     }
 
     inefficient_move(inefficient_move&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}

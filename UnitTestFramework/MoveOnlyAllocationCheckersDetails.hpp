@@ -28,7 +28,7 @@ namespace sequoia::unit_testing::impl
     template<class Logger, class Container, class... Allocators, class... Predictions>
     static void post_move_action(std::string_view description, Logger& logger, const Container& x, const allocation_checker<Container, Allocators, Predictions>&... checkers)
     {
-      check_no_allocation(description, logger, x, allocation_checker<Container, Allocators, Predictions>{x, checkers.first_count(), checkers.info()}...);
+      check_move_y_allocation(description, logger, x, allocation_checker<Container, Allocators, Predictions>{x, checkers.first_count(), checkers.info()}...);
     }
   };
 

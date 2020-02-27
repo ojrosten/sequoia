@@ -14,6 +14,60 @@
 namespace sequoia::unit_testing
 {
   template<class T=int, class Allocator=std::allocator<int>>
+  struct move_only_beast
+  {
+    using allocator_type = Allocator;
+
+    move_only_beast(std::initializer_list<T> list) : x{list} {}
+
+    move_only_beast(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {}
+
+    move_only_beast(const allocator_type& a) : x(a) {}
+
+    move_only_beast(const move_only_beast&) = delete;
+
+    move_only_beast(move_only_beast&&) noexcept = default;
+
+    move_only_beast(move_only_beast&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+
+    move_only_beast& operator=(const move_only_beast&) = delete;
+
+    move_only_beast& operator=(move_only_beast&&) = default;
+
+    void swap(move_only_beast& other) noexcept(noexcept(std::swap(x, other.x)))
+    {
+      std::swap(x, other.x);
+    }
+
+    friend void swap(move_only_beast& lhs, move_only_beast& rhs)
+      noexcept(noexcept(lhs.swap(rhs)))
+    {
+      lhs.swap(rhs);
+    }
+      
+    std::vector<T, Allocator> x{};
+
+    [[nodiscard]]
+    friend bool operator==(const move_only_beast& lhs, const move_only_beast& rhs) noexcept
+    {
+      return lhs.x == rhs.x;
+    }
+
+    [[nodiscard]]
+    friend bool operator!=(const move_only_beast& lhs, const move_only_beast& rhs) noexcept
+    {
+      return !(lhs == rhs);
+    }
+
+    template<class Stream>
+    friend Stream& operator<<(Stream& s, const move_only_beast& b)
+    {
+      for(auto i : b.x) s << i << ' ';
+      return s;
+    }
+  };
+  
+  template<class T=int, class Allocator=std::allocator<int>>
   struct move_only_broken_equality
   {
     using allocator_type = Allocator;
@@ -251,32 +305,35 @@ namespace sequoia::unit_testing
   };
 
   template<class T=int, class Allocator=std::allocator<int>>
-  struct move_only_beast
+  struct move_only_inefficient_move
   {
     using allocator_type = Allocator;
 
-    move_only_beast(std::initializer_list<T> list) : x{list} {}
+    move_only_inefficient_move(std::initializer_list<T> list) : x{list} {}
 
-    move_only_beast(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {}
+    move_only_inefficient_move(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {}
 
-    move_only_beast(const allocator_type& a) : x(a) {}
+    move_only_inefficient_move(const allocator_type& a) : x(a) {}
 
-    move_only_beast(const move_only_beast&) = delete;
+    move_only_inefficient_move(const move_only_inefficient_move&) = delete;
 
-    move_only_beast(move_only_beast&&) noexcept = default;
+    move_only_inefficient_move(move_only_inefficient_move&& other) : x{std::move(other.x)}
+    {
+      x.reserve(x.capacity() + 10);
+    }
 
-    move_only_beast(move_only_beast&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+    move_only_inefficient_move(move_only_inefficient_move&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
 
-    move_only_beast& operator=(const move_only_beast&) = delete;
+    move_only_inefficient_move& operator=(const move_only_inefficient_move&) = delete;
 
-    move_only_beast& operator=(move_only_beast&&) = default;
+    move_only_inefficient_move& operator=(move_only_inefficient_move&&) = default;
 
-    void swap(move_only_beast& other) noexcept(noexcept(std::swap(x, other.x)))
+    void swap(move_only_inefficient_move& other) noexcept(noexcept(std::swap(x, other.x)))
     {
       std::swap(x, other.x);
     }
 
-    friend void swap(move_only_beast& lhs, move_only_beast& rhs)
+    friend void swap(move_only_inefficient_move& lhs, move_only_inefficient_move& rhs)
       noexcept(noexcept(lhs.swap(rhs)))
     {
       lhs.swap(rhs);
@@ -285,19 +342,79 @@ namespace sequoia::unit_testing
     std::vector<T, Allocator> x{};
 
     [[nodiscard]]
-    friend bool operator==(const move_only_beast& lhs, const move_only_beast& rhs) noexcept
+    friend bool operator==(const move_only_inefficient_move& lhs, const move_only_inefficient_move& rhs) noexcept
     {
       return lhs.x == rhs.x;
     }
 
     [[nodiscard]]
-    friend bool operator!=(const move_only_beast& lhs, const move_only_beast& rhs) noexcept
+    friend bool operator!=(const move_only_inefficient_move& lhs, const move_only_inefficient_move& rhs) noexcept
     {
       return !(lhs == rhs);
     }
 
     template<class Stream>
-    friend Stream& operator<<(Stream& s, const move_only_beast& b)
+    friend Stream& operator<<(Stream& s, const move_only_inefficient_move& b)
+    {
+      for(auto i : b.x) s << i << ' ';
+      return s;
+    }
+  };
+
+  template<class T=int, class Allocator=std::allocator<int>>
+  struct move_only_inefficient_move_assignment
+  {
+    using allocator_type = Allocator;
+
+    move_only_inefficient_move_assignment(std::initializer_list<T> list) : x{list} {}
+
+    move_only_inefficient_move_assignment(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {}
+
+    move_only_inefficient_move_assignment(const allocator_type& a) : x(a) {}
+
+    move_only_inefficient_move_assignment(const move_only_inefficient_move_assignment&) = delete;
+
+    move_only_inefficient_move_assignment(move_only_inefficient_move_assignment&&) noexcept = default;
+
+    move_only_inefficient_move_assignment(move_only_inefficient_move_assignment&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+
+    move_only_inefficient_move_assignment& operator=(const move_only_inefficient_move_assignment&) = delete;
+
+    move_only_inefficient_move_assignment& operator=(move_only_inefficient_move_assignment&& other)
+    {
+      x.reserve(x.capacity() + 10);
+      x = std::move(other.x);
+
+      return *this;
+    }
+
+    void swap(move_only_inefficient_move_assignment& other) noexcept(noexcept(std::swap(x, other.x)))
+    {
+      std::swap(x, other.x);
+    }
+
+    friend void swap(move_only_inefficient_move_assignment& lhs, move_only_inefficient_move_assignment& rhs)
+      noexcept(noexcept(lhs.swap(rhs)))
+    {
+      lhs.swap(rhs);
+    }
+      
+    std::vector<T, Allocator> x{};
+
+    [[nodiscard]]
+    friend bool operator==(const move_only_inefficient_move_assignment& lhs, const move_only_inefficient_move_assignment& rhs) noexcept
+    {
+      return lhs.x == rhs.x;
+    }
+
+    [[nodiscard]]
+    friend bool operator!=(const move_only_inefficient_move_assignment& lhs, const move_only_inefficient_move_assignment& rhs) noexcept
+    {
+      return !(lhs == rhs);
+    }
+
+    template<class Stream>
+    friend Stream& operator<<(Stream& s, const move_only_inefficient_move_assignment& b)
     {
       for(auto i : b.x) s << i << ' ';
       return s;
