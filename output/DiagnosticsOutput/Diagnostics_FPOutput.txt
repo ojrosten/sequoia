@@ -644,6 +644,14 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyTestDiagnostics.cpp, Line 29:
+	Broken swap Move assignment (from y)
+	[sequoia::unit_testing::move_only_broken_swap<int, std::__1::allocator<int> >]
+	operator== returned false
+	Obtained : 1 
+	Predicted: 2 
+
+
+	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyTestDiagnostics.cpp, Line 29:
 	Broken swap Post condition: y restored
 	[sequoia::unit_testing::move_only_broken_swap<int, std::__1::allocator<int> >]
 	operator== returned false
@@ -655,23 +663,15 @@
 	Broken move assignment Move assignment (from y)
 	[sequoia::unit_testing::move_only_broken_move_assignment<int, std::__1::allocator<int> >]
 	operator== returned false
-	Obtained : 
+	Obtained : 1 
 	Predicted: 2 
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyTestDiagnostics.cpp, Line 30:
-	Broken move assignment Move assignment
+	Broken move assignment Post condition: y restored
 	[sequoia::unit_testing::move_only_broken_move_assignment<int, std::__1::allocator<int> >]
 	operator== returned false
-	Obtained : 
-	Predicted: 2 
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyTestDiagnostics.cpp, Line 30:
-	Broken move assignment Swap
-	[sequoia::unit_testing::move_only_broken_move_assignment<int, std::__1::allocator<int> >]
-	operator== returned false
-	Obtained : 
+	Obtained : 1 
 	Predicted: 2 
 
 
@@ -701,18 +701,18 @@
 
 	../UnitTests/UnitTestFramework/PerformanceTestDiagnostics.cpp, Line 30:
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
-	Fast Task duration: 0.00129201s +- 4 * 0.000151781
-	Slow Task duration: 0.0012466s +- 4 * 9.42626e-05 [0.964854; (2, 2)]
+	Fast Task duration: 0.001361s +- 4 * 6.65783e-05
+	Slow Task duration: 0.00138904s +- 4 * 1.28133e-05 [1.02061; (2, 2)]
 
 	../UnitTests/UnitTestFramework/PerformanceTestDiagnostics.cpp, Line 34:
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
-	Fast Task duration: 0.0013655s +- 4 * 5.67106e-05
-	Slow Task duration: 0.00133665s +- 4 * 3.43809e-05 [0.978872; (2, 3)]
+	Fast Task duration: 0.00124704s +- 4 * 0.0001413
+	Slow Task duration: 0.00133365s +- 4 * 4.3806e-05 [1.06946; (2, 3)]
 
 	../UnitTests/UnitTestFramework/PerformanceTestDiagnostics.cpp, Line 38:
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
-	Fast Task duration: 0.00136148s +- 4 * 7.45444e-05
-	Slow Task duration: 0.00514789s +- 4 * 1.41111e-05 [3.78109; (2, 2.5)]
+	Fast Task duration: 0.00139246s +- 4 * 4.09728e-06
+	Slow Task duration: 0.00469612s +- 4 * 0.000604886 [3.37254; (2, 2.5)]
 
 	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 29
 	[double]
@@ -5749,30 +5749,14 @@
 	Move assignment x allocations
 	[int]
 	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 67 Move assignment (from y)
 	[sequoia::unit_testing::move_only_broken_move_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, false> >]
 	operator== returned false
-	Obtained : 
-	Predicted: 2 
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 67
-	[sequoia::unit_testing::shared_counting_allocator<int, true, false, false>]
-	Move assignment x allocations
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 67 Move assignment
-	[sequoia::unit_testing::move_only_broken_move_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, false> >]
-	operator== returned false
-	Obtained : 
+	Obtained : 1 
 	Predicted: 2 
 
 
@@ -5790,8 +5774,8 @@
 	Move assignment x allocations
 	[int]
 	operator== returned false
-	Obtained : 2
-	Predicted: 1
+	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 43
@@ -5819,15 +5803,6 @@
 	Predicted: 1 
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 55
-	[sequoia::unit_testing::shared_counting_allocator<int, true, false, true>]
-	Move assignment x allocations
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
-
 	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 55 Swap
 	[sequoia::unit_testing::move_only_broken_move<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, true> >]
 	operator== returned false
@@ -5835,33 +5810,26 @@
 	Predicted: 1 
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 67 Move assignment (from y)
-	[sequoia::unit_testing::move_only_broken_move_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, true> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 2 
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 67
+	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 55
 	[sequoia::unit_testing::shared_counting_allocator<int, true, false, true>]
 	Move assignment x allocations
 	[int]
 	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	Obtained : 1
+	Predicted: 0
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 67 Move assignment
+	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 67 Move assignment (from y)
 	[sequoia::unit_testing::move_only_broken_move_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, true> >]
 	operator== returned false
-	Obtained : 
+	Obtained : 1 
 	Predicted: 2 
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 67 Swap
+	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 67 Post condition: y restored
 	[sequoia::unit_testing::move_only_broken_move_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, true> >]
 	operator== returned false
-	Obtained : 
+	Obtained : 1 
 	Predicted: 2 
 
 
@@ -5873,6 +5841,13 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 81 Swap
+	[sequoia::unit_testing::move_only_broken_swap<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, true> >]
+	operator== returned false
+	Obtained : 1 
+	Predicted: 2 
+
+
+	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 81 Move assignment (from y)
 	[sequoia::unit_testing::move_only_broken_swap<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, true> >]
 	operator== returned false
 	Obtained : 1 
@@ -5900,8 +5875,8 @@
 	Move assignment x allocations
 	[int]
 	operator== returned false
-	Obtained : 2
-	Predicted: 1
+	Obtained : 1
+	Predicted: 0
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 43
@@ -5932,14 +5907,7 @@
 	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 67 Move assignment (from y)
 	[sequoia::unit_testing::move_only_broken_move_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, false> >]
 	operator== returned false
-	Obtained : 
-	Predicted: 2 
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 67 Move assignment
-	[sequoia::unit_testing::move_only_broken_move_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, false> >]
-	operator== returned false
-	Obtained : 
+	Obtained : 1 
 	Predicted: 2 
 
 
@@ -5996,21 +5964,14 @@
 	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 67 Move assignment (from y)
 	[sequoia::unit_testing::move_only_broken_move_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, true> >]
 	operator== returned false
-	Obtained : 
+	Obtained : 1 
 	Predicted: 2 
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 67 Move assignment
+	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 67 Post condition: y restored
 	[sequoia::unit_testing::move_only_broken_move_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, true> >]
 	operator== returned false
-	Obtained : 
-	Predicted: 2 
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 67 Swap
-	[sequoia::unit_testing::move_only_broken_move_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, true> >]
-	operator== returned false
-	Obtained : 
+	Obtained : 1 
 	Predicted: 2 
 
 
@@ -6022,6 +5983,13 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 81 Swap
+	[sequoia::unit_testing::move_only_broken_swap<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, true> >]
+	operator== returned false
+	Obtained : 1 
+	Predicted: 2 
+
+
+	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 81 Move assignment (from y)
 	[sequoia::unit_testing::move_only_broken_swap<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, true> >]
 	operator== returned false
 	Obtained : 1 
@@ -6138,14 +6106,14 @@
 	False Positive Failure:
 		../UnitTests/UnitTestFramework/PerformanceTestDiagnostics.cpp, Line 67:
 	Performance Test which should pass
-	Fast Task duration: 0.00137755s +- 4 * 2.49536e-05
-	Slow Task duration: 0.00263556s +- 4 * 8.63205e-06 [1.91322; (1.8, 2.1)]
+	Fast Task duration: 0.00114047s +- 4 * 9.02792e-05
+	Slow Task duration: 0.00222188s +- 4 * 6.36193e-05 [1.94822; (1.8, 2.1)]
 
 	False Positive Failure:
 		../UnitTests/UnitTestFramework/PerformanceTestDiagnostics.cpp, Line 68:
 	Performance Test which should pass
-	Fast Task duration: 0.00139257s +- 4 * 3.72178e-06
-	Slow Task duration: 0.00514125s +- 4 * 5.14241e-06 [3.69192; (3.6, 4.1)]
+	Fast Task duration: 0.00122448s +- 4 * 9.74185e-05
+	Slow Task duration: 0.00449196s +- 4 * 0.000242964 [3.66847; (3.6, 4.1)]
 
 	False Positive Failure:
 	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 69

@@ -35,22 +35,20 @@ namespace sequoia::unit_testing::impl
     }
     check_equality(combine_messages(description, "Move constructor"), logger, z, xClone);
 
-    // x now moved-from so assumption about allocs for x = std::move(y) may be wrong...
-    check_move_assign(description, logger, actions, x, std::move(y), yClone, args...);
-    check_equality(combine_messages(description, "Move assignment"), logger, x, yClone);
-
     if constexpr (do_swap<Args...>::value)
     {
       using std::swap;
-      swap(z, x);
-      check_equality(combine_messages(description, "Swap"), logger, x, xClone);
+      swap(z, y);
+      check_equality(combine_messages(description, "Swap"), logger, y, xClone);
       check_equality(combine_messages(description, "Swap"), logger, z, yClone);
 
-      y = std::move(z);
+      check_move_assign(description, logger, actions, y, std::move(z), yClone, args...);
     }
     else
-    {
-      y = std::move(x);
+    {      
+      check_move_assign(description, logger, actions, z, std::move(y), yClone, args...);
+      
+      y = std::move(z);
     }
 
     return check_equality(combine_messages(description, "Post condition: y restored"), logger, y, yClone);
