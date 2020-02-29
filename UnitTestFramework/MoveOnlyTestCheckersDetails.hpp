@@ -35,6 +35,7 @@ namespace sequoia::unit_testing::impl
     }
     check_equality(combine_messages(description, "Move constructor"), logger, z, xClone);
 
+    // x now moved-from so assumption about allocs for x = std::move(y) may be wrong...
     check_move_assign(description, logger, actions, x, std::move(y), yClone, args...);
     check_equality(combine_messages(description, "Move assignment"), logger, x, yClone);
 
