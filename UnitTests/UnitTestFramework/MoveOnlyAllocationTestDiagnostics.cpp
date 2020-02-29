@@ -41,10 +41,16 @@ namespace sequoia::unit_testing
       };
 
       check_regular_semantics(LINE(""), beast{1}, beast{2}, beast{1}, beast{2},
-                              move_only_allocation_info{allocGetter, move_only_allocation_predictions{0, {0, 0}}});
+                              move_only_allocation_info{allocGetter, move_only_allocation_predictions{0, 0}});
 
       check_regular_semantics(LINE(""), beast{}, beast{2}, beast{}, beast{2},
-                              move_only_allocation_info{allocGetter, move_only_allocation_predictions{0, {0, 1}}});
+                              move_only_allocation_info{allocGetter, move_only_allocation_predictions{0, 1}});
+
+      if constexpr(!PropagateMove)
+      {
+        check_regular_semantics(LINE(""), beast{}, beast{2}, beast{}, beast{2},
+                                move_only_allocation_info{allocGetter, move_only_allocation_predictions{1, 0}});
+      }
     }
 
     {
@@ -56,7 +62,7 @@ namespace sequoia::unit_testing
       };
       
       check_regular_semantics(LINE(""), beast{1}, beast{2}, beast{1}, beast{2},
-                              move_only_allocation_info{allocGetter, move_only_allocation_predictions{1, {0, 0}}});
+                              move_only_allocation_info{allocGetter, move_only_allocation_predictions{1, 0}});
     }
 
     {
@@ -68,7 +74,7 @@ namespace sequoia::unit_testing
       };
       
       check_regular_semantics(LINE(""), beast{1}, beast{2}, beast{1}, beast{2},
-                              move_only_allocation_info{allocGetter, move_only_allocation_predictions{1, {0, 0}}});
+                              move_only_allocation_info{allocGetter, move_only_allocation_predictions{1, 0}});
     }
 
     
@@ -82,7 +88,7 @@ namespace sequoia::unit_testing
       };
       
       check_regular_semantics(LINE(""), beast{1}, beast{2}, beast{1}, beast{2},
-                              move_only_allocation_info{allocGetter, move_only_allocation_predictions{1, {0, 0}}});
+                              move_only_allocation_info{allocGetter, move_only_allocation_predictions{1, 0}});
     }
 
     {
@@ -94,7 +100,7 @@ namespace sequoia::unit_testing
       };
       
       check_regular_semantics(LINE(""), beast{1}, beast{2}, beast{1}, beast{2},
-                              move_only_allocation_info{allocGetter, move_only_allocation_predictions{1, {0, 0}}});
+                              move_only_allocation_info{allocGetter, move_only_allocation_predictions{1, 0}});
     }
 
     {
@@ -106,7 +112,7 @@ namespace sequoia::unit_testing
       };
       
       check_regular_semantics(LINE(""), beast{1}, beast{2}, beast{1}, beast{2},
-                              move_only_allocation_info{allocGetter, move_only_allocation_predictions{1, {0, 0}}});
+                              move_only_allocation_info{allocGetter, move_only_allocation_predictions{1, 0}});
     }
   }
 
@@ -139,10 +145,10 @@ namespace sequoia::unit_testing
       };
 
       check_regular_semantics(LINE(""), beast{1}, beast{2}, beast{1}, beast{2},
-                              move_only_allocation_info{allocGetter, move_only_allocation_predictions{1, {0, 0}}});
+                              move_only_allocation_info{allocGetter, move_only_allocation_predictions{1, 0}});
 
       check_regular_semantics(LINE(""), beast{}, beast{2}, beast{}, beast{2},
-                              move_only_allocation_info{allocGetter, move_only_allocation_predictions{1, {0, 1}}});
+                              move_only_allocation_info{allocGetter, move_only_allocation_predictions{1, 1}});
     }
   }
 }

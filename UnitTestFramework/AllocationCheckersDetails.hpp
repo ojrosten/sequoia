@@ -182,7 +182,8 @@ namespace sequoia::unit_testing::impl
       
       const bool copyLike{!propagate && !m_AllocatorsEqual};
 
-      const int xPrediction{copyLike ? m_Info.get_predictions().assign_y_to_x.without_propagation : 0};
+      const auto& predictions{m_Info.get_predictions().assign_y_to_x};
+      const int xPrediction{copyLike ? predictions.without_propagation : 0};
       
       if constexpr(propagate)
       {
