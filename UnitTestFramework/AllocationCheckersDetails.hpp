@@ -179,11 +179,22 @@ namespace sequoia::unit_testing::impl
       typename Logger::sentinel s{logger, add_type_info<Allocator>(description)};
 
       constexpr bool propagate{std::allocator_traits<Allocator>::propagate_on_container_move_assignment::value};
-      
-      const bool copyLike{!propagate && !m_AllocatorsEqual};
+            
+      const int xPrediction{
+        [copyLike{!propagate && !m_AllocatorsEqual}, &predictions{m_Info.get_predictions()}](){
+          int prediction{};
+          if constexpr(std::is_same_v<Predictions, move_only_allocation_predictions>)
+          { 
+            if(copyLike) prediction = predictions.assign_without_propagation;
+          }
+          else
+          {            
+            if(copyLike) prediction = predictions.assign_y_to_x.without_propagation;
+          }
 
-      const auto& predictions{m_Info.get_predictions().assign_y_to_x};
-      const int xPrediction{copyLike ? predictions.without_propagation : 0};
+          return prediction;
+        }()        
+      };
       
       if constexpr(propagate)
       {

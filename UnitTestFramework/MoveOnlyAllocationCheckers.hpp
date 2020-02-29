@@ -21,11 +21,10 @@ namespace sequoia::unit_testing
   {
     move_only_allocation_predictions(int paraMove, int assignWithoutPropagation)
       : para_move{paraMove}
-      , assign_y_to_x{0, assignWithoutPropagation}
+      , assign_without_propagation{assignWithoutPropagation}
     {}
     
-    int para_move;
-    assignment_allocation_predictions assign_y_to_x;
+    int para_move{}, assign_without_propagation{};
   };
 
   // Done through inheritance rather than a using declaration
