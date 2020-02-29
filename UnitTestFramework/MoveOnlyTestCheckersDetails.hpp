@@ -34,8 +34,8 @@ namespace sequoia::unit_testing::impl
       actions.post_move_action(description, logger, z, args...);
     }
     check_equality(combine_messages(description, "Move constructor"), logger, z, xClone);
-        
-    x = std::move(y);
+
+    check_move_assign(description, logger, actions, x, std::move(y), yClone, args...);
     check_equality(combine_messages(description, "Move assignment"), logger, x, yClone);
 
     if constexpr (do_swap<Args...>::value)

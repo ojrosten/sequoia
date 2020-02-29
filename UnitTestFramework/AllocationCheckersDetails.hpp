@@ -464,6 +464,63 @@ namespace sequoia::unit_testing::impl
     unpack_invoke(checkers, fn);    
   }
 
+  struct allocation_actions : pre_condition_actions
+  {
+    template<class Logger, class Container, class... Allocators, class... Predictions>
+    static void post_equality_action(std::string_view description, Logger& logger, const Container& x, const Container&, const allocation_checker<Container, Allocators, Predictions>&... checkers)
+    {
+      check_no_allocation(combine_messages(description, "no allocation for operator=="), logger, x, checkers...);
+    }
+
+    template<class Logger, class Container, class... Allocators, class... Predictions>
+    static void post_nequality_action(std::string_view description, Logger& logger, const Container& x, const Container&, const allocation_checker<Container, Allocators, Predictions>&... checkers)
+    {
+      check_no_allocation(combine_messages(description, "no allocation for operator!="), logger, x, checkers...);
+    }
+
+    template<class Logger, class Container, class... Allocators, class... Predictions>
+    static void post_copy_action(std::string_view description, Logger& logger, const Container& xCopy, const allocation_checker<Container, Allocators, Predictions>&... checkers)
+    {
+      check_copy_x_allocation(description, logger, xCopy, allocation_checker<Container, Allocators, Predictions>{xCopy, checkers.first_count(), checkers.info()}...);
+    }
+
+    template<class Logger, class Container, class... Allocators, class... Predictions>
+    static void post_copy_assign_action(std::string_view description, Logger& logger, const Container& lhs, const Container& rhs, const allocation_checker<Container, Allocators, Predictions>&... checkers)
+    {
+      check_copy_assign_allocation(description, logger, lhs, rhs, checkers...);
+    }
+
+    template<class Logger, class Container, class... Allocators, class... Predictions>
+    static void post_move_action(std::string_view description, Logger& logger, const Container& y, const allocation_checker<Container, Allocators, Predictions>&... checkers)
+    {
+      check_move_y_allocation(description, logger, y, allocation_checker<Container, Allocators, Predictions>{y, checkers.first_count(), checkers.info()}...);
+    }
+
+    template<class Logger, class Container, class... Allocators, class... Predictions>
+    static void post_move_assign_action(std::string_view description, Logger& logger, const Container& y, const allocation_checker<Container, Allocators, Predictions>&... checkers)
+    {
+      check_move_assign_allocation(description, logger, y, checkers...);
+    }
+
+    template<class Logger, class Container, class Mutator, class... Allocators, class... Predictions>
+    static void additional_action(std::string_view description, Logger& logger, const Container& x, const Container& y, Mutator yMutator, const allocation_checker<Container, Allocators, Predictions>&... checkers)
+    {
+      check_allocations(description, logger, x, y, std::move(yMutator), allocation_checker<Container, Allocators, Predictions>{x, y, checkers.info()}...);
+    }
+  };
+
+  struct regular_allocation_actions : allocation_actions
+  {
+    constexpr static bool has_post_equality_action{true};
+    constexpr static bool has_post_nequality_action{true};
+    constexpr static bool has_post_copy_action{true};
+    constexpr static bool has_post_copy_assign_action{true};
+    constexpr static bool has_post_move_action{true};
+    constexpr static bool has_post_move_assign_action{true};
+    constexpr static bool has_additional_action{true};
+  };
+  
+
   template<class Logger, class Actions, class Container, class... Allocators, class... Predictions>
   void check_copy_assign(std::string_view description, Logger& logger, const Actions& actions, Container& z, const Container& y, const allocation_checker<Container, Allocators, Predictions>&... checkers)
   {
@@ -476,15 +533,10 @@ namespace sequoia::unit_testing::impl
     do_check_move_construction(description, logger, actions, std::forward<Container>(z), y, allocation_checker<Container, Allocators, Predictions>{z, 0, checkers.info()}...);
   }
 
-  template<class Logger, class Container, class... Allocators, class... Predictions>
-  void check_move_assign(std::string_view description, Logger& logger, Container& u, Container&& v, const Container& y, allocation_checker<Container, Allocators, Predictions>... checkers)
+  template<class Logger, class Actions, class Container, class... Allocators, class... Predictions>
+  void check_move_assign(std::string_view description, Logger& logger, const Actions& actions, Container& u, Container&& v, const Container& y, allocation_checker<Container, Allocators, Predictions>... checkers)
   {
-    u = std::move(v);
-    check_equality(combine_messages(description, "Move assignment (from y)"), logger, u, y);
-    
-    constexpr bool checkAllocs{sizeof...(Allocators) > 0};
-    if constexpr(checkAllocs)
-      check_move_assign_allocation(description, logger, u, checkers...);
+    do_check_move_assign(description, logger, actions, u, std::forward<Container>(v), y, allocation_checker<Container, Allocators, Predictions>{u, v, checkers.info()}...);
   }
 
   template<class Logger, class Container, class Mutator, class... Allocators, class... Predictions>
@@ -561,7 +613,7 @@ namespace sequoia::unit_testing::impl
 
     check_mutation_after_swap(description, logger, u, v, y, yMutator, allocation_checker<Container, Allocators, Predictions>{u, v, checkers.info()}...);
   }
-
+  
   template<class Logger, class Container, class Mutator, class... Allocators, class... Predictions>
   void check_allocations(std::string_view description, Logger& logger, const Container& x, const Container& y, Mutator yMutator, allocation_checker<Container, Allocators, Predictions>... checkers)
   {
@@ -571,7 +623,7 @@ namespace sequoia::unit_testing::impl
       check_copy_y_allocation(description, logger, v, allocation_checker<Container, Allocators, Predictions>{v, checkers.second_count(), checkers.info()}...);
 
       // u = std::move(v) (= y)
-      check_move_assign(description, logger, u, std::move(v), y, allocation_checker<Container, Allocators, Predictions>{u, y, checkers.info()}...);
+      check_move_assign(description, logger, regular_allocation_actions{}, u, std::move(v), y, checkers...);
 
       check_mutation_after_move(description, "assignment", logger, u, y, yMutator, allocation_checker<Container, Allocators, Predictions>{u, 0, checkers.info()}...);
     }
@@ -590,55 +642,6 @@ namespace sequoia::unit_testing::impl
     return do_check_preconditions(description, logger, actions, x, y, allocation_checker<Container, Allocators, Predictions>{x, checkers.first_count(), checkers.info()}...);
   }
 
-  struct allocation_actions : pre_condition_actions
-  {
-    template<class Logger, class Container, class... Allocators, class... Predictions>
-    static void post_equality_action(std::string_view description, Logger& logger, const Container& x, const Container&, const allocation_checker<Container, Allocators, Predictions>&... checkers)
-    {
-      check_no_allocation(combine_messages(description, "no allocation for operator=="), logger, x, checkers...);
-    }
-
-    template<class Logger, class Container, class... Allocators, class... Predictions>
-    static void post_nequality_action(std::string_view description, Logger& logger, const Container& x, const Container&, const allocation_checker<Container, Allocators, Predictions>&... checkers)
-    {
-      check_no_allocation(combine_messages(description, "no allocation for operator!="), logger, x, checkers...);
-    }
-
-    template<class Logger, class Container, class... Allocators, class... Predictions>
-    static void post_copy_action(std::string_view description, Logger& logger, const Container& xCopy, const allocation_checker<Container, Allocators, Predictions>&... checkers)
-    {
-      check_copy_x_allocation(description, logger, xCopy, allocation_checker<Container, Allocators, Predictions>{xCopy, checkers.first_count(), checkers.info()}...);
-    }
-
-    template<class Logger, class Container, class... Allocators, class... Predictions>
-    static void post_copy_assign_action(std::string_view description, Logger& logger, const Container& lhs, const Container& rhs, const allocation_checker<Container, Allocators, Predictions>&... checkers)
-    {
-      check_copy_assign_allocation(description, logger, lhs, rhs, checkers...);
-    }
-
-    template<class Logger, class Container, class... Allocators, class... Predictions>
-    static void post_move_action(std::string_view description, Logger& logger, const Container& y, const allocation_checker<Container, Allocators, Predictions>&... checkers)
-    {
-      check_move_y_allocation(description, logger, y, allocation_checker<Container, Allocators, Predictions>{y, checkers.first_count(), checkers.info()}...);
-    }
-
-    template<class Logger, class Container, class Mutator, class... Allocators, class... Predictions>
-    static void additional_action(std::string_view description, Logger& logger, const Container& x, const Container& y, Mutator yMutator, const allocation_checker<Container, Allocators, Predictions>&... checkers)
-    {
-      check_allocations(description, logger, x, y, std::move(yMutator), allocation_checker<Container, Allocators, Predictions>{x, y, checkers.info()}...);
-    }
-  };
-
-  struct regular_allocation_actions : allocation_actions
-  {
-    constexpr static bool has_post_equality_action{true};
-    constexpr static bool has_post_nequality_action{true};
-    constexpr static bool has_post_copy_action{true};
-    constexpr static bool has_post_copy_assign_action{true};
-    constexpr static bool has_post_move_action{true};
-    constexpr static bool has_post_move_assign_action{true};
-    constexpr static bool has_additional_action{true};
-  };
 
   template<class Logger, class Actions, class T, class Mutator, class... Allocators, class... Predictions>
   bool check_regular_semantics(std::string_view description, Logger& logger, const Actions& actions, const T& x, const T& y, Mutator yMutator, std::tuple<allocation_checker<T, Allocators, Predictions>...> checkers)

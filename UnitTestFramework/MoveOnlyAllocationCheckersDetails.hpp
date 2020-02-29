@@ -31,6 +31,12 @@ namespace sequoia::unit_testing::impl
     {
       check_move_y_allocation(description, logger, x, allocation_checker<Container, Allocators, Predictions>{x, checkers.first_count(), checkers.info()}...);
     }
+
+    template<class Logger, class Container, class... Allocators, class... Predictions>
+    static void post_move_assign_action(std::string_view description, Logger& logger, const Container& y, const allocation_checker<Container, Allocators, Predictions>&... checkers)
+    {
+      check_move_assign_allocation(description, logger, y, checkers...);
+    }
   };
 
   template<class Logger, class Actions, class T, class... Allocators>

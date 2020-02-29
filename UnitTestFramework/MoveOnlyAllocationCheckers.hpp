@@ -20,6 +20,7 @@ namespace sequoia::unit_testing
   struct move_only_allocation_predictions
   {
     int para_move{};
+    assignment_allocation_predictions assign_y_to_x{0, 1};
   };
 
   // Done through inheritance rather than a using declaration

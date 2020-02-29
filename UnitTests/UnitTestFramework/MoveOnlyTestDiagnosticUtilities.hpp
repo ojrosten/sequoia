@@ -382,8 +382,8 @@ namespace sequoia::unit_testing
 
     move_only_inefficient_move_assignment& operator=(move_only_inefficient_move_assignment&& other)
     {
-      x.reserve(x.capacity() + 10);
-      x = std::move(other.x);
+      x = std::move(other.x);      
+      x.reserve(x.capacity() + 1);
 
       return *this;
     }

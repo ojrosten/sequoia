@@ -109,7 +109,7 @@ namespace sequoia::unit_testing::impl
   template<class Logger, class Actions, class T>
   void check_move_assign(std::string_view description, Logger& logger, const Actions& actions, T& z, T&& y, const T& yClone)
   {
-    do_check_move_assign(description, logger, actions, z, std::forward<T>(y), yClone);   
+    do_check_move_assign(description, logger, actions, z, std::forward<T>(y), yClone);
   }
 
   template<class Logger, class Actions, class T, class... Args>
@@ -155,6 +155,11 @@ namespace sequoia::unit_testing::impl
     check_move_construction(description, logger, actions, std::move(z), y, args...);
 
     // move assign
+    // T w{x};
+    // check_move_assign(description, logger, actions, w, std::move(z), y, args...);
+    // check_equality(combine_messages(description, "Move assignment"), logger, w, y);
+    // yMutator stuff...
+    
     z = T{x};
     check_equality(combine_messages(description, "Move assignment"), logger, z, x);
 
