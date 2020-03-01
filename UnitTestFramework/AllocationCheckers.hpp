@@ -59,7 +59,19 @@ namespace sequoia::unit_testing
     allocation_predictions(int copyX, individual_allocation_predictions yPredictions, assignment_allocation_predictions assignYtoX)
       : copy_x{copyX}, y{yPredictions}, assign_y_to_x{assignYtoX}
     {}
-      
+
+    [[nodiscard]]
+    int para_move_allocs() const noexcept
+    {
+      return y.para_move;
+    }
+
+    [[nodiscard]]
+    int assign_without_propagation_allocs() const noexcept
+    {
+      return assign_y_to_x.without_propagation;
+    }
+
     int copy_x{};
     individual_allocation_predictions y;
     assignment_allocation_predictions assign_y_to_x;

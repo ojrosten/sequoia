@@ -23,6 +23,12 @@ namespace sequoia::unit_testing
       : para_move{paraMove}
       , assign_without_propagation{assignWithoutPropagation}
     {}
+
+    [[nodiscard]]
+    int para_move_allocs() const noexcept { return para_move; }
+
+    [[nodiscard]]
+    int assign_without_propagation_allocs() const noexcept { return assign_without_propagation; }
     
     int para_move{}, assign_without_propagation{};
   };

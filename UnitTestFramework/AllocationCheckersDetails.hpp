@@ -15,9 +15,7 @@
 #include <scoped_allocator>
 
 namespace sequoia::unit_testing
-{
-  struct move_only_allocation_predictions;
-  
+{  
   template<class Container, class Allocator, class Predictions>
   class basic_allocation_info;
 }
@@ -136,19 +134,7 @@ namespace sequoia::unit_testing::impl
     template<class Logger>
     void check_para_move_y(std::string_view description, Logger& logger, const Container& container) const
     {
-      const auto& predictions{m_Info.get_predictions()};
-
-      const int prediction{[&predictions]() {
-          if constexpr (std::is_same_v<Predictions, move_only_allocation_predictions>)
-          {
-            return predictions.para_move;
-          }
-          else
-          {
-            return predictions.y.para_move;
-          }
-        }()
-      };
+      const auto prediction{m_Info.get_predictions().para_move_allocs()};
 
       check_para_move(description, "(y)", logger, container, m_Info, prediction);
     }
@@ -157,9 +143,11 @@ namespace sequoia::unit_testing::impl
     void check_copy_assign_y_to_x(std::string_view description, Logger& logger, const Container& xContainer, const Container& yContainer) const
     {
       typename Logger::sentinel s{logger, add_type_info<Allocator>(description)};
+
+      constexpr bool propagate{std::allocator_traits<Allocator>::propagate_on_container_copy_assignment::value};
       
       int yPrediction{};
-      if constexpr(std::allocator_traits<Allocator>::propagate_on_container_copy_assignment::value)
+      if constexpr(propagate)
       {
         yPrediction = m_Info.get_predictions().assign_y_to_x.with_propagation;        
         check_allocation(description, "Copy assignment x allocations", "", logger, xContainer, m_Info, m_SecondCount, yPrediction);
@@ -179,21 +167,11 @@ namespace sequoia::unit_testing::impl
       typename Logger::sentinel s{logger, add_type_info<Allocator>(description)};
 
       constexpr bool propagate{std::allocator_traits<Allocator>::propagate_on_container_move_assignment::value};
-            
-      const int xPrediction{
-        [copyLike{!propagate && !m_AllocatorsEqual}, &predictions{m_Info.get_predictions()}](){
-          int prediction{};
-          if constexpr(std::is_same_v<Predictions, move_only_allocation_predictions>)
-          { 
-            if(copyLike) prediction = predictions.assign_without_propagation;
-          }
-          else
-          {            
-            if(copyLike) prediction = predictions.assign_y_to_x.without_propagation;
-          }
 
-          return prediction;
-        }()        
+      const bool copyLike{!propagate && !m_AllocatorsEqual};
+
+      const int xPrediction{
+        copyLike ? m_Info.get_predictions().assign_without_propagation_allocs() : 0        
       };
       
       if constexpr(propagate)
@@ -509,9 +487,10 @@ namespace sequoia::unit_testing::impl
     }
 
     template<class Logger, class Container, class... Allocators, class... Predictions>
-    static void post_move_assign_action(std::string_view description, Logger& logger, const Container& y, const allocation_checker<Container, Allocators, Predictions>&... checkers)
+    static void post_move_assign_action(std::string_view description, Logger& logger, Container& y, const Container& yClone, const allocation_checker<Container, Allocators, Predictions>&... checkers)
     {
       check_move_assign_allocation(description, logger, y, checkers...);
+      //check_mutation_after_move(description, "assignment", logger, y, yClone, yMutator, allocation_checker<Container, Allocators, Predictions>{y, 0, checkers.info()}...);
     }
 
     template<class Logger, class Container, class Mutator, class... Allocators, class... Predictions>

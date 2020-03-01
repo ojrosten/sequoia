@@ -14,6 +14,11 @@
 #include "AllocationCheckersDetails.hpp"
 #include "MoveOnlyTestCheckersDetails.hpp"
 
+namespace sequoia::unit_testing
+{
+  struct move_only_allocation_predictions;
+}
+
 namespace sequoia::unit_testing::impl
 {
   struct move_only_allocation_actions : allocation_actions
@@ -33,9 +38,9 @@ namespace sequoia::unit_testing::impl
     }
 
     template<class Logger, class Container, class... Allocators, class... Predictions>
-    static void post_move_assign_action(std::string_view description, Logger& logger, const Container& y, const allocation_checker<Container, Allocators, Predictions>&... checkers)
+    static void post_move_assign_action(std::string_view description, Logger& logger, const Container& y, const Container& yClone, const allocation_checker<Container, Allocators, Predictions>&... checkers)
     {
-      check_move_assign_allocation(description, logger, y, checkers...);
+      check_move_assign_allocation(description, logger, y, checkers...);      
     }
   };
 

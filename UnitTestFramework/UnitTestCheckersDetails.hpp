@@ -102,7 +102,7 @@ namespace sequoia::unit_testing::impl
 
     if constexpr(Actions::has_post_move_assign_action)
     {
-      actions.post_move_assign_action(description, logger, z, args...);
+      actions.post_move_assign_action(description, logger, z, yClone, args...);
     }
   }
   
@@ -154,22 +154,15 @@ namespace sequoia::unit_testing::impl
     // move construction
     check_move_construction(description, logger, actions, std::move(z), y, args...);
 
-    // move assign
-    // T w{x};
-    
-    // check_move_assign(description, logger, actions, w, std::move(z), y, args...);
-    // check_equality(combine_messages(description, "Move assignment"), logger, w, y);
-    // yMutator stuff...
-    
-    z = T{x};
-    check_equality(combine_messages(description, "Move assignment"), logger, z, x);
+    T w{x};    
+    check_move_assign(description, logger, actions, w, T{y}, y, args...);
 
     if constexpr (do_swap<Args...>::value)
     {
       using std::swap;
-      T w{y};
-      swap(z, w);
-      check_equality(combine_messages(description, "Swap"), logger, z, y);
+      T v{x};
+      swap(w, v);
+      check_equality(combine_messages(description, "Swap"), logger, v, y);
       check_equality(combine_messages(description, "Swap"), logger, w, x);
     }
 
