@@ -29,6 +29,7 @@ namespace sequoia::unit_testing::impl
     constexpr static bool has_post_copy_assign_action{};
     constexpr static bool has_post_move_action{true};
     constexpr static bool has_post_move_assign_action{true};
+    constexpr static bool has_post_swap_action{true};
     constexpr static bool has_additional_action{};
 
     template<class Logger, class Container, class... Allocators, class... Predictions>

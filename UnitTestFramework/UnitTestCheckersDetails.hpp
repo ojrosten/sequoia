@@ -44,6 +44,7 @@ namespace sequoia::unit_testing::impl
     constexpr static bool has_post_copy_assign_action{};
     constexpr static bool has_post_move_action{};
     constexpr static bool has_post_move_assign_action{};
+    constexpr static bool has_post_swap_action{};
     constexpr static bool has_additional_action{};
   };
  
@@ -125,6 +126,27 @@ namespace sequoia::unit_testing::impl
   }
 
   template<class Logger, class Actions, class T>
+  void check_swap(std::string_view description, Logger& logger, const Actions& actions, T&& x, T& y, const T& xClone, const T& yClone)
+  {
+    do_check_swap(description, logger, actions, std::forward<T>(x), y, xClone, yClone);
+  }
+
+  template<class Logger, class Actions, class T, class... Args>
+  void do_check_swap(std::string_view description, Logger& logger, const Actions& actions, T&& x, T& y, const T& xClone, const T& yClone, const Args&... args)
+  {
+    using std::swap;
+    swap(x, y);
+
+    check_equality(combine_messages(description, "Swap"), logger, y, xClone);
+    check_equality(combine_messages(description, "Swap"), logger, x, yClone);
+    
+    if constexpr(Actions::has_post_swap_action)
+    {
+      //actions.post_swap_action(description, logger, w, args...);
+    }
+  }
+
+  template<class Logger, class Actions, class T>
   void check_move_construction(std::string_view description, Logger& logger, const Actions& actions, T&& z, const T& y)
   {
     do_check_move_construction(description, logger, actions, std::forward<T>(z), y);
@@ -159,11 +181,7 @@ namespace sequoia::unit_testing::impl
 
     if constexpr (do_swap<Args...>::value)
     {
-      using std::swap;
-      T v{x};
-      swap(w, v);
-      check_equality(combine_messages(description, "Swap"), logger, v, y);
-      check_equality(combine_messages(description, "Swap"), logger, w, x);
+      check_swap(description, logger, actions, T{x}, w, x, y);
     }
 
     if constexpr(!std::is_same_v<std::decay_t<Mutator>, null_mutator>)
