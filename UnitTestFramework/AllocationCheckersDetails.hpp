@@ -454,6 +454,15 @@ namespace sequoia::unit_testing::impl
     unpack_invoke(checkers, fn);    
   }
 
+  template<class Logger, class Container, class Mutator, class... Allocators, class... Predictions>
+  void check_mutation_after_swap(std::string_view description, Logger& logger, Container& u, const Container& v, const Container& y, Mutator yMutator, allocation_checker<Container, Allocators, Predictions>... checkers)
+  {
+    yMutator(u);
+    check_mutation_allocation(combine_messages(description, "mutation after swap"), logger, u, v, checkers...);
+
+    check(combine_messages(description, "Mutation is not doing anything following copy then swap"), logger, u != y);    
+  }
+
   struct allocation_actions : pre_condition_actions
   {
     template<class Logger, class Container, class... Allocators, class... Predictions>
@@ -490,7 +499,13 @@ namespace sequoia::unit_testing::impl
     static void post_move_assign_action(std::string_view description, Logger& logger, Container& y, const Container& yClone, const allocation_checker<Container, Allocators, Predictions>&... checkers)
     {
       check_move_assign_allocation(description, logger, y, checkers...);
-      //check_mutation_after_move(description, "assignment", logger, y, yClone, yMutator, allocation_checker<Container, Allocators, Predictions>{y, 0, checkers.info()}...);
+      //check_mutation_after_move(description, "assignment", logger, y, yClone, yMutator, allocation_checker<Container, Allocators, Predictions>{y, 0x, checkers.info()}...);
+    }
+
+    template<class Logger, class Container, class Mutator, class... Allocators, class... Predictions>
+    static void post_swap_action(std::string_view description, Logger& logger, const Container& x, Container& y, const Container& yClone, Mutator yMutator, const allocation_checker<Container, Allocators, Predictions>&... checkers)
+    {
+      check_mutation_after_swap(description, logger, y, x, yClone, yMutator, allocation_checker<Container, Allocators, Predictions>{y, x, checkers.info()}...);
     }
 
     template<class Logger, class Container, class Mutator, class... Allocators, class... Predictions>
@@ -520,15 +535,21 @@ namespace sequoia::unit_testing::impl
   }
 
   template<class Logger, class Actions, class Container, class... Allocators, class... Predictions>
-  void check_move_construction(std::string_view description, Logger& logger, const Actions& actions, Container&& z, const Container& y, allocation_checker<Container, Allocators, Predictions>... checkers)
+  void check_move_construction(std::string_view description, Logger& logger, const Actions& actions, Container&& z, const Container& y, const allocation_checker<Container, Allocators, Predictions>&... checkers)
   {
     do_check_move_construction(description, logger, actions, std::forward<Container>(z), y, allocation_checker<Container, Allocators, Predictions>{z, 0, checkers.info()}...);
   }
 
   template<class Logger, class Actions, class Container, class... Allocators, class... Predictions>
-  void check_move_assign(std::string_view description, Logger& logger, const Actions& actions, Container& u, Container&& v, const Container& y, allocation_checker<Container, Allocators, Predictions>... checkers)
+  void check_move_assign(std::string_view description, Logger& logger, const Actions& actions, Container& u, Container&& v, const Container& y, const allocation_checker<Container, Allocators, Predictions>&... checkers)
   {
     do_check_move_assign(description, logger, actions, u, std::forward<Container>(v), y, allocation_checker<Container, Allocators, Predictions>{u, v, checkers.info()}...);
+  }
+
+  template<class Logger, class Actions, class Container, class Mutator, class... Allocators, class... Predictions>
+  void check_swap(std::string_view description, Logger& logger, const Actions& actions, Container&& x, Container& y, const Container& xClone, const Container& yClone, Mutator yMutator, const allocation_checker<Container, Allocators, Predictions>&... checkers)
+  {
+    do_check_swap(description, logger, actions, std::forward<Container>(x), y, xClone, yClone, std::move(yMutator), allocation_checker<Container, Allocators, Predictions>{x, y, checkers.info()}...);
   }
 
   template<class Logger, class Container, class Mutator, class... Allocators, class... Predictions>
@@ -552,15 +573,6 @@ namespace sequoia::unit_testing::impl
   void check_mutation_after_move(std::string_view description, std::string_view moveType, Logger& logger, Container& u, const Container& y, Mutator yMutator, std::tuple<allocation_checker<Container, Allocators, Predictions>...> checkers)
   {
     check_mutation_after_move(description, moveType, logger, u, y, std::move(yMutator), std::move(checkers), std::make_index_sequence<sizeof...(Allocators)>{});
-  }
-  
-  template<class Logger, class Container, class Mutator, class... Allocators, class... Predictions>
-  void check_mutation_after_swap(std::string_view description, Logger& logger, Container& u, const Container& v, const Container& y, Mutator yMutator, allocation_checker<Container, Allocators, Predictions>... checkers)
-  {
-    yMutator(u);
-    check_mutation_allocation(combine_messages(description, "mutation after swap"), logger, u, v, checkers...);
-
-    check(combine_messages(description, "Mutation is not doing anything following copy then swap"), logger, u != y);    
   }
 
   template<class Logger, class Container, class Mutator, class... Allocators, class... Predictions>
@@ -620,12 +632,12 @@ namespace sequoia::unit_testing::impl
       check_mutation_after_move(description, "assignment", logger, u, y, yMutator, allocation_checker<Container, Allocators, Predictions>{u, 0, checkers.info()}...);
     }
 
-    if constexpr(do_swap<allocation_checker<Container, Allocators, Predictions>...>::value)
+    /*if constexpr(do_swap<allocation_checker<Container, Allocators, Predictions>...>::value)
     {
       Container u{x}, v{y};
 
       check_swap_allocations(description, logger, u, v, y, yMutator, allocation_checker<Container, Allocators, Predictions>{u, v, checkers.info()}...);
-    }
+      }*/
   }
 
   template<class Logger, class Actions, class Container, class... Allocators, class... Predictions>

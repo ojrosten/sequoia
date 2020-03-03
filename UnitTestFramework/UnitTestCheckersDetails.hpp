@@ -125,14 +125,14 @@ namespace sequoia::unit_testing::impl
     }
   }
 
-  template<class Logger, class Actions, class T>
-  void check_swap(std::string_view description, Logger& logger, const Actions& actions, T&& x, T& y, const T& xClone, const T& yClone)
+  template<class Logger, class Actions, class T, class Mutator>
+  void check_swap(std::string_view description, Logger& logger, const Actions& actions, T&& x, T& y, const T& xClone, const T& yClone, Mutator yMutator)
   {
-    do_check_swap(description, logger, actions, std::forward<T>(x), y, xClone, yClone);
+    do_check_swap(description, logger, actions, std::forward<T>(x), y, xClone, yClone, std::move(yMutator));
   }
 
-  template<class Logger, class Actions, class T, class... Args>
-  void do_check_swap(std::string_view description, Logger& logger, const Actions& actions, T&& x, T& y, const T& xClone, const T& yClone, const Args&... args)
+  template<class Logger, class Actions, class T, class Mutator, class... Args>
+  void do_check_swap(std::string_view description, Logger& logger, const Actions& actions, T&& x, T& y, const T& xClone, const T& yClone, Mutator yMutator, const Args&... args)
   {
     using std::swap;
     swap(x, y);
@@ -142,7 +142,7 @@ namespace sequoia::unit_testing::impl
     
     if constexpr(Actions::has_post_swap_action)
     {
-      //actions.post_swap_action(description, logger, w, args...);
+      actions.post_swap_action(description, logger, y, x, yClone, yMutator, args...);
     }
   }
 
@@ -181,7 +181,7 @@ namespace sequoia::unit_testing::impl
 
     if constexpr (do_swap<Args...>::value)
     {
-      check_swap(description, logger, actions, T{x}, w, x, y);
+      check_swap(description, logger, actions, T{x}, w, x, y, yMutator, args...);
     }
 
     if constexpr(!std::is_same_v<std::decay_t<Mutator>, null_mutator>)
