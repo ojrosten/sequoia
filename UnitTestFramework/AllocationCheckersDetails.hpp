@@ -611,15 +611,6 @@ namespace sequoia::unit_testing::impl
       check_equality(combine_messages(description, "Move constructor using allocator"), logger, u, yClone);
     }
   }
-
-  template<class Logger, class Container, class Mutator, class... Allocators, class... Predictions>
-  void check_swap_allocations(std::string_view description, Logger& logger, Container& u, Container& v, const Container& y, Mutator yMutator, allocation_checker<Container, Allocators, Predictions>... checkers)
-  {
-    using std::swap;
-    swap(u, v);
-
-    check_mutation_after_swap(description, logger, u, v, y, yMutator, allocation_checker<Container, Allocators, Predictions>{u, v, checkers.info()}...);
-  }
   
   template<class Logger, class Container, class Mutator, class... Allocators, class... Predictions>
   void check_allocations(std::string_view description, Logger& logger, const Container& x, const Container& y, Mutator yMutator, allocation_checker<Container, Allocators, Predictions>... checkers)
