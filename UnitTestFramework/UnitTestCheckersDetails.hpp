@@ -45,7 +45,6 @@ namespace sequoia::unit_testing::impl
     constexpr static bool has_post_move_action{};
     constexpr static bool has_post_move_assign_action{};
     constexpr static bool has_post_swap_action{};
-    constexpr static bool has_additional_action{};
   };
  
   template<class Logger, class Actions, class T, class... Args>
@@ -95,22 +94,22 @@ namespace sequoia::unit_testing::impl
     do_check_copy_assign(description, logger, actions, z, y);   
   }
 
-  template<class Logger, class Actions, class T, class... Args>
-  void do_check_move_assign(std::string_view description, Logger& logger, const Actions& actions, T& z, T&& y, const T& yClone, const Args&... args)
+  template<class Logger, class Actions, class T, class Mutator, class... Args>
+  void do_check_move_assign(std::string_view description, Logger& logger, const Actions& actions, T& z, T&& y, const T& yClone, Mutator yMutator, const Args&... args)
   {
     z = std::move(y);
     check_equality(combine_messages(description, "Move assignment (from y)"), logger, z, yClone);
 
     if constexpr(Actions::has_post_move_assign_action)
     {
-      actions.post_move_assign_action(description, logger, z, yClone, args...);
+      actions.post_move_assign_action(description, logger, z, yClone, yMutator, args...);
     }
   }
   
-  template<class Logger, class Actions, class T>
-  void check_move_assign(std::string_view description, Logger& logger, const Actions& actions, T& z, T&& y, const T& yClone)
+  template<class Logger, class Actions, class T, class Mutator>
+  void check_move_assign(std::string_view description, Logger& logger, const Actions& actions, T& z, T&& y, const T& yClone, Mutator m)
   {
-    do_check_move_assign(description, logger, actions, z, std::forward<T>(y), yClone);
+    do_check_move_assign(description, logger, actions, z, std::forward<T>(y), yClone, m);
   }
 
   template<class Logger, class Actions, class T, class... Args>
@@ -164,7 +163,7 @@ namespace sequoia::unit_testing::impl
     T z{x};
     if constexpr(Actions::has_post_copy_action)
     {
-      actions.post_copy_action(description, logger, z, args...);
+      actions.post_copy_action(description, logger, z, T{y}, args...);
     }
     check_equality(combine_messages(description, "Copy constructor (x)"), logger, z, x);
     check(combine_messages(description, "Equality operator"), logger, z == x);
@@ -177,7 +176,7 @@ namespace sequoia::unit_testing::impl
     check_move_construction(description, logger, actions, std::move(z), y, args...);
 
     T w{x};    
-    check_move_assign(description, logger, actions, w, T{y}, y, args...);
+    check_move_assign(description, logger, actions, w, T{y}, y, yMutator, args...);
 
     if constexpr (do_swap<Args...>::value)
     {
@@ -198,11 +197,6 @@ namespace sequoia::unit_testing::impl
       yMutator(v);
 
       check(combine_messages(description, "Mutation is not doing anything following copy assignment/ broken value semantics"), logger, v != y);
-    }
-
-    if constexpr(Actions::has_additional_action)
-    {
-      actions.additional_action(description, logger, x, y, yMutator, args...);
     }
 
     return true;

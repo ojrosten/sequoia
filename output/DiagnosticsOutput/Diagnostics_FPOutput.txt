@@ -693,18 +693,18 @@
 
 	../UnitTests/UnitTestFramework/PerformanceTestDiagnostics.cpp, Line 30:
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
-	Fast Task duration: 0.00178774s +- 4 * 0.00106998
-	Slow Task duration: 0.00133926s +- 4 * 5.93611e-05 [0.749135; (2, 2)]
+	Fast Task duration: 0.00129915s +- 4 * 5.89178e-05
+	Slow Task duration: 0.00126248s +- 4 * 6.87186e-05 [0.971772; (2, 2)]
 
 	../UnitTests/UnitTestFramework/PerformanceTestDiagnostics.cpp, Line 34:
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
-	Fast Task duration: 0.00134357s +- 4 * 4.23417e-05
-	Slow Task duration: 0.00125643s +- 4 * 9.13341e-05 [0.935143; (2, 3)]
+	Fast Task duration: 0.0013671s +- 4 * 3.85734e-05
+	Slow Task duration: 0.00135794s +- 4 * 5.0798e-05 [0.993295; (2, 3)]
 
 	../UnitTests/UnitTestFramework/PerformanceTestDiagnostics.cpp, Line 38:
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
-	Fast Task duration: 0.00131903s +- 4 * 0.000120024
-	Slow Task duration: 0.00488346s +- 4 * 0.000418294 [3.70231; (2, 2.5)]
+	Fast Task duration: 0.00139048s +- 4 * 2.47983e-05
+	Slow Task duration: 0.00487642s +- 4 * 0.000424326 [3.507; (2, 2.5)]
 
 	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 29
 	[double]
@@ -820,6 +820,16 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
+	Broken copy
+	[sequoia::unit_testing::shared_counting_allocator<int, false, false, false>]
+	Copy construction allocation (y)
+	[int]
+	operator== returned false
+	Obtained : -1
+	Predicted: 1
+
+
+	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
 	Broken copy Copy constructor (x)
 	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, false> >]
 	operator== returned false
@@ -833,44 +843,6 @@
 	operator== returned false
 	Obtained : false
 	Predicted: true
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
-	Broken copy Move assignment (from y)
-	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, false> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 5 6 
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
-	Broken copy
-	[sequoia::unit_testing::shared_counting_allocator<int, false, false, false>]
-	Move assignment x allocations
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
-	Broken copy
-	[sequoia::unit_testing::shared_counting_allocator<int, false, false, false>]
-	Copy construction allocation (x)
-	[int]
-	operator== returned false
-	Obtained : -1
-	Predicted: 1
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
-	Broken copy
-	[sequoia::unit_testing::shared_counting_allocator<int, false, false, false>]
-	Copy construction allocation (y)
-	[int]
-	operator== returned false
-	Obtained : -1
-	Predicted: 1
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
@@ -1051,24 +1023,6 @@
 	Predicted: 1
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 126:
-	Broken move assignment Move assignment (from y)
-	[sequoia::unit_testing::broken_move_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, false> >]
-	operator== returned false
-	Obtained : 1 
-	Predicted: 5 6 
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 126:
-	Broken move assignment
-	[sequoia::unit_testing::shared_counting_allocator<int, false, false, false>]
-	Move assignment x allocations
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
-
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 141:
 	Broken copy value semantics
 	[sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, false, false>]
@@ -1077,6 +1031,14 @@
 	operator== returned false
 	Obtained : 1
 	Predicted: 0
+
+
+	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 141:
+	Broken copy value semantics Mutation is not doing anything following move assignment
+	[bool]
+	operator== returned false
+	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 141:
@@ -1096,14 +1058,6 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 141:
-	Broken copy value semantics Mutation is not doing anything following move assignment
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 141:
 	Broken copy value semantics Mutation is not doing anything following move allocation assignment
 	[bool]
 	operator== returned false
@@ -1113,14 +1067,6 @@
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 156:
 	Broken copy assignment value semantics Mutation is not doing anything following copy assignment/ broken value semantics
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 156:
-	Broken copy assignment value semantics Mutation is not doing anything following move assignment
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -1153,15 +1099,6 @@
 	Predicted: 3
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 172
-	[sequoia::unit_testing::shared_counting_allocator<int, false, false, false>]
-	Copy construction allocation (x)
-	[int]
-	operator== returned false
-	Obtained : 2
-	Predicted: 3
-
-
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 187
 	[sequoia::unit_testing::shared_counting_allocator<int, false, false, false>]
 	Para copy construction allocation (y)
@@ -1177,16 +1114,6 @@
 	operator== returned false
 	Obtained : false
 	Predicted: true
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 205:
-	Incorrect copy x allocs
-	[sequoia::unit_testing::shared_counting_allocator<int, false, false, false>]
-	Copy construction allocation (x)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 205:
@@ -1233,16 +1160,6 @@
 	Incorrect copy assign y to x allocs
 	[sequoia::unit_testing::shared_counting_allocator<int, false, false, false>]
 	Copy assignment x allocations
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 219:
-	Incorrect copy assign y to x allocs
-	[sequoia::unit_testing::shared_counting_allocator<int, false, false, false>]
-	Move assignment x allocations
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -1289,16 +1206,6 @@
 	Predicted: 0
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 240:
-	Incorrect copy x allocs
-	[sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, false, false>]
-	Copy construction allocation (x)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 244:
 	Incorrect copy y allocs
 	[sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, false, false>]
@@ -1333,16 +1240,6 @@
 	Incorrect copy assign y to x allocs
 	[sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, false, false>]
 	Copy assignment x allocations
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 254:
-	Incorrect copy assign y to x allocs
-	[sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, false, false>]
-	Move assignment x allocations
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -1466,6 +1363,16 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
+	Broken copy
+	[sequoia::unit_testing::shared_counting_allocator<int, false, false, true>]
+	Copy construction allocation (y)
+	[int]
+	operator== returned false
+	Obtained : -1
+	Predicted: 1
+
+
+	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
 	Broken copy Copy constructor (x)
 	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, true> >]
 	operator== returned false
@@ -1521,44 +1428,6 @@
 	operator== returned false
 	Obtained : false
 	Predicted: true
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
-	Broken copy
-	[sequoia::unit_testing::shared_counting_allocator<int, false, false, true>]
-	Copy construction allocation (x)
-	[int]
-	operator== returned false
-	Obtained : -1
-	Predicted: 1
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
-	Broken copy
-	[sequoia::unit_testing::shared_counting_allocator<int, false, false, true>]
-	Copy construction allocation (y)
-	[int]
-	operator== returned false
-	Obtained : -1
-	Predicted: 1
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
-	Broken copy Move assignment (from y)
-	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, true> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 5 6 
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
-	Broken copy
-	[sequoia::unit_testing::shared_counting_allocator<int, false, false, true>]
-	Move assignment x allocations
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 86:
@@ -1721,24 +1590,6 @@
 	Predicted: 1
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 126:
-	Broken move assignment Move assignment (from y)
-	[sequoia::unit_testing::broken_move_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, false, false, true> >]
-	operator== returned false
-	Obtained : 1 
-	Predicted: 5 6 
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 126:
-	Broken move assignment
-	[sequoia::unit_testing::shared_counting_allocator<int, false, false, true>]
-	Move assignment x allocations
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
-
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 141:
 	Broken copy value semantics
 	[sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, false, true>]
@@ -1747,6 +1598,14 @@
 	operator== returned false
 	Obtained : 1
 	Predicted: 0
+
+
+	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 141:
+	Broken copy value semantics Mutation is not doing anything following move assignment
+	[bool]
+	operator== returned false
+	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 141:
@@ -1774,14 +1633,6 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 141:
-	Broken copy value semantics Mutation is not doing anything following move assignment
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 141:
 	Broken copy value semantics Mutation is not doing anything following move allocation assignment
 	[bool]
 	operator== returned false
@@ -1791,14 +1642,6 @@
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 156:
 	Broken copy assignment value semantics Mutation is not doing anything following copy assignment/ broken value semantics
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 156:
-	Broken copy assignment value semantics Mutation is not doing anything following move assignment
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -1816,15 +1659,6 @@
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 171
 	[sequoia::unit_testing::shared_counting_allocator<int, false, false, true>]
 	Copy construction allocation (y)
-	[int]
-	operator== returned false
-	Obtained : 2
-	Predicted: 3
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 172
-	[sequoia::unit_testing::shared_counting_allocator<int, false, false, true>]
-	Copy construction allocation (x)
 	[int]
 	operator== returned false
 	Obtained : 2
@@ -1867,16 +1701,6 @@
 	Predicted: 0
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 205:
-	Incorrect copy x allocs
-	[sequoia::unit_testing::shared_counting_allocator<int, false, false, true>]
-	Copy construction allocation (x)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 209:
 	Incorrect copy y allocs
 	[sequoia::unit_testing::shared_counting_allocator<int, false, false, true>]
@@ -1927,10 +1751,10 @@
 	Predicted: 0
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 219:
-	Incorrect copy assign y to x allocs
+	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 223:
+	Incorrect mutation allocs mutation after move assignment
 	[sequoia::unit_testing::shared_counting_allocator<int, false, false, true>]
-	Move assignment x allocations
+	Mutation allocation after move-like construction
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -1941,16 +1765,6 @@
 	Incorrect mutation allocs mutation after swap
 	[sequoia::unit_testing::shared_counting_allocator<int, false, false, true>]
 	y allocations
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 223:
-	Incorrect mutation allocs mutation after move assignment
-	[sequoia::unit_testing::shared_counting_allocator<int, false, false, true>]
-	Mutation allocation after move-like construction
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -1977,16 +1791,6 @@
 	Predicted: 0
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 240:
-	Incorrect copy x allocs
-	[sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, false, true>]
-	Copy construction allocation (x)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 244:
 	Incorrect copy y allocs
 	[sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, false, true>]
@@ -2037,20 +1841,10 @@
 	Predicted: 0
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 254:
-	Incorrect copy assign y to x allocs
-	[sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, false, true>]
-	Move assignment x allocations
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 258:
-	Incorrect mutation allocs mutation after swap
+	Incorrect mutation allocs mutation after move assignment
 	[sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, false, true>]
-	y allocations
+	Mutation allocation after move-like construction
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -2058,9 +1852,9 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 258:
-	Incorrect mutation allocs mutation after move assignment
+	Incorrect mutation allocs mutation after swap
 	[sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, false, true>]
-	Mutation allocation after move-like construction
+	y allocations
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -2143,20 +1937,20 @@
 	Predicted: 0
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 69:
-	Broken equality
+	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
+	Broken copy
 	[sequoia::unit_testing::shared_counting_allocator<int, false, true, false>]
-	Move assignment x allocations
+	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Obtained : 1
-	Predicted: 0
+	Obtained : -1
+	Predicted: 1
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
 	Broken copy
 	[sequoia::unit_testing::shared_counting_allocator<int, false, true, false>]
-	Copy construction allocation (x)
+	Copy construction allocation (y)
 	[int]
 	operator== returned false
 	Obtained : -1
@@ -2177,34 +1971,6 @@
 	operator== returned false
 	Obtained : false
 	Predicted: true
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
-	Broken copy Move assignment (from y)
-	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, false, true, false> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 5 6 
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
-	Broken copy
-	[sequoia::unit_testing::shared_counting_allocator<int, false, true, false>]
-	Copy construction allocation (x)
-	[int]
-	operator== returned false
-	Obtained : -1
-	Predicted: 1
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
-	Broken copy
-	[sequoia::unit_testing::shared_counting_allocator<int, false, true, false>]
-	Copy construction allocation (y)
-	[int]
-	operator== returned false
-	Obtained : -1
-	Predicted: 1
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
@@ -2371,26 +2137,8 @@
 	Move assignment x allocations
 	[int]
 	operator== returned false
-	Obtained : 2
+	Obtained : 1
 	Predicted: 0
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 126:
-	Broken move assignment Move assignment (from y)
-	[sequoia::unit_testing::broken_move_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, false, true, false> >]
-	operator== returned false
-	Obtained : 1 
-	Predicted: 5 6 
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 141:
-	Broken copy value semantics
-	[sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, true, false>]
-	Copy assignment x allocations
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 141:
@@ -2401,6 +2149,14 @@
 	operator== returned false
 	Obtained : 1
 	Predicted: 0
+
+
+	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 141:
+	Broken copy value semantics Mutation is not doing anything following move assignment
+	[bool]
+	operator== returned false
+	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 141:
@@ -2420,14 +2176,6 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 141:
-	Broken copy value semantics Mutation is not doing anything following move assignment
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 141:
 	Broken copy value semantics Mutation is not doing anything following move allocation assignment
 	[bool]
 	operator== returned false
@@ -2437,14 +2185,6 @@
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 156:
 	Broken copy assignment value semantics Mutation is not doing anything following copy assignment/ broken value semantics
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 156:
-	Broken copy assignment value semantics Mutation is not doing anything following move assignment
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -2477,15 +2217,6 @@
 	Predicted: 3
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 172
-	[sequoia::unit_testing::shared_counting_allocator<int, false, true, false>]
-	Copy construction allocation (x)
-	[int]
-	operator== returned false
-	Obtained : 2
-	Predicted: 3
-
-
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 187
 	[sequoia::unit_testing::shared_counting_allocator<int, false, true, false>]
 	Para copy construction allocation (y)
@@ -2501,16 +2232,6 @@
 	operator== returned false
 	Obtained : false
 	Predicted: true
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 205:
-	Incorrect copy x allocs
-	[sequoia::unit_testing::shared_counting_allocator<int, false, true, false>]
-	Copy construction allocation (x)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 205:
@@ -2577,16 +2298,6 @@
 	Incorrect mutation allocs mutation after move allocation assignment
 	[sequoia::unit_testing::shared_counting_allocator<int, false, true, false>]
 	Mutation allocation after move-like construction
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 240:
-	Incorrect copy x allocs
-	[sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, true, false>]
-	Copy construction allocation (x)
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -2749,20 +2460,20 @@
 	Predicted: 0
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 69:
-	Broken equality
+	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
+	Broken copy
 	[sequoia::unit_testing::shared_counting_allocator<int, false, true, true>]
-	Move assignment x allocations
+	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Obtained : 1
-	Predicted: 0
+	Obtained : -1
+	Predicted: 1
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
 	Broken copy
 	[sequoia::unit_testing::shared_counting_allocator<int, false, true, true>]
-	Copy construction allocation (x)
+	Copy construction allocation (y)
 	[int]
 	operator== returned false
 	Obtained : -1
@@ -2815,34 +2526,6 @@
 	operator== returned false
 	Obtained : false
 	Predicted: true
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
-	Broken copy
-	[sequoia::unit_testing::shared_counting_allocator<int, false, true, true>]
-	Copy construction allocation (x)
-	[int]
-	operator== returned false
-	Obtained : -1
-	Predicted: 1
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
-	Broken copy
-	[sequoia::unit_testing::shared_counting_allocator<int, false, true, true>]
-	Copy construction allocation (y)
-	[int]
-	operator== returned false
-	Obtained : -1
-	Predicted: 1
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
-	Broken copy Move assignment (from y)
-	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, false, true, true> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 5 6 
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 86:
@@ -3001,36 +2684,8 @@
 	Move assignment x allocations
 	[int]
 	operator== returned false
-	Obtained : 2
+	Obtained : 1
 	Predicted: 0
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 126:
-	Broken move assignment Move assignment (from y)
-	[sequoia::unit_testing::broken_move_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, false, true, true> >]
-	operator== returned false
-	Obtained : 1 
-	Predicted: 5 6 
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 126:
-	Broken move assignment
-	[sequoia::unit_testing::shared_counting_allocator<int, false, true, true>]
-	Move assignment x allocations
-	[int]
-	operator== returned false
-	Obtained : -1
-	Predicted: 0
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 141:
-	Broken copy value semantics
-	[sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, true, true>]
-	Copy assignment x allocations
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 141:
@@ -3041,6 +2696,14 @@
 	operator== returned false
 	Obtained : 1
 	Predicted: 0
+
+
+	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 141:
+	Broken copy value semantics Mutation is not doing anything following move assignment
+	[bool]
+	operator== returned false
+	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 141:
@@ -3068,14 +2731,6 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 141:
-	Broken copy value semantics Mutation is not doing anything following move assignment
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 141:
 	Broken copy value semantics Mutation is not doing anything following move allocation assignment
 	[bool]
 	operator== returned false
@@ -3085,14 +2740,6 @@
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 156:
 	Broken copy assignment value semantics Mutation is not doing anything following copy assignment/ broken value semantics
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 156:
-	Broken copy assignment value semantics Mutation is not doing anything following move assignment
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -3125,15 +2772,6 @@
 	Predicted: 3
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 172
-	[sequoia::unit_testing::shared_counting_allocator<int, false, true, true>]
-	Copy construction allocation (x)
-	[int]
-	operator== returned false
-	Obtained : 2
-	Predicted: 3
-
-
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 187
 	[sequoia::unit_testing::shared_counting_allocator<int, false, true, true>]
 	Para copy construction allocation (y)
@@ -3149,16 +2787,6 @@
 	operator== returned false
 	Obtained : false
 	Predicted: true
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 205:
-	Incorrect copy x allocs
-	[sequoia::unit_testing::shared_counting_allocator<int, false, true, true>]
-	Copy construction allocation (x)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 205:
@@ -3212,16 +2840,6 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 223:
-	Incorrect mutation allocs mutation after swap
-	[sequoia::unit_testing::shared_counting_allocator<int, false, true, true>]
-	y allocations
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 223:
 	Incorrect mutation allocs mutation after move assignment
 	[sequoia::unit_testing::shared_counting_allocator<int, false, true, true>]
 	Mutation allocation after move-like construction
@@ -3232,19 +2850,19 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 223:
-	Incorrect mutation allocs mutation after move allocation assignment
+	Incorrect mutation allocs mutation after swap
 	[sequoia::unit_testing::shared_counting_allocator<int, false, true, true>]
-	Mutation allocation after move-like construction
+	y allocations
 	[int]
 	operator== returned false
 	Obtained : 1
 	Predicted: 0
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 240:
-	Incorrect copy x allocs
-	[sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, true, true>]
-	Copy construction allocation (x)
+	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 223:
+	Incorrect mutation allocs mutation after move allocation assignment
+	[sequoia::unit_testing::shared_counting_allocator<int, false, true, true>]
+	Mutation allocation after move-like construction
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -3302,9 +2920,9 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 258:
-	Incorrect mutation allocs mutation after swap
+	Incorrect mutation allocs mutation after move assignment
 	[sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, true, true>]
-	y allocations
+	Mutation allocation after move-like construction
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -3312,9 +2930,9 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 258:
-	Incorrect mutation allocs mutation after move assignment
+	Incorrect mutation allocs mutation after swap
 	[sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, true, true>]
-	Mutation allocation after move-like construction
+	y allocations
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -3418,6 +3036,16 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
+	Broken copy
+	[sequoia::unit_testing::shared_counting_allocator<int, true, false, false>]
+	Copy construction allocation (y)
+	[int]
+	operator== returned false
+	Obtained : -1
+	Predicted: 1
+
+
+	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
 	Broken copy Copy constructor (x)
 	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, false> >]
 	operator== returned false
@@ -3431,44 +3059,6 @@
 	operator== returned false
 	Obtained : false
 	Predicted: true
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
-	Broken copy Move assignment (from y)
-	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, false> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 5 6 
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
-	Broken copy
-	[sequoia::unit_testing::shared_counting_allocator<int, true, false, false>]
-	Move assignment x allocations
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
-	Broken copy
-	[sequoia::unit_testing::shared_counting_allocator<int, true, false, false>]
-	Copy construction allocation (x)
-	[int]
-	operator== returned false
-	Obtained : -1
-	Predicted: 1
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
-	Broken copy
-	[sequoia::unit_testing::shared_counting_allocator<int, true, false, false>]
-	Copy construction allocation (y)
-	[int]
-	operator== returned false
-	Obtained : -4
-	Predicted: 1
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
@@ -3539,7 +3129,7 @@
 	Move construction allocation (y)
 	[int]
 	operator== returned false
-	Obtained : -2
+	Obtained : -3
 	Predicted: 0
 
 
@@ -3600,6 +3190,16 @@
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 118:
 	Broken copy assignment
 	[sequoia::unit_testing::shared_counting_allocator<int, true, false, false>]
+	Copy assignment x allocations
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+
+	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 118:
+	Broken copy assignment
+	[sequoia::unit_testing::shared_counting_allocator<int, true, false, false>]
 	Copy assignment y allocations
 	[int]
 	operator== returned false
@@ -3649,32 +3249,12 @@
 	Predicted: 1
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 126:
-	Broken move assignment Move assignment (from y)
-	[sequoia::unit_testing::broken_move_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, false> >]
-	operator== returned false
-	Obtained : 1 
-	Predicted: 5 6 
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 126:
-	Broken move assignment
-	[sequoia::unit_testing::shared_counting_allocator<int, true, false, false>]
-	Move assignment x allocations
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
-
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 141:
-	Broken copy value semantics
-	[sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, false, false>]
-	Copy assignment x allocations
-	[int]
+	Broken copy value semantics Mutation is not doing anything following move assignment
+	[bool]
 	operator== returned false
-	Obtained : 2
-	Predicted: 1
+	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 141:
@@ -3694,14 +3274,6 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 141:
-	Broken copy value semantics Mutation is not doing anything following move assignment
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 141:
 	Broken copy value semantics Mutation is not doing anything following move allocation assignment
 	[bool]
 	operator== returned false
@@ -3711,14 +3283,6 @@
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 156:
 	Broken copy assignment value semantics Mutation is not doing anything following copy assignment/ broken value semantics
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 156:
-	Broken copy assignment value semantics Mutation is not doing anything following move assignment
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -3751,15 +3315,6 @@
 	Predicted: 3
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 172
-	[sequoia::unit_testing::shared_counting_allocator<int, true, false, false>]
-	Copy construction allocation (x)
-	[int]
-	operator== returned false
-	Obtained : 2
-	Predicted: 3
-
-
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 187
 	[sequoia::unit_testing::shared_counting_allocator<int, true, false, false>]
 	Para copy construction allocation (y)
@@ -3775,16 +3330,6 @@
 	operator== returned false
 	Obtained : false
 	Predicted: true
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 205:
-	Incorrect copy x allocs
-	[sequoia::unit_testing::shared_counting_allocator<int, true, false, false>]
-	Copy construction allocation (x)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 205:
@@ -3861,16 +3406,6 @@
 	Incorrect mutation allocs mutation after move allocation assignment
 	[sequoia::unit_testing::shared_counting_allocator<int, true, false, false>]
 	Mutation allocation after move-like construction
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 240:
-	Incorrect copy x allocs
-	[sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, false, false>]
-	Copy construction allocation (x)
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -4064,6 +3599,16 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
+	Broken copy
+	[sequoia::unit_testing::shared_counting_allocator<int, true, false, true>]
+	Copy construction allocation (y)
+	[int]
+	operator== returned false
+	Obtained : -1
+	Predicted: 1
+
+
+	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
 	Broken copy Copy constructor (x)
 	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, true> >]
 	operator== returned false
@@ -4121,44 +3666,6 @@
 	Predicted: true
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
-	Broken copy
-	[sequoia::unit_testing::shared_counting_allocator<int, true, false, true>]
-	Copy construction allocation (x)
-	[int]
-	operator== returned false
-	Obtained : -1
-	Predicted: 1
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
-	Broken copy
-	[sequoia::unit_testing::shared_counting_allocator<int, true, false, true>]
-	Copy construction allocation (y)
-	[int]
-	operator== returned false
-	Obtained : -4
-	Predicted: 1
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
-	Broken copy Move assignment (from y)
-	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, true> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 5 6 
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
-	Broken copy
-	[sequoia::unit_testing::shared_counting_allocator<int, true, false, true>]
-	Move assignment x allocations
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
-
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 86:
 	Broken copy alloc Copy-like construction
 	[sequoia::unit_testing::broken_copy_alloc<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, true> >]
@@ -4209,7 +3716,7 @@
 	Move construction allocation (y)
 	[int]
 	operator== returned false
-	Obtained : -2
+	Obtained : -3
 	Predicted: 0
 
 
@@ -4270,6 +3777,16 @@
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 118:
 	Broken copy assignment
 	[sequoia::unit_testing::shared_counting_allocator<int, true, false, true>]
+	Copy assignment x allocations
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+
+	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 118:
+	Broken copy assignment
+	[sequoia::unit_testing::shared_counting_allocator<int, true, false, true>]
 	Copy assignment y allocations
 	[int]
 	operator== returned false
@@ -4319,32 +3836,12 @@
 	Predicted: 1
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 126:
-	Broken move assignment Move assignment (from y)
-	[sequoia::unit_testing::broken_move_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, true> >]
-	operator== returned false
-	Obtained : 1 
-	Predicted: 5 6 
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 126:
-	Broken move assignment
-	[sequoia::unit_testing::shared_counting_allocator<int, true, false, true>]
-	Move assignment x allocations
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
-
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 141:
-	Broken copy value semantics
-	[sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, false, true>]
-	Copy assignment x allocations
-	[int]
+	Broken copy value semantics Mutation is not doing anything following move assignment
+	[bool]
 	operator== returned false
-	Obtained : 2
-	Predicted: 1
+	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 141:
@@ -4372,14 +3869,6 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 141:
-	Broken copy value semantics Mutation is not doing anything following move assignment
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 141:
 	Broken copy value semantics Mutation is not doing anything following move allocation assignment
 	[bool]
 	operator== returned false
@@ -4389,14 +3878,6 @@
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 156:
 	Broken copy assignment value semantics Mutation is not doing anything following copy assignment/ broken value semantics
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 156:
-	Broken copy assignment value semantics Mutation is not doing anything following move assignment
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -4414,15 +3895,6 @@
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 171
 	[sequoia::unit_testing::shared_counting_allocator<int, true, false, true>]
 	Copy construction allocation (y)
-	[int]
-	operator== returned false
-	Obtained : 2
-	Predicted: 3
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 172
-	[sequoia::unit_testing::shared_counting_allocator<int, true, false, true>]
-	Copy construction allocation (x)
 	[int]
 	operator== returned false
 	Obtained : 2
@@ -4465,16 +3937,6 @@
 	Predicted: 0
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 205:
-	Incorrect copy x allocs
-	[sequoia::unit_testing::shared_counting_allocator<int, true, false, true>]
-	Copy construction allocation (x)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 209:
 	Incorrect copy y allocs
 	[sequoia::unit_testing::shared_counting_allocator<int, true, false, true>]
@@ -4526,9 +3988,9 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 223:
-	Incorrect mutation allocs mutation after swap
+	Incorrect mutation allocs mutation after move assignment
 	[sequoia::unit_testing::shared_counting_allocator<int, true, false, true>]
-	y allocations
+	Mutation allocation after move-like construction
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -4536,9 +3998,9 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 223:
-	Incorrect mutation allocs mutation after move assignment
+	Incorrect mutation allocs mutation after swap
 	[sequoia::unit_testing::shared_counting_allocator<int, true, false, true>]
-	Mutation allocation after move-like construction
+	y allocations
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -4565,16 +4027,6 @@
 	Predicted: 0
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 240:
-	Incorrect copy x allocs
-	[sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, false, true>]
-	Copy construction allocation (x)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 244:
 	Incorrect copy y allocs
 	[sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, false, true>]
@@ -4626,9 +4078,9 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 258:
-	Incorrect mutation allocs mutation after swap
+	Incorrect mutation allocs mutation after move assignment
 	[sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, false, true>]
-	y allocations
+	Mutation allocation after move-like construction
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -4636,9 +4088,9 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 258:
-	Incorrect mutation allocs mutation after move assignment
+	Incorrect mutation allocs mutation after swap
 	[sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, false, true>]
-	Mutation allocation after move-like construction
+	y allocations
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -4741,20 +4193,20 @@
 	Predicted: 0
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 69:
-	Broken equality
+	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
+	Broken copy
 	[sequoia::unit_testing::shared_counting_allocator<int, true, true, false>]
-	Move assignment x allocations
+	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Obtained : 1
-	Predicted: 0
+	Obtained : -1
+	Predicted: 1
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
 	Broken copy
 	[sequoia::unit_testing::shared_counting_allocator<int, true, true, false>]
-	Copy construction allocation (x)
+	Copy construction allocation (y)
 	[int]
 	operator== returned false
 	Obtained : -1
@@ -4775,34 +4227,6 @@
 	operator== returned false
 	Obtained : false
 	Predicted: true
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
-	Broken copy Move assignment (from y)
-	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, false> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 5 6 
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
-	Broken copy
-	[sequoia::unit_testing::shared_counting_allocator<int, true, true, false>]
-	Copy construction allocation (x)
-	[int]
-	operator== returned false
-	Obtained : -1
-	Predicted: 1
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
-	Broken copy
-	[sequoia::unit_testing::shared_counting_allocator<int, true, true, false>]
-	Copy construction allocation (y)
-	[int]
-	operator== returned false
-	Obtained : -4
-	Predicted: 1
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
@@ -4863,7 +4287,7 @@
 	Move construction allocation (y)
 	[int]
 	operator== returned false
-	Obtained : -2
+	Obtained : -3
 	Predicted: 0
 
 
@@ -4924,6 +4348,16 @@
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 118:
 	Broken copy assignment
 	[sequoia::unit_testing::shared_counting_allocator<int, true, true, false>]
+	Copy assignment x allocations
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+
+	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 118:
+	Broken copy assignment
+	[sequoia::unit_testing::shared_counting_allocator<int, true, true, false>]
 	Copy assignment y allocations
 	[int]
 	operator== returned false
@@ -4964,21 +4398,21 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 126:
-	Broken move assignment Move assignment (from y)
-	[sequoia::unit_testing::broken_move_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, false> >]
-	operator== returned false
-	Obtained : 1 
-	Predicted: 5 6 
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 126:
 	Broken move assignment
 	[sequoia::unit_testing::shared_counting_allocator<int, true, true, false>]
 	Move assignment x allocations
 	[int]
 	operator== returned false
-	Obtained : -2
+	Obtained : -1
 	Predicted: 0
+
+
+	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 141:
+	Broken copy value semantics Mutation is not doing anything following move assignment
+	[bool]
+	operator== returned false
+	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 141:
@@ -4998,14 +4432,6 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 141:
-	Broken copy value semantics Mutation is not doing anything following move assignment
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 141:
 	Broken copy value semantics Mutation is not doing anything following move allocation assignment
 	[bool]
 	operator== returned false
@@ -5015,14 +4441,6 @@
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 156:
 	Broken copy assignment value semantics Mutation is not doing anything following copy assignment/ broken value semantics
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 156:
-	Broken copy assignment value semantics Mutation is not doing anything following move assignment
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -5055,15 +4473,6 @@
 	Predicted: 3
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 172
-	[sequoia::unit_testing::shared_counting_allocator<int, true, true, false>]
-	Copy construction allocation (x)
-	[int]
-	operator== returned false
-	Obtained : 2
-	Predicted: 3
-
-
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 187
 	[sequoia::unit_testing::shared_counting_allocator<int, true, true, false>]
 	Para copy construction allocation (y)
@@ -5079,16 +4488,6 @@
 	operator== returned false
 	Obtained : false
 	Predicted: true
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 205:
-	Incorrect copy x allocs
-	[sequoia::unit_testing::shared_counting_allocator<int, true, true, false>]
-	Copy construction allocation (x)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 205:
@@ -5165,16 +4564,6 @@
 	Incorrect mutation allocs mutation after move allocation assignment
 	[sequoia::unit_testing::shared_counting_allocator<int, true, true, false>]
 	Mutation allocation after move-like construction
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 240:
-	Incorrect copy x allocs
-	[sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, true, false>]
-	Copy construction allocation (x)
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -5367,20 +4756,20 @@
 	Predicted: 0
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 69:
-	Broken equality
+	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
+	Broken copy
 	[sequoia::unit_testing::shared_counting_allocator<int, true, true, true>]
-	Move assignment x allocations
+	Copy construction allocation (x)
 	[int]
 	operator== returned false
-	Obtained : 1
-	Predicted: 0
+	Obtained : -1
+	Predicted: 1
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
 	Broken copy
 	[sequoia::unit_testing::shared_counting_allocator<int, true, true, true>]
-	Copy construction allocation (x)
+	Copy construction allocation (y)
 	[int]
 	operator== returned false
 	Obtained : -1
@@ -5435,34 +4824,6 @@
 	Predicted: true
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
-	Broken copy
-	[sequoia::unit_testing::shared_counting_allocator<int, true, true, true>]
-	Copy construction allocation (x)
-	[int]
-	operator== returned false
-	Obtained : -1
-	Predicted: 1
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
-	Broken copy
-	[sequoia::unit_testing::shared_counting_allocator<int, true, true, true>]
-	Copy construction allocation (y)
-	[int]
-	operator== returned false
-	Obtained : -4
-	Predicted: 1
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 78:
-	Broken copy Move assignment (from y)
-	[sequoia::unit_testing::broken_copy<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, true> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 5 6 
-
-
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 86:
 	Broken copy alloc Copy-like construction
 	[sequoia::unit_testing::broken_copy_alloc<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, true> >]
@@ -5513,7 +4874,7 @@
 	Move construction allocation (y)
 	[int]
 	operator== returned false
-	Obtained : -2
+	Obtained : -3
 	Predicted: 0
 
 
@@ -5574,6 +4935,16 @@
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 118:
 	Broken copy assignment
 	[sequoia::unit_testing::shared_counting_allocator<int, true, true, true>]
+	Copy assignment x allocations
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+
+	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 118:
+	Broken copy assignment
+	[sequoia::unit_testing::shared_counting_allocator<int, true, true, true>]
 	Copy assignment y allocations
 	[int]
 	operator== returned false
@@ -5614,21 +4985,21 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 126:
-	Broken move assignment Move assignment (from y)
-	[sequoia::unit_testing::broken_move_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, true> >]
-	operator== returned false
-	Obtained : 1 
-	Predicted: 5 6 
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 126:
 	Broken move assignment
 	[sequoia::unit_testing::shared_counting_allocator<int, true, true, true>]
 	Move assignment x allocations
 	[int]
 	operator== returned false
-	Obtained : -3
+	Obtained : -1
 	Predicted: 0
+
+
+	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 141:
+	Broken copy value semantics Mutation is not doing anything following move assignment
+	[bool]
+	operator== returned false
+	Obtained : false
+	Predicted: true
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 141:
@@ -5656,14 +5027,6 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 141:
-	Broken copy value semantics Mutation is not doing anything following move assignment
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 141:
 	Broken copy value semantics Mutation is not doing anything following move allocation assignment
 	[bool]
 	operator== returned false
@@ -5673,14 +5036,6 @@
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 156:
 	Broken copy assignment value semantics Mutation is not doing anything following copy assignment/ broken value semantics
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 156:
-	Broken copy assignment value semantics Mutation is not doing anything following move assignment
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -5698,15 +5053,6 @@
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 171
 	[sequoia::unit_testing::shared_counting_allocator<int, true, true, true>]
 	Copy construction allocation (y)
-	[int]
-	operator== returned false
-	Obtained : 2
-	Predicted: 3
-
-
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 172
-	[sequoia::unit_testing::shared_counting_allocator<int, true, true, true>]
-	Copy construction allocation (x)
 	[int]
 	operator== returned false
 	Obtained : 2
@@ -5749,16 +5095,6 @@
 	Predicted: 0
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 205:
-	Incorrect copy x allocs
-	[sequoia::unit_testing::shared_counting_allocator<int, true, true, true>]
-	Copy construction allocation (x)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 209:
 	Incorrect copy y allocs
 	[sequoia::unit_testing::shared_counting_allocator<int, true, true, true>]
@@ -5810,9 +5146,9 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 223:
-	Incorrect mutation allocs mutation after swap
+	Incorrect mutation allocs mutation after move assignment
 	[sequoia::unit_testing::shared_counting_allocator<int, true, true, true>]
-	y allocations
+	Mutation allocation after move-like construction
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -5820,9 +5156,9 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 223:
-	Incorrect mutation allocs mutation after move assignment
+	Incorrect mutation allocs mutation after swap
 	[sequoia::unit_testing::shared_counting_allocator<int, true, true, true>]
-	Mutation allocation after move-like construction
+	y allocations
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -5849,16 +5185,6 @@
 	Predicted: 0
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 240:
-	Incorrect copy x allocs
-	[sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, true, true>]
-	Copy construction allocation (x)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 244:
 	Incorrect copy y allocs
 	[sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, true, true>]
@@ -5910,9 +5236,9 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 258:
-	Incorrect mutation allocs mutation after swap
+	Incorrect mutation allocs mutation after move assignment
 	[sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, true, true>]
-	y allocations
+	Mutation allocation after move-like construction
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -5920,9 +5246,9 @@
 
 
 	Regular Semantics ../UnitTests/UnitTestFramework/AllocationTestDiagnostics.cpp, Line 258:
-	Incorrect mutation allocs mutation after move assignment
+	Incorrect mutation allocs mutation after swap
 	[sequoia::unit_testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, true, true>]
-	Mutation allocation after move-like construction
+	y allocations
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -6380,14 +5706,14 @@
 	False Positive Failure:
 		../UnitTests/UnitTestFramework/PerformanceTestDiagnostics.cpp, Line 67:
 	Performance Test which should pass
-	Fast Task duration: 0.00126182s +- 4 * 4.25792e-05
-	Slow Task duration: 0.00226246s +- 4 * 0.000173545 [1.79301; (1.8, 2.1)]
+	Fast Task duration: 0.00117131s +- 4 * 0.000122873
+	Slow Task duration: 0.00223361s +- 4 * 0.000252925 [1.90693; (1.8, 2.1)]
 
 	False Positive Failure:
 		../UnitTests/UnitTestFramework/PerformanceTestDiagnostics.cpp, Line 68:
 	Performance Test which should pass
-	Fast Task duration: 0.00123567s +- 4 * 0.000117363
-	Slow Task duration: 0.00419244s +- 4 * 7.73662e-05 [3.39284; (3.6, 4.1)]
+	Fast Task duration: 0.00119675s +- 4 * 0.000124106
+	Slow Task duration: 0.0043577s +- 4 * 0.000304881 [3.64129; (3.6, 4.1)]
 
 	False Positive Failure:
 	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 69
