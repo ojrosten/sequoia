@@ -191,21 +191,21 @@ namespace sequoia::unit_testing::impl
     }
 
     template<class Logger>
-    void check_mutation_after_swap(std::string_view description, Logger& logger, const Container& xContainer, const Container& yContainer) const
+    void check_mutation_after_swap(std::string_view description, Logger& logger, const Container& lhs, const Container& rhs) const
     {
       typename Logger::sentinel s{logger, add_type_info<Allocator>(description)};
 
       const auto prediction{m_Info.get_predictions().y.mutation};
-      auto uCount{m_SecondCount}, vCount{m_FirstCount};
+      auto lhCount{m_FirstCount}, rhCount{m_SecondCount};
       
       if constexpr(std::allocator_traits<Allocator>::propagate_on_container_swap::value)
       {
         using std::swap;
-        swap(uCount, vCount);        
+        swap(lhCount, rhCount);
       }
 
-      check_allocation(description, "x allocations", "", logger, xContainer, m_Info, uCount, prediction);
-      check_allocation(description, "y allocations", "", logger, yContainer, m_Info, vCount, 0);
+      check_allocation(description, "y allocations", "", logger, lhs, m_Info, lhCount, prediction);
+      check_allocation(description, "x allocations", "", logger, rhs, m_Info, rhCount, 0);
     }     
 
     [[nodiscard]]
@@ -455,12 +455,15 @@ namespace sequoia::unit_testing::impl
   }
 
   template<class Logger, class Container, class Mutator, class... Allocators, class... Predictions>
-  void check_mutation_after_swap(std::string_view description, Logger& logger, Container& u, const Container& v, const Container& y, Mutator yMutator, allocation_checker<Container, Allocators, Predictions>... checkers)
+  void check_mutation_after_swap(std::string_view description, Logger& logger, Container& lhs, const Container& rhs, const Container& y, Mutator yMutator, allocation_checker<Container, Allocators, Predictions>... checkers)
   {
-    yMutator(u);
-    check_mutation_allocation(combine_messages(description, "mutation after swap"), logger, u, v, checkers...);
+    if(check(combine_messages(description, "Mutation after swap pre-condition violated"), logger, lhs == y))
+    {    
+      yMutator(lhs);
+      check_mutation_allocation(combine_messages(description, "mutation after swap"), logger, lhs, rhs, checkers...);
 
-    check(combine_messages(description, "Mutation is not doing anything following copy then swap"), logger, u != y);    
+      check(combine_messages(description, "Mutation is not doing anything following copy then swap"), logger, lhs != y);
+    }
   }
 
   struct allocation_actions : pre_condition_actions
@@ -503,9 +506,9 @@ namespace sequoia::unit_testing::impl
     }
 
     template<class Logger, class Container, class Mutator, class... Allocators, class... Predictions>
-    static void post_swap_action(std::string_view description, Logger& logger, const Container& x, Container& y, const Container& yClone, Mutator yMutator, const allocation_checker<Container, Allocators, Predictions>&... checkers)
+    static void post_swap_action(std::string_view description, Logger& logger, Container& x, const Container& y, const Container& yClone, Mutator yMutator, const allocation_checker<Container, Allocators, Predictions>&... checkers)
     {
-      check_mutation_after_swap(description, logger, y, x, yClone, yMutator, allocation_checker<Container, Allocators, Predictions>{y, x, checkers.info()}...);
+      check_mutation_after_swap(description, logger, x, y, yClone, yMutator, checkers...);
     }
 
     template<class Logger, class Container, class Mutator, class... Allocators, class... Predictions>

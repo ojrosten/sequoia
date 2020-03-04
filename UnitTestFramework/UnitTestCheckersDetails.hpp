@@ -142,7 +142,7 @@ namespace sequoia::unit_testing::impl
     
     if constexpr(Actions::has_post_swap_action)
     {
-      actions.post_swap_action(description, logger, y, x, yClone, yMutator, args...);
+      actions.post_swap_action(description, logger, x, y, yClone, yMutator, args...);
     }
   }
 
@@ -181,7 +181,8 @@ namespace sequoia::unit_testing::impl
 
     if constexpr (do_swap<Args...>::value)
     {
-      check_swap(description, logger, actions, T{x}, w, x, y, yMutator, args...);
+      T v{y};
+      check_swap(description, logger, actions, T{x}, v, x, y, yMutator, args...);
     }
 
     if constexpr(!std::is_same_v<std::decay_t<Mutator>, null_mutator>)
