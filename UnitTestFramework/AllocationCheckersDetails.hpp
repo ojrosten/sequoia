@@ -187,7 +187,7 @@ namespace sequoia::unit_testing::impl
     template<class Logger>
     void check_mutation(std::string_view description, Logger& logger, const Container& yContainer) const
     {
-      check_allocation(description, "Mutation allocation after move-like construction", "", logger, yContainer, m_Info, m_FirstCount, m_Info.get_predictions().y.mutation);
+      check_allocation(description, "Mutation allocation after move-like construction", "", logger, yContainer, m_Info, m_FirstCount, m_Info.get_predictions().mutation_allocs());
     }
 
     template<class Logger>
@@ -195,7 +195,7 @@ namespace sequoia::unit_testing::impl
     {
       typename Logger::sentinel s{logger, add_type_info<Allocator>(description)};
 
-      const auto prediction{m_Info.get_predictions().y.mutation};
+      const auto prediction{m_Info.get_predictions().mutation_allocs()};
       auto lhCount{m_FirstCount}, rhCount{m_SecondCount};
       
       if constexpr(std::allocator_traits<Allocator>::propagate_on_container_swap::value)
@@ -593,17 +593,6 @@ namespace sequoia::unit_testing::impl
       check_equality(combine_messages(description, "Move-like construction"), logger, v, y);    
       check_para_move_y_allocation(description, logger, v, std::tuple_cat(make_allocation_checkers(info)...));
       check_mutation_after_move(description, "allocation assignment", logger, v, y, yMutator, std::tuple_cat(make_allocation_checkers(info, v, 0)...));
-    }
-  }
-
-  template<class Logger, class Container, class... Allocators, class... Predictions>
-  void check_para_constructor_allocations(std::string_view description, Logger& logger, Container&& y, const Container& yClone, const basic_allocation_info<Container, Allocators, Predictions>&... info)
-  {    
-    if constexpr(sizeof...(Allocators) > 0)
-    {
-      Container u{std::move(y), info.make_allocator()...};
-      check_para_move_y_allocation(description, logger, u, std::tuple_cat(make_allocation_checkers(info)...));
-      check_equality(combine_messages(description, "Move constructor using allocator"), logger, u, yClone);
     }
   }
 

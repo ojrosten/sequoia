@@ -162,7 +162,7 @@ namespace sequoia::unit_testing
 
         auto mutator{
           [](beast& b) {
-            b.x.reserve(3);
+            b.x.reserve(b.x.capacity() + 1);
             b.x.push_back(1);
           }
         };
@@ -178,7 +178,7 @@ namespace sequoia::unit_testing
 
         auto mutator{
           [](beast& b) {
-            b.x.reserve(3);
+            b.x.reserve(b.x.capacity() + 1);
             b.x.push_back(1);
           }
         };
@@ -325,7 +325,7 @@ namespace sequoia::unit_testing
 
       auto mutator{
         [](beast& b) {
-          b.x.reserve(3);
+          b.x.reserve(b.x.capacity() + 1);
           b.x.push_back(1);
         }
       };
@@ -341,7 +341,7 @@ namespace sequoia::unit_testing
       auto mutator{
         [](beast& b) {
           b.x.shrink_to_fit();
-          b.x.reserve(3);
+          b.x.reserve(b.x.capacity() + 1);
           b.x.push_back(1);
         }
       };

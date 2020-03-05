@@ -72,6 +72,9 @@ namespace sequoia::unit_testing
       return assign_y_to_x.without_propagation;
     }
 
+    [[nodiscard]]
+    int mutation_allocs() const noexcept { return y.mutation; }
+
     int copy_x{};
     individual_allocation_predictions y;
     assignment_allocation_predictions assign_y_to_x;

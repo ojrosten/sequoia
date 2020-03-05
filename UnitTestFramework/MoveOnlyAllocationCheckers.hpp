@@ -19,9 +19,10 @@ namespace sequoia::unit_testing
 {
   struct move_only_allocation_predictions
   {
-    move_only_allocation_predictions(int paraMove, int assignWithoutPropagation)
-      : para_move{paraMove}
-      , assign_without_propagation{assignWithoutPropagation}
+    move_only_allocation_predictions(int assignWithoutPropagation, int yMutation, int paraMove)
+      : assign_without_propagation{assignWithoutPropagation}
+      , mutation{yMutation}
+      , para_move{paraMove}
     {}
 
     [[nodiscard]]
@@ -29,8 +30,11 @@ namespace sequoia::unit_testing
 
     [[nodiscard]]
     int assign_without_propagation_allocs() const noexcept { return assign_without_propagation; }
+
+    [[nodiscard]]
+    int mutation_allocs() const noexcept { return mutation; }
     
-    int para_move{}, assign_without_propagation{};
+    int assign_without_propagation{}, mutation{}, para_move{};
   };
 
   // Done through inheritance rather than a using declaration
@@ -53,14 +57,14 @@ namespace sequoia::unit_testing
   move_only_allocation_info(Fn&& allocGetter, std::initializer_list<move_only_allocation_predictions> predictions)
     -> move_only_allocation_info<std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::arg>, std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::ret>>;
   
-  template<class Logger, class T, class... Allocators>
-  void check_regular_semantics(std::string_view description, Logger& logger, T&& x, T&& y, const T& xClone, const T& yClone, move_only_allocation_info<T, Allocators>... info)
+  template<class Logger, class T, class Mutator, class... Allocators>
+  void check_regular_semantics(std::string_view description, Logger& logger, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, move_only_allocation_info<T, Allocators>... info)
   {
     typename Logger::sentinel s{logger, add_type_info<T>(description)};
 
-    if(impl::check_regular_semantics(description, logger, impl::move_only_allocation_actions{}, std::forward<T>(x), std::forward<T>(y), xClone, yClone, std::tuple_cat(impl::make_allocation_checkers(info, x, y)...)))
+    if(auto opt{impl::check_para_constructor_allocations(description, logger, std::forward<T>(y), yClone, info...)})
     {
-      impl::check_para_constructor_allocations(description, logger, std::forward<T>(y), yClone, info...);
+      impl::check_regular_semantics(description, logger, impl::move_only_allocation_actions{}, std::forward<T>(x), std::move(*opt), xClone, yClone, std::move(m), std::tuple_cat(impl::make_allocation_checkers(info, x, y)...));
     }
   }
 }

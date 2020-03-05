@@ -15,18 +15,18 @@
 
 namespace sequoia::unit_testing::impl
 {
-  template<class Logger, class Actions, class T, class... Args>
-  bool check_regular_semantics(std::string_view description, Logger& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, const Args&... args)
+  template<class Logger, class Actions, class T, class Mutator, class... Args>
+  void check_regular_semantics(std::string_view description, Logger& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, const Args&... args)
   {
     typename Logger::sentinel s{logger, add_type_info<T>(description)};
 
     // Preconditions
     if(!check_preconditions(description, logger, actions, x, y, args...))
-      return false;
+      return;
 
-    if(!check(combine_messages(description, "Precondition - for checking regular semantics, x and xClone are assumed to be equal"), logger, x == xClone)) return false;
+    if(!check(combine_messages(description, "Precondition - for checking regular semantics, x and xClone are assumed to be equal"), logger, x == xClone)) return;
 
-    if(!check(combine_messages(description, "Precondition - for checking regular semantics, y and yClone are assumed to be equal"), logger, y == yClone)) return false;
+    if(!check(combine_messages(description, "Precondition - for checking regular semantics, y and yClone are assumed to be equal"), logger, y == yClone)) return;
 
     T z{std::move(x)};
     if constexpr(Actions::has_post_move_action)
@@ -42,15 +42,11 @@ namespace sequoia::unit_testing::impl
       check_equality(combine_messages(description, "Swap"), logger, y, xClone);
       check_equality(combine_messages(description, "Swap"), logger, z, yClone);
 
-      check_move_assign(description, logger, actions, y, std::move(z), yClone, null_mutator{}, args...);
+      check_move_assign(description, logger, actions, y, std::move(z), yClone, m, args...);
     }
     else
     {      
-      check_move_assign(description, logger, actions, z, std::move(y), yClone, null_mutator{}, args...);
-      
-      y = std::move(z);
+      check_move_assign(description, logger, actions, z, std::move(y), yClone, m, args...);
     }
-
-    return check_equality(combine_messages(description, "Post condition: y restored"), logger, y, yClone);
   }
 }
