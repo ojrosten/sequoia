@@ -49,7 +49,7 @@ namespace sequoia::unit_testing
     queue_t t{};
     t.push(2);
 
-    check_regular_semantics(LINE("Standard Semantics"), s, t);
+    check_semantics(LINE("Standard Semantics"), s, t);
 
     check_exception_thrown<std::logic_error>(LINE("Trying to push two elements to queue of depth 1"), [&t]() { t.push(1); });
     check_exception_thrown<std::logic_error>(LINE("Can't construct queue of depth 1 with 2 elements"), []() { queue_t{1, 2}; });
@@ -73,7 +73,7 @@ namespace sequoia::unit_testing
       check_equality(LINE(""), s.top(), 2);
       check_equality(LINE(""), t.top(), 4);
       
-      check_regular_semantics(LINE("Standard Semantics"), s, t);
+      check_semantics(LINE("Standard Semantics"), s, t);
 
       check_exception_thrown<std::logic_error>(LINE("Trying to push three elements to queue of depth 2"), [&t]() { t.push(1); });
       check_exception_thrown<std::logic_error>(LINE("Can't construct queue of depth 2 with 3 elements"), []() { queue_t{1, 2, 3}; });
@@ -102,7 +102,7 @@ namespace sequoia::unit_testing
       constexpr static_priority_queue<int, 2, comp> s{{3, 2}, comp{3}}, t{{4, 6}, comp{2}};
       check_equality(LINE(""), s.top(), 2);
 
-      check_regular_semantics(LINE("Standard semantics"), s, t);
+      check_semantics(LINE("Standard semantics"), s, t);
     }
   }
 
@@ -135,7 +135,7 @@ namespace sequoia::unit_testing
     t.pop();
     check_equality(LINE(""), t, queue_t{6, 2});
 
-    check_regular_semantics(LINE("Standard semantics"), s, t);
+    check_semantics(LINE("Standard semantics"), s, t);
 
     t.pop();
     check_equality(LINE(""), t, queue_t{2});

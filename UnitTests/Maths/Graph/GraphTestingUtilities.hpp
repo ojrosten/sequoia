@@ -280,7 +280,7 @@ namespace sequoia::unit_testing
     using base_t::check_exception_thrown;
     using base_t::check_equality;
     using base_t::check_graph;
-    using base_t::check_regular_semantics;
+    using base_t::check_semantics;
     using base_t::check;
 
     graph_basic_test(std::string_view name, concurrency_mode mode)

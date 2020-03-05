@@ -86,8 +86,8 @@ namespace sequoia::unit_testing
     //   (i)
 
     check_equality(LINE(""), graph, graph_t{edge_init_list_t{{}}, {{0,1}}});
-    check_regular_semantics(LINE("Regular semantics"), graph, graph_t{});
-    check_regular_semantics(LINE("Regular semantics"), graph, graph_t{edge_init_list_t{{}}, {{1,0}}});
+    check_semantics(LINE("Regular semantics"), graph, graph_t{});
+    check_semantics(LINE("Regular semantics"), graph, graph_t{edge_init_list_t{{}}, {{1,0}}});
 
     check_exception_thrown<std::out_of_range>(LINE("Throw if node out of range"), [&graph](){ graph.node_weight(graph.cend_node_weights(), 0.0); });
     
@@ -114,29 +114,29 @@ namespace sequoia::unit_testing
     if constexpr (GraphFlavour == graph_flavour::directed)
     {
       check_equality(LINE(""), graph, graph_t{{{{edge_init_t{0,1}}}}, {{1.1,-4.3}}});
-      check_regular_semantics(LINE("Regular semantics"), graph, graph_t{{{{edge_init_t{0,2}}}}, {{1.1,-4.3}}});
-      check_regular_semantics(LINE("Regular semantics"), graph, graph_t{{{{edge_init_t{0,1}}}}, {{-4.3, 1.1}}});
+      check_semantics(LINE("Regular semantics"), graph, graph_t{{{{edge_init_t{0,2}}}}, {{1.1,-4.3}}});
+      check_semantics(LINE("Regular semantics"), graph, graph_t{{{{edge_init_t{0,1}}}}, {{-4.3, 1.1}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::undirected)
     {      
       check_equality(LINE(""), graph, graph_t{{{edge_init_t{0,1}, edge_init_t{0,1}}}, {{1.1,-4.3}}});
-      check_regular_semantics(LINE("Regular semantics"), graph, graph_t{{{edge_init_t{0,2}, edge_init_t{0,2}}}, {{1.1,-4.3}}});
-      check_regular_semantics(LINE("Regular semantics"), graph, graph_t{{{edge_init_t{0,1}, edge_init_t{0,1}}}, {{-4.3,1.1}}});
+      check_semantics(LINE("Regular semantics"), graph, graph_t{{{edge_init_t{0,2}, edge_init_t{0,2}}}, {{1.1,-4.3}}});
+      check_semantics(LINE("Regular semantics"), graph, graph_t{{{edge_init_t{0,1}, edge_init_t{0,1}}}, {{-4.3,1.1}}});
     }
     else if constexpr(GraphFlavour == graph_flavour::directed_embedded)
     {
       check_equality(LINE(""), graph, graph_t{{{edge_init_t{0,0,1,1}, edge_init_t{0,0,0,1}}}, {{1.1,-4.3}}});
-      check_regular_semantics(LINE(""), graph, graph_t{{{edge_init_t{0,0,1,2}, edge_init_t{0,0,0,2}}}, {{1.1,-4.3}}});
-      check_regular_semantics(LINE(""), graph, graph_t{{{edge_init_t{0,0,1,1}, edge_init_t{0,0,0,1}}}, {{-4.3,1.1}}});      
+      check_semantics(LINE(""), graph, graph_t{{{edge_init_t{0,0,1,2}, edge_init_t{0,0,0,2}}}, {{1.1,-4.3}}});
+      check_semantics(LINE(""), graph, graph_t{{{edge_init_t{0,0,1,1}, edge_init_t{0,0,0,1}}}, {{-4.3,1.1}}});      
     }
     else 
     { 
       check_equality(LINE(""), graph, graph_t{{{edge_init_t{0,1,1}, edge_init_t{0,0,1}}}, {{1.1,-4.3}}});
-      check_regular_semantics(LINE(""), graph, graph_t{{{edge_init_t{0,1,2}, edge_init_t{0,0,2}}}, {{1.1,-4.3}}});
-      check_regular_semantics(LINE(""), graph, graph_t{{{edge_init_t{0,1,1}, edge_init_t{0,0,1}}}, {{-4.3,1.1}}});
+      check_semantics(LINE(""), graph, graph_t{{{edge_init_t{0,1,2}, edge_init_t{0,0,2}}}, {{1.1,-4.3}}});
+      check_semantics(LINE(""), graph, graph_t{{{edge_init_t{0,1,1}, edge_init_t{0,0,1}}}, {{-4.3,1.1}}});
     }
 
-    check_regular_semantics(LINE("Regular semantics"), graph, graph_t{});
+    check_semantics(LINE("Regular semantics"), graph, graph_t{});
 
     graph.set_edge_weight(graph.cbegin_edges(0), -2);
     //   /\ -2

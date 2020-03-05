@@ -17,14 +17,14 @@
 namespace sequoia::unit_testing
 {
   template<class Logger, class T, class Mutator>
-  void check_regular_semantics(std::string_view description, Logger& logger, const T& x, const T& y, Mutator yMutator)
+  void check_semantics(std::string_view description, Logger& logger, const T& x, const T& y, Mutator yMutator)
   {
-    impl::check_regular_semantics(description, logger, impl::default_actions{}, x, y, yMutator);
+    impl::check_semantics(description, logger, impl::default_actions{}, x, y, yMutator);
   }
     
   template<class Logger, class T>
-  void check_regular_semantics(std::string_view description, Logger& logger, const T& x, const T& y)
+  void check_semantics(std::string_view description, Logger& logger, const T& x, const T& y)
   {
-    impl::check_regular_semantics(description, logger, impl::default_actions{}, x, y, impl::null_mutator{});
+    impl::check_semantics(description, logger, impl::default_actions{}, x, y, impl::null_mutator{});
   }
 }

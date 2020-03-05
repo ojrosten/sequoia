@@ -46,7 +46,7 @@ namespace sequoia::unit_testing
     static_queue<int, 1> t{};
     t.push(2);
 
-    check_regular_semantics(LINE("Standard Semantics"), s, t);
+    check_semantics(LINE("Standard Semantics"), s, t);
 
     check_exception_thrown<std::logic_error>(LINE("Trying to push two elements to queue of depth 1"), [&t]() { t.push(1); });
     check_exception_thrown<std::logic_error>( LINE("Can't construct queue of depth 1 with 2 elements"), []() { static_queue<int, 1>{1, 2}; });
@@ -76,10 +76,10 @@ namespace sequoia::unit_testing
     static_queue<int, 2> a{}, b{1}, c{3, 2};
     constexpr static_queue<int, 2> s{make_static_queue_2()};
 
-    check_regular_semantics(LINE("Standard Semantics"), a, b);
-    check_regular_semantics(LINE("Standard Semantics"), b, c);
-    check_regular_semantics(LINE("Standard Semantics"), a, c);
-    check_regular_semantics(LINE("Standard Semantics"), b, s);
+    check_semantics(LINE("Standard Semantics"), a, b);
+    check_semantics(LINE("Standard Semantics"), b, c);
+    check_semantics(LINE("Standard Semantics"), a, c);
+    check_semantics(LINE("Standard Semantics"), b, s);
 
     check_exception_thrown<std::logic_error>(LINE("Can't construct queue of depth 2 with 3 elements"), []() { static_queue<int, 2>{1, 2, 3}; });
 

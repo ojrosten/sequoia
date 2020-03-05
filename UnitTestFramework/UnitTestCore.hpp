@@ -26,15 +26,15 @@ namespace sequoia::unit_testing
     regular_extender& operator=(regular_extender&&) = delete;
 
     template<class T>
-    void check_regular_semantics(std::string_view description, const T& x, const T& y)
+    void check_semantics(std::string_view description, const T& x, const T& y)
     {
-      unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), m_Logger, x, y);
+      unit_testing::check_semantics(combine_messages("Regular Semantics", description), m_Logger, x, y);
     }
 
     template<class T, class Mutator>
-    void check_regular_semantics(std::string_view description, const T& x, const T& y, Mutator m)
+    void check_semantics(std::string_view description, const T& x, const T& y, Mutator m)
     {
-      unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), m_Logger, x, y, m);
+      unit_testing::check_semantics(combine_messages("Regular Semantics", description), m_Logger, x, y, m);
     }
   protected:
     regular_extender(regular_extender&&) noexcept = default;

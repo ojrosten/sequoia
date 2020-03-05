@@ -72,7 +72,7 @@ namespace sequoia
       
       using checker_t::check_equality;      
       using checker_t::check_graph;
-      using checker_t::check_regular_semantics;
+      using checker_t::check_semantics;
 
     private:
       using GGraph = typename

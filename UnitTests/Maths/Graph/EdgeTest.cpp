@@ -65,7 +65,7 @@ namespace sequoia
       edge_t e2{3};
       check_equality(LINE(""), e2, edge_t{3});
       
-      check_regular_semantics(LINE("Standard semantics"), e2, e1);
+      check_semantics(LINE("Standard semantics"), e2, e1);
     }
     
     void test_edges::test_partial_edge_shared_weight()
@@ -90,7 +90,7 @@ namespace sequoia
       edge_t edge1{2,-7};
       check_equality(LINE("Construction"), edge1, edge_t{2, -7});
 
-      check_regular_semantics(LINE("Standard Semantics"), edge1, edge);      
+      check_semantics(LINE("Standard Semantics"), edge1, edge);      
 
       edge_t edge2{6, edge};
       check_equality(LINE("Construction with shared weight"), edge2, edge_t{6, -1});
@@ -107,12 +107,12 @@ namespace sequoia
       check_equality(LINE("Implicit change of shared weight"), edge, edge_t{1, -3});
       check_equality(LINE("Explicit change of shared weight"), edge2, edge_t{5, -3});
 
-      check_regular_semantics(LINE("Standard semantics with shared weight"), edge2, edge);
+      check_semantics(LINE("Standard semantics with shared weight"), edge2, edge);
 
       edge_t edge3(2, 8);
       check_equality(LINE(""), edge3, edge_t{2, 8});
 
-      check_regular_semantics(LINE("Standard semantics with one having a shared weight"), edge2, edge);
+      check_semantics(LINE("Standard semantics with one having a shared weight"), edge2, edge);
  
       std::swap(edge, edge2);
       std::swap(edge, edge3);
@@ -161,7 +161,7 @@ namespace sequoia
       check_equality(LINE("Mutate weight"), edge, edge_t{3, -10});
       check_equality(LINE(""), edge2, edge_t{5, -5});
 
-      check_regular_semantics(LINE("Standard semantics"), edge2, edge);
+      check_semantics(LINE("Standard semantics"), edge2, edge);
     }
 
     void test_edges::test_plain_embedded_partial_edge()
@@ -188,7 +188,7 @@ namespace sequoia
       edge_t e2{10, 10};
       check_equality(LINE("Construction"), e2, edge_t{10, 10});
 
-      check_regular_semantics(LINE("Standard semantics"), e2, e1);
+      check_semantics(LINE("Standard semantics"), e2, e1);
     }
     
     void test_edges::test_embedded_partial_edge_indep_weight()
@@ -214,7 +214,7 @@ namespace sequoia
       edge2.weight(5.6);
       check_equality(LINE("Change weight"), edge2, edge_t{13, 2, 5.6});
 
-      check_regular_semantics(LINE("Standard semantics"), edge2, edge1); 
+      check_semantics(LINE("Standard semantics"), edge2, edge1); 
     }
 
     void test_edges::test_embedded_partial_edge_shared_weight()
@@ -240,7 +240,7 @@ namespace sequoia
       check_equality(LINE("Change weight"), edge2, edge_t{13, 2, 5.6});
       check_equality(LINE("Induced change in shared weight"), edge1, edge_t{1, 2, 5.6});
 
-      check_regular_semantics(LINE("Standard semantics"), edge2, edge1);
+      check_semantics(LINE("Standard semantics"), edge2, edge1);
     }
 
 
@@ -267,13 +267,13 @@ namespace sequoia
       e2.source_node(3);
       check_equality(LINE("Change source"), e2, edge_t{3, 1});      
       
-      check_regular_semantics(LINE("Standard semantics"), e2, e1);
+      check_semantics(LINE("Standard semantics"), e2, e1);
       
       edge_t e3{4, inversion_constant<false>{}}, e4{5, inversion_constant<true>{}};
       check_equality(LINE("Construction"), e3, edge_t{4, inversion_constant<false>{}});
       check_equality(LINE("Construction inverted edge"), e4, edge_t{5, inversion_constant<true>{}});
 
-      check_regular_semantics(LINE("Standard semantics"), e4, e3);
+      check_semantics(LINE("Standard semantics"), e4, e3);
 
       // Changing source / target node for inverted edge implicitly changes source
       e4.target_node(9);
@@ -307,7 +307,7 @@ namespace sequoia
         e1.source_node(5);
         check_equality(LINE("Change target"), e1, edge_t{5, 10, 2.3});
 
-        check_regular_semantics(LINE("Standard semantics"), e2, e1);
+        check_semantics(LINE("Standard semantics"), e2, e1);
       }
 
       {
@@ -322,7 +322,7 @@ namespace sequoia
         check_equality(LINE("Construction"), e1, edge_t{3, inversion_constant<true>{}, 1.2f});
         check_equality(LINE("Construction"), e2, edge_t{4, inversion_constant<false>{}, -1.3f, -1.4f});
 
-        check_regular_semantics(LINE(""), e2, e1);
+        check_semantics(LINE(""), e2, e1);
       }
 
       {
@@ -342,7 +342,7 @@ namespace sequoia
         e1.source_node(2);
         check_equality(LINE("Change source, no induced change in target"), e1, edge_t{2, 0, vector<int>{3, 2}});
         
-        check_regular_semantics(LINE("Standard semantics"), e2, e1);
+        check_semantics(LINE("Standard semantics"), e2, e1);
       }
     }
 
@@ -378,7 +378,7 @@ namespace sequoia
       e1.target_node(8);
       check_equality(LINE("Induced change to source"), e1, edge_t{8, inversion_constant<true>{}, 9});
 
-      check_regular_semantics(LINE("Standard semantics"), e1, e);
+      check_semantics(LINE("Standard semantics"), e1, e);
 
     }
     
@@ -409,7 +409,7 @@ namespace sequoia
       check_equality(LINE("Change weight"), e2, edge_t{7, inversion_constant<true>{}, 4, -2.5});
 
 
-      check_regular_semantics(LINE("Standard semantics"), e2, e);
+      check_semantics(LINE("Standard semantics"), e2, e);
 
     }
 
@@ -440,7 +440,7 @@ namespace sequoia
 
         e2.source_node(5);
         check_equality(LINE("Change source node, inducing change in target"), e2, edge_t{5, inversion_constant<true>{}, 4, 0.0});
-        check_regular_semantics(LINE("Standard semantics"), e2, e);
+        check_semantics(LINE("Standard semantics"), e2, e);
 
         edge_t e3{8, inversion_constant<false>{}, 3, e};
         check_equality(LINE("Construction"), e3, edge_t{8, 8, 3, 5.2});
@@ -449,8 +449,8 @@ namespace sequoia
         check_equality(LINE("Induced change to shared weight"), e, edge_t{9, 0, 3, 0.0});
         check_equality(LINE("Change to shared weight"), e3, edge_t{8, 8, 3, 0.0});
 
-        check_regular_semantics(LINE("Standard semantics"), e3, e);
-        check_regular_semantics(LINE("Standard semantics"), e2, e3);
+        check_semantics(LINE("Standard semantics"), e3, e);
+        check_semantics(LINE("Standard semantics"), e2, e3);
     }
   }
 }

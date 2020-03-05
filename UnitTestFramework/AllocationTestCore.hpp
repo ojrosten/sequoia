@@ -30,9 +30,9 @@ namespace sequoia::unit_testing
     allocation_extender& operator=(allocation_extender&&)      = delete;
 
     template<class T, class Mutator, class... Allocators>
-    void check_regular_semantics(std::string_view description, const T& x, const T& y, Mutator m, allocation_info<T, Allocators>... info)
+    void check_semantics(std::string_view description, const T& x, const T& y, Mutator m, allocation_info<T, Allocators>... info)
     {
-      unit_testing::check_regular_semantics(combine_messages("Regular Semantics", description), m_Logger, x, y, m, info...);
+      unit_testing::check_semantics(combine_messages("Regular Semantics", description), m_Logger, x, y, m, info...);
     }
   protected:
     ~allocation_extender() = default;

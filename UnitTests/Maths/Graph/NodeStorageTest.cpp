@@ -49,7 +49,7 @@ namespace sequoia:: unit_testing
     // 2.4
 
     check_equality(LINE(""), store, storage{2.4});
-    check_regular_semantics(LINE("Regular semantics"), store, storage{});
+    check_semantics(LINE("Regular semantics"), store, storage{});
 
     store.node_weight(store.cbegin_node_weights(), 1.3);
     // 1.3
@@ -66,7 +66,7 @@ namespace sequoia:: unit_testing
     // -0.4, 5.6
 
     check_equality(LINE(""), store, storage{-0.4, 5.6});
-    check_regular_semantics(LINE("Regular semantics"), store, storage{-0.4});
+    check_semantics(LINE("Regular semantics"), store, storage{-0.4});
 
     store.erase_node(store.cbegin_node_weights());
     // 5.6
@@ -117,6 +117,6 @@ namespace sequoia:: unit_testing
     constexpr storage store{4, 4, 7, 9};
 
     check_equivalence(LINE(""), store, std::initializer_list<int>{4, 4, 7, 9});
-    check_regular_semantics(LINE("Regular semantics"), store, {4, 4, 9, 7});
+    check_semantics(LINE("Regular semantics"), store, {4, 4, 9, 7});
   }
 }

@@ -80,7 +80,7 @@ namespace sequoia
       using base_t::check_equality;      
       using base_t::check_graph;
       using base_t::check_equivalence;
-      using base_t::check_regular_semantics;
+      using base_t::check_semantics;
     };
   }
 }

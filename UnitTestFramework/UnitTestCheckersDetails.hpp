@@ -152,7 +152,7 @@ namespace sequoia::unit_testing::impl
   }
   
   template<class Logger, class Actions, class T, class Mutator, class... Args>
-  bool check_regular_semantics(std::string_view description, Logger& logger, const Actions& actions, const T& x, const T& y, Mutator yMutator, const Args&... args)
+  bool check_semantics(std::string_view description, Logger& logger, const Actions& actions, const T& x, const T& y, Mutator yMutator, const Args&... args)
   {        
     typename Logger::sentinel s{logger, add_type_info<T>(description)};
     

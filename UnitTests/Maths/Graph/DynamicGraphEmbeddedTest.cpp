@@ -101,10 +101,10 @@ namespace sequoia
       else
       {
         check_equality(LINE(""), g, {{{0,inv_t{},1}, {0,inv_t{},0}}});
-        check_regular_semantics(LINE("Regular semantics"), g, {{{0,0,1}, {0,0,0}}});
+        check_semantics(LINE("Regular semantics"), g, {{{0,0,1}, {0,0,0}}});
       }
 
-      check_regular_semantics(LINE("Regular semantics"), g, graph_t{});
+      check_semantics(LINE("Regular semantics"), g, graph_t{});
 
       g.insert_join(g.cbegin_edges(0) + 1, 3);
       //   /<\/>\
@@ -243,15 +243,15 @@ namespace sequoia
       if constexpr(GraphFlavour == graph_flavour::undirected_embedded)
       {
         check_equality(LINE(""), g, {{{1,1,5}}, {{1,2,6}, {0,0,5}, {1,0,6}}});
-        check_regular_semantics(LINE("Regular semantics"), g, {{{1,0,5}}, {{0,0,5}, {1,2,6}, {1,1,6}}});
+        check_semantics(LINE("Regular semantics"), g, {{{1,0,5}}, {{0,0,5}, {1,2,6}, {1,1,6}}});
       }
       else
       {
         check_equality(LINE(""), g, {{{0,1,1,5}}, {{1,inversion_constant<true>{},2,6}, {0,1,0,5}, {1,inversion_constant<true>{},0,6}}});
-        check_regular_semantics(LINE("Regular semantics"), g, {{{0,1,1,5}}, {{1,1,2,6}, {0,1,0,5}, {1,1,0,6}}});
+        check_semantics(LINE("Regular semantics"), g, {{{0,1,1,5}}, {{1,1,2,6}, {0,1,0,5}, {1,1,0,6}}});
       }
 
-      check_regular_semantics(LINE("Regular semantics"), g, graph_t{});
+      check_semantics(LINE("Regular semantics"), g, graph_t{});
     }
   }
 }

@@ -137,7 +137,7 @@ namespace sequoia::unit_testing
       pool_t clonePool{};
       auto e{clonePool.make(3)};
       check_weak_equivalence(LINE(""), clonePool, prediction_t{{3, 1}});
-      check_regular_semantics(LINE(""), pool_t{}, std::move(clonePool), pool_t{}, pool);
+      check_semantics(LINE(""), pool_t{}, std::move(clonePool), pool_t{}, pool);
     }
 
     elt.set(4);

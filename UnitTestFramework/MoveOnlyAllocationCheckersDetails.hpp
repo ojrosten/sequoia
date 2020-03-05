@@ -58,11 +58,11 @@ namespace sequoia::unit_testing::impl
   }
 
   template<class Logger, class Actions, class T, class Mutator, class... Allocators>
-  void check_regular_semantics(std::string_view description, Logger& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, std::tuple<allocation_checker<T, Allocators, move_only_allocation_predictions>...> checkers)
+  void check_semantics(std::string_view description, Logger& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, std::tuple<allocation_checker<T, Allocators, move_only_allocation_predictions>...> checkers)
   {
     auto fn{
       [description,&logger,&actions,&x,&y,&xClone,&yClone,m{std::move(m)}](auto&&... checkers){
-        return impl::check_regular_semantics(description, logger, actions, std::forward<T>(x), std::forward<T>(y), xClone, yClone, std::move(m), std::forward<decltype(checkers)>(checkers)...);
+        return impl::check_semantics(description, logger, actions, std::forward<T>(x), std::forward<T>(y), xClone, yClone, std::move(m), std::forward<decltype(checkers)>(checkers)...);
       }
     };
 

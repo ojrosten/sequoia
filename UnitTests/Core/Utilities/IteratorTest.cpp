@@ -233,7 +233,7 @@ namespace sequoia::unit_testing
     check_equality(LINE(combine_messages(message, "Operator ->")), i.operator->(), pBegin);
 
     CustomIter j{end, args...};      
-    check_regular_semantics(LINE(combine_messages(message, "Regular semantics; one iterator at end")), i, j);
+    check_semantics(LINE(combine_messages(message, "Regular semantics; one iterator at end")), i, j);
       
     check(LINE(message), i < j);
     check(LINE(message), j > i);
@@ -255,7 +255,7 @@ namespace sequoia::unit_testing
     j = i - 1;
     check_equality(LINE(message), *i, begin[1] * scale);
     check_equality(LINE(message), *j, begin[0] * scale);
-    check_regular_semantics(LINE(combine_messages(message, "Regular semantics")), i, j);
+    check_semantics(LINE(combine_messages(message, "Regular semantics")), i, j);
 
     i = j + 2;
     check_equality(LINE(message), *i, begin[2] * scale);

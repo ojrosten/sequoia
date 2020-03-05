@@ -27,9 +27,9 @@ namespace sequoia::unit_testing
     move_only_extender& operator=(move_only_extender&&) = delete;
 
     template<class T, class... Allocators>
-    void check_regular_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone)
+    void check_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone)
     {
-      unit_testing::check_regular_semantics(combine_messages("Move-only Semantics", description), m_Logger, std::move(x), std::move(y), xClone, yClone);
+      unit_testing::check_semantics(combine_messages("Move-only Semantics", description), m_Logger, std::move(x), std::move(y), xClone, yClone);
     }
   protected:
     move_only_extender(move_only_extender&&) noexcept = default;

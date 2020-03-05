@@ -56,7 +56,7 @@ namespace sequoia
         storage_t storage2{{3}};
         check_equivalence(LINE(""), storage, prediction_t{{5}});
 
-        check_regular_semantics(LINE(""), storage, storage2);
+        check_semantics(LINE(""), storage, storage2);
 
         auto iter = storage.begin_partition(0);
         *iter = 4;
@@ -73,7 +73,7 @@ namespace sequoia
         storage_t storage2{{1.2}, {1.1, 2.6, -7.8}, {0.0, -9.3}};
         check_equivalence(LINE(""), storage2, prediction_t{{1.2}, {1.1, 2.6, -7.8}, {0.0, -9.3}});
 
-        check_regular_semantics(LINE(""), storage, storage2);
+        check_semantics(LINE(""), storage, storage2);
       }
 
       {
@@ -85,7 +85,7 @@ namespace sequoia
         check_equivalence(LINE(""), storage, prediction_t{{0.2,0.3,-0.4}, {0.8,-1.1,-1.4}});
         check_equivalence(LINE(""), storage2, prediction_t{{0.2,0.3}, {-0.4, 0.8,-1.1,-1.4}});
 
-        check_regular_semantics(LINE(""), storage, storage2);
+        check_semantics(LINE(""), storage, storage2);
       }
 
       {
@@ -171,7 +171,7 @@ namespace sequoia
       // []
      
       check_equality(LINE(""), storage, Storage{{}});
-      check_regular_semantics(LINE("Regular semantics"), storage, Storage{});
+      check_semantics(LINE("Regular semantics"), storage, Storage{});
 
       check_exception_thrown<std::out_of_range>(
         LINE("Only one partition available so cannot push back to the second"),
@@ -202,8 +202,8 @@ namespace sequoia
 
       check_equivalence(LINE(""), storage, equivalent_type{{}, {}});
       check_equality(LINE(""), storage, Storage{{}, {}});
-      check_regular_semantics(LINE(""), storage, Storage{});
-      check_regular_semantics(LINE(""), storage, Storage{{}});
+      check_semantics(LINE(""), storage, Storage{});
+      check_semantics(LINE(""), storage, Storage{{}});
       
       storage.swap_partitions(0,1);
       check_equality(LINE(""), storage, Storage{{}, {}});
@@ -213,14 +213,14 @@ namespace sequoia
 
       check_equivalence(LINE(""), storage, equivalent_type{{2}, {}});
       check_equality(LINE(""), storage, Storage{{2}, {}});
-      check_regular_semantics(LINE("Regular semantics"), storage, Storage{{1},{}});
+      check_semantics(LINE("Regular semantics"), storage, Storage{{1},{}});
 
       storage.swap_partitions(0,1);
       // [][2]
 
       check_equivalence(LINE(""), storage, equivalent_type{{}, {2}});
       check_equality(LINE(""), storage, Storage{{}, {2}});
-      check_regular_semantics(LINE("Regular semantics"), storage, Storage{{2},{}});
+      check_semantics(LINE("Regular semantics"), storage, Storage{{2},{}});
 
       storage.swap_partitions(0,1);
       // [2][]
@@ -249,7 +249,7 @@ namespace sequoia
 
       check_equivalence(LINE(""), storage, equivalent_type{{3}, {4}});
       check_equality(LINE(""), storage, Storage{{3}, {4}});
-      check_regular_semantics(LINE("Regular semantics"), storage, Storage{{4},{3}});
+      check_semantics(LINE("Regular semantics"), storage, Storage{{4},{3}});
 
       storage.swap_partitions(1,0);
       // [4][3]
@@ -269,7 +269,7 @@ namespace sequoia
 
       check_equivalence(LINE(""), storage, equivalent_type{{3}, {4}, {9, -3}});
       check_equality(LINE(""), storage, Storage{{3}, {4}, {9, -3}});
-      check_regular_semantics(LINE("Regular semantics"), storage, Storage{{4},{3}});
+      check_semantics(LINE("Regular semantics"), storage, Storage{{4},{3}});
 
       storage.swap_partitions(1,2);
       // [3][9,-3][4]
@@ -417,7 +417,7 @@ namespace sequoia
         *iter = 2;
         // shared: [2][3][2][4], independent: [2][3][1][4]
         check_equality(LINE(""), storage, sharedData ? Storage{{2}, {3}, {2}, {4}} : Storage{{2}, {3}, {1}, {4}});
-        check_regular_semantics(LINE(""), storage, Storage{{1}, {3}, {1}, {4}});
+        check_semantics(LINE(""), storage, Storage{{1}, {3}, {1}, {4}});
         
         *iter = 1;
         // [1][3][1][4]
@@ -464,7 +464,7 @@ namespace sequoia
         *iter = 2;
         // shared [3,2][4,2], independent: [3,2][4,-5]
         check_equality(LINE(""), storage, sharedData ? Storage{{3, 2}, {4, 2}} : Storage{{3, 2}, {4, -5}});
-        check_regular_semantics(LINE(""), storage, Storage{{3, -5}, {4, -5}});
+        check_semantics(LINE(""), storage, Storage{{3, -5}, {4, -5}});
         
         *iter = -5;
         // [3,-5][4,-5]

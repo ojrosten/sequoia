@@ -44,7 +44,7 @@ namespace sequoia
           }
         };
         
-        m_Checker.check_regular_semantics(LINE("Regular semantics"), Graph{}, g, mutator);
+        m_Checker.check_semantics(LINE("Regular semantics"), Graph{}, g, mutator);
       }
       
       template<class Graph>

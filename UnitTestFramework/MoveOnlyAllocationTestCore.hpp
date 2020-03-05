@@ -30,9 +30,9 @@ namespace sequoia::unit_testing
     move_only_allocation_extender& operator=(move_only_allocation_extender&&)      = delete;
 
     template<class T, class Mutator, class... Allocators>
-    void check_regular_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone, Mutator yMutator, move_only_allocation_info<T, Allocators>... info)
+    void check_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone, Mutator yMutator, move_only_allocation_info<T, Allocators>... info)
     {
-      unit_testing::check_regular_semantics(combine_messages("Move-only Semantics", description), m_Logger, std::move(x), std::move(y), xClone, yClone, std::move(yMutator), info...);
+      unit_testing::check_semantics(combine_messages("Move-only Semantics", description), m_Logger, std::move(x), std::move(y), xClone, yClone, std::move(yMutator), info...);
     }
   protected:
     ~move_only_allocation_extender() = default;

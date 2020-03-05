@@ -17,8 +17,8 @@
 namespace sequoia::unit_testing
 {
   template<class Logger, class T>
-  void check_regular_semantics(std::string_view description, Logger& logger, T&& x, T&& y, const T& xClone, const T& yClone)
+  void check_semantics(std::string_view description, Logger& logger, T&& x, T&& y, const T& xClone, const T& yClone)
   {
-    impl::check_regular_semantics(description, logger, impl::default_actions{}, std::forward<T>(x), std::forward<T>(y), xClone, yClone, impl::null_mutator{});
+    impl::check_semantics(description, logger, impl::default_actions{}, std::forward<T>(x), std::forward<T>(y), xClone, yClone, impl::null_mutator{});
   }
 }

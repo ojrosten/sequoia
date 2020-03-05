@@ -58,7 +58,7 @@ namespace sequoia::unit_testing
     //    0
     
     check_equality(LINE(""), network, graph_t{{}});
-    check_regular_semantics(LINE("Regular semantics"), network, graph_t{});
+    check_semantics(LINE("Regular semantics"), network, graph_t{});
 
     check_exception_thrown<std::out_of_range>(LINE("Unable to join zeroth node to non-existant first node"), [&network]() { network.join(0, 1); });
 
@@ -68,7 +68,7 @@ namespace sequoia::unit_testing
     //    0    1
 
     check_equality(LINE(""), network, graph_t{{}, {}});
-    check_regular_semantics(LINE("Regular semantics"), network, graph_t{{}});
+    check_semantics(LINE("Regular semantics"), network, graph_t{{}});
 
     network.swap_nodes(0,1);
     
@@ -94,7 +94,7 @@ namespace sequoia::unit_testing
       check_equality(LINE(""), network, graph_t{{edge_init_t{1,0}}, {edge_init_t{0,0}}});
     }
 
-    check_regular_semantics(LINE("Regular semantics"), network, graph_t{{}, {}});
+    check_semantics(LINE("Regular semantics"), network, graph_t{{}, {}});
     
     network.swap_nodes(0,1);
 
@@ -940,6 +940,6 @@ namespace sequoia::unit_testing
       check_equality(LINE("Check di-component graph"), network2, graph_t{{edge_init_t{1,0}}, {edge_init_t{0,0}}, {edge_init_t{3,0}}, {edge_init_t{2,0}}});
     }
 
-    check_regular_semantics(LINE("Regular semantics"), network, network2);
+    check_semantics(LINE("Regular semantics"), network, network2);
   }  
 }

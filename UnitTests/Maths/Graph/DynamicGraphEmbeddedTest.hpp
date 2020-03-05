@@ -45,7 +45,7 @@ namespace sequoia
       using graph_t = typename base_t::graph_type;
 
       using base_t::check_equality;
-      using base_t::check_regular_semantics;      
+      using base_t::check_semantics;      
       using graph_checker<unit_test_logger<test_mode::standard>, regular_extender<unit_test_logger<test_mode::standard>>>::check_exception_thrown;
 
       void execute_operations();
@@ -73,7 +73,7 @@ namespace sequoia
 
       using base_t::check_equality;      
       using base_t::check_exception_thrown;
-      using base_t::check_regular_semantics;
+      using base_t::check_semantics;
 
 
       void execute_operations();

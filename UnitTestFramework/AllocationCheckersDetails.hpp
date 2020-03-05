@@ -604,11 +604,11 @@ namespace sequoia::unit_testing::impl
 
 
   template<class Logger, class Actions, class T, class Mutator, class... Allocators, class... Predictions>
-  bool check_regular_semantics(std::string_view description, Logger& logger, const Actions& actions, const T& x, const T& y, Mutator yMutator, std::tuple<allocation_checker<T, Allocators, Predictions>...> checkers)
+  bool check_semantics(std::string_view description, Logger& logger, const Actions& actions, const T& x, const T& y, Mutator yMutator, std::tuple<allocation_checker<T, Allocators, Predictions>...> checkers)
   {
     auto fn{
       [description,&logger,&actions,&x,&y,m=std::move(yMutator)](auto&&... checkers){
-        return impl::check_regular_semantics(description, logger, actions, x, y, m, std::forward<decltype(checkers)>(checkers)...);
+        return impl::check_semantics(description, logger, actions, x, y, m, std::forward<decltype(checkers)>(checkers)...);
       }
     };
 

@@ -80,7 +80,7 @@ namespace sequoia::unit_testing
 
     using info = allocation_info<storage, allocator>;
 
-    check_regular_semantics(LINE(""), s, t, partitionMaker,
+    check_semantics(LINE(""), s, t, partitionMaker,
                             info{allocGetter, {{0, {1,1}, {1,1}}, {0, {2,0}, {2,2}}}});
       
     s.add_slot();
@@ -95,7 +95,7 @@ namespace sequoia::unit_testing
       }
     };
 
-    check_regular_semantics(LINE(""), s, t, mutator,
+    check_semantics(LINE(""), s, t, mutator,
                             info{allocGetter, {{1, {1,1}, {1,1}}, {0, {2,1}, {2,2}}}});
   }
   
@@ -145,7 +145,7 @@ namespace sequoia::unit_testing
         }
       };
         
-      check_regular_semantics(LINE(add_type_info<storage>("")), s, t, partitionMaker,
+      check_semantics(LINE(add_type_info<storage>("")), s, t, partitionMaker,
                               allocation_info<storage, allocator>{allocGetter, {0, {1,0}, {1, 1}}},
                               allocation_info<storage, partitions_allocator>{partitionsAllocGetter, {0, {1,1}, {1, 1}}});
 
