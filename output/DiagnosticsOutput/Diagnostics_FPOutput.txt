@@ -587,7 +587,7 @@
 	Predicted: 5
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyTestDiagnostics.cpp, Line 26:
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyTestDiagnostics.cpp, Line 26:
 	Broken equality Equality operator is inconsistent
 	[bool]
 	operator== returned false
@@ -595,7 +595,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyTestDiagnostics.cpp, Line 27:
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyTestDiagnostics.cpp, Line 27:
 	Broken inequality Equality operator is inconsistent
 	[bool]
 	operator== returned false
@@ -603,7 +603,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyTestDiagnostics.cpp, Line 28:
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyTestDiagnostics.cpp, Line 28:
 	Broken move Move constructor
 	[sequoia::unit_testing::move_only_broken_move<int, std::__1::allocator<int> >]
 	operator== returned false
@@ -611,7 +611,7 @@
 	Predicted: 1 
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyTestDiagnostics.cpp, Line 28:
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyTestDiagnostics.cpp, Line 28:
 	Broken move Swap
 	[sequoia::unit_testing::move_only_broken_move<int, std::__1::allocator<int> >]
 	operator== returned false
@@ -619,7 +619,7 @@
 	Predicted: 1 
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyTestDiagnostics.cpp, Line 29:
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyTestDiagnostics.cpp, Line 29:
 	Broken swap Swap
 	[sequoia::unit_testing::move_only_broken_swap<int, std::__1::allocator<int> >]
 	operator== returned false
@@ -627,7 +627,7 @@
 	Predicted: 1 
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyTestDiagnostics.cpp, Line 29:
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyTestDiagnostics.cpp, Line 29:
 	Broken swap Swap
 	[sequoia::unit_testing::move_only_broken_swap<int, std::__1::allocator<int> >]
 	operator== returned false
@@ -635,7 +635,7 @@
 	Predicted: 2 
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyTestDiagnostics.cpp, Line 29:
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyTestDiagnostics.cpp, Line 29:
 	Broken swap Move assignment (from y)
 	[sequoia::unit_testing::move_only_broken_swap<int, std::__1::allocator<int> >]
 	operator== returned false
@@ -643,7 +643,7 @@
 	Predicted: 2 
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyTestDiagnostics.cpp, Line 30:
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyTestDiagnostics.cpp, Line 30:
 	Broken move assignment Move assignment (from y)
 	[sequoia::unit_testing::move_only_broken_move_assignment<int, std::__1::allocator<int> >]
 	operator== returned false
@@ -651,7 +651,7 @@
 	Predicted: 2 
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyTestDiagnostics.cpp, Line 31:
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyTestDiagnostics.cpp, Line 31:
 	Broken check invariant Precondition - for checking regular semantics, x and y are assumed to be different
 	[bool]
 	operator== returned false
@@ -659,7 +659,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyTestDiagnostics.cpp, Line 32:
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyTestDiagnostics.cpp, Line 32:
 	Broken check invariant Precondition - for checking regular semantics, x and xClone are assumed to be equal
 	[bool]
 	operator== returned false
@@ -667,7 +667,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyTestDiagnostics.cpp, Line 33:
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyTestDiagnostics.cpp, Line 33:
 	Broken check invariant Precondition - for checking regular semantics, x and xClone are assumed to be equal
 	[bool]
 	operator== returned false
@@ -677,18 +677,18 @@
 
 	../UnitTests/UnitTestFramework/PerformanceTestDiagnostics.cpp, Line 30:
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
-	Fast Task duration: 0.0013268s +- 4 * 5.56532e-05
-	Slow Task duration: 0.00127827s +- 4 * 0.000160856 [0.963422; (2, 2)]
+	Fast Task duration: 0.00139382s +- 4 * 3.94423e-06
+	Slow Task duration: 0.00131348s +- 4 * 0.0001211 [0.942355; (2, 2)]
 
 	../UnitTests/UnitTestFramework/PerformanceTestDiagnostics.cpp, Line 34:
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
-	Fast Task duration: 0.00135746s +- 4 * 5.74215e-05
-	Slow Task duration: 0.00133142s +- 4 * 0.000118652 [0.980814; (2, 3)]
+	Fast Task duration: 0.00132187s +- 4 * 5.23824e-05
+	Slow Task duration: 0.00134817s +- 4 * 5.95065e-05 [1.0199; (2, 3)]
 
 	../UnitTests/UnitTestFramework/PerformanceTestDiagnostics.cpp, Line 38:
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
-	Fast Task duration: 0.00130226s +- 4 * 0.000132001
-	Slow Task duration: 0.00502346s +- 4 * 0.000268787 [3.85748; (2, 2.5)]
+	Fast Task duration: 0.00136056s +- 4 * 6.40911e-05
+	Slow Task duration: 0.00472784s +- 4 * 0.000438185 [3.47493; (2, 2.5)]
 
 	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 29
 	[double]
@@ -5249,7 +5249,7 @@
 	Predicted: 1
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 51
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 51
 	[sequoia::unit_testing::shared_counting_allocator<int, true, false, false>]
 	Para move construction allocation (y)
 	[int]
@@ -5258,7 +5258,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 54
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 54
 	[sequoia::unit_testing::shared_counting_allocator<int, true, false, false>]
 	Para move construction allocation (y)
 	[int]
@@ -5267,7 +5267,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 59
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 59
 	[sequoia::unit_testing::shared_counting_allocator<int, true, false, false>]
 	Para move construction allocation (y)
 	[int]
@@ -5276,21 +5276,21 @@
 	Predicted: 0
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 72 Precondition - for checking regular semantics, y and yClone are assumed to be equal
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 72 Precondition - for checking regular semantics, y and yClone are assumed to be equal
 	[bool]
 	operator== returned false
 	Obtained : false
 	Predicted: true
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 84 Move assignment (from y)
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 84 Move assignment (from y)
 	[sequoia::unit_testing::move_only_broken_move_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, false> >]
 	operator== returned false
 	Obtained : 1 
 	Predicted: 2 
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 110
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 110
 	[sequoia::unit_testing::shared_counting_allocator<int, true, false, false>]
 	Move construction allocation (y)
 	[int]
@@ -5299,7 +5299,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 122
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 122
 	[sequoia::unit_testing::shared_counting_allocator<int, true, false, false>]
 	Move assignment x allocations
 	[int]
@@ -5308,7 +5308,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 51
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 51
 	[sequoia::unit_testing::shared_counting_allocator<int, true, false, true>]
 	Para move construction allocation (y)
 	[int]
@@ -5317,7 +5317,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 54
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 54
 	[sequoia::unit_testing::shared_counting_allocator<int, true, false, true>]
 	Para move construction allocation (y)
 	[int]
@@ -5326,7 +5326,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 59
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 59
 	[sequoia::unit_testing::shared_counting_allocator<int, true, false, true>]
 	Para move construction allocation (y)
 	[int]
@@ -5335,42 +5335,42 @@
 	Predicted: 0
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 72 Precondition - for checking regular semantics, y and yClone are assumed to be equal
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 72 Precondition - for checking regular semantics, y and yClone are assumed to be equal
 	[bool]
 	operator== returned false
 	Obtained : false
 	Predicted: true
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 84 Move assignment (from y)
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 84 Move assignment (from y)
 	[sequoia::unit_testing::move_only_broken_move_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, true> >]
 	operator== returned false
 	Obtained : 1 
 	Predicted: 2 
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 98 Swap
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 98 Swap
 	[sequoia::unit_testing::move_only_broken_swap<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, true> >]
 	operator== returned false
 	Obtained : 2 
 	Predicted: 1 
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 98 Swap
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 98 Swap
 	[sequoia::unit_testing::move_only_broken_swap<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, true> >]
 	operator== returned false
 	Obtained : 1 
 	Predicted: 2 
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 98 Move assignment (from y)
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 98 Move assignment (from y)
 	[sequoia::unit_testing::move_only_broken_swap<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, true> >]
 	operator== returned false
 	Obtained : 1 
 	Predicted: 2 
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 110
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 110
 	[sequoia::unit_testing::shared_counting_allocator<int, true, false, true>]
 	Move construction allocation (y)
 	[int]
@@ -5379,7 +5379,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 122
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 122
 	[sequoia::unit_testing::shared_counting_allocator<int, true, false, true>]
 	Move assignment x allocations
 	[int]
@@ -5388,7 +5388,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 51
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 51
 	[sequoia::unit_testing::shared_counting_allocator<int, true, true, false>]
 	Para move construction allocation (y)
 	[int]
@@ -5397,7 +5397,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 54
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 54
 	[sequoia::unit_testing::shared_counting_allocator<int, true, true, false>]
 	Para move construction allocation (y)
 	[int]
@@ -5406,21 +5406,21 @@
 	Predicted: 0
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 72 Precondition - for checking regular semantics, y and yClone are assumed to be equal
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 72 Precondition - for checking regular semantics, y and yClone are assumed to be equal
 	[bool]
 	operator== returned false
 	Obtained : false
 	Predicted: true
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 84 Move assignment (from y)
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 84 Move assignment (from y)
 	[sequoia::unit_testing::move_only_broken_move_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, false> >]
 	operator== returned false
 	Obtained : 1 
 	Predicted: 2 
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 110
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 110
 	[sequoia::unit_testing::shared_counting_allocator<int, true, true, false>]
 	Move construction allocation (y)
 	[int]
@@ -5429,7 +5429,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 122
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 122
 	[sequoia::unit_testing::shared_counting_allocator<int, true, true, false>]
 	Move assignment x allocations
 	[int]
@@ -5438,7 +5438,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 51
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 51
 	[sequoia::unit_testing::shared_counting_allocator<int, true, true, true>]
 	Para move construction allocation (y)
 	[int]
@@ -5447,7 +5447,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 54
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 54
 	[sequoia::unit_testing::shared_counting_allocator<int, true, true, true>]
 	Para move construction allocation (y)
 	[int]
@@ -5456,42 +5456,42 @@
 	Predicted: 0
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 72 Precondition - for checking regular semantics, y and yClone are assumed to be equal
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 72 Precondition - for checking regular semantics, y and yClone are assumed to be equal
 	[bool]
 	operator== returned false
 	Obtained : false
 	Predicted: true
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 84 Move assignment (from y)
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 84 Move assignment (from y)
 	[sequoia::unit_testing::move_only_broken_move_assignment<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, true> >]
 	operator== returned false
 	Obtained : 1 
 	Predicted: 2 
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 98 Swap
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 98 Swap
 	[sequoia::unit_testing::move_only_broken_swap<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, true> >]
 	operator== returned false
 	Obtained : 2 
 	Predicted: 1 
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 98 Swap
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 98 Swap
 	[sequoia::unit_testing::move_only_broken_swap<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, true> >]
 	operator== returned false
 	Obtained : 1 
 	Predicted: 2 
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 98 Move assignment (from y)
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 98 Move assignment (from y)
 	[sequoia::unit_testing::move_only_broken_swap<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, true> >]
 	operator== returned false
 	Obtained : 1 
 	Predicted: 2 
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 110
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 110
 	[sequoia::unit_testing::shared_counting_allocator<int, true, true, true>]
 	Move construction allocation (y)
 	[int]
@@ -5500,7 +5500,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 122
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 122
 	[sequoia::unit_testing::shared_counting_allocator<int, true, true, true>]
 	Move assignment x allocations
 	[int]
@@ -5588,20 +5588,20 @@
 	[std::__1::vector<sequoia::unit_testing::perfectly_normal_beast<int, std::__1::allocator<int> >, std::__1::allocator<sequoia::unit_testing::perfectly_normal_beast<int, std::__1::allocator<int> > > >]
 
 	False Positive Failure:
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyTestDiagnostics.cpp, Line 50
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyTestDiagnostics.cpp, Line 50
 	[sequoia::unit_testing::move_only_beast<int, std::__1::allocator<int> >]
 
 	False Positive Failure:
 		../UnitTests/UnitTestFramework/PerformanceTestDiagnostics.cpp, Line 67:
 	Performance Test which should pass
-	Fast Task duration: 0.00120761s +- 4 * 0.000115992
-	Slow Task duration: 0.00229445s +- 4 * 0.000201383 [1.89999; (1.8, 2.1)]
+	Fast Task duration: 0.00123522s +- 4 * 8.83356e-05
+	Slow Task duration: 0.00221963s +- 4 * 0.000217052 [1.79695; (1.8, 2.1)]
 
 	False Positive Failure:
 		../UnitTests/UnitTestFramework/PerformanceTestDiagnostics.cpp, Line 68:
 	Performance Test which should pass
-	Fast Task duration: 0.00113355s +- 4 * 9.89774e-05
-	Slow Task duration: 0.00419206s +- 4 * 0.000229176 [3.69816; (3.6, 4.1)]
+	Fast Task duration: 0.00118853s +- 4 * 0.000136023
+	Slow Task duration: 0.00414911s +- 4 * 9.85872e-05 [3.49095; (3.6, 4.1)]
 
 	False Positive Failure:
 	../UnitTests/UnitTestFramework/FuzzyTestDiagnostics.cpp, Line 69
@@ -5854,34 +5854,34 @@
 	[sequoia::unit_testing::doubly_normal_beast<int, double, sequoia::unit_testing::shared_counting_allocator<int, true, true, true>, sequoia::unit_testing::shared_counting_allocator<double, true, true, true> >]
 
 	False Positive Failure:
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 162
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 162
 	[sequoia::unit_testing::move_only_beast<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, false> >]
 
 	False Positive Failure:
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 165
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 165
 	[sequoia::unit_testing::move_only_beast<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, false> >]
 
 	False Positive Failure:
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 162
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 162
 	[sequoia::unit_testing::move_only_beast<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, true> >]
 
 	False Positive Failure:
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 165
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 165
 	[sequoia::unit_testing::move_only_beast<int, sequoia::unit_testing::shared_counting_allocator<int, true, false, true> >]
 
 	False Positive Failure:
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 162
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 162
 	[sequoia::unit_testing::move_only_beast<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, false> >]
 
 	False Positive Failure:
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 165
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 165
 	[sequoia::unit_testing::move_only_beast<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, false> >]
 
 	False Positive Failure:
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 162
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 162
 	[sequoia::unit_testing::move_only_beast<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, true> >]
 
 	False Positive Failure:
-	Regular Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 165
+	Move-only Semantics ../UnitTests/UnitTestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 165
 	[sequoia::unit_testing::move_only_beast<int, sequoia::unit_testing::shared_counting_allocator<int, true, true, true> >]
 
