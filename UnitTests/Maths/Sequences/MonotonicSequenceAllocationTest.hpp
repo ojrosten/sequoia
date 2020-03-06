@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "AllocationTestCore.hpp"
+#include "RegularAllocationTestCore.hpp"
 
 #include "MonotonicSequence.hpp"
 

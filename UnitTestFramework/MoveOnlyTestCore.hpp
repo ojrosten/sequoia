@@ -12,7 +12,7 @@
 */
 
 #include "FreeTestCore.hpp"
-#include "MoveOnlyTestCheckers.hpp"
+#include "MoveOnlyCheckers.hpp"
 
 namespace sequoia::unit_testing
 {

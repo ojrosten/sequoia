@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "UnitTestCore.hpp"
+#include "RegularTestCore.hpp"
 
 #include "StaticPriorityQueue.hpp"
 

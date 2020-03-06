@@ -7,11 +7,12 @@
 
 #pragma once
 
-/*! \file UnitTestCore.hpp
-    \brief Extension for testing of regular semantics.
+/*! \file RegularTestCore.hpp
+    \brief Extension for testing classes exhibiting regular semantics.
 */
 
 #include "FreeTestCore.hpp"
+#include "RegularCheckers.hpp"
 
 namespace sequoia::unit_testing
 {

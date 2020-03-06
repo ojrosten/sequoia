@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "AllocationTestCore.hpp"
+#include "RegularAllocationTestCore.hpp"
 
 #include "NodeStorage.hpp"
 #include "StaticNodeStorage.hpp"

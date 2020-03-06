@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "UnitTestCore.hpp"
+#include "RegularTestCore.hpp"
 #include "Edge.hpp"
 
 namespace sequoia::unit_testing

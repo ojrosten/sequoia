@@ -11,7 +11,7 @@
     \brief Utilties for performing allocation checks within the unit testing framework.
 */
 
-#include "UnitTestCheckers.hpp"
+#include "FreeCheckers.hpp"
 #include "AllocationCheckers.hpp"
 #include "MoveOnlyAllocationCheckersDetails.hpp"
 

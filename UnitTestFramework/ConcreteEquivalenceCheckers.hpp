@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "UnitTestCheckers.hpp"
+#include "FreeCheckers.hpp"
 
 namespace sequoia::unit_testing
 {

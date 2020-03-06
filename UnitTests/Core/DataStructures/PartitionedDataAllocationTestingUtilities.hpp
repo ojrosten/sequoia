@@ -8,7 +8,7 @@
 #pragma once
 
 #include "PartitionedDataTestingUtilities.hpp"
-#include "AllocationTestCore.hpp"
+#include "RegularAllocationTestCore.hpp"
 
 #include <scoped_allocator>
 

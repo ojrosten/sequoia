@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file FreeTestCheckersDetails.hpp
+/*! \file FreeCheckersDetails.hpp
     \brief Implementation details for performing checks within the unit testing framework.
 */
 

@@ -7,11 +7,11 @@
 
 #pragma once
 
-/*! \file UnitTestCheckersDetails.hpp
+/*! \file RegularCheckersDetails.hpp
     \brief Implementation details for performing checks within the unit testing framework.
 */
 
-#include "FreeTestCheckersDetails.hpp"
+#include "FreeCheckersDetails.hpp"
 
 namespace sequoia::unit_testing::impl
 {

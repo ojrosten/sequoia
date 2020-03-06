@@ -11,7 +11,7 @@
     \brief Extension of unit testing framework for perfomance testing
 */
 
-#include "UnitTestCore.hpp"
+#include "RegularTestCore.hpp"
 #include "StatisticalAlgorithms.hpp"
 
 #include <chrono>

@@ -13,7 +13,7 @@
  */
 
 
-#include "UnitTestCore.hpp"
+#include "RegularTestCore.hpp"
 #include <vector>
 #include <future>
 

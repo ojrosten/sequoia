@@ -11,8 +11,8 @@
     \brief Utilities for performing checks within the unit testing framework.
 */
 
-#include "FreeTestCheckers.hpp"
-#include "MoveOnlyTestCheckersDetails.hpp"
+#include "FreeCheckers.hpp"
+#include "MoveOnlyCheckersDetails.hpp"
 
 namespace sequoia::unit_testing
 {

@@ -11,7 +11,7 @@
     \brief Extension of unit testing framework for fuzzy testing.
 */
 
-#include "UnitTestCore.hpp"
+#include "RegularTestCore.hpp"
 
 #include <cmath>
 

@@ -8,7 +8,7 @@
 #pragma once
 
 #include "CommandLineArguments.hpp"
-#include "UnitTestCore.hpp"
+#include "RegularTestCore.hpp"
 
 namespace sequoia::unit_testing
 {

@@ -12,7 +12,7 @@
 */
 
 #include "AllocationCheckersDetails.hpp"
-#include "MoveOnlyTestCheckersDetails.hpp"
+#include "MoveOnlyCheckersDetails.hpp"
 
 #include <optional>
 

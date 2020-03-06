@@ -7,11 +7,11 @@
 
 #pragma once
 
-/*! \file AllocationTestCore.hpp
+/*! \file RegularAllocationTestCore.hpp
     \brief Extension of unit testing framework for allocator testing
 */
 
-#include "UnitTestCore.hpp"
+#include "RegularTestCore.hpp"
 #include "AllocationCheckers.hpp"
 #include "AllocationTestUtilities.hpp"
 

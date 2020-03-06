@@ -7,11 +7,11 @@
 
 #pragma once
 
-/*! \file MoveOnlyTestCheckersDetails.hpp
+/*! \file MoveOnlyCheckersDetails.hpp
     \brief Utilities for performing checks within the unit testing framework.
 */
 
-#include "UnitTestCheckersDetails.hpp"
+#include "RegularCheckersDetails.hpp"
 
 namespace sequoia::unit_testing::impl
 {
