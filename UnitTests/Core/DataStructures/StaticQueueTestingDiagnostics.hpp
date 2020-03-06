@@ -11,10 +11,10 @@
 
 namespace sequoia::unit_testing
 {
-  class test_static_queue_false_positives final : public false_positive_test
+  class test_static_queue_false_positives final : public false_positive_regular_test
   {
   public:
-    using false_positive_test::false_positive_test;
+    using false_positive_regular_test::false_positive_regular_test;
 
     [[nodiscard]]
     std::string_view source_file_name() const noexcept final;

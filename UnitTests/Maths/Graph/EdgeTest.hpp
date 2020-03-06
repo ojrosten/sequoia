@@ -13,10 +13,10 @@ namespace sequoia
 {
   namespace unit_testing
   {    
-    class test_edges final : public unit_test
+    class test_edges final : public regular_test
     {
     public:
-      using unit_test::unit_test;
+      using regular_test::regular_test;
 
       [[nodiscard]]
       std::string_view source_file_name() const noexcept final;

@@ -11,10 +11,10 @@
 
 namespace sequoia::unit_testing
 {
-  class test_static_priority_queue final : public unit_test
+  class test_static_priority_queue final : public regular_test
   {
   public:
-    using unit_test::unit_test;
+    using regular_test::regular_test;
 
     [[nodiscard]]
     std::string_view source_file_name() const noexcept final;
