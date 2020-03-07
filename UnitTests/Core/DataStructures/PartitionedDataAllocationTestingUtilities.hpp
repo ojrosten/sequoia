@@ -10,8 +10,6 @@
 #include "PartitionedDataTestingUtilities.hpp"
 #include "RegularAllocationTestCore.hpp"
 
-#include <scoped_allocator>
-
 namespace sequoia::unit_testing
 {
   template

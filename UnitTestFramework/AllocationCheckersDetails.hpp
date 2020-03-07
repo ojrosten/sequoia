@@ -43,6 +43,7 @@ namespace sequoia::unit_testing::impl
     }
 
     template<class... Args>
+    [[nodiscard]]
     Allocator make_allocator(Args&&... args) const
     {
       return Allocator{std::forward<Args>(args)...};
@@ -63,6 +64,7 @@ namespace sequoia::unit_testing::impl
 
     using getter = std::function<Allocator(const Container&)>;
 
+    [[nodiscard]]
     getter make_getter() const
     {
       return m_AllocatorGetter;
