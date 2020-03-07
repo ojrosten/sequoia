@@ -8,10 +8,10 @@
 #pragma once
 
 /*! \file MoveOnlyCheckersDetails.hpp
-    \brief Utilities for performing checks within the unit testing framework.
+    \brief Implementation details for checking move-only semantics within the unit testing framework.
 */
 
-#include "AllocationCheckersDetails.hpp"
+#include "SemanticsCheckersDetails.hpp"
 
 namespace sequoia::unit_testing::impl
 {

@@ -20,6 +20,17 @@ namespace sequoia::unit_testing
 
 namespace sequoia::unit_testing::impl
 {
+  struct regular_allocation_actions : allocation_actions
+  {
+    constexpr static bool has_post_equality_action{true};
+    constexpr static bool has_post_nequality_action{true};
+    constexpr static bool has_post_copy_action{true};
+    constexpr static bool has_post_copy_assign_action{true};
+    constexpr static bool has_post_move_action{true};
+    constexpr static bool has_post_move_assign_action{true};
+    constexpr static bool has_post_swap_action{true};
+  };
+
   template<class Logger, class Container, class Mutator, class... Allocators, class... Predictions>
   void check_para_constructor_allocations(std::string_view description, Logger& logger, const Container& y, Mutator yMutator, const basic_allocation_info<Container, Allocators, Predictions>&... info)
   {    

@@ -514,16 +514,7 @@ namespace sequoia::unit_testing::impl
     }
   };
 
-  struct regular_allocation_actions : allocation_actions
-  {
-    constexpr static bool has_post_equality_action{true};
-    constexpr static bool has_post_nequality_action{true};
-    constexpr static bool has_post_copy_action{true};
-    constexpr static bool has_post_copy_assign_action{true};
-    constexpr static bool has_post_move_action{true};
-    constexpr static bool has_post_move_assign_action{true};
-    constexpr static bool has_post_swap_action{true};
-  };
+
   
 
   template<class Logger, class Actions, class Container, class... Allocators, class... Predictions>
