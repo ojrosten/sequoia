@@ -11,7 +11,7 @@
     \brief Utilities for performing checks within the unit testing framework.
 */
 
-#include "RegularCheckersDetails.hpp"
+#include "AllocationCheckersDetails.hpp"
 
 namespace sequoia::unit_testing::impl
 {
