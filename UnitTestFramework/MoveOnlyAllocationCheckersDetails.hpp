@@ -32,19 +32,6 @@ namespace sequoia::unit_testing::impl
     constexpr static bool has_post_move_action{true};
     constexpr static bool has_post_move_assign_action{true};
     constexpr static bool has_post_swap_action{true};
-
-    template<class Logger, class Container, class... Allocators, class... Predictions>
-    static void post_move_action(std::string_view description, Logger& logger, const Container& x, const allocation_checker<Container, Allocators, Predictions>&... checkers)
-    {
-      check_move_y_allocation(description, logger, x, allocation_checker<Container, Allocators, Predictions>{x, checkers.first_count(), checkers.info()}...);
-    }
-
-    template<class Logger, class Container, class Mutator, class... Allocators, class... Predictions>
-    static void post_move_assign_action(std::string_view description, Logger& logger, Container& y, const Container& yClone, Mutator m, const allocation_checker<Container, Allocators, Predictions>&... checkers)
-    {
-      check_move_assign_allocation(description, logger, y, checkers...);
-      check_mutation_after_move(description, "assignment", logger, y, yClone, m, allocation_checker<Container, Allocators, Predictions>{y, 0, checkers.info()}...);
-    }
   };
 
   template<class Logger, class Container, class... Allocators, class... Predictions>

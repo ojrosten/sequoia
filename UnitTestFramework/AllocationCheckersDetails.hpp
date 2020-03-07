@@ -11,7 +11,7 @@
     \brief Implementation details for allocation checks within the unit testing framework.
 */
 
-#include "RegularCheckersDetails.hpp"
+#include "SemanticsCheckersDetails.hpp"
 #include <scoped_allocator>
 
 namespace sequoia::unit_testing
