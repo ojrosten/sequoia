@@ -7,11 +7,10 @@
 
 #pragma once
 
-/*! \file MoveOnlyCheckers.hpp
-    \brief Utilties for performing allocation checks within the unit testing framework.
+/*! \file MoveOnlyAllocationCheckers.hpp
+    \brief Utilities for performing allocation checks of move-only types.
 */
 
-#include "FreeCheckers.hpp"
 #include "AllocationCheckers.hpp"
 #include "MoveOnlyAllocationCheckersDetails.hpp"
 
