@@ -11,7 +11,7 @@
     \brief Extension of unit testing framework for allocator testing
 */
 
-#include "RegularTestCore.hpp"
+#include "MoveOnlyTestCore.hpp"
 #include "MoveOnlyAllocationCheckers.hpp"
 #include "AllocationTestUtilities.hpp"
 

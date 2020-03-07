@@ -29,7 +29,27 @@ namespace sequoia::unit_testing::impl
     constexpr static bool has_post_move_action{true};
     constexpr static bool has_post_move_assign_action{true};
     constexpr static bool has_post_swap_action{true};
+
+    template<class Logger, class Container, class... Allocators, class... Predictions>
+    static void post_copy_action(std::string_view description, Logger& logger, const Container& xCopy, const Container& yCopy, const allocation_checker<Container, Allocators, Predictions>&... checkers)
+    {
+      check_copy_x_allocation(description, logger, xCopy, allocation_checker<Container, Allocators, Predictions>{xCopy, checkers.first_count(), checkers.info()}...);
+
+      check_copy_y_allocation(description, logger, yCopy, allocation_checker<Container, Allocators, Predictions>{yCopy, checkers.second_count(), checkers.info()}...);
+    }
+
+    template<class Logger, class Container, class... Allocators, class... Predictions>
+    static void post_copy_assign_action(std::string_view description, Logger& logger, const Container& lhs, const Container& rhs, const allocation_checker<Container, Allocators, Predictions>&... checkers)
+    {
+      check_copy_assign_allocation(description, logger, lhs, rhs, checkers...);
+    }
   };
+
+  template<class Logger, class Actions, class Container, class... Allocators, class... Predictions>
+  void check_copy_assign(std::string_view description, Logger& logger, const Actions& actions, Container& z, const Container& y, const allocation_checker<Container, Allocators, Predictions>&... checkers)
+  {
+    do_check_copy_assign(description, logger, actions, z, y, allocation_checker<Container, Allocators, Predictions>{z, y, checkers.info()}...);   
+  }
 
   template<class Logger, class Container, class Mutator, class... Allocators, class... Predictions>
   void check_para_constructor_allocations(std::string_view description, Logger& logger, const Container& y, Mutator yMutator, const basic_allocation_info<Container, Allocators, Predictions>&... info)
