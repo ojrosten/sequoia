@@ -81,12 +81,6 @@ namespace sequoia::unit_testing
         return basic_allocation_info<Container, Alloc, Predictions>{scopedGetter, m_Predictions[I]};
       }
     }
-
-    [[nodiscard]]
-    const Predictions& get_predictions() const noexcept
-    {
-      return m_Predictions[0];
-    }
   private:
     template<std::size_t I, class... As>
     static auto get(const std::scoped_allocator_adaptor<As...>& alloc)
