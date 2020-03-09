@@ -469,7 +469,13 @@ namespace sequoia::unit_testing::impl
   }
 
   struct allocation_actions : pre_condition_actions
-  {
+  {    
+    constexpr static bool has_post_equality_action{true};
+    constexpr static bool has_post_nequality_action{true};
+    constexpr static bool has_post_move_action{true};
+    constexpr static bool has_post_move_assign_action{true};
+    constexpr static bool has_post_swap_action{true};
+
     template<class Logger, class Container, class... Allocators, class... Predictions>
     static void post_equality_action(std::string_view description, Logger& logger, const Container& x, const Container&, const allocation_checker<Container, Allocators, Predictions>&... checkers)
     {

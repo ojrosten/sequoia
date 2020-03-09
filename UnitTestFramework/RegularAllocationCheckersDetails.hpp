@@ -22,13 +22,8 @@ namespace sequoia::unit_testing::impl
 {
   struct regular_allocation_actions : allocation_actions
   {
-    constexpr static bool has_post_equality_action{true};
-    constexpr static bool has_post_nequality_action{true};
     constexpr static bool has_post_copy_action{true};
     constexpr static bool has_post_copy_assign_action{true};
-    constexpr static bool has_post_move_action{true};
-    constexpr static bool has_post_move_assign_action{true};
-    constexpr static bool has_post_swap_action{true};
 
     template<class Logger, class Container, class... Allocators, class... Predictions>
     static void post_copy_action(std::string_view description, Logger& logger, const Container& xCopy, const Container& yCopy, const allocation_checker<Container, Allocators, Predictions>&... checkers)
