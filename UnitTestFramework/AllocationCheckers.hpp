@@ -25,7 +25,7 @@ namespace sequoia::unit_testing
   class alloc_prediction
   {
   public:
-    constexpr /*explicit*/ alloc_prediction(int n = 0) : m_Num{n} {}
+    constexpr explicit alloc_prediction(int n = 0) : m_Num{n} {}
 
     constexpr operator int() const noexcept
     {
@@ -65,7 +65,7 @@ namespace sequoia::unit_testing
 
   [[nodiscard]]
   constexpr para_move_prediction
-  operator "" _py(unsigned long long int n) noexcept
+  operator "" _pm(unsigned long long int n) noexcept
   {
     return para_move_prediction{static_cast<int>(n)};
   }
@@ -75,6 +75,13 @@ namespace sequoia::unit_testing
   operator "" _as(unsigned long long int n) noexcept
   {
     return assign_prediction{static_cast<int>(n)};
+  }
+
+  [[nodiscard]]
+  constexpr assign_prop_prediction
+  operator "" _asp(unsigned long long int n) noexcept
+  {
+    return assign_prop_prediction{static_cast<int>(n)};
   }
   
   template<class Container, class Allocator, class Predictions>

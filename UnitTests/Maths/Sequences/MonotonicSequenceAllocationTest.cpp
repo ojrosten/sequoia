@@ -49,7 +49,7 @@ namespace sequoia::unit_testing
         seq.push_back(val);
       }
     };
-    check_semantics(LINE(""), s, t, mutator, allocation_info<sequence, allocator>{getter, {0, {1, 1}, {1, 1}}});
+    check_semantics(LINE(""), s, t, mutator, allocation_info<sequence, allocator>{getter, {0_c, {1_c, 1_mu}, {1_asp, 1_as}}});
   }
 
 }
