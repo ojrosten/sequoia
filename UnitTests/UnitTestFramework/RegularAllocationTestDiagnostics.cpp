@@ -6,7 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "UnitTestDiagnosticsUtilities.hpp"
-#include "AllocationTestDiagnostics.hpp"
+#include "RegularAllocationTestDiagnostics.hpp"
 
 #include <vector>
 

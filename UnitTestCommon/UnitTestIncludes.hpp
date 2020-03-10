@@ -74,7 +74,7 @@
 #include "MoveOnlyTestDiagnostics.hpp"
 #include "PerformanceTestDiagnostics.hpp"
 #include "FuzzyTestDiagnostics.hpp"
-#include "AllocationTestDiagnostics.hpp"
+#include "RegularAllocationTestDiagnostics.hpp"
 #include "MoveOnlyAllocationTestDiagnostics.hpp"
 
 #include "UnitTestRunner.hpp"
