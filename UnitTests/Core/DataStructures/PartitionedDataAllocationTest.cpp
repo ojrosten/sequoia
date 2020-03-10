@@ -81,7 +81,7 @@ namespace sequoia::unit_testing
     using info = allocation_info<storage, allocator>;
 
     check_semantics(LINE(""), s, t, partitionMaker,
-                            info{allocGetter, {{0_c, {1_c,1_mu}, {1_asp,1_as}}, {0_c, {2_c,0_mu}, {2_asp,2_as}}}});
+                            info{allocGetter, {{0_c, {1_c,1_mu}, {1_awp,1_anp}}, {0_c, {2_c,0_mu}, {2_awp,2_anp}}}});
       
     s.add_slot();
     // []
@@ -96,7 +96,7 @@ namespace sequoia::unit_testing
     };
 
     check_semantics(LINE(""), s, t, mutator,
-                            info{allocGetter, {{1_c, {1_c,1_mu}, {1_asp,1_as}}, {0_c, {2_c,1_mu}, {2_asp,2_as}}}});
+                            info{allocGetter, {{1_c, {1_c,1_mu}, {1_awp,1_anp}}, {0_c, {2_c,1_mu}, {2_awp,2_anp}}}});
   }
   
   template<class T, class SharingPolicy, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
@@ -146,8 +146,8 @@ namespace sequoia::unit_testing
       };
         
       check_semantics(LINE(add_type_info<storage>("")), s, t, partitionMaker,
-                              allocation_info<storage, allocator>{allocGetter, {0_c, {1_c,0_mu}, {1_asp, 1_as}}},
-                              allocation_info<storage, partitions_allocator>{partitionsAllocGetter, {0_c, {1_c,1_mu}, {1_asp, 1_as}}});
+                           allocation_info<storage, allocator>{allocGetter, {0_c, {1_c,0_mu}, {1_awp, 1_anp}}},
+                           allocation_info<storage, partitions_allocator>{partitionsAllocGetter, {0_c, {1_c,1_mu}, {1_awp, 1_anp}}});
 
       s.add_slot();
       // []

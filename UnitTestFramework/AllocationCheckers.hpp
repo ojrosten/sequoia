@@ -72,14 +72,14 @@ namespace sequoia::unit_testing
 
   [[nodiscard]]
   constexpr assign_prediction
-  operator "" _as(unsigned long long int n) noexcept
+  operator "" _anp(unsigned long long int n) noexcept
   {
     return assign_prediction{static_cast<int>(n)};
   }
 
   [[nodiscard]]
   constexpr assign_prop_prediction
-  operator "" _asp(unsigned long long int n) noexcept
+  operator "" _awp(unsigned long long int n) noexcept
   {
     return assign_prop_prediction{static_cast<int>(n)};
   }
