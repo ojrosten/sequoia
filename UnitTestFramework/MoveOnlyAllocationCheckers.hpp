@@ -18,7 +18,7 @@ namespace sequoia::unit_testing
 {
   struct move_only_allocation_predictions
   {
-    move_only_allocation_predictions(int assignWithoutPropagation, int yMutation, int paraMove)
+    move_only_allocation_predictions(assign_prediction assignWithoutPropagation, mutation_prediction yMutation, para_move_prediction paraMove)
       : assign_without_propagation{assignWithoutPropagation}
       , mutation{yMutation}
       , para_move{paraMove}
@@ -33,7 +33,9 @@ namespace sequoia::unit_testing
     [[nodiscard]]
     int mutation_allocs() const noexcept { return mutation; }
     
-    int assign_without_propagation{}, mutation{}, para_move{};
+    assign_prediction assign_without_propagation{};
+    mutation_prediction mutation{};
+    para_move_prediction para_move{};
   };
 
   // Done through inheritance rather than a using declaration
