@@ -19,6 +19,64 @@
 
 namespace sequoia::unit_testing
 {
+  enum class allocation_event { copy, mutation, para_copy, para_move, assign_prop, assign};
+
+  template<allocation_event Event>
+  class alloc_prediction
+  {
+  public:
+    constexpr /*explicit*/ alloc_prediction(int n = 0) : m_Num{n} {}
+
+    constexpr operator int() const noexcept
+    {
+      return m_Num;
+    }
+  private:
+    int m_Num{};
+  };
+
+  using copy_prediction        = alloc_prediction<allocation_event::copy>;
+  using mutation_prediction    = alloc_prediction<allocation_event::mutation>;
+  using para_copy_prediction   = alloc_prediction<allocation_event::para_copy>;
+  using para_move_prediction   = alloc_prediction<allocation_event::para_move>;
+  using assign_prop_prediction = alloc_prediction<allocation_event::assign_prop>;
+  using assign_prediction      = alloc_prediction<allocation_event::assign>;
+
+  [[nodiscard]]
+  constexpr copy_prediction
+  operator "" _c(unsigned long long int n) noexcept
+  {
+    return copy_prediction{static_cast<int>(n)};
+  }
+
+  [[nodiscard]]
+  constexpr mutation_prediction
+  operator "" _mu(unsigned long long int n) noexcept
+  {
+    return mutation_prediction{static_cast<int>(n)};
+  }
+
+  [[nodiscard]]
+  constexpr para_copy_prediction
+  operator "" _pc(unsigned long long int n) noexcept
+  {
+    return para_copy_prediction{static_cast<int>(n)};
+  }
+
+  [[nodiscard]]
+  constexpr para_move_prediction
+  operator "" _py(unsigned long long int n) noexcept
+  {
+    return para_move_prediction{static_cast<int>(n)};
+  }
+
+  [[nodiscard]]
+  constexpr assign_prediction
+  operator "" _as(unsigned long long int n) noexcept
+  {
+    return assign_prediction{static_cast<int>(n)};
+  }
+  
   template<class Container, class Allocator, class Predictions>
   class basic_allocation_info : public impl::allocation_info_base<Container, Allocator>
   {

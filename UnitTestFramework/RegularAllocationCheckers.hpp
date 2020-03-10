@@ -18,28 +18,31 @@ namespace sequoia::unit_testing
 {  
   struct individual_allocation_predictions
   {
-    individual_allocation_predictions(int copyPrediction, int mutationPrediction)
+    individual_allocation_predictions(copy_prediction copyPrediction, mutation_prediction mutationPrediction)
       : copy{copyPrediction}          
       , mutation{mutationPrediction}
       , para_copy{copyPrediction}
       , para_move{copyPrediction}
     {}
 
-    individual_allocation_predictions(int copyPrediction, int mutationPrediction, int copyLikePrediction)
+    individual_allocation_predictions(copy_prediction copyPrediction, mutation_prediction mutationPrediction, para_copy_prediction paraCopyPrediction)
       : copy{copyPrediction}          
       , mutation{mutationPrediction}
-      , para_copy{copyLikePrediction}
+      , para_copy{paraCopyPrediction}
       , para_move{copyPrediction}
     {}
       
-    individual_allocation_predictions(int copyPrediction, int mutationPrediction, int copyLikePrediction, int moveLikePrediction)
+    individual_allocation_predictions(copy_prediction copyPrediction, mutation_prediction mutationPrediction, para_copy_prediction paraCopyPrediction, para_move_prediction paraMovePrediction)
       : copy{copyPrediction}          
       , mutation{mutationPrediction}
-      , para_copy{copyLikePrediction}
-      , para_move{moveLikePrediction}
+      , para_copy{paraCopyPrediction}
+      , para_move{paraMovePrediction}
     {}
       
-    int copy{}, mutation{}, para_copy{}, para_move{};
+    copy_prediction copy{};
+    mutation_prediction mutation{};
+    para_copy_prediction para_copy{};
+    para_move_prediction para_move{};
   };
 
   struct assignment_allocation_predictions
@@ -48,12 +51,13 @@ namespace sequoia::unit_testing
       : with_propagation{withPropagation}, without_propagation{withoutPropagation}
     {}
       
-    int with_propagation{}, without_propagation{};
+    assign_prop_prediction with_propagation{};
+    assign_prediction without_propagation{};
   };
  
   struct allocation_predictions
   {
-    allocation_predictions(int copyX, individual_allocation_predictions yPredictions, assignment_allocation_predictions assignYtoX)
+    allocation_predictions(copy_prediction copyX, individual_allocation_predictions yPredictions, assignment_allocation_predictions assignYtoX)
       : copy_x{copyX}, y{yPredictions}, assign_y_to_x{assignYtoX}
     {}
 
