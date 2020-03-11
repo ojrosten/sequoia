@@ -17,6 +17,9 @@
 
 namespace sequoia::unit_testing
 {
+  template<class Logger, class T, class Compare>
+  bool check_approx_equality(std::string_view description, Logger& logger, Compare compare, const T& value, const T& prediction);
+
   namespace impl
   {
     template<class Compare>
@@ -50,6 +53,12 @@ namespace sequoia::unit_testing
 
     template<class Compare, class T>
     constexpr bool reports_for_type_v{reports_for_type<Compare, T>::value};
+
+    template<class Logger, class Compare, class T>
+    bool check(std::string_view description, Logger& logger, impl::fuzzy_compare<Compare> c, const T& value, const T& prediction)
+    {
+      return check_approx_equality(description, logger, std::move(c.compare), value, prediction);
+    }
   }
 
   template<class Logger, class Iter, class PredictionIter, class Compare>
@@ -102,13 +111,6 @@ namespace sequoia::unit_testing
     {
       static_assert(dependent_false<T>::value, "Compare cannot consume T directly nor interpret as a range");
     }
-  }
-
-  // TO DO: put in impl namespace
-  template<class Logger, class Compare, class T>
-  bool check(std::string_view description, Logger& logger, impl::fuzzy_compare<Compare> c, const T& value, const T& prediction)
-  {
-    return check_approx_equality(description, logger, std::move(c.compare), value, prediction);
   }
 
   template<class Logger>
