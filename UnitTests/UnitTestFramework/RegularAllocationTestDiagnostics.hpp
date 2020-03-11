@@ -12,10 +12,10 @@
 namespace sequoia::unit_testing
 {
   class allocation_false_positive_diagnostics final
-    : public allocation_false_positive_test
+    : public regular_allocation_false_positive_test
   {
   public:
-    using allocation_false_positive_test::allocation_false_positive_test;
+    using regular_allocation_false_positive_test::regular_allocation_false_positive_test;
 
     [[nodiscard]]
     std::string_view source_file_name() const noexcept final;
@@ -30,10 +30,10 @@ namespace sequoia::unit_testing
   };
 
   class allocation_false_negative_diagnostics final
-    : public allocation_false_negative_test
+    : public regular_allocation_false_negative_test
   {
   public:
-    using allocation_false_negative_test::allocation_false_negative_test; 
+    using regular_allocation_false_negative_test::regular_allocation_false_negative_test; 
 
     [[nodiscard]]
     std::string_view source_file_name() const noexcept final;

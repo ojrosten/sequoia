@@ -13,10 +13,10 @@
 
 namespace sequoia::unit_testing
 {
-  class monotonic_sequence_allocation_test final : public allocation_test
+  class monotonic_sequence_allocation_test final : public regular_allocation_test
   {
   public:
-    using allocation_test::allocation_test;
+    using regular_allocation_test::regular_allocation_test;
 
     [[nodiscard]]
     std::string_view source_file_name() const noexcept final;
