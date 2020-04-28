@@ -334,7 +334,7 @@ namespace sequoia::maths::graph_impl
                 else
                 {
                   const bool loopMatched{loop && this->loop_matched(traversal_traits<G, container_type>::begin(graph, nodeIndex), iter)};
-                  const bool secondTraversal{((discovered[nextNode] && processed[nextNode]) || loopMatched)};
+                  const bool secondTraversal{processed[nextNode] || loopMatched};
                   if(secondTraversal) edge_functor_processor<ESTF>::process(taskProcessingModel, std::forward<ESTF>(edgeSecondTraversalFunctor), iter);
                   else                edge_functor_processor<EFTF>::process(taskProcessingModel, std::forward<EFTF>(edgeFirstTraversalFunctor), iter);
                 }  
