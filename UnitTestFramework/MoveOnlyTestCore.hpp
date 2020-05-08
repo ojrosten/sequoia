@@ -42,7 +42,7 @@ namespace sequoia::unit_testing
   using move_only_checker = checker<unit_test_logger<mode>, move_only_extender<unit_test_logger<mode>>>;
   
   template<test_mode mode>
-  using canonical_move_only_test = basic_test<unit_test_logger<mode>, move_only_checker<mode>>;
+  using canonical_move_only_test = basic_test<move_only_checker<mode>>;
 
   using move_only_test                = canonical_move_only_test<test_mode::standard>;
   using move_only_false_negative_test = canonical_move_only_test<test_mode::false_negative>;

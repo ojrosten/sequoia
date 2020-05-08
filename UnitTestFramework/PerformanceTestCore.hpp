@@ -177,7 +177,7 @@ namespace sequoia::unit_testing
   using performance_checker = checker<unit_test_logger<mode>, performance_extender<unit_test_logger<mode>>>;
   
   template<test_mode mode>
-  using basic_performance_test = basic_test<unit_test_logger<mode>, performance_checker<mode>>;
+  using basic_performance_test = basic_test<performance_checker<mode>>;
 
   using performance_test                = basic_performance_test<test_mode::standard>;
   using performance_false_negative_test = basic_performance_test<test_mode::false_negative>;

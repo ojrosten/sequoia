@@ -42,10 +42,10 @@ namespace sequoia::unit_testing
   };
 
   template<class Logger>
-  class basic_move_only_allocation_test : public basic_test<Logger, checker<Logger, move_only_allocation_extender<Logger>>>
+  class basic_move_only_allocation_test : public basic_test<checker<Logger, move_only_allocation_extender<Logger>>>
   {
   public:
-    using basic_test<Logger, checker<Logger, move_only_allocation_extender<Logger>>>::basic_test;
+    using basic_test<checker<Logger, move_only_allocation_extender<Logger>>>::basic_test;
         
     basic_move_only_allocation_test(const basic_move_only_allocation_test&) = delete;
 

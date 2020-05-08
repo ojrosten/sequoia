@@ -272,10 +272,10 @@ namespace sequoia::unit_testing
   };
 
   template<class Logger, class... Extenders>
-  class graph_basic_test : public basic_test<Logger, graph_checker<Logger, Extenders...>>
+  class graph_basic_test : public basic_test<graph_checker<Logger, Extenders...>>
   {
   public:
-    using base_t = basic_test<Logger, graph_checker<Logger, Extenders...>>;
+    using base_t = basic_test<graph_checker<Logger, Extenders...>>;
     
     using base_t::check_exception_thrown;
     using base_t::check_equality;
@@ -284,14 +284,9 @@ namespace sequoia::unit_testing
     using base_t::check;
 
     graph_basic_test(std::string_view name, concurrency_mode mode)
-      : basic_test<Logger, graph_checker<Logger, Extenders...>>{name}
+      : basic_test<graph_checker<Logger, Extenders...>>{name}
       , m_ConcurrencyMode{mode}
     {}
-    
-    log_summary execute() override
-    {        
-      return base_t::execute() + m_AccumulatedSummaries;
-    }
       
     void merge(const log_summary& summary)
     {
@@ -303,6 +298,14 @@ namespace sequoia::unit_testing
       check(combine_messages("Exception thrown during asynchronous execution of graph test:", sv, "\n"), Logger::mode == test_mode::false_positive);
     }
   protected:
+    using time_point = typename base_t::time_point;
+
+    [[nodiscard]]
+    log_summary summarize(const time_point start) override
+    {
+      return base_t::summarize(start) += m_AccumulatedSummaries;
+    }
+    
     [[nodiscard]]
     virtual std::string current_message() const override
     {

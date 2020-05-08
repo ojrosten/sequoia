@@ -37,9 +37,9 @@ namespace sequoia::unit_testing
   }
   
   [[nodiscard]]
-  std::string report_line(std::string file, const int line, const std::string_view message)
+  std::string report_line(std::string_view file, const int line, const std::string_view message)
   {
-    std::string s{std::move(file) + ", Line " + std::to_string(line)};
+    auto s{std::string{file}.append(", Line ").append(std::to_string(line))};
     if(!message.empty()) (s += ":\n\t") += message;
 
     return s;

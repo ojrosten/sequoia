@@ -42,10 +42,10 @@ namespace sequoia::unit_testing
   };
 
   template<class Logger>
-  class basic_regular_allocation_test : public basic_test<Logger, checker<Logger, allocation_extender<Logger>>>
+  class basic_regular_allocation_test : public basic_test<checker<Logger, allocation_extender<Logger>>>
   {
   public:
-    using basic_test<Logger, checker<Logger, allocation_extender<Logger>>>::basic_test;
+    using basic_test<checker<Logger, allocation_extender<Logger>>>::basic_test;
         
     basic_regular_allocation_test(const basic_regular_allocation_test&) = delete;
 

@@ -48,7 +48,7 @@ namespace sequoia::unit_testing
   using regular_checker = checker<unit_test_logger<mode>, regular_extender<unit_test_logger<mode>>>;
   
   template<test_mode mode>
-  using canonical_regular_test = basic_test<unit_test_logger<mode>, regular_checker<mode>>;
+  using canonical_regular_test = basic_test<regular_checker<mode>>;
 
   using regular_test                = canonical_regular_test<test_mode::standard>;
   using false_negative_regular_test = canonical_regular_test<test_mode::false_negative>;

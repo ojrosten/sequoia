@@ -148,7 +148,7 @@ namespace sequoia::unit_testing
   using fuzzy_checker = checker<unit_test_logger<mode>, fuzzy_extender<unit_test_logger<mode>>>;
   
   template<test_mode mode>
-  using basic_fuzzy_test = basic_test<unit_test_logger<mode>, fuzzy_checker<mode>>;
+  using basic_fuzzy_test = basic_test<fuzzy_checker<mode>>;
 
   using fuzzy_test                = basic_fuzzy_test<test_mode::standard>;
   using fuzzy_false_negative_test = basic_fuzzy_test<test_mode::false_negative>;
