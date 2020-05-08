@@ -16,15 +16,17 @@
 
 namespace sequoia::unit_testing
 {
-  template<class Logger>
+  template<test_mode Mode>
   class regular_extender
   {
   public:
-    explicit regular_extender(Logger& logger) : m_Logger{logger} {}
+    constexpr static test_mode mode{Mode};
+    
+    explicit regular_extender(unit_test_logger<Mode>& logger) : m_Logger{logger} {}
 
     regular_extender(const regular_extender&)            = delete;
     regular_extender& operator=(const regular_extender&) = delete;
-    regular_extender& operator=(regular_extender&&) = delete;
+    regular_extender& operator=(regular_extender&&)      = delete;
 
     template<class T>
     void check_semantics(std::string_view description, const T& x, const T& y)
@@ -41,11 +43,11 @@ namespace sequoia::unit_testing
     regular_extender(regular_extender&&) noexcept = default;
     ~regular_extender() = default;
   private:
-    Logger& m_Logger;
+    unit_test_logger<Mode>& m_Logger;
   };
   
   template<test_mode mode>
-  using regular_checker = checker<unit_test_logger<mode>, regular_extender<unit_test_logger<mode>>>;
+  using regular_checker = checker<mode, regular_extender<mode>>;
   
   template<test_mode mode>
   using canonical_regular_test = basic_test<regular_checker<mode>>;

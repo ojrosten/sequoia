@@ -180,15 +180,15 @@ namespace sequoia::unit_testing
     class NodeWeightPooling,
     class EdgeStorageTraits,
     class NodeWeightStorageTraits,
-    class Logger,
+    test_mode Mode,
     class... Extenders
   >
-  class basic_graph_operations : protected graph_checker<Logger, Extenders...>
+  class basic_graph_operations : protected graph_checker<Mode, Extenders...>
   {
   public:
     using graph_type = typename graph_type_generator<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits>::graph_type;   
 
-    using checker_type = graph_checker<Logger, Extenders...>;
+    using checker_type = graph_checker<Mode, Extenders...>;
 
     basic_graph_operations() = default;
     basic_graph_operations(const basic_graph_operations&) = delete;
@@ -224,7 +224,7 @@ namespace sequoia::unit_testing
     test_mode Mode
   >
   using regular_graph_operations
-  = basic_graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits, unit_test_logger<Mode>, regular_extender<unit_test_logger<Mode>>>;
+    = basic_graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits, Mode, regular_extender<Mode>>;
 
   template
   <

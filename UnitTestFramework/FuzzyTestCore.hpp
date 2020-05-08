@@ -17,8 +17,8 @@
 
 namespace sequoia::unit_testing
 {
-  template<class Logger, class T, class Compare>
-  bool check_approx_equality(std::string_view description, Logger& logger, Compare compare, const T& value, const T& prediction);
+  template<test_mode Mode, class T, class Compare>
+  bool check_approx_equality(std::string_view description, unit_test_logger<Mode>& logger, Compare compare, const T& value, const T& prediction);
 
   namespace impl
   {
@@ -54,23 +54,23 @@ namespace sequoia::unit_testing
     template<class Compare, class T>
     constexpr bool reports_for_type_v{reports_for_type<Compare, T>::value};
 
-    template<class Logger, class Compare, class T>
-    bool check(std::string_view description, Logger& logger, impl::fuzzy_compare<Compare> c, const T& value, const T& prediction)
+    template<test_mode Mode, class Compare, class T>
+    bool check(std::string_view description, unit_test_logger<Mode>& logger, impl::fuzzy_compare<Compare> c, const T& value, const T& prediction)
     {
       return check_approx_equality(description, logger, std::move(c.compare), value, prediction);
     }
   }
 
-  template<class Logger, class Iter, class PredictionIter, class Compare>
-  bool check_range_approx(std::string_view description, Logger& logger, Compare compare, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
+  template<test_mode Mode, class Iter, class PredictionIter, class Compare>
+  bool check_range_approx(std::string_view description, unit_test_logger<Mode>& logger, Compare compare, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
   {
     return impl::check_range(description, logger, impl::fuzzy_compare{compare}, first, last, predictionFirst, predictionLast);      
   }
   
-  template<class Logger, class T, class Compare>
-  bool check_approx_equality(std::string_view description, Logger& logger, Compare compare, const T& value, const T& prediction)
+  template<test_mode Mode, class T, class Compare>
+  bool check_approx_equality(std::string_view description, unit_test_logger<Mode>& logger, Compare compare, const T& value, const T& prediction)
   {
-    using sentinel = typename Logger::sentinel;      
+    using sentinel = typename unit_test_logger<Mode>::sentinel;      
     sentinel s{logger, add_type_info<T>(description)};
 
     if constexpr(impl::compares_type_v<Compare, T>)
@@ -113,11 +113,13 @@ namespace sequoia::unit_testing
     }
   }
 
-  template<class Logger>
+  template<test_mode Mode>
   class fuzzy_extender
   {
   public:
-    explicit fuzzy_extender(Logger& logger) : m_Logger{logger} {}
+    constexpr static test_mode mode{Mode};
+
+    explicit fuzzy_extender(unit_test_logger<Mode>& logger) : m_Logger{logger} {}
 
     fuzzy_extender(const fuzzy_extender&) = delete;
     fuzzy_extender(fuzzy_extender&&)      = delete;
@@ -141,11 +143,11 @@ namespace sequoia::unit_testing
     ~fuzzy_extender() = default;
 
   private:
-    Logger& m_Logger;
+    unit_test_logger<Mode>& m_Logger;
   };
 
   template<test_mode mode>
-  using fuzzy_checker = checker<unit_test_logger<mode>, fuzzy_extender<unit_test_logger<mode>>>;
+  using fuzzy_checker = checker<mode, fuzzy_extender<mode>>;
   
   template<test_mode mode>
   using basic_fuzzy_test = basic_test<fuzzy_checker<mode>>;

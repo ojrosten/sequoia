@@ -17,8 +17,8 @@ namespace sequoia::unit_testing
   {
     using type = sequoia::parsing::commandline::operation;
 
-    template<class Logger>
-    static void check(std::string_view description, Logger& logger, const type& operation, const type& prediction)
+    template<test_mode Mode>
+    static void check(std::string_view description, unit_test_logger<Mode>& logger, const type& operation, const type& prediction)
     {
       const bool consistent{((operation.fn != nullptr) && (prediction.fn != nullptr))
           || ((operation.fn == nullptr) && (prediction.fn == nullptr))};

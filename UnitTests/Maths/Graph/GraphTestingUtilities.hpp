@@ -34,8 +34,8 @@ namespace sequoia::unit_testing
     {
       using type = Graph;
       
-      template<class Logger>
-      static void check(std::string_view description, Logger& logger, const Graph& graph, const Graph& prediction)
+      template<test_mode Mode>
+      static void check(std::string_view description, unit_test_logger<Mode>& logger, const Graph& graph, const Graph& prediction)
       {
         using connectivity_t = typename type::connectivity_type;
         using nodes_t = typename type::nodes_type;
@@ -55,8 +55,8 @@ namespace sequoia::unit_testing
       using node_weight_type = typename type::node_weight_type;
       using nodes_equivalent_type = std::initializer_list<node_weight_type>;
 
-      template<class Logger, class W=node_weight_type, std::enable_if_t<!std::is_empty_v<W>, int> = 0>
-      static void check(std::string_view description, Logger& logger, const type& graph, connectivity_equivalent_type connPrediction, nodes_equivalent_type nodesPrediction)
+      template<test_mode Mode, class W=node_weight_type, std::enable_if_t<!std::is_empty_v<W>, int> = 0>
+      static void check(std::string_view description, unit_test_logger<Mode>& logger, const type& graph, connectivity_equivalent_type connPrediction, nodes_equivalent_type nodesPrediction)
       {
         using connectivity_t = typename type::connectivity_type;
         using nodes_t = typename type::nodes_type;
@@ -65,8 +65,8 @@ namespace sequoia::unit_testing
         check_equivalence(description, logger, static_cast<const nodes_t&>(graph), nodesPrediction);
       }
 
-      template<class Logger, class W=node_weight_type, std::enable_if_t<std::is_empty_v<W>, int> = 0>
-      static void check(std::string_view description, Logger& logger, const type& graph, connectivity_equivalent_type connPrediction)
+      template<test_mode Mode, class W=node_weight_type, std::enable_if_t<std::is_empty_v<W>, int> = 0>
+      static void check(std::string_view description, unit_test_logger<Mode>& logger, const type& graph, connectivity_equivalent_type connPrediction)
       {
         using connectivity_t = typename type::connectivity_type;
 
@@ -84,8 +84,8 @@ namespace sequoia::unit_testing
       using node_weight_type = typename type::node_weight_type;
       using nodes_equivalent_type = std::initializer_list<node_weight_type>;
 
-      template<class Logger, class W=node_weight_type, std::enable_if_t<!std::is_empty_v<W>, int> = 0>
-      static void check(std::string_view description, Logger& logger, const type& graph, connectivity_equivalent_type connPrediction, nodes_equivalent_type nodesPrediction)
+      template<test_mode Mode, class W=node_weight_type, std::enable_if_t<!std::is_empty_v<W>, int> = 0>
+      static void check(std::string_view description, unit_test_logger<Mode>& logger, const type& graph, connectivity_equivalent_type connPrediction, nodes_equivalent_type nodesPrediction)
       {
         using connectivity_t = typename type::connectivity_type;
         using nodes_t = typename type::nodes_type;
@@ -94,8 +94,8 @@ namespace sequoia::unit_testing
         check_equivalence(description, logger, static_cast<const nodes_t&>(graph), nodesPrediction);
       }
 
-      template<class Logger, class W=node_weight_type, std::enable_if_t<std::is_empty_v<W>, int> = 0>
-      static void check(std::string_view description, Logger& logger, const type& graph, connectivity_equivalent_type connPrediction)
+      template<test_mode Mode, class W=node_weight_type, std::enable_if_t<std::is_empty_v<W>, int> = 0>
+      static void check(std::string_view description, unit_test_logger<Mode>& logger, const type& graph, connectivity_equivalent_type connPrediction)
       {
         using connectivity_t = typename type::connectivity_type;
 
@@ -114,8 +114,8 @@ namespace sequoia::unit_testing
   {
     using type = maths::connectivity<Directedness, EdgeTraits, WeightMaker>;
 
-    template<class Logger>
-    static void check(std::string_view description, Logger& logger, const type& connectivity, const type& prediction)
+    template<test_mode Mode>
+    static void check(std::string_view description, unit_test_logger<Mode>& logger, const type& connectivity, const type& prediction)
     {
       check_equality(combine_messages(description, "Connectivity sizes different", "\n"), logger, connectivity.size(), prediction.size());
       
@@ -145,8 +145,8 @@ namespace sequoia::unit_testing
     using edge_type       = typename type::edge_type;
     using equivalent_type = std::initializer_list<std::initializer_list<edge_init_type>>;
 
-    template<class Logger>
-    static void check(std::string_view description, Logger& logger, const type& connectivity, equivalent_type prediction)
+    template<test_mode Mode>
+    static void check(std::string_view description, unit_test_logger<Mode>& logger, const type& connectivity, equivalent_type prediction)
     {
       if(check_equality(combine_messages(description, "Connectivity order wrong"), logger, connectivity.order(), prediction.size()))
       {
@@ -180,8 +180,8 @@ namespace sequoia::unit_testing
     using edge_type       = typename type::edge_type;
     using equivalent_type = std::initializer_list<std::initializer_list<edge_init_type>>;
 
-    template<class Logger>
-    static void check(std::string_view description, Logger& logger, const type& connectivity, equivalent_type prediction)
+    template<test_mode Mode>
+    static void check(std::string_view description, unit_test_logger<Mode>& logger, const type& connectivity, equivalent_type prediction)
     {
       if(check_equality(combine_messages(description, "Connectivity order wrong"), logger, connectivity.order(), prediction.size()))
       {
@@ -212,13 +212,13 @@ namespace sequoia::unit_testing
     return flavour != maths::graph_flavour::directed;
   }
 
-  template<class Logger, class... Extenders>
-  class graph_checker : public checker<Logger, Extenders...>
+  template<test_mode Mode, class... Extenders>
+  class graph_checker : public checker<Mode, Extenders...>
   {
   public:
-    using checker_t = checker<Logger, Extenders...>;
+    using checker_t = checker<Mode, Extenders...>;
 
-    using checker<Logger, Extenders...>::checker;
+    using checker<Mode, Extenders...>::checker;
     graph_checker(const graph_checker&) = delete;
 
     graph_checker& operator=(const graph_checker&) = delete;
@@ -271,11 +271,11 @@ namespace sequoia::unit_testing
     ~graph_checker() = default;
   };
 
-  template<class Logger, class... Extenders>
-  class graph_basic_test : public basic_test<graph_checker<Logger, Extenders...>>
+  template<test_mode Mode, class... Extenders>
+  class graph_basic_test : public basic_test<graph_checker<Mode, Extenders...>>
   {
   public:
-    using base_t = basic_test<graph_checker<Logger, Extenders...>>;
+    using base_t = basic_test<graph_checker<Mode, Extenders...>>;
     
     using base_t::check_exception_thrown;
     using base_t::check_equality;
@@ -284,7 +284,7 @@ namespace sequoia::unit_testing
     using base_t::check;
 
     graph_basic_test(std::string_view name, concurrency_mode mode)
-      : basic_test<graph_checker<Logger, Extenders...>>{name}
+      : basic_test<graph_checker<Mode, Extenders...>>{name}
       , m_ConcurrencyMode{mode}
     {}
       
@@ -295,7 +295,7 @@ namespace sequoia::unit_testing
 
     void report_async_exception(std::string_view sv)
     {
-      check(combine_messages("Exception thrown during asynchronous execution of graph test:", sv, "\n"), Logger::mode == test_mode::false_positive);
+      check(combine_messages("Exception thrown during asynchronous execution of graph test:", sv, "\n"), unit_test_logger<Mode>::mode == test_mode::false_positive);
     }
   protected:
     using time_point = typename base_t::time_point;
@@ -322,7 +322,7 @@ namespace sequoia::unit_testing
   };
 
   template<test_mode mode>
-  using regular_graph_test = graph_basic_test<unit_test_logger<mode>, regular_extender<unit_test_logger<mode>>>;
+  using regular_graph_test = graph_basic_test<mode, regular_extender<mode>>;
 
   using graph_unit_test = regular_graph_test<test_mode::standard>;
   using graph_false_positive_test = regular_graph_test<test_mode::false_positive>;    

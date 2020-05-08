@@ -19,15 +19,15 @@ namespace sequoia::unit_testing
   [[nodiscard]]
   std::string add_type_info(std::string_view description);
 
-  template<class Logger, class T> bool check_equality(std::string_view description, Logger& logger, const T& value, const T& prediction);
+  template<test_mode Mode, class T> bool check_equality(std::string_view description, unit_test_logger<Mode>& logger, const T& value, const T& prediction);
 }
 
 namespace sequoia::unit_testing::impl
 {
-  template<class EquivChecker, class Logger, class T, class S, class... U>
-  bool check(std::string_view description, Logger& logger, const T& value, const S& s, const U&... u)
+  template<class EquivChecker, test_mode Mode, class T, class S, class... U>
+  bool check(std::string_view description, unit_test_logger<Mode>& logger, const T& value, const S& s, const U&... u)
   {
-    using sentinel = typename Logger::sentinel;
+    using sentinel = typename unit_test_logger<Mode>::sentinel;
 
     const std::string message{
       add_type_info<S, U...>(
@@ -42,10 +42,10 @@ namespace sequoia::unit_testing::impl
     return logger.failures() == previousFailures;
   }
 
-  template<class Logger, class Tag, class Iter, class PredictionIter>
-  bool check_range(std::string_view description, Logger& logger, Tag tag, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
+  template<test_mode Mode, class Tag, class Iter, class PredictionIter>
+  bool check_range(std::string_view description, unit_test_logger<Mode>& logger, Tag tag, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
   {
-    typename Logger::sentinel r{logger, description};
+    typename unit_test_logger<Mode>::sentinel r{logger, description};
     bool equal{true};
 
     using std::distance;

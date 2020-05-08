@@ -101,10 +101,10 @@ namespace sequoia::unit_testing
   allocation_info(Fn&& allocGetter, std::initializer_list<allocation_predictions> predictions)
     -> allocation_info<std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::arg>, std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::ret>>;
     
-  template<class Logger, class T, class Mutator, class... Allocators>
-  void check_semantics(std::string_view description, Logger& logger, const T& x, const T& y, Mutator yMutator, allocation_info<T, Allocators>... info)
+  template<test_mode Mode, class T, class Mutator, class... Allocators>
+  void check_semantics(std::string_view description, unit_test_logger<Mode>& logger, const T& x, const T& y, Mutator yMutator, allocation_info<T, Allocators>... info)
   {
-    typename Logger::sentinel s{logger, add_type_info<T>(description)};
+    typename unit_test_logger<Mode>::sentinel s{logger, add_type_info<T>(description)};
       
     if(impl::check_semantics(description, logger, impl::regular_allocation_actions{}, x, y, yMutator, std::tuple_cat(impl::make_allocation_checkers(info, x, y)...)))
     {

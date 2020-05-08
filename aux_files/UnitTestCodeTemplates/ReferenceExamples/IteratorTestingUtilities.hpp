@@ -18,8 +18,8 @@ namespace sequoia::unit_testing
   {
     using type = utilities::iterator/*<???>*/;
     
-    template<class Logger>
-    static void check(Logger& logger, const type& reference, const type& actual, std::string_view description)
+    template<test_mode Mode>
+    static void check(unit_test_logger<Mode>& logger, const type& reference, const type& actual, std::string_view description)
     {
       // TO DO
     }
@@ -30,8 +30,8 @@ namespace sequoia::unit_testing
   {
     using type = utilities::iterator/*<???>*/;
     
-    template<class Logger>
-    static void check(Logger& logger, const type& actual, /*???*/ refVals, std::string_view description)
+    template<test_mode Mode>
+    static void check(unit_test_logger<Mode>& logger, const type& actual, /*???*/ refVals, std::string_view description)
     {
       // TO DO
     }

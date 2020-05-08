@@ -24,8 +24,8 @@ namespace sequoia::unit_testing
     {
       using type = Nodes;
 
-      template<class Logger>
-      static void check(std::string_view description, Logger& logger, const Nodes& nodes, const Nodes& prediction)
+      template<test_mode Mode>
+      static void check(std::string_view description, unit_test_logger<Mode>& logger, const Nodes& nodes, const Nodes& prediction)
       {
         check_equality(combine_messages(description, "Sizes different"), logger, nodes.size(), prediction.size());
 
@@ -40,8 +40,8 @@ namespace sequoia::unit_testing
     {
       using type = Nodes;
       
-      template<class Logger>
-      static void check(std::string_view, Logger&, const Nodes&, const Nodes&)
+      template<test_mode Mode>
+      static void check(std::string_view, unit_test_logger<Mode>&, const Nodes&, const Nodes&)
       {
       }
     };
@@ -53,8 +53,8 @@ namespace sequoia::unit_testing
 
       using equivalent_type = std::initializer_list<typename type::weight_type>;
 
-      template<class Logger>
-      static void check(std::string_view description, Logger& logger, const Nodes& nodes, equivalent_type prediction)
+      template<test_mode Mode>
+      static void check(std::string_view description, unit_test_logger<Mode>& logger, const Nodes& nodes, equivalent_type prediction)
       {
         check_equality(combine_messages(description, "Sizes different"), logger, nodes.size(), prediction.size());
 
@@ -69,8 +69,8 @@ namespace sequoia::unit_testing
 
       using equivalent_type = std::initializer_list<typename type::weight_type>;
 
-      template<class Logger>
-      static void check(std::string_view description, Logger& logger, const Nodes& nodes, equivalent_type)
+      template<test_mode Mode>
+      static void check(std::string_view description, unit_test_logger<Mode>& logger, const Nodes& nodes, equivalent_type)
       {
         unit_testing::check(combine_messages(description, "Node storage should have zero size for empty node weights"), logger, nodes.empty());
       }
@@ -114,8 +114,8 @@ namespace sequoia::unit_testing
   {
     using type = maths::graph_impl::heterogeneous_node_storage<Ts...>;
 
-    template<class Logger>
-    static void check(std::string_view description, Logger& logger, const type& nodes, const type& prediction)
+    template<test_mode Mode>
+    static void check(std::string_view description, unit_test_logger<Mode>& logger, const type& nodes, const type& prediction)
     {
       if(check_equality(combine_messages(description, "Node storaage sizes different"), logger, nodes.size(), prediction.size()))
       {
@@ -124,14 +124,14 @@ namespace sequoia::unit_testing
     }
 
   private:
-    template<class Logger, std::size_t I=0>
-    static void check_elements(std::string_view description, Logger& logger, const type& nodes, const type& prediction)
+    template<test_mode Mode, std::size_t I=0>
+    static void check_elements(std::string_view description, unit_test_logger<Mode>& logger, const type& nodes, const type& prediction)
     {
       if constexpr(I < sizeof...(Ts))
       {
         const std::string message{combine_messages(description, std::to_string(I) + "th element incorrect")};
         check_equality(combine_messages(description, message), logger, nodes.template node_weight<I>(), prediction.template node_weight<I>());
-        check_elements<Logger, I+1>(description, logger, nodes, prediction);
+        check_elements<Mode, I+1>(description, logger, nodes, prediction);
       }
     }
   };
@@ -142,8 +142,8 @@ namespace sequoia::unit_testing
     using type = maths::graph_impl::heterogeneous_node_storage<Ts...>;
     using equivalent_type = std::tuple<Ts...>;
 
-    template<class Logger>
-    static void check(std::string_view description, Logger& logger, const type& nodes, const equivalent_type& prediction)
+    template<test_mode Mode>
+    static void check(std::string_view description, unit_test_logger<Mode>& logger, const type& nodes, const equivalent_type& prediction)
     {
       if(check_equality(combine_messages(description, "Node storage sizes different"), logger, nodes.size(), sizeof...(Ts)))
       {
@@ -152,14 +152,14 @@ namespace sequoia::unit_testing
     }
 
   private:
-    template<class Logger, std::size_t I=0>
-    static void check_elements(std::string_view description, Logger& logger, const type& nodes, const equivalent_type& prediction)
+    template<test_mode Mode, std::size_t I=0>
+    static void check_elements(std::string_view description, unit_test_logger<Mode>& logger, const type& nodes, const equivalent_type& prediction)
     {
       if constexpr(I < sizeof...(Ts))
       {
         const std::string message{combine_messages(description, std::to_string(I) + "th element incorrect")};
         check_equality(combine_messages(description, message), logger, nodes.template node_weight<I>(), std::get<I>(prediction));
-        check_elements<Logger, I+1>(description, logger, nodes, prediction);
+        check_elements<Mode, I+1>(description, logger, nodes, prediction);
       }
     }
   };

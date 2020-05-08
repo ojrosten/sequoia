@@ -58,10 +58,10 @@ namespace sequoia::unit_testing
   move_only_allocation_info(Fn&& allocGetter, std::initializer_list<move_only_allocation_predictions> predictions)
     -> move_only_allocation_info<std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::arg>, std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::ret>>;
   
-  template<class Logger, class T, class Mutator, class... Allocators>
-  void check_semantics(std::string_view description, Logger& logger, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, move_only_allocation_info<T, Allocators>... info)
+  template<test_mode Mode, class T, class Mutator, class... Allocators>
+  void check_semantics(std::string_view description, unit_test_logger<Mode>& logger, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, move_only_allocation_info<T, Allocators>... info)
   {
-    typename Logger::sentinel s{logger, add_type_info<T>(description)};
+    typename unit_test_logger<Mode>::sentinel s{logger, add_type_info<T>(description)};
 
     if(auto opt{impl::check_para_constructor_allocations(description, logger, std::forward<T>(y), yClone, info...)})
     {

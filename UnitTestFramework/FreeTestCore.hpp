@@ -145,7 +145,7 @@ namespace sequoia::unit_testing
   };
   
   template<test_mode Mode>
-  using basic_free_test = basic_test<checker<unit_test_logger<Mode>>>;
+  using basic_free_test = basic_test<checker<Mode>>;
 
   using free_test                = basic_free_test<test_mode::standard>;
   using free_false_negative_test = basic_free_test<test_mode::false_negative>;

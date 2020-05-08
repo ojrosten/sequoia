@@ -17,11 +17,13 @@
 
 namespace sequoia::unit_testing
 {
-  template<class Logger>
+  template<test_mode Mode>
   class allocation_extender
   {
   public:
-    explicit allocation_extender(Logger& logger) : m_Logger{logger} {}
+    constexpr static test_mode mode{Mode};
+    
+    explicit allocation_extender(unit_test_logger<Mode>& logger) : m_Logger{logger} {}
 
     allocation_extender(const allocation_extender&) = delete;    
     allocation_extender(allocation_extender&&)      = delete;
@@ -38,14 +40,14 @@ namespace sequoia::unit_testing
     ~allocation_extender() = default;
 
   private:
-    Logger& m_Logger;
+    unit_test_logger<Mode>& m_Logger;
   };
 
-  template<class Logger>
-  class basic_regular_allocation_test : public basic_test<checker<Logger, allocation_extender<Logger>>>
+  template<test_mode Mode>
+  class basic_regular_allocation_test : public basic_test<checker<Mode, allocation_extender<Mode>>>
   {
   public:
-    using basic_test<checker<Logger, allocation_extender<Logger>>>::basic_test;
+    using basic_test<checker<Mode, allocation_extender<Mode>>>::basic_test;
         
     basic_regular_allocation_test(const basic_regular_allocation_test&) = delete;
 
@@ -67,11 +69,8 @@ namespace sequoia::unit_testing
       test.template test_allocation<true, true, true>();
     }
   };
-   
-  template<test_mode Mode>
-  using canonical_regular_allocation_test = basic_regular_allocation_test<unit_test_logger<Mode>>;
 
-  using regular_allocation_test                = canonical_regular_allocation_test<test_mode::standard>;
-  using regular_allocation_false_negative_test = canonical_regular_allocation_test<test_mode::false_negative>;
-  using regular_allocation_false_positive_test = canonical_regular_allocation_test<test_mode::false_positive>;
+  using regular_allocation_test                = basic_regular_allocation_test<test_mode::standard>;
+  using regular_allocation_false_negative_test = basic_regular_allocation_test<test_mode::false_negative>;
+  using regular_allocation_false_positive_test = basic_regular_allocation_test<test_mode::false_positive>;
 }

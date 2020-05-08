@@ -17,11 +17,13 @@
 
 namespace sequoia::unit_testing
 {
-  template<class Logger>
+  template<test_mode Mode>
   class move_only_allocation_extender
   {
   public:
-    explicit move_only_allocation_extender(Logger& logger) : m_Logger{logger} {}
+    constexpr static test_mode mode{Mode};
+
+    explicit move_only_allocation_extender(unit_test_logger<Mode>& logger) : m_Logger{logger} {}
 
     move_only_allocation_extender(const move_only_allocation_extender&) = delete;    
     move_only_allocation_extender(move_only_allocation_extender&&)      = delete;
@@ -38,14 +40,14 @@ namespace sequoia::unit_testing
     ~move_only_allocation_extender() = default;
 
   private:
-    Logger& m_Logger;
+    unit_test_logger<Mode>& m_Logger;
   };
 
-  template<class Logger>
-  class basic_move_only_allocation_test : public basic_test<checker<Logger, move_only_allocation_extender<Logger>>>
+  template<test_mode Mode>
+  class basic_move_only_allocation_test : public basic_test<checker<Mode, move_only_allocation_extender<Mode>>>
   {
   public:
-    using basic_test<checker<Logger, move_only_allocation_extender<Logger>>>::basic_test;
+    using basic_test<checker<Mode, move_only_allocation_extender<Mode>>>::basic_test;
         
     basic_move_only_allocation_test(const basic_move_only_allocation_test&) = delete;
 
@@ -64,10 +66,7 @@ namespace sequoia::unit_testing
     }
   };
 
-  template<test_mode Mode>
-  using canonical_move_only_allocation_test = basic_move_only_allocation_test<unit_test_logger<Mode>>;
-
-  using move_only_allocation_test                = canonical_move_only_allocation_test<test_mode::standard>;
-  using move_only_allocation_false_negative_test = canonical_move_only_allocation_test<test_mode::false_negative>;
-  using move_only_allocation_false_positive_test = canonical_move_only_allocation_test<test_mode::false_positive>;
+  using move_only_allocation_test                = basic_move_only_allocation_test<test_mode::standard>;
+  using move_only_allocation_false_negative_test = basic_move_only_allocation_test<test_mode::false_negative>;
+  using move_only_allocation_false_positive_test = basic_move_only_allocation_test<test_mode::false_positive>;
 }

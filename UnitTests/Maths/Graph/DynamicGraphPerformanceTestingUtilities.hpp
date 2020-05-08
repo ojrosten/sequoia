@@ -25,7 +25,7 @@ namespace sequoia::unit_testing
     test_mode Mode
   >
   using canonical_graph_performance_operations
-    = basic_graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits, unit_test_logger<Mode>, performance_extender<unit_test_logger<Mode>>>;
+    = basic_graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits, Mode, performance_extender<Mode>>;
 
   template
   <

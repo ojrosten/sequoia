@@ -25,8 +25,8 @@ namespace sequoia::unit_testing::impl
   struct move_only_allocation_actions : allocation_actions
   {};
 
-  template<class Logger, class Container, class... Allocators, class... Predictions>
-  std::optional<Container> check_para_constructor_allocations(std::string_view description, Logger& logger, Container&& y, const Container& yClone, const basic_allocation_info<Container, Allocators, Predictions>&... info)
+  template<test_mode Mode, class Container, class... Allocators, class... Predictions>
+  std::optional<Container> check_para_constructor_allocations(std::string_view description, unit_test_logger<Mode>& logger, Container&& y, const Container& yClone, const basic_allocation_info<Container, Allocators, Predictions>&... info)
   {
     Container u{std::move(y), info.make_allocator()...};
     check_para_move_y_allocation(description, logger, u, std::tuple_cat(make_allocation_checkers(info)...));
@@ -35,8 +35,8 @@ namespace sequoia::unit_testing::impl
     return success ? std::optional<Container>{std::move(u)} : std::nullopt;
   }
 
-  template<class Logger, class Actions, class T, class Mutator, class... Allocators>
-  void check_semantics(std::string_view description, Logger& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, std::tuple<allocation_checker<T, Allocators, move_only_allocation_predictions>...> checkers)
+  template<test_mode Mode, class Actions, class T, class Mutator, class... Allocators>
+  void check_semantics(std::string_view description, unit_test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, std::tuple<allocation_checker<T, Allocators, move_only_allocation_predictions>...> checkers)
   {
     auto fn{
       [description,&logger,&actions,&x,&y,&xClone,&yClone,m{std::move(m)}](auto&&... checkers){

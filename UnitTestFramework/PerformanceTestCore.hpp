@@ -26,9 +26,9 @@ namespace sequoia::unit_testing
     bool passed{};
   };
 
-  template<class Logger, class F, class S>
+  template<test_mode Mode, class F, class S>
   [[nodiscard]]
-  auto check_relative_performance(std::string_view description, Logger& logger, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials, const double num_sds, const std::size_t maxAttempts) -> performance_results<std::invoke_result_t<F>>
+  auto check_relative_performance(std::string_view description, unit_test_logger<Mode>& logger, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials, const double num_sds, const std::size_t maxAttempts) -> performance_results<std::invoke_result_t<F>>
   {      
     using R = std::invoke_result_t<F>;
     static_assert(std::is_same_v<R, std::invoke_result_t<S>>, "Fast/Slow invokables must have same return value");
@@ -125,7 +125,7 @@ namespace sequoia::unit_testing
         
         summary = serializer();
 
-        if((Logger::mode == test_mode::false_positive) ? !results.passed : results.passed)
+        if((unit_test_logger<Mode>::mode == test_mode::false_positive) ? !results.passed : results.passed)
         {
           break;
         }
@@ -137,7 +137,7 @@ namespace sequoia::unit_testing
 
       message.append(summary);
 
-      typename Logger::sentinel r{logger, message};
+      typename unit_test_logger<Mode>::sentinel r{logger, message};
       r.log_performance_check();
 
       if(!results.passed)
@@ -148,11 +148,13 @@ namespace sequoia::unit_testing
       return results;
   }
 
-  template<class Logger>
+  template<test_mode Mode>
   class performance_extender
   {
   public:
-    performance_extender(Logger& logger) : m_Logger{logger} {}
+    constexpr static test_mode mode{Mode};
+
+    performance_extender(unit_test_logger<Mode>& logger) : m_Logger{logger} {}
 
     performance_extender(const performance_extender&) = delete;
     performance_extender(performance_extender&&)      = delete;
@@ -170,11 +172,11 @@ namespace sequoia::unit_testing
     ~performance_extender() = default;
 
   private:
-    Logger& m_Logger;
+    unit_test_logger<Mode>& m_Logger;
   };
 
   template<test_mode mode>
-  using performance_checker = checker<unit_test_logger<mode>, performance_extender<unit_test_logger<mode>>>;
+  using performance_checker = checker<mode, performance_extender<mode>>;
   
   template<test_mode mode>
   using basic_performance_test = basic_test<performance_checker<mode>>;

@@ -17,8 +17,8 @@ namespace sequoia::unit_testing
     using type = data_sharing::data_pool<T, Allocator>;
     using prediction_type = std::initializer_list<std::pair<T, long>>;
     
-    template<class Logger>
-    static void check(std::string_view description, Logger& logger, const type& pool, prediction_type prediction)
+    template<test_mode Mode>
+    static void check(std::string_view description, unit_test_logger<Mode>& logger, const type& pool, prediction_type prediction)
     {
       check_equality(combine_messages(description, "empty"), logger, pool.empty(), prediction.size() == 0);
       check_equality(combine_messages(description, "size"), logger, pool.size(), prediction.size());

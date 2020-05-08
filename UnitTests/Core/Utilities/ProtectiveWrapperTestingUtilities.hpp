@@ -18,8 +18,8 @@ namespace sequoia::unit_testing
   {
     using type = utilities::protective_wrapper<T, std::is_empty_v<T>>;
     
-    template<class Logger>
-    static void check(std::string_view description, Logger& logger, const type& wrapper, const type& prediction)
+    template<test_mode Mode>
+    static void check(std::string_view description, unit_test_logger<Mode>& logger, const type& wrapper, const type& prediction)
     {
       check_equality(description, logger, wrapper.get(), prediction.get());
     }
