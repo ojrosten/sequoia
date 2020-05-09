@@ -43,6 +43,7 @@ namespace sequoia::unit_testing
     static_assert(std::is_same_v<custom_iter_t::reference, int&>);
     static_assert(std::is_same_v<custom_iter_t::const_dereference_type, const int&>);
     
+    
     std::array<int, 3> a{3, 0, 1};
     basic_checks<custom_iter_t>(a.begin(), a.end(), &*a.begin(), "Custom iterator from iterator");
 
@@ -213,8 +214,8 @@ namespace sequoia::unit_testing
 
     using value_type = typename std::iterator_traits<Iter>::value_type;
     using deref_pol = typename CustomIter::dereference_policy;
-        
-    if(!check_equality<int64_t>(LINE(combine_messages(message, "Contract violated")), distance(begin, end), 3))
+
+    if(!check_equality(LINE(combine_messages(message, "Contract violated")), distance(begin, end), long{3}))
       return;
     
     CustomIter i{begin, args...};

@@ -8,7 +8,10 @@
 #pragma once
 
 /*! \file FreeCheckers.hpp
-    \brief Free functions for performing checks, together with the 'checker' class template which wraps the former.
+    \brief Free functions for performing checks, together with the 'checker' class template which wraps them.
+
+    Given a type, T, any reasonable testing framework must provide a mechanism for checking whether or
+    not two instances of T are, in the some sense, the same.
 */
 
 #include "FreeCheckersDetails.hpp"
@@ -59,8 +62,8 @@ namespace sequoia::unit_testing
   template<class T>
   struct string_maker
   {
-    static_assert(is_serializable_v<T>);
-      
+    static_assert(is_serializable_v<T>, "Either provide a specialization of string_maker or a specialization of detailed_equality_checker; the latter will enter a different if constexpr block, avoiding the need for serializing T directly");
+    
     [[nodiscard]]
     static std::string make(const T& val)
     {        
@@ -70,27 +73,10 @@ namespace sequoia::unit_testing
     }
   };
 
-  template<class T, class=std::void_t<>>
-  struct has_string_maker : std::false_type {};
-
-  template<class T>
-  struct has_string_maker<T, std::void_t<decltype(string_maker<T>{})>> : std::true_type {};
-
-  template<class T>
-  constexpr bool has_string_maker_v{has_string_maker<T>::value};
-
   template<class T>
   [[nodiscard]] std::string to_string(const T& value)
   {
-    if constexpr(has_string_maker_v<T>)
-    {
-      return string_maker<T>::make(value);
-    }
-    else
-    {
-      // Use this mechanism to generate type-info in the error message
-      static_assert(dependent_false<T>::value, "Type is not serializable");
-    }
+    return string_maker<T>::make(value);    
   }
 
   template<class T, class... U>
@@ -117,10 +103,10 @@ namespace sequoia::unit_testing
   template<test_mode Mode, class T>
   bool check(std::string_view description, unit_test_logger<Mode>& logger, equality_tag, const T& value, const T& prediction)
   {
-    constexpr bool delegate{has_detailed_equality_checker_v<T> || (is_container_v<T> && !is_serializable_v<T>)};
+    constexpr bool delegate{has_detailed_equality_checker_v<T> || is_container_v<T>};
 
-    static_assert(delegate || is_serializable_v<T> || is_equal_to_comparable_v<T>,
-                  "Provide either a specialization of detailed_equality_checker or string_maker and/or operator==");
+    static_assert(delegate || is_equal_to_comparable_v<T>,
+                  "Provide either a specialization of detailed_equality_checker or ensure operator== exists, together with a specialization of string_maker");
       
     using sentinel = typename unit_test_logger<Mode>::sentinel;      
     sentinel s{logger, add_type_info<T>(description)};
@@ -401,7 +387,7 @@ namespace sequoia::unit_testing
     }
 
     [[nodiscard]]
-    const unit_test_logger<Mode>& logger() noexcept const
+    const unit_test_logger<Mode>& logger() const noexcept 
     {
       return static_cast<const unit_test_logger<Mode>&>(*this);
     }
