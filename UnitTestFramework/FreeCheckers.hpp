@@ -8,7 +8,7 @@
 #pragma once
 
 /*! \file FreeCheckers.hpp
-    \brief Utilities for performing checks within the unit testing framework.
+    \brief Free functions for performing checks, together with the 'checker' class template which wraps the former.
 */
 
 #include "FreeCheckersDetails.hpp"
@@ -144,10 +144,10 @@ namespace sequoia::unit_testing
         {
           auto message{messageGenerator("==", "false")};
           if constexpr(!delegate)
-                        {
-                          message.append("\tObtained : " + to_string(value) + "\n");
-                          message.append("\tPredicted: " + to_string(prediction) + "\n\n");           
-                        }
+          {
+            message.append("\tObtained : " + to_string(value) + "\n");
+            message.append("\tPredicted: " + to_string(prediction) + "\n\n");           
+          }
           logger.log_failure(message);
         }
     }
@@ -282,6 +282,21 @@ namespace sequoia::unit_testing
     return impl::check_range(description, logger, weak_equivalence_tag{}, first, last, predictionFirst, predictionLast);      
   }
 
+  /*! \class checker
+      \brief Exposes elementary check methods, with the option to plug in arbitrary Extenders to compose functionality.
+
+      This class template is templated on the enum class test_mode, together with a variadic set of Extenders.
+
+      In its unextended form, the class is appropriate for plugging into basic_test to generate a base class
+      appropriate for testing free functions. Within the unit test framework various Extenders are defined.
+      For example, there are extensions to test types with regular semantics, types with move-only semantics, to do 
+      performance tests, and more, besides. The template design allows extenders to be conveniently mixed and
+      matched via using declarations.
+
+      Each extender must be initialized with a reference to the unit_test_logger held by the checker.
+      To ensure the correct order of initialization, the unit_test_logger is inherited privately.
+   */
+
   template<test_mode Mode, class... Extenders>
   class checker : private unit_test_logger<Mode>, public Extenders...
   {
@@ -300,19 +315,20 @@ namespace sequoia::unit_testing
     checker& operator=(const checker&) = delete;      
     checker& operator=(checker&&)      = delete;
 
-    template<class T> bool check_equality(std::string_view description, const T& value, const T& prediction)
+    template<class T>
+    bool check_equality(std::string_view description, const T& value, const T& prediction)
     {
       return unit_testing::check_equality(description, logger(), value, prediction);
     }
 
     template<class T, class S, class... U>
-      bool check_equivalence(std::string_view description, const T& value, S&& s, U&&... u)
+    bool check_equivalence(std::string_view description, const T& value, S&& s, U&&... u)
     {
       return unit_testing::check_equivalence(description, logger(), value, std::forward<S>(s), std::forward<U>(u)...);
     }
 
     template<class T, class S, class... U>
-      bool check_weak_equivalence(std::string_view description, const T& value, S&& s, U&&... u)
+    bool check_weak_equivalence(std::string_view description, const T& value, S&& s, U&&... u)
     {
       return unit_testing::check_weak_equivalence(description, logger(), value, std::forward<S>(s), std::forward<U>(u)...);
     }
@@ -323,24 +339,25 @@ namespace sequoia::unit_testing
     }
 
     template<class E, class Fn>
-      bool check_exception_thrown(std::string_view description, Fn&& function)
+    bool check_exception_thrown(std::string_view description, Fn&& function)
     {
       return unit_testing::check_exception_thrown<E>(description, logger(), std::forward<Fn>(function));
     }
 
     template<class Iter, class PredictionIter>
-      bool check_range(std::string_view description, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
+    bool check_range(std::string_view description, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
     {
       return unit_testing::check_range(description, logger(), first, last, predictionFirst, predictionLast);
     }
 
     template<class Stream>
-      friend Stream& operator<<(Stream& os, const checker& checker)
+    friend Stream& operator<<(Stream& os, const checker& checker)
     {
       os << checker.logger();
       return os;
     }
 
+    [[nodiscard]]
     log_summary summary(std::string_view prefix, const log_summary::duration delta) const
     {
       return log_summary{prefix, logger(), delta};
@@ -377,14 +394,16 @@ namespace sequoia::unit_testing
       return {logger(), message};
     }
   private:
-      unit_test_logger<Mode>& logger()
-      {
-        return static_cast<unit_test_logger<Mode>&>(*this);
-      }
+    [[nodiscard]]
+    unit_test_logger<Mode>& logger() noexcept
+    {
+      return static_cast<unit_test_logger<Mode>&>(*this);
+    }
 
-      const unit_test_logger<Mode>& logger() const
-      {
-        return static_cast<const unit_test_logger<Mode>&>(*this);
-      }
+    [[nodiscard]]
+    const unit_test_logger<Mode>& logger() noexcept const
+    {
+      return static_cast<const unit_test_logger<Mode>&>(*this);
+    }
   };
 }
