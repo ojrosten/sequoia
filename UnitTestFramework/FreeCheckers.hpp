@@ -82,13 +82,13 @@ namespace sequoia::unit_testing
   template<class T> constexpr bool has_weak_equivalence_checker_v{class_template_is_instantiable_v<weak_equivalence_checker, T>};
   template<class T> constexpr bool has_detailed_equality_checker_v{class_template_is_instantiable_v<detailed_equality_checker, T>};
 
-  /*! \class string_maker
-      \brief Specialize this class to provide custom serialization of a given class.
+  /*! \class serializer
+      \brief Specialize this class template to provide custom serialization of a given class.
 
    */
   
   template<class T>
-  struct string_maker
+  struct serializer
   {
     static_assert(is_serializable_v<T>);
     
@@ -105,11 +105,11 @@ namespace sequoia::unit_testing
   [[nodiscard]]
   std::string to_string(const T& value)
   {
-    return string_maker<T>::make(value);    
+    return serializer<T>::make(value);    
   }
 
   /*! \class type_info
-      \brief Specialize this class to customize the way in which type info is generated for a given class; this is
+      \brief Specialize this class template to customize the way in which type info is generated for a given class; this is
       particularly useful for class templates, where standard de-mangling may be hard to read!
 
    */
@@ -136,16 +136,25 @@ namespace sequoia::unit_testing
     return combine_messages(description, type_info<T, U...>::make().append("\n"), description.empty() ? "" : "\n");
   }
 
+  // forward declaration so that this may be used by check
+
   template<test_mode Mode, class Iter, class PredictionIter>
   bool check_range(std::string_view description, unit_test_logger<Mode>& logger, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast);
 
+  /*! \brief The workhorse of equality checking, which takes responsibility for reflecting upon types and then dispatching, appropriately. 
+
+      The input type, T, must either be equality comparable or possess a detailed_equality_checker, or both. Generally, it 
+      will be the case that T does indeed overload operator==; generally anything beyond the simplest user-defined types
+      should be furnished with a detailed_equality_checker.
+   */
+  
   template<test_mode Mode, class T>
   bool check(std::string_view description, unit_test_logger<Mode>& logger, equality_tag, const T& value, const T& prediction)
   {
     constexpr bool delegate{has_detailed_equality_checker_v<T> || is_container_v<T>};
 
     static_assert(delegate || is_equal_to_comparable_v<T>,
-                  "Provide either a specialization of detailed_equality_checker or ensure operator== exists, together with a specialization of string_maker");
+                  "Provide either a specialization of detailed_equality_checker or ensure operator== exists, together with a specialization of serializer");
       
     using sentinel = typename unit_test_logger<Mode>::sentinel;      
     sentinel s{logger, add_type_info<T>(description)};
@@ -204,6 +213,14 @@ namespace sequoia::unit_testing
 
     return logger.failures() == priorFailures;
   }
+
+  /*! \brief The workhorse for equivalence checking
+
+      This function will reflect on whether an appropriate specialization of equivalence_checker exists. If so,
+      it will be used and if not it will attempt to interpret T as a range. Only if this fails then a static assertion
+      will terminate compilation.
+
+   */
   
   template<test_mode Mode, class T, class S, class... U>
   bool check(std::string_view description, unit_test_logger<Mode>& logger, equivalence_tag, const T& value, S&& s, U&&... u)
@@ -222,6 +239,14 @@ namespace sequoia::unit_testing
     }
   }
 
+  /*! \brief The workhorse for weak equivalence checking
+
+      This function will reflect on whether an appropriate specialization of weak_equivalence_checker exists. If so,
+      it will be used and if not it will attempt to interpret T as a range. Only if this fails then a static assertion
+      will terminate compilation.
+
+   */
+
   template<test_mode Mode, class T, class S, class... U>
   bool check(std::string_view description, unit_test_logger<Mode>& logger, weak_equivalence_tag, const T& value, S&& s, U&&... u)
   {
@@ -238,7 +263,7 @@ namespace sequoia::unit_testing
       static_assert(dependent_false<T>::value, "Unable to find an appropriate specialization of the weak_equivalence_checker");
     }
   }
-    
+
   template<test_mode Mode, class T> bool check_equality(std::string_view description, unit_test_logger<Mode>& logger, const T& value, const T& prediction)
   {
     return check(description, logger, equality_tag{}, value, prediction);

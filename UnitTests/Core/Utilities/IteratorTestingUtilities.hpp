@@ -12,7 +12,7 @@
 namespace sequoia::unit_testing
 {
   template<class Iterator, class DereferencePolicy>
-  struct string_maker<utilities::iterator<Iterator, DereferencePolicy>>
+  struct serializer<utilities::iterator<Iterator, DereferencePolicy>>
   {
     using iter_type = utilities::iterator<Iterator, DereferencePolicy>;
     
