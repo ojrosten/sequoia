@@ -11,25 +11,65 @@
     \brief Free functions for performing checks, together with the 'checker' class template which wraps them.
 
     Given a type, T, any reasonable testing framework must provide a mechanism for checking whether or
-    not two instances of T are, in the some sense, the same.
+    not two instances of T are, in some sense, the same. If the type implements operator== then it
+    is natural to utilize this. However, there is much more to the story. First of all, if this check
+    fails then, in order to be useful, there must be some way of serializing the state of T. This may
+    be done by specializing the class template string_maker for cases where operator<< is not appropriately
+    overloaded.
+
+    However, there is an alternative which may be superior. Consider trying to implement vector.
+    This class has various const accessors suggesting that, if operator== returns false, then the
+    accessors can be used to probe the exact nature of the inequality. To this end, a class template
+    detailed_equality_checker is defined. Specializations perform a detailed check of the equality
+    of the state of two supposedly equal instance of a class. Note that there is no need for the
+    detailed_equality_checker to include checks of operator== or operator!=, since these will be done,
+    regardless. Indeed, the detailed_equality_checker will be triggered independently of whether operator==
+    fails since either the latter or the accesors may have bugs and introducing unnecessary dependencies
+    would reduce the fidelity of the testing framewrok.
+
+    If a detailed_equality_checker is supplied, then compile-time logic will ignore any attempt to
+    serialize objects of type T. Typically, clients may expect a notification that operator== has returned
+    false (and, for consistency, notification that operator!= has returned true). There will then be a series of
+    subsequent checks which will reveal the precise nature of the failure. For example, for vectors, one
+    will be told whether the sizes differ and, if not, the element which is causing the difference
+    between the two supposedly equal instances. If the vector holds a user-defined type then, so long as
+    this has its own detailed_equality_checker, the process will continue until a type is reached without
+    a detailed_equality_checker; typically this will be a sufficiently simple type that serialization is
+    the appropriate solution (as is the case for may built-in types).
+
+    Suppose a client wishes to compare instance of some_container<T>. If some_container has a specialization
+    of detailed_equality_checker then this will be used; if it does not then reflection is used to
+    determine if some_container overloads begin and end. If so, then it is treated as a range and
+    all that is required is to implement a detailed_equality_checker for T (unless serialization is prefered).
+    If some_container is user-defined, it is wisest to provide an overload of the detailed_equality_checker.
+    However, if the container is part of std, it is probably safe to assume it works correctly and so
+    instead effort can be directed focused on T.
+
+    With this in mind, imagine creating a container. One of the first things one may wish to do is to check
+    that it is correctly initialized. It would be a mistake to use the detailed_equality_checker for this
+    since, to do so a second, identical instance would need to be created. This is circular and prone to
+    false positives. Conseuqently, the testing framework also defines a pair of class templates that
+    complement detailed_equality_checker: equivalence_checker and weak_equivalence_checker. We may
+    consider a value for std::vector to be equivalent to an initializer_list in the sense that they hold (at
+    the relevant point of the program) the same elements. Thus, a specialization
+    equivalence_checker<vector, initializer_list> is supplied. Of course, there is more to a vector than the
+    values it holds: there is the entire allocator framework too. In this case, however, it is not part of
+    the logical structure and, indeed, the state of the allocator is not considered in vector::operator==.
+    Thus it is philosphically reasonable to consider equivalence of vector and initializer_list. However,
+    sometimes is is useful to check the equivalence of the state of an instance of T to a proper subset of
+    the logical state of an instance of some S. For this purpose, the class template
+    weak_equivalence_checker is supplied.
+    
+    Both the equivalence_checker and its weak counterpart can be fed >=2 template type arguments. While for
+    a vector we would just feed in two types (vector and initializer_list), in some cases we may need more.
+    For example, a graph has both nodes and edges and so a graph may be consdidered equivalent to two
+    types representing these structures.
 */
 
 #include "FreeCheckersDetails.hpp"
 
 namespace sequoia::unit_testing
 {  
-  template <class, template<class...> class T, class... Args>
-  struct template_class_is_instantiable : std::false_type
-  {};
-
-  template <template<class...> class T, class... Args>
-  struct template_class_is_instantiable<std::void_t<decltype(T<Args...>{})>, T, Args...>
-    : std::true_type
-  {};
-
-  template <template<class...> class T, class... Args>
-  constexpr bool template_class_is_instantiable_v{template_class_is_instantiable<std::void_t<>, T, Args...>::value};
-
   template<class T> struct detailed_equality_checker;
   template<class T, class... Us> struct equivalence_checker;
   template<class T, class... Us> struct weak_equivalence_checker;
@@ -38,31 +78,19 @@ namespace sequoia::unit_testing
   struct equivalence_tag{};
   struct weak_equivalence_tag{};
   
-  template<class T> constexpr bool has_equivalence_checker_v{template_class_is_instantiable_v<equivalence_checker, T>};
-  template<class T> constexpr bool has_weak_equivalence_checker_v{template_class_is_instantiable_v<weak_equivalence_checker, T>};
-  template<class T> constexpr bool has_detailed_equality_checker_v{template_class_is_instantiable_v<detailed_equality_checker, T>};
+  template<class T> constexpr bool has_equivalence_checker_v{class_template_is_instantiable_v<equivalence_checker, T>};
+  template<class T> constexpr bool has_weak_equivalence_checker_v{class_template_is_instantiable_v<weak_equivalence_checker, T>};
+  template<class T> constexpr bool has_detailed_equality_checker_v{class_template_is_instantiable_v<detailed_equality_checker, T>};
+
+  /*! \class string_maker
+      \brief Specialize this class to provide custom serialization of a given class.
+
+   */
   
-  template<class T, class=std::void_t<>>
-  struct is_serializable : public std::false_type
-  {};
-
-  // This makelval hack is to work around a bug in the XCode 10.2 stl implementation:
-  // ostream line 1036. Without this, e.g. decltype(std::stringstream{} << std::vector<int>{})
-  // deduces stringstream&
-  template<class T>
-  std::add_lvalue_reference_t<T> makelval() noexcept;
-    
-  template<class T>
-  struct is_serializable<T, std::void_t<decltype(makelval<std::stringstream>() << std::declval<T>())>>
-    : public std::true_type
-  {};
-
-  template<class T> constexpr bool is_serializable_v{is_serializable<T>::value};
-
   template<class T>
   struct string_maker
   {
-    static_assert(is_serializable_v<T>, "Either provide a specialization of string_maker or a specialization of detailed_equality_checker; the latter will enter a different if constexpr block, avoiding the need for serializing T directly");
+    static_assert(is_serializable_v<T>);
     
     [[nodiscard]]
     static std::string make(const T& val)
@@ -74,27 +102,38 @@ namespace sequoia::unit_testing
   };
 
   template<class T>
-  [[nodiscard]] std::string to_string(const T& value)
+  [[nodiscard]]
+  std::string to_string(const T& value)
   {
     return string_maker<T>::make(value);    
   }
 
-  template<class T, class... U>
-  [[nodiscard]]
-  std::string make_type_info()
-  {        
-    std::string info{demangle<T>()};
-    if constexpr(sizeof...(U) > 0)
-      info.append("\n;").append(make_type_info<U...>());
+  /*! \class type_info
+      \brief Specialize this class to customize the way in which type info is generated for a given class; this is
+      particularly useful for class templates, where standard de-mangling may be hard to read!
 
-    return info;
-  }
+   */
+
+  template<class T, class... U>
+  struct type_info
+  {
+    [[nodiscard]]
+    static std::string make()
+    {
+      auto info{std::string{'['}.append(demangle<T>())};
+      if constexpr(sizeof...(U) > 0)
+        info.append("\n;").append(type_info<U...>::make());
+
+      info += ']';
+      return info;
+    }
+  };
 
   template<class T, class... U>
   [[nodiscard]]
   std::string add_type_info(std::string_view description)
   {
-    return combine_messages(description, "[" + make_type_info<T, U...>() + "]\n", description.empty() ? "" : "\n");
+    return combine_messages(description, type_info<T, U...>::make().append("\n"), description.empty() ? "" : "\n");
   }
 
   template<test_mode Mode, class Iter, class PredictionIter>
@@ -169,7 +208,7 @@ namespace sequoia::unit_testing
   template<test_mode Mode, class T, class S, class... U>
   bool check(std::string_view description, unit_test_logger<Mode>& logger, equivalence_tag, const T& value, S&& s, U&&... u)
   {
-    if constexpr(template_class_is_instantiable_v<equivalence_checker, T>)
+    if constexpr(class_template_is_instantiable_v<equivalence_checker, T>)
     {      
       return impl::check<equivalence_checker<T>>(description, logger, value, std::forward<S>(s), std::forward<U>(u)...);
     }
@@ -186,7 +225,7 @@ namespace sequoia::unit_testing
   template<test_mode Mode, class T, class S, class... U>
   bool check(std::string_view description, unit_test_logger<Mode>& logger, weak_equivalence_tag, const T& value, S&& s, U&&... u)
   {
-    if constexpr(template_class_is_instantiable_v<weak_equivalence_checker, T>)
+    if constexpr(class_template_is_instantiable_v<weak_equivalence_checker, T>)
     {      
       return impl::check<weak_equivalence_checker<T>>(description, logger, value, std::forward<S>(s), std::forward<U>(u)...);
     }

@@ -44,5 +44,9 @@ namespace sequoia::unit_testing
     void test_has_default_constructor();
 
     void test_has_allocator_type();
+
+    void test_serializability();
+
+    void test_class_template_instantantiability();
   };
 }

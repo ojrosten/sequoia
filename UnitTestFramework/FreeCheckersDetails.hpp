@@ -49,14 +49,16 @@ namespace sequoia::unit_testing::impl
     bool equal{true};
 
     using std::distance;
+    using std::advance;
+
     const auto predictedSize{distance(predictionFirst, predictionLast)};
     if(check_equality(combine_messages(description, "Container size wrong", "\n"), logger, distance(first, last), predictedSize))
     {
       auto predictionIter{predictionFirst};
       auto iter{first};
-      for(; predictionIter != predictionLast; ++predictionIter, ++iter)
+      for(; predictionIter != predictionLast; advance(predictionIter, 1), advance(iter, 1))
       {
-        std::string dist{std::to_string(std::distance(predictionFirst, predictionIter)).append("\n")};
+        std::string dist{std::to_string(distance(predictionFirst, predictionIter)).append("\n")};
         if(!check(combine_messages(description, "element ", "\n").append(std::move(dist)), logger, tag, *iter, *predictionIter)) equal = false;
       }
     }

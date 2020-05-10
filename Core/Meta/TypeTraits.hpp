@@ -191,6 +191,45 @@ namespace sequoia
   template<class T>
   using is_allocator_t = typename is_allocator<T>::type;
 
+  // is_serializable
+
+  // This makelval hack is to work around a bug in the XCode 10.2 stl implementation:
+  // ostream line 1036. Without this, e.g. decltype(std::stringstream{} << std::vector<int>{})
+  // deduces stringstream&
+  template<class T>
+  std::add_lvalue_reference_t<T> makelval() noexcept;
+
+  template<class T, class=std::void_t<>>
+  struct is_serializable : public std::false_type
+  {};
+    
+  template<class T>
+  struct is_serializable<T, std::void_t<decltype(makelval<std::stringstream>() << std::declval<T>())>>
+    : public std::true_type
+  {};
+
+  template<class T> constexpr bool is_serializable_v{is_serializable<T>::value};
+
+  template<class T>
+  using is_serializable_t = typename is_serializable<T>::type;
+
+  // is_class_template_instantiable
+
+  template <class, template<class...> class T, class... Args>
+  struct class_template_is_instantiable : std::false_type
+  {};
+
+  template <template<class...> class T, class... Args>
+  struct class_template_is_instantiable<std::void_t<decltype(T<Args...>{})>, T, Args...>
+    : std::true_type
+  {};
+
+  template <template<class...> class T, class... Args>
+  constexpr bool class_template_is_instantiable_v{class_template_is_instantiable<std::void_t<>, T, Args...>::value};
+
+  template <template<class...> class T, class... Args>
+  using class_template_is_instantiable_t = typename class_template_is_instantiable<std::void_t<>, T, Args...>::type;
+
   // has_default_constructor
 
   template<class T, class = std::void_t<>>

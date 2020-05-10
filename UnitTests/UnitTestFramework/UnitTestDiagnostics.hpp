@@ -39,7 +39,6 @@ namespace sequoia:: unit_testing
   private:
     void run_tests() final;
 
-    void test_meta();
     void basic_tests();
     void test_container_checks();
     void test_mixed();

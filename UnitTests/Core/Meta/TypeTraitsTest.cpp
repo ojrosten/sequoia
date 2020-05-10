@@ -22,6 +22,23 @@ namespace sequoia::unit_testing
     return __FILE__;
   }
 
+  struct serializable
+  {
+    template<class Stream>
+    friend Stream& operator<<(Stream& s, const serializable&)
+    {
+      return s;
+    }
+  };
+
+  struct non_serializable
+  {};
+
+  template<class> struct foo;
+
+  template<>
+  struct foo<int> {};
+
   void type_traits_test::run_tests()
   {
     test_variadic_traits();
@@ -36,6 +53,8 @@ namespace sequoia::unit_testing
     test_is_allocator();
     test_has_default_constructor();
     test_has_allocator_type();
+    test_serializability();
+    test_class_template_instantantiability();
   }
 
   void type_traits_test::test_variadic_traits()
@@ -706,6 +725,48 @@ namespace sequoia::unit_testing
 
     check(LINE(""), []() {
         static_assert(!has_allocator_type_v<double>);
+        return true;
+      }()
+    );
+  }
+
+  void type_traits_test::test_serializability()
+  {
+    
+    check(LINE("ints are serializable"), []() {
+        static_assert(is_serializable_v<int>);
+        static_assert(std::is_same_v<is_serializable_t<int>, std::true_type>);
+        return true;
+      }()
+    );
+
+    check(LINE("Serializable class is serializable"), []() {
+        static_assert(is_serializable_v<serializable>);
+        static_assert(std::is_same_v<is_serializable_t<serializable>, std::true_type>);
+        return true;
+      }()
+    );
+
+    check(LINE("Non-serializable is not serializable"), []() {
+        static_assert(!is_serializable_v<non_serializable>);
+        static_assert(!std::is_same_v<is_serializable_t<non_serializable>, std::true_type>);
+        return true;
+      }()
+    );
+  }
+
+  void type_traits_test::test_class_template_instantantiability()
+  {
+    check(LINE("class template foo instantialble with int"), []() {
+        static_assert(class_template_is_instantiable_v<foo, int>);
+        static_assert(std::is_same_v<class_template_is_instantiable_t<foo, int>, std::true_type>);
+        return true;
+      }()
+    );
+
+    check(LINE("class template foo not instantialble with double int"), []() {
+        static_assert(!class_template_is_instantiable_v<foo, double>);
+        static_assert(std::is_same_v<class_template_is_instantiable_t<foo, double>, std::false_type>);
         return true;
       }()
     );

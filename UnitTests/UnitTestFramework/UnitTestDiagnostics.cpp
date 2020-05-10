@@ -13,19 +13,7 @@
 #include <set>
 
 namespace sequoia::unit_testing
-{
-  struct serializable
-  {
-    template<class Stream>
-    friend Stream& operator<<(Stream& s, const serializable&)
-    {
-      return s;
-    }
-  };
-
-  struct non_serializable
-  {};
-  
+{  
   template<class T>
   struct weak_equivalence_checker<perfectly_normal_beast<T>>
   {
@@ -150,31 +138,12 @@ namespace sequoia::unit_testing
 
   void false_negative_diagnostics::run_tests()
   {
-    test_meta();
     basic_tests();
     test_container_checks();
     test_mixed();
     test_regular_semantics();
     test_equivalence_checks();
     test_weak_equivalence_checks();
-  }
-
-  void false_negative_diagnostics::test_meta()
-  {
-    check(LINE("ints are serializable"), []() {
-        static_assert(is_serializable_v<int>);
-        return true;
-      }());
-
-     check(LINE("Serializable class is serializable"), []() {
-        static_assert(is_serializable_v<serializable>);
-        return true;
-      }());
-
-     check(LINE("Non-serializable is not serializable"), []() {
-        static_assert(!is_serializable_v<non_serializable>);
-        return true;
-      }());
   }
 
   void false_negative_diagnostics::basic_tests()
