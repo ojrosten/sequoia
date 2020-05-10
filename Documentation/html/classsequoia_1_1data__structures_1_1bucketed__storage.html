@@ -81,12 +81,15 @@ Public Types</h2></td></tr>
 <tr class="memitem:a1633f9b1d5f06c47836422d53337660d"><td class="memItemLeft" align="right" valign="top"><a id="a1633f9b1d5f06c47836422d53337660d"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>value_type</b> = T</td></tr>
 <tr class="separator:a1633f9b1d5f06c47836422d53337660d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adf976cf9199b6656950a0f9a1acc5d9b"><td class="memItemLeft" align="right" valign="top"><a id="adf976cf9199b6656950a0f9a1acc5d9b"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>size_type</b> = typename bucket_type::size_type</td></tr>
-<tr class="separator:adf976cf9199b6656950a0f9a1acc5d9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad673917f1b1abae3c43352addf9579c8"><td class="memItemLeft" align="right" valign="top"><a id="ad673917f1b1abae3c43352addf9579c8"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>size_type</b> = typename storage_type::size_type</td></tr>
+<tr class="separator:ad673917f1b1abae3c43352addf9579c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a695dfb013bf7113a9d89977b3e2ba19b"><td class="memItemLeft" align="right" valign="top"><a id="a695dfb013bf7113a9d89977b3e2ba19b"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>index_type</b> = size_type</td></tr>
 <tr class="separator:a695dfb013bf7113a9d89977b3e2ba19b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3a5b4551b9c1b48145b711ebf4a6efa"><td class="memItemLeft" align="right" valign="top"><a id="ac3a5b4551b9c1b48145b711ebf4a6efa"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>allocator_type</b> = typename storage_type::allocator_type</td></tr>
+<tr class="separator:ac3a5b4551b9c1b48145b711ebf4a6efa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a31c8ba7d81ca8a4cefa9ca7e186d3fe5"><td class="memItemLeft" align="right" valign="top"><a id="a31c8ba7d81ca8a4cefa9ca7e186d3fe5"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>sharing_policy_type</b> = SharingPolicy</td></tr>
 <tr class="separator:a31c8ba7d81ca8a4cefa9ca7e186d3fe5"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -105,21 +108,36 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>const_reverse_partit
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a53d966480f795dd004b847185cc1cc94"><td class="memItemLeft" align="right" valign="top"><a id="a53d966480f795dd004b847185cc1cc94"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>bucketed_storage</b> (std::initializer_list&lt; std::initializer_list&lt; T &gt;&gt; list)</td></tr>
-<tr class="separator:a53d966480f795dd004b847185cc1cc94"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a05c3e7312c5d6939c44148a39f70e543"><td class="memItemLeft" align="right" valign="top"><a id="a05c3e7312c5d6939c44148a39f70e543"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>bucketed_storage</b> (const allocator_type &amp;allocator) noexcept</td></tr>
+<tr class="separator:a05c3e7312c5d6939c44148a39f70e543"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe129f422e60c078ea0bac1eb7eff548"><td class="memItemLeft" align="right" valign="top"><a id="afe129f422e60c078ea0bac1eb7eff548"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>bucketed_storage</b> (std::initializer_list&lt; std::initializer_list&lt; T &gt;&gt; list, const allocator_type &amp;allocator=allocator_type{})</td></tr>
+<tr class="separator:afe129f422e60c078ea0bac1eb7eff548"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adf21ba4e27d89e6f0f06d9c9032f34b7"><td class="memItemLeft" align="right" valign="top"><a id="adf21ba4e27d89e6f0f06d9c9032f34b7"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>bucketed_storage</b> (const <a class="el" href="classsequoia_1_1data__structures_1_1bucketed__storage.html">bucketed_storage</a> &amp;in)</td></tr>
 <tr class="separator:adf21ba4e27d89e6f0f06d9c9032f34b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb64b79d1213361fb22a2233f984d467"><td class="memItemLeft" align="right" valign="top"><a id="adb64b79d1213361fb22a2233f984d467"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>bucketed_storage</b> (const <a class="el" href="classsequoia_1_1data__structures_1_1bucketed__storage.html">bucketed_storage</a> &amp;in, const allocator_type &amp;allocator)</td></tr>
+<tr class="separator:adb64b79d1213361fb22a2233f984d467"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acfd91a8dbfd9a083ebe792f1ee31056c"><td class="memItemLeft" align="right" valign="top"><a id="acfd91a8dbfd9a083ebe792f1ee31056c"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>bucketed_storage</b> (<a class="el" href="classsequoia_1_1data__structures_1_1bucketed__storage.html">bucketed_storage</a> &amp;&amp;in) noexcept=default</td></tr>
 <tr class="separator:acfd91a8dbfd9a083ebe792f1ee31056c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a302fe425b8ff743772a2f599af65aab9"><td class="memItemLeft" align="right" valign="top"><a id="a302fe425b8ff743772a2f599af65aab9"></a>
-<a class="el" href="classsequoia_1_1data__structures_1_1bucketed__storage.html">bucketed_storage</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="classsequoia_1_1data__structures_1_1bucketed__storage.html">bucketed_storage</a> &amp;&amp;) noexcept=default</td></tr>
-<tr class="separator:a302fe425b8ff743772a2f599af65aab9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af21e11367f4e51ec43112f4766ef3648"><td class="memItemLeft" align="right" valign="top"><a id="af21e11367f4e51ec43112f4766ef3648"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>bucketed_storage</b> (<a class="el" href="classsequoia_1_1data__structures_1_1bucketed__storage.html">bucketed_storage</a> &amp;&amp;in, const allocator_type &amp;allocator)</td></tr>
+<tr class="separator:af21e11367f4e51ec43112f4766ef3648"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af1b7b31b4ed5de3c268d6dd4b0b4356f"><td class="memItemLeft" align="right" valign="top"><a id="af1b7b31b4ed5de3c268d6dd4b0b4356f"></a>
+<a class="el" href="classsequoia_1_1data__structures_1_1bucketed__storage.html">bucketed_storage</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="classsequoia_1_1data__structures_1_1bucketed__storage.html">bucketed_storage</a> &amp;&amp;in)=default</td></tr>
+<tr class="separator:af1b7b31b4ed5de3c268d6dd4b0b4356f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aedc8bc3039e76dff863be031b1ae0c82"><td class="memItemLeft" align="right" valign="top"><a id="aedc8bc3039e76dff863be031b1ae0c82"></a>
 <a class="el" href="classsequoia_1_1data__structures_1_1bucketed__storage.html">bucketed_storage</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="classsequoia_1_1data__structures_1_1bucketed__storage.html">bucketed_storage</a> &amp;in)</td></tr>
 <tr class="separator:aedc8bc3039e76dff863be031b1ae0c82"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c8941cf1069b01e12f546876f02cfea"><td class="memItemLeft" align="right" valign="top"><a id="a6c8941cf1069b01e12f546876f02cfea"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>swap</b> (<a class="el" href="classsequoia_1_1data__structures_1_1bucketed__storage.html">bucketed_storage</a> &amp;other) noexcept(noexcept(std::swap(m_Buckets, other.m_Buckets)))</td></tr>
+<tr class="separator:a6c8941cf1069b01e12f546876f02cfea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1dc2e5aea3d2d2ffa4ec296f40a6ea7b"><td class="memItemLeft" align="right" valign="top"><a id="a1dc2e5aea3d2d2ffa4ec296f40a6ea7b"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>empty</b> () const noexcept</td></tr>
+<tr class="separator:a1dc2e5aea3d2d2ffa4ec296f40a6ea7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac690e3dc25e66bda98bab99e751b1893"><td class="memItemLeft" align="right" valign="top"><a id="ac690e3dc25e66bda98bab99e751b1893"></a>
 size_type&#160;</td><td class="memItemRight" valign="bottom"><b>size</b> () const</td></tr>
 <tr class="separator:ac690e3dc25e66bda98bab99e751b1893"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -129,15 +147,18 @@ size_type&#160;</td><td class="memItemRight" valign="bottom"><b>num_partitions</
 <tr class="memitem:a0d4e14ddd17107acf99efa82343ad21f"><td class="memItemLeft" align="right" valign="top"><a id="a0d4e14ddd17107acf99efa82343ad21f"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>swap_partitions</b> (const size_type i, const size_type j)</td></tr>
 <tr class="separator:a0d4e14ddd17107acf99efa82343ad21f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a55ebdb60fe37858d58207e9b94b108f8"><td class="memItemLeft" align="right" valign="top"><a id="a55ebdb60fe37858d58207e9b94b108f8"></a>
+allocator_type&#160;</td><td class="memItemRight" valign="bottom"><b>get_allocator</b> () const</td></tr>
+<tr class="separator:a55ebdb60fe37858d58207e9b94b108f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acd1f8822fe313b651188aaa3ef3e8867"><td class="memItemLeft" align="right" valign="top"><a id="acd1f8822fe313b651188aaa3ef3e8867"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>add_slot</b> ()</td></tr>
 <tr class="separator:acd1f8822fe313b651188aaa3ef3e8867"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af9fe40058d414ed6431f7b76de09f177"><td class="memItemLeft" align="right" valign="top"><a id="af9fe40058d414ed6431f7b76de09f177"></a>
-size_type&#160;</td><td class="memItemRight" valign="bottom"><b>insert_slot</b> (const size_type pos)</td></tr>
-<tr class="separator:af9fe40058d414ed6431f7b76de09f177"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a07de442f4372d2074c8864c0dbe628ae"><td class="memItemLeft" align="right" valign="top"><a id="a07de442f4372d2074c8864c0dbe628ae"></a>
-size_type&#160;</td><td class="memItemRight" valign="bottom"><b>erase_slot</b> (const size_type n)</td></tr>
-<tr class="separator:a07de442f4372d2074c8864c0dbe628ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aadd2ac91a0a78d4d2e85a4eb88c2d3f1"><td class="memItemLeft" align="right" valign="top"><a id="aadd2ac91a0a78d4d2e85a4eb88c2d3f1"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>insert_slot</b> (const size_type pos)</td></tr>
+<tr class="separator:aadd2ac91a0a78d4d2e85a4eb88c2d3f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa55f877298fc91cc5e8ae4161d5a32aa"><td class="memItemLeft" align="right" valign="top"><a id="aa55f877298fc91cc5e8ae4161d5a32aa"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>erase_slot</b> (const size_type n)</td></tr>
+<tr class="separator:aa55f877298fc91cc5e8ae4161d5a32aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a28629db63314232c647f0f33c36021db"><td class="memItemLeft" align="right" valign="top"><a id="a28629db63314232c647f0f33c36021db"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>reserve_partition</b> (const size_type partition, const size_type size)</td></tr>
 <tr class="separator:a28629db63314232c647f0f33c36021db"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -234,6 +255,12 @@ static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>thro
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
 Friends</h2></td></tr>
+<tr class="memitem:a5340821c92b106e0c3e9960b9235d08a"><td class="memItemLeft" align="right" valign="top"><a id="a5340821c92b106e0c3e9960b9235d08a"></a>
+struct&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::impl::assignment_helper</b></td></tr>
+<tr class="separator:a5340821c92b106e0c3e9960b9235d08a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5fc15e4a2cfee4b3b1884dea2eca1572"><td class="memItemLeft" align="right" valign="top"><a id="a5fc15e4a2cfee4b3b1884dea2eca1572"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>swap</b> (<a class="el" href="classsequoia_1_1data__structures_1_1bucketed__storage.html">bucketed_storage</a> &amp;lhs, <a class="el" href="classsequoia_1_1data__structures_1_1bucketed__storage.html">bucketed_storage</a> &amp;rhs) noexcept(noexcept(lhs.swap(rhs)))</td></tr>
+<tr class="separator:a5fc15e4a2cfee4b3b1884dea2eca1572"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3891515691aad3068910b9f5d32406e3"><td class="memItemLeft" align="right" valign="top"><a id="a3891515691aad3068910b9f5d32406e3"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="classsequoia_1_1data__structures_1_1bucketed__storage.html">bucketed_storage</a> &amp;lhs, const <a class="el" href="classsequoia_1_1data__structures_1_1bucketed__storage.html">bucketed_storage</a> &amp;rhs) noexcept</td></tr>
 <tr class="separator:a3891515691aad3068910b9f5d32406e3"><td class="memSeparator" colspan="2">&#160;</td></tr>

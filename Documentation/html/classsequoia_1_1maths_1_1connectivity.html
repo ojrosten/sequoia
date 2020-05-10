@@ -117,6 +117,12 @@ constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>connectivity</b>
 <tr class="memitem:a4efa2e3d7aa4ffc67fb6ab91dd32efff"><td class="memItemLeft" align="right" valign="top"><a id="a4efa2e3d7aa4ffc67fb6ab91dd32efff"></a>
 constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>connectivity</b> (const <a class="el" href="classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;in)</td></tr>
 <tr class="separator:a4efa2e3d7aa4ffc67fb6ab91dd32efff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f7d79907143583e167171f1d7b0088a"><td class="memItemLeft" align="right" valign="top"><a id="a4f7d79907143583e167171f1d7b0088a"></a>
+constexpr size_type&#160;</td><td class="memItemRight" valign="bottom"><b>order</b> () const noexcept</td></tr>
+<tr class="separator:a4f7d79907143583e167171f1d7b0088a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0ac9e61d5f454b5535ade5879dbbb730"><td class="memItemLeft" align="right" valign="top"><a id="a0ac9e61d5f454b5535ade5879dbbb730"></a>
+constexpr size_type&#160;</td><td class="memItemRight" valign="bottom"><b>size</b> () const noexcept</td></tr>
+<tr class="separator:a0ac9e61d5f454b5535ade5879dbbb730"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a212dc2a0b1ec89de8e63f52b24682668"><td class="memItemLeft" align="right" valign="top"><a id="a212dc2a0b1ec89de8e63f52b24682668"></a>
 constexpr const_edge_iterator&#160;</td><td class="memItemRight" valign="bottom"><b>cbegin_edges</b> (const edge_index_type node) const</td></tr>
 <tr class="separator:a212dc2a0b1ec89de8e63f52b24682668"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -166,49 +172,75 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_storage_type</b
 <tr class="memitem:a72984214790f4ec33679d17dff99921e"><td class="memItemLeft" align="right" valign="top"><a id="a72984214790f4ec33679d17dff99921e"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_iterator</b> = typename edge_storage_type::partition_iterator</td></tr>
 <tr class="separator:a72984214790f4ec33679d17dff99921e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d245e5488b57818fa570cea117edc80"><td class="memItemLeft" align="right" valign="top"><a id="a3d245e5488b57818fa570cea117edc80"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>init_t</b> = std::initializer_list&lt; std::initializer_list&lt; edge_init_type &gt; &gt;</td></tr>
+<tr class="separator:a3d245e5488b57818fa570cea117edc80"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:ae10c05dc1914bea217465325fcc7069a"><td class="memItemLeft" align="right" valign="top"><a id="ae10c05dc1914bea217465325fcc7069a"></a>
-constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>connectivity</b> (<a class="el" href="classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;&amp;in) noexcept=default</td></tr>
-<tr class="separator:ae10c05dc1914bea217465325fcc7069a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a16da8e21a794b8c5e4c5394463cd787d"><td class="memItemLeft" align="right" valign="top"><a id="a16da8e21a794b8c5e4c5394463cd787d"></a>
-constexpr <a class="el" href="classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;&amp;in) noexcept=default</td></tr>
-<tr class="separator:a16da8e21a794b8c5e4c5394463cd787d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a152c1b8d34c71de9826fca6179d2ad"><td class="memTemplParams" colspan="2"><a id="a7a152c1b8d34c71de9826fca6179d2ad"></a>
+template&lt;class Allocator , class... Allocators, std::enable_if_t&lt;(sizeof...(Allocators) &gt; 0&gt; </td></tr>
+<tr class="memitem:a7a152c1b8d34c71de9826fca6179d2ad"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>connectivity</b> (const Allocator &amp;a, const Allocators &amp;... as)</td></tr>
+<tr class="separator:a7a152c1b8d34c71de9826fca6179d2ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a434a287961e967ab9a0705101ab864c3"><td class="memTemplParams" colspan="2"><a id="a434a287961e967ab9a0705101ab864c3"></a>
+template&lt;class Allocator , class... Allocators&gt; </td></tr>
+<tr class="memitem:a434a287961e967ab9a0705101ab864c3"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>connectivity</b> (init_t edges, const Allocator &amp;a, const Allocators &amp;... as)</td></tr>
+<tr class="separator:a434a287961e967ab9a0705101ab864c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b41d909581e130d5153c387b2f6ffcc"><td class="memTemplParams" colspan="2"><a id="a2b41d909581e130d5153c387b2f6ffcc"></a>
+template&lt;class Allocator , class... Allocators&gt; </td></tr>
+<tr class="memitem:a2b41d909581e130d5153c387b2f6ffcc"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>connectivity</b> (const <a class="el" href="classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;c, const Allocator &amp;a, const Allocators &amp;... as)</td></tr>
+<tr class="separator:a2b41d909581e130d5153c387b2f6ffcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1691970e9c965c02a13cdf4e1bd4a535"><td class="memItemLeft" align="right" valign="top"><a id="a1691970e9c965c02a13cdf4e1bd4a535"></a>
+constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>connectivity</b> (<a class="el" href="classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;&amp;) noexcept=default</td></tr>
+<tr class="separator:a1691970e9c965c02a13cdf4e1bd4a535"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aba99a817239692d16290755b9a73cd15"><td class="memTemplParams" colspan="2"><a id="aba99a817239692d16290755b9a73cd15"></a>
+template&lt;class Allocator , class... Allocators&gt; </td></tr>
+<tr class="memitem:aba99a817239692d16290755b9a73cd15"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>connectivity</b> (<a class="el" href="classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;&amp;c, const Allocator &amp;a, const Allocators &amp;... as)</td></tr>
+<tr class="separator:aba99a817239692d16290755b9a73cd15"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9f4eb46de06c96d95e35357ba32f3846"><td class="memItemLeft" align="right" valign="top"><a id="a9f4eb46de06c96d95e35357ba32f3846"></a>
+constexpr <a class="el" href="classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;&amp;)=default</td></tr>
+<tr class="separator:a9f4eb46de06c96d95e35357ba32f3846"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3493dd0d2822cf9bcdd4d3937e333a5a"><td class="memItemLeft" align="right" valign="top"><a id="a3493dd0d2822cf9bcdd4d3937e333a5a"></a>
 constexpr <a class="el" href="classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;in)</td></tr>
 <tr class="separator:a3493dd0d2822cf9bcdd4d3937e333a5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a744a134f1f5f59fa689f32bf49eb05b1"><td class="memItemLeft" align="right" valign="top"><a id="a744a134f1f5f59fa689f32bf49eb05b1"></a>
-constexpr size_type&#160;</td><td class="memItemRight" valign="bottom"><b>order_impl</b> () const noexcept</td></tr>
-<tr class="separator:a744a134f1f5f59fa689f32bf49eb05b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6bf1085a86491e8d872215d5318bca06"><td class="memItemLeft" align="right" valign="top"><a id="a6bf1085a86491e8d872215d5318bca06"></a>
-constexpr size_type&#160;</td><td class="memItemRight" valign="bottom"><b>size_impl</b> () const noexcept</td></tr>
-<tr class="separator:a6bf1085a86491e8d872215d5318bca06"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ac29e3f6f5e717fb07f77e67942ccce"><td class="memItemLeft" align="right" valign="top"><a id="a3ac29e3f6f5e717fb07f77e67942ccce"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>swap</b> (<a class="el" href="classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;other) noexcept(noexcept(m_Edges, other.m_Edges))</td></tr>
+<tr class="separator:a3ac29e3f6f5e717fb07f77e67942ccce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a83e213ed368909f00f87b3eee18f115c"><td class="memItemLeft" align="right" valign="top"><a id="a83e213ed368909f00f87b3eee18f115c"></a>
+constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>swap_edges</b> (edge_index_type node, edge_index_type i, edge_index_type j)</td></tr>
+<tr class="separator:a83e213ed368909f00f87b3eee18f115c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa3daaf71472e0da3c636b7859393fd8b"><td class="memItemLeft" align="right" valign="top"><a id="aa3daaf71472e0da3c636b7859393fd8b"></a>
 constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>swap_nodes</b> (size_type i, size_type j)</td></tr>
 <tr class="separator:aa3daaf71472e0da3c636b7859393fd8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a122d8ac0601b87a434e04d6bf4cbbfa3"><td class="memItemLeft" align="right" valign="top"><a id="a122d8ac0601b87a434e04d6bf4cbbfa3"></a>
+auto&#160;</td><td class="memItemRight" valign="bottom"><b>get_edge_allocator</b> () const</td></tr>
+<tr class="separator:a122d8ac0601b87a434e04d6bf4cbbfa3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f03ea82d5c900f96e1b33149be8cdc3"><td class="memTemplParams" colspan="2"><a id="a6f03ea82d5c900f96e1b33149be8cdc3"></a>
+template&lt;class T  = edge_storage_type, std::enable_if_t&lt; has_partitions_allocator_type_v&lt; T &gt;, int &gt;  = 0&gt; </td></tr>
+<tr class="memitem:a6f03ea82d5c900f96e1b33149be8cdc3"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>get_edge_allocator</b> (<a class="el" href="structsequoia_1_1maths_1_1partitions__allocator__tag.html">partitions_allocator_tag</a>) const</td></tr>
+<tr class="separator:a6f03ea82d5c900f96e1b33149be8cdc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac619351b167e4c70cb76a5d73068bf9a"><td class="memItemLeft" align="right" valign="top"><a id="ac619351b167e4c70cb76a5d73068bf9a"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>reserve_nodes</b> (const size_type size)</td></tr>
 <tr class="separator:ac619351b167e4c70cb76a5d73068bf9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a22e603d2f47c548ffa87d3417db5b114"><td class="memItemLeft" align="right" valign="top"><a id="a22e603d2f47c548ffa87d3417db5b114"></a>
 size_type&#160;</td><td class="memItemRight" valign="bottom"><b>node_capacity</b> () const noexcept</td></tr>
 <tr class="separator:a22e603d2f47c548ffa87d3417db5b114"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4f1d9bebe67c75592e9626c5871eb33e"><td class="memTemplParams" colspan="2"><a id="a4f1d9bebe67c75592e9626c5871eb33e"></a>
-template&lt;class T  = edge_storage_type&gt; </td></tr>
-<tr class="memitem:a4f1d9bebe67c75592e9626c5871eb33e"><td class="memTemplItemLeft" align="right" valign="top">std::enable_if_t&lt; graph_impl::has_reservable_partitions_v&lt; T &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>reserve_edges</b> (const edge_index_type partition, const edge_index_type size)</td></tr>
-<tr class="separator:a4f1d9bebe67c75592e9626c5871eb33e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6485f30237edd1955905de48136767fe"><td class="memTemplParams" colspan="2"><a id="a6485f30237edd1955905de48136767fe"></a>
-template&lt;class T  = edge_storage_type&gt; </td></tr>
-<tr class="memitem:a6485f30237edd1955905de48136767fe"><td class="memTemplItemLeft" align="right" valign="top">std::enable_if_t&lt;!graph_impl::has_reservable_partitions_v&lt; T &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>reserve_edges</b> (const edge_index_type size)</td></tr>
-<tr class="separator:a6485f30237edd1955905de48136767fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af14becef35f449718f7fce31133a46af"><td class="memTemplParams" colspan="2"><a id="af14becef35f449718f7fce31133a46af"></a>
-template&lt;class T  = edge_storage_type&gt; </td></tr>
-<tr class="memitem:af14becef35f449718f7fce31133a46af"><td class="memTemplItemLeft" align="right" valign="top">std::enable_if_t&lt; graph_impl::has_reservable_partitions_v&lt; T &gt;, size_type &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>edges_capacity</b> (const edge_index_type partition) const</td></tr>
-<tr class="separator:af14becef35f449718f7fce31133a46af"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5adf83143f4552c6ad2df178a8aaa5fa"><td class="memTemplParams" colspan="2"><a id="a5adf83143f4552c6ad2df178a8aaa5fa"></a>
-template&lt;class T  = edge_storage_type&gt; </td></tr>
-<tr class="memitem:a5adf83143f4552c6ad2df178a8aaa5fa"><td class="memTemplItemLeft" align="right" valign="top">std::enable_if_t&lt;!graph_impl::has_reservable_partitions_v&lt; T &gt;, size_type &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>edges_capacity</b> () const noexcept</td></tr>
-<tr class="separator:a5adf83143f4552c6ad2df178a8aaa5fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab609476264413088ef6a43ab10b1fc0d"><td class="memTemplParams" colspan="2"><a id="ab609476264413088ef6a43ab10b1fc0d"></a>
+template&lt;class T  = edge_storage_type, std::enable_if_t&lt; graph_impl::has_reservable_partitions_v&lt; T &gt;, int &gt;  = 0&gt; </td></tr>
+<tr class="memitem:ab609476264413088ef6a43ab10b1fc0d"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>reserve_edges</b> (const edge_index_type partition, const edge_index_type size)</td></tr>
+<tr class="separator:ab609476264413088ef6a43ab10b1fc0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0632f048439a215a8782827d871ff2b3"><td class="memTemplParams" colspan="2"><a id="a0632f048439a215a8782827d871ff2b3"></a>
+template&lt;class T  = edge_storage_type, std::enable_if_t&lt;!graph_impl::has_reservable_partitions_v&lt; T &gt;, int &gt;  = 0&gt; </td></tr>
+<tr class="memitem:a0632f048439a215a8782827d871ff2b3"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>reserve_edges</b> (const edge_index_type size)</td></tr>
+<tr class="separator:a0632f048439a215a8782827d871ff2b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8fda2b84ef1fad6e1a04b7ea943d936c"><td class="memTemplParams" colspan="2"><a id="a8fda2b84ef1fad6e1a04b7ea943d936c"></a>
+template&lt;class T  = edge_storage_type, std::enable_if_t&lt; graph_impl::has_reservable_partitions_v&lt; T &gt;, int &gt;  = 0&gt; </td></tr>
+<tr class="memitem:a8fda2b84ef1fad6e1a04b7ea943d936c"><td class="memTemplItemLeft" align="right" valign="top">size_type&#160;</td><td class="memTemplItemRight" valign="bottom"><b>edges_capacity</b> (const edge_index_type partition) const</td></tr>
+<tr class="separator:a8fda2b84ef1fad6e1a04b7ea943d936c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d21fdb832cb6ecffa9500d35ec8cbaf"><td class="memTemplParams" colspan="2"><a id="a1d21fdb832cb6ecffa9500d35ec8cbaf"></a>
+template&lt;class T  = edge_storage_type, std::enable_if_t&lt;!graph_impl::has_reservable_partitions_v&lt; T &gt;, int &gt;  = 0&gt; </td></tr>
+<tr class="memitem:a1d21fdb832cb6ecffa9500d35ec8cbaf"><td class="memTemplItemLeft" align="right" valign="top">size_type&#160;</td><td class="memTemplItemRight" valign="bottom"><b>edges_capacity</b> () const noexcept</td></tr>
+<tr class="separator:a1d21fdb832cb6ecffa9500d35ec8cbaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a373d00fa6e70ab02f4798b4874e22e05"><td class="memItemLeft" align="right" valign="top"><a id="a373d00fa6e70ab02f4798b4874e22e05"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>shrink_to_fit</b> ()</td></tr>
 <tr class="separator:a373d00fa6e70ab02f4798b4874e22e05"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -255,12 +287,15 @@ template&lt;class Comparer &gt; </td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
 Friends</h2></td></tr>
-<tr class="memitem:a0087c867d4c0a1f6bc5c27f371c9b9bc"><td class="memItemLeft" align="right" valign="top"><a id="a0087c867d4c0a1f6bc5c27f371c9b9bc"></a>
-constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;lhs, const <a class="el" href="classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;rhs)</td></tr>
-<tr class="separator:a0087c867d4c0a1f6bc5c27f371c9b9bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a50b1a2820feba393d1a3caaec16119bf"><td class="memItemLeft" align="right" valign="top"><a id="a50b1a2820feba393d1a3caaec16119bf"></a>
-constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator!=</b> (const <a class="el" href="classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;lhs, const <a class="el" href="classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;rhs)</td></tr>
-<tr class="separator:a50b1a2820feba393d1a3caaec16119bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5340821c92b106e0c3e9960b9235d08a"><td class="memItemLeft" align="right" valign="top"><a id="a5340821c92b106e0c3e9960b9235d08a"></a>
+struct&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::impl::assignment_helper</b></td></tr>
+<tr class="separator:a5340821c92b106e0c3e9960b9235d08a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa895b5022eda1e53a989d74ba9c3ede3"><td class="memItemLeft" align="right" valign="top"><a id="aa895b5022eda1e53a989d74ba9c3ede3"></a>
+constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;lhs, const <a class="el" href="classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;rhs) noexcept</td></tr>
+<tr class="separator:aa895b5022eda1e53a989d74ba9c3ede3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aea855ca23cbe77ccfa5cd0638f1bd464"><td class="memItemLeft" align="right" valign="top"><a id="aea855ca23cbe77ccfa5cd0638f1bd464"></a>
+constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator!=</b> (const <a class="el" href="classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;lhs, const <a class="el" href="classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;rhs) noexcept</td></tr>
+<tr class="separator:aea855ca23cbe77ccfa5cd0638f1bd464"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>Maths/Graph/<a class="el" href="_connectivity_8hpp_source.html">Connectivity.hpp</a></li>

@@ -104,7 +104,7 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>pointer</b> = typena
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a2d28594491f7f299c8386446d1a2e681"><td class="memTemplParams" colspan="2"><a id="a2d28594491f7f299c8386446d1a2e681"></a>
-template&lt;class... Args, class  = std::enable_if_t&lt;!resolve_to_copy_constructor_v&lt;identity_dereference_policy, Args...&gt;&gt;&gt; </td></tr>
+template&lt;class... Args, std::enable_if_t&lt;!resolve_to_copy_constructor_v&lt; identity_dereference_policy, Args... &gt;, int &gt;  = 0&gt; </td></tr>
 <tr class="memitem:a2d28594491f7f299c8386446d1a2e681"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>identity_dereference_policy</b> (Args &amp;&amp;... args)</td></tr>
 <tr class="separator:a2d28594491f7f299c8386446d1a2e681"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaae3ebf97a09d947a15e243361470946"><td class="memItemLeft" align="right" valign="top"><a id="aaae3ebf97a09d947a15e243361470946"></a>

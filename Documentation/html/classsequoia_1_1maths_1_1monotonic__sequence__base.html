@@ -90,6 +90,12 @@ Public Types</h2></td></tr>
 <tr class="memitem:a224131dda36f6b3f0c18350500c7fdf6"><td class="memItemLeft" align="right" valign="top"><a id="a224131dda36f6b3f0c18350500c7fdf6"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>value_type</b> = T</td></tr>
 <tr class="separator:a224131dda36f6b3f0c18350500c7fdf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5e16c77aeccbb84182b0ef355101e2a8"><td class="memItemLeft" align="right" valign="top"><a id="a5e16c77aeccbb84182b0ef355101e2a8"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>container_type</b> = C</td></tr>
+<tr class="separator:a5e16c77aeccbb84182b0ef355101e2a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e8a16ec84ddeb6684263844f95ce3ac"><td class="memItemLeft" align="right" valign="top"><a id="a4e8a16ec84ddeb6684263844f95ce3ac"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>compare_type</b> = Compare</td></tr>
+<tr class="separator:a4e8a16ec84ddeb6684263844f95ce3ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2736f6c2b5ef9dd7d9bd3aa474f04258"><td class="memItemLeft" align="right" valign="top"><a id="a2736f6c2b5ef9dd7d9bd3aa474f04258"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>size_type</b> = typename C::size_type</td></tr>
 <tr class="separator:a2736f6c2b5ef9dd7d9bd3aa474f04258"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -157,15 +163,37 @@ template&lt;bool Checked = true, class UnaryOp &gt; </td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
+<tr class="memitem:ad447fab3b0e4a62de902067ea3809d0f"><td class="memTemplParams" colspan="2"><a id="ad447fab3b0e4a62de902067ea3809d0f"></a>
+template&lt;class Allocator &gt; </td></tr>
+<tr class="memitem:ad447fab3b0e4a62de902067ea3809d0f"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>monotonic_sequence_base</b> (const Allocator &amp;allocator) noexcept</td></tr>
+<tr class="separator:ad447fab3b0e4a62de902067ea3809d0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac09a063bfe5e06858e0a262ef118d2f1"><td class="memTemplParams" colspan="2"><a id="ac09a063bfe5e06858e0a262ef118d2f1"></a>
+template&lt;class Allocator &gt; </td></tr>
+<tr class="memitem:ac09a063bfe5e06858e0a262ef118d2f1"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>monotonic_sequence_base</b> (std::initializer_list&lt; T &gt; list, const Allocator &amp;allocator)</td></tr>
+<tr class="separator:ac09a063bfe5e06858e0a262ef118d2f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab93618527dbd5fc4064f2e2d114e3882"><td class="memItemLeft" align="right" valign="top"><a id="ab93618527dbd5fc4064f2e2d114e3882"></a>
 constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>monotonic_sequence_base</b> (<a class="el" href="classsequoia_1_1maths_1_1monotonic__sequence__base.html">monotonic_sequence_base</a> &amp;&amp;) noexcept=default</td></tr>
 <tr class="separator:ab93618527dbd5fc4064f2e2d114e3882"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b7e59796cf004bb306bac118be70825"><td class="memTemplParams" colspan="2"><a id="a2b7e59796cf004bb306bac118be70825"></a>
+template&lt;class Allocator &gt; </td></tr>
+<tr class="memitem:a2b7e59796cf004bb306bac118be70825"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>monotonic_sequence_base</b> (const <a class="el" href="classsequoia_1_1maths_1_1monotonic__sequence__base.html">monotonic_sequence_base</a> &amp;s, const Allocator &amp;allocator)</td></tr>
+<tr class="separator:a2b7e59796cf004bb306bac118be70825"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e68a9b2acb38dd7c993762a26c3f710"><td class="memTemplParams" colspan="2"><a id="a6e68a9b2acb38dd7c993762a26c3f710"></a>
+template&lt;class Allocator &gt; </td></tr>
+<tr class="memitem:a6e68a9b2acb38dd7c993762a26c3f710"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>monotonic_sequence_base</b> (<a class="el" href="classsequoia_1_1maths_1_1monotonic__sequence__base.html">monotonic_sequence_base</a> &amp;&amp;s, const Allocator &amp;allocator)</td></tr>
+<tr class="separator:a6e68a9b2acb38dd7c993762a26c3f710"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa0d33d6d63ba84478c2c067ac7485824"><td class="memItemLeft" align="right" valign="top"><a id="aa0d33d6d63ba84478c2c067ac7485824"></a>
 constexpr <a class="el" href="classsequoia_1_1maths_1_1monotonic__sequence__base.html">monotonic_sequence_base</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="classsequoia_1_1maths_1_1monotonic__sequence__base.html">monotonic_sequence_base</a> &amp;)=default</td></tr>
 <tr class="separator:aa0d33d6d63ba84478c2c067ac7485824"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b72d03a837c6beeae685fb04fa98f61"><td class="memItemLeft" align="right" valign="top"><a id="a2b72d03a837c6beeae685fb04fa98f61"></a>
-constexpr <a class="el" href="classsequoia_1_1maths_1_1monotonic__sequence__base.html">monotonic_sequence_base</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="classsequoia_1_1maths_1_1monotonic__sequence__base.html">monotonic_sequence_base</a> &amp;&amp;) noexcept=default</td></tr>
-<tr class="separator:a2b72d03a837c6beeae685fb04fa98f61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3374a0788d2c4e321c4c7b81555f840f"><td class="memItemLeft" align="right" valign="top"><a id="a3374a0788d2c4e321c4c7b81555f840f"></a>
+constexpr <a class="el" href="classsequoia_1_1maths_1_1monotonic__sequence__base.html">monotonic_sequence_base</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="classsequoia_1_1maths_1_1monotonic__sequence__base.html">monotonic_sequence_base</a> &amp;&amp;)=default</td></tr>
+<tr class="separator:a3374a0788d2c4e321c4c7b81555f840f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96a10210455ec815bc25e1bcd7f452b5"><td class="memItemLeft" align="right" valign="top"><a id="a96a10210455ec815bc25e1bcd7f452b5"></a>
+constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>swap</b> (<a class="el" href="classsequoia_1_1maths_1_1monotonic__sequence__base.html">monotonic_sequence_base</a> &amp;other) noexcept(impl::noexcept_spec_v&lt; C &gt;)</td></tr>
+<tr class="separator:a96a10210455ec815bc25e1bcd7f452b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a056d3c0bf8b7250ac0d74c3c28006a5b"><td class="memItemLeft" align="right" valign="top"><a id="a056d3c0bf8b7250ac0d74c3c28006a5b"></a>
+auto&#160;</td><td class="memItemRight" valign="bottom"><b>get_allocator</b> () const</td></tr>
+<tr class="separator:a056d3c0bf8b7250ac0d74c3c28006a5b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a957d8521423ba7bfea82403a7c04e743"><td class="memItemLeft" align="right" valign="top"><a id="a957d8521423ba7bfea82403a7c04e743"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>push_back</b> (T v)</td></tr>
 <tr class="separator:a957d8521423ba7bfea82403a7c04e743"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -193,12 +221,12 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>clear</b> () noexcept
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
 Friends</h2></td></tr>
-<tr class="memitem:acd843f44568ae186bc527fd96b322f9b"><td class="memItemLeft" align="right" valign="top"><a id="acd843f44568ae186bc527fd96b322f9b"></a>
-constexpr friend bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="classsequoia_1_1maths_1_1monotonic__sequence__base.html">monotonic_sequence_base</a> &amp;lhs, const <a class="el" href="classsequoia_1_1maths_1_1monotonic__sequence__base.html">monotonic_sequence_base</a> &amp;rhs)</td></tr>
-<tr class="separator:acd843f44568ae186bc527fd96b322f9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9ea45d602aea3567ed01883f78a2a0ca"><td class="memItemLeft" align="right" valign="top"><a id="a9ea45d602aea3567ed01883f78a2a0ca"></a>
-constexpr friend bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator!=</b> (const <a class="el" href="classsequoia_1_1maths_1_1monotonic__sequence__base.html">monotonic_sequence_base</a> &amp;lhs, const <a class="el" href="classsequoia_1_1maths_1_1monotonic__sequence__base.html">monotonic_sequence_base</a> &amp;rhs)</td></tr>
-<tr class="separator:a9ea45d602aea3567ed01883f78a2a0ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a203c6ccf1793ce4050d62e2967297b53"><td class="memItemLeft" align="right" valign="top"><a id="a203c6ccf1793ce4050d62e2967297b53"></a>
+constexpr friend bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="classsequoia_1_1maths_1_1monotonic__sequence__base.html">monotonic_sequence_base</a> &amp;lhs, const <a class="el" href="classsequoia_1_1maths_1_1monotonic__sequence__base.html">monotonic_sequence_base</a> &amp;rhs) noexcept</td></tr>
+<tr class="separator:a203c6ccf1793ce4050d62e2967297b53"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07992ad42b53c89be8cee60d69909975"><td class="memItemLeft" align="right" valign="top"><a id="a07992ad42b53c89be8cee60d69909975"></a>
+constexpr friend bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator!=</b> (const <a class="el" href="classsequoia_1_1maths_1_1monotonic__sequence__base.html">monotonic_sequence_base</a> &amp;lhs, const <a class="el" href="classsequoia_1_1maths_1_1monotonic__sequence__base.html">monotonic_sequence_base</a> &amp;rhs) noexcept</td></tr>
+<tr class="separator:a07992ad42b53c89be8cee60d69909975"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>Maths/Sequences/<a class="el" href="_monotonic_sequence_8hpp_source.html">MonotonicSequence.hpp</a></li>

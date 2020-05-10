@@ -68,6 +68,7 @@ $(function() {
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="structsequoia_1_1data__sharing_1_1shared-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">sequoia::data_sharing::shared&lt; T &gt; Struct Template Reference</div>  </div>
@@ -92,12 +93,33 @@ static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>is_s
 template&lt;class... Args&gt; </td></tr>
 <tr class="memitem:af685dad13cf8271c0b4b5d2400df10da"><td class="memTemplItemLeft" align="right" valign="top">static handle_type&#160;</td><td class="memTemplItemRight" valign="bottom"><b>make</b> (Args &amp;&amp;... args)</td></tr>
 <tr class="separator:af685dad13cf8271c0b4b5d2400df10da"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0cc0db30b0e5ed74df8fedc10d056cbd"><td class="memItemLeft" align="right" valign="top"><a id="a0cc0db30b0e5ed74df8fedc10d056cbd"></a>
-static T &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>get</b> (handle_type ptr)</td></tr>
-<tr class="separator:a0cc0db30b0e5ed74df8fedc10d056cbd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afc906645af4cd861babc3fd5c915a15e"><td class="memItemLeft" align="right" valign="top"><a id="afc906645af4cd861babc3fd5c915a15e"></a>
-static T *&#160;</td><td class="memItemRight" valign="bottom"><b>get_ptr</b> (handle_type ptr)</td></tr>
-<tr class="separator:afc906645af4cd861babc3fd5c915a15e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f4ad3b811003bf4c0ec37994679cb3e"><td class="memItemLeft" align="right" valign="top"><a id="a1f4ad3b811003bf4c0ec37994679cb3e"></a>
+static T &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>get</b> (handle_type &amp;ptr)</td></tr>
+<tr class="separator:a1f4ad3b811003bf4c0ec37994679cb3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3490547f6afb9b3c76c16cac74584be1"><td class="memItemLeft" align="right" valign="top"><a id="a3490547f6afb9b3c76c16cac74584be1"></a>
+static const T &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>get</b> (const handle_type &amp;ptr)</td></tr>
+<tr class="separator:a3490547f6afb9b3c76c16cac74584be1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a64dd8c98fd65b1798fb4a576c45b7a70"><td class="memItemLeft" align="right" valign="top"><a id="a64dd8c98fd65b1798fb4a576c45b7a70"></a>
+static T *&#160;</td><td class="memItemRight" valign="bottom"><b>get_ptr</b> (handle_type &amp;ptr)</td></tr>
+<tr class="separator:a64dd8c98fd65b1798fb4a576c45b7a70"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a375a4e18f14b93d4941546347f9e43bc"><td class="memItemLeft" align="right" valign="top"><a id="a375a4e18f14b93d4941546347f9e43bc"></a>
+static const T *&#160;</td><td class="memItemRight" valign="bottom"><b>get_ptr</b> (const handle_type &amp;ptr)</td></tr>
+<tr class="separator:a375a4e18f14b93d4941546347f9e43bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:afe27c8d24a6be4a970623b670691ec8b"><td class="memItemLeft" align="right" valign="top"><a id="afe27c8d24a6be4a970623b670691ec8b"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>shared</b> (const <a class="el" href="structsequoia_1_1data__sharing_1_1shared.html">shared</a> &amp;) noexcept=default</td></tr>
+<tr class="separator:afe27c8d24a6be4a970623b670691ec8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a60ce6d6a042941ad8cf81bd2319e3e46"><td class="memItemLeft" align="right" valign="top"><a id="a60ce6d6a042941ad8cf81bd2319e3e46"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>shared</b> (<a class="el" href="structsequoia_1_1data__sharing_1_1shared.html">shared</a> &amp;&amp;) noexcept=default</td></tr>
+<tr class="separator:a60ce6d6a042941ad8cf81bd2319e3e46"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7cbde3db6321c8e84973fe4f0851dc3a"><td class="memItemLeft" align="right" valign="top"><a id="a7cbde3db6321c8e84973fe4f0851dc3a"></a>
+<a class="el" href="structsequoia_1_1data__sharing_1_1shared.html">shared</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="structsequoia_1_1data__sharing_1_1shared.html">shared</a> &amp;) noexcept=default</td></tr>
+<tr class="separator:a7cbde3db6321c8e84973fe4f0851dc3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:addaee04d32e624f74fedb9e8a7462925"><td class="memItemLeft" align="right" valign="top"><a id="addaee04d32e624f74fedb9e8a7462925"></a>
+<a class="el" href="structsequoia_1_1data__sharing_1_1shared.html">shared</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="structsequoia_1_1data__sharing_1_1shared.html">shared</a> &amp;&amp;) noexcept=default</td></tr>
+<tr class="separator:addaee04d32e624f74fedb9e8a7462925"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>Core/DataSharing/<a class="el" href="_sharing_policies_8hpp_source.html">SharingPolicies.hpp</a></li>

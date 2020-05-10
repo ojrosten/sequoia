@@ -1,15 +1,10 @@
 var searchData=
 [
-  ['wait',['Wait',['../classsequoia_1_1unit__testing_1_1_wait.html',1,'sequoia::unit_testing']]],
-  ['weight_5fmaker',['weight_maker',['../classsequoia_1_1maths_1_1graph__impl_1_1weight__maker.html',1,'sequoia::maths::graph_impl']]],
-  ['weight_5fmaker_3c_20data_5fsharing_3a_3aunpooled_3c_20edgeweight_20_3e_20_3e',['weight_maker&lt; data_sharing::unpooled&lt; EdgeWeight &gt; &gt;',['../classsequoia_1_1maths_1_1graph__impl_1_1weight__maker.html',1,'sequoia::maths::graph_impl']]],
-  ['weight_5fmaker_3c_20data_5fsharing_3a_3aunpooled_3c_20nodeweight_20_3e_20_3e',['weight_maker&lt; data_sharing::unpooled&lt; NodeWeight &gt; &gt;',['../classsequoia_1_1maths_1_1graph__impl_1_1weight__maker.html',1,'sequoia::maths::graph_impl']]],
-  ['weight_5fmaker_3c_20edgeweightpooling_3c_20edgeweight_20_3e_20_3e',['weight_maker&lt; EdgeWeightPooling&lt; EdgeWeight &gt; &gt;',['../classsequoia_1_1maths_1_1graph__impl_1_1weight__maker.html',1,'sequoia::maths::graph_impl']]],
-  ['weight_5fmaker_3c_20nodeweightpooling_3c_20nodeweight_20_3e_20_3e',['weight_maker&lt; NodeWeightPooling&lt; NodeWeight &gt; &gt;',['../classsequoia_1_1maths_1_1graph__impl_1_1weight__maker.html',1,'sequoia::maths::graph_impl']]],
-  ['weight_5fmaker_3c_20weightpooling_2c_20false_20_3e',['weight_maker&lt; WeightPooling, false &gt;',['../classsequoia_1_1maths_1_1graph__impl_1_1weight__maker_3_01_weight_pooling_00_01false_01_4.html',1,'sequoia::maths::graph_impl']]],
-  ['weighting',['weighting',['../classsequoia_1_1maths_1_1weighting.html',1,'sequoia::maths']]],
-  ['weighting_3c_20weight_2c_20data_5fsharing_3a_3aindependent_2c_20weightproxy_2c_20indextype_20_3e',['weighting&lt; Weight, data_sharing::independent, WeightProxy, IndexType &gt;',['../classsequoia_1_1maths_1_1weighting.html',1,'sequoia::maths']]],
-  ['weighting_3c_20weight_2c_20weightsharingpolicy_2c_20weightproxy_2c_20indextype_20_3e',['weighting&lt; Weight, WeightSharingPolicy, WeightProxy, IndexType &gt;',['../classsequoia_1_1maths_1_1weighting.html',1,'sequoia::maths']]],
-  ['weighting_3c_20weight_2c_20weightsharingpolicy_2c_20weightproxy_2c_20indextype_2c_20true_20_3e',['weighting&lt; Weight, WeightSharingPolicy, WeightProxy, IndexType, true &gt;',['../classsequoia_1_1maths_1_1weighting_3_01_weight_00_01_weight_sharing_policy_00_01_weight_proxy_00_01_index_type_00_01true_01_4.html',1,'sequoia::maths']]],
-  ['wrapper',['wrapper',['../structsequoia_1_1unit__testing_1_1wrapper.html',1,'sequoia::unit_testing']]]
+  ['variadic_5ftraits',['variadic_traits',['../structsequoia_1_1variadic__traits.html',1,'sequoia']]],
+  ['variadic_5ftraits_3c_3e',['variadic_traits&lt;&gt;',['../structsequoia_1_1variadic__traits_3_4.html',1,'sequoia']]],
+  ['variadic_5ftraits_5fhelper',['variadic_traits_helper',['../structsequoia_1_1impl_1_1variadic__traits__helper.html',1,'sequoia::impl']]],
+  ['variadic_5ftraits_5fhelper_3c_20h_20_3e',['variadic_traits_helper&lt; H &gt;',['../structsequoia_1_1impl_1_1variadic__traits__helper_3_01_h_01_4.html',1,'sequoia::impl']]],
+  ['variant_5fvisitor',['variant_visitor',['../structsequoia_1_1sequoia_1_1variant__visitor.html',1,'sequoia::sequoia']]],
+  ['void_5ft_3c_20decltype_28makelval_3c_20std_3a_3astringstream_20_3e_28_29_3c_3c_20std_3a_3adeclval_3c_20t_20_3e_28_29_29_3e_20_3e',['void_t&lt; decltype(makelval&lt; std::stringstream &gt;()&lt;&lt; std::declval&lt; T &gt;())&gt; &gt;',['../structsequoia_1_1is__serializable_3_01_t_00_01std_1_1void__t_3_01decltype_07makelval_3_01std_1_19016cd01381d4fb3ea6228994b72d0d7.html',1,'sequoia']]],
+  ['void_5ft_3c_20decltype_28std_3a_3adeclval_3c_20t_20_3e_28_29_3c_20std_3a_3adeclval_3c_20t_20_3e_28_29_29_3e_20_3e',['void_t&lt; decltype(std::declval&lt; T &gt;()&lt; std::declval&lt; T &gt;())&gt; &gt;',['../structsequoia_1_1is__orderable_3_01_t_00_01std_1_1void__t_3_01decltype_07std_1_1declval_3_01_t_069c35a3fc838b4f622235a8c36928d18.html',1,'sequoia']]]
 ];

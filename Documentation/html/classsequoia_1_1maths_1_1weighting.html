@@ -96,9 +96,12 @@ Public Member Functions</h2></td></tr>
 template&lt;class Arg , class... Args&gt; </td></tr>
 <tr class="memitem:aecf47e72218ef625141a6d3b18a07ddf"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>weight</b> (Arg &amp;&amp;arg, Args &amp;&amp;... args)</td></tr>
 <tr class="separator:aecf47e72218ef625141a6d3b18a07ddf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a53ce42cb7ec90e6eb370682e81bde115"><td class="memItemLeft" align="right" valign="top"><a id="a53ce42cb7ec90e6eb370682e81bde115"></a>
-constexpr const Weight &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>weight</b> () const noexcept</td></tr>
-<tr class="separator:a53ce42cb7ec90e6eb370682e81bde115"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa0ff6be4aa235db8988dcc959a2d8bbf"><td class="memItemLeft" align="right" valign="top"><a id="aa0ff6be4aa235db8988dcc959a2d8bbf"></a>
+constexpr const weight_type &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>weight</b> () const noexcept</td></tr>
+<tr class="separator:aa0ff6be4aa235db8988dcc959a2d8bbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae235cde2c6c6d1cd48aad0bf47c91bb2"><td class="memItemLeft" align="right" valign="top"><a id="ae235cde2c6c6d1cd48aad0bf47c91bb2"></a>
+constexpr const weight_proxy_type &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>weight_proxy</b> () const noexcept</td></tr>
+<tr class="separator:ae235cde2c6c6d1cd48aad0bf47c91bb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad38ca7bf1e4b385abda4e2c5020ed840"><td class="memTemplParams" colspan="2"><a id="ad38ca7bf1e4b385abda4e2c5020ed840"></a>
 template&lt;class Fn &gt; </td></tr>
 <tr class="memitem:ad38ca7bf1e4b385abda4e2c5020ed840"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>mutate_weight</b> (Fn fn)</td></tr>
@@ -107,7 +110,7 @@ template&lt;class Fn &gt; </td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:ae448c3393dcdf650e44d6c4b6c44f50f"><td class="memTemplParams" colspan="2"><a id="ae448c3393dcdf650e44d6c4b6c44f50f"></a>
-template&lt;class... Args, class  = std::enable_if_t&lt;                   !resolve_to_copy_constructor_v&lt;weighting, Args...&gt;                &amp;&amp; !is_base_of_head_v&lt;weighting, Args...&gt;              &gt;&gt; </td></tr>
+template&lt;class... Args, std::enable_if_t&lt; !resolve_to_copy_constructor_v&lt; weighting, Args... &gt; &amp;&amp;!is_base_of_head_v&lt; weighting, Args... &gt;, int &gt;  = 0&gt; </td></tr>
 <tr class="memitem:ae448c3393dcdf650e44d6c4b6c44f50f"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>weighting</b> (Args &amp;&amp;... args)</td></tr>
 <tr class="separator:ae448c3393dcdf650e44d6c4b6c44f50f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae6e1b24a1d3a139ba4faf57154e45f51"><td class="memItemLeft" align="right" valign="top"><a id="ae6e1b24a1d3a139ba4faf57154e45f51"></a>

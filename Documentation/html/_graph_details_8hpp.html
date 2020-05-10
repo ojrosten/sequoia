@@ -87,9 +87,7 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1data__sharing_1_1independent.html">sequoia::data_sharing::independent&lt; T &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsequoia_1_1data__sharing_1_1unpooled.html">sequoia::data_sharing::unpooled&lt; T &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsequoia_1_1data__structures_1_1static__contiguous__storage.html">sequoia::data_structures::static_contiguous_storage&lt; T, Npartitions, Nelements, IndexType &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsequoia_1_1data__structures_1_1static__partitioned__sequence.html">sequoia::data_structures::static_partitioned_sequence&lt; T, Npartitions, Nelements, IndexType &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1maths_1_1graph__impl_1_1sharing__v__to__type.html">sequoia::maths::graph_impl::sharing_v_to_type&lt; Sharing &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -178,11 +176,11 @@ constexpr directed_flavour&#160;</td><td class="memItemRight" valign="bottom"><b
 constexpr std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::graph_impl::num_static_edges</b> (const graph_flavour flavour, const std::size_t size) noexcept</td></tr>
 <tr class="separator:a0912ed76c56b2ae1ff9da923d53227c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a07ca142ef55a6816bd674ee2a87ceb78"><td class="memTemplParams" colspan="2"><a id="a07ca142ef55a6816bd674ee2a87ceb78"></a>
-template&lt;class EdgeWeight , template&lt; class &gt; class EdgeWeightPooling&gt; </td></tr>
+template&lt;class EdgeWeight , class EdgeWeightPooling &gt; </td></tr>
 <tr class="memitem:a07ca142ef55a6816bd674ee2a87ceb78"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::graph_impl::big_proxy</b> () noexcept</td></tr>
 <tr class="separator:a07ca142ef55a6816bd674ee2a87ceb78"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a07a95c9f5e638d03196d962dfd199ea0"><td class="memTemplParams" colspan="2"><a id="a07a95c9f5e638d03196d962dfd199ea0"></a>
-template&lt;class EdgeWeight , template&lt; class &gt; class EdgeWeightPooling&gt; </td></tr>
+template&lt;class EdgeWeight , class EdgeWeightPooling &gt; </td></tr>
 <tr class="memitem:a07a95c9f5e638d03196d962dfd199ea0"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::graph_impl::copy_constructible_proxy</b> () noexcept</td></tr>
 <tr class="separator:a07a95c9f5e638d03196d962dfd199ea0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a34572a642cbfa63a7d2382962aceb017"><td class="memTemplParams" colspan="2"><a id="a34572a642cbfa63a7d2382962aceb017"></a>

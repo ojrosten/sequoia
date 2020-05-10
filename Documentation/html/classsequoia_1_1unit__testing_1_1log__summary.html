@@ -66,6 +66,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#friends">Friends</a> &#124;
 <a href="classsequoia_1_1unit__testing_1_1log__summary-members.html">List of all members</a>  </div>
@@ -74,60 +75,87 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a07af96308b3a60ef4c30a6a55dbd6955"><td class="memItemLeft" align="right" valign="top"><a id="a07af96308b3a60ef4c30a6a55dbd6955"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>duration</b> = std::chrono::steady_clock::duration</td></tr>
+<tr class="separator:a07af96308b3a60ef4c30a6a55dbd6955"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:aa67a3d1483f84b07ab3110a1ddf56c29"><td class="memItemLeft" align="right" valign="top"><a id="aa67a3d1483f84b07ab3110a1ddf56c29"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>log_summary</b> (std::string_view name=&quot;&quot;)</td></tr>
 <tr class="separator:aa67a3d1483f84b07ab3110a1ddf56c29"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa582de5d9726daaed4cc8fa40339d3c0"><td class="memTemplParams" colspan="2"><a id="aa582de5d9726daaed4cc8fa40339d3c0"></a>
+<tr class="memitem:a5833899fa5e728bafebeef2edad84914"><td class="memTemplParams" colspan="2"><a id="a5833899fa5e728bafebeef2edad84914"></a>
 template&lt;test_mode Mode&gt; </td></tr>
-<tr class="memitem:aa582de5d9726daaed4cc8fa40339d3c0"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>log_summary</b> (std::string_view name, const <a class="el" href="classsequoia_1_1unit__testing_1_1unit__test__logger.html">unit_test_logger</a>&lt; Mode &gt; &amp;logger)</td></tr>
-<tr class="separator:aa582de5d9726daaed4cc8fa40339d3c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5833899fa5e728bafebeef2edad84914"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>log_summary</b> (std::string_view name, const <a class="el" href="classsequoia_1_1unit__testing_1_1unit__test__logger.html">unit_test_logger</a>&lt; Mode &gt; &amp;logger, const duration delta)</td></tr>
+<tr class="separator:a5833899fa5e728bafebeef2edad84914"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1b9d710d1e7bda30cda3219b600b7b08"><td class="memItemLeft" align="right" valign="top"><a id="a1b9d710d1e7bda30cda3219b600b7b08"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>clear</b> ()</td></tr>
 <tr class="separator:a1b9d710d1e7bda30cda3219b600b7b08"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0ec3a7138639d5b075b47fb2cd58f57e"><td class="memItemLeft" align="right" valign="top"><a id="a0ec3a7138639d5b075b47fb2cd58f57e"></a>
-std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>checks</b> () const noexcept</td></tr>
-<tr class="separator:a0ec3a7138639d5b075b47fb2cd58f57e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac4f4f36dce24b04f454c0b18a917e520"><td class="memItemLeft" align="right" valign="top"><a id="ac4f4f36dce24b04f454c0b18a917e520"></a>
-std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>performance_checks</b> () const noexcept</td></tr>
-<tr class="separator:ac4f4f36dce24b04f454c0b18a917e520"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6971002e91ea1278f6a4579986544eb"><td class="memItemLeft" align="right" valign="top"><a id="aa6971002e91ea1278f6a4579986544eb"></a>
+std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>standard_top_level_checks</b> () const noexcept</td></tr>
+<tr class="separator:aa6971002e91ea1278f6a4579986544eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a89f34ca2ea0a821f4b8d72076b4d34f3"><td class="memItemLeft" align="right" valign="top"><a id="a89f34ca2ea0a821f4b8d72076b4d34f3"></a>
+std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>standard_deep_checks</b> () const noexcept</td></tr>
+<tr class="separator:a89f34ca2ea0a821f4b8d72076b4d34f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa48f7d57ee46985221d8a74319e58962"><td class="memItemLeft" align="right" valign="top"><a id="aa48f7d57ee46985221d8a74319e58962"></a>
+std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>standard_performance_checks</b> () const noexcept</td></tr>
+<tr class="separator:aa48f7d57ee46985221d8a74319e58962"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab4ee42476adcec91f303689415d922ae"><td class="memItemLeft" align="right" valign="top"><a id="ab4ee42476adcec91f303689415d922ae"></a>
 std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>false_negative_checks</b> () const noexcept</td></tr>
 <tr class="separator:ab4ee42476adcec91f303689415d922ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa38dea4d5e48f098fd6620dc4d8dcca5"><td class="memItemLeft" align="right" valign="top"><a id="aa38dea4d5e48f098fd6620dc4d8dcca5"></a>
+std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>false_negative_performance_checks</b> () const noexcept</td></tr>
+<tr class="separator:aa38dea4d5e48f098fd6620dc4d8dcca5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ace6215341fe0709ff0bfe4e9e15f3ecc"><td class="memItemLeft" align="right" valign="top"><a id="ace6215341fe0709ff0bfe4e9e15f3ecc"></a>
 std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>false_positive_checks</b> () const noexcept</td></tr>
 <tr class="separator:ace6215341fe0709ff0bfe4e9e15f3ecc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0ab54e7619de4d9869b19a274de83e78"><td class="memItemLeft" align="right" valign="top"><a id="a0ab54e7619de4d9869b19a274de83e78"></a>
-std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>standard_failures</b> () const noexcept</td></tr>
-<tr class="separator:a0ab54e7619de4d9869b19a274de83e78"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2564f7102fdcbdb328b19628c5000a8c"><td class="memItemLeft" align="right" valign="top"><a id="a2564f7102fdcbdb328b19628c5000a8c"></a>
-std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>performance_failures</b> () const noexcept</td></tr>
-<tr class="separator:a2564f7102fdcbdb328b19628c5000a8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa67cfd81893a76c2b2747d5d2f4c2e9b"><td class="memItemLeft" align="right" valign="top"><a id="aa67cfd81893a76c2b2747d5d2f4c2e9b"></a>
+std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>false_positive_performance_checks</b> () const noexcept</td></tr>
+<tr class="separator:aa67cfd81893a76c2b2747d5d2f4c2e9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aceafc5c91577de7ba44e6aa2054a0310"><td class="memItemLeft" align="right" valign="top"><a id="aceafc5c91577de7ba44e6aa2054a0310"></a>
+std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>standard_deep_failures</b> () const noexcept</td></tr>
+<tr class="separator:aceafc5c91577de7ba44e6aa2054a0310"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac1131ca2f9bf167b611fd2dc88efab51"><td class="memItemLeft" align="right" valign="top"><a id="ac1131ca2f9bf167b611fd2dc88efab51"></a>
+std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>standard_top_level_failures</b> () const noexcept</td></tr>
+<tr class="separator:ac1131ca2f9bf167b611fd2dc88efab51"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a82d5bfaaac40c42c47b0c8036b31faad"><td class="memItemLeft" align="right" valign="top"><a id="a82d5bfaaac40c42c47b0c8036b31faad"></a>
+std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>standard_performance_failures</b> () const noexcept</td></tr>
+<tr class="separator:a82d5bfaaac40c42c47b0c8036b31faad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9c53b0dc756636e9ef170b3fdfec3976"><td class="memItemLeft" align="right" valign="top"><a id="a9c53b0dc756636e9ef170b3fdfec3976"></a>
 std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>false_negative_failures</b> () const noexcept</td></tr>
 <tr class="separator:a9c53b0dc756636e9ef170b3fdfec3976"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af03cf75d9949fab7e476eb5f6b663cda"><td class="memItemLeft" align="right" valign="top"><a id="af03cf75d9949fab7e476eb5f6b663cda"></a>
+std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>false_negative_performance_failures</b> () const noexcept</td></tr>
+<tr class="separator:af03cf75d9949fab7e476eb5f6b663cda"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a34137d766a1309373144fc6293cc1669"><td class="memItemLeft" align="right" valign="top"><a id="a34137d766a1309373144fc6293cc1669"></a>
 std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>false_positive_failures</b> () const noexcept</td></tr>
 <tr class="separator:a34137d766a1309373144fc6293cc1669"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec94d8c4cc357f1125f52aa3648a1545"><td class="memItemLeft" align="right" valign="top"><a id="aec94d8c4cc357f1125f52aa3648a1545"></a>
+std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>false_positive_performance_failures</b> () const noexcept</td></tr>
+<tr class="separator:aec94d8c4cc357f1125f52aa3648a1545"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a883a3cb18b4797d68ec382cc0f26515a"><td class="memItemLeft" align="right" valign="top"><a id="a883a3cb18b4797d68ec382cc0f26515a"></a>
 std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>critical_failures</b> () const noexcept</td></tr>
 <tr class="separator:a883a3cb18b4797d68ec382cc0f26515a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a49db74650f72a32cc3e475bc9980b9"><td class="memItemLeft" align="right" valign="top"><a id="a3a49db74650f72a32cc3e475bc9980b9"></a>
+std::string_view&#160;</td><td class="memItemRight" valign="bottom"><b>versioned_output</b> () const noexcept</td></tr>
+<tr class="separator:a3a49db74650f72a32cc3e475bc9980b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae261543ccaba93b152a679ea9dd527d8"><td class="memItemLeft" align="right" valign="top"><a id="ae261543ccaba93b152a679ea9dd527d8"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>current_message</b> () const</td></tr>
 <tr class="separator:ae261543ccaba93b152a679ea9dd527d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac600797179b1e6cb633cbfc5f5601b67"><td class="memItemLeft" align="right" valign="top"><a id="ac600797179b1e6cb633cbfc5f5601b67"></a>
+duration&#160;</td><td class="memItemRight" valign="bottom"><b>execution_time</b> () const noexcept</td></tr>
+<tr class="separator:ac600797179b1e6cb633cbfc5f5601b67"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a26ae43bd218626edfecf91f333c3a8cc"><td class="memItemLeft" align="right" valign="top"><a id="a26ae43bd218626edfecf91f333c3a8cc"></a>
 <a class="el" href="classsequoia_1_1unit__testing_1_1log__summary.html">log_summary</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator+=</b> (const <a class="el" href="classsequoia_1_1unit__testing_1_1log__summary.html">log_summary</a> &amp;rhs)</td></tr>
 <tr class="separator:a26ae43bd218626edfecf91f333c3a8cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae31ff93162182ee5fed0a43c33417b16"><td class="memItemLeft" align="right" valign="top"><a id="ae31ff93162182ee5fed0a43c33417b16"></a>
 std::string_view&#160;</td><td class="memItemRight" valign="bottom"><b>name</b> () const noexcept</td></tr>
 <tr class="separator:ae31ff93162182ee5fed0a43c33417b16"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a15209a4d31376677b94a157363c5dfde"><td class="memItemLeft" align="right" valign="top"><a id="a15209a4d31376677b94a157363c5dfde"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>name</b> (std::string_view p)</td></tr>
-<tr class="separator:a15209a4d31376677b94a157363c5dfde"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aad63bc2498a781b344fecb20a6f60d84"><td class="memItemLeft" align="right" valign="top"><a id="aad63bc2498a781b344fecb20a6f60d84"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>summarize</b> (std::string_view checkNumsPrefix, const log_verbosity suppression) const</td></tr>
-<tr class="separator:aad63bc2498a781b344fecb20a6f60d84"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a4ce3f94eaaa1010f3acb1c02d0ef07"><td class="memItemLeft" align="right" valign="top"><a id="a1a4ce3f94eaaa1010f3acb1c02d0ef07"></a>
+std::string_view&#160;</td><td class="memItemRight" valign="bottom"><b>failure_messages</b> () const noexcept</td></tr>
+<tr class="separator:a1a4ce3f94eaaa1010f3acb1c02d0ef07"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
 Friends</h2></td></tr>
@@ -136,7 +164,7 @@ Friends</h2></td></tr>
 <tr class="separator:a1e7196b0be0a7b0a12241b7dd09daeb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>UnitTestFramework/<a class="el" href="_unit_test_utils_8hpp_source.html">UnitTestUtils.hpp</a></li>
+<li>UnitTestFramework/<a class="el" href="_unit_test_logger_8hpp_source.html">UnitTestLogger.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

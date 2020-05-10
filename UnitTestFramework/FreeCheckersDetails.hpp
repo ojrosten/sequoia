@@ -7,8 +7,8 @@
 
 #pragma once
 
-/*! \file FreeCheckersDetails.hpp
-    \brief Implementation details for performing checks within the unit testing framework.
+/*! \file
+    \brief Implementation details for the testing of free functions.
 */
 
 #include "UnitTestLogger.hpp"
@@ -19,7 +19,8 @@ namespace sequoia::unit_testing
   [[nodiscard]]
   std::string add_type_info(std::string_view description);
 
-  template<test_mode Mode, class T> bool check_equality(std::string_view description, unit_test_logger<Mode>& logger, const T& value, const T& prediction);
+  template<class T, class... U>
+  struct type_demangler;
 }
 
 namespace sequoia::unit_testing::impl
@@ -31,7 +32,7 @@ namespace sequoia::unit_testing::impl
 
     const std::string message{
       add_type_info<S, U...>(
-        combine_messages(description, "Comparison performed using:\n\t[" + demangle<EquivChecker>() + "]\n\tWith equivalent types:", "\n"))
+                             combine_messages(description, "Comparison performed using:\n\t" + type_demangler<EquivChecker>::make() + "\n\tWith equivalent types:", "\n"))
     };
       
     sentinel r{logger, message};
@@ -59,7 +60,7 @@ namespace sequoia::unit_testing::impl
       for(; predictionIter != predictionLast; advance(predictionIter, 1), advance(iter, 1))
       {
         std::string dist{std::to_string(distance(predictionFirst, predictionIter)).append("\n")};
-        if(!check(combine_messages(description, "element ", "\n").append(std::move(dist)), logger, tag, *iter, *predictionIter)) equal = false;
+        if(!dispatch_check(combine_messages(description, "element ", "\n").append(std::move(dist)), logger, tag, *iter, *predictionIter)) equal = false;
       }
     }
     else

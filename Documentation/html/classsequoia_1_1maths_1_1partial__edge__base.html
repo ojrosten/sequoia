@@ -121,7 +121,7 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>weight_proxy_type</b
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a66a79658c2caff1cb863cac5cd33a618"><td class="memTemplParams" colspan="2"><a id="a66a79658c2caff1cb863cac5cd33a618"></a>
-template&lt;class... Args, class  = typename std::enable_if_t&lt;!resolve_to_copy_constructor_v&lt;partial_edge_base, Args...&gt;&gt;&gt; </td></tr>
+template&lt;class... Args, std::enable_if_t&lt;!resolve_to_copy_constructor_v&lt; partial_edge_base, Args... &gt;, int &gt;  = 0&gt; </td></tr>
 <tr class="memitem:a66a79658c2caff1cb863cac5cd33a618"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>partial_edge_base</b> (const index_type target, Args &amp;&amp;... args)</td></tr>
 <tr class="separator:a66a79658c2caff1cb863cac5cd33a618"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8e5fe9b96767b35c1ec28e7b5a3dd4b1"><td class="memItemLeft" align="right" valign="top"><a id="a8e5fe9b96767b35c1ec28e7b5a3dd4b1"></a>
@@ -153,9 +153,12 @@ constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>target_node
 <tr class="memitem:aecf47e72218ef625141a6d3b18a07ddf inherit pub_methods_classsequoia_1_1maths_1_1weighting"><td class="memItemLeft" align="right" valign="top"><a id="aecf47e72218ef625141a6d3b18a07ddf"></a>
 constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>weight</b> (Arg &amp;&amp;arg, Args &amp;&amp;... args)</td></tr>
 <tr class="separator:aecf47e72218ef625141a6d3b18a07ddf inherit pub_methods_classsequoia_1_1maths_1_1weighting"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a53ce42cb7ec90e6eb370682e81bde115 inherit pub_methods_classsequoia_1_1maths_1_1weighting"><td class="memItemLeft" align="right" valign="top"><a id="a53ce42cb7ec90e6eb370682e81bde115"></a>
-constexpr const Weight &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>weight</b> () const noexcept</td></tr>
-<tr class="separator:a53ce42cb7ec90e6eb370682e81bde115 inherit pub_methods_classsequoia_1_1maths_1_1weighting"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa0ff6be4aa235db8988dcc959a2d8bbf inherit pub_methods_classsequoia_1_1maths_1_1weighting"><td class="memItemLeft" align="right" valign="top"><a id="aa0ff6be4aa235db8988dcc959a2d8bbf"></a>
+constexpr const weight_type &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>weight</b> () const noexcept</td></tr>
+<tr class="separator:aa0ff6be4aa235db8988dcc959a2d8bbf inherit pub_methods_classsequoia_1_1maths_1_1weighting"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae235cde2c6c6d1cd48aad0bf47c91bb2 inherit pub_methods_classsequoia_1_1maths_1_1weighting"><td class="memItemLeft" align="right" valign="top"><a id="ae235cde2c6c6d1cd48aad0bf47c91bb2"></a>
+constexpr const weight_proxy_type &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>weight_proxy</b> () const noexcept</td></tr>
+<tr class="separator:ae235cde2c6c6d1cd48aad0bf47c91bb2 inherit pub_methods_classsequoia_1_1maths_1_1weighting"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad38ca7bf1e4b385abda4e2c5020ed840 inherit pub_methods_classsequoia_1_1maths_1_1weighting"><td class="memItemLeft" align="right" valign="top"><a id="ad38ca7bf1e4b385abda4e2c5020ed840"></a>
 constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>mutate_weight</b> (Fn fn)</td></tr>
 <tr class="separator:ad38ca7bf1e4b385abda4e2c5020ed840 inherit pub_methods_classsequoia_1_1maths_1_1weighting"><td class="memSeparator" colspan="2">&#160;</td></tr>

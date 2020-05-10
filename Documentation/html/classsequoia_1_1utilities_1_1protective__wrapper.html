@@ -89,7 +89,7 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>value_type</b> = T</
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:aa7651891300f5d42583392aae4868c54"><td class="memTemplParams" colspan="2"><a id="aa7651891300f5d42583392aae4868c54"></a>
-template&lt;class... Args, class  = std::enable_if_t&lt;!resolve_to_copy_constructor_v&lt;protective_wrapper, Args...&gt;&gt;&gt; </td></tr>
+template&lt;class... Args, std::enable_if_t&lt;!resolve_to_copy_constructor_v&lt; protective_wrapper, Args... &gt;, int &gt;  = 0&gt; </td></tr>
 <tr class="memitem:aa7651891300f5d42583392aae4868c54"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>protective_wrapper</b> (Args &amp;&amp;... args)</td></tr>
 <tr class="separator:aa7651891300f5d42583392aae4868c54"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7dc48bc5d3ee87f99726b27e7fcd23a5"><td class="memItemLeft" align="right" valign="top"><a id="a7dc48bc5d3ee87f99726b27e7fcd23a5"></a>

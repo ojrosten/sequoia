@@ -68,6 +68,7 @@ $(function() {
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
+<a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">TypeTraits.hpp File Reference</div>  </div>
@@ -77,6 +78,7 @@ $(function() {
 <p>Traits added as required by other components of the library.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;type_traits&gt;</code><br />
+<code>#include &lt;iterator&gt;</code><br />
 </div>
 <p><a href="_type_traits_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -114,9 +116,31 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1is__not__equal__to__comparable_3_01_t_00_01std_1_1void__t_3_01decltype_07_07stda046c42576a8423b543392105dd6eb81.html">sequoia::is_not_equal_to_comparable&lt; T, std::void_t&lt; decltype((std::declval&lt; T &gt;() !=std::declval&lt; T &gt;()))&gt; &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1is__container.html">sequoia::is_container&lt; T, class &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1is__container_3_01_t_00_01std_1_1void__t_3_01decltype_07std_1_1begin_07std_1_1d4fb032eb1b162f4553d62c2880c12d64.html">sequoia::is_container&lt; T, std::void_t&lt; decltype(std::begin(std::declval&lt; T &gt;()))&gt; &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1is__allocator.html">sequoia::is_allocator&lt; T, class &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1is__allocator_3_01_t_00_01std_1_1void__t_3_01decltype_07std_1_1declval_3_01_t_0049427f835b11d7e9108db54da2d0fb5.html">sequoia::is_allocator&lt; T, std::void_t&lt; decltype(std::declval&lt; T &gt;().allocate(0))&gt; &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1is__serializable.html">sequoia::is_serializable&lt; T, class &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1is__serializable_3_01_t_00_01std_1_1void__t_3_01decltype_07makelval_3_01std_1_19016cd01381d4fb3ea6228994b72d0d7.html">sequoia::void_t&lt; decltype(makelval&lt; std::stringstream &gt;()&lt;&lt; std::declval&lt; T &gt;())&gt; &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1class__template__is__instantiable.html">sequoia::class_template_is_instantiable&lt; class, T, Args &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1class__template__is__instantiable_3_01std_1_1void__t_3_01decltype_07_t_3_01_arg6c1ebffd7bb68464f4b8a206e26f5c17.html">sequoia::class_template_is_instantiable&lt; std::void_t&lt; decltype(T&lt; Args... &gt;{})&gt;, T, Args... &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1has__default__constructor.html">sequoia::has_default_constructor&lt; T, class &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1has__default__constructor_3_01_t_00_01std_1_1void__t_3_01decltype_07new_01_t_02_03_08_4_01_4.html">sequoia::has_default_constructor&lt; T, std::void_t&lt; decltype(new T{})&gt; &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1has__allocator__type.html">sequoia::has_allocator_type&lt; T, class &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1has__allocator__type_3_01_t_00_01std_1_1void__t_3_01typename_01_t_1_1allocator__type_01_4_01_4.html">sequoia::has_allocator_type&lt; T, std::void_t&lt; typename T::allocator_type &gt; &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1dependent__false.html">sequoia::dependent_false&lt; T &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
@@ -149,10 +173,37 @@ template&lt;class T &gt; </td></tr>
 template&lt;class T &gt; </td></tr>
 <tr class="memitem:a315f5c1ec9aaa85576317084c6701f3c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::is_not_equal_to_comparable_t</b> = typename is_not_equal_to_comparable&lt; T &gt;::type</td></tr>
 <tr class="separator:a315f5c1ec9aaa85576317084c6701f3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb2279516b30423aeb69f474a7581a4d"><td class="memTemplParams" colspan="2"><a id="afb2279516b30423aeb69f474a7581a4d"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:afb2279516b30423aeb69f474a7581a4d"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::is_container_t</b> = typename is_container&lt; T &gt;::type</td></tr>
+<tr class="separator:afb2279516b30423aeb69f474a7581a4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34bce7245f029e15a09b1ba0750ab183"><td class="memTemplParams" colspan="2"><a id="a34bce7245f029e15a09b1ba0750ab183"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a34bce7245f029e15a09b1ba0750ab183"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::is_allocator_t</b> = typename is_allocator&lt; T &gt;::type</td></tr>
+<tr class="separator:a34bce7245f029e15a09b1ba0750ab183"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a779bb3cfa56320ef25d8aac15ff7fd2d"><td class="memTemplParams" colspan="2"><a id="a779bb3cfa56320ef25d8aac15ff7fd2d"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a779bb3cfa56320ef25d8aac15ff7fd2d"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::is_serializable_t</b> = typename is_serializable&lt; T &gt;::type</td></tr>
+<tr class="separator:a779bb3cfa56320ef25d8aac15ff7fd2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ac3f881b09bf8a51f9b184f3b180e17"><td class="memTemplParams" colspan="2"><a id="a3ac3f881b09bf8a51f9b184f3b180e17"></a>
+template&lt;template&lt; class... &gt; class T, class... Args&gt; </td></tr>
+<tr class="memitem:a3ac3f881b09bf8a51f9b184f3b180e17"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::class_template_is_instantiable_t</b> = typename class_template_is_instantiable&lt; std::void_t&lt;&gt;, T, Args... &gt;::type</td></tr>
+<tr class="separator:a3ac3f881b09bf8a51f9b184f3b180e17"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a5be202fb6aa4b72db6d1dae1d1989a"><td class="memTemplParams" colspan="2"><a id="a7a5be202fb6aa4b72db6d1dae1d1989a"></a>
 template&lt;class T &gt; </td></tr>
 <tr class="memitem:a7a5be202fb6aa4b72db6d1dae1d1989a"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::has_default_constructor_t</b> = typename has_default_constructor&lt; T &gt;::type</td></tr>
 <tr class="separator:a7a5be202fb6aa4b72db6d1dae1d1989a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7915fff8b9d6a00e498e70108ac6b8f5"><td class="memTemplParams" colspan="2"><a id="a7915fff8b9d6a00e498e70108ac6b8f5"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a7915fff8b9d6a00e498e70108ac6b8f5"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::has_allocator_type_t</b> = typename has_allocator_type&lt; T &gt;::type</td></tr>
+<tr class="separator:a7915fff8b9d6a00e498e70108ac6b8f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a774e75722e76f1fcba4bbc80e2ee983e"><td class="memTemplParams" colspan="2"><a id="a774e75722e76f1fcba4bbc80e2ee983e"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a774e75722e76f1fcba4bbc80e2ee983e"><td class="memTemplItemLeft" align="right" valign="top">std::add_lvalue_reference_t&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::makelval</b> () noexcept</td></tr>
+<tr class="separator:a774e75722e76f1fcba4bbc80e2ee983e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -184,10 +235,30 @@ template&lt;class T &gt; </td></tr>
 template&lt;class T &gt; </td></tr>
 <tr class="memitem:a5fb68fe73ee26115d9769661a3232fb6"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::is_not_equal_to_comparable_v</b> {is_not_equal_to_comparable&lt;T&gt;::value}</td></tr>
 <tr class="separator:a5fb68fe73ee26115d9769661a3232fb6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae6e39e504f3dc43235cc43c0d61c280f"><td class="memTemplParams" colspan="2"><a id="ae6e39e504f3dc43235cc43c0d61c280f"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:ae6e39e504f3dc43235cc43c0d61c280f"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::is_container_v</b> {is_container&lt;T&gt;::value}</td></tr>
+<tr class="separator:ae6e39e504f3dc43235cc43c0d61c280f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a877bcc9499bc67fa6cc09a115b1251ed"><td class="memTemplParams" colspan="2"><a id="a877bcc9499bc67fa6cc09a115b1251ed"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a877bcc9499bc67fa6cc09a115b1251ed"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::is_allocator_v</b> {is_allocator&lt;T&gt;::value}</td></tr>
+<tr class="separator:a877bcc9499bc67fa6cc09a115b1251ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0be0809e787b9f14722253e2d466354"><td class="memTemplParams" colspan="2"><a id="af0be0809e787b9f14722253e2d466354"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:af0be0809e787b9f14722253e2d466354"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::is_serializable_v</b> {is_serializable&lt;T&gt;::value}</td></tr>
+<tr class="separator:af0be0809e787b9f14722253e2d466354"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5eaabe0da8be36d787c7d7eb97e3bf73"><td class="memTemplParams" colspan="2"><a id="a5eaabe0da8be36d787c7d7eb97e3bf73"></a>
+template&lt;template&lt; class... &gt; class T, class... Args&gt; </td></tr>
+<tr class="memitem:a5eaabe0da8be36d787c7d7eb97e3bf73"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::class_template_is_instantiable_v</b> {class_template_is_instantiable&lt;std::void_t&lt;&gt;, T, Args...&gt;::value}</td></tr>
+<tr class="separator:a5eaabe0da8be36d787c7d7eb97e3bf73"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a992e315887bb4d372c93bef760db3bb8"><td class="memTemplParams" colspan="2"><a id="a992e315887bb4d372c93bef760db3bb8"></a>
 template&lt;class T &gt; </td></tr>
 <tr class="memitem:a992e315887bb4d372c93bef760db3bb8"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::has_default_constructor_v</b> {has_default_constructor&lt;T&gt;::value}</td></tr>
 <tr class="separator:a992e315887bb4d372c93bef760db3bb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7116cfb2d39c72b37dadc705ff3e4d5d"><td class="memTemplParams" colspan="2"><a id="a7116cfb2d39c72b37dadc705ff3e4d5d"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a7116cfb2d39c72b37dadc705ff3e4d5d"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::has_allocator_type_v</b> = has_allocator_type&lt;T&gt;::value</td></tr>
+<tr class="separator:a7116cfb2d39c72b37dadc705ff3e4d5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Traits added as required by other components of the library. </p>

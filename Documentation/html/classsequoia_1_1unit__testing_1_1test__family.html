@@ -66,6 +66,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classsequoia_1_1unit__testing_1_1test__family-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -73,21 +74,36 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1unit__testing_1_1test__family_1_1results.html">results</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1unit__testing_1_1test__family_1_1summary.html">summary</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a4d77c966f881bb9f753b88c2ff4c1545"><td class="memTemplParams" colspan="2"><a id="a4d77c966f881bb9f753b88c2ff4c1545"></a>
 template&lt;class... Tests&gt; </td></tr>
 <tr class="memitem:a4d77c966f881bb9f753b88c2ff4c1545"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>test_family</b> (std::string_view name, Tests &amp;&amp;... tests)</td></tr>
 <tr class="separator:a4d77c966f881bb9f753b88c2ff4c1545"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4f02fd729396cec281898f0b0ba750a5"><td class="memItemLeft" align="right" valign="top"><a id="a4f02fd729396cec281898f0b0ba750a5"></a>
-std::vector&lt; <a class="el" href="classsequoia_1_1unit__testing_1_1log__summary.html">log_summary</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>execute</b> ()</td></tr>
-<tr class="separator:a4f02fd729396cec281898f0b0ba750a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af9f9f42ce5abda19e755b7f176419404"><td class="memTemplParams" colspan="2"><a id="af9f9f42ce5abda19e755b7f176419404"></a>
+template&lt;class Test &gt; </td></tr>
+<tr class="memitem:af9f9f42ce5abda19e755b7f176419404"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>add_test</b> (Test &amp;&amp;<a class="el" href="classsequoia_1_1unit__testing_1_1test.html">test</a>)</td></tr>
+<tr class="separator:af9f9f42ce5abda19e755b7f176419404"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a89c148ebd38068cdd1677aa66ca7c4b6"><td class="memItemLeft" align="right" valign="top"><a id="a89c148ebd38068cdd1677aa66ca7c4b6"></a>
+auto&#160;</td><td class="memItemRight" valign="bottom"><b>execute</b> (const bool writeFiles, const concurrency_mode mode) -&gt; <a class="el" href="structsequoia_1_1unit__testing_1_1test__family_1_1results.html">results</a></td></tr>
+<tr class="separator:a89c148ebd38068cdd1677aa66ca7c4b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa7c80ba54f6c38a929011ba2e50f430c"><td class="memItemLeft" align="right" valign="top"><a id="aa7c80ba54f6c38a929011ba2e50f430c"></a>
 std::string_view&#160;</td><td class="memItemRight" valign="bottom"><b>name</b> () const noexcept</td></tr>
 <tr class="separator:aa7c80ba54f6c38a929011ba2e50f430c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb1f671bb2444e0d519b1d4f2759156a"><td class="memItemLeft" align="right" valign="top"><a id="abb1f671bb2444e0d519b1d4f2759156a"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>empty</b> () const noexcept</td></tr>
+<tr class="separator:abb1f671bb2444e0d519b1d4f2759156a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following file:<ul>
-<li>UnitTestFramework/<a class="el" href="_unit_test_utils_8hpp_source.html">UnitTestUtils.hpp</a></li>
+<hr/>The documentation for this class was generated from the following files:<ul>
+<li>UnitTestFramework/<a class="el" href="_unit_test_family_8hpp_source.html">UnitTestFamily.hpp</a></li>
+<li>UnitTestFramework/UnitTestFamily.cpp</li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

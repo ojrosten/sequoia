@@ -1,8 +1,16 @@
 var searchData=
 [
-  ['variadic_5ftraits',['variadic_traits',['../structsequoia_1_1variadic__traits.html',1,'sequoia']]],
-  ['variadic_5ftraits_3c_3e',['variadic_traits&lt;&gt;',['../structsequoia_1_1variadic__traits_3_4.html',1,'sequoia']]],
-  ['variadic_5ftraits_5fhelper',['variadic_traits_helper',['../structsequoia_1_1impl_1_1variadic__traits__helper.html',1,'sequoia::impl']]],
-  ['variadic_5ftraits_5fhelper_3c_20h_20_3e',['variadic_traits_helper&lt; H &gt;',['../structsequoia_1_1impl_1_1variadic__traits__helper_3_01_h_01_4.html',1,'sequoia::impl']]],
-  ['void_5ft_3c_20decltype_28std_3a_3adeclval_3c_20t_20_3e_28_29_3c_20std_3a_3adeclval_3c_20t_20_3e_28_29_29_3e_20_3e',['void_t&lt; decltype(std::declval&lt; T &gt;()&lt; std::declval&lt; T &gt;())&gt; &gt;',['../structsequoia_1_1is__orderable_3_01_t_00_01std_1_1void__t_3_01decltype_07std_1_1declval_3_01_t_069c35a3fc838b4f622235a8c36928d18.html',1,'sequoia']]]
+  ['undirected_5fembedded_5finit_5fchecker',['undirected_embedded_init_checker',['../classsequoia_1_1unit__testing_1_1undirected__embedded__init__checker.html',1,'sequoia::unit_testing']]],
+  ['undirected_5ffixed_5ftopology_5fchecker',['undirected_fixed_topology_checker',['../classsequoia_1_1unit__testing_1_1undirected__fixed__topology__checker.html',1,'sequoia::unit_testing']]],
+  ['undirected_5finit_5fchecker',['undirected_init_checker',['../classsequoia_1_1unit__testing_1_1undirected__init__checker.html',1,'sequoia::unit_testing']]],
+  ['unit_5ftest_5flogger',['unit_test_logger',['../classsequoia_1_1unit__testing_1_1unit__test__logger.html',1,'sequoia::unit_testing']]],
+  ['unit_5ftest_5frunner',['unit_test_runner',['../classsequoia_1_1unit__testing_1_1unit__test__runner.html',1,'sequoia::unit_testing']]],
+  ['unpooled',['unpooled',['../classsequoia_1_1data__sharing_1_1unpooled.html',1,'sequoia::data_sharing']]],
+  ['unsortable',['unsortable',['../structsequoia_1_1unit__testing_1_1unsortable.html',1,'sequoia::unit_testing']]],
+  ['unweighted_5fgraph_5fallocation_5ftest',['unweighted_graph_allocation_test',['../classsequoia_1_1unit__testing_1_1unweighted__graph__allocation__test.html',1,'sequoia::unit_testing']]],
+  ['unweighted_5fgraph_5ftest',['unweighted_graph_test',['../classsequoia_1_1unit__testing_1_1unweighted__graph__test.html',1,'sequoia::unit_testing']]],
+  ['updatable',['updatable',['../classsequoia_1_1unit__testing_1_1updatable.html',1,'sequoia::unit_testing']]],
+  ['use_5fweak_5fequiv',['use_weak_equiv',['../structsequoia_1_1unit__testing_1_1impl_1_1use__weak__equiv.html',1,'sequoia::unit_testing::impl']]],
+  ['use_5fweak_5fequiv_3c_20maths_3a_3aedge_3c_20weight_2c_20weightproxy_2c_20indextype_20_3e_20_3e',['use_weak_equiv&lt; maths::edge&lt; Weight, WeightProxy, IndexType &gt; &gt;',['../structsequoia_1_1unit__testing_1_1impl_1_1use__weak__equiv_3_01maths_1_1edge_3_01_weight_00_01_w15a8ddfbb43e598ed9b1cc3de2055b76.html',1,'sequoia::unit_testing::impl']]],
+  ['utilities_5ftest',['utilities_test',['../classsequoia_1_1unit__testing_1_1utilities__test.html',1,'sequoia::unit_testing']]]
 ];

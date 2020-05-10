@@ -108,7 +108,7 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1maths_1_1inversion__constant.html">sequoia::maths::inversion_constant&lt; Inverted &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsequoia_1_1maths_1_1edge.html">sequoia::maths::edge&lt; Weight, WeightProxy, IndexType &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores the host node as well as the target node and an optional weight.  <a href="classsequoia_1_1maths_1_1edge.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores the source node as well as the target node and an optional weight.  <a href="classsequoia_1_1maths_1_1edge.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsequoia_1_1maths_1_1embedded__edge.html">sequoia::maths::embedded_edge&lt; Weight, WeightSharingPolicy, WeightProxy, IndexType &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decoration of edge to record the location on the target node into which the edge is embedded.  <a href="classsequoia_1_1maths_1_1embedded__edge.html#details">More...</a><br /></td></tr>
@@ -136,7 +136,7 @@ template&lt;bool Inverted&gt; </td></tr>
 <p>All concrete edges inherit from this class but may have additional adornments. Depending on the context, edges may have one or more of the following:</p>
 <ol type="1">
 <li>A non-trivial weight;</li>
-<li>A record of the 'host' node, from which the edge points to its target;</li>
+<li>A record of the 'source' node, from which the edge points to its target;</li>
 <li>An index recording the location on the target node into which the edge is embedded. </li>
 </ol>
 </div></div><!-- contents -->

@@ -97,11 +97,11 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>return_type</b> = R<
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a70dbd1cce0c534b03b8255945afe1ab3"><td class="memTemplParams" colspan="2"><a id="a70dbd1cce0c534b03b8255945afe1ab3"></a>
-template&lt;bool B = MultiPipeline, class  = std::enable_if_t&lt;!B&gt;&gt; </td></tr>
+template&lt;bool B = MultiPipeline, std::enable_if_t&lt;!B, int &gt;  = 0&gt; </td></tr>
 <tr class="memitem:a70dbd1cce0c534b03b8255945afe1ab3"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>thread_pool</b> (const std::size_t numThreads)</td></tr>
 <tr class="separator:a70dbd1cce0c534b03b8255945afe1ab3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acedcbcd7f9b06df68eafa7af26327a1e"><td class="memTemplParams" colspan="2"><a id="acedcbcd7f9b06df68eafa7af26327a1e"></a>
-template&lt;bool B = MultiPipeline, class  = std::enable_if_t&lt;B&gt;&gt; </td></tr>
+template&lt;bool B = MultiPipeline, std::enable_if_t&lt; B, int &gt;  = 0&gt; </td></tr>
 <tr class="memitem:acedcbcd7f9b06df68eafa7af26327a1e"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>thread_pool</b> (const std::size_t numThreads, const std::size_t pushCycles=46)</td></tr>
 <tr class="separator:acedcbcd7f9b06df68eafa7af26327a1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a43bb826eda0785a478b90dd01d436194"><td class="memItemLeft" align="right" valign="top"><a id="a43bb826eda0785a478b90dd01d436194"></a>

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.15"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: sequoia::unit_testing::broken_move Struct Reference</title>
+<title>Sequoia: sequoia::unit_testing::broken_move&lt; T, Allocator &gt; Struct Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -66,40 +66,73 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#friends">Friends</a> &#124;
 <a href="structsequoia_1_1unit__testing_1_1broken__move-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">sequoia::unit_testing::broken_move Struct Reference</div>  </div>
+<div class="title">sequoia::unit_testing::broken_move&lt; T, Allocator &gt; Struct Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a420dccf15d57762797a1c6f2286c7810"><td class="memItemLeft" align="right" valign="top"><a id="a420dccf15d57762797a1c6f2286c7810"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>allocator_type</b> = Allocator</td></tr>
+<tr class="separator:a420dccf15d57762797a1c6f2286c7810"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ad385151255bfca9f6fabb198fb12e90e"><td class="memItemLeft" align="right" valign="top"><a id="ad385151255bfca9f6fabb198fb12e90e"></a>
-constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>broken_move</b> (int a)</td></tr>
-<tr class="separator:ad385151255bfca9f6fabb198fb12e90e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3cb6d1665290bb86a8f7aef488c21e4f"><td class="memItemLeft" align="right" valign="top"><a id="a3cb6d1665290bb86a8f7aef488c21e4f"></a>
-constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>broken_move</b> (const <a class="el" href="structsequoia_1_1unit__testing_1_1broken__move.html">broken_move</a> &amp;other)=default</td></tr>
-<tr class="separator:a3cb6d1665290bb86a8f7aef488c21e4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abcdaeefe78165eb0d89501269dd35b2c"><td class="memItemLeft" align="right" valign="top"><a id="abcdaeefe78165eb0d89501269dd35b2c"></a>
-constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>broken_move</b> (<a class="el" href="structsequoia_1_1unit__testing_1_1broken__move.html">broken_move</a> &amp;&amp;)</td></tr>
-<tr class="separator:abcdaeefe78165eb0d89501269dd35b2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0a7a84197785010e1e3c97bc98d82bc3"><td class="memItemLeft" align="right" valign="top"><a id="a0a7a84197785010e1e3c97bc98d82bc3"></a>
-constexpr <a class="el" href="structsequoia_1_1unit__testing_1_1broken__move.html">broken_move</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="structsequoia_1_1unit__testing_1_1broken__move.html">broken_move</a> &amp;other)=default</td></tr>
-<tr class="separator:a0a7a84197785010e1e3c97bc98d82bc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9e6b3ad3610a8de9b14f34ed048029b7"><td class="memItemLeft" align="right" valign="top"><a id="a9e6b3ad3610a8de9b14f34ed048029b7"></a>
-constexpr <a class="el" href="structsequoia_1_1unit__testing_1_1broken__move.html">broken_move</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="structsequoia_1_1unit__testing_1_1broken__move.html">broken_move</a> &amp;&amp;other)=default</td></tr>
-<tr class="separator:a9e6b3ad3610a8de9b14f34ed048029b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb21a05110e83f27627568eb3fae8906"><td class="memItemLeft" align="right" valign="top"><a id="aeb21a05110e83f27627568eb3fae8906"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>broken_move</b> (std::initializer_list&lt; T &gt; list)</td></tr>
+<tr class="separator:aeb21a05110e83f27627568eb3fae8906"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a12efaa9546489e0e096a76857a8b4ebd"><td class="memItemLeft" align="right" valign="top"><a id="a12efaa9546489e0e096a76857a8b4ebd"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>broken_move</b> (std::initializer_list&lt; T &gt; list, const allocator_type &amp;alloc)</td></tr>
+<tr class="separator:a12efaa9546489e0e096a76857a8b4ebd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a054e80b29f0ebf3baf04ab74f520911f"><td class="memItemLeft" align="right" valign="top"><a id="a054e80b29f0ebf3baf04ab74f520911f"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>broken_move</b> (const <a class="el" href="structsequoia_1_1unit__testing_1_1broken__move.html">broken_move</a> &amp;)=default</td></tr>
+<tr class="separator:a054e80b29f0ebf3baf04ab74f520911f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab86ab38811e461ac8a673e61a2edeeee"><td class="memItemLeft" align="right" valign="top"><a id="ab86ab38811e461ac8a673e61a2edeeee"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>broken_move</b> (const <a class="el" href="structsequoia_1_1unit__testing_1_1broken__move.html">broken_move</a> &amp;other, const allocator_type &amp;alloc)</td></tr>
+<tr class="separator:ab86ab38811e461ac8a673e61a2edeeee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a511383e97b39b23be3c1c2b716c36c96"><td class="memItemLeft" align="right" valign="top"><a id="a511383e97b39b23be3c1c2b716c36c96"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>broken_move</b> (<a class="el" href="structsequoia_1_1unit__testing_1_1broken__move.html">broken_move</a> &amp;&amp;)</td></tr>
+<tr class="separator:a511383e97b39b23be3c1c2b716c36c96"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a844650b0439ebf7a567f2d3fa67d94cc"><td class="memItemLeft" align="right" valign="top"><a id="a844650b0439ebf7a567f2d3fa67d94cc"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>broken_move</b> (<a class="el" href="structsequoia_1_1unit__testing_1_1broken__move.html">broken_move</a> &amp;&amp;other, const allocator_type &amp;alloc)</td></tr>
+<tr class="separator:a844650b0439ebf7a567f2d3fa67d94cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1914fe91b26ec46131840a5bc113e394"><td class="memItemLeft" align="right" valign="top"><a id="a1914fe91b26ec46131840a5bc113e394"></a>
+<a class="el" href="structsequoia_1_1unit__testing_1_1broken__move.html">broken_move</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="structsequoia_1_1unit__testing_1_1broken__move.html">broken_move</a> &amp;)=default</td></tr>
+<tr class="separator:a1914fe91b26ec46131840a5bc113e394"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88e5834e831af48b110bdf5cc91744c5"><td class="memItemLeft" align="right" valign="top"><a id="a88e5834e831af48b110bdf5cc91744c5"></a>
+<a class="el" href="structsequoia_1_1unit__testing_1_1broken__move.html">broken_move</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="structsequoia_1_1unit__testing_1_1broken__move.html">broken_move</a> &amp;&amp;)=default</td></tr>
+<tr class="separator:a88e5834e831af48b110bdf5cc91744c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:afc9e2d1cf497321517c7e147552aec43"><td class="memItemLeft" align="right" valign="top"><a id="afc9e2d1cf497321517c7e147552aec43"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>x</b> {}</td></tr>
-<tr class="separator:afc9e2d1cf497321517c7e147552aec43"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a165972718abbe809af11fd8ce30cf82a"><td class="memItemLeft" align="right" valign="top"><a id="a165972718abbe809af11fd8ce30cf82a"></a>
+std::vector&lt; T, Allocator &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>x</b> {}</td></tr>
+<tr class="separator:a165972718abbe809af11fd8ce30cf82a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
+Friends</h2></td></tr>
+<tr class="memitem:a34f14a2ff9f79daf554e6935b150c3f7"><td class="memItemLeft" align="right" valign="top"><a id="a34f14a2ff9f79daf554e6935b150c3f7"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>swap</b> (<a class="el" href="structsequoia_1_1unit__testing_1_1broken__move.html">broken_move</a> &amp;lhs, <a class="el" href="structsequoia_1_1unit__testing_1_1broken__move.html">broken_move</a> &amp;rhs)</td></tr>
+<tr class="separator:a34f14a2ff9f79daf554e6935b150c3f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad12566775379d9482ff0ccee092093d5"><td class="memItemLeft" align="right" valign="top"><a id="ad12566775379d9482ff0ccee092093d5"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="structsequoia_1_1unit__testing_1_1broken__move.html">broken_move</a> &amp;lhs, const <a class="el" href="structsequoia_1_1unit__testing_1_1broken__move.html">broken_move</a> &amp;rhs) noexcept</td></tr>
+<tr class="separator:ad12566775379d9482ff0ccee092093d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a36b2bf200ff433b7257a76bcb72dea7f"><td class="memItemLeft" align="right" valign="top"><a id="a36b2bf200ff433b7257a76bcb72dea7f"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator!=</b> (const <a class="el" href="structsequoia_1_1unit__testing_1_1broken__move.html">broken_move</a> &amp;lhs, const <a class="el" href="structsequoia_1_1unit__testing_1_1broken__move.html">broken_move</a> &amp;rhs) noexcept</td></tr>
+<tr class="separator:a36b2bf200ff433b7257a76bcb72dea7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a77934c2390ffc4a90eb099bab1c88e08"><td class="memTemplParams" colspan="2"><a id="a77934c2390ffc4a90eb099bab1c88e08"></a>
+template&lt;class Stream &gt; </td></tr>
+<tr class="memitem:a77934c2390ffc4a90eb099bab1c88e08"><td class="memTemplItemLeft" align="right" valign="top">Stream &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator&lt;&lt;</b> (Stream &amp;s, const <a class="el" href="structsequoia_1_1unit__testing_1_1broken__move.html">broken_move</a> &amp;b)</td></tr>
+<tr class="separator:a77934c2390ffc4a90eb099bab1c88e08"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>UnitTests/UnitTestFramework/<a class="el" href="_unit_test_diagnostics_8hpp_source.html">UnitTestDiagnostics.hpp</a></li>
+<li>UnitTests/UnitTestFramework/<a class="el" href="_unit_test_diagnostics_utilities_8hpp_source.html">UnitTestDiagnosticsUtilities.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

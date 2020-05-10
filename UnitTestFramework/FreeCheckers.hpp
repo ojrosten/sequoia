@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file FreeCheckers.hpp
+/*! \file
     \brief Free functions for performing checks, together with the 'checker' class template which wraps them.
 
     Given a type, T, any reasonable testing framework must provide a mechanism for checking whether or
@@ -69,9 +69,21 @@
 #include "FreeCheckersDetails.hpp"
 
 namespace sequoia::unit_testing
-{  
+{
+  /*! \brief class template, specializations of which implement detailed comparison of two instantiations of T;
+
+   */
   template<class T> struct detailed_equality_checker;
+
+  /*! \brief class template, specializations of which implement comparision of two equivalent types;
+
+   */
   template<class T, class... Us> struct equivalence_checker;
+
+
+  /*! \brief class template, specializations of which implement comparision of two weakly equivalent types;
+
+   */
   template<class T, class... Us> struct weak_equivalence_checker;
 
   struct equality_tag{};
@@ -82,8 +94,7 @@ namespace sequoia::unit_testing
   template<class T> constexpr bool has_weak_equivalence_checker_v{class_template_is_instantiable_v<weak_equivalence_checker, T>};
   template<class T> constexpr bool has_detailed_equality_checker_v{class_template_is_instantiable_v<detailed_equality_checker, T>};
 
-  /*! \class serializer
-      \brief Specialize this class template to provide custom serialization of a given class.
+  /*! \brief Specialize this struct template to provide custom serialization of a given class.
 
    */
   
@@ -107,22 +118,33 @@ namespace sequoia::unit_testing
   {
     return serializer<T>::make(value);    
   }
+    
+  template<class T>
+  [[nodiscard]]
+  std::string demangle()
+  {
+    #ifndef _MSC_VER_
+      int status;
+      return abi::__cxa_demangle(typeid(T).name(), 0, 0, &status);
+    #else        
+      return typeid(T).name();
+    #endif
+  }
 
-  /*! \class type_info
-      \brief Specialize this class template to customize the way in which type info is generated for a given class; this is
-      particularly useful for class templates, where standard de-mangling may be hard to read!
+  /*! \brief Specialize this struct template to customize the way in which type info is generated for a given class; this is
+      particularly useful for class templates where standard de-mangling may be hard to read!
 
    */
 
   template<class T, class... U>
-  struct type_info
+  struct type_demangler
   {
     [[nodiscard]]
     static std::string make()
     {
       auto info{std::string{'['}.append(demangle<T>())};
       if constexpr(sizeof...(U) > 0)
-        info.append("\n;").append(type_info<U...>::make());
+        info.append("\n;").append(type_demangler<U...>::make());
 
       info += ']';
       return info;
@@ -133,13 +155,14 @@ namespace sequoia::unit_testing
   [[nodiscard]]
   std::string add_type_info(std::string_view description)
   {
-    return combine_messages(description, type_info<T, U...>::make().append("\n"), description.empty() ? "" : "\n");
+    return combine_messages(description, type_demangler<T, U...>::make().append("\n"), description.empty() ? "" : "\n");
   }
 
-  // forward declaration so that this may be used by check
+  /*! The next three functions form an overload set, dedicated to appropiately dispatching requests
+      to check equality, equivalence and weak equivalence. This set may be supplemented by extenders
+      of the testing framework, see FuzzyTestCore.hpp for an example.
 
-  template<test_mode Mode, class Iter, class PredictionIter>
-  bool check_range(std::string_view description, unit_test_logger<Mode>& logger, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast);
+   */
 
   /*! \brief The workhorse of equality checking, which takes responsibility for reflecting upon types and then dispatching, appropriately. 
 
@@ -149,7 +172,7 @@ namespace sequoia::unit_testing
    */
   
   template<test_mode Mode, class T>
-  bool check(std::string_view description, unit_test_logger<Mode>& logger, equality_tag, const T& value, const T& prediction)
+  bool dispatch_check(std::string_view description, unit_test_logger<Mode>& logger, equality_tag, const T& value, const T& prediction)
   {
     constexpr bool delegate{has_detailed_equality_checker_v<T> || is_container_v<T>};
 
@@ -223,7 +246,7 @@ namespace sequoia::unit_testing
    */
   
   template<test_mode Mode, class T, class S, class... U>
-  bool check(std::string_view description, unit_test_logger<Mode>& logger, equivalence_tag, const T& value, S&& s, U&&... u)
+  bool dispatch_check(std::string_view description, unit_test_logger<Mode>& logger, equivalence_tag, const T& value, S&& s, U&&... u)
   {
     if constexpr(class_template_is_instantiable_v<equivalence_checker, T>)
     {      
@@ -248,7 +271,7 @@ namespace sequoia::unit_testing
    */
 
   template<test_mode Mode, class T, class S, class... U>
-  bool check(std::string_view description, unit_test_logger<Mode>& logger, weak_equivalence_tag, const T& value, S&& s, U&&... u)
+  bool dispatch_check(std::string_view description, unit_test_logger<Mode>& logger, weak_equivalence_tag, const T& value, S&& s, U&&... u)
   {
     if constexpr(class_template_is_instantiable_v<weak_equivalence_checker, T>)
     {      
@@ -264,24 +287,26 @@ namespace sequoia::unit_testing
     }
   }
 
-  template<test_mode Mode, class T> bool check_equality(std::string_view description, unit_test_logger<Mode>& logger, const T& value, const T& prediction)
+  template<test_mode Mode, class T>
+  bool check_equality(std::string_view description, unit_test_logger<Mode>& logger, const T& value, const T& prediction)
   {
-    return check(description, logger, equality_tag{}, value, prediction);
+    return dispatch_check(description, logger, equality_tag{}, value, prediction);
   }
 
   template<test_mode Mode, class T, class S, class... U>
   bool check_equivalence(std::string_view description, unit_test_logger<Mode>& logger, const T& value, S&& s, U&&... u)
   {
-    return check(description, logger, equivalence_tag{}, value, std::forward<S>(s), std::forward<U>(u)...);      
+    return dispatch_check(description, logger, equivalence_tag{}, value, std::forward<S>(s), std::forward<U>(u)...);      
   }
 
   template<test_mode Mode, class T, class S, class... U>
   bool check_weak_equivalence(std::string_view description, unit_test_logger<Mode>& logger, const T& value, S&& s, U&&... u)
   {
-    return check(description, logger, weak_equivalence_tag{}, value, std::forward<S>(s), std::forward<U>(u)...);      
+    return dispatch_check(description, logger, weak_equivalence_tag{}, value, std::forward<S>(s), std::forward<U>(u)...);      
   }
 
-  template<test_mode Mode> bool check(std::string_view description, unit_test_logger<Mode>& logger, const bool value)
+  template<test_mode Mode>
+  bool check(std::string_view description, unit_test_logger<Mode>& logger, const bool value)
   {
     return check_equality(description, logger, value, true);
   }
@@ -332,8 +357,7 @@ namespace sequoia::unit_testing
     return impl::check_range(description, logger, weak_equivalence_tag{}, first, last, predictionFirst, predictionLast);      
   }
 
-  /*! \class checker
-      \brief Exposes elementary check methods, with the option to plug in arbitrary Extenders to compose functionality.
+  /*! \brief Exposes elementary check methods, with the option to plug in arbitrary Extenders to compose functionality.
 
       This class template is templated on the enum class test_mode, together with a variadic set of Extenders.
 

@@ -68,8 +68,8 @@ $(function() {
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="#pro-static-methods">Static Protected Member Functions</a> &#124;
 <a href="classsequoia_1_1unit__testing_1_1scaling__dereference__policy-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">sequoia::unit_testing::scaling_dereference_policy&lt; Iterator &gt; Class Template Reference</div>  </div>
@@ -99,18 +99,9 @@ constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>scaling_derefere
 <tr class="memitem:ad7026623f028b297201e921712eb9fa7"><td class="memItemLeft" align="right" valign="top"><a id="ad7026623f028b297201e921712eb9fa7"></a>
 constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>scaling_dereference_policy</b> (const <a class="el" href="classsequoia_1_1unit__testing_1_1scaling__dereference__policy.html">scaling_dereference_policy</a> &amp;)=default</td></tr>
 <tr class="separator:ad7026623f028b297201e921712eb9fa7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a60243c9ac0eb09e2fbd1fcc4b4545206"><td class="memItemLeft" align="right" valign="top"><a id="a60243c9ac0eb09e2fbd1fcc4b4545206"></a>
-constexpr proxy&#160;</td><td class="memItemRight" valign="bottom"><b>get</b> (typename std::iterator_traits&lt; Iterator &gt;::reference ref) const noexcept</td></tr>
-<tr class="separator:a60243c9ac0eb09e2fbd1fcc4b4545206"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8bdaf950527e54bf5ef50b8b2374fb4a"><td class="memItemLeft" align="right" valign="top"><a id="a8bdaf950527e54bf5ef50b8b2374fb4a"></a>
 constexpr value_type&#160;</td><td class="memItemRight" valign="bottom"><b>scale</b> () const noexcept</td></tr>
 <tr class="separator:a8bdaf950527e54bf5ef50b8b2374fb4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
-Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a68dad480155cb88ab61b954198445b8d"><td class="memItemLeft" align="right" valign="top"><a id="a68dad480155cb88ab61b954198445b8d"></a>
-static constexpr pointer&#160;</td><td class="memItemRight" valign="bottom"><b>get_ptr</b> (reference ref) noexcept</td></tr>
-<tr class="separator:a68dad480155cb88ab61b954198445b8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
@@ -123,6 +114,15 @@ constexpr <a class="el" href="classsequoia_1_1unit__testing_1_1scaling__derefere
 <tr class="memitem:a4dbe0018ffcb6976a5e77b7431177aec"><td class="memItemLeft" align="right" valign="top"><a id="a4dbe0018ffcb6976a5e77b7431177aec"></a>
 constexpr <a class="el" href="classsequoia_1_1unit__testing_1_1scaling__dereference__policy.html">scaling_dereference_policy</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="classsequoia_1_1unit__testing_1_1scaling__dereference__policy.html">scaling_dereference_policy</a> &amp;&amp;)=default</td></tr>
 <tr class="separator:a4dbe0018ffcb6976a5e77b7431177aec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a60243c9ac0eb09e2fbd1fcc4b4545206"><td class="memItemLeft" align="right" valign="top"><a id="a60243c9ac0eb09e2fbd1fcc4b4545206"></a>
+constexpr proxy&#160;</td><td class="memItemRight" valign="bottom"><b>get</b> (typename std::iterator_traits&lt; Iterator &gt;::reference ref) const noexcept</td></tr>
+<tr class="separator:a60243c9ac0eb09e2fbd1fcc4b4545206"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-static-methods"></a>
+Static Protected Member Functions</h2></td></tr>
+<tr class="memitem:a68dad480155cb88ab61b954198445b8d"><td class="memItemLeft" align="right" valign="top"><a id="a68dad480155cb88ab61b954198445b8d"></a>
+static constexpr pointer&#160;</td><td class="memItemRight" valign="bottom"><b>get_ptr</b> (reference ref) noexcept</td></tr>
+<tr class="separator:a68dad480155cb88ab61b954198445b8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>UnitTests/Core/Utilities/<a class="el" href="_unit_tests_2_core_2_utilities_2_iterator_test_8hpp_source.html">IteratorTest.hpp</a></li>

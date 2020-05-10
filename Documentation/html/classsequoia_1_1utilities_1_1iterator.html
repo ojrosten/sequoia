@@ -75,7 +75,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>An iterator with policies controlling dereferncing and auxiliary data.  
+<p>An iterator with policies controlling dereferencing and auxiliary data.  
  <a href="classsequoia_1_1utilities_1_1iterator.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="_iterator_8hpp_source.html">Iterator.hpp</a>&gt;</code></p>
@@ -116,11 +116,11 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>const_dereference_ty
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:abb9343e661b7f73543c203ace549fb86"><td class="memTemplParams" colspan="2"><a id="abb9343e661b7f73543c203ace549fb86"></a>
-template&lt;class Arg , class... Args, class  = std::enable_if_t&lt;sizeof...(Args) || !resolve_to_copy_constructor_v&lt;Arg, iterator&gt;&gt;&gt; </td></tr>
+template&lt;class Arg , class... Args, std::enable_if_t&lt; sizeof...(Args)||!resolve_to_copy_constructor_v&lt; Arg, iterator &gt;, int &gt;  = 0&gt; </td></tr>
 <tr class="memitem:abb9343e661b7f73543c203ace549fb86"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>iterator</b> (Arg &amp;&amp;baseIterArg, Args &amp;&amp;... args)</td></tr>
 <tr class="separator:abb9343e661b7f73543c203ace549fb86"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af293b5756d9679b3274e087b5c2a46c2"><td class="memTemplParams" colspan="2"><a id="af293b5756d9679b3274e087b5c2a46c2"></a>
-template&lt;class Iter , class DerefPol , class  = std::enable_if_t&lt;           !std::is_same_v&lt;Iter, Iterator&gt;        &amp;&amp; std::is_convertible_v&lt;Iter, base_iterator_type&gt;        &amp;&amp; impl::are_compatible_v&lt;DereferencePolicy, DerefPol&gt;        &amp;&amp; std::is_same_v&lt;             std::decay_t&lt;impl::type_generator_t&lt;DereferencePolicy&gt;&gt;,             std::decay_t&lt;impl::type_generator_t&lt;DerefPol&gt;&gt;           &gt;      &gt;&gt; </td></tr>
+template&lt;class Iter , class DerefPol , std::enable_if_t&lt; !std::is_same_v&lt; Iter, Iterator &gt; &amp;&amp;std::is_convertible_v&lt; Iter, base_iterator_type &gt; &amp;&amp;impl::are_compatible_v&lt; DereferencePolicy, DerefPol &gt; &amp;&amp;std::is_same_v&lt; std::decay_t&lt; impl::type_generator_t&lt; DereferencePolicy &gt;&gt;, std::decay_t&lt; impl::type_generator_t&lt; DerefPol &gt;&gt; &gt;, int &gt;  = 0&gt; </td></tr>
 <tr class="memitem:af293b5756d9679b3274e087b5c2a46c2"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>iterator</b> (<a class="el" href="classsequoia_1_1utilities_1_1iterator.html">iterator</a>&lt; Iter, DerefPol &gt; iter)</td></tr>
 <tr class="separator:af293b5756d9679b3274e087b5c2a46c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a68167a4c5176f4d1fb330b7bb49982f1"><td class="memItemLeft" align="right" valign="top"><a id="a68167a4c5176f4d1fb330b7bb49982f1"></a>
@@ -142,21 +142,21 @@ constexpr base_iterator_type&#160;</td><td class="memItemRight" valign="bottom">
 constexpr const_dereference_type&#160;</td><td class="memItemRight" valign="bottom"><b>operator *</b> () const</td></tr>
 <tr class="separator:a5576b562e84f38dbc65aebd11f95f112"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0ce3d1a887a8a9d2341d58af28ea1891"><td class="memTemplParams" colspan="2"><a id="a0ce3d1a887a8a9d2341d58af28ea1891"></a>
-template&lt;class DerefPol  = DereferencePolicy, class  = std::enable_if_t&lt;impl::provides_mutable_reference_v&lt;DerefPol&gt;&gt;&gt; </td></tr>
+template&lt;class DerefPol  = DereferencePolicy, std::enable_if_t&lt; impl::provides_mutable_reference_v&lt; DerefPol &gt;, int &gt;  = 0&gt; </td></tr>
 <tr class="memitem:a0ce3d1a887a8a9d2341d58af28ea1891"><td class="memTemplItemLeft" align="right" valign="top">constexpr reference&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator *</b> ()</td></tr>
 <tr class="separator:a0ce3d1a887a8a9d2341d58af28ea1891"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af2493fba35c33be454d38bd54602a5e4"><td class="memItemLeft" align="right" valign="top"><a id="af2493fba35c33be454d38bd54602a5e4"></a>
 constexpr const_dereference_type&#160;</td><td class="memItemRight" valign="bottom"><b>operator[]</b> (const difference_type n) const</td></tr>
 <tr class="separator:af2493fba35c33be454d38bd54602a5e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4fee41f54f3ba22085701837a791cf28"><td class="memTemplParams" colspan="2"><a id="a4fee41f54f3ba22085701837a791cf28"></a>
-template&lt;class DerefPol  = DereferencePolicy, class  = std::enable_if_t&lt;impl::provides_mutable_reference_v&lt;DerefPol&gt;&gt;&gt; </td></tr>
+template&lt;class DerefPol  = DereferencePolicy, std::enable_if_t&lt; impl::provides_mutable_reference_v&lt; DerefPol &gt;, int &gt;  = 0&gt; </td></tr>
 <tr class="memitem:a4fee41f54f3ba22085701837a791cf28"><td class="memTemplItemLeft" align="right" valign="top">constexpr reference&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator[]</b> (const difference_type n)</td></tr>
 <tr class="separator:a4fee41f54f3ba22085701837a791cf28"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a56660c9fb33092feedda4e925ec529f2"><td class="memItemLeft" align="right" valign="top"><a id="a56660c9fb33092feedda4e925ec529f2"></a>
 constexpr std::conditional_t&lt; is_const_pointer_v&lt; pointer &gt;, pointer, const pointer &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>operator-&gt;</b> () const</td></tr>
 <tr class="separator:a56660c9fb33092feedda4e925ec529f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2a18293726291c435fde5e1ca96ec90d"><td class="memTemplParams" colspan="2"><a id="a2a18293726291c435fde5e1ca96ec90d"></a>
-template&lt;class Ptr  = pointer, class  = std::enable_if_t&lt;!is_const_pointer_v&lt;Ptr&gt;&gt;&gt; </td></tr>
+template&lt;class Ptr  = pointer, std::enable_if_t&lt;!is_const_pointer_v&lt; Ptr &gt;, int &gt;  = 0&gt; </td></tr>
 <tr class="memitem:a2a18293726291c435fde5e1ca96ec90d"><td class="memTemplItemLeft" align="right" valign="top">constexpr pointer&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator-&gt;</b> ()</td></tr>
 <tr class="separator:a2a18293726291c435fde5e1ca96ec90d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a71ba91bf890e56ac074efe06ce730a6b"><td class="memItemLeft" align="right" valign="top"><a id="a71ba91bf890e56ac074efe06ce730a6b"></a>
@@ -215,9 +215,8 @@ constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><b>distance</b
 <div class="textblock"><h3>template&lt;class Iterator, class DereferencePolicy&gt;<br />
 class sequoia::utilities::iterator&lt; Iterator, DereferencePolicy &gt;</h3>
 
-<p>An iterator with policies controlling dereferncing and auxiliary data. </p>
-<p>The DereferencePolicy allows customisation of the various dereferencing operators. In principle it is therefore possible that deferencing will not return a reference. This is forbidden in the case that the underlying iterator is non-const since the semantics could then be rather confusing. However, for const iterators this is tacitly allowed.</p>
-<p>The iterator may also hold extra (auxiliary) data, controlled via the AuxiliaryDataPolicy. </p>
+<p>An iterator with policies controlling dereferencing and auxiliary data. </p>
+<p>The DereferencePolicy allows customisation of the various dereferencing operators. In principle it is therefore possible that deferencing will not return a reference. This is forbidden in the case that the underlying iterator is non-const since the semantics could then be rather confusing. However, for const iterators this is tacitly allowed. </p>
 </div><hr/>The documentation for this class was generated from the following file:<ul>
 <li>Core/Utilities/<a class="el" href="_iterator_8hpp_source.html">Iterator.hpp</a></li>
 </ul>

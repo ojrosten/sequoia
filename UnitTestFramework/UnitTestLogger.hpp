@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file UnitTestLogger.hpp
+/*! \file
     \brief Utilities for recording the outcome of the unit tests
 
  */
@@ -50,16 +50,6 @@ namespace sequoia::unit_testing
     }
         
     return mess;
-  }
-  
-  template<class T> std::string demangle()
-  {
-    #ifndef _MSC_VER_
-      int status;
-      return abi::__cxa_demangle(typeid(T).name(), 0, 0, &status);
-    #else        
-      return typeid(T).name();
-    #endif
   }
 
   // TO DO: use std::filesystem when available

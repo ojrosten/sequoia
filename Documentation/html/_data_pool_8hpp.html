@@ -66,7 +66,8 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a>  </div>
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#typedef-members">Typedefs</a>  </div>
   <div class="headertitle">
 <div class="title">DataPool.hpp File Reference</div>  </div>
 </div><!--header-->
@@ -74,7 +75,9 @@ $(function() {
 
 <p>Classes to allow homogenous treatment of pooled/unpooled data.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="_protective_wrapper_8hpp_source.html">Utilities/ProtectiveWrapper.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="_sharing_policies_8hpp_source.html">SharingPolicies.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_protective_wrapper_8hpp_source.html">Utilities/ProtectiveWrapper.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_iterator_8hpp_source.html">Utilities/Iterator.hpp</a>&quot;</code><br />
 <code>#include &lt;vector&gt;</code><br />
 <code>#include &lt;memory&gt;</code><br />
 <code>#include &lt;algorithm&gt;</code><br />
@@ -85,12 +88,21 @@ $(function() {
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsequoia_1_1data__sharing_1_1unpooled.html">sequoia::data_sharing::unpooled&lt; T &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsequoia_1_1data__sharing_1_1data__pool.html">sequoia::data_sharing::data_pool&lt; T &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1data__sharing_1_1impl_1_1pool__deref__policy.html">sequoia::data_sharing::impl::pool_deref_policy&lt; Wrapper &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsequoia_1_1data__sharing_1_1data__pool_1_1handle.html">sequoia::data_sharing::data_pool&lt; T &gt;::handle</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsequoia_1_1data__sharing_1_1data__pool.html">sequoia::data_sharing::data_pool&lt; T, Allocator &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsequoia_1_1data__sharing_1_1data__pool_1_1proxy.html">sequoia::data_sharing::data_pool&lt; T &gt;::proxy</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsequoia_1_1data__sharing_1_1data__pool_1_1data__wrapper.html">sequoia::data_sharing::data_pool&lt; T, Allocator &gt;::data_wrapper</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsequoia_1_1data__sharing_1_1data__pool_1_1proxy.html">sequoia::data_sharing::data_pool&lt; T, Allocator &gt;::proxy</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a55a681d074fabc868e21e1292567ff8a"><td class="memTemplParams" colspan="2"><a id="a55a681d074fabc868e21e1292567ff8a"></a>
+template&lt;class Iterator , class Wrapper &gt; </td></tr>
+<tr class="memitem:a55a681d074fabc868e21e1292567ff8a"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::data_sharing::impl::pool_iterator</b> = utilities::iterator&lt; Iterator, pool_deref_policy&lt; Wrapper &gt; &gt;</td></tr>
+<tr class="separator:a55a681d074fabc868e21e1292567ff8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Classes to allow homogenous treatment of pooled/unpooled data. </p>

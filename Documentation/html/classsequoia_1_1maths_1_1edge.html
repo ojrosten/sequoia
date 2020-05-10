@@ -75,7 +75,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Stores the host node as well as the target node and an optional weight.  
+<p>Stores the source node as well as the target node and an optional weight.  
  <a href="classsequoia_1_1maths_1_1edge.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="_edge_8hpp_source.html">Edge.hpp</a>&gt;</code></p>
@@ -134,10 +134,10 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>weight_proxy_type</b
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a52510e7e210f4f6d38b23da69610ba1f"><td class="memTemplParams" colspan="2"><a id="a52510e7e210f4f6d38b23da69610ba1f"></a>
-template&lt;class... Args, class  = typename std::enable_if_t&lt;!resolve_to_copy_constructor_v&lt;edge, Args...&gt;&gt;&gt; </td></tr>
-<tr class="memitem:a52510e7e210f4f6d38b23da69610ba1f"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>edge</b> (const index_type host, const index_type target, Args &amp;&amp;... args)</td></tr>
-<tr class="separator:a52510e7e210f4f6d38b23da69610ba1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c9d546dd0a328d2f1a0f8dfb54c6a01"><td class="memTemplParams" colspan="2"><a id="a2c9d546dd0a328d2f1a0f8dfb54c6a01"></a>
+template&lt;class... Args, std::enable_if_t&lt;!resolve_to_copy_constructor_v&lt; edge, Args... &gt;, int &gt;  = 0&gt; </td></tr>
+<tr class="memitem:a2c9d546dd0a328d2f1a0f8dfb54c6a01"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>edge</b> (const index_type source, const index_type target, Args &amp;&amp;... args)</td></tr>
+<tr class="separator:a2c9d546dd0a328d2f1a0f8dfb54c6a01"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeed73af87ac1101bff306a7fdab7d62b"><td class="memTemplParams" colspan="2"><a id="aeed73af87ac1101bff306a7fdab7d62b"></a>
 template&lt;bool Inverted, class... Args&gt; </td></tr>
 <tr class="memitem:aeed73af87ac1101bff306a7fdab7d62b"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>edge</b> (const index_type node, const <a class="el" href="structsequoia_1_1maths_1_1inversion__constant.html">inversion_constant</a>&lt; Inverted &gt; inverted, Args &amp;&amp;... args)</td></tr>
@@ -154,12 +154,12 @@ constexpr <a class="el" href="classsequoia_1_1maths_1_1edge.html">edge</a> &amp;
 <tr class="memitem:a203398b3d881f2dd3020ad2b078866ec"><td class="memItemLeft" align="right" valign="top"><a id="a203398b3d881f2dd3020ad2b078866ec"></a>
 constexpr <a class="el" href="classsequoia_1_1maths_1_1edge.html">edge</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="classsequoia_1_1maths_1_1edge.html">edge</a> &amp;&amp;)=default</td></tr>
 <tr class="separator:a203398b3d881f2dd3020ad2b078866ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:accd5566300978f0ab5cdefff7429871d"><td class="memItemLeft" align="right" valign="top"><a id="accd5566300978f0ab5cdefff7429871d"></a>
-constexpr index_type&#160;</td><td class="memItemRight" valign="bottom"><b>host_node</b> () const noexcept</td></tr>
-<tr class="separator:accd5566300978f0ab5cdefff7429871d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa6d4f40bae9bf9edec570246b4565b54"><td class="memItemLeft" align="right" valign="top"><a id="aa6d4f40bae9bf9edec570246b4565b54"></a>
-constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>host_node</b> (const index_type host) noexcept</td></tr>
-<tr class="separator:aa6d4f40bae9bf9edec570246b4565b54"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af5f5f60fabd5b78865ac4001965df4d2"><td class="memItemLeft" align="right" valign="top"><a id="af5f5f60fabd5b78865ac4001965df4d2"></a>
+constexpr index_type&#160;</td><td class="memItemRight" valign="bottom"><b>source_node</b> () const noexcept</td></tr>
+<tr class="separator:af5f5f60fabd5b78865ac4001965df4d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a0b662d449a57bd6dc6deada5e18107"><td class="memItemLeft" align="right" valign="top"><a id="a6a0b662d449a57bd6dc6deada5e18107"></a>
+constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>source_node</b> (const index_type source) noexcept</td></tr>
+<tr class="separator:a6a0b662d449a57bd6dc6deada5e18107"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aba27d5358d4373090e80d9f44c3cdfba"><td class="memItemLeft" align="right" valign="top"><a id="aba27d5358d4373090e80d9f44c3cdfba"></a>
 constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>inverted</b> () const noexcept</td></tr>
 <tr class="separator:aba27d5358d4373090e80d9f44c3cdfba"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -215,9 +215,12 @@ constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>target_node
 <tr class="memitem:aecf47e72218ef625141a6d3b18a07ddf inherit pub_methods_classsequoia_1_1maths_1_1weighting"><td class="memItemLeft" align="right" valign="top"><a id="aecf47e72218ef625141a6d3b18a07ddf"></a>
 constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>weight</b> (Arg &amp;&amp;arg, Args &amp;&amp;... args)</td></tr>
 <tr class="separator:aecf47e72218ef625141a6d3b18a07ddf inherit pub_methods_classsequoia_1_1maths_1_1weighting"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a53ce42cb7ec90e6eb370682e81bde115 inherit pub_methods_classsequoia_1_1maths_1_1weighting"><td class="memItemLeft" align="right" valign="top"><a id="a53ce42cb7ec90e6eb370682e81bde115"></a>
-constexpr const Weight &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>weight</b> () const noexcept</td></tr>
-<tr class="separator:a53ce42cb7ec90e6eb370682e81bde115 inherit pub_methods_classsequoia_1_1maths_1_1weighting"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa0ff6be4aa235db8988dcc959a2d8bbf inherit pub_methods_classsequoia_1_1maths_1_1weighting"><td class="memItemLeft" align="right" valign="top"><a id="aa0ff6be4aa235db8988dcc959a2d8bbf"></a>
+constexpr const weight_type &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>weight</b> () const noexcept</td></tr>
+<tr class="separator:aa0ff6be4aa235db8988dcc959a2d8bbf inherit pub_methods_classsequoia_1_1maths_1_1weighting"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae235cde2c6c6d1cd48aad0bf47c91bb2 inherit pub_methods_classsequoia_1_1maths_1_1weighting"><td class="memItemLeft" align="right" valign="top"><a id="ae235cde2c6c6d1cd48aad0bf47c91bb2"></a>
+constexpr const weight_proxy_type &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>weight_proxy</b> () const noexcept</td></tr>
+<tr class="separator:ae235cde2c6c6d1cd48aad0bf47c91bb2 inherit pub_methods_classsequoia_1_1maths_1_1weighting"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad38ca7bf1e4b385abda4e2c5020ed840 inherit pub_methods_classsequoia_1_1maths_1_1weighting"><td class="memItemLeft" align="right" valign="top"><a id="ad38ca7bf1e4b385abda4e2c5020ed840"></a>
 constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>mutate_weight</b> (Fn fn)</td></tr>
 <tr class="separator:ad38ca7bf1e4b385abda4e2c5020ed840 inherit pub_methods_classsequoia_1_1maths_1_1weighting"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -275,7 +278,7 @@ constexpr <a class="el" href="classsequoia_1_1maths_1_1weighting.html">weighting
 <div class="textblock"><h3>template&lt;class Weight, class WeightProxy, class IndexType = std::size_t&gt;<br />
 class sequoia::maths::edge&lt; Weight, WeightProxy, IndexType &gt;</h3>
 
-<p>Stores the host node as well as the target node and an optional weight. </p>
+<p>Stores the source node as well as the target node and an optional weight. </p>
 </div><hr/>The documentation for this class was generated from the following file:<ul>
 <li>Maths/Graph/<a class="el" href="_edge_8hpp_source.html">Edge.hpp</a></li>
 </ul>

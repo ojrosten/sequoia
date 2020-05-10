@@ -66,7 +66,9 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#friends">Friends</a> &#124;
 <a href="classsequoia_1_1maths_1_1monotonic__sequence-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">sequoia::maths::monotonic_sequence&lt; T, Compare, C &gt; Class Template Reference</div>  </div>
@@ -82,8 +84,60 @@ Inheritance diagram for sequoia::maths::monotonic_sequence&lt; T, Compare, C &gt
   </map>
 </div></div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:aa83207bdbf670e6d1e79f20f37d5ae6a"><td class="memItemLeft" align="right" valign="top"><a id="aa83207bdbf670e6d1e79f20f37d5ae6a"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>allocator_type</b> = typename C::allocator_type</td></tr>
+<tr class="separator:aa83207bdbf670e6d1e79f20f37d5ae6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_types_classsequoia_1_1maths_1_1monotonic__sequence__base"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classsequoia_1_1maths_1_1monotonic__sequence__base')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="classsequoia_1_1maths_1_1monotonic__sequence__base.html">sequoia::maths::monotonic_sequence_base&lt; T, C, Compare &gt;</a></td></tr>
+<tr class="memitem:a224131dda36f6b3f0c18350500c7fdf6 inherit pub_types_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memItemLeft" align="right" valign="top"><a id="a224131dda36f6b3f0c18350500c7fdf6"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>value_type</b> = T</td></tr>
+<tr class="separator:a224131dda36f6b3f0c18350500c7fdf6 inherit pub_types_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5e16c77aeccbb84182b0ef355101e2a8 inherit pub_types_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memItemLeft" align="right" valign="top"><a id="a5e16c77aeccbb84182b0ef355101e2a8"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>container_type</b> = C</td></tr>
+<tr class="separator:a5e16c77aeccbb84182b0ef355101e2a8 inherit pub_types_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e8a16ec84ddeb6684263844f95ce3ac inherit pub_types_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memItemLeft" align="right" valign="top"><a id="a4e8a16ec84ddeb6684263844f95ce3ac"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>compare_type</b> = Compare</td></tr>
+<tr class="separator:a4e8a16ec84ddeb6684263844f95ce3ac inherit pub_types_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2736f6c2b5ef9dd7d9bd3aa474f04258 inherit pub_types_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memItemLeft" align="right" valign="top"><a id="a2736f6c2b5ef9dd7d9bd3aa474f04258"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>size_type</b> = typename C::size_type</td></tr>
+<tr class="separator:a2736f6c2b5ef9dd7d9bd3aa474f04258 inherit pub_types_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5e8d1e1cc324692a3cca2a8a96cd7e6a inherit pub_types_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memItemLeft" align="right" valign="top"><a id="a5e8d1e1cc324692a3cca2a8a96cd7e6a"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>const_iterator</b> = typename C::const_iterator</td></tr>
+<tr class="separator:a5e8d1e1cc324692a3cca2a8a96cd7e6a inherit pub_types_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae8797bfa45196f1b2aabf1ad43205600 inherit pub_types_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memItemLeft" align="right" valign="top"><a id="ae8797bfa45196f1b2aabf1ad43205600"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>const_reverse_iterator</b> = typename C::const_reverse_iterator</td></tr>
+<tr class="separator:ae8797bfa45196f1b2aabf1ad43205600 inherit pub_types_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a9ef9e334524d7d25f9acd001bc5ef0d4"><td class="memItemLeft" align="right" valign="top"><a id="a9ef9e334524d7d25f9acd001bc5ef0d4"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>monotonic_sequence</b> (const allocator_type &amp;allocator)</td></tr>
+<tr class="separator:a9ef9e334524d7d25f9acd001bc5ef0d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f4f7b0ab8e4365d40681f7d117f713c"><td class="memItemLeft" align="right" valign="top"><a id="a8f4f7b0ab8e4365d40681f7d117f713c"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>monotonic_sequence</b> (std::initializer_list&lt; T &gt; list, const allocator_type &amp;allocator=allocator_type{})</td></tr>
+<tr class="separator:a8f4f7b0ab8e4365d40681f7d117f713c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d1f28d0ca4bf0f795344eb1fa5c19c1"><td class="memItemLeft" align="right" valign="top"><a id="a6d1f28d0ca4bf0f795344eb1fa5c19c1"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>monotonic_sequence</b> (const <a class="el" href="classsequoia_1_1maths_1_1monotonic__sequence.html">monotonic_sequence</a> &amp;)=default</td></tr>
+<tr class="separator:a6d1f28d0ca4bf0f795344eb1fa5c19c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad849174cbcc99cf83ebcba8adf36f8c1"><td class="memItemLeft" align="right" valign="top"><a id="ad849174cbcc99cf83ebcba8adf36f8c1"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>monotonic_sequence</b> (const <a class="el" href="classsequoia_1_1maths_1_1monotonic__sequence.html">monotonic_sequence</a> &amp;s, const allocator_type &amp;allocator)</td></tr>
+<tr class="separator:ad849174cbcc99cf83ebcba8adf36f8c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9955d7613de9758cdf2da8beb65d4d55"><td class="memItemLeft" align="right" valign="top"><a id="a9955d7613de9758cdf2da8beb65d4d55"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>monotonic_sequence</b> (<a class="el" href="classsequoia_1_1maths_1_1monotonic__sequence.html">monotonic_sequence</a> &amp;&amp;) noexcept=default</td></tr>
+<tr class="separator:a9955d7613de9758cdf2da8beb65d4d55"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac907200707e6b325d89899557ff79656"><td class="memItemLeft" align="right" valign="top"><a id="ac907200707e6b325d89899557ff79656"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>monotonic_sequence</b> (<a class="el" href="classsequoia_1_1maths_1_1monotonic__sequence.html">monotonic_sequence</a> &amp;&amp;s, const allocator_type &amp;allocator)</td></tr>
+<tr class="separator:ac907200707e6b325d89899557ff79656"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a65dbc82ea12037685be60c9577c7a029"><td class="memItemLeft" align="right" valign="top"><a id="a65dbc82ea12037685be60c9577c7a029"></a>
+<a class="el" href="classsequoia_1_1maths_1_1monotonic__sequence.html">monotonic_sequence</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="classsequoia_1_1maths_1_1monotonic__sequence.html">monotonic_sequence</a> &amp;)=default</td></tr>
+<tr class="separator:a65dbc82ea12037685be60c9577c7a029"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96d228c3cc1a7bc5aef782045dec5336"><td class="memItemLeft" align="right" valign="top"><a id="a96d228c3cc1a7bc5aef782045dec5336"></a>
+<a class="el" href="classsequoia_1_1maths_1_1monotonic__sequence.html">monotonic_sequence</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="classsequoia_1_1maths_1_1monotonic__sequence.html">monotonic_sequence</a> &amp;&amp;)=default</td></tr>
+<tr class="separator:a96d228c3cc1a7bc5aef782045dec5336"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a113133c4b359d76165ad1258d795769c"><td class="memItemLeft" align="right" valign="top"><a id="a113133c4b359d76165ad1258d795769c"></a>
+allocator_type&#160;</td><td class="memItemRight" valign="bottom"><b>get_allocator</b> () const</td></tr>
+<tr class="separator:a113133c4b359d76165ad1258d795769c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a957d8521423ba7bfea82403a7c04e743"><td class="memItemLeft" align="right" valign="top"><a id="a957d8521423ba7bfea82403a7c04e743"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>push_back</b> (T v)</td></tr>
 <tr class="separator:a957d8521423ba7bfea82403a7c04e743"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -162,31 +216,46 @@ template&lt;bool Checked = true, class UnaryOp &gt; </td></tr>
 <tr class="memitem:a75a78bc11c395934d76dd4c5227000dc inherit pub_methods_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>mutate</b> (const_iterator first, const_iterator last, UnaryOp op)</td></tr>
 <tr class="separator:a75a78bc11c395934d76dd4c5227000dc inherit pub_methods_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
+Friends</h2></td></tr>
+<tr class="memitem:adae733e0712c09a7ec05350afca2db46"><td class="memItemLeft" align="right" valign="top"><a id="adae733e0712c09a7ec05350afca2db46"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>swap</b> (<a class="el" href="classsequoia_1_1maths_1_1monotonic__sequence.html">monotonic_sequence</a> &amp;lhs, <a class="el" href="classsequoia_1_1maths_1_1monotonic__sequence.html">monotonic_sequence</a> &amp;rhs) noexcept(noexcept(lhs.swap(rhs)))</td></tr>
+<tr class="separator:adae733e0712c09a7ec05350afca2db46"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
-<tr class="inherit_header pub_types_classsequoia_1_1maths_1_1monotonic__sequence__base"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classsequoia_1_1maths_1_1monotonic__sequence__base')"><img src="closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="classsequoia_1_1maths_1_1monotonic__sequence__base.html">sequoia::maths::monotonic_sequence_base&lt; T, C, Compare &gt;</a></td></tr>
-<tr class="memitem:a224131dda36f6b3f0c18350500c7fdf6 inherit pub_types_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memItemLeft" align="right" valign="top"><a id="a224131dda36f6b3f0c18350500c7fdf6"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>value_type</b> = T</td></tr>
-<tr class="separator:a224131dda36f6b3f0c18350500c7fdf6 inherit pub_types_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2736f6c2b5ef9dd7d9bd3aa474f04258 inherit pub_types_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memItemLeft" align="right" valign="top"><a id="a2736f6c2b5ef9dd7d9bd3aa474f04258"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>size_type</b> = typename C::size_type</td></tr>
-<tr class="separator:a2736f6c2b5ef9dd7d9bd3aa474f04258 inherit pub_types_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5e8d1e1cc324692a3cca2a8a96cd7e6a inherit pub_types_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memItemLeft" align="right" valign="top"><a id="a5e8d1e1cc324692a3cca2a8a96cd7e6a"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>const_iterator</b> = typename C::const_iterator</td></tr>
-<tr class="separator:a5e8d1e1cc324692a3cca2a8a96cd7e6a inherit pub_types_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae8797bfa45196f1b2aabf1ad43205600 inherit pub_types_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memItemLeft" align="right" valign="top"><a id="ae8797bfa45196f1b2aabf1ad43205600"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>const_reverse_iterator</b> = typename C::const_reverse_iterator</td></tr>
-<tr class="separator:ae8797bfa45196f1b2aabf1ad43205600 inherit pub_types_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_classsequoia_1_1maths_1_1monotonic__sequence__base"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classsequoia_1_1maths_1_1monotonic__sequence__base')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classsequoia_1_1maths_1_1monotonic__sequence__base.html">sequoia::maths::monotonic_sequence_base&lt; T, C, Compare &gt;</a></td></tr>
+<tr class="memitem:ad447fab3b0e4a62de902067ea3809d0f inherit pro_methods_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memTemplParams" colspan="2"><a id="ad447fab3b0e4a62de902067ea3809d0f"></a>
+template&lt;class Allocator &gt; </td></tr>
+<tr class="memitem:ad447fab3b0e4a62de902067ea3809d0f inherit pro_methods_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>monotonic_sequence_base</b> (const Allocator &amp;allocator) noexcept</td></tr>
+<tr class="separator:ad447fab3b0e4a62de902067ea3809d0f inherit pro_methods_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac09a063bfe5e06858e0a262ef118d2f1 inherit pro_methods_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memTemplParams" colspan="2"><a id="ac09a063bfe5e06858e0a262ef118d2f1"></a>
+template&lt;class Allocator &gt; </td></tr>
+<tr class="memitem:ac09a063bfe5e06858e0a262ef118d2f1 inherit pro_methods_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>monotonic_sequence_base</b> (std::initializer_list&lt; T &gt; list, const Allocator &amp;allocator)</td></tr>
+<tr class="separator:ac09a063bfe5e06858e0a262ef118d2f1 inherit pro_methods_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab93618527dbd5fc4064f2e2d114e3882 inherit pro_methods_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memItemLeft" align="right" valign="top"><a id="ab93618527dbd5fc4064f2e2d114e3882"></a>
 constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>monotonic_sequence_base</b> (<a class="el" href="classsequoia_1_1maths_1_1monotonic__sequence__base.html">monotonic_sequence_base</a> &amp;&amp;) noexcept=default</td></tr>
 <tr class="separator:ab93618527dbd5fc4064f2e2d114e3882 inherit pro_methods_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b7e59796cf004bb306bac118be70825 inherit pro_methods_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memTemplParams" colspan="2"><a id="a2b7e59796cf004bb306bac118be70825"></a>
+template&lt;class Allocator &gt; </td></tr>
+<tr class="memitem:a2b7e59796cf004bb306bac118be70825 inherit pro_methods_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>monotonic_sequence_base</b> (const <a class="el" href="classsequoia_1_1maths_1_1monotonic__sequence__base.html">monotonic_sequence_base</a> &amp;s, const Allocator &amp;allocator)</td></tr>
+<tr class="separator:a2b7e59796cf004bb306bac118be70825 inherit pro_methods_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6e68a9b2acb38dd7c993762a26c3f710 inherit pro_methods_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memTemplParams" colspan="2"><a id="a6e68a9b2acb38dd7c993762a26c3f710"></a>
+template&lt;class Allocator &gt; </td></tr>
+<tr class="memitem:a6e68a9b2acb38dd7c993762a26c3f710 inherit pro_methods_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>monotonic_sequence_base</b> (<a class="el" href="classsequoia_1_1maths_1_1monotonic__sequence__base.html">monotonic_sequence_base</a> &amp;&amp;s, const Allocator &amp;allocator)</td></tr>
+<tr class="separator:a6e68a9b2acb38dd7c993762a26c3f710 inherit pro_methods_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa0d33d6d63ba84478c2c067ac7485824 inherit pro_methods_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memItemLeft" align="right" valign="top"><a id="aa0d33d6d63ba84478c2c067ac7485824"></a>
 constexpr <a class="el" href="classsequoia_1_1maths_1_1monotonic__sequence__base.html">monotonic_sequence_base</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="classsequoia_1_1maths_1_1monotonic__sequence__base.html">monotonic_sequence_base</a> &amp;)=default</td></tr>
 <tr class="separator:aa0d33d6d63ba84478c2c067ac7485824 inherit pro_methods_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b72d03a837c6beeae685fb04fa98f61 inherit pro_methods_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memItemLeft" align="right" valign="top"><a id="a2b72d03a837c6beeae685fb04fa98f61"></a>
-constexpr <a class="el" href="classsequoia_1_1maths_1_1monotonic__sequence__base.html">monotonic_sequence_base</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="classsequoia_1_1maths_1_1monotonic__sequence__base.html">monotonic_sequence_base</a> &amp;&amp;) noexcept=default</td></tr>
-<tr class="separator:a2b72d03a837c6beeae685fb04fa98f61 inherit pro_methods_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3374a0788d2c4e321c4c7b81555f840f inherit pro_methods_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memItemLeft" align="right" valign="top"><a id="a3374a0788d2c4e321c4c7b81555f840f"></a>
+constexpr <a class="el" href="classsequoia_1_1maths_1_1monotonic__sequence__base.html">monotonic_sequence_base</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="classsequoia_1_1maths_1_1monotonic__sequence__base.html">monotonic_sequence_base</a> &amp;&amp;)=default</td></tr>
+<tr class="separator:a3374a0788d2c4e321c4c7b81555f840f inherit pro_methods_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96a10210455ec815bc25e1bcd7f452b5 inherit pro_methods_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memItemLeft" align="right" valign="top"><a id="a96a10210455ec815bc25e1bcd7f452b5"></a>
+constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>swap</b> (<a class="el" href="classsequoia_1_1maths_1_1monotonic__sequence__base.html">monotonic_sequence_base</a> &amp;other) noexcept(impl::noexcept_spec_v&lt; C &gt;)</td></tr>
+<tr class="separator:a96a10210455ec815bc25e1bcd7f452b5 inherit pro_methods_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a056d3c0bf8b7250ac0d74c3c28006a5b inherit pro_methods_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memItemLeft" align="right" valign="top"><a id="a056d3c0bf8b7250ac0d74c3c28006a5b"></a>
+auto&#160;</td><td class="memItemRight" valign="bottom"><b>get_allocator</b> () const</td></tr>
+<tr class="separator:a056d3c0bf8b7250ac0d74c3c28006a5b inherit pro_methods_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a957d8521423ba7bfea82403a7c04e743 inherit pro_methods_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memItemLeft" align="right" valign="top"><a id="a957d8521423ba7bfea82403a7c04e743"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>push_back</b> (T v)</td></tr>
 <tr class="separator:a957d8521423ba7bfea82403a7c04e743 inherit pro_methods_classsequoia_1_1maths_1_1monotonic__sequence__base"><td class="memSeparator" colspan="2">&#160;</td></tr>

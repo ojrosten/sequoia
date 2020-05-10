@@ -52,13 +52,13 @@ namespace sequoia::unit_testing
     {};
 
     template<class Compare, class T>
-    constexpr bool reports_for_type_v{reports_for_type<Compare, T>::value};
+    constexpr bool reports_for_type_v{reports_for_type<Compare, T>::value};    
+  }
 
-    template<test_mode Mode, class Compare, class T>
-    bool check(std::string_view description, unit_test_logger<Mode>& logger, impl::fuzzy_compare<Compare> c, const T& value, const T& prediction)
-    {
-      return check_approx_equality(description, logger, std::move(c.compare), value, prediction);
-    }
+  template<test_mode Mode, class Compare, class T>
+  bool dispatch_check(std::string_view description, unit_test_logger<Mode>& logger, impl::fuzzy_compare<Compare> c, const T& value, const T& prediction)
+  {
+    return check_approx_equality(description, logger, std::move(c.compare), value, prediction);
   }
 
   template<test_mode Mode, class Iter, class PredictionIter, class Compare>

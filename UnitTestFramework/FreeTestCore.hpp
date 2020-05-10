@@ -28,8 +28,7 @@ namespace sequoia::unit_testing
     std::string make_message(std::string_view tag, std::string_view currentMessage, std::string_view exceptionMessage, const bool exceptionsDetected);
   }
 
-  /*! \class test
-      \brief Abstract base class used for type-erasure of the template class basic_test.
+  /*! \brief Abstract base class used for type-erasure of the template class basic_test.
 
       This class allows for convenient, homogeneous treatment of all concrete tests.
 
@@ -66,8 +65,7 @@ namespace sequoia::unit_testing
     std::string m_Name;
   };
 
-  /*! \class basic_test
-      \brief class template from which all concrete tests should derive.
+  /*! \brief class template from which all concrete tests should derive.
 
       The class template publically inherits from test, for the purposes of type-erasure.
 
