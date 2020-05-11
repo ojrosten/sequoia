@@ -66,7 +66,7 @@
     types representing these structures.
 */
 
-#include "FreeCheckersDetails.hpp"
+#include "UnitTestLogger.hpp"
 
 namespace sequoia::unit_testing
 {

@@ -7,11 +7,9 @@
 
 #pragma once
 
-/*! \file SemanticsCheckersDetails.hpp
-    \brief Implementation details for semantics checks within the unit testing framework.
+/*! \brief Implementation details for semantics checks within the unit testing framework.
 */
 
-#include "FreeCheckersDetails.hpp"
 
 namespace sequoia::unit_testing::impl
 {
