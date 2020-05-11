@@ -54,7 +54,7 @@ namespace sequoia::unit_testing
     test_has_default_constructor();
     test_has_allocator_type();    
     test_has_regular_semantics();
-    test_has_move_only_semantics()
+    test_has_move_only_semantics();
     test_serializability();
     test_class_template_instantantiability();
   }
