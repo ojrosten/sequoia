@@ -25,21 +25,5 @@ namespace sequoia::unit_testing
 
 namespace sequoia::unit_testing::impl
 {
-  template<class EquivChecker, test_mode Mode, class T, class S, class... U>
-  bool check(std::string_view description, unit_test_logger<Mode>& logger, const T& value, const S& s, const U&... u)
-  {
-    using sentinel = typename unit_test_logger<Mode>::sentinel;
-
-    const std::string message{
-      add_type_info<S, U...>(
-                             combine_messages(description, "Comparison performed using:\n\t" + type_demangler<EquivChecker>::make() + "\n\tWith equivalent types:", "\n"))
-    };
-      
-    sentinel r{logger, message};
-    const auto previousFailures{logger.failures()};
-    
-    EquivChecker::check(message, logger, value, s, u...);
-      
-    return logger.failures() == previousFailures;
-  }
+  
 }

@@ -70,20 +70,14 @@
 
 namespace sequoia::unit_testing
 {
-  /*! \brief class template, specializations of which implement detailed comparison of two instantiations of T;
-
-   */
+  /*! \brief class template, specializations of which implement detailed comparison of two instantiations of T; */
   template<class T> struct detailed_equality_checker;
 
-  /*! \brief class template, specializations of which implement comparision of two equivalent types;
-
-   */
+  /*! \brief class template, specializations of which implement comparision of two equivalent types; */
   template<class T, class... Us> struct equivalence_checker;
 
 
-  /*! \brief class template, specializations of which implement comparision of two weakly equivalent types;
-
-   */
+  /*! \brief class template, specializations of which implement comparision of two weakly equivalent types; */
   template<class T, class... Us> struct weak_equivalence_checker;
 
   struct equality_tag{};
@@ -94,9 +88,7 @@ namespace sequoia::unit_testing
   template<class T> constexpr bool has_weak_equivalence_checker_v{class_template_is_instantiable_v<weak_equivalence_checker, T>};
   template<class T> constexpr bool has_detailed_equality_checker_v{class_template_is_instantiable_v<detailed_equality_checker, T>};
 
-  /*! \brief Specialize this struct template to provide custom serialization of a given class.
-
-   */
+  /*! \brief Specialize this struct template to provide custom serialization of a given class. */
   
   template<class T>
   struct serializer
@@ -158,7 +150,32 @@ namespace sequoia::unit_testing
     return combine_messages(description, type_demangler<T, U...>::make().append("\n"), description.empty() ? "" : "\n");
   }
 
-  /*! The next three functions form an overload set, dedicated to appropiately dispatching requests
+  /*! \brief generic function that generates a check from any class providing a static check method.
+
+      This employs a sentinel and so can be used naively.
+   */
+  
+  template<class EquivChecker, test_mode Mode, class T, class S, class... U>
+  bool general_equivalence_check(std::string_view description, unit_test_logger<Mode>& logger, const T& value, const S& s, const U&... u)
+  {
+    using sentinel = typename unit_test_logger<Mode>::sentinel;
+
+    const std::string message{
+      add_type_info<S, U...>(
+        combine_messages(description, "Comparison performed using:\n\t" + type_demangler<EquivChecker>::make() + "\n\tWith equivalent types:", "\n"))
+    };
+      
+    sentinel r{logger, message};
+    const auto previousFailures{logger.failures()};
+    
+    EquivChecker::check(message, logger, value, s, u...);
+      
+    return logger.failures() == previousFailures;
+  }
+
+  /*! \name OverloadSet
+
+      The next three functions form an overload set, dedicated to appropiately dispatching requests
       to check equality, equivalence and weak equivalence. This set may be supplemented by extenders
       of the testing framework, see FuzzyTestCore.hpp for an example.
 
@@ -250,7 +267,7 @@ namespace sequoia::unit_testing
   {
     if constexpr(class_template_is_instantiable_v<equivalence_checker, T>)
     {      
-      return impl::check<equivalence_checker<T>>(description, logger, value, std::forward<S>(s), std::forward<U>(u)...);
+      return general_equivalence_check<equivalence_checker<T>>(description, logger, value, std::forward<S>(s), std::forward<U>(u)...);
     }
     else if constexpr(is_container_v<T> && (sizeof...(U) == 0))
     {
@@ -275,7 +292,7 @@ namespace sequoia::unit_testing
   {
     if constexpr(class_template_is_instantiable_v<weak_equivalence_checker, T>)
     {      
-      return impl::check<weak_equivalence_checker<T>>(description, logger, value, std::forward<S>(s), std::forward<U>(u)...);
+      return general_equivalence_check<weak_equivalence_checker<T>>(description, logger, value, std::forward<S>(s), std::forward<U>(u)...);
     }
     else if constexpr(is_container_v<T> && (sizeof...(U) == 0))
     {
