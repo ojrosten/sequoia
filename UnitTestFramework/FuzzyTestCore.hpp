@@ -13,6 +13,12 @@
     a type utilising a generic function object. A particular use-case is comparison
     within a tolerance, for which a concrete function object is supplied.
     
+    The pattern is to provide a new overload for dispatch_check. Internally, if no compare
+    object is identified for the given type, an attempt it made to interpret the type as
+    a range. Thus if, for example, a fuzzy comparison is defined for a type, T, then no
+    additional work is required to do a fuzzy comparison of the elements of a container of T.
+    All that is required to do this is to feed the fuzzy_compare object to the existing
+    check_range overload set and everything works smoothly.
  */
 
 #include "RegularTestCore.hpp"
@@ -21,48 +27,45 @@
 
 namespace sequoia::unit_testing
 {
-  namespace impl
+  template<class Compare>
+  struct fuzzy_compare
   {
-    template<class Compare>
-    struct fuzzy_compare
-    {
-      explicit fuzzy_compare(Compare c) : compare{std::move(c)} {}
+    explicit fuzzy_compare(Compare c) : compare{std::move(c)} {}
       
-      Compare compare;
-    };
+    Compare compare;
+  };
 
-    template<class Compare, class T, class=std::void_t<>>
-    struct compares_type : std::false_type
-    {};
+  template<class Compare, class T, class=std::void_t<>>
+  struct compares_type : std::false_type
+  {};
 
-    template<class Compare, class T>
-    struct compares_type<Compare, T, std::void_t<std::invoke_result_t<Compare, T, T>>>
-      : std::true_type
-    {};
+  template<class Compare, class T>
+  struct compares_type<Compare, T, std::void_t<std::invoke_result_t<Compare, T, T>>>
+    : std::true_type
+  {};
 
-    template<class Compare, class T>
-    constexpr bool compares_type_v{compares_type<Compare, T>::value};
+  template<class Compare, class T>
+  constexpr bool compares_type_v{compares_type<Compare, T>::value};
 
-    template<class Compare, class T, class=std::void_t<>>
-    struct reports_for_type : std::false_type
-    {};
+  template<class Compare, class T, class=std::void_t<>>
+  struct reports_for_type : std::false_type
+  {};
 
-    template<class Compare, class T>
-    struct reports_for_type<Compare, T, std::void_t<decltype(std::declval<Compare>().report(std::declval<T>(), std::declval<T>()))>>
-      : std::true_type
-    {};
+  template<class Compare, class T>
+  struct reports_for_type<Compare, T, std::void_t<decltype(std::declval<Compare>().report(std::declval<T>(), std::declval<T>()))>>
+    : std::true_type
+  {};
 
-    template<class Compare, class T>
-    constexpr bool reports_for_type_v{reports_for_type<Compare, T>::value};    
-  }
+  template<class Compare, class T>
+  constexpr bool reports_for_type_v{reports_for_type<Compare, T>::value};    
   
   template<test_mode Mode, class Compare, class T>
-  bool dispatch_check(std::string_view description, unit_test_logger<Mode>& logger, impl::fuzzy_compare<Compare> c, const T& value, const T& prediction)
+  bool dispatch_check(std::string_view description, unit_test_logger<Mode>& logger, fuzzy_compare<Compare> c, const T& value, const T& prediction)
   {
     using sentinel = typename unit_test_logger<Mode>::sentinel;      
     sentinel s{logger, add_type_info<T>(description)};
 
-    if constexpr(impl::compares_type_v<Compare, T>)
+    if constexpr(compares_type_v<Compare, T>)
     {
       const auto priorFailures{logger.failures()};
 
@@ -74,7 +77,7 @@ namespace sequoia::unit_testing
           message.append("\t").append(description).append("\n");
         
         message.append(add_type_info<T>(""));
-        if constexpr(impl::reports_for_type_v<Compare, T>)
+        if constexpr(reports_for_type_v<Compare, T>)
         {
           message.append(c.compare.report(value, prediction));
         }
@@ -107,13 +110,13 @@ namespace sequoia::unit_testing
   template<test_mode Mode, class Compare, class T>
   bool check_approx_equality(std::string_view description, unit_test_logger<Mode>& logger, Compare&& compare, const T& value, const T& prediction)
   {
-    return dispatch_check(description, logger, impl::fuzzy_compare<Compare>{compare}, value, prediction);
+    return dispatch_check(description, logger, fuzzy_compare<Compare>{compare}, value, prediction);
   }
 
   template<test_mode Mode, class Iter, class PredictionIter, class Compare>
   bool check_range_approx(std::string_view description, unit_test_logger<Mode>& logger, Compare compare, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
   {
-    return check_range(description, logger, impl::fuzzy_compare{std::move(compare)}, first, last, predictionFirst, predictionLast);      
+    return check_range(description, logger, fuzzy_compare{std::move(compare)}, first, last, predictionFirst, predictionLast);      
   }
 
   template<test_mode Mode>
