@@ -55,15 +55,9 @@ namespace sequoia::unit_testing
     template<class Compare, class T>
     constexpr bool reports_for_type_v{reports_for_type<Compare, T>::value};    
   }
-
-  template<test_mode Mode, class Iter, class PredictionIter, class Compare>
-  bool check_range_approx(std::string_view description, unit_test_logger<Mode>& logger, Compare compare, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
-  {
-    return impl::check_range(description, logger, impl::fuzzy_compare{std::move(compare)}, first, last, predictionFirst, predictionLast);      
-  }
   
-  template<test_mode Mode, class T, class Compare>
-  bool check_approx_equality(std::string_view description, unit_test_logger<Mode>& logger, Compare&& compare, const T& value, const T& prediction)
+  template<test_mode Mode, class Compare, class T>
+  bool dispatch_check(std::string_view description, unit_test_logger<Mode>& logger, impl::fuzzy_compare<Compare> c, const T& value, const T& prediction)
   {
     using sentinel = typename unit_test_logger<Mode>::sentinel;      
     sentinel s{logger, add_type_info<T>(description)};
@@ -73,7 +67,7 @@ namespace sequoia::unit_testing
       const auto priorFailures{logger.failures()};
 
       s.log_check();
-      if(!compare(prediction, value))
+      if(!c.compare(prediction, value))
       {
         std::string message{};
         if(!description.empty())
@@ -82,7 +76,7 @@ namespace sequoia::unit_testing
         message.append(add_type_info<T>(""));
         if constexpr(impl::reports_for_type_v<Compare, T>)
         {
-          message.append(compare.report(value, prediction));
+          message.append(c.compare.report(value, prediction));
         }
         else
         {
@@ -100,7 +94,7 @@ namespace sequoia::unit_testing
     }
     else if constexpr(is_container_v<T>)
     {
-      return check_range_approx(description, logger, std::forward<Compare>(compare), value.begin(), value.end(), prediction.begin(), prediction.end());
+      return check_range(description, logger, std::move(c), value.begin(), value.end(), prediction.begin(), prediction.end());
     }
     else
     {
@@ -108,10 +102,18 @@ namespace sequoia::unit_testing
     }
   }
 
+  //================= namespace-level convenience functions =================//
+
   template<test_mode Mode, class Compare, class T>
-  bool dispatch_check(std::string_view description, unit_test_logger<Mode>& logger, impl::fuzzy_compare<Compare> c, const T& value, const T& prediction)
+  bool check_approx_equality(std::string_view description, unit_test_logger<Mode>& logger, Compare&& compare, const T& value, const T& prediction)
   {
-    return check_approx_equality(description, logger, std::move(c.compare), value, prediction);
+    return dispatch_check(description, logger, impl::fuzzy_compare<Compare>{compare}, value, prediction);
+  }
+
+  template<test_mode Mode, class Iter, class PredictionIter, class Compare>
+  bool check_range_approx(std::string_view description, unit_test_logger<Mode>& logger, Compare compare, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
+  {
+    return check_range(description, logger, impl::fuzzy_compare{std::move(compare)}, first, last, predictionFirst, predictionLast);      
   }
 
   template<test_mode Mode>

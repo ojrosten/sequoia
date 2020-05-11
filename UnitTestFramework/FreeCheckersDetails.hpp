@@ -42,32 +42,4 @@ namespace sequoia::unit_testing::impl
       
     return logger.failures() == previousFailures;
   }
-
-  template<test_mode Mode, class Tag, class Iter, class PredictionIter>
-  bool check_range(std::string_view description, unit_test_logger<Mode>& logger, Tag tag, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
-  {
-    typename unit_test_logger<Mode>::sentinel r{logger, description};
-    bool equal{true};
-
-    using std::distance;
-    using std::advance;
-
-    const auto predictedSize{distance(predictionFirst, predictionLast)};
-    if(check_equality(combine_messages(description, "Container size wrong", "\n"), logger, distance(first, last), predictedSize))
-    {
-      auto predictionIter{predictionFirst};
-      auto iter{first};
-      for(; predictionIter != predictionLast; advance(predictionIter, 1), advance(iter, 1))
-      {
-        std::string dist{std::to_string(distance(predictionFirst, predictionIter)).append("\n")};
-        if(!dispatch_check(combine_messages(description, "element ", "\n").append(std::move(dist)), logger, tag, *iter, *predictionIter)) equal = false;
-      }
-    }
-    else
-    {
-      equal = false;
-    }
-      
-    return equal;
-  }
 }

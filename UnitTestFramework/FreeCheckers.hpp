@@ -254,7 +254,7 @@ namespace sequoia::unit_testing
     }
     else if constexpr(is_container_v<T> && (sizeof...(U) == 0))
     {
-      return check_range_equivalence(add_type_info<T>(description), logger, std::begin(value), std::end(value), std::begin(std::forward<S>(s)), std::end(std::forward<S>(s)));
+      return check_range(add_type_info<T>(description), logger, equivalence_tag{}, std::begin(value), std::end(value), std::begin(std::forward<S>(s)), std::end(std::forward<S>(s)));
     }
     else
     {
@@ -279,7 +279,7 @@ namespace sequoia::unit_testing
     }
     else if constexpr(is_container_v<T> && (sizeof...(U) == 0))
     {
-      return check_range_weak_equivalence(add_type_info<T>(description), logger, std::begin(value), std::end(value), std::begin(std::forward<S>(s)), std::end(std::forward<S>(s)));
+      return check_range(add_type_info<T>(description), logger, weak_equivalence_tag{}, std::begin(value), std::end(value), std::begin(std::forward<S>(s)), std::end(std::forward<S>(s)));
     }
     else
     {
@@ -287,28 +287,32 @@ namespace sequoia::unit_testing
     }
   }
 
-  template<test_mode Mode, class T>
-  bool check_equality(std::string_view description, unit_test_logger<Mode>& logger, const T& value, const T& prediction)
+  template<test_mode Mode, class ElementDispatchDiscriminator, class Iter, class PredictionIter>
+  bool check_range(std::string_view description, unit_test_logger<Mode>& logger, ElementDispatchDiscriminator discriminator, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
   {
-    return dispatch_check(description, logger, equality_tag{}, value, prediction);
-  }
+    typename unit_test_logger<Mode>::sentinel r{logger, description};
+    bool equal{true};
 
-  template<test_mode Mode, class T, class S, class... U>
-  bool check_equivalence(std::string_view description, unit_test_logger<Mode>& logger, const T& value, S&& s, U&&... u)
-  {
-    return dispatch_check(description, logger, equivalence_tag{}, value, std::forward<S>(s), std::forward<U>(u)...);      
-  }
+    using std::distance;
+    using std::advance;
 
-  template<test_mode Mode, class T, class S, class... U>
-  bool check_weak_equivalence(std::string_view description, unit_test_logger<Mode>& logger, const T& value, S&& s, U&&... u)
-  {
-    return dispatch_check(description, logger, weak_equivalence_tag{}, value, std::forward<S>(s), std::forward<U>(u)...);      
-  }
-
-  template<test_mode Mode>
-  bool check(std::string_view description, unit_test_logger<Mode>& logger, const bool value)
-  {
-    return check_equality(description, logger, value, true);
+    const auto predictedSize{distance(predictionFirst, predictionLast)};
+    if(check_equality(combine_messages(description, "Container size wrong", "\n"), logger, distance(first, last), predictedSize))
+    {
+      auto predictionIter{predictionFirst};
+      auto iter{first};
+      for(; predictionIter != predictionLast; advance(predictionIter, 1), advance(iter, 1))
+      {
+        std::string dist{std::to_string(distance(predictionFirst, predictionIter)).append("\n")};
+        if(!dispatch_check(combine_messages(description, "element ", "\n").append(std::move(dist)), logger, discriminator, *iter, *predictionIter)) equal = false;
+      }
+    }
+    else
+    {
+      equal = false;
+    }
+      
+    return equal;
   }
 
   template<class E, test_mode Mode, class Fn>
@@ -338,23 +342,49 @@ namespace sequoia::unit_testing
       return false;
     }
   }
+
+  //================= namespace-level convenience functions =================//
+
+  template<test_mode Mode, class T>
+  bool check_equality(std::string_view description, unit_test_logger<Mode>& logger, const T& value, const T& prediction)
+  {
+    return dispatch_check(description, logger, equality_tag{}, value, prediction);
+  }
+
+  template<test_mode Mode, class T, class S, class... U>
+  bool check_equivalence(std::string_view description, unit_test_logger<Mode>& logger, const T& value, S&& s, U&&... u)
+  {
+    return dispatch_check(description, logger, equivalence_tag{}, value, std::forward<S>(s), std::forward<U>(u)...);      
+  }
+
+  template<test_mode Mode, class T, class S, class... U>
+  bool check_weak_equivalence(std::string_view description, unit_test_logger<Mode>& logger, const T& value, S&& s, U&&... u)
+  {
+    return dispatch_check(description, logger, weak_equivalence_tag{}, value, std::forward<S>(s), std::forward<U>(u)...);      
+  }
+
+  template<test_mode Mode>
+  bool check(std::string_view description, unit_test_logger<Mode>& logger, const bool value)
+  {
+    return check_equality(description, logger, value, true);
+  }
     
   template<test_mode Mode, class Iter, class PredictionIter>
   bool check_range(std::string_view description, unit_test_logger<Mode>& logger, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
   {
-    return impl::check_range(description, logger, equality_tag{}, first, last, predictionFirst, predictionLast);      
+    return check_range(description, logger, equality_tag{}, first, last, predictionFirst, predictionLast);      
   }
 
   template<test_mode Mode, class Iter, class PredictionIter>
   bool check_range_equivalence(std::string_view description, unit_test_logger<Mode>& logger, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
   {
-    return impl::check_range(description, logger, equivalence_tag{}, first, last, predictionFirst, predictionLast);      
+    return check_range(description, logger, equivalence_tag{}, first, last, predictionFirst, predictionLast);      
   }
 
   template<test_mode Mode, class Iter, class PredictionIter>
   bool check_range_weak_equivalence(std::string_view description, unit_test_logger<Mode>& logger, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
   {
-    return impl::check_range(description, logger, weak_equivalence_tag{}, first, last, predictionFirst, predictionLast);      
+    return check_range(description, logger, weak_equivalence_tag{}, first, last, predictionFirst, predictionLast);      
   }
 
   /*! \brief Exposes elementary check methods, with the option to plug in arbitrary Extenders to compose functionality.
