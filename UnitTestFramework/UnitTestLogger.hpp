@@ -8,8 +8,54 @@
 #pragma once
 
 /*! \file
-    \brief Utilities for recording the outcome of the unit tests
+    \brief Utilities for recording the outcome of tests
 
+    One of the defining features of the testing framework is that it is designed to expose
+    false-positives. As such, each test operates in one of three modes, chosen at compile
+    time: standard, false_positive and false_negative.
+
+    In standard mode, the test framework operates as one might expect. A typical check might
+    look as follows:
+
+    check_equality("Description of test", x, 5);
+
+    If x==5, the check passes whereas if x!=5 a failure is reported. However, suppose that
+    check_equality has a bug. For example, it might always return true. This is very dangerous
+    since it would give the impression that all tests pass, giving clients a false sense
+    of security in the code they're testing!
+
+    To counter this, tests can be created to be run in false-positive mode. In this case,
+    the above example will pass when x!=5 and fail when x==5. The purpose of this is to pick
+    up bugs in the testing framework itself.
+
+    In standard mode, when a test fails, details of the failure will be given directly to
+    the client. In the above example, for the case where x==4, something like this will be
+    seen:
+
+    Obtained : 4 
+    Predicted: 5
+
+    In false-positive mode, this output is not be made directly visible to the user, since 
+    the test has passed. Instead, it is dumped to a file. This means that clients can check
+    the underlying failure which the false-positive check has detected is as expected. It is
+    good practice to place this file under version control. This provides sensitivity both to
+    changes in the false-positive test and also changes to the way in which the testing
+    framework generates output.
+
+    Clients may extend the testing framework to conveniently test their types, for example
+    by specializing the detailed_equality_checker. This is a perfect opportunity to write
+    some false-positive tests to give confidence that the newly-added code is not spuriously
+    reporting success.
+
+    Finally, there are false-negative tests. They are essentially the same as standard mode;
+    however, they are treated separately since statements like
+
+    check_equality("Description of test", 5, 5);
+
+    are morally tests of the testing framework itself, rather than tests of client code. As
+    with false-positive tests, output is dumped to an auxiliary file, primarily as a means
+    of detecting (via version control) changes to the way the testing framework generates
+    output.
  */
 
 #include "TypeTraits.hpp"
@@ -25,36 +71,17 @@
 namespace sequoia::unit_testing
 {  
   [[nodiscard]]
-  inline std::string combine_messages(std::string_view s1, std::string_view s2, std::string_view sep=" ")
-  {
-    std::string mess{};
-    if(s1.empty())
-    {
-      if(!s2.empty()) mess.append("\t").append(s2);
-    }
-    else
-    {
-      mess.append(s1);
-      if(!s2.empty())
-      {
-        if((mess.back() == '\n') && (sep.empty() || sep == " "))
-          mess.append("\t");
-        else
-        {
-          mess.append(sep);
-          if(sep.back() == '\n') mess.append("\t");
-        }
-          
-        mess.append(s2);
-      }
-    }
-        
-    return mess;
-  }
+  std::string combine_messages(std::string_view s1, std::string_view s2, std::string_view sep=" ");
 
-  // TO DO: use std::filesystem when available
+  /*! \class
+      \brief Holds details of the file to which the last successfully completed test is registered.
+
+      If a check causes a crash, the recovery file may be used to provide a clue as to where this
+      happened.
+   */
   class output_manager
-  {
+  {    
+    // TO DO: use std::filesystem when available
     inline static std::string st_RecoveryFile{};
   public:
     static void recovery_file(std::string_view recoveryFile) { st_RecoveryFile = std::string{recoveryFile}; }
@@ -63,6 +90,26 @@ namespace sequoia::unit_testing
   };
 
   enum class test_mode { standard, false_positive, false_negative };
+
+  /*! \class
+      \brief logs checks and failures within a test.
+
+      The process of logging checks and failures is marshalled by sentinels. At a basic
+      level, this RAII class ensures robust treatment in the presence of exceptions.
+      But beyond this, it caters for some of the complexity of the testing framework in
+      a localized and simple manner. In particular, a given check may actually be
+      composed of many sub-checks. For standard checks, we want to count this as a
+      single 'top-level' check. For false-positive checks success is counted as a failure
+      of one or more of the sub-checks.
+
+      The sentinels deal with all of this in a way which clients of the framework can
+      generally ignore. For example, when composing a new specialization of the 
+      detailed_equality_checker, there is no need for clients to add sentinels of their
+      own.
+
+      The sentinels also take care of writing to the auxiliary file associated with
+      false-positive/negative tests.
+   */
 
   template<test_mode Mode>
   class unit_test_logger
@@ -290,6 +337,11 @@ namespace sequoia::unit_testing
   {
     return static_cast<log_verbosity>(static_cast<int>(lhs) & static_cast<int>(rhs));
   }
+
+  /*! \brief Summaries data generated by the logger, for the purposes of reporting.
+     
+      Summaries may be combined by using either operator+= or operator+
+   */
 
   class log_summary
   {

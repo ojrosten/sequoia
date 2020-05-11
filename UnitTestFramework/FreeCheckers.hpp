@@ -374,7 +374,7 @@ namespace sequoia::unit_testing
   template<test_mode Mode, class... Extenders>
   class checker : private unit_test_logger<Mode>, public Extenders...
   {
-  public:    
+  public:
     constexpr static test_mode mode{Mode};
     using logger_type = unit_test_logger<Mode>;
 

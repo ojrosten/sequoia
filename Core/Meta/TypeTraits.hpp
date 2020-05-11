@@ -230,6 +230,48 @@ namespace sequoia
   template <template<class...> class T, class... Args>
   using class_template_is_instantiable_t = typename class_template_is_instantiable<std::void_t<>, T, Args...>::type;
 
+  // has_regular_semantics
+
+  template<class T>
+  struct has_regular_semantics
+    : std::bool_constant<
+           std::is_copy_constructible_v<T>
+        && std::is_move_constructible_v<T>
+        && std::is_copy_assignable_v<T>
+        && std::is_move_assignable_v<T>
+        && std::is_swappable_v<T>
+        && is_equal_to_comparable_v<T>
+        && is_not_equal_to_comparable_v<T>
+      >
+  {};
+
+  template<class T>
+  constexpr bool has_regular_semantics_v{has_regular_semantics<T>::value};
+
+  template<class T>
+  using has_regular_semantics_t = typename has_regular_semantics<T>::type;
+
+  // has_move_only_semantics
+
+  template<class T>
+  struct has_move_only_semantics
+    : std::bool_constant<
+           !std::is_copy_constructible_v<T>
+        && std::is_move_constructible_v<T>
+        && !std::is_copy_assignable_v<T>
+        && std::is_move_assignable_v<T>
+        && std::is_swappable_v<T>
+        && is_equal_to_comparable_v<T>
+        && is_not_equal_to_comparable_v<T>
+      >
+  {};
+
+  template<class T>
+  constexpr bool has_move_only_semantics_v{has_move_only_semantics<T>::value};
+
+  template<class T>
+  using has_move_only_semantics_t = typename has_move_only_semantics<T>::type;
+
   // has_default_constructor
 
   template<class T, class = std::void_t<>>

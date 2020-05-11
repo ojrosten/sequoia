@@ -7,9 +7,11 @@
 
 #pragma once
 
-/*! \file RegularTestCore.hpp
-    \brief Extension for testing classes exhibiting regular semantics.
-*/
+/*! \brief Extension for testing classes exhibiting regular semantics.
+
+    This class is designed to be plugged into the checker class template, in order to extend
+    its functionality. See RegularCheckers.hpp for further information.
+ */
 
 #include "FreeTestCore.hpp"
 #include "RegularCheckers.hpp"

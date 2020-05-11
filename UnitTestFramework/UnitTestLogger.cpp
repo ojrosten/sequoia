@@ -1,0 +1,39 @@
+////////////////////////////////////////////////////////////////////
+//                 Copyright Oliver Rosten 2020.                  //
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
+//    (See accompanying file LICENSE.md or copy at                //
+//          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
+////////////////////////////////////////////////////////////////////
+
+#include "UnitTestLogger.hpp"
+
+namespace sequoia::unit_testing
+{  
+  [[nodiscard]]
+  std::string combine_messages(std::string_view s1, std::string_view s2, std::string_view sep)
+  {
+    std::string mess{};
+    if(s1.empty())
+    {
+      if(!s2.empty()) mess.append("\t").append(s2);
+    }
+    else
+    {
+      mess.append(s1);
+      if(!s2.empty())
+      {
+        if((mess.back() == '\n') && (sep.empty() || sep == " "))
+          mess.append("\t");
+        else
+        {
+          mess.append(sep);
+          if(sep.back() == '\n') mess.append("\t");
+        }
+          
+        mess.append(s2);
+      }
+    }
+        
+    return mess;
+  }
+}

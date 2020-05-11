@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file UnitTestFamily.hpp
+/*! \file
     \brief Utilities for grouping unit tests
 
  */

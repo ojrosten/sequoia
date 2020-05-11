@@ -7,8 +7,10 @@
 
 #pragma once
 
-/*! \file MoveOnlTestCore.hpp
-    \brief Extension for testing of regular semantics.
+/*! \brief Extension for testing classes exhibiting move-only semantics.
+
+    This class is designed to be plugged into the checker class template, in order to extend
+    its functionality. See MoveOnlyCheckers.hpp for further information.
 */
 
 #include "FreeTestCore.hpp"
@@ -26,7 +28,7 @@ namespace sequoia::unit_testing
 
     move_only_extender(const move_only_extender&)            = delete;
     move_only_extender& operator=(const move_only_extender&) = delete;
-    move_only_extender& operator=(move_only_extender&&) = delete;
+    move_only_extender& operator=(move_only_extender&&)      = delete;
 
     template<class T, class... Allocators>
     void check_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone)

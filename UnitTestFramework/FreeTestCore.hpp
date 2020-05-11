@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file FreeTestCore.hpp
+/*! \file
     \brief Core functionality for the unit testing framework.
 
     This header defines the basic_test class template, from which all concrete tests derive.

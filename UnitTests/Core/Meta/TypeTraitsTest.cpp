@@ -52,7 +52,9 @@ namespace sequoia::unit_testing
     test_is_container();
     test_is_allocator();
     test_has_default_constructor();
-    test_has_allocator_type();
+    test_has_allocator_type();    
+    test_has_regular_semantics();
+    test_has_move_only_semantics()
     test_serializability();
     test_class_template_instantantiability();
   }
@@ -701,7 +703,41 @@ namespace sequoia::unit_testing
         return true;
       }()
     );
-  }  
+  }
+
+  void type_traits_test::test_has_regular_semantics()
+  {
+    check(LINE(""), []() {
+        static_assert(has_regular_semantics_v<int>);
+        static_assert(std::is_same_v<has_regular_semantics_t<int>, std::true_type>);
+        return true;
+      }()
+    );
+
+    check(LINE(""), []() {
+        static_assert(!has_regular_semantics_v<std::unique_ptr<int>>);
+        static_assert(std::is_same_v<has_regular_semantics_t<std::unique_ptr<int>>, std::false_type>);
+        return true;
+      }()
+    );
+  }
+
+  void type_traits_test::test_has_move_only_semantics()
+  {
+    check(LINE(""), []() {
+        static_assert(!has_move_only_semantics_v<int>);
+        static_assert(std::is_same_v<has_move_only_semantics_t<int>, std::false_type>);
+        return true;
+      }()
+    );
+
+    check(LINE(""), []() {
+        static_assert(has_move_only_semantics_v<std::unique_ptr<int>>);
+        static_assert(std::is_same_v<has_move_only_semantics_t<std::unique_ptr<int>>, std::true_type>);
+        return true;
+      }()
+    );
+  }
 
   void type_traits_test::test_has_allocator_type()
   {

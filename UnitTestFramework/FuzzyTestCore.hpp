@@ -7,9 +7,13 @@
 
 #pragma once
 
-/*! \file FuzzyTestCore.hpp
-    \brief Extension of unit testing framework for fuzzy testing.
-*/
+/*! \brief Extension of unit testing framework for inexact comparisons.
+ 
+    This header provides utilities for performing a comparison between two instances of
+    a type utilising a generic function object. A particular use-case is comparison
+    within a tolerance, for which a concrete function object is supplied.
+    
+ */
 
 #include "RegularTestCore.hpp"
 
@@ -17,9 +21,6 @@
 
 namespace sequoia::unit_testing
 {
-  template<test_mode Mode, class T, class Compare>
-  bool check_approx_equality(std::string_view description, unit_test_logger<Mode>& logger, Compare compare, const T& value, const T& prediction);
-
   namespace impl
   {
     template<class Compare>
@@ -55,20 +56,14 @@ namespace sequoia::unit_testing
     constexpr bool reports_for_type_v{reports_for_type<Compare, T>::value};    
   }
 
-  template<test_mode Mode, class Compare, class T>
-  bool dispatch_check(std::string_view description, unit_test_logger<Mode>& logger, impl::fuzzy_compare<Compare> c, const T& value, const T& prediction)
-  {
-    return check_approx_equality(description, logger, std::move(c.compare), value, prediction);
-  }
-
   template<test_mode Mode, class Iter, class PredictionIter, class Compare>
   bool check_range_approx(std::string_view description, unit_test_logger<Mode>& logger, Compare compare, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
   {
-    return impl::check_range(description, logger, impl::fuzzy_compare{compare}, first, last, predictionFirst, predictionLast);      
+    return impl::check_range(description, logger, impl::fuzzy_compare{std::move(compare)}, first, last, predictionFirst, predictionLast);      
   }
   
   template<test_mode Mode, class T, class Compare>
-  bool check_approx_equality(std::string_view description, unit_test_logger<Mode>& logger, Compare compare, const T& value, const T& prediction)
+  bool check_approx_equality(std::string_view description, unit_test_logger<Mode>& logger, Compare&& compare, const T& value, const T& prediction)
   {
     using sentinel = typename unit_test_logger<Mode>::sentinel;      
     sentinel s{logger, add_type_info<T>(description)};
@@ -105,12 +100,18 @@ namespace sequoia::unit_testing
     }
     else if constexpr(is_container_v<T>)
     {
-      return check_range_approx(description, logger, std::move(compare), value.begin(), value.end(), prediction.begin(), prediction.end());
+      return check_range_approx(description, logger, std::forward<Compare>(compare), value.begin(), value.end(), prediction.begin(), prediction.end());
     }
     else
     {
       static_assert(dependent_false<T>::value, "Compare cannot consume T directly nor interpret as a range");
     }
+  }
+
+  template<test_mode Mode, class Compare, class T>
+  bool dispatch_check(std::string_view description, unit_test_logger<Mode>& logger, impl::fuzzy_compare<Compare> c, const T& value, const T& prediction)
+  {
+    return check_approx_equality(description, logger, std::move(c.compare), value, prediction);
   }
 
   template<test_mode Mode>
@@ -122,7 +123,6 @@ namespace sequoia::unit_testing
     explicit fuzzy_extender(unit_test_logger<Mode>& logger) : m_Logger{logger} {}
 
     fuzzy_extender(const fuzzy_extender&) = delete;
-    fuzzy_extender(fuzzy_extender&&)      = delete;
 
     fuzzy_extender& operator=(const fuzzy_extender&) = delete;
     fuzzy_extender& operator=(fuzzy_extender&&)      = delete;
@@ -139,7 +139,8 @@ namespace sequoia::unit_testing
       return unit_testing::check_range_approx(description, m_Logger, std::move(compare), first, last, predictionFirst, predictionLast);      
     }
 
-  protected:
+  protected:    
+    fuzzy_extender(fuzzy_extender&&) noexcept = default;
     ~fuzzy_extender() = default;
 
   private:
