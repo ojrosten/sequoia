@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file MoveOnlyRegularAllocationTestCore.hpp
+/*! \file
     \brief Extension of unit testing framework for allocator testing
 */
 

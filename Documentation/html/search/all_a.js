@@ -28,7 +28,9 @@ var searchData=
   ['move_5fonly_5finefficient_5fmove_5fassignment',['move_only_inefficient_move_assignment',['../structsequoia_1_1unit__testing_1_1move__only__inefficient__move__assignment.html',1,'sequoia::unit_testing']]],
   ['moveonlyallocationcheckers_2ehpp',['MoveOnlyAllocationCheckers.hpp',['../_move_only_allocation_checkers_8hpp.html',1,'']]],
   ['moveonlyallocationcheckersdetails_2ehpp',['MoveOnlyAllocationCheckersDetails.hpp',['../_move_only_allocation_checkers_details_8hpp.html',1,'']]],
+  ['moveonlycheckers_2ehpp',['MoveOnlyCheckers.hpp',['../_move_only_checkers_8hpp.html',1,'']]],
   ['moveonlycheckersdetails_2ehpp',['MoveOnlyCheckersDetails.hpp',['../_move_only_checkers_details_8hpp.html',1,'']]],
+  ['moveonlytestcore_2ehpp',['MoveOnlyTestCore.hpp',['../_move_only_test_core_8hpp.html',1,'']]],
   ['mutable_5freference',['mutable_reference',['../structsequoia_1_1data__structures_1_1partition__impl_1_1mutable__reference.html',1,'sequoia::data_structures::partition_impl']]],
   ['my_5fclass_5ffalse_5fpositive_5ftest',['my_class_false_positive_test',['../classsequoia_1_1unit__testing_1_1my__class__false__positive__test.html',1,'sequoia::unit_testing']]],
   ['my_5fclass_5ftest',['my_class_test',['../classsequoia_1_1unit__testing_1_1my__class__test.html',1,'sequoia::unit_testing']]]

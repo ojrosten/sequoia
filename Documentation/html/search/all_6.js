@@ -1,6 +1,7 @@
 var searchData=
 [
   ['gaussian_5fapprox_5festimator',['gaussian_approx_estimator',['../structsequoia_1_1maths_1_1bias_1_1gaussian__approx__estimator.html',1,'sequoia::maths::bias']]],
+  ['general_5fequivalence_5fcheck',['general_equivalence_check',['../_free_checkers_8hpp.html#a14a33c9e375569a4c4d2e8e75351a346',1,'sequoia::unit_testing']]],
   ['generic_5fedge_5finsertions',['generic_edge_insertions',['../classsequoia_1_1unit__testing_1_1generic__edge__insertions.html',1,'sequoia::unit_testing']]],
   ['generic_5ffixed_5ftopology_5ftests',['generic_fixed_topology_tests',['../classsequoia_1_1unit__testing_1_1generic__fixed__topology__tests.html',1,'sequoia::unit_testing']]],
   ['generic_5fgraph_5foperations',['generic_graph_operations',['../classsequoia_1_1unit__testing_1_1generic__graph__operations.html',1,'sequoia::unit_testing']]],

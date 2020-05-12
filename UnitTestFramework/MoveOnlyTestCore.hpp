@@ -7,7 +7,8 @@
 
 #pragma once
 
-/*! \brief Extension for testing classes exhibiting move-only semantics.
+/*! \file
+    \brief Extension for testing classes exhibiting move-only semantics.
 
     This class is designed to be plugged into the checker class template, in order to extend
     its functionality. See MoveOnlyCheckers.hpp for further information.

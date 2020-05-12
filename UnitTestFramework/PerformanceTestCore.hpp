@@ -7,8 +7,8 @@
 
 #pragma once
 
-/*! \file PerformanceTestCore.hpp
-    \brief Extension of unit testing framework for perfomance testing
+/*! \file
+    \brief Extension of the testing framework for perfomance testing
 */
 
 #include "RegularTestCore.hpp"
@@ -26,6 +26,48 @@ namespace sequoia::unit_testing
     bool passed{};
   };
 
+  /*! \brief Function for comparing the performance of a fast task to a slow task.
+
+       \param minSpeedUp  the minimum predicted speed up of fast over slow; must be > 1
+       \param maxSpeedUp  the maximum predicted speed up of fast over slow; must be > minSpeedUp
+       \param trials      the number of trial used for the statistical analysis
+       \param num_sds     the number of standard deviations used to define a significant result
+       \param maxAttempts the number of times the entire test should be re-run before accepting failure
+
+       For each trial, both the supposedly fast and slow tasks are run. Their order is random.
+       When all trials have been completed, the mean and standard deviations are computed for
+       both fast and slow tasks. Denote these by m_f, sig_f and m_s, sig_s.
+
+       if (m_f + sig_f < m_s + sig_s)
+
+       then it is concluded that the purportedly fast task is actually slower than the slow task and
+       so the test fails. If this is not the case then the analysis branches depending on which
+       standard deviation is bigger.
+
+       if (sig_f >= sig_s)
+
+       then we mutliply m_f by both the min/max predicted speed-up and compare to the range of
+       values around m_s defined by the number of standard deviations. In particular, the test
+       is taken to pass if
+       
+          (minSpeedUp * m_f <= (m_s + num_sds * sig_s))
+       && (maxSpeedUp * m_f >= (m_s - num_sds * sig_s))
+       
+       which is essentially saying that the range of predicted speed-ups must fall within 
+       the specified number of standard deviations of m_s.
+
+       On the other hand
+
+       if(sig_s > sif_g)
+
+       then we divide m_s by both  the min/max predicted speed-up and compare to the range of
+       values around m_f defined by the number of standard deviations. In particular, the test
+       is taken to pass if
+
+          (m_s / maxSpeedUp <= (m_f + num_sds * sig_f))
+       && (m_s / minSpeedUp >= (m_f - num_sds * sig_f))
+       
+   */
   template<test_mode Mode, class F, class S>
   [[nodiscard]]
   auto check_relative_performance(std::string_view description, unit_test_logger<Mode>& logger, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials, const double num_sds, const std::size_t maxAttempts) -> performance_results<std::invoke_result_t<F>>
@@ -34,10 +76,13 @@ namespace sequoia::unit_testing
     static_assert(std::is_same_v<R, std::invoke_result_t<S>>, "Fast/Slow invokables must have same return value");
 
     if((minSpeedUp <= 1) || (maxSpeedUp <= 1))
-      throw std::logic_error("Relative performance test requires speed-up factors > 1!");
+      throw std::logic_error("Relative performance test requires speed-up factors > 1");
 
     if(minSpeedUp > maxSpeedUp)
-      throw std::logic_error("maxSpeedUp must be >= minSpeedUp");      
+      throw std::logic_error("maxSpeedUp must be >= minSpeedUp");
+
+    if(num_sds <=1)
+      throw std::logic_error("Number of standard deviations is required to be > 1");
       
     performance_results<R> results;      
       
@@ -148,6 +193,7 @@ namespace sequoia::unit_testing
       return results;
   }
 
+  /*! class template for plugging into the checker class template */
   template<test_mode Mode>
   class performance_extender
   {

@@ -75,7 +75,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Extension of unit testing framework for fuzzy testing.  
+<p>Extension of unit testing framework for inexact comparisons.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="_regular_test_core_8hpp_source.html">RegularTestCore.hpp</a>&quot;</code><br />
 <code>#include &lt;cmath&gt;</code><br />
@@ -84,15 +84,15 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1unit__testing_1_1impl_1_1fuzzy__compare.html">sequoia::unit_testing::impl::fuzzy_compare&lt; Compare &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1unit__testing_1_1fuzzy__compare.html">sequoia::unit_testing::fuzzy_compare&lt; Compare &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1unit__testing_1_1impl_1_1compares__type.html">sequoia::unit_testing::impl::compares_type&lt; Compare, T, class &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1unit__testing_1_1compares__type.html">sequoia::unit_testing::compares_type&lt; Compare, T, class &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1unit__testing_1_1impl_1_1compares__type_3_01_compare_00_01_t_00_01std_1_1void__9e8fd6d4a9d6a06b689e07ba2267329f.html">sequoia::unit_testing::impl::compares_type&lt; Compare, T, std::void_t&lt; std::invoke_result_t&lt; Compare, T, T &gt; &gt; &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1unit__testing_1_1compares__type_3_01_compare_00_01_t_00_01std_1_1void__t_3_01stc5a14f7fa783ac7c5d16b74478b332b4.html">sequoia::unit_testing::compares_type&lt; Compare, T, std::void_t&lt; std::invoke_result_t&lt; Compare, T, T &gt; &gt; &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1unit__testing_1_1impl_1_1reports__for__type.html">sequoia::unit_testing::impl::reports_for_type&lt; Compare, T, class &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1unit__testing_1_1reports__for__type.html">sequoia::unit_testing::reports_for_type&lt; Compare, T, class &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1unit__testing_1_1impl_1_1reports__for__type_3_01_compare_00_01_t_00_01std_1_1vo6389fec193d3d7a8dd10c3fc95c6e6bd.html">sequoia::unit_testing::impl::reports_for_type&lt; Compare, T, std::void_t&lt; decltype(std::declval&lt; Compare &gt;().report(std::declval&lt; T &gt;(), std::declval&lt; T &gt;()))&gt; &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1unit__testing_1_1reports__for__type_3_01_compare_00_01_t_00_01std_1_1void__t_3_3d78c0589a71ca8cf73b44c9b2eaacf0.html">sequoia::unit_testing::reports_for_type&lt; Compare, T, std::void_t&lt; decltype(std::declval&lt; Compare &gt;().report(std::declval&lt; T &gt;(), std::declval&lt; T &gt;()))&gt; &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsequoia_1_1unit__testing_1_1fuzzy__extender.html">sequoia::unit_testing::fuzzy_extender&lt; Mode &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -121,14 +121,14 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::unit_testin
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:aeb1b1602bcc70db1f23b09697d112d5d"><td class="memTemplParams" colspan="2"><a id="aeb1b1602bcc70db1f23b09697d112d5d"></a>
-template&lt;test_mode Mode, class T , class Compare &gt; </td></tr>
-<tr class="memitem:aeb1b1602bcc70db1f23b09697d112d5d"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::check_approx_equality</b> (std::string_view description, unit_test_logger&lt; Mode &gt; &amp;logger, Compare compare, const T &amp;value, const T &amp;prediction)</td></tr>
-<tr class="separator:aeb1b1602bcc70db1f23b09697d112d5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a64a01772e786ff5a72ed56717bf477ee"><td class="memTemplParams" colspan="2"><a id="a64a01772e786ff5a72ed56717bf477ee"></a>
+<tr class="memitem:a1640c46e54c86ed5c49fd0d2c48b303f"><td class="memTemplParams" colspan="2"><a id="a1640c46e54c86ed5c49fd0d2c48b303f"></a>
 template&lt;test_mode Mode, class Compare , class T &gt; </td></tr>
-<tr class="memitem:a64a01772e786ff5a72ed56717bf477ee"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::dispatch_check</b> (std::string_view description, unit_test_logger&lt; Mode &gt; &amp;logger, impl::fuzzy_compare&lt; Compare &gt; c, const T &amp;value, const T &amp;prediction)</td></tr>
-<tr class="separator:a64a01772e786ff5a72ed56717bf477ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1640c46e54c86ed5c49fd0d2c48b303f"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::dispatch_check</b> (std::string_view description, unit_test_logger&lt; Mode &gt; &amp;logger, fuzzy_compare&lt; Compare &gt; c, const T &amp;value, const T &amp;prediction)</td></tr>
+<tr class="separator:a1640c46e54c86ed5c49fd0d2c48b303f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab369835185ec9b05e4d2587da011f2df"><td class="memTemplParams" colspan="2"><a id="ab369835185ec9b05e4d2587da011f2df"></a>
+template&lt;test_mode Mode, class Compare , class T &gt; </td></tr>
+<tr class="memitem:ab369835185ec9b05e4d2587da011f2df"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::check_approx_equality</b> (std::string_view description, unit_test_logger&lt; Mode &gt; &amp;logger, Compare &amp;&amp;compare, const T &amp;value, const T &amp;prediction)</td></tr>
+<tr class="separator:ab369835185ec9b05e4d2587da011f2df"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6f22c440a9d85d5cd5288e42306e618d"><td class="memTemplParams" colspan="2"><a id="a6f22c440a9d85d5cd5288e42306e618d"></a>
 template&lt;test_mode Mode, class Iter , class PredictionIter , class Compare &gt; </td></tr>
 <tr class="memitem:a6f22c440a9d85d5cd5288e42306e618d"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::check_range_approx</b> (std::string_view description, unit_test_logger&lt; Mode &gt; &amp;logger, Compare compare, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)</td></tr>
@@ -136,17 +136,19 @@ template&lt;test_mode Mode, class Iter , class PredictionIter , class Compare &g
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a3cdc7a8e816c3e9893a983ef3a4ed491"><td class="memTemplParams" colspan="2"><a id="a3cdc7a8e816c3e9893a983ef3a4ed491"></a>
+<tr class="memitem:afbb27eef255b93ac92b483e92c80b949"><td class="memTemplParams" colspan="2"><a id="afbb27eef255b93ac92b483e92c80b949"></a>
 template&lt;class Compare , class T &gt; </td></tr>
-<tr class="memitem:a3cdc7a8e816c3e9893a983ef3a4ed491"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::impl::compares_type_v</b> {compares_type&lt;Compare, T&gt;::value}</td></tr>
-<tr class="separator:a3cdc7a8e816c3e9893a983ef3a4ed491"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1de646b5e52c24e63d1c3a87a8073032"><td class="memTemplParams" colspan="2"><a id="a1de646b5e52c24e63d1c3a87a8073032"></a>
+<tr class="memitem:afbb27eef255b93ac92b483e92c80b949"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::compares_type_v</b> {compares_type&lt;Compare, T&gt;::value}</td></tr>
+<tr class="separator:afbb27eef255b93ac92b483e92c80b949"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3445d2f8b52686fb05d5b1baffdd3ca9"><td class="memTemplParams" colspan="2"><a id="a3445d2f8b52686fb05d5b1baffdd3ca9"></a>
 template&lt;class Compare , class T &gt; </td></tr>
-<tr class="memitem:a1de646b5e52c24e63d1c3a87a8073032"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::impl::reports_for_type_v</b> {reports_for_type&lt;Compare, T&gt;::value}</td></tr>
-<tr class="separator:a1de646b5e52c24e63d1c3a87a8073032"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3445d2f8b52686fb05d5b1baffdd3ca9"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::reports_for_type_v</b> {reports_for_type&lt;Compare, T&gt;::value}</td></tr>
+<tr class="separator:a3445d2f8b52686fb05d5b1baffdd3ca9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Extension of unit testing framework for fuzzy testing. </p>
+<div class="textblock"><p>Extension of unit testing framework for inexact comparisons. </p>
+<p>This header provides utilities for performing a comparison between two instances of a type utilising a generic function object. A particular use-case is comparison within a tolerance, for which a concrete function object is supplied.</p>
+<p>The pattern is to provide a new overload for dispatch_check. Internally, if no compare object is identified for the given type, an attempt it made to interpret the type as a range. Thus if, for example, a fuzzy comparison is defined for a type, T, then no additional work is required to do a fuzzy comparison of the elements of a container of T. All that is required to do this is to feed the fuzzy_compare object to the existing check_range overload set and everything works smoothly. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

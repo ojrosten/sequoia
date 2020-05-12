@@ -7,14 +7,43 @@
 
 #pragma once
 
+/*! \file
+    \brief Useful specializations for the class template detailed_equality_checker
+
+    The specializations in this header are for various types defined in std. Internally,
+    check_equality is used meaning that there will be automatic, recursive dispatch to 
+    other specializations of detailed_equality_checker, if appropriate. For example,
+    consider two instances of std::pair<my_type1, mytype2>, x and y. The utilities in this
+    header means the call
+
+    check_equality("descripion", logger, x, y);
+
+    will automatically call
+
+    check_equality("bigger desciption", logger, x.first, y,first)
+
+    and similarly for the second element. In turn, this nested check_equality will use
+    a specialization of the detailed_equality_checker of my_type1, should it exist. As
+    usual, if the specialization for T does not exist, but T may be interpretted as
+    a container holding a type U, then everything will simply work, provided either that
+    there exists a specialization of the detailed_equality_checker for U or U is serializable.
+ */
+
 #include "ConcreteEquivalenceCheckers.hpp"
 
 namespace sequoia::unit_testing
 {
+  /*! \brief Detailed comparison of the elements of two instances of std::pair<S,T>
+
+      The elements of a std::pair<S,T> are checked using check_equality; this will recursively
+      dispatch to other specializations detailed_equality_checker if appropriate for either
+      S or T.
+   */
   template<class T, class S>
   struct detailed_equality_checker<std::pair<T, S>> : equivalence_checker<std::pair<T, S>>
   {};
 
+  /*! \brief Detailed comparison of the elements of two instances of std::pair<T...> */  
   template<class... T>
   struct detailed_equality_checker<std::tuple<T...>> : equivalence_checker<std::tuple<T...>>
   {};

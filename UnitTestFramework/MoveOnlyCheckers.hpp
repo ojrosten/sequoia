@@ -7,7 +7,8 @@
 
 #pragma once
 
-/*! \brief Functions for checking semantics of types lacking copy semantics but which are otherwise regular.
+/*! \file
+    \brief Functions for checking semantics of types lacking copy semantics but which are otherwise regular.
 
     Within this library, a type is defined to have move-only semantics if possesses the following:
         

@@ -7,7 +7,8 @@
 
 #pragma once
 
-/*! \brief Extension for testing classes exhibiting regular semantics.
+/*! \file
+    \brief Extension for testing classes exhibiting regular semantics.
 
     This class is designed to be plugged into the checker class template, in order to extend
     its functionality. See RegularCheckers.hpp for further information.

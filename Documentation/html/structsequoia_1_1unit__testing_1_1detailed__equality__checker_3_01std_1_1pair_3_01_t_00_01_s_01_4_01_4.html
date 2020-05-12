@@ -69,6 +69,11 @@ $(function() {
 <div class="title">sequoia::unit_testing::detailed_equality_checker&lt; std::pair&lt; T, S &gt; &gt; Struct Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Detailed comparison of the elements of two instances of std::pair&lt;S,T&gt;  
+ <a href="structsequoia_1_1unit__testing_1_1detailed__equality__checker_3_01std_1_1pair_3_01_t_00_01_s_01_4_01_4.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="_concrete_equality_checkers_8hpp_source.html">ConcreteEqualityCheckers.hpp</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for sequoia::unit_testing::detailed_equality_checker&lt; std::pair&lt; T, S &gt; &gt;:</div>
 <div class="dyncontent">
@@ -78,7 +83,13 @@ Inheritance diagram for sequoia::unit_testing::detailed_equality_checker&lt; std
 <area href="structsequoia_1_1unit__testing_1_1equivalence__checker.html" alt="sequoia::unit_testing::equivalence_checker&lt; std::pair&lt; T, S &gt; &gt;" shape="rect" coords="0,0,393,24"/>
   </map>
 </div></div>
-<hr/>The documentation for this struct was generated from the following file:<ul>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><h3>template&lt;class T, class S&gt;<br />
+struct sequoia::unit_testing::detailed_equality_checker&lt; std::pair&lt; T, S &gt; &gt;</h3>
+
+<p>Detailed comparison of the elements of two instances of std::pair&lt;S,T&gt; </p>
+<p>The elements of a std::pair&lt;S,T&gt; are checked using check_equality; this will recursively dispatch to other specializations <a class="el" href="structsequoia_1_1unit__testing_1_1detailed__equality__checker.html" title="class template, specializations of which implement detailed comparison of two instantiations of T;">detailed_equality_checker</a> if appropriate for either S or T. </p>
+</div><hr/>The documentation for this struct was generated from the following file:<ul>
 <li>UnitTestFramework/<a class="el" href="_concrete_equality_checkers_8hpp_source.html">ConcreteEqualityCheckers.hpp</a></li>
 </ul>
 </div><!-- contents -->

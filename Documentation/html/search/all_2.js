@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['check_5fsemantics',['check_semantics',['../_regular_checkers_8hpp.html#a97fc0828f5ae3ab61632b6c66b98b1d3',1,'sequoia::unit_testing::check_semantics(std::string_view description, unit_test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y, Mutator yMutator)'],['../_regular_checkers_8hpp.html#aaad36fcc1efc28885381d46881c24373',1,'sequoia::unit_testing::check_semantics(std::string_view description, unit_test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y)']]],
   ['checker',['checker',['../classsequoia_1_1unit__testing_1_1checker.html',1,'sequoia::unit_testing']]],
   ['checker_3c_20mode_2c_20allocation_5fextender_3c_20mode_20_3e_20_3e',['checker&lt; Mode, allocation_extender&lt; Mode &gt; &gt;',['../classsequoia_1_1unit__testing_1_1checker.html',1,'sequoia::unit_testing']]],
   ['checker_3c_20mode_2c_20extenders_2e_2e_2e_20_3e',['checker&lt; Mode, Extenders... &gt;',['../classsequoia_1_1unit__testing_1_1checker.html',1,'sequoia::unit_testing']]],
@@ -17,8 +18,10 @@ var searchData=
   ['commandlinearguments_2ehpp',['CommandLineArguments.hpp',['../_command_line_arguments_8hpp.html',1,'']]],
   ['comp_5findex_5fdetector',['comp_index_detector',['../structsequoia_1_1sequoia_1_1maths_1_1graph__impl_1_1comp__index__detector.html',1,'sequoia::sequoia::maths::graph_impl']]],
   ['comp_5findex_5fdetector_3c_20g_2c_20std_3a_3avoid_5ft_3c_20decltype_28std_3a_3adeclval_3c_20typename_20g_3a_3aedge_5ftype_20_3e_28_29_2ecomplementary_5findex_28_29_29_3e_20_3e',['comp_index_detector&lt; G, std::void_t&lt; decltype(std::declval&lt; typename G::edge_type &gt;().complementary_index())&gt; &gt;',['../structsequoia_1_1sequoia_1_1maths_1_1graph__impl_1_1comp__index__detector_3_01_g_00_01std_1_1voif285704c84bad219b831bf7c50cfe852.html',1,'sequoia::sequoia::maths::graph_impl']]],
-  ['compares_5ftype',['compares_type',['../structsequoia_1_1unit__testing_1_1impl_1_1compares__type.html',1,'sequoia::unit_testing::impl']]],
-  ['compares_5ftype_3c_20compare_2c_20t_2c_20std_3a_3avoid_5ft_3c_20std_3a_3ainvoke_5fresult_5ft_3c_20compare_2c_20t_2c_20t_20_3e_20_3e_20_3e',['compares_type&lt; Compare, T, std::void_t&lt; std::invoke_result_t&lt; Compare, T, T &gt; &gt; &gt;',['../structsequoia_1_1unit__testing_1_1impl_1_1compares__type_3_01_compare_00_01_t_00_01std_1_1void__9e8fd6d4a9d6a06b689e07ba2267329f.html',1,'sequoia::unit_testing::impl']]],
+  ['compares_5ftype',['compares_type',['../structsequoia_1_1unit__testing_1_1compares__type.html',1,'sequoia::unit_testing']]],
+  ['compares_5ftype_3c_20compare_2c_20t_2c_20std_3a_3avoid_5ft_3c_20std_3a_3ainvoke_5fresult_5ft_3c_20compare_2c_20t_2c_20t_20_3e_20_3e_20_3e',['compares_type&lt; Compare, T, std::void_t&lt; std::invoke_result_t&lt; Compare, T, T &gt; &gt; &gt;',['../structsequoia_1_1unit__testing_1_1compares__type_3_01_compare_00_01_t_00_01std_1_1void__t_3_01stc5a14f7fa783ac7c5d16b74478b332b4.html',1,'sequoia::unit_testing']]],
+  ['concreteequalitycheckers_2ehpp',['ConcreteEqualityCheckers.hpp',['../_concrete_equality_checkers_8hpp.html',1,'']]],
+  ['concreteequivalencecheckers_2ehpp',['ConcreteEquivalenceCheckers.hpp',['../_concrete_equivalence_checkers_8hpp.html',1,'']]],
   ['concurrencymodels_2ehpp',['ConcurrencyModels.hpp',['../_concurrency_models_8hpp.html',1,'']]],
   ['connectivity',['connectivity',['../classsequoia_1_1maths_1_1connectivity.html',1,'sequoia::maths']]],
   ['connectivity_2ehpp',['Connectivity.hpp',['../_connectivity_8hpp.html',1,'']]],

@@ -12,13 +12,19 @@
 
  */
 
+#include "FreeTestCore.hpp"
 
-#include "RegularTestCore.hpp"
 #include <vector>
 #include <future>
 
 namespace sequoia::unit_testing
 {
+  /*! \brief Allows tests to be grouped together into a family of related tests
+
+      When tests are executed, it is possible to specify both the concurrency mode
+      and whether or not output files (which should generally be version controlled)
+      are generated.
+   */
   class test_family
   {
   public:
@@ -29,7 +35,7 @@ namespace sequoia::unit_testing
       {}
       
       log_summary::duration execution_time{};
-      std::vector<log_summary> logs;
+      std::vector<log_summary> logs{};
     };
 
     struct summary
@@ -38,7 +44,7 @@ namespace sequoia::unit_testing
       {}
       
       log_summary::duration execution_time{};
-      log_summary log;
+      log_summary log{};
     };
     
     template<class... Tests>
@@ -67,7 +73,7 @@ namespace sequoia::unit_testing
     bool empty() const noexcept { return m_Tests.empty(); }
   private:
     std::vector<std::unique_ptr<test>> m_Tests{};
-    std::string m_Name;
+    std::string m_Name{};
 
     [[nodiscard]]
     std::string false_positive_filename();

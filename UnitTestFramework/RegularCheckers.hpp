@@ -7,7 +7,8 @@
 
 #pragma once
 
-/*! \brief Functions for checking regular semantics.
+/*! \file
+    \brief Functions for checking regular semantics.
 
     Types exhibiting regular semantics are pleasant to reason about. Within this
     library, a type is regular if it possesses the following:

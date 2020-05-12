@@ -18,7 +18,7 @@ var searchData=
   ['function_5fsignature_3c_20r_28l_3a_3a_2a_29_28t_29_20const_20noexcept_20_3e',['function_signature&lt; R(L::*)(T) const noexcept &gt;',['../structsequoia_1_1sequoia_1_1function__signature_3_01_r_07_l_1_1_5_08_07_t_08_01const_01noexcept_01_4.html',1,'sequoia::sequoia']]],
   ['function_5fsignature_3c_20r_28l_3a_3a_2a_29_28t_29_20noexcept_20_3e',['function_signature&lt; R(L::*)(T) noexcept &gt;',['../structsequoia_1_1sequoia_1_1function__signature_3_01_r_07_l_1_1_5_08_07_t_08_01noexcept_01_4.html',1,'sequoia::sequoia']]],
   ['function_5fsignature_3c_20r_28l_3a_3a_2a_29_28t_29_3e',['function_signature&lt; R(L::*)(T)&gt;',['../structsequoia_1_1sequoia_1_1function__signature_3_01_r_07_l_1_1_5_08_07_t_08_4.html',1,'sequoia::sequoia']]],
-  ['fuzzy_5fcompare',['fuzzy_compare',['../structsequoia_1_1unit__testing_1_1impl_1_1fuzzy__compare.html',1,'sequoia::unit_testing::impl']]],
+  ['fuzzy_5fcompare',['fuzzy_compare',['../structsequoia_1_1unit__testing_1_1fuzzy__compare.html',1,'sequoia::unit_testing']]],
   ['fuzzy_5fextender',['fuzzy_extender',['../classsequoia_1_1unit__testing_1_1fuzzy__extender.html',1,'sequoia::unit_testing']]],
   ['fuzzy_5ffalse_5fnegative_5fdiagnostics',['fuzzy_false_negative_diagnostics',['../classsequoia_1_1unit__testing_1_1fuzzy__false__negative__diagnostics.html',1,'sequoia::unit_testing']]],
   ['fuzzy_5ffalse_5fpositive_5fdiagnostics',['fuzzy_false_positive_diagnostics',['../classsequoia_1_1unit__testing_1_1fuzzy__false__positive__diagnostics.html',1,'sequoia::unit_testing']]]

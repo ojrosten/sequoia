@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file RegularAllocationCheckersDetails.hpp
+/*! \file
     \brief Implementation details for allocation checks within the unit testing framework.
 */
 

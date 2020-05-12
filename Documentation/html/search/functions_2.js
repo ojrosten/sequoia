@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['run_5ftests',['run_tests',['../classsequoia_1_1unit__testing_1_1basic__test.html#a3d198a5c122f93240c0a687d9cf0af64',1,'sequoia::unit_testing::basic_test']]]
+  ['execute',['execute',['../classsequoia_1_1unit__testing_1_1test.html#aa4e9e9fd33db11ad80b854f811cb24e5',1,'sequoia::unit_testing::test::execute()'],['../classsequoia_1_1unit__testing_1_1basic__test.html#aaf63e950cb8d1838cabb47bf0ea88ac0',1,'sequoia::unit_testing::basic_test::execute()']]]
 ];

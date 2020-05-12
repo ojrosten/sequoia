@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['execute',['execute',['../classsequoia_1_1unit__testing_1_1test.html#aa4e9e9fd33db11ad80b854f811cb24e5',1,'sequoia::unit_testing::test::execute()'],['../classsequoia_1_1unit__testing_1_1basic__test.html#aaf63e950cb8d1838cabb47bf0ea88ac0',1,'sequoia::unit_testing::basic_test::execute()']]]
+  ['dispatch_5fcheck',['dispatch_check',['../_free_checkers_8hpp.html#a9ee54bbd68ce78c773346abb03d7150e',1,'sequoia::unit_testing::dispatch_check(std::string_view description, unit_test_logger&lt; Mode &gt; &amp;logger, equality_tag, const T &amp;value, const T &amp;prediction)'],['../_free_checkers_8hpp.html#aeaee9a1a39cb89c17b77e2c6043c59c5',1,'sequoia::unit_testing::dispatch_check(std::string_view description, unit_test_logger&lt; Mode &gt; &amp;logger, equivalence_tag, const T &amp;value, S &amp;&amp;s, U &amp;&amp;... u)'],['../_free_checkers_8hpp.html#a4d140a3cb27dbd1caeb317a6d92297a6',1,'sequoia::unit_testing::dispatch_check(std::string_view description, unit_test_logger&lt; Mode &gt; &amp;logger, weak_equivalence_tag, const T &amp;value, S &amp;&amp;s, U &amp;&amp;... u)']]]
 ];

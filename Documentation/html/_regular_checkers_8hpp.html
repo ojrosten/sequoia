@@ -83,15 +83,21 @@ $(function() {
 Functions</h2></td></tr>
 <tr class="memitem:a97fc0828f5ae3ab61632b6c66b98b1d3"><td class="memTemplParams" colspan="2"><a id="a97fc0828f5ae3ab61632b6c66b98b1d3"></a>
 template&lt;test_mode Mode, class T , class Mutator &gt; </td></tr>
-<tr class="memitem:a97fc0828f5ae3ab61632b6c66b98b1d3"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::check_semantics</b> (std::string_view description, unit_test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y, Mutator yMutator)</td></tr>
+<tr class="memitem:a97fc0828f5ae3ab61632b6c66b98b1d3"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="_regular_checkers_8hpp.html#a97fc0828f5ae3ab61632b6c66b98b1d3">sequoia::unit_testing::check_semantics</a> (std::string_view description, unit_test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y, Mutator yMutator)</td></tr>
+<tr class="memdesc:a97fc0828f5ae3ab61632b6c66b98b1d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Precondition: x!=y. <br /></td></tr>
 <tr class="separator:a97fc0828f5ae3ab61632b6c66b98b1d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaad36fcc1efc28885381d46881c24373"><td class="memTemplParams" colspan="2"><a id="aaad36fcc1efc28885381d46881c24373"></a>
 template&lt;test_mode Mode, class T &gt; </td></tr>
-<tr class="memitem:aaad36fcc1efc28885381d46881c24373"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::check_semantics</b> (std::string_view description, unit_test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y)</td></tr>
+<tr class="memitem:aaad36fcc1efc28885381d46881c24373"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="_regular_checkers_8hpp.html#aaad36fcc1efc28885381d46881c24373">sequoia::unit_testing::check_semantics</a> (std::string_view description, unit_test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y)</td></tr>
+<tr class="memdesc:aaad36fcc1efc28885381d46881c24373"><td class="mdescLeft">&#160;</td><td class="mdescRight">Precondition: x!=y. <br /></td></tr>
 <tr class="separator:aaad36fcc1efc28885381d46881c24373"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Functions for checking regular semantics. </p>
+<p>Types exhibiting regular semantics are pleasant to reason about. Within this library, a type is regular if it possesses the following:</p>
+<p>copy constructor move constructor copy assignment move assignment swap operator== operator!=</p>
+<p>Note that a default constructor is not a strict requirement. Types additionally possessing the remaining comparison operators will be referred to as having ordered semantics.</p>
+<p>This file adds two functions to the check_semantics overload set; both functions are appropriate for testing the behaviour of types with regular semantics. Inside the functions, consistency of the operators listed above will be checked. One of the overloads also accepts a mutator. This will modify a copy of y, checking both that the copy is indeed changed and also that y is left alone. The reason for this is to check that classes which e.g. wrap a pointer have faithful copy semantics. For example, suppose that the copy constructor of vector were incorrectly implemented with the pointer, rather than what it points to, being copied. The mutation check would catch this. There is a similar check for copy assignment. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

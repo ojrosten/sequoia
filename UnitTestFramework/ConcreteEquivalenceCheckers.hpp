@@ -7,10 +7,15 @@
 
 #pragma once
 
+/*! \file
+    \brief Useful specializations for the class template equivalence_checker.
+*/
+
 #include "FreeCheckers.hpp"
 
 namespace sequoia::unit_testing
 {
+  /*! \brief Checks equivalence of std::basic_string to char[] and string_view */
   template<class Char, class Traits, class Allocator>
   struct equivalence_checker<std::basic_string<Char, Traits, Allocator>>
   {
@@ -29,6 +34,7 @@ namespace sequoia::unit_testing
     }
   };
 
+  /*! \brief Checks equivalence of std::pair<S,T> and std::pair<U,V> where the decays of S,U and T,V are each the same*/
   template<class S, class T>
   struct equivalence_checker<std::pair<S, T>>
   {
@@ -42,6 +48,7 @@ namespace sequoia::unit_testing
     }
   };
 
+  /*! \brief Checks equivalence of std::tuple<T...> and std::tuple<U...> where T... and U... are the same size and the decays of respective elements are the same*/
   template<class... T>
   struct equivalence_checker<std::tuple<T...>>
   {

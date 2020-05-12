@@ -7,7 +7,8 @@
 
 #pragma once
 
-/*! \brief Extension of unit testing framework for inexact comparisons.
+/*! \file
+    \brief Extension of unit testing framework for inexact comparisons.
  
     This header provides utilities for performing a comparison between two instances of
     a type utilising a generic function object. A particular use-case is comparison
@@ -119,6 +120,7 @@ namespace sequoia::unit_testing
     return check_range(description, logger, fuzzy_compare{std::move(compare)}, first, last, predictionFirst, predictionLast);      
   }
 
+  /*! class template for plugging into the checker class template */
   template<test_mode Mode>
   class fuzzy_extender
   {

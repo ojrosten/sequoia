@@ -76,7 +76,7 @@ $(function() {
 
 <p>Free functions for performing checks, together with the 'checker' class template which wraps them.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="_free_checkers_details_8hpp_source.html">FreeCheckersDetails.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="_unit_test_logger_8hpp_source.html">UnitTestLogger.hpp</a>&quot;</code><br />
 </div>
 <p><a href="_free_checkers_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -100,8 +100,8 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1unit__testing_1_1serializer.html">sequoia::unit_testing::serializer&lt; T &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialize this struct template to provide custom serialization of a given class.  <a href="structsequoia_1_1unit__testing_1_1serializer.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1unit__testing_1_1type__info.html">sequoia::unit_testing::type_info&lt; T, U &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialize this struct template to customize the way in which type info is generated for a given class; this is particularly useful for class templates where standard de-mangling may be hard to read!  <a href="structsequoia_1_1unit__testing_1_1type__info.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1unit__testing_1_1type__demangler.html">sequoia::unit_testing::type_demangler&lt; T, U &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialize this struct template to customize the way in which type info is generated for a given class; this is particularly useful for class templates where standard de-mangling may be hard to read!  <a href="structsequoia_1_1unit__testing_1_1type__demangler.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsequoia_1_1unit__testing_1_1checker.html">sequoia::unit_testing::checker&lt; Mode, Extenders &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exposes elementary check methods, with the option to plug in arbitrary Extenders to compose functionality.  <a href="classsequoia_1_1unit__testing_1_1checker.html#details">More...</a><br /></td></tr>
@@ -113,10 +113,21 @@ Functions</h2></td></tr>
 template&lt;class T &gt; </td></tr>
 <tr class="memitem:a0cb673303b9b2ed82705a527beaebb07"><td class="memTemplItemLeft" align="right" valign="top">std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::to_string</b> (const T &amp;value)</td></tr>
 <tr class="separator:a0cb673303b9b2ed82705a527beaebb07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a510ee73270e413132c9bef0cb8b46012"><td class="memTemplParams" colspan="2"><a id="a510ee73270e413132c9bef0cb8b46012"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a510ee73270e413132c9bef0cb8b46012"><td class="memTemplItemLeft" align="right" valign="top">std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::demangle</b> ()</td></tr>
+<tr class="separator:a510ee73270e413132c9bef0cb8b46012"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5b3a9e38e9072a17007508624684b9b6"><td class="memTemplParams" colspan="2"><a id="a5b3a9e38e9072a17007508624684b9b6"></a>
 template&lt;class T , class... U&gt; </td></tr>
 <tr class="memitem:a5b3a9e38e9072a17007508624684b9b6"><td class="memTemplItemLeft" align="right" valign="top">std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::add_type_info</b> (std::string_view description)</td></tr>
 <tr class="separator:a5b3a9e38e9072a17007508624684b9b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a14a33c9e375569a4c4d2e8e75351a346"><td class="memTemplParams" colspan="2">template&lt;class EquivChecker , test_mode Mode, class T , class S , class... U&gt; </td></tr>
+<tr class="memitem:a14a33c9e375569a4c4d2e8e75351a346"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="_free_checkers_8hpp.html#a14a33c9e375569a4c4d2e8e75351a346">sequoia::unit_testing::general_equivalence_check</a> (std::string_view description, unit_test_logger&lt; Mode &gt; &amp;logger, const T &amp;value, const S &amp;s, const U &amp;... u)</td></tr>
+<tr class="memdesc:a14a33c9e375569a4c4d2e8e75351a346"><td class="mdescLeft">&#160;</td><td class="mdescRight">generic function that generates a check from any class providing a static check method.  <a href="_free_checkers_8hpp.html#a14a33c9e375569a4c4d2e8e75351a346">More...</a><br /></td></tr>
+<tr class="separator:a14a33c9e375569a4c4d2e8e75351a346"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">OverloadSet</div></td></tr>
+<tr><td colspan="2"><div class="groupText"><p>The next three functions form an overload set, dedicated to appropiately dispatching requests to check equality, equivalence and weak equivalence. This set may be supplemented by extenders of the testing framework, see <a class="el" href="_fuzzy_test_core_8hpp.html" title="Extension of unit testing framework for inexact comparisons.">FuzzyTestCore.hpp</a> for an example. </p>
+</div></td></tr>
 <tr class="memitem:a9ee54bbd68ce78c773346abb03d7150e"><td class="memTemplParams" colspan="2">template&lt;test_mode Mode, class T &gt; </td></tr>
 <tr class="memitem:a9ee54bbd68ce78c773346abb03d7150e"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="_free_checkers_8hpp.html#a9ee54bbd68ce78c773346abb03d7150e">sequoia::unit_testing::dispatch_check</a> (std::string_view description, unit_test_logger&lt; Mode &gt; &amp;logger, equality_tag, const T &amp;value, const T &amp;prediction)</td></tr>
 <tr class="memdesc:a9ee54bbd68ce78c773346abb03d7150e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The workhorse of equality checking, which takes responsibility for reflecting upon types and then dispatching, appropriately.  <a href="_free_checkers_8hpp.html#a9ee54bbd68ce78c773346abb03d7150e">More...</a><br /></td></tr>
@@ -129,6 +140,14 @@ template&lt;class T , class... U&gt; </td></tr>
 <tr class="memitem:a4d140a3cb27dbd1caeb317a6d92297a6"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="_free_checkers_8hpp.html#a4d140a3cb27dbd1caeb317a6d92297a6">sequoia::unit_testing::dispatch_check</a> (std::string_view description, unit_test_logger&lt; Mode &gt; &amp;logger, weak_equivalence_tag, const T &amp;value, S &amp;&amp;s, U &amp;&amp;... u)</td></tr>
 <tr class="memdesc:a4d140a3cb27dbd1caeb317a6d92297a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">The workhorse for weak equivalence checking.  <a href="_free_checkers_8hpp.html#a4d140a3cb27dbd1caeb317a6d92297a6">More...</a><br /></td></tr>
 <tr class="separator:a4d140a3cb27dbd1caeb317a6d92297a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a54a9779635ccfbc2f7f20d1c72e211bc"><td class="memTemplParams" colspan="2"><a id="a54a9779635ccfbc2f7f20d1c72e211bc"></a>
+template&lt;test_mode Mode, class ElementDispatchDiscriminator , class Iter , class PredictionIter &gt; </td></tr>
+<tr class="memitem:a54a9779635ccfbc2f7f20d1c72e211bc"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::check_range</b> (std::string_view description, unit_test_logger&lt; Mode &gt; &amp;logger, ElementDispatchDiscriminator discriminator, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)</td></tr>
+<tr class="separator:a54a9779635ccfbc2f7f20d1c72e211bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c446d27e2df5cc8898d4484665aca79"><td class="memTemplParams" colspan="2"><a id="a0c446d27e2df5cc8898d4484665aca79"></a>
+template&lt;class E , test_mode Mode, class Fn &gt; </td></tr>
+<tr class="memitem:a0c446d27e2df5cc8898d4484665aca79"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::check_exception_thrown</b> (std::string_view description, unit_test_logger&lt; Mode &gt; &amp;logger, Fn &amp;&amp;function)</td></tr>
+<tr class="separator:a0c446d27e2df5cc8898d4484665aca79"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8be0954c19b657355bd318177d9fdfe7"><td class="memTemplParams" colspan="2"><a id="a8be0954c19b657355bd318177d9fdfe7"></a>
 template&lt;test_mode Mode, class T &gt; </td></tr>
 <tr class="memitem:a8be0954c19b657355bd318177d9fdfe7"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::check_equality</b> (std::string_view description, unit_test_logger&lt; Mode &gt; &amp;logger, const T &amp;value, const T &amp;prediction)</td></tr>
@@ -145,10 +164,6 @@ template&lt;test_mode Mode, class T , class S , class... U&gt; </td></tr>
 template&lt;test_mode Mode&gt; </td></tr>
 <tr class="memitem:a42b4b34ad57a97d8cf9d9bb8a0a09bfc"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::check</b> (std::string_view description, unit_test_logger&lt; Mode &gt; &amp;logger, const bool value)</td></tr>
 <tr class="separator:a42b4b34ad57a97d8cf9d9bb8a0a09bfc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0c446d27e2df5cc8898d4484665aca79"><td class="memTemplParams" colspan="2"><a id="a0c446d27e2df5cc8898d4484665aca79"></a>
-template&lt;class E , test_mode Mode, class Fn &gt; </td></tr>
-<tr class="memitem:a0c446d27e2df5cc8898d4484665aca79"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::check_exception_thrown</b> (std::string_view description, unit_test_logger&lt; Mode &gt; &amp;logger, Fn &amp;&amp;function)</td></tr>
-<tr class="separator:a0c446d27e2df5cc8898d4484665aca79"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa3b3951c1a9e9bf7bc1f1a41bbe807c8"><td class="memTemplParams" colspan="2"><a id="aa3b3951c1a9e9bf7bc1f1a41bbe807c8"></a>
 template&lt;test_mode Mode, class Iter , class PredictionIter &gt; </td></tr>
 <tr class="memitem:aa3b3951c1a9e9bf7bc1f1a41bbe807c8"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::check_range</b> (std::string_view description, unit_test_logger&lt; Mode &gt; &amp;logger, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)</td></tr>
@@ -233,7 +248,6 @@ template&lt;test_mode Mode, class T &gt; </div>
 </div><div class="memdoc">
 
 <p>The workhorse of equality checking, which takes responsibility for reflecting upon types and then dispatching, appropriately. </p>
-<p>The next three functions form an overload set, dedicated to appropiately dispatching requests to check equality, equivalence and weak equivalence. This set may be supplemented by extenders of the testing framework, see <a class="el" href="_fuzzy_test_core_8hpp.html" title="Extension of unit testing framework for fuzzy testing.">FuzzyTestCore.hpp</a> for an example.</p>
 <p>The input type, T, must either be equality comparable or possess a detailed_equality_checker, or both. Generally, it will be the case that T does indeed overload operator==; generally anything beyond the simplest user-defined types should be furnished with a detailed_equality_checker. </p>
 
 </div>
@@ -349,6 +363,57 @@ template&lt;test_mode Mode, class T , class S , class... U&gt; </div>
 
 <p>The workhorse for weak equivalence checking. </p>
 <p>This function will reflect on whether an appropriate specialization of weak_equivalence_checker exists. If so, it will be used and if not it will attempt to interpret T as a range. Only if this fails then a static assertion will terminate compilation. </p>
+
+</div>
+</div>
+<a id="file_a14a33c9e375569a4c4d2e8e75351a346"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#file_a14a33c9e375569a4c4d2e8e75351a346">&#9670;&nbsp;</a></span>general_equivalence_check()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class EquivChecker , test_mode Mode, class T , class S , class... U&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">bool sequoia::unit_testing::general_equivalence_check </td>
+          <td>(</td>
+          <td class="paramtype">std::string_view&#160;</td>
+          <td class="paramname"><em>description</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classsequoia_1_1unit__testing_1_1unit__test__logger.html">unit_test_logger</a>&lt; Mode &gt; &amp;&#160;</td>
+          <td class="paramname"><em>logger</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const T &amp;&#160;</td>
+          <td class="paramname"><em>value</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const S &amp;&#160;</td>
+          <td class="paramname"><em>s</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const U &amp;...&#160;</td>
+          <td class="paramname"><em>u</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>generic function that generates a check from any class providing a static check method. </p>
+<p>This employs a sentinel and so can be used naively. </p>
 
 </div>
 </div>
