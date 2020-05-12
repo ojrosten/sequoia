@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file UnitTestRunner.hpp
+/*! \file
     \brief Helper for running unit tests from the command line.
 */
 
@@ -59,6 +59,9 @@ namespace sequoia::unit_testing
 
     unit_test_runner(const unit_test_runner&) = delete;
     unit_test_runner(unit_test_runner&&)      = default;
+
+    unit_test_runner& operator=(const unit_test_runner&) = delete;
+    unit_test_runner& operator=(unit_test_runner&&)      = delete;
 
     template<class Test, class... Tests>
     void add_test_family(std::string_view name, Test&& test, Tests&&... tests)

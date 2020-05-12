@@ -7,8 +7,8 @@
 
 #pragma once
 
-/*! \file UnitTestUtilities.hpp
-    \brief Utilties for use in unit tests.
+/*! \file
+    \brief Utilities for use in tests.
 */
 
 namespace sequoia::unit_testing
