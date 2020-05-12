@@ -70,7 +70,7 @@ namespace sequoia::unit_testing
    */
   template<test_mode Mode, class F, class S>
   [[nodiscard]]
-  auto check_relative_performance(std::string_view description, unit_test_logger<Mode>& logger, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials, const double num_sds, const std::size_t maxAttempts) -> performance_results<std::invoke_result_t<F>>
+  auto check_relative_performance(std::string_view description, test_logger<Mode>& logger, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials, const double num_sds, const std::size_t maxAttempts) -> performance_results<std::invoke_result_t<F>>
   {      
     using R = std::invoke_result_t<F>;
     static_assert(std::is_same_v<R, std::invoke_result_t<S>>, "Fast/Slow invokables must have same return value");
@@ -170,7 +170,7 @@ namespace sequoia::unit_testing
         
         summary = serializer();
 
-        if((unit_test_logger<Mode>::mode == test_mode::false_positive) ? !results.passed : results.passed)
+        if((test_logger<Mode>::mode == test_mode::false_positive) ? !results.passed : results.passed)
         {
           break;
         }
@@ -182,7 +182,7 @@ namespace sequoia::unit_testing
 
       message.append(summary);
 
-      typename unit_test_logger<Mode>::sentinel r{logger, message};
+      typename test_logger<Mode>::sentinel r{logger, message};
       r.log_performance_check();
 
       if(!results.passed)
@@ -200,7 +200,7 @@ namespace sequoia::unit_testing
   public:
     constexpr static test_mode mode{Mode};
 
-    performance_extender(unit_test_logger<Mode>& logger) : m_Logger{logger} {}
+    performance_extender(test_logger<Mode>& logger) : m_Logger{logger} {}
 
     performance_extender(const performance_extender&) = delete;
     performance_extender(performance_extender&&)      = delete;
@@ -218,7 +218,7 @@ namespace sequoia::unit_testing
     ~performance_extender() = default;
 
   private:
-    unit_test_logger<Mode>& m_Logger;
+    test_logger<Mode>& m_Logger;
   };
 
   template<test_mode mode>

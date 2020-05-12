@@ -16,7 +16,7 @@ namespace sequoia::unit_testing
   namespace impl
   {
     template<test_mode Mode, class PartitionedData>
-    void check_details(std::string_view description, unit_test_logger<Mode>& logger, const PartitionedData& data, const PartitionedData& prediction)
+    void check_details(std::string_view description, test_logger<Mode>& logger, const PartitionedData& data, const PartitionedData& prediction)
     {
       check_equality(combine_messages(description, "Size different"), logger, data.size(), prediction.size());
       if(check_equality(combine_messages(description, "Number of partitions different"), logger, data.num_partitions(), prediction.num_partitions()))
@@ -52,7 +52,7 @@ namespace sequoia::unit_testing
     }
 
     template<test_mode Mode, class PartitionedData, class T=typename PartitionedData::value_type>
-    void check_equivalence(std::string_view description, unit_test_logger<Mode>& logger, const PartitionedData& data, std::initializer_list<std::initializer_list<T>> prediction)
+    void check_equivalence(std::string_view description, test_logger<Mode>& logger, const PartitionedData& data, std::initializer_list<std::initializer_list<T>> prediction)
     {
       const auto numElements{std::accumulate(prediction.begin(), prediction.end(), std::size_t{},
                                              [](std::size_t val, std::initializer_list<T> partition) { return val += partition.size();})};
@@ -78,7 +78,7 @@ namespace sequoia::unit_testing
     using type = data_structures::bucketed_storage<T, SharingPolicy, Traits>;
     
     template<test_mode Mode>
-    static void check(std::string_view description, unit_test_logger<Mode>& logger, const type& data, const type& prediction)
+    static void check(std::string_view description, test_logger<Mode>& logger, const type& data, const type& prediction)
     {
       impl::check_details(description, logger, data, prediction);
     }
@@ -90,7 +90,7 @@ namespace sequoia::unit_testing
     using type = data_structures::bucketed_storage<T, SharingPolicy, Traits>;
     
     template<test_mode Mode>
-    static void check(std::string_view description, unit_test_logger<Mode>& logger, const type& data, std::initializer_list<std::initializer_list<T>> prediction)
+    static void check(std::string_view description, test_logger<Mode>& logger, const type& data, std::initializer_list<std::initializer_list<T>> prediction)
     {
       impl::check_equivalence(description, logger, data, prediction);
     }
@@ -102,7 +102,7 @@ namespace sequoia::unit_testing
     using type = data_structures::partitioned_sequence<T, SharingPolicy, Traits>;
     
     template<test_mode Mode>
-    static void check(std::string_view description, unit_test_logger<Mode>& logger, const type& data, const type& prediction)
+    static void check(std::string_view description, test_logger<Mode>& logger, const type& data, const type& prediction)
     {
       impl::check_details(description, logger, data, prediction);
     }
@@ -115,7 +115,7 @@ namespace sequoia::unit_testing
     using equivalent_type = std::initializer_list<std::initializer_list<T>>;
     
     template<test_mode Mode>
-    static void check(std::string_view description, unit_test_logger<Mode>& logger, const type& data, equivalent_type prediction)
+    static void check(std::string_view description, test_logger<Mode>& logger, const type& data, equivalent_type prediction)
     {
       impl::check_equivalence(description, logger, data, prediction);
     }
@@ -127,7 +127,7 @@ namespace sequoia::unit_testing
     using type = data_structures::static_partitioned_sequence<T, Npartitions, Nelements, IndexType>;
     
     template<test_mode Mode>
-    static void check(std::string_view description, unit_test_logger<Mode>& logger, const type& data, const type& prediction)
+    static void check(std::string_view description, test_logger<Mode>& logger, const type& data, const type& prediction)
     {
       impl::check_details(description, logger, data, prediction);
     }
@@ -139,7 +139,7 @@ namespace sequoia::unit_testing
     using type = data_structures::static_partitioned_sequence<T, Npartitions, Nelements, IndexType>;
     
     template<test_mode Mode>
-    static void check(std::string_view description, unit_test_logger<Mode>& logger, const type& data, std::initializer_list<std::initializer_list<T>> prediction)
+    static void check(std::string_view description, test_logger<Mode>& logger, const type& data, std::initializer_list<std::initializer_list<T>> prediction)
     {
       impl::check_equivalence(description, logger, data, prediction);
     }

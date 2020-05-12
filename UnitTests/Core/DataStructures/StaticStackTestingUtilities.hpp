@@ -19,7 +19,7 @@ namespace sequoia::unit_testing
     using type = data_structures::static_stack<T, MaxDepth>;
     
     template<test_mode Mode>
-    static void check(std::string_view description, unit_test_logger<Mode>& logger, const type& stack, const type& prediction)
+    static void check(std::string_view description, test_logger<Mode>& logger, const type& stack, const type& prediction)
     {
       check_equality(combine_messages(description, "Inconsistent emptiness"), logger, stack.empty(), prediction.empty());
 

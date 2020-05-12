@@ -5,7 +5,7 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "UnitTestUtilities.hpp"
+#include "TestUtilities.hpp"
 #include "ArrayUtilitiesTest.hpp"
 
 #include "ArrayUtilities.hpp"

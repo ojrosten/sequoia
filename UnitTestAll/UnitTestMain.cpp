@@ -16,7 +16,7 @@ int main(int argc, char** argv)
 
   try
   {
-    unit_test_runner runner{argc, argv};
+    test_runner runner{argc, argv};
     const auto mode{runner.concurrency()};
   
     runner.add_test_family(

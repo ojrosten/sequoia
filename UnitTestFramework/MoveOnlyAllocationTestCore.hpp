@@ -23,7 +23,7 @@ namespace sequoia::unit_testing
   public:
     constexpr static test_mode mode{Mode};
 
-    explicit move_only_allocation_extender(unit_test_logger<Mode>& logger) : m_Logger{logger} {}
+    explicit move_only_allocation_extender(test_logger<Mode>& logger) : m_Logger{logger} {}
 
     move_only_allocation_extender(const move_only_allocation_extender&) = delete;    
     move_only_allocation_extender(move_only_allocation_extender&&)      = delete;
@@ -40,7 +40,7 @@ namespace sequoia::unit_testing
     ~move_only_allocation_extender() = default;
 
   private:
-    unit_test_logger<Mode>& m_Logger;
+    test_logger<Mode>& m_Logger;
   };
 
   template<test_mode Mode>

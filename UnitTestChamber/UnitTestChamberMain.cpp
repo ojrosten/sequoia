@@ -16,7 +16,7 @@ int main(int argc, char** argv)
 
   try
   {
-    unit_test_runner runner{argc, argv};
+    test_runner runner{argc, argv};
   
     runner.add_test_family(
       "Diagnostics",

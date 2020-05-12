@@ -29,7 +29,7 @@ namespace sequoia::unit_testing::impl
   struct pre_condition_actions
   {
     template<test_mode Mode, class T, class... Allocators>
-    static bool check_preconditions(std::string_view description, unit_test_logger<Mode>& logger, const T& x, const T& y)
+    static bool check_preconditions(std::string_view description, test_logger<Mode>& logger, const T& x, const T& y)
     {
       return check(combine_messages(description, "Precondition - for checking regular semantics, x and y are assumed to be different"), logger, x != y);
     }
@@ -47,7 +47,7 @@ namespace sequoia::unit_testing::impl
   };
  
   template<test_mode Mode, class Actions, class T, class... Args>
-  bool do_check_preconditions(std::string_view description, unit_test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
+  bool do_check_preconditions(std::string_view description, test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
   {
     if(!check(combine_messages(description, "Equality operator is inconsistent"), logger, x == x))
       return false;
@@ -69,14 +69,14 @@ namespace sequoia::unit_testing::impl
   }
 
   template<test_mode Mode, class Actions, class T>
-  bool check_preconditions(std::string_view description, unit_test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y)
+  bool check_preconditions(std::string_view description, test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y)
   {
     return do_check_preconditions(description, logger, actions, x, y);
   }
 
 
   template<test_mode Mode, class Actions, class T, class Mutator, class... Args>
-  void do_check_move_assign(std::string_view description, unit_test_logger<Mode>& logger, const Actions& actions, T& z, T&& y, const T& yClone, Mutator yMutator, const Args&... args)
+  void do_check_move_assign(std::string_view description, test_logger<Mode>& logger, const Actions& actions, T& z, T&& y, const T& yClone, Mutator yMutator, const Args&... args)
   {
     z = std::move(y);
     check_equality(combine_messages(description, "Move assignment (from y)"), logger, z, yClone);
@@ -88,13 +88,13 @@ namespace sequoia::unit_testing::impl
   }
   
   template<test_mode Mode, class Actions, class T, class Mutator>
-  void check_move_assign(std::string_view description, unit_test_logger<Mode>& logger, const Actions& actions, T& z, T&& y, const T& yClone, Mutator m)
+  void check_move_assign(std::string_view description, test_logger<Mode>& logger, const Actions& actions, T& z, T&& y, const T& yClone, Mutator m)
   {
     do_check_move_assign(description, logger, actions, z, std::forward<T>(y), yClone, m);
   }
 
   template<test_mode Mode, class Actions, class T, class... Args>
-  void do_check_move_construction(std::string_view description, unit_test_logger<Mode>& logger, const Actions& actions, T&& z, const T& y, const Args&... args)
+  void do_check_move_construction(std::string_view description, test_logger<Mode>& logger, const Actions& actions, T&& z, const T& y, const Args&... args)
   {
     const T w{std::move(z)};
     check_equality(combine_messages(description, "Move constructor"), logger, w, y);
@@ -106,13 +106,13 @@ namespace sequoia::unit_testing::impl
   }
 
   template<test_mode Mode, class Actions, class T, class Mutator>
-  void check_swap(std::string_view description, unit_test_logger<Mode>& logger, const Actions& actions, T&& x, T& y, const T& xClone, const T& yClone, Mutator yMutator)
+  void check_swap(std::string_view description, test_logger<Mode>& logger, const Actions& actions, T&& x, T& y, const T& xClone, const T& yClone, Mutator yMutator)
   {
     do_check_swap(description, logger, actions, std::forward<T>(x), y, xClone, yClone, std::move(yMutator));
   }
 
   template<test_mode Mode, class Actions, class T, class Mutator, class... Args>
-  void do_check_swap(std::string_view description, unit_test_logger<Mode>& logger, const Actions& actions, T&& x, T& y, const T& xClone, const T& yClone, Mutator yMutator, const Args&... args)
+  void do_check_swap(std::string_view description, test_logger<Mode>& logger, const Actions& actions, T&& x, T& y, const T& xClone, const T& yClone, Mutator yMutator, const Args&... args)
   {
     using std::swap;
     swap(x, y);
@@ -127,7 +127,7 @@ namespace sequoia::unit_testing::impl
   }
 
   template<test_mode Mode, class Actions, class T>
-  void check_move_construction(std::string_view description, unit_test_logger<Mode>& logger, const Actions& actions, T&& z, const T& y)
+  void check_move_construction(std::string_view description, test_logger<Mode>& logger, const Actions& actions, T&& z, const T& y)
   {
     do_check_move_construction(description, logger, actions, std::forward<T>(z), y);
   }

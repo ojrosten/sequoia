@@ -43,7 +43,7 @@ namespace sequoia::unit_testing
 {
   /// Precondition: x!=y
   template<test_mode Mode, class T, class Mutator>
-  void check_semantics(std::string_view description, unit_test_logger<Mode>& logger, const T& x, const T& y, Mutator yMutator)
+  void check_semantics(std::string_view description, test_logger<Mode>& logger, const T& x, const T& y, Mutator yMutator)
   {
     static_assert(has_regular_semantics_v<T>);
     
@@ -52,7 +52,7 @@ namespace sequoia::unit_testing
 
   /// Precondition: x!=y
   template<test_mode Mode, class T>
-  void check_semantics(std::string_view description, unit_test_logger<Mode>& logger, const T& x, const T& y)
+  void check_semantics(std::string_view description, test_logger<Mode>& logger, const T& x, const T& y)
   {
     static_assert(has_regular_semantics_v<T>);
 

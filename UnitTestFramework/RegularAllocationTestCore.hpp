@@ -23,7 +23,7 @@ namespace sequoia::unit_testing
   public:
     constexpr static test_mode mode{Mode};
     
-    explicit allocation_extender(unit_test_logger<Mode>& logger) : m_Logger{logger} {}
+    explicit allocation_extender(test_logger<Mode>& logger) : m_Logger{logger} {}
 
     allocation_extender(const allocation_extender&) = delete;    
     allocation_extender(allocation_extender&&)      = delete;
@@ -40,7 +40,7 @@ namespace sequoia::unit_testing
     ~allocation_extender() = default;
 
   private:
-    unit_test_logger<Mode>& m_Logger;
+    test_logger<Mode>& m_Logger;
   };
 
   template<test_mode Mode>

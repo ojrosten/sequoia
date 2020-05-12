@@ -25,7 +25,7 @@ namespace sequoia::unit_testing
       using nodes_equivalent_type = std::tuple<NodeWeights...>;
 
       template<test_mode Mode>
-      static void check(std::string_view description, unit_test_logger<Mode>& logger, const type& graph, connectivity_equivalent_type connPrediction, const nodes_equivalent_type& nodesPrediction)
+      static void check(std::string_view description, test_logger<Mode>& logger, const type& graph, connectivity_equivalent_type connPrediction, const nodes_equivalent_type& nodesPrediction)
       {
         using connectivity_t = typename type::connectivity_type;
         using nodes_t = typename type::nodes_type;

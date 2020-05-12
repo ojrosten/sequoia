@@ -16,7 +16,7 @@ namespace sequoia::unit_testing
   namespace impl
   {
     template<test_mode Mode, class T>
-    void check(std::string_view description, unit_test_logger<Mode>& logger, const T& sequence, const T& prediction)
+    void check(std::string_view description, test_logger<Mode>& logger, const T& sequence, const T& prediction)
     {
       if(check_equality(combine_messages(description, "Size incorrect"), logger, sequence.size(), prediction.size()))
       {
@@ -61,7 +61,7 @@ namespace sequoia::unit_testing
     using type = maths::monotonic_sequence<T, C, Compare>;
     
     template<test_mode Mode>
-    static void check(std::string_view description, unit_test_logger<Mode>& logger, const type& sequence, const type& prediction)
+    static void check(std::string_view description, test_logger<Mode>& logger, const type& sequence, const type& prediction)
     {
       impl::check(description, logger, sequence, prediction);
     }
@@ -73,7 +73,7 @@ namespace sequoia::unit_testing
     using type = maths::monotonic_sequence<T, C, Compare>;
     
     template<test_mode Mode>
-    static void check(std::string_view description, unit_test_logger<Mode>& logger, const type& sequence, std::initializer_list<T> prediction)
+    static void check(std::string_view description, test_logger<Mode>& logger, const type& sequence, std::initializer_list<T> prediction)
     {
       check_range(description, logger, sequence.begin(), sequence.end(), prediction.begin(), prediction.end());            
     }
@@ -85,7 +85,7 @@ namespace sequoia::unit_testing
     using type = maths::static_monotonic_sequence<T, N, Compare>;
     
     template<test_mode Mode>
-    static void check(std::string_view description, unit_test_logger<Mode>& logger, const type& sequence, const type& prediction)
+    static void check(std::string_view description, test_logger<Mode>& logger, const type& sequence, const type& prediction)
     {
       impl::check(description, logger, sequence, prediction);
     }
@@ -97,7 +97,7 @@ namespace sequoia::unit_testing
     using type = maths::static_monotonic_sequence<T, N, Compare>;
     
     template<test_mode Mode>
-    static void check(std::string_view description, unit_test_logger<Mode>& logger, const type& sequence, std::initializer_list<T> prediction)
+    static void check(std::string_view description, test_logger<Mode>& logger, const type& sequence, std::initializer_list<T> prediction)
     {
       check_range(description, logger, sequence.begin(), sequence.end(), prediction.begin(), prediction.end());            
     }

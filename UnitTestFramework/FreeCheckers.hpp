@@ -156,9 +156,9 @@ namespace sequoia::unit_testing
    */
   
   template<class EquivChecker, test_mode Mode, class T, class S, class... U>
-  bool general_equivalence_check(std::string_view description, unit_test_logger<Mode>& logger, const T& value, const S& s, const U&... u)
+  bool general_equivalence_check(std::string_view description, test_logger<Mode>& logger, const T& value, const S& s, const U&... u)
   {
-    using sentinel = typename unit_test_logger<Mode>::sentinel;
+    using sentinel = typename test_logger<Mode>::sentinel;
 
     const std::string message{
       add_type_info<S, U...>(
@@ -189,14 +189,14 @@ namespace sequoia::unit_testing
    */
   
   template<test_mode Mode, class T>
-  bool dispatch_check(std::string_view description, unit_test_logger<Mode>& logger, equality_tag, const T& value, const T& prediction)
+  bool dispatch_check(std::string_view description, test_logger<Mode>& logger, equality_tag, const T& value, const T& prediction)
   {
     constexpr bool delegate{has_detailed_equality_checker_v<T> || is_container_v<T>};
 
     static_assert(delegate || is_equal_to_comparable_v<T>,
                   "Provide either a specialization of detailed_equality_checker or ensure operator== exists, together with a specialization of serializer");
       
-    using sentinel = typename unit_test_logger<Mode>::sentinel;      
+    using sentinel = typename test_logger<Mode>::sentinel;      
     sentinel s{logger, add_type_info<T>(description)};
 
     const auto priorFailures{logger.failures()};
@@ -263,7 +263,7 @@ namespace sequoia::unit_testing
    */
   
   template<test_mode Mode, class T, class S, class... U>
-  bool dispatch_check(std::string_view description, unit_test_logger<Mode>& logger, equivalence_tag, const T& value, S&& s, U&&... u)
+  bool dispatch_check(std::string_view description, test_logger<Mode>& logger, equivalence_tag, const T& value, S&& s, U&&... u)
   {
     if constexpr(class_template_is_instantiable_v<equivalence_checker, T>)
     {      
@@ -288,7 +288,7 @@ namespace sequoia::unit_testing
    */
 
   template<test_mode Mode, class T, class S, class... U>
-  bool dispatch_check(std::string_view description, unit_test_logger<Mode>& logger, weak_equivalence_tag, const T& value, S&& s, U&&... u)
+  bool dispatch_check(std::string_view description, test_logger<Mode>& logger, weak_equivalence_tag, const T& value, S&& s, U&&... u)
   {
     if constexpr(class_template_is_instantiable_v<weak_equivalence_checker, T>)
     {      
@@ -305,9 +305,9 @@ namespace sequoia::unit_testing
   }
 
   template<test_mode Mode, class ElementDispatchDiscriminator, class Iter, class PredictionIter>
-  bool check_range(std::string_view description, unit_test_logger<Mode>& logger, ElementDispatchDiscriminator discriminator, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
+  bool check_range(std::string_view description, test_logger<Mode>& logger, ElementDispatchDiscriminator discriminator, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
   {
-    typename unit_test_logger<Mode>::sentinel r{logger, description};
+    typename test_logger<Mode>::sentinel r{logger, description};
     bool equal{true};
 
     using std::distance;
@@ -333,10 +333,10 @@ namespace sequoia::unit_testing
   }
 
   template<class E, test_mode Mode, class Fn>
-  bool check_exception_thrown(std::string_view description, unit_test_logger<Mode>& logger, Fn&& function)
+  bool check_exception_thrown(std::string_view description, test_logger<Mode>& logger, Fn&& function)
   {
     const std::string message{"\t" + add_type_info<E>(combine_messages(description, "Expected Exception Type:", "\n"))};
-    typename unit_test_logger<Mode>::sentinel r{logger, message};
+    typename test_logger<Mode>::sentinel r{logger, message};
     r.log_check();
     try
     {
@@ -363,43 +363,43 @@ namespace sequoia::unit_testing
   //================= namespace-level convenience functions =================//
 
   template<test_mode Mode, class T>
-  bool check_equality(std::string_view description, unit_test_logger<Mode>& logger, const T& value, const T& prediction)
+  bool check_equality(std::string_view description, test_logger<Mode>& logger, const T& value, const T& prediction)
   {
     return dispatch_check(description, logger, equality_tag{}, value, prediction);
   }
 
   template<test_mode Mode, class T, class S, class... U>
-  bool check_equivalence(std::string_view description, unit_test_logger<Mode>& logger, const T& value, S&& s, U&&... u)
+  bool check_equivalence(std::string_view description, test_logger<Mode>& logger, const T& value, S&& s, U&&... u)
   {
     return dispatch_check(description, logger, equivalence_tag{}, value, std::forward<S>(s), std::forward<U>(u)...);      
   }
 
   template<test_mode Mode, class T, class S, class... U>
-  bool check_weak_equivalence(std::string_view description, unit_test_logger<Mode>& logger, const T& value, S&& s, U&&... u)
+  bool check_weak_equivalence(std::string_view description, test_logger<Mode>& logger, const T& value, S&& s, U&&... u)
   {
     return dispatch_check(description, logger, weak_equivalence_tag{}, value, std::forward<S>(s), std::forward<U>(u)...);      
   }
 
   template<test_mode Mode>
-  bool check(std::string_view description, unit_test_logger<Mode>& logger, const bool value)
+  bool check(std::string_view description, test_logger<Mode>& logger, const bool value)
   {
     return check_equality(description, logger, value, true);
   }
     
   template<test_mode Mode, class Iter, class PredictionIter>
-  bool check_range(std::string_view description, unit_test_logger<Mode>& logger, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
+  bool check_range(std::string_view description, test_logger<Mode>& logger, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
   {
     return check_range(description, logger, equality_tag{}, first, last, predictionFirst, predictionLast);      
   }
 
   template<test_mode Mode, class Iter, class PredictionIter>
-  bool check_range_equivalence(std::string_view description, unit_test_logger<Mode>& logger, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
+  bool check_range_equivalence(std::string_view description, test_logger<Mode>& logger, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
   {
     return check_range(description, logger, equivalence_tag{}, first, last, predictionFirst, predictionLast);      
   }
 
   template<test_mode Mode, class Iter, class PredictionIter>
-  bool check_range_weak_equivalence(std::string_view description, unit_test_logger<Mode>& logger, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
+  bool check_range_weak_equivalence(std::string_view description, test_logger<Mode>& logger, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
   {
     return check_range(description, logger, weak_equivalence_tag{}, first, last, predictionFirst, predictionLast);      
   }
@@ -414,16 +414,16 @@ namespace sequoia::unit_testing
       performance tests, and more, besides. The template design allows extenders to be conveniently mixed and
       matched via using declarations.
 
-      Each extender must be initialized with a reference to the unit_test_logger held by the checker.
-      To ensure the correct order of initialization, the unit_test_logger is inherited privately.
+      Each extender must be initialized with a reference to the test_logger held by the checker.
+      To ensure the correct order of initialization, the test_logger is inherited privately.
    */
 
   template<test_mode Mode, class... Extenders>
-  class checker : private unit_test_logger<Mode>, public Extenders...
+  class checker : private test_logger<Mode>, public Extenders...
   {
   public:
     constexpr static test_mode mode{Mode};
-    using logger_type = unit_test_logger<Mode>;
+    using logger_type = test_logger<Mode>;
 
     static_assert(((sizeof(Extenders) == sizeof(logger_type*)) && ...),
                   "The state of any Extenders must comprise precisely a reference to a Logger");
@@ -484,7 +484,7 @@ namespace sequoia::unit_testing
       return log_summary{prefix, logger(), delta};
     }
   protected:
-    using sentinel = typename unit_test_logger<Mode>::sentinel;
+    using sentinel = typename test_logger<Mode>::sentinel;
     
     checker(checker&& other) noexcept
       : logger_type{static_cast<logger_type&&>(other)}
@@ -516,15 +516,15 @@ namespace sequoia::unit_testing
     }
   private:
     [[nodiscard]]
-    unit_test_logger<Mode>& logger() noexcept
+    test_logger<Mode>& logger() noexcept
     {
-      return static_cast<unit_test_logger<Mode>&>(*this);
+      return static_cast<test_logger<Mode>&>(*this);
     }
 
     [[nodiscard]]
-    const unit_test_logger<Mode>& logger() const noexcept 
+    const test_logger<Mode>& logger() const noexcept 
     {
-      return static_cast<const unit_test_logger<Mode>&>(*this);
+      return static_cast<const test_logger<Mode>&>(*this);
     }
   };
 }

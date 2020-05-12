@@ -25,7 +25,7 @@ namespace sequoia::unit_testing
   public:
     constexpr static test_mode mode{Mode};
     
-    explicit regular_extender(unit_test_logger<Mode>& logger) : m_Logger{logger} {}
+    explicit regular_extender(test_logger<Mode>& logger) : m_Logger{logger} {}
 
     regular_extender(const regular_extender&)            = delete;
     regular_extender& operator=(const regular_extender&) = delete;
@@ -46,7 +46,7 @@ namespace sequoia::unit_testing
     regular_extender(regular_extender&&) noexcept = default;
     ~regular_extender() = default;
   private:
-    unit_test_logger<Mode>& m_Logger;
+    test_logger<Mode>& m_Logger;
   };
   
   template<test_mode mode>

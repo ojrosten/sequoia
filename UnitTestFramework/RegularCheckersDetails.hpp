@@ -17,7 +17,7 @@
 namespace sequoia::unit_testing::impl
 {
   template<test_mode Mode, class Actions, class T, class... Args>
-  void do_check_copy_assign(std::string_view description, unit_test_logger<Mode>& logger, const Actions& actions, T& z, const T& y, const Args&... args)
+  void do_check_copy_assign(std::string_view description, test_logger<Mode>& logger, const Actions& actions, T& z, const T& y, const Args&... args)
   {
     z = y;
     check_equality(combine_messages(description, "Copy assignment (from y)"), logger, z, y);
@@ -29,15 +29,15 @@ namespace sequoia::unit_testing::impl
   }
   
   template<test_mode Mode, class Actions, class T>
-  void check_copy_assign(std::string_view description, unit_test_logger<Mode>& logger, const Actions& actions, T& z, const T& y)
+  void check_copy_assign(std::string_view description, test_logger<Mode>& logger, const Actions& actions, T& z, const T& y)
   {
     do_check_copy_assign(description, logger, actions, z, y);   
   }
 
   template<test_mode Mode, class Actions, class T, class Mutator, class... Args>
-  bool check_semantics(std::string_view description, unit_test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, Mutator yMutator, const Args&... args)
+  bool check_semantics(std::string_view description, test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, Mutator yMutator, const Args&... args)
   {        
-    typename unit_test_logger<Mode>::sentinel s{logger, add_type_info<T>(description)};
+    typename test_logger<Mode>::sentinel s{logger, add_type_info<T>(description)};
     
     // Preconditions
     if(!check_preconditions(description, logger, actions, x, y, args...))

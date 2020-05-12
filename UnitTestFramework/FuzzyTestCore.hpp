@@ -61,9 +61,9 @@ namespace sequoia::unit_testing
   constexpr bool reports_for_type_v{reports_for_type<Compare, T>::value};    
   
   template<test_mode Mode, class Compare, class T>
-  bool dispatch_check(std::string_view description, unit_test_logger<Mode>& logger, fuzzy_compare<Compare> c, const T& value, const T& prediction)
+  bool dispatch_check(std::string_view description, test_logger<Mode>& logger, fuzzy_compare<Compare> c, const T& value, const T& prediction)
   {
-    using sentinel = typename unit_test_logger<Mode>::sentinel;      
+    using sentinel = typename test_logger<Mode>::sentinel;      
     sentinel s{logger, add_type_info<T>(description)};
 
     if constexpr(compares_type_v<Compare, T>)
@@ -109,13 +109,13 @@ namespace sequoia::unit_testing
   //================= namespace-level convenience functions =================//
 
   template<test_mode Mode, class Compare, class T>
-  bool check_approx_equality(std::string_view description, unit_test_logger<Mode>& logger, Compare&& compare, const T& value, const T& prediction)
+  bool check_approx_equality(std::string_view description, test_logger<Mode>& logger, Compare&& compare, const T& value, const T& prediction)
   {
     return dispatch_check(description, logger, fuzzy_compare<Compare>{compare}, value, prediction);
   }
 
   template<test_mode Mode, class Iter, class PredictionIter, class Compare>
-  bool check_range_approx(std::string_view description, unit_test_logger<Mode>& logger, Compare compare, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
+  bool check_range_approx(std::string_view description, test_logger<Mode>& logger, Compare compare, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
   {
     return check_range(description, logger, fuzzy_compare{std::move(compare)}, first, last, predictionFirst, predictionLast);      
   }
@@ -127,7 +127,7 @@ namespace sequoia::unit_testing
   public:
     constexpr static test_mode mode{Mode};
 
-    explicit fuzzy_extender(unit_test_logger<Mode>& logger) : m_Logger{logger} {}
+    explicit fuzzy_extender(test_logger<Mode>& logger) : m_Logger{logger} {}
 
     fuzzy_extender(const fuzzy_extender&) = delete;
 
@@ -151,7 +151,7 @@ namespace sequoia::unit_testing
     ~fuzzy_extender() = default;
 
   private:
-    unit_test_logger<Mode>& m_Logger;
+    test_logger<Mode>& m_Logger;
   };
 
   template<test_mode mode>

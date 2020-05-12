@@ -112,22 +112,22 @@ namespace sequoia::unit_testing
    */
 
   template<test_mode Mode>
-  class unit_test_logger
+  class test_logger
   {
   public:
-    unit_test_logger() = default;
+    test_logger() = default;
 
-    unit_test_logger(const unit_test_logger&)            = delete;
-    unit_test_logger(unit_test_logger&&) noexcept        = default;
-    unit_test_logger& operator=(const unit_test_logger&) = delete;
-    unit_test_logger& operator=(unit_test_logger&&)      = delete;
+    test_logger(const test_logger&)            = delete;
+    test_logger(test_logger&&) noexcept        = default;
+    test_logger& operator=(const test_logger&) = delete;
+    test_logger& operator=(test_logger&&)      = delete;
 
     constexpr static test_mode mode{Mode};
       
     class [[nodiscard]] sentinel
     {
     public:
-      sentinel(unit_test_logger& logger, std::string_view message)
+      sentinel(test_logger& logger, std::string_view message)
         : m_Logger{logger}
       {
         if(!logger.depth())
@@ -201,7 +201,7 @@ namespace sequoia::unit_testing
         m_Logger.get().log_check();
       }
     private:
-      std::reference_wrapper<unit_test_logger> m_Logger;
+      std::reference_wrapper<test_logger> m_Logger;
     };       
       
     void log_failure(std::string_view message)
@@ -350,7 +350,7 @@ namespace sequoia::unit_testing
     
     explicit log_summary(std::string_view name="") : m_Name{name} {}
 
-    template<test_mode Mode> log_summary(std::string_view name, const unit_test_logger<Mode>& logger, const duration delta)
+    template<test_mode Mode> log_summary(std::string_view name, const test_logger<Mode>& logger, const duration delta)
       : m_Name{name}
       , m_FailureMessages{logger.failure_messages()}
       , m_CurrentMessage{logger.current_message()}

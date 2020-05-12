@@ -162,7 +162,7 @@ namespace sequoia::unit_testing
   }
 
   [[nodiscard]]
-  std::string unit_test_runner::to_camel_case(std::string text)
+  std::string test_runner::to_camel_case(std::string text)
   {
     if(!text.empty())
     {
@@ -189,7 +189,7 @@ namespace sequoia::unit_testing
     return text;
   }
 
-  [[nodiscard]] std::string unit_test_runner::stringify(concurrency_mode mode)
+  [[nodiscard]] std::string test_runner::stringify(concurrency_mode mode)
   {
     switch(mode)
     {
@@ -204,7 +204,7 @@ namespace sequoia::unit_testing
     }
   }
 
-  const std::array<std::string_view, 5> unit_test_runner::st_TestNameStubs {
+  const std::array<std::string_view, 5> test_runner::st_TestNameStubs {
     "TestingUtilities.hpp",
     "TestingDiagnostics.hpp",
     "TestingDiagnostics.cpp",
@@ -212,7 +212,7 @@ namespace sequoia::unit_testing
     "Test.cpp"
   };  
 
-  void unit_test_runner::replace_all(std::string& text, std::string_view from, const std::string& to)
+  void test_runner::replace_all(std::string& text, std::string_view from, const std::string& to)
   {
     std::string::size_type pos{};
     while((pos = text.find(from, pos)) != std::string::npos)
@@ -222,13 +222,13 @@ namespace sequoia::unit_testing
     }
   }
 
-  bool unit_test_runner::file_exists(const std::string& path) noexcept
+  bool test_runner::file_exists(const std::string& path) noexcept
   {
     // use filesystem when available!
     return static_cast<bool>(std::ifstream{path});    
   }
 
-  auto unit_test_runner::compare_files(std::string_view referenceFile, std::string_view generatedFile) -> file_comparison
+  auto test_runner::compare_files(std::string_view referenceFile, std::string_view generatedFile) -> file_comparison
   {    
     std::ifstream file1{referenceFile.data()}, file2{generatedFile.data()};
     if(!file1) warning("unable to open file ").append(referenceFile).append("\n");
@@ -246,7 +246,7 @@ namespace sequoia::unit_testing
     return file_comparison::failed;
   }
 
-  void unit_test_runner::compare_files(const nascent_test& data, std::string_view partName)
+  void test_runner::compare_files(const nascent_test& data, std::string_view partName)
   {
     const auto referenceFile{std::string{"../output/UnitTestCreationDiagnostics/" + to_camel_case(data.class_name)}.append(partName)};
     const auto generatedFile{std::string{"../aux_files/UnitTestCodeTemplates/ReferenceExamples/" + to_camel_case(data.class_name)}.append(partName)};
@@ -265,7 +265,7 @@ namespace sequoia::unit_testing
     }
   }
 
-  void unit_test_runner::false_positive_check(const nascent_test& data)
+  void test_runner::false_positive_check(const nascent_test& data)
   {
     static_assert(st_TestNameStubs.size() > 1, "Insufficient data for false-positive test");
 
@@ -288,7 +288,7 @@ namespace sequoia::unit_testing
     }
   }
 
-  unit_test_runner::nascent_test::nascent_test(std::string dir, std::string qualifiedName)
+  test_runner::nascent_test::nascent_test(std::string dir, std::string qualifiedName)
     : directory{std::move(dir)}
     , qualified_class_name{std::move(qualifiedName)}
   {
@@ -306,7 +306,7 @@ namespace sequoia::unit_testing
     }
   }
 
-  unit_test_runner::unit_test_runner(int argc, char** argv)
+  test_runner::test_runner(int argc, char** argv)
   {
     using namespace parsing::commandline;
 
@@ -351,7 +351,7 @@ namespace sequoia::unit_testing
     run_diagnostics();
   }
 
-  void unit_test_runner::check_argument_consistency()
+  void test_runner::check_argument_consistency()
   {
     using parsing::commandline::error;
 
@@ -359,7 +359,7 @@ namespace sequoia::unit_testing
       throw std::runtime_error{error("Can't run asynchronously in recovery mode\n")};
   }
 
-  void unit_test_runner::run_diagnostics()
+  void test_runner::run_diagnostics()
   {
     const std::array<nascent_test, 1> diagnosticFiles{nascent_test{"../output/UnitTestCreationDiagnostics", "utilities::iterator"}};
     create_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(),  "Running unit test creation tool diagnostics...\n", true);
@@ -367,7 +367,7 @@ namespace sequoia::unit_testing
     false_positive_check(diagnosticFiles.front());
   }
 
-  bool unit_test_runner::mark_family(std::string_view name)
+  bool test_runner::mark_family(std::string_view name)
   {
     if(m_SelectedFamilies.empty()) return true;
 
@@ -382,7 +382,7 @@ namespace sequoia::unit_testing
   }  
 
   [[nodiscard]]
-  test_family::summary unit_test_runner::process_family(const test_family::results& results)
+  test_family::summary test_runner::process_family(const test_family::results& results)
   {
     test_family::summary familySummary{results.execution_time};
     std::string output{};
@@ -406,7 +406,7 @@ namespace sequoia::unit_testing
     return familySummary;
   }
 
-  void unit_test_runner::check_for_missing_tests()
+  void test_runner::check_for_missing_tests()
   {
     for(const auto& test : m_SelectedFamilies)
     {
@@ -425,14 +425,14 @@ namespace sequoia::unit_testing
     }
   }
                        
-  void unit_test_runner::execute()
+  void test_runner::execute()
   {
     create_files(m_NewFiles.cbegin(), m_NewFiles.cend(), "Creating files...\n", false);
     run_tests();
   }
 
   template<class Iter>
-  void unit_test_runner::create_files(Iter beginFiles, Iter endFiles, std::string_view message, const bool overwrite)
+  void test_runner::create_files(Iter beginFiles, Iter endFiles, std::string_view message, const bool overwrite)
   {    
     if(std::distance(beginFiles, endFiles))
     {
@@ -452,7 +452,7 @@ namespace sequoia::unit_testing
   }
 
   template<class Iter>
-  void unit_test_runner::compare_files(Iter beginFiles, Iter endFiles, std::string_view message)
+  void test_runner::compare_files(Iter beginFiles, Iter endFiles, std::string_view message)
   {
     if(std::distance(beginFiles, endFiles))
     {
@@ -474,7 +474,7 @@ namespace sequoia::unit_testing
     }
   }
 
-  void unit_test_runner::create_file(const nascent_test& data, std::string_view partName, const bool overwrite)
+  void test_runner::create_file(const nascent_test& data, std::string_view partName, const bool overwrite)
   {
     const auto outputPath{std::string{data.directory + "/" + to_camel_case(data.class_name)}.append(partName)};
     if(!overwrite && file_exists(outputPath))
@@ -514,7 +514,7 @@ namespace sequoia::unit_testing
     }
   }
 
-  void unit_test_runner::run_tests()
+  void test_runner::run_tests()
   {
     using namespace std::chrono;
     const auto time{steady_clock::now()};

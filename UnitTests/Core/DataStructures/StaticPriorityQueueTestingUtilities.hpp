@@ -19,7 +19,7 @@ namespace sequoia::unit_testing
     using type = data_structures::static_priority_queue<T, MaxDepth, Compare>;
     
     template<test_mode Mode>
-    static void check(std::string_view description, unit_test_logger<Mode>& logger, const type& queue, const type& prediction)
+    static void check(std::string_view description, test_logger<Mode>& logger, const type& queue, const type& prediction)
     {
       check_equality(combine_messages(description, "Inconsistent emptiness"), logger, queue.empty(), prediction.empty());
       check_equality(combine_messages(description, "Inconsistent size"), logger, queue.size(), prediction.size());

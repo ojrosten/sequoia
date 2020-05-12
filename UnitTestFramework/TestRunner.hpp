@@ -52,16 +52,16 @@ namespace sequoia::unit_testing
     }
   }
 
-  class unit_test_runner
+  class test_runner
   {
   public:
-    unit_test_runner(int argc, char** argv);
+    test_runner(int argc, char** argv);
 
-    unit_test_runner(const unit_test_runner&) = delete;
-    unit_test_runner(unit_test_runner&&)      = default;
+    test_runner(const test_runner&) = delete;
+    test_runner(test_runner&&)      = default;
 
-    unit_test_runner& operator=(const unit_test_runner&) = delete;
-    unit_test_runner& operator=(unit_test_runner&&)      = delete;
+    test_runner& operator=(const test_runner&) = delete;
+    test_runner& operator=(test_runner&&)      = delete;
 
     template<class Test, class... Tests>
     void add_test_family(std::string_view name, Test&& test, Tests&&... tests)

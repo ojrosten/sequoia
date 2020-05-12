@@ -25,7 +25,7 @@ namespace sequoia::unit_testing
   public:
     constexpr static test_mode mode{Mode};
 
-    explicit move_only_extender(unit_test_logger<Mode>& logger) : m_Logger{logger} {}
+    explicit move_only_extender(test_logger<Mode>& logger) : m_Logger{logger} {}
 
     move_only_extender(const move_only_extender&)            = delete;
     move_only_extender& operator=(const move_only_extender&) = delete;
@@ -40,7 +40,7 @@ namespace sequoia::unit_testing
     move_only_extender(move_only_extender&&) noexcept = default;
     ~move_only_extender() = default;
   private:
-    unit_test_logger<Mode>& m_Logger;
+    test_logger<Mode>& m_Logger;
   };
   
   template<test_mode mode>

@@ -39,7 +39,7 @@
 namespace sequoia::unit_testing
 {
   template<test_mode Mode, class T>
-  void check_semantics(std::string_view description, unit_test_logger<Mode>& logger, T&& x, T&& y, const T& xClone, const T& yClone)
+  void check_semantics(std::string_view description, test_logger<Mode>& logger, T&& x, T&& y, const T& xClone, const T& yClone)
   {
     impl::check_semantics(description, logger, impl::default_actions{}, std::forward<T>(x), std::forward<T>(y), xClone, yClone, impl::null_mutator{});
   }

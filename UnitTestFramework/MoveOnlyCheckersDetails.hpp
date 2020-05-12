@@ -16,9 +16,9 @@
 namespace sequoia::unit_testing::impl
 {
   template<test_mode Mode, class Actions, class T, class Mutator, class... Args>
-  void check_semantics(std::string_view description, unit_test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, const Args&... args)
+  void check_semantics(std::string_view description, test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, const Args&... args)
   {
-    typename unit_test_logger<Mode>::sentinel s{logger, add_type_info<T>(description)};
+    typename test_logger<Mode>::sentinel s{logger, add_type_info<T>(description)};
 
     // Preconditions
     if(!check_preconditions(description, logger, actions, x, y, args...))
