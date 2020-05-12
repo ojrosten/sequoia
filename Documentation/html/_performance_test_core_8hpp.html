@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.15"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: UnitTestFramework/PerformanceTestCore.hpp File Reference</title>
+<title>Sequoia: TestFramework/PerformanceTestCore.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -61,7 +61,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_91ebe98c49e7ebe08769d398871963c8.html">UnitTestFramework</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_cb4dc0e0a2495758e3d7598f090e0e9a.html">TestFramework</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -74,7 +74,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Extension of unit testing framework for perfomance testing.  
+<p>Extension of the testing framework for perfomance testing.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="_regular_test_core_8hpp_source.html">RegularTestCore.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_statistical_algorithms_8hpp_source.html">StatisticalAlgorithms.hpp</a>&quot;</code><br />
@@ -113,14 +113,111 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::unit_testin
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a50fcd0644b6eb92ae0809019f88c7981"><td class="memTemplParams" colspan="2"><a id="a50fcd0644b6eb92ae0809019f88c7981"></a>
-template&lt;test_mode Mode, class F , class S &gt; </td></tr>
-<tr class="memitem:a50fcd0644b6eb92ae0809019f88c7981"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::check_relative_performance</b> (std::string_view description, unit_test_logger&lt; Mode &gt; &amp;logger, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials, const double num_sds, const std::size_t maxAttempts) -&gt; performance_results&lt; std::invoke_result_t&lt; F &gt;&gt;</td></tr>
-<tr class="separator:a50fcd0644b6eb92ae0809019f88c7981"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7cc78361e9d49648c6a124f25e293a29"><td class="memTemplParams" colspan="2">template&lt;test_mode Mode, class F , class S &gt; </td></tr>
+<tr class="memitem:a7cc78361e9d49648c6a124f25e293a29"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="_performance_test_core_8hpp.html#a7cc78361e9d49648c6a124f25e293a29">sequoia::unit_testing::check_relative_performance</a> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials, const double num_sds, const std::size_t maxAttempts) -&gt; performance_results&lt; std::invoke_result_t&lt; F &gt;&gt;</td></tr>
+<tr class="memdesc:a7cc78361e9d49648c6a124f25e293a29"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function for comparing the performance of a fast task to a slow task.  <a href="_performance_test_core_8hpp.html#a7cc78361e9d49648c6a124f25e293a29">More...</a><br /></td></tr>
+<tr class="separator:a7cc78361e9d49648c6a124f25e293a29"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Extension of unit testing framework for perfomance testing. </p>
-</div></div><!-- contents -->
+<div class="textblock"><p>Extension of the testing framework for perfomance testing. </p>
+</div><h2 class="groupheader">Function Documentation</h2>
+<a id="file_a7cc78361e9d49648c6a124f25e293a29"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#file_a7cc78361e9d49648c6a124f25e293a29">&#9670;&nbsp;</a></span>check_relative_performance()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;test_mode Mode, class F , class S &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto sequoia::unit_testing::check_relative_performance </td>
+          <td>(</td>
+          <td class="paramtype">std::string_view&#160;</td>
+          <td class="paramname"><em>description</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="classsequoia_1_1unit__testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;&#160;</td>
+          <td class="paramname"><em>logger</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">F&#160;</td>
+          <td class="paramname"><em>fast</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">S&#160;</td>
+          <td class="paramname"><em>slow</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>minSpeedUp</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>maxSpeedUp</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::size_t&#160;</td>
+          <td class="paramname"><em>trials</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&#160;</td>
+          <td class="paramname"><em>num_sds</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::size_t&#160;</td>
+          <td class="paramname"><em>maxAttempts</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> -&gt; <a class="el" href="structsequoia_1_1unit__testing_1_1performance__results.html">performance_results</a>&lt;std::invoke_result_t&lt;F&gt;&gt;
+  </td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Function for comparing the performance of a fast task to a slow task. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">minSpeedUp</td><td>the minimum predicted speed up of fast over slow; must be &gt; 1 </td></tr>
+    <tr><td class="paramname">maxSpeedUp</td><td>the maximum predicted speed up of fast over slow; must be &gt; minSpeedUp </td></tr>
+    <tr><td class="paramname">trials</td><td>the number of trial used for the statistical analysis </td></tr>
+    <tr><td class="paramname">num_sds</td><td>the number of standard deviations used to define a significant result </td></tr>
+    <tr><td class="paramname">maxAttempts</td><td>the number of times the entire test should be re-run before accepting failure</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>For each trial, both the supposedly fast and slow tasks are run. Their order is random. When all trials have been completed, the mean and standard deviations are computed for both fast and slow tasks. Denote these by m_f, sig_f and m_s, sig_s.</p>
+<p>if (m_f + sig_f &lt; m_s + sig_s)</p>
+<p>then it is concluded that the purportedly fast task is actually slower than the slow task and so the test fails. If this is not the case then the analysis branches depending on which standard deviation is bigger.</p>
+<p>if (sig_f &gt;= sig_s)</p>
+<p>then we mutliply m_f by both the min/max predicted speed-up and compare to the range of values around m_s defined by the number of standard deviations. In particular, the test is taken to pass if</p>
+<p>(minSpeedUp * m_f &lt;= (m_s + num_sds * sig_s)) &amp;&amp; (maxSpeedUp * m_f &gt;= (m_s - num_sds * sig_s))</p>
+<p>which is essentially saying that the range of predicted speed-ups must fall within the specified number of standard deviations of m_s.</p>
+<p>On the other hand</p>
+<p>if(sig_s &gt; sif_g)</p>
+<p>then we divide m_s by both the min/max predicted speed-up and compare to the range of values around m_f defined by the number of standard deviations. In particular, the test is taken to pass if</p>
+<p>(m_s / maxSpeedUp &lt;= (m_f + num_sds * sig_f)) &amp;&amp; (m_s / minSpeedUp &gt;= (m_f - num_sds * sig_f)) </p>
+
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

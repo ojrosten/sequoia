@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.15"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: UnitTestFramework/SemanticsCheckersDetails.hpp File Reference</title>
+<title>Sequoia: TestFramework/SemanticsCheckersDetails.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -61,7 +61,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_91ebe98c49e7ebe08769d398871963c8.html">UnitTestFramework</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_cb4dc0e0a2495758e3d7598f090e0e9a.html">TestFramework</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -93,38 +93,38 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a4c1e096dd08a43c8c1d904282b64c217"><td class="memTemplParams" colspan="2"><a id="a4c1e096dd08a43c8c1d904282b64c217"></a>
+<tr class="memitem:a7589addc0a312104ed01f4fd8024ca93"><td class="memTemplParams" colspan="2"><a id="a7589addc0a312104ed01f4fd8024ca93"></a>
 template&lt;test_mode Mode, class Actions , class T , class... Args&gt; </td></tr>
-<tr class="memitem:a4c1e096dd08a43c8c1d904282b64c217"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::impl::do_check_preconditions</b> (std::string_view description, unit_test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, const T &amp;x, const T &amp;y, const Args &amp;... args)</td></tr>
-<tr class="separator:a4c1e096dd08a43c8c1d904282b64c217"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a46509ccf6ba12c33e9d07831650208fa"><td class="memTemplParams" colspan="2"><a id="a46509ccf6ba12c33e9d07831650208fa"></a>
+<tr class="memitem:a7589addc0a312104ed01f4fd8024ca93"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::impl::do_check_preconditions</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, const T &amp;x, const T &amp;y, const Args &amp;... args)</td></tr>
+<tr class="separator:a7589addc0a312104ed01f4fd8024ca93"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a108e606ac387148a88f5460b4e4ac250"><td class="memTemplParams" colspan="2"><a id="a108e606ac387148a88f5460b4e4ac250"></a>
 template&lt;test_mode Mode, class Actions , class T &gt; </td></tr>
-<tr class="memitem:a46509ccf6ba12c33e9d07831650208fa"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::impl::check_preconditions</b> (std::string_view description, unit_test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, const T &amp;x, const T &amp;y)</td></tr>
-<tr class="separator:a46509ccf6ba12c33e9d07831650208fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af51925a64483dbc68046c5095c4bfd27"><td class="memTemplParams" colspan="2"><a id="af51925a64483dbc68046c5095c4bfd27"></a>
+<tr class="memitem:a108e606ac387148a88f5460b4e4ac250"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::impl::check_preconditions</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, const T &amp;x, const T &amp;y)</td></tr>
+<tr class="separator:a108e606ac387148a88f5460b4e4ac250"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad939e97535f22d7ff324508bb846c045"><td class="memTemplParams" colspan="2"><a id="ad939e97535f22d7ff324508bb846c045"></a>
 template&lt;test_mode Mode, class Actions , class T , class Mutator , class... Args&gt; </td></tr>
-<tr class="memitem:af51925a64483dbc68046c5095c4bfd27"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::impl::do_check_move_assign</b> (std::string_view description, unit_test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;z, T &amp;&amp;y, const T &amp;yClone, Mutator yMutator, const Args &amp;... args)</td></tr>
-<tr class="separator:af51925a64483dbc68046c5095c4bfd27"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a762e4826b743e94e3247dd01a2951e4e"><td class="memTemplParams" colspan="2"><a id="a762e4826b743e94e3247dd01a2951e4e"></a>
+<tr class="memitem:ad939e97535f22d7ff324508bb846c045"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::impl::do_check_move_assign</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;z, T &amp;&amp;y, const T &amp;yClone, Mutator yMutator, const Args &amp;... args)</td></tr>
+<tr class="separator:ad939e97535f22d7ff324508bb846c045"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a70657af497d9a02c2098206081e25b19"><td class="memTemplParams" colspan="2"><a id="a70657af497d9a02c2098206081e25b19"></a>
 template&lt;test_mode Mode, class Actions , class T , class Mutator &gt; </td></tr>
-<tr class="memitem:a762e4826b743e94e3247dd01a2951e4e"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::impl::check_move_assign</b> (std::string_view description, unit_test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;z, T &amp;&amp;y, const T &amp;yClone, Mutator m)</td></tr>
-<tr class="separator:a762e4826b743e94e3247dd01a2951e4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a17fe4c261641f9a73c123be6499b8969"><td class="memTemplParams" colspan="2"><a id="a17fe4c261641f9a73c123be6499b8969"></a>
+<tr class="memitem:a70657af497d9a02c2098206081e25b19"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::impl::check_move_assign</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;z, T &amp;&amp;y, const T &amp;yClone, Mutator m)</td></tr>
+<tr class="separator:a70657af497d9a02c2098206081e25b19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2887d78167850040c94ab7dddd6c430"><td class="memTemplParams" colspan="2"><a id="ad2887d78167850040c94ab7dddd6c430"></a>
 template&lt;test_mode Mode, class Actions , class T , class... Args&gt; </td></tr>
-<tr class="memitem:a17fe4c261641f9a73c123be6499b8969"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::impl::do_check_move_construction</b> (std::string_view description, unit_test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;&amp;z, const T &amp;y, const Args &amp;... args)</td></tr>
-<tr class="separator:a17fe4c261641f9a73c123be6499b8969"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa5e8925c313b18cfcb6289dd2a4721ff"><td class="memTemplParams" colspan="2"><a id="aa5e8925c313b18cfcb6289dd2a4721ff"></a>
+<tr class="memitem:ad2887d78167850040c94ab7dddd6c430"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::impl::do_check_move_construction</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;&amp;z, const T &amp;y, const Args &amp;... args)</td></tr>
+<tr class="separator:ad2887d78167850040c94ab7dddd6c430"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a893e48d8d9bec615da62501286fe103e"><td class="memTemplParams" colspan="2"><a id="a893e48d8d9bec615da62501286fe103e"></a>
 template&lt;test_mode Mode, class Actions , class T , class Mutator &gt; </td></tr>
-<tr class="memitem:aa5e8925c313b18cfcb6289dd2a4721ff"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::impl::check_swap</b> (std::string_view description, unit_test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;&amp;x, T &amp;y, const T &amp;xClone, const T &amp;yClone, Mutator yMutator)</td></tr>
-<tr class="separator:aa5e8925c313b18cfcb6289dd2a4721ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aefc2237b705e91718a73664af02c397e"><td class="memTemplParams" colspan="2"><a id="aefc2237b705e91718a73664af02c397e"></a>
+<tr class="memitem:a893e48d8d9bec615da62501286fe103e"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::impl::check_swap</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;&amp;x, T &amp;y, const T &amp;xClone, const T &amp;yClone, Mutator yMutator)</td></tr>
+<tr class="separator:a893e48d8d9bec615da62501286fe103e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:addb0152e89d129b96da19d29c65f87be"><td class="memTemplParams" colspan="2"><a id="addb0152e89d129b96da19d29c65f87be"></a>
 template&lt;test_mode Mode, class Actions , class T , class Mutator , class... Args&gt; </td></tr>
-<tr class="memitem:aefc2237b705e91718a73664af02c397e"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::impl::do_check_swap</b> (std::string_view description, unit_test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;&amp;x, T &amp;y, const T &amp;xClone, const T &amp;yClone, Mutator yMutator, const Args &amp;... args)</td></tr>
-<tr class="separator:aefc2237b705e91718a73664af02c397e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a57183b7a994a0d1c8df2f3e750eced1b"><td class="memTemplParams" colspan="2"><a id="a57183b7a994a0d1c8df2f3e750eced1b"></a>
+<tr class="memitem:addb0152e89d129b96da19d29c65f87be"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::impl::do_check_swap</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;&amp;x, T &amp;y, const T &amp;xClone, const T &amp;yClone, Mutator yMutator, const Args &amp;... args)</td></tr>
+<tr class="separator:addb0152e89d129b96da19d29c65f87be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6cc01684da6c64d8d5948dfcfd583257"><td class="memTemplParams" colspan="2"><a id="a6cc01684da6c64d8d5948dfcfd583257"></a>
 template&lt;test_mode Mode, class Actions , class T &gt; </td></tr>
-<tr class="memitem:a57183b7a994a0d1c8df2f3e750eced1b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::impl::check_move_construction</b> (std::string_view description, unit_test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;&amp;z, const T &amp;y)</td></tr>
-<tr class="separator:a57183b7a994a0d1c8df2f3e750eced1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6cc01684da6c64d8d5948dfcfd583257"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::impl::check_move_construction</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;&amp;z, const T &amp;y)</td></tr>
+<tr class="separator:a6cc01684da6c64d8d5948dfcfd583257"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implementation details for semantics checks within the unit testing framework. </p>

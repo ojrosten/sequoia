@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.15"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: UnitTestFramework/MoveOnlyAllocationCheckers.hpp File Reference</title>
+<title>Sequoia: TestFramework/MoveOnlyAllocationCheckers.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -61,7 +61,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_91ebe98c49e7ebe08769d398871963c8.html">UnitTestFramework</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_cb4dc0e0a2495758e3d7598f090e0e9a.html">TestFramework</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -97,10 +97,10 @@ template&lt;class Fn &gt; </td></tr>
 template&lt;class Fn &gt; </td></tr>
 <tr class="memitem:a8a927973a52e872fc143bc748eb35868"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::move_only_allocation_info</b> (Fn &amp;&amp;allocGetter, std::initializer_list&lt; move_only_allocation_predictions &gt; predictions) -&gt; move_only_allocation_info&lt; std::decay_t&lt; typename function_signature&lt; decltype(&amp;std::decay_t&lt; Fn &gt;::operator())&gt;::arg &gt;, std::decay_t&lt; typename function_signature&lt; decltype(&amp;std::decay_t&lt; Fn &gt;::operator())&gt;::ret &gt;&gt;</td></tr>
 <tr class="separator:a8a927973a52e872fc143bc748eb35868"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7b21994380880e4a3f2ca80941d3f604"><td class="memTemplParams" colspan="2"><a id="a7b21994380880e4a3f2ca80941d3f604"></a>
+<tr class="memitem:a332aebad624e7791920647a828eb9ea1"><td class="memTemplParams" colspan="2"><a id="a332aebad624e7791920647a828eb9ea1"></a>
 template&lt;test_mode Mode, class T , class Mutator , class... Allocators&gt; </td></tr>
-<tr class="memitem:a7b21994380880e4a3f2ca80941d3f604"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::check_semantics</b> (std::string_view description, unit_test_logger&lt; Mode &gt; &amp;logger, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone, Mutator m, move_only_allocation_info&lt; T, Allocators &gt;... info)</td></tr>
-<tr class="separator:a7b21994380880e4a3f2ca80941d3f604"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a332aebad624e7791920647a828eb9ea1"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::check_semantics</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone, Mutator m, move_only_allocation_info&lt; T, Allocators &gt;... info)</td></tr>
+<tr class="separator:a332aebad624e7791920647a828eb9ea1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Utilities for performing allocation checks of move-only types. </p>

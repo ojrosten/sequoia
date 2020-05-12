@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.15"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: UnitTestFramework/RegularAllocationCheckers.hpp File Reference</title>
+<title>Sequoia: TestFramework/RegularAllocationCheckers.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -61,7 +61,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_91ebe98c49e7ebe08769d398871963c8.html">UnitTestFramework</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_cb4dc0e0a2495758e3d7598f090e0e9a.html">TestFramework</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -101,10 +101,10 @@ template&lt;class Fn &gt; </td></tr>
 template&lt;class Fn &gt; </td></tr>
 <tr class="memitem:a585865916328aed1679229eb1b81383e"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::allocation_info</b> (Fn &amp;&amp;allocGetter, std::initializer_list&lt; allocation_predictions &gt; predictions) -&gt; allocation_info&lt; std::decay_t&lt; typename function_signature&lt; decltype(&amp;std::decay_t&lt; Fn &gt;::operator())&gt;::arg &gt;, std::decay_t&lt; typename function_signature&lt; decltype(&amp;std::decay_t&lt; Fn &gt;::operator())&gt;::ret &gt;&gt;</td></tr>
 <tr class="separator:a585865916328aed1679229eb1b81383e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a370ee271736c5a8a8b57ae5e791ab4a3"><td class="memTemplParams" colspan="2"><a id="a370ee271736c5a8a8b57ae5e791ab4a3"></a>
+<tr class="memitem:a4b13ab4fceda3ce6635052893ffdf6ee"><td class="memTemplParams" colspan="2"><a id="a4b13ab4fceda3ce6635052893ffdf6ee"></a>
 template&lt;test_mode Mode, class T , class Mutator , class... Allocators&gt; </td></tr>
-<tr class="memitem:a370ee271736c5a8a8b57ae5e791ab4a3"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::check_semantics</b> (std::string_view description, unit_test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y, Mutator yMutator, allocation_info&lt; T, Allocators &gt;... info)</td></tr>
-<tr class="separator:a370ee271736c5a8a8b57ae5e791ab4a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4b13ab4fceda3ce6635052893ffdf6ee"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::check_semantics</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y, Mutator yMutator, allocation_info&lt; T, Allocators &gt;... info)</td></tr>
+<tr class="separator:a4b13ab4fceda3ce6635052893ffdf6ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Utilities for performing allocation checks of regular types. </p>

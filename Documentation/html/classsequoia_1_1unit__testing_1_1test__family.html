@@ -73,6 +73,11 @@ $(function() {
 <div class="title">sequoia::unit_testing::test_family Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Allows tests to be grouped together into a family of related tests.  
+ <a href="classsequoia_1_1unit__testing_1_1test__family.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="_test_family_8hpp_source.html">TestFamily.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
@@ -92,7 +97,7 @@ template&lt;class Test &gt; </td></tr>
 <tr class="memitem:af9f9f42ce5abda19e755b7f176419404"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>add_test</b> (Test &amp;&amp;<a class="el" href="classsequoia_1_1unit__testing_1_1test.html">test</a>)</td></tr>
 <tr class="separator:af9f9f42ce5abda19e755b7f176419404"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a89c148ebd38068cdd1677aa66ca7c4b6"><td class="memItemLeft" align="right" valign="top"><a id="a89c148ebd38068cdd1677aa66ca7c4b6"></a>
-auto&#160;</td><td class="memItemRight" valign="bottom"><b>execute</b> (const bool writeFiles, const concurrency_mode mode) -&gt; <a class="el" href="structsequoia_1_1unit__testing_1_1test__family_1_1results.html">results</a></td></tr>
+auto&#160;</td><td class="memItemRight" valign="bottom"><b>execute</b> (const bool writeFiles, const <a class="el" href="_free_test_core_8hpp.html#a3590ed65d153da54c484007fcade1283">concurrency_mode</a> mode) -&gt; <a class="el" href="structsequoia_1_1unit__testing_1_1test__family_1_1results.html">results</a></td></tr>
 <tr class="separator:a89c148ebd38068cdd1677aa66ca7c4b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa7c80ba54f6c38a929011ba2e50f430c"><td class="memItemLeft" align="right" valign="top"><a id="aa7c80ba54f6c38a929011ba2e50f430c"></a>
 std::string_view&#160;</td><td class="memItemRight" valign="bottom"><b>name</b> () const noexcept</td></tr>
@@ -101,9 +106,12 @@ std::string_view&#160;</td><td class="memItemRight" valign="bottom"><b>name</b> 
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>empty</b> () const noexcept</td></tr>
 <tr class="separator:abb1f671bb2444e0d519b1d4f2759156a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following files:<ul>
-<li>UnitTestFramework/<a class="el" href="_unit_test_family_8hpp_source.html">UnitTestFamily.hpp</a></li>
-<li>UnitTestFramework/UnitTestFamily.cpp</li>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Allows tests to be grouped together into a family of related tests. </p>
+<p>When tests are executed, it is possible to specify both the concurrency mode and whether or not output files (which should generally be version controlled) are generated. </p>
+</div><hr/>The documentation for this class was generated from the following files:<ul>
+<li>TestFramework/<a class="el" href="_test_family_8hpp_source.html">TestFamily.hpp</a></li>
+<li>TestFramework/TestFamily.cpp</li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

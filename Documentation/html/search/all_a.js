@@ -28,6 +28,7 @@ var searchData=
   ['move_5fonly_5finefficient_5fmove_5fassignment',['move_only_inefficient_move_assignment',['../structsequoia_1_1unit__testing_1_1move__only__inefficient__move__assignment.html',1,'sequoia::unit_testing']]],
   ['moveonlyallocationcheckers_2ehpp',['MoveOnlyAllocationCheckers.hpp',['../_move_only_allocation_checkers_8hpp.html',1,'']]],
   ['moveonlyallocationcheckersdetails_2ehpp',['MoveOnlyAllocationCheckersDetails.hpp',['../_move_only_allocation_checkers_details_8hpp.html',1,'']]],
+  ['moveonlyallocationtestcore_2ehpp',['MoveOnlyAllocationTestCore.hpp',['../_move_only_allocation_test_core_8hpp.html',1,'']]],
   ['moveonlycheckers_2ehpp',['MoveOnlyCheckers.hpp',['../_move_only_checkers_8hpp.html',1,'']]],
   ['moveonlycheckersdetails_2ehpp',['MoveOnlyCheckersDetails.hpp',['../_move_only_checkers_details_8hpp.html',1,'']]],
   ['moveonlytestcore_2ehpp',['MoveOnlyTestCore.hpp',['../_move_only_test_core_8hpp.html',1,'']]],

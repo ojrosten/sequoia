@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.15"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: UnitTestFramework/FuzzyTestCore.hpp File Reference</title>
+<title>Sequoia: TestFramework/FuzzyTestCore.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -61,7 +61,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_91ebe98c49e7ebe08769d398871963c8.html">UnitTestFramework</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_cb4dc0e0a2495758e3d7598f090e0e9a.html">TestFramework</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -121,18 +121,18 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::unit_testin
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a1640c46e54c86ed5c49fd0d2c48b303f"><td class="memTemplParams" colspan="2"><a id="a1640c46e54c86ed5c49fd0d2c48b303f"></a>
+<tr class="memitem:af09aedc34ef0c4aee3e9557cffaf0be2"><td class="memTemplParams" colspan="2"><a id="af09aedc34ef0c4aee3e9557cffaf0be2"></a>
 template&lt;test_mode Mode, class Compare , class T &gt; </td></tr>
-<tr class="memitem:a1640c46e54c86ed5c49fd0d2c48b303f"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::dispatch_check</b> (std::string_view description, unit_test_logger&lt; Mode &gt; &amp;logger, fuzzy_compare&lt; Compare &gt; c, const T &amp;value, const T &amp;prediction)</td></tr>
-<tr class="separator:a1640c46e54c86ed5c49fd0d2c48b303f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab369835185ec9b05e4d2587da011f2df"><td class="memTemplParams" colspan="2"><a id="ab369835185ec9b05e4d2587da011f2df"></a>
+<tr class="memitem:af09aedc34ef0c4aee3e9557cffaf0be2"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::dispatch_check</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, fuzzy_compare&lt; Compare &gt; c, const T &amp;value, const T &amp;prediction)</td></tr>
+<tr class="separator:af09aedc34ef0c4aee3e9557cffaf0be2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f3fe22478951437c00699b911c86bd4"><td class="memTemplParams" colspan="2"><a id="a6f3fe22478951437c00699b911c86bd4"></a>
 template&lt;test_mode Mode, class Compare , class T &gt; </td></tr>
-<tr class="memitem:ab369835185ec9b05e4d2587da011f2df"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::check_approx_equality</b> (std::string_view description, unit_test_logger&lt; Mode &gt; &amp;logger, Compare &amp;&amp;compare, const T &amp;value, const T &amp;prediction)</td></tr>
-<tr class="separator:ab369835185ec9b05e4d2587da011f2df"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6f22c440a9d85d5cd5288e42306e618d"><td class="memTemplParams" colspan="2"><a id="a6f22c440a9d85d5cd5288e42306e618d"></a>
+<tr class="memitem:a6f3fe22478951437c00699b911c86bd4"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::check_approx_equality</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, Compare &amp;&amp;compare, const T &amp;value, const T &amp;prediction)</td></tr>
+<tr class="separator:a6f3fe22478951437c00699b911c86bd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a68e96e7d9080c114eaae4839a273bcc3"><td class="memTemplParams" colspan="2"><a id="a68e96e7d9080c114eaae4839a273bcc3"></a>
 template&lt;test_mode Mode, class Iter , class PredictionIter , class Compare &gt; </td></tr>
-<tr class="memitem:a6f22c440a9d85d5cd5288e42306e618d"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::check_range_approx</b> (std::string_view description, unit_test_logger&lt; Mode &gt; &amp;logger, Compare compare, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)</td></tr>
-<tr class="separator:a6f22c440a9d85d5cd5288e42306e618d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a68e96e7d9080c114eaae4839a273bcc3"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::check_range_approx</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, Compare compare, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)</td></tr>
+<tr class="separator:a68e96e7d9080c114eaae4839a273bcc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>

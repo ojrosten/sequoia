@@ -3,7 +3,7 @@ var searchData=
   ['sequoia',['sequoia',['../md__r_e_a_d_m_e.html',1,'']]],
   ['scaling_5fdereference_5fpolicy',['scaling_dereference_policy',['../classsequoia_1_1unit__testing_1_1scaling__dereference__policy.html',1,'sequoia::unit_testing']]],
   ['semanticscheckersdetails_2ehpp',['SemanticsCheckersDetails.hpp',['../_semantics_checkers_details_8hpp.html',1,'']]],
-  ['sentinel',['sentinel',['../classsequoia_1_1unit__testing_1_1unit__test__logger_1_1sentinel.html',1,'sequoia::unit_testing::unit_test_logger']]],
+  ['sentinel',['sentinel',['../classsequoia_1_1unit__testing_1_1test__logger_1_1sentinel.html',1,'sequoia::unit_testing::test_logger']]],
   ['serial',['serial',['../classsequoia_1_1concurrency_1_1serial.html',1,'sequoia::concurrency']]],
   ['serial_3c_20void_20_3e',['serial&lt; void &gt;',['../classsequoia_1_1concurrency_1_1serial_3_01void_01_4.html',1,'sequoia::concurrency']]],
   ['serializable',['serializable',['../structsequoia_1_1unit__testing_1_1serializable.html',1,'sequoia::unit_testing']]],

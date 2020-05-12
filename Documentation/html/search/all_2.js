@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['check_5fsemantics',['check_semantics',['../_regular_checkers_8hpp.html#a97fc0828f5ae3ab61632b6c66b98b1d3',1,'sequoia::unit_testing::check_semantics(std::string_view description, unit_test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y, Mutator yMutator)'],['../_regular_checkers_8hpp.html#aaad36fcc1efc28885381d46881c24373',1,'sequoia::unit_testing::check_semantics(std::string_view description, unit_test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y)']]],
+  ['check_5frelative_5fperformance',['check_relative_performance',['../_performance_test_core_8hpp.html#a7cc78361e9d49648c6a124f25e293a29',1,'sequoia::unit_testing']]],
+  ['check_5fsemantics',['check_semantics',['../_regular_checkers_8hpp.html#a5f242645f1374b08f0b887ac38bdc8c2',1,'sequoia::unit_testing::check_semantics(std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y, Mutator yMutator)'],['../_regular_checkers_8hpp.html#af8e84e0383e2bfd3a34d3090e2cd2384',1,'sequoia::unit_testing::check_semantics(std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y)']]],
   ['checker',['checker',['../classsequoia_1_1unit__testing_1_1checker.html',1,'sequoia::unit_testing']]],
   ['checker_3c_20mode_2c_20allocation_5fextender_3c_20mode_20_3e_20_3e',['checker&lt; Mode, allocation_extender&lt; Mode &gt; &gt;',['../classsequoia_1_1unit__testing_1_1checker.html',1,'sequoia::unit_testing']]],
   ['checker_3c_20mode_2c_20extenders_2e_2e_2e_20_3e',['checker&lt; Mode, Extenders... &gt;',['../classsequoia_1_1unit__testing_1_1checker.html',1,'sequoia::unit_testing']]],
@@ -22,6 +23,7 @@ var searchData=
   ['compares_5ftype_3c_20compare_2c_20t_2c_20std_3a_3avoid_5ft_3c_20std_3a_3ainvoke_5fresult_5ft_3c_20compare_2c_20t_2c_20t_20_3e_20_3e_20_3e',['compares_type&lt; Compare, T, std::void_t&lt; std::invoke_result_t&lt; Compare, T, T &gt; &gt; &gt;',['../structsequoia_1_1unit__testing_1_1compares__type_3_01_compare_00_01_t_00_01std_1_1void__t_3_01stc5a14f7fa783ac7c5d16b74478b332b4.html',1,'sequoia::unit_testing']]],
   ['concreteequalitycheckers_2ehpp',['ConcreteEqualityCheckers.hpp',['../_concrete_equality_checkers_8hpp.html',1,'']]],
   ['concreteequivalencecheckers_2ehpp',['ConcreteEquivalenceCheckers.hpp',['../_concrete_equivalence_checkers_8hpp.html',1,'']]],
+  ['concurrency_5fmode',['concurrency_mode',['../_free_test_core_8hpp.html#a3590ed65d153da54c484007fcade1283',1,'sequoia::unit_testing']]],
   ['concurrencymodels_2ehpp',['ConcurrencyModels.hpp',['../_concurrency_models_8hpp.html',1,'']]],
   ['connectivity',['connectivity',['../classsequoia_1_1maths_1_1connectivity.html',1,'sequoia::maths']]],
   ['connectivity_2ehpp',['Connectivity.hpp',['../_connectivity_8hpp.html',1,'']]],

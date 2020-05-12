@@ -83,7 +83,7 @@ Inheritance diagram for sequoia::unit_testing::unweighted_graph_test:</div>
 <area href="classsequoia_1_1unit__testing_1_1test.html" title="Abstract base class used for type-erasure of the template class basic_test." alt="sequoia::unit_testing::test" shape="rect" coords="0,112,429,136"/>
 <area href="classsequoia_1_1unit__testing_1_1graph__checker.html" alt="sequoia::unit_testing::graph_checker&lt; Mode, Extenders... &gt;" shape="rect" coords="439,112,868,136"/>
 <area href="classsequoia_1_1unit__testing_1_1checker.html" alt="sequoia::unit_testing::checker&lt; Mode, Extenders... &gt;" shape="rect" coords="439,56,868,80"/>
-<area href="classsequoia_1_1unit__testing_1_1unit__test__logger.html" alt="sequoia::unit_testing::unit_test_logger&lt; Mode &gt;" shape="rect" coords="219,0,648,24"/>
+<area href="classsequoia_1_1unit__testing_1_1test__logger.html" alt="sequoia::unit_testing::test_logger&lt; Mode &gt;" shape="rect" coords="219,0,648,24"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -95,7 +95,7 @@ std::string_view&#160;</td><td class="memItemRight" valign="bottom"><a class="el
 <tr class="separator:a53d9b27126a3a1e069159678aba673e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classsequoia_1_1unit__testing_1_1graph__basic__test"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classsequoia_1_1unit__testing_1_1graph__basic__test')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classsequoia_1_1unit__testing_1_1graph__basic__test.html">sequoia::unit_testing::graph_basic_test&lt; Mode, Extenders &gt;</a></td></tr>
 <tr class="memitem:a5e713c701465dc298a165d107f28738d inherit pub_methods_classsequoia_1_1unit__testing_1_1graph__basic__test"><td class="memItemLeft" align="right" valign="top"><a id="a5e713c701465dc298a165d107f28738d"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>graph_basic_test</b> (std::string_view name, concurrency_mode mode)</td></tr>
+&#160;</td><td class="memItemRight" valign="bottom"><b>graph_basic_test</b> (std::string_view name, <a class="el" href="_free_test_core_8hpp.html#a3590ed65d153da54c484007fcade1283">concurrency_mode</a> mode)</td></tr>
 <tr class="separator:a5e713c701465dc298a165d107f28738d inherit pub_methods_classsequoia_1_1unit__testing_1_1graph__basic__test"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa20be877df0dc02147819515a23a500a inherit pub_methods_classsequoia_1_1unit__testing_1_1graph__basic__test"><td class="memItemLeft" align="right" valign="top"><a id="aa20be877df0dc02147819515a23a500a"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>merge</b> (const <a class="el" href="classsequoia_1_1unit__testing_1_1log__summary.html">log_summary</a> &amp;summary)</td></tr>
@@ -162,12 +162,12 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>time_point</b> = std
 using&#160;</td><td class="memItemRight" valign="bottom"><b>checker_t</b> = <a class="el" href="classsequoia_1_1unit__testing_1_1checker.html">checker</a>&lt; Mode, Extenders... &gt;</td></tr>
 <tr class="separator:a3c3916bd12fb68622c9a444b3e00200d inherit pro_types_classsequoia_1_1unit__testing_1_1graph__checker"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_types_classsequoia_1_1unit__testing_1_1checker"><td colspan="2" onclick="javascript:toggleInherit('pro_types_classsequoia_1_1unit__testing_1_1checker')"><img src="closed.png" alt="-"/>&#160;Protected Types inherited from <a class="el" href="classsequoia_1_1unit__testing_1_1checker.html">sequoia::unit_testing::checker&lt; Mode, Extenders... &gt;</a></td></tr>
-<tr class="memitem:ac4c520a5745fc681705666b0fdc185dc inherit pro_types_classsequoia_1_1unit__testing_1_1checker"><td class="memItemLeft" align="right" valign="top"><a id="ac4c520a5745fc681705666b0fdc185dc"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>sentinel</b> = typename <a class="el" href="classsequoia_1_1unit__testing_1_1unit__test__logger.html">unit_test_logger</a>&lt; Mode &gt;::sentinel</td></tr>
-<tr class="separator:ac4c520a5745fc681705666b0fdc185dc inherit pro_types_classsequoia_1_1unit__testing_1_1checker"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2cf64c9b3a730c2b04274adea7237d26 inherit pro_types_classsequoia_1_1unit__testing_1_1checker"><td class="memItemLeft" align="right" valign="top"><a id="a2cf64c9b3a730c2b04274adea7237d26"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>logger_type</b> = <a class="el" href="classsequoia_1_1unit__testing_1_1unit__test__logger.html">unit_test_logger</a>&lt; Mode &gt;</td></tr>
-<tr class="separator:a2cf64c9b3a730c2b04274adea7237d26 inherit pro_types_classsequoia_1_1unit__testing_1_1checker"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2d784871a4c3ec268d617b50a55a1591 inherit pro_types_classsequoia_1_1unit__testing_1_1checker"><td class="memItemLeft" align="right" valign="top"><a id="a2d784871a4c3ec268d617b50a55a1591"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>sentinel</b> = typename <a class="el" href="classsequoia_1_1unit__testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt;::sentinel</td></tr>
+<tr class="separator:a2d784871a4c3ec268d617b50a55a1591 inherit pro_types_classsequoia_1_1unit__testing_1_1checker"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a79bf6c07da3f0e9aa57f1dcea3bfd9d4 inherit pro_types_classsequoia_1_1unit__testing_1_1checker"><td class="memItemLeft" align="right" valign="top"><a id="a79bf6c07da3f0e9aa57f1dcea3bfd9d4"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>logger_type</b> = <a class="el" href="classsequoia_1_1unit__testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt;</td></tr>
+<tr class="separator:a79bf6c07da3f0e9aa57f1dcea3bfd9d4 inherit pro_types_classsequoia_1_1unit__testing_1_1checker"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_classsequoia_1_1unit__testing_1_1graph__basic__test"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classsequoia_1_1unit__testing_1_1graph__basic__test')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classsequoia_1_1unit__testing_1_1graph__basic__test.html">sequoia::unit_testing::graph_basic_test&lt; Mode, Extenders &gt;</a></td></tr>
 <tr class="memitem:a33e73bb77ca068d557ba022acee6ecd1 inherit pro_methods_classsequoia_1_1unit__testing_1_1graph__basic__test"><td class="memItemLeft" align="right" valign="top"><a id="a33e73bb77ca068d557ba022acee6ecd1"></a>
 <a class="el" href="classsequoia_1_1unit__testing_1_1log__summary.html">log_summary</a>&#160;</td><td class="memItemRight" valign="bottom"><b>summarize</b> (const time_point start) override</td></tr>
@@ -176,7 +176,7 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>logger_type</b> = <a
 virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><b>current_message</b> () const override</td></tr>
 <tr class="separator:a3fd9fd20edfd2caa4dc25a00ac968e0b inherit pro_methods_classsequoia_1_1unit__testing_1_1graph__basic__test"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a08bbfdf24e986cd23f16ece7d9e84654 inherit pro_methods_classsequoia_1_1unit__testing_1_1graph__basic__test"><td class="memItemLeft" align="right" valign="top"><a id="a08bbfdf24e986cd23f16ece7d9e84654"></a>
-concurrency_mode&#160;</td><td class="memItemRight" valign="bottom"><b>concurrent_execution</b> () const noexcept</td></tr>
+<a class="el" href="_free_test_core_8hpp.html#a3590ed65d153da54c484007fcade1283">concurrency_mode</a>&#160;</td><td class="memItemRight" valign="bottom"><b>concurrent_execution</b> () const noexcept</td></tr>
 <tr class="separator:a08bbfdf24e986cd23f16ece7d9e84654 inherit pro_methods_classsequoia_1_1unit__testing_1_1graph__basic__test"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_classsequoia_1_1unit__testing_1_1basic__test"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classsequoia_1_1unit__testing_1_1basic__test')"><img src="closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="classsequoia_1_1unit__testing_1_1basic__test.html">sequoia::unit_testing::basic_test&lt; graph_checker&lt; Mode, Extenders... &gt; &gt;</a></td></tr>
 <tr class="memitem:aaac390376d5b370abff26beb85ccd50f inherit pro_methods_classsequoia_1_1unit__testing_1_1basic__test"><td class="memItemLeft" align="right" valign="top"><a id="aaac390376d5b370abff26beb85ccd50f"></a>
@@ -276,8 +276,8 @@ static constexpr test_mode&#160;</td><td class="memItemRight" valign="bottom"><b
 <tr class="separator:aa138b3e839655ee5d625ef5eaf74eade inherit pro_static_attribs_classsequoia_1_1unit__testing_1_1checker"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following files:<ul>
-<li>UnitTests/Maths/Graph/<a class="el" href="_dynamic_graph_unweighted_test_8hpp_source.html">DynamicGraphUnweightedTest.hpp</a></li>
-<li>UnitTests/Maths/Graph/DynamicGraphUnweightedTest.cpp</li>
+<li>Tests/Maths/Graph/<a class="el" href="_dynamic_graph_unweighted_test_8hpp_source.html">DynamicGraphUnweightedTest.hpp</a></li>
+<li>Tests/Maths/Graph/DynamicGraphUnweightedTest.cpp</li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
