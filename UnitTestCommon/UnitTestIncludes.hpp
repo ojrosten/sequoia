@@ -77,4 +77,4 @@
 #include "RegularAllocationTestDiagnostics.hpp"
 #include "MoveOnlyAllocationTestDiagnostics.hpp"
 
-#include "UnitTestRunner.hpp"
+#include "TestRunner.hpp"

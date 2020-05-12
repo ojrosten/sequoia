@@ -66,7 +66,7 @@
     types representing these structures.
 */
 
-#include "UnitTestLogger.hpp"
+#include "TestLogger.hpp"
 
 namespace sequoia::unit_testing
 {

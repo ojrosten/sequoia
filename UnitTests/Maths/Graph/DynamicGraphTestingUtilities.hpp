@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "UnitTestPreprocessor.hpp"
+#include "TestPreprocessorDefinitions.hpp"
 
 #include "GraphTestingUtilities.hpp"
 #include "NodeStorageTestingUtilities.hpp"
