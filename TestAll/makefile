@@ -1,10 +1,10 @@
 BUILDROOT  := ../build/native
-BUILDDIR   := $(BUILDROOT)/UnitTestAll
-LIBDIRS    := ../Core ../Maths ../Experimental ../Algorithms ../Parsing ../UnitTestFramework ../UnitTestCommon
-UTBUILDDIR := $(BUILDDIR)/UnitTests
-UTDIR      := ../UnitTests
+BUILDDIR   := $(BUILDROOT)/TestAll
+LIBDIRS    := ../Core ../Maths ../Experimental ../Algorithms ../Parsing ../TestFramework ../TestCommon
+UTBUILDDIR := $(BUILDDIR)/Tests
+UTDIR      := ../Tests
 
-UTSUBDIRS  := $(filter-out ../UnitTests, $(shell find $(UTDIR) -type d))
+UTSUBDIRS  := $(filter-out ../Tests, $(shell find $(UTDIR) -type d))
 LIBSUBDIRS := $(shell find $(LIBDIRS) -type d)
 
 BUILDSUBDIRS := $(addprefix $(UTBUILDDIR)/, $(UTSUBDIRS))
@@ -22,9 +22,9 @@ CFLAGS := -Wall -Wextra -Wpedantic -std=c++2a -O0 -ferror-limit=1 \
 	  $(PREPROP)						   \
 	  $(patsubst %,-I%, $(UTSUBDIRS))      \
       $(patsubst %,-I%, $(LIBSUBDIRS))
-EXE := $(BUILDDIR)/UnitTest.exe
+EXE := $(BUILDDIR)/TestAll.exe
 
-UTSRCS := UnitTestMain.cpp
+UTSRCS := TestMain.cpp
 UTSRCS += $(shell find $(UTDIR) -name '*.cpp')
 UTOBJS := $(addprefix $(UTBUILDDIR)/, $(UTSRCS:%.cpp=%.o))
 UTDEPS := $(addprefix $(UTBUILDDIR)/, $(UTSRCS:%.cpp=%.d))
