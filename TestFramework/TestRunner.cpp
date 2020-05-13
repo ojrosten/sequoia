@@ -224,7 +224,7 @@ namespace sequoia::unit_testing
 
   bool test_runner::file_exists(const std::string& path) noexcept
   {
-    // use filesystem when available!
+    // TO DO: use filesystem when available!
     return static_cast<bool>(std::ifstream{path});    
   }
 
@@ -443,7 +443,7 @@ namespace sequoia::unit_testing
         const auto& data{*beginFiles};
         for(const auto& stub : st_TestNameStubs)
         {
-          create_file(data, stub,   overwrite);
+          create_file(data, stub, overwrite);
         }
 
         ++beginFiles;
