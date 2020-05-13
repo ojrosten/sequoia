@@ -13,9 +13,8 @@
 
 
 namespace sequoia::unit_testing
-{
-    /*! \class shared_counting_allocator
-      \brief Somewhat similar to std::allocator but logs (de)allocations and is without certain copy-like constructors.
+{  
+  /*! \brief Somewhat similar to std::allocator but logs (de)allocations and is without certain copy-like constructors.
 
       Whereas std::allocator<T> allows construction from std::allocator<U> this 
       possibility is excluded to ensure that constructors of classes taking multiple
@@ -77,5 +76,26 @@ namespace sequoia::unit_testing
     }
   private:
     std::shared_ptr<int> m_pAllocs{}, m_pDeallocs{};
+  };
+
+  template<class T, class... U>
+  struct type_demangler;
+
+  template<class T, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
+  struct type_demangler<shared_counting_allocator<T, PropagateCopy, PropagateMove, PropagateSwap>>
+  {
+    [[nodiscard]]
+    static std::string make()
+    {
+      auto info{std::string{"[shared_counting_allocator<\n\t\t"}.append(demangle<T>()).append(",\n")};
+
+      auto toString{[](bool b){ return b ? "true" : "false";}};
+
+      info.append("\t\tPropagate on copy assigment = ").append(toString(PropagateCopy)).append(",\n");
+      info.append("\t\tPropagate on move assigment = ").append(toString(PropagateMove)).append(",\n");
+      info.append("\t\tPropagate on swap = ").append(toString(PropagateSwap)).append("\n\t>");
+
+      return info;
+    }
   };
 }
