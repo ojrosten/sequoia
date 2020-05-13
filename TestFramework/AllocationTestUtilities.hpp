@@ -91,9 +91,9 @@ namespace sequoia::unit_testing
 
       auto toString{[](bool b){ return b ? "true" : "false";}};
 
-      info.append("\t\tPropagate on copy assigment = ").append(toString(PropagateCopy)).append(",\n");
-      info.append("\t\tPropagate on move assigment = ").append(toString(PropagateMove)).append(",\n");
-      info.append("\t\tPropagate on swap = ").append(toString(PropagateSwap)).append("\n\t>");
+      info.append("\t\tPropagate on copy assignment = ").append(toString(PropagateCopy)).append(",\n");
+      info.append("\t\tPropagate on move assignment = ").append(toString(PropagateMove)).append(",\n");
+      info.append("\t\tPropagate on swap = ").append(toString(PropagateSwap)).append("\n\t>]");
 
       return info;
     }
