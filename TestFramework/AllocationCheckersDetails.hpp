@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file AllocationCheckersDetails.hpp
+/*! \file
     \brief Implementation details for allocation checks within the unit testing framework.
 */
 
@@ -22,58 +22,6 @@ namespace sequoia::unit_testing
 
 namespace sequoia::unit_testing::impl
 {
-  template<class Container, class Allocator>
-  class allocation_info_base
-  {
-  public:
-    template<class Fn>
-    explicit allocation_info_base(Fn&& allocGetter)
-      : m_AllocatorGetter{std::forward<Fn>(allocGetter)}
-    {
-      if(!m_AllocatorGetter)
-        throw std::logic_error("allocation_info must be supplied with a non-null function object");
-    }
-
-    allocation_info_base(const allocation_info_base&) = default;
-
-    [[nodiscard]]
-    int count(const Container& c) const noexcept
-    {        
-      return m_AllocatorGetter(c).allocs();
-    }
-
-    template<class... Args>
-    [[nodiscard]]
-    Allocator make_allocator(Args&&... args) const
-    {
-      return Allocator{std::forward<Args>(args)...};
-    }
-
-    [[nodiscard]]
-    Allocator allocator(const Container& c) const
-    {
-      return m_AllocatorGetter(c);
-    }
-  protected:
-    ~allocation_info_base() = default;
-
-    allocation_info_base(allocation_info_base&&) noexcept = default;
-
-    allocation_info_base& operator=(const allocation_info_base&)     = default;
-    allocation_info_base& operator=(allocation_info_base&&) noexcept = default;
-
-    using getter = std::function<Allocator(const Container&)>;
-
-    [[nodiscard]]
-    getter make_getter() const
-    {
-      return m_AllocatorGetter;
-    }
-  private:
-
-    getter m_AllocatorGetter;
-  };
-
   template<class Container, class Allocator, class Predictions>
   class allocation_checker
   {

@@ -7,18 +7,31 @@
 
 #pragma once
 
-/*! \file AllocationTestUtilities.hpp
+/*! \file
     \brief Utilities for allocator testing
-*/
+ */
 
 
 namespace sequoia::unit_testing
 {  
-  /*! \brief Somewhat similar to std::allocator but logs (de)allocations and is without certain copy-like constructors.
+  /*! \brief Somewhat similar to std::allocator but logs (de)allocations via an counter which is shared upon copying.
 
-      Whereas std::allocator<T> allows construction from std::allocator<U> this 
-      possibility is excluded to ensure that constructors of classes taking multiple
-      allocators do not confuse them internally.
+      A fundamental ingredient of the allocation testing framework is the capactity to
+      count the number of allocations which have occured before/after some operation and
+      to compare the difference to a prediction. Experimentation has (tentatively)
+      suggested that the most robust way to do this is for copies of an allocator to share
+      a counter. The benefit of this is that the framework is sensitive to copies of the
+      allocator being taken between the measurement points. For example, the framework can
+      (and has!) detected a typo in an overload of operator== in which one of the arguments
+      was accidentally taken by value, leading to unexpected allocations.
+      
+      There is also a more subtle difference to std:allocator<T>. Whereas the latter allows
+      construction from std::allocator<U> this possibility is excluded to ensure that
+      constructors of classes taking multiple allocators do not confuse them internally.
+
+      In addition to taking the usual T as a template parameter, the class template accepts
+      three bools which control whether or not the allocator is propapaged when the
+      associated container is copied, mobed or swapped.
    */
 
   template<class T, bool PropagateCopy=true, bool PropagateMove=true, bool PropagateSwap=false>
@@ -33,14 +46,17 @@ namespace sequoia::unit_testing
     using propagate_on_container_swap            = std::bool_constant<PropagateSwap>;
     using is_always_equal = std::false_type;
 
-    // Remove when libc++ is updated
-    template< class U > struct rebind { using other = shared_counting_allocator<U, PropagateCopy, PropagateMove, PropagateSwap>; };    
+    // TO DO: Remove when libc++ is updated
+    template< class U > struct rebind
+    {
+      using other = shared_counting_allocator<U, PropagateCopy, PropagateMove, PropagateSwap>;
+    };    
 
     shared_counting_allocator()
       : m_pAllocs{std::make_shared<int>()}, m_pDeallocs{std::make_shared<int>()}
     {}
     
-    constexpr shared_counting_allocator(const shared_counting_allocator&) = default;
+    shared_counting_allocator(const shared_counting_allocator&) = default;
 
     [[nodiscard]] T* allocate(std::size_t n)
     {
@@ -57,11 +73,11 @@ namespace sequoia::unit_testing
       if(n) ++(*m_pDeallocs);
     }
 
+    [[nodiscard]]
     int allocs() const noexcept { return *m_pAllocs; }
 
+    [[nodiscard]]
     int deallocs() const noexcept { return *m_pDeallocs; }
-
-    std::shared_ptr<int> preserve_dealloc_count() const noexcept { return m_pDeallocs; }
 
     [[nodiscard]]
     friend bool operator==(const shared_counting_allocator& lhs, const shared_counting_allocator& rhs) noexcept
