@@ -257,6 +257,11 @@ namespace sequoia::unit_testing
       }
     }
 
+    [[nodiscard]]
+    const Predictions& get_predictions() const noexcept
+    {
+      return m_Predictions[0];
+    }
   private:
     template<std::size_t I, class... As>
     [[nodiscard]]
