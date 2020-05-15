@@ -240,28 +240,16 @@ namespace sequoia::unit_testing
     [[nodiscard]]
     decltype(auto) unpack() const
     {
-      if constexpr(I==0)
-      {
-        return *this;
-      }
-      else
-      {
-        auto scopedGetter{[getter=this->make_getter()](const Container& c){
-            return get<I>(getter(c));
-          }
-        };
+      auto scopedGetter{[getter=this->make_getter()](const Container& c){
+          return get<I>(getter(c));
+        }
+      };
 
-        using Alloc = decltype(scopedGetter(std::declval<Container>()));
+      using Alloc = decltype(scopedGetter(std::declval<Container>()));
 
-        return basic_allocation_info<Container, Alloc, Predictions>{scopedGetter, m_Predictions[I]};
-      }
+      return basic_allocation_info<Container, Alloc, Predictions>{scopedGetter, m_Predictions[I]};
     }
 
-    [[nodiscard]]
-    const Predictions& get_predictions() const noexcept
-    {
-      return m_Predictions[0];
-    }
   private:
     template<std::size_t I, class... As>
     [[nodiscard]]
