@@ -7,8 +7,8 @@
 
 #pragma once
 
-/*! \file RegularAllocationCheckers.hpp
-    \brief Utilities for performing allocation checks of regular types.
+/*! \file
+    \brief Utilities for performing allocation checks for regular types.
 */
 
 #include "AllocationCheckers.hpp"

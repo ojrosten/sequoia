@@ -28,7 +28,7 @@ namespace sequoia::unit_testing::impl
   public:
     using alloc_info = basic_allocation_info<Container, Allocator, Predictions>;
     
-    allocation_checker(alloc_info i)
+    explicit allocation_checker(alloc_info i)
       : m_Info{std::move(i)}
     {}
 
@@ -246,7 +246,8 @@ namespace sequoia::unit_testing::impl
   std::tuple<allocation_checker<Container, Allocator, Predictions>>
   make_allocation_checkers(const basic_allocation_info<Container, Allocator, Predictions>& info, Args&&... args)
   {
-    return {{std::forward<Args>(args)..., info}};
+    using checker = allocation_checker<Container, Allocator, Predictions>;
+    return {checker{std::forward<Args>(args)..., info}};
   }
 
   //================================ Variadic Allocation Checking ================================//
