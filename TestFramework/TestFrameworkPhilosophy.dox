@@ -1,0 +1,169 @@
+/*! \page testframeworkpage The Testing Framework
+
+    The sequoia testing framework is designed to be robust, extensible, semantics-aware
+    and allocator-aware.
+
+    \section sec_robustness Robustness
+
+    The testing framework is sophisticated and sophistication brings danger, since it
+    raises the chances that the framework itself has bugs. If this is the case, then the
+    framework would give clients a false sense of security about the code they have written,
+    which could be disastrous. To mitigate this risk, the testing framework has been
+    designed to run self-diagnostics. This has been employed to give a high degree of
+    confidence that the existing framework is correct. Used idiomatically, it should confer
+    similar confidence in any extensions.
+
+    One of the defining features of the testing framework is that it is designed to expose
+    false-positives. As such, each test operates in one of three modes, chosen at compile
+    time: standard, false_positive and false_negative.
+
+    In standard mode, the test framework operates as one might expect. A typical check might
+    look as follows:
+
+    check_equality("Description of test", x, 5);
+
+    If x==5, the check passes whereas if x!=5 a failure is reported. However, suppose that
+    check_equality has a bug. For example, it might always return true. This is very dangerous
+    since it would give the impression that all tests pass, giving clients a false sense
+    of security in the code they're testing!
+
+    To counter this, tests can be created to be run in false-positive mode. In this case,
+    the above example will pass when x!=5 and fail when x==5. The purpose of this is to pick
+    up bugs in the testing framework itself.
+
+    In standard mode, when a test fails, details of the failure will be given directly to
+    the client. In the above example, for the case where x==4, something like this will be
+    seen:
+
+    Obtained : 4 
+    Predicted: 5
+
+    In false-positive mode, this output is not be made directly visible to the user, since 
+    the false-positive test has succeeded Instead, it is dumped to a file. This means that
+    clients can check
+    the underlying failure which the false-positive check has detected is as expected. It is
+    good practice to place this file under version control. This provides sensitivity both to
+    changes in the false-positive test and also changes to the way in which the testing
+    framework generates output.
+
+    Clients may extend the testing framework to conveniently test their types, for example
+    by specializing the detailed_equality_checker. This is a perfect opportunity to write
+    some false-positive tests to give confidence that the newly-added code is not spuriously
+    reporting success.
+
+    Finally, there are false-negative tests. They are essentially the same as standard mode;
+    however, they are treated separately since statements like
+
+    check_equality("Description of test", 5, 5);
+
+    are morally tests of the testing framework itself, rather than tests of client code. As
+    with false-positive tests, output is dumped to an auxiliary file, primarily as a means
+    of detecting (via version control) changes to the way the testing framework generates
+    output.
+
+
+    \section sec_extensible Extensibility
+
+    There are several ways in which the testing framework may be extended. Suppose that a
+    client has created a new type, my_type. One way or another, it is almost inevitable that
+    calls will be made to check_equality. If the type is sufficiently simple, and defines
+    operator==, it suffices for clients to specialize the class template string_maker. This
+    defines how to serialize instances of the class and so we may again end up with a failure
+    report along the lines of the above. However, if the class is more complex, there is
+    a superior alternative.
+
+    sequoia defines a class template, detailed_equality_checker. The purpose of this is to
+    use the const accessors of two instances of a class to probe their purported equality.
+    Suppose that a client has created a new container and consider comparing two instances.
+    operator== may return false or true. In the first case, we want to get to the bottom
+    of this, in a more appropriate manner than simply serializing the class (which may produce
+    excessive output). For a container, it would make sense to use iterators to compare
+    the elements and any that differ. However, it makes sense to do this even if operator==
+    returns true; after the aim is to test with high fidelity  and it may be that operator==
+    has a bug; or perhaps it is fine but there's a bug in the const accessors. Either way,
+    a well designed specialization of the detailed_equality_checker will catch this.
+
+    However, there is a gap here. Consider the the first time a type is instantiated in
+    a test, say
+
+    my_type x{5};
+
+    It is desirable to check that x is correctly initialized, but circular to write something
+    like
+
+    check_equality("x correctly initialized", x, my_type{5});
+
+    Therefore, in addition to the detailed_equality_checker, the framework defines two class
+    templates, equivalence_checker and weak_equivalence_checker. Suppose that, in this example
+    my_type, simply wraps an int; in this case it may make sense to define the specialization
+    equivalence_checker<my_type>; internally, this will define a static function, check, which
+    define a comparison between my_type and int. The line of code above may then be replaced by
+
+    check_equivalence("x correctly initialized", x, 5);
+
+    Once consistency of initialization has been checked, thereafter it make sense to revert
+    to check_equality.
+
+    What of the weak_equivalence_checker? This is for cases where there is a signifcant mismatch
+    between the information content of the type to be checked and the type it is being compared
+    with.
+
+    There is also an entirely different way in which the testing framework may be extended.
+    The 'checkers' class template provides basic functionality such as check_equality and
+    check_exception_thrown. However, the class template accepts a variadic number of extenders,
+    which enhance its functionality. Examples provided with sequoia are various semantics checkers, a
+    performance checker, and a checker for doing fuzzy comparisons. These may be readily
+    mixed and matched with appropriate using declarations, some of which are supplied with the
+    library. If a client of the code wishes to provide a new extension, simply follow the existing
+    pattern using e.g. FuzzyTestCore.hpp as an example.
+
+
+    \section sec_semantics Sematics-Awareness
+
+    By utilizing sequoia's testing framework, clients are strongly encourged to think carefully
+    about the semantics of their classes upfront, rather than as an after thought. For the
+    purposes of this library, a type exhibiting regular semantics is understood to have copy/move
+    constructors, copy/move assigment, operator==, operator!= and swap. Note that
+    there is no strict requirement for a default constructor. If a class provides this
+    functionality, then the regular_test class template may be utilized, whichh makes use of the
+    regular_extender class template. The latter
+    provides an overload of check_semantics; given two instantiations of a class it checks
+    consistency of the above list of special member functions / functions. Alternatively,
+    for move-only types, the move_only_test may be exploited. Either way, this removes much
+    of the burden of devising ways to carefully check consistency of these operations by
+    reliably bundling everything into a call to check_semantics.
+
+
+    \section sec_allocators Allocator-Awareness
+
+    The C++17 allocator framework is powerful but complex. Much of this complexity derives
+    from the intersection of the logical abstraction containers seek to represent with the
+    realities of creating efficient code. Consider std::vector. This models dynamic, contiguous
+    storage: the logical content of this container is its elements. Indeed, operator== checks
+    that two vectors are of the same size and that its elements are equal, but no more than
+    this. However, vectors additionally comprise allocators which are not part of the logical
+    abstraction. In principle, the allocator maybe stateful and this raises interesting questions.
+    Should operator== take account of this state? The design of vector gives a definitive
+    answer: No. But what should be done when doing assignment? Should the state of the allocator
+    propagate or not. Should the choice be consistent between copy assignment and move assignment?
+    What about swapping? There are no definitive answers to these questions and so this is left
+    in the hands of the client. Indeed, std::allocator_traits exposes various type definitions,
+    reflecting this freedom.
+
+    With flexibility of the C++ allocation model comes commensurate difficulty when it comes
+    to testing. To help with this, the sequoia testing framework has been built with allocators
+    firmly in mind. An allocator-aware class may be rigorously tested by using a
+    regular_allocation_checker (or an analogue, such as move_only_allocation_checker, for types
+    with different semantics). This checker provides an overload of the check_semantics
+    method which accepts allocation predictions for copying, assigning (with and without
+    propagation) and mutation. The design accomodates for scoped allocators and for multiple
+    allocators (be they normal or scoped). Allocation tests come with a facility for automatically
+    generating all 8 combinations of allocation propagation from a single call to check_semantics.
+
+    The allocation testing framework has been rigorously tested with a combination of
+    false-positive and false-negative checks and has very high fidelity. For example, if
+    check_semantics is fed a type for which operator== has accidentally been written such
+    that one (or more) of its arguments captures by value, rather than be reference, the
+    framework will detect this.
+
+ */

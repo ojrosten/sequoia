@@ -35,7 +35,7 @@ namespace sequoia::unit_testing
       The only state it holds is a string representing the name of the test.
 
       The semantics are such that, of the special member functions, only explicit construction from a
-      string_view and (virtual) destruction are publically available. Move construction is protected;
+      string_view and (virtual) destruction are publicly available. Move construction is protected;
       all remaining special member functions are deleted to discourage multiple instantiations.
    */
   
@@ -67,21 +67,21 @@ namespace sequoia::unit_testing
 
   /*! \brief class template from which all concrete tests should derive.
 
-      The class template publically inherits from test, for the purposes of type-erasure.
+      The class template publicly inherits from test, for the purposes of type-erasure.
 
       The class template inherits in a protected manner from the template parameter Checker.
       The inheritance is protected in order to keep the public interface of basic_test minimal,
       while allowing convenient internal access to the Checkers various check methods, in particular.
 
-      test::excute is final; however, customisation of the way in which the log_summary is generated
-      is allowed through the virtul function summarize.
+      test::execute is final; however, customisation of the way in which the log_summary is generated
+      is allowed through the virtual function summarize.
 
       The execute method delegates to the pure virtual function run_tests. In a concrete test case,
       this method will contain, either directly or indirectly, the various checks which are to be
       performed.
 
       The semantics are such that, of the special member functions, only explicit construction from a
-      string_view and (virtual) destruction are publically available. Move construction is protected;
+      string_view and (virtual) destruction are publicly available. Move construction is protected;
       all remaining special member functions are deleted to discourage multiple instantiations.
    */
   

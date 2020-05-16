@@ -24,8 +24,8 @@
     of the state of two supposedly equal instance of a class. Note that there is no need for the
     detailed_equality_checker to include checks of operator== or operator!=, since these will be done,
     regardless. Indeed, the detailed_equality_checker will be triggered independently of whether operator==
-    fails since either the latter or the accesors may have bugs and introducing unnecessary dependencies
-    would reduce the fidelity of the testing framewrok.
+    fails since either the latter or the accessors may have bugs and introducing unnecessary dependencies
+    would reduce the fidelity of the testing framework.
 
     If a detailed_equality_checker is supplied, then compile-time logic will ignore any attempt to
     serialize objects of type T. Typically, clients may expect a notification that operator== has returned
@@ -48,21 +48,21 @@
     With this in mind, imagine creating a container. One of the first things one may wish to do is to check
     that it is correctly initialized. It would be a mistake to use the detailed_equality_checker for this
     since, to do so a second, identical instance would need to be created. This is circular and prone to
-    false positives. Conseuqently, the testing framework also defines a pair of class templates that
+    false positives. Consequently, the testing framework also defines a pair of class templates that
     complement detailed_equality_checker: equivalence_checker and weak_equivalence_checker. We may
     consider a value for std::vector to be equivalent to an initializer_list in the sense that they hold (at
     the relevant point of the program) the same elements. Thus, a specialization
     equivalence_checker<vector, initializer_list> is supplied. Of course, there is more to a vector than the
     values it holds: there is the entire allocator framework too. In this case, however, it is not part of
     the logical structure and, indeed, the state of the allocator is not considered in vector::operator==.
-    Thus it is philosphically reasonable to consider equivalence of vector and initializer_list. However,
+    Thus it is philosophically reasonable to consider equivalence of vector and initializer_list. However,
     sometimes is is useful to check the equivalence of the state of an instance of T to a proper subset of
     the logical state of an instance of some S. For this purpose, the class template
     weak_equivalence_checker is supplied.
     
     Both the equivalence_checker and its weak counterpart can be fed >=2 template type arguments. While for
     a vector we would just feed in two types (vector and initializer_list), in some cases we may need more.
-    For example, a graph has both nodes and edges and so a graph may be consdidered equivalent to two
+    For example, a graph has both nodes and edges and so a graph may be considered equivalent to two
     types representing these structures.
 */
 

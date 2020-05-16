@@ -10,52 +10,11 @@
 /*! \file
     \brief Utilities for recording the outcome of tests
 
-    One of the defining features of the testing framework is that it is designed to expose
-    false-positives. As such, each test operates in one of three modes, chosen at compile
-    time: standard, false_positive and false_negative.
-
-    In standard mode, the test framework operates as one might expect. A typical check might
-    look as follows:
-
-    check_equality("Description of test", x, 5);
-
-    If x==5, the check passes whereas if x!=5 a failure is reported. However, suppose that
-    check_equality has a bug. For example, it might always return true. This is very dangerous
-    since it would give the impression that all tests pass, giving clients a false sense
-    of security in the code they're testing!
-
-    To counter this, tests can be created to be run in false-positive mode. In this case,
-    the above example will pass when x!=5 and fail when x==5. The purpose of this is to pick
-    up bugs in the testing framework itself.
-
-    In standard mode, when a test fails, details of the failure will be given directly to
-    the client. In the above example, for the case where x==4, something like this will be
-    seen:
-
-    Obtained : 4 
-    Predicted: 5
-
-    In false-positive mode, this output is not be made directly visible to the user, since 
-    the test has passed. Instead, it is dumped to a file. This means that clients can check
-    the underlying failure which the false-positive check has detected is as expected. It is
-    good practice to place this file under version control. This provides sensitivity both to
-    changes in the false-positive test and also changes to the way in which the testing
-    framework generates output.
-
-    Clients may extend the testing framework to conveniently test their types, for example
-    by specializing the detailed_equality_checker. This is a perfect opportunity to write
-    some false-positive tests to give confidence that the newly-added code is not spuriously
-    reporting success.
-
-    Finally, there are false-negative tests. They are essentially the same as standard mode;
-    however, they are treated separately since statements like
-
-    check_equality("Description of test", 5, 5);
-
-    are morally tests of the testing framework itself, rather than tests of client code. As
-    with false-positive tests, output is dumped to an auxiliary file, primarily as a means
-    of detecting (via version control) changes to the way the testing framework generates
-    output.
+    This is the header where the enum class, test_mode, is defined. This ultimately determines
+    whether a given test is standard, false-positive or false-negative. The test_logger class
+    template employs test_mode as a non-type template parameter. It is via the test_logger that
+    other building blocks of the testing framework, such as checkers and test classes
+    themselves depend on the test_mode.
  */
 
 #include "TypeTraits.hpp"
