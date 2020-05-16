@@ -118,7 +118,7 @@
     pattern using e.g. FuzzyTestCore.hpp as an example.
 
 
-    \section sec_semantics Sematics-Awareness
+    \section sec_semantics Semantics-Awareness
 
     By utilizing sequoia's testing framework, clients are strongly encourged to think carefully
     about the semantics of their classes upfront, rather than as an after thought. For the

@@ -76,7 +76,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Somewhat similar to std::allocator but logs (de)allocations and is without certain copy-like constructors.  
+<p>Somewhat similar to std::allocator but logs (de)allocations via an counter which is shared upon copying.  
  <a href="classsequoia_1_1unit__testing_1_1shared__counting__allocator.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="_allocation_test_utilities_8hpp_source.html">AllocationTestUtilities.hpp</a>&gt;</code></p>
@@ -112,9 +112,9 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>is_always_equal</b> 
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a164994049f95a785fc6252363af682d8"><td class="memItemLeft" align="right" valign="top"><a id="a164994049f95a785fc6252363af682d8"></a>
-constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>shared_counting_allocator</b> (const <a class="el" href="classsequoia_1_1unit__testing_1_1shared__counting__allocator.html">shared_counting_allocator</a> &amp;)=default</td></tr>
-<tr class="separator:a164994049f95a785fc6252363af682d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a672e5c0b47adde26bfc0e65408d4cc24"><td class="memItemLeft" align="right" valign="top"><a id="a672e5c0b47adde26bfc0e65408d4cc24"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>shared_counting_allocator</b> (const <a class="el" href="classsequoia_1_1unit__testing_1_1shared__counting__allocator.html">shared_counting_allocator</a> &amp;)=default</td></tr>
+<tr class="separator:a672e5c0b47adde26bfc0e65408d4cc24"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a730477306fd6d783dd2a6fa8048cdb93"><td class="memItemLeft" align="right" valign="top"><a id="a730477306fd6d783dd2a6fa8048cdb93"></a>
 T *&#160;</td><td class="memItemRight" valign="bottom"><b>allocate</b> (std::size_t n)</td></tr>
 <tr class="separator:a730477306fd6d783dd2a6fa8048cdb93"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -127,9 +127,6 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>allocs</b> () const no
 <tr class="memitem:aae284d38ff33038a9bfafad4f8858f95"><td class="memItemLeft" align="right" valign="top"><a id="aae284d38ff33038a9bfafad4f8858f95"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>deallocs</b> () const noexcept</td></tr>
 <tr class="separator:aae284d38ff33038a9bfafad4f8858f95"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a380d4bb36a9ec87facfa2d7cca1a3145"><td class="memItemLeft" align="right" valign="top"><a id="a380d4bb36a9ec87facfa2d7cca1a3145"></a>
-std::shared_ptr&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>preserve_dealloc_count</b> () const noexcept</td></tr>
-<tr class="separator:a380d4bb36a9ec87facfa2d7cca1a3145"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
 Friends</h2></td></tr>
@@ -144,8 +141,10 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator!=</b> (const
 <div class="textblock"><h3>template&lt;class T, bool PropagateCopy = true, bool PropagateMove = true, bool PropagateSwap = false&gt;<br />
 class sequoia::unit_testing::shared_counting_allocator&lt; T, PropagateCopy, PropagateMove, PropagateSwap &gt;</h3>
 
-<p>Somewhat similar to std::allocator but logs (de)allocations and is without certain copy-like constructors. </p>
-<p>Whereas std::allocator&lt;T&gt; allows construction from std::allocator&lt;U&gt; this possibility is excluded to ensure that constructors of classes taking multiple allocators do not confuse them internally. </p>
+<p>Somewhat similar to std::allocator but logs (de)allocations via an counter which is shared upon copying. </p>
+<p>A fundamental ingredient of the allocation testing framework is the capactity to count the number of allocations which have occured before/after some operation and to compare the difference to a prediction. Experimentation has (tentatively) suggested that the most robust way to do this is for copies of an allocator to share a counter. The benefit of this is that the framework is sensitive to copies of the allocator being taken between the measurement points. For example, the framework can (and has!) detected a typo in an overload of operator== in which one of the arguments was accidentally taken by value, leading to unexpected allocations.</p>
+<p>There is also a more subtle difference to std:allocator&lt;T&gt;. Whereas the latter allows construction from std::allocator&lt;U&gt; this possibility is excluded to ensure that constructors of classes taking multiple allocators do not confuse them internally.</p>
+<p>In addition to taking the usual T as a template parameter, the class template accepts three bools which control whether or not the allocator is propapaged when the associated container is copied, mobed or swapped. </p>
 </div><hr/>The documentation for this class was generated from the following file:<ul>
 <li>TestFramework/<a class="el" href="_allocation_test_utilities_8hpp_source.html">AllocationTestUtilities.hpp</a></li>
 </ul>

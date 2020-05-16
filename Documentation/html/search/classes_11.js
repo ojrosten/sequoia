@@ -49,6 +49,7 @@ var searchData=
   ['traverser_3c_20dfs_20_3e',['Traverser&lt; DFS &gt;',['../structsequoia_1_1unit__testing_1_1_traverser_3_01_d_f_s_01_4.html',1,'sequoia::unit_testing']]],
   ['traverser_3c_20prs_20_3e',['Traverser&lt; PRS &gt;',['../structsequoia_1_1unit__testing_1_1_traverser_3_01_p_r_s_01_4.html',1,'sequoia::unit_testing']]],
   ['type_5fdemangler',['type_demangler',['../structsequoia_1_1unit__testing_1_1type__demangler.html',1,'sequoia::unit_testing']]],
+  ['type_5fdemangler_3c_20shared_5fcounting_5fallocator_3c_20t_2c_20propagatecopy_2c_20propagatemove_2c_20propagateswap_20_3e_20_3e',['type_demangler&lt; shared_counting_allocator&lt; T, PropagateCopy, PropagateMove, PropagateSwap &gt; &gt;',['../structsequoia_1_1unit__testing_1_1type__demangler_3_01shared__counting__allocator_3_01_t_00_01_p31e7e62befa0da3b9c855a2ac3c79d4f.html',1,'sequoia::unit_testing']]],
   ['type_5fgenerator',['type_generator',['../structsequoia_1_1utilities_1_1impl_1_1type__generator.html',1,'sequoia::utilities::impl']]],
   ['type_5fgenerator_3c_20dereferencepolicy_2c_20false_20_3e',['type_generator&lt; DereferencePolicy, false &gt;',['../structsequoia_1_1utilities_1_1impl_1_1type__generator_3_01_dereference_policy_00_01false_01_4.html',1,'sequoia::utilities::impl']]],
   ['type_5fto_5ftype',['type_to_type',['../structsequoia_1_1impl_1_1type__to__type.html',1,'sequoia::impl']]],

@@ -32,10 +32,12 @@ var menudata={children:[
 {text:"All",url:"functions.html",children:[
 {text:"e",url:"functions.html#index_e"},
 {text:"r",url:"functions.html#index_r"},
-{text:"s",url:"functions.html#index_s"}]},
+{text:"s",url:"functions.html#index_s"},
+{text:"u",url:"functions.html#index_u"}]},
 {text:"Functions",url:"functions_func.html",children:[
 {text:"e",url:"functions_func.html#index_e"},
 {text:"r",url:"functions_func.html#index_r"},
-{text:"s",url:"functions_func.html#index_s"}]}]}]},
+{text:"s",url:"functions_func.html#index_s"},
+{text:"u",url:"functions_func.html#index_u"}]}]}]},
 {text:"Files",url:"files.html",children:[
 {text:"File List",url:"files.html"}]}]}

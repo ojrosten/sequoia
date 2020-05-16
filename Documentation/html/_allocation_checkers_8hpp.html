@@ -88,9 +88,14 @@ $(function() {
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsequoia_1_1unit__testing_1_1alloc__prediction.html">sequoia::unit_testing::alloc_prediction&lt; Event &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsequoia_1_1unit__testing_1_1allocation__info__base.html">sequoia::unit_testing::allocation_info_base&lt; Container, Allocator &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Base class for use with both plain (shared counting) allocators and std::scoped_allocator_adaptor.  <a href="classsequoia_1_1unit__testing_1_1allocation__info__base.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsequoia_1_1unit__testing_1_1basic__allocation__info.html">sequoia::unit_testing::basic_allocation_info&lt; Container, Allocator, Predictions &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class for use with a container possessing a (shared counting) allocator.  <a href="classsequoia_1_1unit__testing_1_1basic__allocation__info.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsequoia_1_1unit__testing_1_1basic__allocation__info_3_01_container_00_01std_1_1scoped__allob81d85e5047459e24719967088a72710.html">sequoia::unit_testing::basic_allocation_info&lt; Container, std::scoped_allocator_adaptor&lt; Allocators... &gt;, Predictions &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A specialization of <a class="el" href="classsequoia_1_1unit__testing_1_1basic__allocation__info.html" title="Class for use with a container possessing a (shared counting) allocator.">basic_allocation_info</a> appropriate for std::scoped_allocator_adaptor.  <a href="classsequoia_1_1unit__testing_1_1basic__allocation__info_3_01_container_00_01std_1_1scoped__allob81d85e5047459e24719967088a72710.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
@@ -151,6 +156,19 @@ constexpr assign_prop_prediction&#160;</td><td class="memItemRight" valign="bott
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Utilities for performing allocation checks within the unit testing framework. </p>
+<p>The allocation testing framework is built upon the idea of supplying and testing predictions for particular allocation events, in particular:</p>
+<ul>
+<li>copying</li>
+<li>mutating</li>
+<li>para copy (use of the copy-like constructor taking an allocator as an extra argument)</li>
+<li>para move (use of the move-like constructor taking an allocator as an extra argument)</li>
+<li>assignment with propagation of the allocator</li>
+<li>assignment without propagation of the allocator</li>
+</ul>
+<p>To help with readability of actual tests, various user defined literals are introduced so that, for example, 1_c may be used to mean a prediction of 1 allocation for a copy event. This is more expressive than just '1' and less verbose than copy_prediction{1}, particularly bearing in mind that often all 6 predictions are supplied together.</p>
+<p>In addition to predictions, clients must also supply a function object which consumes a container and returns a copy of its allocator. With these ingredients, the following scenario may be realized. Given a container which uses the shared_counting_allocator (see <a class="el" href="_allocation_test_utilities_8hpp.html" title="Utilities for allocator testing.">AllocationTestUtilities.hpp</a>) the following scenario may be realized:</p>
+<p>A extract a copy of the allocator B acquire the number of allocations C perform an operator with an expected number of allocations D acquire the number of allocations E compare the prediction to the difference between D and B.</p>
+<p>Note that the framework is designed to work smoothly with std::scoped_allocator_adaptor and/or with containers containing multiple allocators, scoped or otherwise. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

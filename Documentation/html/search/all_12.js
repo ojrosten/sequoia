@@ -3,6 +3,7 @@ var searchData=
   ['undirected_5fembedded_5finit_5fchecker',['undirected_embedded_init_checker',['../classsequoia_1_1unit__testing_1_1undirected__embedded__init__checker.html',1,'sequoia::unit_testing']]],
   ['undirected_5ffixed_5ftopology_5fchecker',['undirected_fixed_topology_checker',['../classsequoia_1_1unit__testing_1_1undirected__fixed__topology__checker.html',1,'sequoia::unit_testing']]],
   ['undirected_5finit_5fchecker',['undirected_init_checker',['../classsequoia_1_1unit__testing_1_1undirected__init__checker.html',1,'sequoia::unit_testing']]],
+  ['unpack',['unpack',['../classsequoia_1_1unit__testing_1_1basic__allocation__info_3_01_container_00_01std_1_1scoped__allob81d85e5047459e24719967088a72710.html#afa3b5c15f522da36a92c011279983a80',1,'sequoia::unit_testing::basic_allocation_info&lt; Container, std::scoped_allocator_adaptor&lt; Allocators... &gt;, Predictions &gt;']]],
   ['unpooled',['unpooled',['../classsequoia_1_1data__sharing_1_1unpooled.html',1,'sequoia::data_sharing']]],
   ['unsortable',['unsortable',['../structsequoia_1_1unit__testing_1_1unsortable.html',1,'sequoia::unit_testing']]],
   ['unweighted_5fgraph_5fallocation_5ftest',['unweighted_graph_allocation_test',['../classsequoia_1_1unit__testing_1_1unweighted__graph__allocation__test.html',1,'sequoia::unit_testing']]],

@@ -1,0 +1,8 @@
+/*! \mainpage
+
+    \section intro_sec Introduction
+
+    sequoia is a modern C++ library which aims to supply various mathematical
+    abstractions, together with a sophisticated testing framework.
+    More information about the latter can be found here \ref testframeworkpage.
+ */
