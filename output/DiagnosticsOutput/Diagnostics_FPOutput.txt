@@ -735,18 +735,18 @@
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30:
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
-	Fast Task duration: 0.00133403s +- 4 * 8.269e-05
-	Slow Task duration: 0.00123079s +- 4 * 0.000116846 [0.922612; (2, 2)]
+	Fast Task duration: 0.00131011s +- 4 * 0.000108068
+	Slow Task duration: 0.00125584s +- 4 * 0.000163099 [0.958571; (2, 2)]
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34:
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
-	Fast Task duration: 0.00127733s +- 4 * 9.42688e-05
-	Slow Task duration: 0.00137456s +- 4 * 3.80346e-05 [1.07612; (2, 3)]
+	Fast Task duration: 0.00135159s +- 4 * 4.21179e-05
+	Slow Task duration: 0.00130893s +- 4 * 6.68004e-05 [0.968433; (2, 3)]
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38:
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
-	Fast Task duration: 0.0013756s +- 4 * 3.42191e-05
-	Slow Task duration: 0.00470205s +- 4 * 0.000531778 [3.41818; (2, 2.5)]
+	Fast Task duration: 0.00128335s +- 4 * 0.000122316
+	Slow Task duration: 0.00473309s +- 4 * 0.000364095 [3.68809; (2, 2.5)]
 
 	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 29
 	[double]
@@ -819,7 +819,7 @@
 		Propagate on move assignment = false,
 		Propagate on swap = false
 	>]
-
+	No allocation for x
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -834,7 +834,7 @@
 		Propagate on move assignment = false,
 		Propagate on swap = false
 	>]
-
+	No allocation for x
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -1517,7 +1517,7 @@
 		Propagate on move assignment = false,
 		Propagate on swap = true
 	>]
-
+	No allocation for x
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -1532,7 +1532,7 @@
 		Propagate on move assignment = false,
 		Propagate on swap = true
 	>]
-
+	No allocation for x
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -2307,7 +2307,7 @@
 		Propagate on move assignment = true,
 		Propagate on swap = false
 	>]
-
+	No allocation for x
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -2322,7 +2322,7 @@
 		Propagate on move assignment = true,
 		Propagate on swap = false
 	>]
-
+	No allocation for x
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -2975,7 +2975,7 @@
 		Propagate on move assignment = true,
 		Propagate on swap = true
 	>]
-
+	No allocation for x
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -2990,7 +2990,7 @@
 		Propagate on move assignment = true,
 		Propagate on swap = true
 	>]
-
+	No allocation for x
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -3735,7 +3735,7 @@
 		Propagate on move assignment = false,
 		Propagate on swap = false
 	>]
-
+	No allocation for x
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -3750,7 +3750,7 @@
 		Propagate on move assignment = false,
 		Propagate on swap = false
 	>]
-
+	No allocation for x
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -4463,7 +4463,7 @@
 		Propagate on move assignment = false,
 		Propagate on swap = true
 	>]
-
+	No allocation for x
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -4478,7 +4478,7 @@
 		Propagate on move assignment = false,
 		Propagate on swap = true
 	>]
-
+	No allocation for x
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -5283,7 +5283,7 @@
 		Propagate on move assignment = true,
 		Propagate on swap = false
 	>]
-
+	No allocation for x
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -5298,7 +5298,7 @@
 		Propagate on move assignment = true,
 		Propagate on swap = false
 	>]
-
+	No allocation for x
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -6011,7 +6011,7 @@
 		Propagate on move assignment = true,
 		Propagate on swap = true
 	>]
-
+	No allocation for x
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -6026,7 +6026,7 @@
 		Propagate on move assignment = true,
 		Propagate on swap = true
 	>]
-
+	No allocation for x
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -7242,14 +7242,14 @@
 	False Positive Failure:
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67:
 	Performance Test which should pass
-	Fast Task duration: 0.00138851s +- 4 * 1.52908e-05
-	Slow Task duration: 0.00264022s +- 4 * 1.20828e-05 [1.90148; (1.8, 2.1)]
+	Fast Task duration: 0.00138109s +- 4 * 1.9668e-05
+	Slow Task duration: 0.00254779s +- 4 * 0.000175829 [1.84476; (1.8, 2.1)]
 
 	False Positive Failure:
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68:
 	Performance Test which should pass
-	Fast Task duration: 0.0013703s +- 4 * 3.17213e-05
-	Slow Task duration: 0.00452548s +- 4 * 0.000320392 [3.30255; (3.6, 4.1)]
+	Fast Task duration: 0.00135482s +- 4 * 9.03725e-05
+	Slow Task duration: 0.00514703s +- 4 * 8.57699e-06 [3.79904; (3.6, 4.1)]
 
 	False Positive Failure:
 	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 69

@@ -52,9 +52,10 @@ namespace sequoia::unit_testing::impl
     int second_count() const noexcept { return m_SecondCount; }
 
     template<test_mode Mode>
-    void check_no_allocation(std::string_view description, test_logger<Mode>& logger, const Container& container) const
+    void check_no_allocation(std::string_view description, test_logger<Mode>& logger, const Container& x, const Container& y) const
     {
-      check_allocation(description, "", "", logger, container, m_Info, m_FirstCount, 0);
+      check_allocation(description, "No allocation for x", "", logger, x, m_Info, m_FirstCount, 0);
+      check_allocation(description, "No allocation for y", "", logger, y, m_Info, m_SecondCount, 0);
     }
 
     template<test_mode Mode>
@@ -264,11 +265,11 @@ namespace sequoia::unit_testing::impl
   }
 
   template<test_mode Mode, class Container, class Allocator, class Prediction, class... Allocators, class... Predictions>
-  void check_no_allocation(std::string_view description, test_logger<Mode>& logger, const Container& container, const allocation_checker<Container, Allocator, Prediction>& checker, const allocation_checker<Container, Allocators, Predictions>&... moreCheckers)
+  void check_no_allocation(std::string_view description, test_logger<Mode>& logger, const Container& x, const Container& y, const allocation_checker<Container, Allocator, Prediction>& checker, const allocation_checker<Container, Allocators, Predictions>&... moreCheckers)
   {
     auto checkFn{
-      [&logger, &container](std::string_view message, auto& checker){
-        checker.check_no_allocation(message, logger, container);
+      [&logger, &x, &y](std::string_view message, auto& checker){
+        checker.check_no_allocation(message, logger, x, y);
       }
     };
 
@@ -426,15 +427,15 @@ namespace sequoia::unit_testing::impl
     constexpr static bool has_post_swap_action{true};
 
     template<test_mode Mode, class Container, class... Allocators, class... Predictions>
-    static void post_equality_action(std::string_view description, test_logger<Mode>& logger, const Container& x, const Container&, const allocation_checker<Container, Allocators, Predictions>&... checkers)
+    static void post_equality_action(std::string_view description, test_logger<Mode>& logger, const Container& x, const Container& y, const allocation_checker<Container, Allocators, Predictions>&... checkers)
     {
-      check_no_allocation(combine_messages(description, "no allocation for operator=="), logger, x, checkers...);
+      check_no_allocation(combine_messages(description, "no allocation for operator=="), logger, x, y, checkers...);
     }
 
     template<test_mode Mode, class Container, class... Allocators, class... Predictions>
-    static void post_nequality_action(std::string_view description, test_logger<Mode>& logger, const Container& x, const Container&, const allocation_checker<Container, Allocators, Predictions>&... checkers)
+    static void post_nequality_action(std::string_view description, test_logger<Mode>& logger, const Container& x, const Container& y, const allocation_checker<Container, Allocators, Predictions>&... checkers)
     {
-      check_no_allocation(combine_messages(description, "no allocation for operator!="), logger, x, checkers...);
+      check_no_allocation(combine_messages(description, "no allocation for operator!="), logger, x, y, checkers...);
     }
 
     template<test_mode Mode, class Container, class... Allocators, class... Predictions>
@@ -456,11 +457,14 @@ namespace sequoia::unit_testing::impl
       check_mutation_after_swap(description, logger, x, y, yClone, yMutator, checkers...);
     }
   };
+
+  // Functions for performing allocation checks which are common to types with both regular and
+  // move-only semantics
  
   template<test_mode Mode, class Actions, class Container, class... Allocators, class... Predictions>
   bool check_preconditions(std::string_view description, test_logger<Mode>& logger, const Actions& actions, const Container& x, const Container& y, const allocation_checker<Container, Allocators, Predictions>&... checkers)
   {
-    return do_check_preconditions(description, logger, actions, x, y, allocation_checker<Container, Allocators, Predictions>{x, checkers.first_count(), checkers.info()}...);
+    return do_check_preconditions(description, logger, actions, x, y, allocation_checker<Container, Allocators, Predictions>{x, y, checkers.info()}...);
   }
 
   template<test_mode Mode, class Actions, class Container, class... Allocators, class... Predictions>
