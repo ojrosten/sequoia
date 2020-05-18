@@ -65,7 +65,7 @@ namespace sequoia::unit_testing
 
     if(auto opt{impl::check_para_constructor_allocations(description, logger, std::forward<T>(y), yClone, info...)})
     {
-      impl::check_semantics(description, logger, impl::move_only_allocation_actions{}, std::forward<T>(x), std::move(*opt), xClone, yClone, std::move(m), std::tuple_cat(impl::make_allocation_checkers(info, x, y)...));
+      impl::check_semantics(description, logger, impl::move_only_allocation_actions{}, std::forward<T>(x), std::move(*opt), xClone, yClone, std::move(m), std::tuple_cat(impl::make_dual_allocation_checkers(info, x, y)...));
     }
   }
 }

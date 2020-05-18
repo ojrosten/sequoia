@@ -106,7 +106,7 @@ namespace sequoia::unit_testing
   {
     typename test_logger<Mode>::sentinel s{logger, add_type_info<T>(description)};
       
-    if(impl::check_semantics(description, logger, impl::regular_allocation_actions{}, x, y, yMutator, std::tuple_cat(impl::make_allocation_checkers(info, x, y)...)))
+    if(impl::check_semantics(description, logger, impl::regular_allocation_actions{}, x, y, yMutator, std::tuple_cat(impl::make_dual_allocation_checkers(info, x, y)...)))
     {
       impl::check_para_constructor_allocations(description, logger, y, yMutator, info...);
     }
