@@ -735,18 +735,18 @@
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30:
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
-	Fast Task duration: 0.00131011s +- 4 * 0.000108068
-	Slow Task duration: 0.00125584s +- 4 * 0.000163099 [0.958571; (2, 2)]
+	Fast Task duration: 0.00127408s +- 4 * 0.000135153
+	Slow Task duration: 0.00125315s +- 4 * 9.85529e-05 [0.98357; (2, 2)]
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34:
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
-	Fast Task duration: 0.00135159s +- 4 * 4.21179e-05
-	Slow Task duration: 0.00130893s +- 4 * 6.68004e-05 [0.968433; (2, 3)]
+	Fast Task duration: 0.00127915s +- 4 * 0.000162191
+	Slow Task duration: 0.00130881s +- 4 * 6.1091e-05 [1.02318; (2, 3)]
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38:
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
-	Fast Task duration: 0.00128335s +- 4 * 0.000122316
-	Slow Task duration: 0.00473309s +- 4 * 0.000364095 [3.68809; (2, 2.5)]
+	Fast Task duration: 0.00139796s +- 4 * 1.02874e-05
+	Slow Task duration: 0.00501456s +- 4 * 0.000305439 [3.58706; (2, 2.5)]
 
 	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 29
 	[double]
@@ -1351,7 +1351,7 @@
 		Propagate on move assignment = false,
 		Propagate on swap = false
 	>]
-	Mutation allocation after move-like construction
+
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -1366,7 +1366,7 @@
 		Propagate on move assignment = false,
 		Propagate on swap = false
 	>]
-	Mutation allocation after move-like construction
+
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -1471,7 +1471,7 @@
 		Propagate on move assignment = false,
 		Propagate on swap = false
 	>]
-	Mutation allocation after move-like construction
+
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -1486,7 +1486,7 @@
 		Propagate on move assignment = false,
 		Propagate on swap = false
 	>]
-	Mutation allocation after move-like construction
+
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -2111,7 +2111,7 @@
 		Propagate on move assignment = false,
 		Propagate on swap = true
 	>]
-	Mutation allocation after move-like construction
+
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -2141,7 +2141,7 @@
 		Propagate on move assignment = false,
 		Propagate on swap = true
 	>]
-	Mutation allocation after move-like construction
+
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -2246,7 +2246,7 @@
 		Propagate on move assignment = false,
 		Propagate on swap = true
 	>]
-	Mutation allocation after move-like construction
+
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -2276,7 +2276,7 @@
 		Propagate on move assignment = false,
 		Propagate on swap = true
 	>]
-	Mutation allocation after move-like construction
+
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -2824,7 +2824,7 @@
 		Propagate on move assignment = true,
 		Propagate on swap = false
 	>]
-	Mutation allocation after move-like construction
+
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -2839,7 +2839,7 @@
 		Propagate on move assignment = true,
 		Propagate on swap = false
 	>]
-	Mutation allocation after move-like construction
+
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -2929,7 +2929,7 @@
 		Propagate on move assignment = true,
 		Propagate on swap = false
 	>]
-	Mutation allocation after move-like construction
+
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -2944,7 +2944,7 @@
 		Propagate on move assignment = true,
 		Propagate on swap = false
 	>]
-	Mutation allocation after move-like construction
+
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -3554,7 +3554,7 @@
 		Propagate on move assignment = true,
 		Propagate on swap = true
 	>]
-	Mutation allocation after move-like construction
+
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -3584,7 +3584,7 @@
 		Propagate on move assignment = true,
 		Propagate on swap = true
 	>]
-	Mutation allocation after move-like construction
+
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -3674,7 +3674,7 @@
 		Propagate on move assignment = true,
 		Propagate on swap = true
 	>]
-	Mutation allocation after move-like construction
+
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -3704,7 +3704,7 @@
 		Propagate on move assignment = true,
 		Propagate on swap = true
 	>]
-	Mutation allocation after move-like construction
+
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -4297,7 +4297,7 @@
 		Propagate on move assignment = false,
 		Propagate on swap = false
 	>]
-	Mutation allocation after move-like construction
+
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -4312,7 +4312,7 @@
 		Propagate on move assignment = false,
 		Propagate on swap = false
 	>]
-	Mutation allocation after move-like construction
+
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -4417,7 +4417,7 @@
 		Propagate on move assignment = false,
 		Propagate on swap = false
 	>]
-	Mutation allocation after move-like construction
+
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -4432,7 +4432,7 @@
 		Propagate on move assignment = false,
 		Propagate on swap = false
 	>]
-	Mutation allocation after move-like construction
+
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -5087,7 +5087,7 @@
 		Propagate on move assignment = false,
 		Propagate on swap = true
 	>]
-	Mutation allocation after move-like construction
+
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -5117,7 +5117,7 @@
 		Propagate on move assignment = false,
 		Propagate on swap = true
 	>]
-	Mutation allocation after move-like construction
+
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -5222,7 +5222,7 @@
 		Propagate on move assignment = false,
 		Propagate on swap = true
 	>]
-	Mutation allocation after move-like construction
+
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -5252,7 +5252,7 @@
 		Propagate on move assignment = false,
 		Propagate on swap = true
 	>]
-	Mutation allocation after move-like construction
+
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -5845,7 +5845,7 @@
 		Propagate on move assignment = true,
 		Propagate on swap = false
 	>]
-	Mutation allocation after move-like construction
+
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -5860,7 +5860,7 @@
 		Propagate on move assignment = true,
 		Propagate on swap = false
 	>]
-	Mutation allocation after move-like construction
+
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -5965,7 +5965,7 @@
 		Propagate on move assignment = true,
 		Propagate on swap = false
 	>]
-	Mutation allocation after move-like construction
+
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -5980,7 +5980,7 @@
 		Propagate on move assignment = true,
 		Propagate on swap = false
 	>]
-	Mutation allocation after move-like construction
+
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -6635,7 +6635,7 @@
 		Propagate on move assignment = true,
 		Propagate on swap = true
 	>]
-	Mutation allocation after move-like construction
+
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -6665,7 +6665,7 @@
 		Propagate on move assignment = true,
 		Propagate on swap = true
 	>]
-	Mutation allocation after move-like construction
+
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -6770,7 +6770,7 @@
 		Propagate on move assignment = true,
 		Propagate on swap = true
 	>]
-	Mutation allocation after move-like construction
+
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -6800,7 +6800,7 @@
 		Propagate on move assignment = true,
 		Propagate on swap = true
 	>]
-	Mutation allocation after move-like construction
+
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -7242,14 +7242,14 @@
 	False Positive Failure:
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67:
 	Performance Test which should pass
-	Fast Task duration: 0.00138109s +- 4 * 1.9668e-05
-	Slow Task duration: 0.00254779s +- 4 * 0.000175829 [1.84476; (1.8, 2.1)]
+	Fast Task duration: 0.00116269s +- 4 * 0.000105045
+	Slow Task duration: 0.0021178s +- 4 * 4.39587e-05 [1.82147; (1.8, 2.1)]
 
 	False Positive Failure:
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68:
 	Performance Test which should pass
-	Fast Task duration: 0.00135482s +- 4 * 9.03725e-05
-	Slow Task duration: 0.00514703s +- 4 * 8.57699e-06 [3.79904; (3.6, 4.1)]
+	Fast Task duration: 0.00124722s +- 4 * 0.000117502
+	Slow Task duration: 0.00439767s +- 4 * 0.000420869 [3.52596; (3.6, 4.1)]
 
 	False Positive Failure:
 	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 69

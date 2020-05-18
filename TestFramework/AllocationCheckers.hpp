@@ -17,22 +17,22 @@
     - mutating
     - para copy (use of the copy-like constructor taking an allocator as an extra argument)
     - para move (use of the move-like constructor taking an allocator as an extra argument)
-    - assignment with propagation of the allocator
-    - assignment without propagation of the allocator
+    - assignment with/without propagation of the allocator
+    - swap with/without propagation of the allocator
 
     To help with readability of actual tests, various user defined literals are introduced
     so that, for example, 1_c may be used to mean a prediction of 1 allocation for a copy
     event. This is more expressive than just '1' and less verbose than copy_prediction{1},
-    particularly bearing in mind that often all 6 predictions are supplied together.
+    particularly bearing in mind that often several predictions are supplied together.
 
     In addition to predictions, clients must also supply a function object which consumes
-    a container and returns a copy of its allocator. With these ingredients, the following
-    scenario may be realized. Given a container which uses the shared_counting_allocator
-    (see AllocationTestUtilities.hpp) the following scenario may be realized:
+    a container and returns a copy of its allocator. With these ingredients, together with
+    a container which uses the shared_counting_allocator, the following
+    scenario may be realized:
 
     A extract a copy of the allocator
     B acquire the number of allocations
-    C perform an operator with an expected number of allocations
+    C perform an operation with an expected number of allocations
     D acquire the number of allocations
     E compare the prediction to the difference between D and B.
 

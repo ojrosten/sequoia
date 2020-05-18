@@ -8,7 +8,9 @@
 #pragma once
 
 /*! \file
-    \brief Implementation details for allocation checks within the unit testing framework.
+    \brief Implementation details for allocation checks within the testing framework.
+
+    
 */
 
 #include "SemanticsCheckersDetails.hpp"
@@ -22,6 +24,22 @@ namespace sequoia::unit_testing
 
 namespace sequoia::unit_testing::impl
 {
+  /*! \brief Wraps basic_allocation_info, together with two ints which hold various allocation counts.
+
+      Depending on the scenario, the interpretation of the two ints, accessed through first_ccount() 
+      and second_count() is slightly different.
+
+      A. There are two containers, x and y, which in some way interact e.g. via copy/move or swap
+         followed by mutation. In this case the ints should hold the number of allocations (for
+         a given allocator of) both x and y, prior to the operation of interest being performed.
+         The number of allocations after the operation may be acquired by inspecting the Container
+         via the function object stored in basic_allocation_info. Combining this with the result of
+         invoking either first_count() or second_count(), as appropriate, gives a number which may
+         be compared to the appropriate prediction stored within basic_allocation_info.
+
+      B. There is a single container, x, on which a potentially allocating operation is performed. 
+
+   */
   template<class Container, class Allocator, class Predictions>
   class allocation_checker_data
   {
@@ -218,7 +236,7 @@ namespace sequoia::unit_testing::impl
     template<test_mode Mode>
     void check_mutation(std::string_view description, test_logger<Mode>& logger, const Container& yContainer) const
     {
-      data::check_allocation(description, "Mutation allocation after move-like construction", "", logger, yContainer, info(), first_count(), info().get_predictions().mutation_allocs());
+      data::check_allocation(description, "", "", logger, yContainer, info(), first_count(), info().get_predictions().mutation_allocs());
     }
   private:
     using data = allocation_checker_data<Container, Allocator, Predictions>;
@@ -259,11 +277,9 @@ namespace sequoia::unit_testing::impl
     using predictions_type = Predictions;
     using alloc_info       = basic_allocation_info<Container, Allocator, Predictions>;
     
-
     allocation_checker(const Container& x, const int priorCount, alloc_info i)
       : m_Data{i.count(x), priorCount, std::move(i)}
     {}
-
    
     template<test_mode Mode>
     void check_copy_x(std::string_view description, test_logger<Mode>& logger, const Container& container) const
@@ -286,7 +302,7 @@ namespace sequoia::unit_testing::impl
     template<test_mode Mode>
     void check_mutation(std::string_view description, test_logger<Mode>& logger, const Container& yContainer) const
     {
-      data::check_allocation(description, "Mutation allocation after move-like construction", "", logger, yContainer, info(), first_count(), info().get_predictions().mutation_allocs());
+      data::check_allocation(description, "", "", logger, yContainer, info(), first_count(), info().get_predictions().mutation_allocs());
     }
 
     [[nodiscard]]
