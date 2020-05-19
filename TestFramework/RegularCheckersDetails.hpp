@@ -55,7 +55,6 @@ namespace sequoia::unit_testing::impl
     check_copy_assign(description, logger, actions, z, y, args...);
     check(combine_messages(description, "Inequality operator"), logger, z != x);
 
-    // move construction
     check_move_construction(description, logger, actions, std::move(z), y, args...);
 
     T w{x};    

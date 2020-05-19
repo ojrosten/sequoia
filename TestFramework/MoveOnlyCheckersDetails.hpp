@@ -28,12 +28,7 @@ namespace sequoia::unit_testing::impl
 
     if(!check(combine_messages(description, "Precondition - for checking regular semantics, y and yClone are assumed to be equal"), logger, y == yClone)) return;
 
-    T z{std::move(x)};    
-    check_equality(combine_messages(description, "Move constructor"), logger, z, xClone);
-    if constexpr(Actions::has_post_move_action)
-    {
-      actions.post_move_action(description, logger, z, args...);
-    }
+    T z{check_move_construction(description, logger, actions, std::move(x), xClone, args...)};    
 
     if constexpr (do_swap<Args...>::value)
     {

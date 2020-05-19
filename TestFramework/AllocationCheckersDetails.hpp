@@ -24,6 +24,17 @@ namespace sequoia::unit_testing
 
 namespace sequoia::unit_testing::impl
 {
+  template<test_mode Mode, class Container, class Allocator, class Predictions>
+  static void check_allocation(std::string_view description, std::string_view detail, std::string_view suffix, test_logger<Mode>& logger, const Container& container, const basic_allocation_info<Container, Allocator, Predictions>& info, const int previous, const int prediction)
+  {
+    typename test_logger<Mode>::sentinel s{logger, add_type_info<Allocator>(description)};
+
+    const auto current{info.count(container)};      
+    auto message{combine_messages(combine_messages(description, detail), suffix)};
+
+    check_equality(std::move(message), logger, current - previous, prediction);
+  }
+
   /*! \brief Wraps basic_allocation_info, together with two ints which hold various allocation counts.
 
       Depending on the scenario, the interpretation of the two ints, accessed through first_ccount() 
@@ -38,20 +49,7 @@ namespace sequoia::unit_testing::impl
          be compared to the appropriate prediction stored within basic_allocation_info.
 
       B. There is a single container, x, on which a potentially allocating operation is performed.
-         NOW IT IS ONLY NECESSARY TO USE 1 INT, BUT TWO ARE BEING USED!!
-
    */
-
-  template<test_mode Mode, class Container, class Allocator, class Predictions>
-  static void check_allocation(std::string_view description, std::string_view detail, std::string_view suffix, test_logger<Mode>& logger, const Container& container, const basic_allocation_info<Container, Allocator, Predictions>& info, const int previous, const int prediction)
-  {
-    typename test_logger<Mode>::sentinel s{logger, add_type_info<Allocator>(description)};
-
-    const auto current{info.count(container)};      
-    auto message{combine_messages(combine_messages(description, detail), suffix)};
-
-    check_equality(std::move(message), logger, current - previous, prediction);
-  }
 
   template<class Container, class Allocator, class Predictions>
   class allocation_checker_data
@@ -633,12 +631,6 @@ namespace sequoia::unit_testing::impl
     }
 
     template<test_mode Mode, class Container, class... Allocators, class... Predictions>
-    static void post_move_action(std::string_view description, test_logger<Mode>& logger, const Container& y, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
-    {
-      check_move_y_allocation(description, logger, y, allocation_checker<Container, Allocators, Predictions>{y, checkers.first_count(), checkers.info()}...);
-    }
-
-    template<test_mode Mode, class Container, class... Allocators, class... Predictions>
     static void post_move_action(std::string_view description, test_logger<Mode>& logger, const Container& y, const allocation_checker<Container, Allocators, Predictions>&... checkers)
     {
       check_move_y_allocation(description, logger, y, allocation_checker<Container, Allocators, Predictions>{y, checkers.first_count(), checkers.info()}...);
@@ -668,9 +660,9 @@ namespace sequoia::unit_testing::impl
   }
 
   template<test_mode Mode, class Actions, class Container, class... Allocators, class... Predictions>
-  void check_move_construction(std::string_view description, test_logger<Mode>& logger, const Actions& actions, Container&& z, const Container& y, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
+  Container check_move_construction(std::string_view description, test_logger<Mode>& logger, const Actions& actions, Container&& z, const Container& y, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
   {
-    do_check_move_construction(description, logger, actions, std::forward<Container>(z), y, allocation_checker<Container, Allocators, Predictions>{z, 0, checkers.info()}...);
+    return do_check_move_construction(description, logger, actions, std::forward<Container>(z), y, allocation_checker<Container, Allocators, Predictions>{z, 0, checkers.info()}...);
   }
 
   template<test_mode Mode, class Actions, class Container, class Mutator, class... Allocators, class... Predictions>

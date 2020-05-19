@@ -94,15 +94,17 @@ namespace sequoia::unit_testing::impl
   }
 
   template<test_mode Mode, class Actions, class T, class... Args>
-  void do_check_move_construction(std::string_view description, test_logger<Mode>& logger, const Actions& actions, T&& z, const T& y, const Args&... args)
+  T do_check_move_construction(std::string_view description, test_logger<Mode>& logger, const Actions& actions, T&& z, const T& y, const Args&... args)
   {
-    const T w{std::move(z)};
+    T w{std::move(z)};
     check_equality(combine_messages(description, "Move constructor"), logger, w, y);
 
     if constexpr(Actions::has_post_move_action)
     {
       actions.post_move_action(description, logger, w, args...);
     }
+
+    return w;
   }
 
   template<test_mode Mode, class Actions, class T, class Mutator>
@@ -127,8 +129,8 @@ namespace sequoia::unit_testing::impl
   }
 
   template<test_mode Mode, class Actions, class T>
-  void check_move_construction(std::string_view description, test_logger<Mode>& logger, const Actions& actions, T&& z, const T& y)
+  T check_move_construction(std::string_view description, test_logger<Mode>& logger, const Actions& actions, T&& z, const T& y)
   {
-    do_check_move_construction(description, logger, actions, std::forward<T>(z), y);
+    return do_check_move_construction(description, logger, actions, std::forward<T>(z), y);
   }
 }
