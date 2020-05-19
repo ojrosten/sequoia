@@ -208,23 +208,21 @@ namespace sequoia::unit_testing::impl
     using alloc_info       = basic_allocation_info<Container, Allocator, Predictions>;
     
     explicit para_allocation_checker(alloc_info i)
-      : m_Data{0, 0, std::move(i)}
-    {}
-
-    para_allocation_checker(const Container& x, const int priorCount, alloc_info i)
-      : m_Data{i.count(x), priorCount, std::move(i)}
+      : m_Info{std::move(i)}
     {}
 
     [[nodiscard]]
     const alloc_info& info() const noexcept
     {
-      return m_Data.info();
+      return m_Info;
     }
 
     template<test_mode Mode>
     void check_para_copy_y(std::string_view description, test_logger<Mode>& logger, const Container& container) const
     {
-      check_para_copy(description, "(y)", logger, container, info(), info().get_predictions().y.para_copy);
+      const auto prediction{info().get_predictions().y.para_copy};
+      
+      check_allocation(description, "Para copy construction allocation", "(y)", logger, container, info(), 0, prediction);
     }
 
     template<test_mode Mode>
@@ -232,36 +230,10 @@ namespace sequoia::unit_testing::impl
     {
       const auto prediction{info().get_predictions().para_move_allocs()};
 
-      check_para_move(description, "(y)", logger, container, info(), prediction);
+      check_allocation(description, "Para move construction allocation", "(y)", logger, container, info(), 0, prediction);
     }
   private:
-    using data = allocation_checker_data<Container, Allocator, Predictions>;
-
-    data m_Data;
-
-    [[nodiscard]]
-    int first_count() const noexcept
-    {
-      return m_Data.first_count();
-    }
-
-    [[nodiscard]]
-    int second_count() const noexcept
-    {
-      return m_Data.second_count();
-    }
-
-    template<test_mode Mode>
-    void check_para_copy(std::string_view description, std::string_view suffix, test_logger<Mode>& logger, const Container& container, const alloc_info& info, const int prediction) const
-    {
-      check_allocation(description, "Para copy construction allocation", suffix, logger, container, info, second_count(), prediction);
-    }
-
-    template<test_mode Mode>
-    void check_para_move(std::string_view description, std::string_view suffix, test_logger<Mode>& logger, const Container& container, const alloc_info& info, const int prediction) const
-    {
-      check_allocation(description, "Para move construction allocation", suffix, logger, container, info, first_count(), prediction);
-    }
+    alloc_info m_Info;
   };
 
   template<class Container, class Allocator, class Predictions>
