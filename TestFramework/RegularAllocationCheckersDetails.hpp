@@ -29,9 +29,9 @@ namespace sequoia::unit_testing::impl
     static void post_copy_action(std::string_view description, test_logger<Mode>& logger, const Container& xCopy, const Container& yCopy, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
     {
       
-      check_copy_x_allocation(description, logger, xCopy, allocation_checker<Container, Allocators, Predictions>{xCopy, checkers.first_count(), checkers.info()}...);
+      check_copy_x_allocation(description, logger, xCopy, allocation_checker<Container, Allocators, Predictions>{checkers.first_count(), checkers.info()}...);
 
-      check_copy_y_allocation(description, logger, yCopy, allocation_checker<Container, Allocators, Predictions>{yCopy, checkers.second_count(), checkers.info()}...);
+      check_copy_y_allocation(description, logger, yCopy, allocation_checker<Container, Allocators, Predictions>{checkers.second_count(), checkers.info()}...);
     }
 
     template<test_mode Mode, class Container, class... Allocators, class... Predictions>

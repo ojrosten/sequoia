@@ -291,8 +291,12 @@ namespace sequoia::unit_testing::impl
     using predictions_type = Predictions;
     using alloc_info       = basic_allocation_info<Container, Allocator, Predictions>;
     
-    allocation_checker(const Container& x, const int priorCount, alloc_info i)
-      : m_Data{i.count(x), priorCount, std::move(i)}
+    allocation_checker(const int priorCount, alloc_info i)
+      : m_Data{0, priorCount, std::move(i)}
+    {}
+
+    allocation_checker(const Container& x, alloc_info i)
+      : m_Data{0, i.count(x), std::move(i)}
     {}
    
     template<test_mode Mode>
@@ -318,12 +322,6 @@ namespace sequoia::unit_testing::impl
     {
       return m_Data.info();
     }
-
-    [[nodiscard]]
-    int first_count() const noexcept
-    {
-      return m_Data.first_count();
-    }
   private:
     using data = allocation_checker_data<Container, Allocator, Predictions>;
 
@@ -343,7 +341,11 @@ namespace sequoia::unit_testing::impl
   };
 
   template<class Container, class Allocator, class Predictions>
-  allocation_checker(const Container&, int, basic_allocation_info<Container, Allocator, Predictions>)
+  allocation_checker(const Container&, basic_allocation_info<Container, Allocator, Predictions>)
+    -> allocation_checker<Container, Allocator, Predictions>;
+
+  template<class Container, class Allocator, class Predictions>
+  allocation_checker(int, basic_allocation_info<Container, Allocator, Predictions>)
     -> allocation_checker<Container, Allocator, Predictions>;
   
   template<class T, class... Allocators, class... Predictions>
@@ -648,7 +650,7 @@ namespace sequoia::unit_testing::impl
     template<test_mode Mode, class Container, class... Allocators, class... Predictions>
     static void post_move_action(std::string_view description, test_logger<Mode>& logger, const Container& y, const allocation_checker<Container, Allocators, Predictions>&... checkers)
     {
-      check_move_y_allocation(description, logger, y, allocation_checker{y, checkers.first_count(), checkers.info()}...);
+      check_move_y_allocation(description, logger, y, checkers...);
     }
 
     template<test_mode Mode, class Container, class Mutator, class... Allocators, class... Predictions>
@@ -677,7 +679,7 @@ namespace sequoia::unit_testing::impl
   template<test_mode Mode, class Actions, class Container, class... Allocators, class... Predictions>
   Container check_move_construction(std::string_view description, test_logger<Mode>& logger, const Actions& actions, Container&& z, const Container& y, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
   {
-    return do_check_move_construction(description, logger, actions, std::forward<Container>(z), y, allocation_checker{z, 0, checkers.info()}...);
+    return do_check_move_construction(description, logger, actions, std::forward<Container>(z), y, allocation_checker{z, checkers.info()}...);
   }
 
   template<test_mode Mode, class Actions, class Container, class Mutator, class... Allocators, class... Predictions>
