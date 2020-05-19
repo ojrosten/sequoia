@@ -234,12 +234,6 @@ namespace sequoia::unit_testing::impl
 
       check_para_move(description, "(y)", logger, container, info(), prediction);
     }
-
-    template<test_mode Mode>
-    void check_mutation(std::string_view description, test_logger<Mode>& logger, const Container& yContainer) const
-    {
-      check_allocation(description, "", "", logger, yContainer, info(), first_count(), info().get_predictions().mutation_allocs());
-    }
   private:
     using data = allocation_checker_data<Container, Allocator, Predictions>;
 
@@ -337,8 +331,6 @@ namespace sequoia::unit_testing::impl
     {
       check_allocation(description, "Move construction allocation", "(y)", logger, container, info(), second_count(), 0);
     }
-
-    
 
     [[nodiscard]]
     const alloc_info& info() const noexcept
@@ -455,6 +447,31 @@ namespace sequoia::unit_testing::impl
     return {checker{std::forward<Args>(args)..., info}};
   }
 
+  // make_mutation_allocation_checkers
+  
+  template<class Container, class Predictions, class... Allocators, class... Args, std::size_t... I>
+  [[nodiscard]]
+  auto make_mutation_allocation_checkers(const basic_allocation_info<Container, std::scoped_allocator_adaptor<Allocators...>, Predictions>& info, std::index_sequence<I...>, Args&&... args)
+  {
+    return std::make_tuple(mutation_allocation_checker{std::forward<Args>(args)..., info.template unpack<I>()}...);
+  }
+
+  template<class Container, class Predictions, class... Args, class... Allocators>
+  [[nodiscard]]
+  auto make_mutation_allocation_checkers(const basic_allocation_info<Container, std::scoped_allocator_adaptor<Allocators...>, Predictions>& info, Args&&... args)
+  {
+    return make_mutation_allocation_checkers(info, std::make_index_sequence<sizeof...(Allocators)>{}, std::forward<Args>(args)...);
+  }
+
+  template<class Container, class Allocator, class Predictions, class... Args>
+  [[nodiscard]]
+  std::tuple<mutation_allocation_checker<Container, Allocator, Predictions>>
+  make_mutation_allocation_checkers(const basic_allocation_info<Container, Allocator, Predictions>& info, Args&&... args)
+  {
+    using checker = mutation_allocation_checker<Container, Allocator, Predictions>;
+    return {checker{std::forward<Args>(args)..., info}};
+  }
+
   //================================ Variadic Allocation Checking ================================//
 
   template<test_mode Mode, class CheckFn, class Checker, class... Checkers>
@@ -547,18 +564,6 @@ namespace sequoia::unit_testing::impl
     auto checkFn{
       [&logger, &xContainer, &yContainer](std::string_view message, auto& checker){
         checker.check_mutation_after_swap(message, logger, xContainer, yContainer);
-      }
-    };
-
-    check_allocation(description, logger, checkFn, checker, moreCheckers...);
-  }
-
-  template<test_mode Mode, class Container, class Allocator, class Prediction, class... Allocators, class... Predictions>
-  void check_mutation_allocation(std::string_view description, test_logger<Mode>& logger, const Container& yContainer, const para_allocation_checker<Container, Allocator, Prediction>& checker, const para_allocation_checker<Container, Allocators, Predictions>&... moreCheckers)
-  {
-    auto checkFn{
-      [&logger, &yContainer](std::string_view message, auto& checker){
-        checker.check_mutation(message, logger, yContainer);
       }
     };
 
