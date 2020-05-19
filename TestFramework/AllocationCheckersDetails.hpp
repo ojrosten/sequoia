@@ -37,9 +37,22 @@ namespace sequoia::unit_testing::impl
          invoking either first_count() or second_count(), as appropriate, gives a number which may
          be compared to the appropriate prediction stored within basic_allocation_info.
 
-      B. There is a single container, x, on which a potentially allocating operation is performed. 
+      B. There is a single container, x, on which a potentially allocating operation is performed.
+         NOW IT IS ONLY NECESSARY TO USE 1 INT, BUT TWO ARE BEING USED!!
 
    */
+
+  template<test_mode Mode, class Container, class Allocator, class Predictions>
+  static void check_allocation(std::string_view description, std::string_view detail, std::string_view suffix, test_logger<Mode>& logger, const Container& container, const basic_allocation_info<Container, Allocator, Predictions>& info, const int previous, const int prediction)
+  {
+    typename test_logger<Mode>::sentinel s{logger, add_type_info<Allocator>(description)};
+
+    const auto current{info.count(container)};      
+    auto message{combine_messages(combine_messages(description, detail), suffix)};
+
+    check_equality(std::move(message), logger, current - previous, prediction);
+  }
+
   template<class Container, class Allocator, class Predictions>
   class allocation_checker_data
   {
@@ -68,17 +81,6 @@ namespace sequoia::unit_testing::impl
     int second_count() const noexcept
     {
       return m_SecondCount;
-    }
-
-    template<test_mode Mode>
-    static void check_allocation(std::string_view description, std::string_view detail, std::string_view suffix, test_logger<Mode>& logger, const Container& container, const alloc_info& info, const int previous, const int prediction)
-    {
-      typename test_logger<Mode>::sentinel s{logger, add_type_info<Allocator>(description)};
-
-      const auto current{info.count(container)};      
-      auto message{combine_messages(combine_messages(description, detail), suffix)};
-
-      check_equality(std::move(message), logger, current - previous, prediction);
     }
   private:      
     int m_FirstCount{}, m_SecondCount{};
@@ -121,8 +123,8 @@ namespace sequoia::unit_testing::impl
     template<test_mode Mode>
     void check_no_allocation(std::string_view description, test_logger<Mode>& logger, const Container& x, const Container& y) const
     {
-      data::check_allocation(description, "No allocation for x", "", logger, x, info(), first_count(), 0);
-      data::check_allocation(description, "No allocation for y", "", logger, y, info(), second_count(), 0);
+      check_allocation(description, "No allocation for x", "", logger, x, info(), first_count(), 0);
+      check_allocation(description, "No allocation for y", "", logger, y, info(), second_count(), 0);
     }
 
     template<test_mode Mode>
@@ -136,15 +138,15 @@ namespace sequoia::unit_testing::impl
       if constexpr(propagate)
       {
         yPrediction = info().get_predictions().assign_y_to_x.with_propagation;        
-        data::check_allocation(description, "Copy assignment x allocations", "", logger, xContainer, info(), second_count(), yPrediction);
+        check_allocation(description, "Copy assignment x allocations", "", logger, xContainer, info(), second_count(), yPrediction);
       }
       else
       {
         const int xPrediction{info().get_predictions().assign_y_to_x.without_propagation};        
-        data::check_allocation(description, "Copy assignment x allocations", "", logger, xContainer, info(), first_count(), xPrediction);
+        check_allocation(description, "Copy assignment x allocations", "", logger, xContainer, info(), first_count(), xPrediction);
       }
 
-      data::check_allocation(description, "Copy assignment y allocations", "", logger, yContainer, info(), second_count(), yPrediction);
+      check_allocation(description, "Copy assignment y allocations", "", logger, yContainer, info(), second_count(), yPrediction);
     }
 
     template<test_mode Mode>
@@ -162,11 +164,11 @@ namespace sequoia::unit_testing::impl
       
       if constexpr(propagate)
       {
-        data::check_allocation(description, "Move assignment x allocations", "", logger, xContainer, info(), second_count(), xPrediction);
+        check_allocation(description, "Move assignment x allocations", "", logger, xContainer, info(), second_count(), xPrediction);
       }
       else
       {
-        data::check_allocation(description, "Move assignment x allocations", "", logger, xContainer, info(), first_count(), xPrediction);
+        check_allocation(description, "Move assignment x allocations", "", logger, xContainer, info(), first_count(), xPrediction);
       }
     }
 
@@ -184,8 +186,8 @@ namespace sequoia::unit_testing::impl
         swap(lhCount, rhCount);
       }
 
-      data::check_allocation(description, "y allocations", "", logger, lhs, info(), lhCount, prediction);
-      data::check_allocation(description, "x allocations", "", logger, rhs, info(), rhCount, 0);
+      check_allocation(description, "y allocations", "", logger, lhs, info(), lhCount, prediction);
+      check_allocation(description, "x allocations", "", logger, rhs, info(), rhCount, 0);
     }
   private:
     using data = allocation_checker_data<Container, Allocator, Predictions>;
@@ -236,7 +238,7 @@ namespace sequoia::unit_testing::impl
     template<test_mode Mode>
     void check_mutation(std::string_view description, test_logger<Mode>& logger, const Container& yContainer) const
     {
-      data::check_allocation(description, "", "", logger, yContainer, info(), first_count(), info().get_predictions().mutation_allocs());
+      check_allocation(description, "", "", logger, yContainer, info(), first_count(), info().get_predictions().mutation_allocs());
     }
   private:
     using data = allocation_checker_data<Container, Allocator, Predictions>;
@@ -258,13 +260,13 @@ namespace sequoia::unit_testing::impl
     template<test_mode Mode>
     void check_para_copy(std::string_view description, std::string_view suffix, test_logger<Mode>& logger, const Container& container, const alloc_info& info, const int prediction) const
     {
-      data::check_allocation(description, "Para copy construction allocation", suffix, logger, container, info, second_count(), prediction);
+      check_allocation(description, "Para copy construction allocation", suffix, logger, container, info, second_count(), prediction);
     }
 
     template<test_mode Mode>
     void check_para_move(std::string_view description, std::string_view suffix, test_logger<Mode>& logger, const Container& container, const alloc_info& info, const int prediction) const
     {
-      data::check_allocation(description, "Para move construction allocation", suffix, logger, container, info, first_count(), prediction);
+      check_allocation(description, "Para move construction allocation", suffix, logger, container, info, first_count(), prediction);
     }
   };
 
@@ -296,13 +298,13 @@ namespace sequoia::unit_testing::impl
     template<test_mode Mode>
     void check_move_y(std::string_view description, test_logger<Mode>& logger, const Container& container) const
     {
-      data::check_allocation(description, "Move construction allocation", "(y)", logger, container, info(), second_count(), 0);
+      check_allocation(description, "Move construction allocation", "(y)", logger, container, info(), second_count(), 0);
     }
 
     template<test_mode Mode>
     void check_mutation(std::string_view description, test_logger<Mode>& logger, const Container& yContainer) const
     {
-      data::check_allocation(description, "", "", logger, yContainer, info(), first_count(), info().get_predictions().mutation_allocs());
+      check_allocation(description, "", "", logger, yContainer, info(), first_count(), info().get_predictions().mutation_allocs());
     }
 
     [[nodiscard]]
@@ -330,7 +332,7 @@ namespace sequoia::unit_testing::impl
     template<test_mode Mode>
     static void check_copy(std::string_view description, std::string_view suffix, test_logger<Mode>& logger, const Container& container, const alloc_info& info, const int previous, const int prediction)
     {
-      data::check_allocation(description, "Copy construction allocation", suffix, logger, container, info, previous, prediction);
+      check_allocation(description, "Copy construction allocation", suffix, logger, container, info, previous, prediction);
     }
   };
   
