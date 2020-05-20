@@ -35,20 +35,15 @@ namespace sequoia::unit_testing::impl
     check_equality(std::move(message), logger, current - previous, prediction);
   }
 
-  /*! \brief Wraps basic_allocation_info, together with two ints which hold various allocation counts.
+  /*! \brief Wraps basic_allocation_info, together with two ints which holding  allocation counts.
 
-      Depending on the scenario, the interpretation of the two ints, accessed through first_ccount() 
-      and second_count() is slightly different.
-
-      A. There are two containers, x and y, which in some way interact e.g. via copy/move or swap
-         followed by mutation. In this case the ints should hold the number of allocations (for
-         a given allocator of) both x and y, prior to the operation of interest being performed.
-         The number of allocations after the operation may be acquired by inspecting the Container
-         via the function object stored in basic_allocation_info. Combining this with the result of
-         invoking either first_count() or second_count(), as appropriate, gives a number which may
-         be compared to the appropriate prediction stored within basic_allocation_info.
-
-      B. There is a single container, x, on which a potentially allocating operation is performed.
+      There are two containers, x and y, which in some way interact e.g. via copy/move or swap
+      followed by mutation. As such, the ints hold the number of allocations (for
+      a given allocator of) both x and y, prior to the operation of interest being performed.
+      The number of allocations after the operation may be acquired by inspecting the Container
+      via the function object stored in basic_allocation_info. Combining this with the result of
+      invoking either first_count() or second_count(), as appropriate, gives a number which may
+      be compared to the appropriate prediction stored within basic_allocation_info.
    */
 
   template<class Container, class Allocator, class Predictions>
@@ -251,37 +246,32 @@ namespace sequoia::unit_testing::impl
     using alloc_info       = basic_allocation_info<Container, Allocator, Predictions>;
     
     mutation_allocation_checker(const Container& x, alloc_info i)
-      : m_Data{i.count(x), 0, std::move(i)}
+      : m_Info{std::move(i)}
+      , m_PriorCount{m_Info.count(x)}
     {}
 
     [[nodiscard]]
     const alloc_info& info() const noexcept
     {
-      return m_Data.info();
+      return m_Info;
     }
 
     template<test_mode Mode>
     void check_mutation(std::string_view description, test_logger<Mode>& logger, const Container& yContainer) const
     {
-      check_allocation(description, "", "", logger, yContainer, info(), first_count(), info().get_predictions().mutation_allocs());
+      check_allocation(description, "", "", logger, yContainer, info(), m_PriorCount, info().get_predictions().mutation_allocs());
     }
 
   private:
-    using data = allocation_checker_data<Container, Allocator, Predictions>;
-
-    data m_Data;
-
-    [[nodiscard]]
-    int first_count() const noexcept
-    {
-      return m_Data.first_count();
-    }
+    alloc_info m_Info{};
+    int m_PriorCount{};
   };
 
   template<class Container, class Allocator, class Predictions>
   mutation_allocation_checker(const Container&, basic_allocation_info<Container, Allocator, Predictions>)
     -> mutation_allocation_checker<Container, Allocator, Predictions>;
 
+  // No need to use allocation_checker_data here!
   template<class Container, class Allocator, class Predictions>
   class allocation_checker
   {
@@ -292,46 +282,41 @@ namespace sequoia::unit_testing::impl
     using alloc_info       = basic_allocation_info<Container, Allocator, Predictions>;
     
     allocation_checker(const int priorCount, alloc_info i)
-      : m_Data{0, priorCount, std::move(i)}
+      : m_Info{std::move(i)}
+      , m_PriorCount{priorCount}
     {}
 
     allocation_checker(const Container& x, alloc_info i)
-      : m_Data{0, i.count(x), std::move(i)}
+      : m_Info{std::move(i)}
+      , m_PriorCount{m_Info.count(x)}
     {}
    
     template<test_mode Mode>
     void check_copy_x(std::string_view description, test_logger<Mode>& logger, const Container& container) const
     {
-      check_copy(description, "(x)", logger, container, info(), second_count(), info().get_predictions().copy_x);
+      check_copy(description, "(x)", logger, container, info(), m_PriorCount, info().get_predictions().copy_x);
     }
 
     template<test_mode Mode>
     void check_copy_y(std::string_view description, test_logger<Mode>& logger, const Container& container) const
     {
-      check_copy(description, "(y)", logger, container, info(), second_count(), info().get_predictions().y.copy);
+      check_copy(description, "(y)", logger, container, info(), m_PriorCount, info().get_predictions().y.copy);
     }
 
     template<test_mode Mode>
     void check_move_y(std::string_view description, test_logger<Mode>& logger, const Container& container) const
     {
-      check_allocation(description, "Move construction allocation", "(y)", logger, container, info(), second_count(), 0);
+      check_allocation(description, "Move construction allocation", "(y)", logger, container, info(), m_PriorCount, 0);
     }
 
     [[nodiscard]]
     const alloc_info& info() const noexcept
     {
-      return m_Data.info();
+      return m_Info;
     }
   private:
-    using data = allocation_checker_data<Container, Allocator, Predictions>;
-
-    data m_Data;
-
-    [[nodiscard]]
-    int second_count() const noexcept
-    {
-      return m_Data.second_count();
-    }
+    alloc_info m_Info{};
+    int m_PriorCount{};
 
     template<test_mode Mode>
     static void check_copy(std::string_view description, std::string_view suffix, test_logger<Mode>& logger, const Container& container, const alloc_info& info, const int previous, const int prediction)
