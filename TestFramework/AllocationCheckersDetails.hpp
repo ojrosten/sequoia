@@ -179,7 +179,7 @@ namespace sequoia::unit_testing::impl
     }
 
     template<test_mode Mode>
-    void check_para_copy_y(std::string_view description, test_logger<Mode>& logger, const Container& container) const
+    void check_para_copy(std::string_view description, test_logger<Mode>& logger, const Container& container) const
     {
       const auto prediction{info().get_predictions().y.para_copy};
       
@@ -187,7 +187,7 @@ namespace sequoia::unit_testing::impl
     }
 
     template<test_mode Mode>
-    void check_para_move_y(std::string_view description, test_logger<Mode>& logger, const Container& container) const
+    void check_para_move(std::string_view description, test_logger<Mode>& logger, const Container& container) const
     {
       const auto prediction{info().get_predictions().para_move_allocs()};
 
@@ -524,7 +524,7 @@ namespace sequoia::unit_testing::impl
   {
     auto checkFn{
       [&logger, &container](std::string_view message, auto& checker){
-        checker.check_para_copy_y(message, logger, container);
+        checker.check_para_copy(message, logger, container);
       }
     };
 
@@ -547,7 +547,7 @@ namespace sequoia::unit_testing::impl
   {
     auto checkFn{
       [&logger, &container](std::string_view message, auto& checker){
-        checker.check_para_move_y(message, logger, container);
+        checker.check_para_move(message, logger, container);
       }
     };
 
