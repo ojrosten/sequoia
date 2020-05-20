@@ -35,7 +35,7 @@ namespace sequoia::unit_testing::impl
     check_equality(std::move(message), logger, current - previous, prediction);
   }
 
-  /*! \brief Wraps basic_allocation_info, together with two ints which holding  allocation counts.
+  /*! \brief Wraps basic_allocation_info, together with two ints which holding allocation counts.
 
       There are two containers, x and y, which in some way interact e.g. via copy/move or swap
       followed by mutation. As such, the ints hold the number of allocations (for
@@ -45,17 +45,20 @@ namespace sequoia::unit_testing::impl
       invoking either first_count() or second_count(), as appropriate, gives a number which may
       be compared to the appropriate prediction stored within basic_allocation_info.
    */
-
   template<class Container, class Allocator, class Predictions>
-  class allocation_checker_data
+  class dual_allocation_checker
   {
   public:
-    using alloc_info = basic_allocation_info<Container, Allocator, Predictions>;
+    using container_type   = Container;
+    using allocator_type   = Allocator;
+    using predictions_type = Predictions;
+    using alloc_info       = basic_allocation_info<Container, Allocator, Predictions>;
 
-    allocation_checker_data(const int firstCount, const int secondCount, alloc_info i)
-      : m_FirstCount{firstCount}
-      , m_SecondCount{secondCount}
-      , m_Info{std::move(i)}
+    dual_allocation_checker(const Container& x, const Container& y, alloc_info i)
+      : m_Info{std::move(i)}
+      , m_FirstCount{m_Info.count(x)}
+      , m_SecondCount{m_Info.count(y)}
+      , m_AllocatorsEqual{m_Info.allocator(x) == m_Info.allocator(y)}
     {}
 
     [[nodiscard]]
@@ -74,43 +77,6 @@ namespace sequoia::unit_testing::impl
     int second_count() const noexcept
     {
       return m_SecondCount;
-    }
-  private:      
-    int m_FirstCount{}, m_SecondCount{};
-    
-    alloc_info m_Info{};
-  };
-
-  template<class Container, class Allocator, class Predictions>
-  class dual_allocation_checker
-  {
-  public:
-    using container_type   = Container;
-    using allocator_type   = Allocator;
-    using predictions_type = Predictions;
-    using alloc_info       = basic_allocation_info<Container, Allocator, Predictions>;
-
-    dual_allocation_checker(const Container& x, const Container& y, alloc_info i)
-      : m_Data{i.count(x), i.count(y), std::move(i)}
-      , m_AllocatorsEqual{m_Data.info().allocator(x) == m_Data.info().allocator(y)}
-    {}
-
-    [[nodiscard]]
-    const alloc_info& info() const noexcept
-    {
-      return m_Data.info();
-    }
-
-    [[nodiscard]]
-    int first_count() const noexcept
-    {
-      return m_Data.first_count();
-    }
-
-    [[nodiscard]]
-    int second_count() const noexcept
-    {
-      return m_Data.second_count();
     }
 
     template<test_mode Mode>
@@ -182,10 +148,9 @@ namespace sequoia::unit_testing::impl
       check_allocation(description, "y allocations", "", logger, lhs, info(), lhCount, prediction);
       check_allocation(description, "x allocations", "", logger, rhs, info(), rhCount, 0);
     }
-  private:
-    using data = allocation_checker_data<Container, Allocator, Predictions>;
-
-    data m_Data;
+  private:    
+    alloc_info m_Info{};    
+    int m_FirstCount{}, m_SecondCount{};
     bool m_AllocatorsEqual{};    
   };
 
