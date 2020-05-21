@@ -254,23 +254,11 @@ namespace sequoia::unit_testing::impl
       : m_Info{std::move(i)}
       , m_PriorCount{m_Info.count(x)}
     {}
-   
-    template<test_mode Mode>
-    void check_copy_x(std::string_view description, test_logger<Mode>& logger, const Container& container) const
-    {
-      check_copy(description, "(x)", logger, container, info(), m_PriorCount, info().get_predictions().copy_x);
-    }
 
     template<test_mode Mode>
-    void check_copy_y(std::string_view description, test_logger<Mode>& logger, const Container& container) const
+    void check(std::string_view description, std::string_view detail, test_logger<Mode>& logger, const Container& container, const int prediction) const
     {
-      check_copy(description, "(y)", logger, container, info(), m_PriorCount, info().get_predictions().y.copy);
-    }
-
-    template<test_mode Mode>
-    void check_move(std::string_view description, test_logger<Mode>& logger, const Container& container) const
-    {
-      check_allocation(description, "Move construction allocation", "(y)", logger, container, info(), m_PriorCount, 0);
+      check_allocation(description, detail, "", logger, container, info(), m_PriorCount, prediction);
     }
 
     [[nodiscard]]
@@ -281,12 +269,6 @@ namespace sequoia::unit_testing::impl
   private:
     alloc_info m_Info{};
     int m_PriorCount{};
-
-    template<test_mode Mode>
-    static void check_copy(std::string_view description, std::string_view suffix, test_logger<Mode>& logger, const Container& container, const alloc_info& info, const int previous, const int prediction)
-    {
-      check_allocation(description, "Copy construction allocation", suffix, logger, container, info, previous, prediction);
-    }
   };
 
   template<class Container, class Allocator, class Predictions>
@@ -439,7 +421,8 @@ namespace sequoia::unit_testing::impl
   {
     auto checkFn{
       [&logger, &container](std::string_view message, const auto& checker){
-        checker.check_copy_x(message, logger, container);
+        const auto prediction{checker.info().get_predictions().copy_x};
+        checker.check(message, "Copy construction allocation (x)", logger, container, prediction);
       }
     };
 
@@ -451,7 +434,8 @@ namespace sequoia::unit_testing::impl
   {
     auto checkFn{
       [&logger, &container](std::string_view message, const auto& checker){
-        checker.check_copy_y(message, logger, container);
+        const auto prediction{checker.info().get_predictions().y.copy};
+        checker.check(message, "Copy construction allocation (y)", logger, container, prediction);
       }
     };
 
@@ -463,7 +447,7 @@ namespace sequoia::unit_testing::impl
   {
     auto checkFn{
       [&logger, &container](std::string_view message, const auto& checker){
-        checker.check_move(message, logger, container);
+        checker.check(message, "Move construction allocation (y)", logger, container, 0);
       }
     };
 
