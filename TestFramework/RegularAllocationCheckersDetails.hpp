@@ -66,7 +66,7 @@ namespace sequoia::unit_testing::impl
 
       check_equality(combine_messages(description, "Move-like construction"), logger, v, y);    
       check_para_move_y_allocation(description, logger, v, std::tuple_cat(make_para_allocation_checkers(info)...));
-      check_mutation_after_move(description, "allocation assignment", logger, v, y, yMutator, std::tuple_cat(make_mutation_allocation_checkers(info, v)...));
+      check_mutation_after_move(description, "allocation assignment", logger, v, y, yMutator, std::tuple_cat(make_allocation_checkers(info, v)...));
     }
   }
 

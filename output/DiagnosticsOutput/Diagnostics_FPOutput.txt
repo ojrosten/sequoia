@@ -735,18 +735,18 @@
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30:
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
-	Fast Task duration: 0.00127408s +- 4 * 0.000135153
-	Slow Task duration: 0.00125315s +- 4 * 9.85529e-05 [0.98357; (2, 2)]
+	Fast Task duration: 0.00131089s +- 4 * 0.000106915
+	Slow Task duration: 0.00137853s +- 4 * 3.93542e-05 [1.0516; (2, 2)]
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34:
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
-	Fast Task duration: 0.00127915s +- 4 * 0.000162191
-	Slow Task duration: 0.00130881s +- 4 * 6.1091e-05 [1.02318; (2, 3)]
+	Fast Task duration: 0.0013353s +- 4 * 4.93963e-05
+	Slow Task duration: 0.00130182s +- 4 * 0.00012431 [0.974926; (2, 3)]
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38:
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
-	Fast Task duration: 0.00139796s +- 4 * 1.02874e-05
-	Slow Task duration: 0.00501456s +- 4 * 0.000305439 [3.58706; (2, 2.5)]
+	Fast Task duration: 0.00126454s +- 4 * 8.43725e-05
+	Slow Task duration: 0.00463334s +- 4 * 0.000410004 [3.66406; (2, 2.5)]
 
 	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 29
 	[double]
@@ -7242,14 +7242,14 @@
 	False Positive Failure:
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67:
 	Performance Test which should pass
-	Fast Task duration: 0.00116269s +- 4 * 0.000105045
-	Slow Task duration: 0.0021178s +- 4 * 4.39587e-05 [1.82147; (1.8, 2.1)]
+	Fast Task duration: 0.00132305s +- 4 * 7.47684e-05
+	Slow Task duration: 0.00223808s +- 4 * 0.000200417 [1.6916; (1.8, 2.1)]
 
 	False Positive Failure:
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68:
 	Performance Test which should pass
-	Fast Task duration: 0.00124722s +- 4 * 0.000117502
-	Slow Task duration: 0.00439767s +- 4 * 0.000420869 [3.52596; (3.6, 4.1)]
+	Fast Task duration: 0.00123417s +- 4 * 0.000142984
+	Slow Task duration: 0.0045748s +- 4 * 0.000434773 [3.70677; (3.6, 4.1)]
 
 	False Positive Failure:
 	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 69
