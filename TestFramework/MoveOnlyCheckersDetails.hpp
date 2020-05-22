@@ -8,7 +8,7 @@
 #pragma once
 
 /*! \file MoveOnlyCheckersDetails.hpp
-    \brief Implementation details for checking move-only semantics within the unit testing framework.
+    \brief Implementation details for checking move-only semantics.
 */
 
 #include "SemanticsCheckersDetails.hpp"

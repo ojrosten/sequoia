@@ -8,10 +8,11 @@
 #pragma once
 
 /*! \file
-    \brief Implementation details for allocation checks within the unit testing framework.
+    \brief Implementation details for allocation checks of regular types.
 */
 
 #include "AllocationCheckersDetails.hpp"
+#include "RegularCheckersDetails.hpp"
 
 namespace sequoia::unit_testing
 {
@@ -20,6 +21,7 @@ namespace sequoia::unit_testing
 
 namespace sequoia::unit_testing::impl
 {
+  /*! \brief Extends allocation_actions for types with copy semantics. */
   struct regular_allocation_actions : allocation_actions
   {
     constexpr static bool has_post_copy_action{true};
@@ -41,6 +43,8 @@ namespace sequoia::unit_testing::impl
     }
   };
 
+  /// Provides an extra level of indirection in order that the current number of allocations
+  /// may be acquired before proceeding.
   template<test_mode Mode, class Actions, class Container, class... Allocators, class... Predictions>
   void check_copy_assign(std::string_view description, test_logger<Mode>& logger, const Actions& actions, Container& z, const Container& y, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
   {
@@ -66,10 +70,11 @@ namespace sequoia::unit_testing::impl
 
       check_equality(combine_messages(description, "Move-like construction"), logger, v, y);    
       check_para_move_y_allocation(description, logger, v, std::tuple_cat(make_allocation_checkers(info)...));
-      check_mutation_after_move(description, "allocation assignment", logger, v, y, yMutator, std::tuple_cat(make_allocation_checkers(info, v)...));
+      check_mutation_after_move(description, "allocation assignment", logger, v, y, std::move(yMutator), std::tuple_cat(make_allocation_checkers(info, v)...));
     }
   }
 
+  /// Unpacks the tuple and feeds to the overload of check_semantics defined in MoveOnlyCheckersDetails.hpp
   template<test_mode Mode, class Actions, class T, class Mutator, class... Allocators, class... Predictions>
   bool check_semantics(std::string_view description, test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, Mutator yMutator, std::tuple<dual_allocation_checker<T, Allocators, Predictions>...> checkers)
   {

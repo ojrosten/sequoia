@@ -12,6 +12,7 @@
 */
 
 #include "AllocationCheckersDetails.hpp"
+#include "MoveOnlyCheckersDetails.hpp"
 
 #include <optional>
 
@@ -35,6 +36,7 @@ namespace sequoia::unit_testing::impl
     return success ? std::optional<Container>{std::move(u)} : std::nullopt;
   }
 
+  /// Unpacks the tuple and feeds to the overload of check_semantics defined in MoveOnlyCheckersDetails.hpp
   template<test_mode Mode, class Actions, class T, class Mutator, class... Allocators>
   void check_semantics(std::string_view description, test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, std::tuple<dual_allocation_checker<T, Allocators, move_only_allocation_predictions>...> checkers)
   {

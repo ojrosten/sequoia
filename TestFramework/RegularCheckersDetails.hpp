@@ -8,7 +8,7 @@
 #pragma once
 
 /*! \file
-    \brief Implementation details for checking regular semantics within the unit testing framework.
+    \brief Implementation details for checking regular semantics.
  
  */
 

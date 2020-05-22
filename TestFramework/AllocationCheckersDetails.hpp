@@ -154,7 +154,7 @@ namespace sequoia::unit_testing::impl
     bool m_AllocatorsEqual{};    
   };
 
-  // Deduction guide
+  //================================ Deduction guide ================================//
 
   template<class Container, class Allocator, class Predictions>
   dual_allocation_checker(basic_allocation_info<Container, Allocator, Predictions>, const Container&, const Container&)
@@ -205,7 +205,7 @@ namespace sequoia::unit_testing::impl
     int m_PriorCount{};
   };
 
-  // Deduction guides
+  //================================ Deduction guides ================================//
 
   template<class Container, class Allocator, class Predictions>
   allocation_checker(basic_allocation_info<Container, Allocator, Predictions>, const Container&)
@@ -215,7 +215,7 @@ namespace sequoia::unit_testing::impl
   allocation_checker(basic_allocation_info<Container, Allocator, Predictions>, int)
     -> allocation_checker<Container, Allocator, Predictions>;
 
-  // Speccializations of do_swap
+  //================================ Specializations of do_swap ================================//
   
   template<class T, class... Allocators, class... Predictions>
   struct do_swap<dual_allocation_checker<T, Allocators, Predictions>...>
@@ -233,7 +233,7 @@ namespace sequoia::unit_testing::impl
         || std::allocator_traits<Allocators>::is_always_equal::value) && ...) };
   };
 
-  // make_scoped_allocation_checkers
+  //================================ make_scoped_allocation_checkers ================================//
 
   template
   <
@@ -264,7 +264,7 @@ namespace sequoia::unit_testing::impl
     return make_scoped_allocation_checkers(info, std::make_index_sequence<sizeof...(Allocators)>{}, std::forward<Args>(args)...);
   }
 
-  // make_dual_allocation_checkers
+  //================================ make_dual_allocation_checkers ================================//
 
   template<class Container, class Predictions, class... Args, class... Allocators>
   [[nodiscard]]
@@ -282,7 +282,7 @@ namespace sequoia::unit_testing::impl
     return {checker{info, std::forward<Args>(args)...}};
   }
 
-  // make_allocation_checkers
+  //================================ make_allocation_checkers ================================//
 
   template<class Container, class Predictions, class... Args, class... Allocators>
   [[nodiscard]]
@@ -314,7 +314,7 @@ namespace sequoia::unit_testing::impl
     }
   }
 
-  // checks using dual_allocation_checker
+  //================================ checks using dual_allocation_checker ================================//
 
   template<test_mode Mode, class Container, class Allocator, class Prediction, class... Allocators, class... Predictions>
   void check_no_allocation(std::string_view description, test_logger<Mode>& logger, const Container& x, const Container& y, const dual_allocation_checker<Container, Allocator, Prediction>& checker, const dual_allocation_checker<Container, Allocators, Predictions>&... moreCheckers)
@@ -376,7 +376,7 @@ namespace sequoia::unit_testing::impl
     }
   }
 
-  // checks using allocation_checker
+  //================================ checks using allocation_checker ================================//
 
   template<test_mode Mode, class Container, class Allocator, class Prediction, class... Allocators, class... Predictions>
   void check_copy_x_allocation(std::string_view description, test_logger<Mode>& logger, const Container& container, const allocation_checker<Container, Allocator, Prediction>& checker, const allocation_checker<Container, Allocators, Predictions>&... moreCheckers)
@@ -519,8 +519,12 @@ namespace sequoia::unit_testing::impl
     }
   };
 
-  // Functions for performing allocation checks which are common to types with both regular and
-  // move-only semantics
+  /*! \name OverloadSet
+
+      Functions for performing allocation checks which are common to types with both regular and
+      move-only semantics. These functions provide an extra level of indirection in order that
+      the current number of allocations may be acquired before proceeding
+   */
  
   template<test_mode Mode, class Actions, class Container, class... Allocators, class... Predictions>
   bool check_preconditions(std::string_view description, test_logger<Mode>& logger, const Actions& actions, const Container& x, const Container& y, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)

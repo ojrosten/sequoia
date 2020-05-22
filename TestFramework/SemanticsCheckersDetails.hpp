@@ -8,7 +8,53 @@
 #pragma once
 
 /*! \file
-    \brief Implementation details for semantics checks within the unit testing framework.
+    \brief Implementation details for semantics checks that cleanly supports types which do/do not have allocators.
+
+    The general pattern in this file is of piared function templates of the form
+
+    template<test_mode Mode, class Actions, class T, class... Args>
+    ret_type do_check_foo(std::string_view, test_logger<Mode>&, const Actions&, const T&, const T&, const Args&...);
+
+    template<test_mode Mode, class Actions, class T>
+    ret_type check_foo(std::string_view description, test_logger<Mode>& logger, const Actions& actions, const T& x , const T&y)
+    {
+      return do_check_foo(description, logger, actions, x, y);
+    }
+
+    The idea is that the implementation of check_foo in this file is appropriate for types without allocators.
+    As such, check_foo delegates to the instantiation of do_check_foo for which sizeof...(Args) is zero. However,
+    do_check_foo is designed such that it can also deal with types which may allocate. As such, do_check_foo takes
+    a template argument 'Actions'. Appropriate realizations of this type possess a bunch of constexpr static bools
+    which indicate whether additional actions should be carried out.
+
+    For example, when checking the semantics of a regular type, two const references to the type must be supplied.
+    It is a precondition that these instances are not equal to one another. This is always checked. However, if
+    the type allocates, clients may prefer to utilize the allocation-checking extension supplied with sequoia. In
+    this case, there is a constexpr flag which indicates that, after checking the precondition, it is further checked
+    that operator== hasn't unwittingly allocated - as can happen if it accidentally captures by value rather than
+    reference.
+
+    Thus, the general structure is
+
+    some_common_check(...);
+    if constexpr (Actions::some_flag)
+    {
+      do_some_extra_check(...);
+    }
+
+    where the extra check is fed, amongst other things, the parameter pack args...
+
+    Therefore when checking the semantics of an allocating type, the skeleton of the function is that same as for
+    non-allocating types. However, in the former case extra checks are folded in. This pattern ensures
+    consistency: if the scheme is tweaked for non-allocating types, allocating types will automatically benefit.
+    But there is enough flexbility to allow for all the extra allocation checks that allocating types require.
+
+    As such, the various check_foo functions in this header have overloads in AllocationCheckersDetails.hpp which
+    supply the extra argument(s) for the additional actions that comprise allocation checking. 
+
+    Note that check_foo / do_check_foo pairs in this file are common to both regular and move-only types.
+    However, regular types additionally have copy semantics; the extra pieces necessary for this may be found
+    in RegularCheckersDetails.hpp and RegularAllocationCheckerDetails.hpp
 */
 
 
@@ -23,7 +69,7 @@ namespace sequoia::unit_testing::impl
 
   struct null_mutator
   {
-    template<class T> constexpr void operator()(T&) noexcept {};
+    template<class T> constexpr void operator()(const T&) noexcept {};
   };
 
   struct pre_condition_actions
@@ -45,6 +91,8 @@ namespace sequoia::unit_testing::impl
     constexpr static bool has_post_move_assign_action{};
     constexpr static bool has_post_swap_action{};
   };
+
+  //================================ preconditions ================================//
  
   template<test_mode Mode, class Actions, class T, class... Args>
   bool do_check_preconditions(std::string_view description, test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
@@ -74,6 +122,7 @@ namespace sequoia::unit_testing::impl
     return do_check_preconditions(description, logger, actions, x, y);
   }
 
+  //================================ move assign ================================//
 
   template<test_mode Mode, class Actions, class T, class Mutator, class... Args>
   void do_check_move_assign(std::string_view description, test_logger<Mode>& logger, const Actions& actions, T& z, T&& y, const T& yClone, Mutator yMutator, const Args&... args)
@@ -83,35 +132,17 @@ namespace sequoia::unit_testing::impl
 
     if constexpr(Actions::has_post_move_assign_action)
     {
-      actions.post_move_assign_action(description, logger, z, yClone, yMutator, args...);
+      actions.post_move_assign_action(description, logger, z, yClone, std::move(yMutator), args...);
     }
   }
   
   template<test_mode Mode, class Actions, class T, class Mutator>
   void check_move_assign(std::string_view description, test_logger<Mode>& logger, const Actions& actions, T& z, T&& y, const T& yClone, Mutator m)
   {
-    do_check_move_assign(description, logger, actions, z, std::forward<T>(y), yClone, m);
+    do_check_move_assign(description, logger, actions, z, std::forward<T>(y), yClone, std::move(m));
   }
 
-  template<test_mode Mode, class Actions, class T, class... Args>
-  T do_check_move_construction(std::string_view description, test_logger<Mode>& logger, const Actions& actions, T&& z, const T& y, const Args&... args)
-  {
-    T w{std::move(z)};
-    check_equality(combine_messages(description, "Move constructor"), logger, w, y);
-
-    if constexpr(Actions::has_post_move_action)
-    {
-      actions.post_move_action(description, logger, w, args...);
-    }
-
-    return w;
-  }
-
-  template<test_mode Mode, class Actions, class T, class Mutator>
-  void check_swap(std::string_view description, test_logger<Mode>& logger, const Actions& actions, T&& x, T& y, const T& xClone, const T& yClone, Mutator yMutator)
-  {
-    do_check_swap(description, logger, actions, std::forward<T>(x), y, xClone, yClone, std::move(yMutator));
-  }
+  //================================ swap ================================//
 
   template<test_mode Mode, class Actions, class T, class Mutator, class... Args>
   void do_check_swap(std::string_view description, test_logger<Mode>& logger, const Actions& actions, T&& x, T& y, const T& xClone, const T& yClone, Mutator yMutator, const Args&... args)
@@ -126,6 +157,28 @@ namespace sequoia::unit_testing::impl
     {
       actions.post_swap_action(description, logger, x, y, yClone, yMutator, args...);
     }
+  }
+
+  template<test_mode Mode, class Actions, class T, class Mutator>
+  void check_swap(std::string_view description, test_logger<Mode>& logger, const Actions& actions, T&& x, T& y, const T& xClone, const T& yClone, Mutator yMutator)
+  {
+    do_check_swap(description, logger, actions, std::forward<T>(x), y, xClone, yClone, std::move(yMutator));
+  }
+
+  //================================  move construction ================================ //
+
+  template<test_mode Mode, class Actions, class T, class... Args>
+  T do_check_move_construction(std::string_view description, test_logger<Mode>& logger, const Actions& actions, T&& z, const T& y, const Args&... args)
+  {
+    T w{std::move(z)};
+    check_equality(combine_messages(description, "Move constructor"), logger, w, y);
+
+    if constexpr(Actions::has_post_move_action)
+    {
+      actions.post_move_action(description, logger, w, args...);
+    }
+
+    return w;
   }
 
   template<test_mode Mode, class Actions, class T>
