@@ -25,12 +25,12 @@ namespace sequoia::unit_testing
 namespace sequoia::unit_testing::impl
 {
   template<test_mode Mode, class Container, class Allocator, class Predictions>
-  static void check_allocation(std::string_view description, std::string_view detail, std::string_view suffix, test_logger<Mode>& logger, const Container& container, const basic_allocation_info<Container, Allocator, Predictions>& info, const int previous, const int prediction)
+  static void check_allocation(std::string_view description, std::string_view detail, test_logger<Mode>& logger, const Container& container, const basic_allocation_info<Container, Allocator, Predictions>& info, const int previous, const int prediction)
   {
     typename test_logger<Mode>::sentinel s{logger, add_type_info<Allocator>(description)};
 
     const auto current{info.count(container)};      
-    auto message{combine_messages(combine_messages(description, detail), suffix)};
+    auto message{combine_messages(description, detail)};
 
     check_equality(std::move(message), logger, current - previous, prediction);
   }
@@ -82,8 +82,8 @@ namespace sequoia::unit_testing::impl
     template<test_mode Mode>
     void check_no_allocation(std::string_view description, test_logger<Mode>& logger, const Container& x, const Container& y) const
     {
-      check_allocation(description, "No allocation for x", "", logger, x, info(), first_count(), 0);
-      check_allocation(description, "No allocation for y", "", logger, y, info(), second_count(), 0);
+      check_allocation(description, "No allocation for x", logger, x, info(), first_count(), 0);
+      check_allocation(description, "No allocation for y", logger, y, info(), second_count(), 0);
     }
 
     template<test_mode Mode>
@@ -97,15 +97,15 @@ namespace sequoia::unit_testing::impl
       if constexpr(propagate)
       {
         yPrediction = info().get_predictions().assign_y_to_x.with_propagation;        
-        check_allocation(description, "Copy assignment x allocations", "", logger, xContainer, info(), second_count(), yPrediction);
+        check_allocation(description, "Copy assignment x allocations", logger, xContainer, info(), second_count(), yPrediction);
       }
       else
       {
         const int xPrediction{info().get_predictions().assign_y_to_x.without_propagation};        
-        check_allocation(description, "Copy assignment x allocations", "", logger, xContainer, info(), first_count(), xPrediction);
+        check_allocation(description, "Copy assignment x allocations", logger, xContainer, info(), first_count(), xPrediction);
       }
 
-      check_allocation(description, "Copy assignment y allocations", "", logger, yContainer, info(), second_count(), yPrediction);
+      check_allocation(description, "Copy assignment y allocations", logger, yContainer, info(), second_count(), yPrediction);
     }
 
     template<test_mode Mode>
@@ -123,11 +123,11 @@ namespace sequoia::unit_testing::impl
       
       if constexpr(propagate)
       {
-        check_allocation(description, "Move assignment x allocations", "", logger, xContainer, info(), second_count(), xPrediction);
+        check_allocation(description, "Move assignment x allocations", logger, xContainer, info(), second_count(), xPrediction);
       }
       else
       {
-        check_allocation(description, "Move assignment x allocations", "", logger, xContainer, info(), first_count(), xPrediction);
+        check_allocation(description, "Move assignment x allocations", logger, xContainer, info(), first_count(), xPrediction);
       }
     }
 
@@ -145,8 +145,8 @@ namespace sequoia::unit_testing::impl
         swap(lhCount, rhCount);
       }
 
-      check_allocation(description, "y allocations", "", logger, lhs, info(), lhCount, prediction);
-      check_allocation(description, "x allocations", "", logger, rhs, info(), rhCount, 0);
+      check_allocation(description, "y allocations", logger, lhs, info(), lhCount, prediction);
+      check_allocation(description, "x allocations", logger, rhs, info(), rhCount, 0);
     }
   private:    
     alloc_info m_Info{};    
@@ -172,26 +172,16 @@ namespace sequoia::unit_testing::impl
       : m_Info{std::move(i)}
     {}
 
+    template<test_mode Mode>
+    void check(std::string_view description, std::string_view detail, test_logger<Mode>& logger, const Container& container, const int prediction) const
+    {
+      check_allocation(description, detail, logger, container, info(), 0, prediction);
+    }
+
     [[nodiscard]]
     const alloc_info& info() const noexcept
     {
       return m_Info;
-    }
-
-    template<test_mode Mode>
-    void check_para_copy(std::string_view description, test_logger<Mode>& logger, const Container& container) const
-    {
-      const auto prediction{info().get_predictions().y.para_copy};
-      
-      check_allocation(description, "Para copy construction allocation", "(y)", logger, container, info(), 0, prediction);
-    }
-
-    template<test_mode Mode>
-    void check_para_move(std::string_view description, test_logger<Mode>& logger, const Container& container) const
-    {
-      const auto prediction{info().get_predictions().para_move_allocs()};
-
-      check_allocation(description, "Para move construction allocation", "(y)", logger, container, info(), 0, prediction);
     }
   private:
     alloc_info m_Info;
@@ -223,7 +213,7 @@ namespace sequoia::unit_testing::impl
     template<test_mode Mode>
     void check(std::string_view description, std::string_view detail, test_logger<Mode>& logger, const Container& container, const int prediction) const
     {
-      check_allocation(description, detail, "", logger, container, info(), m_PriorCount, prediction);
+      check_allocation(description, detail, logger, container, info(), m_PriorCount, prediction);
     }
 
     [[nodiscard]]
@@ -473,7 +463,8 @@ namespace sequoia::unit_testing::impl
   {
     auto checkFn{
       [&logger, &container](std::string_view message, const auto& checker){
-        checker.check_para_copy(message, logger, container);
+        const auto prediction{checker.info().get_predictions().y.para_copy};
+        checker.check(message, "Para copy construction allocation (y)", logger, container, prediction);
       }
     };
 
@@ -496,7 +487,8 @@ namespace sequoia::unit_testing::impl
   {
     auto checkFn{
       [&logger, &container](std::string_view message, const auto& checker){
-        checker.check_para_move(message, logger, container);
+        const auto prediction{checker.info().get_predictions().para_move_allocs()};
+        checker.check(message, "Para move construction allocation (y)", logger, container, prediction);
       }
     };
 
