@@ -157,39 +157,7 @@ namespace sequoia::unit_testing::impl
   template<class Container, class Allocator, class Predictions>
   dual_allocation_checker(basic_allocation_info<Container, Allocator, Predictions>, const Container&, const Container&)
     -> dual_allocation_checker<Container, Allocator, Predictions>;
-
-
-  template<class Container, class Allocator, class Predictions>
-  class para_allocation_checker
-  {
-  public:
-    using container_type   = Container;
-    using allocator_type   = Allocator;
-    using predictions_type = Predictions;
-    using alloc_info       = basic_allocation_info<Container, Allocator, Predictions>;
-    
-    explicit para_allocation_checker(alloc_info i)
-      : m_Info{std::move(i)}
-    {}
-
-    template<test_mode Mode>
-    void check(std::string_view description, std::string_view detail, test_logger<Mode>& logger, const Container& container, const int prediction) const
-    {
-      check_allocation(description, detail, logger, container, info(), 0, prediction);
-    }
-
-    [[nodiscard]]
-    const alloc_info& info() const noexcept
-    {
-      return m_Info;
-    }
-  private:
-    alloc_info m_Info;
-  };
-
-  template<class Container, class Allocator, class Predictions>
-  para_allocation_checker(basic_allocation_info<Container, Allocator, Predictions>)
-    -> para_allocation_checker<Container, Allocator, Predictions>;
+  
 
   template<class Container, class Allocator, class Predictions>
   class allocation_checker
@@ -200,7 +168,7 @@ namespace sequoia::unit_testing::impl
     using predictions_type = Predictions;
     using alloc_info       = basic_allocation_info<Container, Allocator, Predictions>;
     
-    allocation_checker(alloc_info i, const int priorCount)
+    allocation_checker(alloc_info i, const int priorCount=0)
       : m_Info{std::move(i)}
       , m_PriorCount{priorCount}
     {}
@@ -236,14 +204,6 @@ namespace sequoia::unit_testing::impl
   
   template<class T, class... Allocators, class... Predictions>
   struct do_swap<dual_allocation_checker<T, Allocators, Predictions>...>
-  {
-    constexpr static bool value{
-      ((   std::allocator_traits<Allocators>::propagate_on_container_swap::value
-        || std::allocator_traits<Allocators>::is_always_equal::value) && ...) };
-  };
-
-  template<class T, class... Allocators, class... Predictions>
-  struct do_swap<para_allocation_checker<T, Allocators, Predictions>...>
   {
     constexpr static bool value{
       ((   std::allocator_traits<Allocators>::propagate_on_container_swap::value
@@ -292,31 +252,6 @@ namespace sequoia::unit_testing::impl
   make_dual_allocation_checkers(const basic_allocation_info<Container, Allocator, Predictions>& info, Args&&... args)
   {
     using checker = dual_allocation_checker<Container, Allocator, Predictions>;
-    return {checker{info, std::forward<Args>(args)...}};
-  }
-
-  // make_para_allocation_checkers
-  
-  template<class Container, class Predictions, class... Allocators, class... Args, std::size_t... I>
-  [[nodiscard]]
-  auto make_para_allocation_checkers(const basic_allocation_info<Container, std::scoped_allocator_adaptor<Allocators...>, Predictions>& info, std::index_sequence<I...>, Args&&... args)
-  {
-    return std::make_tuple(para_allocation_checker{info.template unpack<I>(), std::forward<Args>(args)...}...);
-  }
-
-  template<class Container, class Predictions, class... Args, class... Allocators>
-  [[nodiscard]]
-  auto make_para_allocation_checkers(const basic_allocation_info<Container, std::scoped_allocator_adaptor<Allocators...>, Predictions>& info, Args&&... args)
-  {
-    return make_para_allocation_checkers(info, std::make_index_sequence<sizeof...(Allocators)>{}, std::forward<Args>(args)...);
-  }
-
-  template<class Container, class Allocator, class Predictions, class... Args>
-  [[nodiscard]]
-  std::tuple<para_allocation_checker<Container, Allocator, Predictions>>
-  make_para_allocation_checkers(const basic_allocation_info<Container, Allocator, Predictions>& info, Args&&... args)
-  {
-    using checker = para_allocation_checker<Container, Allocator, Predictions>;
     return {checker{info, std::forward<Args>(args)...}};
   }
 
@@ -475,7 +410,7 @@ namespace sequoia::unit_testing::impl
   }
 
   template<test_mode Mode, class Container, class Allocator, class Prediction, class... Allocators, class... Predictions>
-  void check_para_copy_y_allocation(std::string_view description, test_logger<Mode>& logger, const Container& container, const para_allocation_checker<Container, Allocator, Prediction>& checker, const para_allocation_checker<Container, Allocators, Predictions>&... moreCheckers)
+  void check_para_copy_y_allocation(std::string_view description, test_logger<Mode>& logger, const Container& container, const allocation_checker<Container, Allocator, Prediction>& checker, const allocation_checker<Container, Allocators, Predictions>&... moreCheckers)
   {
     auto checkFn{
       [&logger, &container](std::string_view message, const auto& checker){
@@ -488,7 +423,7 @@ namespace sequoia::unit_testing::impl
   }
   
   template<test_mode Mode, class Container, class... Allocators, class... Predictions>
-  void check_para_copy_y_allocation(std::string_view description, test_logger<Mode>& logger, const Container& container, std::tuple<para_allocation_checker<Container, Allocators, Predictions>...> checkers)
+  void check_para_copy_y_allocation(std::string_view description, test_logger<Mode>& logger, const Container& container, std::tuple<allocation_checker<Container, Allocators, Predictions>...> checkers)
   {
     auto fn{[description,&logger,&container](auto&&... checkers){
         check_para_copy_y_allocation(description, logger, container, std::forward<decltype(checkers)>(checkers)...);
@@ -499,7 +434,7 @@ namespace sequoia::unit_testing::impl
   }
 
   template<test_mode Mode, class Container, class Prediction, class Allocator, class... Allocators, class... Predictions>
-  void check_para_move_y_allocation(std::string_view description, test_logger<Mode>& logger, const Container& container, const para_allocation_checker<Container, Allocator, Prediction>& checker, const para_allocation_checker<Container, Allocators, Predictions>&... moreCheckers)
+  void check_para_move_y_allocation(std::string_view description, test_logger<Mode>& logger, const Container& container, const allocation_checker<Container, Allocator, Prediction>& checker, const allocation_checker<Container, Allocators, Predictions>&... moreCheckers)
   {
     auto checkFn{
       [&logger, &container](std::string_view message, const auto& checker){
@@ -512,7 +447,7 @@ namespace sequoia::unit_testing::impl
   }
   
   template<test_mode Mode, class Container, class... Allocators, class... Predictions>
-  void check_para_move_y_allocation(std::string_view description, test_logger<Mode>& logger, const Container& container, std::tuple<para_allocation_checker<Container, Allocators, Predictions>...> checkers)
+  void check_para_move_y_allocation(std::string_view description, test_logger<Mode>& logger, const Container& container, std::tuple<allocation_checker<Container, Allocators, Predictions>...> checkers)
   {
     auto fn{[description,&logger,&container](auto&&... checkers){
         check_para_move_y_allocation(description, logger, container, std::forward<decltype(checkers)>(checkers)...);
@@ -525,7 +460,7 @@ namespace sequoia::unit_testing::impl
   
   /*! \brief actions common to both move-only and regular types. */
   struct allocation_actions : pre_condition_actions
-  {    
+  {
     constexpr static bool has_post_equality_action{true};
     constexpr static bool has_post_nequality_action{true};
     constexpr static bool has_post_move_action{true};
