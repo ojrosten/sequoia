@@ -8,9 +8,7 @@
 #pragma once
 
 /*! \file
-    \brief Implementation details for allocation checks within the testing framework.
-
-    
+    \brief Implementation details for allocation checks within the testing framework.  
 */
 
 #include "SemanticsCheckersDetails.hpp"
@@ -511,13 +509,13 @@ namespace sequoia::unit_testing::impl
     static void post_move_assign_action(std::string_view description, test_logger<Mode>& logger, Container& y, const Container& yClone, Mutator yMutator, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
     {
       check_move_assign_allocation(description, logger, y, checkers...);
-      check_mutation_after_move(description, "assignment", logger, y, yClone, yMutator, allocation_checker{checkers.info(), y}...);
+      check_mutation_after_move(description, "assignment", logger, y, yClone, std::move(yMutator), allocation_checker{checkers.info(), y}...);
     }
 
     template<test_mode Mode, class Container, class Mutator, class... Allocators, class... Predictions>
     static void post_swap_action(std::string_view description, test_logger<Mode>& logger, Container& x, const Container& y, const Container& yClone, Mutator yMutator, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
     {
-      check_mutation_after_swap(description, logger, x, y, yClone, yMutator, checkers...);
+      check_mutation_after_swap(description, logger, x, y, yClone, std::move(yMutator), checkers...);
     }
   };
 
@@ -539,7 +537,7 @@ namespace sequoia::unit_testing::impl
   template<test_mode Mode, class Actions, class Container, class Mutator, class... Allocators, class... Predictions>
   void check_move_assign(std::string_view description, test_logger<Mode>& logger, const Actions& actions, Container& u, Container&& v, const Container& y, Mutator yMutator, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
   {
-    do_check_move_assign(description, logger, actions, u, std::forward<Container>(v), y, yMutator, dual_allocation_checker{checkers.info(), u, v}...);
+    do_check_move_assign(description, logger, actions, u, std::forward<Container>(v), y, std::move(yMutator), dual_allocation_checker{checkers.info(), u, v}...);
   }
 
   template<test_mode Mode, class Actions, class Container, class Mutator, class... Allocators, class... Predictions>

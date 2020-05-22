@@ -25,9 +25,9 @@
     event. This is more expressive than just '1' and less verbose than copy_prediction{1},
     particularly bearing in mind that often several predictions are supplied together.
 
-    In addition to predictions, clients must also supply a function object which consumes
-    a container and returns a copy of its allocator. With these ingredients, together with
-    a container which uses the shared_counting_allocator, the following
+    In addition to predictions, clients must also supply a function object, per allocator
+    which consumes a container and returns a copy of the allocator. With these ingredients,
+    together with a container which uses the shared_counting_allocator, the following
     scenario may be realized:
 
     A extract a copy of the allocator
