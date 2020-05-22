@@ -54,7 +54,7 @@ namespace sequoia::unit_testing::impl
     using predictions_type = Predictions;
     using alloc_info       = basic_allocation_info<Container, Allocator, Predictions>;
 
-    dual_allocation_checker(const Container& x, const Container& y, alloc_info i)
+    dual_allocation_checker(alloc_info i, const Container& x, const Container& y)
       : m_Info{std::move(i)}
       , m_FirstCount{m_Info.count(x)}
       , m_SecondCount{m_Info.count(y)}
@@ -155,7 +155,7 @@ namespace sequoia::unit_testing::impl
   };
 
   template<class Container, class Allocator, class Predictions>
-  dual_allocation_checker(const Container&, const Container&, basic_allocation_info<Container, Allocator, Predictions>)
+  dual_allocation_checker(basic_allocation_info<Container, Allocator, Predictions>, const Container&, const Container&)
     -> dual_allocation_checker<Container, Allocator, Predictions>;
 
 
@@ -200,12 +200,12 @@ namespace sequoia::unit_testing::impl
     using predictions_type = Predictions;
     using alloc_info       = basic_allocation_info<Container, Allocator, Predictions>;
     
-    allocation_checker(const int priorCount, alloc_info i)
+    allocation_checker(alloc_info i, const int priorCount)
       : m_Info{std::move(i)}
       , m_PriorCount{priorCount}
     {}
 
-    allocation_checker(const Container& x, alloc_info i)
+    allocation_checker(alloc_info i, const Container& x)
       : m_Info{std::move(i)}
       , m_PriorCount{m_Info.count(x)}
     {}
@@ -227,11 +227,11 @@ namespace sequoia::unit_testing::impl
   };
 
   template<class Container, class Allocator, class Predictions>
-  allocation_checker(const Container&, basic_allocation_info<Container, Allocator, Predictions>)
+  allocation_checker(basic_allocation_info<Container, Allocator, Predictions>, const Container&)
     -> allocation_checker<Container, Allocator, Predictions>;
 
   template<class Container, class Allocator, class Predictions>
-  allocation_checker(int, basic_allocation_info<Container, Allocator, Predictions>)
+  allocation_checker(basic_allocation_info<Container, Allocator, Predictions>, int)
     -> allocation_checker<Container, Allocator, Predictions>;
   
   template<class T, class... Allocators, class... Predictions>
@@ -276,7 +276,7 @@ namespace sequoia::unit_testing::impl
   [[nodiscard]]
   auto make_dual_allocation_checkers(const basic_allocation_info<Container, std::scoped_allocator_adaptor<Allocators...>, Predictions>& info, std::index_sequence<I...>, Args&&... args)
   {
-    return std::make_tuple(dual_allocation_checker{std::forward<Args>(args)..., info.template unpack<I>()}...);
+    return std::make_tuple(dual_allocation_checker{info.template unpack<I>(), std::forward<Args>(args)...}...);
   }
 
   template<class Container, class Predictions, class... Args, class... Allocators>
@@ -292,7 +292,7 @@ namespace sequoia::unit_testing::impl
   make_dual_allocation_checkers(const basic_allocation_info<Container, Allocator, Predictions>& info, Args&&... args)
   {
     using checker = dual_allocation_checker<Container, Allocator, Predictions>;
-    return {checker{std::forward<Args>(args)..., info}};
+    return {checker{info, std::forward<Args>(args)...}};
   }
 
   // make_para_allocation_checkers
@@ -301,7 +301,7 @@ namespace sequoia::unit_testing::impl
   [[nodiscard]]
   auto make_para_allocation_checkers(const basic_allocation_info<Container, std::scoped_allocator_adaptor<Allocators...>, Predictions>& info, std::index_sequence<I...>, Args&&... args)
   {
-    return std::make_tuple(para_allocation_checker{std::forward<Args>(args)..., info.template unpack<I>()}...);
+    return std::make_tuple(para_allocation_checker{info.template unpack<I>(), std::forward<Args>(args)...}...);
   }
 
   template<class Container, class Predictions, class... Args, class... Allocators>
@@ -317,7 +317,7 @@ namespace sequoia::unit_testing::impl
   make_para_allocation_checkers(const basic_allocation_info<Container, Allocator, Predictions>& info, Args&&... args)
   {
     using checker = para_allocation_checker<Container, Allocator, Predictions>;
-    return {checker{std::forward<Args>(args)..., info}};
+    return {checker{info, std::forward<Args>(args)...}};
   }
 
   // make_allocation_checkers
@@ -326,7 +326,7 @@ namespace sequoia::unit_testing::impl
   [[nodiscard]]
   auto make_allocation_checkers(const basic_allocation_info<Container, std::scoped_allocator_adaptor<Allocators...>, Predictions>& info, std::index_sequence<I...>, Args&&... args)
   {
-    return std::make_tuple(allocation_checker{std::forward<Args>(args)..., info.template unpack<I>()}...);
+    return std::make_tuple(allocation_checker{info.template unpack<I>(), std::forward<Args>(args)...}...);
   }
 
   template<class Container, class Predictions, class... Args, class... Allocators>
@@ -342,7 +342,7 @@ namespace sequoia::unit_testing::impl
   make_allocation_checkers(const basic_allocation_info<Container, Allocator, Predictions>& info, Args&&... args)
   {
     using checker = allocation_checker<Container, Allocator, Predictions>;
-    return {checker{std::forward<Args>(args)..., info}};
+    return {checker{info, std::forward<Args>(args)...}};
   }
 
   //================================ Variadic Allocation Checking ================================//
@@ -359,50 +359,14 @@ namespace sequoia::unit_testing::impl
     }
   }
 
+  // checks using dual_allocation_checker
+
   template<test_mode Mode, class Container, class Allocator, class Prediction, class... Allocators, class... Predictions>
   void check_no_allocation(std::string_view description, test_logger<Mode>& logger, const Container& x, const Container& y, const dual_allocation_checker<Container, Allocator, Prediction>& checker, const dual_allocation_checker<Container, Allocators, Predictions>&... moreCheckers)
   {
     auto checkFn{
       [&logger, &x, &y](std::string_view message, const auto& checker){
         checker.check_no_allocation(message, logger, x, y);
-      }
-    };
-
-    check_allocation(description, logger, checkFn, checker, moreCheckers...);
-  }
-
-  template<test_mode Mode, class Container, class Allocator, class Prediction, class... Allocators, class... Predictions>
-  void check_copy_x_allocation(std::string_view description, test_logger<Mode>& logger, const Container& container, const allocation_checker<Container, Allocator, Prediction>& checker, const allocation_checker<Container, Allocators, Predictions>&... moreCheckers)
-  {
-    auto checkFn{
-      [&logger, &container](std::string_view message, const auto& checker){
-        const auto prediction{checker.info().get_predictions().copy_x};
-        checker.check(message, "Copy construction allocation (x)", logger, container, prediction);
-      }
-    };
-
-    check_allocation(description, logger, checkFn, checker, moreCheckers...);
-  }
-
-  template<test_mode Mode, class Container, class Allocator, class Prediction, class... Allocators, class... Predictions>
-  void check_copy_y_allocation(std::string_view description, test_logger<Mode>& logger, const Container& container, const allocation_checker<Container, Allocator, Prediction>& checker, const allocation_checker<Container, Allocators, Predictions>&... moreCheckers)
-  {
-    auto checkFn{
-      [&logger, &container](std::string_view message, const auto& checker){
-        const auto prediction{checker.info().get_predictions().y.copy};
-        checker.check(message, "Copy construction allocation (y)", logger, container, prediction);
-      }
-    };
-
-    check_allocation(description, logger, checkFn, checker, moreCheckers...);
-  }
-
-  template<test_mode Mode, class Container, class Allocator, class Prediction, class... Allocators, class... Predictions>
-  void check_move_y_allocation(std::string_view description, test_logger<Mode>& logger, const Container& container, const allocation_checker<Container, Allocator, Prediction>& checker, const allocation_checker<Container, Allocators, Predictions>&... moreCheckers)
-  {
-    auto checkFn{
-      [&logger, &container](std::string_view message, const auto& checker){
-        checker.check(message, "Move construction allocation (y)", logger, container, 0);
       }
     };
 
@@ -439,6 +403,58 @@ namespace sequoia::unit_testing::impl
     auto checkFn{
       [&logger, &xContainer, &yContainer](std::string_view message, const auto& checker){
         checker.check_mutation_after_swap(message, logger, xContainer, yContainer);
+      }
+    };
+
+    check_allocation(description, logger, checkFn, checker, moreCheckers...);
+  }
+
+  template<test_mode Mode, class Container, class Mutator, class... Allocators, class... Predictions>
+  void check_mutation_after_swap(std::string_view description, test_logger<Mode>& logger, Container& lhs, const Container& rhs, const Container& y, Mutator yMutator, dual_allocation_checker<Container, Allocators, Predictions>... checkers)
+  {
+    if(check(combine_messages(description, "Mutation after swap pre-condition violated"), logger, lhs == y))
+    {    
+      yMutator(lhs);
+      check_mutation_allocation(combine_messages(description, "mutation after swap"), logger, lhs, rhs, checkers...);
+
+      check(combine_messages(description, "Mutation is not doing anything following copy then swap"), logger, lhs != y);
+    }
+  }
+
+  // checks using allocation_checker
+
+  template<test_mode Mode, class Container, class Allocator, class Prediction, class... Allocators, class... Predictions>
+  void check_copy_x_allocation(std::string_view description, test_logger<Mode>& logger, const Container& container, const allocation_checker<Container, Allocator, Prediction>& checker, const allocation_checker<Container, Allocators, Predictions>&... moreCheckers)
+  {
+    auto checkFn{
+      [&logger, &container](std::string_view message, const auto& checker){
+        const auto prediction{checker.info().get_predictions().copy_x};
+        checker.check(message, "Copy construction allocation (x)", logger, container, prediction);
+      }
+    };
+
+    check_allocation(description, logger, checkFn, checker, moreCheckers...);
+  }
+
+  template<test_mode Mode, class Container, class Allocator, class Prediction, class... Allocators, class... Predictions>
+  void check_copy_y_allocation(std::string_view description, test_logger<Mode>& logger, const Container& container, const allocation_checker<Container, Allocator, Prediction>& checker, const allocation_checker<Container, Allocators, Predictions>&... moreCheckers)
+  {
+    auto checkFn{
+      [&logger, &container](std::string_view message, const auto& checker){
+        const auto prediction{checker.info().get_predictions().y.copy};
+        checker.check(message, "Copy construction allocation (y)", logger, container, prediction);
+      }
+    };
+
+    check_allocation(description, logger, checkFn, checker, moreCheckers...);
+  }
+
+  template<test_mode Mode, class Container, class Allocator, class Prediction, class... Allocators, class... Predictions>
+  void check_move_y_allocation(std::string_view description, test_logger<Mode>& logger, const Container& container, const allocation_checker<Container, Allocator, Prediction>& checker, const allocation_checker<Container, Allocators, Predictions>&... moreCheckers)
+  {
+    auto checkFn{
+      [&logger, &container](std::string_view message, const auto& checker){
+        checker.check(message, "Move construction allocation (y)", logger, container, 0);
       }
     };
 
@@ -506,18 +522,8 @@ namespace sequoia::unit_testing::impl
     unpack_invoke(checkers, fn);    
   }
 
-  template<test_mode Mode, class Container, class Mutator, class... Allocators, class... Predictions>
-  void check_mutation_after_swap(std::string_view description, test_logger<Mode>& logger, Container& lhs, const Container& rhs, const Container& y, Mutator yMutator, dual_allocation_checker<Container, Allocators, Predictions>... checkers)
-  {
-    if(check(combine_messages(description, "Mutation after swap pre-condition violated"), logger, lhs == y))
-    {    
-      yMutator(lhs);
-      check_mutation_allocation(combine_messages(description, "mutation after swap"), logger, lhs, rhs, checkers...);
-
-      check(combine_messages(description, "Mutation is not doing anything following copy then swap"), logger, lhs != y);
-    }
-  }
-
+  
+  /*! \brief actions common to both move-only and regular types. */
   struct allocation_actions : pre_condition_actions
   {    
     constexpr static bool has_post_equality_action{true};
@@ -548,7 +554,7 @@ namespace sequoia::unit_testing::impl
     static void post_move_assign_action(std::string_view description, test_logger<Mode>& logger, Container& y, const Container& yClone, Mutator yMutator, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
     {
       check_move_assign_allocation(description, logger, y, checkers...);
-      check_mutation_after_move(description, "assignment", logger, y, yClone, yMutator, allocation_checker{y, checkers.info()}...);
+      check_mutation_after_move(description, "assignment", logger, y, yClone, yMutator, allocation_checker{checkers.info(), y}...);
     }
 
     template<test_mode Mode, class Container, class Mutator, class... Allocators, class... Predictions>
@@ -564,25 +570,25 @@ namespace sequoia::unit_testing::impl
   template<test_mode Mode, class Actions, class Container, class... Allocators, class... Predictions>
   bool check_preconditions(std::string_view description, test_logger<Mode>& logger, const Actions& actions, const Container& x, const Container& y, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
   {
-    return do_check_preconditions(description, logger, actions, x, y, dual_allocation_checker<Container, Allocators, Predictions>{x, y, checkers.info()}...);
+    return do_check_preconditions(description, logger, actions, x, y, dual_allocation_checker<Container, Allocators, Predictions>{checkers.info(), x, y}...);
   }
 
   template<test_mode Mode, class Actions, class Container, class... Allocators, class... Predictions>
   Container check_move_construction(std::string_view description, test_logger<Mode>& logger, const Actions& actions, Container&& z, const Container& y, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
   {
-    return do_check_move_construction(description, logger, actions, std::forward<Container>(z), y, allocation_checker{z, checkers.info()}...);
+    return do_check_move_construction(description, logger, actions, std::forward<Container>(z), y, allocation_checker{checkers.info(), z}...);
   }
 
   template<test_mode Mode, class Actions, class Container, class Mutator, class... Allocators, class... Predictions>
   void check_move_assign(std::string_view description, test_logger<Mode>& logger, const Actions& actions, Container& u, Container&& v, const Container& y, Mutator yMutator, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
   {
-    do_check_move_assign(description, logger, actions, u, std::forward<Container>(v), y, yMutator, dual_allocation_checker{u, v, checkers.info()}...);
+    do_check_move_assign(description, logger, actions, u, std::forward<Container>(v), y, yMutator, dual_allocation_checker{checkers.info(), u, v}...);
   }
 
   template<test_mode Mode, class Actions, class Container, class Mutator, class... Allocators, class... Predictions>
   void check_swap(std::string_view description, test_logger<Mode>& logger, const Actions& actions, Container&& x, Container& y, const Container& xClone, const Container& yClone, Mutator yMutator, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
   {
-    do_check_swap(description, logger, actions, std::forward<Container>(x), y, xClone, yClone, std::move(yMutator), dual_allocation_checker{x, y, checkers.info()}...);
+    do_check_swap(description, logger, actions, std::forward<Container>(x), y, xClone, yClone, std::move(yMutator), dual_allocation_checker{checkers.info(), x, y}...);
   }
 
   template<test_mode Mode, class Container, class Mutator, class... Checkers>

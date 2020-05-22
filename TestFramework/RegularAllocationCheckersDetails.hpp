@@ -29,9 +29,9 @@ namespace sequoia::unit_testing::impl
     static void post_copy_action(std::string_view description, test_logger<Mode>& logger, const Container& xCopy, const Container& yCopy, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
     {
       
-      check_copy_x_allocation(description, logger, xCopy, allocation_checker<Container, Allocators, Predictions>{checkers.first_count(), checkers.info()}...);
+      check_copy_x_allocation(description, logger, xCopy, allocation_checker{checkers.info(), checkers.first_count()}...);
 
-      check_copy_y_allocation(description, logger, yCopy, allocation_checker<Container, Allocators, Predictions>{checkers.second_count(), checkers.info()}...);
+      check_copy_y_allocation(description, logger, yCopy, allocation_checker{checkers.info(), checkers.second_count()}...);
     }
 
     template<test_mode Mode, class Container, class... Allocators, class... Predictions>
@@ -44,7 +44,7 @@ namespace sequoia::unit_testing::impl
   template<test_mode Mode, class Actions, class Container, class... Allocators, class... Predictions>
   void check_copy_assign(std::string_view description, test_logger<Mode>& logger, const Actions& actions, Container& z, const Container& y, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
   {
-    do_check_copy_assign(description, logger, actions, z, y, dual_allocation_checker<Container, Allocators, Predictions>{z, y, checkers.info()}...);   
+    do_check_copy_assign(description, logger, actions, z, y, dual_allocation_checker{checkers.info(), z, y}...);   
   }
 
   template<test_mode Mode, class Container, class Mutator, class... Allocators, class... Predictions>
