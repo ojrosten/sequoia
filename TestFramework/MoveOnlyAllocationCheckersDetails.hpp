@@ -44,6 +44,6 @@ namespace sequoia::unit_testing::impl
       }
     };
 
-    unpack_invoke(checkers, fn);
+    std::apply(fn, checkers);
   }
 }

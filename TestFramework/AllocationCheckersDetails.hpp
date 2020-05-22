@@ -35,15 +35,17 @@ namespace sequoia::unit_testing::impl
     check_equality(std::move(message), logger, current - previous, prediction);
   }
 
-  /*! \brief Wraps basic_allocation_info, together with two ints which holding allocation counts.
+  /*! \brief Wraps basic_allocation_info, together with two prior allocation counts.
 
-      There are two containers, x and y, which in some way interact e.g. via copy/move or swap
-      followed by mutation. As such, the ints hold the number of allocations (for
-      a given allocator of) both x and y, prior to the operation of interest being performed.
+      Consider two containers, x and y, which in some way interact e.g. via copy/move or swap
+      followed by mutation. The class holds allocation counts (for
+      a given allocator) of both x and y, prior to the operation of interest being performed.
       The number of allocations after the operation may be acquired by inspecting the Container
       via the function object stored in basic_allocation_info. Combining this with the result of
       invoking either first_count() or second_count(), as appropriate, gives a number which may
       be compared to the appropriate prediction stored within basic_allocation_info.
+
+      The main complication is dealing correctly with the various propagation traits.
    */
   template<class Container, class Allocator, class Predictions>
   class dual_allocation_checker
@@ -154,10 +156,21 @@ namespace sequoia::unit_testing::impl
     bool m_AllocatorsEqual{};    
   };
 
+  // Deduction guide
+
   template<class Container, class Allocator, class Predictions>
   dual_allocation_checker(basic_allocation_info<Container, Allocator, Predictions>, const Container&, const Container&)
     -> dual_allocation_checker<Container, Allocator, Predictions>;
-  
+
+  /*! \brief Wraps basic_allocation_info, together with the prior allocation count.
+
+      Consider a container, x, on which some potentially allocating operation is performed.
+      Prior to this operation, an instantiation of the allocation_checker class template
+      acquires the number of allocations already performed. Calling the check method after
+      the operation of interest, the container is inspected via the function object stored
+      in basic_allocation_info. This allows the change in the number of allocations to be
+      computed, which is then compared with the prediction.
+   */
 
   template<class Container, class Allocator, class Predictions>
   class allocation_checker
@@ -194,6 +207,8 @@ namespace sequoia::unit_testing::impl
     int m_PriorCount{};
   };
 
+  // Deduction guides
+
   template<class Container, class Allocator, class Predictions>
   allocation_checker(basic_allocation_info<Container, Allocator, Predictions>, const Container&)
     -> allocation_checker<Container, Allocator, Predictions>;
@@ -201,6 +216,8 @@ namespace sequoia::unit_testing::impl
   template<class Container, class Allocator, class Predictions>
   allocation_checker(basic_allocation_info<Container, Allocator, Predictions>, int)
     -> allocation_checker<Container, Allocator, Predictions>;
+
+  // Speccializations of do_swap
   
   template<class T, class... Allocators, class... Predictions>
   struct do_swap<dual_allocation_checker<T, Allocators, Predictions>...>
@@ -217,18 +234,6 @@ namespace sequoia::unit_testing::impl
       ((   std::allocator_traits<Allocators>::propagate_on_container_swap::value
         || std::allocator_traits<Allocators>::is_always_equal::value) && ...) };
   };
-  
-  template<class Fn, class... Ts, std::size_t... I>
-  decltype(auto) unpack_invoke(const std::tuple<Ts...>& t, Fn&& fn, std::index_sequence<I...>)
-  {
-    return fn(std::get<I>(t)...);
-  }
-
-  template<class Fn, class... Ts>
-  decltype(auto) unpack_invoke(const std::tuple<Ts...>& t, Fn&& fn)
-  {
-    return unpack_invoke(t, std::forward<Fn>(fn), std::make_index_sequence<sizeof...(Ts)>{});
-  }
 
   // make_dual_allocation_checkers
 
@@ -430,7 +435,7 @@ namespace sequoia::unit_testing::impl
       }
     };
 
-    unpack_invoke(checkers, fn);
+    std::apply(fn, checkers);
   }
 
   template<test_mode Mode, class Container, class Prediction, class Allocator, class... Allocators, class... Predictions>
@@ -454,7 +459,7 @@ namespace sequoia::unit_testing::impl
       }
     };
 
-    unpack_invoke(checkers, fn);    
+    std::apply(fn, checkers);
   }
 
   
