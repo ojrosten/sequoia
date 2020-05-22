@@ -235,20 +235,44 @@ namespace sequoia::unit_testing::impl
         || std::allocator_traits<Allocators>::is_always_equal::value) && ...) };
   };
 
-  // make_dual_allocation_checkers
+  // make_scoped_allocation_checkers
 
-  template<class Container, class Predictions, class... Allocators, class... Args, std::size_t... I>
+  template
+  <
+    template<class, class, class> class Checker,
+    class Container,
+    class Predictions,
+    class... Allocators,
+    class... Args,
+    std::size_t... I
+  >
   [[nodiscard]]
-  auto make_dual_allocation_checkers(const basic_allocation_info<Container, std::scoped_allocator_adaptor<Allocators...>, Predictions>& info, std::index_sequence<I...>, Args&&... args)
+  auto make_scoped_allocation_checkers(const basic_allocation_info<Container, std::scoped_allocator_adaptor<Allocators...>, Predictions>& info, std::index_sequence<I...>, Args&&... args)
   {
-    return std::make_tuple(dual_allocation_checker{info.template unpack<I>(), std::forward<Args>(args)...}...);
+    return std::make_tuple(Checker{info.template unpack<I>(), std::forward<Args>(args)...}...);
   }
+
+  template
+  <
+    template<class, class, class> class Checker,
+    class Container,
+    class Predictions,
+    class... Allocators,
+    class... Args
+  >
+  [[nodiscard]]
+  auto make_scoped_allocation_checkers(const basic_allocation_info<Container, std::scoped_allocator_adaptor<Allocators...>, Predictions>& info, Args&&... args)
+  {
+    return make_scoped_allocation_checkers(info, std::make_index_sequence<sizeof...(Allocators)>{}, std::forward<Args>(args)...);
+  }
+
+  // make_dual_allocation_checkers
 
   template<class Container, class Predictions, class... Args, class... Allocators>
   [[nodiscard]]
   auto make_dual_allocation_checkers(const basic_allocation_info<Container, std::scoped_allocator_adaptor<Allocators...>, Predictions>& info, Args&&... args)
   {
-    return make_dual_allocation_checkers(info, std::make_index_sequence<sizeof...(Allocators)>{}, std::forward<Args>(args)...);
+    return make_scoped_allocation_checkers<dual_allocation_checker>(info, std::forward<Args>(args)...);
   }
 
   template<class Container, class Allocator, class Predictions, class... Args>
@@ -261,19 +285,12 @@ namespace sequoia::unit_testing::impl
   }
 
   // make_allocation_checkers
-  
-  template<class Container, class Predictions, class... Allocators, class... Args, std::size_t... I>
-  [[nodiscard]]
-  auto make_allocation_checkers(const basic_allocation_info<Container, std::scoped_allocator_adaptor<Allocators...>, Predictions>& info, std::index_sequence<I...>, Args&&... args)
-  {
-    return std::make_tuple(allocation_checker{info.template unpack<I>(), std::forward<Args>(args)...}...);
-  }
 
   template<class Container, class Predictions, class... Args, class... Allocators>
   [[nodiscard]]
   auto make_allocation_checkers(const basic_allocation_info<Container, std::scoped_allocator_adaptor<Allocators...>, Predictions>& info, Args&&... args)
   {
-    return make_allocation_checkers(info, std::make_index_sequence<sizeof...(Allocators)>{}, std::forward<Args>(args)...);
+    return make_scoped_allocation_checkers<allocation_checker>(info, std::forward<Args>(args)...);
   }
 
   template<class Container, class Allocator, class Predictions, class... Args>
