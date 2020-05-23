@@ -8,7 +8,7 @@
 #pragma once
 
 /*! \file
-    \brief Utilities for performing allocation checks within the unit testing framework.
+    \brief Utilities for performing allocation checks.
 
     The allocation testing framework is built upon the idea of supplying and testing
     predictions for particular allocation events, in particular:

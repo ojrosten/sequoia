@@ -8,7 +8,7 @@
 #pragma once
 
 /*! \file
-    \brief Implementation details for allocation checks within the testing framework.  
+    \brief Implementation details for allocation checks.  
 */
 
 #include "SemanticsCheckersDetails.hpp"

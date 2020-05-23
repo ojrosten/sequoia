@@ -73,76 +73,51 @@ $(function() {
 <div class="title">sequoia::sequoia::unit_testing::impl::allocation_checker&lt; Container, Allocator, Predictions &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Wraps basic_allocation_info, together with the prior allocation count.  
+ <a href="classsequoia_1_1sequoia_1_1unit__testing_1_1impl_1_1allocation__checker.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="_allocation_checkers_details_8hpp_source.html">AllocationCheckersDetails.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
+<tr class="memitem:ad4dbd403c2706019c43c9257e64ea95c"><td class="memItemLeft" align="right" valign="top"><a id="ad4dbd403c2706019c43c9257e64ea95c"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>container_type</b> = Container</td></tr>
+<tr class="separator:ad4dbd403c2706019c43c9257e64ea95c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab87b0594d7806a661f67bf1cf92e6d77"><td class="memItemLeft" align="right" valign="top"><a id="ab87b0594d7806a661f67bf1cf92e6d77"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>allocator_type</b> = Allocator</td></tr>
+<tr class="separator:ab87b0594d7806a661f67bf1cf92e6d77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa07c40de6246071683119cda9b59b927"><td class="memItemLeft" align="right" valign="top"><a id="aa07c40de6246071683119cda9b59b927"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>predictions_type</b> = Predictions</td></tr>
+<tr class="separator:aa07c40de6246071683119cda9b59b927"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9432cc466d6f776241af157b98b15a68"><td class="memItemLeft" align="right" valign="top"><a id="a9432cc466d6f776241af157b98b15a68"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>alloc_info</b> = basic_allocation_info&lt; Container, Allocator, Predictions &gt;</td></tr>
 <tr class="separator:a9432cc466d6f776241af157b98b15a68"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aba7e30c68b63c4c01e4b3867751b79fd"><td class="memItemLeft" align="right" valign="top"><a id="aba7e30c68b63c4c01e4b3867751b79fd"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>allocation_checker</b> (alloc_info i)</td></tr>
-<tr class="separator:aba7e30c68b63c4c01e4b3867751b79fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a363cbd258381ee62ae427da0159889c2"><td class="memItemLeft" align="right" valign="top"><a id="a363cbd258381ee62ae427da0159889c2"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>allocation_checker</b> (const Container &amp;x, const Container &amp;y, alloc_info i)</td></tr>
-<tr class="separator:a363cbd258381ee62ae427da0159889c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aff774369d952d64b8586632c91bbacf3"><td class="memItemLeft" align="right" valign="top"><a id="aff774369d952d64b8586632c91bbacf3"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>allocation_checker</b> (const Container &amp;x, const int existingCount, alloc_info i)</td></tr>
-<tr class="separator:aff774369d952d64b8586632c91bbacf3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a599a3839fcbc4b5c9b7e71b614486ef6"><td class="memItemLeft" align="right" valign="top"><a id="a599a3839fcbc4b5c9b7e71b614486ef6"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>first_count</b> () const noexcept</td></tr>
-<tr class="separator:a599a3839fcbc4b5c9b7e71b614486ef6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5eda1d7b105833182a5946987326f821"><td class="memItemLeft" align="right" valign="top"><a id="a5eda1d7b105833182a5946987326f821"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>second_count</b> () const noexcept</td></tr>
-<tr class="separator:a5eda1d7b105833182a5946987326f821"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a57df6ac495234c7048b2f0d67e0cc2bc"><td class="memTemplParams" colspan="2"><a id="a57df6ac495234c7048b2f0d67e0cc2bc"></a>
+<tr class="memitem:a331891b3bf28ceecc2c97ba05d2c3016"><td class="memItemLeft" align="right" valign="top"><a id="a331891b3bf28ceecc2c97ba05d2c3016"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>allocation_checker</b> (alloc_info i, const int priorCount=0)</td></tr>
+<tr class="separator:a331891b3bf28ceecc2c97ba05d2c3016"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab5cf9f364fde0b80ad77dd3e1b91e7dd"><td class="memItemLeft" align="right" valign="top"><a id="ab5cf9f364fde0b80ad77dd3e1b91e7dd"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>allocation_checker</b> (alloc_info i, const Container &amp;x)</td></tr>
+<tr class="separator:ab5cf9f364fde0b80ad77dd3e1b91e7dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a111c67792da77eb4d2cc616998c0d7b2"><td class="memTemplParams" colspan="2"><a id="a111c67792da77eb4d2cc616998c0d7b2"></a>
 template&lt;test_mode Mode&gt; </td></tr>
-<tr class="memitem:a57df6ac495234c7048b2f0d67e0cc2bc"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_no_allocation</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const Container &amp;container) const</td></tr>
-<tr class="separator:a57df6ac495234c7048b2f0d67e0cc2bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8244e82b5719badd022b19188e6b6d59"><td class="memTemplParams" colspan="2"><a id="a8244e82b5719badd022b19188e6b6d59"></a>
-template&lt;test_mode Mode&gt; </td></tr>
-<tr class="memitem:a8244e82b5719badd022b19188e6b6d59"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_copy_x</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const Container &amp;container) const</td></tr>
-<tr class="separator:a8244e82b5719badd022b19188e6b6d59"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af937022c6bb66c7a6a68994a2dd6df14"><td class="memTemplParams" colspan="2"><a id="af937022c6bb66c7a6a68994a2dd6df14"></a>
-template&lt;test_mode Mode&gt; </td></tr>
-<tr class="memitem:af937022c6bb66c7a6a68994a2dd6df14"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_copy_y</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const Container &amp;container) const</td></tr>
-<tr class="separator:af937022c6bb66c7a6a68994a2dd6df14"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aed1dd67fbd6a825294678e5217838016"><td class="memTemplParams" colspan="2"><a id="aed1dd67fbd6a825294678e5217838016"></a>
-template&lt;test_mode Mode&gt; </td></tr>
-<tr class="memitem:aed1dd67fbd6a825294678e5217838016"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_para_copy_y</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const Container &amp;container) const</td></tr>
-<tr class="separator:aed1dd67fbd6a825294678e5217838016"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa0b15ab91a5a8e1cb5877b5d3876cf96"><td class="memTemplParams" colspan="2"><a id="aa0b15ab91a5a8e1cb5877b5d3876cf96"></a>
-template&lt;test_mode Mode&gt; </td></tr>
-<tr class="memitem:aa0b15ab91a5a8e1cb5877b5d3876cf96"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_move_y</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const Container &amp;container) const</td></tr>
-<tr class="separator:aa0b15ab91a5a8e1cb5877b5d3876cf96"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6965fadd7cca513e69321fd2897e5b0e"><td class="memTemplParams" colspan="2"><a id="a6965fadd7cca513e69321fd2897e5b0e"></a>
-template&lt;test_mode Mode&gt; </td></tr>
-<tr class="memitem:a6965fadd7cca513e69321fd2897e5b0e"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_para_move_y</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const Container &amp;container) const</td></tr>
-<tr class="separator:a6965fadd7cca513e69321fd2897e5b0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7f4245ba360545ce32fcaa8a18cb543f"><td class="memTemplParams" colspan="2"><a id="a7f4245ba360545ce32fcaa8a18cb543f"></a>
-template&lt;test_mode Mode&gt; </td></tr>
-<tr class="memitem:a7f4245ba360545ce32fcaa8a18cb543f"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_copy_assign_y_to_x</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const Container &amp;xContainer, const Container &amp;yContainer) const</td></tr>
-<tr class="separator:a7f4245ba360545ce32fcaa8a18cb543f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5a98be0a8a5a2f523c0e004603ce5ba7"><td class="memTemplParams" colspan="2"><a id="a5a98be0a8a5a2f523c0e004603ce5ba7"></a>
-template&lt;test_mode Mode&gt; </td></tr>
-<tr class="memitem:a5a98be0a8a5a2f523c0e004603ce5ba7"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_move_assign_y_to_x</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const Container &amp;xContainer) const</td></tr>
-<tr class="separator:a5a98be0a8a5a2f523c0e004603ce5ba7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a71c983acf8716239ed9f40bba8e008d5"><td class="memTemplParams" colspan="2"><a id="a71c983acf8716239ed9f40bba8e008d5"></a>
-template&lt;test_mode Mode&gt; </td></tr>
-<tr class="memitem:a71c983acf8716239ed9f40bba8e008d5"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_mutation</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const Container &amp;yContainer) const</td></tr>
-<tr class="separator:a71c983acf8716239ed9f40bba8e008d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5f72ed61f9bd673facf2de6516d8b98c"><td class="memTemplParams" colspan="2"><a id="a5f72ed61f9bd673facf2de6516d8b98c"></a>
-template&lt;test_mode Mode&gt; </td></tr>
-<tr class="memitem:a5f72ed61f9bd673facf2de6516d8b98c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_mutation_after_swap</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const Container &amp;lhs, const Container &amp;rhs) const</td></tr>
-<tr class="separator:a5f72ed61f9bd673facf2de6516d8b98c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a111c67792da77eb4d2cc616998c0d7b2"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check</b> (std::string_view description, std::string_view detail, test_logger&lt; Mode &gt; &amp;logger, const Container &amp;container, const int prediction) const</td></tr>
+<tr class="separator:a111c67792da77eb4d2cc616998c0d7b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaf8beef8a7e0ff4156d6a052a3e450d5"><td class="memItemLeft" align="right" valign="top"><a id="aaf8beef8a7e0ff4156d6a052a3e450d5"></a>
 const alloc_info &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>info</b> () const noexcept</td></tr>
 <tr class="separator:aaf8beef8a7e0ff4156d6a052a3e450d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following file:<ul>
-<li>TestFramework/<a class="el" href="_allocation_checkers_details_8hpp_source.html">AllocationCheckersDetails.hpp</a></li>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><h3>template&lt;class Container, class Allocator, class Predictions&gt;<br />
+class sequoia::sequoia::unit_testing::impl::allocation_checker&lt; Container, Allocator, Predictions &gt;</h3>
+
+<p>Wraps basic_allocation_info, together with the prior allocation count. </p>
+<p>Consider a container, x, on which some potentially allocating operation is performed. Prior to this operation, an instantiation of the <a class="el" href="classsequoia_1_1sequoia_1_1unit__testing_1_1impl_1_1allocation__checker.html" title="Wraps basic_allocation_info, together with the prior allocation count.">allocation_checker</a> class template acquires the number of allocations already performed. Calling the check method after the operation of interest, the container is inspected via the function object stored in basic_allocation_info. This allows the change in the number of allocations to be computed, which is then compared with the prediction. </p>
+</div><hr/>The documentation for this class was generated from the following file:<ul>
+<li>/Users/Claire/Dropbox/Sequoia/TestFramework/<a class="el" href="_allocation_checkers_details_8hpp_source.html">AllocationCheckersDetails.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

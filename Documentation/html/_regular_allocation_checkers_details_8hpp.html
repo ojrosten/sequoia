@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.15"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: TestFramework/RegularAllocationCheckersDetails.hpp File Reference</title>
+<title>Sequoia: /Users/Claire/Dropbox/Sequoia/TestFramework/RegularAllocationCheckersDetails.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -73,35 +73,93 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Implementation details for allocation checks within the unit testing framework.  
+<p>Implementation details for allocation checks of regular types.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="_allocation_checkers_details_8hpp_source.html">AllocationCheckersDetails.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_regular_checkers_details_8hpp_source.html">RegularCheckersDetails.hpp</a>&quot;</code><br />
 </div>
 <p><a href="_regular_allocation_checkers_details_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1sequoia_1_1unit__testing_1_1impl_1_1regular__allocation__actions.html">sequoia::sequoia::unit_testing::impl::regular_allocation_actions</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extends <a class="el" href="structsequoia_1_1sequoia_1_1unit__testing_1_1impl_1_1allocation__actions.html" title="actions common to both move-only and regular types.">allocation_actions</a> for types with copy semantics.  <a href="structsequoia_1_1sequoia_1_1unit__testing_1_1impl_1_1regular__allocation__actions.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:acdba83dfa35225633346ab3d8daefa61"><td class="memTemplParams" colspan="2"><a id="acdba83dfa35225633346ab3d8daefa61"></a>
-template&lt;test_mode Mode, class Actions , class Container , class... Allocators, class... Predictions&gt; </td></tr>
-<tr class="memitem:acdba83dfa35225633346ab3d8daefa61"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::sequoia::unit_testing::impl::check_copy_assign</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, Container &amp;z, const Container &amp;y, const allocation_checker&lt; Container, Allocators, Predictions &gt; &amp;... checkers)</td></tr>
-<tr class="separator:acdba83dfa35225633346ab3d8daefa61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a248d28e29abb13724ae28e6070ce029e"><td class="memTemplParams" colspan="2">template&lt;test_mode Mode, class Actions , class Container , class... Allocators, class... Predictions&gt; </td></tr>
+<tr class="memitem:a248d28e29abb13724ae28e6070ce029e"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="_regular_allocation_checkers_details_8hpp.html#a248d28e29abb13724ae28e6070ce029e">sequoia::sequoia::unit_testing::impl::check_copy_assign</a> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, Container &amp;z, const Container &amp;y, const dual_allocation_checker&lt; Container, Allocators, Predictions &gt; &amp;... checkers)</td></tr>
+<tr class="separator:a248d28e29abb13724ae28e6070ce029e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acabe0b756d1ccb98232e0b42d2d14c78"><td class="memTemplParams" colspan="2"><a id="acabe0b756d1ccb98232e0b42d2d14c78"></a>
 template&lt;test_mode Mode, class Container , class Mutator , class... Allocators, class... Predictions&gt; </td></tr>
 <tr class="memitem:acabe0b756d1ccb98232e0b42d2d14c78"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::sequoia::unit_testing::impl::check_para_constructor_allocations</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const Container &amp;y, Mutator yMutator, const basic_allocation_info&lt; Container, Allocators, Predictions &gt; &amp;... info)</td></tr>
 <tr class="separator:acabe0b756d1ccb98232e0b42d2d14c78"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a69b238cdaa160e277ebec5160839993d"><td class="memTemplParams" colspan="2"><a id="a69b238cdaa160e277ebec5160839993d"></a>
+<tr class="memitem:a901ddaa3e0d8f8cb9ea106ea54e8cf34"><td class="memTemplParams" colspan="2"><a id="a901ddaa3e0d8f8cb9ea106ea54e8cf34"></a>
 template&lt;test_mode Mode, class Actions , class T , class Mutator , class... Allocators, class... Predictions&gt; </td></tr>
-<tr class="memitem:a69b238cdaa160e277ebec5160839993d"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::sequoia::unit_testing::impl::check_semantics</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, const T &amp;x, const T &amp;y, Mutator yMutator, std::tuple&lt; allocation_checker&lt; T, Allocators, Predictions &gt;... &gt; checkers)</td></tr>
-<tr class="separator:a69b238cdaa160e277ebec5160839993d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a901ddaa3e0d8f8cb9ea106ea54e8cf34"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="_regular_allocation_checkers_details_8hpp.html#a901ddaa3e0d8f8cb9ea106ea54e8cf34">sequoia::sequoia::unit_testing::impl::check_semantics</a> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, const T &amp;x, const T &amp;y, Mutator yMutator, std::tuple&lt; dual_allocation_checker&lt; T, Allocators, Predictions &gt;... &gt; checkers)</td></tr>
+<tr class="memdesc:a901ddaa3e0d8f8cb9ea106ea54e8cf34"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unpacks the tuple and feeds to the overload of check_semantics defined in <a class="el" href="_move_only_checkers_details_8hpp.html" title="Implementation details for checking move-only semantics.">MoveOnlyCheckersDetails.hpp</a>. <br /></td></tr>
+<tr class="separator:a901ddaa3e0d8f8cb9ea106ea54e8cf34"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Implementation details for allocation checks within the unit testing framework. </p>
-</div></div><!-- contents -->
+<div class="textblock"><p>Implementation details for allocation checks of regular types. </p>
+</div><h2 class="groupheader">Function Documentation</h2>
+<a id="file_a248d28e29abb13724ae28e6070ce029e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#file_a248d28e29abb13724ae28e6070ce029e">&#9670;&nbsp;</a></span>check_copy_assign()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;test_mode Mode, class Actions , class Container , class... Allocators, class... Predictions&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void sequoia::sequoia::unit_testing::impl::check_copy_assign </td>
+          <td>(</td>
+          <td class="paramtype">std::string_view&#160;</td>
+          <td class="paramname"><em>description</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">test_logger&lt; Mode &gt; &amp;&#160;</td>
+          <td class="paramname"><em>logger</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Actions &amp;&#160;</td>
+          <td class="paramname"><em>actions</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Container &amp;&#160;</td>
+          <td class="paramname"><em>z</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const Container &amp;&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classsequoia_1_1sequoia_1_1unit__testing_1_1impl_1_1dual__allocation__checker.html">dual_allocation_checker</a>&lt; Container, Allocators, Predictions &gt; &amp;...&#160;</td>
+          <td class="paramname"><em>checkers</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Provides an extra level of indirection in order that the current number of allocations may be acquired before proceeding. </p>
+
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

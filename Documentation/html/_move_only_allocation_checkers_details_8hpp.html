@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.15"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: TestFramework/MoveOnlyAllocationCheckersDetails.hpp File Reference</title>
+<title>Sequoia: /Users/Claire/Dropbox/Sequoia/TestFramework/MoveOnlyAllocationCheckersDetails.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -76,6 +76,7 @@ $(function() {
 <p>Implementation details for allocation checks within the unit testing framework.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="_allocation_checkers_details_8hpp_source.html">AllocationCheckersDetails.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_move_only_checkers_details_8hpp_source.html">MoveOnlyCheckersDetails.hpp</a>&quot;</code><br />
 <code>#include &lt;optional&gt;</code><br />
 </div>
 <p><a href="_move_only_allocation_checkers_details_8hpp_source.html">Go to the source code of this file.</a></p>
@@ -91,10 +92,11 @@ Functions</h2></td></tr>
 template&lt;test_mode Mode, class Container , class... Allocators, class... Predictions&gt; </td></tr>
 <tr class="memitem:a00675dab1a69668eedc2ebb9cdc26f4a"><td class="memTemplItemLeft" align="right" valign="top">std::optional&lt; Container &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::sequoia::unit_testing::impl::check_para_constructor_allocations</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, Container &amp;&amp;y, const Container &amp;yClone, const basic_allocation_info&lt; Container, Allocators, Predictions &gt; &amp;... info)</td></tr>
 <tr class="separator:a00675dab1a69668eedc2ebb9cdc26f4a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acced55e06b981d11cd6a66c42af199ae"><td class="memTemplParams" colspan="2"><a id="acced55e06b981d11cd6a66c42af199ae"></a>
+<tr class="memitem:ad72dbf274534cb16ef23c5bc81fc862a"><td class="memTemplParams" colspan="2"><a id="ad72dbf274534cb16ef23c5bc81fc862a"></a>
 template&lt;test_mode Mode, class Actions , class T , class Mutator , class... Allocators&gt; </td></tr>
-<tr class="memitem:acced55e06b981d11cd6a66c42af199ae"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::sequoia::unit_testing::impl::check_semantics</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone, Mutator m, std::tuple&lt; allocation_checker&lt; T, Allocators, move_only_allocation_predictions &gt;... &gt; checkers)</td></tr>
-<tr class="separator:acced55e06b981d11cd6a66c42af199ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad72dbf274534cb16ef23c5bc81fc862a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="_move_only_allocation_checkers_details_8hpp.html#ad72dbf274534cb16ef23c5bc81fc862a">sequoia::sequoia::unit_testing::impl::check_semantics</a> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone, Mutator m, std::tuple&lt; dual_allocation_checker&lt; T, Allocators, move_only_allocation_predictions &gt;... &gt; checkers)</td></tr>
+<tr class="memdesc:ad72dbf274534cb16ef23c5bc81fc862a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unpacks the tuple and feeds to the overload of check_semantics defined in <a class="el" href="_move_only_checkers_details_8hpp.html" title="Implementation details for checking move-only semantics.">MoveOnlyCheckersDetails.hpp</a>. <br /></td></tr>
+<tr class="separator:ad72dbf274534cb16ef23c5bc81fc862a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implementation details for allocation checks within the unit testing framework. </p>

@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file MoveOnlyAllocationCheckers.hpp
+/*! \file
     \brief Utilities for performing allocation checks of move-only types.
 */
 

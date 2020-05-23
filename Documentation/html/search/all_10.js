@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['sequoia',['sequoia',['../md__r_e_a_d_m_e.html',1,'']]],
+  ['sequoia',['sequoia',['../md___users__claire__dropbox__sequoia__r_e_a_d_m_e.html',1,'']]],
   ['scaling_5fdereference_5fpolicy',['scaling_dereference_policy',['../classsequoia_1_1unit__testing_1_1scaling__dereference__policy.html',1,'sequoia::unit_testing']]],
   ['semanticscheckersdetails_2ehpp',['SemanticsCheckersDetails.hpp',['../_semantics_checkers_details_8hpp.html',1,'']]],
   ['sentinel',['sentinel',['../classsequoia_1_1unit__testing_1_1test__logger_1_1sentinel.html',1,'sequoia::unit_testing::test_logger']]],

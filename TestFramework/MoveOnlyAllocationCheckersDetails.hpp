@@ -7,8 +7,8 @@
 
 #pragma once
 
-/*! \file MoveOnlyAllocationCheckersDetails.hpp
-    \brief Implementation details for allocation checks within the unit testing framework.
+/*! \file
+    \brief Implementation details specific to allocation checks for move-only types.
 */
 
 #include "AllocationCheckersDetails.hpp"
@@ -42,7 +42,7 @@ namespace sequoia::unit_testing::impl
   {
     auto fn{
       [description,&logger,&actions,&x,&y,&xClone,&yClone,m{std::move(m)}](auto&&... checkers){
-        return impl::check_semantics(description, logger, actions, std::forward<T>(x), std::forward<T>(y), xClone, yClone, std::move(m), std::forward<decltype(checkers)>(checkers)...);
+        return check_semantics(description, logger, actions, std::forward<T>(x), std::forward<T>(y), xClone, yClone, std::move(m), std::forward<decltype(checkers)>(checkers)...);
       }
     };
 

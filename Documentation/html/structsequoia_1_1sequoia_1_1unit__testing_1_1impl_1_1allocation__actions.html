@@ -73,6 +73,11 @@ $(function() {
 <div class="title">sequoia::sequoia::unit_testing::impl::allocation_actions Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>actions common to both move-only and regular types.  
+ <a href="structsequoia_1_1sequoia_1_1unit__testing_1_1impl_1_1allocation__actions.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="_allocation_checkers_details_8hpp_source.html">AllocationCheckersDetails.hpp</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for sequoia::sequoia::unit_testing::impl::allocation_actions:</div>
 <div class="dyncontent">
@@ -80,32 +85,32 @@ Inheritance diagram for sequoia::sequoia::unit_testing::impl::allocation_actions
   <img src="structsequoia_1_1sequoia_1_1unit__testing_1_1impl_1_1allocation__actions.png" usemap="#sequoia::sequoia::unit_5Ftesting::impl::allocation_5Factions_map" alt=""/>
   <map id="sequoia::sequoia::unit_5Ftesting::impl::allocation_5Factions_map" name="sequoia::sequoia::unit_5Ftesting::impl::allocation_5Factions_map">
 <area href="structsequoia_1_1sequoia_1_1unit__testing_1_1impl_1_1move__only__allocation__actions.html" alt="sequoia::sequoia::unit_testing::impl::move_only_allocation_actions" shape="rect" coords="0,112,376,136"/>
-<area href="structsequoia_1_1sequoia_1_1unit__testing_1_1impl_1_1regular__allocation__actions.html" alt="sequoia::sequoia::unit_testing::impl::regular_allocation_actions" shape="rect" coords="386,112,762,136"/>
+<area href="structsequoia_1_1sequoia_1_1unit__testing_1_1impl_1_1regular__allocation__actions.html" title="Extends allocation_actions for types with copy semantics." alt="sequoia::sequoia::unit_testing::impl::regular_allocation_actions" shape="rect" coords="386,112,762,136"/>
   </map>
 </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a469d17a21b9002a33fda95c776fdbfc3"><td class="memTemplParams" colspan="2"><a id="a469d17a21b9002a33fda95c776fdbfc3"></a>
+<tr class="memitem:a3f1eb9e5d57b57c90cc292e990959151"><td class="memTemplParams" colspan="2"><a id="a3f1eb9e5d57b57c90cc292e990959151"></a>
 template&lt;test_mode Mode, class Container , class... Allocators, class... Predictions&gt; </td></tr>
-<tr class="memitem:a469d17a21b9002a33fda95c776fdbfc3"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>post_equality_action</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const Container &amp;x, const Container &amp;, const <a class="el" href="classsequoia_1_1sequoia_1_1unit__testing_1_1impl_1_1allocation__checker.html">allocation_checker</a>&lt; Container, Allocators, Predictions &gt; &amp;... checkers)</td></tr>
-<tr class="separator:a469d17a21b9002a33fda95c776fdbfc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad5ef327e164604d15d0f7e673d22c76d"><td class="memTemplParams" colspan="2"><a id="ad5ef327e164604d15d0f7e673d22c76d"></a>
+<tr class="memitem:a3f1eb9e5d57b57c90cc292e990959151"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>post_equality_action</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const Container &amp;x, const Container &amp;y, const <a class="el" href="classsequoia_1_1sequoia_1_1unit__testing_1_1impl_1_1dual__allocation__checker.html">dual_allocation_checker</a>&lt; Container, Allocators, Predictions &gt; &amp;... checkers)</td></tr>
+<tr class="separator:a3f1eb9e5d57b57c90cc292e990959151"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2881771480f481ab0476e4cc78399ebe"><td class="memTemplParams" colspan="2"><a id="a2881771480f481ab0476e4cc78399ebe"></a>
 template&lt;test_mode Mode, class Container , class... Allocators, class... Predictions&gt; </td></tr>
-<tr class="memitem:ad5ef327e164604d15d0f7e673d22c76d"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>post_nequality_action</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const Container &amp;x, const Container &amp;, const <a class="el" href="classsequoia_1_1sequoia_1_1unit__testing_1_1impl_1_1allocation__checker.html">allocation_checker</a>&lt; Container, Allocators, Predictions &gt; &amp;... checkers)</td></tr>
-<tr class="separator:ad5ef327e164604d15d0f7e673d22c76d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2881771480f481ab0476e4cc78399ebe"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>post_nequality_action</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const Container &amp;x, const Container &amp;y, const <a class="el" href="classsequoia_1_1sequoia_1_1unit__testing_1_1impl_1_1dual__allocation__checker.html">dual_allocation_checker</a>&lt; Container, Allocators, Predictions &gt; &amp;... checkers)</td></tr>
+<tr class="separator:a2881771480f481ab0476e4cc78399ebe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6b8f10474f971f7c2917438a1f81b70f"><td class="memTemplParams" colspan="2"><a id="a6b8f10474f971f7c2917438a1f81b70f"></a>
 template&lt;test_mode Mode, class Container , class... Allocators, class... Predictions&gt; </td></tr>
 <tr class="memitem:a6b8f10474f971f7c2917438a1f81b70f"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>post_move_action</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const Container &amp;y, const <a class="el" href="classsequoia_1_1sequoia_1_1unit__testing_1_1impl_1_1allocation__checker.html">allocation_checker</a>&lt; Container, Allocators, Predictions &gt; &amp;... checkers)</td></tr>
 <tr class="separator:a6b8f10474f971f7c2917438a1f81b70f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8434ad1d6f5296b093b3b6ae2b3ded57"><td class="memTemplParams" colspan="2"><a id="a8434ad1d6f5296b093b3b6ae2b3ded57"></a>
+<tr class="memitem:a4c90e71f023e5285ff4c1caf0e961a70"><td class="memTemplParams" colspan="2"><a id="a4c90e71f023e5285ff4c1caf0e961a70"></a>
 template&lt;test_mode Mode, class Container , class Mutator , class... Allocators, class... Predictions&gt; </td></tr>
-<tr class="memitem:a8434ad1d6f5296b093b3b6ae2b3ded57"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>post_move_assign_action</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, Container &amp;y, const Container &amp;yClone, Mutator yMutator, const <a class="el" href="classsequoia_1_1sequoia_1_1unit__testing_1_1impl_1_1allocation__checker.html">allocation_checker</a>&lt; Container, Allocators, Predictions &gt; &amp;... checkers)</td></tr>
-<tr class="separator:a8434ad1d6f5296b093b3b6ae2b3ded57"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3ac7fa9b2c10862f6d7080014ce90172"><td class="memTemplParams" colspan="2"><a id="a3ac7fa9b2c10862f6d7080014ce90172"></a>
+<tr class="memitem:a4c90e71f023e5285ff4c1caf0e961a70"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>post_move_assign_action</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, Container &amp;y, const Container &amp;yClone, Mutator yMutator, const <a class="el" href="classsequoia_1_1sequoia_1_1unit__testing_1_1impl_1_1dual__allocation__checker.html">dual_allocation_checker</a>&lt; Container, Allocators, Predictions &gt; &amp;... checkers)</td></tr>
+<tr class="separator:a4c90e71f023e5285ff4c1caf0e961a70"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada3e15c9d5f4963c331aee1f47dd73f8"><td class="memTemplParams" colspan="2"><a id="ada3e15c9d5f4963c331aee1f47dd73f8"></a>
 template&lt;test_mode Mode, class Container , class Mutator , class... Allocators, class... Predictions&gt; </td></tr>
-<tr class="memitem:a3ac7fa9b2c10862f6d7080014ce90172"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>post_swap_action</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, Container &amp;x, const Container &amp;y, const Container &amp;yClone, Mutator yMutator, const <a class="el" href="classsequoia_1_1sequoia_1_1unit__testing_1_1impl_1_1allocation__checker.html">allocation_checker</a>&lt; Container, Allocators, Predictions &gt; &amp;... checkers)</td></tr>
-<tr class="separator:a3ac7fa9b2c10862f6d7080014ce90172"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada3e15c9d5f4963c331aee1f47dd73f8"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>post_swap_action</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, Container &amp;x, const Container &amp;y, const Container &amp;yClone, Mutator yMutator, const <a class="el" href="classsequoia_1_1sequoia_1_1unit__testing_1_1impl_1_1dual__allocation__checker.html">dual_allocation_checker</a>&lt; Container, Allocators, Predictions &gt; &amp;... checkers)</td></tr>
+<tr class="separator:ada3e15c9d5f4963c331aee1f47dd73f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
@@ -125,8 +130,10 @@ static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>has_
 static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>has_post_swap_action</b> {true}</td></tr>
 <tr class="separator:acc3ca601c71b087ba453853e34c9af97"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this struct was generated from the following file:<ul>
-<li>TestFramework/<a class="el" href="_allocation_checkers_details_8hpp_source.html">AllocationCheckersDetails.hpp</a></li>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>actions common to both move-only and regular types. </p>
+</div><hr/>The documentation for this struct was generated from the following file:<ul>
+<li>/Users/Claire/Dropbox/Sequoia/TestFramework/<a class="el" href="_allocation_checkers_details_8hpp_source.html">AllocationCheckersDetails.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

@@ -1,7 +1,7 @@
 /*! \page testframeworkpage The Testing Framework
 
-    The sequoia testing framework is designed to be robust, extensible, semantics-aware
-    and allocator-aware.
+    The sequoia testing framework is designed to be robust, extensible, semantics-aware,
+    allocator-aware and generics-friendly.
 
     \section sec_robustness Robustness
 
@@ -23,10 +23,7 @@
     check_equality("Description of test", x, 5);
 
     If x==5, the check passes whereas if x!=5 a failure is reported. However, suppose that
-    check_equality has a bug. For example, it might always return true. This is very dangerous
-    since it would give the impression that all tests pass, giving clients a false sense
-    of security in the code they're testing!
-
+    check_equality has a bug. For example, it might nver report failure.
     To counter this, tests can be created to be run in false-positive mode. In this case,
     the above example will pass when x!=5 and fail when x==5. The purpose of this is to pick
     up bugs in the testing framework itself.
@@ -39,17 +36,17 @@
     Predicted: 5
 
     In false-positive mode, this output is not be made directly visible to the user, since 
-    the false-positive test has succeeded Instead, it is dumped to a file. This means that
-    clients can check
+    the false-positive test has succeeded. Instead, it is dumped to a file. This means that
+    clients can check whether
     the underlying failure which the false-positive check has detected is as expected. It is
     good practice to place this file under version control. This provides sensitivity both to
     changes in the false-positive test and also changes to the way in which the testing
     framework generates output.
 
     Clients may extend the testing framework to conveniently test their types, for example
-    by specializing the detailed_equality_checker. This is a perfect opportunity to write
-    some false-positive tests to give confidence that the newly-added code is not spuriously
-    reporting success.
+    by specializing the detailed_equality_checker (see \ref sec_extensible). This is a perfect
+    opportunity to write some false-positive tests to give confidence that the newly-added code
+    is not spuriously reporting success.
 
     Finally, there are false-negative tests. They are essentially the same as standard mode;
     however, they are treated separately since statements like
@@ -77,11 +74,13 @@
     Suppose that a client has created a new container and consider comparing two instances.
     operator== may return false or true. In the first case, we want to get to the bottom
     of this, in a more appropriate manner than simply serializing the class (which may produce
-    excessive output). For a container, it would make sense to use iterators to compare
-    the elements and any that differ. However, it makes sense to do this even if operator==
-    returns true; after the aim is to test with high fidelity  and it may be that operator==
+    excessive output). For a container, it would make sense compare the size and then
+    to use iterators to compare
+    the elements and find any that differ. However, it makes sense to do this even if operator==
+    returns true; after all, the aim is to test with high fidelity and it may be that operator==
     has a bug; or perhaps it is fine but there's a bug in the const accessors. Either way,
-    a well designed specialization of the detailed_equality_checker will catch this.
+    a well designed specialization of the detailed_equality_checker will catch these
+    potential inconsistencies.
 
     However, there is a gap here. Consider the the first time a type is instantiated in
     a test, say
@@ -94,14 +93,14 @@
     check_equality("x correctly initialized", x, my_type{5});
 
     Therefore, in addition to the detailed_equality_checker, the framework defines two class
-    templates, equivalence_checker and weak_equivalence_checker. Suppose that, in this example
-    my_type, simply wraps an int; in this case it may make sense to define the specialization
+    templates, equivalence_checker and weak_equivalence_checker. Suppose that, in this example,
+    my_type simply wraps an int. Here it may make sense to define the specialization
     equivalence_checker<my_type>; internally, this will define a static function, check, which
-    define a comparison between my_type and int. The line of code above may then be replaced by
+    defines a comparison between my_type and int. The line of code above may then be replaced by
 
     check_equivalence("x correctly initialized", x, 5);
 
-    Once consistency of initialization has been checked, thereafter it make sense to revert
+    Once consistency of initialization has been checked, thereafter it makes sense to revert
     to check_equality.
 
     What of the weak_equivalence_checker? This is for cases where there is a signifcant mismatch
@@ -121,7 +120,7 @@
     \section sec_semantics Semantics-Awareness
 
     By utilizing sequoia's testing framework, clients are strongly encourged to think carefully
-    about the semantics of their classes upfront, rather than as an after thought. For the
+    about the semantics of their classes upfront, rather than as an after-thought. For the
     purposes of this library, a type exhibiting regular semantics is understood to have copy/move
     constructors, copy/move assigment, operator==, operator!= and swap. Note that
     there is no strict requirement for a default constructor. If a class provides this
@@ -156,14 +155,46 @@
     regular_allocation_checker (or an analogue, such as move_only_allocation_checker, for types
     with different semantics). This checker provides an overload of the check_semantics
     method which accepts allocation predictions for copying, assigning (with and without
-    propagation) and mutation. The design accomodates for scoped allocators and for multiple
-    allocators (be they normal or scoped). Allocation tests come with a facility for automatically
+    propagation) and mutation. The design accomodates scoped allocators and multiple
+    allocators (be each of them normal or scoped). Allocation tests come with a facility for automatically
     generating all 8 combinations of allocation propagation from a single call to check_semantics.
 
     The allocation testing framework has been rigorously tested with a combination of
     false-positive and false-negative checks and has very high fidelity. For example, if
     check_semantics is fed a type for which operator== has accidentally been written such
-    that one (or more) of its arguments captures by value, rather than be reference, the
+    that one (or more) of its arguments are captured by value, rather than be reference, the
     framework will detect this.
+
+
+    \section sec_generics Generics-Friendliness
+
+    When writing generic code, it is natural to want to test it with a variety of appropriate
+    types. This leads to the idea of templated unit tests; within sequoia this is
+    most naturally achieved by leaving the test classes plain (rather than templated) but
+    templating various methods inside. However, a challenge with doing this is interpreting failures.
+    The line at which the failure occurs is no longer enough, since this line may correspond to
+    several different template instantiations.
+
+    Consequently, sequoia reports failures with plenty of type information. For example, the following
+    output is typical of what to expect when checking the equality of two instance of std::pair<int,double>
+
+    ../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 51
+	[std::__1::pair<int, double>]
+	operator== returned false
+
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 51
+	[std::__1::pair<int, double>]
+	operator!= returned true
+
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 51
+	Second element of pair is incorrect
+	[double]
+	operator== returned false
+	Obtained : 7.8
+	Predicted: -7.8
+
+    For each check performed as part of the top-level check, type information is reported. This is
+    generated by the class template \ref type_demangler. Clients are welcome to specialize this
+    to provide more readable demangling.
 
  */

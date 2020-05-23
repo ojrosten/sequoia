@@ -80,7 +80,7 @@ namespace sequoia::unit_testing::impl
   {
     auto fn{
       [description,&logger,&actions,&x,&y,m=std::move(yMutator)](auto&&... checkers){
-        return impl::check_semantics(description, logger, actions, x, y, m, std::forward<decltype(checkers)>(checkers)...);
+        return check_semantics(description, logger, actions, x, y, m, std::forward<decltype(checkers)>(checkers)...);
       }
     };
 

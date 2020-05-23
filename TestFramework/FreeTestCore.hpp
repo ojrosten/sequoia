@@ -8,7 +8,7 @@
 #pragma once
 
 /*! \file
-    \brief Core functionality for the unit testing framework.
+    \brief Core functionality for the testing framework.
 
     This header defines the basic_test class template, from which all concrete tests derive.
 

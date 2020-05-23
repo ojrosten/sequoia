@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file MoveOnlyCheckersDetails.hpp
+/*! \file
     \brief Implementation details for checking move-only semantics.
 */
 
