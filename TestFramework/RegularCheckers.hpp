@@ -34,6 +34,8 @@
     the copy constructor of vector were incorrectly implemented with the pointer, rather
     than what it points to, being copied. The mutation check would catch this. There is a
     similar check for copy assignment.
+
+    \anchor regular_semantics_definition
  */
 
 #include "FreeCheckers.hpp"

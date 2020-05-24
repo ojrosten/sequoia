@@ -66,6 +66,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#namespaces">Namespaces</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">RegularCheckers.hpp File Reference</div>  </div>
@@ -79,6 +80,12 @@ $(function() {
 </div>
 <p><a href="_regular_checkers_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:namespacesequoia"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesequoia.html">sequoia</a></td></tr>
+<tr class="memdesc:namespacesequoia"><td class="mdescLeft">&#160;</td><td class="mdescRight">Definitions for a handful of functions which are not templated. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a5f242645f1374b08f0b887ac38bdc8c2"><td class="memTemplParams" colspan="2"><a id="a5f242645f1374b08f0b887ac38bdc8c2"></a>
@@ -97,7 +104,8 @@ template&lt;test_mode Mode, class T &gt; </td></tr>
 <p>Types exhibiting regular semantics are pleasant to reason about. Within this library, a type is regular if it possesses the following:</p>
 <p>copy constructor move constructor copy assignment move assignment swap operator== operator!=</p>
 <p>Note that a default constructor is not a strict requirement. Types additionally possessing the remaining comparison operators will be referred to as having ordered semantics.</p>
-<p>This file adds two functions to the check_semantics overload set; both functions are appropriate for testing the behaviour of types with regular semantics. Inside the functions, consistency of the operators listed above will be checked. One of the overloads also accepts a mutator. This will modify a copy of y, checking both that the copy is indeed changed and also that y is left alone. The reason for this is to check that classes which e.g. wrap a pointer have faithful copy semantics. For example, suppose that the copy constructor of vector were incorrectly implemented with the pointer, rather than what it points to, being copied. The mutation check would catch this. There is a similar check for copy assignment. </p>
+<p>This file adds two functions to the check_semantics overload set; both functions are appropriate for testing the behaviour of types with regular semantics. Inside the functions, consistency of the operators listed above will be checked. One of the overloads also accepts a mutator. This will modify a copy of y, checking both that the copy is indeed changed and also that y is left alone. The reason for this is to check that classes which e.g. wrap a pointer have faithful copy semantics. For example, suppose that the copy constructor of vector were incorrectly implemented with the pointer, rather than what it points to, being copied. The mutation check would catch this. There is a similar check for copy assignment.</p>
+<p><a class="anchor" id="regular_semantics_definition"></a></p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

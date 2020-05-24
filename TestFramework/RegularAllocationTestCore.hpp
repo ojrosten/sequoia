@@ -8,7 +8,8 @@
 #pragma once
 
 /*! \file
-    \brief Extension for checking allocations for types with regular semantics
+    \brief Extension for checking allocations for types with regular semantics,
+    see \ref regular_semantics_definition "here".
 */
 
 #include "RegularTestCore.hpp"

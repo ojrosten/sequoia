@@ -141,7 +141,8 @@
     \ref regular_extender_primary "regular_extender" class template. The latter
     provides an overload of check_semantics; given two instantiations of a class it checks
     consistency of the above list of special member functions / functions. Alternatively,
-    for move-only types, the \ref move_only_test_alias "move_only_test" may be exploited.
+    for move-only types (defined as regular types but for which the copy operations are removed),
+    the \ref move_only_test_alias "move_only_test" may be exploited.
     Either way, this removes much
     of the burden of devising ways to carefully check consistency of these operations by
     reliably bundling everything into a call to check_semantics.

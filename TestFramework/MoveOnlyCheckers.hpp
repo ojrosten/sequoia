@@ -31,6 +31,8 @@
     two instance of T, x and y, in the move-only case 4 are taken. This is because, by definition,
     we cannot copy x and y and so, to be able to compare to the original values (essential for
     the mechanics of testing), immutable clones must be supplied.
+
+    \anchor move_only_definition
 */
 
 #include "FreeCheckers.hpp"
@@ -38,6 +40,12 @@
 
 namespace sequoia::unit_testing
 {
+  /*! Preconditions:
+    
+      x == xClone
+      y == yClone
+      x != y
+   */
   template<test_mode Mode, class T>
   void check_semantics(std::string_view description, test_logger<Mode>& logger, T&& x, T&& y, const T& xClone, const T& yClone)
   {

@@ -8,13 +8,15 @@
 #pragma once
 
 /*! \file
-    \brief Utilities for recording the outcome of tests
+    \brief Utilities for recording the outcome of tests.
 
     This is the header where the enum class, test_mode, is defined. This ultimately determines
-    whether a given test is standard, false-positive or false-negative. The test_logger class
+    whether a given test is standard, false-positive or false-negative. See
+    \ref sec_robustness for more information.
+    The test_logger class
     template employs test_mode as a non-type template parameter. It is via the test_logger that
-    other building blocks of the testing framework, such as checkers and test classes
-    themselves depend on the test_mode.
+    other building blocks of the testing framework, such as checkers and concrete test classes
+    depend on the test_mode.
  */
 
 #include "TypeTraits.hpp"
@@ -32,8 +34,7 @@ namespace sequoia::unit_testing
   [[nodiscard]]
   std::string combine_messages(std::string_view s1, std::string_view s2, std::string_view sep=" ");
 
-  /*! \class
-      \brief Holds details of the file to which the last successfully completed test is registered.
+  /*! \brief Holds details of the file to which the last successfully completed test is registered.
 
       If a check causes a crash, the recovery file may be used to provide a clue as to where this
       happened.
@@ -48,7 +49,7 @@ namespace sequoia::unit_testing
     static std::string_view recovery_file() noexcept { return st_RecoveryFile; }
   };
 
-  /*! \brief Specifies whether tests are run as standard tests or in false postive/negative mode 
+  /*! \brief Specifies whether tests are run as standard tests or in false postive/negative mode .
       
       \anchor test_mode_enum
    */
@@ -72,6 +73,8 @@ namespace sequoia::unit_testing
 
       The sentinels also take care of writing to the auxiliary file associated with
       false-positive/negative tests.
+
+      \anchor test_logger_primary
    */
 
   template<test_mode Mode>

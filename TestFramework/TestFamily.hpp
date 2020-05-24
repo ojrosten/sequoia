@@ -8,7 +8,7 @@
 #pragma once
 
 /*! \file
-    \brief Utilities for grouping unit tests
+    \brief Utilities for grouping tests into families.
 
  */
 

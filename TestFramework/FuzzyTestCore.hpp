@@ -8,13 +8,14 @@
 #pragma once
 
 /*! \file
-    \brief Extension of unit testing framework for inexact comparisons.
+    \brief Extension of testing framework for inexact comparisons.
  
     This header provides utilities for performing a comparison between two instances of
     a type utilising a generic function object. A particular use-case is comparison
     within a tolerance, for which a concrete function object is supplied.
     
-    The pattern is to provide a new overload for dispatch_check. Internally, if no compare
+    The pattern is to provide a new overload for
+    \ref dispatch_check_free_overloads "dispatch_check". Internally, if no compare
     object is identified for the given type, an attempt it made to interpret the type as
     a range. Thus if, for example, a fuzzy comparison is defined for a type, T, then no
     additional work is required to do a fuzzy comparison of the elements of a container of T.
@@ -28,6 +29,9 @@
 
 namespace sequoia::unit_testing
 {
+  /*! Thin wrapper for the comparison object, for the purposes of cleanly adding an overload
+      to \ref dispatch_check_free_overloads "dispatch_check".
+   */
   template<class Compare>
   struct fuzzy_compare
   {
@@ -36,6 +40,9 @@ namespace sequoia::unit_testing
     Compare compare;
   };
 
+  /*! \brief Reflection for whether a given type, Compare, behaves as a function object capable of comparing
+      two instances of a type, T
+   */
   template<class Compare, class T, class=std::void_t<>>
   struct compares_type : std::false_type
   {};
@@ -48,6 +55,14 @@ namespace sequoia::unit_testing
   template<class Compare, class T>
   constexpr bool compares_type_v{compares_type<Compare, T>::value};
 
+  /*! \brief Reflection for wether an object of type Compare defines a function, report, which accepts
+      two instance of a type, T.
+
+      Generally, when writing a new comparison class, it is desirable to provide detailed information
+      in the case that the comparison fails. If this is done via a function, report, it will be
+      automatically used by
+      \ref dispatch_check_fuzzy "dispatch_check"
+   */
   template<class Compare, class T, class=std::void_t<>>
   struct reports_for_type : std::false_type
   {};
@@ -59,7 +74,8 @@ namespace sequoia::unit_testing
 
   template<class Compare, class T>
   constexpr bool reports_for_type_v{reports_for_type<Compare, T>::value};    
-  
+
+  /*! \brief Adds to the overload set dispatch_check_free_overloads */
   template<test_mode Mode, class Compare, class T>
   bool dispatch_check(std::string_view description, test_logger<Mode>& logger, fuzzy_compare<Compare> c, const T& value, const T& prediction)
   {

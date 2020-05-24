@@ -7,9 +7,9 @@
 
 #pragma once
 
-/*! \file UnitTestPreprocessor.hpp
+/*! \file
     \brief Central location for pre-processor options.
-*/
+ */
 
 namespace sequoia::unit_testing
 {

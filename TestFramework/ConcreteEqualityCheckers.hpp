@@ -8,7 +8,7 @@
 #pragma once
 
 /*! \file
-    \brief Useful specializations for the class template detailed_equality_checker
+    \brief Useful specializations for the class template detailed_equality_checker.
 
     The specializations in this header are for various types defined in std. Internally,
     check_equality is used meaning that there will be automatic, recursive dispatch to 
@@ -20,11 +20,11 @@
 
     will automatically call
 
-    check_equality("bigger desciption", logger, x.first, y,first)
+    check_equality("automatically enhanced desciption", logger, x.first, y,first)
 
     and similarly for the second element. In turn, this nested check_equality will use
     a specialization of the detailed_equality_checker of my_type1, should it exist. As
-    usual, if the specialization for T does not exist, but T may be interpretted as
+    usual, if the specialization for T does not exist, but T may be interpreted as
     a container holding a type U, then everything will simply work, provided either that
     there exists a specialization of the detailed_equality_checker for U or U is serializable.
  */

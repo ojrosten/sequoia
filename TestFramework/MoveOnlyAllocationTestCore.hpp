@@ -8,7 +8,9 @@
 #pragma once
 
 /*! \file
-    \brief Extension for checking allocations for types with move-only semantics
+    \brief Extension for checking allocations for types with move-only semantics.
+
+    Move-only semantics are defined \ref move_only_definition "here".
 */
 
 #include "MoveOnlyTestCore.hpp"

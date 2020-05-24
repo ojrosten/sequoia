@@ -40,7 +40,7 @@ namespace sequoia::unit_testing
 
   // Done through inheritance rather than a using declaration
   // in order to make use of CTAD. Should be able to revert
-  // to using in C++20...
+  // to 'using' in C++20...
     
   template<class Container, class Allocator>
   class move_only_allocation_info
@@ -65,7 +65,7 @@ namespace sequoia::unit_testing
 
     if(auto opt{impl::check_para_constructor_allocations(description, logger, std::forward<T>(y), yClone, info...)})
     {
-      impl::check_semantics(description, logger, impl::move_only_allocation_actions{}, std::forward<T>(x), std::move(*opt), xClone, yClone, std::move(m), std::tuple_cat(impl::make_dual_allocation_checkers(info, x, y)...));
+      check_semantics(description, logger, impl::move_only_allocation_actions{}, std::forward<T>(x), std::move(*opt), xClone, yClone, std::move(m), std::tuple_cat(impl::make_dual_allocation_checkers(info, x, y)...));
     }
   }
 }

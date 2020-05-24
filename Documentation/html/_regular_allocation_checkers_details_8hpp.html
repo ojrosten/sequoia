@@ -67,6 +67,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#namespaces">Namespaces</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">RegularAllocationCheckersDetails.hpp File Reference</div>  </div>
@@ -86,6 +87,12 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extends <a class="el" href="structsequoia_1_1sequoia_1_1unit__testing_1_1impl_1_1allocation__actions.html" title="actions common to both move-only and regular types.">allocation_actions</a> for types with copy semantics.  <a href="structsequoia_1_1sequoia_1_1unit__testing_1_1impl_1_1regular__allocation__actions.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:namespacesequoia"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesequoia.html">sequoia</a></td></tr>
+<tr class="memdesc:namespacesequoia"><td class="mdescLeft">&#160;</td><td class="mdescRight">Definitions for a handful of functions which are not templated. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a248d28e29abb13724ae28e6070ce029e"><td class="memTemplParams" colspan="2">template&lt;test_mode Mode, class Actions , class Container , class... Allocators, class... Predictions&gt; </td></tr>
@@ -98,7 +105,7 @@ template&lt;test_mode Mode, class Container , class Mutator , class... Allocator
 <tr class="memitem:a901ddaa3e0d8f8cb9ea106ea54e8cf34"><td class="memTemplParams" colspan="2"><a id="a901ddaa3e0d8f8cb9ea106ea54e8cf34"></a>
 template&lt;test_mode Mode, class Actions , class T , class Mutator , class... Allocators, class... Predictions&gt; </td></tr>
 <tr class="memitem:a901ddaa3e0d8f8cb9ea106ea54e8cf34"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="_regular_allocation_checkers_details_8hpp.html#a901ddaa3e0d8f8cb9ea106ea54e8cf34">sequoia::sequoia::unit_testing::impl::check_semantics</a> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, const T &amp;x, const T &amp;y, Mutator yMutator, std::tuple&lt; dual_allocation_checker&lt; T, Allocators, Predictions &gt;... &gt; checkers)</td></tr>
-<tr class="memdesc:a901ddaa3e0d8f8cb9ea106ea54e8cf34"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unpacks the tuple and feeds to the overload of check_semantics defined in <a class="el" href="_move_only_checkers_details_8hpp.html" title="Implementation details for checking move-only semantics.">MoveOnlyCheckersDetails.hpp</a>. <br /></td></tr>
+<tr class="memdesc:a901ddaa3e0d8f8cb9ea106ea54e8cf34"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unpacks the tuple and feeds to the overload of check_semantics defined in <a class="el" href="_regular_checkers_details_8hpp.html" title="Implementation details for checking regular semantics.">RegularCheckersDetails.hpp</a>. <br /></td></tr>
 <tr class="separator:a901ddaa3e0d8f8cb9ea106ea54e8cf34"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -155,7 +162,7 @@ template&lt;test_mode Mode, class Actions , class Container , class... Allocator
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Provides an extra level of indirection in order that the current number of allocations may be acquired before proceeding. </p>
+<p>Provides an extra level of indirection in order that the current number of allocation may be acquired before proceeding. </p>
 
 </div>
 </div>
