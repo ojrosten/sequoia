@@ -10,7 +10,7 @@
 /*! \file
     \brief Implementation details for semantics checks that cleanly supports types which do/do not have allocators.
 
-    The general pattern in this file is of piared function templates of the form
+    The general pattern in this file is of paired function templates of the form
 
     template<test_mode Mode, class Actions, class T, class... Args>
     ret_type do_check_foo(std::string_view, test_logger<Mode>&, const Actions&, const T&, const T&, const Args&...);
@@ -25,7 +25,7 @@
     As such, check_foo delegates to the instantiation of do_check_foo for which sizeof...(Args) is zero. However,
     do_check_foo is designed such that it can also deal with types which may allocate. As such, do_check_foo takes
     a template argument 'Actions'. Appropriate realizations of this type possess a bunch of constexpr static bools
-    which indicate whether additional actions should be carried out.
+    which indicate whether or not additional actions should be carried out.
 
     For example, when checking the semantics of a regular type, two const references to the type must be supplied.
     It is a precondition that these instances are not equal to one another. This is always checked. However, if
@@ -44,7 +44,7 @@
 
     where the extra check is fed, amongst other things, the parameter pack args...
 
-    Therefore when checking the semantics of an allocating type, the skeleton of the function is that same as for
+    Therefore when checking the semantics of an allocating type, the skeleton of the function is the same as for
     non-allocating types. However, in the former case extra checks are folded in. This pattern ensures
     consistency: if the scheme is tweaked for non-allocating types, allocating types will automatically benefit.
     But there is enough flexbility to allow for all the extra allocation checks that allocating types require.

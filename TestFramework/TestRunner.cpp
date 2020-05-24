@@ -5,10 +5,13 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+/*! \file
+    \brief Various definitions associated with running tests from the commandline.
+*/
+
 #include "TestRunner.hpp"
 #include "CommandLineArguments.hpp"
 
-#include <map>
 #include <iostream>
 #include <fstream>
 #include <sstream>

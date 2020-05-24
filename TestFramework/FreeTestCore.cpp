@@ -5,7 +5,9 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "RegularTestCore.hpp"
+#include "FreeTestCore.hpp"
+
+/*! \brief Definitions for a handful of functions which are not templated. */
 
 namespace sequoia::unit_testing
 {

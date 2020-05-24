@@ -8,7 +8,7 @@
 #pragma once
 
 /*! \file
-    \brief Helper for running unit tests from the command line.
+    \brief Utilities for running tests from the command line.
 */
 
 #include "TestFamily.hpp"
@@ -56,19 +56,20 @@ namespace sequoia::unit_testing
 
       The various arguments have the following effect:
 
-      test <name>                              : runs the specified test
-      source <cpp file>                        : runs all tests in the specified cpp
-      create <directory, namespace::class_name>: creates infrastructure for a new test
+      test <name>                               : runs the specified test
+      source <cpp file>                         : runs all tests in the specified cpp
+      create <directory, namespace::class_name> : creates infrastructure for a new test
       
       --async-depth <[0-2]> / -ad: serial/family/test/deep
 
       --async    / -a: unless overridden runs families of test concurrently
       --verbose  / -v: provides detailed break down of test results 
       --nofiles  / -n: suppresses output of diagnostic files
-      --pause    / -p: pauses execution until enter is hit
+      --pause    / -p: pauses execution until 'enter' is hit
       --recovery / -r: generates recovery file, which may help tracking down crashes
 
-      If no arguments are specified, all tests a run, in serial, with the diagnostic files generated.
+      If no arguments are specified, all tests are run, in serial, with the diagnostic
+      files generated.
 
    */
 

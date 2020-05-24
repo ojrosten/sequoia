@@ -66,7 +66,8 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a>  </div>
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#namespaces">Namespaces</a>  </div>
   <div class="headertitle">
 <div class="title">ConcreteEqualityCheckers.hpp File Reference</div>  </div>
 </div><!--header-->
@@ -86,14 +87,20 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1unit__testing_1_1detailed__equality__checker_3_01std_1_1tuple_3_01_t_8_8_8_01_4_01_4.html">sequoia::unit_testing::detailed_equality_checker&lt; std::tuple&lt; T... &gt; &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Detailed comparison of the elements of two instances of std::pair&lt;T...&gt;  <a href="structsequoia_1_1unit__testing_1_1detailed__equality__checker_3_01std_1_1tuple_3_01_t_8_8_8_01_4_01_4.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:namespacesequoia"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesequoia.html">sequoia</a></td></tr>
+<tr class="memdesc:namespacesequoia"><td class="mdescLeft">&#160;</td><td class="mdescRight">Definitions for a handful of functions which are not templated. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Useful specializations for the class template detailed_equality_checker. </p>
 <p>The specializations in this header are for various types defined in std. Internally, check_equality is used meaning that there will be automatic, recursive dispatch to other specializations of detailed_equality_checker, if appropriate. For example, consider two instances of std::pair&lt;my_type1, mytype2&gt;, x and y. The utilities in this header means the call</p>
 <p>check_equality("descripion", logger, x, y);</p>
 <p>will automatically call</p>
-<p>check_equality("bigger desciption", logger, x.first, y,first)</p>
-<p>and similarly for the second element. In turn, this nested check_equality will use a specialization of the detailed_equality_checker of my_type1, should it exist. As usual, if the specialization for T does not exist, but T may be interpretted as a container holding a type U, then everything will simply work, provided either that there exists a specialization of the detailed_equality_checker for U or U is serializable. </p>
+<p>check_equality("automatically enhanced desciption", logger, x.first, y,first)</p>
+<p>and similarly for the second element. In turn, this nested check_equality will use a specialization of the detailed_equality_checker of my_type1, should it exist. As usual, if the specialization for T does not exist, but T may be interpreted as a container holding a type U, then everything will simply work, provided either that there exists a specialization of the detailed_equality_checker for U or U is serializable. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

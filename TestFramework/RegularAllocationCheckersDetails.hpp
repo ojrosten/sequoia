@@ -43,8 +43,9 @@ namespace sequoia::unit_testing::impl
     }
   };
 
-  /// Provides an extra level of indirection in order that the current number of allocations
-  /// may be acquired before proceeding.
+  /*! Provides an extra level of indirection in order that the current number of allocation
+       may be acquired before proceeding.
+   */
   template<test_mode Mode, class Actions, class Container, class... Allocators, class... Predictions>
   void check_copy_assign(std::string_view description, test_logger<Mode>& logger, const Actions& actions, Container& z, const Container& y, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
   {
@@ -74,7 +75,7 @@ namespace sequoia::unit_testing::impl
     }
   }
 
-  /// Unpacks the tuple and feeds to the overload of check_semantics defined in MoveOnlyCheckersDetails.hpp
+  /// Unpacks the tuple and feeds to the overload of check_semantics defined in RegularCheckersDetails.hpp
   template<test_mode Mode, class Actions, class T, class Mutator, class... Allocators, class... Predictions>
   bool check_semantics(std::string_view description, test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, Mutator yMutator, std::tuple<dual_allocation_checker<T, Allocators, Predictions>...> checkers)
   {

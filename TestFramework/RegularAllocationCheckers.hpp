@@ -8,7 +8,8 @@
 #pragma once
 
 /*! \file
-    \brief Utilities for performing allocation checks for regular types.
+    \brief Utilities for performing allocation checks for regular types,
+    see \ref regular_semantics_definition "here".
 */
 
 #include "AllocationCheckers.hpp"

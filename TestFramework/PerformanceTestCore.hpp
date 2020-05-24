@@ -8,7 +8,7 @@
 #pragma once
 
 /*! \file
-    \brief Extension of the testing framework for perfomance testing
+    \brief Extension of the testing framework for perfomance testing.
 */
 
 #include "RegularTestCore.hpp"

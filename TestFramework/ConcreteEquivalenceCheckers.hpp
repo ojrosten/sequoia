@@ -34,7 +34,9 @@ namespace sequoia::unit_testing
     }
   };
 
-  /*! \brief Checks equivalence of std::pair<S,T> and std::pair<U,V> where the decays of S,U and T,V are each the same*/
+  /*! \brief Checks equivalence of std::pair<S,T> and std::pair<U,V> where the decays
+      of S,U and T,V are each the same
+   */
   template<class S, class T>
   struct equivalence_checker<std::pair<S, T>>
   {

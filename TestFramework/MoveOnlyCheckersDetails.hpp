@@ -37,11 +37,11 @@ namespace sequoia::unit_testing::impl
       check_equality(combine_messages(description, "Swap"), logger, y, xClone);
       check_equality(combine_messages(description, "Swap"), logger, z, yClone);
 
-      check_move_assign(description, logger, actions, y, std::move(z), yClone, m, args...);
+      check_move_assign(description, logger, actions, y, std::move(z), yClone, std::move(m), args...);
     }
     else
     {      
-      check_move_assign(description, logger, actions, z, std::move(y), yClone, m, args...);
+      check_move_assign(description, logger, actions, z, std::move(y), yClone, std::move(m), args...);
     }
   }
 }

@@ -71,7 +71,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Useful specializations for the class template detailed_equality_checker.  
+<p>Definitions for a handful of functions which are not templated.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
@@ -333,34 +333,7 @@ template&lt;class T &gt; </td></tr>
 <tr class="separator:a7116cfb2d39c72b37dadc705ff3e4d5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Useful specializations for the class template detailed_equality_checker. </p>
-<p>Implementation details for semantics checks within the unit testing framework.</p>
-<p>Extension for testing classes exhibiting regular semantics.</p>
-<p>Implementation details for checking regular semantics within the unit testing framework.</p>
-<p>Functions for checking regular semantics.</p>
-<p>Extension for testing classes exhibiting move-only semantics.</p>
-<p>Functions for checking semantics of types lacking copy semantics but which are otherwise regular.</p>
-<p>Extension of unit testing framework for inexact comparisons.</p>
-<p>Useful specializations for the class template equivalence_checker.</p>
-<p>The specializations in this header are for various types defined in std. Internally, check_equality is used meaning that there will be automatic, recursive dispatch to other specializations of detailed_equality_checker, if appropriate. For example, consider two instances of std::pair&lt;my_type1, mytype2&gt;, x and y. The utilities in this header means the call</p>
-<p>check_equality("descripion", logger, x, y);</p>
-<p>will automatically call</p>
-<p>check_equality("bigger desciption", logger, x.first, y,first)</p>
-<p>and similarly for the second element. In turn, this nested check_equality will use a specialization of the detailed_equality_checker of my_type1, should it exist. As usual, if the specialization for T does not exist, but T may be interpretted as a container holding a type U, then everything will simply work, provided either that there exists a specialization of the detailed_equality_checker for U or U is serializable.</p>
-<p>This header provides utilities for performing a comparison between two instances of a type utilising a generic function object. A particular use-case is comparison within a tolerance, for which a concrete function object is supplied.</p>
-<p>The pattern is to provide a new overload for dispatch_check. Internally, if no compare object is identified for the given type, an attempt it made to interpret the type as a range. Thus if, for example, a fuzzy comparison is defined for a type, T, then no additional work is required to do a fuzzy comparison of the elements of a container of T. All that is required to do this is to feed the fuzzy_compare object to the existing check_range overload set and everything works smoothly.</p>
-<p>Within this library, a type is defined to have move-only semantics if possesses the following:</p>
-<p>move constructor move assignment swap operator== operator!=</p>
-<p>but lacks</p>
-<p>copy constructor copy assignment</p>
-<p>Note that a default constructor is not a strict requirement.</p>
-<p>This file adds one function to the check_semantics overload set, inside which consistency of the first list of operators above will be checked. There is an important difference compared to the corresponding overloads for regular semantics. Whereas the latter takes just two instance of T, x and y, in the move-only case 4 are taken. This is because, by definition, we cannot copy x and y and so, to be able to compare to the original values (essential for the mechanics of testing), immutable clones must be supplied.</p>
-<p>This class is designed to be plugged into the checker class template, in order to extend its functionality. See <a class="el" href="_move_only_checkers_8hpp_source.html">MoveOnlyCheckers.hpp</a> for further information.</p>
-<p>Types exhibiting regular semantics are pleasant to reason about. Within this library, a type is regular if it possesses the following:</p>
-<p>copy constructor move constructor copy assignment move assignment swap operator== operator!=</p>
-<p>Note that a default constructor is not a strict requirement. Types additionally possessing the remaining comparison operators will be referred to as having ordered semantics.</p>
-<p>This file adds two functions to the check_semantics overload set; both functions are appropriate for testing the behaviour of types with regular semantics. Inside the functions, consistency of the operators listed above will be checked. One of the overloads also accepts a mutator. This will modify a copy of y, checking both that the copy is indeed changed and also that y is left alone. The reason for this is to check that classes which e.g. wrap a pointer have faithful copy semantics. For example, suppose that the copy constructor of vector were incorrectly implemented with the pointer, rather than what it points to, being copied. The mutation check would catch this. There is a similar check for copy assignment.</p>
-<p>This class is designed to be plugged into the checker class template, in order to extend its functionality. See <a class="el" href="_regular_checkers_8hpp_source.html">RegularCheckers.hpp</a> for further information. </p>
+<div class="textblock"><p>Definitions for a handful of functions which are not templated. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

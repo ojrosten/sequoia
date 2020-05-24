@@ -8,13 +8,14 @@
 #pragma once
 
 /*! \file
-    \brief Utilities for allocator testing
+    \brief Utilities for allocation testing.
  */
 
 
 namespace sequoia::unit_testing
 {  
-  /*! \brief Somewhat similar to std::allocator but logs (de)allocations via an counter which is shared upon copying.
+  /*! \brief Somewhat similar to std::allocator but logs (de)allocations via an counter
+      which is shared upon copying.
 
       A fundamental ingredient of the allocation testing framework is the capactity to
       count the number of allocations which have occured before/after some operation and

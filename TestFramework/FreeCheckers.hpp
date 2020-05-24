@@ -14,17 +14,19 @@
     not two instances of T are, in some sense, the same. If the type implements operator== then it
     is natural to utilize this. However, there is much more to the story. First of all, if this check
     fails then, in order to be useful, there must be some way of serializing the state of T. This may
-    be done by specializing the class template string_maker for cases where operator<< is not appropriately
+    be done by specializing the class template 
+    \ref string_maker_primary "string_maker" for cases where operator<< is not appropriately
     overloaded.
 
     However, there is an alternative which may be superior. Consider trying to implement vector.
     This class has various const accessors suggesting that, if operator== returns false, then the
     accessors can be used to probe the exact nature of the inequality. To this end, a class template
-    detailed_equality_checker is defined. Specializations perform a detailed check of the equality
+    \ref detailed_equality_checker_primary "detailed_equality_checker" is defined. Specializations
+    perform a detailed check of the equality
     of the state of two supposedly equal instance of a class. Note that there is no need for the
     detailed_equality_checker to include checks of operator== or operator!=, since these will be done,
     regardless. Indeed, the detailed_equality_checker will be triggered independently of whether operator==
-    fails since either the latter or the accessors may have bugs and introducing unnecessary dependencies
+    fails since either the latter or the accessors may have bugs, and introducing unnecessary dependencies
     would reduce the fidelity of the testing framework.
 
     If a detailed_equality_checker is supplied, then compile-time logic will ignore any attempt to
@@ -38,18 +40,24 @@
     the appropriate solution (as is the case for may built-in types).
 
     Suppose a client wishes to compare instance of some_container<T>. If some_container has a specialization
-    of detailed_equality_checker then this will be used; if it does not then reflection is used to
+    of \ref detailed_equality_checker_primary "detailed_equality_checker" then this will be used; if it does
+    not then reflection is used to
     determine if some_container overloads begin and end. If so, then it is treated as a range and
     all that is required is to implement a detailed_equality_checker for T (unless serialization is prefered).
-    If some_container is user-defined, it is wisest to provide an overload of the detailed_equality_checker.
+    If some_container is user-defined, it is wisest to provide an overload of the
+    \ref detailed_equality_checker_primary "detailed_equality_checker".
     However, if the container is part of std, it is probably safe to assume it works correctly and so
     instead effort can be directed focused on T.
 
     With this in mind, imagine creating a container. One of the first things one may wish to do is to check
-    that it is correctly initialized. It would be a mistake to use the detailed_equality_checker for this
-    since, to do so a second, identical instance would need to be created. This is circular and prone to
+    that it is correctly initialized. It would be a mistake to use the
+    \ref detailed_equality_checker_primary "detailed_equality_checker" for this
+    since, to do so, a second, identical instance would need to be created. This is circular and prone to
     false positives. Consequently, the testing framework also defines a pair of class templates that
-    complement detailed_equality_checker: equivalence_checker and weak_equivalence_checker. We may
+    complement
+    \ref detailed_equality_checker_primary "detailed_equality_checker":
+    \ref equivalence_checker_primary "equivalence_checker" and 
+    \ref weak_equivalence_checker_primary "weak_equivalence_checker". We may
     consider a value for std::vector to be equivalent to an initializer_list in the sense that they hold (at
     the relevant point of the program) the same elements. Thus, a specialization
     equivalence_checker<vector, initializer_list> is supplied. Of course, there is more to a vector than the
@@ -58,9 +66,10 @@
     Thus it is philosophically reasonable to consider equivalence of vector and initializer_list. However,
     sometimes is is useful to check the equivalence of the state of an instance of T to a proper subset of
     the logical state of an instance of some S. For this purpose, the class template
-    weak_equivalence_checker is supplied.
+    \ref weak_equivalence_checker_primary "weak_equivalence_checker" is supplied.
     
-    Both the equivalence_checker and its weak counterpart can be fed >=2 template type arguments. While for
+    Both the \ref equivalence_checker_primary "equivalence_checker" and its weak counterpart can be fed >=2
+    template type arguments. While for
     a vector we would just feed in two types (vector and initializer_list), in some cases we may need more.
     For example, a graph has both nodes and edges and so a graph may be considered equivalent to two
     types representing these structures.
@@ -161,7 +170,7 @@ namespace sequoia::unit_testing
 
   /*! \brief generic function that generates a check from any class providing a static check method.
 
-      This employs a sentinel and so can be used naively.
+      This employs a \ref test_logger_primary "sentinel" and so can be used naively.
    */
   
   template<class EquivChecker, test_mode Mode, class T, class S, class... U>
@@ -182,19 +191,22 @@ namespace sequoia::unit_testing
     return logger.failures() == previousFailures;
   }
 
-  /*! \name OverloadSet
+  /*! \name dispatch_check basic overload set
 
       The next three functions form an overload set, dedicated to appropiately dispatching requests
       to check equality, equivalence and weak equivalence. This set may be supplemented by extenders
       of the testing framework, see FuzzyTestCore.hpp for an example.
 
+      \anchor dispatch_check_free_overloads
+
    */
 
-  /*! \brief The workhorse of equality checking, which takes responsibility for reflecting upon types and then dispatching, appropriately. 
+  /*! \brief The workhorse of equality checking, which takes responsibility for reflecting upon types
+      and then dispatching, appropriately. 
 
-      The input type, T, must either be equality comparable or possess a detailed_equality_checker, or both. Generally, it 
-      will be the case that T does indeed overload operator==; generally anything beyond the simplest user-defined types
-      should be furnished with a detailed_equality_checker.
+      The input type, T, must either be equality comparable or possess a detailed_equality_checker, or both. 
+      Generally, it will be the case that T does indeed overload operator==; generally anything beyond 
+      the simplest user-defined types should be furnished with a detailed_equality_checker.
    */
   
   template<test_mode Mode, class T>
@@ -265,9 +277,9 @@ namespace sequoia::unit_testing
 
   /*! \brief The workhorse for equivalence checking
 
-      This function will reflect on whether an appropriate specialization of equivalence_checker exists. If so,
-      it will be used and if not it will attempt to interpret T as a range. Only if this fails then a static assertion
-      will terminate compilation.
+      This function will reflect on whether an appropriate specialization of equivalence_checker exists.
+      If so, it will be used and if not it will attempt to interpret T as a range. Only if this fails
+      then a static assertion will terminate compilation.
 
    */
   
@@ -290,9 +302,9 @@ namespace sequoia::unit_testing
 
   /*! \brief The workhorse for weak equivalence checking
 
-      This function will reflect on whether an appropriate specialization of weak_equivalence_checker exists. If so,
-      it will be used and if not it will attempt to interpret T as a range. Only if this fails then a static assertion
-      will terminate compilation.
+      This function will reflect on whether an appropriate specialization of weak_equivalence_checker exists.
+      If so, it will be used and if not it will attempt to interpret T as a range. Only if this fails then a
+      static assertion will terminate compilation.
 
    */
 

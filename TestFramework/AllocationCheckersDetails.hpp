@@ -8,7 +8,7 @@
 #pragma once
 
 /*! \file
-    \brief Implementation details for allocation checks.  
+    \brief Implementation details for allocation checks.
 */
 
 #include "SemanticsCheckersDetails.hpp"
@@ -222,7 +222,8 @@ namespace sequoia::unit_testing::impl
   {
     constexpr static bool value{
       ((   std::allocator_traits<Allocators>::propagate_on_container_swap::value
-        || std::allocator_traits<Allocators>::is_always_equal::value) && ...) };
+        || std::allocator_traits<Allocators>::is_always_equal::value) && ...)
+    };
   };
 
   template<class T, class... Allocators, class... Predictions>
@@ -230,7 +231,8 @@ namespace sequoia::unit_testing::impl
   {
     constexpr static bool value{
       ((   std::allocator_traits<Allocators>::propagate_on_container_swap::value
-        || std::allocator_traits<Allocators>::is_always_equal::value) && ...) };
+        || std::allocator_traits<Allocators>::is_always_equal::value) && ...)
+    };
   };
 
   //================================ make_scoped_allocation_checkers ================================//
@@ -261,7 +263,7 @@ namespace sequoia::unit_testing::impl
   [[nodiscard]]
   auto make_scoped_allocation_checkers(const basic_allocation_info<Container, std::scoped_allocator_adaptor<Allocators...>, Predictions>& info, Args&&... args)
   {
-    return make_scoped_allocation_checkers(info, std::make_index_sequence<sizeof...(Allocators)>{}, std::forward<Args>(args)...);
+    return make_scoped_allocation_checkers<Checker>(info, std::make_index_sequence<sizeof...(Allocators)>{}, std::forward<Args>(args)...);
   }
 
   //================================ make_dual_allocation_checkers ================================//

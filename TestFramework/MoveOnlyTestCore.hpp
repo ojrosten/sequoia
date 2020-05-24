@@ -20,7 +20,8 @@
 namespace sequoia::unit_testing
 {
   /*! \brief class template for plugging into the \ref checker_primary "checker"
-      class template to provide allocation checks for move-only types.
+      class template to provide allocation checks for move-only types,
+      see \ref move_only_definition "here".
 
       \anchor move_only_extender_primary
    */

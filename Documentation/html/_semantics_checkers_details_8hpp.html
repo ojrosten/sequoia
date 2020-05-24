@@ -67,6 +67,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#namespaces">Namespaces</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">SemanticsCheckersDetails.hpp File Reference</div>  </div>
@@ -89,6 +90,12 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1unit__testing_1_1impl_1_1pre__condition__actions.html">sequoia::unit_testing::impl::pre_condition_actions</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1unit__testing_1_1impl_1_1default__actions.html">sequoia::unit_testing::impl::default_actions</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:namespacesequoia"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacesequoia.html">sequoia</a></td></tr>
+<tr class="memdesc:namespacesequoia"><td class="mdescLeft">&#160;</td><td class="mdescRight">Definitions for a handful of functions which are not templated. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
@@ -128,15 +135,15 @@ template&lt;test_mode Mode, class Actions , class T &gt; </td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implementation details for semantics checks that cleanly supports types which do/do not have allocators. </p>
-<p>The general pattern in this file is of piared function templates of the form</p>
+<p>The general pattern in this file is of paired function templates of the form</p>
 <p>template&lt;test_mode Mode, class Actions, class T, class... Args&gt; ret_type do_check_foo(std::string_view, test_logger&lt;Mode&gt;&amp;, const Actions&amp;, const T&amp;, const T&amp;, const Args&amp;...);</p>
 <p>template&lt;test_mode Mode, class Actions, class T&gt; ret_type check_foo(std::string_view description, test_logger&lt;Mode&gt;&amp; logger, const Actions&amp; actions, const T&amp; x , const T&amp;y) { return do_check_foo(description, logger, actions, x, y); }</p>
-<p>The idea is that the implementation of check_foo in this file is appropriate for types without allocators. As such, check_foo delegates to the instantiation of do_check_foo for which sizeof...(Args) is zero. However, do_check_foo is designed such that it can also deal with types which may allocate. As such, do_check_foo takes a template argument 'Actions'. Appropriate realizations of this type possess a bunch of constexpr static bools which indicate whether additional actions should be carried out.</p>
+<p>The idea is that the implementation of check_foo in this file is appropriate for types without allocators. As such, check_foo delegates to the instantiation of do_check_foo for which sizeof...(Args) is zero. However, do_check_foo is designed such that it can also deal with types which may allocate. As such, do_check_foo takes a template argument 'Actions'. Appropriate realizations of this type possess a bunch of constexpr static bools which indicate whether or not additional actions should be carried out.</p>
 <p>For example, when checking the semantics of a regular type, two const references to the type must be supplied. It is a precondition that these instances are not equal to one another. This is always checked. However, if the type allocates, clients may prefer to utilize the allocation-checking extension supplied with sequoia. In this case, there is a constexpr flag which indicates that, after checking the precondition, it is further checked that operator== hasn't unwittingly allocated - as can happen if it accidentally captures by value rather than reference.</p>
 <p>Thus, the general structure is</p>
 <p>some_common_check(...); if constexpr (Actions::some_flag) { do_some_extra_check(...); }</p>
 <p>where the extra check is fed, amongst other things, the parameter pack args...</p>
-<p>Therefore when checking the semantics of an allocating type, the skeleton of the function is that same as for non-allocating types. However, in the former case extra checks are folded in. This pattern ensures consistency: if the scheme is tweaked for non-allocating types, allocating types will automatically benefit. But there is enough flexbility to allow for all the extra allocation checks that allocating types require.</p>
+<p>Therefore when checking the semantics of an allocating type, the skeleton of the function is the same as for non-allocating types. However, in the former case extra checks are folded in. This pattern ensures consistency: if the scheme is tweaked for non-allocating types, allocating types will automatically benefit. But there is enough flexbility to allow for all the extra allocation checks that allocating types require.</p>
 <p>As such, the various check_foo functions in this header have overloads in <a class="el" href="_allocation_checkers_details_8hpp.html" title="Implementation details for allocation checks.">AllocationCheckersDetails.hpp</a> which supply the extra argument(s) for the additional actions that comprise allocation checking.</p>
 <p>Note that check_foo / do_check_foo pairs in this file are common to both regular and move-only types. However, regular types additionally have copy semantics; the extra pieces necessary for this may be found in <a class="el" href="_regular_checkers_details_8hpp.html" title="Implementation details for checking regular semantics.">RegularCheckersDetails.hpp</a> and RegularAllocationCheckerDetails.hpp </p>
 </div></div><!-- contents -->
