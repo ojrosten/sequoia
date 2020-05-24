@@ -48,6 +48,10 @@ namespace sequoia::unit_testing
     static std::string_view recovery_file() noexcept { return st_RecoveryFile; }
   };
 
+  /*! \brief Specifies whether tests are run as standard tests or in false postive/negative mode 
+      
+      \anchor test_mode_enum
+   */
   enum class test_mode { standard, false_positive, false_negative };
 
   /*! \class

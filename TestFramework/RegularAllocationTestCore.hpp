@@ -7,8 +7,8 @@
 
 #pragma once
 
-/*! \file RegularAllocationTestCore.hpp
-    \brief Extension of unit testing framework for allocator testing
+/*! \file
+    \brief Extension for checking allocations for types with regular semantics
 */
 
 #include "RegularTestCore.hpp"
@@ -17,19 +17,24 @@
 
 namespace sequoia::unit_testing
 {
+  /*! \brief class template for plugging into the \ref checker_primary "checker"
+      class template to provide allocation checks for regular types.
+
+      \anchor regular_allocation_extender_primary
+   */
   template<test_mode Mode>
-  class allocation_extender
+  class regular_allocation_extender
   {
   public:
     constexpr static test_mode mode{Mode};
     
-    explicit allocation_extender(test_logger<Mode>& logger) : m_Logger{logger} {}
+    explicit regular_allocation_extender(test_logger<Mode>& logger) : m_Logger{logger} {}
 
-    allocation_extender(const allocation_extender&) = delete;    
-    allocation_extender(allocation_extender&&)      = delete;
+    regular_allocation_extender(const regular_allocation_extender&) = delete;    
+    regular_allocation_extender(regular_allocation_extender&&)      = delete;
 
-    allocation_extender& operator=(const allocation_extender&) = delete;  
-    allocation_extender& operator=(allocation_extender&&)      = delete;
+    regular_allocation_extender& operator=(const regular_allocation_extender&) = delete;  
+    regular_allocation_extender& operator=(regular_allocation_extender&&)      = delete;
 
     template<class T, class Mutator, class... Allocators>
     void check_semantics(std::string_view description, const T& x, const T& y, Mutator m, allocation_info<T, Allocators>... info)
@@ -37,17 +42,35 @@ namespace sequoia::unit_testing
       unit_testing::check_semantics(combine_messages("Regular Semantics", description), m_Logger, x, y, m, info...);
     }
   protected:
-    ~allocation_extender() = default;
+    ~regular_allocation_extender() = default;
 
   private:
     test_logger<Mode>& m_Logger;
   };
 
+  /*!  \brief Templated on the test_mode, this forms the basis of all allocation tests for regular types.
+
+       This class template provides a mechanism to help with the automatic generation of checks with
+       all 8 combinations of the allocation propagation flags. To utilize this, derived classes need
+       to define the following function template
+
+       template<bool, bool, bool>
+       void test_allocation();
+
+       Within the derived class, a call
+
+       do_allocation_tests(*this);
+
+       will ensure that all checks defined in the test_allocation function template are executed
+       for each combination of the allocation propagation flags.
+   
+       \anchor basic_regular_allocation_test_primary
+   */
   template<test_mode Mode>
-  class basic_regular_allocation_test : public basic_test<checker<Mode, allocation_extender<Mode>>>
+  class basic_regular_allocation_test : public basic_test<checker<Mode, regular_allocation_extender<Mode>>>
   {
   public:
-    using basic_test<checker<Mode, allocation_extender<Mode>>>::basic_test;
+    using basic_test<checker<Mode, regular_allocation_extender<Mode>>>::basic_test;
         
     basic_regular_allocation_test(const basic_regular_allocation_test&) = delete;
 
@@ -70,6 +93,7 @@ namespace sequoia::unit_testing
     }
   };
 
+  /*! \anchor regular_allocation_test_alias */
   using regular_allocation_test                = basic_regular_allocation_test<test_mode::standard>;
   using regular_allocation_false_negative_test = basic_regular_allocation_test<test_mode::false_negative>;
   using regular_allocation_false_positive_test = basic_regular_allocation_test<test_mode::false_positive>;

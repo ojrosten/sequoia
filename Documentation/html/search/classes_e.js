@@ -10,7 +10,7 @@ var searchData=
   ['queue_5fdetails',['queue_details',['../structsequoia_1_1concurrency_1_1impl_1_1queue__details.html',1,'sequoia::concurrency::impl']]],
   ['queue_5fdetails_3c_20r_2c_20false_20_3e',['queue_details&lt; R, false &gt;',['../structsequoia_1_1concurrency_1_1impl_1_1queue__details_3_01_r_00_01false_01_4.html',1,'sequoia::concurrency::impl']]],
   ['queue_5fdetails_3c_20r_2c_20multipipeline_20_3e',['queue_details&lt; R, MultiPipeline &gt;',['../structsequoia_1_1concurrency_1_1impl_1_1queue__details.html',1,'sequoia::concurrency::impl']]],
-  ['queue_5fselector',['queue_selector',['../structsequoia_1_1maths_1_1graph__impl_1_1queue__selector.html',1,'sequoia::maths::graph_impl::queue_selector&lt; G, bool &gt;'],['../structsequoia_1_1sequoia_1_1maths_1_1graph__impl_1_1queue__selector.html',1,'sequoia::sequoia::maths::graph_impl::queue_selector&lt; G, bool &gt;']]],
+  ['queue_5fselector',['queue_selector',['../structsequoia_1_1sequoia_1_1maths_1_1graph__impl_1_1queue__selector.html',1,'sequoia::sequoia::maths::graph_impl::queue_selector&lt; G, bool &gt;'],['../structsequoia_1_1maths_1_1graph__impl_1_1queue__selector.html',1,'sequoia::maths::graph_impl::queue_selector&lt; G, bool &gt;']]],
   ['queue_5fselector_3c_20g_2c_20false_20_3e',['queue_selector&lt; G, false &gt;',['../structsequoia_1_1maths_1_1graph__impl_1_1queue__selector_3_01_g_00_01false_01_4.html',1,'sequoia::maths::graph_impl']]],
   ['queue_5fselector_3c_20g_2c_20true_20_3e',['queue_selector&lt; G, true &gt;',['../structsequoia_1_1maths_1_1graph__impl_1_1queue__selector_3_01_g_00_01true_01_4.html',1,'sequoia::maths::graph_impl']]]
 ];

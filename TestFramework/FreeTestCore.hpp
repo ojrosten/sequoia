@@ -83,6 +83,8 @@ namespace sequoia::unit_testing
       The semantics are such that, of the special member functions, only explicit construction from a
       string_view and (virtual) destruction are publicly available. Move construction is protected;
       all remaining special member functions are deleted to discourage multiple instantiations.
+
+      \anchor basic_test_primary
    */
   
   template<class Checker>
@@ -145,6 +147,7 @@ namespace sequoia::unit_testing
   template<test_mode Mode>
   using basic_free_test = basic_test<checker<Mode>>;
 
+  /*! \anchor free_test_alias */
   using free_test                = basic_free_test<test_mode::standard>;
   using free_false_negative_test = basic_free_test<test_mode::false_negative>;
   using free_false_positive_test = basic_free_test<test_mode::false_positive>;

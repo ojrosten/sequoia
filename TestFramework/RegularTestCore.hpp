@@ -8,10 +8,7 @@
 #pragma once
 
 /*! \file
-    \brief Extension for testing classes exhibiting regular semantics.
-
-    This class is designed to be plugged into the checker class template, in order to extend
-    its functionality. See RegularCheckers.hpp for further information.
+    \brief Utilities for checking regular semantics.
  */
 
 #include "FreeTestCore.hpp"
@@ -19,6 +16,14 @@
 
 namespace sequoia::unit_testing
 {
+  /*! \brief Extender for testing classes exhibiting regular semantics.
+
+       This class is designed to be plugged into the 
+       \ref checker_primary "checker" class template, in order to extend
+       its functionality.
+
+       \anchor regular_extender_primary
+   */
   template<test_mode Mode>
   class regular_extender
   {
@@ -55,6 +60,7 @@ namespace sequoia::unit_testing
   template<test_mode mode>
   using canonical_regular_test = basic_test<regular_checker<mode>>;
 
+  /*! \anchor regular_test_alias */
   using regular_test                = canonical_regular_test<test_mode::standard>;
   using false_negative_regular_test = canonical_regular_test<test_mode::false_negative>;
   using false_positive_regular_test = canonical_regular_test<test_mode::false_positive>;  

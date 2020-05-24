@@ -74,6 +74,11 @@ $(function() {
 <div class="title">sequoia::unit_testing::basic_move_only_allocation_test&lt; Mode &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Templated on the test_mode, this forms the basis of all allocation tests for move-only types.  
+ <a href="classsequoia_1_1unit__testing_1_1basic__move__only__allocation__test.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="_move_only_allocation_test_core_8hpp_source.html">MoveOnlyAllocationTestCore.hpp</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for sequoia::unit_testing::basic_move_only_allocation_test&lt; Mode &gt;:</div>
 <div class="dyncontent">
@@ -250,10 +255,21 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>logger_type</b> = <a
 <tr class="separator:a79bf6c07da3f0e9aa57f1dcea3bfd9d4 inherit pro_types_classsequoia_1_1unit__testing_1_1checker"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_static_attribs_classsequoia_1_1unit__testing_1_1checker"><td colspan="2" onclick="javascript:toggleInherit('pro_static_attribs_classsequoia_1_1unit__testing_1_1checker')"><img src="closed.png" alt="-"/>&#160;Static Protected Attributes inherited from <a class="el" href="classsequoia_1_1unit__testing_1_1checker.html">sequoia::unit_testing::checker&lt; Mode, move_only_allocation_extender&lt; Mode &gt; &gt;</a></td></tr>
 <tr class="memitem:aa138b3e839655ee5d625ef5eaf74eade inherit pro_static_attribs_classsequoia_1_1unit__testing_1_1checker"><td class="memItemLeft" align="right" valign="top"><a id="aa138b3e839655ee5d625ef5eaf74eade"></a>
-static constexpr test_mode&#160;</td><td class="memItemRight" valign="bottom"><b>mode</b></td></tr>
+static constexpr <a class="el" href="_test_logger_8hpp.html#a0c941d9260474f8474ab230cb70d6317">test_mode</a>&#160;</td><td class="memItemRight" valign="bottom"><b>mode</b></td></tr>
 <tr class="separator:aa138b3e839655ee5d625ef5eaf74eade inherit pro_static_attribs_classsequoia_1_1unit__testing_1_1checker"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following file:<ul>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><h3>template&lt;test_mode Mode&gt;<br />
+class sequoia::unit_testing::basic_move_only_allocation_test&lt; Mode &gt;</h3>
+
+<p>Templated on the test_mode, this forms the basis of all allocation tests for move-only types. </p>
+<p>This class template provides a mechanism to help with the automatic generation of checks with all 4 combinations of the allocation propagation flags relevant to move-only types. To utilize this, derived classes need to define the following function template</p>
+<p>template&lt;bool, bool&gt; void test_allocation();</p>
+<p>Within the derived class, a call</p>
+<p>do_allocation_tests(*this);</p>
+<p>will ensure that all checks defined in the test_allocation function template are executed for each combination of the allocation propagation flags.</p>
+<p><a class="anchor" id="basic_move_only_allocation_test_primary"></a></p>
+</div><hr/>The documentation for this class was generated from the following file:<ul>
 <li>/Users/Claire/Dropbox/Sequoia/TestFramework/<a class="el" href="_move_only_allocation_test_core_8hpp_source.html">MoveOnlyAllocationTestCore.hpp</a></li>
 </ul>
 </div><!-- contents -->

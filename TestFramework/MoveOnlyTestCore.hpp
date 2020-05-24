@@ -19,6 +19,11 @@
 
 namespace sequoia::unit_testing
 {
+  /*! \brief class template for plugging into the \ref checker_primary "checker"
+      class template to provide allocation checks for move-only types.
+
+      \anchor move_only_extender_primary
+   */
   template<test_mode Mode>
   class move_only_extender
   {
@@ -49,6 +54,7 @@ namespace sequoia::unit_testing
   template<test_mode mode>
   using canonical_move_only_test = basic_test<move_only_checker<mode>>;
 
+  /*! \anchor move_only_test_alias */
   using move_only_test                = canonical_move_only_test<test_mode::standard>;
   using move_only_false_negative_test = canonical_move_only_test<test_mode::false_negative>;
   using move_only_false_positive_test = canonical_move_only_test<test_mode::false_positive>;  

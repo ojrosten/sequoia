@@ -1,9 +1,9 @@
 var searchData=
 [
   ['checker',['checker',['../classsequoia_1_1unit__testing_1_1checker.html',1,'sequoia::unit_testing']]],
-  ['checker_3c_20mode_2c_20allocation_5fextender_3c_20mode_20_3e_20_3e',['checker&lt; Mode, allocation_extender&lt; Mode &gt; &gt;',['../classsequoia_1_1unit__testing_1_1checker.html',1,'sequoia::unit_testing']]],
   ['checker_3c_20mode_2c_20extenders_2e_2e_2e_20_3e',['checker&lt; Mode, Extenders... &gt;',['../classsequoia_1_1unit__testing_1_1checker.html',1,'sequoia::unit_testing']]],
   ['checker_3c_20mode_2c_20move_5fonly_5fallocation_5fextender_3c_20mode_20_3e_20_3e',['checker&lt; Mode, move_only_allocation_extender&lt; Mode &gt; &gt;',['../classsequoia_1_1unit__testing_1_1checker.html',1,'sequoia::unit_testing']]],
+  ['checker_3c_20mode_2c_20regular_5fallocation_5fextender_3c_20mode_20_3e_20_3e',['checker&lt; Mode, regular_allocation_extender&lt; Mode &gt; &gt;',['../classsequoia_1_1unit__testing_1_1checker.html',1,'sequoia::unit_testing']]],
   ['checker_5fselector',['checker_selector',['../structsequoia_1_1unit__testing_1_1checker__selector.html',1,'sequoia::unit_testing']]],
   ['checker_5fselector_3c_20maths_3a_3agraph_5fflavour_3a_3adirected_20_3e',['checker_selector&lt; maths::graph_flavour::directed &gt;',['../structsequoia_1_1unit__testing_1_1checker__selector_3_01maths_1_1graph__flavour_1_1directed_01_4.html',1,'sequoia::unit_testing']]],
   ['checker_5fselector_3c_20maths_3a_3agraph_5fflavour_3a_3adirected_5fembedded_20_3e',['checker_selector&lt; maths::graph_flavour::directed_embedded &gt;',['../structsequoia_1_1unit__testing_1_1checker__selector_3_01maths_1_1graph__flavour_1_1directed__embedded_01_4.html',1,'sequoia::unit_testing']]],

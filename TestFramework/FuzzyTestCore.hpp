@@ -120,7 +120,11 @@ namespace sequoia::unit_testing
     return check_range(description, logger, fuzzy_compare{std::move(compare)}, first, last, predictionFirst, predictionLast);      
   }
 
-  /*! class template for plugging into the checker class template */
+  /*! \brief class template for plugging into the \ref checker_primary "checker"
+      class template to provide fuzzy checks.
+
+      \anchor fuzzy_extender_primary
+   */
   template<test_mode Mode>
   class fuzzy_extender
   {
@@ -160,10 +164,15 @@ namespace sequoia::unit_testing
   template<test_mode mode>
   using basic_fuzzy_test = basic_test<fuzzy_checker<mode>>;
 
+  /*! \anchor fuzzy_test_alias */
   using fuzzy_test                = basic_fuzzy_test<test_mode::standard>;
   using fuzzy_false_negative_test = basic_fuzzy_test<test_mode::false_negative>;
   using fuzzy_false_positive_test = basic_fuzzy_test<test_mode::false_positive>;
 
+  /*! \brief Function object for performing comparisons within an absolute tolerance
+
+      \anchor within_tolerance_primary
+   */
   template<class T>
   class within_tolerance
   {

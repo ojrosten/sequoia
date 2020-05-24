@@ -2,7 +2,10 @@ var searchData=
 [
   ['rebind',['rebind',['../structsequoia_1_1unit__testing_1_1shared__counting__allocator_1_1rebind.html',1,'sequoia::unit_testing::shared_counting_allocator']]],
   ['regular_5fallocation_5factions',['regular_allocation_actions',['../structsequoia_1_1sequoia_1_1unit__testing_1_1impl_1_1regular__allocation__actions.html',1,'sequoia::sequoia::unit_testing::impl']]],
+  ['regular_5fallocation_5fextender',['regular_allocation_extender',['../classsequoia_1_1unit__testing_1_1regular__allocation__extender.html',1,'sequoia::unit_testing']]],
+  ['regular_5fallocation_5ftest',['regular_allocation_test',['../_regular_allocation_test_core_8hpp.html#ac274ed08b406f48e4b8b55f15815520f',1,'sequoia::unit_testing']]],
   ['regular_5fextender',['regular_extender',['../classsequoia_1_1unit__testing_1_1regular__extender.html',1,'sequoia::unit_testing']]],
+  ['regular_5ftest',['regular_test',['../_regular_test_core_8hpp.html#aa6606cb8944bef0d0dd34a44382ae3e4',1,'sequoia::unit_testing']]],
   ['regularallocationcheckers_2ehpp',['RegularAllocationCheckers.hpp',['../_regular_allocation_checkers_8hpp.html',1,'']]],
   ['regularallocationcheckersdetails_2ehpp',['RegularAllocationCheckersDetails.hpp',['../_regular_allocation_checkers_details_8hpp.html',1,'']]],
   ['regularallocationtestcore_2ehpp',['RegularAllocationTestCore.hpp',['../_regular_allocation_test_core_8hpp.html',1,'']]],

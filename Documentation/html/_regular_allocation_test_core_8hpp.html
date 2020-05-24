@@ -73,7 +73,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Extension of unit testing framework for allocator testing.  
+<p>Extension for checking allocations for types with regular semantics.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="_regular_test_core_8hpp_source.html">RegularTestCore.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="_regular_allocation_checkers_8hpp_source.html">RegularAllocationCheckers.hpp</a>&quot;</code><br />
@@ -83,15 +83,16 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsequoia_1_1unit__testing_1_1allocation__extender.html">sequoia::unit_testing::allocation_extender&lt; Mode &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsequoia_1_1unit__testing_1_1regular__allocation__extender.html">sequoia::unit_testing::regular_allocation_extender&lt; Mode &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">class template for plugging into the <a class="el" href="classsequoia_1_1unit__testing_1_1checker.html#checker_primary">checker</a> class template to provide allocation checks for regular types.  <a href="classsequoia_1_1unit__testing_1_1regular__allocation__extender.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsequoia_1_1unit__testing_1_1basic__regular__allocation__test.html">sequoia::unit_testing::basic_regular_allocation_test&lt; Mode &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Templated on the test_mode, this forms the basis of all allocation tests for regular types.  <a href="classsequoia_1_1unit__testing_1_1basic__regular__allocation__test.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:ac274ed08b406f48e4b8b55f15815520f"><td class="memItemLeft" align="right" valign="top"><a id="ac274ed08b406f48e4b8b55f15815520f"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::unit_testing::regular_allocation_test</b> = basic_regular_allocation_test&lt; test_mode::standard &gt;</td></tr>
+<tr class="memitem:ac274ed08b406f48e4b8b55f15815520f"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_regular_allocation_test_core_8hpp.html#ac274ed08b406f48e4b8b55f15815520f">sequoia::unit_testing::regular_allocation_test</a> = basic_regular_allocation_test&lt; test_mode::standard &gt;</td></tr>
 <tr class="separator:ac274ed08b406f48e4b8b55f15815520f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a01f88450f516a79f51dcee73f1bbe3fc"><td class="memItemLeft" align="right" valign="top"><a id="a01f88450f516a79f51dcee73f1bbe3fc"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::unit_testing::regular_allocation_false_negative_test</b> = basic_regular_allocation_test&lt; test_mode::false_negative &gt;</td></tr>
@@ -101,8 +102,24 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::unit_testin
 <tr class="separator:a689b1cf5aa2414028a95d5e535ce3fe6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Extension of unit testing framework for allocator testing. </p>
-</div></div><!-- contents -->
+<div class="textblock"><p>Extension for checking allocations for types with regular semantics. </p>
+</div><h2 class="groupheader">Typedef Documentation</h2>
+<a id="file_ac274ed08b406f48e4b8b55f15815520f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#file_ac274ed08b406f48e4b8b55f15815520f">&#9670;&nbsp;</a></span>regular_allocation_test</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="_regular_allocation_test_core_8hpp.html#ac274ed08b406f48e4b8b55f15815520f">sequoia::unit_testing::regular_allocation_test</a> = typedef basic_regular_allocation_test&lt;test_mode::standard&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p><a class="anchor" id="regular_allocation_test_alias"></a> </p>
+
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

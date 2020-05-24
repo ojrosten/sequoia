@@ -55,7 +55,7 @@ namespace sequoia::unit_testing
     test_mode Mode
   >
   using canonical_graph_allocation_operations
-    = basic_graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits, Mode, allocation_extender<Mode>>;
+    = basic_graph_operations<GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits, Mode, regular_allocation_extender<Mode>>;
 
   template
   <
@@ -93,7 +93,7 @@ namespace sequoia::unit_testing
       
     using checker_t::check_equality;
     using checker_t::check_semantics;
-    using graph_checker<test_mode::standard, allocation_extender<test_mode::standard>>::check_exception_thrown;
+    using graph_checker<test_mode::standard, regular_allocation_extender<test_mode::standard>>::check_exception_thrown;
 
 
     void execute_operations() override;
@@ -120,7 +120,7 @@ namespace sequoia::unit_testing
 
     using checker_t::check_equality;
     using checker_t::check_semantics;
-    using graph_checker<test_mode::standard, allocation_extender<test_mode::standard>>::check_exception_thrown;
+    using graph_checker<test_mode::standard, regular_allocation_extender<test_mode::standard>>::check_exception_thrown;
 
     void execute_operations() override;
   };

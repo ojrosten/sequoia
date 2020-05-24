@@ -193,7 +193,9 @@ namespace sequoia::unit_testing
       return results;
   }
 
-  /*! class template for plugging into the checker class template */
+  /*! \brief class template for plugging into the checker class template
+      \anchor performance_extender_primary
+   */
   template<test_mode Mode>
   class performance_extender
   {
@@ -227,6 +229,7 @@ namespace sequoia::unit_testing
   template<test_mode mode>
   using basic_performance_test = basic_test<performance_checker<mode>>;
 
+  /*! \anchor performance_test_alias */
   using performance_test                = basic_performance_test<test_mode::standard>;
   using performance_false_negative_test = basic_performance_test<test_mode::false_negative>;
   using performance_false_positive_test = basic_performance_test<test_mode::false_positive>;

@@ -14,16 +14,17 @@
     similar confidence in any extensions.
 
     One of the defining features of the testing framework is that it is designed to expose
-    false-positives. As such, each test operates in one of three modes, chosen at compile
-    time: standard, false_positive and false_negative.
+    false-positives. As such, each test operates in a particular
+    \ref test_mode_enum "test_mode", chosen at
+    compile time: standard, false_positive and false_negative.
 
-    In standard mode, the test framework operates as one might expect. A typical check might
-    look as follows:
+    In standard mode, the test framework operates as one might expect. A typical
+    check looks as follows:
 
     check_equality("Description of test", x, 5);
 
-    If x==5, the check passes whereas if x!=5 a failure is reported. However, suppose that
-    check_equality has a bug. For example, it might nver report failure.
+    If x==5 the check passes, whereas if x!=5 a failure is reported. However, suppose that
+    check_equality has a bug. For example, it might never report failure.
     To counter this, tests can be created to be run in false-positive mode. In this case,
     the above example will pass when x!=5 and fail when x==5. The purpose of this is to pick
     up bugs in the testing framework itself.
@@ -32,10 +33,10 @@
     the client. In the above example, for the case where x==4, something like this will be
     seen:
 
-    Obtained : 4 
+    Obtained : 4 \n 
     Predicted: 5
 
-    In false-positive mode, this output is not be made directly visible to the user, since 
+    In false-positive mode, this output is not made directly visible to the user, since 
     the false-positive test has succeeded. Instead, it is dumped to a file. This means that
     clients can check whether
     the underlying failure which the false-positive check has detected is as expected. It is
@@ -48,7 +49,7 @@
     opportunity to write some false-positive tests to give confidence that the newly-added code
     is not spuriously reporting success.
 
-    Finally, there are false-negative tests. They are essentially the same as standard mode;
+    Finally, there are false-negative tests. They are essentially the same as standard mode tests;
     however, they are treated separately since statements like
 
     check_equality("Description of test", 5, 5);
@@ -64,22 +65,26 @@
     There are several ways in which the testing framework may be extended. Suppose that a
     client has created a new type, my_type. One way or another, it is almost inevitable that
     calls will be made to check_equality. If the type is sufficiently simple, and defines
-    operator==, it suffices for clients to specialize the class template string_maker. This
+    operator==, it suffices for clients to specialize the class template
+    \ref serializer_primary "serializer". This
     defines how to serialize instances of the class and so we may again end up with a failure
     report along the lines of the above. However, if the class is more complex, there is
     a superior alternative.
 
-    sequoia defines a class template, detailed_equality_checker. The purpose of this is to
+    sequoia defines a class template,
+    \ref detailed_equality_checker_primary "detailed_equality_checker".
+    The purpose of this is to
     use the const accessors of two instances of a class to probe their purported equality.
     Suppose that a client has created a new container and consider comparing two instances.
     operator== may return false or true. In the first case, we want to get to the bottom
     of this, in a more appropriate manner than simply serializing the class (which may produce
     excessive output). For a container, it would make sense compare the size and then
     to use iterators to compare
-    the elements and find any that differ. However, it makes sense to do this even if operator==
+    the elements and find any that differ. However, it is worth doing this even if operator==
     returns true; after all, the aim is to test with high fidelity and it may be that operator==
     has a bug; or perhaps it is fine but there's a bug in the const accessors. Either way,
-    a well designed specialization of the detailed_equality_checker will catch these
+    a well designed specialization of the
+    \ref detailed_equality_checker_primary "detailed_equality_checker" will catch these
     potential inconsistencies.
 
     However, there is a gap here. Consider the the first time a type is instantiated in
@@ -92,8 +97,12 @@
 
     check_equality("x correctly initialized", x, my_type{5});
 
-    Therefore, in addition to the detailed_equality_checker, the framework defines two class
-    templates, equivalence_checker and weak_equivalence_checker. Suppose that, in this example,
+    Therefore, in addition to the
+    \ref detailed_equality_checker_primary "detailed_equality_checker", the framework defines two class
+    templates,
+    \ref equivalence_checker_primary "equivalence_checker" and
+    \ref weak_equivalence_checker_primary "weak_equivalence_checker".
+    Suppose that, in this example,
     my_type simply wraps an int. Here it may make sense to define the specialization
     equivalence_checker<my_type>; internally, this will define a static function, check, which
     defines a comparison between my_type and int. The line of code above may then be replaced by
@@ -103,15 +112,18 @@
     Once consistency of initialization has been checked, thereafter it makes sense to revert
     to check_equality.
 
-    What of the weak_equivalence_checker? This is for cases where there is a signifcant mismatch
+    What of the \ref weak_equivalence_checker_primary "weak_equivalence_checker"?
+    This is for cases where there is a signifcant mismatch
     between the information content of the type to be checked and the type it is being compared
     with.
 
     There is also an entirely different way in which the testing framework may be extended.
-    The 'checkers' class template provides basic functionality such as check_equality and
+    The \ref checker_primary "checker" class template provides basic functionality such as check_equality and
     check_exception_thrown. However, the class template accepts a variadic number of extenders,
-    which enhance its functionality. Examples provided with sequoia are various semantics checkers, a
-    performance checker, and a checker for doing fuzzy comparisons. These may be readily
+    which enhance its functionality. Examples provided with sequoia are various semantics extenders
+    (see below), a
+    \ref performance_extender_primary "performance_extender", and a
+    \ref fuzzy_extender_primary "fuzzy_extender" for doing fuzzy comparisons. These may be readily
     mixed and matched with appropriate using declarations, some of which are supplied with the
     library. If a client of the code wishes to provide a new extension, simply follow the existing
     pattern using e.g. FuzzyTestCore.hpp as an example.
@@ -124,11 +136,13 @@
     purposes of this library, a type exhibiting regular semantics is understood to have copy/move
     constructors, copy/move assigment, operator==, operator!= and swap. Note that
     there is no strict requirement for a default constructor. If a class provides this
-    functionality, then the regular_test class template may be utilized, whichh makes use of the
-    regular_extender class template. The latter
+    functionality, then the \ref regular_test_alias "regular_test" alias template may be utilized,
+    which makes use of the
+    \ref regular_extender_primary "regular_extender" class template. The latter
     provides an overload of check_semantics; given two instantiations of a class it checks
     consistency of the above list of special member functions / functions. Alternatively,
-    for move-only types, the move_only_test may be exploited. Either way, this removes much
+    for move-only types, the \ref move_only_test_alias "move_only_test" may be exploited.
+    Either way, this removes much
     of the burden of devising ways to carefully check consistency of these operations by
     reliably bundling everything into a call to check_semantics.
 
@@ -151,12 +165,20 @@
 
     With flexibility of the C++ allocation model comes commensurate difficulty when it comes
     to testing. To help with this, the sequoia testing framework has been built with allocators
-    firmly in mind. An allocator-aware class may be rigorously tested by using a
-    regular_allocation_checker (or an analogue, such as move_only_allocation_checker, for types
-    with different semantics). This checker provides an overload of the check_semantics
-    method which accepts allocation predictions for copying, assigning (with and without
-    propagation) and mutation. The design accomodates scoped allocators and multiple
-    allocators (be each of them normal or scoped). Allocation tests come with a facility for automatically
+    firmly in mind. An allocator-aware class with regular semantics may be rigorously tested by
+    using a
+    \ref regular_allocation_extender_primary "regular_allocation_extender"; for the move-only case
+    \ref move_only_allocation_extender_primary "move_only_allocation_extender"
+    is available.
+    These checkers provides an overload of the check_semantics
+    method which accepts allocation predictions. In the regular case, the latter correspond to
+    copying, assigning (with and without
+    propagation) and mutation, together with para-copy/move. Here and throught the documentation
+    para copy/move refer to the copy-like and move-like constructors which additionally accept
+    an allocator.
+    The design accomodates scoped allocators and multiple
+    allocators (be each of them normal or scoped). Allocation tests come with a facility for
+    automatically
     generating all 8 combinations of allocation propagation from a single call to check_semantics.
 
     The allocation testing framework has been rigorously tested with a combination of
@@ -172,29 +194,31 @@
     types. This leads to the idea of templated unit tests; within sequoia this is
     most naturally achieved by leaving the test classes plain (rather than templated) but
     templating various methods inside. However, a challenge with doing this is interpreting failures.
-    The line at which the failure occurs is no longer enough, since this line may correspond to
+    The line at which the failure occurs is no longer enough to uniquely disambiguate, since
+    this line may correspond to
     several different template instantiations.
 
     Consequently, sequoia reports failures with plenty of type information. For example, the following
-    output is typical of what to expect when checking the equality of two instance of std::pair<int,double>
+    output is typical of what to expect when checking the equality of two instances
+    of std::pair<int,double>:
 
-    ../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 51
-	[std::__1::pair<int, double>]
+    ../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 51\n 
+	[std::__1::pair<int, double>]\n 
 	operator== returned false
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 51
-	[std::__1::pair<int, double>]
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 51\n 
+	[std::__1::pair<int, double>]\n 
 	operator!= returned true
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 51
-	Second element of pair is incorrect
-	[double]
-	operator== returned false
-	Obtained : 7.8
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 51\n 
+	Second element of pair is incorrect\n 
+	[double]\n 
+	operator== returned false\n 
+	Obtained : 7.8\n 
 	Predicted: -7.8
 
-    For each check performed as part of the top-level check, type information is reported. This is
-    generated by the class template \ref type_demangler. Clients are welcome to specialize this
-    to provide more readable demangling.
+    For each sub-check performed as part of the top-level check, type information is reported. This is
+    generated by the class template \ref type_demangler_primary "type_demangler". Clients are welcome
+    to specialize this to provide more readable demangling.
 
  */

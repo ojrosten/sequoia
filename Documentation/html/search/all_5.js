@@ -5,6 +5,7 @@ var searchData=
   ['filtered_5fsequence',['filtered_sequence',['../structsequoia_1_1sequoia_1_1filtered__sequence.html',1,'sequoia::sequoia']]],
   ['foo',['foo',['../structsequoia_1_1unit__testing_1_1foo.html',1,'sequoia::unit_testing']]],
   ['foo_3c_20int_20_3e',['foo&lt; int &gt;',['../structsequoia_1_1unit__testing_1_1foo_3_01int_01_4.html',1,'sequoia::unit_testing']]],
+  ['free_5ftest',['free_test',['../_free_test_core_8hpp.html#a2181c420a247a16e124209300508551e',1,'sequoia::unit_testing']]],
   ['freecheckers_2ehpp',['FreeCheckers.hpp',['../_free_checkers_8hpp.html',1,'']]],
   ['freetestcore_2ehpp',['FreeTestCore.hpp',['../_free_test_core_8hpp.html',1,'']]],
   ['ft_5fchecker_5fselector',['ft_checker_selector',['../structsequoia_1_1unit__testing_1_1ft__checker__selector.html',1,'sequoia::unit_testing']]],
@@ -24,5 +25,6 @@ var searchData=
   ['fuzzy_5fextender',['fuzzy_extender',['../classsequoia_1_1unit__testing_1_1fuzzy__extender.html',1,'sequoia::unit_testing']]],
   ['fuzzy_5ffalse_5fnegative_5fdiagnostics',['fuzzy_false_negative_diagnostics',['../classsequoia_1_1unit__testing_1_1fuzzy__false__negative__diagnostics.html',1,'sequoia::unit_testing']]],
   ['fuzzy_5ffalse_5fpositive_5fdiagnostics',['fuzzy_false_positive_diagnostics',['../classsequoia_1_1unit__testing_1_1fuzzy__false__positive__diagnostics.html',1,'sequoia::unit_testing']]],
+  ['fuzzy_5ftest',['fuzzy_test',['../_fuzzy_test_core_8hpp.html#a587c0dd90b33f064c1b4b4f0dd848a0c',1,'sequoia::unit_testing']]],
   ['fuzzytestcore_2ehpp',['FuzzyTestCore.hpp',['../_fuzzy_test_core_8hpp.html',1,'']]]
 ];

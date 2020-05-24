@@ -13,7 +13,6 @@ var searchData=
   ['alloc_5fprediction_3c_20allocation_5fevent_3a_3apara_5fmove_20_3e',['alloc_prediction&lt; allocation_event::para_move &gt;',['../classsequoia_1_1unit__testing_1_1alloc__prediction.html',1,'sequoia::unit_testing']]],
   ['allocation_5factions',['allocation_actions',['../structsequoia_1_1sequoia_1_1unit__testing_1_1impl_1_1allocation__actions.html',1,'sequoia::sequoia::unit_testing::impl']]],
   ['allocation_5fchecker',['allocation_checker',['../classsequoia_1_1sequoia_1_1unit__testing_1_1impl_1_1allocation__checker.html',1,'sequoia::sequoia::unit_testing::impl']]],
-  ['allocation_5fextender',['allocation_extender',['../classsequoia_1_1unit__testing_1_1allocation__extender.html',1,'sequoia::unit_testing']]],
   ['allocation_5ffalse_5fnegative_5fdiagnostics',['allocation_false_negative_diagnostics',['../classsequoia_1_1unit__testing_1_1allocation__false__negative__diagnostics.html',1,'sequoia::unit_testing']]],
   ['allocation_5ffalse_5fpositive_5fdiagnostics',['allocation_false_positive_diagnostics',['../classsequoia_1_1unit__testing_1_1allocation__false__positive__diagnostics.html',1,'sequoia::unit_testing']]],
   ['allocation_5finfo',['allocation_info',['../classsequoia_1_1unit__testing_1_1allocation__info.html',1,'sequoia::unit_testing']]],

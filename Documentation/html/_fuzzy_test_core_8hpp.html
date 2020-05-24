@@ -95,8 +95,10 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1unit__testing_1_1reports__for__type_3_01_compare_00_01_t_00_01std_1_1void__t_3_3d78c0589a71ca8cf73b44c9b2eaacf0.html">sequoia::unit_testing::reports_for_type&lt; Compare, T, std::void_t&lt; decltype(std::declval&lt; Compare &gt;().report(std::declval&lt; T &gt;(), std::declval&lt; T &gt;()))&gt; &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsequoia_1_1unit__testing_1_1fuzzy__extender.html">sequoia::unit_testing::fuzzy_extender&lt; Mode &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">class template for plugging into the <a class="el" href="classsequoia_1_1unit__testing_1_1checker.html#checker_primary">checker</a> class template to provide fuzzy checks.  <a href="classsequoia_1_1unit__testing_1_1fuzzy__extender.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsequoia_1_1unit__testing_1_1within__tolerance.html">sequoia::unit_testing::within_tolerance&lt; T &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function object for performing comparisons within an absolute tolerance.  <a href="classsequoia_1_1unit__testing_1_1within__tolerance.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
@@ -109,8 +111,7 @@ template&lt;test_mode mode&gt; </td></tr>
 template&lt;test_mode mode&gt; </td></tr>
 <tr class="memitem:a14d99f1c9a1468e158d37e00a17b7874"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::basic_fuzzy_test</b> = basic_test&lt; fuzzy_checker&lt; mode &gt; &gt;</td></tr>
 <tr class="separator:a14d99f1c9a1468e158d37e00a17b7874"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a587c0dd90b33f064c1b4b4f0dd848a0c"><td class="memItemLeft" align="right" valign="top"><a id="a587c0dd90b33f064c1b4b4f0dd848a0c"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::unit_testing::fuzzy_test</b> = basic_fuzzy_test&lt; test_mode::standard &gt;</td></tr>
+<tr class="memitem:a587c0dd90b33f064c1b4b4f0dd848a0c"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_fuzzy_test_core_8hpp.html#a587c0dd90b33f064c1b4b4f0dd848a0c">sequoia::unit_testing::fuzzy_test</a> = basic_fuzzy_test&lt; test_mode::standard &gt;</td></tr>
 <tr class="separator:a587c0dd90b33f064c1b4b4f0dd848a0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae3d2a54be096c0cd76b0876fa97528a2"><td class="memItemLeft" align="right" valign="top"><a id="ae3d2a54be096c0cd76b0876fa97528a2"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::unit_testing::fuzzy_false_negative_test</b> = basic_fuzzy_test&lt; test_mode::false_negative &gt;</td></tr>
@@ -149,7 +150,23 @@ template&lt;class Compare , class T &gt; </td></tr>
 <div class="textblock"><p>Extension of unit testing framework for inexact comparisons. </p>
 <p>This header provides utilities for performing a comparison between two instances of a type utilising a generic function object. A particular use-case is comparison within a tolerance, for which a concrete function object is supplied.</p>
 <p>The pattern is to provide a new overload for dispatch_check. Internally, if no compare object is identified for the given type, an attempt it made to interpret the type as a range. Thus if, for example, a fuzzy comparison is defined for a type, T, then no additional work is required to do a fuzzy comparison of the elements of a container of T. All that is required to do this is to feed the fuzzy_compare object to the existing check_range overload set and everything works smoothly. </p>
-</div></div><!-- contents -->
+</div><h2 class="groupheader">Typedef Documentation</h2>
+<a id="file_a587c0dd90b33f064c1b4b4f0dd848a0c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#file_a587c0dd90b33f064c1b4b4f0dd848a0c">&#9670;&nbsp;</a></span>fuzzy_test</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="_fuzzy_test_core_8hpp.html#a587c0dd90b33f064c1b4b4f0dd848a0c">sequoia::unit_testing::fuzzy_test</a> = typedef basic_fuzzy_test&lt;test_mode::standard&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p><a class="anchor" id="fuzzy_test_alias"></a> </p>
+
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

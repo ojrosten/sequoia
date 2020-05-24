@@ -70,14 +70,20 @@
 
 namespace sequoia::unit_testing
 {
-  /*! \brief class template, specializations of which implement detailed comparison of two instantiations of T; */
+  /*! \brief class template, specializations of which implement detailed comparison of two instantiations of T; 
+      \anchor detailed_equality_checker_primary
+   */
   template<class T> struct detailed_equality_checker;
 
-  /*! \brief class template, specializations of which implement comparision of two equivalent types; */
+  /*! \brief class template, specializations of which implement comparision of two equivalent types
+      \anchor equivalence_checker_primary
+   */
   template<class T, class... Us> struct equivalence_checker;
 
 
-  /*! \brief class template, specializations of which implement comparision of two weakly equivalent types; */
+  /*! \brief class template, specializations of which implement comparision of two weakly equivalent types;
+      \anchor weak_equivalence_checker_primary
+   */
   template<class T, class... Us> struct weak_equivalence_checker;
 
   struct equality_tag{};
@@ -88,7 +94,9 @@ namespace sequoia::unit_testing
   template<class T> constexpr bool has_weak_equivalence_checker_v{class_template_is_instantiable_v<weak_equivalence_checker, T>};
   template<class T> constexpr bool has_detailed_equality_checker_v{class_template_is_instantiable_v<detailed_equality_checker, T>};
 
-  /*! \brief Specialize this struct template to provide custom serialization of a given class. */
+  /*! \brief Specialize this struct template to provide custom serialization of a given class.
+      \anchor serializer_primary
+   */
   
   template<class T>
   struct serializer
@@ -123,9 +131,10 @@ namespace sequoia::unit_testing
     #endif
   }
 
-  /*! \brief Specialize this struct template to customize the way in which type info is generated for a given class; this is
-      particularly useful for class templates where standard de-mangling may be hard to read!
-
+  /*! \brief Specialize this struct template to customize the way in which type info is generated for a given class.
+      This is particularly useful for class templates where standard de-mangling may be hard to read!
+      
+      \anchor type_demangler_primary
    */
 
   template<class T, class... U>
@@ -416,6 +425,8 @@ namespace sequoia::unit_testing
 
       Each extender must be initialized with a reference to the test_logger held by the checker.
       To ensure the correct order of initialization, the test_logger is inherited privately.
+
+      \anchor checker_primary
    */
 
   template<test_mode Mode, class... Extenders>
@@ -472,9 +483,9 @@ namespace sequoia::unit_testing
     }
 
     template<class Stream>
-    friend Stream& operator<<(Stream& os, const checker& checker)
+    friend Stream& operator<<(Stream& os, const checker& c)
     {
-      os << checker.logger();
+      os << c.logger();
       return os;
     }
 

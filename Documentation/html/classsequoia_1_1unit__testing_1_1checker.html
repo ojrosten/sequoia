@@ -139,7 +139,7 @@ template&lt;class Iter , class PredictionIter &gt; </td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
 <tr class="memitem:aa138b3e839655ee5d625ef5eaf74eade"><td class="memItemLeft" align="right" valign="top"><a id="aa138b3e839655ee5d625ef5eaf74eade"></a>
-static constexpr test_mode&#160;</td><td class="memItemRight" valign="bottom"><b>mode</b> {Mode}</td></tr>
+static constexpr <a class="el" href="_test_logger_8hpp.html#a0c941d9260474f8474ab230cb70d6317">test_mode</a>&#160;</td><td class="memItemRight" valign="bottom"><b>mode</b> {Mode}</td></tr>
 <tr class="separator:aa138b3e839655ee5d625ef5eaf74eade"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-types"></a>
@@ -189,7 +189,8 @@ class sequoia::unit_testing::checker&lt; Mode, Extenders &gt;</h3>
 <p>Exposes elementary check methods, with the option to plug in arbitrary Extenders to compose functionality. </p>
 <p>This class template is templated on the enum class test_mode, together with a variadic set of Extenders.</p>
 <p>In its unextended form, the class is appropriate for plugging into <a class="el" href="classsequoia_1_1unit__testing_1_1basic__test.html" title="class template from which all concrete tests should derive.">basic_test</a> to generate a base class appropriate for testing free functions. Within the unit test framework various Extenders are defined. For example, there are extensions to test types with regular semantics, types with move-only semantics, to do performance tests, and more, besides. The template design allows extenders to be conveniently mixed and matched via using declarations.</p>
-<p>Each extender must be initialized with a reference to the <a class="el" href="classsequoia_1_1unit__testing_1_1test__logger.html">test_logger</a> held by the checker. To ensure the correct order of initialization, the <a class="el" href="classsequoia_1_1unit__testing_1_1test__logger.html">test_logger</a> is inherited privately. </p>
+<p>Each extender must be initialized with a reference to the <a class="el" href="classsequoia_1_1unit__testing_1_1test__logger.html">test_logger</a> held by the checker. To ensure the correct order of initialization, the <a class="el" href="classsequoia_1_1unit__testing_1_1test__logger.html">test_logger</a> is inherited privately.</p>
+<p><a class="anchor" id="checker_primary"></a></p>
 </div><hr/>The documentation for this class was generated from the following file:<ul>
 <li>/Users/Claire/Dropbox/Sequoia/TestFramework/<a class="el" href="_free_checkers_8hpp_source.html">FreeCheckers.hpp</a></li>
 </ul>
