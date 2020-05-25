@@ -9,7 +9,7 @@
 
 #include "HeterogeneousStaticGraph.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   [[nodiscard]]
   std::string_view test_heterogeneous_static_graph::source_file_name() const noexcept

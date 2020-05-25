@@ -7,7 +7,7 @@
 
 #include "MyClassTestingDiagnostics.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   [[nodiscard]]
   std::string_view my_class_false_positive_test::source_file_name() const noexcept

@@ -9,7 +9,7 @@
 
 #include "MoveOnlyTestCore.hpp"
 
-namespace sequoia:: unit_testing
+namespace sequoia:: testing
 {
   class move_only_false_positive_diagnostics final : public move_only_false_positive_test
   {

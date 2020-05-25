@@ -11,7 +11,7 @@
 
 #include "ProtectiveWrapper.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   template<class T>
   struct detailed_equality_checker<utilities::protective_wrapper<T, std::is_empty_v<T>>>

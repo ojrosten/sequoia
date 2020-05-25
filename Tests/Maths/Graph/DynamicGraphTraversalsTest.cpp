@@ -7,7 +7,7 @@
 
 #include "DynamicGraphTraversalsTest.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   [[nodiscard]]
   std::string_view test_graph_traversals::source_file_name() const noexcept

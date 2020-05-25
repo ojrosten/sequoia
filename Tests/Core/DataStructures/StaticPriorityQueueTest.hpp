@@ -9,7 +9,7 @@
 
 #include "RegularTestCore.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   class test_static_priority_queue final : public regular_test
   {

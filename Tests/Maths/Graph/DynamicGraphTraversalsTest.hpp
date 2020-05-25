@@ -14,7 +14,7 @@
 
 #include <functional>
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   class node_tracker
   {

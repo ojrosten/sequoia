@@ -9,7 +9,7 @@
 
 /*! \brief Definitions for a handful of functions which are not templated. */
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   namespace impl
   {

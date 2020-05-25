@@ -18,7 +18,7 @@
 
 namespace sequoia
 {
-  namespace unit_testing
+  namespace testing
   {
 
     [[nodiscard]]

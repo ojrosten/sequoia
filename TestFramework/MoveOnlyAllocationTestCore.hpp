@@ -17,7 +17,7 @@
 #include "MoveOnlyAllocationCheckers.hpp"
 #include "AllocationTestUtilities.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   /*! \brief class template for plugging into the \ref checker_primary "checker"
       class template to provide allocation checks for move-only types.
@@ -41,7 +41,7 @@ namespace sequoia::unit_testing
     template<class T, class Mutator, class... Allocators>
     void check_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone, Mutator yMutator, move_only_allocation_info<T, Allocators>... info)
     {
-      unit_testing::check_semantics(combine_messages("Move-only Semantics", description), m_Logger, std::move(x), std::move(y), xClone, yClone, std::move(yMutator), info...);
+      testing::check_semantics(combine_messages("Move-only Semantics", description), m_Logger, std::move(x), std::move(y), xClone, yClone, std::move(yMutator), info...);
     }
   protected:
     ~move_only_allocation_extender() = default;

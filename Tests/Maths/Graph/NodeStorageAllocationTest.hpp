@@ -11,7 +11,7 @@
 
 #include "RegularAllocationTestCore.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   class node_storage_allocation_test final : public regular_allocation_test
   {

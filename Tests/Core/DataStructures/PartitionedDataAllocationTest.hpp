@@ -9,7 +9,7 @@
 
 #include "PartitionedDataAllocationTestingUtilities.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   class partitioned_data_allocation_test final : public regular_allocation_test
   {

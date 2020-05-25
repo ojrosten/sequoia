@@ -17,7 +17,7 @@
 
 namespace sequoia
 {
-  namespace unit_testing
+  namespace testing
   {
     template<class T, std::size_t N, class Comparer=std::less<T>>
     constexpr std::array<T, N> sort(std::array<T,N> a, Comparer comp = Comparer{})

@@ -83,8 +83,8 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsequoia_1_1unit__testing_1_1move__only__extender.html">sequoia::unit_testing::move_only_extender&lt; Mode &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">class template for plugging into the <a class="el" href="classsequoia_1_1unit__testing_1_1checker.html#checker_primary">checker</a> class template to provide allocation checks for move-only types, see <a class="el" href="_move_only_checkers_8hpp.html#move_only_definition">here</a>.  <a href="classsequoia_1_1unit__testing_1_1move__only__extender.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsequoia_1_1testing_1_1move__only__extender.html">sequoia::testing::move_only_extender&lt; Mode &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">class template for plugging into the <a class="el" href="classsequoia_1_1testing_1_1checker.html#checker_primary">checker</a> class template to provide allocation checks for move-only types, see <a class="el" href="_move_only_checkers_8hpp.html#move_only_definition">here</a>.  <a href="classsequoia_1_1testing_1_1move__only__extender.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
@@ -95,35 +95,35 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:a6c76ac606278f29ac80ce00144e33d8c"><td class="memTemplParams" colspan="2"><a id="a6c76ac606278f29ac80ce00144e33d8c"></a>
+<tr class="memitem:aec7163b90dd6105c38e7af5752e01b7d"><td class="memTemplParams" colspan="2"><a id="aec7163b90dd6105c38e7af5752e01b7d"></a>
 template&lt;test_mode mode&gt; </td></tr>
-<tr class="memitem:a6c76ac606278f29ac80ce00144e33d8c"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::move_only_checker</b> = checker&lt; mode, move_only_extender&lt; mode &gt; &gt;</td></tr>
-<tr class="separator:a6c76ac606278f29ac80ce00144e33d8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aebc72624ce8e8dd6a99e836d3527f8c3"><td class="memTemplParams" colspan="2"><a id="aebc72624ce8e8dd6a99e836d3527f8c3"></a>
+<tr class="memitem:aec7163b90dd6105c38e7af5752e01b7d"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::move_only_checker</b> = checker&lt; mode, move_only_extender&lt; mode &gt; &gt;</td></tr>
+<tr class="separator:aec7163b90dd6105c38e7af5752e01b7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10fd2db05af38662ebcf1f7bc51a5de1"><td class="memTemplParams" colspan="2"><a id="a10fd2db05af38662ebcf1f7bc51a5de1"></a>
 template&lt;test_mode mode&gt; </td></tr>
-<tr class="memitem:aebc72624ce8e8dd6a99e836d3527f8c3"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::canonical_move_only_test</b> = basic_test&lt; move_only_checker&lt; mode &gt; &gt;</td></tr>
-<tr class="separator:aebc72624ce8e8dd6a99e836d3527f8c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a22332f996d9c08935dd863545470ca59"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_move_only_test_core_8hpp.html#a22332f996d9c08935dd863545470ca59">sequoia::unit_testing::move_only_test</a> = canonical_move_only_test&lt; test_mode::standard &gt;</td></tr>
-<tr class="separator:a22332f996d9c08935dd863545470ca59"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac9980516a089383c85a0e0c952731d2d"><td class="memItemLeft" align="right" valign="top"><a id="ac9980516a089383c85a0e0c952731d2d"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::unit_testing::move_only_false_negative_test</b> = canonical_move_only_test&lt; test_mode::false_negative &gt;</td></tr>
-<tr class="separator:ac9980516a089383c85a0e0c952731d2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9e5d5e7ea8a6258b0e9eb154af8e3303"><td class="memItemLeft" align="right" valign="top"><a id="a9e5d5e7ea8a6258b0e9eb154af8e3303"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::unit_testing::move_only_false_positive_test</b> = canonical_move_only_test&lt; test_mode::false_positive &gt;</td></tr>
-<tr class="separator:a9e5d5e7ea8a6258b0e9eb154af8e3303"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10fd2db05af38662ebcf1f7bc51a5de1"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::canonical_move_only_test</b> = basic_test&lt; move_only_checker&lt; mode &gt; &gt;</td></tr>
+<tr class="separator:a10fd2db05af38662ebcf1f7bc51a5de1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a198c390bfabb54c797a6fcfe8dec09cd"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_move_only_test_core_8hpp.html#a198c390bfabb54c797a6fcfe8dec09cd">sequoia::testing::move_only_test</a> = canonical_move_only_test&lt; test_mode::standard &gt;</td></tr>
+<tr class="separator:a198c390bfabb54c797a6fcfe8dec09cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b6e726e4dc7bfb856d99b7f44eb3449"><td class="memItemLeft" align="right" valign="top"><a id="a7b6e726e4dc7bfb856d99b7f44eb3449"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::move_only_false_negative_test</b> = canonical_move_only_test&lt; test_mode::false_negative &gt;</td></tr>
+<tr class="separator:a7b6e726e4dc7bfb856d99b7f44eb3449"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a04291c702b5923e33d45d15c7063490d"><td class="memItemLeft" align="right" valign="top"><a id="a04291c702b5923e33d45d15c7063490d"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::move_only_false_positive_test</b> = canonical_move_only_test&lt; test_mode::false_positive &gt;</td></tr>
+<tr class="separator:a04291c702b5923e33d45d15c7063490d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Extension for testing classes exhibiting move-only semantics. </p>
 <p>This class is designed to be plugged into the checker class template, in order to extend its functionality. See <a class="el" href="_move_only_checkers_8hpp.html" title="Functions for checking semantics of types lacking copy semantics but which are otherwise regular.">MoveOnlyCheckers.hpp</a> for further information. </p>
 </div><h2 class="groupheader">Typedef Documentation</h2>
-<a id="file_a22332f996d9c08935dd863545470ca59"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#file_a22332f996d9c08935dd863545470ca59">&#9670;&nbsp;</a></span>move_only_test</h2>
+<a id="file_a198c390bfabb54c797a6fcfe8dec09cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#file_a198c390bfabb54c797a6fcfe8dec09cd">&#9670;&nbsp;</a></span>move_only_test</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="_move_only_test_core_8hpp.html#a22332f996d9c08935dd863545470ca59">sequoia::unit_testing::move_only_test</a> = typedef canonical_move_only_test&lt;test_mode::standard&gt;</td>
+          <td class="memname">using <a class="el" href="_move_only_test_core_8hpp.html#a198c390bfabb54c797a6fcfe8dec09cd">sequoia::testing::move_only_test</a> = typedef canonical_move_only_test&lt;test_mode::standard&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">

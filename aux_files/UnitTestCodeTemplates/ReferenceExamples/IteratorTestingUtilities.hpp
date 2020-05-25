@@ -11,7 +11,7 @@
 
 //#include "Iterator.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   //template<???>
   struct details_checker<utilities::iterator/*<???>*/>

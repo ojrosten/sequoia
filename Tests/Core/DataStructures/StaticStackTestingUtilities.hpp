@@ -11,7 +11,7 @@
 
 #include "StaticStack.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {  
   template<class T, std::size_t MaxDepth>
   struct detailed_equality_checker<data_structures::static_stack<T, MaxDepth>>

@@ -15,7 +15,7 @@
 
 #include <map>
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   template<class Iter> void pad_right(Iter begin, Iter end, std::string_view suffix)
   {

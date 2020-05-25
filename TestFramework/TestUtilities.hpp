@@ -11,7 +11,7 @@
     \brief Utilities for use in tests.
 */
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   class no_default_constructor
   {

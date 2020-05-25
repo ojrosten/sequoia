@@ -11,7 +11,7 @@
 
 #include <vector>
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   class threading_models_test final : public regular_test
   {      

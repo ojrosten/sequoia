@@ -13,7 +13,7 @@
 #include <complex>
 #include <list>
 
-namespace sequoia:: unit_testing
+namespace sequoia:: testing
 {
   [[nodiscard]]
   std::string_view node_storage_test::source_file_name() const noexcept

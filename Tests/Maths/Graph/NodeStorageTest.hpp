@@ -9,7 +9,7 @@
 
 #include "NodeStorageTestingUtilities.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   class node_storage_test final : public regular_test
   {

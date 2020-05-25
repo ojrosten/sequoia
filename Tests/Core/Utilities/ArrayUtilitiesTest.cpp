@@ -10,7 +10,7 @@
 
 #include "ArrayUtilities.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   [[nodiscard]]
   std::string_view array_utilities_test::source_file_name() const noexcept

@@ -17,7 +17,7 @@
 
 #include "ConcreteEqualityCheckers.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   namespace impl
   {

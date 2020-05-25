@@ -11,7 +11,7 @@
 
 #include "MonotonicSequence.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   namespace impl
   {
@@ -47,10 +47,10 @@ namespace sequoia::unit_testing
           check_equality(combine_messages(description, "Dereferenced criterator wrong" + mess), logger, *(cri + shift), *(cri_prediction + shift));
         }
           
-        unit_testing::check(combine_messages(description, "iterator location wrong"), logger, i_prediction == prediction.end());
-        unit_testing::check(combine_messages(description, "citerator location wrong"), logger, ci_prediction == prediction.cend());
-        unit_testing::check(combine_messages(description, "riterator location wrong"), logger, ri_prediction == prediction.rend());
-        unit_testing::check(combine_messages(description, "criterator location wrong"), logger, cri_prediction == prediction.crend());
+        testing::check(combine_messages(description, "iterator location wrong"), logger, i_prediction == prediction.end());
+        testing::check(combine_messages(description, "citerator location wrong"), logger, ci_prediction == prediction.cend());
+        testing::check(combine_messages(description, "riterator location wrong"), logger, ri_prediction == prediction.rend());
+        testing::check(combine_messages(description, "criterator location wrong"), logger, cri_prediction == prediction.crend());
       }
     }
   }

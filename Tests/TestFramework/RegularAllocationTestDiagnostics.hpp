@@ -9,7 +9,7 @@
 
 #include "RegularAllocationTestCore.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   class allocation_false_positive_diagnostics final
     : public regular_allocation_false_positive_test

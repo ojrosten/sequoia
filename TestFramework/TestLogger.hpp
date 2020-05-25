@@ -29,7 +29,7 @@
   #include <cxxabi.h>
 #endif
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   [[nodiscard]]
   std::string combine_messages(std::string_view s1, std::string_view s2, std::string_view sep=" ");

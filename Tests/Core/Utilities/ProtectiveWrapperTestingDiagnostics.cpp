@@ -9,7 +9,7 @@
 
 #include <vector>
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   [[nodiscard]]
   std::string_view protective_wrapper_false_positive_test::source_file_name() const noexcept

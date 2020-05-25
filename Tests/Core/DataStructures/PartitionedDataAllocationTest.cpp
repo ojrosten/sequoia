@@ -7,7 +7,7 @@
 
 #include "PartitionedDataAllocationTest.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   [[nodiscard]]
   std::string_view partitioned_data_allocation_test::source_file_name() const noexcept

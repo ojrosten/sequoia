@@ -8,7 +8,7 @@
 
 #include "PerformanceTestCore.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   class performance_false_positive_diagnostics final : public performance_false_positive_test
   {

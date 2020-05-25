@@ -9,7 +9,7 @@
 
 #include "Utilities.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   
   template<class T>

@@ -17,7 +17,7 @@
 #include "FreeTestCore.hpp"
 #include "MoveOnlyCheckers.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   /*! \brief class template for plugging into the \ref checker_primary "checker"
       class template to provide allocation checks for move-only types,
@@ -40,7 +40,7 @@ namespace sequoia::unit_testing
     template<class T, class... Allocators>
     void check_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone)
     {
-      unit_testing::check_semantics(combine_messages("Move-only Semantics", description), m_Logger, std::move(x), std::move(y), xClone, yClone);
+      testing::check_semantics(combine_messages("Move-only Semantics", description), m_Logger, std::move(x), std::move(y), xClone, yClone);
     }
   protected:
     move_only_extender(move_only_extender&&) noexcept = default;

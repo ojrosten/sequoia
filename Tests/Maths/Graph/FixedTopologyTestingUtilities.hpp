@@ -12,7 +12,7 @@
 
 namespace sequoia
 {
-  namespace unit_testing
+  namespace testing
   {
     template<class Checker>
     class undirected_fixed_topology_checker

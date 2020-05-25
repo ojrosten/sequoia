@@ -7,7 +7,7 @@
 
 #include "DynamicGraphUnweightedAllocationTest.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   [[nodiscard]]
   std::string_view unweighted_graph_allocation_test::source_file_name() const noexcept

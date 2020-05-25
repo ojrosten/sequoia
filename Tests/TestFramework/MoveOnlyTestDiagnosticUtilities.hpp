@@ -11,7 +11,7 @@
 
 #include <vector>
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   template<class T=int, class Allocator=std::allocator<int>>
   struct move_only_beast

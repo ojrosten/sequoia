@@ -9,7 +9,7 @@
 
 #include "FuzzyTestCore.hpp"
 
-namespace sequoia:: unit_testing
+namespace sequoia:: testing
 {
   class fuzzy_false_positive_diagnostics final : public fuzzy_false_positive_test
   {

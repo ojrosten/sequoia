@@ -10,7 +10,7 @@
 #include "GraphTestingUtilities.hpp"
 #include "StaticGraph.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   // Details Checkers
   

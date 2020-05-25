@@ -12,7 +12,7 @@
 int main(int argc, char** argv)
 {
   using namespace sequoia;
-  using namespace unit_testing;
+  using namespace testing;
 
   try
   {

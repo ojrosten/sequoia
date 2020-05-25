@@ -11,7 +11,7 @@
 
 #include "HeterogeneousNodeStorage.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   class test_heterogeneous_node_storage final : public regular_test
   {

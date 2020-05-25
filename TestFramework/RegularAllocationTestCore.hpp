@@ -16,7 +16,7 @@
 #include "RegularAllocationCheckers.hpp"
 #include "AllocationTestUtilities.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   /*! \brief class template for plugging into the \ref checker_primary "checker"
       class template to provide allocation checks for regular types.
@@ -40,7 +40,7 @@ namespace sequoia::unit_testing
     template<class T, class Mutator, class... Allocators>
     void check_semantics(std::string_view description, const T& x, const T& y, Mutator m, allocation_info<T, Allocators>... info)
     {
-      unit_testing::check_semantics(combine_messages("Regular Semantics", description), m_Logger, x, y, m, info...);
+      testing::check_semantics(combine_messages("Regular Semantics", description), m_Logger, x, y, m, info...);
     }
   protected:
     ~regular_allocation_extender() = default;

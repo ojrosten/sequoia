@@ -10,7 +10,7 @@
 #include "GraphTestingUtilities.hpp"
 #include "DynamicGraphTraversals.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   struct BFS {};
   struct DFS {};

@@ -41,7 +41,7 @@
 #include "FreeCheckers.hpp"
 #include "RegularCheckersDetails.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   /// Precondition: x!=y
   template<test_mode Mode, class T, class Mutator>

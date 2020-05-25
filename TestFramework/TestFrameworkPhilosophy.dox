@@ -211,11 +211,9 @@
 	[std::__1::pair<int, double>]\n 
 	operator== returned false
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 51\n 
 	[std::__1::pair<int, double>]\n 
 	operator!= returned true
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 51\n 
 	Second element of pair is incorrect\n 
 	[double]\n 
 	operator== returned false\n 

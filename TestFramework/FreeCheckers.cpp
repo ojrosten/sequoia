@@ -12,7 +12,7 @@
 
 #include "FreeCheckers.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   [[nodiscard]]
   std::string operator_message(std::string_view description, std::string_view typeInfo, std::string_view op, std::string_view retVal)

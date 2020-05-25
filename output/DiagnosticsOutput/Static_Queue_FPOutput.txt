@@ -19,37 +19,31 @@
 	[sequoia::data_structures::static_queue<int, 1ul>]
 	operator== returned false
 
-	../Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 42:
-	Empty queue versus populated queue
 	[sequoia::data_structures::static_queue<int, 1ul>]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 42:
-	Empty queue versus populated queue Inconsistent emptiness
+	Inconsistent emptiness
 	[bool]
 	operator== returned false
 	Obtained : true
 	Predicted: false
 
 
-	../Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 42:
-	Empty queue versus populated queue Inconsistent size
+	Inconsistent size
 	[unsigned long]
 	operator== returned false
 	Obtained : 0
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 42:
-	Empty queue versus populated queue Hidden state
+	Hidden state
 	[bool]
 	operator== returned false
 	Obtained : false
 	Predicted: true
 
 
-	../Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 42:
-	Empty queue versus populated queue Hidden state, symmetry of operator==
+	Hidden state, symmetry of operator==
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -61,37 +55,31 @@
 	[sequoia::data_structures::static_queue<int, 1ul>]
 	operator== returned false
 
-	../Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 45:
-	Differing elements
 	[sequoia::data_structures::static_queue<int, 1ul>]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 45:
-	Differing elements Inconsistent front element
+	Inconsistent front element
 	[int]
 	operator== returned false
 	Obtained : 2
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 45:
-	Differing elements Inconsistent back element
+	Inconsistent back element
 	[int]
 	operator== returned false
 	Obtained : 2
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 45:
-	Differing elements Hidden state
+	Hidden state
 	[bool]
 	operator== returned false
 	Obtained : false
 	Predicted: true
 
 
-	../Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 45:
-	Differing elements Hidden state, symmetry of operator==
+	Hidden state, symmetry of operator==
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -103,37 +91,31 @@
 	[sequoia::data_structures::static_queue<int, 1ul>]
 	operator== returned false
 
-	../Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 48:
-	Empty queue versus populated queue
 	[sequoia::data_structures::static_queue<int, 1ul>]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 48:
-	Empty queue versus populated queue Inconsistent emptiness
+	Inconsistent emptiness
 	[bool]
 	operator== returned false
 	Obtained : true
 	Predicted: false
 
 
-	../Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 48:
-	Empty queue versus populated queue Inconsistent size
+	Inconsistent size
 	[unsigned long]
 	operator== returned false
 	Obtained : 0
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 48:
-	Empty queue versus populated queue Hidden state
+	Hidden state
 	[bool]
 	operator== returned false
 	Obtained : false
 	Predicted: true
 
 
-	../Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 48:
-	Empty queue versus populated queue Hidden state, symmetry of operator==
+	Hidden state, symmetry of operator==
 	[bool]
 	operator== returned false
 	Obtained : false

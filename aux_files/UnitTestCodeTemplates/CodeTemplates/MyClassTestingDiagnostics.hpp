@@ -7,7 +7,7 @@
 
 #include "MyClassTestingUtilities.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   class my_class_false_positive_test final : public false_positive_regular_test
   {

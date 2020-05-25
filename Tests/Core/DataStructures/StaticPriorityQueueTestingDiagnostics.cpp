@@ -8,7 +8,7 @@
 #include "StaticPriorityQueueTestingDiagnostics.hpp"
 #include "StaticPriorityQueueTestingUtilities.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   [[nodiscard]]
   std::string_view test_static_priority_queue_false_positives::source_file_name() const noexcept

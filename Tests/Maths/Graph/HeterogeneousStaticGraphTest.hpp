@@ -9,7 +9,7 @@
 
 #include "HeterogeneousGraphTestingUtilities.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {    
   class test_heterogeneous_static_graph final : public graph_unit_test
   {

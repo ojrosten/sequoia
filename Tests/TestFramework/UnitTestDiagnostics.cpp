@@ -12,7 +12,7 @@
 #include <vector>
 #include <set>
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {  
   template<class T>
   struct weak_equivalence_checker<perfectly_normal_beast<T>>

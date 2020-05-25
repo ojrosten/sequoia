@@ -9,7 +9,7 @@
 
 #include "DataPool.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   template<class T, class Allocator>
   struct weak_equivalence_checker<data_sharing::data_pool<T, Allocator>>

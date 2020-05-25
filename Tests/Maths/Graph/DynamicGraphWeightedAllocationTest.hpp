@@ -9,7 +9,7 @@
 
 #include "DynamicGraphAllocationTestingUtilities.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   class weighted_graph_allocation_test final : public graph_unit_test
   {

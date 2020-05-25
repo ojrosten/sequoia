@@ -77,7 +77,7 @@
 
 #include "TestLogger.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   /*! \brief class template, specializations of which implement detailed comparison of two instantiations of T; 
       \anchor detailed_equality_checker_primary
@@ -467,36 +467,36 @@ namespace sequoia::unit_testing
     template<class T>
     bool check_equality(std::string_view description, const T& value, const T& prediction)
     {
-      return unit_testing::check_equality(description, logger(), value, prediction);
+      return testing::check_equality(description, logger(), value, prediction);
     }
 
     template<class T, class S, class... U>
     bool check_equivalence(std::string_view description, const T& value, S&& s, U&&... u)
     {
-      return unit_testing::check_equivalence(description, logger(), value, std::forward<S>(s), std::forward<U>(u)...);
+      return testing::check_equivalence(description, logger(), value, std::forward<S>(s), std::forward<U>(u)...);
     }
 
     template<class T, class S, class... U>
     bool check_weak_equivalence(std::string_view description, const T& value, S&& s, U&&... u)
     {
-      return unit_testing::check_weak_equivalence(description, logger(), value, std::forward<S>(s), std::forward<U>(u)...);
+      return testing::check_weak_equivalence(description, logger(), value, std::forward<S>(s), std::forward<U>(u)...);
     }
 
     bool check(std::string_view description, const bool value)
     {
-      return unit_testing::check(description, logger(), value);
+      return testing::check(description, logger(), value);
     }
 
     template<class E, class Fn>
     bool check_exception_thrown(std::string_view description, Fn&& function)
     {
-      return unit_testing::check_exception_thrown<E>(description, logger(), std::forward<Fn>(function));
+      return testing::check_exception_thrown<E>(description, logger(), std::forward<Fn>(function));
     }
 
     template<class Iter, class PredictionIter>
     bool check_range(std::string_view description, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
     {
-      return unit_testing::check_range(description, logger(), first, last, predictionFirst, predictionLast);
+      return testing::check_range(description, logger(), first, last, predictionFirst, predictionLast);
     }
 
     template<class Stream>

@@ -8,7 +8,7 @@
 #include "ConcurrencyModelsTest.hpp"
 #include "ConcurrencyModels.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   [[nodiscard]]
   std::string_view threading_models_test::source_file_name() const noexcept

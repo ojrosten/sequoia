@@ -11,7 +11,7 @@
 
 #include "MonotonicSequence.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   class monotonic_sequence_allocation_test final : public regular_allocation_test
   {

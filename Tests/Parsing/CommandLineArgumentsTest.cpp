@@ -7,7 +7,7 @@
 
 #include "CommandLineArgumentsTest.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   [[nodiscard]]
   std::string_view commandline_arguments_test::source_file_name() const noexcept

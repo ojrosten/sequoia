@@ -11,7 +11,7 @@
 
 #include "TestFamily.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   auto test_family::execute(const bool writeFiles, const concurrency_mode mode) -> results 
   {

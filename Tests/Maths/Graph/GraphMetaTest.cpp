@@ -9,7 +9,7 @@
 
 #include "DynamicGraph.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   [[nodiscard]]
   std::string_view test_graph_meta::source_file_name() const noexcept
