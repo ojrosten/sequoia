@@ -15,7 +15,7 @@ namespace sequoia::unit_testing
     std::string mess{};
     if(s1.empty())
     {
-      if(!s2.empty()) mess.append("\t").append(s2);
+      if(!s2.empty()) mess.append(s2);
     }
     else
     {
@@ -23,7 +23,9 @@ namespace sequoia::unit_testing
       if(!s2.empty())
       {
         if((mess.back() == '\n') && (sep.empty() || sep == " "))
+        {
           mess.append("\t");
+        }
         else
         {
           mess.append(sep);

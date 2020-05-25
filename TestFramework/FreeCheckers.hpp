@@ -191,6 +191,12 @@ namespace sequoia::unit_testing
     return logger.failures() == previousFailures;
   }
 
+  [[nodiscard]]
+  std::string operator_message(std::string_view description, std::string_view typeInfo, std::string_view op, std::string_view retVal);
+
+  [[nodiscard]]
+  std::string prediction_message(std::string_view obtained, std::string_view predicted);
+
   /*! \name dispatch_check basic overload set
 
       The next three functions form an overload set, dedicated to appropiately dispatching requests
@@ -221,50 +227,49 @@ namespace sequoia::unit_testing
     sentinel s{logger, add_type_info<T>(description)};
 
     const auto priorFailures{logger.failures()};
+    const auto priorChecks{logger.deep_checks()};
       
-    auto messageGenerator{
-      [description](std::string op, std::string retVal){
-        std::string info{add_type_info<T>("")
-            .append("\toperator").append(std::move(op))
-            .append(" returned ").append(std::move(retVal)).append("\n")
-            };
-        return description.empty() ? std::move(info) : std::string{"\t"}.append(description).append("\n" + std::move(info));
-      }
-    };
       
     if constexpr(is_equal_to_comparable_v<T>)
     {
       s.log_check();
       if(!(prediction == value))
+      {
+        auto message{operator_message(description, add_type_info<T>(""), "==", "false")};
+        if constexpr(!delegate)
         {
-          auto message{messageGenerator("==", "false")};
-          if constexpr(!delegate)
-          {
-            message.append("\tObtained : " + to_string(value) + "\n");
-            message.append("\tPredicted: " + to_string(prediction) + "\n\n");           
-          }
-          logger.log_failure(message);
+          message.append(prediction_message(to_string(value), to_string(prediction)));      
         }
+        logger.log_failure(message);
+      }
     }
 
     if constexpr(delegate)
     {
+      auto useDescription{
+        [&logger,priorChecks](){
+          return logger.deep_checks() == priorChecks + 1;
+        }
+      };
+      
       if constexpr(is_not_equal_to_comparable_v<T>)
       {
         s.log_check();
         if(prediction != value)
         {
-          logger.log_failure(messageGenerator("!=", "true"));
+          std::string_view desc{useDescription() ? description : ""};
+          logger.log_failure(operator_message(desc, add_type_info<T>(""), "!=", "true"));
         }
       }
 
+      std::string_view desc{useDescription() ? description : ""};
       if constexpr(has_detailed_equality_checker_v<T>)
       {
-        detailed_equality_checker<T>::check(description, logger, value, prediction);
+        detailed_equality_checker<T>::check(desc, logger, value, prediction);
       }
       else if constexpr(is_container_v<T>)
       {
-        check_range(description, logger, std::begin(value), std::end(value), std::begin(prediction), std::end(prediction));
+        check_range(desc, logger, std::begin(value), std::end(value), std::begin(prediction), std::end(prediction));
       }      
       else
       {

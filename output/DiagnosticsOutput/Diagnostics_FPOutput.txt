@@ -23,11 +23,9 @@
 	[std::__1::pair<int, double>]
 	operator== returned false
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 51
 	[std::__1::pair<int, double>]
 	operator!= returned true
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 51
 	Second element of pair is incorrect
 	[double]
 	operator== returned false
@@ -39,11 +37,9 @@
 	[std::__1::pair<int, double>]
 	operator== returned false
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 52
 	[std::__1::pair<int, double>]
 	operator!= returned true
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 52
 	First element of pair is incorrect
 	[int]
 	operator== returned false
@@ -55,11 +51,9 @@
 	[std::__1::tuple<int, double, float>]
 	operator== returned false
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 54
 	[std::__1::tuple<int, double, float>]
 	operator!= returned true
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 54
 	Element 0 of tuple incorrect
 	[int]
 	operator== returned false
@@ -71,11 +65,9 @@
 	[std::__1::tuple<int, double, float>]
 	operator== returned false
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 55
 	[std::__1::tuple<int, double, float>]
 	operator!= returned true
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 55
 	Element 1 of tuple incorrect
 	[double]
 	operator== returned false
@@ -87,11 +79,9 @@
 	[std::__1::tuple<int, double, float>]
 	operator== returned false
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 56
 	[std::__1::tuple<int, double, float>]
 	operator!= returned true
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 56
 	Element 2 of tuple incorrect
 	[float]
 	operator== returned false
@@ -123,13 +113,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 65:
-	Empty vector check which should fail
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 65:
-	Empty vector check which should fail
 	Container size wrong
 	[long]
 	operator== returned false
@@ -142,13 +128,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 66:
-	One element vector check which should fail due to wrong value
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 66:
-	One element vector check which should fail due to wrong value
 	element 0
 
 	[double]
@@ -162,13 +144,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 67:
-	One element vector check which should fail due to differing sizes
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 67:
-	One element vector check which should fail due to differing sizes
 	Container size wrong
 	[long]
 	operator== returned false
@@ -181,13 +159,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 68:
-	Multi-element vector comparison which should fail due to last element
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 68:
-	Multi-element vector comparison which should fail due to last element
 	element 1
 
 	[double]
@@ -201,13 +175,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 69:
-	Multi-element vector comparison which should fail due to first element
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 69:
-	Multi-element vector comparison which should fail due to first element
 	element 0
 
 	[double]
@@ -221,13 +191,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 70:
-	Multi-element vector comparison which should fail due to middle element
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 70:
-	Multi-element vector comparison which should fail due to middle element
 	element 2
 
 	[double]
@@ -241,13 +207,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 71:
-	Multi-element vector comparison which should fail due to different sizes
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 71:
-	Multi-element vector comparison which should fail due to different sizes
 	Container size wrong
 	[long]
 	operator== returned false
@@ -309,13 +271,9 @@
 	[std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >]
 	operator== returned false
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 79:
-	Differing strings
 	[std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >]
 	operator!= returned true
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 79:
-	Differing strings
 	Container size wrong
 	[long]
 	operator== returned false
@@ -327,37 +285,23 @@
 	[std::__1::tuple<std::__1::vector<std::__1::pair<int, float>, std::__1::allocator<std::__1::pair<int, float> > >, std::__1::set<double, std::__1::less<double>, std::__1::allocator<double> >, std::__1::complex<double> >]
 	operator== returned false
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 93
 	[std::__1::tuple<std::__1::vector<std::__1::pair<int, float>, std::__1::allocator<std::__1::pair<int, float> > >, std::__1::set<double, std::__1::less<double>, std::__1::allocator<double> >, std::__1::complex<double> >]
 	operator!= returned true
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 93
 	Element 0 of tuple incorrect
 	[std::__1::vector<std::__1::pair<int, float>, std::__1::allocator<std::__1::pair<int, float> > >]
 	operator== returned false
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 93
-	Element 0 of tuple incorrect
 	[std::__1::vector<std::__1::pair<int, float>, std::__1::allocator<std::__1::pair<int, float> > >]
 	operator!= returned true
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 93
-	Element 0 of tuple incorrect
 	element 0
 
 	[std::__1::pair<int, float>]
 	operator== returned false
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 93
-	Element 0 of tuple incorrect
-	element 0
-
 	[std::__1::pair<int, float>]
 	operator!= returned true
-
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 93
-	Element 0 of tuple incorrect
-	element 0
 
 	First element of pair is incorrect
 	[int]
@@ -370,22 +314,16 @@
 	[std::__1::tuple<std::__1::vector<std::__1::pair<int, float>, std::__1::allocator<std::__1::pair<int, float> > >, std::__1::set<double, std::__1::less<double>, std::__1::allocator<double> >, std::__1::complex<double> >]
 	operator== returned false
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 98
 	[std::__1::tuple<std::__1::vector<std::__1::pair<int, float>, std::__1::allocator<std::__1::pair<int, float> > >, std::__1::set<double, std::__1::less<double>, std::__1::allocator<double> >, std::__1::complex<double> >]
 	operator!= returned true
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 98
 	Element 1 of tuple incorrect
 	[std::__1::set<double, std::__1::less<double>, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 98
-	Element 1 of tuple incorrect
 	[std::__1::set<double, std::__1::less<double>, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 98
-	Element 1 of tuple incorrect
 	element 2
 
 	[double]
@@ -547,20 +485,8 @@
 	[std::__1::basic_string_view<char, std::__1::char_traits<char> >]
 	operator== returned false
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 119
-	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >]
-	With equivalent types:
-	[char [3]]
-
 	[std::__1::basic_string_view<char, std::__1::char_traits<char> >]
 	operator!= returned true
-
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 119
-	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >]
-	With equivalent types:
-	[char [3]]
 
 	Container size wrong
 	[long]
@@ -582,28 +508,8 @@
 	[std::__1::basic_string_view<char, std::__1::char_traits<char> >]
 	operator== returned false
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 121
-	[std::__1::vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > >]
-
-	element 1
-
-	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >]
-	With equivalent types:
-	[std::__1::basic_string_view<char, std::__1::char_traits<char> >]
-
 	[std::__1::basic_string_view<char, std::__1::char_traits<char> >]
 	operator!= returned true
-
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 121
-	[std::__1::vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > >]
-
-	element 1
-
-	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >]
-	With equivalent types:
-	[std::__1::basic_string_view<char, std::__1::char_traits<char> >]
 
 	element 0
 
@@ -735,18 +641,18 @@
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30:
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
-	Fast Task duration: 0.0013353s +- 4 * 9.6474e-05
-	Slow Task duration: 0.00138018s +- 4 * 2.12136e-05 [1.03361; (2, 2)]
+	Fast Task duration: 0.0013923s +- 4 * 1.51656e-05
+	Slow Task duration: 0.00139409s +- 4 * 3.22001e-05 [1.00129; (2, 2)]
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34:
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
-	Fast Task duration: 0.00138122s +- 4 * 3.38754e-05
-	Slow Task duration: 0.00128204s +- 4 * 0.000123949 [0.928193; (2, 3)]
+	Fast Task duration: 0.00134058s +- 4 * 7.59405e-05
+	Slow Task duration: 0.00128477s +- 4 * 0.000132574 [0.958373; (2, 3)]
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38:
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
-	Fast Task duration: 0.00119172s +- 4 * 0.000131956
-	Slow Task duration: 0.00483095s +- 4 * 0.000311249 [4.05378; (2, 2.5)]
+	Fast Task duration: 0.00125325s +- 4 * 0.000115669
+	Slow Task duration: 0.00486743s +- 4 * 0.000358712 [3.88384; (2, 2.5)]
 
 	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 29
 	[double]
@@ -7242,14 +7148,14 @@
 	False Positive Failure:
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67:
 	Performance Test which should pass
-	Fast Task duration: 0.00120802s +- 4 * 0.000129516
-	Slow Task duration: 0.00245583s +- 4 * 0.000161667 [2.03293; (1.8, 2.1)]
+	Fast Task duration: 0.00124418s +- 4 * 8.81324e-05
+	Slow Task duration: 0.00229528s +- 4 * 0.000248739 [1.84482; (1.8, 2.1)]
 
 	False Positive Failure:
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68:
 	Performance Test which should pass
-	Fast Task duration: 0.001185s +- 4 * 0.000131587
-	Slow Task duration: 0.00460298s +- 4 * 0.000277658 [3.88437; (3.6, 4.1)]
+	Fast Task duration: 0.00156677s +- 4 * 0.000458718
+	Slow Task duration: 0.00471622s +- 4 * 0.000475257 [3.01014; (3.6, 4.1)]
 
 	False Positive Failure:
 	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 69

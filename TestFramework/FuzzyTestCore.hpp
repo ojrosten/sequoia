@@ -89,9 +89,9 @@ namespace sequoia::unit_testing
       s.log_check();
       if(!c.compare(prediction, value))
       {
-        std::string message{};
+        std::string message{"\t"};
         if(!description.empty())
-          message.append("\t").append(description).append("\n");
+          message.append(description).append("\n\t");
         
         message.append(add_type_info<T>(""));
         if constexpr(reports_for_type_v<Compare, T>)
