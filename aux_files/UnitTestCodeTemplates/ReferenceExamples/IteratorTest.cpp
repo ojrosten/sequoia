@@ -9,7 +9,7 @@
 
 // #include "Iterator.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   [[nodiscard]]
   std::string_view iterator_test::source_file_name() const noexcept

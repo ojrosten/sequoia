@@ -18,7 +18,7 @@
 #include <cctype>
 #include <optional>
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   using parsing::commandline::warning;
 
@@ -64,7 +64,7 @@ namespace sequoia::unit_testing
         std::string{indent}.append("\tFalse Negative Checks:"),
         std::string{indent}.append("\tFalse Negative Performance Checks:"),
         std::string{indent}.append("\tFalse Positive Checks:"),
-        std::string{indent}.append("\tFalse Positive PerformanceChecks:")
+        std::string{indent}.append("\tFalse Positive Performance Checks:")
       };
 
       pad_right(summaries.begin(), summaries.end(), "  ");

@@ -27,7 +27,7 @@
 
 #include <cmath>
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   /*! Thin wrapper for the comparison object, for the purposes of cleanly adding an overload
       to \ref dispatch_check_free_overloads "dispatch_check".
@@ -89,9 +89,9 @@ namespace sequoia::unit_testing
       s.log_check();
       if(!c.compare(prediction, value))
       {
-        std::string message{};
+        std::string message{"\t"};
         if(!description.empty())
-          message.append("\t").append(description).append("\n");
+          message.append(description).append("\n\t");
         
         message.append(add_type_info<T>(""));
         if constexpr(reports_for_type_v<Compare, T>)
@@ -157,13 +157,13 @@ namespace sequoia::unit_testing
     template<class T, class Compare>
     bool check_approx_equality(std::string_view description, Compare compare, const T& value, const T& prediction)
     {
-      return unit_testing::check_approx_equality(description, m_Logger, std::move(compare), value, prediction);      
+      return testing::check_approx_equality(description, m_Logger, std::move(compare), value, prediction);      
     }
 
     template<class Iter, class PredictionIter, class Compare>
     bool check_range_approx(std::string_view description, Compare compare, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
     {
-      return unit_testing::check_range_approx(description, m_Logger, std::move(compare), first, last, predictionFirst, predictionLast);      
+      return testing::check_range_approx(description, m_Logger, std::move(compare), first, last, predictionFirst, predictionLast);      
     }
 
   protected:    

@@ -8,7 +8,7 @@
 #include "MonotonicSequenceAllocationTest.hpp"
 #include "MonotonicSequenceTestingUtilities.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   [[nodiscard]]
   std::string_view monotonic_sequence_allocation_test::source_file_name() const noexcept

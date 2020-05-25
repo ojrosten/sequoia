@@ -46,7 +46,7 @@
 #include "ArrayUtilities.hpp"
 #include "Utilities.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   enum class allocation_event { copy, mutation, para_copy, para_move, assign_prop, assign};
 

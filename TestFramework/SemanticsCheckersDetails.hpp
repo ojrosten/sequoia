@@ -58,7 +58,7 @@
 */
 
 
-namespace sequoia::unit_testing::impl
+namespace sequoia::testing::impl
 {
   template<class...> struct do_swap;
 

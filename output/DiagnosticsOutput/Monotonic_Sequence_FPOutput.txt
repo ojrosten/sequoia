@@ -1,7 +1,7 @@
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 25:
 	Empty sequence inequivalent to a single value
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > > >]
+	[sequoia::testing::equivalence_checker<sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > > >]
 	With equivalent types:
 	[std::initializer_list<int>]
 
@@ -15,7 +15,7 @@
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 26:
 	Non-empty sequence inequivalent to empty list
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > > >]
+	[sequoia::testing::equivalence_checker<sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > > >]
 	With equivalent types:
 	[std::initializer_list<int>]
 
@@ -29,7 +29,7 @@
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 27:
 	Sequence of size one inequivalent to list with different value
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > > >]
+	[sequoia::testing::equivalence_checker<sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > > >]
 	With equivalent types:
 	[std::initializer_list<int>]
 
@@ -46,13 +46,10 @@
 	[sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > >]
 	operator== returned false
 
-	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 28:
-	Empty/non-empty sequences should compare different
 	[sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > >]
 	operator!= returned true
 
-	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 28:
-	Empty/non-empty sequences should compare different Size incorrect
+	Size incorrect
 	[unsigned long]
 	operator== returned false
 	Obtained : 0
@@ -152,61 +149,52 @@
 	[sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > >]
 	operator== returned false
 
-	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 47:
-	Sequences of size 1 with different elements should compare different
 	[sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > >]
 	operator!= returned true
 
-	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 47:
-	Sequences of size 1 with different elements should compare different Back element wrong
+	Back element wrong
 	[int]
 	operator== returned false
 	Obtained : 2
 	Predicted: 1
 
 
-	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 47:
-	Sequences of size 1 with different elements should compare different Front element wrong
+	Front element wrong
 	[int]
 	operator== returned false
 	Obtained : 2
 	Predicted: 1
 
 
-	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 47:
-	Sequences of size 1 with different elements should compare different Dereferenced iterator wrong for index 0
+	Dereferenced iterator wrong for index 0
 	[int]
 	operator== returned false
 	Obtained : 2
 	Predicted: 1
 
 
-	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 47:
-	Sequences of size 1 with different elements should compare different Dereferenced citerator wrong for index 0
+	Dereferenced citerator wrong for index 0
 	[int]
 	operator== returned false
 	Obtained : 2
 	Predicted: 1
 
 
-	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 47:
-	Sequences of size 1 with different elements should compare different operator[] wrong for index 0
+	operator[] wrong for index 0
 	[int]
 	operator== returned false
 	Obtained : 2
 	Predicted: 1
 
 
-	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 47:
-	Sequences of size 1 with different elements should compare different Dereferenced riterator wrong for index 0
+	Dereferenced riterator wrong for index 0
 	[int]
 	operator== returned false
 	Obtained : 2
 	Predicted: 1
 
 
-	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 47:
-	Sequences of size 1 with different elements should compare different Dereferenced criterator wrong for index 0
+	Dereferenced criterator wrong for index 0
 	[int]
 	operator== returned false
 	Obtained : 2
@@ -218,13 +206,10 @@
 	[sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > >]
 	operator== returned false
 
-	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 52:
-	Sequences of different sizes should compare different
 	[sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > >]
 	operator!= returned true
 
-	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 52:
-	Sequences of different sizes should compare different Size incorrect
+	Size incorrect
 	[unsigned long]
 	operator== returned false
 	Obtained : 2
@@ -330,7 +315,7 @@
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 70:
 	Inequivalent sequences of size two
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > > >]
+	[sequoia::testing::equivalence_checker<sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > > >]
 	With equivalent types:
 	[std::initializer_list<int>]
 
@@ -345,7 +330,7 @@
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 71:
 	Inequivalent sequences of size two
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > > >]
+	[sequoia::testing::equivalence_checker<sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > > >]
 	With equivalent types:
 	[std::initializer_list<int>]
 
@@ -362,101 +347,87 @@
 	[sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > >]
 	operator== returned false
 
-	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 72:
-	Sequences of size 2 with different elements should compare different
 	[sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > >]
 	operator!= returned true
 
-	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 72:
-	Sequences of size 2 with different elements should compare different Back element wrong
+	Back element wrong
 	[int]
 	operator== returned false
 	Obtained : 2
 	Predicted: 0
 
 
-	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 72:
-	Sequences of size 2 with different elements should compare different Front element wrong
+	Front element wrong
 	[int]
 	operator== returned false
 	Obtained : 3
 	Predicted: 1
 
 
-	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 72:
-	Sequences of size 2 with different elements should compare different Dereferenced iterator wrong for index 0
+	Dereferenced iterator wrong for index 0
 	[int]
 	operator== returned false
 	Obtained : 3
 	Predicted: 1
 
 
-	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 72:
-	Sequences of size 2 with different elements should compare different Dereferenced citerator wrong for index 0
+	Dereferenced citerator wrong for index 0
 	[int]
 	operator== returned false
 	Obtained : 3
 	Predicted: 1
 
 
-	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 72:
-	Sequences of size 2 with different elements should compare different operator[] wrong for index 0
+	operator[] wrong for index 0
 	[int]
 	operator== returned false
 	Obtained : 3
 	Predicted: 1
 
 
-	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 72:
-	Sequences of size 2 with different elements should compare different Dereferenced riterator wrong for index 0
+	Dereferenced riterator wrong for index 0
 	[int]
 	operator== returned false
 	Obtained : 3
 	Predicted: 1
 
 
-	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 72:
-	Sequences of size 2 with different elements should compare different Dereferenced criterator wrong for index 0
+	Dereferenced criterator wrong for index 0
 	[int]
 	operator== returned false
 	Obtained : 3
 	Predicted: 1
 
 
-	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 72:
-	Sequences of size 2 with different elements should compare different Dereferenced iterator wrong for index 1
+	Dereferenced iterator wrong for index 1
 	[int]
 	operator== returned false
 	Obtained : 2
 	Predicted: 0
 
 
-	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 72:
-	Sequences of size 2 with different elements should compare different Dereferenced citerator wrong for index 1
+	Dereferenced citerator wrong for index 1
 	[int]
 	operator== returned false
 	Obtained : 2
 	Predicted: 0
 
 
-	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 72:
-	Sequences of size 2 with different elements should compare different operator[] wrong for index 1
+	operator[] wrong for index 1
 	[int]
 	operator== returned false
 	Obtained : 2
 	Predicted: 0
 
 
-	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 72:
-	Sequences of size 2 with different elements should compare different Dereferenced riterator wrong for index 1
+	Dereferenced riterator wrong for index 1
 	[int]
 	operator== returned false
 	Obtained : 3
 	Predicted: 1
 
 
-	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 72:
-	Sequences of size 2 with different elements should compare different Dereferenced criterator wrong for index 1
+	Dereferenced criterator wrong for index 1
 	[int]
 	operator== returned false
 	Obtained : 3
@@ -468,37 +439,31 @@
 	[sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > >]
 	operator== returned false
 
-	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 77:
-	Sequences of size 2 with different final elements should compare different
 	[sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > >]
 	operator!= returned true
 
-	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 77:
-	Sequences of size 2 with different final elements should compare different Back element wrong
+	Back element wrong
 	[int]
 	operator== returned false
 	Obtained : 2
 	Predicted: 0
 
 
-	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 77:
-	Sequences of size 2 with different final elements should compare different Dereferenced iterator wrong for index 1
+	Dereferenced iterator wrong for index 1
 	[int]
 	operator== returned false
 	Obtained : 2
 	Predicted: 0
 
 
-	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 77:
-	Sequences of size 2 with different final elements should compare different Dereferenced citerator wrong for index 1
+	Dereferenced citerator wrong for index 1
 	[int]
 	operator== returned false
 	Obtained : 2
 	Predicted: 0
 
 
-	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 77:
-	Sequences of size 2 with different final elements should compare different operator[] wrong for index 1
+	operator[] wrong for index 1
 	[int]
 	operator== returned false
 	Obtained : 2
@@ -510,69 +475,59 @@
 	[sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > >]
 	operator== returned false
 
-	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 82:
-	Sequences of size 2 with different first elements should compare different
 	[sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > >]
 	operator!= returned true
 
-	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 82:
-	Sequences of size 2 with different first elements should compare different Front element wrong
+	Front element wrong
 	[int]
 	operator== returned false
 	Obtained : 3
 	Predicted: 5
 
 
-	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 82:
-	Sequences of size 2 with different first elements should compare different Dereferenced iterator wrong for index 0
+	Dereferenced iterator wrong for index 0
 	[int]
 	operator== returned false
 	Obtained : 3
 	Predicted: 5
 
 
-	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 82:
-	Sequences of size 2 with different first elements should compare different Dereferenced citerator wrong for index 0
+	Dereferenced citerator wrong for index 0
 	[int]
 	operator== returned false
 	Obtained : 3
 	Predicted: 5
 
 
-	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 82:
-	Sequences of size 2 with different first elements should compare different operator[] wrong for index 0
+	operator[] wrong for index 0
 	[int]
 	operator== returned false
 	Obtained : 3
 	Predicted: 5
 
 
-	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 82:
-	Sequences of size 2 with different first elements should compare different Dereferenced riterator wrong for index 0
+	Dereferenced riterator wrong for index 0
 	[int]
 	operator== returned false
 	Obtained : 3
 	Predicted: 5
 
 
-	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 82:
-	Sequences of size 2 with different first elements should compare different Dereferenced criterator wrong for index 0
+	Dereferenced criterator wrong for index 0
 	[int]
 	operator== returned false
 	Obtained : 3
 	Predicted: 5
 
 
-	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 82:
-	Sequences of size 2 with different first elements should compare different Dereferenced riterator wrong for index 1
+	Dereferenced riterator wrong for index 1
 	[int]
 	operator== returned false
 	Obtained : 3
 	Predicted: 5
 
 
-	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 82:
-	Sequences of size 2 with different first elements should compare different Dereferenced criterator wrong for index 1
+	Dereferenced criterator wrong for index 1
 	[int]
 	operator== returned false
 	Obtained : 3

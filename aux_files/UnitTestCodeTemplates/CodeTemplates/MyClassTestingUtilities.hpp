@@ -11,7 +11,7 @@
 
 //#include "MyClass.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   //template<???>
   struct details_checker<::my_class/*<???>*/>

@@ -8,7 +8,7 @@
 #include "MoveOnlyTestDiagnostics.hpp"
 #include "MoveOnlyTestDiagnosticUtilities.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   [[nodiscard]]
   std::string_view move_only_false_positive_diagnostics::source_file_name() const noexcept

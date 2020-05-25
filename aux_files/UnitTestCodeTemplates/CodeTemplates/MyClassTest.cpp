@@ -9,7 +9,7 @@
 
 // #include "MyClass.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   [[nodiscard]]
   std::string_view my_class_test::source_file_name() const noexcept

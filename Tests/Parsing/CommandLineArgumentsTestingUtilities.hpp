@@ -10,7 +10,7 @@
 #include "CommandLineArguments.hpp"
 #include "RegularTestCore.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   template<>
   struct weak_equivalence_checker<parsing::commandline::operation>
@@ -22,7 +22,7 @@ namespace sequoia::unit_testing
     {
       const bool consistent{((operation.fn != nullptr) && (prediction.fn != nullptr))
           || ((operation.fn == nullptr) && (prediction.fn == nullptr))};
-      unit_testing::check(combine_messages(description, "Existence of function objects differes"), logger, consistent);
+      testing::check(combine_messages(description, "Existence of function objects differes"), logger, consistent);
       check_equality(combine_messages(description, "Operation Parameters differ"), logger, operation.parameters, prediction.parameters);
     }
   };

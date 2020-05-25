@@ -14,7 +14,7 @@
 #include "AllocationCheckers.hpp"
 #include "MoveOnlyAllocationCheckersDetails.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   struct move_only_allocation_predictions
   {

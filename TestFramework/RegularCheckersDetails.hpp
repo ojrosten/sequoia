@@ -14,7 +14,7 @@
 
 #include "SemanticsCheckersDetails.hpp"
 
-namespace sequoia::unit_testing::impl
+namespace sequoia::testing::impl
 {
   template<test_mode Mode, class Actions, class T, class... Args>
   void do_check_copy_assign(std::string_view description, test_logger<Mode>& logger, const Actions& actions, T& z, const T& y, const Args&... args)

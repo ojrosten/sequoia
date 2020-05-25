@@ -17,7 +17,7 @@
 
 #include <variant>
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   // Details Checkers
   

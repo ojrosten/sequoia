@@ -9,7 +9,7 @@
 
 #include "RegularTestCore.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {  
   class utilities_test final : public free_test
   {

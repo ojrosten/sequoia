@@ -34,29 +34,24 @@
 	[sequoia::data_structures::static_stack<int, 1ul>]
 	operator== returned false
 
-	../Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 48:
-	Empty stack versus populated stack
 	[sequoia::data_structures::static_stack<int, 1ul>]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 48:
-	Empty stack versus populated stack Inconsistent emptiness
+	Inconsistent emptiness
 	[bool]
 	operator== returned false
 	Obtained : true
 	Predicted: false
 
 
-	../Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 48:
-	Empty stack versus populated stack Inconsistent size
+	Inconsistent size
 	[unsigned long]
 	operator== returned false
 	Obtained : 0
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 48:
-	Empty stack versus populated stack Hidden state
+	Hidden state
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -68,21 +63,17 @@
 	[sequoia::data_structures::static_stack<int, 1ul>]
 	operator== returned false
 
-	../Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 51:
-	Differing elements
 	[sequoia::data_structures::static_stack<int, 1ul>]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 51:
-	Differing elements Inconsistent top element
+	Inconsistent top element
 	[int]
 	operator== returned false
 	Obtained : 2
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 51:
-	Differing elements Hidden state
+	Hidden state
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -94,29 +85,24 @@
 	[sequoia::data_structures::static_stack<int, 1ul>]
 	operator== returned false
 
-	../Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 54:
-	Empty stack versus populated stack
 	[sequoia::data_structures::static_stack<int, 1ul>]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 54:
-	Empty stack versus populated stack Inconsistent emptiness
+	Inconsistent emptiness
 	[bool]
 	operator== returned false
 	Obtained : true
 	Predicted: false
 
 
-	../Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 54:
-	Empty stack versus populated stack Inconsistent size
+	Inconsistent size
 	[unsigned long]
 	operator== returned false
 	Obtained : 0
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 54:
-	Empty stack versus populated stack Hidden state
+	Hidden state
 	[bool]
 	operator== returned false
 	Obtained : false

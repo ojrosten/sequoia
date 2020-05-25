@@ -9,7 +9,7 @@
 
 #include "DynamicGraphTestingUtilities.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   class test_subgraph final : public graph_unit_test
   {

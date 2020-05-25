@@ -11,7 +11,7 @@
 
 #include "StaticQueue.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {  
   template<class T, std::size_t MaxPushes>
   struct detailed_equality_checker<data_structures::static_queue<T, MaxPushes>>

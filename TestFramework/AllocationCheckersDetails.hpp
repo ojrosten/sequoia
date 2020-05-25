@@ -14,13 +14,13 @@
 #include "SemanticsCheckersDetails.hpp"
 #include <scoped_allocator>
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {  
   template<class Container, class Allocator, class Predictions>
   class basic_allocation_info;
 }
 
-namespace sequoia::unit_testing::impl
+namespace sequoia::testing::impl
 {
   template<test_mode Mode, class Container, class Allocator, class Predictions>
   static void check_allocation(std::string_view description, std::string_view detail, test_logger<Mode>& logger, const Container& container, const basic_allocation_info<Container, Allocator, Predictions>& info, const int previous, const int prediction)

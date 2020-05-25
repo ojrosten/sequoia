@@ -9,7 +9,7 @@
 
 #include "RegularTestCore.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   class test_static_stack_false_positives final : public false_positive_regular_test
   {

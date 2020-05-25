@@ -9,7 +9,7 @@
 
 #include "DynamicGraphTestingUtilities.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   class test_graph_false_positives final : public graph_false_positive_test
   {

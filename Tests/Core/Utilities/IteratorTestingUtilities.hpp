@@ -9,7 +9,7 @@
 
 #include "Iterator.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   template<class Iterator, class DereferencePolicy>
   struct serializer<utilities::iterator<Iterator, DereferencePolicy>>

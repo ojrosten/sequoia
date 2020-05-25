@@ -11,7 +11,7 @@
     \brief Central location for pre-processor options.
  */
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   [[nodiscard]]
   constexpr bool minimal_graph_tests() noexcept

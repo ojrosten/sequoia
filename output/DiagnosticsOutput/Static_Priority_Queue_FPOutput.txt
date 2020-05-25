@@ -3,37 +3,31 @@
 	[sequoia::data_structures::static_priority_queue<int, 1ul, std::__1::less<int> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/StaticPriorityQueueTestingDiagnostics.cpp, Line 32:
-	Empty queue versus populated queue
 	[sequoia::data_structures::static_priority_queue<int, 1ul, std::__1::less<int> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/StaticPriorityQueueTestingDiagnostics.cpp, Line 32:
-	Empty queue versus populated queue Inconsistent emptiness
+	Inconsistent emptiness
 	[bool]
 	operator== returned false
 	Obtained : true
 	Predicted: false
 
 
-	../Tests/Core/DataStructures/StaticPriorityQueueTestingDiagnostics.cpp, Line 32:
-	Empty queue versus populated queue Inconsistent size
+	Inconsistent size
 	[unsigned long]
 	operator== returned false
 	Obtained : 0
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/StaticPriorityQueueTestingDiagnostics.cpp, Line 32:
-	Empty queue versus populated queue Inconsistent Hidden state
+	Inconsistent Hidden state
 	[bool]
 	operator== returned false
 	Obtained : false
 	Predicted: true
 
 
-	../Tests/Core/DataStructures/StaticPriorityQueueTestingDiagnostics.cpp, Line 32:
-	Empty queue versus populated queue Inconsistent Hidden state, symmetry of ==
+	Inconsistent Hidden state, symmetry of ==
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -45,29 +39,24 @@
 	[sequoia::data_structures::static_priority_queue<int, 1ul, std::__1::less<int> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/StaticPriorityQueueTestingDiagnostics.cpp, Line 35:
-	Differing elements
 	[sequoia::data_structures::static_priority_queue<int, 1ul, std::__1::less<int> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/StaticPriorityQueueTestingDiagnostics.cpp, Line 35:
-	Differing elements Inconsistent top element
+	Inconsistent top element
 	[int]
 	operator== returned false
 	Obtained : 2
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/StaticPriorityQueueTestingDiagnostics.cpp, Line 35:
-	Differing elements Inconsistent Hidden state
+	Inconsistent Hidden state
 	[bool]
 	operator== returned false
 	Obtained : false
 	Predicted: true
 
 
-	../Tests/Core/DataStructures/StaticPriorityQueueTestingDiagnostics.cpp, Line 35:
-	Differing elements Inconsistent Hidden state, symmetry of ==
+	Inconsistent Hidden state, symmetry of ==
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -79,37 +68,31 @@
 	[sequoia::data_structures::static_priority_queue<int, 1ul, std::__1::less<int> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/StaticPriorityQueueTestingDiagnostics.cpp, Line 38:
-	Empty queue versus populated queue
 	[sequoia::data_structures::static_priority_queue<int, 1ul, std::__1::less<int> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/StaticPriorityQueueTestingDiagnostics.cpp, Line 38:
-	Empty queue versus populated queue Inconsistent emptiness
+	Inconsistent emptiness
 	[bool]
 	operator== returned false
 	Obtained : true
 	Predicted: false
 
 
-	../Tests/Core/DataStructures/StaticPriorityQueueTestingDiagnostics.cpp, Line 38:
-	Empty queue versus populated queue Inconsistent size
+	Inconsistent size
 	[unsigned long]
 	operator== returned false
 	Obtained : 0
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/StaticPriorityQueueTestingDiagnostics.cpp, Line 38:
-	Empty queue versus populated queue Inconsistent Hidden state
+	Inconsistent Hidden state
 	[bool]
 	operator== returned false
 	Obtained : false
 	Predicted: true
 
 
-	../Tests/Core/DataStructures/StaticPriorityQueueTestingDiagnostics.cpp, Line 38:
-	Empty queue versus populated queue Inconsistent Hidden state, symmetry of ==
+	Inconsistent Hidden state, symmetry of ==
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -121,37 +104,31 @@
 	[sequoia::data_structures::static_priority_queue<int, 2ul, std::__1::less<int> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/StaticPriorityQueueTestingDiagnostics.cpp, Line 46:
-	Two element queue versus one element queue
 	[sequoia::data_structures::static_priority_queue<int, 2ul, std::__1::less<int> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/StaticPriorityQueueTestingDiagnostics.cpp, Line 46:
-	Two element queue versus one element queue Inconsistent size
+	Inconsistent size
 	[unsigned long]
 	operator== returned false
 	Obtained : 2
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/StaticPriorityQueueTestingDiagnostics.cpp, Line 46:
-	Two element queue versus one element queue Inconsistent top element
+	Inconsistent top element
 	[int]
 	operator== returned false
 	Obtained : 2
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/StaticPriorityQueueTestingDiagnostics.cpp, Line 46:
-	Two element queue versus one element queue Inconsistent Hidden state
+	Inconsistent Hidden state
 	[bool]
 	operator== returned false
 	Obtained : false
 	Predicted: true
 
 
-	../Tests/Core/DataStructures/StaticPriorityQueueTestingDiagnostics.cpp, Line 46:
-	Two element queue versus one element queue Inconsistent Hidden state, symmetry of ==
+	Inconsistent Hidden state, symmetry of ==
 	[bool]
 	operator== returned false
 	Obtained : false

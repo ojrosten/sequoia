@@ -11,7 +11,7 @@
 
 #include "PerformanceTestCore.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   template
   <

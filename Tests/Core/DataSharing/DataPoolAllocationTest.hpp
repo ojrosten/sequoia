@@ -11,7 +11,7 @@
 
 #include "DataPool.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   class data_pool_allocation_test final : public move_only_allocation_test
   {

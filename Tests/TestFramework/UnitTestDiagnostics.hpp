@@ -9,7 +9,7 @@
 
 #include "RegularTestCore.hpp"
 
-namespace sequoia:: unit_testing
+namespace sequoia:: testing
 {
   class false_positive_diagnostics final : public false_positive_regular_test
   {

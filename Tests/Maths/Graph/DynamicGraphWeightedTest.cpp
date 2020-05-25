@@ -9,7 +9,7 @@
 
 #include <complex>
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   [[nodiscard]]
   std::string_view weighted_graph_test::source_file_name() const noexcept

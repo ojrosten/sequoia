@@ -87,10 +87,10 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1unit__testing_1_1performance__results.html">sequoia::unit_testing::performance_results&lt; R &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structsequoia_1_1testing_1_1performance__results.html">sequoia::testing::performance_results&lt; R &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsequoia_1_1unit__testing_1_1performance__extender.html">sequoia::unit_testing::performance_extender&lt; Mode &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">class template for plugging into the checker class template  <a href="classsequoia_1_1unit__testing_1_1performance__extender.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classsequoia_1_1testing_1_1performance__extender.html">sequoia::testing::performance_extender&lt; Mode &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">class template for plugging into the checker class template  <a href="classsequoia_1_1testing_1_1performance__extender.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
@@ -101,41 +101,41 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:a4598dfc5a763c7feb5c7469af89ff7c0"><td class="memTemplParams" colspan="2"><a id="a4598dfc5a763c7feb5c7469af89ff7c0"></a>
+<tr class="memitem:a1cbc72b3ac1d9a7994e5f8b5b19a3e46"><td class="memTemplParams" colspan="2"><a id="a1cbc72b3ac1d9a7994e5f8b5b19a3e46"></a>
 template&lt;test_mode mode&gt; </td></tr>
-<tr class="memitem:a4598dfc5a763c7feb5c7469af89ff7c0"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::performance_checker</b> = checker&lt; mode, performance_extender&lt; mode &gt; &gt;</td></tr>
-<tr class="separator:a4598dfc5a763c7feb5c7469af89ff7c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad05c3bd8cbd6d5a2badd27485eb956e4"><td class="memTemplParams" colspan="2"><a id="ad05c3bd8cbd6d5a2badd27485eb956e4"></a>
+<tr class="memitem:a1cbc72b3ac1d9a7994e5f8b5b19a3e46"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::performance_checker</b> = checker&lt; mode, performance_extender&lt; mode &gt; &gt;</td></tr>
+<tr class="separator:a1cbc72b3ac1d9a7994e5f8b5b19a3e46"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f617b5f25defd230aa3c2abbb5ab1be"><td class="memTemplParams" colspan="2"><a id="a1f617b5f25defd230aa3c2abbb5ab1be"></a>
 template&lt;test_mode mode&gt; </td></tr>
-<tr class="memitem:ad05c3bd8cbd6d5a2badd27485eb956e4"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::unit_testing::basic_performance_test</b> = basic_test&lt; performance_checker&lt; mode &gt; &gt;</td></tr>
-<tr class="separator:ad05c3bd8cbd6d5a2badd27485eb956e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad3895b99ddfe219821a8bf97d0c25001"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_performance_test_core_8hpp.html#ad3895b99ddfe219821a8bf97d0c25001">sequoia::unit_testing::performance_test</a> = basic_performance_test&lt; test_mode::standard &gt;</td></tr>
-<tr class="separator:ad3895b99ddfe219821a8bf97d0c25001"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a43e9b1731cbf250230928b6ea4304286"><td class="memItemLeft" align="right" valign="top"><a id="a43e9b1731cbf250230928b6ea4304286"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::unit_testing::performance_false_negative_test</b> = basic_performance_test&lt; test_mode::false_negative &gt;</td></tr>
-<tr class="separator:a43e9b1731cbf250230928b6ea4304286"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a710a345e563d6be8956aea06bc3bba45"><td class="memItemLeft" align="right" valign="top"><a id="a710a345e563d6be8956aea06bc3bba45"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::unit_testing::performance_false_positive_test</b> = basic_performance_test&lt; test_mode::false_positive &gt;</td></tr>
-<tr class="separator:a710a345e563d6be8956aea06bc3bba45"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f617b5f25defd230aa3c2abbb5ab1be"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::basic_performance_test</b> = basic_test&lt; performance_checker&lt; mode &gt; &gt;</td></tr>
+<tr class="separator:a1f617b5f25defd230aa3c2abbb5ab1be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b874e01861e15541be69707ad861a5c"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_performance_test_core_8hpp.html#a3b874e01861e15541be69707ad861a5c">sequoia::testing::performance_test</a> = basic_performance_test&lt; test_mode::standard &gt;</td></tr>
+<tr class="separator:a3b874e01861e15541be69707ad861a5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c92efd3ec66c66bc04c225c05d91868"><td class="memItemLeft" align="right" valign="top"><a id="a2c92efd3ec66c66bc04c225c05d91868"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::performance_false_negative_test</b> = basic_performance_test&lt; test_mode::false_negative &gt;</td></tr>
+<tr class="separator:a2c92efd3ec66c66bc04c225c05d91868"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae139f2a0f6850ad8184392a8171f7117"><td class="memItemLeft" align="right" valign="top"><a id="ae139f2a0f6850ad8184392a8171f7117"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::performance_false_positive_test</b> = basic_performance_test&lt; test_mode::false_positive &gt;</td></tr>
+<tr class="separator:ae139f2a0f6850ad8184392a8171f7117"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a7cc78361e9d49648c6a124f25e293a29"><td class="memTemplParams" colspan="2">template&lt;test_mode Mode, class F , class S &gt; </td></tr>
-<tr class="memitem:a7cc78361e9d49648c6a124f25e293a29"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="_performance_test_core_8hpp.html#a7cc78361e9d49648c6a124f25e293a29">sequoia::unit_testing::check_relative_performance</a> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials, const double num_sds, const std::size_t maxAttempts) -&gt; performance_results&lt; std::invoke_result_t&lt; F &gt;&gt;</td></tr>
-<tr class="memdesc:a7cc78361e9d49648c6a124f25e293a29"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function for comparing the performance of a fast task to a slow task.  <a href="_performance_test_core_8hpp.html#a7cc78361e9d49648c6a124f25e293a29">More...</a><br /></td></tr>
-<tr class="separator:a7cc78361e9d49648c6a124f25e293a29"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a322caa7e0a0a4c80e5d3dd5ccd9912cf"><td class="memTemplParams" colspan="2">template&lt;test_mode Mode, class F , class S &gt; </td></tr>
+<tr class="memitem:a322caa7e0a0a4c80e5d3dd5ccd9912cf"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="_performance_test_core_8hpp.html#a322caa7e0a0a4c80e5d3dd5ccd9912cf">sequoia::testing::check_relative_performance</a> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials, const double num_sds, const std::size_t maxAttempts) -&gt; performance_results&lt; std::invoke_result_t&lt; F &gt;&gt;</td></tr>
+<tr class="memdesc:a322caa7e0a0a4c80e5d3dd5ccd9912cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Function for comparing the performance of a fast task to a slow task.  <a href="_performance_test_core_8hpp.html#a322caa7e0a0a4c80e5d3dd5ccd9912cf">More...</a><br /></td></tr>
+<tr class="separator:a322caa7e0a0a4c80e5d3dd5ccd9912cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Extension of the testing framework for perfomance testing. </p>
 </div><h2 class="groupheader">Typedef Documentation</h2>
-<a id="file_ad3895b99ddfe219821a8bf97d0c25001"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#file_ad3895b99ddfe219821a8bf97d0c25001">&#9670;&nbsp;</a></span>performance_test</h2>
+<a id="file_a3b874e01861e15541be69707ad861a5c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#file_a3b874e01861e15541be69707ad861a5c">&#9670;&nbsp;</a></span>performance_test</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="_performance_test_core_8hpp.html#ad3895b99ddfe219821a8bf97d0c25001">sequoia::unit_testing::performance_test</a> = typedef basic_performance_test&lt;test_mode::standard&gt;</td>
+          <td class="memname">using <a class="el" href="_performance_test_core_8hpp.html#a3b874e01861e15541be69707ad861a5c">sequoia::testing::performance_test</a> = typedef basic_performance_test&lt;test_mode::standard&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -144,8 +144,8 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="file_a7cc78361e9d49648c6a124f25e293a29"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#file_a7cc78361e9d49648c6a124f25e293a29">&#9670;&nbsp;</a></span>check_relative_performance()</h2>
+<a id="file_a322caa7e0a0a4c80e5d3dd5ccd9912cf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#file_a322caa7e0a0a4c80e5d3dd5ccd9912cf">&#9670;&nbsp;</a></span>check_relative_performance()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -153,7 +153,7 @@ Functions</h2></td></tr>
 template&lt;test_mode Mode, class F , class S &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">auto sequoia::unit_testing::check_relative_performance </td>
+          <td class="memname">auto sequoia::testing::check_relative_performance </td>
           <td>(</td>
           <td class="paramtype">std::string_view&#160;</td>
           <td class="paramname"><em>description</em>, </td>
@@ -161,7 +161,7 @@ template&lt;test_mode Mode, class F , class S &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classsequoia_1_1unit__testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;&#160;</td>
+          <td class="paramtype"><a class="el" href="classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;&#160;</td>
           <td class="paramname"><em>logger</em>, </td>
         </tr>
         <tr>
@@ -209,7 +209,7 @@ template&lt;test_mode Mode, class F , class S &gt; </div>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td> -&gt; <a class="el" href="structsequoia_1_1unit__testing_1_1performance__results.html">performance_results</a>&lt;std::invoke_result_t&lt;F&gt;&gt;
+          <td></td><td> -&gt; <a class="el" href="structsequoia_1_1testing_1_1performance__results.html">performance_results</a>&lt;std::invoke_result_t&lt;F&gt;&gt;
   </td>
         </tr>
       </table>

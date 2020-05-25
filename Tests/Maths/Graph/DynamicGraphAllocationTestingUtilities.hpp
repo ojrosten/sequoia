@@ -10,7 +10,7 @@
 #include "DynamicGraphTestingUtilities.hpp"
 #include "PartitionedDataAllocationTestingUtilities.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   struct custom_allocator_contiguous_edge_storage_traits
   {

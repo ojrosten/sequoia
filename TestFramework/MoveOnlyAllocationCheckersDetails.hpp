@@ -16,12 +16,12 @@
 
 #include <optional>
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   struct move_only_allocation_predictions;
 }
 
-namespace sequoia::unit_testing::impl
+namespace sequoia::testing::impl
 {
   struct move_only_allocation_actions : allocation_actions
   {};

@@ -11,7 +11,7 @@
 
 namespace sequoia
 {
-  namespace unit_testing
+  namespace testing
   {    
     class test_edges final : public regular_test
     {

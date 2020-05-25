@@ -10,7 +10,7 @@
 
 #include <vector>
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   [[nodiscard]]
   std::string_view move_only_allocation_false_positive_diagnostics::source_file_name() const noexcept

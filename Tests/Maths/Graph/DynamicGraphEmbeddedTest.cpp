@@ -9,7 +9,7 @@
 
 namespace sequoia
 {
-  namespace unit_testing
+  namespace testing
   {
     [[nodiscard]]
     std::string_view test_edge_insertion::source_file_name() const noexcept

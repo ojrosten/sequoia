@@ -15,7 +15,7 @@
 
 #include "AllocationTestUtilities.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   namespace impl
   {
@@ -72,7 +72,7 @@ namespace sequoia::unit_testing
       template<test_mode Mode>
       static void check(std::string_view description, test_logger<Mode>& logger, const Nodes& nodes, equivalent_type)
       {
-        unit_testing::check(combine_messages(description, "Node storage should have zero size for empty node weights"), logger, nodes.empty());
+        testing::check(combine_messages(description, "Node storage should have zero size for empty node weights"), logger, nodes.empty());
       }
     };
   }

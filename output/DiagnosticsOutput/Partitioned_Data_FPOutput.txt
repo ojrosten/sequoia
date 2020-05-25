@@ -1,7 +1,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54:
 	Empty data inequivalent to non-empty data 
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::independent<int> > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::independent<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 	Number of elements
@@ -14,7 +14,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54:
 	Empty data inequivalent to non-empty data 
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::independent<int> > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::independent<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 	Number of partitions
@@ -27,7 +27,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
 	Non-empty data inequivalent to empty data 
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::independent<int> > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::independent<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 	Number of elements
@@ -40,7 +40,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
 	Non-empty data inequivalent to empty data 
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::independent<int> > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::independent<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 	Partition 0: iterator
@@ -54,7 +54,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
 	Non-empty data inequivalent to empty data 
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::independent<int> > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::independent<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 	Partition 0: riterator
@@ -68,7 +68,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
 	Single partitions holding different elements compare not equal
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::independent<int> > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::independent<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 	Partition 0: iterator
@@ -83,7 +83,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
 	Single partitions holding different elements compare not equal
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::independent<int> > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::independent<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 	Partition 0: riterator
@@ -98,7 +98,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57:
 	Identical elements divided between different partitions compare notequal
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::independent<int> > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::independent<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 	Number of partitions
@@ -111,7 +111,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58:
 	Identical elements divided between different partitions compare notequal
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::independent<int> > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::independent<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 	Number of partitions
@@ -125,18 +125,17 @@
 	[sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::independent<int> > >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60
 	[sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::independent<int> > >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60 Size different
+	Size different
 	[unsigned long]
 	operator== returned false
 	Obtained : 0
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60 Number of partitions different
+	Number of partitions different
 	[unsigned long]
 	operator== returned false
 	Obtained : 0
@@ -147,11 +146,10 @@
 	[sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::independent<int> > >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61
 	[sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::independent<int> > >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const)
+	Partition 0 iterator (const)
 	element 0
 
 	[int]
@@ -160,7 +158,7 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const)
+	Partition 0 r_iterator (const)
 	element 0
 
 	[int]
@@ -169,7 +167,7 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator
+	Partition 0 c_iterator
 	element 0
 
 	[int]
@@ -178,7 +176,7 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator
+	Partition 0 cr_iterator
 	element 0
 
 	[int]
@@ -187,7 +185,7 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator
+	Partition 0 iterator
 	element 0
 
 	[int]
@@ -196,7 +194,7 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator
+	Partition 0 r_iterator
 	element 0
 
 	[int]
@@ -209,11 +207,10 @@
 	[sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::independent<int> > >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
 	[sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::independent<int> > >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62 Number of partitions different
+	Number of partitions different
 	[unsigned long]
 	operator== returned false
 	Obtained : 1
@@ -491,7 +488,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54:
 	Empty data inequivalent to non-empty data 
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::shared<int> > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::shared<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 	Number of elements
@@ -504,7 +501,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54:
 	Empty data inequivalent to non-empty data 
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::shared<int> > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::shared<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 	Number of partitions
@@ -517,7 +514,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
 	Non-empty data inequivalent to empty data 
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::shared<int> > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::shared<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 	Number of elements
@@ -530,7 +527,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
 	Non-empty data inequivalent to empty data 
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::shared<int> > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::shared<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 	Partition 0: iterator
@@ -544,7 +541,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
 	Non-empty data inequivalent to empty data 
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::shared<int> > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::shared<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 	Partition 0: riterator
@@ -558,7 +555,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
 	Single partitions holding different elements compare not equal
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::shared<int> > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::shared<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 	Partition 0: iterator
@@ -573,7 +570,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
 	Single partitions holding different elements compare not equal
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::shared<int> > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::shared<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 	Partition 0: riterator
@@ -588,7 +585,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57:
 	Identical elements divided between different partitions compare notequal
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::shared<int> > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::shared<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 	Number of partitions
@@ -601,7 +598,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58:
 	Identical elements divided between different partitions compare notequal
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::shared<int> > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::shared<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 	Number of partitions
@@ -615,18 +612,17 @@
 	[sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::shared<int> > >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60
 	[sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::shared<int> > >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60 Size different
+	Size different
 	[unsigned long]
 	operator== returned false
 	Obtained : 0
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60 Number of partitions different
+	Number of partitions different
 	[unsigned long]
 	operator== returned false
 	Obtained : 0
@@ -637,11 +633,10 @@
 	[sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::shared<int> > >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61
 	[sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::shared<int> > >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const)
+	Partition 0 iterator (const)
 	element 0
 
 	[int]
@@ -650,7 +645,7 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const)
+	Partition 0 r_iterator (const)
 	element 0
 
 	[int]
@@ -659,7 +654,7 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator
+	Partition 0 c_iterator
 	element 0
 
 	[int]
@@ -668,7 +663,7 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator
+	Partition 0 cr_iterator
 	element 0
 
 	[int]
@@ -677,7 +672,7 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator
+	Partition 0 iterator
 	element 0
 
 	[int]
@@ -686,7 +681,7 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator
+	Partition 0 r_iterator
 	element 0
 
 	[int]
@@ -699,11 +694,10 @@
 	[sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::shared<int> > >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
 	[sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::shared<int> > >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62 Number of partitions different
+	Number of partitions different
 	[unsigned long]
 	operator== returned false
 	Obtained : 1
@@ -981,7 +975,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54:
 	Empty data inequivalent to non-empty data 
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::independent<int> > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::independent<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 	Number of elements
@@ -994,7 +988,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54:
 	Empty data inequivalent to non-empty data 
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::independent<int> > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::independent<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 	Number of partitions
@@ -1007,7 +1001,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
 	Non-empty data inequivalent to empty data 
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::independent<int> > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::independent<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 	Number of elements
@@ -1020,7 +1014,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
 	Non-empty data inequivalent to empty data 
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::independent<int> > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::independent<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 	Partition 0: iterator
@@ -1034,7 +1028,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
 	Non-empty data inequivalent to empty data 
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::independent<int> > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::independent<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 	Partition 0: riterator
@@ -1048,7 +1042,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
 	Single partitions holding different elements compare not equal
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::independent<int> > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::independent<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 	Partition 0: iterator
@@ -1063,7 +1057,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
 	Single partitions holding different elements compare not equal
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::independent<int> > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::independent<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 	Partition 0: riterator
@@ -1078,7 +1072,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57:
 	Identical elements divided between different partitions compare notequal
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::independent<int> > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::independent<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 	Number of partitions
@@ -1091,7 +1085,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58:
 	Identical elements divided between different partitions compare notequal
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::independent<int> > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::independent<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 	Number of partitions
@@ -1105,18 +1099,17 @@
 	[sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::independent<int> > >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60
 	[sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::independent<int> > >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60 Size different
+	Size different
 	[unsigned long]
 	operator== returned false
 	Obtained : 0
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60 Number of partitions different
+	Number of partitions different
 	[unsigned long]
 	operator== returned false
 	Obtained : 0
@@ -1127,11 +1120,10 @@
 	[sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::independent<int> > >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61
 	[sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::independent<int> > >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const)
+	Partition 0 iterator (const)
 	element 0
 
 	[int]
@@ -1140,7 +1132,7 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const)
+	Partition 0 r_iterator (const)
 	element 0
 
 	[int]
@@ -1149,7 +1141,7 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator
+	Partition 0 c_iterator
 	element 0
 
 	[int]
@@ -1158,7 +1150,7 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator
+	Partition 0 cr_iterator
 	element 0
 
 	[int]
@@ -1167,7 +1159,7 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator
+	Partition 0 iterator
 	element 0
 
 	[int]
@@ -1176,7 +1168,7 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator
+	Partition 0 r_iterator
 	element 0
 
 	[int]
@@ -1189,11 +1181,10 @@
 	[sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::independent<int> > >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
 	[sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::independent<int> > >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62 Number of partitions different
+	Number of partitions different
 	[unsigned long]
 	operator== returned false
 	Obtained : 1
@@ -1471,7 +1462,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54:
 	Empty data inequivalent to non-empty data 
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::shared<int> > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::shared<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 	Number of elements
@@ -1484,7 +1475,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54:
 	Empty data inequivalent to non-empty data 
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::shared<int> > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::shared<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 	Number of partitions
@@ -1497,7 +1488,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
 	Non-empty data inequivalent to empty data 
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::shared<int> > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::shared<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 	Number of elements
@@ -1510,7 +1501,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
 	Non-empty data inequivalent to empty data 
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::shared<int> > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::shared<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 	Partition 0: iterator
@@ -1524,7 +1515,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
 	Non-empty data inequivalent to empty data 
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::shared<int> > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::shared<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 	Partition 0: riterator
@@ -1538,7 +1529,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
 	Single partitions holding different elements compare not equal
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::shared<int> > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::shared<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 	Partition 0: iterator
@@ -1553,7 +1544,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
 	Single partitions holding different elements compare not equal
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::shared<int> > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::shared<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 	Partition 0: riterator
@@ -1568,7 +1559,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57:
 	Identical elements divided between different partitions compare notequal
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::shared<int> > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::shared<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 	Number of partitions
@@ -1581,7 +1572,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58:
 	Identical elements divided between different partitions compare notequal
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::shared<int> > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::shared<int> > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<int> >]
 	Number of partitions
@@ -1595,18 +1586,17 @@
 	[sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::shared<int> > >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60
 	[sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::shared<int> > >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60 Size different
+	Size different
 	[unsigned long]
 	operator== returned false
 	Obtained : 0
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60 Number of partitions different
+	Number of partitions different
 	[unsigned long]
 	operator== returned false
 	Obtained : 0
@@ -1617,11 +1607,10 @@
 	[sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::shared<int> > >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61
 	[sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::shared<int> > >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const)
+	Partition 0 iterator (const)
 	element 0
 
 	[int]
@@ -1630,7 +1619,7 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const)
+	Partition 0 r_iterator (const)
 	element 0
 
 	[int]
@@ -1639,7 +1628,7 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator
+	Partition 0 c_iterator
 	element 0
 
 	[int]
@@ -1648,7 +1637,7 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator
+	Partition 0 cr_iterator
 	element 0
 
 	[int]
@@ -1657,7 +1646,7 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator
+	Partition 0 iterator
 	element 0
 
 	[int]
@@ -1666,7 +1655,7 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator
+	Partition 0 r_iterator
 	element 0
 
 	[int]
@@ -1679,11 +1668,10 @@
 	[sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::shared<int> > >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
 	[sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::shared<int> > >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62 Number of partitions different
+	Number of partitions different
 	[unsigned long]
 	operator== returned false
 	Obtained : 1
@@ -1961,7 +1949,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54:
 	Empty data inequivalent to non-empty data 
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
 	Number of elements
@@ -1974,7 +1962,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54:
 	Empty data inequivalent to non-empty data 
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
 	Number of partitions
@@ -1987,7 +1975,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
 	Non-empty data inequivalent to empty data 
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
 	Number of elements
@@ -2000,7 +1988,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
 	Non-empty data inequivalent to empty data 
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
 	Partition 0: iterator
@@ -2014,7 +2002,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
 	Non-empty data inequivalent to empty data 
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
 	Partition 0: riterator
@@ -2028,7 +2016,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
 	Single partitions holding different elements compare not equal
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
 	Partition 0: iterator
@@ -2037,26 +2025,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
-	Single partitions holding different elements compare not equal
-	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: iterator
-	element 0
-
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
-	Single partitions holding different elements compare not equal
-	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: iterator
-	element 0
 
 	element 0
 
@@ -2069,7 +2039,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
 	Single partitions holding different elements compare not equal
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
 	Partition 0: riterator
@@ -2078,26 +2048,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
-	Single partitions holding different elements compare not equal
-	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: riterator
-	element 0
-
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
-	Single partitions holding different elements compare not equal
-	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: riterator
-	element 0
 
 	element 0
 
@@ -2110,7 +2062,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57:
 	Identical elements divided between different partitions compare notequal
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
 	Number of partitions
@@ -2123,7 +2075,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58:
 	Identical elements divided between different partitions compare notequal
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
 	Number of partitions
@@ -2137,18 +2089,17 @@
 	[sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60
 	[sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60 Size different
+	Size different
 	[unsigned long]
 	operator== returned false
 	Obtained : 0
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60 Number of partitions different
+	Number of partitions different
 	[unsigned long]
 	operator== returned false
 	Obtained : 0
@@ -2159,24 +2110,17 @@
 	[sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61
 	[sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const)
+	Partition 0 iterator (const)
 	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const)
-	element 0
-
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const)
-	element 0
 
 	element 0
 
@@ -2186,20 +2130,14 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const)
+	Partition 0 r_iterator (const)
 	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const)
-	element 0
-
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const)
-	element 0
 
 	element 0
 
@@ -2209,20 +2147,14 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator
+	Partition 0 c_iterator
 	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator
-	element 0
-
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator
-	element 0
 
 	element 0
 
@@ -2232,20 +2164,14 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator
+	Partition 0 cr_iterator
 	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator
-	element 0
-
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator
-	element 0
 
 	element 0
 
@@ -2255,20 +2181,14 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator
+	Partition 0 iterator
 	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator
-	element 0
-
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator
-	element 0
 
 	element 0
 
@@ -2278,20 +2198,14 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator
+	Partition 0 r_iterator
 	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator
-	element 0
-
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator
-	element 0
 
 	element 0
 
@@ -2305,11 +2219,10 @@
 	[sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
 	[sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62 Number of partitions different
+	Number of partitions different
 	[unsigned long]
 	operator== returned false
 	Obtained : 1
@@ -2364,11 +2277,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 72
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 72
 	element 0
 
 	[double]
@@ -2381,11 +2292,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 73
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 73
 	element 0
 
 	[double]
@@ -2398,11 +2307,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 74
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 74
 	element 0
 
 	[double]
@@ -2415,11 +2322,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75
 	element 0
 
 	[double]
@@ -2432,11 +2337,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76
 	element 0
 
 	[double]
@@ -2449,11 +2352,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 78
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 78
 	element 0
 
 	[double]
@@ -2466,11 +2367,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 79
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 79
 	element 0
 
 	[double]
@@ -2483,11 +2382,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 80
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 80
 	element 0
 
 	[double]
@@ -2500,11 +2397,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81
 	element 0
 
 	[double]
@@ -2517,11 +2412,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 82
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 82
 	element 0
 
 	[double]
@@ -2534,11 +2427,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 84
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 84
 	element 0
 
 	[double]
@@ -2551,11 +2442,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 85
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 85
 	element 0
 
 	[double]
@@ -2568,11 +2457,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 86
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 86
 	element 0
 
 	[double]
@@ -2585,11 +2472,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87
 	element 0
 
 	[double]
@@ -2602,11 +2487,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88
 	element 0
 
 	[double]
@@ -2619,11 +2502,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 90
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 90
 	element 0
 
 	[double]
@@ -2636,11 +2517,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 91
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 91
 	element 0
 
 	[double]
@@ -2653,11 +2532,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 92
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 92
 	element 0
 
 	[double]
@@ -2670,11 +2547,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93
 	element 0
 
 	[double]
@@ -2687,11 +2562,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 94
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 94
 	element 0
 
 	[double]
@@ -2704,11 +2577,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 97
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 97
 	element 0
 
 	[double]
@@ -2721,11 +2592,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 98
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 98
 	element 0
 
 	[double]
@@ -2738,11 +2607,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
 	element 0
 
 	[double]
@@ -2755,11 +2622,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 101
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 101
 	element 0
 
 	[double]
@@ -2772,11 +2637,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 102
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 102
 	element 0
 
 	[double]
@@ -2789,11 +2652,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103
 	element 0
 
 	[double]
@@ -2806,11 +2667,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105
 	element 0
 
 	[double]
@@ -2823,11 +2682,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 106
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 106
 	element 0
 
 	[double]
@@ -2840,11 +2697,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 107
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 107
 	element 0
 
 	[double]
@@ -2857,11 +2712,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 109
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 109
 	element 0
 
 	[double]
@@ -2874,11 +2727,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 110
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 110
 	element 0
 
 	[double]
@@ -2891,11 +2742,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 111
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 111
 	element 0
 
 	[double]
@@ -2907,7 +2756,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54:
 	Empty data inequivalent to non-empty data 
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
 	Number of elements
@@ -2920,7 +2769,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54:
 	Empty data inequivalent to non-empty data 
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
 	Number of partitions
@@ -2933,7 +2782,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
 	Non-empty data inequivalent to empty data 
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
 	Number of elements
@@ -2946,7 +2795,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
 	Non-empty data inequivalent to empty data 
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
 	Partition 0: iterator
@@ -2960,7 +2809,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
 	Non-empty data inequivalent to empty data 
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
 	Partition 0: riterator
@@ -2974,7 +2823,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
 	Single partitions holding different elements compare not equal
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
 	Partition 0: iterator
@@ -2983,26 +2832,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
-	Single partitions holding different elements compare not equal
-	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: iterator
-	element 0
-
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
-	Single partitions holding different elements compare not equal
-	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: iterator
-	element 0
 
 	element 0
 
@@ -3015,7 +2846,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
 	Single partitions holding different elements compare not equal
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
 	Partition 0: riterator
@@ -3024,26 +2855,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
-	Single partitions holding different elements compare not equal
-	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: riterator
-	element 0
-
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
-	Single partitions holding different elements compare not equal
-	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: riterator
-	element 0
 
 	element 0
 
@@ -3056,7 +2869,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57:
 	Identical elements divided between different partitions compare notequal
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
 	Number of partitions
@@ -3069,7 +2882,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58:
 	Identical elements divided between different partitions compare notequal
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
 	Number of partitions
@@ -3083,18 +2896,17 @@
 	[sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60
 	[sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60 Size different
+	Size different
 	[unsigned long]
 	operator== returned false
 	Obtained : 0
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60 Number of partitions different
+	Number of partitions different
 	[unsigned long]
 	operator== returned false
 	Obtained : 0
@@ -3105,24 +2917,17 @@
 	[sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61
 	[sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const)
+	Partition 0 iterator (const)
 	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const)
-	element 0
-
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const)
-	element 0
 
 	element 0
 
@@ -3132,20 +2937,14 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const)
+	Partition 0 r_iterator (const)
 	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const)
-	element 0
-
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const)
-	element 0
 
 	element 0
 
@@ -3155,20 +2954,14 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator
+	Partition 0 c_iterator
 	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator
-	element 0
-
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator
-	element 0
 
 	element 0
 
@@ -3178,20 +2971,14 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator
+	Partition 0 cr_iterator
 	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator
-	element 0
-
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator
-	element 0
 
 	element 0
 
@@ -3201,20 +2988,14 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator
+	Partition 0 iterator
 	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator
-	element 0
-
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator
-	element 0
 
 	element 0
 
@@ -3224,20 +3005,14 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator
+	Partition 0 r_iterator
 	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator
-	element 0
-
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator
-	element 0
 
 	element 0
 
@@ -3251,11 +3026,10 @@
 	[sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
 	[sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62 Number of partitions different
+	Number of partitions different
 	[unsigned long]
 	operator== returned false
 	Obtained : 1
@@ -3310,11 +3084,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 72
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 72
 	element 0
 
 	[double]
@@ -3327,11 +3099,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 73
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 73
 	element 0
 
 	[double]
@@ -3344,11 +3114,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 74
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 74
 	element 0
 
 	[double]
@@ -3361,11 +3129,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75
 	element 0
 
 	[double]
@@ -3378,11 +3144,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76
 	element 0
 
 	[double]
@@ -3395,11 +3159,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 78
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 78
 	element 0
 
 	[double]
@@ -3412,11 +3174,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 79
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 79
 	element 0
 
 	[double]
@@ -3429,11 +3189,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 80
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 80
 	element 0
 
 	[double]
@@ -3446,11 +3204,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81
 	element 0
 
 	[double]
@@ -3463,11 +3219,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 82
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 82
 	element 0
 
 	[double]
@@ -3480,11 +3234,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 84
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 84
 	element 0
 
 	[double]
@@ -3497,11 +3249,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 85
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 85
 	element 0
 
 	[double]
@@ -3514,11 +3264,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 86
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 86
 	element 0
 
 	[double]
@@ -3531,11 +3279,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87
 	element 0
 
 	[double]
@@ -3548,11 +3294,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88
 	element 0
 
 	[double]
@@ -3565,11 +3309,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 90
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 90
 	element 0
 
 	[double]
@@ -3582,11 +3324,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 91
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 91
 	element 0
 
 	[double]
@@ -3599,11 +3339,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 92
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 92
 	element 0
 
 	[double]
@@ -3616,11 +3354,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93
 	element 0
 
 	[double]
@@ -3633,11 +3369,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 94
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 94
 	element 0
 
 	[double]
@@ -3650,11 +3384,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 97
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 97
 	element 0
 
 	[double]
@@ -3667,11 +3399,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 98
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 98
 	element 0
 
 	[double]
@@ -3684,11 +3414,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
 	element 0
 
 	[double]
@@ -3701,11 +3429,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 101
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 101
 	element 0
 
 	[double]
@@ -3718,11 +3444,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 102
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 102
 	element 0
 
 	[double]
@@ -3735,11 +3459,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103
 	element 0
 
 	[double]
@@ -3752,11 +3474,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105
 	element 0
 
 	[double]
@@ -3769,11 +3489,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 106
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 106
 	element 0
 
 	[double]
@@ -3786,11 +3504,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 107
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 107
 	element 0
 
 	[double]
@@ -3803,11 +3519,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 109
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 109
 	element 0
 
 	[double]
@@ -3820,11 +3534,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 110
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 110
 	element 0
 
 	[double]
@@ -3837,11 +3549,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 111
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 111
 	element 0
 
 	[double]
@@ -3853,7 +3563,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54:
 	Empty data inequivalent to non-empty data 
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
 	Number of elements
@@ -3866,7 +3576,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54:
 	Empty data inequivalent to non-empty data 
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
 	Number of partitions
@@ -3879,7 +3589,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
 	Non-empty data inequivalent to empty data 
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
 	Number of elements
@@ -3892,7 +3602,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
 	Non-empty data inequivalent to empty data 
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
 	Partition 0: iterator
@@ -3906,7 +3616,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
 	Non-empty data inequivalent to empty data 
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
 	Partition 0: riterator
@@ -3920,7 +3630,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
 	Single partitions holding different elements compare not equal
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
 	Partition 0: iterator
@@ -3929,26 +3639,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
-	Single partitions holding different elements compare not equal
-	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: iterator
-	element 0
-
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
-	Single partitions holding different elements compare not equal
-	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: iterator
-	element 0
 
 	element 0
 
@@ -3961,7 +3653,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
 	Single partitions holding different elements compare not equal
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
 	Partition 0: riterator
@@ -3970,26 +3662,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
-	Single partitions holding different elements compare not equal
-	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: riterator
-	element 0
-
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
-	Single partitions holding different elements compare not equal
-	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: riterator
-	element 0
 
 	element 0
 
@@ -4002,7 +3676,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57:
 	Identical elements divided between different partitions compare notequal
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
 	Number of partitions
@@ -4015,7 +3689,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58:
 	Identical elements divided between different partitions compare notequal
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
 	Number of partitions
@@ -4029,18 +3703,17 @@
 	[sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60
 	[sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60 Size different
+	Size different
 	[unsigned long]
 	operator== returned false
 	Obtained : 0
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60 Number of partitions different
+	Number of partitions different
 	[unsigned long]
 	operator== returned false
 	Obtained : 0
@@ -4051,24 +3724,17 @@
 	[sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61
 	[sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const)
+	Partition 0 iterator (const)
 	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const)
-	element 0
-
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const)
-	element 0
 
 	element 0
 
@@ -4078,20 +3744,14 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const)
+	Partition 0 r_iterator (const)
 	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const)
-	element 0
-
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const)
-	element 0
 
 	element 0
 
@@ -4101,20 +3761,14 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator
+	Partition 0 c_iterator
 	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator
-	element 0
-
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator
-	element 0
 
 	element 0
 
@@ -4124,20 +3778,14 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator
+	Partition 0 cr_iterator
 	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator
-	element 0
-
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator
-	element 0
 
 	element 0
 
@@ -4147,20 +3795,14 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator
+	Partition 0 iterator
 	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator
-	element 0
-
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator
-	element 0
 
 	element 0
 
@@ -4170,20 +3812,14 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator
+	Partition 0 r_iterator
 	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator
-	element 0
-
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator
-	element 0
 
 	element 0
 
@@ -4197,11 +3833,10 @@
 	[sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
 	[sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62 Number of partitions different
+	Number of partitions different
 	[unsigned long]
 	operator== returned false
 	Obtained : 1
@@ -4256,11 +3891,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 72
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 72
 	element 0
 
 	[double]
@@ -4273,11 +3906,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 73
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 73
 	element 0
 
 	[double]
@@ -4290,11 +3921,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 74
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 74
 	element 0
 
 	[double]
@@ -4307,11 +3936,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75
 	element 0
 
 	[double]
@@ -4324,11 +3951,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76
 	element 0
 
 	[double]
@@ -4341,11 +3966,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 78
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 78
 	element 0
 
 	[double]
@@ -4358,11 +3981,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 79
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 79
 	element 0
 
 	[double]
@@ -4375,11 +3996,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 80
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 80
 	element 0
 
 	[double]
@@ -4392,11 +4011,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81
 	element 0
 
 	[double]
@@ -4409,11 +4026,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 82
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 82
 	element 0
 
 	[double]
@@ -4426,11 +4041,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 84
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 84
 	element 0
 
 	[double]
@@ -4443,11 +4056,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 85
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 85
 	element 0
 
 	[double]
@@ -4460,11 +4071,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 86
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 86
 	element 0
 
 	[double]
@@ -4477,11 +4086,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87
 	element 0
 
 	[double]
@@ -4494,11 +4101,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88
 	element 0
 
 	[double]
@@ -4511,11 +4116,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 90
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 90
 	element 0
 
 	[double]
@@ -4528,11 +4131,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 91
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 91
 	element 0
 
 	[double]
@@ -4545,11 +4146,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 92
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 92
 	element 0
 
 	[double]
@@ -4562,11 +4161,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93
 	element 0
 
 	[double]
@@ -4579,11 +4176,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 94
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 94
 	element 0
 
 	[double]
@@ -4596,11 +4191,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 97
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 97
 	element 0
 
 	[double]
@@ -4613,11 +4206,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 98
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 98
 	element 0
 
 	[double]
@@ -4630,11 +4221,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
 	element 0
 
 	[double]
@@ -4647,11 +4236,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 101
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 101
 	element 0
 
 	[double]
@@ -4664,11 +4251,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 102
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 102
 	element 0
 
 	[double]
@@ -4681,11 +4266,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103
 	element 0
 
 	[double]
@@ -4698,11 +4281,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105
 	element 0
 
 	[double]
@@ -4715,11 +4296,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 106
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 106
 	element 0
 
 	[double]
@@ -4732,11 +4311,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 107
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 107
 	element 0
 
 	[double]
@@ -4749,11 +4326,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 109
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 109
 	element 0
 
 	[double]
@@ -4766,11 +4341,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 110
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 110
 	element 0
 
 	[double]
@@ -4783,11 +4356,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 111
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 111
 	element 0
 
 	[double]
@@ -4799,7 +4370,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54:
 	Empty data inequivalent to non-empty data 
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
 	Number of elements
@@ -4812,7 +4383,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54:
 	Empty data inequivalent to non-empty data 
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
 	Number of partitions
@@ -4825,7 +4396,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
 	Non-empty data inequivalent to empty data 
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
 	Number of elements
@@ -4838,7 +4409,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
 	Non-empty data inequivalent to empty data 
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
 	Partition 0: iterator
@@ -4852,7 +4423,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
 	Non-empty data inequivalent to empty data 
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
 	Partition 0: riterator
@@ -4866,7 +4437,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
 	Single partitions holding different elements compare not equal
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
 	Partition 0: iterator
@@ -4875,26 +4446,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
-	Single partitions holding different elements compare not equal
-	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: iterator
-	element 0
-
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
-	Single partitions holding different elements compare not equal
-	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: iterator
-	element 0
 
 	element 0
 
@@ -4907,7 +4460,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
 	Single partitions holding different elements compare not equal
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
 	Partition 0: riterator
@@ -4916,26 +4469,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
-	Single partitions holding different elements compare not equal
-	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: riterator
-	element 0
-
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
-	Single partitions holding different elements compare not equal
-	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
-	Partition 0: riterator
-	element 0
 
 	element 0
 
@@ -4948,7 +4483,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57:
 	Identical elements divided between different partitions compare notequal
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
 	Number of partitions
@@ -4961,7 +4496,7 @@
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58:
 	Identical elements divided between different partitions compare notequal
 	Comparison performed using:
-	[sequoia::unit_testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
+	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > > >]
 	With equivalent types:
 	[std::initializer_list<std::initializer_list<std::__1::vector<double, std::__1::allocator<double> > > >]
 	Number of partitions
@@ -4975,18 +4510,17 @@
 	[sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60
 	[sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60 Size different
+	Size different
 	[unsigned long]
 	operator== returned false
 	Obtained : 0
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60 Number of partitions different
+	Number of partitions different
 	[unsigned long]
 	operator== returned false
 	Obtained : 0
@@ -4997,24 +4531,17 @@
 	[sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61
 	[sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const)
+	Partition 0 iterator (const)
 	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const)
-	element 0
-
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator (const)
-	element 0
 
 	element 0
 
@@ -5024,20 +4551,14 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const)
+	Partition 0 r_iterator (const)
 	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const)
-	element 0
-
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator (const)
-	element 0
 
 	element 0
 
@@ -5047,20 +4568,14 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator
+	Partition 0 c_iterator
 	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator
-	element 0
-
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 c_iterator
-	element 0
 
 	element 0
 
@@ -5070,20 +4585,14 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator
+	Partition 0 cr_iterator
 	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator
-	element 0
-
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 cr_iterator
-	element 0
 
 	element 0
 
@@ -5093,20 +4602,14 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator
+	Partition 0 iterator
 	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator
-	element 0
-
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 iterator
-	element 0
 
 	element 0
 
@@ -5116,20 +4619,14 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator
+	Partition 0 r_iterator
 	element 0
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator
-	element 0
-
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61 Partition 0 r_iterator
-	element 0
 
 	element 0
 
@@ -5143,11 +4640,10 @@
 	[sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
 	[sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62 Number of partitions different
+	Number of partitions different
 	[unsigned long]
 	operator== returned false
 	Obtained : 1
@@ -5202,11 +4698,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 72
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 72
 	element 0
 
 	[double]
@@ -5219,11 +4713,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 73
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 73
 	element 0
 
 	[double]
@@ -5236,11 +4728,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 74
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 74
 	element 0
 
 	[double]
@@ -5253,11 +4743,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75
 	element 0
 
 	[double]
@@ -5270,11 +4758,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76
 	element 0
 
 	[double]
@@ -5287,11 +4773,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 78
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 78
 	element 0
 
 	[double]
@@ -5304,11 +4788,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 79
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 79
 	element 0
 
 	[double]
@@ -5321,11 +4803,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 80
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 80
 	element 0
 
 	[double]
@@ -5338,11 +4818,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81
 	element 0
 
 	[double]
@@ -5355,11 +4833,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 82
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 82
 	element 0
 
 	[double]
@@ -5372,11 +4848,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 84
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 84
 	element 0
 
 	[double]
@@ -5389,11 +4863,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 85
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 85
 	element 0
 
 	[double]
@@ -5406,11 +4878,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 86
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 86
 	element 0
 
 	[double]
@@ -5423,11 +4893,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87
 	element 0
 
 	[double]
@@ -5440,11 +4908,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88
 	element 0
 
 	[double]
@@ -5457,11 +4923,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 90
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 90
 	element 0
 
 	[double]
@@ -5474,11 +4938,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 91
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 91
 	element 0
 
 	[double]
@@ -5491,11 +4953,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 92
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 92
 	element 0
 
 	[double]
@@ -5508,11 +4968,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93
 	element 0
 
 	[double]
@@ -5525,11 +4983,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 94
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 94
 	element 0
 
 	[double]
@@ -5542,11 +4998,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 97
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 97
 	element 0
 
 	[double]
@@ -5559,11 +5013,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 98
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 98
 	element 0
 
 	[double]
@@ -5576,11 +5028,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
 	element 0
 
 	[double]
@@ -5593,11 +5043,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 101
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 101
 	element 0
 
 	[double]
@@ -5610,11 +5058,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 102
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 102
 	element 0
 
 	[double]
@@ -5627,11 +5073,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103
 	element 0
 
 	[double]
@@ -5644,11 +5088,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105
 	element 0
 
 	[double]
@@ -5661,11 +5103,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 106
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 106
 	element 0
 
 	[double]
@@ -5678,11 +5118,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 107
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 107
 	element 0
 
 	[double]
@@ -5695,11 +5133,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 109
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 109
 	element 0
 
 	[double]
@@ -5712,11 +5148,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 110
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 110
 	element 0
 
 	[double]
@@ -5729,11 +5163,9 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 111
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator!= returned true
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 111
 	element 0
 
 	[double]

@@ -13,7 +13,7 @@
 
 #include "SemanticsCheckersDetails.hpp"
 
-namespace sequoia::unit_testing::impl
+namespace sequoia::testing::impl
 {
   template<test_mode Mode, class Actions, class T, class Mutator, class... Args>
   void check_semantics(std::string_view description, test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, const Args&... args)

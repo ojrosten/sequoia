@@ -11,7 +11,7 @@
 
 namespace sequoia
 {
-  namespace unit_testing
+  namespace testing
   {
     class test_edge_insertion final : public graph_unit_test
     {

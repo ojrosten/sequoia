@@ -10,7 +10,7 @@
 
 #include "StaticPriorityQueue.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   [[nodiscard]]
   std::string_view test_static_priority_queue::source_file_name() const noexcept

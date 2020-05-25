@@ -2,7 +2,7 @@
 
 #include "EdgeTestingUtilities.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   class test_edge_false_positives final : public false_positive_regular_test
   {

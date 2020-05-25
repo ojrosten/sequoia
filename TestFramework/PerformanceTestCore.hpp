@@ -18,7 +18,7 @@
 #include <random>
 #include <future>
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   template<class R> struct performance_results
   {
@@ -214,7 +214,7 @@ namespace sequoia::unit_testing
     auto check_relative_performance(std::string_view description, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials=5, const double num_sds=4)
       -> performance_results<std::invoke_result_t<F>>
     {
-      return unit_testing::check_relative_performance(description, m_Logger, fast, slow, minSpeedUp, maxSpeedUp, trials, num_sds, 2);
+      return testing::check_relative_performance(description, m_Logger, fast, slow, minSpeedUp, maxSpeedUp, trials, num_sds, 2);
     }
   protected:
     ~performance_extender() = default;

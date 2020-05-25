@@ -7,7 +7,7 @@
 
 #include "DynamicGraphUpdateTest.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   template<class G>
   std::tuple<std::size_t, std::size_t, std::size_t> nth_connection_indices(const G& graph, const std::size_t node, const std::size_t localEdgeIndex)

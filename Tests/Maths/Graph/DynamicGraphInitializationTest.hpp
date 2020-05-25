@@ -12,7 +12,7 @@
 
 namespace sequoia
 {
-  namespace unit_testing
+  namespace testing
   {    
     class test_graph_init final : public graph_unit_test
     {

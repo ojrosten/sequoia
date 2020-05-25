@@ -38,7 +38,7 @@
 #include "FreeCheckers.hpp"
 #include "MoveOnlyCheckersDetails.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   /*! Preconditions:
     

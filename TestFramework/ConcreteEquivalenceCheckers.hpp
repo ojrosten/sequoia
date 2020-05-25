@@ -13,7 +13,7 @@
 
 #include "FreeCheckers.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   /*! \brief Checks equivalence of std::basic_string to char[] and string_view */
   template<class Char, class Traits, class Allocator>

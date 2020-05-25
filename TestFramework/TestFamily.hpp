@@ -17,7 +17,7 @@
 #include <vector>
 #include <future>
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   /*! \brief Allows tests to be grouped together into a family of related tests
 

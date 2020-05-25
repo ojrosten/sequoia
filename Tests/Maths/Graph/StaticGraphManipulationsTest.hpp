@@ -9,7 +9,7 @@
 
 #include "GraphTestingUtilities.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {    
   class test_static_fixed_topology final : public graph_unit_test
   {

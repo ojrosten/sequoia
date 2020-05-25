@@ -10,7 +10,7 @@
 
 #include <vector>
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   // a+1, b*2
   constexpr utilities::protective_wrapper<data> make(int a, double b)

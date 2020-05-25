@@ -12,7 +12,7 @@
  */
 
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {  
   /*! \brief Somewhat similar to std::allocator but logs (de)allocations via an counter
       which is shared upon copying.

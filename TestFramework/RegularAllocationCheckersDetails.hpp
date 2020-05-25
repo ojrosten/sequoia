@@ -14,12 +14,12 @@
 #include "AllocationCheckersDetails.hpp"
 #include "RegularCheckersDetails.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   struct allocation_predictions;
 }
 
-namespace sequoia::unit_testing::impl
+namespace sequoia::testing::impl
 {
   /*! \brief Extends allocation_actions for types with copy semantics. */
   struct regular_allocation_actions : allocation_actions

@@ -9,7 +9,7 @@
 
 #include "PerformanceTestCore.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   class threading_models_performance_test final : public performance_test
   {      

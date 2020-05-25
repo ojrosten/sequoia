@@ -15,7 +15,7 @@
 #include "AllocationCheckers.hpp"
 #include "RegularAllocationCheckersDetails.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {  
   struct individual_allocation_predictions
   {

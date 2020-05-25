@@ -9,7 +9,7 @@
 
 #include "RegularTestCore.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   class protective_wrapper_test final : public regular_test
   {

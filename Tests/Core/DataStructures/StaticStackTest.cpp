@@ -10,7 +10,7 @@
 
 #include "StaticStack.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   [[nodiscard]]
   std::string_view test_static_stack::source_file_name() const noexcept

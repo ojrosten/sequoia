@@ -31,7 +31,7 @@
 
 #include "ConcreteEquivalenceCheckers.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   /*! \brief Detailed comparison of the elements of two instances of std::pair<S,T>
 

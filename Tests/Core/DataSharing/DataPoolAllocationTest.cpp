@@ -8,7 +8,7 @@
 #include "DataPoolAllocationTest.hpp"
 #include "DataPoolTestingUtilities.hpp"
 
-namespace sequoia::unit_testing
+namespace sequoia::testing
 {
   [[nodiscard]]
   std::string_view data_pool_allocation_test::source_file_name() const noexcept
