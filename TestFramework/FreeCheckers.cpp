@@ -15,12 +15,12 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::string operator_message(std::string_view description, std::string_view typeInfo, std::string_view op, std::string_view retVal)
+  std::string operator_message(std::string_view description, std::string_view typeInfo, std::string_view op, std::string_view opRetVal)
   {
     std::string info{typeInfo};
 
     info.append("\toperator").append(op)
-        .append(" returned ").append(retVal).append("\n");
+        .append(" returned ").append(opRetVal).append("\n");
 
     return description.empty()
       ? std::string{"\t"}.append(std::move(info))

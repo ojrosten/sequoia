@@ -211,7 +211,7 @@ namespace sequoia::testing
       and then dispatching, appropriately. 
 
       The input type, T, must either be equality comparable or possess a detailed_equality_checker, or both. 
-      Generally, it will be the case that T does indeed overload operator==; generally anything beyond 
+      Generally, it will be the case that T does indeed overload operator==; anything beyond 
       the simplest user-defined types should be furnished with a detailed_equality_checker.
    */
   
@@ -221,15 +221,15 @@ namespace sequoia::testing
     constexpr bool delegate{has_detailed_equality_checker_v<T> || is_container_v<T>};
 
     static_assert(delegate || is_equal_to_comparable_v<T>,
-                  "Provide either a specialization of detailed_equality_checker or ensure operator== exists, together with a specialization of serializer");
+                  "Provide either a specialization of detailed_equality_checker or ensure operator== exists,"
+                  "together with a specialization of serializer");
       
     using sentinel = typename test_logger<Mode>::sentinel;      
     sentinel s{logger, add_type_info<T>(description)};
 
     const auto priorFailures{logger.failures()};
     const auto priorChecks{logger.deep_checks()};
-      
-      
+     
     if constexpr(is_equal_to_comparable_v<T>)
     {
       s.log_check();
@@ -246,23 +246,8 @@ namespace sequoia::testing
 
     if constexpr(delegate)
     {
-      auto useDescription{
-        [&logger,priorChecks](){
-          return logger.deep_checks() == priorChecks + 1;
-        }
-      };
-      
-      if constexpr(is_not_equal_to_comparable_v<T>)
-      {
-        s.log_check();
-        if(prediction != value)
-        {
-          std::string_view desc{useDescription() ? description : ""};
-          logger.log_failure(operator_message(desc, add_type_info<T>(""), "!=", "true"));
-        }
-      }
-
-      std::string_view desc{useDescription() ? description : ""};
+      const bool useDescription{logger.deep_checks() == priorChecks};
+      std::string_view desc{useDescription ? description : ""};
       if constexpr(has_detailed_equality_checker_v<T>)
       {
         detailed_equality_checker<T>::check(desc, logger, value, prediction);
@@ -346,8 +331,10 @@ namespace sequoia::testing
       auto iter{first};
       for(; predictionIter != predictionLast; advance(predictionIter, 1), advance(iter, 1))
       {
-        std::string dist{std::to_string(distance(predictionFirst, predictionIter)).append("\n")};
-        if(!dispatch_check(combine_messages(description, "element ", "\n").append(std::move(dist)), logger, discriminator, *iter, *predictionIter)) equal = false;
+        std::string dist{std::to_string(distance(predictionFirst, predictionIter))};
+        std::string mess{combine_messages(description, "Element ", "\n")
+            .append(std::move(dist)).append(" of range incorrect")};
+        if(!dispatch_check(std::move(mess), logger, discriminator, *iter, *predictionIter)) equal = false;
       }
     }
     else
