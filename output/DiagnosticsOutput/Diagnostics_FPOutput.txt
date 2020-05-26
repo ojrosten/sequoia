@@ -213,8 +213,6 @@
 	Predicted: 1.1
 
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 77:
-	Iterators demarcate differing elements
 	Element 1 of range incorrect
 	[float]
 	operator== returned false
@@ -222,8 +220,6 @@
 	Predicted: -4.3
 
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 77:
-	Iterators demarcate differing elements
 	Element 2 of range incorrect
 	[float]
 	operator== returned false
@@ -231,8 +227,6 @@
 	Predicted: 2.8
 
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 77:
-	Iterators demarcate differing elements
 	Element 3 of range incorrect
 	[float]
 	operator== returned false
@@ -446,9 +440,6 @@
 	Predicted: 2
 
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 122
-	[std::__1::vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > >]
-
 	Element 1 of range incorrect
 	Comparison performed using:
 	[sequoia::testing::equivalence_checker<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >]
@@ -465,27 +456,12 @@
 	Predicted: c
 
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 128
-	Comparison performed using:
-	[sequoia::testing::weak_equivalence_checker<sequoia::testing::perfectly_normal_beast<int, std::__1::allocator<int> > >]
-	With equivalent types:
-	[std::initializer_list<int>]
-
 	Element 1 of range incorrect
 	[int]
 	operator== returned false
 	Obtained : 2
 	Predicted: 1
 
-
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 131
-	[std::__1::vector<sequoia::testing::perfectly_normal_beast<int, std::__1::allocator<int> >, std::__1::allocator<sequoia::testing::perfectly_normal_beast<int, std::__1::allocator<int> > > >]
-
-	Element 1 of range incorrect
-	Comparison performed using:
-	[sequoia::testing::weak_equivalence_checker<sequoia::testing::perfectly_normal_beast<int, std::__1::allocator<int> > >]
-	With equivalent types:
-	[std::initializer_list<int>]
 
 	Element 1 of range incorrect
 	[int]
@@ -584,18 +560,18 @@
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30:
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
-	Fast Task duration: 0.00120769s +- 4 * 0.000131889
-	Slow Task duration: 0.00129984s +- 4 * 2.57413e-05 [1.0763; (2, 2)]
+	Fast Task duration: 0.00140557s +- 4 * 0.000291615
+	Slow Task duration: 0.00132825s +- 4 * 0.000159201 [0.944989; (2, 2)]
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34:
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
-	Fast Task duration: 0.00135228s +- 4 * 6.05652e-05
-	Slow Task duration: 0.00133768s +- 4 * 7.8892e-05 [0.9892; (2, 3)]
+	Fast Task duration: 0.00123028s +- 4 * 0.000171871
+	Slow Task duration: 0.00126952s +- 4 * 2.82835e-05 [1.03189; (2, 3)]
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38:
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
-	Fast Task duration: 0.00134849s +- 4 * 3.76068e-05
-	Slow Task duration: 0.00482172s +- 4 * 0.000379926 [3.57564; (2, 2.5)]
+	Fast Task duration: 0.00121847s +- 4 * 0.000166052
+	Slow Task duration: 0.00485643s +- 4 * 0.000125929 [3.98567; (2, 2.5)]
 
 	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 29
 	[double]
@@ -620,19 +596,16 @@
 	Obtained : 0.5
 	Predicted: -0.1 +/- 0.5
 
-	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 43
 	Element 1 of range incorrect
 	[double]
 	Obtained : 0.6
 	Predicted: 1.2 +/- 0.5
 
-	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 48
 	Element 1 of range incorrect
 	[double]
 	Obtained : -1
 	Predicted: -1.8 +/- 0.5
 
-	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 51
 	Element 1 of range incorrect
 	Element 0 of range incorrect
 	[double]
@@ -7086,14 +7059,14 @@
 	False Positive Failure:
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67:
 	Performance Test which should pass
-	Fast Task duration: 0.00120944s +- 4 * 0.000194026
-	Slow Task duration: 0.00238213s +- 4 * 0.000169269 [1.96962; (1.8, 2.1)]
+	Fast Task duration: 0.00120578s +- 4 * 0.000151489
+	Slow Task duration: 0.00233217s +- 4 * 0.000237479 [1.93415; (1.8, 2.1)]
 
 	False Positive Failure:
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68:
 	Performance Test which should pass
-	Fast Task duration: 0.00133621s +- 4 * 8.67915e-05
-	Slow Task duration: 0.00442367s +- 4 * 0.00042268 [3.31061; (3.6, 4.1)]
+	Fast Task duration: 0.00120476s +- 4 * 0.000137669
+	Slow Task duration: 0.00473717s +- 4 * 0.000448558 [3.93203; (3.6, 4.1)]
 
 	False Positive Failure:
 	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 69
