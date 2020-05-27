@@ -45,7 +45,7 @@ namespace sequoia::testing
   {
     check(LINE(""), false);
       
-    check_equality(LINE(""), 5, 4);
+    check_equality(LINE("Integers which should compare different"), 5, 4);
     check_equality(LINE(""), 6.5, 5.6);
 
     check_equality(LINE(""), std::pair<int, double>{5, 7.8}, std::pair<int, double>{5, -7.8});

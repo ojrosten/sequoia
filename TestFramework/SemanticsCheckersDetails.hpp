@@ -102,7 +102,7 @@ namespace sequoia::testing::impl
 
     if constexpr (Actions::has_post_equality_action)
     {
-      actions.post_equality_action(combine_messages(description, "Unexpected allocation detected for operator==", "\n"), logger, x, y, args...);
+      actions.post_equality_action(description, logger, x, y, args...);
     }
     
     if(!check(combine_messages(description, "Inequality operator is inconsistent", "\n"), logger, !(x != x)))
@@ -110,7 +110,7 @@ namespace sequoia::testing::impl
 
     if constexpr (Actions::has_post_nequality_action)
     {
-      actions.post_nequality_action(combine_messages(description, "Unexpected allocation detected for operator!=", "\n"), logger, x, y, args...);
+      actions.post_nequality_action(description, logger, x, y, args...);
     }
 
     return actions.check_preconditions(description, logger, x, y);

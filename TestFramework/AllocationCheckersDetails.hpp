@@ -28,7 +28,7 @@ namespace sequoia::testing::impl
     typename test_logger<Mode>::sentinel s{logger, add_type_info<Allocator>(description)};
 
     const auto current{info.count(container)};      
-    auto message{combine_messages(description, detail)};
+    auto message{combine_messages(description, detail, "\n")};
 
     check_equality(std::move(message), logger, current - previous, prediction);
   }
@@ -82,8 +82,8 @@ namespace sequoia::testing::impl
     template<test_mode Mode>
     void check_no_allocation(std::string_view description, test_logger<Mode>& logger, const Container& x, const Container& y) const
     {
-      check_allocation(description, "No allocation for x", logger, x, info(), first_count(), 0);
-      check_allocation(description, "No allocation for y", logger, y, info(), second_count(), 0);
+      check_allocation(description, "Unexpected allocation detected (x)", logger, x, info(), first_count(), 0);
+      check_allocation(description, "Unexpected allocation detected (y)", logger, y, info(), second_count(), 0);
     }
 
     template<test_mode Mode>
@@ -97,15 +97,15 @@ namespace sequoia::testing::impl
       if constexpr(propagate)
       {
         yPrediction = info().get_predictions().assign_y_to_x.with_propagation;        
-        check_allocation(description, "Copy assignment x allocations", logger, xContainer, info(), second_count(), yPrediction);
+        check_allocation(description, "Unexpected allocation detected for copy assignment (x)", logger, xContainer, info(), second_count(), yPrediction);
       }
       else
       {
         const int xPrediction{info().get_predictions().assign_y_to_x.without_propagation};        
-        check_allocation(description, "Copy assignment x allocations", logger, xContainer, info(), first_count(), xPrediction);
+        check_allocation(description, "Unexpected allocation detected for copy assignment (x)", logger, xContainer, info(), first_count(), xPrediction);
       }
 
-      check_allocation(description, "Copy assignment y allocations", logger, yContainer, info(), second_count(), yPrediction);
+      check_allocation(description, "Unexpected allocation detected for copy assignment (y)", logger, yContainer, info(), second_count(), yPrediction);
     }
 
     template<test_mode Mode>
@@ -123,11 +123,11 @@ namespace sequoia::testing::impl
       
       if constexpr(propagate)
       {
-        check_allocation(description, "Move assignment x allocations", logger, xContainer, info(), second_count(), xPrediction);
+        check_allocation(description, "Unexpected allocation detected for move assignment (x)", logger, xContainer, info(), second_count(), xPrediction);
       }
       else
       {
-        check_allocation(description, "Move assignment x allocations", logger, xContainer, info(), first_count(), xPrediction);
+        check_allocation(description, "Unexpected allocation detected for move assignment (x)", logger, xContainer, info(), first_count(), xPrediction);
       }
     }
 
@@ -145,8 +145,8 @@ namespace sequoia::testing::impl
         swap(lhCount, rhCount);
       }
 
-      check_allocation(description, "y allocations", logger, lhs, info(), lhCount, prediction);
-      check_allocation(description, "x allocations", logger, rhs, info(), rhCount, 0);
+      check_allocation(description, "Unexpected allocation detected following mutation after swap (y)", logger, lhs, info(), lhCount, prediction);
+      check_allocation(description, "Unexpected allocation detected following mutation after swap (x)", logger, rhs, info(), rhCount, 0);
     }
   private:    
     alloc_info m_Info{};    
@@ -369,12 +369,12 @@ namespace sequoia::testing::impl
   template<test_mode Mode, class Container, class Mutator, class... Allocators, class... Predictions>
   void check_mutation_after_swap(std::string_view description, test_logger<Mode>& logger, Container& lhs, const Container& rhs, const Container& y, Mutator yMutator, dual_allocation_checker<Container, Allocators, Predictions>... checkers)
   {
-    if(check(combine_messages(description, "Mutation after swap pre-condition violated"), logger, lhs == y))
+    if(check(combine_messages(description, "Mutation after swap pre-condition violated", "\n"), logger, lhs == y))
     {    
       yMutator(lhs);
-      check_mutation_allocation(combine_messages(description, "mutation after swap"), logger, lhs, rhs, checkers...);
+      check_mutation_allocation(combine_messages(description, "Unexpected allocation detected following mutation after swap", "\n"), logger, lhs, rhs, checkers...);
 
-      check(combine_messages(description, "Mutation is not doing anything following copy then swap"), logger, lhs != y);
+      check(combine_messages(description, "Mutation is not doing anything following copy then swap", "\n"), logger, lhs != y);
     }
   }
 
@@ -386,7 +386,7 @@ namespace sequoia::testing::impl
     auto checkFn{
       [&logger, &container](std::string_view message, const auto& checker){
         const auto prediction{checker.info().get_predictions().copy_x};
-        checker.check(message, "Copy construction allocation (x)", logger, container, prediction);
+        checker.check(message, "Unexpected allocation detected for copy construction (x)", logger, container, prediction);
       }
     };
 
@@ -399,7 +399,7 @@ namespace sequoia::testing::impl
     auto checkFn{
       [&logger, &container](std::string_view message, const auto& checker){
         const auto prediction{checker.info().get_predictions().y.copy};
-        checker.check(message, "Copy construction allocation (y)", logger, container, prediction);
+        checker.check(message, "Unexpected allocation detected for copy construction (y)", logger, container, prediction);
       }
     };
 
@@ -411,7 +411,7 @@ namespace sequoia::testing::impl
   {
     auto checkFn{
       [&logger, &container](std::string_view message, const auto& checker){
-        checker.check(message, "Move construction allocation (y)", logger, container, 0);
+        checker.check(message, "Unexpected allocation detected for move construction (y)", logger, container, 0);
       }
     };
 
@@ -437,7 +437,7 @@ namespace sequoia::testing::impl
     auto checkFn{
       [&logger, &container](std::string_view message, const auto& checker){
         const auto prediction{checker.info().get_predictions().y.para_copy};
-        checker.check(message, "Para copy construction allocation (y)", logger, container, prediction);
+        checker.check(message, "Unexpected allocation detected for para-copy construction (y)", logger, container, prediction);
       }
     };
 
@@ -461,7 +461,7 @@ namespace sequoia::testing::impl
     auto checkFn{
       [&logger, &container](std::string_view message, const auto& checker){
         const auto prediction{checker.info().get_predictions().para_move_allocs()};
-        checker.check(message, "Para move construction allocation (y)", logger, container, prediction);
+        checker.check(message, "Unexpected allocation detected for para-move construction (y)", logger, container, prediction);
       }
     };
 
@@ -492,13 +492,13 @@ namespace sequoia::testing::impl
     template<test_mode Mode, class Container, class... Allocators, class... Predictions>
     static void post_equality_action(std::string_view description, test_logger<Mode>& logger, const Container& x, const Container& y, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
     {
-      check_no_allocation(combine_messages(description, "no allocation for operator=="), logger, x, y, checkers...);
+      check_no_allocation(combine_messages(description, "Unexpected allocation detected for operator==", "\n"), logger, x, y, checkers...);
     }
 
     template<test_mode Mode, class Container, class... Allocators, class... Predictions>
     static void post_nequality_action(std::string_view description, test_logger<Mode>& logger, const Container& x, const Container& y, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
     {
-      check_no_allocation(combine_messages(description, "no allocation for operator!="), logger, x, y, checkers...);
+      check_no_allocation(combine_messages(description, "Unexpected allocation detected for operator!=", "\n"), logger, x, y, checkers...);
     }
 
     template<test_mode Mode, class Container, class... Allocators, class... Predictions>
