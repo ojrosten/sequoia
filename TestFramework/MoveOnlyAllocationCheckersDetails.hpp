@@ -31,7 +31,7 @@ namespace sequoia::testing::impl
   {
     Container u{std::move(y), info.make_allocator()...};
     check_para_move_y_allocation(description, logger, u, std::tuple_cat(make_allocation_checkers(info)...));
-    const bool success{check_equality(combine_messages(description, "Move constructor using allocator"), logger, u, yClone)};
+    const bool success{check_equality(combine_messages(description, "Inonsistent para-move constructor", "\n"), logger, u, yClone)};
 
     return success ? std::optional<Container>{std::move(u)} : std::nullopt;
   }

@@ -20,7 +20,7 @@ namespace sequoia::testing::impl
   void do_check_copy_assign(std::string_view description, test_logger<Mode>& logger, const Actions& actions, T& z, const T& y, const Args&... args)
   {
     z = y;
-    check_equality(combine_messages(description, "Copy assignment (from y)"), logger, z, y);
+    check_equality(combine_messages(description, "Inconsistent copy assignment (from y)", "\n"), logger, z, y);
 
     if constexpr(Actions::has_post_copy_assign_action)
     {
@@ -48,12 +48,10 @@ namespace sequoia::testing::impl
     {
       actions.post_copy_action(description, logger, z, T{y}, args...);
     }
-    check_equality(combine_messages(description, "Copy constructor (x)"), logger, z, x);
-    check(combine_messages(description, "Equality operator"), logger, z == x);
+    check_equality(combine_messages(description, "Inconsistent copy constructor (x)", "\n"), logger, z, x);
 
     // z = y
     check_copy_assign(description, logger, actions, z, y, args...);
-    check(combine_messages(description, "Inequality operator"), logger, z != x);
 
     check_move_construction(description, logger, actions, std::move(z), y, args...);
 
@@ -71,14 +69,14 @@ namespace sequoia::testing::impl
       T v{y};
       yMutator(v);
 
-      check(combine_messages(description, "Mutation is not doing anything following copy constrution/broken value semantics"), logger, v != y);
+      check(combine_messages(description, "Either mutation is not doing anything following copy constrution or value semantics are broken, with mutation of an object also changing the object from which it was copied", "\n"), logger, v != y);
 
       v = y;
-      check_equality(combine_messages(description, "Copy assignment"), logger, v, y);
+      check_equality(combine_messages(description, "Inconsistent copy assignment (from mutated y)", "\n"), logger, v, y);
 
       yMutator(v);
 
-      check(combine_messages(description, "Mutation is not doing anything following copy assignment/ broken value semantics"), logger, v != y);
+      check(combine_messages(description, "Mutation is not doing anything following copy assignment/ broken value semantics", "\n"), logger, v != y);
     }
 
     return true;

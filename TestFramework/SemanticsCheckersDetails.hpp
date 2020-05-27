@@ -97,20 +97,20 @@ namespace sequoia::testing::impl
   template<test_mode Mode, class Actions, class T, class... Args>
   bool do_check_preconditions(std::string_view description, test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
   {
-    if(!check(combine_messages(description, "Equality operator is inconsistent"), logger, x == x))
+    if(!check(combine_messages(description, "Equality operator is inconsistent", "\n"), logger, x == x))
       return false;
 
     if constexpr (Actions::has_post_equality_action)
     {
-      actions.post_equality_action(combine_messages(description, "no allocation for operator=="), logger, x, y, args...);
+      actions.post_equality_action(combine_messages(description, "Unexpected allocation detected for operator==", "\n"), logger, x, y, args...);
     }
     
-    if(!check(combine_messages(description, "Inequality operator is inconsistent"), logger, !(x != x)))
+    if(!check(combine_messages(description, "Inequality operator is inconsistent", "\n"), logger, !(x != x)))
       return false;
 
-    if constexpr (Actions::has_post_equality_action)
+    if constexpr (Actions::has_post_nequality_action)
     {
-      actions.post_nequality_action(combine_messages(description, "no allocation for operator!="), logger, x, y, args...);
+      actions.post_nequality_action(combine_messages(description, "Unexpected allocation detected for operator!=", "\n"), logger, x, y, args...);
     }
 
     return actions.check_preconditions(description, logger, x, y);
@@ -128,7 +128,7 @@ namespace sequoia::testing::impl
   void do_check_move_assign(std::string_view description, test_logger<Mode>& logger, const Actions& actions, T& z, T&& y, const T& yClone, Mutator yMutator, const Args&... args)
   {
     z = std::move(y);
-    check_equality(combine_messages(description, "Move assignment (from y)"), logger, z, yClone);
+    check_equality(combine_messages(description, "Inconsistent move assignment (from y)", "\n"), logger, z, yClone);
 
     if constexpr(Actions::has_post_move_assign_action)
     {
@@ -150,8 +150,8 @@ namespace sequoia::testing::impl
     using std::swap;
     swap(x, y);
 
-    check_equality(combine_messages(description, "Swap"), logger, y, xClone);
-    check_equality(combine_messages(description, "Swap"), logger, x, yClone);
+    check_equality(combine_messages(description, "Inconsistent Swap (y)", "\n"), logger, y, xClone);
+    check_equality(combine_messages(description, "Inconsistent Swap (x)", "\n"), logger, x, yClone);
     
     if constexpr(Actions::has_post_swap_action)
     {
@@ -171,7 +171,7 @@ namespace sequoia::testing::impl
   T do_check_move_construction(std::string_view description, test_logger<Mode>& logger, const Actions& actions, T&& z, const T& y, const Args&... args)
   {
     T w{std::move(z)};
-    check_equality(combine_messages(description, "Move constructor"), logger, w, y);
+    check_equality(combine_messages(description, "Inconsistent move construction", "\n"), logger, w, y);
 
     if constexpr(Actions::has_post_move_action)
     {

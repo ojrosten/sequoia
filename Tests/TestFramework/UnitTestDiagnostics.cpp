@@ -77,7 +77,8 @@ namespace sequoia::testing
     check_range(LINE("Iterators demarcate differing elements"), refs.cbegin(), refs.cend(), ans.cbegin(), ans.cbegin() + 4);
 
     using namespace std::string_literals;
-    check_equality(LINE("Differing strings"), "what?!"s, "Hello, World!"s);
+    check_equality(LINE("Strings of differing length"), "what?!"s, "Hello, World!"s);
+    check_equality(LINE("Differing strings of same length"), "Hello, world?"s, "Hello, World!"s);
   }
 
   void false_positive_diagnostics::test_mixed()

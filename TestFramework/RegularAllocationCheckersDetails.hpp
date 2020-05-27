@@ -60,7 +60,7 @@ namespace sequoia::testing::impl
       auto make{
         [description, &logger, &y](auto&... info){
           Container u{y, info.make_allocator()...};
-          check_equality(combine_messages(description, "Copy-like construction"), logger, u, y);
+          check_equality(combine_messages(description, "Inconsistent para-copy construction", "\n"), logger, u, y);
           check_para_copy_y_allocation(description, logger, u, std::tuple_cat(make_allocation_checkers(info)...));
 
           return u;
@@ -69,7 +69,7 @@ namespace sequoia::testing::impl
 
       Container v{make(info...), info.make_allocator()...};
 
-      check_equality(combine_messages(description, "Move-like construction"), logger, v, y);    
+      check_equality(combine_messages(description, "Inconsistent para-move construction", "\n"), logger, v, y);    
       check_para_move_y_allocation(description, logger, v, std::tuple_cat(make_allocation_checkers(info)...));
       check_mutation_after_move(description, "allocation assignment", logger, v, y, std::move(yMutator), std::tuple_cat(make_allocation_checkers(info, v)...));
     }
