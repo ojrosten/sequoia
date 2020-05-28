@@ -95,6 +95,8 @@ namespace sequoia::testing
     public:
       sentinel(test_logger& logger, std::string_view message)
         : m_Logger{logger}
+        , m_PriorFailures{logger.failures()}
+        , m_PriorDeepChecks{logger.deep_checks()}
       {
         if(!logger.depth())
         {
@@ -166,8 +168,21 @@ namespace sequoia::testing
       {
         m_Logger.get().log_check();
       }
+
+      [[nodiscard]]
+      bool failures_detected() const noexcept
+      {
+        return m_Logger.get().failures() != m_PriorFailures;
+      }
+
+      [[nodiscard]]
+      bool checks_registered() const noexcept
+      {
+        return m_Logger.get().deep_checks() != m_PriorDeepChecks;
+      }
     private:
       std::reference_wrapper<test_logger> m_Logger;
+      std::size_t m_PriorFailures{}, m_PriorDeepChecks{};
     };       
       
     void log_failure(std::string_view message)
@@ -222,7 +237,7 @@ namespace sequoia::testing
 
     [[nodiscard]]
     std::size_t top_level_checks() const noexcept { return m_TopLevelChecks; }
-
+    
     [[nodiscard]]
     std::size_t deep_checks() const noexcept { return m_Checks; }
 

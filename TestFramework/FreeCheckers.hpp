@@ -226,9 +226,6 @@ namespace sequoia::testing
       
     using sentinel = typename test_logger<Mode>::sentinel;      
     sentinel s{logger, add_type_info<T>(description)};
-
-    const auto priorFailures{logger.failures()};
-    const auto priorChecks{logger.deep_checks()};
      
     if constexpr(is_equal_to_comparable_v<T>)
     {
@@ -246,8 +243,7 @@ namespace sequoia::testing
 
     if constexpr(delegate)
     {
-      const bool useDescription{logger.deep_checks() == priorChecks};
-      std::string_view desc{useDescription ? description : ""};
+      std::string_view desc{s.checks_registered() ? "" : description};
       if constexpr(has_detailed_equality_checker_v<T>)
       {
         detailed_equality_checker<T>::check(desc, logger, value, prediction);
@@ -262,7 +258,7 @@ namespace sequoia::testing
       }
     }
 
-    return logger.failures() == priorFailures;
+    return !s.failures_detected();
   }
 
   /*! \brief The workhorse for equivalence checking
