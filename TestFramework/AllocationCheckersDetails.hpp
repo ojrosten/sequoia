@@ -28,7 +28,7 @@ namespace sequoia::testing::impl
     typename test_logger<Mode>::sentinel s{logger, add_type_info<Allocator>(description)};
 
     const auto current{info.count(container)};      
-    auto message{combine_messages(description, detail, "\n")};
+    auto message{merge(description, detail, "\n")};
 
     check_equality(std::move(message), logger, current - previous, prediction);
   }
@@ -369,12 +369,12 @@ namespace sequoia::testing::impl
   template<test_mode Mode, class Container, class Mutator, class... Allocators, class... Predictions>
   void check_mutation_after_swap(std::string_view description, test_logger<Mode>& logger, Container& lhs, const Container& rhs, const Container& y, Mutator yMutator, dual_allocation_checker<Container, Allocators, Predictions>... checkers)
   {
-    if(check(combine_messages(description, "Mutation after swap pre-condition violated", "\n"), logger, lhs == y))
+    if(check(merge(description, "Mutation after swap pre-condition violated", "\n"), logger, lhs == y))
     {    
       yMutator(lhs);
-      check_mutation_allocation(combine_messages(description, "Unexpected allocation detected following mutation after swap", "\n"), logger, lhs, rhs, checkers...);
+      check_mutation_allocation(merge(description, "Unexpected allocation detected following mutation after swap", "\n"), logger, lhs, rhs, checkers...);
 
-      check(combine_messages(description, "Mutation is not doing anything following copy then swap", "\n"), logger, lhs != y);
+      check(merge(description, "Mutation is not doing anything following copy then swap", "\n"), logger, lhs != y);
     }
   }
 
@@ -492,13 +492,13 @@ namespace sequoia::testing::impl
     template<test_mode Mode, class Container, class... Allocators, class... Predictions>
     static void post_equality_action(std::string_view description, test_logger<Mode>& logger, const Container& x, const Container& y, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
     {
-      check_no_allocation(combine_messages(description, "Unexpected allocation detected for operator==", "\n"), logger, x, y, checkers...);
+      check_no_allocation(merge(description, "Unexpected allocation detected for operator==", "\n"), logger, x, y, checkers...);
     }
 
     template<test_mode Mode, class Container, class... Allocators, class... Predictions>
     static void post_nequality_action(std::string_view description, test_logger<Mode>& logger, const Container& x, const Container& y, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
     {
-      check_no_allocation(combine_messages(description, "Unexpected allocation detected for operator!=", "\n"), logger, x, y, checkers...);
+      check_no_allocation(merge(description, "Unexpected allocation detected for operator!=", "\n"), logger, x, y, checkers...);
     }
 
     template<test_mode Mode, class Container, class... Allocators, class... Predictions>
@@ -556,11 +556,11 @@ namespace sequoia::testing::impl
   void check_mutation_after_move(std::string_view description, std::string_view moveType, test_logger<Mode>& logger, Container& u, const Container& y, Mutator yMutator, Checkers... checkers)
   {
     yMutator(u);
-    auto mess{combine_messages("mutation after move", moveType)};
-    check_mutation_allocation(combine_messages(description, std::move(mess)), logger, u, checkers...);
+    auto mess{merge("mutation after move", moveType)};
+    check_mutation_allocation(merge(description, std::move(mess)), logger, u, checkers...);
 
-    mess = combine_messages("Mutation is not doing anything following move", moveType);
-    check(combine_messages(description, std::move(mess)), logger, u != y);    
+    mess = merge("Mutation is not doing anything following move", moveType);
+    check(merge(description, std::move(mess)), logger, u != y);    
   }
 
   template<test_mode Mode, class Container, class Mutator, class... Checkers, std::size_t... I>

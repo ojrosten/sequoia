@@ -21,19 +21,19 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void check(std::string_view description, test_logger<Mode>& logger, const type& queue, const type& prediction)
     {
-      check_equality(combine_messages(description, "Inconsistent emptiness"), logger, queue.empty(), prediction.empty());
+      check_equality(merge(description, "Inconsistent emptiness"), logger, queue.empty(), prediction.empty());
 
-      check_equality(combine_messages(description, "Inconsistent size"), logger, queue.size(), prediction.size());
+      check_equality(merge(description, "Inconsistent size"), logger, queue.size(), prediction.size());
       
       if(!prediction.empty() && !queue.empty())
       {
-        check_equality(combine_messages(description, "Inconsistent front element"), logger, queue.front(), prediction.front());
+        check_equality(merge(description, "Inconsistent front element"), logger, queue.front(), prediction.front());
 
-        check_equality(combine_messages(description, "Inconsistent back element"), logger, queue.back(), prediction.back());
+        check_equality(merge(description, "Inconsistent back element"), logger, queue.back(), prediction.back());
       }
 
-      check_equality(combine_messages(description, "Hidden state"), logger, prediction == queue, true);
-      check_equality(combine_messages(description, "Hidden state, symmetry of operator=="), logger, queue == prediction, true);
+      check_equality(merge(description, "Hidden state"), logger, prediction == queue, true);
+      check_equality(merge(description, "Hidden state, symmetry of operator=="), logger, queue == prediction, true);
     }
   };
 }

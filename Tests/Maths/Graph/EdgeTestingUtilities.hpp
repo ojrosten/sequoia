@@ -17,25 +17,25 @@ namespace sequoia::testing
     template<test_mode Mode, class Edge, class Prediction>
     void check_partial(std::string_view description, test_logger<Mode>& logger, const Edge& edge, const Prediction& prediction)
     {
-      check_equality(combine_messages(description, "Target node incorrect"), logger, edge.target_node(), prediction.target_node());
+      check_equality(merge(description, "Target node incorrect"), logger, edge.target_node(), prediction.target_node());
     
       if constexpr (!std::is_empty_v<typename Edge::weight_type>)
       {
-        check_equality(combine_messages(description, "Weight incorrect"), logger, edge.weight(), prediction.weight());
+        check_equality(merge(description, "Weight incorrect"), logger, edge.weight(), prediction.weight());
       }
     }
 
     template<test_mode Mode, class Edge, class Prediction>
     void check_complementary(std::string_view description, test_logger<Mode>& logger, const Edge& edge, const Prediction& prediction)
     {
-      check_equality(combine_messages(description, "Complementary index incorrect"), logger, edge.complementary_index(), prediction.complementary_index());
+      check_equality(merge(description, "Complementary index incorrect"), logger, edge.complementary_index(), prediction.complementary_index());
     }
   
     template<test_mode Mode, class Edge, class Prediction>
     void check_source(std::string_view description, test_logger<Mode>& logger, const Edge& edge, const Prediction& prediction)
     {
-      check_equality(combine_messages(description, "Host node incorrect"), logger, edge.source_node(), prediction.source_node());
-      check_equality(combine_messages(description, "Inversion flag incorrect"), logger, edge.inverted(), prediction.inverted()); 
+      check_equality(merge(description, "Host node incorrect"), logger, edge.source_node(), prediction.source_node());
+      check_equality(merge(description, "Inversion flag incorrect"), logger, edge.inverted(), prediction.inverted()); 
 
     }
   }

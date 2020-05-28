@@ -39,13 +39,13 @@ namespace sequoia::testing
     template<class T>
     void check_semantics(std::string_view description, const T& x, const T& y)
     {
-      testing::check_semantics(combine_messages("Regular Semantics", description), m_Logger, x, y);
+      testing::check_semantics(merge("Regular Semantics", description), m_Logger, x, y);
     }
 
     template<class T, class Mutator>
     void check_semantics(std::string_view description, const T& x, const T& y, Mutator m)
     {
-      testing::check_semantics(combine_messages("Regular Semantics", description), m_Logger, x, y, m);
+      testing::check_semantics(merge("Regular Semantics", description), m_Logger, x, y, m);
     }
   protected:
     regular_extender(regular_extender&&) noexcept = default;

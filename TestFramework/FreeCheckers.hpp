@@ -165,7 +165,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string add_type_info(std::string_view description)
   {
-    return combine_messages(description, type_demangler<T, U...>::make().append("\n"), description.empty() ? "" : "\n");
+    return merge(description, type_demangler<T, U...>::make().append("\n"), description.empty() ? "" : "\n");
   }
 
   /*! \brief generic function that generates a check from any class providing a static check method.
@@ -180,7 +180,7 @@ namespace sequoia::testing
 
     const std::string message{
       add_type_info<S, U...>(
-        combine_messages(description, "Comparison performed using:\n\t" + type_demangler<EquivChecker>::make() + "\n\tWith equivalent types:", "\n"))
+        merge(description, "Comparison performed using:\n\t" + type_demangler<EquivChecker>::make() + "\n\tWith equivalent types:", "\n"))
     };
       
     sentinel r{logger, message};
@@ -321,7 +321,7 @@ namespace sequoia::testing
     using std::advance;
 
     const auto predictedSize{distance(predictionFirst, predictionLast)};
-    if(check_equality(combine_messages(description, "Container size wrong", "\n"), logger, distance(first, last), predictedSize))
+    if(check_equality(merge(description, "Container size wrong", "\n"), logger, distance(first, last), predictedSize))
     {
       auto predictionIter{predictionFirst};
       auto iter{first};
@@ -329,7 +329,7 @@ namespace sequoia::testing
       {
         const auto dist{distance(predictionFirst, predictionIter)};
         std::string_view desc{dist ? "" : description};
-        std::string mess{combine_messages(desc, "Element ", "\n")
+        std::string mess{merge(desc, "Element ", "\n")
             .append(std::to_string(dist)).append(" of range incorrect")};
         if(!dispatch_check(std::move(mess), logger, discriminator, *iter, *predictionIter)) equal = false;
       }
@@ -345,13 +345,13 @@ namespace sequoia::testing
   template<class E, test_mode Mode, class Fn>
   bool check_exception_thrown(std::string_view description, test_logger<Mode>& logger, Fn&& function)
   {
-    const std::string message{"\t" + add_type_info<E>(combine_messages(description, "Expected Exception Type:", "\n"))};
+    const std::string message{"\t" + add_type_info<E>(merge(description, "Expected Exception Type:", "\n"))};
     typename test_logger<Mode>::sentinel r{logger, message};
     r.log_check();
     try
     {
       function();
-      logger.log_failure(combine_messages(message, "No exception thrown\n"));
+      logger.log_failure(merge(message, "No exception thrown\n"));
       return false;
     }
     catch(const E&)
@@ -360,12 +360,12 @@ namespace sequoia::testing
     }
     catch(const std::exception& e)
     {
-      logger.log_failure(combine_messages(message, std::string{"Unexpected exception thrown (caught by std::exception&):\n\t\""} + e.what() + "\"\n"));
+      logger.log_failure(merge(message, std::string{"Unexpected exception thrown (caught by std::exception&):\n\t\""} + e.what() + "\"\n"));
       return false;
     }
     catch(...)
     {
-      logger.log_failure(combine_messages(message, "Unknown exception thrown\n"));
+      logger.log_failure(merge(message, "Unknown exception thrown\n"));
       return false;
     }
   }

@@ -40,7 +40,7 @@ namespace sequoia::testing
     template<class T, class Mutator, class... Allocators>
     void check_semantics(std::string_view description, const T& x, const T& y, Mutator m, allocation_info<T, Allocators>... info)
     {
-      testing::check_semantics(combine_messages("Regular Semantics", description), m_Logger, x, y, m, info...);
+      testing::check_semantics(merge("Regular Semantics", description), m_Logger, x, y, m, info...);
     }
   protected:
     ~regular_allocation_extender() = default;

@@ -20,7 +20,7 @@ namespace sequoia::testing::impl
   void do_check_copy_assign(std::string_view description, test_logger<Mode>& logger, const Actions& actions, T& z, const T& y, const Args&... args)
   {
     z = y;
-    check_equality(combine_messages(description, "Inconsistent copy assignment (from y)", "\n"), logger, z, y);
+    check_equality(merge(description, "Inconsistent copy assignment (from y)", "\n"), logger, z, y);
 
     if constexpr(Actions::has_post_copy_assign_action)
     {
@@ -48,7 +48,7 @@ namespace sequoia::testing::impl
     {
       actions.post_copy_action(description, logger, z, T{y}, args...);
     }
-    check_equality(combine_messages(description, "Inconsistent copy constructor (x)", "\n"), logger, z, x);
+    check_equality(merge(description, "Inconsistent copy constructor (x)", "\n"), logger, z, x);
 
     // z = y
     check_copy_assign(description, logger, actions, z, y, args...);
@@ -69,14 +69,14 @@ namespace sequoia::testing::impl
       T v{y};
       yMutator(v);
 
-      check(combine_messages(description, "Either mutation is not doing anything following copy constrution or value semantics are broken, with mutation of an object also changing the object from which it was copied", "\n"), logger, v != y);
+      check(merge(description, "Either mutation is not doing anything following copy constrution or value semantics are broken, with mutation of an object also changing the object from which it was copied", "\n"), logger, v != y);
 
       v = y;
-      check_equality(combine_messages(description, "Inconsistent copy assignment (from mutated y)", "\n"), logger, v, y);
+      check_equality(merge(description, "Inconsistent copy assignment (from mutated y)", "\n"), logger, v, y);
 
       yMutator(v);
 
-      check(combine_messages(description, "Mutation is not doing anything following copy assignment/ broken value semantics", "\n"), logger, v != y);
+      check(merge(description, "Mutation is not doing anything following copy assignment/ broken value semantics", "\n"), logger, v != y);
     }
 
     return true;

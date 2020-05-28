@@ -18,12 +18,12 @@ namespace sequoia::testing
     template<test_mode Mode, class T>
     void check(std::string_view description, test_logger<Mode>& logger, const T& sequence, const T& prediction)
     {
-      if(check_equality(combine_messages(description, "Size incorrect"), logger, sequence.size(), prediction.size()))
+      if(check_equality(merge(description, "Size incorrect"), logger, sequence.size(), prediction.size()))
       {
         if(!prediction.empty())
         {
-          check_equality(combine_messages(description, "Back element wrong"), logger, sequence.back(), prediction.back());
-          check_equality(combine_messages(description, "Front element wrong"), logger, sequence.front(), prediction.front());
+          check_equality(merge(description, "Back element wrong"), logger, sequence.back(), prediction.back());
+          check_equality(merge(description, "Front element wrong"), logger, sequence.front(), prediction.front());
         }
        
         auto i_prediction{prediction.begin()}, i{sequence.begin()};
@@ -37,20 +37,20 @@ namespace sequoia::testing
           const auto d{distance(prediction.begin(), i_prediction)};
           const std::string mess{" for index " + std::to_string(d)};
           
-          check_equality(combine_messages(description, "Dereferenced iterator wrong" + mess), logger, *i, *i_prediction);
-          check_equality(combine_messages(description, "Dereferenced citerator wrong" + mess), logger, *ci, *ci_prediction);
+          check_equality(merge(description, "Dereferenced iterator wrong" + mess), logger, *i, *i_prediction);
+          check_equality(merge(description, "Dereferenced citerator wrong" + mess), logger, *ci, *ci_prediction);
 
-          check_equality(combine_messages(description, "operator[] wrong" + mess), logger, sequence[d], prediction[d]);  
+          check_equality(merge(description, "operator[] wrong" + mess), logger, sequence[d], prediction[d]);  
 
           const auto shift{static_cast<int64_t>(prediction.size()) - d - 1};
-          check_equality(combine_messages(description, "Dereferenced riterator wrong" + mess), logger, *(ri + shift), *(ri_prediction + shift));
-          check_equality(combine_messages(description, "Dereferenced criterator wrong" + mess), logger, *(cri + shift), *(cri_prediction + shift));
+          check_equality(merge(description, "Dereferenced riterator wrong" + mess), logger, *(ri + shift), *(ri_prediction + shift));
+          check_equality(merge(description, "Dereferenced criterator wrong" + mess), logger, *(cri + shift), *(cri_prediction + shift));
         }
           
-        testing::check(combine_messages(description, "iterator location wrong"), logger, i_prediction == prediction.end());
-        testing::check(combine_messages(description, "citerator location wrong"), logger, ci_prediction == prediction.cend());
-        testing::check(combine_messages(description, "riterator location wrong"), logger, ri_prediction == prediction.rend());
-        testing::check(combine_messages(description, "criterator location wrong"), logger, cri_prediction == prediction.crend());
+        testing::check(merge(description, "iterator location wrong"), logger, i_prediction == prediction.end());
+        testing::check(merge(description, "citerator location wrong"), logger, ci_prediction == prediction.cend());
+        testing::check(merge(description, "riterator location wrong"), logger, ri_prediction == prediction.rend());
+        testing::check(merge(description, "criterator location wrong"), logger, cri_prediction == prediction.crend());
       }
     }
   }

@@ -32,7 +32,7 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::string combine_messages(std::string_view s1, std::string_view s2, std::string_view sep=" ");
+  std::string merge(std::string_view s1, std::string_view s2, std::string_view sep=" ");
 
   /*! \brief Holds details of the file to which the last successfully completed test is registered.
 
@@ -127,7 +127,7 @@ namespace sequoia::testing
 
           auto messageMaker{
             [&logger](){
-              return combine_messages("\tFalse Positive Failure:", logger.current_message(), "\n");
+              return merge("\tFalse Positive Failure:", logger.current_message(), "\n");
             }
           };
 

@@ -24,9 +24,9 @@ namespace sequoia::testing::impl
     if(!check_preconditions(description, logger, actions, x, y, args...))
       return;
 
-    if(!check(combine_messages(description, "Precondition - for checking regular semantics, x and xClone are assumed to be equal", "\n"), logger, x == xClone)) return;
+    if(!check(merge(description, "Precondition - for checking regular semantics, x and xClone are assumed to be equal", "\n"), logger, x == xClone)) return;
 
-    if(!check(combine_messages(description, "Precondition - for checking regular semantics, y and yClone are assumed to be equal", "\n"), logger, y == yClone)) return;
+    if(!check(merge(description, "Precondition - for checking regular semantics, y and yClone are assumed to be equal", "\n"), logger, y == yClone)) return;
 
     T z{check_move_construction(description, logger, actions, std::move(x), xClone, args...)};    
 
@@ -34,8 +34,8 @@ namespace sequoia::testing::impl
     {
       using std::swap;
       swap(z, y);
-      check_equality(combine_messages(description, "Inconsistent Swap (y)", "\n"), logger, y, xClone);
-      check_equality(combine_messages(description, "Inconsistent Swap (x)", "\n"), logger, z, yClone);
+      check_equality(merge(description, "Inconsistent Swap (y)", "\n"), logger, y, xClone);
+      check_equality(merge(description, "Inconsistent Swap (x)", "\n"), logger, z, yClone);
 
       check_move_assign(description, logger, actions, y, std::move(z), yClone, std::move(m), args...);
     }
