@@ -1,4 +1,5 @@
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 46
+
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -7,6 +8,7 @@
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 48:
 	Integers which should compare different
+
 	[int]
 	operator== returned false
 	Obtained : 5
@@ -14,6 +16,7 @@
 
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 49
+
 	[double]
 	operator== returned false
 	Obtained : 6.5
@@ -21,6 +24,7 @@
 
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 51
+
 	[std::__1::pair<int, double>]
 	operator== returned false
 
@@ -32,6 +36,7 @@
 
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 52
+
 	[std::__1::pair<int, double>]
 	operator== returned false
 
@@ -43,6 +48,7 @@
 
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 53
+
 	[std::__1::pair<int, double>]
 	operator== returned false
 
@@ -61,6 +67,7 @@
 
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 55
+
 	[std::__1::tuple<int, double, float>]
 	operator== returned false
 
@@ -72,6 +79,7 @@
 
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 56
+
 	[std::__1::tuple<int, double, float>]
 	operator== returned false
 
@@ -83,6 +91,7 @@
 
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 57
+
 	[std::__1::tuple<int, double, float>]
 	operator== returned false
 
@@ -95,12 +104,14 @@
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 59:
 	Exception expected but nothing thrown
+
 	Expected Exception Type:
 	[std::runtime_error]
 	No exception thrown
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 60:
 	Exception thrown but of wrong type
+
 	Expected Exception Type:
 	[std::runtime_error]
 	Unexpected exception thrown (caught by std::exception&):
@@ -108,12 +119,14 @@
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 61:
 	Exception thrown but of unknown type
+
 	Expected Exception Type:
 	[std::runtime_error]
 	Unknown exception thrown
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 66:
 	Empty vector check which should fail
+
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
@@ -126,6 +139,7 @@
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 67:
 	One element vector check which should fail due to wrong value
+
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
@@ -138,6 +152,7 @@
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 68:
 	One element vector check which should fail due to differing sizes
+
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
@@ -150,6 +165,7 @@
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 69:
 	Multi-element vector comparison which should fail due to last element
+
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
@@ -162,6 +178,7 @@
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 70:
 	Multi-element vector comparison which should fail due to first element
+
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
@@ -174,6 +191,7 @@
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 71:
 	Multi-element vector comparison which should fail due to middle element
+
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
@@ -186,6 +204,7 @@
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 72:
 	Multi-element vector comparison which should fail due to different sizes
+
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
 
@@ -198,6 +217,7 @@
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 76:
 	Iterators demarcate differing number of elements
+
 	Container size wrong
 	[long]
 	operator== returned false
@@ -207,6 +227,7 @@
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 77:
 	Iterators demarcate differing elements
+
 	Element 0 of range incorrect
 	[float]
 	operator== returned false
@@ -237,6 +258,7 @@
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 80:
 	Strings of differing length
+
 	[std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >]
 	operator== returned false
 
@@ -249,6 +271,7 @@
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 81:
 	Differing strings of same length
+
 	[std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >]
 	operator== returned false
 
@@ -267,6 +290,7 @@
 
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 95
+
 	[std::__1::tuple<std::__1::vector<std::__1::pair<int, float>, std::__1::allocator<std::__1::pair<int, float> > >, std::__1::set<double, std::__1::less<double>, std::__1::allocator<double> >, std::__1::complex<double> >]
 	operator== returned false
 
@@ -286,6 +310,7 @@
 
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 100
+
 	[std::__1::tuple<std::__1::vector<std::__1::pair<int, float>, std::__1::allocator<std::__1::pair<int, float> > >, std::__1::set<double, std::__1::less<double>, std::__1::allocator<double> >, std::__1::complex<double> >]
 	operator== returned false
 
@@ -302,6 +327,7 @@
 
 	Regular Semantics ../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 106:
 	Broken equality
+
 	Equality operator is inconsistent
 	[bool]
 	operator== returned false
@@ -311,6 +337,7 @@
 
 	Regular Semantics ../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 107:
 	Broken inequality
+
 	Equality operator is inconsistent
 	[bool]
 	operator== returned false
@@ -320,6 +347,7 @@
 
 	Regular Semantics ../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 108:
 	Broken copy
+
 	Inconsistent copy constructor (x)
 	[sequoia::testing::broken_copy<int, std::__1::allocator<int> >]
 	operator== returned false
@@ -350,6 +378,7 @@
 
 	Regular Semantics ../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 109:
 	Broken move
+
 	Inconsistent move construction
 	[sequoia::testing::broken_move<int, std::__1::allocator<int> >]
 	operator== returned false
@@ -359,6 +388,7 @@
 
 	Regular Semantics ../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 110:
 	Broken copy assignment
+
 	Inconsistent copy assignment (from y)
 	[sequoia::testing::broken_copy_assignment<int, std::__1::allocator<int> >]
 	operator== returned false
@@ -375,6 +405,7 @@
 
 	Regular Semantics ../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 111:
 	Broken move assignment
+
 	Inconsistent move assignment (from y)
 	[sequoia::testing::broken_move_assignment<int, std::__1::allocator<int> >]
 	operator== returned false
@@ -384,6 +415,7 @@
 
 	Regular Semantics ../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 112:
 	Broken swap
+
 	Inconsistent Swap (y)
 	[sequoia::testing::broken_swap<int, std::__1::allocator<int> >]
 	operator== returned false
@@ -400,6 +432,7 @@
 
 	Regular Semantics ../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 113:
 	Broken copy value semantics
+
 	Either mutation is not doing anything following copy construction or value semantics are broken, with mutation of an object also changing the object from which it was copied
 	[bool]
 	operator== returned false
@@ -416,6 +449,7 @@
 
 	Regular Semantics ../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 114:
 	Broken copy assignment value semantics
+
 	Mutation is not doing anything following copy assignment/ broken value semantics
 	[bool]
 	operator== returned false
@@ -425,6 +459,7 @@
 
 	Regular Semantics ../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 116:
 	Broken check invariant
+
 	Precondition - for checking regular semantics, x and y are assumed to be different
 	[bool]
 	operator== returned false
@@ -433,6 +468,7 @@
 
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 121
+
 	Comparison performed using:
 	[sequoia::testing::equivalence_checker<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >]
 	With equivalent types:
@@ -480,6 +516,7 @@
 
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 26:
 	Broken equality
+
 	Equality operator is inconsistent
 	[bool]
 	operator== returned false
@@ -489,6 +526,7 @@
 
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 27:
 	Broken inequality
+
 	Equality operator is inconsistent
 	[bool]
 	operator== returned false
@@ -498,6 +536,7 @@
 
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 28:
 	Broken move
+
 	Inconsistent move construction
 	[sequoia::testing::move_only_broken_move<int, std::__1::allocator<int> >]
 	operator== returned false
@@ -514,6 +553,7 @@
 
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 29:
 	Broken swap
+
 	Inconsistent Swap (y)
 	[sequoia::testing::move_only_broken_swap<int, std::__1::allocator<int> >]
 	operator== returned false
@@ -537,6 +577,7 @@
 
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 30:
 	Broken move assignment
+
 	Inconsistent move assignment (from y)
 	[sequoia::testing::move_only_broken_move_assignment<int, std::__1::allocator<int> >]
 	operator== returned false
@@ -546,6 +587,7 @@
 
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 31:
 	Broken check invariant
+
 	Precondition - for checking regular semantics, x and y are assumed to be different
 	[bool]
 	operator== returned false
@@ -555,6 +597,7 @@
 
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 32:
 	Broken check invariant
+
 	Precondition - for checking regular semantics, x and xClone are assumed to be equal
 	[bool]
 	operator== returned false
@@ -564,6 +607,7 @@
 
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 33:
 	Broken check invariant
+
 	Precondition - for checking regular semantics, x and xClone are assumed to be equal
 	[bool]
 	operator== returned false
@@ -573,30 +617,36 @@
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30:
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
-	Fast Task duration: 0.00121876s +- 4 * 7.08405e-05
-	Slow Task duration: 0.00122866s +- 4 * 0.000267238 [1.00812; (2, 2)]
+
+	Fast Task duration: 0.00127759s +- 4 * 0.000146298
+	Slow Task duration: 0.00122519s +- 4 * 9.03163e-05 [0.958979; (2, 2)]
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34:
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
-	Fast Task duration: 0.00128952s +- 4 * 0.000141554
-	Slow Task duration: 0.00125095s +- 4 * 0.000135368 [0.970091; (2, 3)]
+
+	Fast Task duration: 0.00119118s +- 4 * 0.000133407
+	Slow Task duration: 0.00127885s +- 4 * 0.000151255 [1.07359; (2, 3)]
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38:
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
-	Fast Task duration: 0.00130982s +- 4 * 0.000147948
-	Slow Task duration: 0.00492718s +- 4 * 0.000272538 [3.76173; (2, 2.5)]
+
+	Fast Task duration: 0.00119865s +- 4 * 0.000133409
+	Slow Task duration: 0.00483475s +- 4 * 0.000474784 [4.03351; (2, 2.5)]
 
 	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 29
+
 	[double]
 	Obtained : 3
 	Predicted: 5 +/- 1
 
 	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 30
+
 	[double]
 	Obtained : 7
 	Predicted: 5 +/- 1
 
 	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 32
+
 	[double]
 	Fuzzy comparison failed
 	Obtained : 1
@@ -604,6 +654,7 @@
 
 
 	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 40
+
 	Element 0 of range incorrect
 	[double]
 	Obtained : 0.5
@@ -627,6 +678,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 52:
 	Broken equality
+
 	Equality operator is inconsistent
 	[bool]
 	operator== returned false
@@ -636,6 +688,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 60:
 	Broken inequality
+
 	Equality operator is inconsistent
 	[bool]
 	operator== returned false
@@ -645,6 +698,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 68:
 	Broken equality
+
 	Unexpected allocation detected for operator==
 	[shared_counting_allocator<
 		int,
@@ -683,6 +737,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 77:
 	Broken copy
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = false,
@@ -727,6 +782,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 85:
 	Broken copy alloc
+
 	Inconsistent para-copy construction
 	[sequoia::testing::broken_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
 	operator== returned false
@@ -757,6 +813,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 93:
 	Broken move
+
 	Inconsistent move construction
 	[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
 	operator== returned false
@@ -787,6 +844,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101:
 	Broken move alloc
+
 	Inconsistent para-move construction
 	[sequoia::testing::broken_move_alloc<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
 	operator== returned false
@@ -803,6 +861,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 109:
 	Inefficient move
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = false,
@@ -819,6 +878,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 117:
 	Broken copy assignment
+
 	Inconsistent copy assignment (from y)
 	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
 	operator== returned false
@@ -849,6 +909,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 125:
 	Broken move assignment
+
 	Inconsistent move assignment (from y)
 	[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
 	operator== returned false
@@ -865,6 +926,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 139:
 	Broken copy value semantics
+
 	[shared_counting_allocator<
 		std::__1::shared_ptr<int>,
 		Propagate on copy assignment = false,
@@ -909,6 +971,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 154:
 	Broken copy assignment value semantics
+
 	Mutation is not doing anything following copy assignment/ broken value semantics
 	[bool]
 	operator== returned false
@@ -924,6 +987,7 @@
 
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 169
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = false,
@@ -939,6 +1003,7 @@
 
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 170
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = false,
@@ -954,6 +1019,7 @@
 
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 185
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = false,
@@ -970,6 +1036,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 194:
 	Broken check invariant
+
 	Precondition - for checking regular semantics, x and y are assumed to be different
 	[bool]
 	operator== returned false
@@ -979,6 +1046,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 203:
 	Incorrect copy x allocs
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = false,
@@ -995,6 +1063,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 207:
 	Incorrect copy y allocs
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = false,
@@ -1025,6 +1094,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 217:
 	Incorrect copy assign y to x allocs
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = false,
@@ -1047,7 +1117,8 @@
 
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 221:
-	Incorrect mutation allocs mutation after move assignment
+	Incorrect mutation allocs
+	mutation after move assignment
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = false,
@@ -1069,6 +1140,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 238:
 	Incorrect copy x allocs
+
 	[shared_counting_allocator<
 		std::__1::shared_ptr<int>,
 		Propagate on copy assignment = false,
@@ -1085,6 +1157,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 242:
 	Incorrect copy y allocs
+
 	[shared_counting_allocator<
 		std::__1::shared_ptr<int>,
 		Propagate on copy assignment = false,
@@ -1115,6 +1188,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 252:
 	Incorrect copy assign y to x allocs
+
 	[shared_counting_allocator<
 		std::__1::shared_ptr<int>,
 		Propagate on copy assignment = false,
@@ -1137,7 +1211,8 @@
 
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 256:
-	Incorrect mutation allocs mutation after move assignment
+	Incorrect mutation allocs
+	mutation after move assignment
 	[shared_counting_allocator<
 		std::__1::shared_ptr<int>,
 		Propagate on copy assignment = false,
@@ -1159,6 +1234,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 52:
 	Broken equality
+
 	Equality operator is inconsistent
 	[bool]
 	operator== returned false
@@ -1168,6 +1244,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 60:
 	Broken inequality
+
 	Equality operator is inconsistent
 	[bool]
 	operator== returned false
@@ -1177,6 +1254,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 68:
 	Broken equality
+
 	Unexpected allocation detected for operator==
 	[shared_counting_allocator<
 		int,
@@ -1229,6 +1307,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 77:
 	Broken copy
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = false,
@@ -1294,6 +1373,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 85:
 	Broken copy alloc
+
 	Inconsistent para-copy construction
 	[sequoia::testing::broken_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
 	operator== returned false
@@ -1324,6 +1404,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 93:
 	Broken move
+
 	Inconsistent move construction
 	[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
 	operator== returned false
@@ -1354,6 +1435,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101:
 	Broken move alloc
+
 	Inconsistent para-move construction
 	[sequoia::testing::broken_move_alloc<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
 	operator== returned false
@@ -1370,6 +1452,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 109:
 	Inefficient move
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = false,
@@ -1386,6 +1469,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 117:
 	Broken copy assignment
+
 	Inconsistent copy assignment (from y)
 	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
 	operator== returned false
@@ -1416,6 +1500,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 125:
 	Broken move assignment
+
 	Inconsistent move assignment (from y)
 	[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
 	operator== returned false
@@ -1432,6 +1517,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 139:
 	Broken copy value semantics
+
 	[shared_counting_allocator<
 		std::__1::shared_ptr<int>,
 		Propagate on copy assignment = false,
@@ -1483,6 +1569,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 154:
 	Broken copy assignment value semantics
+
 	Mutation is not doing anything following copy assignment/ broken value semantics
 	[bool]
 	operator== returned false
@@ -1498,6 +1585,7 @@
 
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 169
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = false,
@@ -1513,6 +1601,7 @@
 
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 170
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = false,
@@ -1528,6 +1617,7 @@
 
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 185
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = false,
@@ -1544,6 +1634,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 194:
 	Broken check invariant
+
 	Precondition - for checking regular semantics, x and y are assumed to be different
 	[bool]
 	operator== returned false
@@ -1553,6 +1644,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 203:
 	Incorrect copy x allocs
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = false,
@@ -1569,6 +1661,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 207:
 	Incorrect copy y allocs
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = false,
@@ -1599,6 +1692,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 217:
 	Incorrect copy assign y to x allocs
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = false,
@@ -1621,7 +1715,8 @@
 
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 221:
-	Incorrect mutation allocs mutation after move assignment
+	Incorrect mutation allocs
+	mutation after move assignment
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = false,
@@ -1650,6 +1745,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 238:
 	Incorrect copy x allocs
+
 	[shared_counting_allocator<
 		std::__1::shared_ptr<int>,
 		Propagate on copy assignment = false,
@@ -1666,6 +1762,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 242:
 	Incorrect copy y allocs
+
 	[shared_counting_allocator<
 		std::__1::shared_ptr<int>,
 		Propagate on copy assignment = false,
@@ -1696,6 +1793,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 252:
 	Incorrect copy assign y to x allocs
+
 	[shared_counting_allocator<
 		std::__1::shared_ptr<int>,
 		Propagate on copy assignment = false,
@@ -1718,7 +1816,8 @@
 
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 256:
-	Incorrect mutation allocs mutation after move assignment
+	Incorrect mutation allocs
+	mutation after move assignment
 	[shared_counting_allocator<
 		std::__1::shared_ptr<int>,
 		Propagate on copy assignment = false,
@@ -1747,6 +1846,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 52:
 	Broken equality
+
 	Equality operator is inconsistent
 	[bool]
 	operator== returned false
@@ -1756,6 +1856,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 60:
 	Broken inequality
+
 	Equality operator is inconsistent
 	[bool]
 	operator== returned false
@@ -1765,6 +1866,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 68:
 	Broken equality
+
 	Unexpected allocation detected for operator==
 	[shared_counting_allocator<
 		int,
@@ -1810,6 +1912,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 77:
 	Broken copy
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = false,
@@ -1847,6 +1950,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 85:
 	Broken copy alloc
+
 	Inconsistent para-copy construction
 	[sequoia::testing::broken_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
 	operator== returned false
@@ -1877,6 +1981,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 93:
 	Broken move
+
 	Inconsistent move construction
 	[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
 	operator== returned false
@@ -1907,6 +2012,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101:
 	Broken move alloc
+
 	Inconsistent para-move construction
 	[sequoia::testing::broken_move_alloc<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
 	operator== returned false
@@ -1923,6 +2029,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 109:
 	Inefficient move
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = false,
@@ -1939,6 +2046,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 117:
 	Broken copy assignment
+
 	Inconsistent copy assignment (from y)
 	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
 	operator== returned false
@@ -1969,6 +2077,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 125:
 	Broken move assignment
+
 	Inconsistent move assignment (from y)
 	[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
 	operator== returned false
@@ -1985,6 +2094,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 139:
 	Broken copy value semantics
+
 	[shared_counting_allocator<
 		std::__1::shared_ptr<int>,
 		Propagate on copy assignment = false,
@@ -2029,6 +2139,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 154:
 	Broken copy assignment value semantics
+
 	Mutation is not doing anything following copy assignment/ broken value semantics
 	[bool]
 	operator== returned false
@@ -2044,6 +2155,7 @@
 
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 169
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = false,
@@ -2059,6 +2171,7 @@
 
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 170
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = false,
@@ -2074,6 +2187,7 @@
 
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 185
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = false,
@@ -2090,6 +2204,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 194:
 	Broken check invariant
+
 	Precondition - for checking regular semantics, x and y are assumed to be different
 	[bool]
 	operator== returned false
@@ -2099,6 +2214,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 203:
 	Incorrect copy x allocs
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = false,
@@ -2115,6 +2231,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 207:
 	Incorrect copy y allocs
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = false,
@@ -2145,6 +2262,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 217:
 	Incorrect copy assign y to x allocs
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = false,
@@ -2160,7 +2278,8 @@
 
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 221:
-	Incorrect mutation allocs mutation after move assignment
+	Incorrect mutation allocs
+	mutation after move assignment
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = false,
@@ -2182,6 +2301,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 238:
 	Incorrect copy x allocs
+
 	[shared_counting_allocator<
 		std::__1::shared_ptr<int>,
 		Propagate on copy assignment = false,
@@ -2198,6 +2318,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 242:
 	Incorrect copy y allocs
+
 	[shared_counting_allocator<
 		std::__1::shared_ptr<int>,
 		Propagate on copy assignment = false,
@@ -2228,6 +2349,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 252:
 	Incorrect copy assign y to x allocs
+
 	[shared_counting_allocator<
 		std::__1::shared_ptr<int>,
 		Propagate on copy assignment = false,
@@ -2243,7 +2365,8 @@
 
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 256:
-	Incorrect mutation allocs mutation after move assignment
+	Incorrect mutation allocs
+	mutation after move assignment
 	[shared_counting_allocator<
 		std::__1::shared_ptr<int>,
 		Propagate on copy assignment = false,
@@ -2265,6 +2388,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 52:
 	Broken equality
+
 	Equality operator is inconsistent
 	[bool]
 	operator== returned false
@@ -2274,6 +2398,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 60:
 	Broken inequality
+
 	Equality operator is inconsistent
 	[bool]
 	operator== returned false
@@ -2283,6 +2408,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 68:
 	Broken equality
+
 	Unexpected allocation detected for operator==
 	[shared_counting_allocator<
 		int,
@@ -2342,6 +2468,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 77:
 	Broken copy
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = false,
@@ -2400,6 +2527,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 85:
 	Broken copy alloc
+
 	Inconsistent para-copy construction
 	[sequoia::testing::broken_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
 	operator== returned false
@@ -2430,6 +2558,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 93:
 	Broken move
+
 	Inconsistent move construction
 	[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
 	operator== returned false
@@ -2460,6 +2589,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101:
 	Broken move alloc
+
 	Inconsistent para-move construction
 	[sequoia::testing::broken_move_alloc<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
 	operator== returned false
@@ -2476,6 +2606,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 109:
 	Inefficient move
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = false,
@@ -2492,6 +2623,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 117:
 	Broken copy assignment
+
 	Inconsistent copy assignment (from y)
 	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
 	operator== returned false
@@ -2522,6 +2654,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 125:
 	Broken move assignment
+
 	Inconsistent move assignment (from y)
 	[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
 	operator== returned false
@@ -2538,6 +2671,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 139:
 	Broken copy value semantics
+
 	[shared_counting_allocator<
 		std::__1::shared_ptr<int>,
 		Propagate on copy assignment = false,
@@ -2589,6 +2723,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 154:
 	Broken copy assignment value semantics
+
 	Mutation is not doing anything following copy assignment/ broken value semantics
 	[bool]
 	operator== returned false
@@ -2604,6 +2739,7 @@
 
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 169
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = false,
@@ -2619,6 +2755,7 @@
 
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 170
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = false,
@@ -2634,6 +2771,7 @@
 
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 185
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = false,
@@ -2650,6 +2788,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 194:
 	Broken check invariant
+
 	Precondition - for checking regular semantics, x and y are assumed to be different
 	[bool]
 	operator== returned false
@@ -2659,6 +2798,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 203:
 	Incorrect copy x allocs
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = false,
@@ -2675,6 +2815,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 207:
 	Incorrect copy y allocs
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = false,
@@ -2705,6 +2846,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 217:
 	Incorrect copy assign y to x allocs
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = false,
@@ -2720,7 +2862,8 @@
 
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 221:
-	Incorrect mutation allocs mutation after move assignment
+	Incorrect mutation allocs
+	mutation after move assignment
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = false,
@@ -2749,6 +2892,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 238:
 	Incorrect copy x allocs
+
 	[shared_counting_allocator<
 		std::__1::shared_ptr<int>,
 		Propagate on copy assignment = false,
@@ -2765,6 +2909,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 242:
 	Incorrect copy y allocs
+
 	[shared_counting_allocator<
 		std::__1::shared_ptr<int>,
 		Propagate on copy assignment = false,
@@ -2795,6 +2940,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 252:
 	Incorrect copy assign y to x allocs
+
 	[shared_counting_allocator<
 		std::__1::shared_ptr<int>,
 		Propagate on copy assignment = false,
@@ -2810,7 +2956,8 @@
 
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 256:
-	Incorrect mutation allocs mutation after move assignment
+	Incorrect mutation allocs
+	mutation after move assignment
 	[shared_counting_allocator<
 		std::__1::shared_ptr<int>,
 		Propagate on copy assignment = false,
@@ -2839,6 +2986,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 52:
 	Broken equality
+
 	Equality operator is inconsistent
 	[bool]
 	operator== returned false
@@ -2848,6 +2996,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 60:
 	Broken inequality
+
 	Equality operator is inconsistent
 	[bool]
 	operator== returned false
@@ -2857,6 +3006,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 68:
 	Broken equality
+
 	Unexpected allocation detected for operator==
 	[shared_counting_allocator<
 		int,
@@ -2909,6 +3059,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 77:
 	Broken copy
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -2953,6 +3104,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 85:
 	Broken copy alloc
+
 	Inconsistent para-copy construction
 	[sequoia::testing::broken_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
 	operator== returned false
@@ -2983,6 +3135,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 93:
 	Broken move
+
 	Inconsistent move construction
 	[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
 	operator== returned false
@@ -3013,6 +3166,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101:
 	Broken move alloc
+
 	Inconsistent para-move construction
 	[sequoia::testing::broken_move_alloc<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
 	operator== returned false
@@ -3029,6 +3183,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 109:
 	Inefficient move
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -3045,6 +3200,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 117:
 	Broken copy assignment
+
 	Inconsistent copy assignment (from y)
 	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
 	operator== returned false
@@ -3082,6 +3238,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 125:
 	Broken move assignment
+
 	Inconsistent move assignment (from y)
 	[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
 	operator== returned false
@@ -3098,6 +3255,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 139:
 	Broken copy value semantics
+
 	Mutation is not doing anything following move assignment
 	[bool]
 	operator== returned false
@@ -3128,6 +3286,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 154:
 	Broken copy assignment value semantics
+
 	Mutation is not doing anything following copy assignment/ broken value semantics
 	[bool]
 	operator== returned false
@@ -3143,6 +3302,7 @@
 
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 169
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -3158,6 +3318,7 @@
 
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 170
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -3173,6 +3334,7 @@
 
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 185
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -3189,6 +3351,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 194:
 	Broken check invariant
+
 	Precondition - for checking regular semantics, x and y are assumed to be different
 	[bool]
 	operator== returned false
@@ -3198,6 +3361,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 203:
 	Incorrect copy x allocs
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -3214,6 +3378,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 207:
 	Incorrect copy y allocs
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -3244,6 +3409,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 217:
 	Incorrect copy assign y to x allocs
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -3266,7 +3432,8 @@
 
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 221:
-	Incorrect mutation allocs mutation after move assignment
+	Incorrect mutation allocs
+	mutation after move assignment
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -3288,6 +3455,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 238:
 	Incorrect copy x allocs
+
 	[shared_counting_allocator<
 		std::__1::shared_ptr<int>,
 		Propagate on copy assignment = true,
@@ -3304,6 +3472,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 242:
 	Incorrect copy y allocs
+
 	[shared_counting_allocator<
 		std::__1::shared_ptr<int>,
 		Propagate on copy assignment = true,
@@ -3334,6 +3503,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 252:
 	Incorrect copy assign y to x allocs
+
 	[shared_counting_allocator<
 		std::__1::shared_ptr<int>,
 		Propagate on copy assignment = true,
@@ -3356,7 +3526,8 @@
 
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 256:
-	Incorrect mutation allocs mutation after move assignment
+	Incorrect mutation allocs
+	mutation after move assignment
 	[shared_counting_allocator<
 		std::__1::shared_ptr<int>,
 		Propagate on copy assignment = true,
@@ -3378,6 +3549,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 52:
 	Broken equality
+
 	Equality operator is inconsistent
 	[bool]
 	operator== returned false
@@ -3387,6 +3559,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 60:
 	Broken inequality
+
 	Equality operator is inconsistent
 	[bool]
 	operator== returned false
@@ -3396,6 +3569,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 68:
 	Broken equality
+
 	Unexpected allocation detected for operator==
 	[shared_counting_allocator<
 		int,
@@ -3462,6 +3636,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 77:
 	Broken copy
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -3527,6 +3702,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 85:
 	Broken copy alloc
+
 	Inconsistent para-copy construction
 	[sequoia::testing::broken_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
 	operator== returned false
@@ -3557,6 +3733,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 93:
 	Broken move
+
 	Inconsistent move construction
 	[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
 	operator== returned false
@@ -3587,6 +3764,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101:
 	Broken move alloc
+
 	Inconsistent para-move construction
 	[sequoia::testing::broken_move_alloc<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
 	operator== returned false
@@ -3603,6 +3781,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 109:
 	Inefficient move
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -3619,6 +3798,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 117:
 	Broken copy assignment
+
 	Inconsistent copy assignment (from y)
 	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
 	operator== returned false
@@ -3656,6 +3836,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 125:
 	Broken move assignment
+
 	Inconsistent move assignment (from y)
 	[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
 	operator== returned false
@@ -3672,6 +3853,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 139:
 	Broken copy value semantics
+
 	Mutation is not doing anything following move assignment
 	[bool]
 	operator== returned false
@@ -3709,6 +3891,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 154:
 	Broken copy assignment value semantics
+
 	Mutation is not doing anything following copy assignment/ broken value semantics
 	[bool]
 	operator== returned false
@@ -3724,6 +3907,7 @@
 
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 169
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -3739,6 +3923,7 @@
 
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 170
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -3754,6 +3939,7 @@
 
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 185
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -3770,6 +3956,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 194:
 	Broken check invariant
+
 	Precondition - for checking regular semantics, x and y are assumed to be different
 	[bool]
 	operator== returned false
@@ -3779,6 +3966,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 203:
 	Incorrect copy x allocs
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -3795,6 +3983,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 207:
 	Incorrect copy y allocs
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -3825,6 +4014,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 217:
 	Incorrect copy assign y to x allocs
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -3847,7 +4037,8 @@
 
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 221:
-	Incorrect mutation allocs mutation after move assignment
+	Incorrect mutation allocs
+	mutation after move assignment
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -3876,6 +4067,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 238:
 	Incorrect copy x allocs
+
 	[shared_counting_allocator<
 		std::__1::shared_ptr<int>,
 		Propagate on copy assignment = true,
@@ -3892,6 +4084,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 242:
 	Incorrect copy y allocs
+
 	[shared_counting_allocator<
 		std::__1::shared_ptr<int>,
 		Propagate on copy assignment = true,
@@ -3922,6 +4115,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 252:
 	Incorrect copy assign y to x allocs
+
 	[shared_counting_allocator<
 		std::__1::shared_ptr<int>,
 		Propagate on copy assignment = true,
@@ -3944,7 +4138,8 @@
 
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 256:
-	Incorrect mutation allocs mutation after move assignment
+	Incorrect mutation allocs
+	mutation after move assignment
 	[shared_counting_allocator<
 		std::__1::shared_ptr<int>,
 		Propagate on copy assignment = true,
@@ -3973,6 +4168,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 52:
 	Broken equality
+
 	Equality operator is inconsistent
 	[bool]
 	operator== returned false
@@ -3982,6 +4178,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 60:
 	Broken inequality
+
 	Equality operator is inconsistent
 	[bool]
 	operator== returned false
@@ -3991,6 +4188,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 68:
 	Broken equality
+
 	Unexpected allocation detected for operator==
 	[shared_counting_allocator<
 		int,
@@ -4050,6 +4248,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 77:
 	Broken copy
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -4087,6 +4286,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 85:
 	Broken copy alloc
+
 	Inconsistent para-copy construction
 	[sequoia::testing::broken_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
 	operator== returned false
@@ -4117,6 +4317,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 93:
 	Broken move
+
 	Inconsistent move construction
 	[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
 	operator== returned false
@@ -4147,6 +4348,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101:
 	Broken move alloc
+
 	Inconsistent para-move construction
 	[sequoia::testing::broken_move_alloc<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
 	operator== returned false
@@ -4163,6 +4365,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 109:
 	Inefficient move
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -4179,6 +4382,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 117:
 	Broken copy assignment
+
 	Inconsistent copy assignment (from y)
 	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
 	operator== returned false
@@ -4216,6 +4420,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 125:
 	Broken move assignment
+
 	Inconsistent move assignment (from y)
 	[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
 	operator== returned false
@@ -4232,6 +4437,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 139:
 	Broken copy value semantics
+
 	Mutation is not doing anything following move assignment
 	[bool]
 	operator== returned false
@@ -4262,6 +4468,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 154:
 	Broken copy assignment value semantics
+
 	Mutation is not doing anything following copy assignment/ broken value semantics
 	[bool]
 	operator== returned false
@@ -4277,6 +4484,7 @@
 
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 169
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -4292,6 +4500,7 @@
 
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 170
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -4307,6 +4516,7 @@
 
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 185
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -4323,6 +4533,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 194:
 	Broken check invariant
+
 	Precondition - for checking regular semantics, x and y are assumed to be different
 	[bool]
 	operator== returned false
@@ -4332,6 +4543,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 203:
 	Incorrect copy x allocs
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -4348,6 +4560,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 207:
 	Incorrect copy y allocs
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -4378,6 +4591,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 217:
 	Incorrect copy assign y to x allocs
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -4400,7 +4614,8 @@
 
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 221:
-	Incorrect mutation allocs mutation after move assignment
+	Incorrect mutation allocs
+	mutation after move assignment
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -4422,6 +4637,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 238:
 	Incorrect copy x allocs
+
 	[shared_counting_allocator<
 		std::__1::shared_ptr<int>,
 		Propagate on copy assignment = true,
@@ -4438,6 +4654,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 242:
 	Incorrect copy y allocs
+
 	[shared_counting_allocator<
 		std::__1::shared_ptr<int>,
 		Propagate on copy assignment = true,
@@ -4468,6 +4685,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 252:
 	Incorrect copy assign y to x allocs
+
 	[shared_counting_allocator<
 		std::__1::shared_ptr<int>,
 		Propagate on copy assignment = true,
@@ -4490,7 +4708,8 @@
 
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 256:
-	Incorrect mutation allocs mutation after move assignment
+	Incorrect mutation allocs
+	mutation after move assignment
 	[shared_counting_allocator<
 		std::__1::shared_ptr<int>,
 		Propagate on copy assignment = true,
@@ -4512,6 +4731,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 52:
 	Broken equality
+
 	Equality operator is inconsistent
 	[bool]
 	operator== returned false
@@ -4521,6 +4741,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 60:
 	Broken inequality
+
 	Equality operator is inconsistent
 	[bool]
 	operator== returned false
@@ -4530,6 +4751,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 68:
 	Broken equality
+
 	Unexpected allocation detected for operator==
 	[shared_counting_allocator<
 		int,
@@ -4603,6 +4825,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 77:
 	Broken copy
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -4661,6 +4884,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 85:
 	Broken copy alloc
+
 	Inconsistent para-copy construction
 	[sequoia::testing::broken_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
 	operator== returned false
@@ -4691,6 +4915,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 93:
 	Broken move
+
 	Inconsistent move construction
 	[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
 	operator== returned false
@@ -4721,6 +4946,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101:
 	Broken move alloc
+
 	Inconsistent para-move construction
 	[sequoia::testing::broken_move_alloc<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
 	operator== returned false
@@ -4737,6 +4963,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 109:
 	Inefficient move
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -4753,6 +4980,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 117:
 	Broken copy assignment
+
 	Inconsistent copy assignment (from y)
 	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
 	operator== returned false
@@ -4790,6 +5018,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 125:
 	Broken move assignment
+
 	Inconsistent move assignment (from y)
 	[sequoia::testing::broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
 	operator== returned false
@@ -4806,6 +5035,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 139:
 	Broken copy value semantics
+
 	Mutation is not doing anything following move assignment
 	[bool]
 	operator== returned false
@@ -4843,6 +5073,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 154:
 	Broken copy assignment value semantics
+
 	Mutation is not doing anything following copy assignment/ broken value semantics
 	[bool]
 	operator== returned false
@@ -4858,6 +5089,7 @@
 
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 169
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -4873,6 +5105,7 @@
 
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 170
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -4888,6 +5121,7 @@
 
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 185
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -4904,6 +5138,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 194:
 	Broken check invariant
+
 	Precondition - for checking regular semantics, x and y are assumed to be different
 	[bool]
 	operator== returned false
@@ -4913,6 +5148,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 203:
 	Incorrect copy x allocs
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -4929,6 +5165,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 207:
 	Incorrect copy y allocs
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -4959,6 +5196,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 217:
 	Incorrect copy assign y to x allocs
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -4981,7 +5219,8 @@
 
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 221:
-	Incorrect mutation allocs mutation after move assignment
+	Incorrect mutation allocs
+	mutation after move assignment
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -5010,6 +5249,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 238:
 	Incorrect copy x allocs
+
 	[shared_counting_allocator<
 		std::__1::shared_ptr<int>,
 		Propagate on copy assignment = true,
@@ -5026,6 +5266,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 242:
 	Incorrect copy y allocs
+
 	[shared_counting_allocator<
 		std::__1::shared_ptr<int>,
 		Propagate on copy assignment = true,
@@ -5056,6 +5297,7 @@
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 252:
 	Incorrect copy assign y to x allocs
+
 	[shared_counting_allocator<
 		std::__1::shared_ptr<int>,
 		Propagate on copy assignment = true,
@@ -5078,7 +5320,8 @@
 
 
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 256:
-	Incorrect mutation allocs mutation after move assignment
+	Incorrect mutation allocs
+	mutation after move assignment
 	[shared_counting_allocator<
 		std::__1::shared_ptr<int>,
 		Propagate on copy assignment = true,
@@ -5106,6 +5349,7 @@
 
 
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 51
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -5121,6 +5365,7 @@
 
 
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 54
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -5136,6 +5381,7 @@
 
 
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 59
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -5151,6 +5397,7 @@
 
 
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 72
+
 	Precondition - for checking regular semantics, y and yClone are assumed to be equal
 	[bool]
 	operator== returned false
@@ -5159,6 +5406,7 @@
 
 
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 84
+
 	Inconsistent move assignment (from y)
 	[sequoia::testing::move_only_broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
 	operator== returned false
@@ -5167,6 +5415,7 @@
 
 
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 110
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -5182,6 +5431,7 @@
 
 
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 122
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -5197,6 +5447,7 @@
 
 
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 51
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -5212,6 +5463,7 @@
 
 
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 54
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -5227,6 +5479,7 @@
 
 
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 59
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -5242,6 +5495,7 @@
 
 
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 72
+
 	Precondition - for checking regular semantics, y and yClone are assumed to be equal
 	[bool]
 	operator== returned false
@@ -5250,6 +5504,7 @@
 
 
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 84
+
 	Inconsistent move assignment (from y)
 	[sequoia::testing::move_only_broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
 	operator== returned false
@@ -5258,6 +5513,7 @@
 
 
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 98
+
 	Inconsistent Swap (y)
 	[sequoia::testing::move_only_broken_swap<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
 	operator== returned false
@@ -5280,6 +5536,7 @@
 
 
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 110
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -5295,6 +5552,7 @@
 
 
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 122
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -5310,6 +5568,7 @@
 
 
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 51
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -5325,6 +5584,7 @@
 
 
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 54
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -5340,6 +5600,7 @@
 
 
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 72
+
 	Precondition - for checking regular semantics, y and yClone are assumed to be equal
 	[bool]
 	operator== returned false
@@ -5348,6 +5609,7 @@
 
 
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 84
+
 	Inconsistent move assignment (from y)
 	[sequoia::testing::move_only_broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
 	operator== returned false
@@ -5356,6 +5618,7 @@
 
 
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 110
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -5371,6 +5634,7 @@
 
 
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 122
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -5386,6 +5650,7 @@
 
 
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 51
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -5401,6 +5666,7 @@
 
 
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 54
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -5416,6 +5682,7 @@
 
 
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 72
+
 	Precondition - for checking regular semantics, y and yClone are assumed to be equal
 	[bool]
 	operator== returned false
@@ -5424,6 +5691,7 @@
 
 
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 84
+
 	Inconsistent move assignment (from y)
 	[sequoia::testing::move_only_broken_move_assignment<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
 	operator== returned false
@@ -5432,6 +5700,7 @@
 
 
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 98
+
 	Inconsistent Swap (y)
 	[sequoia::testing::move_only_broken_swap<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
 	operator== returned false
@@ -5454,6 +5723,7 @@
 
 
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 110
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -5469,6 +5739,7 @@
 
 
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 122
+
 	[shared_counting_allocator<
 		int,
 		Propagate on copy assignment = true,
@@ -5485,60 +5756,74 @@
 
 	False Positive Failure:
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 153
+
 	[bool]
 
 	False Positive Failure:
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 155
+
 	[int]
 
 	False Positive Failure:
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 156
+
 	[double]
 
 	False Positive Failure:
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 158
+
 	[std::__1::pair<int, double>]
 
 	False Positive Failure:
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 160
+
 	[std::__1::tuple<int, double, float>]
 
 	False Positive Failure:
 		../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 162
+
 	Expected Exception Type:
 	[std::runtime_error]
 
 	False Positive Failure:
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 167:
 	Empty vector check which should pass
+
 	[std::__1::vector<double, std::__1::allocator<double> >]
 
 	False Positive Failure:
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 168:
 	One element vector check which should pass
+
 	[std::__1::vector<double, std::__1::allocator<double> >]
 
 	False Positive Failure:
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 169:
 	Multi-element vector comparison which should pass
+
 	[std::__1::vector<double, std::__1::allocator<double> >]
 
 	False Positive Failure:
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 173:
 	Iterators demarcate identical elements
+
 	False Positive Failure:
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 175:
 	Differing strings
+
 	[std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >]
 
 	False Positive Failure:
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 188
+
 	[std::__1::tuple<std::__1::vector<std::__1::pair<int, float>, std::__1::allocator<std::__1::pair<int, float> > >, std::__1::set<double, std::__1::less<double>, std::__1::allocator<double> >, std::__1::complex<double> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 193
+
 	False Positive Failure:
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 198
+
 	Comparison performed using:
 	[sequoia::testing::equivalence_checker<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >]
 	With equivalent types:
@@ -5546,10 +5831,12 @@
 
 	False Positive Failure:
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 200
+
 	[std::__1::vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > >]
 
 	False Positive Failure:
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 206
+
 	Comparison performed using:
 	[sequoia::testing::weak_equivalence_checker<sequoia::testing::perfectly_normal_beast<int, std::__1::allocator<int> > >]
 	With equivalent types:
@@ -5557,303 +5844,378 @@
 
 	False Positive Failure:
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 209
+
 	[std::__1::vector<sequoia::testing::perfectly_normal_beast<int, std::__1::allocator<int> >, std::__1::allocator<sequoia::testing::perfectly_normal_beast<int, std::__1::allocator<int> > > >]
 
 	False Positive Failure:
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 50
+
 	[sequoia::testing::move_only_beast<int, std::__1::allocator<int> >]
 
 	False Positive Failure:
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67:
 	Performance Test which should pass
-	Fast Task duration: 0.00126325s +- 4 * 9.80695e-05
-	Slow Task duration: 0.00236698s +- 4 * 0.000190951 [1.87373; (1.8, 2.1)]
+
+	Fast Task duration: 0.0011937s +- 4 * 0.000161976
+	Slow Task duration: 0.00253718s +- 4 * 0.000179559 [2.12548; (1.8, 2.1)]
 
 	False Positive Failure:
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68:
 	Performance Test which should pass
-	Fast Task duration: 0.00131017s +- 4 * 5.25829e-05
-	Slow Task duration: 0.00451486s +- 4 * 0.000404864 [3.44602; (3.6, 4.1)]
+
+	Fast Task duration: 0.00111494s +- 4 * 7.31285e-05
+	Slow Task duration: 0.00464237s +- 4 * 0.000383852 [4.16378; (3.6, 4.1)]
 
 	False Positive Failure:
 	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 69
+
 	[double]
 
 	False Positive Failure:
 	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 70
+
 	[double]
 
 	False Positive Failure:
 	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 72
+
 	[double]
 
 	False Positive Failure:
 	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 73
+
 	[double]
 
 	False Positive Failure:
 	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 79
+
 	False Positive Failure:
 	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 84
+
 	[std::__1::vector<double, std::__1::allocator<double> >]
 
 	False Positive Failure:
 	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 87
+
 	[std::__1::vector<std::__1::vector<double, std::__1::allocator<double> >, std::__1::allocator<std::__1::vector<double, std::__1::allocator<double> > > >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 298
+
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 300
+
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 315
+
 	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, false, false> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 317
+
 	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, false, false> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 332
+
 	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 347
+
 	[sequoia::testing::inefficient_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 369
+
 	[sequoia::testing::doubly_normal_beast<int, double, sequoia::testing::shared_counting_allocator<int, false, false, false>, sequoia::testing::shared_counting_allocator<double, false, false, false> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 298
+
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 300
+
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 315
+
 	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, false, true> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 317
+
 	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, false, true> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 332
+
 	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 347
+
 	[sequoia::testing::inefficient_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 369
+
 	[sequoia::testing::doubly_normal_beast<int, double, sequoia::testing::shared_counting_allocator<int, false, false, true>, sequoia::testing::shared_counting_allocator<double, false, false, true> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 298
+
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 300
+
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 315
+
 	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, true, false> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 317
+
 	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, true, false> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 332
+
 	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 347
+
 	[sequoia::testing::inefficient_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 369
+
 	[sequoia::testing::doubly_normal_beast<int, double, sequoia::testing::shared_counting_allocator<int, false, true, false>, sequoia::testing::shared_counting_allocator<double, false, true, false> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 298
+
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 300
+
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 315
+
 	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, true, true> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 317
+
 	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, true, true> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 332
+
 	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 347
+
 	[sequoia::testing::inefficient_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 369
+
 	[sequoia::testing::doubly_normal_beast<int, double, sequoia::testing::shared_counting_allocator<int, false, true, true>, sequoia::testing::shared_counting_allocator<double, false, true, true> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 298
+
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 300
+
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 315
+
 	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, false, false> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 317
+
 	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, false, false> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 332
+
 	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 347
+
 	[sequoia::testing::inefficient_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 369
+
 	[sequoia::testing::doubly_normal_beast<int, double, sequoia::testing::shared_counting_allocator<int, true, false, false>, sequoia::testing::shared_counting_allocator<double, true, false, false> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 298
+
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 300
+
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 315
+
 	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, false, true> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 317
+
 	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, false, true> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 332
+
 	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 347
+
 	[sequoia::testing::inefficient_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 369
+
 	[sequoia::testing::doubly_normal_beast<int, double, sequoia::testing::shared_counting_allocator<int, true, false, true>, sequoia::testing::shared_counting_allocator<double, true, false, true> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 298
+
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 300
+
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 315
+
 	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, true, false> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 317
+
 	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, true, false> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 332
+
 	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 347
+
 	[sequoia::testing::inefficient_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 369
+
 	[sequoia::testing::doubly_normal_beast<int, double, sequoia::testing::shared_counting_allocator<int, true, true, false>, sequoia::testing::shared_counting_allocator<double, true, true, false> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 298
+
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 300
+
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 315
+
 	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, true, true> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 317
+
 	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, true, true> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 332
+
 	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 347
+
 	[sequoia::testing::inefficient_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
 
 	False Positive Failure:
 	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 369
+
 	[sequoia::testing::doubly_normal_beast<int, double, sequoia::testing::shared_counting_allocator<int, true, true, true>, sequoia::testing::shared_counting_allocator<double, true, true, true> >]
 
 	False Positive Failure:
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 162
+
 	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
 
 	False Positive Failure:
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 165
+
 	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
 
 	False Positive Failure:
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 162
+
 	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
 
 	False Positive Failure:
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 165
+
 	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
 
 	False Positive Failure:
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 162
+
 	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
 
 	False Positive Failure:
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 165
+
 	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
 
 	False Positive Failure:
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 162
+
 	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
 
 	False Positive Failure:
 	Move-only Semantics ../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 165
+
 	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
 

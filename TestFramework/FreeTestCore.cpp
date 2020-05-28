@@ -42,7 +42,9 @@ namespace sequoia::testing
   std::string report_line(std::string_view file, const int line, const std::string_view message)
   {
     auto s{std::string{file}.append(", Line ").append(std::to_string(line))};
-    if(!message.empty()) (s += ":\n\t") += message;
+    if(!message.empty()) s.append(":\n\t").append(message);
+
+    s.append("\n");
 
     return s;
   }

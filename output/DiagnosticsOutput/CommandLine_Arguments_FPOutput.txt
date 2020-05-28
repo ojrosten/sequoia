@@ -1,5 +1,6 @@
 	../Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 33:
 	Final argument missing
+
 	Expected Exception Type:
 	[int]
 	Unexpected exception thrown (caught by std::exception&):
@@ -8,6 +9,7 @@
 
 	../Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 42:
 	Unexpected argument
+
 	Expected Exception Type:
 	[int]
 	Unexpected exception thrown (caught by std::exception&):
@@ -16,6 +18,7 @@
 
 	../Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 50:
 	No bound function object
+
 	Expected Exception Type:
 	[int]
 	Unexpected exception thrown (caught by std::exception&):
@@ -24,6 +27,7 @@
 
 	../Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 58:
 	Unexpected argument
+
 	Expected Exception Type:
 	[int]
 	Unexpected exception thrown (caught by std::exception&):
