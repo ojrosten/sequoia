@@ -176,14 +176,12 @@ namespace sequoia::testing
   template<class EquivChecker, test_mode Mode, class T, class S, class... U>
   bool general_equivalence_check(std::string_view description, test_logger<Mode>& logger, const T& value, const S& s, const U&... u)
   {
-    using sentinel = typename test_logger<Mode>::sentinel;
-
     const std::string message{
       add_type_info<S, U...>(
         merge(description, "Comparison performed using:\n\t" + type_demangler<EquivChecker>::make() + "\n\tWith equivalent types:", "\n"))
     };
       
-    sentinel r{logger, message};
+    sentinel<Mode> r{logger, message};
     const auto previousFailures{logger.failures()};
     
     EquivChecker::check(message, logger, value, s, u...);
@@ -223,9 +221,8 @@ namespace sequoia::testing
     static_assert(delegate || is_equal_to_comparable_v<T>,
                   "Provide either a specialization of detailed_equality_checker or ensure operator== exists,"
                   "together with a specialization of serializer");
-      
-    using sentinel = typename test_logger<Mode>::sentinel;      
-    sentinel s{logger, add_type_info<T>(description)};
+
+    sentinel<Mode> s{logger, add_type_info<T>(description)};
      
     if constexpr(is_equal_to_comparable_v<T>)
     {
@@ -314,7 +311,7 @@ namespace sequoia::testing
   template<test_mode Mode, class ElementDispatchDiscriminator, class Iter, class PredictionIter>
   bool check_range(std::string_view description, test_logger<Mode>& logger, ElementDispatchDiscriminator discriminator, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
   {
-    typename test_logger<Mode>::sentinel r{logger, description};
+    sentinel<Mode> r{logger, description};
     bool equal{true};
 
     using std::distance;
@@ -346,7 +343,7 @@ namespace sequoia::testing
   bool check_exception_thrown(std::string_view description, test_logger<Mode>& logger, Fn&& function)
   {
     const std::string message{"\t" + add_type_info<E>(merge(description, "Expected Exception Type:", "\n"))};
-    typename test_logger<Mode>::sentinel r{logger, message};
+    sentinel<Mode> r{logger, message};
     r.log_check();
     try
     {
@@ -495,9 +492,7 @@ namespace sequoia::testing
     {
       return log_summary{prefix, logger(), delta};
     }
-  protected:
-    using sentinel = typename test_logger<Mode>::sentinel;
-    
+  protected:    
     checker(checker&& other) noexcept
       : logger_type{static_cast<logger_type&&>(other)}
       , Extenders{logger()}...
@@ -522,7 +517,7 @@ namespace sequoia::testing
     int exceptions_detected_by_sentinel() const noexcept { return logger().exceptions_detected_by_sentinel(); }
 
     [[nodiscard]]
-    sentinel make_sentinel(std::string_view message)
+    sentinel<Mode> make_sentinel(std::string_view message)
     {
       return {logger(), message};
     }

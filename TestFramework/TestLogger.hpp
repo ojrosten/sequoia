@@ -78,8 +78,120 @@ namespace sequoia::testing
    */
 
   template<test_mode Mode>
+  class test_logger;
+
+  template<test_mode Mode>
+  class [[nodiscard]] sentinel
+  {
+  public:
+    sentinel(test_logger<Mode>& logger, std::string_view message)
+      : m_Logger{logger}
+      , m_PriorFailures{logger.failures()}
+      , m_PriorDeepChecks{logger.deep_checks()}
+    {
+      if(!logger.depth())
+      {
+        logger.current_message(message);
+        logger.log_top_level_check();
+
+        if(auto file{output_manager::recovery_file()}; !file.empty())
+        {
+          if(std::ofstream of{file.data()})
+            of << "Check started:\n" << message << "\n";
+        }
+      }
+
+      logger.increment_depth();
+    }
+
+    ~sentinel()
+    {
+      auto& logger{m_Logger.get()};
+      logger.decrement_depth();
+
+      if(!logger.depth())
+      {
+        const bool failure{
+          ((Mode == test_mode::false_positive) && !logger.failures())
+            || ((Mode != test_mode::false_positive) &&  logger.failures())
+            };
+
+        auto messageMaker{
+          [&logger](){
+            return testing::merge("\tFalse Positive Failure:", logger.current_message(), "\n");
+          }
+        };
+
+        if(failure)
+        {
+          logger.log_top_level_failure((Mode == test_mode::false_positive) ? messageMaker() : "");
+        }
+        else if constexpr(Mode == test_mode::false_negative)
+                         {
+                           logger.append_to_versioned_output(messageMaker().append("\n"));
+                         }
+
+          
+        logger.reset_failures();
+
+        if(auto file{output_manager::recovery_file()}; !file.empty())
+        {
+          if(std::ofstream of{file.data(), std::ios_base::app})
+            of << "Check ended\n";
+        }
+      }
+
+      if(!logger.depth()) logger.exceptions_detected_by_sentinel(std::uncaught_exceptions());
+    }
+
+    sentinel(const sentinel&) = delete;
+    sentinel(sentinel&&)      = default;
+
+    sentinel& operator=(const sentinel&) = delete;
+    sentinel& operator=(sentinel&&)      = delete;
+
+    [[nodiscard]]
+      std::string merge(std::string_view description, std::string_view details) const
+    {
+      std::string_view desc{checks_registered() && failure_detected() ? "" : description};
+      return testing::merge(desc, details, "\n");
+    }
+
+    void log_performance_check()
+    {
+      m_Logger.get().log_performance_check();
+    }
+
+    void log_check()
+    {
+      m_Logger.get().log_check();
+    }
+
+    [[nodiscard]]
+    bool failure_detected() const noexcept
+    {
+      return m_Logger.get().failures() != m_PriorFailures;
+    }
+
+    [[nodiscard]]
+    bool checks_registered() const noexcept
+    {
+      return m_Logger.get().deep_checks() != m_PriorDeepChecks;
+    }
+
+    [[nodiscard]]
+      test_logger<Mode>& logger() noexcept { return m_Logger.get(); }
+  private:
+    std::reference_wrapper<test_logger<Mode>> m_Logger;
+    std::size_t m_PriorFailures{}, m_PriorDeepChecks{};
+  };
+
+  
+
+  template<test_mode Mode>
   class test_logger
   {
+    friend class sentinel<Mode>;
   public:
     test_logger() = default;
 
@@ -89,112 +201,7 @@ namespace sequoia::testing
     test_logger& operator=(test_logger&&)      = delete;
 
     constexpr static test_mode mode{Mode};
-      
-    class [[nodiscard]] sentinel
-    {
-    public:
-      sentinel(test_logger& logger, std::string_view message)
-        : m_Logger{logger}
-        , m_PriorFailures{logger.failures()}
-        , m_PriorDeepChecks{logger.deep_checks()}
-      {
-        if(!logger.depth())
-        {
-          logger.current_message(message);
-          logger.log_top_level_check();
-
-          if(auto file{output_manager::recovery_file()}; !file.empty())
-          {
-            if(std::ofstream of{file.data()})
-              of << "Check started:\n" << message << "\n";
-          }
-        }
-
-        logger.increment_depth();
-      }
-
-      ~sentinel()
-      {
-        auto& logger{m_Logger.get()};
-        logger.decrement_depth();
-
-        if(!logger.depth())
-        {
-          const bool failure{
-               ((Mode == test_mode::false_positive) && !logger.failures())
-            || ((Mode != test_mode::false_positive) &&  logger.failures())
-          };
-
-          auto messageMaker{
-            [&logger](){
-              return testing::merge("\tFalse Positive Failure:", logger.current_message(), "\n");
-            }
-          };
-
-          if(failure)
-          {
-            logger.log_top_level_failure((Mode == test_mode::false_positive) ? messageMaker() : "");
-          }
-          else if constexpr(Mode == test_mode::false_negative)
-          {
-            logger.append_to_versioned_output(messageMaker().append("\n"));
-          }
-
-          
-          logger.reset_failures();
-
-          if(auto file{output_manager::recovery_file()}; !file.empty())
-          {
-            if(std::ofstream of{file.data(), std::ios_base::app})
-              of << "Check ended\n";
-          }
-        }
-
-        if(!logger.depth()) logger.exceptions_detected_by_sentinel(std::uncaught_exceptions());
-      }
-
-      sentinel(const sentinel&) = delete;
-      sentinel(sentinel&&)      = default;
-
-      sentinel& operator=(const sentinel&) = delete;
-      sentinel& operator=(sentinel&&)      = delete;
-
-      [[nodiscard]]
-      std::string merge(std::string_view description, std::string_view details) const
-      {
-        std::string_view desc{checks_registered() && failure_detected() ? "" : description};
-        return testing::merge(desc, details, "\n");
-      }
-
-      void log_performance_check()
-      {
-        m_Logger.get().log_performance_check();
-      }
-
-      void log_check()
-      {
-        m_Logger.get().log_check();
-      }
-
-      [[nodiscard]]
-      bool failure_detected() const noexcept
-      {
-        return m_Logger.get().failures() != m_PriorFailures;
-      }
-
-      [[nodiscard]]
-      bool checks_registered() const noexcept
-      {
-        return m_Logger.get().deep_checks() != m_PriorDeepChecks;
-      }
-
-      [[nodiscard]]
-      test_logger& logger() noexcept { return m_Logger.get(); }
-    private:
-      std::reference_wrapper<test_logger> m_Logger;
-      std::size_t m_PriorFailures{}, m_PriorDeepChecks{};
-    };       
-      
+     
     void log_failure(std::string_view message)
     {
       ++m_Failures;
@@ -320,9 +327,6 @@ namespace sequoia::testing
       m_VersionedOutput.append(message);
     }
   };
-
-  template<test_mode Mode>
-  using sentinel = typename test_logger<Mode>::sentinel;
 
   enum class log_verbosity { terse=0, absent_checks=1, failure_messages=2};
 

@@ -182,7 +182,7 @@ namespace sequoia::testing
 
       message.append(summary);
 
-      typename test_logger<Mode>::sentinel r{logger, message};
+      sentinel<Mode> r{logger, message};
       r.log_performance_check();
 
       if(!results.passed)

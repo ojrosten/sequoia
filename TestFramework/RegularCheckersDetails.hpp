@@ -16,8 +16,8 @@
 
 namespace sequoia::testing::impl
 {
-  template<class Sentinel, class Actions, class T, class... Args>
-  void do_check_copy_assign(std::string_view description, Sentinel& sentry, const Actions& actions, T& z, const T& y, const Args&... args)
+  template<test_mode Mode, class Actions, class T, class... Args>
+  void do_check_copy_assign(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, T& z, const T& y, const Args&... args)
   {
     z = y;
     check_equality(sentry.merge(description, "Inconsistent copy assignment (from y)"), sentry.logger(), z, y);
@@ -28,14 +28,14 @@ namespace sequoia::testing::impl
     }
   }
   
-  template<class Sentinel, class Actions, class T>
-  void check_copy_assign(std::string_view description, Sentinel& sentry, const Actions& actions, T& z, const T& y)
+  template<test_mode Mode, class Actions, class T>
+  void check_copy_assign(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, T& z, const T& y)
   {
     do_check_copy_assign(description, sentry, actions, z, y);   
   }
 
-  template<class Sentinel, class Actions, class T, class Mutator, class... Args>
-  bool check_semantics(std::string_view description, Sentinel& sentry, const Actions& actions, const T& x, const T& y, Mutator yMutator, const Args&... args)
+  template<test_mode Mode, class Actions, class T, class Mutator, class... Args>
+  bool check_semantics(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, const T& x, const T& y, Mutator yMutator, const Args&... args)
   {    
     // Preconditions
     if(!check_preconditions(description, sentry, actions, x, y, args...))

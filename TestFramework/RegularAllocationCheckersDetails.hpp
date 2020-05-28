@@ -27,8 +27,8 @@ namespace sequoia::testing::impl
     constexpr static bool has_post_copy_action{true};
     constexpr static bool has_post_copy_assign_action{true};
 
-    template<class Sentinel, class Container, class... Allocators, class... Predictions>
-    static void post_copy_action(std::string_view description, Sentinel& sentry, const Container& xCopy, const Container& yCopy, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
+    template<test_mode Mode, class Container, class... Allocators, class... Predictions>
+    static void post_copy_action(std::string_view description, sentinel<Mode>& sentry, const Container& xCopy, const Container& yCopy, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
     {
       
       check_copy_x_allocation(description, sentry, xCopy, allocation_checker{checkers.info(), checkers.first_count()}...);
@@ -36,8 +36,8 @@ namespace sequoia::testing::impl
       check_copy_y_allocation(description, sentry, yCopy, allocation_checker{checkers.info(), checkers.second_count()}...);
     }
 
-    template<class Sentinel, class Container, class... Allocators, class... Predictions>
-    static void post_copy_assign_action(std::string_view description, Sentinel& sentry, const Container& lhs, const Container& rhs, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
+    template<test_mode Mode, class Container, class... Allocators, class... Predictions>
+    static void post_copy_assign_action(std::string_view description, sentinel<Mode>& sentry, const Container& lhs, const Container& rhs, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
     {
       check_copy_assign_allocation(description, sentry, lhs, rhs, checkers...);
     }
@@ -46,14 +46,14 @@ namespace sequoia::testing::impl
   /*! Provides an extra level of indirection in order that the current number of allocation
        may be acquired before proceeding.
    */
-  template<class Sentinel, class Actions, class Container, class... Allocators, class... Predictions>
-  void check_copy_assign(std::string_view description, Sentinel& sentry, const Actions& actions, Container& z, const Container& y, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
+  template<test_mode Mode, class Actions, class Container, class... Allocators, class... Predictions>
+  void check_copy_assign(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, Container& z, const Container& y, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
   {
     do_check_copy_assign(description, sentry, actions, z, y, dual_allocation_checker{checkers.info(), z, y}...);   
   }
 
-  template<class Sentinel, class Container, class Mutator, class... Allocators, class... Predictions>
-  void check_para_constructor_allocations(std::string_view description, Sentinel& sentry, const Container& y, Mutator yMutator, const basic_allocation_info<Container, Allocators, Predictions>&... info)
+  template<test_mode Mode, class Container, class Mutator, class... Allocators, class... Predictions>
+  void check_para_constructor_allocations(std::string_view description, sentinel<Mode>& sentry, const Container& y, Mutator yMutator, const basic_allocation_info<Container, Allocators, Predictions>&... info)
   {    
     if constexpr(sizeof...(Allocators) > 0)
     {
@@ -76,8 +76,8 @@ namespace sequoia::testing::impl
   }
 
   /// Unpacks the tuple and feeds to the overload of check_semantics defined in RegularCheckersDetails.hpp
-  template<class Sentinel, class Actions, class T, class Mutator, class... Allocators, class... Predictions>
-  bool check_semantics(std::string_view description, Sentinel& sentry, const Actions& actions, const T& x, const T& y, Mutator yMutator, std::tuple<dual_allocation_checker<T, Allocators, Predictions>...> checkers)
+  template<test_mode Mode, class Actions, class T, class Mutator, class... Allocators, class... Predictions>
+  bool check_semantics(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, const T& x, const T& y, Mutator yMutator, std::tuple<dual_allocation_checker<T, Allocators, Predictions>...> checkers)
   {
     auto fn{
       [description,&sentry,&actions,&x,&y,m=std::move(yMutator)](auto&&... checkers){

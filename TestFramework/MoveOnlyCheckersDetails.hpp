@@ -15,8 +15,8 @@
 
 namespace sequoia::testing::impl
 {
-  template<class Sentinel, class Actions, class T, class Mutator, class... Args>
-  void check_semantics(std::string_view description, Sentinel& sentry, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, const Args&... args)
+  template<test_mode Mode, class Actions, class T, class Mutator, class... Args>
+  void check_semantics(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, const Args&... args)
   {
     // Preconditions
     if(!check_preconditions(description, sentry, actions, x, y, args...))

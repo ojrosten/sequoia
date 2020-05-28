@@ -26,8 +26,8 @@ namespace sequoia::testing::impl
   struct move_only_allocation_actions : allocation_actions
   {};
 
-  template<class Sentinel, class Container, class... Allocators, class... Predictions>
-  std::optional<Container> check_para_constructor_allocations(std::string_view description, Sentinel& sentry, Container&& y, const Container& yClone, const basic_allocation_info<Container, Allocators, Predictions>&... info)
+  template<test_mode Mode, class Container, class... Allocators, class... Predictions>
+  std::optional<Container> check_para_constructor_allocations(std::string_view description, sentinel<Mode>& sentry, Container&& y, const Container& yClone, const basic_allocation_info<Container, Allocators, Predictions>&... info)
   {
     Container u{std::move(y), info.make_allocator()...};
     check_para_move_y_allocation(description, sentry, u, std::tuple_cat(make_allocation_checkers(info)...));
@@ -37,8 +37,8 @@ namespace sequoia::testing::impl
   }
 
   /// Unpacks the tuple and feeds to the overload of check_semantics defined in MoveOnlyCheckersDetails.hpp
-  template<class Sentinel, class Actions, class T, class Mutator, class... Allocators>
-  void check_semantics(std::string_view description, Sentinel& sentry, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, std::tuple<dual_allocation_checker<T, Allocators, move_only_allocation_predictions>...> checkers)
+  template<test_mode Mode, class Actions, class T, class Mutator, class... Allocators>
+  void check_semantics(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, std::tuple<dual_allocation_checker<T, Allocators, move_only_allocation_predictions>...> checkers)
   {
     auto fn{
       [description,&sentry,&actions,&x,&y,&xClone,&yClone,m{std::move(m)}](auto&&... checkers){

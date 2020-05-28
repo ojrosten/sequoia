@@ -12,11 +12,11 @@
 
     The general pattern in this file is of paired function templates of the form
 
-    template<class Sentinel, class Actions, class T, class... Args>
-    ret_type do_check_foo(std::string_view, Sentinel&, const Actions&, const T&, const T&, const Args&...);
+    template<test_mode Mode, class Actions, class T, class... Args>
+    ret_type do_check_foo(std::string_view, sentinel<Mode>&, const Actions&, const T&, const T&, const Args&...);
 
-    template<class Sentinel, class Actions, class T>
-    ret_type check_foo(std::string_view description, Sentinel& sentry, const Actions& actions, const T& x , const T&y)
+    template<test_mode Mode, class Actions, class T>
+    ret_type check_foo(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, const T& x , const T&y)
     {
       return do_check_foo(description, sentry, actions, x, y);
     }
@@ -74,8 +74,8 @@ namespace sequoia::testing::impl
 
   struct pre_condition_actions
   {
-    template<class Sentinel, class T, class... Allocators>
-    static bool check_preconditions(std::string_view description, Sentinel& sentry, const T& x, const T& y)
+    template<test_mode Mode, class T, class... Allocators>
+    static bool check_preconditions(std::string_view description, sentinel<Mode>& sentry, const T& x, const T& y)
     {
       return check(sentry.merge(description, "Precondition - for checking regular semantics, x and y are assumed to be different"), sentry.logger(), x != y);
     }
@@ -94,8 +94,8 @@ namespace sequoia::testing::impl
 
   //================================ preconditions ================================//
  
-  template<class Sentinel, class Actions, class T, class... Args>
-  bool do_check_preconditions(std::string_view description, Sentinel& sentry, const Actions& actions, const T& x, const T& y, const Args&... args)
+  template<test_mode Mode, class Actions, class T, class... Args>
+  bool do_check_preconditions(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, const T& x, const T& y, const Args&... args)
   {
     if(!check(sentry.merge(description, "Equality operator is inconsistent"), sentry.logger(), x == x))
       return false;
@@ -116,16 +116,16 @@ namespace sequoia::testing::impl
     return actions.check_preconditions(description, sentry, x, y);
   }
 
-  template<class Sentinel, class Actions, class T>
-  bool check_preconditions(std::string_view description, Sentinel& sentry, const Actions& actions, const T& x, const T& y)
+  template<test_mode Mode, class Actions, class T>
+  bool check_preconditions(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, const T& x, const T& y)
   {
     return do_check_preconditions(description, sentry, actions, x, y);
   }
 
   //================================ move assign ================================//
 
-  template<class Sentinel, class Actions, class T, class Mutator, class... Args>
-  void do_check_move_assign(std::string_view description, Sentinel& sentry, const Actions& actions, T& z, T&& y, const T& yClone, Mutator yMutator, const Args&... args)
+  template<test_mode Mode, class Actions, class T, class Mutator, class... Args>
+  void do_check_move_assign(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, T& z, T&& y, const T& yClone, Mutator yMutator, const Args&... args)
   {
     z = std::move(y);
     check_equality(sentry.merge(description, "Inconsistent move assignment (from y)"), sentry.logger(), z, yClone);
@@ -136,16 +136,16 @@ namespace sequoia::testing::impl
     }
   }
   
-  template<class Sentinel, class Actions, class T, class Mutator>
-  void check_move_assign(std::string_view description, Sentinel& sentry, const Actions& actions, T& z, T&& y, const T& yClone, Mutator m)
+  template<test_mode Mode, class Actions, class T, class Mutator>
+  void check_move_assign(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, T& z, T&& y, const T& yClone, Mutator m)
   {
     do_check_move_assign(description, sentry, actions, z, std::forward<T>(y), yClone, std::move(m));
   }
 
   //================================ swap ================================//
 
-  template<class Sentinel, class Actions, class T, class Mutator, class... Args>
-  void do_check_swap(std::string_view description, Sentinel& sentry, const Actions& actions, T&& x, T& y, const T& xClone, const T& yClone, Mutator yMutator, const Args&... args)
+  template<test_mode Mode, class Actions, class T, class Mutator, class... Args>
+  void do_check_swap(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, T&& x, T& y, const T& xClone, const T& yClone, Mutator yMutator, const Args&... args)
   {
     using std::swap;
     swap(x, y);
@@ -159,16 +159,16 @@ namespace sequoia::testing::impl
     }
   }
 
-  template<class Sentinel, class Actions, class T, class Mutator>
-  void check_swap(std::string_view description, Sentinel& sentry, const Actions& actions, T&& x, T& y, const T& xClone, const T& yClone, Mutator yMutator)
+  template<test_mode Mode, class Actions, class T, class Mutator>
+  void check_swap(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, T&& x, T& y, const T& xClone, const T& yClone, Mutator yMutator)
   {
     do_check_swap(description, sentry, actions, std::forward<T>(x), y, xClone, yClone, std::move(yMutator));
   }
 
   //================================  move construction ================================ //
 
-  template<class Sentinel, class Actions, class T, class... Args>
-  T do_check_move_construction(std::string_view description, Sentinel& sentry, const Actions& actions, T&& z, const T& y, const Args&... args)
+  template<test_mode Mode, class Actions, class T, class... Args>
+  T do_check_move_construction(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, T&& z, const T& y, const Args&... args)
   {
     T w{std::move(z)};
     check_equality(sentry.merge(description, "Inconsistent move construction"), sentry.logger(), w, y);
@@ -181,8 +181,8 @@ namespace sequoia::testing::impl
     return w;
   }
 
-  template<class Sentinel, class Actions, class T>
-  T check_move_construction(std::string_view description, Sentinel& sentry, const Actions& actions, T&& z, const T& y)
+  template<test_mode Mode, class Actions, class T>
+  T check_move_construction(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, T&& z, const T& y)
   {
     return do_check_move_construction(description, sentry, actions, std::forward<T>(z), y);
   }
