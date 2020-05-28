@@ -16,52 +16,50 @@
 
 namespace sequoia::testing::impl
 {
-  template<test_mode Mode, class Actions, class T, class... Args>
-  void do_check_copy_assign(std::string_view description, test_logger<Mode>& logger, const Actions& actions, T& z, const T& y, const Args&... args)
+  template<class Sentinel, class Actions, class T, class... Args>
+  void do_check_copy_assign(std::string_view description, Sentinel& sentry, const Actions& actions, T& z, const T& y, const Args&... args)
   {
     z = y;
-    check_equality(merge(description, "Inconsistent copy assignment (from y)", "\n"), logger, z, y);
+    check_equality(sentry.merge(description, "Inconsistent copy assignment (from y)"), sentry.logger(), z, y);
 
     if constexpr(Actions::has_post_copy_assign_action)
     {
-      actions.post_copy_assign_action(description, logger, z, y, args...);
+      actions.post_copy_assign_action(description, sentry, z, y, args...);
     }
   }
   
-  template<test_mode Mode, class Actions, class T>
-  void check_copy_assign(std::string_view description, test_logger<Mode>& logger, const Actions& actions, T& z, const T& y)
+  template<class Sentinel, class Actions, class T>
+  void check_copy_assign(std::string_view description, Sentinel& sentry, const Actions& actions, T& z, const T& y)
   {
-    do_check_copy_assign(description, logger, actions, z, y);   
+    do_check_copy_assign(description, sentry, actions, z, y);   
   }
 
-  template<test_mode Mode, class Actions, class T, class Mutator, class... Args>
-  bool check_semantics(std::string_view description, test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, Mutator yMutator, const Args&... args)
-  {        
-    typename test_logger<Mode>::sentinel s{logger, add_type_info<T>(description)};
-    
+  template<class Sentinel, class Actions, class T, class Mutator, class... Args>
+  bool check_semantics(std::string_view description, Sentinel& sentry, const Actions& actions, const T& x, const T& y, Mutator yMutator, const Args&... args)
+  {    
     // Preconditions
-    if(!check_preconditions(description, logger, actions, x, y, args...))
+    if(!check_preconditions(description, sentry, actions, x, y, args...))
       return false;
         
     T z{x};
     if constexpr(Actions::has_post_copy_action)
     {
-      actions.post_copy_action(description, logger, z, T{y}, args...);
+      actions.post_copy_action(description, sentry, z, T{y}, args...);
     }
-    check_equality(merge(description, "Inconsistent copy constructor (x)", "\n"), logger, z, x);
+    check_equality(sentry.merge(description, "Inconsistent copy constructor (x)"), sentry.logger(), z, x);
 
     // z = y
-    check_copy_assign(description, logger, actions, z, y, args...);
+    check_copy_assign(description, sentry, actions, z, y, args...);
 
-    check_move_construction(description, logger, actions, std::move(z), y, args...);
+    check_move_construction(description, sentry, actions, std::move(z), y, args...);
 
     T w{x};    
-    check_move_assign(description, logger, actions, w, T{y}, y, yMutator, args...);
+    check_move_assign(description, sentry, actions, w, T{y}, y, yMutator, args...);
 
     if constexpr (do_swap<Args...>::value)
     {
       T v{y};
-      check_swap(description, logger, actions, T{x}, v, x, y, yMutator, args...);
+      check_swap(description, sentry, actions, T{x}, v, x, y, yMutator, args...);
     }
 
     if constexpr(!std::is_same_v<std::decay_t<Mutator>, null_mutator>)
@@ -69,14 +67,14 @@ namespace sequoia::testing::impl
       T v{y};
       yMutator(v);
 
-      check(merge(description, "Either mutation is not doing anything following copy constrution or value semantics are broken, with mutation of an object also changing the object from which it was copied", "\n"), logger, v != y);
+      check(sentry.merge(description, "Either mutation is not doing anything following copy construction or value semantics are broken, with mutation of an object also changing the object from which it was copied"), sentry.logger(), v != y);
 
       v = y;
-      check_equality(merge(description, "Inconsistent copy assignment (from mutated y)", "\n"), logger, v, y);
+      check_equality(sentry.merge(description, "Inconsistent copy assignment (from mutated y)"), sentry.logger(), v, y);
 
       yMutator(v);
 
-      check(merge(description, "Mutation is not doing anything following copy assignment/ broken value semantics", "\n"), logger, v != y);
+      check(sentry.merge(description, "Mutation is not doing anything following copy assignment/ broken value semantics"), sentry.logger(), v != y);
     }
 
     return true;

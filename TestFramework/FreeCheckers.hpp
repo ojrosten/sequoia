@@ -258,7 +258,7 @@ namespace sequoia::testing
       }
     }
 
-    return !s.failures_detected();
+    return !s.failure_detected();
   }
 
   /*! \brief The workhorse for equivalence checking

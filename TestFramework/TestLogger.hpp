@@ -127,7 +127,7 @@ namespace sequoia::testing
 
           auto messageMaker{
             [&logger](){
-              return merge("\tFalse Positive Failure:", logger.current_message(), "\n");
+              return testing::merge("\tFalse Positive Failure:", logger.current_message(), "\n");
             }
           };
 
@@ -159,6 +159,13 @@ namespace sequoia::testing
       sentinel& operator=(const sentinel&) = delete;
       sentinel& operator=(sentinel&&)      = delete;
 
+      [[nodiscard]]
+      std::string merge(std::string_view description, std::string_view details) const
+      {
+        std::string_view desc{checks_registered() && failure_detected() ? "" : description};
+        return testing::merge(desc, details, "\n");
+      }
+
       void log_performance_check()
       {
         m_Logger.get().log_performance_check();
@@ -170,7 +177,7 @@ namespace sequoia::testing
       }
 
       [[nodiscard]]
-      bool failures_detected() const noexcept
+      bool failure_detected() const noexcept
       {
         return m_Logger.get().failures() != m_PriorFailures;
       }
@@ -180,6 +187,9 @@ namespace sequoia::testing
       {
         return m_Logger.get().deep_checks() != m_PriorDeepChecks;
       }
+
+      [[nodiscard]]
+      test_logger& logger() noexcept { return m_Logger.get(); }
     private:
       std::reference_wrapper<test_logger> m_Logger;
       std::size_t m_PriorFailures{}, m_PriorDeepChecks{};
@@ -310,6 +320,9 @@ namespace sequoia::testing
       m_VersionedOutput.append(message);
     }
   };
+
+  template<test_mode Mode>
+  using sentinel = typename test_logger<Mode>::sentinel;
 
   enum class log_verbosity { terse=0, absent_checks=1, failure_messages=2};
 

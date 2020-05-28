@@ -15,33 +15,31 @@
 
 namespace sequoia::testing::impl
 {
-  template<test_mode Mode, class Actions, class T, class Mutator, class... Args>
-  void check_semantics(std::string_view description, test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, const Args&... args)
+  template<class Sentinel, class Actions, class T, class Mutator, class... Args>
+  void check_semantics(std::string_view description, Sentinel& sentry, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, const Args&... args)
   {
-    typename test_logger<Mode>::sentinel s{logger, add_type_info<T>(description)};
-
     // Preconditions
-    if(!check_preconditions(description, logger, actions, x, y, args...))
+    if(!check_preconditions(description, sentry, actions, x, y, args...))
       return;
 
-    if(!check(merge(description, "Precondition - for checking regular semantics, x and xClone are assumed to be equal", "\n"), logger, x == xClone)) return;
+    if(!check(sentry.merge(description, "Precondition - for checking regular semantics, x and xClone are assumed to be equal"), sentry.logger(), x == xClone)) return;
 
-    if(!check(merge(description, "Precondition - for checking regular semantics, y and yClone are assumed to be equal", "\n"), logger, y == yClone)) return;
+    if(!check(sentry.merge(description, "Precondition - for checking regular semantics, y and yClone are assumed to be equal"), sentry.logger(), y == yClone)) return;
 
-    T z{check_move_construction(description, logger, actions, std::move(x), xClone, args...)};    
+    T z{check_move_construction(description, sentry, actions, std::move(x), xClone, args...)};    
 
     if constexpr (do_swap<Args...>::value)
     {
       using std::swap;
       swap(z, y);
-      check_equality(merge(description, "Inconsistent Swap (y)", "\n"), logger, y, xClone);
-      check_equality(merge(description, "Inconsistent Swap (x)", "\n"), logger, z, yClone);
+      check_equality(sentry.merge(description, "Inconsistent Swap (y)"), sentry.logger(), y, xClone);
+      check_equality(sentry.merge(description, "Inconsistent Swap (x)"), sentry.logger(), z, yClone);
 
-      check_move_assign(description, logger, actions, y, std::move(z), yClone, std::move(m), args...);
+      check_move_assign(description, sentry, actions, y, std::move(z), yClone, std::move(m), args...);
     }
     else
     {      
-      check_move_assign(description, logger, actions, z, std::move(y), yClone, std::move(m), args...);
+      check_move_assign(description, sentry, actions, z, std::move(y), yClone, std::move(m), args...);
     }
   }
 }

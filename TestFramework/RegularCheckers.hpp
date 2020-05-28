@@ -48,8 +48,9 @@ namespace sequoia::testing
   void check_semantics(std::string_view description, test_logger<Mode>& logger, const T& x, const T& y, Mutator yMutator)
   {
     static_assert(has_regular_semantics_v<T>);
-    
-    impl::check_semantics(description, logger, impl::default_actions{}, x, y, yMutator);
+
+    sentinel<Mode> sentry{logger, description};
+    impl::check_semantics(description, sentry, impl::default_actions{}, x, y, yMutator);
   }
 
   /// Precondition: x!=y
@@ -58,6 +59,7 @@ namespace sequoia::testing
   {
     static_assert(has_regular_semantics_v<T>);
 
-    impl::check_semantics(description, logger, impl::default_actions{}, x, y, impl::null_mutator{});
+    sentinel<Mode> sentry{logger, description};
+    impl::check_semantics(description, sentry, impl::default_actions{}, x, y, impl::null_mutator{});
   }
 }

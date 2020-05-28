@@ -63,9 +63,9 @@ namespace sequoia::testing
   {
     typename test_logger<Mode>::sentinel s{logger, add_type_info<T>(description)};
 
-    if(auto opt{impl::check_para_constructor_allocations(description, logger, std::forward<T>(y), yClone, info...)})
+    if(auto opt{impl::check_para_constructor_allocations(description, s, std::forward<T>(y), yClone, info...)})
     {
-      check_semantics(description, logger, impl::move_only_allocation_actions{}, std::forward<T>(x), std::move(*opt), xClone, yClone, std::move(m), std::tuple_cat(impl::make_dual_allocation_checkers(info, x, y)...));
+      check_semantics(description, s, impl::move_only_allocation_actions{}, std::forward<T>(x), std::move(*opt), xClone, yClone, std::move(m), std::tuple_cat(impl::make_dual_allocation_checkers(info, x, y)...));
     }
   }
 }
