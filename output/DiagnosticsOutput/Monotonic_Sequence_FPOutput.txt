@@ -1,5 +1,6 @@
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 25:
 	Empty sequence inequivalent to a single value
+
 	Comparison performed using:
 	[sequoia::testing::equivalence_checker<sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > > >]
 	With equivalent types:
@@ -14,6 +15,7 @@
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 26:
 	Non-empty sequence inequivalent to empty list
+
 	Comparison performed using:
 	[sequoia::testing::equivalence_checker<sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > > >]
 	With equivalent types:
@@ -28,13 +30,13 @@
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 27:
 	Sequence of size one inequivalent to list with different value
+
 	Comparison performed using:
 	[sequoia::testing::equivalence_checker<sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > > >]
 	With equivalent types:
 	[std::initializer_list<int>]
 
-	element 0
-
+	Element 0 of range incorrect
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -43,11 +45,9 @@
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 28:
 	Empty/non-empty sequences should compare different
-	[sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > >]
-	operator== returned false
 
 	[sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > >]
-	operator!= returned true
+	operator== returned false
 
 	Size incorrect
 	[unsigned long]
@@ -58,6 +58,7 @@
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 30:
 	Empty sequence should not report as non-empty
+
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -66,6 +67,7 @@
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 31:
 	Non-empty sequence should not report as empty
+
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -74,6 +76,7 @@
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 33:
 	Empty sequence should not report non-zero size
+
 	[unsigned long]
 	operator== returned false
 	Obtained : 0
@@ -82,6 +85,7 @@
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 34:
 	Non-Eepty sequence should not report zero size
+
 	[unsigned long]
 	operator== returned false
 	Obtained : 1
@@ -90,6 +94,7 @@
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 36:
 	Back element equal to 1 should not report as 2
+
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -98,6 +103,7 @@
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 37:
 	Front element equal to 1 should not report as 2
+
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -106,6 +112,7 @@
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 38:
 	Zeroth element equal to 1 should not report as 2
+
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -114,6 +121,7 @@
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 39:
 	begin() pointing to 1 should not dereference as 2
+
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -122,6 +130,7 @@
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 40:
 	cbegin() pointing to 1 should not dereference as 2
+
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -130,6 +139,7 @@
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 41:
 	rbegin() pointing to 1 should not dereference as 2
+
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -138,6 +148,7 @@
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 42:
 	crbegin() pointing to 1 should not dereference as 2
+
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -146,11 +157,9 @@
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 47:
 	Sequences of size 1 with different elements should compare different
-	[sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > >]
-	operator== returned false
 
 	[sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > >]
-	operator!= returned true
+	operator== returned false
 
 	Back element wrong
 	[int]
@@ -203,11 +212,9 @@
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 52:
 	Sequences of different sizes should compare different
-	[sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > >]
-	operator== returned false
 
 	[sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > >]
-	operator!= returned true
+	operator== returned false
 
 	Size incorrect
 	[unsigned long]
@@ -218,6 +225,7 @@
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 57:
 	Back element equal to 0 should not report as 1
+
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -226,6 +234,7 @@
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 58:
 	Front element equal to 0 should not report as 1
+
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -234,6 +243,7 @@
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 59:
 	Zeroth element equal to 1 should not report as 1
+
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -242,6 +252,7 @@
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 60:
 	First element equal to 0 should not report as 1
+
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -250,6 +261,7 @@
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 61:
 	begin() pointing to 1 should not dereference as 0
+
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -258,6 +270,7 @@
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 62:
 	cbegin() pointing to 1 should not dereference as 0
+
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -266,6 +279,7 @@
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 63:
 	rbegin() pointing to 0 should not dereference as 1
+
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -274,6 +288,7 @@
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 64:
 	crbegin() pointing to 0 should not dereference as 1
+
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -282,6 +297,7 @@
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 65:
 	iterator pointing to 0 should not dereference as 1
+
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -290,6 +306,7 @@
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 66:
 	citerator pointing to 0 should not dereference as 1
+
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -298,6 +315,7 @@
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 67:
 	riterator pointing to 1 should not dereference as 0
+
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -306,21 +324,14 @@
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 68:
 	criterator pointing to 1 should not dereference as 0
+
 	[int]
 	operator== returned false
 	Obtained : 1
 	Predicted: 0
 
 
-	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 70:
-	Inequivalent sequences of size two
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > > >]
-	With equivalent types:
-	[std::initializer_list<int>]
-
-	element 1
-
+	Element 1 of range incorrect
 	[int]
 	operator== returned false
 	Obtained : 2
@@ -329,13 +340,13 @@
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 71:
 	Inequivalent sequences of size two
+
 	Comparison performed using:
 	[sequoia::testing::equivalence_checker<sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > > >]
 	With equivalent types:
 	[std::initializer_list<int>]
 
-	element 0
-
+	Element 0 of range incorrect
 	[int]
 	operator== returned false
 	Obtained : 3
@@ -344,11 +355,9 @@
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 72:
 	Sequences of size 2 with different elements should compare different
-	[sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > >]
-	operator== returned false
 
 	[sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > >]
-	operator!= returned true
+	operator== returned false
 
 	Back element wrong
 	[int]
@@ -436,11 +445,9 @@
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 77:
 	Sequences of size 2 with different final elements should compare different
-	[sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > >]
-	operator== returned false
 
 	[sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > >]
-	operator!= returned true
+	operator== returned false
 
 	Back element wrong
 	[int]
@@ -472,11 +479,9 @@
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 82:
 	Sequences of size 2 with different first elements should compare different
-	[sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > >]
-	operator== returned false
 
 	[sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > >]
-	operator!= returned true
+	operator== returned false
 
 	Front element wrong
 	[int]

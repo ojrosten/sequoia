@@ -295,7 +295,7 @@ namespace sequoia::testing
 
     void report_async_exception(std::string_view sv)
     {
-      check(merge("Exception thrown during asynchronous execution of graph test:", sv, "\n"), test_logger<Mode>::mode == test_mode::false_positive);
+      check(testing::merge("Exception thrown during asynchronous execution of graph test:", sv, "\n"), test_logger<Mode>::mode == test_mode::false_positive);
     }
   protected:
     using time_point = typename base_t::time_point;

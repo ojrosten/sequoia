@@ -1,5 +1,6 @@
 	../Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 30:
 	Empty stack
+
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -7,6 +8,7 @@
 
 
 	../Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 31
+
 	[unsigned long]
 	operator== returned false
 	Obtained : 0
@@ -15,6 +17,7 @@
 
 	../Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 45:
 	Empty stack
+
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -23,6 +26,7 @@
 
 	../Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 46:
 	Non-empty stack
+
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -31,11 +35,9 @@
 
 	../Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 48:
 	Empty stack versus populated stack
-	[sequoia::data_structures::static_stack<int, 1ul>]
-	operator== returned false
 
 	[sequoia::data_structures::static_stack<int, 1ul>]
-	operator!= returned true
+	operator== returned false
 
 	Inconsistent emptiness
 	[bool]
@@ -60,11 +62,9 @@
 
 	../Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 51:
 	Differing elements
-	[sequoia::data_structures::static_stack<int, 1ul>]
-	operator== returned false
 
 	[sequoia::data_structures::static_stack<int, 1ul>]
-	operator!= returned true
+	operator== returned false
 
 	Inconsistent top element
 	[int]
@@ -82,11 +82,9 @@
 
 	../Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 54:
 	Empty stack versus populated stack
-	[sequoia::data_structures::static_stack<int, 1ul>]
-	operator== returned false
 
 	[sequoia::data_structures::static_stack<int, 1ul>]
-	operator!= returned true
+	operator== returned false
 
 	Inconsistent emptiness
 	[bool]

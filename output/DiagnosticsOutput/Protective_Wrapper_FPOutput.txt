@@ -1,9 +1,7 @@
 	../Tests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 32
-	[sequoia::utilities::protective_wrapper<int, false>]
-	operator== returned false
 
 	[sequoia::utilities::protective_wrapper<int, false>]
-	operator!= returned true
+	operator== returned false
 
 	[int]
 	operator== returned false
@@ -12,17 +10,12 @@
 
 
 	../Tests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 40
+
 	[sequoia::utilities::protective_wrapper<std::__1::vector<int, std::__1::allocator<int> >, false>]
 	operator== returned false
 
-	[sequoia::utilities::protective_wrapper<std::__1::vector<int, std::__1::allocator<int> >, false>]
-	operator!= returned true
-
 	[std::__1::vector<int, std::__1::allocator<int> >]
 	operator== returned false
-
-	[std::__1::vector<int, std::__1::allocator<int> >]
-	operator!= returned true
 
 	Container size wrong
 	[long]
@@ -32,20 +25,14 @@
 
 
 	../Tests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 43
+
 	[sequoia::utilities::protective_wrapper<std::__1::vector<int, std::__1::allocator<int> >, false>]
 	operator== returned false
 
-	[sequoia::utilities::protective_wrapper<std::__1::vector<int, std::__1::allocator<int> >, false>]
-	operator!= returned true
-
 	[std::__1::vector<int, std::__1::allocator<int> >]
 	operator== returned false
 
-	[std::__1::vector<int, std::__1::allocator<int> >]
-	operator!= returned true
-
-	element 0
-
+	Element 0 of range incorrect
 	[int]
 	operator== returned false
 	Obtained : 2
@@ -53,20 +40,14 @@
 
 
 	../Tests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 46
+
 	[sequoia::utilities::protective_wrapper<std::__1::vector<int, std::__1::allocator<int> >, false>]
 	operator== returned false
 
-	[sequoia::utilities::protective_wrapper<std::__1::vector<int, std::__1::allocator<int> >, false>]
-	operator!= returned true
-
 	[std::__1::vector<int, std::__1::allocator<int> >]
 	operator== returned false
 
-	[std::__1::vector<int, std::__1::allocator<int> >]
-	operator!= returned true
-
-	element 0
-
+	Element 0 of range incorrect
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -74,11 +55,9 @@
 
 
 	../Tests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 54
-	[sequoia::utilities::protective_wrapper<sequoia::testing::data, false>]
-	operator== returned false
 
 	[sequoia::utilities::protective_wrapper<sequoia::testing::data, false>]
-	operator!= returned true
+	operator== returned false
 
 	[sequoia::testing::data]
 	operator== returned false

@@ -1,5 +1,6 @@
 	../Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 31:
 	Empty queue must be empty
+
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -8,6 +9,7 @@
 
 	../Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 32:
 	Empty queue must have size zero
+
 	[unsigned long]
 	operator== returned false
 	Obtained : 0
@@ -16,11 +18,9 @@
 
 	../Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 42:
 	Empty queue versus populated queue
-	[sequoia::data_structures::static_queue<int, 1ul>]
-	operator== returned false
 
 	[sequoia::data_structures::static_queue<int, 1ul>]
-	operator!= returned true
+	operator== returned false
 
 	Inconsistent emptiness
 	[bool]
@@ -52,11 +52,9 @@
 
 	../Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 45:
 	Differing elements
-	[sequoia::data_structures::static_queue<int, 1ul>]
-	operator== returned false
 
 	[sequoia::data_structures::static_queue<int, 1ul>]
-	operator!= returned true
+	operator== returned false
 
 	Inconsistent front element
 	[int]
@@ -88,11 +86,9 @@
 
 	../Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 48:
 	Empty queue versus populated queue
-	[sequoia::data_structures::static_queue<int, 1ul>]
-	operator== returned false
 
 	[sequoia::data_structures::static_queue<int, 1ul>]
-	operator!= returned true
+	operator== returned false
 
 	Inconsistent emptiness
 	[bool]
