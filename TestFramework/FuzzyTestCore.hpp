@@ -79,13 +79,11 @@ namespace sequoia::testing
   template<test_mode Mode, class Compare, class T>
   bool dispatch_check(std::string_view description, test_logger<Mode>& logger, fuzzy_compare<Compare> c, const T& value, const T& prediction)
   {  
-    sentinel<Mode> s{logger, add_type_info<T>(description)};
+    sentinel<Mode> sentry{logger, add_type_info<T>(description)};
 
     if constexpr(compares_type_v<Compare, T>)
     {
-      const auto priorFailures{logger.failures()};
-
-      s.log_check();
+      sentry.log_check();
       if(!c.compare(prediction, value))
       {
         std::string message{"\t"};
@@ -109,7 +107,7 @@ namespace sequoia::testing
         logger.log_failure(message);
       }
 
-      return logger.failures() == priorFailures;
+      return !sentry.failure_detected();
     }
     else if constexpr(is_container_v<T>)
     {

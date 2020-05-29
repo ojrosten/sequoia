@@ -181,19 +181,18 @@ namespace sequoia::testing
         merge(description, "Comparison performed using:\n\t" + type_demangler<EquivChecker>::make() + "\n\tWith equivalent types:", "\n"))
     };
       
-    sentinel<Mode> r{logger, message};
-    const auto previousFailures{logger.failures()};
+    sentinel<Mode> sentry{logger, message};
     
     EquivChecker::check(message, logger, value, s, u...);
       
-    return logger.failures() == previousFailures;
+    return !sentry.failure_detected();
   }
 
   [[nodiscard]]
   std::string operator_message(std::string_view description, std::string_view typeInfo, std::string_view op, std::string_view retVal);
 
   [[nodiscard]]
-  std::string prediction_message(std::string_view obtained, std::string_view predicted);
+  std::string prediction_message(std::string_view obtained, std::string_view predicted, std::string_view advice="");
 
   /*! \name dispatch_check basic overload set
 
@@ -219,8 +218,8 @@ namespace sequoia::testing
     constexpr bool delegate{has_detailed_equality_checker_v<T> || is_container_v<T>};
 
     static_assert(delegate || is_equal_to_comparable_v<T>,
-                  "Provide either a specialization of detailed_equality_checker or ensure operator== exists,"
-                  "together with a specialization of serializer");
+                  "Provide either a specialization of detailed_equality_checker or"
+                  "ensure operator== exists, together with a specialization of serializer");
 
     sentinel<Mode> s{logger, add_type_info<T>(description)};
      
@@ -232,9 +231,9 @@ namespace sequoia::testing
         auto message{operator_message(description, add_type_info<T>(""), "==", "false")};
         if constexpr(!delegate)
         {
-          message.append(prediction_message(to_string(value), to_string(prediction)));      
+          message.append(prediction_message(to_string(value), to_string(prediction)));
         }
-        logger.log_failure(message);
+        logger.log_failure(std::move(message));
       }
     }
 
