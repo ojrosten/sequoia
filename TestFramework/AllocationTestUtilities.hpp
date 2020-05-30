@@ -95,7 +95,7 @@ namespace sequoia::testing
     std::shared_ptr<int> m_pAllocs{}, m_pDeallocs{};
   };
 
-  template<class T, class... U>
+  template<class T>
   struct type_demangler;
 
   template<class T, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
@@ -104,13 +104,13 @@ namespace sequoia::testing
     [[nodiscard]]
     static std::string make()
     {
-      auto info{std::string{"[shared_counting_allocator<\n\t\t"}.append(demangle<T>()).append(",\n")};
+      auto info{std::string{"shared_counting_allocator<\n\t\t"}.append(demangle<T>()).append(",\n")};
 
       auto toString{[](bool b){ return b ? "true" : "false";}};
 
       info.append("\t\tPropagate on copy assignment = ").append(toString(PropagateCopy)).append(",\n");
       info.append("\t\tPropagate on move assignment = ").append(toString(PropagateMove)).append(",\n");
-      info.append("\t\tPropagate on swap = ").append(toString(PropagateSwap)).append("\n\t>]");
+      info.append("\t\tPropagate on swap = ").append(toString(PropagateSwap)).append("\n\t>");
 
       return info;
     }

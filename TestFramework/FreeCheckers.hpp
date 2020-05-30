@@ -146,18 +146,29 @@ namespace sequoia::testing
       \anchor type_demangler_primary
    */
 
-  template<class T, class... U>
+  template<class T>
   struct type_demangler
   {
     [[nodiscard]]
     static std::string make()
     {
-      auto info{std::string{'['}.append(demangle<T>())};
-      if constexpr(sizeof...(U) > 0)
-        info.append("\n;").append(type_demangler<U...>::make());
+      return demangle<T>();
+    }
+  };
 
-      info += ']';
-      return info;
+  template<class T, class... U>
+  struct type_list_demangler
+  {
+    [[nodiscard]]
+    static std::string make()
+    {
+      auto mess{type_demangler<T>::make()};
+      if constexpr(sizeof...(U) > 0)
+      {
+        mess.append(",\n\t").append(type_list_demangler<U...>::make());
+      }
+
+      return mess;
     }
   };
 
@@ -165,7 +176,19 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string add_type_info(std::string_view description)
   {
-    return merge(description, type_demangler<T, U...>::make().append("\n"), description.empty() ? "" : "\n");
+    auto mess{merge(description, "[", "\n")};
+    if constexpr (sizeof...(U) > 0)
+    {
+      mess.append(type_list_demangler<T>::make());
+    }
+    else
+    {
+      mess.append(type_demangler<T>::make());
+    }
+
+    mess.append("]\n");
+
+    return mess;
   }
 
   /*! \brief generic function that generates a check from any class providing a static check method.
@@ -178,7 +201,7 @@ namespace sequoia::testing
   {
     const std::string message{
       add_type_info<S, U...>(
-        merge(description, "Comparison performed using:\n\t" + type_demangler<EquivChecker>::make() + "\n\tWith equivalent types:", "\n"))
+        merge(description, "Comparison performed using:\n\t[" + type_demangler<EquivChecker>::make() + "]\n\tWith equivalent types:", "\n"))
     };
       
     sentinel<Mode> sentry{logger, message};
