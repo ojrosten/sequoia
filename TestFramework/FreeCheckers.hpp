@@ -165,7 +165,8 @@ namespace sequoia::testing
       auto mess{type_demangler<T>::make()};
       if constexpr(sizeof...(U) > 0)
       {
-        mess.append(",\n\t").append(type_list_demangler<U...>::make());
+        mess += ',';
+        merge(mess, type_list_demangler<U...>::make(), "\n");
       }
 
       return mess;
