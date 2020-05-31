@@ -7,7 +7,7 @@ var indexSectionsWithContent =
   4: "cdegrsu",
   5: "fmpr",
   6: "ct",
-  7: "lst"
+  7: "ilst"
 };
 
 var indexSectionNames =
