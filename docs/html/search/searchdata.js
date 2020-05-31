@@ -7,7 +7,8 @@ var indexSectionsWithContent =
   4: "cdegrsu",
   5: "fmpr",
   6: "ct",
-  7: "ilst"
+  7: "dft",
+  8: "ilst"
 };
 
 var indexSectionNames =
@@ -19,7 +20,8 @@ var indexSectionNames =
   4: "functions",
   5: "typedefs",
   6: "enums",
-  7: "pages"
+  7: "enumvalues",
+  8: "pages"
 };
 
 var indexSectionLabels =
@@ -31,6 +33,7 @@ var indexSectionLabels =
   4: "Functions",
   5: "Typedefs",
   6: "Enumerations",
-  7: "Pages"
+  7: "Enumerator",
+  8: "Pages"
 };
 

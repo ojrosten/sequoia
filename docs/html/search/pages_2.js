@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['sequoia',['sequoia',['../d2/db5/md___users__claire__dropbox__sequoia__r_e_a_d_m_e.html',1,'']]]
+  ['sequoia_1405',['sequoia',['../dd/df0/md__Users_Claire_Dropbox_Sequoia_README.html',1,'']]]
 ];
