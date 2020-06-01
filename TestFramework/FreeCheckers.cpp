@@ -14,32 +14,5 @@
 
 namespace sequoia::testing
 {
-  [[nodiscard]]
-  std::string operator_message(std::string_view description, std::string_view typeInfo, std::string_view op, std::string_view opRetVal)
-  {
-    std::string info{typeInfo};
-
-    info.append("\toperator").append(op)
-        .append(" returned ").append(opRetVal).append("\n");
-
-    return description.empty()
-      ? std::string{"\t"}.append(std::move(info))
-      : std::string{"\t"}.append(description).append("\n\t" + std::move(info));
-  }
-
-  [[nodiscard]]
-  std::string prediction_message(std::string_view obtained, std::string_view predicted, std::string_view advice)
-  {
-    std::string mess{};
-
-    mess.append("\tObtained : ").append(obtained).append("\n");
-    mess.append("\tPredicted: ").append(predicted).append("\n\n");
-
-    if(!advice.empty())
-    {
-      mess.append("\tAdvice: ").append(advice).append("\n\n");
-    }
-
-    return mess;
-  }
+  
 }

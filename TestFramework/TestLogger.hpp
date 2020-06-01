@@ -20,6 +20,7 @@
  */
 
 #include "TypeTraits.hpp"
+#include "Format.hpp"
 
 #include <sstream>
 #include <fstream>
@@ -31,9 +32,6 @@
 
 namespace sequoia::testing
 {
-  [[nodiscard]]
-  std::string merge(std::string_view s1, std::string_view s2, std::string_view sep=" ");
-
   /*! \brief Holds details of the file to which the last successfully completed test is registered.
 
       If a check causes a crash, the recovery file may be used to provide a clue as to where this

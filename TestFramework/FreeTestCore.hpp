@@ -19,14 +19,6 @@
 
 namespace sequoia::testing
 {
-  namespace impl
-  {
-    [[nodiscard]]
-    std::string format(std::string_view s);
-
-    [[nodiscard]]
-    std::string make_message(std::string_view tag, std::string_view currentMessage, std::string_view exceptionMessage, const bool exceptionsDetected);
-  }
 
   /*! \brief Abstract base class used for type-erasure of the template class basic_test.
 
@@ -140,7 +132,7 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string make_message(std::string_view tag, std::string_view exceptionMessage) const
     {
-      return impl::make_message(tag, current_message(), exceptionMessage, Checker::exceptions_detected_by_sentinel());
+      return testing::make_message(tag, current_message(), exceptionMessage, Checker::exceptions_detected_by_sentinel());
     }
   };
   
@@ -158,10 +150,5 @@ namespace sequoia::testing
     family,    /// families of tests are executed concurrently
     test,      /// tests are executed concurrently, independently of their families
     deep       /// concurrency-aware components of individual tests are executed concurrently
-  };
-
-  [[nodiscard]]
-  std::string report_line(std::string_view file, const int line, const std::string_view message);
-
-  #define LINE(message) report_line(__FILE__, __LINE__, message)    
+  }; 
 }

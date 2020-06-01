@@ -212,12 +212,6 @@ namespace sequoia::testing
     return !sentry.failure_detected();
   }
 
-  [[nodiscard]]
-  std::string operator_message(std::string_view description, std::string_view typeInfo, std::string_view op, std::string_view retVal);
-
-  [[nodiscard]]
-  std::string prediction_message(std::string_view obtained, std::string_view predicted, std::string_view advice="");
-
   /*! \name dispatch_check basic overload set
 
       The next three functions form an overload set, dedicated to appropiately dispatching requests
