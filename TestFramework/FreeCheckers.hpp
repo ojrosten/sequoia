@@ -246,7 +246,7 @@ namespace sequoia::testing
       s.log_check();
       if(!(prediction == value))
       {
-        auto message{operator_message(description, add_type_info<T>(""), "==", "false")};
+        auto message{operator_message(add_type_info<T>(description), "==", "false")};
         if constexpr(!delegate)
         {
           message.append(prediction_message(to_string(value), to_string(prediction)));

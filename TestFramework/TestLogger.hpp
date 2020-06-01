@@ -110,9 +110,9 @@ namespace sequoia::testing
       if(!logger.depth())
       {
         const bool failure{
-          ((Mode == test_mode::false_positive) && !logger.failures())
+               ((Mode == test_mode::false_positive) && !logger.failures())
             || ((Mode != test_mode::false_positive) &&  logger.failures())
-            };
+        };
 
         auto messageMaker{
           [&logger](){
@@ -125,9 +125,9 @@ namespace sequoia::testing
           logger.log_top_level_failure((Mode == test_mode::false_positive) ? messageMaker() : "");
         }
         else if constexpr(Mode == test_mode::false_negative)
-                         {
-                           logger.append_to_versioned_output(messageMaker().append("\n"));
-                         }
+        {
+          logger.append_to_versioned_output(messageMaker().append("\n"));
+        }
 
           
         logger.reset_failures();
@@ -139,7 +139,8 @@ namespace sequoia::testing
         }
       }
 
-      if(!logger.depth()) logger.exceptions_detected_by_sentinel(std::uncaught_exceptions());
+      if(!logger.depth())
+        logger.exceptions_detected_by_sentinel(std::uncaught_exceptions());
     }
 
     sentinel(const sentinel&) = delete;

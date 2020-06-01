@@ -43,40 +43,73 @@ namespace sequoia::testing
     return mess;
   }
 
-  std::string format(std::string_view s)
+  std::string indent(std::string_view s, std::string_view space)
   {
-    return s.empty() ? std::string{s} : std::string{'\t'}.append(s);
+    return s.empty() ? std::string{s} : std::string{space}.append(s);
   }
 
-  [[nodiscard]]
-  std::string make_message(std::string_view tag, std::string_view currentMessage, std::string_view exceptionMessage, const bool exceptionsDetected)
+  /*[[nodiscard]]
+  std::string indent(std::string_view s1, std::string_view s2, std::string_view space)
   {
-    auto mess{(std::string{"\tError -- "}.append(tag) += " Exception:") += format(exceptionMessage) += '\n'};
-    if(exceptionsDetected)
+    if(s1.empty() && s2.empty()) return "";
+
+    if(s1.empty()) return std::string{space}.append(s2);
+
+    if(s2.empty()) return std::string{space}.append(s1);
+
+    auto mess{std::string{space}.append(s1)};
+    if(mess.back() != '\n') mess.append("\n");
+
+    return mess.append(space).append(s2);
+    }*/
+
+  void indent_after(std::string& s1, std::string_view s2, std::string_view space)
+  {
+    if(s2.empty()) return;
+
+    if(s1.empty())
     {
-      mess += "\tException thrown during last check\n";
+      s1 = std::string{space}.append(s2);
     }
     else
     {
-      mess += "\tException thrown after check completed\n";
+      if(s1.back() != '\n') s1.append("\n");
+      
+      s1.append(space).append(s2);
+    }
+  }
+
+  
+  [[nodiscard]]
+  std::string make_message(std::string_view tag, std::string_view currentMessage, std::string_view exceptionMessage, const bool exceptionsDetected)  
+  {
+    auto mess{indent("Error -- ").append(tag).append(" Exception:")};
+    indent_after(mess, exceptionMessage);
+    mess.append("\n");
+        
+    if(exceptionsDetected)
+    {
+      indent_after(mess, "Exception thrown during last check");
+    }
+    else
+    {
+      indent_after(mess, "\tException thrown after check completed");
     }
 
-    mess += ("\tLast Recorded Message:\n" + format(currentMessage));
-
+    indent_after(mess, "Last Recorded Message:");
+    indent_after(mess, currentMessage);
+ 
     return mess;
   }
 
   [[nodiscard]]
-  std::string operator_message(std::string_view description, std::string_view typeInfo, std::string_view op, std::string_view opRetVal)
+  std::string operator_message(std::string_view description, std::string_view op, std::string_view opRetVal)
   {
-    std::string info{typeInfo};
+    std::string info{indent(description)};
+    indent_after(info, "operator");
+    info.append(op).append(" returned ").append(opRetVal).append("\n");
 
-    info.append("\toperator").append(op)
-        .append(" returned ").append(opRetVal).append("\n");
-
-    return description.empty()
-      ? std::string{"\t"}.append(std::move(info))
-      : std::string{"\t"}.append(description).append("\n\t" + std::move(info));
+    return info;
   }
 
   [[nodiscard]]

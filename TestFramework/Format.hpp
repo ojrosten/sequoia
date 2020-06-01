@@ -19,13 +19,18 @@ namespace sequoia::testing
   std::string merge(std::string_view s1, std::string_view s2, std::string_view sep=" ");
 
   [[nodiscard]]
-  std::string format(std::string_view s);
+  std::string indent(std::string_view s, std::string_view space="\t");
+
+  //[[nodiscard]]
+  //std::string indent(std::string_view s1, std::string_view s2, std::string_view space="\t");
+
+  void indent_after(std::string& s1, std::string_view s2, std::string_view space="\t");
 
   [[nodiscard]]
   std::string make_message(std::string_view tag, std::string_view currentMessage, std::string_view exceptionMessage, const bool exceptionsDetected);
 
   [[nodiscard]]
-  std::string operator_message(std::string_view description, std::string_view typeInfo, std::string_view op, std::string_view retVal);
+  std::string operator_message(std::string_view description, std::string_view op, std::string_view retVal);
 
   [[nodiscard]]
   std::string prediction_message(std::string_view obtained, std::string_view predicted, std::string_view advice="");
