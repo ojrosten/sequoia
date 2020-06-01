@@ -93,7 +93,7 @@ namespace sequoia::testing
     }
     else
     {
-      indent_after(mess, "\tException thrown after check completed");
+      indent_after(mess, "Exception thrown after check completed");
     }
 
     indent_after(mess, "Last Recorded Message:");
