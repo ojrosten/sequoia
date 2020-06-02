@@ -1,4 +1,4 @@
-	../Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 33:
+	../Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 33
 	Final argument missing
 
 	Expected Exception Type:
@@ -7,7 +7,7 @@
 	"
   Error: expected 1 argument, [case], but found 0 arguments"
 
-	../Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 42:
+	../Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 42
 	Unexpected argument
 
 	Expected Exception Type:
@@ -16,7 +16,7 @@
 	"
   Error: unrecognized option '--asyng'"
 
-	../Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 50:
+	../Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 50
 	No bound function object
 
 	Expected Exception Type:
@@ -25,7 +25,7 @@
 	"
   Error: Commandline option not bound to a function object"
 
-	../Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 58:
+	../Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 58
 	Unexpected argument
 
 	Expected Exception Type:

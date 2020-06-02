@@ -6,7 +6,7 @@
 	Predicted: true
 
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 48:
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 48
 	Integers which should compare different
 
 	[int]
@@ -102,14 +102,14 @@
 	Predicted: -0
 
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 59:
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 59
 	Exception expected but nothing thrown
 
 	Expected Exception Type:
 	[std::runtime_error]
 	No exception thrown
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 60:
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 60
 	Exception thrown but of wrong type
 
 	Expected Exception Type:
@@ -117,14 +117,14 @@
 	Unexpected exception thrown (caught by std::exception&):
 	"Error"
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 61:
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 61
 	Exception thrown but of unknown type
 
 	Expected Exception Type:
 	[std::runtime_error]
 	Unknown exception thrown
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 66:
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 66
 	Empty vector check which should fail
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
@@ -137,7 +137,7 @@
 	Predicted: 1
 
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 67:
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 67
 	One element vector check which should fail due to wrong value
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
@@ -150,7 +150,7 @@
 	Predicted: 2
 
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 68:
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 68
 	One element vector check which should fail due to differing sizes
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
@@ -163,7 +163,7 @@
 	Predicted: 2
 
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 69:
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 69
 	Multi-element vector comparison which should fail due to last element
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
@@ -176,7 +176,7 @@
 	Predicted: 4
 
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 70:
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 70
 	Multi-element vector comparison which should fail due to first element
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
@@ -189,7 +189,7 @@
 	Predicted: 0
 
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 71:
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 71
 	Multi-element vector comparison which should fail due to middle element
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
@@ -202,7 +202,7 @@
 	Predicted: 3.3
 
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 72:
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 72
 	Multi-element vector comparison which should fail due to different sizes
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
@@ -215,7 +215,7 @@
 	Predicted: 2
 
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 76:
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 76
 	Iterators demarcate differing number of elements
 
 	Container size wrong
@@ -225,7 +225,7 @@
 	Predicted: 6
 
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 77:
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 77
 	Iterators demarcate differing elements
 
 	Element 0 of range incorrect
@@ -256,7 +256,7 @@
 	Predicted: 6.2
 
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 80:
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 80
 	Strings of differing length
 
 	[std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >]
@@ -269,7 +269,7 @@
 	Predicted: 13
 
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 81:
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 81
 	Differing strings of same length
 
 	[std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >]
@@ -325,7 +325,7 @@
 	Predicted: 3.4
 
 
-	Regular Semantics ../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 106:
+	Regular Semantics ../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 106
 	Broken equality
 
 	Equality operator is inconsistent
@@ -335,7 +335,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 107:
+	Regular Semantics ../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 107
 	Broken inequality
 
 	Equality operator is inconsistent
@@ -345,7 +345,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 108:
+	Regular Semantics ../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 108
 	Broken copy
 
 	Inconsistent copy constructor (x)
@@ -376,7 +376,7 @@
 	Predicted: 2 
 
 
-	Regular Semantics ../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 109:
+	Regular Semantics ../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 109
 	Broken move
 
 	Inconsistent move construction
@@ -386,7 +386,7 @@
 	Predicted: 2 
 
 
-	Regular Semantics ../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 110:
+	Regular Semantics ../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 110
 	Broken copy assignment
 
 	Inconsistent copy assignment (from y)
@@ -403,7 +403,7 @@
 	Predicted: 2 
 
 
-	Regular Semantics ../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 111:
+	Regular Semantics ../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 111
 	Broken move assignment
 
 	Inconsistent move assignment (from y)
@@ -413,7 +413,7 @@
 	Predicted: 2 
 
 
-	Regular Semantics ../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 112:
+	Regular Semantics ../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 112
 	Broken swap
 
 	Inconsistent Swap (y)
@@ -430,7 +430,7 @@
 	Predicted: 2 
 
 
-	Regular Semantics ../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 113:
+	Regular Semantics ../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 113
 	Broken copy value semantics
 
 	Either mutation is not doing anything following copy construction or value semantics are broken, with mutation of an object also changing the object from which it was copied
@@ -447,7 +447,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 114:
+	Regular Semantics ../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 114
 	Broken copy assignment value semantics
 
 	Mutation is not doing anything following copy assignment/ broken value semantics
@@ -457,7 +457,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 116:
+	Regular Semantics ../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 116
 	Broken check invariant
 
 	Precondition - for checking regular semantics, x and y are assumed to be different
@@ -514,7 +514,7 @@
 	Predicted: 5
 
 
-	Move-only Semantics ../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 26:
+	Move-only Semantics ../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 26
 	Broken equality
 
 	Equality operator is inconsistent
@@ -524,7 +524,7 @@
 	Predicted: true
 
 
-	Move-only Semantics ../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 27:
+	Move-only Semantics ../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 27
 	Broken inequality
 
 	Equality operator is inconsistent
@@ -534,7 +534,7 @@
 	Predicted: true
 
 
-	Move-only Semantics ../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 28:
+	Move-only Semantics ../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 28
 	Broken move
 
 	Inconsistent move construction
@@ -551,7 +551,7 @@
 	Predicted: 1 
 
 
-	Move-only Semantics ../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 29:
+	Move-only Semantics ../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 29
 	Broken swap
 
 	Inconsistent Swap (y)
@@ -575,7 +575,7 @@
 	Predicted: 2 
 
 
-	Move-only Semantics ../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 30:
+	Move-only Semantics ../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 30
 	Broken move assignment
 
 	Inconsistent move assignment (from y)
@@ -585,7 +585,7 @@
 	Predicted: 2 
 
 
-	Move-only Semantics ../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 31:
+	Move-only Semantics ../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 31
 	Broken check invariant
 
 	Precondition - for checking regular semantics, x and y are assumed to be different
@@ -595,7 +595,7 @@
 	Predicted: true
 
 
-	Move-only Semantics ../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 32:
+	Move-only Semantics ../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 32
 	Broken check invariant
 
 	Precondition - for checking regular semantics, x and xClone are assumed to be equal
@@ -605,7 +605,7 @@
 	Predicted: true
 
 
-	Move-only Semantics ../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 33:
+	Move-only Semantics ../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 33
 	Broken check invariant
 
 	Precondition - for checking regular semantics, x and xClone are assumed to be equal
@@ -615,23 +615,23 @@
 	Predicted: true
 
 
-	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30:
+	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-	Fast Task duration: 0.00139204s +- 4 * 2.44896e-05
-	Slow Task duration: 0.00139924s +- 4 * 1.70443e-05 [1.00517; (2, 2)]
+	Fast Task duration: 0.00140827s +- 4 * 0.000120018
+	Slow Task duration: 0.00127496s +- 4 * 0.000134371 [0.905339; (2, 2)]
 
-	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34:
+	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-	Fast Task duration: 0.00135817s +- 4 * 4.15982e-05
-	Slow Task duration: 0.00133173s +- 4 * 9.18155e-05 [0.980537; (2, 3)]
+	Fast Task duration: 0.00133697s +- 4 * 8.8868e-05
+	Slow Task duration: 0.00131825s +- 4 * 4.01401e-05 [0.986; (2, 3)]
 
-	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38:
+	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-	Fast Task duration: 0.00135751s +- 4 * 4.33429e-05
-	Slow Task duration: 0.00508265s +- 4 * 7.11087e-05 [3.74411; (2, 2.5)]
+	Fast Task duration: 0.00137737s +- 4 * 1.5129e-05
+	Slow Task duration: 0.00487396s +- 4 * 0.000361358 [3.53861; (2, 2.5)]
 
 	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 29
 
@@ -676,7 +676,7 @@
 	Obtained : 5.1
 	Predicted: 3.7 +/- 0.5
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 52:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 52
 	Broken equality
 
 	Equality operator is inconsistent
@@ -686,7 +686,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 60:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 60
 	Broken inequality
 
 	Equality operator is inconsistent
@@ -696,7 +696,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 68:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 68
 	Broken equality
 
 	Unexpected allocation detected for operator==
@@ -735,7 +735,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 77:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 77
 	Broken copy
 
 	[shared_counting_allocator<
@@ -780,7 +780,7 @@
 	Predicted: 1
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 85:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 85
 	Broken copy alloc
 
 	Inconsistent para-copy construction
@@ -811,7 +811,7 @@
 	Predicted: 1
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 93:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 93
 	Broken move
 
 	Inconsistent move construction
@@ -842,7 +842,7 @@
 	Predicted: 1
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
 	Broken move alloc
 
 	Inconsistent para-move construction
@@ -859,7 +859,7 @@
 	Predicted: 1
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 109:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 109
 	Inefficient move
 
 	[shared_counting_allocator<
@@ -876,7 +876,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 117:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 117
 	Broken copy assignment
 
 	Inconsistent copy assignment (from y)
@@ -907,7 +907,7 @@
 	Predicted: 5 6 
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 125:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 125
 	Broken move assignment
 
 	Inconsistent move assignment (from y)
@@ -924,7 +924,7 @@
 	Predicted: 1
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 139:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 139
 	Broken copy value semantics
 
 	[shared_counting_allocator<
@@ -969,7 +969,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 154:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 154
 	Broken copy assignment value semantics
 
 	Mutation is not doing anything following copy assignment/ broken value semantics
@@ -1034,7 +1034,7 @@
 	Predicted: 3
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 194:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 194
 	Broken check invariant
 
 	Precondition - for checking regular semantics, x and y are assumed to be different
@@ -1044,7 +1044,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 203:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 203
 	Incorrect copy x allocs
 
 	[shared_counting_allocator<
@@ -1061,7 +1061,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 207:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 207
 	Incorrect copy y allocs
 
 	[shared_counting_allocator<
@@ -1092,7 +1092,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 217:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 217
 	Incorrect copy assign y to x allocs
 
 	[shared_counting_allocator<
@@ -1116,7 +1116,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 221:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 221
 	Incorrect mutation allocs
 	mutation after move assignment
 	[shared_counting_allocator<
@@ -1138,7 +1138,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 238:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 238
 	Incorrect copy x allocs
 
 	[shared_counting_allocator<
@@ -1155,7 +1155,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 242:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 242
 	Incorrect copy y allocs
 
 	[shared_counting_allocator<
@@ -1186,7 +1186,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 252:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 252
 	Incorrect copy assign y to x allocs
 
 	[shared_counting_allocator<
@@ -1210,7 +1210,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 256:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 256
 	Incorrect mutation allocs
 	mutation after move assignment
 	[shared_counting_allocator<
@@ -1232,7 +1232,7 @@
 	Predicted: 1
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 52:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 52
 	Broken equality
 
 	Equality operator is inconsistent
@@ -1242,7 +1242,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 60:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 60
 	Broken inequality
 
 	Equality operator is inconsistent
@@ -1252,7 +1252,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 68:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 68
 	Broken equality
 
 	Unexpected allocation detected for operator==
@@ -1305,7 +1305,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 77:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 77
 	Broken copy
 
 	[shared_counting_allocator<
@@ -1371,7 +1371,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 85:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 85
 	Broken copy alloc
 
 	Inconsistent para-copy construction
@@ -1402,7 +1402,7 @@
 	Predicted: 1
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 93:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 93
 	Broken move
 
 	Inconsistent move construction
@@ -1433,7 +1433,7 @@
 	Predicted: 1
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
 	Broken move alloc
 
 	Inconsistent para-move construction
@@ -1450,7 +1450,7 @@
 	Predicted: 1
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 109:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 109
 	Inefficient move
 
 	[shared_counting_allocator<
@@ -1467,7 +1467,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 117:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 117
 	Broken copy assignment
 
 	Inconsistent copy assignment (from y)
@@ -1498,7 +1498,7 @@
 	Predicted: 5 6 
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 125:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 125
 	Broken move assignment
 
 	Inconsistent move assignment (from y)
@@ -1515,7 +1515,7 @@
 	Predicted: 1
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 139:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 139
 	Broken copy value semantics
 
 	[shared_counting_allocator<
@@ -1567,7 +1567,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 154:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 154
 	Broken copy assignment value semantics
 
 	Mutation is not doing anything following copy assignment/ broken value semantics
@@ -1632,7 +1632,7 @@
 	Predicted: 3
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 194:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 194
 	Broken check invariant
 
 	Precondition - for checking regular semantics, x and y are assumed to be different
@@ -1642,7 +1642,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 203:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 203
 	Incorrect copy x allocs
 
 	[shared_counting_allocator<
@@ -1659,7 +1659,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 207:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 207
 	Incorrect copy y allocs
 
 	[shared_counting_allocator<
@@ -1690,7 +1690,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 217:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 217
 	Incorrect copy assign y to x allocs
 
 	[shared_counting_allocator<
@@ -1714,7 +1714,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 221:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 221
 	Incorrect mutation allocs
 	mutation after move assignment
 	[shared_counting_allocator<
@@ -1743,7 +1743,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 238:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 238
 	Incorrect copy x allocs
 
 	[shared_counting_allocator<
@@ -1760,7 +1760,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 242:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 242
 	Incorrect copy y allocs
 
 	[shared_counting_allocator<
@@ -1791,7 +1791,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 252:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 252
 	Incorrect copy assign y to x allocs
 
 	[shared_counting_allocator<
@@ -1815,7 +1815,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 256:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 256
 	Incorrect mutation allocs
 	mutation after move assignment
 	[shared_counting_allocator<
@@ -1844,7 +1844,7 @@
 	Predicted: 1
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 52:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 52
 	Broken equality
 
 	Equality operator is inconsistent
@@ -1854,7 +1854,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 60:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 60
 	Broken inequality
 
 	Equality operator is inconsistent
@@ -1864,7 +1864,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 68:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 68
 	Broken equality
 
 	Unexpected allocation detected for operator==
@@ -1910,7 +1910,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 77:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 77
 	Broken copy
 
 	[shared_counting_allocator<
@@ -1948,7 +1948,7 @@
 	Predicted: 5 6 
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 85:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 85
 	Broken copy alloc
 
 	Inconsistent para-copy construction
@@ -1979,7 +1979,7 @@
 	Predicted: 1
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 93:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 93
 	Broken move
 
 	Inconsistent move construction
@@ -2010,7 +2010,7 @@
 	Predicted: 1
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
 	Broken move alloc
 
 	Inconsistent para-move construction
@@ -2027,7 +2027,7 @@
 	Predicted: 1
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 109:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 109
 	Inefficient move
 
 	[shared_counting_allocator<
@@ -2044,7 +2044,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 117:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 117
 	Broken copy assignment
 
 	Inconsistent copy assignment (from y)
@@ -2075,7 +2075,7 @@
 	Predicted: 5 6 
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 125:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 125
 	Broken move assignment
 
 	Inconsistent move assignment (from y)
@@ -2092,7 +2092,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 139:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 139
 	Broken copy value semantics
 
 	[shared_counting_allocator<
@@ -2137,7 +2137,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 154:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 154
 	Broken copy assignment value semantics
 
 	Mutation is not doing anything following copy assignment/ broken value semantics
@@ -2202,7 +2202,7 @@
 	Predicted: 3
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 194:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 194
 	Broken check invariant
 
 	Precondition - for checking regular semantics, x and y are assumed to be different
@@ -2212,7 +2212,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 203:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 203
 	Incorrect copy x allocs
 
 	[shared_counting_allocator<
@@ -2229,7 +2229,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 207:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 207
 	Incorrect copy y allocs
 
 	[shared_counting_allocator<
@@ -2260,7 +2260,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 217:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 217
 	Incorrect copy assign y to x allocs
 
 	[shared_counting_allocator<
@@ -2277,7 +2277,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 221:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 221
 	Incorrect mutation allocs
 	mutation after move assignment
 	[shared_counting_allocator<
@@ -2299,7 +2299,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 238:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 238
 	Incorrect copy x allocs
 
 	[shared_counting_allocator<
@@ -2316,7 +2316,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 242:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 242
 	Incorrect copy y allocs
 
 	[shared_counting_allocator<
@@ -2347,7 +2347,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 252:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 252
 	Incorrect copy assign y to x allocs
 
 	[shared_counting_allocator<
@@ -2364,7 +2364,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 256:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 256
 	Incorrect mutation allocs
 	mutation after move assignment
 	[shared_counting_allocator<
@@ -2386,7 +2386,7 @@
 	Predicted: 1
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 52:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 52
 	Broken equality
 
 	Equality operator is inconsistent
@@ -2396,7 +2396,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 60:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 60
 	Broken inequality
 
 	Equality operator is inconsistent
@@ -2406,7 +2406,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 68:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 68
 	Broken equality
 
 	Unexpected allocation detected for operator==
@@ -2466,7 +2466,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 77:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 77
 	Broken copy
 
 	[shared_counting_allocator<
@@ -2525,7 +2525,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 85:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 85
 	Broken copy alloc
 
 	Inconsistent para-copy construction
@@ -2556,7 +2556,7 @@
 	Predicted: 1
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 93:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 93
 	Broken move
 
 	Inconsistent move construction
@@ -2587,7 +2587,7 @@
 	Predicted: 1
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
 	Broken move alloc
 
 	Inconsistent para-move construction
@@ -2604,7 +2604,7 @@
 	Predicted: 1
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 109:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 109
 	Inefficient move
 
 	[shared_counting_allocator<
@@ -2621,7 +2621,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 117:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 117
 	Broken copy assignment
 
 	Inconsistent copy assignment (from y)
@@ -2652,7 +2652,7 @@
 	Predicted: 5 6 
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 125:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 125
 	Broken move assignment
 
 	Inconsistent move assignment (from y)
@@ -2669,7 +2669,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 139:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 139
 	Broken copy value semantics
 
 	[shared_counting_allocator<
@@ -2721,7 +2721,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 154:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 154
 	Broken copy assignment value semantics
 
 	Mutation is not doing anything following copy assignment/ broken value semantics
@@ -2786,7 +2786,7 @@
 	Predicted: 3
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 194:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 194
 	Broken check invariant
 
 	Precondition - for checking regular semantics, x and y are assumed to be different
@@ -2796,7 +2796,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 203:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 203
 	Incorrect copy x allocs
 
 	[shared_counting_allocator<
@@ -2813,7 +2813,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 207:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 207
 	Incorrect copy y allocs
 
 	[shared_counting_allocator<
@@ -2844,7 +2844,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 217:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 217
 	Incorrect copy assign y to x allocs
 
 	[shared_counting_allocator<
@@ -2861,7 +2861,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 221:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 221
 	Incorrect mutation allocs
 	mutation after move assignment
 	[shared_counting_allocator<
@@ -2890,7 +2890,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 238:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 238
 	Incorrect copy x allocs
 
 	[shared_counting_allocator<
@@ -2907,7 +2907,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 242:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 242
 	Incorrect copy y allocs
 
 	[shared_counting_allocator<
@@ -2938,7 +2938,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 252:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 252
 	Incorrect copy assign y to x allocs
 
 	[shared_counting_allocator<
@@ -2955,7 +2955,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 256:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 256
 	Incorrect mutation allocs
 	mutation after move assignment
 	[shared_counting_allocator<
@@ -2984,7 +2984,7 @@
 	Predicted: 1
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 52:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 52
 	Broken equality
 
 	Equality operator is inconsistent
@@ -2994,7 +2994,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 60:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 60
 	Broken inequality
 
 	Equality operator is inconsistent
@@ -3004,7 +3004,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 68:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 68
 	Broken equality
 
 	Unexpected allocation detected for operator==
@@ -3057,7 +3057,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 77:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 77
 	Broken copy
 
 	[shared_counting_allocator<
@@ -3102,7 +3102,7 @@
 	Predicted: 1
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 85:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 85
 	Broken copy alloc
 
 	Inconsistent para-copy construction
@@ -3133,7 +3133,7 @@
 	Predicted: 1
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 93:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 93
 	Broken move
 
 	Inconsistent move construction
@@ -3164,7 +3164,7 @@
 	Predicted: 1
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
 	Broken move alloc
 
 	Inconsistent para-move construction
@@ -3181,7 +3181,7 @@
 	Predicted: 1
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 109:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 109
 	Inefficient move
 
 	[shared_counting_allocator<
@@ -3198,7 +3198,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 117:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 117
 	Broken copy assignment
 
 	Inconsistent copy assignment (from y)
@@ -3236,7 +3236,7 @@
 	Predicted: 5 6 
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 125:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 125
 	Broken move assignment
 
 	Inconsistent move assignment (from y)
@@ -3253,7 +3253,7 @@
 	Predicted: 1
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 139:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 139
 	Broken copy value semantics
 
 	Mutation is not doing anything following move assignment
@@ -3284,7 +3284,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 154:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 154
 	Broken copy assignment value semantics
 
 	Mutation is not doing anything following copy assignment/ broken value semantics
@@ -3349,7 +3349,7 @@
 	Predicted: 3
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 194:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 194
 	Broken check invariant
 
 	Precondition - for checking regular semantics, x and y are assumed to be different
@@ -3359,7 +3359,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 203:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 203
 	Incorrect copy x allocs
 
 	[shared_counting_allocator<
@@ -3376,7 +3376,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 207:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 207
 	Incorrect copy y allocs
 
 	[shared_counting_allocator<
@@ -3407,7 +3407,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 217:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 217
 	Incorrect copy assign y to x allocs
 
 	[shared_counting_allocator<
@@ -3431,7 +3431,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 221:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 221
 	Incorrect mutation allocs
 	mutation after move assignment
 	[shared_counting_allocator<
@@ -3453,7 +3453,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 238:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 238
 	Incorrect copy x allocs
 
 	[shared_counting_allocator<
@@ -3470,7 +3470,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 242:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 242
 	Incorrect copy y allocs
 
 	[shared_counting_allocator<
@@ -3501,7 +3501,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 252:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 252
 	Incorrect copy assign y to x allocs
 
 	[shared_counting_allocator<
@@ -3525,7 +3525,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 256:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 256
 	Incorrect mutation allocs
 	mutation after move assignment
 	[shared_counting_allocator<
@@ -3547,7 +3547,7 @@
 	Predicted: 1
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 52:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 52
 	Broken equality
 
 	Equality operator is inconsistent
@@ -3557,7 +3557,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 60:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 60
 	Broken inequality
 
 	Equality operator is inconsistent
@@ -3567,7 +3567,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 68:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 68
 	Broken equality
 
 	Unexpected allocation detected for operator==
@@ -3634,7 +3634,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 77:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 77
 	Broken copy
 
 	[shared_counting_allocator<
@@ -3700,7 +3700,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 85:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 85
 	Broken copy alloc
 
 	Inconsistent para-copy construction
@@ -3731,7 +3731,7 @@
 	Predicted: 1
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 93:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 93
 	Broken move
 
 	Inconsistent move construction
@@ -3762,7 +3762,7 @@
 	Predicted: 1
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
 	Broken move alloc
 
 	Inconsistent para-move construction
@@ -3779,7 +3779,7 @@
 	Predicted: 1
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 109:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 109
 	Inefficient move
 
 	[shared_counting_allocator<
@@ -3796,7 +3796,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 117:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 117
 	Broken copy assignment
 
 	Inconsistent copy assignment (from y)
@@ -3834,7 +3834,7 @@
 	Predicted: 5 6 
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 125:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 125
 	Broken move assignment
 
 	Inconsistent move assignment (from y)
@@ -3851,7 +3851,7 @@
 	Predicted: 1
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 139:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 139
 	Broken copy value semantics
 
 	Mutation is not doing anything following move assignment
@@ -3889,7 +3889,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 154:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 154
 	Broken copy assignment value semantics
 
 	Mutation is not doing anything following copy assignment/ broken value semantics
@@ -3954,7 +3954,7 @@
 	Predicted: 3
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 194:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 194
 	Broken check invariant
 
 	Precondition - for checking regular semantics, x and y are assumed to be different
@@ -3964,7 +3964,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 203:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 203
 	Incorrect copy x allocs
 
 	[shared_counting_allocator<
@@ -3981,7 +3981,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 207:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 207
 	Incorrect copy y allocs
 
 	[shared_counting_allocator<
@@ -4012,7 +4012,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 217:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 217
 	Incorrect copy assign y to x allocs
 
 	[shared_counting_allocator<
@@ -4036,7 +4036,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 221:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 221
 	Incorrect mutation allocs
 	mutation after move assignment
 	[shared_counting_allocator<
@@ -4065,7 +4065,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 238:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 238
 	Incorrect copy x allocs
 
 	[shared_counting_allocator<
@@ -4082,7 +4082,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 242:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 242
 	Incorrect copy y allocs
 
 	[shared_counting_allocator<
@@ -4113,7 +4113,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 252:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 252
 	Incorrect copy assign y to x allocs
 
 	[shared_counting_allocator<
@@ -4137,7 +4137,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 256:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 256
 	Incorrect mutation allocs
 	mutation after move assignment
 	[shared_counting_allocator<
@@ -4166,7 +4166,7 @@
 	Predicted: 1
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 52:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 52
 	Broken equality
 
 	Equality operator is inconsistent
@@ -4176,7 +4176,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 60:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 60
 	Broken inequality
 
 	Equality operator is inconsistent
@@ -4186,7 +4186,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 68:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 68
 	Broken equality
 
 	Unexpected allocation detected for operator==
@@ -4246,7 +4246,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 77:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 77
 	Broken copy
 
 	[shared_counting_allocator<
@@ -4284,7 +4284,7 @@
 	Predicted: 5 6 
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 85:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 85
 	Broken copy alloc
 
 	Inconsistent para-copy construction
@@ -4315,7 +4315,7 @@
 	Predicted: 1
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 93:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 93
 	Broken move
 
 	Inconsistent move construction
@@ -4346,7 +4346,7 @@
 	Predicted: 1
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
 	Broken move alloc
 
 	Inconsistent para-move construction
@@ -4363,7 +4363,7 @@
 	Predicted: 1
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 109:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 109
 	Inefficient move
 
 	[shared_counting_allocator<
@@ -4380,7 +4380,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 117:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 117
 	Broken copy assignment
 
 	Inconsistent copy assignment (from y)
@@ -4418,7 +4418,7 @@
 	Predicted: 5 6 
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 125:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 125
 	Broken move assignment
 
 	Inconsistent move assignment (from y)
@@ -4435,7 +4435,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 139:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 139
 	Broken copy value semantics
 
 	Mutation is not doing anything following move assignment
@@ -4466,7 +4466,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 154:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 154
 	Broken copy assignment value semantics
 
 	Mutation is not doing anything following copy assignment/ broken value semantics
@@ -4531,7 +4531,7 @@
 	Predicted: 3
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 194:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 194
 	Broken check invariant
 
 	Precondition - for checking regular semantics, x and y are assumed to be different
@@ -4541,7 +4541,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 203:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 203
 	Incorrect copy x allocs
 
 	[shared_counting_allocator<
@@ -4558,7 +4558,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 207:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 207
 	Incorrect copy y allocs
 
 	[shared_counting_allocator<
@@ -4589,7 +4589,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 217:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 217
 	Incorrect copy assign y to x allocs
 
 	[shared_counting_allocator<
@@ -4613,7 +4613,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 221:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 221
 	Incorrect mutation allocs
 	mutation after move assignment
 	[shared_counting_allocator<
@@ -4635,7 +4635,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 238:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 238
 	Incorrect copy x allocs
 
 	[shared_counting_allocator<
@@ -4652,7 +4652,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 242:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 242
 	Incorrect copy y allocs
 
 	[shared_counting_allocator<
@@ -4683,7 +4683,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 252:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 252
 	Incorrect copy assign y to x allocs
 
 	[shared_counting_allocator<
@@ -4707,7 +4707,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 256:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 256
 	Incorrect mutation allocs
 	mutation after move assignment
 	[shared_counting_allocator<
@@ -4729,7 +4729,7 @@
 	Predicted: 1
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 52:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 52
 	Broken equality
 
 	Equality operator is inconsistent
@@ -4739,7 +4739,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 60:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 60
 	Broken inequality
 
 	Equality operator is inconsistent
@@ -4749,7 +4749,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 68:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 68
 	Broken equality
 
 	Unexpected allocation detected for operator==
@@ -4823,7 +4823,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 77:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 77
 	Broken copy
 
 	[shared_counting_allocator<
@@ -4882,7 +4882,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 85:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 85
 	Broken copy alloc
 
 	Inconsistent para-copy construction
@@ -4913,7 +4913,7 @@
 	Predicted: 1
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 93:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 93
 	Broken move
 
 	Inconsistent move construction
@@ -4944,7 +4944,7 @@
 	Predicted: 1
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
 	Broken move alloc
 
 	Inconsistent para-move construction
@@ -4961,7 +4961,7 @@
 	Predicted: 1
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 109:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 109
 	Inefficient move
 
 	[shared_counting_allocator<
@@ -4978,7 +4978,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 117:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 117
 	Broken copy assignment
 
 	Inconsistent copy assignment (from y)
@@ -5016,7 +5016,7 @@
 	Predicted: 5 6 
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 125:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 125
 	Broken move assignment
 
 	Inconsistent move assignment (from y)
@@ -5033,7 +5033,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 139:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 139
 	Broken copy value semantics
 
 	Mutation is not doing anything following move assignment
@@ -5071,7 +5071,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 154:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 154
 	Broken copy assignment value semantics
 
 	Mutation is not doing anything following copy assignment/ broken value semantics
@@ -5136,7 +5136,7 @@
 	Predicted: 3
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 194:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 194
 	Broken check invariant
 
 	Precondition - for checking regular semantics, x and y are assumed to be different
@@ -5146,7 +5146,7 @@
 	Predicted: true
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 203:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 203
 	Incorrect copy x allocs
 
 	[shared_counting_allocator<
@@ -5163,7 +5163,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 207:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 207
 	Incorrect copy y allocs
 
 	[shared_counting_allocator<
@@ -5194,7 +5194,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 217:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 217
 	Incorrect copy assign y to x allocs
 
 	[shared_counting_allocator<
@@ -5218,7 +5218,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 221:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 221
 	Incorrect mutation allocs
 	mutation after move assignment
 	[shared_counting_allocator<
@@ -5247,7 +5247,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 238:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 238
 	Incorrect copy x allocs
 
 	[shared_counting_allocator<
@@ -5264,7 +5264,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 242:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 242
 	Incorrect copy y allocs
 
 	[shared_counting_allocator<
@@ -5295,7 +5295,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 252:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 252
 	Incorrect copy assign y to x allocs
 
 	[shared_counting_allocator<
@@ -5319,7 +5319,7 @@
 	Predicted: 0
 
 
-	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 256:
+	Regular Semantics ../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 256
 	Incorrect mutation allocs
 	mutation after move assignment
 	[shared_counting_allocator<
@@ -5786,29 +5786,29 @@
 	[std::runtime_error]
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 167:
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 167
 	Empty vector check which should pass
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 168:
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 168
 	One element vector check which should pass
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 169:
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 169
 	Multi-element vector comparison which should pass
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 173:
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 173
 	Iterators demarcate identical elements
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 175:
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 175
 	Differing strings
 
 	[std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >]
@@ -5853,18 +5853,18 @@
 	[sequoia::testing::move_only_beast<int, std::__1::allocator<int> >]
 
 	False Positive Failure:
-		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67:
+		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67
 	Performance Test which should pass
 
-	Fast Task duration: 0.00120097s +- 4 * 9.33584e-05
-	Slow Task duration: 0.00218292s +- 4 * 0.000120708 [1.81763; (1.8, 2.1)]
+	Fast Task duration: 0.0012544s +- 4 * 0.00015729
+	Slow Task duration: 0.00243635s +- 4 * 0.000251684 [1.94225; (1.8, 2.1)]
 
 	False Positive Failure:
-		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68:
+		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68
 	Performance Test which should pass
 
-	Fast Task duration: 0.00129293s +- 4 * 0.000118437
-	Slow Task duration: 0.00476592s +- 4 * 0.000515281 [3.68615; (3.6, 4.1)]
+	Fast Task duration: 0.00138307s +- 4 * 1.11031e-05
+	Slow Task duration: 0.00482713s +- 4 * 0.000452753 [3.49015; (3.6, 4.1)]
 
 	False Positive Failure:
 	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 69

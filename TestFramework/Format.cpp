@@ -48,35 +48,23 @@ namespace sequoia::testing
     return s.empty() ? std::string{s} : std::string{space}.append(s);
   }
 
-  /*[[nodiscard]]
-  std::string indent(std::string_view s1, std::string_view s2, std::string_view space)
+  std::string& indent_after(std::string& s1, std::string_view s2, std::string_view space)
   {
-    if(s1.empty() && s2.empty()) return "";
-
-    if(s1.empty()) return std::string{space}.append(s2);
-
-    if(s2.empty()) return std::string{space}.append(s1);
-
-    auto mess{std::string{space}.append(s1)};
-    if(mess.back() != '\n') mess.append("\n");
-
-    return mess.append(space).append(s2);
-    }*/
-
-  void indent_after(std::string& s1, std::string_view s2, std::string_view space)
-  {
-    if(s2.empty()) return;
-
-    if(s1.empty())
+    if(!s2.empty())
     {
-      s1 = std::string{space}.append(s2);
-    }
-    else
-    {
-      if(s1.back() != '\n') s1.append("\n");
+      if(s1.empty())
+      {
+        s1 = std::string{space}.append(s2);
+      }
+      else
+      {
+        if(s1.back() != '\n') s1.append("\n");
       
-      s1.append(space).append(s2);
+        s1.append(space).append(s2);
+      }
     }
+
+    return s1;
   }
 
   
@@ -115,27 +103,23 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string prediction_message(std::string_view obtained, std::string_view predicted, std::string_view advice)
   {
-    std::string mess{};
-
-    mess.append("\tObtained : ").append(obtained).append("\n");
-    mess.append("\tPredicted: ").append(predicted).append("\n\n");
-
+    std::string info{indent("Obtained : ").append(obtained)};
+    indent_after(info,      "Predicted: ").append(predicted).append("\n\n");
+    
     if(!advice.empty())
     {
-      mess.append("\tAdvice: ").append(advice).append("\n\n");
+      indent_after(info, "Advice: ").append(advice).append("\n\n");
     }
 
-    return mess;
+    return info;
   }
   
   [[nodiscard]]
   std::string report_line(std::string_view file, const int line, const std::string_view message)
   {
-    auto s{std::string{file}.append(", Line ").append(std::to_string(line))};
-    if(!message.empty()) s.append(":\n\t").append(message);
+    auto info{std::string{file}.append(", Line ").append(std::to_string(line))};
+    indent_after(info, message).append("\n");
 
-    s.append("\n");
-
-    return s;
+    return info;
   }
 }

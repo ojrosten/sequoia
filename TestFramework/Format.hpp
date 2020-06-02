@@ -24,7 +24,7 @@ namespace sequoia::testing
   //[[nodiscard]]
   //std::string indent(std::string_view s1, std::string_view s2, std::string_view space="\t");
 
-  void indent_after(std::string& s1, std::string_view s2, std::string_view space="\t");
+  std::string& indent_after(std::string& s1, std::string_view s2, std::string_view space="\t");
 
   [[nodiscard]]
   std::string make_message(std::string_view tag, std::string_view currentMessage, std::string_view exceptionMessage, const bool exceptionsDetected);
