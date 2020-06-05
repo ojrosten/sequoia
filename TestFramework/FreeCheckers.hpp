@@ -127,70 +127,6 @@ namespace sequoia::testing
   {
     return serializer<T>::make(value);    
   }
-    
-  template<class T>
-  [[nodiscard]]
-  std::string demangle()
-  {
-    #ifndef _MSC_VER_
-      int status;
-      return abi::__cxa_demangle(typeid(T).name(), 0, 0, &status);
-    #else        
-      return typeid(T).name();
-    #endif
-  }
-
-  /*! \brief Specialize this struct template to customize the way in which type info is generated for a given class.
-      This is particularly useful for class templates where standard de-mangling may be hard to read!
-      
-      \anchor type_demangler_primary
-   */
-
-  template<class T>
-  struct type_demangler
-  {
-    [[nodiscard]]
-    static std::string make()
-    {
-      return demangle<T>();
-    }
-  };
-
-  template<class T, class... U>
-  struct type_list_demangler
-  {
-    [[nodiscard]]
-    static std::string make()
-    {
-      auto mess{type_demangler<T>::make()};
-      if constexpr(sizeof...(U) > 0)
-      {
-        mess += ',';
-        merge(mess, type_list_demangler<U...>::make(), "\n");
-      }
-
-      return mess;
-    }
-  };
-
-  template<class T, class... U>
-  [[nodiscard]]
-  std::string add_type_info(std::string_view description)
-  {
-    auto mess{merge(description, "[", "\n")};
-    if constexpr (sizeof...(U) > 0)
-    {
-      mess.append(type_list_demangler<T>::make());
-    }
-    else
-    {
-      mess.append(type_demangler<T>::make());
-    }
-
-    mess.append("]\n");
-
-    return mess;
-  }
 
   /*! \brief generic function that generates a check from any class providing a static check method.
 
@@ -199,10 +135,18 @@ namespace sequoia::testing
   
   template<class EquivChecker, test_mode Mode, class T, class S, class... U>
   bool general_equivalence_check(std::string_view description, test_logger<Mode>& logger, const T& value, const S& s, const U&... u)
-  {
-    const std::string message{
-      add_type_info<S, U...>(
-        merge(description, "Comparison performed using:\n\t[" + type_demangler<EquivChecker>::make() + "]\n\tWith equivalent types:", "\n"))
+  {    
+    const auto message{
+      [description](){
+        std::string info{description};
+    
+        append_indented(info, "Comparison performed using:");
+        append_indented(info, make_type_info<EquivChecker>());
+        append_indented(info, "With equivalent types:");
+        append_indented(info, make_type_info<S, U...>());
+
+        return info;
+      }()
     };
       
     sentinel<Mode> sentry{logger, message};
@@ -239,17 +183,18 @@ namespace sequoia::testing
                   "Provide either a specialization of detailed_equality_checker or"
                   "ensure operator== exists, together with a specialization of serializer");
 
-    sentinel<Mode> s{logger, add_type_info<T>(description)};
-     
+    const auto info{add_type_info<T>(description)};
+    sentinel<Mode> s{logger, info};
+
     if constexpr(is_equal_to_comparable_v<T>)
     {
       s.log_check();
       if(!(prediction == value))
       {
-        auto message{operator_message(add_type_info<T>(description), "==", "false")};
+        auto message{operator_message(info, "==", "false")};
         if constexpr(!delegate)
         {
-          message.append(prediction_message(to_string(value), to_string(prediction)));
+          append_indented(message, prediction_message(to_string(value), to_string(prediction)));
         }
         logger.log_failure(std::move(message));
       }
@@ -335,7 +280,7 @@ namespace sequoia::testing
     using std::advance;
 
     const auto predictedSize{distance(predictionFirst, predictionLast)};
-    if(check_equality(merge(description, "Container size wrong", "\n"), logger, distance(first, last), predictedSize))
+    if(check_equality(append_indented(description, "Container size wrong"), logger, distance(first, last), predictedSize))
     {
       auto predictionIter{predictionFirst};
       auto iter{first};
@@ -343,7 +288,7 @@ namespace sequoia::testing
       {
         const auto dist{distance(predictionFirst, predictionIter)};
         std::string_view desc{dist ? "" : description};
-        std::string mess{merge(desc, "Element ", "\n")
+        std::string mess{append_indented(desc, "Element ")
             .append(std::to_string(dist)).append(" of range incorrect")};
         if(!dispatch_check(std::move(mess), logger, discriminator, *iter, *predictionIter)) equal = false;
       }
@@ -359,13 +304,22 @@ namespace sequoia::testing
   template<class E, test_mode Mode, class Fn>
   bool check_exception_thrown(std::string_view description, test_logger<Mode>& logger, Fn&& function)
   {
-    const std::string message{"\t" + add_type_info<E>(merge(description, "Expected Exception Type:", "\n"))};
+    auto message{
+      [description](){
+        std::string info{indent(description)};
+        append_indented(info, "Expected Exception Type:");
+        append_indented(info, make_type_info<E>());
+
+        return info;
+      }()
+    };
+
     sentinel<Mode> r{logger, message};
     r.log_check();
     try
     {
       function();
-      logger.log_failure(merge(message, "No exception thrown\n"));
+      logger.log_failure(append_indented(message, "No exception thrown"));
       return false;
     }
     catch(const E&)
@@ -374,12 +328,15 @@ namespace sequoia::testing
     }
     catch(const std::exception& e)
     {
-      logger.log_failure(merge(message, std::string{"Unexpected exception thrown (caught by std::exception&):\n\t\""} + e.what() + "\"\n"));
+      append_indented(message, "Unexpected exception thrown (caught by std::exception&):");
+      append_indented(message, "\"").append(e.what()).append("\"\n");
+        
+      logger.log_failure(message);
       return false;
     }
     catch(...)
     {
-      logger.log_failure(merge(message, "Unknown exception thrown\n"));
+      logger.log_failure(append_indented(message, "Unknown exception thrown\n"));
       return false;
     }
   }

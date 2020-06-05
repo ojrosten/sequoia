@@ -93,17 +93,15 @@ namespace sequoia::testing
         message.append(add_type_info<T>(""));
         if constexpr(reports_for_type_v<Compare, T>)
         {
-          message.append(c.compare.report(value, prediction));
+          append_indented(message, c.compare.report(value, prediction));
         }
         else
         {
-          message.append("\tFuzzy comparison failed\n\tObtained : ")
-            .append(to_string(value))
-            .append("\n\tPredicted: ")
-            .append(to_string(prediction))
-            .append("\n\n");         
+          append_indented(message, "Fuzzy comparison failed");
+          append_indented(message, "Obtained : ").append(to_string(value));
+          append_indented(message, "Predicted: ").append(to_string(prediction));           
         }
-
+        
         logger.log_failure(message);
       }
 
@@ -205,13 +203,12 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string report(const T& value, const T& prediction) const
     {
-      std::string mess{"\tObtained : " };
+      std::string mess{"Obtained : " };
       mess.append(to_string(value))
         .append("\n\tPredicted: ")
         .append(to_string(prediction))              
         .append(" +/- ")
-        .append(to_string(m_Tol))
-        .append("\n");
+        .append(to_string(m_Tol));
 
       return mess;
     }

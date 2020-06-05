@@ -45,8 +45,8 @@ namespace sequoia::testing
     {        
       static_assert(std::is_same_v<std::decay_t<S>, std::decay_t<U>> && std::is_same_v<std::decay_t<T>, std::decay_t<V>>);
 
-      check_equality(merge(description, "First element of pair is incorrect", "\n"), logger, value.first, prediction.first);
-      check_equality(merge(description, "Second element of pair is incorrect", "\n"), logger, value.second, prediction.second);
+      check_equality(append_indented(description, "First element of pair is incorrect"), logger, value.first, prediction.first);
+      check_equality(append_indented(description, "Second element of pair is incorrect"), logger, value.second, prediction.second);
     }
   };
 
@@ -61,7 +61,7 @@ namespace sequoia::testing
       if constexpr(I < sizeof...(T))
       {
         const std::string message{"Element " + std::to_string(I) + " of tuple incorrect"};
-        check_equality(merge(description, message, "\n"), logger, std::get<I>(value), std::get<I>(prediction));
+        check_equality(append_indented(description, message), logger, std::get<I>(value), std::get<I>(prediction));
         check_tuple_elements<Mode, I+1>(description, logger, value, prediction);
       }
     }

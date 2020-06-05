@@ -26,10 +26,6 @@
 #include <fstream>
 #include <array>
 
-#ifndef _MSC_VER_
-  #include <cxxabi.h>
-#endif
-
 namespace sequoia::testing
 {
   /*! \brief Holds details of the file to which the last successfully completed test is registered.
@@ -108,15 +104,21 @@ namespace sequoia::testing
       logger.decrement_depth();
 
       if(!logger.depth())
-      {
+      {        
         const bool failure{
-               ((Mode == test_mode::false_positive) && !logger.failures())
-            || ((Mode != test_mode::false_positive) &&  logger.failures())
+               ((Mode == test_mode::false_positive) && !failure_detected())
+            || ((Mode != test_mode::false_positive) &&  failure_detected())
         };
+
+        if(failure_detected()) logger.end_message();
 
         auto messageMaker{
           [&logger](){
-            return testing::merge("\tFalse Positive Failure:", logger.current_message(), "\n");
+            auto mess{indent("False Positive Failure:")};
+            append_indented(mess, logger.current_message());
+            end_block(mess, 3);
+
+            return mess;
           }
         };
 
@@ -126,11 +128,8 @@ namespace sequoia::testing
         }
         else if constexpr(Mode == test_mode::false_negative)
         {
-          logger.append_to_versioned_output(messageMaker().append("\n"));
+          logger.append_to_versioned_output(messageMaker());
         }
-
-          
-        logger.reset_failures();
 
         if(auto file{output_manager::recovery_file()}; !file.empty())
         {
@@ -150,7 +149,7 @@ namespace sequoia::testing
     sentinel& operator=(sentinel&&)      = delete;
 
     [[nodiscard]]
-      std::string merge(std::string_view description, std::string_view details) const
+    std::string merge(std::string_view description, std::string_view details) const
     {
       std::string_view desc{checks_registered() && failure_detected() ? "" : description};
       return testing::merge(desc, details, "\n");
@@ -206,20 +205,7 @@ namespace sequoia::testing
       ++m_Failures;
       m_CurrentMessage = message;
 
-      auto append{
-        [&currentMessage{m_CurrentMessage}](std::string& output) {
-          output.append(currentMessage).append("\n");
-        }
-      };
-
-      if constexpr (Mode != test_mode::false_positive)
-      {
-        append(m_FailureMessages);
-      }
-      else
-      {
-        append(m_VersionedOutput);
-      }
+      update_output(m_CurrentMessage, 2);
     }
 
     void log_performance_failure(std::string_view message)
@@ -308,8 +294,6 @@ namespace sequoia::testing
       ++m_PerformanceChecks;
     }
 
-    void reset_failures() noexcept { m_Failures = 0u; }
-
     void log_top_level_failure(std::string_view message)
     {
       ++m_TopLevelFailures;
@@ -324,6 +308,30 @@ namespace sequoia::testing
     void append_to_versioned_output(std::string message)
     {
       m_VersionedOutput.append(message);
+    }
+
+    void end_message()
+    {
+      if(!m_CurrentMessage.empty()) update_output("", 3);
+    }
+
+    void update_output(std::string_view message, std::size_t gap)
+    {
+      auto append{
+        [message, gap](std::string& output) {
+          output.append(message);
+          end_block(output, gap);
+        }
+      };
+
+      if constexpr (Mode != test_mode::false_positive)
+      {
+        append(m_FailureMessages);
+      }
+      else
+      {
+        append(m_VersionedOutput);
+      }
     }
   };
 

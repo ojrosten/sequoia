@@ -43,49 +43,72 @@ namespace sequoia::testing
     return mess;
   }
 
-  std::string indent(std::string_view s, std::string_view space)
+  std::string indent(std::string_view s, std::string_view gap)
   {
-    return s.empty() ? std::string{s} : std::string{space}.append(s);
+    return s.empty() ? std::string{s} : std::string{gap}.append(s);
   }
 
-  std::string& indent_after(std::string& s1, std::string_view s2, std::string_view space)
+  std::string& append_indented(std::string& s1, std::string_view s2, std::string_view gap)
   {
     if(!s2.empty())
     {
       if(s1.empty())
       {
-        s1 = std::string{space}.append(s2);
+        s1 = s2;
       }
       else
       {
-        if(s1.back() != '\n') s1.append("\n");
-      
-        s1.append(space).append(s2);
+        s1.append("\n").append(gap).append(s2);
       }
     }
 
     return s1;
   }
 
+  [[nodiscard]]
+  std::string append_indented(std::string_view s1, std::string_view s2, std::string_view gap)
+  {
+    std::string s{s1};
+    append_indented(s, s2, gap);
+
+    return s;
+  }
+
+  void end_block(std::string& s, const std::size_t gap)
+  {    
+    if(!s.empty())
+    {
+      std::size_t n{};
+      for(; n < std::min(s.size(), gap); ++n)
+      {
+        if(s[s.size() - 1 - n] != '\n') break;
+      }
+
+      for(; n<gap; ++n)
+      {
+        s.append("\n");
+      }
+    }
+  }
   
   [[nodiscard]]
   std::string make_message(std::string_view tag, std::string_view currentMessage, std::string_view exceptionMessage, const bool exceptionsDetected)  
   {
     auto mess{indent("Error -- ").append(tag).append(" Exception:")};
-    indent_after(mess, exceptionMessage);
+    append_indented(mess, exceptionMessage);
     mess.append("\n");
         
     if(exceptionsDetected)
     {
-      indent_after(mess, "Exception thrown during last check");
+      append_indented(mess, "Exception thrown during last check");
     }
     else
     {
-      indent_after(mess, "Exception thrown after check completed");
+      append_indented(mess, "Exception thrown after check completed");
     }
 
-    indent_after(mess, "Last Recorded Message:");
-    indent_after(mess, currentMessage);
+    append_indented(mess, "Last Recorded Message:");
+    append_indented(mess, currentMessage);
  
     return mess;
   }
@@ -94,8 +117,8 @@ namespace sequoia::testing
   std::string operator_message(std::string_view description, std::string_view op, std::string_view opRetVal)
   {
     std::string info{indent(description)};
-    indent_after(info, "operator");
-    info.append(op).append(" returned ").append(opRetVal).append("\n");
+    append_indented(info, "operator");
+    info.append(op).append(" returned ").append(opRetVal);
 
     return info;
   }
@@ -103,12 +126,12 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string prediction_message(std::string_view obtained, std::string_view predicted, std::string_view advice)
   {
-    std::string info{indent("Obtained : ").append(obtained)};
-    indent_after(info,      "Predicted: ").append(predicted).append("\n\n");
+    auto info{std::string{"Obtained : "}.append(obtained)};
+    append_indented(info, "Predicted: ").append(predicted);
     
     if(!advice.empty())
     {
-      indent_after(info, "Advice: ").append(advice).append("\n\n");
+      append_indented(info, "Advice: ").append(advice);
     }
 
     return info;
@@ -118,7 +141,7 @@ namespace sequoia::testing
   std::string report_line(std::string_view file, const int line, const std::string_view message)
   {
     auto info{std::string{file}.append(", Line ").append(std::to_string(line))};
-    indent_after(info, message).append("\n");
+    append_indented(info, message).append("\n");
 
     return info;
   }
