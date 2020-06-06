@@ -20,7 +20,7 @@ namespace sequoia::testing::impl
   void do_check_copy_assign(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, T& z, const T& y, const Args&... args)
   {
     z = y;
-    check_equality(sentry.merge(description, "Inconsistent copy assignment (from y)"), sentry.logger(), z, y);
+    check_equality(sentry.add_details(description, "Inconsistent copy assignment (from y)"), sentry.logger(), z, y);
 
     if constexpr(Actions::has_post_copy_assign_action)
     {
@@ -46,7 +46,7 @@ namespace sequoia::testing::impl
     {
       actions.post_copy_action(description, sentry, z, T{y}, args...);
     }
-    check_equality(sentry.merge(description, "Inconsistent copy constructor (x)"), sentry.logger(), z, x);
+    check_equality(sentry.add_details(description, "Inconsistent copy constructor (x)"), sentry.logger(), z, x);
 
     // z = y
     check_copy_assign(description, sentry, actions, z, y, args...);
@@ -67,14 +67,14 @@ namespace sequoia::testing::impl
       T v{y};
       yMutator(v);
 
-      check(sentry.merge(description, "Either mutation is not doing anything following copy construction or value semantics are broken, with mutation of an object also changing the object from which it was copied"), sentry.logger(), v != y);
+      check(sentry.add_details(description, "Either mutation is not doing anything following copy construction or value semantics are broken, with mutation of an object also changing the object from which it was copied"), sentry.logger(), v != y);
 
       v = y;
-      check_equality(sentry.merge(description, "Inconsistent copy assignment (from mutated y)"), sentry.logger(), v, y);
+      check_equality(sentry.add_details(description, "Inconsistent copy assignment (from mutated y)"), sentry.logger(), v, y);
 
       yMutator(v);
 
-      check(sentry.merge(description, "Mutation is not doing anything following copy assignment/ broken value semantics"), sentry.logger(), v != y);
+      check(sentry.add_details(description, "Mutation is not doing anything following copy assignment/ broken value semantics"), sentry.logger(), v != y);
     }
 
     return true;

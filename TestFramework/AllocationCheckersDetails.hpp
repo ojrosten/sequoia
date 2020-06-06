@@ -26,7 +26,7 @@ namespace sequoia::testing::impl
   static void check_allocation(std::string_view description, std::string_view detail, sentinel<Mode>& sentry, const Container& container, const basic_allocation_info<Container, Allocator, Predictions>& info, const int previous, const int prediction)
   {
     const auto current{info.count(container)};      
-    auto message{sentry.merge(description, detail)};
+    auto message{sentry.add_details(description, detail)};
 
     check_equality(std::move(message), sentry.logger(), current - previous, prediction);
   }
@@ -361,12 +361,12 @@ namespace sequoia::testing::impl
   template<test_mode Mode, class Container, class Mutator, class... Allocators, class... Predictions>
   void check_mutation_after_swap(std::string_view description, sentinel<Mode>& sentry, Container& lhs, const Container& rhs, const Container& y, Mutator yMutator, dual_allocation_checker<Container, Allocators, Predictions>... checkers)
   {
-    if(check(sentry.merge(description, "Mutation after swap pre-condition violated"), sentry.logger(), lhs == y))
+    if(check(sentry.add_details(description, "Mutation after swap pre-condition violated"), sentry.logger(), lhs == y))
     {    
       yMutator(lhs);
-      check_mutation_allocation(sentry.merge(description, "Unexpected allocation detected following mutation after swap"), sentry, lhs, rhs, checkers...);
+      check_mutation_allocation(sentry.add_details(description, "Unexpected allocation detected following mutation after swap"), sentry, lhs, rhs, checkers...);
 
-      check(sentry.merge(description, "Mutation is not doing anything following copy then swap"), sentry.logger(), lhs != y);
+      check(sentry.add_details(description, "Mutation is not doing anything following copy then swap"), sentry.logger(), lhs != y);
     }
   }
 
@@ -484,13 +484,13 @@ namespace sequoia::testing::impl
     template<test_mode Mode, class Container, class... Allocators, class... Predictions>
     static void post_equality_action(std::string_view description, sentinel<Mode>& sentry, const Container& x, const Container& y, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
     {
-      check_no_allocation(sentry.merge(description, "Unexpected allocation detected for operator=="), sentry, x, y, checkers...);
+      check_no_allocation(sentry.add_details(description, "Unexpected allocation detected for operator=="), sentry, x, y, checkers...);
     }
 
     template<test_mode Mode, class Container, class... Allocators, class... Predictions>
     static void post_nequality_action(std::string_view description, sentinel<Mode>& sentry, const Container& x, const Container& y, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
     {
-      check_no_allocation(sentry.merge(description, "Unexpected allocation detected for operator!="), sentry, x, y, checkers...);
+      check_no_allocation(sentry.add_details(description, "Unexpected allocation detected for operator!="), sentry, x, y, checkers...);
     }
 
     template<test_mode Mode, class Container, class... Allocators, class... Predictions>
@@ -552,7 +552,7 @@ namespace sequoia::testing::impl
     check_mutation_allocation(merge(description, std::move(mess)), sentry, u, checkers...);
 
     mess = merge("Mutation is not doing anything following move", moveType);
-    check(sentry.merge(description, std::move(mess)), sentry.logger(), u != y);    
+    check(sentry.add_details(description, std::move(mess)), sentry.logger(), u != y);    
   }
 
   template<test_mode Mode, class Container, class Mutator, class... Checkers, std::size_t... I>

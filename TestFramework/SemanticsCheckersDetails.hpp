@@ -77,7 +77,7 @@ namespace sequoia::testing::impl
     template<test_mode Mode, class T, class... Allocators>
     static bool check_preconditions(std::string_view description, sentinel<Mode>& sentry, const T& x, const T& y)
     {
-      return check(sentry.merge(description, "Precondition - for checking regular semantics, x and y are assumed to be different"), sentry.logger(), x != y);
+      return check(sentry.add_details(description, "Precondition - for checking regular semantics, x and y are assumed to be different"), sentry.logger(), x != y);
     }
   };
   
@@ -97,7 +97,7 @@ namespace sequoia::testing::impl
   template<test_mode Mode, class Actions, class T, class... Args>
   bool do_check_preconditions(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, const T& x, const T& y, const Args&... args)
   {
-    if(!check(sentry.merge(description, "Equality operator is inconsistent"), sentry.logger(), x == x))
+    if(!check(sentry.add_details(description, "Equality operator is inconsistent"), sentry.logger(), x == x))
       return false;
 
     if constexpr (Actions::has_post_equality_action)
@@ -105,7 +105,7 @@ namespace sequoia::testing::impl
       actions.post_equality_action(description, sentry, x, y, args...);
     }
     
-    if(!check(sentry.merge(description, "Inequality operator is inconsistent"), sentry.logger(), !(x != x)))
+    if(!check(sentry.add_details(description, "Inequality operator is inconsistent"), sentry.logger(), !(x != x)))
       return false;
 
     if constexpr (Actions::has_post_nequality_action)
@@ -128,7 +128,7 @@ namespace sequoia::testing::impl
   void do_check_move_assign(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, T& z, T&& y, const T& yClone, Mutator yMutator, const Args&... args)
   {
     z = std::move(y);
-    check_equality(sentry.merge(description, "Inconsistent move assignment (from y)"), sentry.logger(), z, yClone);
+    check_equality(sentry.add_details(description, "Inconsistent move assignment (from y)"), sentry.logger(), z, yClone);
 
     if constexpr(Actions::has_post_move_assign_action)
     {
@@ -150,8 +150,8 @@ namespace sequoia::testing::impl
     using std::swap;
     swap(x, y);
 
-    check_equality(sentry.merge(description, "Inconsistent Swap (y)"), sentry.logger(), y, xClone);
-    check_equality(sentry.merge(description, "Inconsistent Swap (x)"), sentry.logger(), x, yClone);
+    check_equality(sentry.add_details(description, "Inconsistent Swap (y)"), sentry.logger(), y, xClone);
+    check_equality(sentry.add_details(description, "Inconsistent Swap (x)"), sentry.logger(), x, yClone);
     
     if constexpr(Actions::has_post_swap_action)
     {
@@ -171,7 +171,7 @@ namespace sequoia::testing::impl
   T do_check_move_construction(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, T&& z, const T& y, const Args&... args)
   {
     T w{std::move(z)};
-    check_equality(sentry.merge(description, "Inconsistent move construction"), sentry.logger(), w, y);
+    check_equality(sentry.add_details(description, "Inconsistent move construction"), sentry.logger(), w, y);
 
     if constexpr(Actions::has_post_move_action)
     {

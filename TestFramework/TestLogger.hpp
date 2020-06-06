@@ -149,10 +149,10 @@ namespace sequoia::testing
     sentinel& operator=(sentinel&&)      = delete;
 
     [[nodiscard]]
-    std::string merge(std::string_view description, std::string_view details) const
+    std::string add_details(std::string_view description, std::string_view details) const
     {
       std::string_view desc{checks_registered() && failure_detected() ? "" : description};
-      return testing::merge(desc, details, "\n");
+      return append_indented(desc, details);
     }
 
     void log_performance_check()

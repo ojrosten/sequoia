@@ -22,9 +22,9 @@ namespace sequoia::testing::impl
     if(!check_preconditions(description, sentry, actions, x, y, args...))
       return;
 
-    if(!check(sentry.merge(description, "Precondition - for checking regular semantics, x and xClone are assumed to be equal"), sentry.logger(), x == xClone)) return;
+    if(!check(sentry.add_details(description, "Precondition - for checking regular semantics, x and xClone are assumed to be equal"), sentry.logger(), x == xClone)) return;
 
-    if(!check(sentry.merge(description, "Precondition - for checking regular semantics, y and yClone are assumed to be equal"), sentry.logger(), y == yClone)) return;
+    if(!check(sentry.add_details(description, "Precondition - for checking regular semantics, y and yClone are assumed to be equal"), sentry.logger(), y == yClone)) return;
 
     T z{check_move_construction(description, sentry, actions, std::move(x), xClone, args...)};    
 
@@ -32,8 +32,8 @@ namespace sequoia::testing::impl
     {
       using std::swap;
       swap(z, y);
-      check_equality(sentry.merge(description, "Inconsistent Swap (y)"), sentry.logger(), y, xClone);
-      check_equality(sentry.merge(description, "Inconsistent Swap (x)"), sentry.logger(), z, yClone);
+      check_equality(sentry.add_details(description, "Inconsistent Swap (y)"), sentry.logger(), y, xClone);
+      check_equality(sentry.add_details(description, "Inconsistent Swap (x)"), sentry.logger(), z, yClone);
 
       check_move_assign(description, sentry, actions, y, std::move(z), yClone, std::move(m), args...);
     }
