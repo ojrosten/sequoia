@@ -17,25 +17,25 @@ namespace sequoia::testing
     template<test_mode Mode, class Edge, class Prediction>
     void check_partial(std::string_view description, test_logger<Mode>& logger, const Edge& edge, const Prediction& prediction)
     {
-      check_equality(merge(description, "Target node incorrect"), logger, edge.target_node(), prediction.target_node());
+      check_equality(append_indented(description, "Target node incorrect"), logger, edge.target_node(), prediction.target_node());
     
       if constexpr (!std::is_empty_v<typename Edge::weight_type>)
       {
-        check_equality(merge(description, "Weight incorrect"), logger, edge.weight(), prediction.weight());
+        check_equality(append_indented(description, "Weight incorrect"), logger, edge.weight(), prediction.weight());
       }
     }
 
     template<test_mode Mode, class Edge, class Prediction>
     void check_complementary(std::string_view description, test_logger<Mode>& logger, const Edge& edge, const Prediction& prediction)
     {
-      check_equality(merge(description, "Complementary index incorrect"), logger, edge.complementary_index(), prediction.complementary_index());
+      check_equality(append_indented(description, "Complementary index incorrect"), logger, edge.complementary_index(), prediction.complementary_index());
     }
   
     template<test_mode Mode, class Edge, class Prediction>
     void check_source(std::string_view description, test_logger<Mode>& logger, const Edge& edge, const Prediction& prediction)
     {
-      check_equality(merge(description, "Host node incorrect"), logger, edge.source_node(), prediction.source_node());
-      check_equality(merge(description, "Inversion flag incorrect"), logger, edge.inverted(), prediction.inverted()); 
+      check_equality(append_indented(description, "Host node incorrect"), logger, edge.source_node(), prediction.source_node());
+      check_equality(append_indented(description, "Inversion flag incorrect"), logger, edge.inverted(), prediction.inverted()); 
 
     }
   }

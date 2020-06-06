@@ -548,10 +548,10 @@ namespace sequoia::testing::impl
   void check_mutation_after_move(std::string_view description, std::string_view moveType, sentinel<Mode>& sentry, Container& u, const Container& y, Mutator yMutator, Checkers... checkers)
   {
     yMutator(u);
-    auto mess{merge("mutation after move", moveType)};
-    check_mutation_allocation(merge(description, std::move(mess)), sentry, u, checkers...);
+    auto mess{append_indented("mutation after move", moveType)};
+    check_mutation_allocation(append_indented(description, std::move(mess)), sentry, u, checkers...);
 
-    mess = merge("Mutation is not doing anything following move", moveType);
+    mess = append_indented("Mutation is not doing anything following move", moveType);
     check(sentry.add_details(description, std::move(mess)), sentry.logger(), u != y);    
   }
 

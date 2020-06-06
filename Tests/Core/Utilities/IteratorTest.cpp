@@ -215,7 +215,7 @@ namespace sequoia::testing
     using value_type = typename std::iterator_traits<Iter>::value_type;
     using deref_pol = typename CustomIter::dereference_policy;
 
-    if(!check_equality(LINE(merge(message, "Contract violated")), distance(begin, end), long{3}))
+    if(!check_equality(LINE(append_indented(message, "Contract violated")), distance(begin, end), long{3}))
       return;
     
     CustomIter i{begin, args...};
@@ -231,16 +231,16 @@ namespace sequoia::testing
     check_equality(LINE(message), i[1], begin[1] * scale);
     check_equality(LINE(message), i[2], begin[2] * scale);
 
-    check_equality(LINE(merge(message, "Operator ->")), i.operator->(), pBegin);
+    check_equality(LINE(append_indented(message, "Operator ->")), i.operator->(), pBegin);
 
     CustomIter j{end, args...};      
-    check_semantics(LINE(merge(message, "Regular semantics; one iterator at end")), i, j);
+    check_semantics(LINE(append_indented(message, "Regular semantics; one iterator at end")), i, j);
       
     check(LINE(message), i < j);
     check(LINE(message), j > i);
     check(LINE(message), i <= j);
     check(LINE(message), j >= i);
-    check_equality(LINE(merge(message, "Check non-zero distance")), distance(i, j), distance(begin, end));
+    check_equality(LINE(append_indented(message, "Check non-zero distance")), distance(i, j), distance(begin, end));
 
     check_equality(LINE(message), *++i, begin[1] * scale);
     check_equality(LINE(message), *i++, begin[1] * scale);
@@ -256,7 +256,7 @@ namespace sequoia::testing
     j = i - 1;
     check_equality(LINE(message), *i, begin[1] * scale);
     check_equality(LINE(message), *j, begin[0] * scale);
-    check_semantics(LINE(merge(message, "Regular semantics")), i, j);
+    check_semantics(LINE(append_indented(message, "Regular semantics")), i, j);
 
     i = j + 2;
     check_equality(LINE(message), *i, begin[2] * scale);
@@ -268,6 +268,6 @@ namespace sequoia::testing
     check_equality(LINE(message), *j, begin[1] * scale);
 
     check(LINE(message), i == j);
-    check_equality<int64_t>(LINE(merge(message, "Check for distance of zero")), distance(i, j), 0);
+    check_equality<int64_t>(LINE(append_indented(message, "Check for distance of zero")), distance(i, j), 0);
   }
 }

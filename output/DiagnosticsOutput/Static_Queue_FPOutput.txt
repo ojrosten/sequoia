@@ -1,4 +1,4 @@
-	../Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 31:
+	../Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 31
 	Empty queue must be empty
 
 	[bool]
@@ -7,7 +7,7 @@
 	Predicted: true
 
 
-	../Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 32:
+	../Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 32
 	Empty queue must have size zero
 
 	[unsigned long]
@@ -16,7 +16,7 @@
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 42:
+	../Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 42
 	Empty queue versus populated queue
 
 	[sequoia::data_structures::static_queue<int, 1ul>]
@@ -28,20 +28,17 @@
 	Obtained : true
 	Predicted: false
 
-
 	Inconsistent size
 	[unsigned long]
 	operator== returned false
 	Obtained : 0
 	Predicted: 1
 
-
 	Hidden state
 	[bool]
 	operator== returned false
 	Obtained : false
 	Predicted: true
-
 
 	Hidden state, symmetry of operator==
 	[bool]
@@ -50,7 +47,7 @@
 	Predicted: true
 
 
-	../Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 45:
+	../Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 45
 	Differing elements
 
 	[sequoia::data_structures::static_queue<int, 1ul>]
@@ -62,20 +59,17 @@
 	Obtained : 2
 	Predicted: 1
 
-
 	Inconsistent back element
 	[int]
 	operator== returned false
 	Obtained : 2
 	Predicted: 1
 
-
 	Hidden state
 	[bool]
 	operator== returned false
 	Obtained : false
 	Predicted: true
-
 
 	Hidden state, symmetry of operator==
 	[bool]
@@ -84,7 +78,7 @@
 	Predicted: true
 
 
-	../Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 48:
+	../Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 48
 	Empty queue versus populated queue
 
 	[sequoia::data_structures::static_queue<int, 1ul>]
@@ -96,20 +90,17 @@
 	Obtained : true
 	Predicted: false
 
-
 	Inconsistent size
 	[unsigned long]
 	operator== returned false
 	Obtained : 0
 	Predicted: 1
 
-
 	Hidden state
 	[bool]
 	operator== returned false
 	Obtained : false
 	Predicted: true
-
 
 	Hidden state, symmetry of operator==
 	[bool]

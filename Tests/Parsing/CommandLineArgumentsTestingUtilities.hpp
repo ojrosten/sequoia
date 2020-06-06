@@ -22,8 +22,8 @@ namespace sequoia::testing
     {
       const bool consistent{((operation.fn != nullptr) && (prediction.fn != nullptr))
           || ((operation.fn == nullptr) && (prediction.fn == nullptr))};
-      testing::check(merge(description, "Existence of function objects differes"), logger, consistent);
-      check_equality(merge(description, "Operation Parameters differ"), logger, operation.parameters, prediction.parameters);
+      testing::check(append_indented(description, "Existence of function objects differes"), logger, consistent);
+      check_equality(append_indented(description, "Operation Parameters differ"), logger, operation.parameters, prediction.parameters);
     }
   };
 

@@ -20,15 +20,15 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::string merge(std::string_view s1, std::string_view s2, std::string_view sep=" ");
-
-  [[nodiscard]]
   std::string indent(std::string_view s, std::string_view gap="\t");
 
   std::string& append_indented(std::string& s1, std::string_view s2, std::string_view gap="\t");
 
   [[nodiscard]]
   std::string append_indented(std::string_view s1, std::string_view s2, std::string_view gap="\t");
+
+  [[nodiscard]]
+  std::string emphasise(std::string_view s);
 
   void end_block(std::string& s, const std::size_t gap);
 

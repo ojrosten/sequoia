@@ -101,7 +101,7 @@ namespace sequoia::testing
 
     auto make_message{
       [](std::string_view message) {
-        return merge(demangle<Traverser>(), message);
+        return append_indented(demangle<Traverser>(), message);
       }
     };
 

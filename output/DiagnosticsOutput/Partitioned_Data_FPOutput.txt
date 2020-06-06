@@ -1,4 +1,4 @@
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
 	Empty data inequivalent to non-empty data 
 
 	Comparison performed using:
@@ -11,8 +11,7 @@
 	Obtained : 0
 	Predicted: 1
 
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
 	Empty data inequivalent to non-empty data 
 
 	Comparison performed using:
@@ -26,7 +25,7 @@
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
 	Non-empty data inequivalent to empty data 
 
 	Comparison performed using:
@@ -39,8 +38,7 @@
 	Obtained : 1
 	Predicted: 0
 
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
 	Non-empty data inequivalent to empty data 
 
 	Comparison performed using:
@@ -54,8 +52,7 @@
 	Obtained : 1
 	Predicted: 0
 
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
 	Non-empty data inequivalent to empty data 
 
 	Comparison performed using:
@@ -70,7 +67,7 @@
 	Predicted: 0
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
 	Single partitions holding different elements compare not equal
 
 	Comparison performed using:
@@ -84,8 +81,7 @@
 	Obtained : 2
 	Predicted: 1
 
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
 	Single partitions holding different elements compare not equal
 
 	Comparison performed using:
@@ -100,7 +96,7 @@
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57
 	Identical elements divided between different partitions compare notequal
 
 	Comparison performed using:
@@ -114,7 +110,7 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58
 	Identical elements divided between different partitions compare notequal
 
 	Comparison performed using:
@@ -139,7 +135,6 @@
 	Obtained : 0
 	Predicted: 1
 
-
 	Number of partitions different
 	[unsigned long]
 	operator== returned false
@@ -152,47 +147,48 @@
 	[sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::independent<int> > >]
 	operator== returned false
 
-	Partition 0 iterator (const)
+	Partition 0
+	iterator (const)
 	Element 0 of range incorrect
 	[int]
 	operator== returned false
 	Obtained : 1
 	Predicted: 2
 
-
-	Partition 0 r_iterator (const)
+	Partition 0
+	r_iterator (const)
 	Element 0 of range incorrect
 	[int]
 	operator== returned false
 	Obtained : 1
 	Predicted: 2
 
-
-	Partition 0 c_iterator
+	Partition 0
+	c_iterator
 	Element 0 of range incorrect
 	[int]
 	operator== returned false
 	Obtained : 1
 	Predicted: 2
 
-
-	Partition 0 cr_iterator
+	Partition 0
+	cr_iterator
 	Element 0 of range incorrect
 	[int]
 	operator== returned false
 	Obtained : 1
 	Predicted: 2
 
-
-	Partition 0 iterator
+	Partition 0
+	iterator
 	Element 0 of range incorrect
 	[int]
 	operator== returned false
 	Obtained : 1
 	Predicted: 2
 
-
-	Partition 0 r_iterator
+	Partition 0
+	r_iterator
 	Element 0 of range incorrect
 	[int]
 	operator== returned false
@@ -212,7 +208,7 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
 	Size 0 should not compare equal to 1
 
 	[unsigned long]
@@ -221,7 +217,7 @@
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65
 	Size 1 should not compare equal to 0
 
 	[unsigned long]
@@ -518,7 +514,7 @@
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
 	Empty data inequivalent to non-empty data 
 
 	Comparison performed using:
@@ -531,8 +527,7 @@
 	Obtained : 0
 	Predicted: 1
 
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
 	Empty data inequivalent to non-empty data 
 
 	Comparison performed using:
@@ -546,7 +541,7 @@
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
 	Non-empty data inequivalent to empty data 
 
 	Comparison performed using:
@@ -559,8 +554,7 @@
 	Obtained : 1
 	Predicted: 0
 
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
 	Non-empty data inequivalent to empty data 
 
 	Comparison performed using:
@@ -574,8 +568,7 @@
 	Obtained : 1
 	Predicted: 0
 
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
 	Non-empty data inequivalent to empty data 
 
 	Comparison performed using:
@@ -590,7 +583,7 @@
 	Predicted: 0
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
 	Single partitions holding different elements compare not equal
 
 	Comparison performed using:
@@ -604,8 +597,7 @@
 	Obtained : 2
 	Predicted: 1
 
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
 	Single partitions holding different elements compare not equal
 
 	Comparison performed using:
@@ -620,7 +612,7 @@
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57
 	Identical elements divided between different partitions compare notequal
 
 	Comparison performed using:
@@ -634,7 +626,7 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58
 	Identical elements divided between different partitions compare notequal
 
 	Comparison performed using:
@@ -659,7 +651,6 @@
 	Obtained : 0
 	Predicted: 1
 
-
 	Number of partitions different
 	[unsigned long]
 	operator== returned false
@@ -672,47 +663,48 @@
 	[sequoia::data_structures::bucketed_storage<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::data_sharing::shared<int> > >]
 	operator== returned false
 
-	Partition 0 iterator (const)
+	Partition 0
+	iterator (const)
 	Element 0 of range incorrect
 	[int]
 	operator== returned false
 	Obtained : 1
 	Predicted: 2
 
-
-	Partition 0 r_iterator (const)
+	Partition 0
+	r_iterator (const)
 	Element 0 of range incorrect
 	[int]
 	operator== returned false
 	Obtained : 1
 	Predicted: 2
 
-
-	Partition 0 c_iterator
+	Partition 0
+	c_iterator
 	Element 0 of range incorrect
 	[int]
 	operator== returned false
 	Obtained : 1
 	Predicted: 2
 
-
-	Partition 0 cr_iterator
+	Partition 0
+	cr_iterator
 	Element 0 of range incorrect
 	[int]
 	operator== returned false
 	Obtained : 1
 	Predicted: 2
 
-
-	Partition 0 iterator
+	Partition 0
+	iterator
 	Element 0 of range incorrect
 	[int]
 	operator== returned false
 	Obtained : 1
 	Predicted: 2
 
-
-	Partition 0 r_iterator
+	Partition 0
+	r_iterator
 	Element 0 of range incorrect
 	[int]
 	operator== returned false
@@ -732,7 +724,7 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
 	Size 0 should not compare equal to 1
 
 	[unsigned long]
@@ -741,7 +733,7 @@
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65
 	Size 1 should not compare equal to 0
 
 	[unsigned long]
@@ -1038,7 +1030,7 @@
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
 	Empty data inequivalent to non-empty data 
 
 	Comparison performed using:
@@ -1051,8 +1043,7 @@
 	Obtained : 0
 	Predicted: 1
 
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
 	Empty data inequivalent to non-empty data 
 
 	Comparison performed using:
@@ -1066,7 +1057,7 @@
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
 	Non-empty data inequivalent to empty data 
 
 	Comparison performed using:
@@ -1079,8 +1070,7 @@
 	Obtained : 1
 	Predicted: 0
 
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
 	Non-empty data inequivalent to empty data 
 
 	Comparison performed using:
@@ -1094,8 +1084,7 @@
 	Obtained : 1
 	Predicted: 0
 
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
 	Non-empty data inequivalent to empty data 
 
 	Comparison performed using:
@@ -1110,7 +1099,7 @@
 	Predicted: 0
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
 	Single partitions holding different elements compare not equal
 
 	Comparison performed using:
@@ -1124,8 +1113,7 @@
 	Obtained : 2
 	Predicted: 1
 
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
 	Single partitions holding different elements compare not equal
 
 	Comparison performed using:
@@ -1140,7 +1128,7 @@
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57
 	Identical elements divided between different partitions compare notequal
 
 	Comparison performed using:
@@ -1154,7 +1142,7 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58
 	Identical elements divided between different partitions compare notequal
 
 	Comparison performed using:
@@ -1179,7 +1167,6 @@
 	Obtained : 0
 	Predicted: 1
 
-
 	Number of partitions different
 	[unsigned long]
 	operator== returned false
@@ -1192,47 +1179,48 @@
 	[sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::independent<int> > >]
 	operator== returned false
 
-	Partition 0 iterator (const)
+	Partition 0
+	iterator (const)
 	Element 0 of range incorrect
 	[int]
 	operator== returned false
 	Obtained : 1
 	Predicted: 2
 
-
-	Partition 0 r_iterator (const)
+	Partition 0
+	r_iterator (const)
 	Element 0 of range incorrect
 	[int]
 	operator== returned false
 	Obtained : 1
 	Predicted: 2
 
-
-	Partition 0 c_iterator
+	Partition 0
+	c_iterator
 	Element 0 of range incorrect
 	[int]
 	operator== returned false
 	Obtained : 1
 	Predicted: 2
 
-
-	Partition 0 cr_iterator
+	Partition 0
+	cr_iterator
 	Element 0 of range incorrect
 	[int]
 	operator== returned false
 	Obtained : 1
 	Predicted: 2
 
-
-	Partition 0 iterator
+	Partition 0
+	iterator
 	Element 0 of range incorrect
 	[int]
 	operator== returned false
 	Obtained : 1
 	Predicted: 2
 
-
-	Partition 0 r_iterator
+	Partition 0
+	r_iterator
 	Element 0 of range incorrect
 	[int]
 	operator== returned false
@@ -1252,7 +1240,7 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
 	Size 0 should not compare equal to 1
 
 	[unsigned long]
@@ -1261,7 +1249,7 @@
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65
 	Size 1 should not compare equal to 0
 
 	[unsigned long]
@@ -1558,7 +1546,7 @@
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
 	Empty data inequivalent to non-empty data 
 
 	Comparison performed using:
@@ -1571,8 +1559,7 @@
 	Obtained : 0
 	Predicted: 1
 
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
 	Empty data inequivalent to non-empty data 
 
 	Comparison performed using:
@@ -1586,7 +1573,7 @@
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
 	Non-empty data inequivalent to empty data 
 
 	Comparison performed using:
@@ -1599,8 +1586,7 @@
 	Obtained : 1
 	Predicted: 0
 
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
 	Non-empty data inequivalent to empty data 
 
 	Comparison performed using:
@@ -1614,8 +1600,7 @@
 	Obtained : 1
 	Predicted: 0
 
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
 	Non-empty data inequivalent to empty data 
 
 	Comparison performed using:
@@ -1630,7 +1615,7 @@
 	Predicted: 0
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
 	Single partitions holding different elements compare not equal
 
 	Comparison performed using:
@@ -1644,8 +1629,7 @@
 	Obtained : 2
 	Predicted: 1
 
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
 	Single partitions holding different elements compare not equal
 
 	Comparison performed using:
@@ -1660,7 +1644,7 @@
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57
 	Identical elements divided between different partitions compare notequal
 
 	Comparison performed using:
@@ -1674,7 +1658,7 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58
 	Identical elements divided between different partitions compare notequal
 
 	Comparison performed using:
@@ -1699,7 +1683,6 @@
 	Obtained : 0
 	Predicted: 1
 
-
 	Number of partitions different
 	[unsigned long]
 	operator== returned false
@@ -1712,47 +1695,48 @@
 	[sequoia::data_structures::partitioned_sequence<int, sequoia::data_sharing::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::data_sharing::shared<int> > >]
 	operator== returned false
 
-	Partition 0 iterator (const)
+	Partition 0
+	iterator (const)
 	Element 0 of range incorrect
 	[int]
 	operator== returned false
 	Obtained : 1
 	Predicted: 2
 
-
-	Partition 0 r_iterator (const)
+	Partition 0
+	r_iterator (const)
 	Element 0 of range incorrect
 	[int]
 	operator== returned false
 	Obtained : 1
 	Predicted: 2
 
-
-	Partition 0 c_iterator
+	Partition 0
+	c_iterator
 	Element 0 of range incorrect
 	[int]
 	operator== returned false
 	Obtained : 1
 	Predicted: 2
 
-
-	Partition 0 cr_iterator
+	Partition 0
+	cr_iterator
 	Element 0 of range incorrect
 	[int]
 	operator== returned false
 	Obtained : 1
 	Predicted: 2
 
-
-	Partition 0 iterator
+	Partition 0
+	iterator
 	Element 0 of range incorrect
 	[int]
 	operator== returned false
 	Obtained : 1
 	Predicted: 2
 
-
-	Partition 0 r_iterator
+	Partition 0
+	r_iterator
 	Element 0 of range incorrect
 	[int]
 	operator== returned false
@@ -1772,7 +1756,7 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
 	Size 0 should not compare equal to 1
 
 	[unsigned long]
@@ -1781,7 +1765,7 @@
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65
 	Size 1 should not compare equal to 0
 
 	[unsigned long]
@@ -2078,7 +2062,7 @@
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
 	Empty data inequivalent to non-empty data 
 
 	Comparison performed using:
@@ -2091,8 +2075,7 @@
 	Obtained : 0
 	Predicted: 1
 
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
 	Empty data inequivalent to non-empty data 
 
 	Comparison performed using:
@@ -2106,7 +2089,7 @@
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
 	Non-empty data inequivalent to empty data 
 
 	Comparison performed using:
@@ -2119,8 +2102,7 @@
 	Obtained : 1
 	Predicted: 0
 
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
 	Non-empty data inequivalent to empty data 
 
 	Comparison performed using:
@@ -2134,8 +2116,7 @@
 	Obtained : 1
 	Predicted: 0
 
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
 	Non-empty data inequivalent to empty data 
 
 	Comparison performed using:
@@ -2150,7 +2131,7 @@
 	Predicted: 0
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
 	Single partitions holding different elements compare not equal
 
 	Comparison performed using:
@@ -2168,8 +2149,7 @@
 	Obtained : 2
 	Predicted: 1
 
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
 	Single partitions holding different elements compare not equal
 
 	Comparison performed using:
@@ -2188,7 +2168,7 @@
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57
 	Identical elements divided between different partitions compare notequal
 
 	Comparison performed using:
@@ -2202,7 +2182,7 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58
 	Identical elements divided between different partitions compare notequal
 
 	Comparison performed using:
@@ -2227,7 +2207,6 @@
 	Obtained : 0
 	Predicted: 1
 
-
 	Number of partitions different
 	[unsigned long]
 	operator== returned false
@@ -2240,7 +2219,8 @@
 	[sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > >]
 	operator== returned false
 
-	Partition 0 iterator (const)
+	Partition 0
+	iterator (const)
 	Element 0 of range incorrect
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
@@ -2251,8 +2231,8 @@
 	Obtained : 1
 	Predicted: 2
 
-
-	Partition 0 r_iterator (const)
+	Partition 0
+	r_iterator (const)
 	Element 0 of range incorrect
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
@@ -2263,8 +2243,8 @@
 	Obtained : 1
 	Predicted: 2
 
-
-	Partition 0 c_iterator
+	Partition 0
+	c_iterator
 	Element 0 of range incorrect
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
@@ -2275,8 +2255,8 @@
 	Obtained : 1
 	Predicted: 2
 
-
-	Partition 0 cr_iterator
+	Partition 0
+	cr_iterator
 	Element 0 of range incorrect
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
@@ -2287,8 +2267,8 @@
 	Obtained : 1
 	Predicted: 2
 
-
-	Partition 0 iterator
+	Partition 0
+	iterator
 	Element 0 of range incorrect
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
@@ -2299,8 +2279,8 @@
 	Obtained : 1
 	Predicted: 2
 
-
-	Partition 0 r_iterator
+	Partition 0
+	r_iterator
 	Element 0 of range incorrect
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
@@ -2324,7 +2304,7 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
 	Size 0 should not compare equal to 1
 
 	[unsigned long]
@@ -2333,7 +2313,7 @@
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65
 	Size 1 should not compare equal to 0
 
 	[unsigned long]
@@ -2758,7 +2738,7 @@
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
 	Empty data inequivalent to non-empty data 
 
 	Comparison performed using:
@@ -2771,8 +2751,7 @@
 	Obtained : 0
 	Predicted: 1
 
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
 	Empty data inequivalent to non-empty data 
 
 	Comparison performed using:
@@ -2786,7 +2765,7 @@
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
 	Non-empty data inequivalent to empty data 
 
 	Comparison performed using:
@@ -2799,8 +2778,7 @@
 	Obtained : 1
 	Predicted: 0
 
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
 	Non-empty data inequivalent to empty data 
 
 	Comparison performed using:
@@ -2814,8 +2792,7 @@
 	Obtained : 1
 	Predicted: 0
 
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
 	Non-empty data inequivalent to empty data 
 
 	Comparison performed using:
@@ -2830,7 +2807,7 @@
 	Predicted: 0
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
 	Single partitions holding different elements compare not equal
 
 	Comparison performed using:
@@ -2848,8 +2825,7 @@
 	Obtained : 2
 	Predicted: 1
 
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
 	Single partitions holding different elements compare not equal
 
 	Comparison performed using:
@@ -2868,7 +2844,7 @@
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57
 	Identical elements divided between different partitions compare notequal
 
 	Comparison performed using:
@@ -2882,7 +2858,7 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58
 	Identical elements divided between different partitions compare notequal
 
 	Comparison performed using:
@@ -2907,7 +2883,6 @@
 	Obtained : 0
 	Predicted: 1
 
-
 	Number of partitions different
 	[unsigned long]
 	operator== returned false
@@ -2920,7 +2895,8 @@
 	[sequoia::data_structures::bucketed_storage<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > >]
 	operator== returned false
 
-	Partition 0 iterator (const)
+	Partition 0
+	iterator (const)
 	Element 0 of range incorrect
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
@@ -2931,8 +2907,8 @@
 	Obtained : 1
 	Predicted: 2
 
-
-	Partition 0 r_iterator (const)
+	Partition 0
+	r_iterator (const)
 	Element 0 of range incorrect
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
@@ -2943,8 +2919,8 @@
 	Obtained : 1
 	Predicted: 2
 
-
-	Partition 0 c_iterator
+	Partition 0
+	c_iterator
 	Element 0 of range incorrect
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
@@ -2955,8 +2931,8 @@
 	Obtained : 1
 	Predicted: 2
 
-
-	Partition 0 cr_iterator
+	Partition 0
+	cr_iterator
 	Element 0 of range incorrect
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
@@ -2967,8 +2943,8 @@
 	Obtained : 1
 	Predicted: 2
 
-
-	Partition 0 iterator
+	Partition 0
+	iterator
 	Element 0 of range incorrect
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
@@ -2979,8 +2955,8 @@
 	Obtained : 1
 	Predicted: 2
 
-
-	Partition 0 r_iterator
+	Partition 0
+	r_iterator
 	Element 0 of range incorrect
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
@@ -3004,7 +2980,7 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
 	Size 0 should not compare equal to 1
 
 	[unsigned long]
@@ -3013,7 +2989,7 @@
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65
 	Size 1 should not compare equal to 0
 
 	[unsigned long]
@@ -3438,7 +3414,7 @@
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
 	Empty data inequivalent to non-empty data 
 
 	Comparison performed using:
@@ -3451,8 +3427,7 @@
 	Obtained : 0
 	Predicted: 1
 
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
 	Empty data inequivalent to non-empty data 
 
 	Comparison performed using:
@@ -3466,7 +3441,7 @@
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
 	Non-empty data inequivalent to empty data 
 
 	Comparison performed using:
@@ -3479,8 +3454,7 @@
 	Obtained : 1
 	Predicted: 0
 
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
 	Non-empty data inequivalent to empty data 
 
 	Comparison performed using:
@@ -3494,8 +3468,7 @@
 	Obtained : 1
 	Predicted: 0
 
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
 	Non-empty data inequivalent to empty data 
 
 	Comparison performed using:
@@ -3510,7 +3483,7 @@
 	Predicted: 0
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
 	Single partitions holding different elements compare not equal
 
 	Comparison performed using:
@@ -3528,8 +3501,7 @@
 	Obtained : 2
 	Predicted: 1
 
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
 	Single partitions holding different elements compare not equal
 
 	Comparison performed using:
@@ -3548,7 +3520,7 @@
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57
 	Identical elements divided between different partitions compare notequal
 
 	Comparison performed using:
@@ -3562,7 +3534,7 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58
 	Identical elements divided between different partitions compare notequal
 
 	Comparison performed using:
@@ -3587,7 +3559,6 @@
 	Obtained : 0
 	Predicted: 1
 
-
 	Number of partitions different
 	[unsigned long]
 	operator== returned false
@@ -3600,7 +3571,8 @@
 	[sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::independent<std::__1::vector<double, std::__1::allocator<double> > > > >]
 	operator== returned false
 
-	Partition 0 iterator (const)
+	Partition 0
+	iterator (const)
 	Element 0 of range incorrect
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
@@ -3611,8 +3583,8 @@
 	Obtained : 1
 	Predicted: 2
 
-
-	Partition 0 r_iterator (const)
+	Partition 0
+	r_iterator (const)
 	Element 0 of range incorrect
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
@@ -3623,8 +3595,8 @@
 	Obtained : 1
 	Predicted: 2
 
-
-	Partition 0 c_iterator
+	Partition 0
+	c_iterator
 	Element 0 of range incorrect
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
@@ -3635,8 +3607,8 @@
 	Obtained : 1
 	Predicted: 2
 
-
-	Partition 0 cr_iterator
+	Partition 0
+	cr_iterator
 	Element 0 of range incorrect
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
@@ -3647,8 +3619,8 @@
 	Obtained : 1
 	Predicted: 2
 
-
-	Partition 0 iterator
+	Partition 0
+	iterator
 	Element 0 of range incorrect
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
@@ -3659,8 +3631,8 @@
 	Obtained : 1
 	Predicted: 2
 
-
-	Partition 0 r_iterator
+	Partition 0
+	r_iterator
 	Element 0 of range incorrect
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
@@ -3684,7 +3656,7 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
 	Size 0 should not compare equal to 1
 
 	[unsigned long]
@@ -3693,7 +3665,7 @@
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65
 	Size 1 should not compare equal to 0
 
 	[unsigned long]
@@ -4118,7 +4090,7 @@
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
 	Empty data inequivalent to non-empty data 
 
 	Comparison performed using:
@@ -4131,8 +4103,7 @@
 	Obtained : 0
 	Predicted: 1
 
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
 	Empty data inequivalent to non-empty data 
 
 	Comparison performed using:
@@ -4146,7 +4117,7 @@
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
 	Non-empty data inequivalent to empty data 
 
 	Comparison performed using:
@@ -4159,8 +4130,7 @@
 	Obtained : 1
 	Predicted: 0
 
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
 	Non-empty data inequivalent to empty data 
 
 	Comparison performed using:
@@ -4174,8 +4144,7 @@
 	Obtained : 1
 	Predicted: 0
 
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
 	Non-empty data inequivalent to empty data 
 
 	Comparison performed using:
@@ -4190,7 +4159,7 @@
 	Predicted: 0
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
 	Single partitions holding different elements compare not equal
 
 	Comparison performed using:
@@ -4208,8 +4177,7 @@
 	Obtained : 2
 	Predicted: 1
 
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
 	Single partitions holding different elements compare not equal
 
 	Comparison performed using:
@@ -4228,7 +4196,7 @@
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57
 	Identical elements divided between different partitions compare notequal
 
 	Comparison performed using:
@@ -4242,7 +4210,7 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58
 	Identical elements divided between different partitions compare notequal
 
 	Comparison performed using:
@@ -4267,7 +4235,6 @@
 	Obtained : 0
 	Predicted: 1
 
-
 	Number of partitions different
 	[unsigned long]
 	operator== returned false
@@ -4280,7 +4247,8 @@
 	[sequoia::data_structures::partitioned_sequence<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::__1::vector<double, std::__1::allocator<double> >, sequoia::data_sharing::shared<std::__1::vector<double, std::__1::allocator<double> > > > >]
 	operator== returned false
 
-	Partition 0 iterator (const)
+	Partition 0
+	iterator (const)
 	Element 0 of range incorrect
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
@@ -4291,8 +4259,8 @@
 	Obtained : 1
 	Predicted: 2
 
-
-	Partition 0 r_iterator (const)
+	Partition 0
+	r_iterator (const)
 	Element 0 of range incorrect
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
@@ -4303,8 +4271,8 @@
 	Obtained : 1
 	Predicted: 2
 
-
-	Partition 0 c_iterator
+	Partition 0
+	c_iterator
 	Element 0 of range incorrect
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
@@ -4315,8 +4283,8 @@
 	Obtained : 1
 	Predicted: 2
 
-
-	Partition 0 cr_iterator
+	Partition 0
+	cr_iterator
 	Element 0 of range incorrect
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
@@ -4327,8 +4295,8 @@
 	Obtained : 1
 	Predicted: 2
 
-
-	Partition 0 iterator
+	Partition 0
+	iterator
 	Element 0 of range incorrect
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
@@ -4339,8 +4307,8 @@
 	Obtained : 1
 	Predicted: 2
 
-
-	Partition 0 r_iterator
+	Partition 0
+	r_iterator
 	Element 0 of range incorrect
 	[std::__1::vector<double, std::__1::allocator<double> >]
 	operator== returned false
@@ -4364,7 +4332,7 @@
 	Predicted: 2
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
 	Size 0 should not compare equal to 1
 
 	[unsigned long]
@@ -4373,7 +4341,7 @@
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65:
+	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65
 	Size 1 should not compare equal to 0
 
 	[unsigned long]

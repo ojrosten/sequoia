@@ -40,7 +40,7 @@ namespace sequoia::testing
     template<class T, class... Allocators>
     void check_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone)
     {
-      testing::check_semantics(merge("Move-only Semantics", description), m_Logger, std::move(x), std::move(y), xClone, yClone);
+      testing::check_semantics(append_indented(description, emphasise("Move-only Semantics")), m_Logger, std::move(x), std::move(y), xClone, yClone);
     }
   protected:
     move_only_extender(move_only_extender&&) noexcept = default;

@@ -1,4 +1,4 @@
-	../Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 30:
+	../Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 30
 	Empty stack
 
 	[bool]
@@ -15,7 +15,7 @@
 	Predicted: 1
 
 
-	../Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 45:
+	../Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 45
 	Empty stack
 
 	[bool]
@@ -24,7 +24,7 @@
 	Predicted: true
 
 
-	../Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 46:
+	../Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 46
 	Non-empty stack
 
 	[bool]
@@ -33,7 +33,7 @@
 	Predicted: true
 
 
-	../Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 48:
+	../Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 48
 	Empty stack versus populated stack
 
 	[sequoia::data_structures::static_stack<int, 1ul>]
@@ -45,13 +45,11 @@
 	Obtained : true
 	Predicted: false
 
-
 	Inconsistent size
 	[unsigned long]
 	operator== returned false
 	Obtained : 0
 	Predicted: 1
-
 
 	Hidden state
 	[bool]
@@ -60,7 +58,7 @@
 	Predicted: true
 
 
-	../Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 51:
+	../Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 51
 	Differing elements
 
 	[sequoia::data_structures::static_stack<int, 1ul>]
@@ -72,7 +70,6 @@
 	Obtained : 2
 	Predicted: 1
 
-
 	Hidden state
 	[bool]
 	operator== returned false
@@ -80,7 +77,7 @@
 	Predicted: true
 
 
-	../Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 54:
+	../Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 54
 	Empty stack versus populated stack
 
 	[sequoia::data_structures::static_stack<int, 1ul>]
@@ -92,13 +89,11 @@
 	Obtained : true
 	Predicted: false
 
-
 	Inconsistent size
 	[unsigned long]
 	operator== returned false
 	Obtained : 0
 	Predicted: 1
-
 
 	Hidden state
 	[bool]

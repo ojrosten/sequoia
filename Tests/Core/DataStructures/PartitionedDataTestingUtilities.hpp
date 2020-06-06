@@ -18,35 +18,35 @@ namespace sequoia::testing
     template<test_mode Mode, class PartitionedData>
     void check_details(std::string_view description, test_logger<Mode>& logger, const PartitionedData& data, const PartitionedData& prediction)
     {
-      check_equality(merge(description, "Size different"), logger, data.size(), prediction.size());
-      if(check_equality(merge(description, "Number of partitions different"), logger, data.num_partitions(), prediction.num_partitions()))
+      check_equality(append_indented(description, "Size different"), logger, data.size(), prediction.size());
+      if(check_equality(append_indented(description, "Number of partitions different"), logger, data.num_partitions(), prediction.num_partitions()))
       {
         for(std::size_t i{}; i<prediction.num_partitions(); ++i)
         {
-          const std::string message{merge(description,"Partition " + std::to_string(i))};
-          if(check_range(merge(message, "iterator (const)"), logger, data.begin_partition(i), data.end_partition(i), prediction.begin_partition(i), prediction.end_partition(i)))
+          const std::string message{append_indented(description,"Partition " + std::to_string(i))};
+          if(check_range(append_indented(message, "iterator (const)"), logger, data.begin_partition(i), data.end_partition(i), prediction.begin_partition(i), prediction.end_partition(i)))
           {
             for(int64_t j{}; j<distance(prediction.begin_partition(i), prediction.end_partition(i)); ++j)
             {
-              check_equality(merge(message,"[] (const)"), logger, data[i][j], prediction[i][j]);
+              check_equality(append_indented(message,"[] (const)"), logger, data[i][j], prediction[i][j]);
             }
           }
           
-          check_range(merge(message, "r_iterator (const)"), logger, data.rbegin_partition(i), data.rend_partition(i), prediction.rbegin_partition(i), prediction.rend_partition(i));
-          check_range(merge(message, "c_iterator"), logger, data.cbegin_partition(i), data.cend_partition(i), prediction.cbegin_partition(i), prediction.cend_partition(i));
-          check_range(merge(message, "cr_iterator"), logger, data.crbegin_partition(i), data.crend_partition(i), prediction.crbegin_partition(i), prediction.crend_partition(i));
+          check_range(append_indented(message, "r_iterator (const)"), logger, data.rbegin_partition(i), data.rend_partition(i), prediction.rbegin_partition(i), prediction.rend_partition(i));
+          check_range(append_indented(message, "c_iterator"), logger, data.cbegin_partition(i), data.cend_partition(i), prediction.cbegin_partition(i), prediction.cend_partition(i));
+          check_range(append_indented(message, "cr_iterator"), logger, data.crbegin_partition(i), data.crend_partition(i), prediction.crbegin_partition(i), prediction.crend_partition(i));
 
           auto& r{const_cast<PartitionedData&>(prediction)};
           auto& d{const_cast<PartitionedData&>(data)};
-          if(check_range(merge(message, "iterator"), logger, d.begin_partition(i), d.end_partition(i), r.begin_partition(i), r.end_partition(i)))
+          if(check_range(append_indented(message, "iterator"), logger, d.begin_partition(i), d.end_partition(i), r.begin_partition(i), r.end_partition(i)))
           {
             for(int64_t j{}; j<distance(r.begin_partition(i), r.end_partition(i)); ++j)
             {
-              check_equality(merge(message,"[]"), logger, d[i][j], r[i][j]);
+              check_equality(append_indented(message,"[]"), logger, d[i][j], r[i][j]);
             }
           }
           
-          check_range(merge(message, "r_iterator"), logger, d.rbegin_partition(i), d.rend_partition(i), r.rbegin_partition(i), r.rend_partition(i));
+          check_range(append_indented(message, "r_iterator"), logger, d.rbegin_partition(i), d.rend_partition(i), r.rbegin_partition(i), r.rend_partition(i));
         }
       }
     }
@@ -57,13 +57,13 @@ namespace sequoia::testing
       const auto numElements{std::accumulate(prediction.begin(), prediction.end(), std::size_t{},
                                              [](std::size_t val, std::initializer_list<T> partition) { return val += partition.size();})};
 
-      check_equality(merge(description, "Number of elements"), logger, data.size(), numElements);
+      check_equality(append_indented(description, "Number of elements"), logger, data.size(), numElements);
 
-      if(check_equality(merge(description, "Number of partitions"), logger, data.num_partitions(), prediction.size()))
+      if(check_equality(append_indented(description, "Number of partitions"), logger, data.num_partitions(), prediction.size()))
       {
         for(std::size_t i{}; i<prediction.size(); ++i)
         {
-          const std::string message{merge(description, "Partition " + std::to_string(i))};
+          const std::string message{append_indented(description, "Partition " + std::to_string(i))};
           check_range(message + ": iterator", logger, data.begin_partition(i), data.end_partition(i), (prediction.begin() + i)->begin(), (prediction.begin() + i)->end());
 
           check_range(message + ": riterator", logger, data.rbegin_partition(i), data.rend_partition(i), std::rbegin(*(prediction.begin() + i)), std::rend(*(prediction.begin() + i)));
