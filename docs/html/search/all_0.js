@@ -23,12 +23,13 @@ var searchData=
   ['allocationcheckers_2ehpp_20',['AllocationCheckers.hpp',['../d3/dfb/AllocationCheckers_8hpp.html',1,'']]],
   ['allocationcheckersdetails_2ehpp_21',['AllocationCheckersDetails.hpp',['../d5/d00/AllocationCheckersDetails_8hpp.html',1,'']]],
   ['allocationtestutilities_2ehpp_22',['AllocationTestUtilities.hpp',['../d0/d9c/AllocationTestUtilities_8hpp.html',1,'']]],
-  ['append_5fto_5fsequence_23',['append_to_sequence',['../da/d23/structsequoia_1_1impl_1_1append__to__sequence.html',1,'sequoia::impl']]],
-  ['append_5fto_5fsequence_3c_20std_3a_3aindex_5fsequence_3c_20m_2e_2e_2e_20_3e_2c_20std_3a_3aindex_5fsequence_3c_20x_2e_2e_2e_20_3e_20_3e_24',['append_to_sequence&lt; std::index_sequence&lt; M... &gt;, std::index_sequence&lt; X... &gt; &gt;',['../db/d00/structsequoia_1_1impl_1_1append__to__sequence_3_01std_1_1index__sequence_3_01M_8_8_8_01_4_00_01sf171ecf8f186cd5bbb82b93d0ba412c8.html',1,'sequoia::impl']]],
-  ['array_5futilities_5ftest_25',['array_utilities_test',['../d2/dda/classsequoia_1_1testing_1_1array__utilities__test.html',1,'sequoia::testing']]],
-  ['arrayutilities_2ehpp_26',['ArrayUtilities.hpp',['../d8/def/ArrayUtilities_8hpp.html',1,'']]],
-  ['assignment_5fallocation_5fpredictions_27',['assignment_allocation_predictions',['../dd/db4/structsequoia_1_1testing_1_1assignment__allocation__predictions.html',1,'sequoia::testing']]],
-  ['assignment_5fhelper_28',['assignment_helper',['../d6/d69/structsequoia_1_1impl_1_1assignment__helper.html',1,'sequoia::impl']]],
-  ['assignmentutilities_2ehpp_29',['AssignmentUtilities.hpp',['../d0/dbb/AssignmentUtilities_8hpp.html',1,'']]],
-  ['asynchronous_30',['asynchronous',['../d0/d11/classsequoia_1_1concurrency_1_1asynchronous.html',1,'sequoia::concurrency']]]
+  ['append_5findented_23',['append_indented',['../d7/d96/Format_8cpp.html#a3610f5124224711b4b8c8c480d14f76d',1,'sequoia::testing']]],
+  ['append_5fto_5fsequence_24',['append_to_sequence',['../da/d23/structsequoia_1_1impl_1_1append__to__sequence.html',1,'sequoia::impl']]],
+  ['append_5fto_5fsequence_3c_20std_3a_3aindex_5fsequence_3c_20m_2e_2e_2e_20_3e_2c_20std_3a_3aindex_5fsequence_3c_20x_2e_2e_2e_20_3e_20_3e_25',['append_to_sequence&lt; std::index_sequence&lt; M... &gt;, std::index_sequence&lt; X... &gt; &gt;',['../db/d00/structsequoia_1_1impl_1_1append__to__sequence_3_01std_1_1index__sequence_3_01M_8_8_8_01_4_00_01sf171ecf8f186cd5bbb82b93d0ba412c8.html',1,'sequoia::impl']]],
+  ['array_5futilities_5ftest_26',['array_utilities_test',['../d2/dda/classsequoia_1_1testing_1_1array__utilities__test.html',1,'sequoia::testing']]],
+  ['arrayutilities_2ehpp_27',['ArrayUtilities.hpp',['../d8/def/ArrayUtilities_8hpp.html',1,'']]],
+  ['assignment_5fallocation_5fpredictions_28',['assignment_allocation_predictions',['../dd/db4/structsequoia_1_1testing_1_1assignment__allocation__predictions.html',1,'sequoia::testing']]],
+  ['assignment_5fhelper_29',['assignment_helper',['../d6/d69/structsequoia_1_1impl_1_1assignment__helper.html',1,'sequoia::impl']]],
+  ['assignmentutilities_2ehpp_30',['AssignmentUtilities.hpp',['../d0/dbb/AssignmentUtilities_8hpp.html',1,'']]],
+  ['asynchronous_31',['asynchronous',['../d0/d11/classsequoia_1_1concurrency_1_1asynchronous.html',1,'sequoia::concurrency']]]
 ];

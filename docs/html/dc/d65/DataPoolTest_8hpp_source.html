@@ -80,12 +80,12 @@ $(function() {
 <div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../df/d01/DataPool_8hpp.html">DataPool.hpp</a>&quot;</span></div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">namespace </span><a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html">sequoia::testing</a></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="keyword">namespace </span>sequoia::testing</div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;{</div>
 <div class="line"><a name="l00016"></a><span class="lineno"><a class="line" href="../../d1/d80/classsequoia_1_1testing_1_1data__pool__test.html">   16</a></span>&#160;  <span class="keyword">class </span><a class="code" href="../../d1/d80/classsequoia_1_1testing_1_1data__pool__test.html">data_pool_test</a> final : <span class="keyword">public</span> <a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">move_only_test</a></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;  {</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;  <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keyword">using</span> <a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#a198c390bfabb54c797a6fcfe8dec09cd">move_only_test::move_only_test</a>;</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keyword">using</span> move_only_test::move_only_test;</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    [[nodiscard]]</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    std::string_view <a class="code" href="../../d1/d80/classsequoia_1_1testing_1_1data__pool__test.html#a4eb2db40576cea065fb81a384cf88c93">source_file_name</a>() <span class="keyword">const</span> noexcept <span class="keyword">final</span>;</div>
@@ -101,13 +101,11 @@ $(function() {
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aclasssequoia_1_1testing_1_1data__pool__test_html_a4eb2db40576cea065fb81a384cf88c93"><div class="ttname"><a href="../../d1/d80/classsequoia_1_1testing_1_1data__pool__test.html#a4eb2db40576cea065fb81a384cf88c93">sequoia::testing::data_pool_test::source_file_name</a></div><div class="ttdeci">std::string_view source_file_name() const noexcept final</div><div class="ttdoc">Pure virtual method which should be overridden in a concrete test's cpp file in order to provide the ...</div><div class="ttdef"><b>Definition:</b> DataPoolTest.cpp:14</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1basic__test_html"><div class="ttname"><a href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">sequoia::testing::basic_test</a></div><div class="ttdoc">class template from which all concrete tests should derive.</div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:92</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1basic__test_html"><div class="ttname"><a href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">sequoia::testing::basic_test</a></div><div class="ttdoc">class template from which all concrete tests should derive.</div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:84</div></div>
 <div class="ttc" id="aclasssequoia_1_1data__sharing_1_1data__pool_html"><div class="ttname"><a href="../../d8/d6e/classsequoia_1_1data__sharing_1_1data__pool.html">sequoia::data_sharing::data_pool</a></div><div class="ttdef"><b>Definition:</b> DataPool.hpp:84</div></div>
 <div class="ttc" id="aMoveOnlyTestCore_8hpp_html"><div class="ttname"><a href="../../de/d25/MoveOnlyTestCore_8hpp.html">MoveOnlyTestCore.hpp</a></div><div class="ttdoc">Extension for testing classes exhibiting move-only semantics.</div></div>
 <div class="ttc" id="aDataPool_8hpp_html"><div class="ttname"><a href="../../df/d01/DataPool_8hpp.html">DataPool.hpp</a></div><div class="ttdoc">Classes to allow homogenous treatment of pooled/unpooled data.</div></div>
-<div class="ttc" id="anamespacesequoia_1_1testing_html_a198c390bfabb54c797a6fcfe8dec09cd"><div class="ttname"><a href="../../dd/da8/namespacesequoia_1_1testing.html#a198c390bfabb54c797a6fcfe8dec09cd">sequoia::testing::move_only_test</a></div><div class="ttdeci">canonical_move_only_test&lt; test_mode::standard &gt; move_only_test</div><div class="ttdef"><b>Definition:</b> MoveOnlyTestCore.hpp:59</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1data__pool__test_html"><div class="ttname"><a href="../../d1/d80/classsequoia_1_1testing_1_1data__pool__test.html">sequoia::testing::data_pool_test</a></div><div class="ttdef"><b>Definition:</b> DataPoolTest.hpp:17</div></div>
-<div class="ttc" id="anamespacesequoia_1_1testing_html"><div class="ttname"><a href="../../dd/da8/namespacesequoia_1_1testing.html">sequoia::testing</a></div><div class="ttdoc">Definitions for a handful of functions which are not templated.</div><div class="ttdef"><b>Definition:</b> MyClassTest.cpp:13</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

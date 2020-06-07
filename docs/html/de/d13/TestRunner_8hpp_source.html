@@ -80,7 +80,7 @@ $(function() {
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="preprocessor">#include &lt;map&gt;</span></div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160; </div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">namespace </span><a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html">sequoia::testing</a></div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">namespace </span>sequoia::testing</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;{</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> Iter&gt; <span class="keywordtype">void</span> pad_right(Iter begin, Iter end, std::string_view suffix)</div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;  {</div>
@@ -160,7 +160,7 @@ $(function() {
 <div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <span class="keywordtype">void</span> execute();</div>
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160; </div>
 <div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    [[nodiscard]]</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#a5bf3cc5ec793288c6c7da7ceeb3249a7">concurrency_mode</a> concurrency() <span class="keyword">const</span> noexcept { <span class="keywordflow">return</span> m_ConcurrencyMode; }</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <a class="code" href="../../dd/d3e/FreeTestCore_8hpp.html#a5bf3cc5ec793288c6c7da7ceeb3249a7">concurrency_mode</a> concurrency() <span class="keyword">const</span> noexcept { <span class="keywordflow">return</span> m_ConcurrencyMode; }</div>
 <div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;  <span class="keyword">private</span>:    </div>
 <div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <span class="keyword">struct </span>nascent_test</div>
 <div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    {</div>
@@ -177,7 +177,7 @@ $(function() {
 <div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;    </div>
 <div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    <span class="keywordtype">bool</span> m_Verbose{}, m_Pause{}, m_WriteFiles{<span class="keyword">true</span>};</div>
 <div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160; </div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    <a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#a5bf3cc5ec793288c6c7da7ceeb3249a7">concurrency_mode</a> m_ConcurrencyMode{concurrency_mode::serial};</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;    <a class="code" href="../../dd/d3e/FreeTestCore_8hpp.html#a5bf3cc5ec793288c6c7da7ceeb3249a7">concurrency_mode</a> m_ConcurrencyMode{concurrency_mode::serial};</div>
 <div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160; </div>
 <div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;    <span class="keyword">const</span> <span class="keyword">static</span> std::array&lt;std::string_view, 5&gt; st_TestNameStubs;</div>
 <div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160; </div>
@@ -214,7 +214,7 @@ $(function() {
 <div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;    <span class="keyword">static</span> std::string to_camel_case(std::string text);</div>
 <div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160; </div>
 <div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;    [[nodiscard]]</div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;    <span class="keyword">static</span> std::string stringify(<a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html#a5bf3cc5ec793288c6c7da7ceeb3249a7">concurrency_mode</a> mode);</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;    <span class="keyword">static</span> std::string stringify(<a class="code" href="../../dd/d3e/FreeTestCore_8hpp.html#a5bf3cc5ec793288c6c7da7ceeb3249a7">concurrency_mode</a> mode);</div>
 <div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160; </div>
 <div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> replace_all(std::string&amp; text, std::string_view from, <span class="keyword">const</span> std::string&amp; to);</div>
 <div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160; </div>
@@ -240,13 +240,12 @@ $(function() {
 <div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="astructsequoia_1_1testing_1_1test__family_1_1results_html"><div class="ttname"><a href="../../d4/d17/structsequoia_1_1testing_1_1test__family_1_1results.html">sequoia::testing::test_family::results</a></div><div class="ttdef"><b>Definition:</b> TestFamily.hpp:32</div></div>
-<div class="ttc" id="anamespacesequoia_1_1testing_html_a5bf3cc5ec793288c6c7da7ceeb3249a7"><div class="ttname"><a href="../../dd/da8/namespacesequoia_1_1testing.html#a5bf3cc5ec793288c6c7da7ceeb3249a7">sequoia::testing::concurrency_mode</a></div><div class="ttdeci">concurrency_mode</div><div class="ttdoc">Specifies the granularity at which concurrent execution is applied.</div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:156</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1test_html_a9771f3acff238cab5056de70bbf42311"><div class="ttname"><a href="../../da/d6f/classsequoia_1_1testing_1_1test.html#a9771f3acff238cab5056de70bbf42311">sequoia::testing::test::source_file_name</a></div><div class="ttdeci">virtual std::string_view source_file_name() const noexcept=0</div><div class="ttdoc">Pure virtual method which should be overridden in a concrete test's cpp file in order to provide the ...</div></div>
 <div class="ttc" id="astructsequoia_1_1testing_1_1data_html"><div class="ttname"><a href="../../d7/d5b/structsequoia_1_1testing_1_1data.html">sequoia::testing::data</a></div><div class="ttdef"><b>Definition:</b> ProtectiveWrapperTestingUtilities.hpp:30</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1test_html"><div class="ttname"><a href="../../da/d6f/classsequoia_1_1testing_1_1test.html">sequoia::testing::test</a></div><div class="ttdoc">Abstract base class used for type-erasure of the template class basic_test.</div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:43</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1test_html"><div class="ttname"><a href="../../da/d6f/classsequoia_1_1testing_1_1test.html">sequoia::testing::test</a></div><div class="ttdoc">Abstract base class used for type-erasure of the template class basic_test.</div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:35</div></div>
+<div class="ttc" id="aFreeTestCore_8hpp_html_a5bf3cc5ec793288c6c7da7ceeb3249a7"><div class="ttname"><a href="../../dd/d3e/FreeTestCore_8hpp.html#a5bf3cc5ec793288c6c7da7ceeb3249a7">sequoia::testing::concurrency_mode</a></div><div class="ttdeci">concurrency_mode</div><div class="ttdoc">Specifies the granularity at which concurrent execution is applied.</div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:148</div></div>
 <div class="ttc" id="astructsequoia_1_1testing_1_1test__family_1_1summary_html"><div class="ttname"><a href="../../d9/d87/structsequoia_1_1testing_1_1test__family_1_1summary.html">sequoia::testing::test_family::summary</a></div><div class="ttdef"><b>Definition:</b> TestFamily.hpp:42</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1test__runner_html"><div class="ttname"><a href="../../da/d37/classsequoia_1_1testing_1_1test__runner.html">sequoia::testing::test_runner</a></div><div class="ttdoc">Consumes command-line arguments and holds all test families.</div><div class="ttdef"><b>Definition:</b> TestRunner.hpp:77</div></div>
-<div class="ttc" id="anamespacesequoia_1_1testing_html"><div class="ttname"><a href="../../dd/da8/namespacesequoia_1_1testing.html">sequoia::testing</a></div><div class="ttdoc">Definitions for a handful of functions which are not templated.</div><div class="ttdef"><b>Definition:</b> MyClassTest.cpp:13</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1test__family_html"><div class="ttname"><a href="../../de/d4a/classsequoia_1_1testing_1_1test__family.html">sequoia::testing::test_family</a></div><div class="ttdoc">Allows tests to be grouped together into a family of related tests.</div><div class="ttdef"><b>Definition:</b> TestFamily.hpp:29</div></div>
 <div class="ttc" id="aTestFamily_8hpp_html"><div class="ttname"><a href="../../db/d6a/TestFamily_8hpp.html">TestFamily.hpp</a></div><div class="ttdoc">Utilities for grouping tests into families.</div></div>
 <!-- start footer part -->

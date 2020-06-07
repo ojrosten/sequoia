@@ -1,7 +1,7 @@
 var searchData=
 [
   ['gaussian_5fapprox_5festimator_254',['gaussian_approx_estimator',['../d5/d31/structsequoia_1_1maths_1_1bias_1_1gaussian__approx__estimator.html',1,'sequoia::maths::bias']]],
-  ['general_5fequivalence_5fcheck_255',['general_equivalence_check',['../dd/da8/namespacesequoia_1_1testing.html#aad1dd9129ae28daf8a4da6b42ba3b959',1,'sequoia::testing']]],
+  ['general_5fequivalence_5fcheck_255',['general_equivalence_check',['../d2/d0d/FreeCheckers_8hpp.html#aad1dd9129ae28daf8a4da6b42ba3b959',1,'sequoia::testing']]],
   ['generic_5fedge_5finsertions_256',['generic_edge_insertions',['../df/d8c/classsequoia_1_1testing_1_1generic__edge__insertions.html',1,'sequoia::testing']]],
   ['generic_5ffixed_5ftopology_5ftests_257',['generic_fixed_topology_tests',['../db/d0a/classsequoia_1_1testing_1_1generic__fixed__topology__tests.html',1,'sequoia::testing']]],
   ['generic_5fgraph_5foperations_258',['generic_graph_operations',['../d2/d7f/classsequoia_1_1testing_1_1generic__graph__operations.html',1,'sequoia::testing']]],

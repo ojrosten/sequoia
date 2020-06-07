@@ -76,7 +76,7 @@ $(function() {
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"></span> </div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">namespace </span><a class="code" href="../../dd/da8/namespacesequoia_1_1testing.html">sequoia::testing</a></div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;<span class="keyword">namespace </span>sequoia::testing</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;{  </div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keywordtype">bool</span> PropagateCopy=true, <span class="keywordtype">bool</span> PropagateMove=true, <span class="keywordtype">bool</span> PropagateSwap=false&gt;</div>
 <div class="line"><a name="l00039"></a><span class="lineno"><a class="line" href="../../d7/db0/classsequoia_1_1testing_1_1shared__counting__allocator.html">   39</a></span>&#160;  <span class="keyword">class </span><a class="code" href="../../d7/db0/classsequoia_1_1testing_1_1shared__counting__allocator.html">shared_counting_allocator</a></div>
@@ -138,7 +138,7 @@ $(function() {
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    std::shared_ptr&lt;int&gt; m_pAllocs{}, m_pDeallocs{};</div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;  };</div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class </span>T, <span class="keyword">class</span>... U&gt;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</div>
 <div class="line"><a name="l00099"></a><span class="lineno"><a class="line" href="../../d3/d78/structsequoia_1_1testing_1_1type__demangler.html">   99</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../d3/d78/structsequoia_1_1testing_1_1type__demangler.html">type_demangler</a>;</div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160; </div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keywordtype">bool</span> PropagateCopy, <span class="keywordtype">bool</span> PropagateMove, <span class="keywordtype">bool</span> PropagateSwap&gt;</div>
@@ -147,13 +147,13 @@ $(function() {
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    [[nodiscard]]</div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keyword">static</span> std::string make()</div>
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    {</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;      <span class="keyword">auto</span> info{std::string{<span class="stringliteral">&quot;[shared_counting_allocator&lt;\n\t\t&quot;</span>}.append(demangle&lt;T&gt;()).append(<span class="stringliteral">&quot;,\n&quot;</span>)};</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;      <span class="keyword">auto</span> info{std::string{<span class="stringliteral">&quot;shared_counting_allocator&lt;\n\t\t&quot;</span>}.append(demangle&lt;T&gt;()).append(<span class="stringliteral">&quot;,\n&quot;</span>)};</div>
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
 <div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;      <span class="keyword">auto</span> toString{[](<span class="keywordtype">bool</span> b){ <span class="keywordflow">return</span> b ? <span class="stringliteral">&quot;true&quot;</span> : <span class="stringliteral">&quot;false&quot;</span>;}};</div>
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160; </div>
 <div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;      info.append(<span class="stringliteral">&quot;\t\tPropagate on copy assignment = &quot;</span>).append(toString(PropagateCopy)).append(<span class="stringliteral">&quot;,\n&quot;</span>);</div>
 <div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;      info.append(<span class="stringliteral">&quot;\t\tPropagate on move assignment = &quot;</span>).append(toString(PropagateMove)).append(<span class="stringliteral">&quot;,\n&quot;</span>);</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;      info.append(<span class="stringliteral">&quot;\t\tPropagate on swap = &quot;</span>).append(toString(PropagateSwap)).append(<span class="stringliteral">&quot;\n\t&gt;]&quot;</span>);</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;      info.append(<span class="stringliteral">&quot;\t\tPropagate on swap = &quot;</span>).append(toString(PropagateSwap)).append(<span class="stringliteral">&quot;\n\t&gt;&quot;</span>);</div>
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160; </div>
 <div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;      <span class="keywordflow">return</span> info;</div>
 <div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    }</div>
@@ -163,7 +163,6 @@ $(function() {
 <div class="ttc" id="astructsequoia_1_1testing_1_1shared__counting__allocator_1_1rebind_html"><div class="ttname"><a href="../../d2/df3/structsequoia_1_1testing_1_1shared__counting__allocator_1_1rebind.html">sequoia::testing::shared_counting_allocator::rebind</a></div><div class="ttdef"><b>Definition:</b> AllocationTestUtilities.hpp:52</div></div>
 <div class="ttc" id="astructsequoia_1_1testing_1_1type__demangler_html"><div class="ttname"><a href="../../d3/d78/structsequoia_1_1testing_1_1type__demangler.html">sequoia::testing::type_demangler</a></div><div class="ttdoc">Specialize this struct template to customize the way in which type info is generated for a given clas...</div><div class="ttdef"><b>Definition:</b> AllocationTestUtilities.hpp:99</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1shared__counting__allocator_html"><div class="ttname"><a href="../../d7/db0/classsequoia_1_1testing_1_1shared__counting__allocator.html">sequoia::testing::shared_counting_allocator</a></div><div class="ttdoc">Somewhat similar to std::allocator but logs (de)allocations via an counter which is shared upon copyi...</div><div class="ttdef"><b>Definition:</b> AllocationTestUtilities.hpp:40</div></div>
-<div class="ttc" id="anamespacesequoia_1_1testing_html"><div class="ttname"><a href="../../dd/da8/namespacesequoia_1_1testing.html">sequoia::testing</a></div><div class="ttdoc">Definitions for a handful of functions which are not templated.</div><div class="ttdef"><b>Definition:</b> MyClassTest.cpp:13</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

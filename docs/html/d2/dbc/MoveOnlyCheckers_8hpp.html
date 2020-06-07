@@ -66,7 +66,6 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#namespaces">Namespaces</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">MoveOnlyCheckers.hpp File Reference</div>  </div>
@@ -80,16 +79,10 @@ $(function() {
 </div>
 <p><a href="../../d2/dbc/MoveOnlyCheckers_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:dd/da8/namespacesequoia_1_1testing"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/da8/namespacesequoia_1_1testing.html">sequoia::testing</a></td></tr>
-<tr class="memdesc:dd/da8/namespacesequoia_1_1testing"><td class="mdescLeft">&#160;</td><td class="mdescRight">Definitions for a handful of functions which are not templated. <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:ac338b82e4f6a44a8a02400da454e953c"><td class="memTemplParams" colspan="2">template&lt;test_mode Mode, class T &gt; </td></tr>
-<tr class="memitem:ac338b82e4f6a44a8a02400da454e953c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/da8/namespacesequoia_1_1testing.html#ac338b82e4f6a44a8a02400da454e953c">sequoia::testing::check_semantics</a> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone)</td></tr>
+<tr class="memitem:ac338b82e4f6a44a8a02400da454e953c"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/dbc/MoveOnlyCheckers_8hpp.html#ac338b82e4f6a44a8a02400da454e953c">sequoia::testing::check_semantics</a> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone)</td></tr>
 <tr class="separator:ac338b82e4f6a44a8a02400da454e953c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -101,7 +94,64 @@ Functions</h2></td></tr>
 <p>Note that a default constructor is not a strict requirement.</p>
 <p>This file adds one function to the check_semantics overload set, inside which consistency of the first list of operators above will be checked. There is an important difference compared to the corresponding overloads for regular semantics. Whereas the latter takes just two instance of T, x and y, in the move-only case 4 are taken. This is because, by definition, we cannot copy x and y and so, to be able to compare to the original values (essential for the mechanics of testing), immutable clones must be supplied.</p>
 <p><a class="anchor" id="move_only_definition"></a></p>
-</div></div><!-- contents -->
+</div><h2 class="groupheader">Function Documentation</h2>
+<a id="ac338b82e4f6a44a8a02400da454e953c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac338b82e4f6a44a8a02400da454e953c">&#9670;&nbsp;</a></span>check_semantics()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;test_mode Mode, class T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void sequoia::testing::check_semantics </td>
+          <td>(</td>
+          <td class="paramtype">std::string_view&#160;</td>
+          <td class="paramname"><em>description</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;&#160;</td>
+          <td class="paramname"><em>logger</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T &amp;&amp;&#160;</td>
+          <td class="paramname"><em>x</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">T &amp;&amp;&#160;</td>
+          <td class="paramname"><em>y</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const T &amp;&#160;</td>
+          <td class="paramname"><em>xClone</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const T &amp;&#160;</td>
+          <td class="paramname"><em>yClone</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Preconditions:</p>
+<p>x == xClone y == yClone x != y </p>
+
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

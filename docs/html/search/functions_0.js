@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['check_5fcopy_5fassign_1381',['check_copy_assign',['../d0/dce/RegularAllocationCheckersDetails_8hpp.html#a6eaeef2419ff43454aa2a81aaab4b72c',1,'sequoia::testing::impl']]],
-  ['check_5frelative_5fperformance_1382',['check_relative_performance',['../dd/da8/namespacesequoia_1_1testing.html#a322caa7e0a0a4c80e5d3dd5ccd9912cf',1,'sequoia::testing']]],
-  ['check_5fsemantics_1383',['check_semantics',['../df/d57/MoveOnlyAllocationCheckersDetails_8hpp.html#a173ae1a6359c9723f5e129e65d496f94',1,'sequoia::testing::impl::check_semantics()'],['../dd/da8/namespacesequoia_1_1testing.html#ac338b82e4f6a44a8a02400da454e953c',1,'sequoia::testing::check_semantics()'],['../d0/dce/RegularAllocationCheckersDetails_8hpp.html#aa77c33a32dc56e363c24a414e36527ca',1,'sequoia::testing::impl::check_semantics()'],['../dd/da8/namespacesequoia_1_1testing.html#a38a2b3cef41484963c530ab8cc1a4eb2',1,'sequoia::testing::check_semantics(std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y, Mutator yMutator)'],['../dd/da8/namespacesequoia_1_1testing.html#a2c67b08bff5cf4cf2709f890dff8fe9a',1,'sequoia::testing::check_semantics(std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y)']]]
+  ['append_5findented_1384',['append_indented',['../d7/d96/Format_8cpp.html#a3610f5124224711b4b8c8c480d14f76d',1,'sequoia::testing']]]
 ];

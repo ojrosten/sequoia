@@ -66,7 +66,6 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#namespaces">Namespaces</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">RegularCheckersDetails.hpp File Reference</div>  </div>
@@ -79,26 +78,20 @@ $(function() {
 </div>
 <p><a href="../../d6/d98/RegularCheckersDetails_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
-Namespaces</h2></td></tr>
-<tr class="memitem:dd/da8/namespacesequoia_1_1testing"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/da8/namespacesequoia_1_1testing.html">sequoia::testing</a></td></tr>
-<tr class="memdesc:dd/da8/namespacesequoia_1_1testing"><td class="mdescLeft">&#160;</td><td class="mdescRight">Definitions for a handful of functions which are not templated. <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a3025648cc47dcf0977a73a6daa6f302d"><td class="memTemplParams" colspan="2"><a id="a3025648cc47dcf0977a73a6daa6f302d"></a>
+<tr class="memitem:a07b9bb2c6f95d47eeb6505daa236196f"><td class="memTemplParams" colspan="2"><a id="a07b9bb2c6f95d47eeb6505daa236196f"></a>
 template&lt;test_mode Mode, class Actions , class T , class... Args&gt; </td></tr>
-<tr class="memitem:a3025648cc47dcf0977a73a6daa6f302d"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::do_check_copy_assign</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;z, const T &amp;y, const Args &amp;... args)</td></tr>
-<tr class="separator:a3025648cc47dcf0977a73a6daa6f302d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9ebf1e18d4d2452e6b70b03b7db3503f"><td class="memTemplParams" colspan="2"><a id="a9ebf1e18d4d2452e6b70b03b7db3503f"></a>
+<tr class="memitem:a07b9bb2c6f95d47eeb6505daa236196f"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::do_check_copy_assign</b> (std::string_view description, sentinel&lt; Mode &gt; &amp;sentry, const Actions &amp;actions, T &amp;z, const T &amp;y, const Args &amp;... args)</td></tr>
+<tr class="separator:a07b9bb2c6f95d47eeb6505daa236196f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adcc4ac4f1f425a09cce08a3bc9cdad21"><td class="memTemplParams" colspan="2"><a id="adcc4ac4f1f425a09cce08a3bc9cdad21"></a>
 template&lt;test_mode Mode, class Actions , class T &gt; </td></tr>
-<tr class="memitem:a9ebf1e18d4d2452e6b70b03b7db3503f"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_copy_assign</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;z, const T &amp;y)</td></tr>
-<tr class="separator:a9ebf1e18d4d2452e6b70b03b7db3503f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa4bedd119b99690942a98ac333d32724"><td class="memTemplParams" colspan="2"><a id="aa4bedd119b99690942a98ac333d32724"></a>
+<tr class="memitem:adcc4ac4f1f425a09cce08a3bc9cdad21"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_copy_assign</b> (std::string_view description, sentinel&lt; Mode &gt; &amp;sentry, const Actions &amp;actions, T &amp;z, const T &amp;y)</td></tr>
+<tr class="separator:adcc4ac4f1f425a09cce08a3bc9cdad21"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a2a78cc3c9bd1b77cb0926c36d0a477"><td class="memTemplParams" colspan="2"><a id="a6a2a78cc3c9bd1b77cb0926c36d0a477"></a>
 template&lt;test_mode Mode, class Actions , class T , class Mutator , class... Args&gt; </td></tr>
-<tr class="memitem:aa4bedd119b99690942a98ac333d32724"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_semantics</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, const T &amp;x, const T &amp;y, Mutator yMutator, const Args &amp;... args)</td></tr>
-<tr class="separator:aa4bedd119b99690942a98ac333d32724"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a2a78cc3c9bd1b77cb0926c36d0a477"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_semantics</b> (std::string_view description, sentinel&lt; Mode &gt; &amp;sentry, const Actions &amp;actions, const T &amp;x, const T &amp;y, Mutator yMutator, const Args &amp;... args)</td></tr>
+<tr class="separator:a6a2a78cc3c9bd1b77cb0926c36d0a477"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implementation details for checking regular semantics. </p>
