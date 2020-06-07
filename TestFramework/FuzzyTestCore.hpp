@@ -86,11 +86,7 @@ namespace sequoia::testing
       sentry.log_check();
       if(!c.compare(prediction, value))
       {
-        std::string message{"\t"};
-        if(!description.empty())
-          message.append(description).append("\n\t");
-        
-        message.append(add_type_info<T>(""));
+        std::string message{add_type_info<T>(indent(description))};
         if constexpr(reports_for_type_v<Compare, T>)
         {
           append_indented(message, c.compare.report(value, prediction));
