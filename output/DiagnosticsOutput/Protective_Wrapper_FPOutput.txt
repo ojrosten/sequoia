@@ -8,6 +8,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 40
 
@@ -23,6 +24,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 43
 
@@ -38,6 +40,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 46
 
@@ -53,6 +56,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 54
 
@@ -64,4 +68,5 @@
 	Obtained : 00
 	Predicted: 12
 
+	=======================================
 

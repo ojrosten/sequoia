@@ -24,6 +24,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
 	Non-empty data inequivalent to empty data 
@@ -66,6 +67,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
 	Single partitions holding different elements compare not equal
@@ -95,6 +97,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57
 	Identical elements divided between different partitions compare notequal
@@ -109,6 +112,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58
 	Identical elements divided between different partitions compare notequal
@@ -123,6 +127,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60
 
@@ -141,6 +146,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61
 
@@ -195,6 +201,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
 
@@ -207,6 +214,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
 	Size 0 should not compare equal to 1
@@ -216,6 +224,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65
 	Size 1 should not compare equal to 0
@@ -225,6 +234,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 67
 
@@ -233,6 +243,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 68
 
@@ -241,6 +252,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 69
 
@@ -249,6 +261,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 70
 
@@ -257,6 +270,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 72
 
@@ -265,6 +279,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 73
 
@@ -273,6 +288,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 74
 
@@ -281,6 +297,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75
 
@@ -289,6 +306,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76
 
@@ -297,6 +315,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 78
 
@@ -305,6 +324,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 79
 
@@ -313,6 +333,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 80
 
@@ -321,6 +342,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81
 
@@ -329,6 +351,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 82
 
@@ -337,6 +360,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 84
 
@@ -345,6 +369,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 85
 
@@ -353,6 +378,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 86
 
@@ -361,6 +387,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87
 
@@ -369,6 +396,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88
 
@@ -377,6 +405,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 90
 
@@ -385,6 +414,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 91
 
@@ -393,6 +423,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 92
 
@@ -401,6 +432,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93
 
@@ -409,6 +441,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 94
 
@@ -417,6 +450,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 97
 
@@ -425,6 +459,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 98
 
@@ -433,6 +468,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
 
@@ -441,6 +477,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 101
 
@@ -449,6 +486,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 102
 
@@ -457,6 +495,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103
 
@@ -465,6 +504,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105
 
@@ -473,6 +513,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 106
 
@@ -481,6 +522,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 107
 
@@ -489,6 +531,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 109
 
@@ -497,6 +540,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 110
 
@@ -505,6 +549,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 111
 
@@ -513,6 +558,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
 	Empty data inequivalent to non-empty data 
@@ -540,6 +586,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
 	Non-empty data inequivalent to empty data 
@@ -582,6 +629,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
 	Single partitions holding different elements compare not equal
@@ -611,6 +659,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57
 	Identical elements divided between different partitions compare notequal
@@ -625,6 +674,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58
 	Identical elements divided between different partitions compare notequal
@@ -639,6 +689,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60
 
@@ -657,6 +708,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61
 
@@ -711,6 +763,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
 
@@ -723,6 +776,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
 	Size 0 should not compare equal to 1
@@ -732,6 +786,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65
 	Size 1 should not compare equal to 0
@@ -741,6 +796,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 67
 
@@ -749,6 +805,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 68
 
@@ -757,6 +814,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 69
 
@@ -765,6 +823,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 70
 
@@ -773,6 +832,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 72
 
@@ -781,6 +841,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 73
 
@@ -789,6 +850,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 74
 
@@ -797,6 +859,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75
 
@@ -805,6 +868,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76
 
@@ -813,6 +877,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 78
 
@@ -821,6 +886,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 79
 
@@ -829,6 +895,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 80
 
@@ -837,6 +904,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81
 
@@ -845,6 +913,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 82
 
@@ -853,6 +922,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 84
 
@@ -861,6 +931,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 85
 
@@ -869,6 +940,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 86
 
@@ -877,6 +949,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87
 
@@ -885,6 +958,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88
 
@@ -893,6 +967,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 90
 
@@ -901,6 +976,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 91
 
@@ -909,6 +985,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 92
 
@@ -917,6 +994,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93
 
@@ -925,6 +1003,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 94
 
@@ -933,6 +1012,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 97
 
@@ -941,6 +1021,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 98
 
@@ -949,6 +1030,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
 
@@ -957,6 +1039,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 101
 
@@ -965,6 +1048,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 102
 
@@ -973,6 +1057,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103
 
@@ -981,6 +1066,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105
 
@@ -989,6 +1075,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 106
 
@@ -997,6 +1084,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 107
 
@@ -1005,6 +1093,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 109
 
@@ -1013,6 +1102,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 110
 
@@ -1021,6 +1111,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 111
 
@@ -1029,6 +1120,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
 	Empty data inequivalent to non-empty data 
@@ -1056,6 +1148,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
 	Non-empty data inequivalent to empty data 
@@ -1098,6 +1191,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
 	Single partitions holding different elements compare not equal
@@ -1127,6 +1221,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57
 	Identical elements divided between different partitions compare notequal
@@ -1141,6 +1236,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58
 	Identical elements divided between different partitions compare notequal
@@ -1155,6 +1251,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60
 
@@ -1173,6 +1270,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61
 
@@ -1227,6 +1325,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
 
@@ -1239,6 +1338,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
 	Size 0 should not compare equal to 1
@@ -1248,6 +1348,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65
 	Size 1 should not compare equal to 0
@@ -1257,6 +1358,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 67
 
@@ -1265,6 +1367,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 68
 
@@ -1273,6 +1376,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 69
 
@@ -1281,6 +1385,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 70
 
@@ -1289,6 +1394,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 72
 
@@ -1297,6 +1403,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 73
 
@@ -1305,6 +1412,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 74
 
@@ -1313,6 +1421,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75
 
@@ -1321,6 +1430,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76
 
@@ -1329,6 +1439,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 78
 
@@ -1337,6 +1448,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 79
 
@@ -1345,6 +1457,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 80
 
@@ -1353,6 +1466,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81
 
@@ -1361,6 +1475,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 82
 
@@ -1369,6 +1484,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 84
 
@@ -1377,6 +1493,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 85
 
@@ -1385,6 +1502,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 86
 
@@ -1393,6 +1511,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87
 
@@ -1401,6 +1520,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88
 
@@ -1409,6 +1529,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 90
 
@@ -1417,6 +1538,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 91
 
@@ -1425,6 +1547,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 92
 
@@ -1433,6 +1556,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93
 
@@ -1441,6 +1565,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 94
 
@@ -1449,6 +1574,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 97
 
@@ -1457,6 +1583,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 98
 
@@ -1465,6 +1592,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
 
@@ -1473,6 +1601,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 101
 
@@ -1481,6 +1610,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 102
 
@@ -1489,6 +1619,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103
 
@@ -1497,6 +1628,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105
 
@@ -1505,6 +1637,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 106
 
@@ -1513,6 +1646,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 107
 
@@ -1521,6 +1655,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 109
 
@@ -1529,6 +1664,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 110
 
@@ -1537,6 +1673,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 111
 
@@ -1545,6 +1682,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
 	Empty data inequivalent to non-empty data 
@@ -1572,6 +1710,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
 	Non-empty data inequivalent to empty data 
@@ -1614,6 +1753,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
 	Single partitions holding different elements compare not equal
@@ -1643,6 +1783,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57
 	Identical elements divided between different partitions compare notequal
@@ -1657,6 +1798,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58
 	Identical elements divided between different partitions compare notequal
@@ -1671,6 +1813,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60
 
@@ -1689,6 +1832,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61
 
@@ -1743,6 +1887,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
 
@@ -1755,6 +1900,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
 	Size 0 should not compare equal to 1
@@ -1764,6 +1910,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65
 	Size 1 should not compare equal to 0
@@ -1773,6 +1920,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 67
 
@@ -1781,6 +1929,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 68
 
@@ -1789,6 +1938,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 69
 
@@ -1797,6 +1947,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 70
 
@@ -1805,6 +1956,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 72
 
@@ -1813,6 +1965,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 73
 
@@ -1821,6 +1974,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 74
 
@@ -1829,6 +1983,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75
 
@@ -1837,6 +1992,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76
 
@@ -1845,6 +2001,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 78
 
@@ -1853,6 +2010,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 79
 
@@ -1861,6 +2019,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 80
 
@@ -1869,6 +2028,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81
 
@@ -1877,6 +2037,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 82
 
@@ -1885,6 +2046,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 84
 
@@ -1893,6 +2055,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 85
 
@@ -1901,6 +2064,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 86
 
@@ -1909,6 +2073,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87
 
@@ -1917,6 +2082,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88
 
@@ -1925,6 +2091,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 90
 
@@ -1933,6 +2100,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 91
 
@@ -1941,6 +2109,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 92
 
@@ -1949,6 +2118,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93
 
@@ -1957,6 +2127,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 94
 
@@ -1965,6 +2136,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 97
 
@@ -1973,6 +2145,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 98
 
@@ -1981,6 +2154,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
 
@@ -1989,6 +2163,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 101
 
@@ -1997,6 +2172,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 102
 
@@ -2005,6 +2181,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103
 
@@ -2013,6 +2190,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105
 
@@ -2021,6 +2199,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 106
 
@@ -2029,6 +2208,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 107
 
@@ -2037,6 +2217,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 109
 
@@ -2045,6 +2226,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 110
 
@@ -2053,6 +2235,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 111
 
@@ -2061,6 +2244,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
 	Empty data inequivalent to non-empty data 
@@ -2088,6 +2272,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
 	Non-empty data inequivalent to empty data 
@@ -2130,6 +2315,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
 	Single partitions holding different elements compare not equal
@@ -2167,6 +2353,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57
 	Identical elements divided between different partitions compare notequal
@@ -2181,6 +2368,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58
 	Identical elements divided between different partitions compare notequal
@@ -2195,6 +2383,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60
 
@@ -2213,6 +2402,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61
 
@@ -2291,6 +2481,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
 
@@ -2303,6 +2494,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
 	Size 0 should not compare equal to 1
@@ -2312,6 +2504,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65
 	Size 1 should not compare equal to 0
@@ -2321,6 +2514,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 67
 
@@ -2329,6 +2523,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 68
 
@@ -2337,6 +2532,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 69
 
@@ -2345,6 +2541,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 70
 
@@ -2353,6 +2550,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 72
 
@@ -2365,6 +2563,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 73
 
@@ -2377,6 +2576,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 74
 
@@ -2389,6 +2589,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75
 
@@ -2401,6 +2602,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76
 
@@ -2413,6 +2615,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 78
 
@@ -2425,6 +2628,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 79
 
@@ -2437,6 +2641,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 80
 
@@ -2449,6 +2654,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81
 
@@ -2461,6 +2667,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 82
 
@@ -2473,6 +2680,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 84
 
@@ -2485,6 +2693,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 85
 
@@ -2497,6 +2706,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 86
 
@@ -2509,6 +2719,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87
 
@@ -2521,6 +2732,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88
 
@@ -2533,6 +2745,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 90
 
@@ -2545,6 +2758,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 91
 
@@ -2557,6 +2771,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 92
 
@@ -2569,6 +2784,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93
 
@@ -2581,6 +2797,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 94
 
@@ -2593,6 +2810,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 97
 
@@ -2605,6 +2823,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 98
 
@@ -2617,6 +2836,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
 
@@ -2629,6 +2849,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 101
 
@@ -2641,6 +2862,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 102
 
@@ -2653,6 +2875,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103
 
@@ -2665,6 +2888,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105
 
@@ -2677,6 +2901,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 106
 
@@ -2689,6 +2914,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 107
 
@@ -2701,6 +2927,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 109
 
@@ -2713,6 +2940,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 110
 
@@ -2725,6 +2953,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 111
 
@@ -2737,6 +2966,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
 	Empty data inequivalent to non-empty data 
@@ -2764,6 +2994,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
 	Non-empty data inequivalent to empty data 
@@ -2806,6 +3037,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
 	Single partitions holding different elements compare not equal
@@ -2843,6 +3075,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57
 	Identical elements divided between different partitions compare notequal
@@ -2857,6 +3090,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58
 	Identical elements divided between different partitions compare notequal
@@ -2871,6 +3105,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60
 
@@ -2889,6 +3124,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61
 
@@ -2967,6 +3203,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
 
@@ -2979,6 +3216,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
 	Size 0 should not compare equal to 1
@@ -2988,6 +3226,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65
 	Size 1 should not compare equal to 0
@@ -2997,6 +3236,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 67
 
@@ -3005,6 +3245,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 68
 
@@ -3013,6 +3254,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 69
 
@@ -3021,6 +3263,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 70
 
@@ -3029,6 +3272,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 72
 
@@ -3041,6 +3285,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 73
 
@@ -3053,6 +3298,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 74
 
@@ -3065,6 +3311,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75
 
@@ -3077,6 +3324,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76
 
@@ -3089,6 +3337,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 78
 
@@ -3101,6 +3350,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 79
 
@@ -3113,6 +3363,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 80
 
@@ -3125,6 +3376,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81
 
@@ -3137,6 +3389,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 82
 
@@ -3149,6 +3402,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 84
 
@@ -3161,6 +3415,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 85
 
@@ -3173,6 +3428,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 86
 
@@ -3185,6 +3441,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87
 
@@ -3197,6 +3454,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88
 
@@ -3209,6 +3467,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 90
 
@@ -3221,6 +3480,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 91
 
@@ -3233,6 +3493,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 92
 
@@ -3245,6 +3506,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93
 
@@ -3257,6 +3519,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 94
 
@@ -3269,6 +3532,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 97
 
@@ -3281,6 +3545,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 98
 
@@ -3293,6 +3558,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
 
@@ -3305,6 +3571,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 101
 
@@ -3317,6 +3584,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 102
 
@@ -3329,6 +3597,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103
 
@@ -3341,6 +3610,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105
 
@@ -3353,6 +3623,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 106
 
@@ -3365,6 +3636,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 107
 
@@ -3377,6 +3649,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 109
 
@@ -3389,6 +3662,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 110
 
@@ -3401,6 +3675,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 111
 
@@ -3413,6 +3688,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
 	Empty data inequivalent to non-empty data 
@@ -3440,6 +3716,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
 	Non-empty data inequivalent to empty data 
@@ -3482,6 +3759,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
 	Single partitions holding different elements compare not equal
@@ -3519,6 +3797,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57
 	Identical elements divided between different partitions compare notequal
@@ -3533,6 +3812,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58
 	Identical elements divided between different partitions compare notequal
@@ -3547,6 +3827,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60
 
@@ -3565,6 +3846,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61
 
@@ -3643,6 +3925,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
 
@@ -3655,6 +3938,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
 	Size 0 should not compare equal to 1
@@ -3664,6 +3948,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65
 	Size 1 should not compare equal to 0
@@ -3673,6 +3958,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 67
 
@@ -3681,6 +3967,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 68
 
@@ -3689,6 +3976,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 69
 
@@ -3697,6 +3985,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 70
 
@@ -3705,6 +3994,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 72
 
@@ -3717,6 +4007,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 73
 
@@ -3729,6 +4020,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 74
 
@@ -3741,6 +4033,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75
 
@@ -3753,6 +4046,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76
 
@@ -3765,6 +4059,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 78
 
@@ -3777,6 +4072,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 79
 
@@ -3789,6 +4085,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 80
 
@@ -3801,6 +4098,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81
 
@@ -3813,6 +4111,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 82
 
@@ -3825,6 +4124,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 84
 
@@ -3837,6 +4137,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 85
 
@@ -3849,6 +4150,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 86
 
@@ -3861,6 +4163,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87
 
@@ -3873,6 +4176,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88
 
@@ -3885,6 +4189,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 90
 
@@ -3897,6 +4202,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 91
 
@@ -3909,6 +4215,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 92
 
@@ -3921,6 +4228,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93
 
@@ -3933,6 +4241,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 94
 
@@ -3945,6 +4254,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 97
 
@@ -3957,6 +4267,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 98
 
@@ -3969,6 +4280,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
 
@@ -3981,6 +4293,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 101
 
@@ -3993,6 +4306,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 102
 
@@ -4005,6 +4319,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103
 
@@ -4017,6 +4332,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105
 
@@ -4029,6 +4345,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 106
 
@@ -4041,6 +4358,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 107
 
@@ -4053,6 +4371,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 109
 
@@ -4065,6 +4384,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 110
 
@@ -4077,6 +4397,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 111
 
@@ -4089,6 +4410,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
 	Empty data inequivalent to non-empty data 
@@ -4116,6 +4438,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
 	Non-empty data inequivalent to empty data 
@@ -4158,6 +4481,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
 	Single partitions holding different elements compare not equal
@@ -4195,6 +4519,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 57
 	Identical elements divided between different partitions compare notequal
@@ -4209,6 +4534,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 58
 	Identical elements divided between different partitions compare notequal
@@ -4223,6 +4549,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 60
 
@@ -4241,6 +4568,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 61
 
@@ -4319,6 +4647,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 62
 
@@ -4331,6 +4660,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 64
 	Size 0 should not compare equal to 1
@@ -4340,6 +4670,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 65
 	Size 1 should not compare equal to 0
@@ -4349,6 +4680,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 67
 
@@ -4357,6 +4689,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 68
 
@@ -4365,6 +4698,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 69
 
@@ -4373,6 +4707,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 70
 
@@ -4381,6 +4716,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 72
 
@@ -4393,6 +4729,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 73
 
@@ -4405,6 +4742,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 74
 
@@ -4417,6 +4755,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 75
 
@@ -4429,6 +4768,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 76
 
@@ -4441,6 +4781,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 78
 
@@ -4453,6 +4794,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 79
 
@@ -4465,6 +4807,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 80
 
@@ -4477,6 +4820,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 81
 
@@ -4489,6 +4833,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 82
 
@@ -4501,6 +4846,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 84
 
@@ -4513,6 +4859,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 85
 
@@ -4525,6 +4872,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 86
 
@@ -4537,6 +4885,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 87
 
@@ -4549,6 +4898,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 88
 
@@ -4561,6 +4911,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 90
 
@@ -4573,6 +4924,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 91
 
@@ -4585,6 +4937,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 92
 
@@ -4597,6 +4950,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 93
 
@@ -4609,6 +4963,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 94
 
@@ -4621,6 +4976,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 97
 
@@ -4633,6 +4989,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 98
 
@@ -4645,6 +5002,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 99
 
@@ -4657,6 +5015,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 101
 
@@ -4669,6 +5028,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 102
 
@@ -4681,6 +5041,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 103
 
@@ -4693,6 +5054,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 105
 
@@ -4705,6 +5067,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 106
 
@@ -4717,6 +5080,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 107
 
@@ -4729,6 +5093,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 109
 
@@ -4741,6 +5106,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 110
 
@@ -4753,6 +5119,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 111
 
@@ -4765,4 +5132,5 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 

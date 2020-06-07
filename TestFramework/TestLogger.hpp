@@ -116,7 +116,7 @@ namespace sequoia::testing
           [&logger](){
             auto mess{indent("False Positive Failure:")};
             append_indented(mess, logger.current_message());
-            end_block(mess, 3, foot_border());
+            end_block(mess, 3, footer());
 
             return mess;
           }
@@ -312,7 +312,7 @@ namespace sequoia::testing
 
     void end_message()
     {
-      if(!m_CurrentMessage.empty()) update_output("", 2, foot_border());
+      if(!m_CurrentMessage.empty()) update_output("", 2, footer());
     }
 
     void update_output(std::string_view message, std::size_t newLines, std::string foot)
@@ -446,7 +446,9 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string current_message() const
     {
-      return m_Name.empty() ?  m_CurrentMessage : '[' + m_Name + "]\n\t" + m_CurrentMessage;
+      return m_Name.empty()
+        ?  m_CurrentMessage
+        : append_indented(std::string{"["}.append(m_Name).append("]"), m_CurrentMessage);
     }
 
     [[nodiscard]]

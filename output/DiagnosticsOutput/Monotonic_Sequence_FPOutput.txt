@@ -11,6 +11,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 26
 	Non-empty sequence inequivalent to empty list
@@ -25,6 +26,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 27
 	Sequence of size one inequivalent to list with different value
@@ -39,6 +41,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 28
 	Empty/non-empty sequences should compare different
@@ -52,6 +55,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 30
 	Empty sequence should not report as non-empty
@@ -61,6 +65,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 31
 	Non-empty sequence should not report as empty
@@ -70,6 +75,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 33
 	Empty sequence should not report non-zero size
@@ -79,6 +85,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 34
 	Non-Eepty sequence should not report zero size
@@ -88,6 +95,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 36
 	Back element equal to 1 should not report as 2
@@ -97,6 +105,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 37
 	Front element equal to 1 should not report as 2
@@ -106,6 +115,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 38
 	Zeroth element equal to 1 should not report as 2
@@ -115,6 +125,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 39
 	begin() pointing to 1 should not dereference as 2
@@ -124,6 +135,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 40
 	cbegin() pointing to 1 should not dereference as 2
@@ -133,6 +145,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 41
 	rbegin() pointing to 1 should not dereference as 2
@@ -142,6 +155,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 42
 	crbegin() pointing to 1 should not dereference as 2
@@ -151,6 +165,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 47
 	Sequences of size 1 with different elements should compare different
@@ -200,6 +215,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 52
 	Sequences of different sizes should compare different
@@ -213,6 +229,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 57
 	Back element equal to 0 should not report as 1
@@ -222,6 +239,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 58
 	Front element equal to 0 should not report as 1
@@ -231,6 +249,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 59
 	Zeroth element equal to 1 should not report as 1
@@ -240,6 +259,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 60
 	First element equal to 0 should not report as 1
@@ -249,6 +269,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 61
 	begin() pointing to 1 should not dereference as 0
@@ -258,6 +279,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 62
 	cbegin() pointing to 1 should not dereference as 0
@@ -267,6 +289,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 63
 	rbegin() pointing to 0 should not dereference as 1
@@ -276,6 +299,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 64
 	crbegin() pointing to 0 should not dereference as 1
@@ -285,6 +309,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 65
 	iterator pointing to 0 should not dereference as 1
@@ -294,6 +319,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 66
 	citerator pointing to 0 should not dereference as 1
@@ -303,6 +329,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 67
 	riterator pointing to 1 should not dereference as 0
@@ -312,6 +339,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 68
 	criterator pointing to 1 should not dereference as 0
@@ -321,13 +349,22 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
+	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 70
+	Inequivalent sequences of size two
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<sequoia::maths::monotonic_sequence<int, std::__1::less<int>, std::__1::vector<int, std::__1::allocator<int> > > >]
+	With equivalent types:
+	[std::initializer_list<int>]
 	Element 1 of range incorrect
 	[int]
 	operator== returned false
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 71
 	Inequivalent sequences of size two
@@ -342,6 +379,7 @@
 	Obtained : 3
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 72
 	Sequences of size 2 with different elements should compare different
@@ -421,6 +459,7 @@
 	Obtained : 3
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 77
 	Sequences of size 2 with different final elements should compare different
@@ -452,6 +491,7 @@
 	Obtained : 2
 	Predicted: 0
 
+	=======================================
 
 	../Tests/Maths/Sequences/MonotonicSequenceTestingDiagnostics.cpp, Line 82
 	Sequences of size 2 with different first elements should compare different
@@ -507,4 +547,5 @@
 	Obtained : 3
 	Predicted: 5
 
+	=======================================
 

@@ -13,17 +13,17 @@
 
 namespace sequoia::testing
 {
-  std::string foot_border(std::string_view gap)
+  std::string footer(std::string_view indentation)
   {
-    return indent("=======================================\n\n", gap);
+    return indent("=======================================\n\n", indentation);
   }
   
-  std::string indent(std::string_view s, std::string_view gap)
+  std::string indent(std::string_view s, std::string_view indentation)
   {
-    return s.empty() ? std::string{s} : std::string{gap}.append(s);
+    return s.empty() ? std::string{} : std::string{indentation}.append(s);
   }
 
-  std::string& append_indented(std::string& s1, std::string_view s2, std::string_view gap)
+  std::string& append_indented(std::string& s1, std::string_view s2, std::string_view indentation)
   {
     if(!s2.empty())
     {
@@ -33,7 +33,7 @@ namespace sequoia::testing
       }
       else
       {
-        s1.append("\n").append(gap).append(s2);
+        s1.append("\n").append(indentation).append(s2);
       }
     }
 
@@ -41,10 +41,10 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string append_indented(std::string_view s1, std::string_view s2, std::string_view gap)
+  std::string append_indented(std::string_view s1, std::string_view s2, std::string_view indentation)
   {
     std::string s{s1};
-    append_indented(s, s2, gap);
+    append_indented(s, s2, indentation);
 
     return s;
   }

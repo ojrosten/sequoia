@@ -6,6 +6,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 31
 
@@ -14,6 +15,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 45
 	Empty stack
@@ -23,6 +25,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 46
 	Non-empty stack
@@ -32,6 +35,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 48
 	Empty stack versus populated stack
@@ -57,6 +61,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 51
 	Differing elements
@@ -76,6 +81,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/Core/DataStructures/StaticStackTestingDiagnostics.cpp, Line 54
 	Empty stack versus populated stack
@@ -101,4 +107,5 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 

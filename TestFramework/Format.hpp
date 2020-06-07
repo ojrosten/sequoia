@@ -19,13 +19,27 @@
 
 namespace sequoia::testing
 {
+  constexpr std::string_view tab{"\t"};
+  
+  /// For a non-empty string_view prepends with an indentation; otherwise returns an empty string
   [[nodiscard]]
-  std::string indent(std::string_view s, std::string_view gap="\t");
+  std::string indent(std::string_view s, std::string_view indentation=tab);
 
-  std::string& append_indented(std::string& s1, std::string_view s2, std::string_view gap="\t");
+  /*! \param s1 The target for appending 
+      \param s2 The text to append
+      \param indentation The absolute (not relative) indentation of s2
+
+      If s1 and s2 are both non-empty, a new line is appended to s1, followed by the indentation
+      and then s2.
+
+      If s1 is empty, then s1 is set equal to s2, with no indentation.
+
+      If s2 is empty, no action is taken.
+   */
+  std::string& append_indented(std::string& s1, std::string_view s2, std::string_view indentation=tab);
 
   [[nodiscard]]
-  std::string append_indented(std::string_view s1, std::string_view s2, std::string_view gap="\t");
+  std::string append_indented(std::string_view s1, std::string_view s2, std::string_view indentation=tab);
 
   [[nodiscard]]
   std::string emphasise(std::string_view s);
@@ -41,7 +55,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string prediction_message(std::string_view obtained, std::string_view predicted, std::string_view advice="");
 
-  std::string foot_border(std::string_view gap="\t");
+  std::string footer(std::string_view indentation=tab);
 
   [[nodiscard]]
   std::string report_line(std::string_view file, const int line, const std::string_view message);
@@ -82,7 +96,7 @@ namespace sequoia::testing
   {
     /// Demangles T; if U... is not empty, indents each demangled element of U
     [[nodiscard]]
-    static std::string make([[maybe_unused]] std::string_view indent="\t")
+    static std::string make([[maybe_unused]] std::string_view indent=tab)
     {
       auto info{type_demangler<T>::make()};
       if constexpr(sizeof...(U) > 0)
@@ -97,7 +111,7 @@ namespace sequoia::testing
   
   template<class T, class... U>
   [[nodiscard]]
-  std::string make_type_info([[maybe_unused]] std::string_view indent="\t")
+  std::string make_type_info([[maybe_unused]] std::string_view indent=tab)
   {
     std::string info{"["};
     if constexpr (sizeof...(U) > 0)
@@ -116,7 +130,7 @@ namespace sequoia::testing
 
   template<class T, class... U>
   [[nodiscard]]
-  std::string add_type_info(std::string_view description, std::string_view indent="\t")
+  std::string add_type_info(std::string_view description, std::string_view indent=tab)
   {
     std::string info{description};
     append_indented(info, make_type_info<T, U...>(indent), indent);

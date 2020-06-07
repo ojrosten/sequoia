@@ -6,6 +6,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 32
 	Empty queue must have size zero
@@ -15,6 +16,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 42
 	Empty queue versus populated queue
@@ -46,6 +48,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 45
 	Differing elements
@@ -77,6 +80,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/Core/DataStructures/StaticQueueTestingDiagnostics.cpp, Line 48
 	Empty queue versus populated queue
@@ -108,4 +112,5 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 

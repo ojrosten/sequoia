@@ -13,6 +13,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 58
 	Check false positive: empty graph versus single node with loop
@@ -35,6 +36,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 49
 	Check false positive: empty graph versus single node
@@ -51,6 +53,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 58
 	Check false positive: empty graph versus single node with loop
@@ -73,6 +76,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 49
 	Check false positive: empty graph versus single node
@@ -89,6 +93,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 66
 	Check false positive: empty graph versus single node with loop
@@ -111,6 +116,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 49
 	Check false positive: empty graph versus single node
@@ -127,6 +133,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 66
 	Check false positive: empty graph versus single node with loop
@@ -149,6 +156,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 49
 	Check false positive: empty graph versus single node
@@ -165,6 +173,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 54
 	Check false positive: empty graph versus single node with loop
@@ -187,6 +196,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 49
 	Check false positive: empty graph versus single node
@@ -203,6 +213,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 54
 	Check false positive: empty graph versus single node with loop
@@ -225,6 +236,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 49
 	Check false positive: empty graph versus single node
@@ -241,6 +253,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 62
 	Check false positive: empty graph versus single node with loop
@@ -263,6 +276,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 49
 	Check false positive: empty graph versus single node
@@ -279,6 +293,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 62
 	Check false positive: empty graph versus single node with loop
@@ -301,6 +316,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 49
 	Check false positive: empty graph versus single node
@@ -317,6 +333,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 62
 	Check false positive: empty graph versus single node with loop
@@ -339,6 +356,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 49
 	Check false positive: empty graph versus single node
@@ -355,6 +373,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 62
 	Check false positive: empty graph versus single node with loop
@@ -377,4 +396,5 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 

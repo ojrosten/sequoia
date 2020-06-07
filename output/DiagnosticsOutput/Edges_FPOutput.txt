@@ -10,6 +10,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 50
 	Differing target indices
@@ -24,6 +25,7 @@
 
 	Predicted: ÿ
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 60
 	Differing targets, identical weights
@@ -37,6 +39,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 61
 	Differing targets, identical weights
@@ -50,6 +53,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 62
 	Identical targets, differeing weights
@@ -63,6 +67,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 63
 	Identical targets, differeing weights
@@ -76,6 +81,7 @@
 	Obtained : 5
 	Predicted: 6
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 64
 	Differing targets and weights
@@ -95,6 +101,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 65
 	Differing targets and weights
@@ -114,6 +121,7 @@
 	Obtained : 1
 	Predicted: 3
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 75
 	Differing targets, identical weights
@@ -127,6 +135,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 76
 	Differing targets, identical weights
@@ -140,6 +149,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 77
 	Identical targets, differeing weights
@@ -153,6 +163,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 78
 	Identical targets, differeing weights
@@ -166,6 +177,7 @@
 	Obtained : 5
 	Predicted: 6
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 79
 	Differing targets and weights
@@ -185,6 +197,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 80
 	Differing targets and weights
@@ -204,6 +217,7 @@
 	Obtained : 1
 	Predicted: 3
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 90
 	Differing targets, identical complementary indices
@@ -217,6 +231,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 91
 	Differing targets, identical complementary indices
@@ -230,6 +245,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 92
 	Identical targets, differeing complementary indices
@@ -243,6 +259,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 93
 	Identical targets, differeing complementary indices
@@ -256,6 +273,7 @@
 	Obtained : 5
 	Predicted: 6
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 94
 	Differing targets and complementary indices
@@ -275,6 +293,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 95
 	Differing targets and complementary indices
@@ -294,6 +313,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 105
 	Differing targets, identical complementary indices and weights
@@ -307,6 +327,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 106
 	Differing targets, identical complementary indices and weights
@@ -320,6 +341,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 107
 	Differing targets, identical complementary indices and weights
@@ -333,6 +355,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 109
 	Differing complementary indices, identical targets and weights
@@ -346,6 +369,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 110
 	Differing complementary indices, identical targets and weights
@@ -359,6 +383,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 111
 	Differing complementary indices, identical targets and weights
@@ -372,6 +397,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 113
 	Differing weights, identical targets and complementary indices
@@ -385,6 +411,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 114
 	Differing weights, identical targets and complementary indices
@@ -398,6 +425,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 115
 	Differing weights, identical targets and complementary indices
@@ -411,6 +439,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 117
 	Differing targets and complementary indices, identical weights
@@ -430,6 +459,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 118
 	Differing targets and weights, identical complementary indices
@@ -449,6 +479,7 @@
 	Obtained : 6
 	Predicted: 5
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 119
 	Differing complementary indices and weights, identical targets
@@ -468,6 +499,7 @@
 	Obtained : 1
 	Predicted: 3
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 121
 	Differing targets, complementary indices and weights
@@ -493,6 +525,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 131
 	Differing targets, identical complementary indices and weights
@@ -506,6 +539,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 132
 	Differing targets, identical complementary indices and weights
@@ -519,6 +553,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 133
 	Differing targets, identical complementary indices and weights
@@ -532,6 +567,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 135
 	Differing complementary indices, identical targets and weights
@@ -545,6 +581,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 136
 	Differing complementary indices, identical targets and weights
@@ -558,6 +595,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 137
 	Differing complementary indices, identical targets and weights
@@ -571,6 +609,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 139
 	Differing weights, identical targets and complementary indices
@@ -584,6 +623,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 140
 	Differing weights, identical targets and complementary indices
@@ -597,6 +637,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 141
 	Differing weights, identical targets and complementary indices
@@ -610,6 +651,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 143
 	Differing targets and complementary indices, identical weights
@@ -629,6 +671,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 144
 	Differing targets and weights, identical complementary indices
@@ -648,6 +691,7 @@
 	Obtained : 6
 	Predicted: 5
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 145
 	Differing complementary indices and weights, identical targets
@@ -667,6 +711,7 @@
 	Obtained : 1
 	Predicted: 3
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 147
 	Differing targets, complementary indices and weights
@@ -692,6 +737,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 157
 	Differing targets, identical soures
@@ -705,6 +751,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 158
 	Differing targets, identical soures
@@ -718,6 +765,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 160
 	Differing soures, identical targets
@@ -731,6 +779,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 161
 	Differing soures, identical targets
@@ -744,6 +793,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 163
 	Differing soures and targets
@@ -763,6 +813,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 165
 	Differing inversion flag
@@ -776,6 +827,7 @@
 	Obtained : true
 	Predicted: false
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 175
 	Differing targets, identical soures and weight
@@ -789,6 +841,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 176
 	Differing targets, identical soure and weights
@@ -802,6 +855,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 177
 	Differing targets, identical soure and weights
@@ -815,6 +869,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 178
 	Differing inversion flag
@@ -828,6 +883,7 @@
 	Obtained : true
 	Predicted: false
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 180
 	Differing soures, identical targets and weights
@@ -841,6 +897,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 181
 	Differing soures, identical targets and weights
@@ -854,6 +911,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 182
 	Differing soures, identical targets and weights
@@ -867,6 +925,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 184
 	Differing weights, identical targets and soures
@@ -880,6 +939,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 185
 	Differing weights, identical targets and soures
@@ -893,6 +953,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 186
 	Differing weights, identical targets and soures
@@ -906,6 +967,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 188
 	Differing targets and soures, identical weights
@@ -925,6 +987,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 189
 	Differing targets and weights, identical soures
@@ -944,6 +1007,7 @@
 	Obtained : 0
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 190
 	Differing soures and weights, identical targets
@@ -963,6 +1027,7 @@
 	Obtained : 4
 	Predicted: 5
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 192
 	Differing targets, soures and weights
@@ -988,6 +1053,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 202
 	Differing targets, identical soures and complementary indices
@@ -1001,6 +1067,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 203
 	Differing targets, identical soure and complementary indices
@@ -1014,6 +1081,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 204
 	Differing targets, identical soure and complementary indices
@@ -1027,6 +1095,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 205
 	Differing inversion flag
@@ -1040,6 +1109,7 @@
 	Obtained : true
 	Predicted: false
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 207
 	Differing soures, identical targets and complementary indices
@@ -1053,6 +1123,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 208
 	Differing soures, identical targets and complementary indices
@@ -1066,6 +1137,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 209
 	Differing soures, identical targets and complementary indices
@@ -1079,6 +1151,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 211
 	Differing complementary indicess, identical targets and soures
@@ -1092,6 +1165,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 212
 	Differing complementary indicess, identical targets and soures
@@ -1105,6 +1179,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 213
 	Differing complementary indicess, identical targets and soures
@@ -1118,6 +1193,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 215
 	Differing targets and soures, identical complementary indices
@@ -1137,6 +1213,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 216
 	Differing targets and complementary indices, identical soures
@@ -1156,6 +1233,7 @@
 	Obtained : 0
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 217
 	Differing soures and complementary indices, identical targets
@@ -1175,6 +1253,7 @@
 	Obtained : 4
 	Predicted: 5
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 219
 	Differing targets, soures and complementary indicess
@@ -1200,6 +1279,7 @@
 	Obtained : 0
 	Predicted: 2
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 229
 	Differing targets, identical soures, complementary indices and weights
@@ -1213,6 +1293,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 230
 	Differing soures, identical targets, complementary indices and weights
@@ -1226,6 +1307,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 231
 	Differing complementary indices, identical soures, targets and weights
@@ -1239,6 +1321,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 232
 	Differing weights, identical soures, targets, complementary indices
@@ -1252,6 +1335,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 233
 	Differing inversion flag
@@ -1265,6 +1349,7 @@
 	Obtained : true
 	Predicted: false
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 244
 	Differing targets, identical soures, complementary indices and weights
@@ -1278,6 +1363,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 245
 	Differing soures, identical targets, complementary indices and weights
@@ -1291,6 +1377,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 246
 	Differing complementary indices, identical soures, targets and weights
@@ -1304,6 +1391,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 247
 	Differing weights, identical soures, targets, complementary indices
@@ -1317,6 +1405,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/Maths/Graph/EdgeTestingDiagnostics.cpp, Line 248
 	Differing inversion flag
@@ -1330,4 +1419,5 @@
 	Obtained : true
 	Predicted: false
 
+	=======================================
 
