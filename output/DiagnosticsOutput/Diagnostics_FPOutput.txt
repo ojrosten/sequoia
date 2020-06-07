@@ -521,6 +521,9 @@
 
 	=======================================
 
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 123
+
+	[std::__1::vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > >]
 	Element 1 of range incorrect
 	Comparison performed using:
 	[sequoia::testing::equivalence_checker<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >]
@@ -537,6 +540,12 @@
 
 	=======================================
 
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 129
+
+	Comparison performed using:
+	[sequoia::testing::weak_equivalence_checker<sequoia::testing::perfectly_normal_beast<int, std::__1::allocator<int> > >]
+	With equivalent types:
+	[std::initializer_list<int>]
 	Element 1 of range incorrect
 	[int]
 	operator== returned false
@@ -545,6 +554,14 @@
 
 	=======================================
 
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 132
+
+	[std::__1::vector<sequoia::testing::perfectly_normal_beast<int, std::__1::allocator<int> >, std::__1::allocator<sequoia::testing::perfectly_normal_beast<int, std::__1::allocator<int> > > >]
+	Element 1 of range incorrect
+	Comparison performed using:
+	[sequoia::testing::weak_equivalence_checker<sequoia::testing::perfectly_normal_beast<int, std::__1::allocator<int> > >]
+	With equivalent types:
+	[std::initializer_list<int>]
 	Element 1 of range incorrect
 	[int]
 	operator== returned false
@@ -670,24 +687,24 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-	Fast Task duration: 0.00137926s +- 4 * 1.45016e-05
-	Slow Task duration: 0.00146831s +- 4 * 0.000185803 [1.06457; (2, 2)]
+	Fast Task duration: 0.00134584s +- 4 * 7.56877e-05
+	Slow Task duration: 0.00139434s +- 4 * 1.23619e-05 [1.03604; (2, 2)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-	Fast Task duration: 0.0013604s +- 4 * 4.04566e-05
-	Slow Task duration: 0.00134329s +- 4 * 4.69045e-05 [0.987425; (2, 3)]
+	Fast Task duration: 0.0013608s +- 4 * 4.919e-05
+	Slow Task duration: 0.00136766s +- 4 * 6.07946e-05 [1.00504; (2, 3)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-	Fast Task duration: 0.00132977s +- 4 * 9.58642e-05
-	Slow Task duration: 0.00500724s +- 4 * 0.000336856 [3.76549; (2, 2.5)]
+	Fast Task duration: 0.00133171s +- 4 * 8.70192e-05
+	Slow Task duration: 0.00509705s +- 4 * 9.85002e-05 [3.82745; (2, 2.5)]
 
 	=======================================
 
@@ -725,6 +742,8 @@
 
 	=======================================
 
+	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 43
+
 	Element 1 of range incorrect
 	[double]
 	Obtained : 0.6
@@ -732,12 +751,16 @@
 
 	=======================================
 
+	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 48
+
 	Element 1 of range incorrect
 	[double]
 	Obtained : -1
 	Predicted: -1.8 +/- 0.5
 
 	=======================================
+
+	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 51
 
 	Element 1 of range incorrect
 	Element 0 of range incorrect
@@ -6058,8 +6081,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67
 	Performance Test which should pass
 
-	Fast Task duration: 0.00125332s +- 4 * 5.92056e-05
-	Slow Task duration: 0.00242226s +- 4 * 0.000186986 [1.93267; (1.8, 2.1)]
+	Fast Task duration: 0.00118069s +- 4 * 0.000107216
+	Slow Task duration: 0.00221719s +- 4 * 0.00023811 [1.87788; (1.8, 2.1)]
 
 
 	=======================================
@@ -6068,8 +6091,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68
 	Performance Test which should pass
 
-	Fast Task duration: 0.00134741s +- 4 * 6.78409e-05
-	Slow Task duration: 0.00493533s +- 4 * 0.00048893 [3.66282; (3.6, 4.1)]
+	Fast Task duration: 0.00136638s +- 4 * 5.62492e-05
+	Slow Task duration: 0.00515197s +- 4 * 2.40658e-05 [3.77054; (3.6, 4.1)]
 
 
 	=======================================

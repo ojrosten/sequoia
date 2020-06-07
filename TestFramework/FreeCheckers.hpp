@@ -287,7 +287,7 @@ namespace sequoia::testing
       for(; predictionIter != predictionLast; advance(predictionIter, 1), advance(iter, 1))
       {
         const auto dist{distance(predictionFirst, predictionIter)};
-        std::string_view desc{dist ? "" : description};
+        std::string_view desc{equal ? description : ""};
         std::string mess{append_indented(desc, "Element ")
             .append(std::to_string(dist)).append(" of range incorrect")};
         if(!dispatch_check(std::move(mess), logger, discriminator, *iter, *predictionIter)) equal = false;

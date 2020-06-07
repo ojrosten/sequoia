@@ -146,7 +146,11 @@ namespace sequoia::testing
       }
 
       if((suppression & log_verbosity::failure_messages) == log_verbosity::failure_messages)
-        summary += log.failure_messages();
+      {
+        auto mess{log.failure_messages()};
+        if(!mess.empty())
+          summary.append("\n").append(std::move(mess));
+      }
 
       return summary;
     }
