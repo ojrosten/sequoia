@@ -116,7 +116,7 @@ namespace sequoia::testing
           [&logger](){
             auto mess{indent("False Positive Failure:")};
             append_indented(mess, logger.current_message());
-            end_block(mess, 3);
+            end_block(mess, 3, foot_border());
 
             return mess;
           }
@@ -205,7 +205,7 @@ namespace sequoia::testing
       ++m_Failures;
       m_CurrentMessage = message;
 
-      update_output(m_CurrentMessage, 2);
+      update_output(m_CurrentMessage, 2, "");
     }
 
     void log_performance_failure(std::string_view message)
@@ -312,15 +312,15 @@ namespace sequoia::testing
 
     void end_message()
     {
-      if(!m_CurrentMessage.empty()) update_output("", 3);
+      if(!m_CurrentMessage.empty()) update_output("", 2, foot_border());
     }
 
-    void update_output(std::string_view message, std::size_t gap)
+    void update_output(std::string_view message, std::size_t newLines, std::string foot)
     {
       auto append{
-        [message, gap](std::string& output) {
+        [message, newLines, ft{std::move(foot)}](std::string& output) {
           output.append(message);
-          end_block(output, gap);
+          end_block(output, newLines, ft);
         }
       };
 

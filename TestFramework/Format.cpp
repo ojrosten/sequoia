@@ -13,6 +13,11 @@
 
 namespace sequoia::testing
 {
+  std::string foot_border(std::string_view gap)
+  {
+    return indent("=======================================\n\n", gap);
+  }
+  
   std::string indent(std::string_view s, std::string_view gap)
   {
     return s.empty() ? std::string{s} : std::string{gap}.append(s);
@@ -44,20 +49,22 @@ namespace sequoia::testing
     return s;
   }
 
-  void end_block(std::string& s, const std::size_t gap)
+  void end_block(std::string& s, const std::size_t newlines, std::string footer)
   {    
     if(!s.empty())
     {
       std::size_t n{};
-      for(; n < std::min(s.size(), gap); ++n)
+      for(; n < std::min(s.size(), newlines); ++n)
       {
         if(s[s.size() - 1 - n] != '\n') break;
       }
 
-      for(; n<gap; ++n)
+      for(; n<newlines; ++n)
       {
         s.append("\n");
       }
+
+      s.append(std::move(footer));
     }
   }
 
@@ -70,11 +77,10 @@ namespace sequoia::testing
   }
   
   [[nodiscard]]
-  std::string make_message(std::string_view tag, std::string_view currentMessage, std::string_view exceptionMessage, const bool exceptionsDetected)  
+  std::string exception_message(std::string_view tag, std::string_view currentMessage, std::string_view exceptionMessage, const bool exceptionsDetected)  
   {
     auto mess{indent("Error -- ").append(tag).append(" Exception:")};
-    append_indented(mess, exceptionMessage);
-    mess.append("\n");
+    append_indented(mess, exceptionMessage).append("\n");
         
     if(exceptionsDetected)
     {

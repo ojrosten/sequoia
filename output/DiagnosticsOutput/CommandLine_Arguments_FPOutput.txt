@@ -7,6 +7,7 @@
 	"
   Error: expected 1 argument, [case], but found 0 arguments"
 
+	=======================================
 
 	../Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 42
 	Unexpected argument
@@ -17,6 +18,7 @@
 	"
   Error: unrecognized option '--asyng'"
 
+	=======================================
 
 	../Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 50
 	No bound function object
@@ -27,6 +29,7 @@
 	"
   Error: Commandline option not bound to a function object"
 
+	=======================================
 
 	../Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 58
 	Unexpected argument
@@ -37,4 +40,5 @@
 	"
   Error: unrecognized option '-ac'"
 
+	=======================================
 

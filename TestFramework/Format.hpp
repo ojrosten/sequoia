@@ -30,16 +30,18 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string emphasise(std::string_view s);
 
-  void end_block(std::string& s, const std::size_t gap);
+  void end_block(std::string& s, const std::size_t newlines, std::string footer="");
 
   [[nodiscard]]
-  std::string make_message(std::string_view tag, std::string_view currentMessage, std::string_view exceptionMessage, const bool exceptionsDetected);
+  std::string exception_message(std::string_view tag, std::string_view currentMessage, std::string_view exceptionMessage, const bool exceptionsDetected);
 
   [[nodiscard]]
   std::string operator_message(std::string_view description, std::string_view op, std::string_view retVal);
 
   [[nodiscard]]
   std::string prediction_message(std::string_view obtained, std::string_view predicted, std::string_view advice="");
+
+  std::string foot_border(std::string_view gap="\t");
 
   [[nodiscard]]
   std::string report_line(std::string_view file, const int line, const std::string_view message);

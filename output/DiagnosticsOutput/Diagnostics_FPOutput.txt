@@ -5,6 +5,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 48
 	Integers which should compare different
@@ -14,6 +15,7 @@
 	Obtained : 5
 	Predicted: 4
 
+	=======================================
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 49
 
@@ -22,6 +24,7 @@
 	Obtained : 6.5
 	Predicted: 5.6
 
+	=======================================
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 51
 
@@ -34,6 +37,7 @@
 	Obtained : 7.8
 	Predicted: -7.8
 
+	=======================================
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 52
 
@@ -46,6 +50,7 @@
 	Obtained : 5
 	Predicted: -5
 
+	=======================================
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 53
 
@@ -64,6 +69,7 @@
 	Obtained : 7.8
 	Predicted: 6.8
 
+	=======================================
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 55
 
@@ -76,6 +82,7 @@
 	Obtained : 4
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 56
 
@@ -88,6 +95,7 @@
 	Obtained : 3.4
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 57
 
@@ -100,6 +108,7 @@
 	Obtained : -9.2
 	Predicted: -0
 
+	=======================================
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 59
 	Exception expected but nothing thrown
@@ -108,6 +117,7 @@
 	[std::runtime_error]
 	No exception thrown
 
+	=======================================
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 60
 	Exception thrown but of wrong type
@@ -117,6 +127,7 @@
 	Unexpected exception thrown (caught by std::exception&):
 	"Error"
 
+	=======================================
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 61
 	Exception thrown but of unknown type
@@ -125,6 +136,7 @@
 	[std::runtime_error]
 	Unknown exception thrown
 
+	=======================================
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 66
 	Empty vector check which should fail
@@ -138,6 +150,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 67
 	One element vector check which should fail due to wrong value
@@ -151,6 +164,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 68
 	One element vector check which should fail due to differing sizes
@@ -164,6 +178,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 69
 	Multi-element vector comparison which should fail due to last element
@@ -177,6 +192,7 @@
 	Obtained : 5
 	Predicted: 4
 
+	=======================================
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 70
 	Multi-element vector comparison which should fail due to first element
@@ -190,6 +206,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 71
 	Multi-element vector comparison which should fail due to middle element
@@ -203,6 +220,7 @@
 	Obtained : 3.2
 	Predicted: 3.3
 
+	=======================================
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 72
 	Multi-element vector comparison which should fail due to different sizes
@@ -216,6 +234,7 @@
 	Obtained : 3
 	Predicted: 2
 
+	=======================================
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 76
 	Iterators demarcate differing number of elements
@@ -226,6 +245,7 @@
 	Obtained : 4
 	Predicted: 6
 
+	=======================================
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 77
 	Iterators demarcate differing elements
@@ -254,6 +274,7 @@
 	Obtained : 7.3
 	Predicted: 6.2
 
+	=======================================
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 80
 	Strings of differing length
@@ -267,6 +288,7 @@
 	Obtained : 6
 	Predicted: 13
 
+	=======================================
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 81
 	Differing strings of same length
@@ -286,6 +308,7 @@
 	Obtained : ?
 	Predicted: !
 
+	=======================================
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 95
 
@@ -306,6 +329,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 100
 
@@ -322,6 +346,7 @@
 	Obtained : 3.3
 	Predicted: 3.4
 
+	=======================================
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 106
 	Broken equality
@@ -333,6 +358,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 107
 	Broken inequality
@@ -344,6 +370,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 108
 	Broken copy
@@ -373,6 +400,7 @@
 	Obtained : 
 	Predicted: 2 
 
+	=======================================
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 109
 	Broken move
@@ -384,6 +412,7 @@
 	Obtained : 
 	Predicted: 2 
 
+	=======================================
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 110
 	Broken copy assignment
@@ -401,6 +430,7 @@
 	Obtained : 1 
 	Predicted: 2 
 
+	=======================================
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 111
 	Broken move assignment
@@ -412,6 +442,7 @@
 	Obtained : 1 
 	Predicted: 2 
 
+	=======================================
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 112
 	Broken swap
@@ -429,6 +460,7 @@
 	Obtained : 1 
 	Predicted: 2 
 
+	=======================================
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 113
 	Broken copy value semantics
@@ -446,6 +478,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 114
 	Broken copy assignment value semantics
@@ -457,6 +490,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 116
 	Broken check invariant
@@ -468,6 +502,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 121
 
@@ -484,6 +519,7 @@
 	Obtained : 3
 	Predicted: 2
 
+	=======================================
 
 	Element 1 of range incorrect
 	Comparison performed using:
@@ -499,6 +535,7 @@
 	Obtained : b
 	Predicted: c
 
+	=======================================
 
 	Element 1 of range incorrect
 	[int]
@@ -506,6 +543,7 @@
 	Obtained : 2
 	Predicted: 1
 
+	=======================================
 
 	Element 1 of range incorrect
 	[int]
@@ -513,6 +551,7 @@
 	Obtained : 4
 	Predicted: 5
 
+	=======================================
 
 	../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 26
 	Broken equality
@@ -524,6 +563,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 27
 	Broken inequality
@@ -535,6 +575,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 28
 	Broken move
@@ -552,6 +593,7 @@
 	Obtained : 
 	Predicted: 1 
 
+	=======================================
 
 	../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 29
 	Broken swap
@@ -575,6 +617,7 @@
 	Obtained : 1 
 	Predicted: 2 
 
+	=======================================
 
 	../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 30
 	Broken move assignment
@@ -586,6 +629,7 @@
 	Obtained : 1 
 	Predicted: 2 
 
+	=======================================
 
 	../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 31
 	Broken check invariant
@@ -597,6 +641,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 32
 	Broken check invariant
@@ -608,6 +653,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 33
 	Broken check invariant
@@ -619,27 +665,31 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-	Fast Task duration: 0.00119359s +- 4 * 0.000121247
-	Slow Task duration: 0.00146146s +- 4 * 0.000700225 [1.22443; (2, 2)]
+	Fast Task duration: 0.00137926s +- 4 * 1.45016e-05
+	Slow Task duration: 0.00146831s +- 4 * 0.000185803 [1.06457; (2, 2)]
 
+	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-	Fast Task duration: 0.00122444s +- 4 * 8.95785e-05
-	Slow Task duration: 0.00125257s +- 4 * 7.20428e-05 [1.02297; (2, 3)]
+	Fast Task duration: 0.0013604s +- 4 * 4.04566e-05
+	Slow Task duration: 0.00134329s +- 4 * 4.69045e-05 [0.987425; (2, 3)]
 
+	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-	Fast Task duration: 0.00123856s +- 4 * 0.000141844
-	Slow Task duration: 0.00463181s +- 4 * 0.000511833 [3.73968; (2, 2.5)]
+	Fast Task duration: 0.00132977s +- 4 * 9.58642e-05
+	Slow Task duration: 0.00500724s +- 4 * 0.000336856 [3.76549; (2, 2.5)]
 
+	=======================================
 
 	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 29
 
@@ -647,6 +697,7 @@
 	Obtained : 3
 	Predicted: 5 +/- 1
 
+	=======================================
 
 	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 30
 
@@ -654,6 +705,7 @@
 	Obtained : 7
 	Predicted: 5 +/- 1
 
+	=======================================
 
 	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 32
 
@@ -662,6 +714,7 @@
 	Obtained : 1
 	Predicted: 2
 
+	=======================================
 
 	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 40
 
@@ -670,18 +723,21 @@
 	Obtained : 0.5
 	Predicted: -0.1 +/- 0.5
 
+	=======================================
 
 	Element 1 of range incorrect
 	[double]
 	Obtained : 0.6
 	Predicted: 1.2 +/- 0.5
 
+	=======================================
 
 	Element 1 of range incorrect
 	[double]
 	Obtained : -1
 	Predicted: -1.8 +/- 0.5
 
+	=======================================
 
 	Element 1 of range incorrect
 	Element 0 of range incorrect
@@ -689,6 +745,7 @@
 	Obtained : 5.1
 	Predicted: 3.7 +/- 0.5
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 52
 	Broken equality
@@ -700,6 +757,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 60
 	Broken inequality
@@ -711,6 +769,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 68
 	Broken equality
@@ -747,6 +806,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 77
 	Broken copy
@@ -788,6 +848,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 85
 	Broken copy alloc
@@ -817,6 +878,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 93
 	Broken move
@@ -846,6 +908,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
 	Broken move alloc
@@ -863,6 +926,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 109
 	Inefficient move
@@ -880,6 +944,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 117
 	Broken copy assignment
@@ -909,6 +974,7 @@
 	Obtained : 5 6 1 
 	Predicted: 5 6 
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 125
 	Broken move assignment
@@ -926,6 +992,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 139
 	Broken copy value semantics
@@ -969,6 +1036,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 154
 	Broken copy assignment value semantics
@@ -987,6 +1055,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 169
 
@@ -1003,6 +1072,7 @@
 	Obtained : 2
 	Predicted: 3
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 170
 
@@ -1019,6 +1089,7 @@
 	Obtained : 2
 	Predicted: 3
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 185
 
@@ -1035,6 +1106,7 @@
 	Obtained : 2
 	Predicted: 3
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 194
 	Broken check invariant
@@ -1046,6 +1118,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 203
 	Incorrect copy x allocs
@@ -1063,6 +1136,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 207
 	Incorrect copy y allocs
@@ -1092,6 +1166,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 217
 	Incorrect copy assign y to x allocs
@@ -1115,6 +1190,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 221
 	Incorrect mutation allocs
@@ -1138,6 +1214,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 238
 	Incorrect copy x allocs
@@ -1155,6 +1232,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 242
 	Incorrect copy y allocs
@@ -1184,6 +1262,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 252
 	Incorrect copy assign y to x allocs
@@ -1207,6 +1286,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 256
 	Incorrect mutation allocs
@@ -1230,6 +1310,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 52
 	Broken equality
@@ -1241,6 +1322,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 60
 	Broken inequality
@@ -1252,6 +1334,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 68
 	Broken equality
@@ -1300,6 +1383,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 77
 	Broken copy
@@ -1359,6 +1443,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 85
 	Broken copy alloc
@@ -1388,6 +1473,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 93
 	Broken move
@@ -1417,6 +1503,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
 	Broken move alloc
@@ -1434,6 +1521,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 109
 	Inefficient move
@@ -1451,6 +1539,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 117
 	Broken copy assignment
@@ -1480,6 +1569,7 @@
 	Obtained : 5 6 1 
 	Predicted: 5 6 
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 125
 	Broken move assignment
@@ -1497,6 +1587,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 139
 	Broken copy value semantics
@@ -1546,6 +1637,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 154
 	Broken copy assignment value semantics
@@ -1564,6 +1656,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 169
 
@@ -1580,6 +1673,7 @@
 	Obtained : 2
 	Predicted: 3
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 170
 
@@ -1596,6 +1690,7 @@
 	Obtained : 2
 	Predicted: 3
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 185
 
@@ -1612,6 +1707,7 @@
 	Obtained : 2
 	Predicted: 3
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 194
 	Broken check invariant
@@ -1623,6 +1719,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 203
 	Incorrect copy x allocs
@@ -1640,6 +1737,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 207
 	Incorrect copy y allocs
@@ -1669,6 +1767,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 217
 	Incorrect copy assign y to x allocs
@@ -1692,6 +1791,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 221
 	Incorrect mutation allocs
@@ -1721,6 +1821,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 238
 	Incorrect copy x allocs
@@ -1738,6 +1839,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 242
 	Incorrect copy y allocs
@@ -1767,6 +1869,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 252
 	Incorrect copy assign y to x allocs
@@ -1790,6 +1893,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 256
 	Incorrect mutation allocs
@@ -1819,6 +1923,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 52
 	Broken equality
@@ -1830,6 +1935,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 60
 	Broken inequality
@@ -1841,6 +1947,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 68
 	Broken equality
@@ -1883,6 +1990,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 77
 	Broken copy
@@ -1918,6 +2026,7 @@
 	Obtained : 
 	Predicted: 5 6 
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 85
 	Broken copy alloc
@@ -1947,6 +2056,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 93
 	Broken move
@@ -1976,6 +2086,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
 	Broken move alloc
@@ -1993,6 +2104,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 109
 	Inefficient move
@@ -2010,6 +2122,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 117
 	Broken copy assignment
@@ -2039,6 +2152,7 @@
 	Obtained : 5 6 1 
 	Predicted: 5 6 
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 125
 	Broken move assignment
@@ -2056,6 +2170,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 139
 	Broken copy value semantics
@@ -2099,6 +2214,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 154
 	Broken copy assignment value semantics
@@ -2117,6 +2233,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 169
 
@@ -2133,6 +2250,7 @@
 	Obtained : 2
 	Predicted: 3
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 170
 
@@ -2149,6 +2267,7 @@
 	Obtained : 2
 	Predicted: 3
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 185
 
@@ -2165,6 +2284,7 @@
 	Obtained : 2
 	Predicted: 3
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 194
 	Broken check invariant
@@ -2176,6 +2296,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 203
 	Incorrect copy x allocs
@@ -2193,6 +2314,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 207
 	Incorrect copy y allocs
@@ -2222,6 +2344,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 217
 	Incorrect copy assign y to x allocs
@@ -2239,6 +2362,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 221
 	Incorrect mutation allocs
@@ -2262,6 +2386,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 238
 	Incorrect copy x allocs
@@ -2279,6 +2404,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 242
 	Incorrect copy y allocs
@@ -2308,6 +2434,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 252
 	Incorrect copy assign y to x allocs
@@ -2325,6 +2452,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 256
 	Incorrect mutation allocs
@@ -2348,6 +2476,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 52
 	Broken equality
@@ -2359,6 +2488,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 60
 	Broken inequality
@@ -2370,6 +2500,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 68
 	Broken equality
@@ -2424,6 +2555,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 77
 	Broken copy
@@ -2477,6 +2609,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 85
 	Broken copy alloc
@@ -2506,6 +2639,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 93
 	Broken move
@@ -2535,6 +2669,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
 	Broken move alloc
@@ -2552,6 +2687,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 109
 	Inefficient move
@@ -2569,6 +2705,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 117
 	Broken copy assignment
@@ -2598,6 +2735,7 @@
 	Obtained : 5 6 1 
 	Predicted: 5 6 
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 125
 	Broken move assignment
@@ -2615,6 +2753,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 139
 	Broken copy value semantics
@@ -2664,6 +2803,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 154
 	Broken copy assignment value semantics
@@ -2682,6 +2822,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 169
 
@@ -2698,6 +2839,7 @@
 	Obtained : 2
 	Predicted: 3
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 170
 
@@ -2714,6 +2856,7 @@
 	Obtained : 2
 	Predicted: 3
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 185
 
@@ -2730,6 +2873,7 @@
 	Obtained : 2
 	Predicted: 3
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 194
 	Broken check invariant
@@ -2741,6 +2885,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 203
 	Incorrect copy x allocs
@@ -2758,6 +2903,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 207
 	Incorrect copy y allocs
@@ -2787,6 +2933,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 217
 	Incorrect copy assign y to x allocs
@@ -2804,6 +2951,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 221
 	Incorrect mutation allocs
@@ -2833,6 +2981,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 238
 	Incorrect copy x allocs
@@ -2850,6 +2999,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 242
 	Incorrect copy y allocs
@@ -2879,6 +3029,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 252
 	Incorrect copy assign y to x allocs
@@ -2896,6 +3047,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 256
 	Incorrect mutation allocs
@@ -2925,6 +3077,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 52
 	Broken equality
@@ -2936,6 +3089,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 60
 	Broken inequality
@@ -2947,6 +3101,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 68
 	Broken equality
@@ -2995,6 +3150,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 77
 	Broken copy
@@ -3036,6 +3192,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 85
 	Broken copy alloc
@@ -3065,6 +3222,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 93
 	Broken move
@@ -3094,6 +3252,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
 	Broken move alloc
@@ -3111,6 +3270,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 109
 	Inefficient move
@@ -3128,6 +3288,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 117
 	Broken copy assignment
@@ -3163,6 +3324,7 @@
 	Obtained : 5 6 1 
 	Predicted: 5 6 
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 125
 	Broken move assignment
@@ -3180,6 +3342,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 139
 	Broken copy value semantics
@@ -3211,6 +3374,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 154
 	Broken copy assignment value semantics
@@ -3229,6 +3393,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 169
 
@@ -3245,6 +3410,7 @@
 	Obtained : 2
 	Predicted: 3
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 170
 
@@ -3261,6 +3427,7 @@
 	Obtained : 2
 	Predicted: 3
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 185
 
@@ -3277,6 +3444,7 @@
 	Obtained : 2
 	Predicted: 3
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 194
 	Broken check invariant
@@ -3288,6 +3456,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 203
 	Incorrect copy x allocs
@@ -3305,6 +3474,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 207
 	Incorrect copy y allocs
@@ -3334,6 +3504,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 217
 	Incorrect copy assign y to x allocs
@@ -3357,6 +3528,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 221
 	Incorrect mutation allocs
@@ -3380,6 +3552,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 238
 	Incorrect copy x allocs
@@ -3397,6 +3570,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 242
 	Incorrect copy y allocs
@@ -3426,6 +3600,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 252
 	Incorrect copy assign y to x allocs
@@ -3449,6 +3624,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 256
 	Incorrect mutation allocs
@@ -3472,6 +3648,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 52
 	Broken equality
@@ -3483,6 +3660,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 60
 	Broken inequality
@@ -3494,6 +3672,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 68
 	Broken equality
@@ -3554,6 +3733,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 77
 	Broken copy
@@ -3613,6 +3793,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 85
 	Broken copy alloc
@@ -3642,6 +3823,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 93
 	Broken move
@@ -3671,6 +3853,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
 	Broken move alloc
@@ -3688,6 +3871,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 109
 	Inefficient move
@@ -3705,6 +3889,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 117
 	Broken copy assignment
@@ -3740,6 +3925,7 @@
 	Obtained : 5 6 1 
 	Predicted: 5 6 
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 125
 	Broken move assignment
@@ -3757,6 +3943,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 139
 	Broken copy value semantics
@@ -3794,6 +3981,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 154
 	Broken copy assignment value semantics
@@ -3812,6 +4000,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 169
 
@@ -3828,6 +4017,7 @@
 	Obtained : 2
 	Predicted: 3
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 170
 
@@ -3844,6 +4034,7 @@
 	Obtained : 2
 	Predicted: 3
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 185
 
@@ -3860,6 +4051,7 @@
 	Obtained : 2
 	Predicted: 3
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 194
 	Broken check invariant
@@ -3871,6 +4063,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 203
 	Incorrect copy x allocs
@@ -3888,6 +4081,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 207
 	Incorrect copy y allocs
@@ -3917,6 +4111,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 217
 	Incorrect copy assign y to x allocs
@@ -3940,6 +4135,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 221
 	Incorrect mutation allocs
@@ -3969,6 +4165,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 238
 	Incorrect copy x allocs
@@ -3986,6 +4183,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 242
 	Incorrect copy y allocs
@@ -4015,6 +4213,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 252
 	Incorrect copy assign y to x allocs
@@ -4038,6 +4237,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 256
 	Incorrect mutation allocs
@@ -4067,6 +4267,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 52
 	Broken equality
@@ -4078,6 +4279,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 60
 	Broken inequality
@@ -4089,6 +4291,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 68
 	Broken equality
@@ -4143,6 +4346,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 77
 	Broken copy
@@ -4178,6 +4382,7 @@
 	Obtained : 
 	Predicted: 5 6 
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 85
 	Broken copy alloc
@@ -4207,6 +4412,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 93
 	Broken move
@@ -4236,6 +4442,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
 	Broken move alloc
@@ -4253,6 +4460,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 109
 	Inefficient move
@@ -4270,6 +4478,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 117
 	Broken copy assignment
@@ -4305,6 +4514,7 @@
 	Obtained : 5 6 1 
 	Predicted: 5 6 
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 125
 	Broken move assignment
@@ -4322,6 +4532,7 @@
 	Obtained : -1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 139
 	Broken copy value semantics
@@ -4353,6 +4564,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 154
 	Broken copy assignment value semantics
@@ -4371,6 +4583,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 169
 
@@ -4387,6 +4600,7 @@
 	Obtained : 2
 	Predicted: 3
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 170
 
@@ -4403,6 +4617,7 @@
 	Obtained : 2
 	Predicted: 3
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 185
 
@@ -4419,6 +4634,7 @@
 	Obtained : 2
 	Predicted: 3
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 194
 	Broken check invariant
@@ -4430,6 +4646,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 203
 	Incorrect copy x allocs
@@ -4447,6 +4664,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 207
 	Incorrect copy y allocs
@@ -4476,6 +4694,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 217
 	Incorrect copy assign y to x allocs
@@ -4499,6 +4718,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 221
 	Incorrect mutation allocs
@@ -4522,6 +4742,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 238
 	Incorrect copy x allocs
@@ -4539,6 +4760,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 242
 	Incorrect copy y allocs
@@ -4568,6 +4790,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 252
 	Incorrect copy assign y to x allocs
@@ -4591,6 +4814,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 256
 	Incorrect mutation allocs
@@ -4614,6 +4838,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 52
 	Broken equality
@@ -4625,6 +4850,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 60
 	Broken inequality
@@ -4636,6 +4862,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 68
 	Broken equality
@@ -4702,6 +4929,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 77
 	Broken copy
@@ -4755,6 +4983,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 85
 	Broken copy alloc
@@ -4784,6 +5013,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 93
 	Broken move
@@ -4813,6 +5043,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
 	Broken move alloc
@@ -4830,6 +5061,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 109
 	Inefficient move
@@ -4847,6 +5079,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 117
 	Broken copy assignment
@@ -4882,6 +5115,7 @@
 	Obtained : 5 6 1 
 	Predicted: 5 6 
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 125
 	Broken move assignment
@@ -4899,6 +5133,7 @@
 	Obtained : -1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 139
 	Broken copy value semantics
@@ -4936,6 +5171,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 154
 	Broken copy assignment value semantics
@@ -4954,6 +5190,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 169
 
@@ -4970,6 +5207,7 @@
 	Obtained : 2
 	Predicted: 3
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 170
 
@@ -4986,6 +5224,7 @@
 	Obtained : 2
 	Predicted: 3
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 185
 
@@ -5002,6 +5241,7 @@
 	Obtained : 2
 	Predicted: 3
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 194
 	Broken check invariant
@@ -5013,6 +5253,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 203
 	Incorrect copy x allocs
@@ -5030,6 +5271,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 207
 	Incorrect copy y allocs
@@ -5059,6 +5301,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 217
 	Incorrect copy assign y to x allocs
@@ -5082,6 +5325,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 221
 	Incorrect mutation allocs
@@ -5111,6 +5355,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 238
 	Incorrect copy x allocs
@@ -5128,6 +5373,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 242
 	Incorrect copy y allocs
@@ -5157,6 +5403,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 252
 	Incorrect copy assign y to x allocs
@@ -5180,6 +5427,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 256
 	Incorrect mutation allocs
@@ -5209,6 +5457,7 @@
 	Obtained : 0
 	Predicted: 1
 
+	=======================================
 
 	../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 51
 
@@ -5225,6 +5474,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 54
 
@@ -5241,6 +5491,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 59
 
@@ -5257,6 +5508,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 72
 
@@ -5267,6 +5519,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 84
 
@@ -5277,6 +5530,7 @@
 	Obtained : 1 
 	Predicted: 2 
 
+	=======================================
 
 	../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 110
 
@@ -5293,6 +5547,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 122
 
@@ -5309,6 +5564,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 51
 
@@ -5325,6 +5581,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 54
 
@@ -5341,6 +5598,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 59
 
@@ -5357,6 +5615,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 72
 
@@ -5367,6 +5626,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 84
 
@@ -5377,6 +5637,7 @@
 	Obtained : 1 
 	Predicted: 2 
 
+	=======================================
 
 	../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 98
 
@@ -5399,6 +5660,7 @@
 	Obtained : 1 
 	Predicted: 2 
 
+	=======================================
 
 	../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 110
 
@@ -5415,6 +5677,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 122
 
@@ -5431,6 +5694,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 51
 
@@ -5447,6 +5711,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 54
 
@@ -5463,6 +5728,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 72
 
@@ -5473,6 +5739,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 84
 
@@ -5483,6 +5750,7 @@
 	Obtained : 1 
 	Predicted: 2 
 
+	=======================================
 
 	../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 110
 
@@ -5499,6 +5767,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 122
 
@@ -5515,6 +5784,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 51
 
@@ -5531,6 +5801,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 54
 
@@ -5547,6 +5818,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 72
 
@@ -5557,6 +5829,7 @@
 	Obtained : false
 	Predicted: true
 
+	=======================================
 
 	../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 84
 
@@ -5567,6 +5840,7 @@
 	Obtained : 1 
 	Predicted: 2 
 
+	=======================================
 
 	../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 98
 
@@ -5589,6 +5863,7 @@
 	Obtained : 1 
 	Predicted: 2 
 
+	=======================================
 
 	../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 110
 
@@ -5605,6 +5880,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 122
 
@@ -5621,6 +5897,7 @@
 	Obtained : 1
 	Predicted: 0
 
+	=======================================
 
 	False Positive Failure:
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 153
@@ -5628,11 +5905,15 @@
 	[bool]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 155
 
 	[int]
 
+
+	=======================================
 
 	False Positive Failure:
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 156
@@ -5640,17 +5921,23 @@
 	[double]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 158
 
 	[std::__1::pair<int, double>]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 160
 
 	[std::__1::tuple<int, double, float>]
 
+
+	=======================================
 
 	False Positive Failure:
 		../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 162
@@ -5659,12 +5946,16 @@
 	[std::runtime_error]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 167
 	Empty vector check which should pass
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
 
+
+	=======================================
 
 	False Positive Failure:
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 168
@@ -5673,6 +5964,8 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 169
 	Multi-element vector comparison which should pass
@@ -5680,10 +5973,14 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 173
 	Iterators demarcate identical elements
 
+
+	=======================================
 
 	False Positive Failure:
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 175
@@ -5692,17 +5989,23 @@
 	[std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 188
 
 	[std::__1::tuple<std::__1::vector<std::__1::pair<int, float>, std::__1::allocator<std::__1::pair<int, float> > >, std::__1::set<double, std::__1::less<double>, std::__1::allocator<double> >, std::__1::complex<double> >]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 193
 
 	--Regular Semantics--
 
+
+	=======================================
 
 	False Positive Failure:
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 198
@@ -5713,11 +6016,15 @@
 	[char [4]]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 200
 
 	[std::__1::vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > >]
 
+
+	=======================================
 
 	False Positive Failure:
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 206
@@ -5728,11 +6035,15 @@
 	[std::initializer_list<int>]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 209
 
 	[std::__1::vector<sequoia::testing::perfectly_normal_beast<int, std::__1::allocator<int> >, std::__1::allocator<sequoia::testing::perfectly_normal_beast<int, std::__1::allocator<int> > > >]
 
+
+	=======================================
 
 	False Positive Failure:
 	../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 50
@@ -5741,21 +6052,27 @@
 	[sequoia::testing::move_only_beast<int, std::__1::allocator<int> >]
 
 
+	=======================================
+
 	False Positive Failure:
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67
 	Performance Test which should pass
 
-	Fast Task duration: 0.00138207s +- 4 * 1.78726e-05
-	Slow Task duration: 0.00252372s +- 4 * 0.000266735 [1.82605; (1.8, 2.1)]
+	Fast Task duration: 0.00125332s +- 4 * 5.92056e-05
+	Slow Task duration: 0.00242226s +- 4 * 0.000186986 [1.93267; (1.8, 2.1)]
 
+
+	=======================================
 
 	False Positive Failure:
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68
 	Performance Test which should pass
 
-	Fast Task duration: 0.00136317s +- 4 * 7.79384e-05
-	Slow Task duration: 0.00499199s +- 4 * 0.000265321 [3.66206; (3.6, 4.1)]
+	Fast Task duration: 0.00134741s +- 4 * 6.78409e-05
+	Slow Task duration: 0.00493533s +- 4 * 0.00048893 [3.66282; (3.6, 4.1)]
 
+
+	=======================================
 
 	False Positive Failure:
 	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 69
@@ -5763,11 +6080,15 @@
 	[double]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 70
 
 	[double]
 
+
+	=======================================
 
 	False Positive Failure:
 	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 72
@@ -5775,15 +6096,21 @@
 	[double]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 73
 
 	[double]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 79
 
+
+	=======================================
 
 	False Positive Failure:
 	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 84
@@ -5791,11 +6118,15 @@
 	[std::__1::vector<double, std::__1::allocator<double> >]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 87
 
 	[std::__1::vector<std::__1::vector<double, std::__1::allocator<double> >, std::__1::allocator<std::__1::vector<double, std::__1::allocator<double> > > >]
 
+
+	=======================================
 
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 298
@@ -5804,12 +6135,16 @@
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 300
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
 
+
+	=======================================
 
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 315
@@ -5818,12 +6153,16 @@
 	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, false, false> >]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 317
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, false, false> >]
 
+
+	=======================================
 
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 332
@@ -5832,12 +6171,16 @@
 	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 347
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
 
+
+	=======================================
 
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 369
@@ -5846,12 +6189,16 @@
 	[sequoia::testing::doubly_normal_beast<int, double, sequoia::testing::shared_counting_allocator<int, false, false, false>, sequoia::testing::shared_counting_allocator<double, false, false, false> >]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 298
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
 
+
+	=======================================
 
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 300
@@ -5860,6 +6207,8 @@
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 315
 
@@ -5867,12 +6216,16 @@
 	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, false, true> >]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 317
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, false, true> >]
 
+
+	=======================================
 
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 332
@@ -5881,12 +6234,16 @@
 	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 347
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
 
+
+	=======================================
 
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 369
@@ -5895,12 +6252,16 @@
 	[sequoia::testing::doubly_normal_beast<int, double, sequoia::testing::shared_counting_allocator<int, false, false, true>, sequoia::testing::shared_counting_allocator<double, false, false, true> >]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 298
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
 
+
+	=======================================
 
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 300
@@ -5909,6 +6270,8 @@
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 315
 
@@ -5916,12 +6279,16 @@
 	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, true, false> >]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 317
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, true, false> >]
 
+
+	=======================================
 
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 332
@@ -5930,12 +6297,16 @@
 	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 347
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
 
+
+	=======================================
 
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 369
@@ -5944,12 +6315,16 @@
 	[sequoia::testing::doubly_normal_beast<int, double, sequoia::testing::shared_counting_allocator<int, false, true, false>, sequoia::testing::shared_counting_allocator<double, false, true, false> >]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 298
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
 
+
+	=======================================
 
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 300
@@ -5958,6 +6333,8 @@
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 315
 
@@ -5965,12 +6342,16 @@
 	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, true, true> >]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 317
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, true, true> >]
 
+
+	=======================================
 
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 332
@@ -5979,12 +6360,16 @@
 	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 347
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
 
+
+	=======================================
 
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 369
@@ -5993,12 +6378,16 @@
 	[sequoia::testing::doubly_normal_beast<int, double, sequoia::testing::shared_counting_allocator<int, false, true, true>, sequoia::testing::shared_counting_allocator<double, false, true, true> >]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 298
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
 
+
+	=======================================
 
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 300
@@ -6007,6 +6396,8 @@
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 315
 
@@ -6014,12 +6405,16 @@
 	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, false, false> >]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 317
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, false, false> >]
 
+
+	=======================================
 
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 332
@@ -6028,12 +6423,16 @@
 	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 347
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
 
+
+	=======================================
 
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 369
@@ -6042,12 +6441,16 @@
 	[sequoia::testing::doubly_normal_beast<int, double, sequoia::testing::shared_counting_allocator<int, true, false, false>, sequoia::testing::shared_counting_allocator<double, true, false, false> >]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 298
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
 
+
+	=======================================
 
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 300
@@ -6056,6 +6459,8 @@
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 315
 
@@ -6063,12 +6468,16 @@
 	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, false, true> >]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 317
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, false, true> >]
 
+
+	=======================================
 
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 332
@@ -6077,12 +6486,16 @@
 	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 347
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
 
+
+	=======================================
 
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 369
@@ -6091,12 +6504,16 @@
 	[sequoia::testing::doubly_normal_beast<int, double, sequoia::testing::shared_counting_allocator<int, true, false, true>, sequoia::testing::shared_counting_allocator<double, true, false, true> >]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 298
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
 
+
+	=======================================
 
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 300
@@ -6105,6 +6522,8 @@
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 315
 
@@ -6112,12 +6531,16 @@
 	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, true, false> >]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 317
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, true, false> >]
 
+
+	=======================================
 
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 332
@@ -6126,12 +6549,16 @@
 	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 347
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
 
+
+	=======================================
 
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 369
@@ -6140,12 +6567,16 @@
 	[sequoia::testing::doubly_normal_beast<int, double, sequoia::testing::shared_counting_allocator<int, true, true, false>, sequoia::testing::shared_counting_allocator<double, true, true, false> >]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 298
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
 
+
+	=======================================
 
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 300
@@ -6154,12 +6585,16 @@
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 315
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, true, true> >]
 
+
+	=======================================
 
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 317
@@ -6168,12 +6603,16 @@
 	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, true, true> >]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 332
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_copy<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
 
+
+	=======================================
 
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 347
@@ -6182,6 +6621,8 @@
 	[sequoia::testing::inefficient_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 369
 
@@ -6189,6 +6630,8 @@
 	[sequoia::testing::doubly_normal_beast<int, double, sequoia::testing::shared_counting_allocator<int, true, true, true>, sequoia::testing::shared_counting_allocator<double, true, true, true> >]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 162
 
@@ -6196,12 +6639,16 @@
 	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 165
 
 	--Move-only Semantics--
 	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
 
+
+	=======================================
 
 	False Positive Failure:
 	../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 162
@@ -6210,6 +6657,8 @@
 	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 165
 
@@ -6217,12 +6666,16 @@
 	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 162
 
 	--Move-only Semantics--
 	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
 
+
+	=======================================
 
 	False Positive Failure:
 	../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 165
@@ -6231,6 +6684,8 @@
 	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 162
 
@@ -6238,10 +6693,14 @@
 	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
 
 
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 165
 
 	--Move-only Semantics--
 	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
 
+
+	=======================================
 

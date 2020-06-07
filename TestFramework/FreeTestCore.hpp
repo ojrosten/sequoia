@@ -101,11 +101,11 @@ namespace sequoia::testing
       }
       catch(const std::exception& e)
       {         
-        Checker::log_critical_failure(make_message("Unexpected", e.what()));
+        Checker::log_critical_failure(exception_message("Unexpected", e.what()));
       }
       catch(...)
       {
-        Checker::log_critical_failure(make_message("Unknown", ""));
+        Checker::log_critical_failure(exception_message("Unknown", ""));
       }
 
       return summarize(time);
@@ -130,9 +130,9 @@ namespace sequoia::testing
     virtual std::string current_message() const { return std::string{Checker::current_message()}; }
 
     [[nodiscard]]
-    std::string make_message(std::string_view tag, std::string_view exceptionMessage) const
+    std::string exception_message(std::string_view tag, std::string_view exceptionMessage) const
     {
-      return testing::make_message(tag, current_message(), exceptionMessage, Checker::exceptions_detected_by_sentinel());
+      return testing::exception_message(tag, current_message(), exceptionMessage, Checker::exceptions_detected_by_sentinel());
     }
   };
   
