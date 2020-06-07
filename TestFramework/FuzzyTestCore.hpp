@@ -94,8 +94,7 @@ namespace sequoia::testing
         else
         {
           append_indented(message, "Fuzzy comparison failed");
-          append_indented(message, "Obtained : ").append(to_string(value));
-          append_indented(message, "Predicted: ").append(to_string(prediction));           
+          append_indented(message, prediction_message(to_string(value), to_string(prediction)));
         }
         
         logger.log_failure(message);
@@ -199,14 +198,9 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string report(const T& value, const T& prediction) const
     {
-      std::string mess{"Obtained : " };
-      mess.append(to_string(value))
-        .append("\n\tPredicted: ")
-        .append(to_string(prediction))              
+      return prediction_message(to_string(value), to_string(prediction))
         .append(" +/- ")
         .append(to_string(m_Tol));
-
-      return mess;
     }
   };
 }
