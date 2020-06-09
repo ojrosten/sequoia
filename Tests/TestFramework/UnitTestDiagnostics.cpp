@@ -111,7 +111,7 @@ namespace sequoia::testing
 
     {
       type b{t_0{{2, 2.1f}, {2, 2.8f}}, {3.3, -9.6, 3.2}, {1.1, 0.2}};
-      check_equality(LINE(""), a, b);
+      check_equality(LINE(""), a, b, [](int, int){ return "Nested int advice";});
     }
 
     {
