@@ -57,6 +57,7 @@
     in RegularCheckersDetails.hpp and RegularAllocationCheckerDetails.hpp
 */
 
+#include "TestLogger.hpp"
 
 namespace sequoia::testing::impl
 {

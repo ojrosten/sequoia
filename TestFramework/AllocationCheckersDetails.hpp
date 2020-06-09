@@ -22,13 +22,18 @@ namespace sequoia::testing
 
 namespace sequoia::testing::impl
 {
+  struct allocation_advice
+  {
+    std::string operator()(int count, int) const;
+  };
+  
   template<test_mode Mode, class Container, class Allocator, class Predictions>
   static void check_allocation(std::string_view description, std::string_view detail, sentinel<Mode>& sentry, const Container& container, const basic_allocation_info<Container, Allocator, Predictions>& info, const int previous, const int prediction)
   {
     const auto current{info.count(container)};      
     auto message{sentry.add_details(description, detail)};
 
-    check_equality(std::move(message), sentry.logger(), current - previous, prediction);
+    check_equality(std::move(message), sentry.logger(), current - previous, prediction, allocation_advice{});
   }
 
   /*! \brief Wraps basic_allocation_info, together with two prior allocation counts.
