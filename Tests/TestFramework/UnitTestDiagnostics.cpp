@@ -82,7 +82,8 @@ namespace sequoia::testing
   void false_positive_diagnostics::test_container_checks()
   {
     check_equality(LINE("Empty vector check which should fail"), std::vector<double>{}, std::vector<double>{1});
-    check_equality(LINE("One element vector check which should fail due to wrong value"), std::vector<double>{1}, std::vector<double>{2});
+    check_equality(LINE("One element vector check which should fail due to wrong value"), std::vector<double>{1}, std::vector<double>{2},
+                   [](double, double) { return "Vector element advice"; });
     check_equality(LINE("One element vector check which should fail due to differing sizes"), std::vector<double>{1}, std::vector<double>{1,2});
     check_equality(LINE("Multi-element vector comparison which should fail due to last element"), std::vector<double>{1,5}, std::vector<double>{1,4});
     check_equality(LINE("Multi-element vector comparison which should fail due to first element"), std::vector<double>{1,5}, std::vector<double>{0,5});
