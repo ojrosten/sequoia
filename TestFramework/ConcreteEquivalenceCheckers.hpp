@@ -21,16 +21,16 @@ namespace sequoia::testing
   {
     using string_type = std::basic_string<Char, Traits, Allocator>;
     
-    template<test_mode Mode, std::size_t N>
-    static void check(std::string_view description, test_logger<Mode>& logger, const string_type& s, char const (&prediction)[N])
+    template<test_mode Mode, std::size_t N, class Advisor>
+    static void check(std::string_view description, test_logger<Mode>& logger, const string_type& s, char const (&prediction)[N], Advisor advisor)
     {
-      check_equality(description, logger, std::string_view{s}, std::string_view{prediction});
+      check_equality(description, logger, std::string_view{s}, std::string_view{prediction}, std::move(advisor));
     }
 
-    template<test_mode Mode>
-    static void check(std::string_view description, test_logger<Mode>& logger, const string_type& s, std::basic_string_view<Char, Traits> prediction)
+    template<test_mode Mode, class Advisor>
+    static void check(std::string_view description, test_logger<Mode>& logger, const string_type& s, std::basic_string_view<Char, Traits> prediction, Advisor advisor)
     {
-      check_equality(description, logger, std::string_view{s}, prediction);
+      check_equality(description, logger, std::string_view{s}, prediction, std::move(advisor));
     }
   };
 
@@ -40,13 +40,13 @@ namespace sequoia::testing
   template<class S, class T>
   struct equivalence_checker<std::pair<S, T>>
   {
-    template<test_mode Mode, class U, class V>
-    static void check(std::string_view description, test_logger<Mode>& logger, const std::pair<S, T>& value, const std::pair<U, V>& prediction)
+    template<test_mode Mode, class U, class V, class Advisor>
+    static void check(std::string_view description, test_logger<Mode>& logger, const std::pair<S, T>& value, const std::pair<U, V>& prediction, Advisor advisor)
     {        
       static_assert(std::is_same_v<std::decay_t<S>, std::decay_t<U>> && std::is_same_v<std::decay_t<T>, std::decay_t<V>>);
 
-      check_equality(append_indented(description, "First element of pair is incorrect"), logger, value.first, prediction.first);
-      check_equality(append_indented(description, "Second element of pair is incorrect"), logger, value.second, prediction.second);
+      check_equality(append_indented(description, "First element of pair is incorrect"), logger, value.first, prediction.first, advisor);
+      check_equality(append_indented(description, "Second element of pair is incorrect"), logger, value.second, prediction.second, advisor);
     }
   };
 
@@ -55,25 +55,25 @@ namespace sequoia::testing
   struct equivalence_checker<std::tuple<T...>>
   {
   private:
-    template<test_mode Mode, std::size_t I = 0, class... U>
-    static void check_tuple_elements(std::string_view description, test_logger<Mode>& logger, const std::tuple<T...>& value, const std::tuple<U...>& prediction)
+    template<test_mode Mode, std::size_t I = 0, class... U, class Advisor>
+    static void check_tuple_elements(std::string_view description, test_logger<Mode>& logger, const std::tuple<T...>& value, const std::tuple<U...>& prediction, Advisor advisor)
     {
       if constexpr(I < sizeof...(T))
       {
         const std::string message{"Element " + std::to_string(I) + " of tuple incorrect"};
-        check_equality(append_indented(description, message), logger, std::get<I>(value), std::get<I>(prediction));
-        check_tuple_elements<Mode, I+1>(description, logger, value, prediction);
+        check_equality(append_indented(description, message), logger, std::get<I>(value), std::get<I>(prediction), advisor);
+        check_tuple_elements<Mode, I+1>(description, logger, value, prediction, advisor);
       }
     }
       
   public:
-    template<test_mode Mode, class... U>
-    static void check(std::string_view description, test_logger<Mode>& logger, const std::tuple<T...>& value, const std::tuple<U...>& prediction)
-    {        
+    template<test_mode Mode, class... U, class Advisor>
+    static void check(std::string_view description, test_logger<Mode>& logger, const std::tuple<T...>& value, const std::tuple<U...>& prediction, Advisor advisor)
+    {
       static_assert(sizeof...(T) == sizeof...(U));
       static_assert((std::is_same_v<std::decay_t<T>, std::decay_t<U>> && ...));      
 
-      check_tuple_elements(description, logger, value, prediction);
+      check_tuple_elements(description, logger, value, prediction, advisor);
     }
   };
 }

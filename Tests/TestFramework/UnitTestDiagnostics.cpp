@@ -18,9 +18,9 @@ namespace sequoia::testing
   struct weak_equivalence_checker<perfectly_normal_beast<T>>
   {
     template<class Logger>
-    static void check(std::string_view description, Logger& logger, const perfectly_normal_beast<T>& beast, std::initializer_list<T> prediction)
+    static void check(std::string_view description, Logger& logger, const perfectly_normal_beast<T>& beast, std::initializer_list<T> prediction, null_advisor)
     {
-      check_range(description, logger, std::begin(beast.x), std::end(beast.x), std::begin(prediction), std::end(prediction));
+      check_range(description, logger, std::begin(beast.x), std::end(beast.x), std::begin(prediction), std::end(prediction), null_advisor{});
     }
   };
 
@@ -44,6 +44,9 @@ namespace sequoia::testing
   void false_positive_diagnostics::basic_tests()
   {
     check(LINE(""), false);
+    check(LINE(""), false, [](bool, bool){
+        return std::string{"I pity the fool who confuses the bool."};
+      });
       
     check_equality(LINE("Integers which should compare different"), 5, 4);
     check_equality(LINE(""), 6.5, 5.6);

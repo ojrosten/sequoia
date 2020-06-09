@@ -156,6 +156,9 @@ namespace sequoia::testing
     return !sentry.failure_detected();
   }
 
+  /// \brief tag to denote the absence of advice
+  struct null_advisor{};
+
   /*! \name dispatch_check basic overload set
 
       The next three functions form an overload set, dedicated to appropiately dispatching requests
@@ -172,10 +175,10 @@ namespace sequoia::testing
       The input type, T, must either be equality comparable or possess a detailed_equality_checker, or both. 
       Generally, it will be the case that T does indeed overload operator==; anything beyond 
       the simplest user-defined types should be furnished with a detailed_equality_checker.
-   */
+   */  
   
-  template<test_mode Mode, class T>
-  bool dispatch_check(std::string_view description, test_logger<Mode>& logger, equality_tag, const T& value, const T& prediction)
+  template<test_mode Mode, class T, class Advisor=null_advisor>
+  bool dispatch_check(std::string_view description, test_logger<Mode>& logger, equality_tag, const T& value, const T& prediction, Advisor advisor=Advisor{})
   {
     constexpr bool delegate{has_detailed_equality_checker_v<T> || is_container_v<T>};
 
@@ -194,7 +197,13 @@ namespace sequoia::testing
         auto message{operator_message(info, "==", "false")};
         if constexpr(!delegate)
         {
-          append_indented(message, prediction_message(to_string(value), to_string(prediction)));
+          std::string advice{};
+          if constexpr(std::is_invocable_r_v<std::string, Advisor, T, T>)
+          {
+            advice = advisor(value, prediction);
+          }
+          
+          append_indented(message, prediction_message(to_string(value), to_string(prediction), advice));
         }
         logger.log_failure(std::move(message));
       }
@@ -205,11 +214,11 @@ namespace sequoia::testing
       std::string_view desc{s.checks_registered() ? "" : description};
       if constexpr(has_detailed_equality_checker_v<T>)
       {
-        detailed_equality_checker<T>::check(desc, logger, value, prediction);
+        detailed_equality_checker<T>::check(desc, logger, value, prediction, advisor);
       }
       else if constexpr(is_container_v<T>)
       {
-        check_range(desc, logger, std::begin(value), std::end(value), std::begin(prediction), std::end(prediction));
+        check_range(desc, logger, std::begin(value), std::end(value), std::begin(prediction), std::end(prediction), advisor);
       }      
       else
       {
@@ -235,9 +244,9 @@ namespace sequoia::testing
     {      
       return general_equivalence_check<equivalence_checker<T>>(description, logger, value, std::forward<S>(s), std::forward<U>(u)...);
     }
-    else if constexpr(is_container_v<T> && (sizeof...(U) == 0))
+    else if constexpr(is_container_v<T> && (sizeof...(U) == 1) && std::is_same_v<std::decay_t<head_of_t<U...>>, null_advisor>)
     {
-      return check_range(add_type_info<T>(description), logger, equivalence_tag{}, std::begin(value), std::end(value), std::begin(std::forward<S>(s)), std::end(std::forward<S>(s)));
+      return check_range(add_type_info<T>(description), logger, equivalence_tag{}, std::begin(value), std::end(value), std::begin(std::forward<S>(s)), std::end(std::forward<S>(s)), std::forward<U>(u)...);
     }
     else
     {
@@ -260,9 +269,9 @@ namespace sequoia::testing
     {      
       return general_equivalence_check<weak_equivalence_checker<T>>(description, logger, value, std::forward<S>(s), std::forward<U>(u)...);
     }
-    else if constexpr(is_container_v<T> && (sizeof...(U) == 0))
+    else if constexpr(is_container_v<T> && (sizeof...(U) == 1) && std::is_same_v<std::decay_t<head_of_t<U...>>, null_advisor>)
     {
-      return check_range(add_type_info<T>(description), logger, weak_equivalence_tag{}, std::begin(value), std::end(value), std::begin(std::forward<S>(s)), std::end(std::forward<S>(s)));
+      return check_range(add_type_info<T>(description), logger, weak_equivalence_tag{}, std::begin(value), std::end(value), std::begin(std::forward<S>(s)), std::end(std::forward<S>(s)), std::forward<U...>(u)...);
     }
     else
     {
@@ -270,8 +279,8 @@ namespace sequoia::testing
     }
   }
 
-  template<test_mode Mode, class ElementDispatchDiscriminator, class Iter, class PredictionIter>
-  bool check_range(std::string_view description, test_logger<Mode>& logger, ElementDispatchDiscriminator discriminator, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
+  template<test_mode Mode, class ElementDispatchDiscriminator, class Iter, class PredictionIter, class Advisor=null_advisor>
+  bool check_range(std::string_view description, test_logger<Mode>& logger, ElementDispatchDiscriminator discriminator, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, Advisor advisor=Advisor{})
   {
     sentinel<Mode> r{logger, description};
     bool equal{true};
@@ -290,7 +299,7 @@ namespace sequoia::testing
         std::string_view desc{equal ? description : ""};
         std::string mess{append_indented(desc, "Element ")
             .append(std::to_string(dist)).append(" of range incorrect")};
-        if(!dispatch_check(std::move(mess), logger, discriminator, *iter, *predictionIter)) equal = false;
+        if(!dispatch_check(std::move(mess), logger, discriminator, *iter, *predictionIter, advisor)) equal = false;
       }
     }
     else
@@ -343,10 +352,10 @@ namespace sequoia::testing
 
   //================= namespace-level convenience functions =================//
 
-  template<test_mode Mode, class T>
-  bool check_equality(std::string_view description, test_logger<Mode>& logger, const T& value, const T& prediction)
+  template<test_mode Mode, class T, class Advisor=null_advisor>
+  bool check_equality(std::string_view description, test_logger<Mode>& logger, const T& value, const T& prediction, Advisor advisor=Advisor{})
   {
-    return dispatch_check(description, logger, equality_tag{}, value, prediction);
+    return dispatch_check(description, logger, equality_tag{}, value, prediction, std::move(advisor));
   }
 
   template<test_mode Mode, class T, class S, class... U>
@@ -361,16 +370,16 @@ namespace sequoia::testing
     return dispatch_check(description, logger, weak_equivalence_tag{}, value, std::forward<S>(s), std::forward<U>(u)...);      
   }
 
-  template<test_mode Mode>
-  bool check(std::string_view description, test_logger<Mode>& logger, const bool value)
+  template<test_mode Mode, class Advisor=null_advisor>
+  bool check(std::string_view description, test_logger<Mode>& logger, const bool value, Advisor advisor=Advisor{})
   {
-    return check_equality(description, logger, value, true);
+    return check_equality(description, logger, value, true, std::move(advisor));
   }
     
-  template<test_mode Mode, class Iter, class PredictionIter>
-  bool check_range(std::string_view description, test_logger<Mode>& logger, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
+  template<test_mode Mode, class Iter, class PredictionIter, class Advisor=null_advisor>
+  bool check_range(std::string_view description, test_logger<Mode>& logger, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, Advisor advisor=Advisor{})
   {
-    return check_range(description, logger, equality_tag{}, first, last, predictionFirst, predictionLast);      
+    return check_range(description, logger, equality_tag{}, first, last, predictionFirst, predictionLast, std::move(advisor));
   }
 
   template<test_mode Mode, class Iter, class PredictionIter>
@@ -419,27 +428,28 @@ namespace sequoia::testing
     checker& operator=(const checker&) = delete;      
     checker& operator=(checker&&)      = delete;
 
-    template<class T>
-    bool check_equality(std::string_view description, const T& value, const T& prediction)
+    template<class T, class Advisor=null_advisor>
+    bool check_equality(std::string_view description, const T& value, const T& prediction, Advisor advisor=Advisor{})
     {
-      return testing::check_equality(description, logger(), value, prediction);
+      return testing::check_equality(description, logger(), value, prediction, std::move(advisor));
     }
 
     template<class T, class S, class... U>
     bool check_equivalence(std::string_view description, const T& value, S&& s, U&&... u)
     {
-      return testing::check_equivalence(description, logger(), value, std::forward<S>(s), std::forward<U>(u)...);
+      return testing::check_equivalence(description, logger(), value, std::forward<S>(s), std::forward<U>(u)..., null_advisor{});
     }
 
     template<class T, class S, class... U>
     bool check_weak_equivalence(std::string_view description, const T& value, S&& s, U&&... u)
     {
-      return testing::check_weak_equivalence(description, logger(), value, std::forward<S>(s), std::forward<U>(u)...);
+      return testing::check_weak_equivalence(description, logger(), value, std::forward<S>(s), std::forward<U>(u)..., null_advisor{});
     }
 
-    bool check(std::string_view description, const bool value)
+    template<class Advisor=null_advisor>
+    bool check(std::string_view description, const bool value, Advisor advisor=Advisor{})
     {
-      return testing::check(description, logger(), value);
+      return testing::check(description, logger(), value, std::move(advisor));
     }
 
     template<class E, class Fn>
@@ -448,10 +458,10 @@ namespace sequoia::testing
       return testing::check_exception_thrown<E>(description, logger(), std::forward<Fn>(function));
     }
 
-    template<class Iter, class PredictionIter>
-    bool check_range(std::string_view description, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
+    template<class Iter, class PredictionIter, class Advisor=null_advisor>
+    bool check_range(std::string_view description, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, Advisor advisor=Advisor{})
     {
-      return testing::check_range(description, logger(), first, last, predictionFirst, predictionLast);
+      return testing::check_range(description, logger(), first, last, predictionFirst, predictionLast, std::move(advisor));
     }
 
     template<class Stream>

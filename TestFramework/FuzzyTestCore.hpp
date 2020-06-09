@@ -63,21 +63,21 @@ namespace sequoia::testing
       automatically used by
       \ref dispatch_check_fuzzy "dispatch_check"
    */
-  template<class Compare, class T, class=std::void_t<>>
+  template<class Compare, class T, class Advisor, class=std::void_t<>>
   struct reports_for_type : std::false_type
   {};
 
-  template<class Compare, class T>
-  struct reports_for_type<Compare, T, std::void_t<decltype(std::declval<Compare>().report(std::declval<T>(), std::declval<T>()))>>
+  template<class Compare, class T, class Advisor>
+  struct reports_for_type<Compare, T, Advisor, std::void_t<decltype(std::declval<Compare>().report(std::declval<T>(), std::declval<T>(), std::declval<Advisor>()))>>
     : std::true_type
   {};
 
-  template<class Compare, class T>
-  constexpr bool reports_for_type_v{reports_for_type<Compare, T>::value};    
+  template<class Compare, class T, class Advisor>
+  constexpr bool reports_for_type_v{reports_for_type<Compare, T, Advisor>::value};
 
   /*! \brief Adds to the overload set dispatch_check_free_overloads */
-  template<test_mode Mode, class Compare, class T>
-  bool dispatch_check(std::string_view description, test_logger<Mode>& logger, fuzzy_compare<Compare> c, const T& value, const T& prediction)
+  template<test_mode Mode, class Compare, class T, class Advisor>
+  bool dispatch_check(std::string_view description, test_logger<Mode>& logger, fuzzy_compare<Compare> c, const T& value, const T& prediction, Advisor advisor)
   {  
     sentinel<Mode> sentry{logger, add_type_info<T>(description)};
 
@@ -87,9 +87,9 @@ namespace sequoia::testing
       if(!c.compare(prediction, value))
       {
         std::string message{add_type_info<T>(indent(description))};
-        if constexpr(reports_for_type_v<Compare, T>)
+        if constexpr(reports_for_type_v<Compare, T, Advisor>)
         {
-          append_indented(message, c.compare.report(value, prediction));
+          append_indented(message, c.compare.report(value, prediction, advisor));
         }
         else
         {
@@ -104,7 +104,7 @@ namespace sequoia::testing
     }
     else if constexpr(is_container_v<T>)
     {
-      return check_range(description, logger, std::move(c), value.begin(), value.end(), prediction.begin(), prediction.end());
+      return check_range(description, logger, std::move(c), value.begin(), value.end(), prediction.begin(), prediction.end(), advisor);
     }
     else
     {
@@ -114,16 +114,16 @@ namespace sequoia::testing
 
   //================= namespace-level convenience functions =================//
 
-  template<test_mode Mode, class Compare, class T>
-  bool check_approx_equality(std::string_view description, test_logger<Mode>& logger, Compare&& compare, const T& value, const T& prediction)
+  template<test_mode Mode, class Compare, class T, class Advisor>
+  bool check_approx_equality(std::string_view description, test_logger<Mode>& logger, Compare&& compare, const T& value, const T& prediction, Advisor advisor)
   {
-    return dispatch_check(description, logger, fuzzy_compare<Compare>{compare}, value, prediction);
+    return dispatch_check(description, logger, fuzzy_compare<Compare>{compare}, value, prediction, std::move(advisor));
   }
 
-  template<test_mode Mode, class Iter, class PredictionIter, class Compare>
-  bool check_range_approx(std::string_view description, test_logger<Mode>& logger, Compare compare, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
+  template<test_mode Mode, class Iter, class PredictionIter, class Compare, class Advisor>
+  bool check_range_approx(std::string_view description, test_logger<Mode>& logger, Compare compare, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, Advisor advisor)
   {
-    return check_range(description, logger, fuzzy_compare{std::move(compare)}, first, last, predictionFirst, predictionLast);      
+    return check_range(description, logger, fuzzy_compare{std::move(compare)}, first, last, predictionFirst, predictionLast, std::move(advisor));
   }
 
   /*! \brief class template for plugging into the \ref checker_primary "checker"
@@ -144,16 +144,16 @@ namespace sequoia::testing
     fuzzy_extender& operator=(const fuzzy_extender&) = delete;
     fuzzy_extender& operator=(fuzzy_extender&&)      = delete;
 
-    template<class T, class Compare>
-    bool check_approx_equality(std::string_view description, Compare compare, const T& value, const T& prediction)
+    template<class T, class Compare, class Advisor=null_advisor>
+    bool check_approx_equality(std::string_view description, Compare compare, const T& value, const T& prediction, Advisor advisor=Advisor{})
     {
-      return testing::check_approx_equality(description, m_Logger, std::move(compare), value, prediction);      
+      return testing::check_approx_equality(description, m_Logger, std::move(compare), value, prediction, std::move(advisor));      
     }
 
-    template<class Iter, class PredictionIter, class Compare>
-    bool check_range_approx(std::string_view description, Compare compare, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)
+    template<class Iter, class PredictionIter, class Compare, class Advisor=null_advisor>
+    bool check_range_approx(std::string_view description, Compare compare, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, Advisor advisor=Advisor{})
     {
-      return testing::check_range_approx(description, m_Logger, std::move(compare), first, last, predictionFirst, predictionLast);      
+      return testing::check_range_approx(description, m_Logger, std::move(compare), first, last, predictionFirst, predictionLast, std::move(advisor));      
     }
 
   protected:    
@@ -195,12 +195,20 @@ namespace sequoia::testing
       return abs(value - prediction) <= m_Tol;
     }
 
+    template<class Advisor>
     [[nodiscard]]
-    std::string report(const T& value, const T& prediction) const
+    std::string report(const T& value, const T& prediction, Advisor advisor) const
     {
-      return prediction_message(to_string(value), to_string(prediction))
+      auto mess{prediction_message(to_string(value), to_string(prediction))
         .append(" +/- ")
-        .append(to_string(m_Tol));
+        .append(to_string(m_Tol))};
+
+      if constexpr(std::is_invocable_r_v<std::string, Advisor, T, T>)
+      {
+        mess.append_indented(advisor(value, prediction));
+      }
+
+      return mess;
     }
   };
 }

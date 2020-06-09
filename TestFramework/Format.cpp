@@ -115,7 +115,7 @@ namespace sequoia::testing
     
     if(!advice.empty())
     {
-      append_indented(info, "Advice: ").append(advice);
+      append_indented(info, "Advice   : ").append(advice);
     }
 
     return info;

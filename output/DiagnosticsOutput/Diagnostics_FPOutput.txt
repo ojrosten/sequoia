@@ -7,7 +7,17 @@
 
 	=======================================
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 48
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 47
+
+	[bool]
+	operator== returned false
+	Obtained : false
+	Predicted: true
+	Advice   : I pity the fool who confuses the bool.
+
+	=======================================
+
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 51
 	Integers which should compare different
 
 	[int]
@@ -17,7 +27,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 49
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 52
 
 	[double]
 	operator== returned false
@@ -26,7 +36,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 51
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 54
 
 	[std::__1::pair<int, double>]
 	operator== returned false
@@ -39,7 +49,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 52
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 55
 
 	[std::__1::pair<int, double>]
 	operator== returned false
@@ -52,7 +62,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 53
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 56
 
 	[std::__1::pair<int, double>]
 	operator== returned false
@@ -71,7 +81,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 55
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 58
 
 	[std::__1::tuple<int, double, float>]
 	operator== returned false
@@ -84,7 +94,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 56
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 59
 
 	[std::__1::tuple<int, double, float>]
 	operator== returned false
@@ -97,7 +107,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 57
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 60
 
 	[std::__1::tuple<int, double, float>]
 	operator== returned false
@@ -110,7 +120,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 59
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 62
 	Exception expected but nothing thrown
 
 	Expected Exception Type:
@@ -119,7 +129,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 60
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 63
 	Exception thrown but of wrong type
 
 	Expected Exception Type:
@@ -129,7 +139,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 61
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 64
 	Exception thrown but of unknown type
 
 	Expected Exception Type:
@@ -138,7 +148,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 66
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 69
 	Empty vector check which should fail
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
@@ -152,7 +162,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 67
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 70
 	One element vector check which should fail due to wrong value
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
@@ -166,7 +176,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 68
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 71
 	One element vector check which should fail due to differing sizes
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
@@ -180,7 +190,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 69
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 72
 	Multi-element vector comparison which should fail due to last element
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
@@ -194,7 +204,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 70
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 73
 	Multi-element vector comparison which should fail due to first element
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
@@ -208,7 +218,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 71
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 74
 	Multi-element vector comparison which should fail due to middle element
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
@@ -222,7 +232,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 72
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 75
 	Multi-element vector comparison which should fail due to different sizes
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
@@ -236,7 +246,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 76
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 79
 	Iterators demarcate differing number of elements
 
 	Container size wrong
@@ -247,7 +257,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 77
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 80
 	Iterators demarcate differing elements
 
 	Element 0 of range incorrect
@@ -276,7 +286,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 80
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 83
 	Strings of differing length
 
 	[std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >]
@@ -290,7 +300,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 81
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 84
 	Differing strings of same length
 
 	[std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >]
@@ -310,7 +320,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 95
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 98
 
 	[std::__1::tuple<std::__1::vector<std::__1::pair<int, float>, std::__1::allocator<std::__1::pair<int, float> > >, std::__1::set<double, std::__1::less<double>, std::__1::allocator<double> >, std::__1::complex<double> >]
 	operator== returned false
@@ -331,7 +341,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 100
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 103
 
 	[std::__1::tuple<std::__1::vector<std::__1::pair<int, float>, std::__1::allocator<std::__1::pair<int, float> > >, std::__1::set<double, std::__1::less<double>, std::__1::allocator<double> >, std::__1::complex<double> >]
 	operator== returned false
@@ -348,7 +358,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 106
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 109
 	Broken equality
 
 	--Regular Semantics--
@@ -360,7 +370,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 107
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 110
 	Broken inequality
 
 	--Regular Semantics--
@@ -372,7 +382,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 108
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 111
 	Broken copy
 
 	--Regular Semantics--
@@ -402,7 +412,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 109
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 112
 	Broken move
 
 	--Regular Semantics--
@@ -414,7 +424,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 110
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 113
 	Broken copy assignment
 
 	--Regular Semantics--
@@ -432,7 +442,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 111
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 114
 	Broken move assignment
 
 	--Regular Semantics--
@@ -444,7 +454,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 112
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 115
 	Broken swap
 
 	--Regular Semantics--
@@ -462,7 +472,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 113
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 116
 	Broken copy value semantics
 
 	--Regular Semantics--
@@ -480,7 +490,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 114
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 117
 	Broken copy assignment value semantics
 
 	--Regular Semantics--
@@ -492,7 +502,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 116
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 119
 	Broken check invariant
 
 	--Regular Semantics--
@@ -504,7 +514,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 121
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 124
 
 	Comparison performed using:
 	[sequoia::testing::equivalence_checker<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >]
@@ -521,7 +531,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 123
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 126
 
 	[std::__1::vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > >]
 	Element 1 of range incorrect
@@ -540,7 +550,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 129
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 132
 
 	Comparison performed using:
 	[sequoia::testing::weak_equivalence_checker<sequoia::testing::perfectly_normal_beast<int, std::__1::allocator<int> > >]
@@ -554,7 +564,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 132
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 135
 
 	[std::__1::vector<sequoia::testing::perfectly_normal_beast<int, std::__1::allocator<int> >, std::__1::allocator<sequoia::testing::perfectly_normal_beast<int, std::__1::allocator<int> > > >]
 	Element 1 of range incorrect
@@ -687,24 +697,24 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-	Fast Task duration: 0.00126334s +- 4 * 0.00017956
-	Slow Task duration: 0.00132543s +- 4 * 0.00011221 [1.04914; (2, 2)]
+	Fast Task duration: 0.00131735s +- 4 * 0.000148384
+	Slow Task duration: 0.00139068s +- 4 * 1.73034e-05 [1.05566; (2, 2)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-	Fast Task duration: 0.00135298s +- 4 * 4.67467e-05
-	Slow Task duration: 0.00134287s +- 4 * 4.30359e-05 [0.992527; (2, 3)]
+	Fast Task duration: 0.00138653s +- 4 * 9.54262e-06
+	Slow Task duration: 0.00138647s +- 4 * 1.1411e-05 [0.999953; (2, 3)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-	Fast Task duration: 0.00134745s +- 4 * 8.59493e-05
-	Slow Task duration: 0.00465618s +- 4 * 0.000519173 [3.45555; (2, 2.5)]
+	Fast Task duration: 0.00138388s +- 4 * 2.68605e-05
+	Slow Task duration: 0.00493304s +- 4 * 0.000302066 [3.56465; (2, 2.5)]
 
 	=======================================
 
@@ -5923,7 +5933,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 153
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 156
 
 	[bool]
 
@@ -5931,7 +5941,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 155
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 158
 
 	[int]
 
@@ -5939,7 +5949,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 156
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 159
 
 	[double]
 
@@ -5947,7 +5957,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 158
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 161
 
 	[std::__1::pair<int, double>]
 
@@ -5955,7 +5965,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 160
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 163
 
 	[std::__1::tuple<int, double, float>]
 
@@ -5963,7 +5973,7 @@
 	=======================================
 
 	False Positive Failure:
-		../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 162
+		../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 165
 
 	Expected Exception Type:
 	[std::runtime_error]
@@ -5972,7 +5982,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 167
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 170
 	Empty vector check which should pass
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
@@ -5981,7 +5991,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 168
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 171
 	One element vector check which should pass
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
@@ -5990,7 +6000,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 169
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 172
 	Multi-element vector comparison which should pass
 
 	[std::__1::vector<double, std::__1::allocator<double> >]
@@ -5999,14 +6009,14 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 173
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 176
 	Iterators demarcate identical elements
 
 
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 175
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 178
 	Differing strings
 
 	[std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >]
@@ -6015,7 +6025,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 188
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 191
 
 	[std::__1::tuple<std::__1::vector<std::__1::pair<int, float>, std::__1::allocator<std::__1::pair<int, float> > >, std::__1::set<double, std::__1::less<double>, std::__1::allocator<double> >, std::__1::complex<double> >]
 
@@ -6023,7 +6033,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 193
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 196
 
 	--Regular Semantics--
 
@@ -6031,7 +6041,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 198
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 201
 
 	Comparison performed using:
 	[sequoia::testing::equivalence_checker<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >]
@@ -6042,7 +6052,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 200
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 203
 
 	[std::__1::vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > >]
 
@@ -6050,7 +6060,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 206
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 209
 
 	Comparison performed using:
 	[sequoia::testing::weak_equivalence_checker<sequoia::testing::perfectly_normal_beast<int, std::__1::allocator<int> > >]
@@ -6061,7 +6071,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 209
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 212
 
 	[std::__1::vector<sequoia::testing::perfectly_normal_beast<int, std::__1::allocator<int> >, std::__1::allocator<sequoia::testing::perfectly_normal_beast<int, std::__1::allocator<int> > > >]
 
@@ -6081,8 +6091,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67
 	Performance Test which should pass
 
-	Fast Task duration: 0.00133503s +- 4 * 0.000118727
-	Slow Task duration: 0.00257571s +- 4 * 0.000101765 [1.92933; (1.8, 2.1)]
+	Fast Task duration: 0.00136857s +- 4 * 7.33657e-05
+	Slow Task duration: 0.00245931s +- 4 * 0.000274747 [1.79699; (1.8, 2.1)]
 
 
 	=======================================
@@ -6091,8 +6101,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68
 	Performance Test which should pass
 
-	Fast Task duration: 0.00136545s +- 4 * 0.000101417
-	Slow Task duration: 0.00481469s +- 4 * 0.000496207 [3.52609; (3.6, 4.1)]
+	Fast Task duration: 0.00139486s +- 4 * 6.76587e-06
+	Slow Task duration: 0.00500442s +- 4 * 0.000335458 [3.58776; (3.6, 4.1)]
 
 
 	=======================================

@@ -54,7 +54,7 @@ namespace sequoia
       return impl::variadic_traits_helper<T...>::size();
     }
   };
-    
+     
   template<>
   struct variadic_traits<>
   {
@@ -66,6 +66,12 @@ namespace sequoia
     }
   };
 
+  template<class... T>
+  using head_of_t = typename variadic_traits<T...>::head;
+  
+  template<class... T>
+  using tail_of_t = typename variadic_traits<T...>::tail;
+ 
   // is_base_of_head
   
   template<class T, class... Args>
