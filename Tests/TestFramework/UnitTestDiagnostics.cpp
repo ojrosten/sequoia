@@ -24,6 +24,19 @@ namespace sequoia::testing
     }
   };
 
+  struct advisor
+  {
+    std::string operator()(int, int) const
+    {
+      return {"Integer advice"};
+    }
+
+    std::string operator()(double, double) const
+    {
+      return {"Double advice"};
+    }
+  };
+
   
   [[nodiscard]]
   std::string_view false_positive_diagnostics::source_file_name() const noexcept
@@ -49,11 +62,13 @@ namespace sequoia::testing
       });
       
     check_equality(LINE("Integers which should compare different"), 5, 4);
-    check_equality(LINE(""), 6.5, 5.6);
+    check_equality(LINE(""), 6.5, 5.6, [](double, double){
+        return std::string{"Double, double, toil and trouble"};
+      });
 
     check_equality(LINE(""), std::pair<int, double>{5, 7.8}, std::pair<int, double>{5, -7.8});
     check_equality(LINE(""), std::pair<int, double>{5, 7.8}, std::pair<int, double>{-5, 7.8});
-    check_equality(LINE(""), std::pair<int, double>{5, 7.8}, std::pair<int, double>{-5, 6.8});
+    check_equality(LINE(""), std::pair<int, double>{5, 7.8}, std::pair<int, double>{-5, 6.8}, advisor{});
 
     check_equality(LINE(""), std::tuple<int, double, float>{4, 3.4, -9.2f}, std::tuple<int, double, float>{0, 3.4, -9.2f});
     check_equality(LINE(""), std::tuple<int, double, float>{4, 3.4, -9.2f}, std::tuple<int, double, float>{4, 0.0, -9.2f});
