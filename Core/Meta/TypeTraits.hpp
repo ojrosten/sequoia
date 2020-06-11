@@ -199,7 +199,7 @@ namespace sequoia
 
   // is_serializable
 
-  // This makelval hack is to work around a bug in the XCode 10.2 stl implementation:
+  // This makelval is in part a hack is to work around a bug in the XCode 10.2 stl implementation:
   // ostream line 1036. Without this, e.g. decltype(std::stringstream{} << std::vector<int>{})
   // deduces stringstream&
   template<class T>

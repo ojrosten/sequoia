@@ -203,9 +203,9 @@ namespace sequoia::testing
         .append(" +/- ")
         .append(to_string(m_Tol))};
 
-      if constexpr(std::is_invocable_r_v<std::string, Advisor, T, T>)
+      if constexpr(is_advisor_v<Advisor, T, T>)
       {
-        mess.append_indented(advisor(value, prediction));
+        append_indented(mess, advisor(value, prediction));
       }
 
       return mess;

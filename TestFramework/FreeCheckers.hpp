@@ -76,6 +76,7 @@
 */
 
 #include "TestLogger.hpp"
+#include "Utilities.hpp"
 
 namespace sequoia::testing
 {
@@ -128,6 +129,39 @@ namespace sequoia::testing
     return serializer<T>::make(value);    
   }
 
+  /// \brief Represents the absence of advice
+  struct null_advisor
+  {
+    template<class T, class U>
+    std::string operator()(const T&, const U&) const
+    {
+      return "";
+    }
+  };
+
+  template<test_mode Mode, class Checker, class=std::void_t<>, class... Ts>
+  struct advice_not_required : std::false_type
+  {};
+
+  template<test_mode Mode, class Checker, class... Ts>
+  struct advice_not_required<Mode, Checker, std::void_t<decltype(Checker::check(std::string_view{}, makelval<test_logger<Mode>>(), std::declval<Ts>()...))>, Ts...>
+    : std::true_type
+  {};
+
+  template<test_mode Mode, class Checker, class... Ts>
+  constexpr bool advice_not_required_v{advice_not_required<Mode, Checker, std::void_t<>, Ts...>::value};
+
+  template<class A, class T, class U>
+  struct is_advisor : std::is_invocable_r<std::string, A, T, U>
+  {};
+
+  template<class T, class U>
+  struct is_advisor<void, T, U> : std::false_type
+  {};
+
+  template<class A, class T, class U>
+  constexpr bool is_advisor_v{is_advisor<A, T, U>::value};  
+
   /*! \brief generic function that generates a check from any class providing a static check method.
 
       This employs a \ref test_logger_primary "sentinel" and so can be used naively.
@@ -150,14 +184,29 @@ namespace sequoia::testing
     };
       
     sentinel<Mode> sentry{logger, message};
-    
-    EquivChecker::check(message, logger, value, s, u...);
+
+    if constexpr(advice_not_required_v<Mode, EquivChecker, T, S, U...>)
+    {
+      EquivChecker::check(message, logger, value, s, u...);
+    }
+    else if constexpr(   ((sizeof...(U) == 1) && is_advisor_v<head_of_t<U...>, T, S>)
+                      || ((sizeof...(U) > 1) && is_advisor_v<tail_of_t<U...>, T, S>))
+    {
+      auto fn{
+        [message,&logger,&value](auto&&... predictions){
+          EquivChecker::check(message, logger, value, std::forward<decltype(predictions)>(predictions)...);
+        }
+      };
+
+      impl::filter(fn, std::make_index_sequence<sizeof...(u)>(), s, u...);
+    }
+    else
+    {
+      EquivChecker::check(message, logger, value, s, u..., null_advisor{});
+    }
       
     return !sentry.failure_detected();
-  }
-
-  /// \brief tag to denote the absence of advice
-  struct null_advisor{};
+  }  
 
   /*! \name dispatch_check basic overload set
 
@@ -214,7 +263,14 @@ namespace sequoia::testing
       std::string_view desc{s.checks_registered() ? "" : description};
       if constexpr(has_detailed_equality_checker_v<T>)
       {
-        detailed_equality_checker<T>::check(desc, logger, value, prediction, advisor);
+        if constexpr(advice_not_required_v<Mode, detailed_equality_checker<T>, T, T>)
+        {          
+          detailed_equality_checker<T>::check(desc, logger, value, prediction);
+        }
+        else
+        {
+          detailed_equality_checker<T>::check(desc, logger, value, prediction, advisor);
+        }
       }
       else if constexpr(is_container_v<T>)
       {
@@ -244,7 +300,7 @@ namespace sequoia::testing
     {      
       return general_equivalence_check<equivalence_checker<T>>(description, logger, value, std::forward<S>(s), std::forward<U>(u)...);
     }
-    else if constexpr(is_container_v<T> && (sizeof...(U) == 1) && std::is_same_v<std::decay_t<head_of_t<U...>>, null_advisor>)
+    else if constexpr(is_container_v<T> && ((sizeof...(U) == 0) || ((sizeof...(U) == 1) && is_advisor_v<head_of_t<U...>, T, S>)))
     {
       return check_range(add_type_info<T>(description), logger, equivalence_tag{}, std::begin(value), std::end(value), std::begin(std::forward<S>(s)), std::end(std::forward<S>(s)), std::forward<U>(u)...);
     }
@@ -269,7 +325,7 @@ namespace sequoia::testing
     {      
       return general_equivalence_check<weak_equivalence_checker<T>>(description, logger, value, std::forward<S>(s), std::forward<U>(u)...);
     }
-    else if constexpr(is_container_v<T> && (sizeof...(U) == 1) && std::is_same_v<std::decay_t<head_of_t<U...>>, null_advisor>)
+    else if constexpr(is_container_v<T> && ((sizeof...(U) == 0) || ((sizeof...(U) == 1) && is_advisor_v<head_of_t<U...>, T, S>)))
     {
       return check_range(add_type_info<T>(description), logger, weak_equivalence_tag{}, std::begin(value), std::end(value), std::begin(std::forward<S>(s)), std::end(std::forward<S>(s)), std::forward<U...>(u)...);
     }
@@ -437,13 +493,13 @@ namespace sequoia::testing
     template<class T, class S, class... U>
     bool check_equivalence(std::string_view description, const T& value, S&& s, U&&... u)
     {
-      return testing::check_equivalence(description, logger(), value, std::forward<S>(s), std::forward<U>(u)..., null_advisor{});
+      return testing::check_equivalence(description, logger(), value, std::forward<S>(s), std::forward<U>(u)...);
     }
 
     template<class T, class S, class... U>
     bool check_weak_equivalence(std::string_view description, const T& value, S&& s, U&&... u)
     {
-      return testing::check_weak_equivalence(description, logger(), value, std::forward<S>(s), std::forward<U>(u)..., null_advisor{});
+      return testing::check_weak_equivalence(description, logger(), value, std::forward<S>(s), std::forward<U>(u)...);
     }
 
     template<class Advisor=null_advisor>
