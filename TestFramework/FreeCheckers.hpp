@@ -131,36 +131,30 @@ namespace sequoia::testing
 
   /// \brief Represents the absence of advice
   struct null_advisor
-  {
-    template<class T, class U>
-    std::string operator()(const T&, const U&) const
-    {
-      return "";
-    }
-  };
+  {};
 
   template<test_mode Mode, class Checker, class=std::void_t<>, class... Ts>
-  struct advice_not_required : std::false_type
+  struct check_method_is_invocable : std::false_type
   {};
 
   template<test_mode Mode, class Checker, class... Ts>
-  struct advice_not_required<Mode, Checker, std::void_t<decltype(Checker::check(std::string_view{}, makelval<test_logger<Mode>>(), std::declval<Ts>()...))>, Ts...>
+  struct check_method_is_invocable<Mode, Checker, std::void_t<decltype(Checker::check(std::string_view{}, makelval<test_logger<Mode>>(), std::declval<Ts>()...))>, Ts...>
     : std::true_type
   {};
 
   template<test_mode Mode, class Checker, class... Ts>
-  constexpr bool advice_not_required_v{advice_not_required<Mode, Checker, std::void_t<>, Ts...>::value};
+  constexpr bool check_method_is_invocable_v{check_method_is_invocable<Mode, Checker, std::void_t<>, Ts...>::value};
 
-  template<class A, class T, class U>
-  struct is_advisor : std::is_invocable_r<std::string, A, T, U>
+  template<class A, class T>
+  struct is_advisor : std::is_invocable_r<std::string, A, T>
   {};
 
-  template<class T, class U>
-  struct is_advisor<void, T, U> : std::false_type
+  template<class T>
+  struct is_advisor<void, T> : std::false_type
   {};
 
-  template<class A, class T, class U>
-  constexpr bool is_advisor_v{is_advisor<A, T, U>::value};  
+  template<class A, class T>
+  constexpr bool is_advisor_v{is_advisor<A, T>::value};  
 
   /*! \brief generic function that generates a check from any class providing a static check method.
 
@@ -185,12 +179,12 @@ namespace sequoia::testing
       
     sentinel<Mode> sentry{logger, message};
 
-    if constexpr(advice_not_required_v<Mode, EquivChecker, T, S, U...>)
+    if constexpr(check_method_is_invocable_v<Mode, EquivChecker, T, S, U...>)
     {
       EquivChecker::check(message, logger, value, s, u...);
     }
-    else if constexpr(   ((sizeof...(U) == 1) && is_advisor_v<head_of_t<U...>, T, S>)
-                      || ((sizeof...(U) > 1) && is_advisor_v<tail_of_t<U...>, T, S>))
+    else if constexpr(   ((sizeof...(U) == 1) && is_advisor_v<head_of_t<U...>, T>)
+                      || ((sizeof...(U)  > 1) && is_advisor_v<tail_of_t<U...>, T>))
     {
       auto fn{
         [message,&logger,&value](auto&&... predictions){
@@ -206,13 +200,20 @@ namespace sequoia::testing
     }
       
     return !sentry.failure_detected();
-  }  
+  }
 
   /*! \name dispatch_check basic overload set
 
       The next three functions form an overload set, dedicated to appropiately dispatching requests
       to check equality, equivalence and weak equivalence. This set may be supplemented by extenders
       of the testing framework, see FuzzyTestCore.hpp for an example.
+
+      In each case, the final argument may be utilized to supply custom advice, targeted at particular
+      failures which may benefit from explanation. To active this, clients must supply a function
+      object, with operator() overloaded to take two instances of a type and returning a string.
+      Internally, reflection is used to invoke this function only when the matching type is obtained.
+      Therefore, advice for type T can be supplied to a check of e.g. std::vector<T>, and the advice
+      will find its way to the correct invocation site.
 
       \anchor dispatch_check_free_overloads
 
@@ -263,7 +264,7 @@ namespace sequoia::testing
       std::string_view desc{s.checks_registered() ? "" : description};
       if constexpr(has_detailed_equality_checker_v<T>)
       {
-        if constexpr(advice_not_required_v<Mode, detailed_equality_checker<T>, T, T>)
+        if constexpr(check_method_is_invocable_v<Mode, detailed_equality_checker<T>, T, T>)
         {          
           detailed_equality_checker<T>::check(desc, logger, value, prediction);
         }

@@ -203,7 +203,7 @@ namespace sequoia::testing
         .append(" +/- ")
         .append(to_string(m_Tol))};
 
-      if constexpr(is_advisor_v<Advisor, T, T>)
+      if constexpr(is_advisor_v<Advisor, T>)
       {
         append_indented(mess, advisor(value, prediction));
       }
