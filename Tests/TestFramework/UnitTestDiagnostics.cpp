@@ -18,9 +18,15 @@ namespace sequoia::testing
   struct weak_equivalence_checker<perfectly_normal_beast<T>>
   {
     template<class Logger>
-    static void check(std::string_view description, Logger& logger, const perfectly_normal_beast<T>& beast, std::initializer_list<T> prediction, null_advisor)
+    static void check(std::string_view description, Logger& logger, const perfectly_normal_beast<T>& beast, std::initializer_list<T> prediction)
     {
-      check_range(description, logger, std::begin(beast.x), std::end(beast.x), std::begin(prediction), std::end(prediction), null_advisor{});
+      check_range(description, logger, std::begin(beast.x), std::end(beast.x), std::begin(prediction), std::end(prediction));
+    }
+
+    template<class Logger, class Advisor>
+    static void check(std::string_view description, Logger& logger, const perfectly_normal_beast<T>& beast, std::initializer_list<T> prediction, Advisor advisor)
+    {
+      check_range(description, logger, std::begin(beast.x), std::end(beast.x), std::begin(prediction), std::end(prediction), std::move(advisor));
     }
   };
 
@@ -138,17 +144,31 @@ namespace sequoia::testing
   void false_positive_diagnostics::test_equivalence_checks()
   {
     check_equivalence(LINE(""), std::string{"foo"}, "fo");
+    check_equivalence(LINE(""), std::string{"foo"}, "fob", [](char, char){
+        return "Sort your chars out!";
+      });
 
     check_equivalence(LINE(""), std::vector<std::string>{{"a"}, {"b"}}, std::initializer_list<std::string_view>{"a", "c"});
+
+    check_equivalence(LINE(""), std::vector<std::string>{{"a"}, {"b"}}, std::initializer_list<std::string_view>{"a", "c"}, [](char, char){
+        return "Ah, chars. So easy to get wrong.";
+      });
   }
 
   void false_positive_diagnostics::test_weak_equivalence_checks()
   {
     using beast = perfectly_normal_beast<int>;
     check_weak_equivalence(LINE(""), beast{1, 2}, std::initializer_list<int>{1, 1});
+    check_weak_equivalence(LINE(""), beast{1, 2}, std::initializer_list<int>{1, 1}, [](int, int){
+        return "Don't mess with the beast.";
+      });
 
     using prediction = std::initializer_list<std::initializer_list<int>>;
     check_weak_equivalence(LINE(""), std::vector<beast>{{1, 2}, {3, 4}}, prediction{{1, 2}, {3, 5}});
+    check_weak_equivalence(LINE(""), std::vector<beast>{{1, 2}, {3, 4}}, prediction{{1, 2}, {3, 5}},
+                           [](int, int){
+                             return "Or at least don't mess with a vector of beasts.";
+                           });
   }
 
   [[nodiscard]]

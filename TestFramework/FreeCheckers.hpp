@@ -300,8 +300,8 @@ namespace sequoia::testing
     {      
       return general_equivalence_check<equivalence_checker<T>>(description, logger, value, std::forward<S>(s), std::forward<U>(u)...);
     }
-    else if constexpr(is_container_v<T> && ((sizeof...(U) == 0) || ((sizeof...(U) == 1) && is_advisor_v<head_of_t<U...>, T, S>)))
-    {
+    else if constexpr(is_container_v<T>)
+    {      
       return check_range(add_type_info<T>(description), logger, equivalence_tag{}, std::begin(value), std::end(value), std::begin(std::forward<S>(s)), std::end(std::forward<S>(s)), std::forward<U>(u)...);
     }
     else
@@ -325,7 +325,7 @@ namespace sequoia::testing
     {      
       return general_equivalence_check<weak_equivalence_checker<T>>(description, logger, value, std::forward<S>(s), std::forward<U>(u)...);
     }
-    else if constexpr(is_container_v<T> && ((sizeof...(U) == 0) || ((sizeof...(U) == 1) && is_advisor_v<head_of_t<U...>, T, S>)))
+    else if constexpr(is_container_v<T>)
     {
       return check_range(add_type_info<T>(description), logger, weak_equivalence_tag{}, std::begin(value), std::end(value), std::begin(std::forward<S>(s)), std::end(std::forward<S>(s)), std::forward<U...>(u)...);
     }
