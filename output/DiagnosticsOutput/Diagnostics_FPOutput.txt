@@ -772,24 +772,24 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-	Fast Task duration: 0.00134493s +- 4 * 0.000121781
-	Slow Task duration: 0.00137921s +- 4 * 1.19216e-05 [1.02549; (2, 2)]
+	Fast Task duration: 0.00145173s +- 4 * 0.000165342
+	Slow Task duration: 0.0013105s +- 4 * 0.000131406 [0.902715; (2, 2)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-	Fast Task duration: 0.00125313s +- 4 * 0.000127974
-	Slow Task duration: 0.0013477s +- 4 * 5.33915e-05 [1.07547; (2, 3)]
+	Fast Task duration: 0.00133788s +- 4 * 4.37251e-05
+	Slow Task duration: 0.00126384s +- 4 * 0.000114544 [0.944662; (2, 3)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-	Fast Task duration: 0.00137892s +- 4 * 7.83025e-05
-	Slow Task duration: 0.00502256s +- 4 * 0.000335974 [3.64238; (2, 2.5)]
+	Fast Task duration: 0.00137404s +- 4 * 4.0759e-05
+	Slow Task duration: 0.00466317s +- 4 * 0.00048743 [3.39375; (2, 2.5)]
 
 	=======================================
 
@@ -931,14 +931,14 @@
 	operator== returned false
 	Obtained : -1
 	Predicted: 1
-	Advice   : A negative allocation count generally indicates an allocator propagting when it should(not).
+	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
 	Unexpected allocation detected for copy construction (y)
 	[int]
 	operator== returned false
 	Obtained : -1
 	Predicted: 1
-	Advice   : A negative allocation count generally indicates an allocator propagting when it should(not).
+	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
 	Inconsistent copy constructor (x)
 	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
@@ -1005,7 +1005,7 @@
 	operator== returned false
 	Obtained : -3
 	Predicted: 0
-	Advice   : A negative allocation count generally indicates an allocator propagting when it should(not).
+	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
 	Inconsistent para-move construction
 	[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
@@ -1511,14 +1511,14 @@
 	operator== returned false
 	Obtained : -1
 	Predicted: 1
-	Advice   : A negative allocation count generally indicates an allocator propagting when it should(not).
+	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
 	Unexpected allocation detected for copy construction (y)
 	[int]
 	operator== returned false
 	Obtained : -1
 	Predicted: 1
-	Advice   : A negative allocation count generally indicates an allocator propagting when it should(not).
+	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
 	Inconsistent copy constructor (x)
 	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
@@ -1603,7 +1603,7 @@
 	operator== returned false
 	Obtained : -3
 	Predicted: 0
-	Advice   : A negative allocation count generally indicates an allocator propagting when it should(not).
+	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
 	Inconsistent para-move construction
 	[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
@@ -2121,14 +2121,14 @@
 	operator== returned false
 	Obtained : -1
 	Predicted: 1
-	Advice   : A negative allocation count generally indicates an allocator propagting when it should(not).
+	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
 	Unexpected allocation detected for copy construction (y)
 	[int]
 	operator== returned false
 	Obtained : -1
 	Predicted: 1
-	Advice   : A negative allocation count generally indicates an allocator propagting when it should(not).
+	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
 	Inconsistent copy constructor (x)
 	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
@@ -2189,7 +2189,7 @@
 	operator== returned false
 	Obtained : -3
 	Predicted: 0
-	Advice   : A negative allocation count generally indicates an allocator propagting when it should(not).
+	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
 	Inconsistent para-move construction
 	[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
@@ -2689,14 +2689,14 @@
 	operator== returned false
 	Obtained : -1
 	Predicted: 1
-	Advice   : A negative allocation count generally indicates an allocator propagting when it should(not).
+	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
 	Unexpected allocation detected for copy construction (y)
 	[int]
 	operator== returned false
 	Obtained : -1
 	Predicted: 1
-	Advice   : A negative allocation count generally indicates an allocator propagting when it should(not).
+	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
 	Inconsistent copy constructor (x)
 	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
@@ -2775,7 +2775,7 @@
 	operator== returned false
 	Obtained : -3
 	Predicted: 0
-	Advice   : A negative allocation count generally indicates an allocator propagting when it should(not).
+	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
 	Inconsistent para-move construction
 	[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
@@ -3287,14 +3287,14 @@
 	operator== returned false
 	Obtained : -1
 	Predicted: 1
-	Advice   : A negative allocation count generally indicates an allocator propagting when it should(not).
+	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
 	Unexpected allocation detected for copy construction (y)
 	[int]
 	operator== returned false
 	Obtained : -1
 	Predicted: 1
-	Advice   : A negative allocation count generally indicates an allocator propagting when it should(not).
+	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
 	Inconsistent copy constructor (x)
 	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
@@ -3361,7 +3361,7 @@
 	operator== returned false
 	Obtained : -3
 	Predicted: 0
-	Advice   : A negative allocation count generally indicates an allocator propagting when it should(not).
+	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
 	Inconsistent para-move construction
 	[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
@@ -3873,14 +3873,14 @@
 	operator== returned false
 	Obtained : -1
 	Predicted: 1
-	Advice   : A negative allocation count generally indicates an allocator propagting when it should(not).
+	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
 	Unexpected allocation detected for copy construction (y)
 	[int]
 	operator== returned false
 	Obtained : -1
 	Predicted: 1
-	Advice   : A negative allocation count generally indicates an allocator propagting when it should(not).
+	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
 	Inconsistent copy constructor (x)
 	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
@@ -3965,7 +3965,7 @@
 	operator== returned false
 	Obtained : -3
 	Predicted: 0
-	Advice   : A negative allocation count generally indicates an allocator propagting when it should(not).
+	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
 	Inconsistent para-move construction
 	[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
@@ -4489,14 +4489,14 @@
 	operator== returned false
 	Obtained : -1
 	Predicted: 1
-	Advice   : A negative allocation count generally indicates an allocator propagting when it should(not).
+	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
 	Unexpected allocation detected for copy construction (y)
 	[int]
 	operator== returned false
 	Obtained : -1
 	Predicted: 1
-	Advice   : A negative allocation count generally indicates an allocator propagting when it should(not).
+	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
 	Inconsistent copy constructor (x)
 	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
@@ -4557,7 +4557,7 @@
 	operator== returned false
 	Obtained : -3
 	Predicted: 0
-	Advice   : A negative allocation count generally indicates an allocator propagting when it should(not).
+	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
 	Inconsistent para-move construction
 	[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
@@ -4660,7 +4660,7 @@
 	operator== returned false
 	Obtained : -1
 	Predicted: 0
-	Advice   : A negative allocation count generally indicates an allocator propagting when it should(not).
+	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
 	=======================================
 
@@ -5076,14 +5076,14 @@
 	operator== returned false
 	Obtained : -1
 	Predicted: 1
-	Advice   : A negative allocation count generally indicates an allocator propagting when it should(not).
+	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
 	Unexpected allocation detected for copy construction (y)
 	[int]
 	operator== returned false
 	Obtained : -1
 	Predicted: 1
-	Advice   : A negative allocation count generally indicates an allocator propagting when it should(not).
+	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
 	Inconsistent copy constructor (x)
 	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
@@ -5162,7 +5162,7 @@
 	operator== returned false
 	Obtained : -3
 	Predicted: 0
-	Advice   : A negative allocation count generally indicates an allocator propagting when it should(not).
+	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
 	Inconsistent para-move construction
 	[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
@@ -5265,7 +5265,7 @@
 	operator== returned false
 	Obtained : -1
 	Predicted: 0
-	Advice   : A negative allocation count generally indicates an allocator propagting when it should(not).
+	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
 	=======================================
 
@@ -6192,8 +6192,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67
 	Performance Test which should pass
 
-	Fast Task duration: 0.00138952s +- 4 * 1.37795e-05
-	Slow Task duration: 0.00253491s +- 4 * 0.000262384 [1.82431; (1.8, 2.1)]
+	Fast Task duration: 0.00110029s +- 4 * 0.000104765
+	Slow Task duration: 0.00223224s +- 4 * 0.000209917 [2.02877; (1.8, 2.1)]
 
 
 	=======================================
@@ -6202,8 +6202,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68
 	Performance Test which should pass
 
-	Fast Task duration: 0.0013195s +- 4 * 0.000151811
-	Slow Task duration: 0.00514342s +- 4 * 1.31745e-05 [3.89802; (3.6, 4.1)]
+	Fast Task duration: 0.00118789s +- 4 * 0.000115853
+	Slow Task duration: 0.00446334s +- 4 * 0.000390813 [3.75736; (3.6, 4.1)]
 
 
 	=======================================

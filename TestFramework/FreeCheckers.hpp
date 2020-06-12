@@ -154,7 +154,13 @@ namespace sequoia::testing
   {};
 
   template<class A, class T>
-  constexpr bool is_advisor_v{is_advisor<A, T>::value};  
+  constexpr bool is_advisor_v{is_advisor<A, T>::value};
+
+  template<class T, class... U>
+  constexpr bool strip_advisor_v{
+       ((sizeof...(U) == 1) && (is_advisor_v<head_of_t<U...>, T> || std::is_same_v<std::remove_cvref_t<head_of_t<U...>>, null_advisor>))
+    || ((sizeof...(U)  > 1) && (is_advisor_v<tail_of_t<U...>, T> || std::is_same_v<std::remove_cvref_t<tail_of_t<U...>>, null_advisor>))
+  };
 
   /*! \brief generic function that generates a check from any class providing a static check method.
 
@@ -163,7 +169,7 @@ namespace sequoia::testing
   
   template<class EquivChecker, test_mode Mode, class T, class S, class... U>
   bool general_equivalence_check(std::string_view description, test_logger<Mode>& logger, const T& value, const S& s, const U&... u)
-  {    
+  {
     const auto message{
       [description](){
         std::string info{description};
@@ -183,8 +189,7 @@ namespace sequoia::testing
     {
       EquivChecker::check(message, logger, value, s, u...);
     }
-    else if constexpr(   ((sizeof...(U) == 1) && is_advisor_v<head_of_t<U...>, T>)
-                      || ((sizeof...(U)  > 1) && is_advisor_v<tail_of_t<U...>, T>))
+    else if constexpr(strip_advisor_v<T, U...>)
     {
       auto fn{
         [message,&logger,&value](auto&&... predictions){

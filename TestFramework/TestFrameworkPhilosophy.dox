@@ -239,17 +239,18 @@
     of the framework. This is hopefully ameliorated by levaraging the advice functionality internally, giving
     typical output:
 
-    Obtained : -1
-	Predicted: 1
-	Advice   : A negative allocation count generally indicates an allocator propagting when it should(not).
+    Obtained : -1 \n
+	Predicted: 1  \n
+	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
     Clients may provided customized advice by calling many of the check methods with an extra function
     object. If the latter overloads operator() in such a way that it takes two instances of a type and
     returns a string, then reflection is utilized to apply this function object whenever the
-    appropriate overload may be invoked. For example, suppose advice is supplied for type int. Suppose this
-    advice function object is fed to a check performed on a vector of ints. In this case, the function object
-    will be propagated through the internal control flow until it reaches the point where it can be applied
-    to the ints at the bottom of the pile.
+    appropriate overload may be invoked. For example, consider the case where a function object is supplied to
+    provide advice for ints, under certain conditions. Suppose this
+    function object is fed to a check performed on a std::vector<int>. In this case, the function object
+    will be propagated internally until it reaches the point where it can be invoked
+    on the ints at the end of the chain.
 
 
  */
