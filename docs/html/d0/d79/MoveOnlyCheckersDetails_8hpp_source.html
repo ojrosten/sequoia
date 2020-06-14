@@ -76,7 +76,7 @@ $(function() {
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"></span> </div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../df/dd3/SemanticsCheckersDetails_8hpp.html">SemanticsCheckersDetails.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../d5/d00/AllocationCheckersDetails_8hpp.html">AllocationCheckersDetails.hpp</a>&quot;</span></div>
 <div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;<span class="keyword">namespace </span>sequoia::testing::impl</div>
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;{</div>
@@ -95,22 +95,18 @@ $(function() {
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keywordflow">if</span> constexpr (do_swap&lt;Args...&gt;::value)</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    {</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;      <span class="keyword">using</span> std::swap;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;      swap(z, y);</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;      check_equality(sentry.add_details(description, <span class="stringliteral">&quot;Inconsistent Swap (y)&quot;</span>), sentry.logger(), y, xClone);</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;      check_equality(sentry.add_details(description, <span class="stringliteral">&quot;Inconsistent Swap (x)&quot;</span>), sentry.logger(), z, yClone);</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160; </div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;      check_move_assign(description, sentry, actions, y, std::move(z), yClone, std::move(m), args...);</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;      check_swap(description, sentry, actions, std::forward&lt;T&gt;(z), y, xClone, yClone, args...);</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;      check_move_assign(description, sentry, actions, y, std::move(z), yClone, std::move(m), args...);</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    }</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    {      </div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;      check_move_assign(description, sentry, actions, z, std::move(y), yClone, std::move(m), args...);</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    }</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    {      </div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;      check_move_assign(description, sentry, actions, z, std::move(y), yClone, std::move(m), args...);</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    }</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;  }</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;}</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;  }</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aTestLogger_8hpp_html_ae4e97c9d45a89647799f0d308ba6d244"><div class="ttname"><a href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">sequoia::testing::test_mode</a></div><div class="ttdeci">test_mode</div><div class="ttdoc">Specifies whether tests are run as standard tests or in false postive/negative mode .</div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:50</div></div>
-<div class="ttc" id="aSemanticsCheckersDetails_8hpp_html"><div class="ttname"><a href="../../df/dd3/SemanticsCheckersDetails_8hpp.html">SemanticsCheckersDetails.hpp</a></div><div class="ttdoc">Implementation details for semantics checks that cleanly supports types which do/do not have allocato...</div></div>
+<div class="ttc" id="aAllocationCheckersDetails_8hpp_html"><div class="ttname"><a href="../../d5/d00/AllocationCheckersDetails_8hpp.html">AllocationCheckersDetails.hpp</a></div><div class="ttdoc">Implementation details for allocation checks.</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

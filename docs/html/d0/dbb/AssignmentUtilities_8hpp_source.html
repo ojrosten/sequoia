@@ -83,9 +83,9 @@ $(function() {
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">namespace </span>sequoia::impl</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;{</div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> Excluded, <span class="keyword">template</span>&lt;<span class="keyword">class</span>&gt; <span class="keyword">class </span>TypeToType, <span class="keyword">class </span>Fn, <span class="keyword">class</span>... Ts&gt;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;  <span class="keywordtype">void</span> filter(Fn f, Ts... t)</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;  {   </div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    impl::filter(f, make_filtered_sequence&lt;Excluded, TypeToType, Ts...&gt;{}, t...);</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;  <span class="keywordtype">void</span> invoke_filtered(Fn f, Ts... t)</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;  {</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    invoke_with_specified_args(f, make_filtered_sequence&lt;Excluded, TypeToType, Ts...&gt;{}, t...);</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;  }</div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;  </div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> Container&gt;</div>
@@ -103,7 +103,7 @@ $(function() {
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class </span>Container, <span class="keyword">class</span>... AllocGetters&gt;</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    constexpr <span class="keyword">static</span> <span class="keywordtype">void</span> assign(Container&amp; to, <span class="keyword">const</span> Container&amp; from, [[maybe_unused]] AllocGetters... allocGetters)</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    {</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;      filter&lt;void, type_to_type&lt;Container&gt;::template mapper&gt;([&amp;to, &amp;from](<span class="keyword">auto</span>... filteredAllocGetters){ assign_filtered(to, from, filteredAllocGetters...); }, allocGetters...);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;      invoke_filtered&lt;void, type_to_type&lt;Container&gt;::template mapper&gt;([&amp;to, &amp;from](<span class="keyword">auto</span>... filteredAllocGetters){ assign_filtered(to, from, filteredAllocGetters...); }, allocGetters...);</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    }</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;  <span class="keyword">private</span>:</div>

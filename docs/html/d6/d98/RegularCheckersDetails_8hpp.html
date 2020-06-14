@@ -88,6 +88,10 @@ template&lt;test_mode Mode, class Actions , class T , class... Args&gt; </td></t
 template&lt;test_mode Mode, class Actions , class T &gt; </td></tr>
 <tr class="memitem:adcc4ac4f1f425a09cce08a3bc9cdad21"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_copy_assign</b> (std::string_view description, sentinel&lt; Mode &gt; &amp;sentry, const Actions &amp;actions, T &amp;z, const T &amp;y)</td></tr>
 <tr class="separator:adcc4ac4f1f425a09cce08a3bc9cdad21"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a58e000858492503779278c4f8fbcbab0"><td class="memTemplParams" colspan="2"><a id="a58e000858492503779278c4f8fbcbab0"></a>
+template&lt;test_mode Mode, class Actions , class T , class Mutator , std::enable_if_t&lt; std::is_invocable_v&lt; Mutator, T &amp; &gt;, int &gt;  = 0&gt; </td></tr>
+<tr class="memitem:a58e000858492503779278c4f8fbcbab0"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_swap</b> (std::string_view description, sentinel&lt; Mode &gt; &amp;sentry, const Actions &amp;actions, T &amp;&amp;x, T &amp;y, const T &amp;xClone, const T &amp;yClone, Mutator yMutator)</td></tr>
+<tr class="separator:a58e000858492503779278c4f8fbcbab0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6a2a78cc3c9bd1b77cb0926c36d0a477"><td class="memTemplParams" colspan="2"><a id="a6a2a78cc3c9bd1b77cb0926c36d0a477"></a>
 template&lt;test_mode Mode, class Actions , class T , class Mutator , class... Args&gt; </td></tr>
 <tr class="memitem:a6a2a78cc3c9bd1b77cb0926c36d0a477"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_semantics</b> (std::string_view description, sentinel&lt; Mode &gt; &amp;sentry, const Actions &amp;actions, const T &amp;x, const T &amp;y, Mutator yMutator, const Args &amp;... args)</td></tr>

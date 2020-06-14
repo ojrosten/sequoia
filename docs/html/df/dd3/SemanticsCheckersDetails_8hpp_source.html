@@ -164,8 +164,8 @@ $(function() {
 <div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160; </div>
 <div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;  <span class="comment">//================================ swap ================================//</span></div>
 <div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160; </div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;  <span class="keyword">template</span>&lt;<a class="code" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode, <span class="keyword">class </span>Actions, <span class="keyword">class </span>T, <span class="keyword">class </span>Mutator, <span class="keyword">class</span>... Args&gt;</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;  <span class="keywordtype">void</span> do_check_swap(std::string_view description, sentinel&lt;Mode&gt;&amp; sentry, <span class="keyword">const</span> Actions&amp; actions, T&amp;&amp; x, T&amp; y, <span class="keyword">const</span> T&amp; xClone, <span class="keyword">const</span> T&amp; yClone, Mutator yMutator, <span class="keyword">const</span> Args&amp;... args)</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;  <span class="keyword">template</span>&lt;<a class="code" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">test_mode</a> Mode, <span class="keyword">class </span>Actions, <span class="keyword">class </span>T, <span class="keyword">class</span>... Args&gt;</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;  <span class="keywordtype">void</span> do_check_swap(std::string_view description, sentinel&lt;Mode&gt;&amp; sentry, <span class="keyword">const</span> Actions&amp; actions, T&amp;&amp; x, T&amp; y, <span class="keyword">const</span> T&amp; xClone, <span class="keyword">const</span> T&amp; yClone, <span class="keyword">const</span> Args&amp;... args)</div>
 <div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;  {</div>
 <div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;    <span class="keyword">using</span> std::swap;</div>
 <div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;    swap(x, y);</div>
@@ -175,14 +175,14 @@ $(function() {
 <div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    </div>
 <div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;    <span class="keywordflow">if</span> constexpr(Actions::has_post_swap_action)</div>
 <div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    {</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;      actions.post_swap_action(description, sentry, x, y, yClone, yMutator, args...);</div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;      actions.post_swap_action(description, sentry, x, y, yClone, args...);</div>
 <div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;    }</div>
 <div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;  }</div>
 <div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160; </div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;  <span class="keyword">template</span>&lt;test_mode Mode, <span class="keyword">class</span> Actions, <span class="keyword">class</span> T, <span class="keyword">class</span> Mutator&gt;</div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;  <span class="keywordtype">void</span> check_swap(std::string_view description, sentinel&lt;Mode&gt;&amp; sentry, <span class="keyword">const</span> Actions&amp; actions, T&amp;&amp; x, T&amp; y, <span class="keyword">const</span> T&amp; xClone, <span class="keyword">const</span> T&amp; yClone, Mutator yMutator)</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;  <span class="keyword">template</span>&lt;test_mode Mode, <span class="keyword">class</span> Actions, <span class="keyword">class</span> T&gt;</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;  <span class="keywordtype">void</span> check_swap(std::string_view description, sentinel&lt;Mode&gt;&amp; sentry, <span class="keyword">const</span> Actions&amp; actions, T&amp;&amp; x, T&amp; y, <span class="keyword">const</span> T&amp; xClone, <span class="keyword">const</span> T&amp; yClone)</div>
 <div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;  {</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    do_check_swap(description, sentry, actions, std::forward&lt;T&gt;(x), y, xClone, yClone, std::move(yMutator));</div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    do_check_swap(description, sentry, actions, std::forward&lt;T&gt;(x), y, xClone, yClone);</div>
 <div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;  }</div>
 <div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160; </div>
 <div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;  <span class="comment">//================================  move construction ================================ //</span></div>
