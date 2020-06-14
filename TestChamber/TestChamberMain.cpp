@@ -26,6 +26,7 @@ int main(int argc, char** argv)
       fuzzy_false_positive_diagnostics{"Fuzzy False Positive Diagnostics"},
       allocation_false_positive_diagnostics{"Alloction False Positive Diagnostics"},
       move_only_allocation_false_positive_diagnostics{"Move-Only Alloction False Positive Diagnostics"},
+      scoped_allocation_false_positive_diagnostics{"Scoped Allocation False Negative Diagnostics"},
       false_negative_diagnostics{"False Negative Diagnostics"},
       move_only_false_negative_diagnostics{"Move-Only False Negative Diagnostics"},
       performance_false_negative_diagnostics{"Performance False Negative Diagnostics"},

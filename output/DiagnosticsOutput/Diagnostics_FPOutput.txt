@@ -772,24 +772,24 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-	Fast Task duration: 0.00138788s +- 4 * 9.09115e-06
-	Slow Task duration: 0.00139042s +- 4 * 1.44166e-05 [1.00183; (2, 2)]
+	Fast Task duration: 0.00132838s +- 4 * 0.000168319
+	Slow Task duration: 0.00130293s +- 4 * 0.000113293 [0.980844; (2, 2)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-	Fast Task duration: 0.0013658s +- 4 * 3.94493e-05
-	Slow Task duration: 0.00135528s +- 4 * 4.55442e-05 [0.992296; (2, 3)]
+	Fast Task duration: 0.00137953s +- 4 * 3.30976e-05
+	Slow Task duration: 0.00135425s +- 4 * 6.46165e-05 [0.981673; (2, 3)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-	Fast Task duration: 0.001394s +- 4 * 6.15729e-06
-	Slow Task duration: 0.00469235s +- 4 * 0.000424283 [3.36611; (2, 2.5)]
+	Fast Task duration: 0.00137443s +- 4 * 4.18723e-05
+	Slow Task duration: 0.00462642s +- 4 * 0.000535246 [3.36606; (2, 2.5)]
 
 	=======================================
 
@@ -6205,6 +6205,2166 @@
 
 	=======================================
 
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 98
+	Incorrect copy x outer allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, false, false> >,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = false,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for copy construction (x)
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 103
+	Incorrect copy y outer allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, false, false> >,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = false,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	Unexpected allocation detected for para-copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	Unexpected allocation detected for para-move construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 108
+	Incorrect mutation outer allocs
+
+	--Regular Semantics--
+	mutation after move
+	assignment
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, false, false> >,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = false,
+		Propagate on swap = false
+	>]
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 113
+	Incorrect assignment outer allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, false, false> >,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = false,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for copy assignment (x)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 3
+
+	Unexpected allocation detected for move assignment (x)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 3
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 118
+	Incorrect para copy x outer allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, false, false> >,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = false,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for para-copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 123
+	Incorrect para move x outer allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, false, false> >,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = false,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for para-move construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 128
+	Incorrect copy x inner allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = false,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for copy construction (x)
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 4
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 133
+	Incorrect copy y inner allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = false,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 0
+
+	Unexpected allocation detected for para-copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 0
+
+	Unexpected allocation detected for para-move construction (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 138
+	Incorrect mutation inner allocs
+
+	--Regular Semantics--
+	mutation after move
+	assignment
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = false,
+		Propagate on swap = false
+	>]
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 3
+
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 3
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 143
+	Incorrect assignment inner allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = false,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for copy assignment (x)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 0
+
+	Unexpected allocation detected for move assignment (x)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 148
+	Incorrect para copy x inner allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = false,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for para-copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 4
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 153
+	Incorrect para move x inener allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = false,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for para-move construction (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 98
+	Incorrect copy x outer allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, false, true> >,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = false,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for copy construction (x)
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 103
+	Incorrect copy y outer allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, false, true> >,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = false,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	Unexpected allocation detected for para-copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	Unexpected allocation detected for para-move construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 108
+	Incorrect mutation outer allocs
+
+	--Regular Semantics--
+	mutation after move
+	assignment
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, false, true> >,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = false,
+		Propagate on swap = true
+	>]
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	Unexpected allocation detected following mutation after swap (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 113
+	Incorrect assignment outer allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, false, true> >,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = false,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for copy assignment (x)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 3
+
+	Unexpected allocation detected for move assignment (x)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 3
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 118
+	Incorrect para copy x outer allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, false, true> >,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = false,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for para-copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 123
+	Incorrect para move x outer allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, false, true> >,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = false,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for para-move construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 128
+	Incorrect copy x inner allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = false,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for copy construction (x)
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 4
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 133
+	Incorrect copy y inner allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = false,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 0
+
+	Unexpected allocation detected for para-copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 0
+
+	Unexpected allocation detected for para-move construction (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 138
+	Incorrect mutation inner allocs
+
+	--Regular Semantics--
+	mutation after move
+	assignment
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = false,
+		Propagate on swap = true
+	>]
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 3
+
+	Unexpected allocation detected following mutation after swap (y)
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 3
+
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 3
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 143
+	Incorrect assignment inner allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = false,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for copy assignment (x)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 0
+
+	Unexpected allocation detected for move assignment (x)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 148
+	Incorrect para copy x inner allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = false,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for para-copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 4
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 153
+	Incorrect para move x inener allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = false,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for para-move construction (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 98
+	Incorrect copy x outer allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, true, false> >,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = true,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for copy construction (x)
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 103
+	Incorrect copy y outer allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, true, false> >,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = true,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	Unexpected allocation detected for para-copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	Unexpected allocation detected for para-move construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 108
+	Incorrect mutation outer allocs
+
+	--Regular Semantics--
+	mutation after move
+	assignment
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, true, false> >,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = true,
+		Propagate on swap = false
+	>]
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 113
+	Incorrect assignment outer allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, true, false> >,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = true,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for copy assignment (x)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 3
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 118
+	Incorrect para copy x outer allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, true, false> >,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = true,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for para-copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 123
+	Incorrect para move x outer allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, true, false> >,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = true,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for para-move construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 128
+	Incorrect copy x inner allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = true,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for copy construction (x)
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 4
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 133
+	Incorrect copy y inner allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = true,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 0
+
+	Unexpected allocation detected for para-copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 0
+
+	Unexpected allocation detected for para-move construction (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 138
+	Incorrect mutation inner allocs
+
+	--Regular Semantics--
+	mutation after move
+	assignment
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = true,
+		Propagate on swap = false
+	>]
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 3
+
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 3
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 143
+	Incorrect assignment inner allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = true,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for copy assignment (x)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 148
+	Incorrect para copy x inner allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = true,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for para-copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 4
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 153
+	Incorrect para move x inener allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = true,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for para-move construction (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 98
+	Incorrect copy x outer allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, true, true> >,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = true,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for copy construction (x)
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 103
+	Incorrect copy y outer allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, true, true> >,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = true,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	Unexpected allocation detected for para-copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	Unexpected allocation detected for para-move construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 108
+	Incorrect mutation outer allocs
+
+	--Regular Semantics--
+	mutation after move
+	assignment
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, true, true> >,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = true,
+		Propagate on swap = true
+	>]
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	Unexpected allocation detected following mutation after swap (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 113
+	Incorrect assignment outer allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, true, true> >,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = true,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for copy assignment (x)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 3
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 118
+	Incorrect para copy x outer allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, true, true> >,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = true,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for para-copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 123
+	Incorrect para move x outer allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, true, true> >,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = true,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for para-move construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 128
+	Incorrect copy x inner allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = true,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for copy construction (x)
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 4
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 133
+	Incorrect copy y inner allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = true,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 0
+
+	Unexpected allocation detected for para-copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 0
+
+	Unexpected allocation detected for para-move construction (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 138
+	Incorrect mutation inner allocs
+
+	--Regular Semantics--
+	mutation after move
+	assignment
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = true,
+		Propagate on swap = true
+	>]
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 3
+
+	Unexpected allocation detected following mutation after swap (y)
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 3
+
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 3
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 143
+	Incorrect assignment inner allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = true,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for copy assignment (x)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 148
+	Incorrect para copy x inner allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = true,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for para-copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 4
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 153
+	Incorrect para move x inener allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = false,
+		Propagate on move assignment = true,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for para-move construction (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 98
+	Incorrect copy x outer allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, false> >,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = false,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for copy construction (x)
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 103
+	Incorrect copy y outer allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, false> >,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = false,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	Unexpected allocation detected for para-copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	Unexpected allocation detected for para-move construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 108
+	Incorrect mutation outer allocs
+
+	--Regular Semantics--
+	mutation after move
+	assignment
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, false> >,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = false,
+		Propagate on swap = false
+	>]
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 113
+	Incorrect assignment outer allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, false> >,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = false,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for copy assignment (x)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	Unexpected allocation detected for copy assignment (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	Unexpected allocation detected for move assignment (x)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 3
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 118
+	Incorrect para copy x outer allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, false> >,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = false,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for para-copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 123
+	Incorrect para move x outer allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, false> >,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = false,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for para-move construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 128
+	Incorrect copy x inner allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = false,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for copy construction (x)
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 4
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 133
+	Incorrect copy y inner allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = false,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 0
+
+	Unexpected allocation detected for para-copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 0
+
+	Unexpected allocation detected for para-move construction (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 138
+	Incorrect mutation inner allocs
+
+	--Regular Semantics--
+	mutation after move
+	assignment
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = false,
+		Propagate on swap = false
+	>]
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 3
+
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 3
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 143
+	Incorrect assignment inner allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = false,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for copy assignment (x)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	Unexpected allocation detected for copy assignment (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	Unexpected allocation detected for move assignment (x)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 148
+	Incorrect para copy x inner allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = false,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for para-copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 4
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 153
+	Incorrect para move x inener allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = false,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for para-move construction (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 98
+	Incorrect copy x outer allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, true> >,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = false,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for copy construction (x)
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 103
+	Incorrect copy y outer allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, true> >,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = false,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	Unexpected allocation detected for para-copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	Unexpected allocation detected for para-move construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 108
+	Incorrect mutation outer allocs
+
+	--Regular Semantics--
+	mutation after move
+	assignment
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, true> >,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = false,
+		Propagate on swap = true
+	>]
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	Unexpected allocation detected following mutation after swap (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 113
+	Incorrect assignment outer allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, true> >,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = false,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for copy assignment (x)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	Unexpected allocation detected for copy assignment (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	Unexpected allocation detected for move assignment (x)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 3
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 118
+	Incorrect para copy x outer allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, true> >,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = false,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for para-copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 123
+	Incorrect para move x outer allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, true> >,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = false,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for para-move construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 128
+	Incorrect copy x inner allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = false,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for copy construction (x)
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 4
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 133
+	Incorrect copy y inner allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = false,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 0
+
+	Unexpected allocation detected for para-copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 0
+
+	Unexpected allocation detected for para-move construction (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 138
+	Incorrect mutation inner allocs
+
+	--Regular Semantics--
+	mutation after move
+	assignment
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = false,
+		Propagate on swap = true
+	>]
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 3
+
+	Unexpected allocation detected following mutation after swap (y)
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 3
+
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 3
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 143
+	Incorrect assignment inner allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = false,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for copy assignment (x)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	Unexpected allocation detected for copy assignment (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	Unexpected allocation detected for move assignment (x)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 148
+	Incorrect para copy x inner allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = false,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for para-copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 4
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 153
+	Incorrect para move x inener allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = false,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for para-move construction (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 98
+	Incorrect copy x outer allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, false> >,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = true,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for copy construction (x)
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 103
+	Incorrect copy y outer allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, false> >,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = true,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	Unexpected allocation detected for para-copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	Unexpected allocation detected for para-move construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 108
+	Incorrect mutation outer allocs
+
+	--Regular Semantics--
+	mutation after move
+	assignment
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, false> >,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = true,
+		Propagate on swap = false
+	>]
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 113
+	Incorrect assignment outer allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, false> >,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = true,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for copy assignment (x)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	Unexpected allocation detected for copy assignment (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 118
+	Incorrect para copy x outer allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, false> >,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = true,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for para-copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 123
+	Incorrect para move x outer allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, false> >,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = true,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for para-move construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 128
+	Incorrect copy x inner allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = true,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for copy construction (x)
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 4
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 133
+	Incorrect copy y inner allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = true,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 0
+
+	Unexpected allocation detected for para-copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 0
+
+	Unexpected allocation detected for para-move construction (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 138
+	Incorrect mutation inner allocs
+
+	--Regular Semantics--
+	mutation after move
+	assignment
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = true,
+		Propagate on swap = false
+	>]
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 3
+
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 3
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 143
+	Incorrect assignment inner allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = true,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for copy assignment (x)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	Unexpected allocation detected for copy assignment (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 148
+	Incorrect para copy x inner allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = true,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for para-copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 4
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 153
+	Incorrect para move x inener allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = true,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for para-move construction (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 98
+	Incorrect copy x outer allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, true> >,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = true,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for copy construction (x)
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 1
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 103
+	Incorrect copy y outer allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, true> >,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = true,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	Unexpected allocation detected for para-copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	Unexpected allocation detected for para-move construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 108
+	Incorrect mutation outer allocs
+
+	--Regular Semantics--
+	mutation after move
+	assignment
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, true> >,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = true,
+		Propagate on swap = true
+	>]
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	Unexpected allocation detected following mutation after swap (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 113
+	Incorrect assignment outer allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, true> >,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = true,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for copy assignment (x)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	Unexpected allocation detected for copy assignment (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 118
+	Incorrect para copy x outer allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, true> >,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = true,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for para-copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 2
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 123
+	Incorrect para move x outer allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, true> >,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = true,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for para-move construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 128
+	Incorrect copy x inner allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = true,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for copy construction (x)
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 4
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 133
+	Incorrect copy y inner allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = true,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 0
+
+	Unexpected allocation detected for para-copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 0
+
+	Unexpected allocation detected for para-move construction (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 138
+	Incorrect mutation inner allocs
+
+	--Regular Semantics--
+	mutation after move
+	assignment
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = true,
+		Propagate on swap = true
+	>]
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 3
+
+	Unexpected allocation detected following mutation after swap (y)
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 3
+
+	[int]
+	operator== returned false
+	Obtained : 0
+	Predicted: 3
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 143
+	Incorrect assignment inner allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = true,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for copy assignment (x)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	Unexpected allocation detected for copy assignment (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 1
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 148
+	Incorrect para copy x inner allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = true,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for para-copy construction (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 4
+
+	=======================================
+
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 153
+	Incorrect para move x inener allocs
+
+	--Regular Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = true,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for para-move construction (y)
+	[int]
+	operator== returned false
+	Obtained : 2
+	Predicted: 0
+
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 192
 
@@ -6364,8 +8524,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67
 	Performance Test which should pass
 
-	Fast Task duration: 0.00117694s +- 4 * 0.00011315
-	Slow Task duration: 0.00239058s +- 4 * 0.000158172 [2.03117; (1.8, 2.1)]
+	Fast Task duration: 0.00138551s +- 4 * 1.40629e-05
+	Slow Task duration: 0.00258011s +- 4 * 0.00012858 [1.8622; (1.8, 2.1)]
 
 
 	=======================================
@@ -6374,8 +8534,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68
 	Performance Test which should pass
 
-	Fast Task duration: 0.00132792s +- 4 * 5.40364e-05
-	Slow Task duration: 0.00457542s +- 4 * 0.000545563 [3.44554; (3.6, 4.1)]
+	Fast Task duration: 0.00131458s +- 4 * 0.000142518
+	Slow Task duration: 0.00527732s +- 4 * 0.000713812 [4.01444; (3.6, 4.1)]
 
 
 	=======================================
