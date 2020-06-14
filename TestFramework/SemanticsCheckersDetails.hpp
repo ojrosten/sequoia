@@ -160,12 +160,6 @@ namespace sequoia::testing::impl
     }
   }
 
-  template<test_mode Mode, class Actions, class T, class Mutator>
-  void check_swap(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, T&& x, T& y, const T& xClone, const T& yClone, Mutator yMutator)
-  {
-    do_check_swap(description, sentry, actions, std::forward<T>(x), y, xClone, yClone, std::move(yMutator));
-  }
-
   template<test_mode Mode, class Actions, class T>
   void check_swap(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, T&& x, T& y, const T& xClone, const T& yClone)
   {

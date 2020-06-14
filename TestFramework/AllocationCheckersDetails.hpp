@@ -547,12 +547,6 @@ namespace sequoia::testing::impl
     do_check_move_assign(description, sentry, actions, u, std::forward<Container>(v), y, std::move(yMutator), dual_allocation_checker{checkers.info(), u, v}...);
   }
 
-  template<test_mode Mode, class Actions, class Container, class Mutator, class... Allocators, class... Predictions>
-  void check_swap(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, Container&& x, Container& y, const Container& xClone, const Container& yClone, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
-  {
-    do_check_swap(description, sentry, actions, std::forward<Container>(x), y, xClone, yClone, dual_allocation_checker{checkers.info(), x, y}...);
-  }
-
   template<test_mode Mode, class Container, class Mutator, class... Checkers>
   void check_mutation_after_move(std::string_view description, std::string_view moveType, sentinel<Mode>& sentry, Container& u, const Container& y, Mutator yMutator, Checkers... checkers)
   {

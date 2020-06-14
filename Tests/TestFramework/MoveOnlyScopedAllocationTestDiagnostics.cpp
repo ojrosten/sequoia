@@ -30,6 +30,31 @@ namespace sequoia::testing
   template<bool PropagateMove, bool PropagateSwap>
   void move_only_scoped_allocation_false_negative_diagnostics::test_regular_semantics()
   {
+    using beast
+      = move_only_scoped_beast<shared_counting_allocator<char, true, PropagateMove, PropagateSwap>>;
+
+    auto mutator{
+      [](beast& b) {
+        b.x.push_back("something too long for small string optimization");
+      }
+    };
+
+    using allocator = typename beast::allocator_type;
+    using info = move_only_allocation_info<beast, allocator>;
+
+    auto allocGetter{
+      [](const beast& b) {
+        return b.x.get_allocator();
+      }
+    };
+
+    check_semantics(LINE(""),
+                    beast{},
+                    beast{{"something too long for small string optimization"}},
+                    beast{},
+                    beast{{"something too long for small string optimization"}},
+                    mutator, info{allocGetter, {{1_anp, 1_mu, 1_pm}, {1_anp, 1_mu, 1_pm}}}
+    );
   }
 
 

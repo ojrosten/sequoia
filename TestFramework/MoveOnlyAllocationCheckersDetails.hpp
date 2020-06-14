@@ -26,6 +26,12 @@ namespace sequoia::testing::impl
   struct move_only_allocation_actions : allocation_actions
   {};
 
+  template<test_mode Mode, class Actions, class Container, class... Allocators, class... Predictions>
+  void check_swap(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, Container&& x, Container& y, const Container& xClone, const Container& yClone, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
+  {
+    do_check_swap(description, sentry, actions, std::forward<Container>(x), y, xClone, yClone, dual_allocation_checker{checkers.info(), x, y}...);
+  }
+
   template<test_mode Mode, class Container, class... Allocators, class... Predictions>
   std::optional<Container> check_para_constructor_allocations(std::string_view description, sentinel<Mode>& sentry, Container&& y, const Container& yClone, const basic_allocation_info<Container, Allocators, Predictions>&... info)
   {

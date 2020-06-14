@@ -34,10 +34,10 @@ namespace sequoia::testing
       = perfectly_scoped_beast<shared_counting_allocator<char, PropagateCopy, PropagateMove, PropagateSwap>>;
 
     auto mutator{
-        [](beast& b) {
-          b.x.push_back("baz");
-        }
-      };
+      [](beast& b) {
+        b.x.push_back("baz");
+      }
+    };
     
     check_semantics(LINE(""), beast{}, beast{{"foo"}, {"bar"}}, mutator);
 
