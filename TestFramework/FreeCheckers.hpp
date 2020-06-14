@@ -197,7 +197,7 @@ namespace sequoia::testing
         }
       };
 
-      impl::filter(fn, std::make_index_sequence<sizeof...(u)>(), s, u...);
+      invoke_with_specified_args(fn, std::make_index_sequence<sizeof...(u)>(), s, u...);
     }
     else
     {

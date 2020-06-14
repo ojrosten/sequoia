@@ -44,23 +44,17 @@ namespace sequoia::impl
 
   public:
     using type = typename aggregate<appended, Total, Excluded, TypeToType, Ts...>::type;
-  };   
-
-  template<std::size_t I, class... Ts>
-  decltype(auto) get(const std::tuple<Ts...>& ts)
-  {
-    return std::get<I>(ts);
-  }
-
-  template<class Fn, class... Ts, std::size_t... I>
-  void filter(Fn f, std::index_sequence<I...>, Ts&&... ts)
-  {
-    f(get<I>(std::tuple<Ts&&...>{std::forward<Ts>(ts)...})...);
-  }
+  };
 }
 
 namespace sequoia
 {
+  template<class Fn, class... Ts, std::size_t... I>
+  void invoke_with_specified_args(Fn f, std::index_sequence<I...>, Ts&&... ts)
+  {
+    f(std::get<I>(std::tuple<Ts&&...>{std::forward<Ts>(ts)...})...);
+  }
+
   template<class Excluded, template<class> class TypeToType, class... Ts>
   struct filtered_sequence
   {

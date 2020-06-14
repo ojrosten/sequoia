@@ -18,9 +18,9 @@
 namespace sequoia::impl
 {
   template<class Excluded, template<class> class TypeToType, class Fn, class... Ts>
-  void filter(Fn f, Ts... t)
-  {   
-    impl::filter(f, make_filtered_sequence<Excluded, TypeToType, Ts...>{}, t...);
+  void invoke_filtered(Fn f, Ts... t)
+  {
+    invoke_with_specified_args(f, make_filtered_sequence<Excluded, TypeToType, Ts...>{}, t...);
   }
   
   template<class Container>
@@ -38,7 +38,7 @@ namespace sequoia::impl
     template<class Container, class... AllocGetters>
     constexpr static void assign(Container& to, const Container& from, [[maybe_unused]] AllocGetters... allocGetters)
     {
-      filter<void, type_to_type<Container>::template mapper>([&to, &from](auto... filteredAllocGetters){ assign_filtered(to, from, filteredAllocGetters...); }, allocGetters...);
+      invoke_filtered<void, type_to_type<Container>::template mapper>([&to, &from](auto... filteredAllocGetters){ assign_filtered(to, from, filteredAllocGetters...); }, allocGetters...);
     }
 
   private:
