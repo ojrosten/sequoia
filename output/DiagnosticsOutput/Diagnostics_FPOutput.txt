@@ -772,24 +772,24 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-	Fast Task duration: 0.00111734s +- 4 * 0.000111885
-	Slow Task duration: 0.00114153s +- 4 * 0.000122219 [1.02165; (2, 2)]
+	Fast Task duration: 0.00135379s +- 4 * 5.59299e-05
+	Slow Task duration: 0.00135826s +- 4 * 8.51003e-05 [1.00331; (2, 2)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-	Fast Task duration: 0.00133092s +- 4 * 4.79531e-05
-	Slow Task duration: 0.00132052s +- 4 * 7.27044e-05 [0.992186; (2, 3)]
+	Fast Task duration: 0.00128265s +- 4 * 0.000109197
+	Slow Task duration: 0.00134182s +- 4 * 4.64604e-05 [1.04613; (2, 3)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-	Fast Task duration: 0.00135355s +- 4 * 5.76462e-05
-	Slow Task duration: 0.00514177s +- 4 * 4.61583e-06 [3.79874; (2, 2.5)]
+	Fast Task duration: 0.00121259s +- 4 * 8.52385e-05
+	Slow Task duration: 0.00465357s +- 4 * 0.000507564 [3.83772; (2, 2.5)]
 
 	=======================================
 
@@ -965,7 +965,7 @@
 
 	--Regular Semantics--
 	Inconsistent para-copy construction
-	[sequoia::testing::broken_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
+	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
 	operator== returned false
 	Obtained : 
 	Predicted: 5 6 
@@ -977,7 +977,7 @@
 	Predicted: 1
 
 	Inconsistent para-move construction
-	[sequoia::testing::broken_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
+	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
 	operator== returned false
 	Obtained : 
 	Predicted: 5 6 
@@ -1026,7 +1026,7 @@
 
 	--Regular Semantics--
 	Inconsistent para-move construction
-	[sequoia::testing::broken_move_alloc<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
+	[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
 	operator== returned false
 	Obtained : 
 	Predicted: 5 6 
@@ -1563,7 +1563,7 @@
 
 	--Regular Semantics--
 	Inconsistent para-copy construction
-	[sequoia::testing::broken_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
+	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
 	operator== returned false
 	Obtained : 
 	Predicted: 5 6 
@@ -1575,7 +1575,7 @@
 	Predicted: 1
 
 	Inconsistent para-move construction
-	[sequoia::testing::broken_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
+	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
 	operator== returned false
 	Obtained : 
 	Predicted: 5 6 
@@ -1624,7 +1624,7 @@
 
 	--Regular Semantics--
 	Inconsistent para-move construction
-	[sequoia::testing::broken_move_alloc<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
+	[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
 	operator== returned false
 	Obtained : 
 	Predicted: 5 6 
@@ -2149,7 +2149,7 @@
 
 	--Regular Semantics--
 	Inconsistent para-copy construction
-	[sequoia::testing::broken_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
+	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
 	operator== returned false
 	Obtained : 
 	Predicted: 5 6 
@@ -2161,7 +2161,7 @@
 	Predicted: 1
 
 	Inconsistent para-move construction
-	[sequoia::testing::broken_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
+	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
 	operator== returned false
 	Obtained : 
 	Predicted: 5 6 
@@ -2210,7 +2210,7 @@
 
 	--Regular Semantics--
 	Inconsistent para-move construction
-	[sequoia::testing::broken_move_alloc<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
+	[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
 	operator== returned false
 	Obtained : 
 	Predicted: 5 6 
@@ -2747,7 +2747,7 @@
 
 	--Regular Semantics--
 	Inconsistent para-copy construction
-	[sequoia::testing::broken_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
+	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
 	operator== returned false
 	Obtained : 
 	Predicted: 5 6 
@@ -2759,7 +2759,7 @@
 	Predicted: 1
 
 	Inconsistent para-move construction
-	[sequoia::testing::broken_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
+	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
 	operator== returned false
 	Obtained : 
 	Predicted: 5 6 
@@ -2808,7 +2808,7 @@
 
 	--Regular Semantics--
 	Inconsistent para-move construction
-	[sequoia::testing::broken_move_alloc<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
+	[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
 	operator== returned false
 	Obtained : 
 	Predicted: 5 6 
@@ -3333,7 +3333,7 @@
 
 	--Regular Semantics--
 	Inconsistent para-copy construction
-	[sequoia::testing::broken_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
 	operator== returned false
 	Obtained : 
 	Predicted: 5 6 
@@ -3345,7 +3345,7 @@
 	Predicted: 1
 
 	Inconsistent para-move construction
-	[sequoia::testing::broken_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
 	operator== returned false
 	Obtained : 
 	Predicted: 5 6 
@@ -3394,7 +3394,7 @@
 
 	--Regular Semantics--
 	Inconsistent para-move construction
-	[sequoia::testing::broken_move_alloc<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
 	operator== returned false
 	Obtained : 
 	Predicted: 5 6 
@@ -3937,7 +3937,7 @@
 
 	--Regular Semantics--
 	Inconsistent para-copy construction
-	[sequoia::testing::broken_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
 	operator== returned false
 	Obtained : 
 	Predicted: 5 6 
@@ -3949,7 +3949,7 @@
 	Predicted: 1
 
 	Inconsistent para-move construction
-	[sequoia::testing::broken_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
 	operator== returned false
 	Obtained : 
 	Predicted: 5 6 
@@ -3998,7 +3998,7 @@
 
 	--Regular Semantics--
 	Inconsistent para-move construction
-	[sequoia::testing::broken_move_alloc<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
 	operator== returned false
 	Obtained : 
 	Predicted: 5 6 
@@ -4529,7 +4529,7 @@
 
 	--Regular Semantics--
 	Inconsistent para-copy construction
-	[sequoia::testing::broken_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
 	operator== returned false
 	Obtained : 
 	Predicted: 5 6 
@@ -4541,7 +4541,7 @@
 	Predicted: 1
 
 	Inconsistent para-move construction
-	[sequoia::testing::broken_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
 	operator== returned false
 	Obtained : 
 	Predicted: 5 6 
@@ -4590,7 +4590,7 @@
 
 	--Regular Semantics--
 	Inconsistent para-move construction
-	[sequoia::testing::broken_move_alloc<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
 	operator== returned false
 	Obtained : 
 	Predicted: 5 6 
@@ -5146,7 +5146,7 @@
 
 	--Regular Semantics--
 	Inconsistent para-copy construction
-	[sequoia::testing::broken_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
 	operator== returned false
 	Obtained : 
 	Predicted: 5 6 
@@ -5158,7 +5158,7 @@
 	Predicted: 1
 
 	Inconsistent para-move construction
-	[sequoia::testing::broken_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
 	operator== returned false
 	Obtained : 
 	Predicted: 5 6 
@@ -5207,7 +5207,7 @@
 
 	--Regular Semantics--
 	Inconsistent para-move construction
-	[sequoia::testing::broken_move_alloc<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
 	operator== returned false
 	Obtained : 
 	Predicted: 5 6 
@@ -6228,8 +6228,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67
 	Performance Test which should pass
 
-	Fast Task duration: 0.00138493s +- 4 * 2.18485e-05
-	Slow Task duration: 0.00260026s +- 4 * 7.65272e-05 [1.87753; (1.8, 2.1)]
+	Fast Task duration: 0.00121323s +- 4 * 0.000134468
+	Slow Task duration: 0.00234965s +- 4 * 0.000212757 [1.93669; (1.8, 2.1)]
 
 
 	=======================================
@@ -6238,8 +6238,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68
 	Performance Test which should pass
 
-	Fast Task duration: 0.00139593s +- 4 * 4.3108e-06
-	Slow Task duration: 0.00514312s +- 4 * 9.35465e-06 [3.68436; (3.6, 4.1)]
+	Fast Task duration: 0.00130751s +- 4 * 9.64645e-05
+	Slow Task duration: 0.00492446s +- 4 * 0.000479347 [3.76629; (3.6, 4.1)]
 
 
 	=======================================
@@ -6347,7 +6347,7 @@
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 347
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
+	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
 
 
 	=======================================
@@ -6410,7 +6410,7 @@
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 347
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
+	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
 
 
 	=======================================
@@ -6473,7 +6473,7 @@
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 347
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
+	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
 
 
 	=======================================
@@ -6536,7 +6536,7 @@
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 347
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
+	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
 
 
 	=======================================
@@ -6599,7 +6599,7 @@
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 347
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
 
 
 	=======================================
@@ -6662,7 +6662,7 @@
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 347
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
 
 
 	=======================================
@@ -6725,7 +6725,7 @@
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 347
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
 
 
 	=======================================
@@ -6788,7 +6788,7 @@
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 347
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_copy_alloc<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
 
 
 	=======================================
