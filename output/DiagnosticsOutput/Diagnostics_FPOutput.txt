@@ -772,24 +772,24 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-	Fast Task duration: 0.00132177s +- 4 * 0.000144988
-	Slow Task duration: 0.00139357s +- 4 * 6.44907e-06 [1.05433; (2, 2)]
+	Fast Task duration: 0.00140015s +- 4 * 1.58965e-05
+	Slow Task duration: 0.00139525s +- 4 * 1.94341e-05 [0.996501; (2, 2)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-	Fast Task duration: 0.00131482s +- 4 * 0.000111679
-	Slow Task duration: 0.00139417s +- 4 * 1.85285e-05 [1.06035; (2, 3)]
+	Fast Task duration: 0.00137883s +- 4 * 3.44051e-05
+	Slow Task duration: 0.00139421s +- 4 * 8.36458e-06 [1.01115; (2, 3)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-	Fast Task duration: 0.00119768s +- 4 * 0.000104638
-	Slow Task duration: 0.00471747s +- 4 * 0.000403711 [3.93883; (2, 2.5)]
+	Fast Task duration: 0.00135717s +- 4 * 4.78268e-05
+	Slow Task duration: 0.0043921s +- 4 * 0.000436035 [3.23622; (2, 2.5)]
 
 	=======================================
 
@@ -8353,6 +8353,374 @@
 
 	=======================================
 
+	../Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 101
+	Incorrect assigment outer allocs
+
+	--Move-only Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, false> >,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = false,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for move assignment (x)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 110
+	Incorrect mutation outer allocs
+
+	--Move-only Semantics--
+	mutation after move
+	assignment
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, false> >,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = false,
+		Propagate on swap = false
+	>]
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 118
+	Incorrect para move outer allocs
+
+	--Move-only Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, false> >,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = false,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for para-move construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 128
+	Incorrect assigment inner allocs
+
+	--Move-only Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = false,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for move assignment (x)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 137
+	Incorrect mutation inner allocs
+
+	--Move-only Semantics--
+	mutation after move
+	assignment
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = false,
+		Propagate on swap = false
+	>]
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 145
+	Incorrect para move inner allocs
+
+	--Move-only Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = false,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for para-move construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 101
+	Incorrect assigment outer allocs
+
+	--Move-only Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, true> >,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = false,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for move assignment (x)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 110
+	Incorrect mutation outer allocs
+
+	--Move-only Semantics--
+	mutation after move
+	assignment
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, true> >,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = false,
+		Propagate on swap = true
+	>]
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 118
+	Incorrect para move outer allocs
+
+	--Move-only Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, true> >,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = false,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for para-move construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 128
+	Incorrect assigment inner allocs
+
+	--Move-only Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = false,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for move assignment (x)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 137
+	Incorrect mutation inner allocs
+
+	--Move-only Semantics--
+	mutation after move
+	assignment
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = false,
+		Propagate on swap = true
+	>]
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 145
+	Incorrect para move inner allocs
+
+	--Move-only Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = false,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for para-move construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 110
+	Incorrect mutation outer allocs
+
+	--Move-only Semantics--
+	mutation after move
+	assignment
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, false> >,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = true,
+		Propagate on swap = false
+	>]
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 118
+	Incorrect para move outer allocs
+
+	--Move-only Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, false> >,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = true,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for para-move construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 137
+	Incorrect mutation inner allocs
+
+	--Move-only Semantics--
+	mutation after move
+	assignment
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = true,
+		Propagate on swap = false
+	>]
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 145
+	Incorrect para move inner allocs
+
+	--Move-only Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = true,
+		Propagate on swap = false
+	>]
+	Unexpected allocation detected for para-move construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 110
+	Incorrect mutation outer allocs
+
+	--Move-only Semantics--
+	mutation after move
+	assignment
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, true> >,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = true,
+		Propagate on swap = true
+	>]
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 118
+	Incorrect para move outer allocs
+
+	--Move-only Semantics--
+	[shared_counting_allocator<
+		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, true> >,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = true,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for para-move construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 137
+	Incorrect mutation inner allocs
+
+	--Move-only Semantics--
+	mutation after move
+	assignment
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = true,
+		Propagate on swap = true
+	>]
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
+	../Tests/TestFramework/MoveOnlyScopedAllocationTestDiagnostics.cpp, Line 145
+	Incorrect para move inner allocs
+
+	--Move-only Semantics--
+	[shared_counting_allocator<
+		char,
+		Propagate on copy assignment = true,
+		Propagate on move assignment = true,
+		Propagate on swap = true
+	>]
+	Unexpected allocation detected for para-move construction (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	=======================================
+
 	False Positive Failure:
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 192
 
@@ -8512,8 +8880,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67
 	Performance Test which should pass
 
-	Fast Task duration: 0.00133793s +- 4 * 8.79084e-05
-	Slow Task duration: 0.0026477s +- 4 * 2.18089e-05 [1.97895; (1.8, 2.1)]
+	Fast Task duration: 0.0013894s +- 4 * 1.3735e-05
+	Slow Task duration: 0.00257718s +- 4 * 0.000102624 [1.85489; (1.8, 2.1)]
 
 
 	=======================================
@@ -8522,8 +8890,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68
 	Performance Test which should pass
 
-	Fast Task duration: 0.00138808s +- 4 * 5.33661e-05
-	Slow Task duration: 0.00506757s +- 4 * 7.52627e-05 [3.65079; (3.6, 4.1)]
+	Fast Task duration: 0.00136401s +- 4 * 4.9131e-05
+	Slow Task duration: 0.00538051s +- 4 * 0.000555816 [3.94464; (3.6, 4.1)]
 
 
 	=======================================
