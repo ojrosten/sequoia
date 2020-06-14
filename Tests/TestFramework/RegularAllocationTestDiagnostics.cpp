@@ -186,6 +186,21 @@ namespace sequoia::testing
       }
 
       {
+        using beast = inefficient_para_move<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
+        using allocator = typename beast::allocator_type;
+
+        auto mutator{
+          [](beast& b) {
+            b.x.reserve(b.x.capacity() + 1);
+            b.x.push_back(1);
+          }
+        };
+
+        
+        check_semantics(LINE(""), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info<beast, allocator>{allocGetter, {1_c, {1_c,1_mu,1_pc,3_pm}, {1_awp,1_anp}}});
+      }
+      
+      {
         using beast = perfectly_normal_beast<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
         using allocator = typename beast::allocator_type;
 
@@ -345,6 +360,21 @@ namespace sequoia::testing
       };
 
       check_semantics(LINE(""), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info<beast, allocator>{allocGetter, {1_c, {1_c,1_mu,2_pc,1_pm}, {1_awp,1_anp}}});
+    }
+
+    {
+      using beast = inefficient_para_move<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
+      using allocator = typename beast::allocator_type;
+
+      auto mutator{
+        [](beast& b) {
+          b.x.reserve(b.x.capacity() + 1);
+          b.x.push_back(1);
+        }
+      };
+
+        
+      check_semantics(LINE(""), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info<beast, allocator>{allocGetter, {1_c, {1_c,1_mu,1_pc,2_pm}, {1_awp,1_anp}}});
     }
 
     

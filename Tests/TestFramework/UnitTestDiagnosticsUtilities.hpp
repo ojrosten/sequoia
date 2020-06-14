@@ -932,7 +932,7 @@ namespace sequoia::testing
 
     inefficient_move(inefficient_move&& other) : x{std::move(other.x)}
     {
-      x.reserve(x.capacity() + 10);
+      x.reserve(x.capacity() + 1);
     }
 
     inefficient_move(inefficient_move&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
@@ -967,6 +967,60 @@ namespace sequoia::testing
       return s;
     }
   };
+
+  template<class T=int, class Allocator=std::allocator<int>>
+  struct inefficient_para_move
+  {
+    using allocator_type = Allocator;
+
+    inefficient_para_move(std::initializer_list<T> list) : x{list} {}
+      
+    inefficient_para_move(std::initializer_list<T> list, const allocator_type& alloc) : x{list, alloc} {}
+
+    inefficient_para_move(const inefficient_para_move& other) = default;
+
+    inefficient_para_move(const inefficient_para_move& other, const allocator_type& alloc)
+      : x(other.x, alloc)
+    {}
+
+    inefficient_para_move(inefficient_para_move&& other) = default;
+
+    inefficient_para_move(inefficient_para_move&& other, const allocator_type& alloc) : x(std::move(other.x), alloc)
+    {
+       x.reserve(x.capacity() + 1);
+    }
+
+    inefficient_para_move& operator=(const inefficient_para_move&) = default;
+
+    inefficient_para_move& operator=(inefficient_para_move&&) = default;
+
+    friend void swap(inefficient_para_move& lhs, inefficient_para_move& rhs)
+    {
+      std::swap(lhs.x, rhs.x);
+    }
+      
+    std::vector<T, Allocator> x{};
+
+    [[nodiscard]]
+    friend bool operator==(const inefficient_para_move& lhs, const inefficient_para_move& rhs) noexcept
+    {
+      return lhs.x == rhs.x;
+    }
+
+    [[nodiscard]]
+    friend bool operator!=(const inefficient_para_move& lhs, const inefficient_para_move& rhs) noexcept
+    {
+      return !(lhs == rhs);
+    }
+
+    template<class Stream>
+    friend Stream& operator<<(Stream& s, const inefficient_para_move& b)
+    {
+      for(auto i : b.x) s << i << ' ';
+      return s;
+    }
+  };
+
 
   template<class T=int, class U=double, class xAllocator=std::allocator<T>, class yAllocator=std::allocator<U>>
   struct doubly_normal_beast
