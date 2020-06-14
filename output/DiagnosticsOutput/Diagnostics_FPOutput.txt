@@ -772,24 +772,24 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-	Fast Task duration: 0.00145173s +- 4 * 0.000165342
-	Slow Task duration: 0.0013105s +- 4 * 0.000131406 [0.902715; (2, 2)]
+	Fast Task duration: 0.00139174s +- 4 * 1.52186e-05
+	Slow Task duration: 0.0013303s +- 4 * 0.000138033 [0.955854; (2, 2)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-	Fast Task duration: 0.00133788s +- 4 * 4.37251e-05
-	Slow Task duration: 0.00126384s +- 4 * 0.000114544 [0.944662; (2, 3)]
+	Fast Task duration: 0.00138816s +- 4 * 0.000104679
+	Slow Task duration: 0.00139061s +- 4 * 0.00024816 [1.00176; (2, 3)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-	Fast Task duration: 0.00137404s +- 4 * 4.0759e-05
-	Slow Task duration: 0.00466317s +- 4 * 0.00048743 [3.39375; (2, 2.5)]
+	Fast Task duration: 0.00134327s +- 4 * 5.81996e-05
+	Slow Task duration: 0.00468128s +- 4 * 0.000380596 [3.48499; (2, 2.5)]
 
 	=======================================
 
@@ -2655,6 +2655,18 @@
 	Predicted: 0
 
 	Unexpected allocation detected for move assignment (x)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	Unexpected allocation detected (x)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	Unexpected allocation detected (y)
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -5047,6 +5059,18 @@
 	Obtained : 1
 	Predicted: 0
 
+	Unexpected allocation detected (x)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
+	Unexpected allocation detected (y)
+	[int]
+	operator== returned false
+	Obtained : 1
+	Predicted: 0
+
 	Unexpected allocation detected following mutation after swap (y)
 	[int]
 	operator== returned false
@@ -6192,8 +6216,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67
 	Performance Test which should pass
 
-	Fast Task duration: 0.00110029s +- 4 * 0.000104765
-	Slow Task duration: 0.00223224s +- 4 * 0.000209917 [2.02877; (1.8, 2.1)]
+	Fast Task duration: 0.00127005s +- 4 * 8.61746e-05
+	Slow Task duration: 0.00224538s +- 4 * 0.000207214 [1.76794; (1.8, 2.1)]
 
 
 	=======================================
@@ -6202,8 +6226,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68
 	Performance Test which should pass
 
-	Fast Task duration: 0.00118789s +- 4 * 0.000115853
-	Slow Task duration: 0.00446334s +- 4 * 0.000390813 [3.75736; (3.6, 4.1)]
+	Fast Task duration: 0.00132281s +- 4 * 0.00016135
+	Slow Task duration: 0.00488903s +- 4 * 0.000421738 [3.69594; (3.6, 4.1)]
 
 
 	=======================================

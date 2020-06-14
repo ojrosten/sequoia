@@ -41,6 +41,13 @@ namespace sequoia::testing::impl
     {
       check_copy_assign_allocation(description, sentry, lhs, rhs, checkers...);
     }
+
+    template<test_mode Mode, class Container, class Mutator, class... Allocators, class... Predictions>
+    static void post_swap_action(std::string_view description, sentinel<Mode>& sentry, Container& x, const Container& y, const Container& yClone, Mutator yMutator, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
+    {
+      allocation_actions::post_swap_action(description, sentry, x, y, checkers...);      
+      check_mutation_after_swap(description, sentry, x, y, yClone, std::move(yMutator), checkers...);
+    }
   };
 
   /*! Provides an extra level of indirection in order that the current number of allocation

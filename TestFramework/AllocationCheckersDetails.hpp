@@ -511,10 +511,14 @@ namespace sequoia::testing::impl
       check_mutation_after_move(description, "assignment", sentry, y, yClone, std::move(yMutator), allocation_checker{checkers.info(), y}...);
     }
 
-    template<test_mode Mode, class Container, class Mutator, class... Allocators, class... Predictions>
-    static void post_swap_action(std::string_view description, sentinel<Mode>& sentry, Container& x, const Container& y, const Container& yClone, Mutator yMutator, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
+    template<test_mode Mode, class Container, class... Allocators, class... Predictions>
+    static void post_swap_action(std::string_view description, sentinel<Mode>& sentry, const Container& x, const Container& y, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
     {
-      check_mutation_after_swap(description, sentry, x, y, yClone, std::move(yMutator), checkers...);
+      if constexpr(((   std::allocator_traits<Allocators>::propagate_on_container_move_assignment::value
+                     && std::allocator_traits<Allocators>::propagate_on_container_swap::value) && ... ))
+      {
+        check_no_allocation(sentry.add_details(description, "Unexpected allocation detected for swap"), sentry, y, x, checkers...);
+      }
     }
   };
 
