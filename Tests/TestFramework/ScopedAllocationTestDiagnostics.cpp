@@ -40,5 +40,18 @@ namespace sequoia::testing
       };
     
     check_semantics(LINE(""), beast{}, beast{{"foo"}, {"bar"}}, mutator);
+
+    using allocator = typename beast::allocator_type;
+    using info = allocation_info<beast, allocator>;
+
+    auto allocGetter{
+      [](const beast& b) {
+        return b.x.get_allocator();
+      }
+    };
+
+    check_semantics(LINE(""), beast{}, beast{{"something too long for small string optimization"}, {"something else too long for small string optimization"}}, mutator, info{
+        allocGetter, {{0_c, {1_c,1_mu}, {1_awp,1_anp}}, {0_c, {2_c,0_mu}, {2_awp,2_awp}}}
+      });
   }
 }

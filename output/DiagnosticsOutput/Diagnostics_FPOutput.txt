@@ -772,24 +772,24 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-	Fast Task duration: 0.00139352s +- 4 * 6.37081e-06
-	Slow Task duration: 0.00138855s +- 4 * 1.5811e-05 [0.996437; (2, 2)]
+	Fast Task duration: 0.00138788s +- 4 * 9.09115e-06
+	Slow Task duration: 0.00139042s +- 4 * 1.44166e-05 [1.00183; (2, 2)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-	Fast Task duration: 0.0012776s +- 4 * 0.000121537
-	Slow Task duration: 0.00136072s +- 4 * 4.43549e-05 [1.06506; (2, 3)]
+	Fast Task duration: 0.0013658s +- 4 * 3.94493e-05
+	Slow Task duration: 0.00135528s +- 4 * 4.55442e-05 [0.992296; (2, 3)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-	Fast Task duration: 0.00136203s +- 4 * 4.83325e-05
-	Slow Task duration: 0.00499071s +- 4 * 0.00034678 [3.66418; (2, 2.5)]
+	Fast Task duration: 0.001394s +- 4 * 6.15729e-06
+	Slow Task duration: 0.00469235s +- 4 * 0.000424283 [3.36611; (2, 2.5)]
 
 	=======================================
 
@@ -6364,8 +6364,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67
 	Performance Test which should pass
 
-	Fast Task duration: 0.00131005s +- 4 * 0.000151767
-	Slow Task duration: 0.0023835s +- 4 * 0.000251508 [1.8194; (1.8, 2.1)]
+	Fast Task duration: 0.00117694s +- 4 * 0.00011315
+	Slow Task duration: 0.00239058s +- 4 * 0.000158172 [2.03117; (1.8, 2.1)]
 
 
 	=======================================
@@ -6374,8 +6374,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68
 	Performance Test which should pass
 
-	Fast Task duration: 0.00139346s +- 4 * 2.87967e-06
-	Slow Task duration: 0.00514409s +- 4 * 5.519e-06 [3.69159; (3.6, 4.1)]
+	Fast Task duration: 0.00132792s +- 4 * 5.40364e-05
+	Slow Task duration: 0.00457542s +- 4 * 0.000545563 [3.44554; (3.6, 4.1)]
 
 
 	=======================================
@@ -7091,9 +7091,10 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 42
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 53
 
 	--Regular Semantics--
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, false, false, false> >]
 
 
 	=======================================
@@ -7107,9 +7108,10 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 42
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 53
 
 	--Regular Semantics--
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, false, false, true> >]
 
 
 	=======================================
@@ -7123,9 +7125,10 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 42
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 53
 
 	--Regular Semantics--
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, false, true, false> >]
 
 
 	=======================================
@@ -7139,9 +7142,78 @@
 	=======================================
 
 	False Positive Failure:
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 53
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, false, true, true> >]
+
+
+	=======================================
+
+	False Positive Failure:
 	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 42
 
 	--Regular Semantics--
+
+
+	=======================================
+
+	False Positive Failure:
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 53
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, true, false, false> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 42
+
+	--Regular Semantics--
+
+
+	=======================================
+
+	False Positive Failure:
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 53
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, true, false, true> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 42
+
+	--Regular Semantics--
+
+
+	=======================================
+
+	False Positive Failure:
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 53
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, true, true, false> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 42
+
+	--Regular Semantics--
+
+
+	=======================================
+
+	False Positive Failure:
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 53
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, true, true, true> >]
 
 
 	=======================================
