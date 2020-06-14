@@ -76,5 +76,6 @@
 #include "FuzzyTestDiagnostics.hpp"
 #include "RegularAllocationTestDiagnostics.hpp"
 #include "MoveOnlyAllocationTestDiagnostics.hpp"
+#include "ScopedAllocationTestDiagnostics.hpp"
 
 #include "TestRunner.hpp"

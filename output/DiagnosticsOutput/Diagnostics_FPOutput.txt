@@ -772,24 +772,24 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-	Fast Task duration: 0.00128403s +- 4 * 0.000156274
-	Slow Task duration: 0.001299s +- 4 * 0.000110637 [1.01166; (2, 2)]
+	Fast Task duration: 0.00139352s +- 4 * 6.37081e-06
+	Slow Task duration: 0.00138855s +- 4 * 1.5811e-05 [0.996437; (2, 2)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-	Fast Task duration: 0.00108067s +- 4 * 3.44547e-05
-	Slow Task duration: 0.00121013s +- 4 * 0.000115997 [1.11979; (2, 3)]
+	Fast Task duration: 0.0012776s +- 4 * 0.000121537
+	Slow Task duration: 0.00136072s +- 4 * 4.43549e-05 [1.06506; (2, 3)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-	Fast Task duration: 0.00129389s +- 4 * 0.000148577
-	Slow Task duration: 0.00488606s +- 4 * 0.000395023 [3.77626; (2, 2.5)]
+	Fast Task duration: 0.00136203s +- 4 * 4.83325e-05
+	Slow Task duration: 0.00499071s +- 4 * 0.00034678 [3.66418; (2, 2.5)]
 
 	=======================================
 
@@ -6364,8 +6364,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67
 	Performance Test which should pass
 
-	Fast Task duration: 0.00133521s +- 4 * 8.38916e-05
-	Slow Task duration: 0.00251961s +- 4 * 0.000237485 [1.88704; (1.8, 2.1)]
+	Fast Task duration: 0.00131005s +- 4 * 0.000151767
+	Slow Task duration: 0.0023835s +- 4 * 0.000251508 [1.8194; (1.8, 2.1)]
 
 
 	=======================================
@@ -6374,8 +6374,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68
 	Performance Test which should pass
 
-	Fast Task duration: 0.00110072s +- 4 * 4.78316e-05
-	Slow Task duration: 0.00414616s +- 4 * 9.93604e-05 [3.76676; (3.6, 4.1)]
+	Fast Task duration: 0.00139346s +- 4 * 2.87967e-06
+	Slow Task duration: 0.00514409s +- 4 * 5.519e-06 [3.69159; (3.6, 4.1)]
 
 
 	=======================================
@@ -7078,6 +7078,70 @@
 
 	--Move-only Semantics--
 	[sequoia::testing::move_only_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+
+
+	=======================================
+
+	False Positive Failure:
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 42
+
+	--Regular Semantics--
+
+
+	=======================================
+
+	False Positive Failure:
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 42
+
+	--Regular Semantics--
+
+
+	=======================================
+
+	False Positive Failure:
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 42
+
+	--Regular Semantics--
+
+
+	=======================================
+
+	False Positive Failure:
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 42
+
+	--Regular Semantics--
+
+
+	=======================================
+
+	False Positive Failure:
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 42
+
+	--Regular Semantics--
+
+
+	=======================================
+
+	False Positive Failure:
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 42
+
+	--Regular Semantics--
+
+
+	=======================================
+
+	False Positive Failure:
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 42
+
+	--Regular Semantics--
+
+
+	=======================================
+
+	False Positive Failure:
+	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 42
+
+	--Regular Semantics--
 
 
 	=======================================
