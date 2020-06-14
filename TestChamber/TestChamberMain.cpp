@@ -27,13 +27,15 @@ int main(int argc, char** argv)
       allocation_false_positive_diagnostics{"Alloction False Positive Diagnostics"},
       move_only_allocation_false_positive_diagnostics{"Move-Only Alloction False Positive Diagnostics"},
       scoped_allocation_false_positive_diagnostics{"Scoped Allocation False Negative Diagnostics"},
+      move_only_scoped_allocation_false_positive_diagnostics{"Move-Only Scoped Allocation False Negative Diagnostics"},
       false_negative_diagnostics{"False Negative Diagnostics"},
       move_only_false_negative_diagnostics{"Move-Only False Negative Diagnostics"},
       performance_false_negative_diagnostics{"Performance False Negative Diagnostics"},
       fuzzy_false_negative_diagnostics{"Fuzzy False Negative Diagnostics"},
       allocation_false_negative_diagnostics{"Allocation False Negative Diagnostics"},
       move_only_allocation_false_negative_diagnostics{"Move-Only Allocation False Negative Diagnostics"},
-      scoped_allocation_false_negative_diagnostics{"Scoped Allocation False Negative Diagnostics"}
+      scoped_allocation_false_negative_diagnostics{"Scoped Allocation False Negative Diagnostics"},
+      move_only_scoped_allocation_false_negative_diagnostics{"Move-Only Scoped Allocation False Negative Diagnostics"}
     );
 
     runner.add_test_family(

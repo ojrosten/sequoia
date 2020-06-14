@@ -77,5 +77,6 @@
 #include "RegularAllocationTestDiagnostics.hpp"
 #include "MoveOnlyAllocationTestDiagnostics.hpp"
 #include "ScopedAllocationTestDiagnostics.hpp"
+#include "MoveOnlyScopedAllocationTestDiagnostics.hpp"
 
 #include "TestRunner.hpp"
