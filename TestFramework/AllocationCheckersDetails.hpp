@@ -512,7 +512,7 @@ namespace sequoia::testing::impl
     }
 
     template<test_mode Mode, class Container, class... Allocators, class... Predictions>
-    static void post_swap_action(std::string_view description, sentinel<Mode>& sentry, const Container& x, const Container& y, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
+    static void post_swap_action(std::string_view description, sentinel<Mode>& sentry, const Container& x, const Container& y, const Container&, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
     {
       if constexpr(((   std::allocator_traits<Allocators>::propagate_on_container_move_assignment::value
                      && std::allocator_traits<Allocators>::propagate_on_container_swap::value) && ... ))
@@ -548,9 +548,9 @@ namespace sequoia::testing::impl
   }
 
   template<test_mode Mode, class Actions, class Container, class Mutator, class... Allocators, class... Predictions>
-  void check_swap(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, Container&& x, Container& y, const Container& xClone, const Container& yClone, Mutator yMutator, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
+  void check_swap(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, Container&& x, Container& y, const Container& xClone, const Container& yClone, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
   {
-    do_check_swap(description, sentry, actions, std::forward<Container>(x), y, xClone, yClone, std::move(yMutator), dual_allocation_checker{checkers.info(), x, y}...);
+    do_check_swap(description, sentry, actions, std::forward<Container>(x), y, xClone, yClone, dual_allocation_checker{checkers.info(), x, y}...);
   }
 
   template<test_mode Mode, class Container, class Mutator, class... Checkers>

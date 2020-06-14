@@ -45,7 +45,7 @@ namespace sequoia::testing::impl
     template<test_mode Mode, class Container, class Mutator, class... Allocators, class... Predictions>
     static void post_swap_action(std::string_view description, sentinel<Mode>& sentry, Container& x, const Container& y, const Container& yClone, Mutator yMutator, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
     {
-      allocation_actions::post_swap_action(description, sentry, x, y, checkers...);      
+      allocation_actions::post_swap_action(description, sentry, x, y, yClone, checkers...);      
       check_mutation_after_swap(description, sentry, x, y, yClone, std::move(yMutator), checkers...);
     }
   };
@@ -80,6 +80,12 @@ namespace sequoia::testing::impl
       check_para_move_y_allocation(description, sentry, v, std::tuple_cat(make_allocation_checkers(info)...));
       check_mutation_after_move(description, "allocation assignment", sentry, v, y, std::move(yMutator), std::tuple_cat(make_allocation_checkers(info, v)...));
     }
+  }
+
+  template<test_mode Mode, class Actions, class Container, class Mutator, class... Allocators, class... Predictions>
+  void check_swap(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, Container&& x, Container& y, const Container& xClone, const Container& yClone, Mutator yMutator, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
+  {
+    do_check_swap(description, sentry, actions, std::forward<Container>(x), y, xClone, yClone, std::move(yMutator), dual_allocation_checker{checkers.info(), x, y}...);
   }
 
   /// Unpacks the tuple and feeds to the overload of check_semantics defined in RegularCheckersDetails.hpp

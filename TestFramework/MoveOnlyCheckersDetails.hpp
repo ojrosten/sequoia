@@ -11,7 +11,7 @@
     \brief Implementation details for checking move-only semantics.
 */
 
-#include "SemanticsCheckersDetails.hpp"
+#include "AllocationCheckersDetails.hpp"
 
 namespace sequoia::testing::impl
 {
@@ -30,11 +30,7 @@ namespace sequoia::testing::impl
 
     if constexpr (do_swap<Args...>::value)
     {
-      using std::swap;
-      swap(z, y);
-      check_equality(sentry.add_details(description, "Inconsistent Swap (y)"), sentry.logger(), y, xClone);
-      check_equality(sentry.add_details(description, "Inconsistent Swap (x)"), sentry.logger(), z, yClone);
-
+      check_swap(description, sentry, actions, std::forward<T>(z), y, xClone, yClone, args...);
       check_move_assign(description, sentry, actions, y, std::move(z), yClone, std::move(m), args...);
     }
     else

@@ -145,8 +145,8 @@ namespace sequoia::testing::impl
 
   //================================ swap ================================//
 
-  template<test_mode Mode, class Actions, class T, class Mutator, class... Args>
-  void do_check_swap(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, T&& x, T& y, const T& xClone, const T& yClone, Mutator yMutator, const Args&... args)
+  template<test_mode Mode, class Actions, class T, class... Args>
+  void do_check_swap(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, T&& x, T& y, const T& xClone, const T& yClone, const Args&... args)
   {
     using std::swap;
     swap(x, y);
@@ -156,7 +156,7 @@ namespace sequoia::testing::impl
     
     if constexpr(Actions::has_post_swap_action)
     {
-      actions.post_swap_action(description, sentry, x, y, yClone, yMutator, args...);
+      actions.post_swap_action(description, sentry, x, y, yClone, args...);
     }
   }
 
@@ -164,6 +164,12 @@ namespace sequoia::testing::impl
   void check_swap(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, T&& x, T& y, const T& xClone, const T& yClone, Mutator yMutator)
   {
     do_check_swap(description, sentry, actions, std::forward<T>(x), y, xClone, yClone, std::move(yMutator));
+  }
+
+  template<test_mode Mode, class Actions, class T>
+  void check_swap(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, T&& x, T& y, const T& xClone, const T& yClone)
+  {
+    do_check_swap(description, sentry, actions, std::forward<T>(x), y, xClone, yClone);
   }
 
   //================================  move construction ================================ //
