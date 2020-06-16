@@ -76,7 +76,7 @@ namespace sequoia::testing
     std::string m_Name{};
 
     [[nodiscard]]
-    std::string false_positive_filename();
+    std::string diagnostics_filename();
 
     template<class Test, class... Tests>
     void register_tests(Test&& t, Tests&&... tests)

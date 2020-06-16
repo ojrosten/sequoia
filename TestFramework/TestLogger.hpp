@@ -128,7 +128,7 @@ namespace sequoia::testing
         }
         else if constexpr(Mode == test_mode::false_negative)
         {
-          logger.append_to_versioned_output(messageMaker());
+          logger.append_to_diagnostics_output(messageMaker());
         }
 
         if(auto file{output_manager::recovery_file()}; !file.empty())
@@ -253,7 +253,7 @@ namespace sequoia::testing
     std::string_view current_message() const noexcept { return m_CurrentMessage; }
 
     [[nodiscard]]
-    std::string_view versioned_output() const noexcept { return m_VersionedOutput; }
+    std::string_view diagnostics_output() const noexcept { return m_DiagnosticsOutput; }
 
     void exceptions_detected_by_sentinel(const int n) { m_ExceptionsInFlight = n; }
 
@@ -263,7 +263,7 @@ namespace sequoia::testing
     std::string
       m_FailureMessages,
       m_CurrentMessage,
-      m_VersionedOutput;
+      m_DiagnosticsOutput;
 
     int m_ExceptionsInFlight{};
       
@@ -305,9 +305,9 @@ namespace sequoia::testing
       m_CurrentMessage = message;
     }
 
-    void append_to_versioned_output(std::string message)
+    void append_to_diagnostics_output(std::string message)
     {
-      m_VersionedOutput.append(message);
+      m_DiagnosticsOutput.append(message);
     }
 
     void end_message()
@@ -330,7 +330,7 @@ namespace sequoia::testing
       }
       else
       {
-        append(m_VersionedOutput);
+        append(m_DiagnosticsOutput);
       }
     }
   };
@@ -385,7 +385,7 @@ namespace sequoia::testing
         break;
       }
 
-      m_VersionedOutput = logger. versioned_output();
+      m_DiagnosticsOutput = logger.diagnostics_output();
       m_CriticalFailures = logger.critical_failures();
     }
 
@@ -441,7 +441,7 @@ namespace sequoia::testing
     std::size_t critical_failures() const noexcept { return m_CriticalFailures; }
 
     [[nodiscard]]
-    std::string_view versioned_output() const noexcept { return m_VersionedOutput; }
+    std::string_view diagnostics_output() const noexcept { return m_DiagnosticsOutput; }
 
     [[nodiscard]]
     std::string current_message() const
@@ -476,7 +476,7 @@ namespace sequoia::testing
       
       m_CriticalFailures   += rhs.m_CriticalFailures;
       m_ExceptionsInFlight += rhs.m_ExceptionsInFlight;
-      m_VersionedOutput    += rhs.m_VersionedOutput;
+      m_DiagnosticsOutput  += rhs.m_DiagnosticsOutput;
       m_Duration           += rhs.m_Duration;
         
       m_CurrentMessage      = rhs.m_CurrentMessage;
@@ -499,7 +499,7 @@ namespace sequoia::testing
       return s;
     }
   private:
-    std::string m_Name, m_FailureMessages, m_CurrentMessage, m_VersionedOutput;
+    std::string m_Name, m_FailureMessages, m_CurrentMessage, m_DiagnosticsOutput;
     std::size_t
       m_StandardTopLevelChecks{},
       m_StandardDeepChecks{},

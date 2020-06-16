@@ -27,7 +27,7 @@ namespace sequoia::testing
       for(auto& pTest : m_Tests)
       {
         summaries.push_back(pTest->execute());
-        if(!summaries.back().versioned_output().empty()) dataToWrite = true;
+        if(!summaries.back().diagnostics_output().empty()) dataToWrite = true;
       }
     }
     else
@@ -43,24 +43,24 @@ namespace sequoia::testing
       for(auto& res : results)
       {
         summaries.push_back(res.get());
-        if(!summaries.back().versioned_output().empty()) dataToWrite = true;
+        if(!summaries.back().diagnostics_output().empty()) dataToWrite = true;
       } 
     }
 
     if(writeFiles && dataToWrite)
     {
-      if(auto filename{false_positive_filename()}; !filename.empty())
+      if(auto filename{diagnostics_filename()}; !filename.empty())
       {
         if(std::ofstream file{filename.data()})
         {           
           for(const auto& s : summaries)
           {           
-            file << s.versioned_output().data();
+            file << s.diagnostics_output().data();
           }
         }
         else
         {
-          throw std::runtime_error{std::string{"Unable to open versioned file "}.append(filename).append(" for writing\n")};
+          throw std::runtime_error{std::string{"Unable to open diagnostics output file "}.append(filename).append(" for writing\n")};
         }
       }
     }
@@ -68,7 +68,7 @@ namespace sequoia::testing
     return {steady_clock::now() - time, std::move(summaries)};
   }
 
-  std::string test_family::false_positive_filename()
+  std::string test_family::diagnostics_filename()
   {
     std::string name{m_Name};
     for(auto& c : name)
