@@ -20,34 +20,45 @@ namespace sequoia::testing
     
     std::vector<log_summary> summaries{};
     summaries.reserve(m_Tests.size());
-    bool dataToWrite{};
+    bool diagnosticsToWrite{};
 
     if(mode < concurrency_mode::test)
     {
+      summary_writer writer{};
       for(auto& pTest : m_Tests)
       {
-        summaries.push_back(pTest->execute());
-        if(!summaries.back().diagnostics_output().empty()) dataToWrite = true;
+        const auto summary{pTest->execute()};
+        summaries.push_back(summary);
+
+        if(!summary.diagnostics_output().empty()) diagnosticsToWrite = true;
+
+        writer.to_file(test_summary_filename(*pTest), summary);
       }
     }
     else
     {
-      std::vector<std::future<log_summary>> results{};
+      using data = std::pair<std::string, log_summary>;
+      std::vector<std::future<data>> results{};
       results.reserve(m_Tests.size());
       for(auto& pTest : m_Tests)
       {
         results.emplace_back(std::async([&pTest](){
-              return pTest->execute(); }));
+              return std::make_pair(test_summary_filename(*pTest), pTest->execute()); }));
       }
-
+      
+      summary_writer writer{};
       for(auto& res : results)
       {
-        summaries.push_back(res.get());
-        if(!summaries.back().diagnostics_output().empty()) dataToWrite = true;
-      } 
+        const auto [filename, summary]{res.get()};
+        summaries.push_back(summary);
+
+        if(!summary.diagnostics_output().empty()) diagnosticsToWrite = true;
+
+        writer.to_file(filename, summary);
+      }
     }
 
-    if(writeFiles && dataToWrite)
+    if(writeFiles && diagnosticsToWrite)
     {
       if(auto filename{diagnostics_filename()}; !filename.empty())
       {
@@ -66,16 +77,51 @@ namespace sequoia::testing
     }
 
     return {steady_clock::now() - time, std::move(summaries)};
-  }
+  }  
 
-  std::string test_family::diagnostics_filename()
+  std::string test_family::diagnostics_filename() const
   {
     std::string name{m_Name};
-    for(auto& c : name)
-    {
-      if(c == ' ') c = '_';
-    }
+    for(auto& c : name) if(c == ' ') c = '_';
+
+    // TO DO: use filesystem
     
     return std::string{"../output/DiagnosticsOutput/"}.append(std::move(name)).append("_FPOutput.txt");
+  }
+
+  std::string test_family::test_summary_filename(const test& t)
+  {
+    // TO DO: use filesystem
+
+    std::string name{t.source_file_name()};    
+    name.erase(name.find_last_of('.') + 1);
+    name.append("txt");
+    
+    const auto pos{name.find_last_of('/')};
+    name = name.substr(pos);
+
+    return std::string{"../output/TestSummaries/"}.append(name);
+  }
+
+  void test_family::summary_writer::to_file(std::string_view filename, const log_summary& summary)
+  {
+    auto mode{std::ios_base::out};
+    if(auto found{m_Record.find(filename)}; found != m_Record.end())
+    {
+      mode = std::ios_base::app;
+    }
+    else
+    {
+      m_Record.insert(std::string{filename});
+    }
+
+    if(std::ofstream file{filename.data()})
+    {
+      //file << summary << "\n\n";
+    }
+    else
+    {
+      throw std::runtime_error{std::string{"Unable to open summaries file "}.append(filename).append(" for writing\n")};
+    }
   }
 }

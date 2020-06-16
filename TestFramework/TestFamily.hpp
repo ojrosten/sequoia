@@ -16,6 +16,7 @@
 
 #include <vector>
 #include <future>
+#include <set>
 
 namespace sequoia::testing
 {
@@ -76,7 +77,12 @@ namespace sequoia::testing
     std::string m_Name{};
 
     [[nodiscard]]
-    std::string diagnostics_filename();
+    std::string diagnostics_filename() const;
+
+    [[nodiscard]]
+    static std::string test_summary_filename(const test& t);
+
+    static void write_summary_to_file(const log_summary& summary, std::set<std::string>& record);
 
     template<class Test, class... Tests>
     void register_tests(Test&& t, Tests&&... tests)
@@ -86,5 +92,13 @@ namespace sequoia::testing
       if constexpr (sizeof...(Tests) > 0)
         register_tests(std::forward<Tests>(tests)...);
     }
+
+    class summary_writer
+    {
+    public:
+      void to_file(std::string_view filename, const log_summary& summary);
+    private:
+      std::set<std::string, std::less<>> m_Record{};
+    };
   };
 }
