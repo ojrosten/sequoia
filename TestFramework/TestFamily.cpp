@@ -10,6 +10,7 @@
  */
 
 #include "TestFamily.hpp"
+#include "Summary.hpp"
 
 namespace sequoia::testing
 {
@@ -123,5 +124,11 @@ namespace sequoia::testing
     {
       throw std::runtime_error{std::string{"Unable to open summaries file "}.append(filename).append(" for writing\n")};
     }
+  }
+
+  [[nodiscard]]
+  std::string summarize(const test_family::summary& summary, std::string_view indent, const log_verbosity suppression)
+  {
+    return summarize(summary.log, summary.execution_time, indent, suppression);
   }
 }

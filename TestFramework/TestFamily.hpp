@@ -101,4 +101,7 @@ namespace sequoia::testing
       std::set<std::string, std::less<>> m_Record{};
     };
   };
+
+  [[nodiscard]]
+  std::string summarize(const test_family::summary& summary, std::string_view indent, const log_verbosity suppression);
 }
