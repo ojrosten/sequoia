@@ -97,7 +97,7 @@ namespace sequoia::testing
     name.erase(name.find_last_of('.') + 1);
     name.append("txt");
     
-    const auto pos{name.find_last_of('/')};
+    const auto pos{name.find_first_of('/')+1};
     name = name.substr(pos);
 
     return std::string{"../output/TestSummaries/"}.append(name);
