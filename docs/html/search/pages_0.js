@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['index_1440',['index',['../d2/d66/md__Users_Claire_Dropbox_Sequoia_docs_index.html',1,'']]]
+  ['license_1439',['LICENSE',['../df/dbf/md__Users_Claire_Dropbox_Sequoia_LICENSE.html',1,'']]]
 ];

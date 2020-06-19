@@ -42,6 +42,5 @@ var searchData=
   ['iterator_5fgetter_373',['iterator_getter',['../dc/d46/structsequoia_1_1maths_1_1graph__impl_1_1iterator__getter.html',1,'sequoia::maths::graph_impl']]],
   ['iterator_5fgetter_3c_20false_20_3e_374',['iterator_getter&lt; false &gt;',['../d9/dd6/structsequoia_1_1maths_1_1graph__impl_1_1iterator__getter_3_01false_01_4.html',1,'sequoia::maths::graph_impl']]],
   ['iterator_5ftest_375',['iterator_test',['../d9/d53/classsequoia_1_1testing_1_1iterator__test.html',1,'sequoia::testing']]],
-  ['iteratordetails_2ehpp_376',['IteratorDetails.hpp',['../dc/dce/IteratorDetails_8hpp.html',1,'']]],
-  ['index_377',['index',['../d2/d66/md__Users_Claire_Dropbox_Sequoia_docs_index.html',1,'']]]
+  ['iteratordetails_2ehpp_376',['IteratorDetails.hpp',['../dc/dce/IteratorDetails_8hpp.html',1,'']]]
 ];
