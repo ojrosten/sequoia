@@ -3,12 +3,15 @@ BUILDDIR   := $(BUILDROOT)/TestAll
 LIBDIRS    := ../Core ../Maths ../Experimental ../Algorithms ../Parsing ../TestFramework ../TestCommon
 UTBUILDDIR := $(BUILDDIR)/Tests
 UTDIR      := ../Tests
+OUTPUTDIR    := ../output/TestSummaries/Tests
 
 UTSUBDIRS  := $(filter-out ../Tests, $(shell find $(UTDIR) -type d))
 LIBSUBDIRS := $(shell find $(LIBDIRS) -type d)
 
 BUILDSUBDIRS := $(addprefix $(UTBUILDDIR)/, $(UTSUBDIRS))
 BUILDSUBDIRS += $(addprefix $(UTBUILDDIR)/, $(LIBSUBDIRS))
+
+OUTPUTSUBDIRS := $(addprefix $(OUTPUTDIR)/, $(UTSUBDIRS))
 
 .PHONY: all clean subdirs
 
@@ -46,6 +49,7 @@ subdirs :
 	-mkdir $(BUILDDIR)
 	-mkdir $(UTBUILDDIR)
 	-mkdir $(BUILDSUBDIRS)
+	-mkdir $(OUTPUTSUBDIRS)
 
 clean :
 	rm -r $(BUILDDIR)
