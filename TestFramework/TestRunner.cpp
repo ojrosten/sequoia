@@ -256,7 +256,7 @@ namespace sequoia::testing
     std::string output{};
     for(const auto& s : results.logs)
     {
-      if(m_Verbose) output += summarize(s, "\t", log_verbosity::failure_messages);
+      if(m_Verbose) output += summarize(s, log_verbosity::failure_messages, "\t", "\t");
       familySummary.log += s;
     }
           
@@ -266,7 +266,7 @@ namespace sequoia::testing
     }
     else
     {
-      output += summarize(familySummary, "", log_verbosity::failure_messages);
+      output += summarize(familySummary, log_verbosity::failure_messages, "\t", "");
     }
 
     std::cout << output;
@@ -419,7 +419,7 @@ namespace sequoia::testing
         }
       }
       std::cout <<  "\n-----------Grand Totals-----------\n";
-      std::cout << summarize(summary, steady_clock::now() - time, "", log_verbosity::absent_checks);
+      std::cout << summarize(summary, steady_clock::now() - time, log_verbosity::absent_checks, "\t",  "");
     }
 
     check_for_missing_tests();

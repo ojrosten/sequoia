@@ -1,0 +1,3 @@
+Move-Only Allocation False Negative Diagnostics
+[2ms]
+False Negative Checks:                     8;  Failures:  0

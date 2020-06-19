@@ -35,17 +35,23 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string summarize(const log_summary& log, const opt_duration duration, std::string_view indent, const log_verbosity suppression)
+  std::string summarize(const log_summary& log, const opt_duration duration, const log_verbosity verbosity, std::string_view indent_0, std::string_view indent_1)
   {
     constexpr std::size_t entries{6};
 
+    auto indent{
+      [indent_0, indent_1](){
+        return std::string{indent_0}.append(indent_1);
+      }
+    };
+
     std::array<std::string, entries> summaries{
-      std::string{indent}.append("\tStandard Top Level Checks:"),
-      std::string{indent}.append("\tStandard Performance Checks:"),
-      std::string{indent}.append("\tFalse Negative Checks:"),
-      std::string{indent}.append("\tFalse Negative Performance Checks:"),
-      std::string{indent}.append("\tFalse Positive Checks:"),
-      std::string{indent}.append("\tFalse Positive Performance Checks:")
+      indent().append("Standard Top Level Checks:"),
+      indent().append("Standard Performance Checks:"),
+      indent().append("False Negative Checks:"),
+      indent().append("False Negative Performance Checks:"),
+      indent().append("False Positive Checks:"),
+      indent().append("False Positive Performance Checks:")
     };
 
     pad_right(summaries.begin(), summaries.end(), "  ");
@@ -94,10 +100,10 @@ namespace sequoia::testing
       }
     };
     
-    std::string summary{log.name().empty() ? dur()
-        : std::string{"\t"}.append(log.name()).append(":\n\t").append(dur())};
+    std::string summary{testing::indent(log.name(), indent_0)};
+    append_indented(summary, dur(), indent_0);
 
-    if((suppression & log_verbosity::absent_checks) == log_verbosity::absent_checks)
+    if((verbosity & log_verbosity::absent_checks) == log_verbosity::absent_checks)
     {
       std::for_each(std::cbegin(summaries), std::cend(summaries), [&summary](const std::string& s){
           (summary += s) += "\n";
@@ -126,19 +132,17 @@ namespace sequoia::testing
       (summary += "Critical Failures:  ") += std::to_string(log.critical_failures()) += "\n";
     }
 
-    if((suppression & log_verbosity::failure_messages) == log_verbosity::failure_messages)
+    if((verbosity & log_verbosity::failure_messages) == log_verbosity::failure_messages)
     {
-      auto mess{log.failure_messages()};
-      if(!mess.empty())
-        summary.append("\n").append(std::move(mess));
+      append_indented(summary, log.failure_messages(), "");
     }
 
     return summary;
   }
 
   [[nodiscard]]
-  std::string summarize(const log_summary& log, std::string_view indent, const log_verbosity suppression)
+  std::string summarize(const log_summary& log, const log_verbosity verbosity, std::string_view indent_0, std::string_view indent_1)
   {
-    return summarize(log, std::nullopt, indent, suppression);
+    return summarize(log, std::nullopt, verbosity, indent_0, indent_1);
   }
 }

@@ -1,0 +1,3 @@
+Move-Only False Negative Diagnostics
+[0ms]
+False Negative Checks:                     1;  Failures:  0

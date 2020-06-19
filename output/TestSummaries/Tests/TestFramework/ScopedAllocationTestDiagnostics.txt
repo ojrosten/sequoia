@@ -1,0 +1,3 @@
+Scoped Allocation False Negative Diagnostics
+[19ms]
+False Negative Checks:                    16;  Failures:  0
