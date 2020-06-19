@@ -21,41 +21,43 @@ namespace sequoia::testing
     
     std::vector<log_summary> summaries{};
     summaries.reserve(m_Tests.size());
-    bool diagnosticsToWrite{};
+    bool diagnosticsToWrite{};    
+    summary_writer writer{};
 
-    if(mode < concurrency_mode::test)
-    {
-      summary_writer writer{};
-      for(auto& pTest : m_Tests)
-      {
-        const auto summary{pTest->execute()};
-        summaries.push_back(summary);
+    auto summarizer{
+      [&summaries, &diagnosticsToWrite, &writer](const log_summary& summary, std::string_view filename){
+        summaries.push_back(std::move(summary));
 
         if(!summary.diagnostics_output().empty()) diagnosticsToWrite = true;
 
-        writer.to_file(test_summary_filename(*pTest), summary);
+        writer.to_file(std::move(filename), summary);
+      }
+    };
+    
+    if(mode < concurrency_mode::test)
+    {
+      for(auto& pTest : m_Tests)
+      {
+        const auto summary{pTest->execute()};
+        summarizer(summary, test_summary_filename(*pTest, writeFiles));
       }
     }
     else
     {
-      using data = std::pair<std::string, log_summary>;
+      using data = std::pair<log_summary, std::string>;
       std::vector<std::future<data>> results{};
       results.reserve(m_Tests.size());
       for(auto& pTest : m_Tests)
       {
-        results.emplace_back(std::async([&pTest](){
-              return std::make_pair(test_summary_filename(*pTest), pTest->execute()); }));
+        results.emplace_back(std::async([&pTest, writeFiles](){
+              return std::make_pair(pTest->execute(), test_summary_filename(*pTest, writeFiles)); }));
       }
       
       summary_writer writer{};
       for(auto& res : results)
       {
-        const auto [filename, summary]{res.get()};
-        summaries.push_back(summary);
-
-        if(!summary.diagnostics_output().empty()) diagnosticsToWrite = true;
-
-        writer.to_file(filename, summary);
+        const auto [summary, filename]{res.get()};
+        summarizer(summary, filename);
       }
     }
 
@@ -90,8 +92,10 @@ namespace sequoia::testing
     return std::string{"../output/DiagnosticsOutput/"}.append(std::move(name)).append("_FPOutput.txt");
   }
 
-  std::string test_family::test_summary_filename(const test& t)
+  std::string test_family::test_summary_filename(const test& t, const bool writeFiles)
   {
+    if(!writeFiles) return "";
+    
     // TO DO: use filesystem
 
     std::string name{t.source_file_name()};    
@@ -106,6 +110,8 @@ namespace sequoia::testing
 
   void test_family::summary_writer::to_file(std::string_view filename, const log_summary& summary)
   {
+    if(filename.empty()) return;
+    
     auto mode{std::ios_base::out};
     if(auto found{m_Record.find(filename)}; found != m_Record.end())
     {

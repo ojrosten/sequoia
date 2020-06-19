@@ -80,7 +80,7 @@ namespace sequoia::testing
     std::string diagnostics_filename() const;
 
     [[nodiscard]]
-    static std::string test_summary_filename(const test& t);
+    static std::string test_summary_filename(const test& t, const bool writeFiles);
 
     static void write_summary_to_file(const log_summary& summary, std::set<std::string>& record);
 
