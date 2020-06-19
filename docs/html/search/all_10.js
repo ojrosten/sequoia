@@ -64,5 +64,7 @@ var searchData=
   ['storage_5ftype_5fgenerator_3c_20partitioned_5fsequence_5ftraits_3c_20t_2c_20data_5fsharing_3a_3aindependent_3c_20t_20_3e_20_3e_2c_20data_5fsharing_3a_3aindependent_3c_20t_20_3e_20_3e_607',['storage_type_generator&lt; partitioned_sequence_traits&lt; T, data_sharing::independent&lt; T &gt; &gt;, data_sharing::independent&lt; T &gt; &gt;',['../d3/d79/structsequoia_1_1data__structures_1_1partition__impl_1_1storage__type__generator.html',1,'sequoia::data_structures::partition_impl']]],
   ['storage_5ftype_5fgenerator_3c_20static_5fpartitioned_5fsequence_5ftraits_3c_20t_2c_20npartitions_2c_20nelements_2c_20std_3a_3asize_5ft_20_3e_2c_20data_5fsharing_3a_3aindependent_3c_20t_20_3e_20_3e_608',['storage_type_generator&lt; static_partitioned_sequence_traits&lt; T, Npartitions, Nelements, std::size_t &gt;, data_sharing::independent&lt; T &gt; &gt;',['../d3/d79/structsequoia_1_1data__structures_1_1partition__impl_1_1storage__type__generator.html',1,'sequoia::data_structures::partition_impl']]],
   ['summarize_609',['summarize',['../d0/d16/classsequoia_1_1testing_1_1basic__test.html#a55be710c77850420b69a72be21af103c',1,'sequoia::testing::basic_test']]],
-  ['summary_610',['summary',['../d9/d87/structsequoia_1_1testing_1_1test__family_1_1summary.html',1,'sequoia::testing::test_family']]]
+  ['summary_610',['summary',['../d9/d87/structsequoia_1_1testing_1_1test__family_1_1summary.html',1,'sequoia::testing::test_family']]],
+  ['summary_2ecpp_611',['Summary.cpp',['../d1/dd4/Summary_8cpp.html',1,'']]],
+  ['summary_2ehpp_612',['Summary.hpp',['../dc/d7f/Summary_8hpp.html',1,'']]]
 ];

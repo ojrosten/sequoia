@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: /Users/Claire/Dropbox/Sequoia/TestFramework/TestRunner.hpp File Reference</title>
+<title>Sequoia: /Users/Claire/Dropbox/Sequoia/TestFramework/Summary.cpp File Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -66,34 +66,33 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
-<div class="title">TestRunner.hpp File Reference</div>  </div>
+<div class="title">Summary.cpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Utilities for running tests from the command line.  
+<p>Definitions used for summarizing results of tests.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="../../db/d6a/TestFamily_8hpp_source.html">TestFamily.hpp</a>&quot;</code><br />
-<code>#include &lt;map&gt;</code><br />
-</div>
-<p><a href="../../de/d13/TestRunner_8hpp_source.html">Go to the source code of this file.</a></p>
-<table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d37/classsequoia_1_1testing_1_1test__runner.html">sequoia::testing::test_runner</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Consumes command-line arguments and holds all test families.  <a href="../../da/d37/classsequoia_1_1testing_1_1test__runner.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
+<div class="textblock"><code>#include &quot;<a class="el" href="../../dc/d7f/Summary_8hpp_source.html">Summary.hpp</a>&quot;</code><br />
+</div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a6a45ec074d2be18774c71333d8ec4343"><td class="memItemLeft" align="right" valign="top"><a id="a6a45ec074d2be18774c71333d8ec4343"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::report_time</b> (const test_family::summary &amp;s)</td></tr>
-<tr class="separator:a6a45ec074d2be18774c71333d8ec4343"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c7a8a95ca2e069f581374378bb85fd7"><td class="memItemLeft" align="right" valign="top"><a id="a5c7a8a95ca2e069f581374378bb85fd7"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::stringify</b> (const log_summary::duration &amp;d)</td></tr>
+<tr class="separator:a5c7a8a95ca2e069f581374378bb85fd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada56828e7e618c3658dbc90410bd5821"><td class="memItemLeft" align="right" valign="top"><a id="ada56828e7e618c3658dbc90410bd5821"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::report_time</b> (const log_summary &amp;log, const opt_duration duration)</td></tr>
+<tr class="separator:ada56828e7e618c3658dbc90410bd5821"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ab5337bb515beae5a154072a9bf10ae"><td class="memItemLeft" align="right" valign="top"><a id="a5ab5337bb515beae5a154072a9bf10ae"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::summarize</b> (const log_summary &amp;log, const opt_duration duration, const log_verbosity verbosity, std::string_view indent_0, std::string_view indent_1)</td></tr>
+<tr class="separator:a5ab5337bb515beae5a154072a9bf10ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c8c492d02fe2f8234df833752cbde83"><td class="memItemLeft" align="right" valign="top"><a id="a2c8c492d02fe2f8234df833752cbde83"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::summarize</b> (const log_summary &amp;log, const log_verbosity verbosity, std::string_view indent_0, std::string_view indent_1)</td></tr>
+<tr class="separator:a2c8c492d02fe2f8234df833752cbde83"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Utilities for running tests from the command line. </p>
+<div class="textblock"><p>Definitions used for summarizing results of tests. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
