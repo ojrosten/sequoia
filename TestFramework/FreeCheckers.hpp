@@ -233,7 +233,7 @@ namespace sequoia::testing
    */  
   
   template<test_mode Mode, class T, class Advisor=null_advisor>
-  bool dispatch_check(std::string_view description, test_logger<Mode>& logger, equality_tag, const T& value, const T& prediction, Advisor advisor=Advisor{})
+  bool dispatch_check(std::string_view description, test_logger<Mode>& logger, equality_tag, const T& value, const T& prediction, [[maybe_unused]] Advisor advisor=Advisor{})
   {
     constexpr bool delegate{has_detailed_equality_checker_v<T> || is_container_v<T>};
 

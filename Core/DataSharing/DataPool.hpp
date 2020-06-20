@@ -183,7 +183,7 @@ namespace sequoia::data_sharing
 
     data_pool(data_pool&& other) noexcept : data_pool()
     {
-      swap(*this, other);
+      swap(other);
     }
 
     data_pool(data_pool&& other, const allocator_type& alloc) : m_Data(alloc)
@@ -219,11 +219,16 @@ namespace sequoia::data_sharing
       return *this;
     }
 
+    void swap(data_pool& rhs)
+    {
+      std::swap(this->m_Data, rhs.m_Data);
+      for(auto& pData : this->m_Data) pData->m_pPool = this;
+      for(auto& pData : rhs.m_Data)   pData->m_pPool = &rhs;
+    }
+
     friend void swap(data_pool& lhs, data_pool& rhs) noexcept
     {
-      std::swap(lhs.m_Data, rhs.m_Data);
-      for(auto& pData : lhs.m_Data) pData->m_pPool = &lhs;
-      for(auto& pData : rhs.m_Data) pData->m_pPool = &rhs;
+      lhs.swap(rhs);
     }
 
     [[nodiscard]]

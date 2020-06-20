@@ -262,7 +262,7 @@ namespace sequoia
       }
 
       void swap(connectivity& other)
-        noexcept(noexcept(m_Edges, other.m_Edges))
+        noexcept(noexcept(this->m_Edges, other.m_Edges))
       {
         sequoia::swap(m_Edges, other.m_Edges);
       }
@@ -475,7 +475,7 @@ namespace sequoia
                       [](const auto index) { return index - 1; });
       }
 
-      void reserve_for_join(const edge_index_type node1, const edge_index_type node2)
+      void reserve_for_join([[maybe_unused]] const edge_index_type node1, [[maybe_unused]] const edge_index_type node2)
       {
         if constexpr (graph_impl::has_reservable_partitions_v<edge_storage_type>)
         {
@@ -670,7 +670,8 @@ namespace sequoia
             }
             else
             {
-              const auto partnerDist{[this, partner](const auto source, const auto citer){
+              const auto partnerDist{
+                [this, partner]([[maybe_unused]] const auto source, [[maybe_unused]] const auto citer){
                   if constexpr (directed(directedness))
                   {
                     const auto pEdge{&*citer};
@@ -776,7 +777,7 @@ namespace sequoia
               {
                 if((ci != citer) && (ci->target_node() == source))
                 {
-                  const bool remove{[](const auto ci, const auto citer){
+                  const bool remove{[]([[maybe_unused]] const auto ci, [[maybe_unused]] const auto citer){
                       if constexpr(std::is_empty_v<edge_weight_type>)
                       {
                         return true;
@@ -1318,7 +1319,7 @@ namespace sequoia
 
       template<class EdgeInitializer>
       [[nodiscard]]
-      edge_type make_edge(const edge_index_type source, const EdgeInitializer& edgeInit)
+      edge_type make_edge([[maybe_unused]] const edge_index_type source, const EdgeInitializer& edgeInit)
       {
         static_assert(!std::is_same_v<edge_type, edge_init_type>, "Logic error!");
         if constexpr(edge_type::flavour == edge_flavour::partial)
@@ -1553,6 +1554,7 @@ namespace sequoia
         else
         {
           const auto source{citer.partition_index()};
+          auto found{cend_edges(partner)};
           if(source == partner)
           {
             for(auto iter{m_Edges.begin_partition(partner)}; iter != m_Edges.end_partition(partner); ++iter)
@@ -1563,7 +1565,8 @@ namespace sequoia
               if(*iter == *citer)
               {
                 setter(iter);
-                return cbegin_edges(partner) + distance(m_Edges.begin_partition(partner), iter);
+                found = cbegin_edges(partner) + distance(m_Edges.begin_partition(partner), iter);
+                break;
               }
             }
           }
@@ -1574,12 +1577,20 @@ namespace sequoia
               if((iter->target_node() == source) && (iter->weight() == citer->weight()))
               {
                 setter(iter);
-                return cbegin_edges(partner) + distance(m_Edges.begin_partition(partner), iter);
+                found = cbegin_edges(partner) + distance(m_Edges.begin_partition(partner), iter);
+                break;
               }
             }
           }          
 
-          throw std::logic_error("Partner weight not found");
+          if(found != cend_edges(partner))
+          {
+            return found;
+          }
+          else
+          {
+            throw std::logic_error("Partner weight not found");
+          }
         }
       }
 
@@ -1601,7 +1612,7 @@ namespace sequoia
         if constexpr (std::is_empty_v<edge_weight_type>)
           static_assert(sizeof...(args) == 0, "Makes no sense to supply arguments for an empty weight!");
         
-        const auto node1{citer1.partition_index()}, pos1{static_cast<edge_index_type>(distance(cbegin_edges(node1), citer1))};
+        const auto node1{citer1.partition_index()};
         if constexpr(std::is_empty_v<edge_weight_type>)
         {          
           if constexpr(edge_type::flavour == edge_flavour::partial_embedded)
@@ -1611,7 +1622,8 @@ namespace sequoia
             
           }
           else if constexpr(edge_type::flavour == edge_flavour::full)
-          {
+          {            
+            const auto pos1{static_cast<edge_index_type>(distance(cbegin_edges(node1), citer1))};
             if((node1 == node2) && (pos2 <= pos1))
             {
               citer1 = m_Edges.insert_to_partition(citer1, node1, inversion_constant<true>{});
@@ -1635,7 +1647,8 @@ namespace sequoia
             increment_comp_indices(++to_edge_iterator(citer1), end_edges(node1), 1);            
           }
           else if constexpr(edge_type::flavour == edge_flavour::full)
-          {
+          {            
+            const auto pos1{static_cast<edge_index_type>(distance(cbegin_edges(node1), citer1))};
             if((node1 == node2) && (pos2 <= pos1))
             {
               citer1 = m_Edges.insert_to_partition(citer1, node1, inversion_constant<true>{}, make_edge_weight(std::forward<Args>(args)...));
@@ -1661,7 +1674,7 @@ namespace sequoia
         while(first != last)
         {
           const auto source{first.partition_index()};
-          const auto other{[first](const auto n){
+          const auto other{[first]([[maybe_unused]] const auto n){
               const auto target{first->target_node()};
               if constexpr(edge_type::flavour == edge_flavour::full_embedded)
               {

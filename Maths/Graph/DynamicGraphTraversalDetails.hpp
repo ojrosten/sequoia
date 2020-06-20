@@ -23,7 +23,7 @@ namespace sequoia::maths::graph_impl
     constexpr static bool uses_forward_iterator() noexcept { return true; }
 
     [[nodiscard]]
-    constexpr static auto get_container_element(const std::priority_queue<std::size_t, Container, Compare>& q)
+    static auto get_container_element(const std::priority_queue<std::size_t, Container, Compare>& q)
     {
       return q.top();
     }
@@ -35,7 +35,7 @@ namespace sequoia::maths::graph_impl
     constexpr static bool uses_forward_iterator() noexcept { return false; }
 
     [[nodiscard]]
-    constexpr static auto get_container_element(const std::stack<std::size_t>& s) { return s.top(); }
+    static auto get_container_element(const std::stack<std::size_t>& s) { return s.top(); }
   };
 
 
@@ -45,7 +45,7 @@ namespace sequoia::maths::graph_impl
     constexpr static bool uses_forward_iterator() noexcept { return true; }
 
     [[nodiscard]]
-    constexpr static auto get_container_element(const std::queue<std::size_t>& q) { return q.front(); }
+    static auto get_container_element(const std::queue<std::size_t>& q) { return q.front(); }
   };
 
   template<class G, class Container, class Comparer>

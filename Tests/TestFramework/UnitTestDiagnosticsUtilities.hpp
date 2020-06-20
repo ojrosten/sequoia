@@ -674,7 +674,7 @@ namespace sequoia::testing
 
     perfectly_normal_beast& operator=(perfectly_normal_beast&&) = default;
 
-    void swap(perfectly_normal_beast& other) noexcept(noexcept(std::swap(x, other.x)))
+    void swap(perfectly_normal_beast& other) noexcept(noexcept(std::swap(this->x, other.x)))
     {
       std::swap(x, other.x);
     }
@@ -761,7 +761,7 @@ namespace sequoia::testing
 
     perfectly_sharing_beast& operator=(perfectly_sharing_beast&&) = default;
 
-    void swap(perfectly_sharing_beast& other) noexcept(noexcept(std::swap(x, other.x)))
+    void swap(perfectly_sharing_beast& other) noexcept(noexcept(std::swap(this->x, other.x)))
     {
       std::swap(x, other.x);
     }
@@ -1052,7 +1052,7 @@ namespace sequoia::testing
 
     doubly_normal_beast& operator=(doubly_normal_beast&&) = default;
 
-    void swap(doubly_normal_beast& other) noexcept(noexcept(std::swap(x, other.x)) && noexcept(std::swap(y, other.y)))
+    void swap(doubly_normal_beast& other) noexcept(noexcept(std::swap(this->x, other.x)) && noexcept(std::swap(this->y, other.y)))
     {
       std::swap(x, other.x);
       std::swap(y, other.y);

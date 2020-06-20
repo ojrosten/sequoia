@@ -6,7 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 /*! \file
-    \brief Various definitions associated with running tests from the commandline.
+    \brief Definitions for TestRunner.hpp.
 */
 
 #include "TestRunner.hpp"
@@ -69,6 +69,8 @@ namespace sequoia::testing
       return "Test";
     case concurrency_mode::deep:
       return "Deep";
+    default:      
+      throw std::logic_error("Missing treatment for a case of concurrency_mode");
     }
   }
 

@@ -380,7 +380,7 @@ namespace sequoia
       }
 
       {
-        constexpr std::array<double, 0> a{1};
+        constexpr std::array<double, 1> a{1};
         auto iters{equal_range(a.begin(), a.end(), 0)};
         check(LINE(""), iters.first == a.begin());
         check(LINE(""), iters.second == a.begin());

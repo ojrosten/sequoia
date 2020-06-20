@@ -34,7 +34,7 @@ namespace sequoia::testing
 
     move_only_beast& operator=(move_only_beast&&) = default;
 
-    void swap(move_only_beast& other) noexcept(noexcept(std::swap(x, other.x)))
+    void swap(move_only_beast& other) noexcept(noexcept(std::swap(this->x, other.x)))
     {
       std::swap(x, other.x);
     }
@@ -328,7 +328,7 @@ namespace sequoia::testing
 
     move_only_inefficient_move& operator=(move_only_inefficient_move&&) = default;
 
-    void swap(move_only_inefficient_move& other) noexcept(noexcept(std::swap(x, other.x)))
+    void swap(move_only_inefficient_move& other) noexcept(noexcept(std::swap(this->x, other.x)))
     {
       std::swap(x, other.x);
     }
@@ -388,7 +388,7 @@ namespace sequoia::testing
       return *this;
     }
 
-    void swap(move_only_inefficient_move_assignment& other) noexcept(noexcept(std::swap(x, other.x)))
+    void swap(move_only_inefficient_move_assignment& other) noexcept(noexcept(std::swap(this->x, other.x)))
     {
       std::swap(x, other.x);
     }

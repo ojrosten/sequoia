@@ -44,7 +44,7 @@ namespace sequoia::testing
 
     perfectly_scoped_beast& operator=(perfectly_scoped_beast&&) = default;
 
-    void swap(perfectly_scoped_beast& other) noexcept(noexcept(std::swap(x, other.x)))
+    void swap(perfectly_scoped_beast& other) noexcept(noexcept(std::swap(this->x, other.x)))
     {
       std::swap(x, other.x);
     }

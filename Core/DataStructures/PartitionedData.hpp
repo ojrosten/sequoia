@@ -84,10 +84,10 @@ namespace sequoia
       using allocator_type       = typename storage_type::allocator_type;
       using sharing_policy_type  = SharingPolicy;
 
-      using partition_iterator               = partition_iterator<Traits, SharingPolicy, size_type>;
-      using const_partition_iterator         = const_partition_iterator<Traits, SharingPolicy, size_type>;
-      using reverse_partition_iterator       = reverse_partition_iterator<Traits, SharingPolicy, size_type>;
-      using const_reverse_partition_iterator = const_reverse_partition_iterator<Traits, SharingPolicy, size_type>;
+      using partition_iterator               = data_structures::partition_iterator<Traits, SharingPolicy, size_type>;
+      using const_partition_iterator         = data_structures::const_partition_iterator<Traits, SharingPolicy, size_type>;
+      using reverse_partition_iterator       = data_structures::reverse_partition_iterator<Traits, SharingPolicy, size_type>;
+      using const_reverse_partition_iterator = data_structures::const_reverse_partition_iterator<Traits, SharingPolicy, size_type>;
 
       constexpr static bool throw_on_range_error{Traits::throw_on_range_error};
       
@@ -160,7 +160,7 @@ namespace sequoia
       }
 
       void swap(bucketed_storage& other)
-        noexcept(noexcept(std::swap(m_Buckets, other.m_Buckets)))
+        noexcept(noexcept(std::swap(this->m_Buckets, other.m_Buckets)))
       {
         std::swap(m_Buckets, other.m_Buckets);
       }
@@ -493,10 +493,10 @@ namespace sequoia
       using size_type           = std::common_type_t<typename Traits::partition_index_type, typename container_type::size_type>;
       using index_type          = typename Traits::index_type;
 
-      using partition_iterator               = partition_iterator<Traits, SharingPolicy, index_type>;
-      using const_partition_iterator         = const_partition_iterator<Traits, SharingPolicy, index_type>;
-      using reverse_partition_iterator       = reverse_partition_iterator<Traits, SharingPolicy, index_type>;
-      using const_reverse_partition_iterator = const_reverse_partition_iterator<Traits, SharingPolicy, index_type>;
+      using partition_iterator               = data_structures::partition_iterator<Traits, SharingPolicy, index_type>;
+      using const_partition_iterator         = data_structures::const_partition_iterator<Traits, SharingPolicy, index_type>;
+      using reverse_partition_iterator       = data_structures::reverse_partition_iterator<Traits, SharingPolicy, index_type>;
+      using const_reverse_partition_iterator = data_structures::const_reverse_partition_iterator<Traits, SharingPolicy, index_type>;
 
       constexpr static bool throw_on_range_error{Traits::throw_on_range_error};
       
@@ -697,7 +697,7 @@ namespace sequoia
       }
 
       void swap(partitioned_sequence_base& other)
-        noexcept(noexcept(sequoia::swap(m_Partitions, other.m_Partitions)) && noexcept(m_Storage, other.m_Storage))
+        noexcept(noexcept(sequoia::swap(this->m_Partitions, other.m_Partitions)) && noexcept(sequoia::swap(this->m_Storage, other.m_Storage)))
       {
         sequoia::swap(m_Partitions, other.m_Partitions);
         sequoia::swap(m_Storage, other.m_Storage);
@@ -735,12 +735,12 @@ namespace sequoia
       template<class Allocator, class PartitionsAllocator>
       constexpr partitioned_sequence_base(const partitioned_sequence_base& in, const Allocator& allocator, const PartitionsAllocator& partitionsAllocator)
         : partitioned_sequence_base(partition_impl::copy_constant<directCopy>{}, in, allocator, partitionsAllocator)
-      {};
+      {}
       
       template<class Allocator, class PartitionsAllocator>
       constexpr partitioned_sequence_base(partitioned_sequence_base&& in, const Allocator& allocator, const PartitionsAllocator& partitionsAllocator)
         : m_Partitions{std::move(in.m_Partitions), partitionsAllocator}, m_Storage{std::move(in.m_Storage), allocator}
-      {};
+      {}
 
       void add_slot()
       {
@@ -937,13 +937,13 @@ namespace sequoia
       constexpr partitioned_sequence_base(partition_impl::direct_copy_type, const partitioned_sequence_base& in, const Allocator& allocator)
         : m_Partitions{in.m_Partitions}
         , m_Storage{in.m_Storage, allocator}
-      {};
+      {}
 
       template<class Allocator, class PartitionsAllocator>
       constexpr partitioned_sequence_base(partition_impl::direct_copy_type, const partitioned_sequence_base& in, const Allocator& allocator, const PartitionsAllocator& partitionsAllocator)
         : m_Partitions{in.m_Partitions, partitionsAllocator}
         , m_Storage{in.m_Storage, allocator}
-      {};
+      {}
 
       void init(std::initializer_list<std::initializer_list<T>> list)
       {
@@ -1164,7 +1164,7 @@ namespace sequoia
       partitioned_sequence& operator=(partitioned_sequence&&)      = default;
 
       void swap(partitioned_sequence& other)
-        noexcept(noexcept(base_t::swap(other)))
+        noexcept(noexcept(this->base_t::swap(other)))
       {
         base_t::swap(other);
       }

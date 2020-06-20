@@ -77,7 +77,7 @@ namespace sequoia::testing
 
   /*! \brief Adds to the overload set dispatch_check_free_overloads */
   template<test_mode Mode, class Compare, class T, class Advisor>
-  bool dispatch_check(std::string_view description, test_logger<Mode>& logger, fuzzy_compare<Compare> c, const T& value, const T& prediction, Advisor advisor)
+  bool dispatch_check(std::string_view description, test_logger<Mode>& logger, fuzzy_compare<Compare> c, const T& value, const T& prediction, const Advisor& advisor)
   {  
     sentinel<Mode> sentry{logger, add_type_info<T>(description)};
 
@@ -197,7 +197,7 @@ namespace sequoia::testing
 
     template<class Advisor>
     [[nodiscard]]
-    std::string report(const T& value, const T& prediction, Advisor advisor) const
+    std::string report(const T& value, const T& prediction, const Advisor& advisor) const
     {
       auto mess{prediction_message(to_string(value), to_string(prediction))
         .append(" +/- ")

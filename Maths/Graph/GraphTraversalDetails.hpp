@@ -309,7 +309,7 @@ namespace sequoia::maths::graph_impl
               
               if constexpr(G::flavour != graph_flavour::directed)
               {
-                const bool loop{[iter](const std::size_t currentNodeIndex){
+                const bool loop{[iter]([[maybe_unused]] const std::size_t currentNodeIndex){
                     if constexpr (G::flavour == graph_flavour::directed_embedded)
                       return iter->target_node() == iter->source_node();
                     else

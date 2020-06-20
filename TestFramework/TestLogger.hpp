@@ -25,6 +25,8 @@
 #include <sstream>
 #include <fstream>
 #include <array>
+#include <chrono>
+#include <functional>
 
 namespace sequoia::testing
 {

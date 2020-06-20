@@ -12,10 +12,10 @@
 
 	../Tests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 40
 
-	[sequoia::utilities::protective_wrapper<std::__1::vector<int, std::__1::allocator<int> >, false>]
+	[sequoia::utilities::protective_wrapper<std::vector<int, std::allocator<int> >, false>]
 	operator== returned false
 
-	[std::__1::vector<int, std::__1::allocator<int> >]
+	[std::vector<int, std::allocator<int> >]
 	operator== returned false
 
 	Container size wrong
@@ -28,10 +28,10 @@
 
 	../Tests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 43
 
-	[sequoia::utilities::protective_wrapper<std::__1::vector<int, std::__1::allocator<int> >, false>]
+	[sequoia::utilities::protective_wrapper<std::vector<int, std::allocator<int> >, false>]
 	operator== returned false
 
-	[std::__1::vector<int, std::__1::allocator<int> >]
+	[std::vector<int, std::allocator<int> >]
 	operator== returned false
 
 	Element 0 of range incorrect
@@ -44,10 +44,10 @@
 
 	../Tests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 46
 
-	[sequoia::utilities::protective_wrapper<std::__1::vector<int, std::__1::allocator<int> >, false>]
+	[sequoia::utilities::protective_wrapper<std::vector<int, std::allocator<int> >, false>]
 	operator== returned false
 
-	[std::__1::vector<int, std::__1::allocator<int> >]
+	[std::vector<int, std::allocator<int> >]
 	operator== returned false
 
 	Element 0 of range incorrect

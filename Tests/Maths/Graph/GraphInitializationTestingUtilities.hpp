@@ -30,7 +30,7 @@ namespace sequoia
         class Edge=typename Graph::edge_init_type,
         class NodeWeight=typename Graph::node_weight_type
       >
-      void check_graph(std::string_view description, const Graph& g, std::initializer_list<std::initializer_list<Edge>> connPrediction, std::initializer_list<NodeWeight> nodePrediction)
+      void check_graph(std::string_view description, const Graph& g, std::initializer_list<std::initializer_list<Edge>> connPrediction, [[maybe_unused]] std::initializer_list<NodeWeight> nodePrediction)
       {
         if constexpr(std::is_empty_v<NodeWeight>)
         {
@@ -47,7 +47,7 @@ namespace sequoia
       {
         if constexpr(is_static_graph_v<Graph>)
         {
-          // Should work in C++ 20;
+          // TO DO Should work in C++ 20;
           // the issue is std::array<T,0> doesn't work
           // for types without a default constructor...
 

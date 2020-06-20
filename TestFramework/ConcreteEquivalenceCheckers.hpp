@@ -12,6 +12,7 @@
 */
 
 #include "FreeCheckers.hpp"
+#include <tuple>
 
 namespace sequoia::testing
 {
@@ -41,7 +42,7 @@ namespace sequoia::testing
   struct equivalence_checker<std::pair<S, T>>
   {
     template<test_mode Mode, class U, class V, class Advisor>
-    static void check(std::string_view description, test_logger<Mode>& logger, const std::pair<S, T>& value, const std::pair<U, V>& prediction, Advisor advisor)
+    static void check(std::string_view description, test_logger<Mode>& logger, const std::pair<S, T>& value, const std::pair<U, V>& prediction, const Advisor& advisor)
     {        
       static_assert(std::is_same_v<std::decay_t<S>, std::decay_t<U>> && std::is_same_v<std::decay_t<T>, std::decay_t<V>>);
 
@@ -56,7 +57,7 @@ namespace sequoia::testing
   {
   private:
     template<test_mode Mode, std::size_t I = 0, class... U, class Advisor>
-    static void check_tuple_elements(std::string_view description, test_logger<Mode>& logger, const std::tuple<T...>& value, const std::tuple<U...>& prediction, Advisor advisor)
+    static void check_tuple_elements([[maybe_unused]] std::string_view description, test_logger<Mode>& logger, const std::tuple<T...>& value, const std::tuple<U...>& prediction, const Advisor& advisor)
     {
       if constexpr(I < sizeof...(T))
       {

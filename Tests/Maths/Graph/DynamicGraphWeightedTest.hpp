@@ -43,7 +43,6 @@ namespace sequoia::testing
 
     using base_t::check_equality;
     using base_t::check_semantics;
-    using graph_checker<test_mode::standard, regular_extender<test_mode::standard>>::check_exception_thrown;
       
     void execute_operations() override
     {
@@ -51,5 +50,12 @@ namespace sequoia::testing
     }
 
     void test_basic_operations();
+
+    template<class E, class Fn>
+    bool check_exception_thrown(std::string_view description, Fn&& function)
+    {
+      using checker = graph_checker<test_mode::standard, regular_extender<test_mode::standard>>;
+      return checker::check_exception_thrown<E>(description, std::forward<Fn>(function)); 
+    }
   };
 }

@@ -6,7 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 /*! \file
-    \brief Definitions used for summarizing results of tests.
+    \brief Definitions for Summary.hpp.
 */
 
 #include "Summary.hpp"

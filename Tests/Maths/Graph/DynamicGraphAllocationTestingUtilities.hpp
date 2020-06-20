@@ -260,7 +260,7 @@ namespace sequoia::testing
     }
   }
 
-   template
+  template
   <
     maths::graph_flavour GraphFlavour,
     class EdgeWeight,
@@ -298,8 +298,8 @@ namespace sequoia::testing
     
     graph_t g{maker()};
 
-    check_exception_thrown<std::out_of_range>(LINE(""), [&g](){ g.reserve_edges(0, 4);});
-    check_exception_thrown<std::out_of_range>(LINE(""), [&g](){ return g.edges_capacity(0);});
+    this->template check_exception_thrown<std::out_of_range>(LINE(""), [&g](){ g.reserve_edges(0, 4);});
+    this->template check_exception_thrown<std::out_of_range>(LINE(""), [&g](){ return g.edges_capacity(0);});
     check_equality(LINE(""), g.node_capacity(), 0ul);
 
     g.add_node();

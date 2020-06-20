@@ -42,7 +42,7 @@ namespace sequoia::testing
 
     move_only_scoped_beast& operator=(move_only_scoped_beast&&) = default;
 
-    void swap(move_only_scoped_beast& other) noexcept(noexcept(std::swap(x, other.x)))
+    void swap(move_only_scoped_beast& other) noexcept(noexcept(std::swap(this->x, other.x)))
     {
       std::swap(x, other.x);
     }

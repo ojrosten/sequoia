@@ -6,7 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 /*! \file
-    \brief Definitions for various functions used to format test output.
+    \brief Definitions for Format.hpp.
  */
 
 #include "Format.hpp"

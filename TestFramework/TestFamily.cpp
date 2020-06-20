@@ -6,7 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 /*! \file
-    \brief Various definitions for test_family.
+    \brief Definitions for TestFamily.hpp.
  */
 
 #include "TestFamily.hpp"
@@ -122,7 +122,7 @@ namespace sequoia::testing
       m_Record.insert(std::string{filename});
     }
 
-    if(std::ofstream file{filename.data()})
+    if(std::ofstream file{filename.data(), mode})
     {
       file << summarize(summary, log_verbosity::failure_messages, "", "");
     }

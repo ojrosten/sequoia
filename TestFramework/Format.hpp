@@ -69,8 +69,18 @@ namespace sequoia::testing
   {
     #ifndef _MSC_VER_
       int status;
-      return abi::__cxa_demangle(typeid(T).name(), 0, 0, &status);
-    #else        
+      std::string_view name{abi::__cxa_demangle(typeid(T).name(), 0, 0, &status)};
+      if(name.starts_with("std::__"))
+      {
+        name.remove_prefix(5);
+        const auto pos{name.find_first_of("::")};
+        name.remove_prefix(pos + 1);
+
+        return std::string{"std::"}.append(name); 
+      }
+      
+      return std::string{name};
+    #else
       return typeid(T).name();
     #endif
   }

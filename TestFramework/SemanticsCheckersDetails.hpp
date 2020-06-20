@@ -70,7 +70,7 @@ namespace sequoia::testing::impl
 
   struct null_mutator
   {
-    template<class T> constexpr void operator()(const T&) noexcept {};
+    template<class T> constexpr void operator()(const T&) noexcept {}
   };
 
   struct pre_condition_actions
@@ -126,7 +126,7 @@ namespace sequoia::testing::impl
   //================================ move assign ================================//
 
   template<test_mode Mode, class Actions, class T, class Mutator, class... Args>
-  void do_check_move_assign(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, T& z, T&& y, const T& yClone, Mutator yMutator, const Args&... args)
+  void do_check_move_assign(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, T& z, T&& y, const T& yClone, Mutator&& yMutator, const Args&... args)
   {
     z = std::move(y);
     check_equality(sentry.add_details(description, "Inconsistent move assignment (from y)"), sentry.logger(), z, yClone);

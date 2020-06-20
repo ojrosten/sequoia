@@ -512,7 +512,7 @@ namespace sequoia::testing::impl
     }
 
     template<test_mode Mode, class Container, class... Allocators, class... Predictions>
-    static void post_swap_action(std::string_view description, sentinel<Mode>& sentry, const Container& x, const Container& y, const Container&, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
+    static void post_swap_action([[maybe_unused]] std::string_view description, sentinel<Mode>& sentry, const Container& x, const Container& y, const Container&, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
     {
       if constexpr(((   std::allocator_traits<Allocators>::propagate_on_container_move_assignment::value
                      && std::allocator_traits<Allocators>::propagate_on_container_swap::value) && ... ))

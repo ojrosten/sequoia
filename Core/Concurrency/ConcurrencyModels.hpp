@@ -114,7 +114,7 @@ namespace sequoia::concurrency
           m_Q.pop();
         }
         
-      return std::move(task);
+      return task;
     }
   };
 
@@ -339,7 +339,7 @@ namespace sequoia::concurrency
 
       for(std::size_t q{}; q<numThreads; ++q)
       {
-        auto loop{[=]() {
+        auto loop{[=,this]() {
             if constexpr(MultiPipeline)
             {
               task_t task{m_Queues[q].pop()};

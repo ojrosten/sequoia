@@ -39,7 +39,7 @@
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 75
 
-	[std::__1::pair<int, double>]
+	[std::pair<int, double>]
 	operator== returned false
 
 	Second element of pair is incorrect
@@ -52,7 +52,7 @@
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 76
 
-	[std::__1::pair<int, double>]
+	[std::pair<int, double>]
 	operator== returned false
 
 	First element of pair is incorrect
@@ -65,7 +65,7 @@
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 77
 
-	[std::__1::pair<int, double>]
+	[std::pair<int, double>]
 	operator== returned false
 
 	First element of pair is incorrect
@@ -86,7 +86,7 @@
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 79
 
-	[std::__1::tuple<int, double, float>]
+	[std::tuple<int, double, float>]
 	operator== returned false
 
 	Element 0 of tuple incorrect
@@ -99,7 +99,7 @@
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 80
 
-	[std::__1::tuple<int, double, float>]
+	[std::tuple<int, double, float>]
 	operator== returned false
 
 	Element 1 of tuple incorrect
@@ -112,7 +112,7 @@
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 81
 
-	[std::__1::tuple<int, double, float>]
+	[std::tuple<int, double, float>]
 	operator== returned false
 
 	Element 2 of tuple incorrect
@@ -154,7 +154,7 @@
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 90
 	Empty vector check which should fail
 
-	[std::__1::vector<double, std::__1::allocator<double> >]
+	[std::vector<double, std::allocator<double> >]
 	operator== returned false
 
 	Container size wrong
@@ -168,7 +168,7 @@
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 91
 	One element vector check which should fail due to wrong value
 
-	[std::__1::vector<double, std::__1::allocator<double> >]
+	[std::vector<double, std::allocator<double> >]
 	operator== returned false
 
 	Element 0 of range incorrect
@@ -183,7 +183,7 @@
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 93
 	One element vector check which should fail due to differing sizes
 
-	[std::__1::vector<double, std::__1::allocator<double> >]
+	[std::vector<double, std::allocator<double> >]
 	operator== returned false
 
 	Container size wrong
@@ -197,7 +197,7 @@
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 94
 	Multi-element vector comparison which should fail due to last element
 
-	[std::__1::vector<double, std::__1::allocator<double> >]
+	[std::vector<double, std::allocator<double> >]
 	operator== returned false
 
 	Element 1 of range incorrect
@@ -211,7 +211,7 @@
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 95
 	Multi-element vector comparison which should fail due to first element
 
-	[std::__1::vector<double, std::__1::allocator<double> >]
+	[std::vector<double, std::allocator<double> >]
 	operator== returned false
 
 	Element 0 of range incorrect
@@ -225,7 +225,7 @@
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 96
 	Multi-element vector comparison which should fail due to middle element
 
-	[std::__1::vector<double, std::__1::allocator<double> >]
+	[std::vector<double, std::allocator<double> >]
 	operator== returned false
 
 	Element 2 of range incorrect
@@ -239,7 +239,7 @@
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 97
 	Multi-element vector comparison which should fail due to different sizes
 
-	[std::__1::vector<double, std::__1::allocator<double> >]
+	[std::vector<double, std::allocator<double> >]
 	operator== returned false
 
 	Container size wrong
@@ -293,7 +293,7 @@
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 105
 	Strings of differing length
 
-	[std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >]
+	[std:::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	operator== returned false
 
 	Container size wrong
@@ -307,7 +307,7 @@
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 106
 	Differing strings of same length
 
-	[std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >]
+	[std:::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	operator== returned false
 
 	Element 7 of range incorrect
@@ -326,15 +326,15 @@
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 120
 
-	[std::__1::tuple<std::__1::vector<std::__1::pair<int, float>, std::__1::allocator<std::__1::pair<int, float> > >, std::__1::set<double, std::__1::less<double>, std::__1::allocator<double> >, std::__1::complex<double> >]
+	[std::tuple<std::vector<std::pair<int, float>, std::allocator<std::pair<int, float> > >, std::set<double, std::less<double>, std::allocator<double> >, std::complex<double> >]
 	operator== returned false
 
 	Element 0 of tuple incorrect
-	[std::__1::vector<std::__1::pair<int, float>, std::__1::allocator<std::__1::pair<int, float> > >]
+	[std::vector<std::pair<int, float>, std::allocator<std::pair<int, float> > >]
 	operator== returned false
 
 	Element 0 of range incorrect
-	[std::__1::pair<int, float>]
+	[std::pair<int, float>]
 	operator== returned false
 
 	First element of pair is incorrect
@@ -348,11 +348,11 @@
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 125
 
-	[std::__1::tuple<std::__1::vector<std::__1::pair<int, float>, std::__1::allocator<std::__1::pair<int, float> > >, std::__1::set<double, std::__1::less<double>, std::__1::allocator<double> >, std::__1::complex<double> >]
+	[std::tuple<std::vector<std::pair<int, float>, std::allocator<std::pair<int, float> > >, std::set<double, std::less<double>, std::allocator<double> >, std::complex<double> >]
 	operator== returned false
 
 	Element 1 of tuple incorrect
-	[std::__1::set<double, std::__1::less<double>, std::__1::allocator<double> >]
+	[std::set<double, std::less<double>, std::allocator<double> >]
 	operator== returned false
 
 	Element 2 of range incorrect
@@ -392,25 +392,25 @@
 
 	--Regular Semantics--
 	Inconsistent copy constructor (x)
-	[sequoia::testing::broken_copy<int, std::__1::allocator<int> >]
+	[sequoia::testing::broken_copy<int, std::allocator<int> >]
 	operator== returned false
 	Obtained : 
 	Predicted: 1 
 
 	Inconsistent move assignment (from y)
-	[sequoia::testing::broken_copy<int, std::__1::allocator<int> >]
+	[sequoia::testing::broken_copy<int, std::allocator<int> >]
 	operator== returned false
 	Obtained : 
 	Predicted: 2 
 
 	Inconsistent Swap (y)
-	[sequoia::testing::broken_copy<int, std::__1::allocator<int> >]
+	[sequoia::testing::broken_copy<int, std::allocator<int> >]
 	operator== returned false
 	Obtained : 
 	Predicted: 1 
 
 	Inconsistent Swap (x)
-	[sequoia::testing::broken_copy<int, std::__1::allocator<int> >]
+	[sequoia::testing::broken_copy<int, std::allocator<int> >]
 	operator== returned false
 	Obtained : 
 	Predicted: 2 
@@ -422,7 +422,7 @@
 
 	--Regular Semantics--
 	Inconsistent move construction
-	[sequoia::testing::broken_move<int, std::__1::allocator<int> >]
+	[sequoia::testing::broken_move<int, std::allocator<int> >]
 	operator== returned false
 	Obtained : 
 	Predicted: 2 
@@ -434,13 +434,13 @@
 
 	--Regular Semantics--
 	Inconsistent copy assignment (from y)
-	[sequoia::testing::broken_copy_assignment<int, std::__1::allocator<int> >]
+	[sequoia::testing::broken_copy_assignment<int, std::allocator<int> >]
 	operator== returned false
 	Obtained : 1 
 	Predicted: 2 
 
 	Inconsistent move construction
-	[sequoia::testing::broken_copy_assignment<int, std::__1::allocator<int> >]
+	[sequoia::testing::broken_copy_assignment<int, std::allocator<int> >]
 	operator== returned false
 	Obtained : 1 
 	Predicted: 2 
@@ -452,7 +452,7 @@
 
 	--Regular Semantics--
 	Inconsistent move assignment (from y)
-	[sequoia::testing::broken_move_assignment<int, std::__1::allocator<int> >]
+	[sequoia::testing::broken_move_assignment<int, std::allocator<int> >]
 	operator== returned false
 	Obtained : 1 
 	Predicted: 2 
@@ -464,13 +464,13 @@
 
 	--Regular Semantics--
 	Inconsistent Swap (y)
-	[sequoia::testing::broken_swap<int, std::__1::allocator<int> >]
+	[sequoia::testing::broken_swap<int, std::allocator<int> >]
 	operator== returned false
 	Obtained : 2 
 	Predicted: 1 
 
 	Inconsistent Swap (x)
-	[sequoia::testing::broken_swap<int, std::__1::allocator<int> >]
+	[sequoia::testing::broken_swap<int, std::allocator<int> >]
 	operator== returned false
 	Obtained : 1 
 	Predicted: 2 
@@ -522,10 +522,10 @@
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 146
 
 	Comparison performed using:
-	[sequoia::testing::equivalence_checker<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >]
+	[sequoia::testing::equivalence_checker<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >>]
 	With equivalent types:
 	[char [3]]
-	[std::__1::basic_string_view<char, std::__1::char_traits<char> >]
+	[std::basic_string_view<char, std::char_traits<char> >]
 	operator== returned false
 
 	Container size wrong
@@ -539,10 +539,10 @@
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 147
 
 	Comparison performed using:
-	[sequoia::testing::equivalence_checker<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >]
+	[sequoia::testing::equivalence_checker<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >>]
 	With equivalent types:
 	[char [4]]
-	[std::__1::basic_string_view<char, std::__1::char_traits<char> >]
+	[std::basic_string_view<char, std::char_traits<char> >]
 	operator== returned false
 
 	Element 2 of range incorrect
@@ -556,13 +556,13 @@
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 151
 
-	[std::__1::vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > >]
+	[std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >]
 	Element 1 of range incorrect
 	Comparison performed using:
-	[sequoia::testing::equivalence_checker<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >]
+	[sequoia::testing::equivalence_checker<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >>]
 	With equivalent types:
-	[std::__1::basic_string_view<char, std::__1::char_traits<char> >]
-	[std::__1::basic_string_view<char, std::__1::char_traits<char> >]
+	[std::basic_string_view<char, std::char_traits<char> >]
+	[std::basic_string_view<char, std::char_traits<char> >]
 	operator== returned false
 
 	Element 0 of range incorrect
@@ -575,13 +575,13 @@
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 153
 
-	[std::__1::vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > >]
+	[std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >]
 	Element 1 of range incorrect
 	Comparison performed using:
-	[sequoia::testing::equivalence_checker<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >]
+	[sequoia::testing::equivalence_checker<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >>]
 	With equivalent types:
-	[std::__1::basic_string_view<char, std::__1::char_traits<char> >]
-	[std::__1::basic_string_view<char, std::__1::char_traits<char> >]
+	[std::basic_string_view<char, std::char_traits<char> >]
+	[std::basic_string_view<char, std::char_traits<char> >]
 	operator== returned false
 
 	Element 0 of range incorrect
@@ -596,7 +596,7 @@
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 161
 
 	Comparison performed using:
-	[sequoia::testing::weak_equivalence_checker<sequoia::testing::perfectly_normal_beast<int, std::__1::allocator<int> > >]
+	[sequoia::testing::weak_equivalence_checker<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >>]
 	With equivalent types:
 	[std::initializer_list<int>]
 	Element 1 of range incorrect
@@ -610,7 +610,7 @@
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 162
 
 	Comparison performed using:
-	[sequoia::testing::weak_equivalence_checker<sequoia::testing::perfectly_normal_beast<int, std::__1::allocator<int> > >]
+	[sequoia::testing::weak_equivalence_checker<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >>]
 	With equivalent types:
 	[std::initializer_list<int>]
 	Element 1 of range incorrect
@@ -624,10 +624,10 @@
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 167
 
-	[std::__1::vector<sequoia::testing::perfectly_normal_beast<int, std::__1::allocator<int> >, std::__1::allocator<sequoia::testing::perfectly_normal_beast<int, std::__1::allocator<int> > > >]
+	[std::vector<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >, std::allocator<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > > >]
 	Element 1 of range incorrect
 	Comparison performed using:
-	[sequoia::testing::weak_equivalence_checker<sequoia::testing::perfectly_normal_beast<int, std::__1::allocator<int> > >]
+	[sequoia::testing::weak_equivalence_checker<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >>]
 	With equivalent types:
 	[std::initializer_list<int>]
 	Element 1 of range incorrect
@@ -640,10 +640,10 @@
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 168
 
-	[std::__1::vector<sequoia::testing::perfectly_normal_beast<int, std::__1::allocator<int> >, std::__1::allocator<sequoia::testing::perfectly_normal_beast<int, std::__1::allocator<int> > > >]
+	[std::vector<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >, std::allocator<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > > >]
 	Element 1 of range incorrect
 	Comparison performed using:
-	[sequoia::testing::weak_equivalence_checker<sequoia::testing::perfectly_normal_beast<int, std::__1::allocator<int> > >]
+	[sequoia::testing::weak_equivalence_checker<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >>]
 	With equivalent types:
 	[std::initializer_list<int>]
 	Element 1 of range incorrect
@@ -684,13 +684,13 @@
 
 	--Move-only Semantics--
 	Inconsistent move construction
-	[sequoia::testing::move_only_broken_move<int, std::__1::allocator<int> >]
+	[sequoia::testing::move_only_broken_move<int, std::allocator<int> >]
 	operator== returned false
 	Obtained : 
 	Predicted: 1 
 
 	Inconsistent Swap (y)
-	[sequoia::testing::move_only_broken_move<int, std::__1::allocator<int> >]
+	[sequoia::testing::move_only_broken_move<int, std::allocator<int> >]
 	operator== returned false
 	Obtained : 
 	Predicted: 1 
@@ -702,19 +702,19 @@
 
 	--Move-only Semantics--
 	Inconsistent Swap (y)
-	[sequoia::testing::move_only_broken_swap<int, std::__1::allocator<int> >]
+	[sequoia::testing::move_only_broken_swap<int, std::allocator<int> >]
 	operator== returned false
 	Obtained : 2 
 	Predicted: 1 
 
 	Inconsistent Swap (x)
-	[sequoia::testing::move_only_broken_swap<int, std::__1::allocator<int> >]
+	[sequoia::testing::move_only_broken_swap<int, std::allocator<int> >]
 	operator== returned false
 	Obtained : 1 
 	Predicted: 2 
 
 	Inconsistent move assignment (from y)
-	[sequoia::testing::move_only_broken_swap<int, std::__1::allocator<int> >]
+	[sequoia::testing::move_only_broken_swap<int, std::allocator<int> >]
 	operator== returned false
 	Obtained : 1 
 	Predicted: 2 
@@ -726,7 +726,7 @@
 
 	--Move-only Semantics--
 	Inconsistent move assignment (from y)
-	[sequoia::testing::move_only_broken_move_assignment<int, std::__1::allocator<int> >]
+	[sequoia::testing::move_only_broken_move_assignment<int, std::allocator<int> >]
 	operator== returned false
 	Obtained : 1 
 	Predicted: 2 
@@ -772,24 +772,24 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-	Fast Task duration: 0.0013397s +- 4 * 5.38059e-05
-	Slow Task duration: 0.00144784s +- 4 * 0.000281966 [1.08072; (2, 2)]
+	Fast Task duration: 0.0016722s +- 4 * 0.00102566
+	Slow Task duration: 0.001285s +- 4 * 0.000101354 [0.768449; (2, 2)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-	Fast Task duration: 0.00133387s +- 4 * 9.5171e-05
-	Slow Task duration: 0.00128793s +- 4 * 0.000126721 [0.965562; (2, 3)]
+	Fast Task duration: 0.001319s +- 4 * 6.67618e-06
+	Slow Task duration: 0.0012644s +- 4 * 0.000105705 [0.958605; (2, 3)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-	Fast Task duration: 0.00134134s +- 4 * 0.000127943
-	Slow Task duration: 0.00480988s +- 4 * 0.000446119 [3.58588; (2, 2.5)]
+	Fast Task duration: 0.0012519s +- 4 * 9.67829e-05
+	Slow Task duration: 0.0044597s +- 4 * 0.000401491 [3.56235; (2, 2.5)]
 
 	=======================================
 
@@ -1110,7 +1110,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::shared_ptr<int>,
+		std::shared_ptr<int>,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = false,
 		Propagate on swap = false
@@ -1349,7 +1349,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::shared_ptr<int>,
+		std::shared_ptr<int>,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = false,
 		Propagate on swap = false
@@ -1367,7 +1367,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::shared_ptr<int>,
+		std::shared_ptr<int>,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = false,
 		Propagate on swap = false
@@ -1397,7 +1397,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::shared_ptr<int>,
+		std::shared_ptr<int>,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = false,
 		Propagate on swap = false
@@ -1423,7 +1423,7 @@
 	mutation after move
 	assignment
 	[shared_counting_allocator<
-		std::__1::shared_ptr<int>,
+		std::shared_ptr<int>,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = false,
 		Propagate on swap = false
@@ -1725,7 +1725,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::shared_ptr<int>,
+		std::shared_ptr<int>,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = false,
 		Propagate on swap = true
@@ -1976,7 +1976,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::shared_ptr<int>,
+		std::shared_ptr<int>,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = false,
 		Propagate on swap = true
@@ -1994,7 +1994,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::shared_ptr<int>,
+		std::shared_ptr<int>,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = false,
 		Propagate on swap = true
@@ -2024,7 +2024,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::shared_ptr<int>,
+		std::shared_ptr<int>,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = false,
 		Propagate on swap = true
@@ -2050,7 +2050,7 @@
 	mutation after move
 	assignment
 	[shared_counting_allocator<
-		std::__1::shared_ptr<int>,
+		std::shared_ptr<int>,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = false,
 		Propagate on swap = true
@@ -2328,7 +2328,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::shared_ptr<int>,
+		std::shared_ptr<int>,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = true,
 		Propagate on swap = false
@@ -2561,7 +2561,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::shared_ptr<int>,
+		std::shared_ptr<int>,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = true,
 		Propagate on swap = false
@@ -2579,7 +2579,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::shared_ptr<int>,
+		std::shared_ptr<int>,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = true,
 		Propagate on swap = false
@@ -2609,7 +2609,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::shared_ptr<int>,
+		std::shared_ptr<int>,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = true,
 		Propagate on swap = false
@@ -2629,7 +2629,7 @@
 	mutation after move
 	assignment
 	[shared_counting_allocator<
-		std::__1::shared_ptr<int>,
+		std::shared_ptr<int>,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = true,
 		Propagate on swap = false
@@ -2943,7 +2943,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::shared_ptr<int>,
+		std::shared_ptr<int>,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = true,
 		Propagate on swap = true
@@ -3188,7 +3188,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::shared_ptr<int>,
+		std::shared_ptr<int>,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = true,
 		Propagate on swap = true
@@ -3206,7 +3206,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::shared_ptr<int>,
+		std::shared_ptr<int>,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = true,
 		Propagate on swap = true
@@ -3236,7 +3236,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::shared_ptr<int>,
+		std::shared_ptr<int>,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = true,
 		Propagate on swap = true
@@ -3256,7 +3256,7 @@
 	mutation after move
 	assignment
 	[shared_counting_allocator<
-		std::__1::shared_ptr<int>,
+		std::shared_ptr<int>,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = true,
 		Propagate on swap = true
@@ -3779,7 +3779,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::shared_ptr<int>,
+		std::shared_ptr<int>,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = false,
 		Propagate on swap = false
@@ -3797,7 +3797,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::shared_ptr<int>,
+		std::shared_ptr<int>,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = false,
 		Propagate on swap = false
@@ -3827,7 +3827,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::shared_ptr<int>,
+		std::shared_ptr<int>,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = false,
 		Propagate on swap = false
@@ -3853,7 +3853,7 @@
 	mutation after move
 	assignment
 	[shared_counting_allocator<
-		std::__1::shared_ptr<int>,
+		std::shared_ptr<int>,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = false,
 		Propagate on swap = false
@@ -4412,7 +4412,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::shared_ptr<int>,
+		std::shared_ptr<int>,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = false,
 		Propagate on swap = true
@@ -4430,7 +4430,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::shared_ptr<int>,
+		std::shared_ptr<int>,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = false,
 		Propagate on swap = true
@@ -4460,7 +4460,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::shared_ptr<int>,
+		std::shared_ptr<int>,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = false,
 		Propagate on swap = true
@@ -4486,7 +4486,7 @@
 	mutation after move
 	assignment
 	[shared_counting_allocator<
-		std::__1::shared_ptr<int>,
+		std::shared_ptr<int>,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = false,
 		Propagate on swap = true
@@ -5010,7 +5010,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::shared_ptr<int>,
+		std::shared_ptr<int>,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = true,
 		Propagate on swap = false
@@ -5028,7 +5028,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::shared_ptr<int>,
+		std::shared_ptr<int>,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = true,
 		Propagate on swap = false
@@ -5058,7 +5058,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::shared_ptr<int>,
+		std::shared_ptr<int>,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = true,
 		Propagate on swap = false
@@ -5084,7 +5084,7 @@
 	mutation after move
 	assignment
 	[shared_counting_allocator<
-		std::__1::shared_ptr<int>,
+		std::shared_ptr<int>,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = true,
 		Propagate on swap = false
@@ -5656,7 +5656,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::shared_ptr<int>,
+		std::shared_ptr<int>,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = true,
 		Propagate on swap = true
@@ -5674,7 +5674,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::shared_ptr<int>,
+		std::shared_ptr<int>,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = true,
 		Propagate on swap = true
@@ -5704,7 +5704,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::shared_ptr<int>,
+		std::shared_ptr<int>,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = true,
 		Propagate on swap = true
@@ -5730,7 +5730,7 @@
 	mutation after move
 	assignment
 	[shared_counting_allocator<
-		std::__1::shared_ptr<int>,
+		std::shared_ptr<int>,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = true,
 		Propagate on swap = true
@@ -6198,7 +6198,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, false, false> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, false, false> >,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = false,
 		Propagate on swap = false
@@ -6216,7 +6216,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, false, false> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, false, false> >,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = false,
 		Propagate on swap = false
@@ -6248,7 +6248,7 @@
 	mutation after move
 	assignment
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, false, false> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, false, false> >,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = false,
 		Propagate on swap = false
@@ -6270,7 +6270,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, false, false> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, false, false> >,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = false,
 		Propagate on swap = false
@@ -6294,7 +6294,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, false, false> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, false, false> >,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = false,
 		Propagate on swap = false
@@ -6312,7 +6312,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, false, false> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, false, false> >,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = false,
 		Propagate on swap = false
@@ -6462,7 +6462,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, false, true> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, false, true> >,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = false,
 		Propagate on swap = true
@@ -6480,7 +6480,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, false, true> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, false, true> >,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = false,
 		Propagate on swap = true
@@ -6512,7 +6512,7 @@
 	mutation after move
 	assignment
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, false, true> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, false, true> >,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = false,
 		Propagate on swap = true
@@ -6540,7 +6540,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, false, true> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, false, true> >,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = false,
 		Propagate on swap = true
@@ -6564,7 +6564,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, false, true> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, false, true> >,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = false,
 		Propagate on swap = true
@@ -6582,7 +6582,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, false, true> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, false, true> >,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = false,
 		Propagate on swap = true
@@ -6738,7 +6738,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, true, false> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, true, false> >,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = true,
 		Propagate on swap = false
@@ -6756,7 +6756,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, true, false> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, true, false> >,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = true,
 		Propagate on swap = false
@@ -6788,7 +6788,7 @@
 	mutation after move
 	assignment
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, true, false> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, true, false> >,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = true,
 		Propagate on swap = false
@@ -6810,7 +6810,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, true, false> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, true, false> >,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = true,
 		Propagate on swap = false
@@ -6828,7 +6828,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, true, false> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, true, false> >,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = true,
 		Propagate on swap = false
@@ -6846,7 +6846,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, true, false> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, true, false> >,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = true,
 		Propagate on swap = false
@@ -6990,7 +6990,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, true, true> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, true, true> >,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = true,
 		Propagate on swap = true
@@ -7008,7 +7008,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, true, true> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, true, true> >,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = true,
 		Propagate on swap = true
@@ -7040,7 +7040,7 @@
 	mutation after move
 	assignment
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, true, true> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, true, true> >,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = true,
 		Propagate on swap = true
@@ -7068,7 +7068,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, true, true> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, true, true> >,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = true,
 		Propagate on swap = true
@@ -7086,7 +7086,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, true, true> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, true, true> >,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = true,
 		Propagate on swap = true
@@ -7104,7 +7104,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, true, true> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, false, true, true> >,
 		Propagate on copy assignment = false,
 		Propagate on move assignment = true,
 		Propagate on swap = true
@@ -7254,7 +7254,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, false> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, false> >,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = false,
 		Propagate on swap = false
@@ -7272,7 +7272,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, false> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, false> >,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = false,
 		Propagate on swap = false
@@ -7304,7 +7304,7 @@
 	mutation after move
 	assignment
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, false> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, false> >,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = false,
 		Propagate on swap = false
@@ -7326,7 +7326,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, false> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, false> >,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = false,
 		Propagate on swap = false
@@ -7356,7 +7356,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, false> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, false> >,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = false,
 		Propagate on swap = false
@@ -7374,7 +7374,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, false> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, false> >,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = false,
 		Propagate on swap = false
@@ -7530,7 +7530,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, true> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, true> >,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = false,
 		Propagate on swap = true
@@ -7548,7 +7548,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, true> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, true> >,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = false,
 		Propagate on swap = true
@@ -7580,7 +7580,7 @@
 	mutation after move
 	assignment
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, true> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, true> >,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = false,
 		Propagate on swap = true
@@ -7608,7 +7608,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, true> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, true> >,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = false,
 		Propagate on swap = true
@@ -7638,7 +7638,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, true> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, true> >,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = false,
 		Propagate on swap = true
@@ -7656,7 +7656,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, true> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, true> >,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = false,
 		Propagate on swap = true
@@ -7818,7 +7818,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, false> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, false> >,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = true,
 		Propagate on swap = false
@@ -7836,7 +7836,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, false> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, false> >,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = true,
 		Propagate on swap = false
@@ -7868,7 +7868,7 @@
 	mutation after move
 	assignment
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, false> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, false> >,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = true,
 		Propagate on swap = false
@@ -7890,7 +7890,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, false> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, false> >,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = true,
 		Propagate on swap = false
@@ -7914,7 +7914,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, false> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, false> >,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = true,
 		Propagate on swap = false
@@ -7932,7 +7932,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, false> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, false> >,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = true,
 		Propagate on swap = false
@@ -8082,7 +8082,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, true> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, true> >,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = true,
 		Propagate on swap = true
@@ -8100,7 +8100,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, true> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, true> >,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = true,
 		Propagate on swap = true
@@ -8132,7 +8132,7 @@
 	mutation after move
 	assignment
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, true> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, true> >,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = true,
 		Propagate on swap = true
@@ -8160,7 +8160,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, true> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, true> >,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = true,
 		Propagate on swap = true
@@ -8184,7 +8184,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, true> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, true> >,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = true,
 		Propagate on swap = true
@@ -8202,7 +8202,7 @@
 
 	--Regular Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, true> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, true> >,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = true,
 		Propagate on swap = true
@@ -8358,7 +8358,7 @@
 
 	--Move-only Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, false> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, false> >,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = false,
 		Propagate on swap = false
@@ -8378,7 +8378,7 @@
 	mutation after move
 	assignment
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, false> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, false> >,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = false,
 		Propagate on swap = false
@@ -8395,7 +8395,7 @@
 
 	--Move-only Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, false> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, false> >,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = false,
 		Propagate on swap = false
@@ -8468,7 +8468,7 @@
 
 	--Move-only Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, true> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, true> >,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = false,
 		Propagate on swap = true
@@ -8488,7 +8488,7 @@
 	mutation after move
 	assignment
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, true> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, true> >,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = false,
 		Propagate on swap = true
@@ -8505,7 +8505,7 @@
 
 	--Move-only Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, true> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, false, true> >,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = false,
 		Propagate on swap = true
@@ -8580,7 +8580,7 @@
 	mutation after move
 	assignment
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, false> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, false> >,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = true,
 		Propagate on swap = false
@@ -8597,7 +8597,7 @@
 
 	--Move-only Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, false> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, false> >,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = true,
 		Propagate on swap = false
@@ -8654,7 +8654,7 @@
 	mutation after move
 	assignment
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, true> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, true> >,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = true,
 		Propagate on swap = true
@@ -8671,7 +8671,7 @@
 
 	--Move-only Semantics--
 	[shared_counting_allocator<
-		std::__1::basic_string<char, std::__1::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, true> >,
+		std:::basic_string<char, std::char_traits<char>, sequoia::testing::shared_counting_allocator<char, true, true, true> >,
 		Propagate on copy assignment = true,
 		Propagate on move assignment = true,
 		Propagate on swap = true
@@ -8748,7 +8748,7 @@
 	False Positive Failure:
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 197
 
-	[std::__1::pair<int, double>]
+	[std::pair<int, double>]
 
 
 	=======================================
@@ -8756,7 +8756,7 @@
 	False Positive Failure:
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 199
 
-	[std::__1::tuple<int, double, float>]
+	[std::tuple<int, double, float>]
 
 
 	=======================================
@@ -8774,7 +8774,7 @@
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 206
 	Empty vector check which should pass
 
-	[std::__1::vector<double, std::__1::allocator<double> >]
+	[std::vector<double, std::allocator<double> >]
 
 
 	=======================================
@@ -8783,7 +8783,7 @@
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 207
 	One element vector check which should pass
 
-	[std::__1::vector<double, std::__1::allocator<double> >]
+	[std::vector<double, std::allocator<double> >]
 
 
 	=======================================
@@ -8792,7 +8792,7 @@
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 208
 	Multi-element vector comparison which should pass
 
-	[std::__1::vector<double, std::__1::allocator<double> >]
+	[std::vector<double, std::allocator<double> >]
 
 
 	=======================================
@@ -8808,7 +8808,7 @@
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 214
 	Differing strings
 
-	[std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >]
+	[std:::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 
 
 	=======================================
@@ -8816,7 +8816,7 @@
 	False Positive Failure:
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 227
 
-	[std::__1::tuple<std::__1::vector<std::__1::pair<int, float>, std::__1::allocator<std::__1::pair<int, float> > >, std::__1::set<double, std::__1::less<double>, std::__1::allocator<double> >, std::__1::complex<double> >]
+	[std::tuple<std::vector<std::pair<int, float>, std::allocator<std::pair<int, float> > >, std::set<double, std::less<double>, std::allocator<double> >, std::complex<double> >]
 
 
 	=======================================
@@ -8833,7 +8833,7 @@
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 237
 
 	Comparison performed using:
-	[sequoia::testing::equivalence_checker<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >]
+	[sequoia::testing::equivalence_checker<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >>]
 	With equivalent types:
 	[char [4]]
 
@@ -8843,7 +8843,7 @@
 	False Positive Failure:
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 239
 
-	[std::__1::vector<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > >]
+	[std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >]
 
 
 	=======================================
@@ -8852,7 +8852,7 @@
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 245
 
 	Comparison performed using:
-	[sequoia::testing::weak_equivalence_checker<sequoia::testing::perfectly_normal_beast<int, std::__1::allocator<int> > >]
+	[sequoia::testing::weak_equivalence_checker<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >>]
 	With equivalent types:
 	[std::initializer_list<int>]
 
@@ -8862,7 +8862,7 @@
 	False Positive Failure:
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 248
 
-	[std::__1::vector<sequoia::testing::perfectly_normal_beast<int, std::__1::allocator<int> >, std::__1::allocator<sequoia::testing::perfectly_normal_beast<int, std::__1::allocator<int> > > >]
+	[std::vector<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >, std::allocator<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > > >]
 
 
 	=======================================
@@ -8871,7 +8871,7 @@
 	../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 50
 
 	--Move-only Semantics--
-	[sequoia::testing::move_only_beast<int, std::__1::allocator<int> >]
+	[sequoia::testing::move_only_beast<int, std::allocator<int> >]
 
 
 	=======================================
@@ -8880,8 +8880,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67
 	Performance Test which should pass
 
-	Fast Task duration: 0.00115458s +- 4 * 0.000107209
-	Slow Task duration: 0.00225248s +- 4 * 0.000156676 [1.95091; (1.8, 2.1)]
+	Fast Task duration: 0.0014104s +- 4 * 2.56192e-05
+	Slow Task duration: 0.002657s +- 4 * 3.35261e-05 [1.88386; (1.8, 2.1)]
 
 
 	=======================================
@@ -8890,8 +8890,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68
 	Performance Test which should pass
 
-	Fast Task duration: 0.00134206s +- 4 * 4.84831e-05
-	Slow Task duration: 0.00490068s +- 4 * 0.00035334 [3.6516; (3.6, 4.1)]
+	Fast Task duration: 0.0012296s +- 4 * 0.000194191
+	Slow Task duration: 0.004818s +- 4 * 0.000451862 [3.91835; (3.6, 4.1)]
 
 
 	=======================================
@@ -8937,7 +8937,7 @@
 	False Positive Failure:
 	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 84
 
-	[std::__1::vector<double, std::__1::allocator<double> >]
+	[std::vector<double, std::allocator<double> >]
 
 
 	=======================================
@@ -8945,7 +8945,7 @@
 	False Positive Failure:
 	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 87
 
-	[std::__1::vector<std::__1::vector<double, std::__1::allocator<double> >, std::__1::allocator<std::__1::vector<double, std::__1::allocator<double> > > >]
+	[std::vector<std::vector<double, std::allocator<double> >, std::allocator<std::vector<double, std::allocator<double> > > >]
 
 
 	=======================================
@@ -8972,7 +8972,7 @@
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 330
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, false, false> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, false, false> >]
 
 
 	=======================================
@@ -8981,7 +8981,7 @@
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 332
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, false, false> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, false, false> >]
 
 
 	=======================================
@@ -9044,7 +9044,7 @@
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 330
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, false, true> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, false, true> >]
 
 
 	=======================================
@@ -9053,7 +9053,7 @@
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 332
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, false, true> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, false, true> >]
 
 
 	=======================================
@@ -9116,7 +9116,7 @@
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 330
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, true, false> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, true, false> >]
 
 
 	=======================================
@@ -9125,7 +9125,7 @@
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 332
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, true, false> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, true, false> >]
 
 
 	=======================================
@@ -9188,7 +9188,7 @@
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 330
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, true, true> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, true, true> >]
 
 
 	=======================================
@@ -9197,7 +9197,7 @@
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 332
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, false, true, true> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, true, true> >]
 
 
 	=======================================
@@ -9260,7 +9260,7 @@
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 330
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, false, false> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, false, false> >]
 
 
 	=======================================
@@ -9269,7 +9269,7 @@
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 332
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, false, false> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, false, false> >]
 
 
 	=======================================
@@ -9332,7 +9332,7 @@
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 330
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, false, true> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, false, true> >]
 
 
 	=======================================
@@ -9341,7 +9341,7 @@
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 332
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, false, true> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, false, true> >]
 
 
 	=======================================
@@ -9404,7 +9404,7 @@
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 330
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, true, false> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, true, false> >]
 
 
 	=======================================
@@ -9413,7 +9413,7 @@
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 332
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, true, false> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, true, false> >]
 
 
 	=======================================
@@ -9476,7 +9476,7 @@
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 330
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, true, true> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, true, true> >]
 
 
 	=======================================
@@ -9485,7 +9485,7 @@
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 332
 
 	--Regular Semantics--
-	[sequoia::testing::perfectly_sharing_beast<int, std::__1::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::__1::shared_ptr<int>, true, true, true> >]
+	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, true, true> >]
 
 
 	=======================================

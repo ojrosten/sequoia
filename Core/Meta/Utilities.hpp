@@ -12,6 +12,7 @@
  */
 
 #include <utility>
+#include <tuple>
 
 namespace sequoia::impl
 {
