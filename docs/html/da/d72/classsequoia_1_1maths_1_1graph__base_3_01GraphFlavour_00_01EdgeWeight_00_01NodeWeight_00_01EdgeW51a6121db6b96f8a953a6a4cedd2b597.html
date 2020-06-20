@@ -508,9 +508,9 @@ constexpr <a class="el" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity
 <tr class="memitem:a3493dd0d2822cf9bcdd4d3937e333a5a inherit pro_methods_classsequoia_1_1maths_1_1connectivity"><td class="memItemLeft" align="right" valign="top"><a id="a3493dd0d2822cf9bcdd4d3937e333a5a"></a>
 constexpr <a class="el" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;in)</td></tr>
 <tr class="separator:a3493dd0d2822cf9bcdd4d3937e333a5a inherit pro_methods_classsequoia_1_1maths_1_1connectivity"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3ac29e3f6f5e717fb07f77e67942ccce inherit pro_methods_classsequoia_1_1maths_1_1connectivity"><td class="memItemLeft" align="right" valign="top"><a id="a3ac29e3f6f5e717fb07f77e67942ccce"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>swap</b> (<a class="el" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;other) noexcept(noexcept(m_Edges, other.m_Edges))</td></tr>
-<tr class="separator:a3ac29e3f6f5e717fb07f77e67942ccce inherit pro_methods_classsequoia_1_1maths_1_1connectivity"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad6bf17ac34da69a5ac5786c24bb34b89 inherit pro_methods_classsequoia_1_1maths_1_1connectivity"><td class="memItemLeft" align="right" valign="top"><a id="ad6bf17ac34da69a5ac5786c24bb34b89"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>swap</b> (<a class="el" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;other) noexcept(noexcept(this-&gt;m_Edges, other.m_Edges))</td></tr>
+<tr class="separator:ad6bf17ac34da69a5ac5786c24bb34b89 inherit pro_methods_classsequoia_1_1maths_1_1connectivity"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a83e213ed368909f00f87b3eee18f115c inherit pro_methods_classsequoia_1_1maths_1_1connectivity"><td class="memItemLeft" align="right" valign="top"><a id="a83e213ed368909f00f87b3eee18f115c"></a>
 constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>swap_edges</b> (edge_index_type node, edge_index_type i, edge_index_type j)</td></tr>
 <tr class="separator:a83e213ed368909f00f87b3eee18f115c inherit pro_methods_classsequoia_1_1maths_1_1connectivity"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -559,9 +559,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>insert_node</b> (cons
 <tr class="memitem:ab56efe6a11e4a2118d1c0218cfef0c75 inherit pro_methods_classsequoia_1_1maths_1_1connectivity"><td class="memItemLeft" align="right" valign="top"><a id="ab56efe6a11e4a2118d1c0218cfef0c75"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>erase_node</b> (const size_type node)</td></tr>
 <tr class="separator:ab56efe6a11e4a2118d1c0218cfef0c75 inherit pro_methods_classsequoia_1_1maths_1_1connectivity"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abbb92fd11269de015499ffc5f3a8f550 inherit pro_methods_classsequoia_1_1maths_1_1connectivity"><td class="memItemLeft" align="right" valign="top"><a id="abbb92fd11269de015499ffc5f3a8f550"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>reserve_for_join</b> (const edge_index_type node1, const edge_index_type node2)</td></tr>
-<tr class="separator:abbb92fd11269de015499ffc5f3a8f550 inherit pro_methods_classsequoia_1_1maths_1_1connectivity"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a91e5c927becdd2a510267693d6a684e8 inherit pro_methods_classsequoia_1_1maths_1_1connectivity"><td class="memItemLeft" align="right" valign="top"><a id="a91e5c927becdd2a510267693d6a684e8"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>reserve_for_join</b> ([[maybe_unused]] const edge_index_type node1,[[maybe_unused]] const edge_index_type node2)</td></tr>
+<tr class="separator:a91e5c927becdd2a510267693d6a684e8 inherit pro_methods_classsequoia_1_1maths_1_1connectivity"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8ddfae14bba297d05fce86bdb9272968 inherit pro_methods_classsequoia_1_1maths_1_1connectivity"><td class="memItemLeft" align="right" valign="top"><a id="a8ddfae14bba297d05fce86bdb9272968"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>join</b> (const edge_index_type node1, const edge_index_type node2, Args &amp;&amp;... args)</td></tr>
 <tr class="separator:a8ddfae14bba297d05fce86bdb9272968 inherit pro_methods_classsequoia_1_1maths_1_1connectivity"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -608,9 +608,9 @@ constexpr <a class="el" href="../../d0/de4/classsequoia_1_1maths_1_1graph__impl_
 <tr class="memitem:ab918a435c502ffedca583fd21ca7cc56 inherit pro_methods_classsequoia_1_1maths_1_1graph__impl_1_1node__storage"><td class="memItemLeft" align="right" valign="top"><a id="ab918a435c502ffedca583fd21ca7cc56"></a>
 constexpr <a class="el" href="../../d0/de4/classsequoia_1_1maths_1_1graph__impl_1_1node__storage.html">node_storage</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../d0/de4/classsequoia_1_1maths_1_1graph__impl_1_1node__storage.html">node_storage</a> &amp;&amp;)=default</td></tr>
 <tr class="separator:ab918a435c502ffedca583fd21ca7cc56 inherit pro_methods_classsequoia_1_1maths_1_1graph__impl_1_1node__storage"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a67dc2cadfe8f6d4acc63fc8575e44794 inherit pro_methods_classsequoia_1_1maths_1_1graph__impl_1_1node__storage"><td class="memItemLeft" align="right" valign="top"><a id="a67dc2cadfe8f6d4acc63fc8575e44794"></a>
-constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>swap</b> (<a class="el" href="../../d0/de4/classsequoia_1_1maths_1_1graph__impl_1_1node__storage.html">node_storage</a> &amp;other) noexcept(noexcept(sequoia::swap(m_NodeWeights, other.m_NodeWeights)))</td></tr>
-<tr class="separator:a67dc2cadfe8f6d4acc63fc8575e44794 inherit pro_methods_classsequoia_1_1maths_1_1graph__impl_1_1node__storage"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a89c95ec7e52cef5b72d983608af3c65e inherit pro_methods_classsequoia_1_1maths_1_1graph__impl_1_1node__storage"><td class="memItemLeft" align="right" valign="top"><a id="a89c95ec7e52cef5b72d983608af3c65e"></a>
+constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>swap</b> (<a class="el" href="../../d0/de4/classsequoia_1_1maths_1_1graph__impl_1_1node__storage.html">node_storage</a> &amp;other) noexcept(noexcept(sequoia::swap(this-&gt;m_NodeWeights, other.m_NodeWeights)))</td></tr>
+<tr class="separator:a89c95ec7e52cef5b72d983608af3c65e inherit pro_methods_classsequoia_1_1maths_1_1graph__impl_1_1node__storage"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5ac9031481ef101d20270949577e9afa inherit pro_methods_classsequoia_1_1maths_1_1graph__impl_1_1node__storage"><td class="memItemLeft" align="right" valign="top"><a id="a5ac9031481ef101d20270949577e9afa"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>reset</b> (const Allocator &amp;allocator) noexcept</td></tr>
 <tr class="separator:a5ac9031481ef101d20270949577e9afa inherit pro_methods_classsequoia_1_1maths_1_1graph__impl_1_1node__storage"><td class="memSeparator" colspan="2">&#160;</td></tr>

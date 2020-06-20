@@ -87,7 +87,7 @@ $(function() {
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    constexpr <span class="keyword">static</span> <span class="keywordtype">bool</span> uses_forward_iterator() noexcept { <span class="keywordflow">return</span> <span class="keyword">true</span>; }</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    [[nodiscard]]</div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    constexpr <span class="keyword">static</span> <span class="keyword">auto</span> get_container_element(<span class="keyword">const</span> std::priority_queue&lt;std::size_t, Container, Compare&gt;&amp; q)</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <span class="keyword">static</span> <span class="keyword">auto</span> get_container_element(<span class="keyword">const</span> std::priority_queue&lt;std::size_t, Container, Compare&gt;&amp; q)</div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    {</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;      <span class="keywordflow">return</span> q.top();</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;    }</div>
@@ -99,7 +99,7 @@ $(function() {
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    constexpr <span class="keyword">static</span> <span class="keywordtype">bool</span> uses_forward_iterator() noexcept { <span class="keywordflow">return</span> <span class="keyword">false</span>; }</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    [[nodiscard]]</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    constexpr <span class="keyword">static</span> <span class="keyword">auto</span> get_container_element(<span class="keyword">const</span> std::stack&lt;std::size_t&gt;&amp; s) { <span class="keywordflow">return</span> s.top(); }</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <span class="keyword">static</span> <span class="keyword">auto</span> get_container_element(<span class="keyword">const</span> std::stack&lt;std::size_t&gt;&amp; s) { <span class="keywordflow">return</span> s.top(); }</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;  };</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
@@ -109,7 +109,7 @@ $(function() {
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    constexpr <span class="keyword">static</span> <span class="keywordtype">bool</span> uses_forward_iterator() noexcept { <span class="keywordflow">return</span> <span class="keyword">true</span>; }</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    [[nodiscard]]</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    constexpr <span class="keyword">static</span> <span class="keyword">auto</span> get_container_element(<span class="keyword">const</span> std::queue&lt;std::size_t&gt;&amp; q) { <span class="keywordflow">return</span> q.front(); }</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keyword">static</span> <span class="keyword">auto</span> get_container_element(<span class="keyword">const</span> std::queue&lt;std::size_t&gt;&amp; q) { <span class="keywordflow">return</span> q.front(); }</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;  };</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> G, <span class="keyword">class</span> Container, <span class="keyword">class</span> Comparer&gt;</div>

@@ -99,7 +99,7 @@ $(function() {
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;        <span class="keyword">class </span>Edge=<span class="keyword">typename</span> Graph::edge_init_type,</div>
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;        <span class="keyword">class </span>NodeWeight=<span class="keyword">typename</span> Graph::node_weight_type</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;      &gt;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;      <span class="keywordtype">void</span> check_graph(std::string_view description, <span class="keyword">const</span> Graph&amp; g, std::initializer_list&lt;std::initializer_list&lt;Edge&gt;&gt; connPrediction, std::initializer_list&lt;NodeWeight&gt; nodePrediction)</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;      <span class="keywordtype">void</span> check_graph(std::string_view description, <span class="keyword">const</span> Graph&amp; g, std::initializer_list&lt;std::initializer_list&lt;Edge&gt;&gt; connPrediction, [[maybe_unused]] std::initializer_list&lt;NodeWeight&gt; nodePrediction)</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;      {</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <span class="keywordflow">if</span> constexpr(std::is_empty_v&lt;NodeWeight&gt;)</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        {</div>
@@ -116,7 +116,7 @@ $(function() {
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;      {</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;        <span class="keywordflow">if</span> constexpr(is_static_graph_v&lt;Graph&gt;)</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;        {</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;          <span class="comment">// Should work in C++ 20;</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;          <span class="comment">// TO DO Should work in C++ 20;</span></div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;          <span class="comment">// the issue is std::array&lt;T,0&gt; doesn&#39;t work</span></div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;          <span class="comment">// for types without a default constructor...</span></div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>

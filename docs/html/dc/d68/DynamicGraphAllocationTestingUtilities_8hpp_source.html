@@ -329,7 +329,7 @@ $(function() {
 <div class="line"><a name="l00260"></a><span class="lineno">  260</span>&#160;    }</div>
 <div class="line"><a name="l00261"></a><span class="lineno">  261</span>&#160;  }</div>
 <div class="line"><a name="l00262"></a><span class="lineno">  262</span>&#160; </div>
-<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;   <span class="keyword">template</span></div>
+<div class="line"><a name="l00263"></a><span class="lineno">  263</span>&#160;  <span class="keyword">template</span></div>
 <div class="line"><a name="l00264"></a><span class="lineno">  264</span>&#160;  &lt;</div>
 <div class="line"><a name="l00265"></a><span class="lineno">  265</span>&#160;    maths::graph_flavour GraphFlavour,</div>
 <div class="line"><a name="l00266"></a><span class="lineno">  266</span>&#160;    <span class="keyword">class </span>EdgeWeight,</div>
@@ -367,8 +367,8 @@ $(function() {
 <div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;    </div>
 <div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;    graph_t g{maker()};</div>
 <div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160; </div>
-<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;    check_exception_thrown&lt;std::out_of_range&gt;(LINE(<span class="stringliteral">&quot;&quot;</span>), [&amp;g](){ g.reserve_edges(0, 4);});</div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;    check_exception_thrown&lt;std::out_of_range&gt;(LINE(<span class="stringliteral">&quot;&quot;</span>), [&amp;g](){ <span class="keywordflow">return</span> g.edges_capacity(0);});</div>
+<div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;    this-&gt;<span class="keyword">template</span> check_exception_thrown&lt;std::out_of_range&gt;(LINE(<span class="stringliteral">&quot;&quot;</span>), [&amp;g](){ g.reserve_edges(0, 4);});</div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;    this-&gt;<span class="keyword">template</span> check_exception_thrown&lt;std::out_of_range&gt;(LINE(<span class="stringliteral">&quot;&quot;</span>), [&amp;g](){ <span class="keywordflow">return</span> g.edges_capacity(0);});</div>
 <div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;    check_equality(LINE(<span class="stringliteral">&quot;&quot;</span>), g.node_capacity(), 0ul);</div>
 <div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160; </div>
 <div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;    g.add_node();</div>
@@ -521,7 +521,7 @@ $(function() {
 <div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160;  }</div>
 <div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aTestLogger_8hpp_html_ae4e97c9d45a89647799f0d308ba6d244"><div class="ttname"><a href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">sequoia::testing::test_mode</a></div><div class="ttdeci">test_mode</div><div class="ttdoc">Specifies whether tests are run as standard tests or in false postive/negative mode .</div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:50</div></div>
+<div class="ttc" id="aTestLogger_8hpp_html_ae4e97c9d45a89647799f0d308ba6d244"><div class="ttname"><a href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">sequoia::testing::test_mode</a></div><div class="ttdeci">test_mode</div><div class="ttdoc">Specifies whether tests are run as standard tests or in false postive/negative mode .</div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:52</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1basic__graph__operations_html"><div class="ttname"><a href="../../d2/d79/classsequoia_1_1testing_1_1basic__graph__operations.html">sequoia::testing::basic_graph_operations</a></div><div class="ttdef"><b>Definition:</b> DynamicGraphTestingUtilities.hpp:187</div></div>
 <div class="ttc" id="astructsequoia_1_1testing_1_1custom__allocator__bucketed__edge__storage__traits_html"><div class="ttname"><a href="../../dc/dc1/structsequoia_1_1testing_1_1custom__allocator__bucketed__edge__storage__traits.html">sequoia::testing::custom_allocator_bucketed_edge_storage_traits</a></div><div class="ttdef"><b>Definition:</b> DynamicGraphAllocationTestingUtilities.hpp:24</div></div>
 <div class="ttc" id="astructsequoia_1_1testing_1_1custom__allocator__contiguous__edge__storage__traits_html"><div class="ttname"><a href="../../da/dc0/structsequoia_1_1testing_1_1custom__allocator__contiguous__edge__storage__traits.html">sequoia::testing::custom_allocator_contiguous_edge_storage_traits</a></div><div class="ttdef"><b>Definition:</b> DynamicGraphAllocationTestingUtilities.hpp:16</div></div>

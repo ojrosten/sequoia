@@ -203,9 +203,9 @@ constexpr <a class="el" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity
 <tr class="memitem:a3493dd0d2822cf9bcdd4d3937e333a5a"><td class="memItemLeft" align="right" valign="top"><a id="a3493dd0d2822cf9bcdd4d3937e333a5a"></a>
 constexpr <a class="el" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;in)</td></tr>
 <tr class="separator:a3493dd0d2822cf9bcdd4d3937e333a5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3ac29e3f6f5e717fb07f77e67942ccce"><td class="memItemLeft" align="right" valign="top"><a id="a3ac29e3f6f5e717fb07f77e67942ccce"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>swap</b> (<a class="el" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;other) noexcept(noexcept(m_Edges, other.m_Edges))</td></tr>
-<tr class="separator:a3ac29e3f6f5e717fb07f77e67942ccce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad6bf17ac34da69a5ac5786c24bb34b89"><td class="memItemLeft" align="right" valign="top"><a id="ad6bf17ac34da69a5ac5786c24bb34b89"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>swap</b> (<a class="el" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a> &amp;other) noexcept(noexcept(this-&gt;m_Edges, other.m_Edges))</td></tr>
+<tr class="separator:ad6bf17ac34da69a5ac5786c24bb34b89"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a83e213ed368909f00f87b3eee18f115c"><td class="memItemLeft" align="right" valign="top"><a id="a83e213ed368909f00f87b3eee18f115c"></a>
 constexpr void&#160;</td><td class="memItemRight" valign="bottom"><b>swap_edges</b> (edge_index_type node, edge_index_type i, edge_index_type j)</td></tr>
 <tr class="separator:a83e213ed368909f00f87b3eee18f115c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -259,9 +259,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>insert_node</b> (cons
 <tr class="memitem:ab56efe6a11e4a2118d1c0218cfef0c75"><td class="memItemLeft" align="right" valign="top"><a id="ab56efe6a11e4a2118d1c0218cfef0c75"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>erase_node</b> (const size_type node)</td></tr>
 <tr class="separator:ab56efe6a11e4a2118d1c0218cfef0c75"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abbb92fd11269de015499ffc5f3a8f550"><td class="memItemLeft" align="right" valign="top"><a id="abbb92fd11269de015499ffc5f3a8f550"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>reserve_for_join</b> (const edge_index_type node1, const edge_index_type node2)</td></tr>
-<tr class="separator:abbb92fd11269de015499ffc5f3a8f550"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a91e5c927becdd2a510267693d6a684e8"><td class="memItemLeft" align="right" valign="top"><a id="a91e5c927becdd2a510267693d6a684e8"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>reserve_for_join</b> ([[maybe_unused]] const edge_index_type node1, [[maybe_unused]] const edge_index_type node2)</td></tr>
+<tr class="separator:a91e5c927becdd2a510267693d6a684e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8ddfae14bba297d05fce86bdb9272968"><td class="memTemplParams" colspan="2"><a id="a8ddfae14bba297d05fce86bdb9272968"></a>
 template&lt;class... Args&gt; </td></tr>
 <tr class="memitem:a8ddfae14bba297d05fce86bdb9272968"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>join</b> (const edge_index_type node1, const edge_index_type node2, Args &amp;&amp;... args)</td></tr>

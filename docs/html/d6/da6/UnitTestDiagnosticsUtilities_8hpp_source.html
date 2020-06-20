@@ -743,7 +743,7 @@ $(function() {
 <div class="line"><a name="l00674"></a><span class="lineno">  674</span>&#160; </div>
 <div class="line"><a name="l00675"></a><span class="lineno">  675</span>&#160;    <a class="code" href="../../d9/d0c/structsequoia_1_1testing_1_1perfectly__normal__beast.html">perfectly_normal_beast</a>&amp; operator=(<a class="code" href="../../d9/d0c/structsequoia_1_1testing_1_1perfectly__normal__beast.html">perfectly_normal_beast</a>&amp;&amp;) = <span class="keywordflow">default</span>;</div>
 <div class="line"><a name="l00676"></a><span class="lineno">  676</span>&#160; </div>
-<div class="line"><a name="l00677"></a><span class="lineno">  677</span>&#160;    <span class="keywordtype">void</span> swap(<a class="code" href="../../d9/d0c/structsequoia_1_1testing_1_1perfectly__normal__beast.html">perfectly_normal_beast</a>&amp; other) noexcept(noexcept(std::swap(x, other.x)))</div>
+<div class="line"><a name="l00677"></a><span class="lineno">  677</span>&#160;    <span class="keywordtype">void</span> swap(<a class="code" href="../../d9/d0c/structsequoia_1_1testing_1_1perfectly__normal__beast.html">perfectly_normal_beast</a>&amp; other) noexcept(noexcept(std::swap(this-&gt;x, other.x)))</div>
 <div class="line"><a name="l00678"></a><span class="lineno">  678</span>&#160;    {</div>
 <div class="line"><a name="l00679"></a><span class="lineno">  679</span>&#160;      std::swap(x, other.x);</div>
 <div class="line"><a name="l00680"></a><span class="lineno">  680</span>&#160;    }</div>
@@ -830,7 +830,7 @@ $(function() {
 <div class="line"><a name="l00761"></a><span class="lineno">  761</span>&#160; </div>
 <div class="line"><a name="l00762"></a><span class="lineno">  762</span>&#160;    <a class="code" href="../../d2/dd8/structsequoia_1_1testing_1_1perfectly__sharing__beast.html">perfectly_sharing_beast</a>&amp; operator=(<a class="code" href="../../d2/dd8/structsequoia_1_1testing_1_1perfectly__sharing__beast.html">perfectly_sharing_beast</a>&amp;&amp;) = <span class="keywordflow">default</span>;</div>
 <div class="line"><a name="l00763"></a><span class="lineno">  763</span>&#160; </div>
-<div class="line"><a name="l00764"></a><span class="lineno">  764</span>&#160;    <span class="keywordtype">void</span> swap(<a class="code" href="../../d2/dd8/structsequoia_1_1testing_1_1perfectly__sharing__beast.html">perfectly_sharing_beast</a>&amp; other) noexcept(noexcept(std::swap(x, other.x)))</div>
+<div class="line"><a name="l00764"></a><span class="lineno">  764</span>&#160;    <span class="keywordtype">void</span> swap(<a class="code" href="../../d2/dd8/structsequoia_1_1testing_1_1perfectly__sharing__beast.html">perfectly_sharing_beast</a>&amp; other) noexcept(noexcept(std::swap(this-&gt;x, other.x)))</div>
 <div class="line"><a name="l00765"></a><span class="lineno">  765</span>&#160;    {</div>
 <div class="line"><a name="l00766"></a><span class="lineno">  766</span>&#160;      std::swap(x, other.x);</div>
 <div class="line"><a name="l00767"></a><span class="lineno">  767</span>&#160;    }</div>
@@ -1121,7 +1121,7 @@ $(function() {
 <div class="line"><a name="l01052"></a><span class="lineno"> 1052</span>&#160; </div>
 <div class="line"><a name="l01053"></a><span class="lineno"> 1053</span>&#160;    <a class="code" href="../../d7/d85/structsequoia_1_1testing_1_1doubly__normal__beast.html">doubly_normal_beast</a>&amp; operator=(<a class="code" href="../../d7/d85/structsequoia_1_1testing_1_1doubly__normal__beast.html">doubly_normal_beast</a>&amp;&amp;) = <span class="keywordflow">default</span>;</div>
 <div class="line"><a name="l01054"></a><span class="lineno"> 1054</span>&#160; </div>
-<div class="line"><a name="l01055"></a><span class="lineno"> 1055</span>&#160;    <span class="keywordtype">void</span> swap(<a class="code" href="../../d7/d85/structsequoia_1_1testing_1_1doubly__normal__beast.html">doubly_normal_beast</a>&amp; other) noexcept(noexcept(std::swap(x, other.x)) &amp;&amp; noexcept(std::swap(y, other.y)))</div>
+<div class="line"><a name="l01055"></a><span class="lineno"> 1055</span>&#160;    <span class="keywordtype">void</span> swap(<a class="code" href="../../d7/d85/structsequoia_1_1testing_1_1doubly__normal__beast.html">doubly_normal_beast</a>&amp; other) noexcept(noexcept(std::swap(this-&gt;x, other.x)) &amp;&amp; noexcept(std::swap(this-&gt;y, other.y)))</div>
 <div class="line"><a name="l01056"></a><span class="lineno"> 1056</span>&#160;    {</div>
 <div class="line"><a name="l01057"></a><span class="lineno"> 1057</span>&#160;      std::swap(x, other.x);</div>
 <div class="line"><a name="l01058"></a><span class="lineno"> 1058</span>&#160;      std::swap(y, other.y);</div>

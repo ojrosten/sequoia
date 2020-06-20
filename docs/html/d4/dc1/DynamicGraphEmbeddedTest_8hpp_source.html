@@ -114,44 +114,56 @@ $(function() {
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;      <span class="keyword">using</span> graph_t = <span class="keyword">typename</span> base_t::graph_type;</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;      <span class="keyword">using</span> base_t::check_equality;</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;      <span class="keyword">using</span> base_t::check_semantics;      </div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;      <span class="keyword">using</span> <a class="code" href="../../d2/d97/classsequoia_1_1testing_1_1graph__checker.html">graph_checker&lt;test_mode::standard, regular_extender&lt;test_mode::standard&gt;</a>&gt;::check_exception_thrown;</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;      <span class="keywordtype">void</span> execute_operations();</div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    };</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <span class="keyword">template</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    &lt;</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;      maths::graph_flavour GraphFlavour,</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;      <span class="keyword">class </span>EdgeWeight,</div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;      <span class="keyword">class </span>NodeWeight,      </div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;      <span class="keyword">class </span>EdgeWeightPooling,</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;      <span class="keyword">class </span>NodeWeightPooling,</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;      <span class="keyword">class </span>EdgeStorageTraits,</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;      <span class="keyword">class </span>NodeWeightStorageTraits</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    &gt;</div>
-<div class="line"><a name="l00064"></a><span class="lineno"><a class="line" href="../../dd/d95/classsequoia_1_1testing_1_1generic__weighted__edge__insertions.html">   64</a></span>&#160;    <span class="keyword">class </span><a class="code" href="../../dd/d95/classsequoia_1_1testing_1_1generic__weighted__edge__insertions.html">generic_weighted_edge_insertions</a></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;      : <span class="keyword">public</span> <a class="code" href="../../d2/d79/classsequoia_1_1testing_1_1basic__graph__operations.html">graph_operations</a>&lt;GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits&gt;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    {</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;      </div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;      <span class="keyword">using</span> <a class="code" href="../../d2/d79/classsequoia_1_1testing_1_1basic__graph__operations.html">base_t</a> = <a class="code" href="../../d2/d79/classsequoia_1_1testing_1_1basic__graph__operations.html">graph_operations&lt;GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits&gt;</a>;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;      </div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;      <span class="keyword">using</span> graph_t = <span class="keyword">typename</span> base_t::graph_type;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160; </div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;      <span class="keyword">using</span> base_t::check_equality;      </div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;      <span class="keyword">using</span> base_t::check_exception_thrown;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;      <span class="keyword">using</span> base_t::check_semantics;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;      <span class="keywordtype">void</span> execute_operations();</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    };</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;  }</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;}</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;      <span class="keyword">using</span> base_t::check_semantics;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;      <span class="keywordtype">void</span> execute_operations();</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;      <span class="keyword">template</span>&lt;<span class="keyword">class</span> E, <span class="keyword">class</span> Fn&gt;</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;      <span class="keywordtype">bool</span> check_exception_thrown(std::string_view description, Fn&amp;&amp; <span class="keyword">function</span>)</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;      {</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;        <span class="keyword">using</span> <a class="code" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">checker</a> = <a class="code" href="../../d2/d97/classsequoia_1_1testing_1_1graph__checker.html">graph_checker&lt;test_mode::standard, regular_extender&lt;test_mode::standard&gt;</a>&gt;;</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;        <span class="keywordflow">return</span> checker::check_exception_thrown&lt;E&gt;(description, std::forward&lt;Fn&gt;(<span class="keyword">function</span>)); </div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;      }</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    };</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keyword">template</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    &lt;</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;      maths::graph_flavour GraphFlavour,</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;      <span class="keyword">class </span>EdgeWeight,</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;      <span class="keyword">class </span>NodeWeight,      </div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;      <span class="keyword">class </span>EdgeWeightPooling,</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;      <span class="keyword">class </span>NodeWeightPooling,</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;      <span class="keyword">class </span>EdgeStorageTraits,</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;      <span class="keyword">class </span>NodeWeightStorageTraits</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    &gt;</div>
+<div class="line"><a name="l00070"></a><span class="lineno"><a class="line" href="../../dd/d95/classsequoia_1_1testing_1_1generic__weighted__edge__insertions.html">   70</a></span>&#160;    <span class="keyword">class </span><a class="code" href="../../dd/d95/classsequoia_1_1testing_1_1generic__weighted__edge__insertions.html">generic_weighted_edge_insertions</a></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;      : <span class="keyword">public</span> <a class="code" href="../../d2/d79/classsequoia_1_1testing_1_1basic__graph__operations.html">graph_operations</a>&lt;GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits&gt;</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    {</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;      </div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;      <span class="keyword">using</span> <a class="code" href="../../d2/d79/classsequoia_1_1testing_1_1basic__graph__operations.html">base_t</a> = <a class="code" href="../../d2/d79/classsequoia_1_1testing_1_1basic__graph__operations.html">graph_operations&lt;GraphFlavour, EdgeWeight, NodeWeight, EdgeWeightPooling, NodeWeightPooling, EdgeStorageTraits, NodeWeightStorageTraits&gt;</a>;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;      </div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;      <span class="keyword">using</span> graph_t = <span class="keyword">typename</span> base_t::graph_type;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;      <span class="keyword">using</span> base_t::check_equality;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;      <span class="keyword">using</span> base_t::check_semantics;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;      <span class="keywordtype">void</span> execute_operations();</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;      <span class="keyword">template</span>&lt;<span class="keyword">class</span> E, <span class="keyword">class</span> Fn&gt;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;      <span class="keywordtype">bool</span> check_exception_thrown(std::string_view description, Fn&amp;&amp; <span class="keyword">function</span>)</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;      {</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        <span class="keyword">using</span> <a class="code" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">checker</a> = <a class="code" href="../../d2/d97/classsequoia_1_1testing_1_1graph__checker.html">graph_checker&lt;test_mode::standard, regular_extender&lt;test_mode::standard&gt;</a>&gt;;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        <span class="keywordflow">return</span> checker::check_exception_thrown&lt;E&gt;(description, std::forward&lt;Fn&gt;(<span class="keyword">function</span>)); </div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;      }</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    };</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;  }</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aclasssequoia_1_1testing_1_1basic__graph__operations_html"><div class="ttname"><a href="../../d2/d79/classsequoia_1_1testing_1_1basic__graph__operations.html">sequoia::testing::basic_graph_operations</a></div><div class="ttdef"><b>Definition:</b> DynamicGraphTestingUtilities.hpp:187</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1generic__weighted__edge__insertions_html"><div class="ttname"><a href="../../dd/d95/classsequoia_1_1testing_1_1generic__weighted__edge__insertions.html">sequoia::testing::generic_weighted_edge_insertions</a></div><div class="ttdef"><b>Definition:</b> DynamicGraphEmbeddedTest.hpp:66</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1checker_html"><div class="ttname"><a href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">sequoia::testing::checker</a></div><div class="ttdoc">Exposes elementary check methods, with the option to plug in arbitrary Extenders to compose functiona...</div><div class="ttdef"><b>Definition:</b> FreeCheckers.hpp:477</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1generic__weighted__edge__insertions_html"><div class="ttname"><a href="../../dd/d95/classsequoia_1_1testing_1_1generic__weighted__edge__insertions.html">sequoia::testing::generic_weighted_edge_insertions</a></div><div class="ttdef"><b>Definition:</b> DynamicGraphEmbeddedTest.hpp:72</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1generic__edge__insertions_html"><div class="ttname"><a href="../../df/d8c/classsequoia_1_1testing_1_1generic__edge__insertions.html">sequoia::testing::generic_edge_insertions</a></div><div class="ttdef"><b>Definition:</b> DynamicGraphEmbeddedTest.hpp:39</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1test__edge__insertion_html"><div class="ttname"><a href="../../dc/d2f/classsequoia_1_1testing_1_1test__edge__insertion.html">sequoia::testing::test_edge_insertion</a></div><div class="ttdef"><b>Definition:</b> DynamicGraphEmbeddedTest.hpp:17</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1test__edge__insertion_html_afd1efcf4e14e88d0e2113df25d0d73dc"><div class="ttname"><a href="../../dc/d2f/classsequoia_1_1testing_1_1test__edge__insertion.html#afd1efcf4e14e88d0e2113df25d0d73dc">sequoia::testing::test_edge_insertion::source_file_name</a></div><div class="ttdeci">std::string_view source_file_name() const noexcept final</div><div class="ttdoc">Pure virtual method which should be overridden in a concrete test's cpp file in order to provide the ...</div><div class="ttdef"><b>Definition:</b> DynamicGraphEmbeddedTest.cpp:15</div></div>

@@ -103,7 +103,7 @@ $(function() {
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <a class="code" href="../../d1/dff/structsequoia_1_1testing_1_1move__only__beast.html">move_only_beast</a>&amp; operator=(<a class="code" href="../../d1/dff/structsequoia_1_1testing_1_1move__only__beast.html">move_only_beast</a>&amp;&amp;) = <span class="keywordflow">default</span>;</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keywordtype">void</span> swap(<a class="code" href="../../d1/dff/structsequoia_1_1testing_1_1move__only__beast.html">move_only_beast</a>&amp; other) noexcept(noexcept(std::swap(x, other.x)))</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keywordtype">void</span> swap(<a class="code" href="../../d1/dff/structsequoia_1_1testing_1_1move__only__beast.html">move_only_beast</a>&amp; other) noexcept(noexcept(std::swap(this-&gt;x, other.x)))</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    {</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;      std::swap(x, other.x);</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    }</div>
@@ -397,7 +397,7 @@ $(function() {
 <div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160; </div>
 <div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;    <a class="code" href="../../de/d0c/structsequoia_1_1testing_1_1move__only__inefficient__move.html">move_only_inefficient_move</a>&amp; operator=(<a class="code" href="../../de/d0c/structsequoia_1_1testing_1_1move__only__inefficient__move.html">move_only_inefficient_move</a>&amp;&amp;) = <span class="keywordflow">default</span>;</div>
 <div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160; </div>
-<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;    <span class="keywordtype">void</span> swap(<a class="code" href="../../de/d0c/structsequoia_1_1testing_1_1move__only__inefficient__move.html">move_only_inefficient_move</a>&amp; other) noexcept(noexcept(std::swap(x, other.x)))</div>
+<div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;    <span class="keywordtype">void</span> swap(<a class="code" href="../../de/d0c/structsequoia_1_1testing_1_1move__only__inefficient__move.html">move_only_inefficient_move</a>&amp; other) noexcept(noexcept(std::swap(this-&gt;x, other.x)))</div>
 <div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;    {</div>
 <div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;      std::swap(x, other.x);</div>
 <div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160;    }</div>
@@ -457,7 +457,7 @@ $(function() {
 <div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;      <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
 <div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;    }</div>
 <div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160; </div>
-<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;    <span class="keywordtype">void</span> swap(<a class="code" href="../../dc/d70/structsequoia_1_1testing_1_1move__only__inefficient__move__assignment.html">move_only_inefficient_move_assignment</a>&amp; other) noexcept(noexcept(std::swap(x, other.x)))</div>
+<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;    <span class="keywordtype">void</span> swap(<a class="code" href="../../dc/d70/structsequoia_1_1testing_1_1move__only__inefficient__move__assignment.html">move_only_inefficient_move_assignment</a>&amp; other) noexcept(noexcept(std::swap(this-&gt;x, other.x)))</div>
 <div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;    {</div>
 <div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;      std::swap(x, other.x);</div>
 <div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;    }</div>

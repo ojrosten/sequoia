@@ -111,7 +111,7 @@ $(function() {
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160; </div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <a class="code" href="../../d2/db1/structsequoia_1_1testing_1_1move__only__scoped__beast.html">move_only_scoped_beast</a>&amp; operator=(<a class="code" href="../../d2/db1/structsequoia_1_1testing_1_1move__only__scoped__beast.html">move_only_scoped_beast</a>&amp;&amp;) = <span class="keywordflow">default</span>;</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordtype">void</span> swap(<a class="code" href="../../d2/db1/structsequoia_1_1testing_1_1move__only__scoped__beast.html">move_only_scoped_beast</a>&amp; other) noexcept(noexcept(std::swap(x, other.x)))</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keywordtype">void</span> swap(<a class="code" href="../../d2/db1/structsequoia_1_1testing_1_1move__only__scoped__beast.html">move_only_scoped_beast</a>&amp; other) noexcept(noexcept(std::swap(this-&gt;x, other.x)))</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    {</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;      std::swap(x, other.x);</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    }</div>

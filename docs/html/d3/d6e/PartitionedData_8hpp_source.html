@@ -149,10 +149,10 @@ $(function() {
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;      <span class="keyword">using</span> allocator_type       = <span class="keyword">typename</span> storage_type::allocator_type;</div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;      <span class="keyword">using</span> sharing_policy_type  = SharingPolicy;</div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;      <span class="keyword">using</span> partition_iterator               = partition_iterator&lt;Traits, SharingPolicy, size_type&gt;;</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;      <span class="keyword">using</span> const_partition_iterator         = const_partition_iterator&lt;Traits, SharingPolicy, size_type&gt;;</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;      <span class="keyword">using</span> reverse_partition_iterator       = reverse_partition_iterator&lt;Traits, SharingPolicy, size_type&gt;;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;      <span class="keyword">using</span> const_reverse_partition_iterator = const_reverse_partition_iterator&lt;Traits, SharingPolicy, size_type&gt;;</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;      <span class="keyword">using</span> <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">partition_iterator</a>               = <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">data_structures::partition_iterator&lt;Traits, SharingPolicy, size_type&gt;</a>;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;      <span class="keyword">using</span> <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_partition_iterator</a>         = <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">data_structures::const_partition_iterator&lt;Traits, SharingPolicy, size_type&gt;</a>;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;      <span class="keyword">using</span> <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">reverse_partition_iterator</a>       = <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">data_structures::reverse_partition_iterator&lt;Traits, SharingPolicy, size_type&gt;</a>;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;      <span class="keyword">using</span> <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_reverse_partition_iterator</a> = <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">data_structures::const_reverse_partition_iterator&lt;Traits, SharingPolicy, size_type&gt;</a>;</div>
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;      constexpr <span class="keyword">static</span> <span class="keywordtype">bool</span> throw_on_range_error{Traits::throw_on_range_error};</div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;      </div>
@@ -225,7 +225,7 @@ $(function() {
 <div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;      }</div>
 <div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160; </div>
 <div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;      <span class="keywordtype">void</span> swap(<a class="code" href="../../da/d7b/classsequoia_1_1data__structures_1_1bucketed__storage.html">bucketed_storage</a>&amp; other)</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;        noexcept(noexcept(std::swap(m_Buckets, other.m_Buckets)))</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;        noexcept(noexcept(std::swap(this-&gt;m_Buckets, other.m_Buckets)))</div>
 <div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;      {</div>
 <div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;        std::swap(m_Buckets, other.m_Buckets);</div>
 <div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;      }</div>
@@ -356,7 +356,7 @@ $(function() {
 <div class="line"><a name="l00291"></a><span class="lineno">  291</span>&#160;        m_Buckets[index].push_back(SharingPolicy::make(std::forward&lt;Args&gt;(args)...));</div>
 <div class="line"><a name="l00292"></a><span class="lineno">  292</span>&#160;      }</div>
 <div class="line"><a name="l00293"></a><span class="lineno">  293</span>&#160; </div>
-<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;      <span class="keywordtype">void</span> push_back_to_partition(<span class="keyword">const</span> size_type index, const_partition_iterator iter)</div>
+<div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;      <span class="keywordtype">void</span> push_back_to_partition(<span class="keyword">const</span> size_type index, <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_partition_iterator</a> iter)</div>
 <div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160;      {</div>
 <div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;        <span class="keywordflow">if</span> constexpr(throw_on_range_error) check_range(index);</div>
 <div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160; </div>
@@ -364,7 +364,7 @@ $(function() {
 <div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;      }</div>
 <div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160; </div>
 <div class="line"><a name="l00301"></a><span class="lineno">  301</span>&#160;      <span class="keyword">template</span>&lt;<span class="keyword">class</span>... Args&gt;</div>
-<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;      partition_iterator insert_to_partition(const_partition_iterator pos, Args&amp;&amp;... args)</div>
+<div class="line"><a name="l00302"></a><span class="lineno">  302</span>&#160;      <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">partition_iterator</a> insert_to_partition(<a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_partition_iterator</a> pos, Args&amp;&amp;... args)</div>
 <div class="line"><a name="l00303"></a><span class="lineno">  303</span>&#160;      {</div>
 <div class="line"><a name="l00304"></a><span class="lineno">  304</span>&#160;        <span class="keywordflow">if</span> constexpr(throw_on_range_error)</div>
 <div class="line"><a name="l00305"></a><span class="lineno">  305</span>&#160;        {</div>
@@ -374,11 +374,11 @@ $(function() {
 <div class="line"><a name="l00309"></a><span class="lineno">  309</span>&#160;        <span class="keyword">const</span> <span class="keyword">auto</span> soure{pos.partition_index()};        </div>
 <div class="line"><a name="l00310"></a><span class="lineno">  310</span>&#160;        <span class="keyword">auto</span> iter{m_Buckets[soure].insert(pos.base_iterator(), SharingPolicy::make(std::forward&lt;Args&gt;(args)...))};</div>
 <div class="line"><a name="l00311"></a><span class="lineno">  311</span>&#160; </div>
-<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;        <span class="keywordflow">return</span> partition_iterator{iter, soure};</div>
+<div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">partition_iterator</a>{iter, soure};</div>
 <div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;      }</div>
 <div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160; </div>
 <div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;      <span class="keyword">template</span>&lt;<span class="keyword">class</span>... Args&gt;</div>
-<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;      partition_iterator insert_to_partition(const_partition_iterator pos, const_partition_iterator setFromIter)</div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;      <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">partition_iterator</a> insert_to_partition(<a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_partition_iterator</a> pos, <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_partition_iterator</a> setFromIter)</div>
 <div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;      {</div>
 <div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160;        <span class="keywordflow">if</span> constexpr(throw_on_range_error)</div>
 <div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;        {</div>
@@ -388,10 +388,10 @@ $(function() {
 <div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;        <span class="keyword">const</span> <span class="keyword">auto</span> soure{pos.partition_index()};     </div>
 <div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;        <span class="keyword">auto</span> iter{m_Buckets[soure].insert(pos.base_iterator(), *(setFromIter.base_iterator()))};</div>
 <div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160; </div>
-<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;        <span class="keywordflow">return</span> partition_iterator{iter, soure};</div>
+<div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">partition_iterator</a>{iter, soure};</div>
 <div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;      }</div>
 <div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160; </div>
-<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;      partition_iterator erase_from_partition(<span class="keyword">const</span> size_type index, <span class="keyword">const</span> size_type pos)</div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;      <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">partition_iterator</a> erase_from_partition(<span class="keyword">const</span> size_type index, <span class="keyword">const</span> size_type pos)</div>
 <div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;      {</div>
 <div class="line"><a name="l00331"></a><span class="lineno">  331</span>&#160;        <span class="keyword">auto</span> iter{begin_partition(index)};</div>
 <div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;        <span class="keyword">auto</span> next{end_partition(index).base_iterator()};</div>
@@ -400,90 +400,90 @@ $(function() {
 <div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;          next = m_Buckets[index].erase((iter + pos).base_iterator());</div>
 <div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160;        }</div>
 <div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160; </div>
-<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;        <span class="keywordflow">return</span> partition_iterator{next, index};</div>
+<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">partition_iterator</a>{next, index};</div>
 <div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;      }</div>
 <div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160; </div>
-<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;      partition_iterator erase_from_partition(const_partition_iterator iter)</div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;      <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">partition_iterator</a> erase_from_partition(<a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_partition_iterator</a> iter)</div>
 <div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160;      {</div>
 <div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;        <span class="keyword">const</span> <span class="keyword">auto</span> partition{iter.partition_index()};</div>
 <div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160;        <span class="keyword">const</span> <span class="keyword">auto</span> next{m_Buckets[partition].erase(iter.base_iterator())};</div>
-<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;        <span class="keywordflow">return</span> partition_iterator{next, partition};</div>
+<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">partition_iterator</a>{next, partition};</div>
 <div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160;      }</div>
 <div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160; </div>
-<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;      partition_iterator begin_partition(<span class="keyword">const</span> size_type i)</div>
+<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160;      <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">partition_iterator</a> begin_partition(<span class="keyword">const</span> size_type i)</div>
 <div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;      {</div>
 <div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160;        <span class="keywordflow">if</span> constexpr(throw_on_range_error) <span class="keywordflow">if</span>(m_Buckets.empty()) <span class="keywordflow">throw</span> std::out_of_range(<span class="stringliteral">&quot;bucketed_storage::begin_partition: no buckets!\n&quot;</span>);</div>
-<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;        <span class="keywordflow">return</span> (i &lt; m_Buckets.size()) ? partition_iterator(m_Buckets[i].begin(), i) : partition_iterator(m_Buckets.back().end(), npos);</div>
+<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;        <span class="keywordflow">return</span> (i &lt; m_Buckets.size()) ? <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">partition_iterator</a>(m_Buckets[i].begin(), i) : <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">partition_iterator</a>(m_Buckets.back().end(), npos);</div>
 <div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160;      }</div>
 <div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160; </div>
-<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;      partition_iterator end_partition(<span class="keyword">const</span> size_type i)</div>
+<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;      <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">partition_iterator</a> end_partition(<span class="keyword">const</span> size_type i)</div>
 <div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;      {</div>
 <div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;        <span class="keywordflow">if</span> constexpr(throw_on_range_error) <span class="keywordflow">if</span>(m_Buckets.empty()) <span class="keywordflow">throw</span> std::out_of_range(<span class="stringliteral">&quot;bucketed_storage::end_partition: no buckets!\n&quot;</span>);</div>
-<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;        <span class="keywordflow">return</span> (i &lt; m_Buckets.size()) ? partition_iterator(m_Buckets[i].end(), i) : partition_iterator(m_Buckets.back().end(), npos);</div>
+<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160;        <span class="keywordflow">return</span> (i &lt; m_Buckets.size()) ? <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">partition_iterator</a>(m_Buckets[i].end(), i) : <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">partition_iterator</a>(m_Buckets.back().end(), npos);</div>
 <div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;      }</div>
 <div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160; </div>
-<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;      const_partition_iterator begin_partition(<span class="keyword">const</span> size_type i)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;      <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_partition_iterator</a> begin_partition(<span class="keyword">const</span> size_type i)<span class="keyword"> const</span></div>
 <div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;<span class="keyword">      </span>{</div>
 <div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;        <span class="keywordflow">if</span> constexpr(throw_on_range_error) <span class="keywordflow">if</span>(m_Buckets.empty()) <span class="keywordflow">throw</span> std::out_of_range(<span class="stringliteral">&quot;bucketed_storage::begin_partition: no buckets!\n&quot;</span>);</div>
-<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;        <span class="keywordflow">return</span> (i &lt; m_Buckets.size()) ? const_partition_iterator(m_Buckets[i].cbegin(), i) : const_partition_iterator(m_Buckets.back().cend(), npos);</div>
+<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;        <span class="keywordflow">return</span> (i &lt; m_Buckets.size()) ? <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_partition_iterator</a>(m_Buckets[i].cbegin(), i) : <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_partition_iterator</a>(m_Buckets.back().cend(), npos);</div>
 <div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;      }</div>
 <div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160; </div>
-<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;      const_partition_iterator end_partition(<span class="keyword">const</span> size_type i)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;      <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_partition_iterator</a> end_partition(<span class="keyword">const</span> size_type i)<span class="keyword"> const</span></div>
 <div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;<span class="keyword">      </span>{</div>
 <div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160;        <span class="keywordflow">if</span> constexpr(throw_on_range_error) <span class="keywordflow">if</span>(m_Buckets.empty()) <span class="keywordflow">throw</span> std::out_of_range(<span class="stringliteral">&quot;bucketed_storage::end_partition: no buckets!\n&quot;</span>);</div>
-<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;        <span class="keywordflow">return</span> (i &lt; m_Buckets.size()) ? const_partition_iterator(m_Buckets[i].cend(), i) : const_partition_iterator(m_Buckets.back().cend(), npos);</div>
+<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;        <span class="keywordflow">return</span> (i &lt; m_Buckets.size()) ? <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_partition_iterator</a>(m_Buckets[i].cend(), i) : <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_partition_iterator</a>(m_Buckets.back().cend(), npos);</div>
 <div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;      }</div>
 <div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160; </div>
-<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;      reverse_partition_iterator rbegin_partition(<span class="keyword">const</span> size_type i)</div>
+<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;      <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">reverse_partition_iterator</a> rbegin_partition(<span class="keyword">const</span> size_type i)</div>
 <div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;      {</div>
 <div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;        <span class="keywordflow">if</span>(m_Buckets.empty()) <span class="keywordflow">throw</span> std::out_of_range(<span class="stringliteral">&quot;bucketed_storage::begin_partition: no buckets!\n&quot;</span>);</div>
-<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;        <span class="keywordflow">return</span> (i &lt; m_Buckets.size()) ? reverse_partition_iterator(m_Buckets[i].rbegin(), i) : reverse_partition_iterator(m_Buckets.front().rend(), npos);</div>
+<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;        <span class="keywordflow">return</span> (i &lt; m_Buckets.size()) ? <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">reverse_partition_iterator</a>(m_Buckets[i].rbegin(), i) : <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">reverse_partition_iterator</a>(m_Buckets.front().rend(), npos);</div>
 <div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;      }</div>
 <div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160; </div>
-<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;      reverse_partition_iterator rend_partition(<span class="keyword">const</span> size_type i)</div>
+<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160;      <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">reverse_partition_iterator</a> rend_partition(<span class="keyword">const</span> size_type i)</div>
 <div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;      {</div>
 <div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;        <span class="keywordflow">if</span> constexpr(throw_on_range_error) <span class="keywordflow">if</span>(m_Buckets.empty()) <span class="keywordflow">throw</span> std::out_of_range(<span class="stringliteral">&quot;bucketed_storage::end_partition: no buckets!\n&quot;</span>);</div>
-<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;        <span class="keywordflow">return</span> (i &lt; m_Buckets.size()) ? reverse_partition_iterator(m_Buckets[i].rend(), i) : reverse_partition_iterator(m_Buckets.front().rend(), npos);</div>
+<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;        <span class="keywordflow">return</span> (i &lt; m_Buckets.size()) ? <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">reverse_partition_iterator</a>(m_Buckets[i].rend(), i) : <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">reverse_partition_iterator</a>(m_Buckets.front().rend(), npos);</div>
 <div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;      }</div>
 <div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160; </div>
-<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;      const_reverse_partition_iterator rbegin_partition(<span class="keyword">const</span> size_type i)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;      <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_reverse_partition_iterator</a> rbegin_partition(<span class="keyword">const</span> size_type i)<span class="keyword"> const</span></div>
 <div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;<span class="keyword">      </span>{</div>
 <div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;        <span class="keywordflow">if</span> constexpr(throw_on_range_error) <span class="keywordflow">if</span>(m_Buckets.empty()) <span class="keywordflow">throw</span> std::out_of_range(<span class="stringliteral">&quot;bucketed_storage::begin_partition: no buckets!\n&quot;</span>);</div>
-<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;        <span class="keywordflow">return</span> (i &lt; m_Buckets.size()) ? const_reverse_partition_iterator(m_Buckets[i].crbegin(), i) : const_reverse_partition_iterator(m_Buckets.front().crend(), npos);</div>
+<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;        <span class="keywordflow">return</span> (i &lt; m_Buckets.size()) ? <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_reverse_partition_iterator</a>(m_Buckets[i].crbegin(), i) : <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_reverse_partition_iterator</a>(m_Buckets.front().crend(), npos);</div>
 <div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160; </div>
 <div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160;      }</div>
 <div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160; </div>
-<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;      const_reverse_partition_iterator rend_partition(<span class="keyword">const</span> size_type i)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;      <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_reverse_partition_iterator</a> rend_partition(<span class="keyword">const</span> size_type i)<span class="keyword"> const</span></div>
 <div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;<span class="keyword">      </span>{</div>
 <div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;        <span class="keywordflow">if</span> constexpr(throw_on_range_error) <span class="keywordflow">if</span>(m_Buckets.empty()) <span class="keywordflow">throw</span> std::out_of_range(<span class="stringliteral">&quot;bucketed_storage::end_partition: no buckets!\n&quot;</span>);</div>
-<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;        <span class="keywordflow">return</span> (i &lt; m_Buckets.size()) ? const_reverse_partition_iterator(m_Buckets[i].crend(), i) : const_reverse_partition_iterator(m_Buckets.front().crend(), npos);</div>
+<div class="line"><a name="l00394"></a><span class="lineno">  394</span>&#160;        <span class="keywordflow">return</span> (i &lt; m_Buckets.size()) ? <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_reverse_partition_iterator</a>(m_Buckets[i].crend(), i) : <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_reverse_partition_iterator</a>(m_Buckets.front().crend(), npos);</div>
 <div class="line"><a name="l00395"></a><span class="lineno">  395</span>&#160;      }</div>
 <div class="line"><a name="l00396"></a><span class="lineno">  396</span>&#160; </div>
-<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;      const_partition_iterator cbegin_partition(<span class="keyword">const</span> size_type i)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;      <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_partition_iterator</a> cbegin_partition(<span class="keyword">const</span> size_type i)<span class="keyword"> const</span></div>
 <div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160;<span class="keyword">      </span>{</div>
 <div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;        <span class="keywordflow">return</span> begin_partition(i);</div>
 <div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;      }</div>
 <div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160; </div>
-<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;      const_partition_iterator cend_partition(<span class="keyword">const</span> size_type i)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;      <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_partition_iterator</a> cend_partition(<span class="keyword">const</span> size_type i)<span class="keyword"> const</span></div>
 <div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;<span class="keyword">      </span>{</div>
 <div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;        <span class="keywordflow">return</span> end_partition(i);</div>
 <div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;      }</div>
 <div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160; </div>
-<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;      const_reverse_partition_iterator crbegin_partition(<span class="keyword">const</span> size_type i)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;      <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_reverse_partition_iterator</a> crbegin_partition(<span class="keyword">const</span> size_type i)<span class="keyword"> const</span></div>
 <div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;<span class="keyword">      </span>{</div>
 <div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;        <span class="keywordflow">return</span> rbegin_partition(i);</div>
 <div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;      }</div>
 <div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160; </div>
-<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;      const_reverse_partition_iterator crend_partition(<span class="keyword">const</span> size_type i)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;      <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_reverse_partition_iterator</a> crend_partition(<span class="keyword">const</span> size_type i)<span class="keyword"> const</span></div>
 <div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;<span class="keyword">      </span>{</div>
 <div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;        <span class="keywordflow">return</span> rend_partition(i);</div>
 <div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;      }</div>
 <div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160; </div>
 <div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;      [[nodiscard]]</div>
-<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;      const_partition_iterator operator[](<span class="keyword">const</span> size_type i)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> cbegin_partition(i); }</div>
+<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;      <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_partition_iterator</a> operator[](<span class="keyword">const</span> size_type i)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> cbegin_partition(i); }</div>
 <div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160; </div>
 <div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;      [[nodiscard]]</div>
-<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;      partition_iterator operator[](<span class="keyword">const</span> size_type i) { <span class="keywordflow">return</span> begin_partition(i); }</div>
+<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;      <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">partition_iterator</a> operator[](<span class="keyword">const</span> size_type i) { <span class="keywordflow">return</span> begin_partition(i); }</div>
 <div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160; </div>
 <div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;      [[nodiscard]]</div>
 <div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;      <span class="keyword">friend</span> <span class="keywordtype">bool</span> operator==(<span class="keyword">const</span> <a class="code" href="../../da/d7b/classsequoia_1_1data__structures_1_1bucketed__storage.html">bucketed_storage</a>&amp; lhs, <span class="keyword">const</span> <a class="code" href="../../da/d7b/classsequoia_1_1data__structures_1_1bucketed__storage.html">bucketed_storage</a>&amp; rhs) noexcept</div>
@@ -558,10 +558,10 @@ $(function() {
 <div class="line"><a name="l00493"></a><span class="lineno">  493</span>&#160;      <span class="keyword">using</span> size_type           = std::common_type_t&lt;typename Traits::partition_index_type, typename container_type::size_type&gt;;</div>
 <div class="line"><a name="l00494"></a><span class="lineno">  494</span>&#160;      <span class="keyword">using</span> index_type          = <span class="keyword">typename</span> Traits::index_type;</div>
 <div class="line"><a name="l00495"></a><span class="lineno">  495</span>&#160; </div>
-<div class="line"><a name="l00496"></a><span class="lineno">  496</span>&#160;      <span class="keyword">using</span> partition_iterator               = partition_iterator&lt;Traits, SharingPolicy, index_type&gt;;</div>
-<div class="line"><a name="l00497"></a><span class="lineno">  497</span>&#160;      <span class="keyword">using</span> const_partition_iterator         = const_partition_iterator&lt;Traits, SharingPolicy, index_type&gt;;</div>
-<div class="line"><a name="l00498"></a><span class="lineno">  498</span>&#160;      <span class="keyword">using</span> reverse_partition_iterator       = reverse_partition_iterator&lt;Traits, SharingPolicy, index_type&gt;;</div>
-<div class="line"><a name="l00499"></a><span class="lineno">  499</span>&#160;      <span class="keyword">using</span> const_reverse_partition_iterator = const_reverse_partition_iterator&lt;Traits, SharingPolicy, index_type&gt;;</div>
+<div class="line"><a name="l00496"></a><span class="lineno">  496</span>&#160;      <span class="keyword">using</span> <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">partition_iterator</a>               = <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">data_structures::partition_iterator&lt;Traits, SharingPolicy, index_type&gt;</a>;</div>
+<div class="line"><a name="l00497"></a><span class="lineno">  497</span>&#160;      <span class="keyword">using</span> <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_partition_iterator</a>         = <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">data_structures::const_partition_iterator&lt;Traits, SharingPolicy, index_type&gt;</a>;</div>
+<div class="line"><a name="l00498"></a><span class="lineno">  498</span>&#160;      <span class="keyword">using</span> <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">reverse_partition_iterator</a>       = <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">data_structures::reverse_partition_iterator&lt;Traits, SharingPolicy, index_type&gt;</a>;</div>
+<div class="line"><a name="l00499"></a><span class="lineno">  499</span>&#160;      <span class="keyword">using</span> <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_reverse_partition_iterator</a> = <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">data_structures::const_reverse_partition_iterator&lt;Traits, SharingPolicy, index_type&gt;</a>;</div>
 <div class="line"><a name="l00500"></a><span class="lineno">  500</span>&#160; </div>
 <div class="line"><a name="l00501"></a><span class="lineno">  501</span>&#160;      constexpr <span class="keyword">static</span> <span class="keywordtype">bool</span> throw_on_range_error{Traits::throw_on_range_error};</div>
 <div class="line"><a name="l00502"></a><span class="lineno">  502</span>&#160;      </div>
@@ -582,82 +582,82 @@ $(function() {
 <div class="line"><a name="l00517"></a><span class="lineno">  517</span>&#160;      constexpr <span class="keyword">auto</span> num_partitions() <span class="keyword">const</span> noexcept { <span class="keywordflow">return</span> m_Partitions.size(); }</div>
 <div class="line"><a name="l00518"></a><span class="lineno">  518</span>&#160; </div>
 <div class="line"><a name="l00519"></a><span class="lineno">  519</span>&#160;      [[nodiscard]]</div>
-<div class="line"><a name="l00520"></a><span class="lineno">  520</span>&#160;      constexpr partition_iterator begin_partition(<span class="keyword">const</span> index_type i) noexcept</div>
+<div class="line"><a name="l00520"></a><span class="lineno">  520</span>&#160;      constexpr <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">partition_iterator</a> begin_partition(<span class="keyword">const</span> index_type i) noexcept</div>
 <div class="line"><a name="l00521"></a><span class="lineno">  521</span>&#160;      {</div>
 <div class="line"><a name="l00522"></a><span class="lineno">  522</span>&#160;        <span class="keywordflow">return</span> get_begin_iterator&lt;partition_iterator&gt;(i, m_Storage.begin());</div>
 <div class="line"><a name="l00523"></a><span class="lineno">  523</span>&#160;      }</div>
 <div class="line"><a name="l00524"></a><span class="lineno">  524</span>&#160; </div>
 <div class="line"><a name="l00525"></a><span class="lineno">  525</span>&#160;      [[nodiscard]]</div>
-<div class="line"><a name="l00526"></a><span class="lineno">  526</span>&#160;      constexpr partition_iterator end_partition(<span class="keyword">const</span> index_type i) noexcept</div>
+<div class="line"><a name="l00526"></a><span class="lineno">  526</span>&#160;      constexpr <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">partition_iterator</a> end_partition(<span class="keyword">const</span> index_type i) noexcept</div>
 <div class="line"><a name="l00527"></a><span class="lineno">  527</span>&#160;      {</div>
 <div class="line"><a name="l00528"></a><span class="lineno">  528</span>&#160;        <span class="keywordflow">return</span> get_end_iterator&lt;partition_iterator&gt;(i, m_Storage.begin());</div>
 <div class="line"><a name="l00529"></a><span class="lineno">  529</span>&#160;      }</div>
 <div class="line"><a name="l00530"></a><span class="lineno">  530</span>&#160; </div>
 <div class="line"><a name="l00531"></a><span class="lineno">  531</span>&#160;      [[nodiscard]]</div>
-<div class="line"><a name="l00532"></a><span class="lineno">  532</span>&#160;      constexpr const_partition_iterator begin_partition(<span class="keyword">const</span> index_type i) <span class="keyword">const</span> noexcept</div>
+<div class="line"><a name="l00532"></a><span class="lineno">  532</span>&#160;      constexpr <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_partition_iterator</a> begin_partition(<span class="keyword">const</span> index_type i) <span class="keyword">const</span> noexcept</div>
 <div class="line"><a name="l00533"></a><span class="lineno">  533</span>&#160;      {</div>
 <div class="line"><a name="l00534"></a><span class="lineno">  534</span>&#160;        <span class="keywordflow">return</span> get_begin_iterator&lt;const_partition_iterator&gt;(i, m_Storage.cbegin());</div>
 <div class="line"><a name="l00535"></a><span class="lineno">  535</span>&#160;      }</div>
 <div class="line"><a name="l00536"></a><span class="lineno">  536</span>&#160; </div>
 <div class="line"><a name="l00537"></a><span class="lineno">  537</span>&#160;      [[nodiscard]]</div>
-<div class="line"><a name="l00538"></a><span class="lineno">  538</span>&#160;      constexpr const_partition_iterator end_partition(<span class="keyword">const</span> index_type i) <span class="keyword">const</span> noexcept</div>
+<div class="line"><a name="l00538"></a><span class="lineno">  538</span>&#160;      constexpr <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_partition_iterator</a> end_partition(<span class="keyword">const</span> index_type i) <span class="keyword">const</span> noexcept</div>
 <div class="line"><a name="l00539"></a><span class="lineno">  539</span>&#160;      {</div>
 <div class="line"><a name="l00540"></a><span class="lineno">  540</span>&#160;        <span class="keywordflow">return</span> get_end_iterator&lt;const_partition_iterator&gt;(i, m_Storage.cbegin());</div>
 <div class="line"><a name="l00541"></a><span class="lineno">  541</span>&#160;      }</div>
 <div class="line"><a name="l00542"></a><span class="lineno">  542</span>&#160; </div>
 <div class="line"><a name="l00543"></a><span class="lineno">  543</span>&#160;      [[nodiscard]]</div>
-<div class="line"><a name="l00544"></a><span class="lineno">  544</span>&#160;      constexpr const_partition_iterator cbegin_partition(<span class="keyword">const</span> index_type i) <span class="keyword">const</span> noexcept</div>
+<div class="line"><a name="l00544"></a><span class="lineno">  544</span>&#160;      constexpr <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_partition_iterator</a> cbegin_partition(<span class="keyword">const</span> index_type i) <span class="keyword">const</span> noexcept</div>
 <div class="line"><a name="l00545"></a><span class="lineno">  545</span>&#160;      {</div>
 <div class="line"><a name="l00546"></a><span class="lineno">  546</span>&#160;        <span class="keywordflow">return</span> begin_partition(i);</div>
 <div class="line"><a name="l00547"></a><span class="lineno">  547</span>&#160;      }      </div>
 <div class="line"><a name="l00548"></a><span class="lineno">  548</span>&#160; </div>
 <div class="line"><a name="l00549"></a><span class="lineno">  549</span>&#160;      [[nodiscard]]</div>
-<div class="line"><a name="l00550"></a><span class="lineno">  550</span>&#160;      constexpr const_partition_iterator cend_partition(<span class="keyword">const</span> index_type i) <span class="keyword">const</span> noexcept</div>
+<div class="line"><a name="l00550"></a><span class="lineno">  550</span>&#160;      constexpr <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_partition_iterator</a> cend_partition(<span class="keyword">const</span> index_type i) <span class="keyword">const</span> noexcept</div>
 <div class="line"><a name="l00551"></a><span class="lineno">  551</span>&#160;      {</div>
 <div class="line"><a name="l00552"></a><span class="lineno">  552</span>&#160;        <span class="keywordflow">return</span> end_partition(i);</div>
 <div class="line"><a name="l00553"></a><span class="lineno">  553</span>&#160;      }</div>
 <div class="line"><a name="l00554"></a><span class="lineno">  554</span>&#160; </div>
 <div class="line"><a name="l00555"></a><span class="lineno">  555</span>&#160;      [[nodiscard]]</div>
-<div class="line"><a name="l00556"></a><span class="lineno">  556</span>&#160;      constexpr reverse_partition_iterator rbegin_partition(<span class="keyword">const</span> index_type i) noexcept</div>
+<div class="line"><a name="l00556"></a><span class="lineno">  556</span>&#160;      constexpr <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">reverse_partition_iterator</a> rbegin_partition(<span class="keyword">const</span> index_type i) noexcept</div>
 <div class="line"><a name="l00557"></a><span class="lineno">  557</span>&#160;      {</div>
 <div class="line"><a name="l00558"></a><span class="lineno">  558</span>&#160;        <span class="keywordflow">return</span> get_end_iterator&lt;reverse_partition_iterator&gt;(i, m_Storage.rend());</div>
 <div class="line"><a name="l00559"></a><span class="lineno">  559</span>&#160;      }</div>
 <div class="line"><a name="l00560"></a><span class="lineno">  560</span>&#160; </div>
 <div class="line"><a name="l00561"></a><span class="lineno">  561</span>&#160;      [[nodiscard]]</div>
-<div class="line"><a name="l00562"></a><span class="lineno">  562</span>&#160;      constexpr reverse_partition_iterator rend_partition(<span class="keyword">const</span> index_type i) noexcept</div>
+<div class="line"><a name="l00562"></a><span class="lineno">  562</span>&#160;      constexpr <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">reverse_partition_iterator</a> rend_partition(<span class="keyword">const</span> index_type i) noexcept</div>
 <div class="line"><a name="l00563"></a><span class="lineno">  563</span>&#160;      {</div>
 <div class="line"><a name="l00564"></a><span class="lineno">  564</span>&#160;        <span class="keywordflow">return</span> get_begin_iterator&lt;reverse_partition_iterator&gt;(i, m_Storage.rend());</div>
 <div class="line"><a name="l00565"></a><span class="lineno">  565</span>&#160;      }</div>
 <div class="line"><a name="l00566"></a><span class="lineno">  566</span>&#160; </div>
 <div class="line"><a name="l00567"></a><span class="lineno">  567</span>&#160;      [[nodiscard]]</div>
-<div class="line"><a name="l00568"></a><span class="lineno">  568</span>&#160;      constexpr const_reverse_partition_iterator rbegin_partition(<span class="keyword">const</span> index_type i) <span class="keyword">const</span> noexcept</div>
+<div class="line"><a name="l00568"></a><span class="lineno">  568</span>&#160;      constexpr <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_reverse_partition_iterator</a> rbegin_partition(<span class="keyword">const</span> index_type i) <span class="keyword">const</span> noexcept</div>
 <div class="line"><a name="l00569"></a><span class="lineno">  569</span>&#160;      {</div>
 <div class="line"><a name="l00570"></a><span class="lineno">  570</span>&#160;        <span class="keywordflow">return</span> get_end_iterator&lt;const_reverse_partition_iterator&gt;(i, m_Storage.crend());</div>
 <div class="line"><a name="l00571"></a><span class="lineno">  571</span>&#160;      }</div>
 <div class="line"><a name="l00572"></a><span class="lineno">  572</span>&#160; </div>
 <div class="line"><a name="l00573"></a><span class="lineno">  573</span>&#160;      [[nodiscard]]</div>
-<div class="line"><a name="l00574"></a><span class="lineno">  574</span>&#160;      constexpr const_reverse_partition_iterator rend_partition(<span class="keyword">const</span> index_type i) <span class="keyword">const</span> noexcept</div>
+<div class="line"><a name="l00574"></a><span class="lineno">  574</span>&#160;      constexpr <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_reverse_partition_iterator</a> rend_partition(<span class="keyword">const</span> index_type i) <span class="keyword">const</span> noexcept</div>
 <div class="line"><a name="l00575"></a><span class="lineno">  575</span>&#160;      {</div>
 <div class="line"><a name="l00576"></a><span class="lineno">  576</span>&#160;        <span class="keywordflow">return</span> get_begin_iterator&lt;const_reverse_partition_iterator&gt;(i, m_Storage.crend());</div>
 <div class="line"><a name="l00577"></a><span class="lineno">  577</span>&#160;      }</div>
 <div class="line"><a name="l00578"></a><span class="lineno">  578</span>&#160; </div>
 <div class="line"><a name="l00579"></a><span class="lineno">  579</span>&#160;      [[nodiscard]]</div>
-<div class="line"><a name="l00580"></a><span class="lineno">  580</span>&#160;      constexpr const_reverse_partition_iterator crbegin_partition(<span class="keyword">const</span> index_type i) <span class="keyword">const</span> noexcept</div>
+<div class="line"><a name="l00580"></a><span class="lineno">  580</span>&#160;      constexpr <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_reverse_partition_iterator</a> crbegin_partition(<span class="keyword">const</span> index_type i) <span class="keyword">const</span> noexcept</div>
 <div class="line"><a name="l00581"></a><span class="lineno">  581</span>&#160;      {</div>
 <div class="line"><a name="l00582"></a><span class="lineno">  582</span>&#160;        <span class="keywordflow">return</span> rbegin_partition(i);</div>
 <div class="line"><a name="l00583"></a><span class="lineno">  583</span>&#160;      }</div>
 <div class="line"><a name="l00584"></a><span class="lineno">  584</span>&#160; </div>
 <div class="line"><a name="l00585"></a><span class="lineno">  585</span>&#160;      [[nodiscard]]</div>
-<div class="line"><a name="l00586"></a><span class="lineno">  586</span>&#160;      constexpr const_reverse_partition_iterator crend_partition(<span class="keyword">const</span> index_type i) <span class="keyword">const</span> noexcept</div>
+<div class="line"><a name="l00586"></a><span class="lineno">  586</span>&#160;      constexpr <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_reverse_partition_iterator</a> crend_partition(<span class="keyword">const</span> index_type i) <span class="keyword">const</span> noexcept</div>
 <div class="line"><a name="l00587"></a><span class="lineno">  587</span>&#160;      {</div>
 <div class="line"><a name="l00588"></a><span class="lineno">  588</span>&#160;        <span class="keywordflow">return</span> rend_partition(i);</div>
 <div class="line"><a name="l00589"></a><span class="lineno">  589</span>&#160;      }</div>
 <div class="line"><a name="l00590"></a><span class="lineno">  590</span>&#160; </div>
 <div class="line"><a name="l00591"></a><span class="lineno">  591</span>&#160;      [[nodiscard]]</div>
-<div class="line"><a name="l00592"></a><span class="lineno">  592</span>&#160;      constexpr const_partition_iterator operator[](<span class="keyword">const</span> index_type i) <span class="keyword">const</span> noexcept { <span class="keywordflow">return</span> cbegin_partition(i); }</div>
+<div class="line"><a name="l00592"></a><span class="lineno">  592</span>&#160;      constexpr <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_partition_iterator</a> operator[](<span class="keyword">const</span> index_type i) <span class="keyword">const</span> noexcept { <span class="keywordflow">return</span> cbegin_partition(i); }</div>
 <div class="line"><a name="l00593"></a><span class="lineno">  593</span>&#160; </div>
 <div class="line"><a name="l00594"></a><span class="lineno">  594</span>&#160;      [[nodiscard]]</div>
-<div class="line"><a name="l00595"></a><span class="lineno">  595</span>&#160;      constexpr partition_iterator operator[](<span class="keyword">const</span> index_type i) noexcept { <span class="keywordflow">return</span> begin_partition(i); }</div>
+<div class="line"><a name="l00595"></a><span class="lineno">  595</span>&#160;      constexpr <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">partition_iterator</a> operator[](<span class="keyword">const</span> index_type i) noexcept { <span class="keywordflow">return</span> begin_partition(i); }</div>
 <div class="line"><a name="l00596"></a><span class="lineno">  596</span>&#160; </div>
 <div class="line"><a name="l00597"></a><span class="lineno">  597</span>&#160;      constexpr <span class="keywordtype">void</span> swap_partitions(size_type i, size_type j)</div>
 <div class="line"><a name="l00598"></a><span class="lineno">  598</span>&#160;      {</div>
@@ -762,7 +762,7 @@ $(function() {
 <div class="line"><a name="l00697"></a><span class="lineno">  697</span>&#160;      }</div>
 <div class="line"><a name="l00698"></a><span class="lineno">  698</span>&#160; </div>
 <div class="line"><a name="l00699"></a><span class="lineno">  699</span>&#160;      <span class="keywordtype">void</span> swap(<a class="code" href="../../d1/d3a/classsequoia_1_1data__structures_1_1partitioned__sequence__base.html">partitioned_sequence_base</a>&amp; other)</div>
-<div class="line"><a name="l00700"></a><span class="lineno">  700</span>&#160;        noexcept(noexcept(sequoia::swap(m_Partitions, other.m_Partitions)) &amp;&amp; noexcept(m_Storage, other.m_Storage))</div>
+<div class="line"><a name="l00700"></a><span class="lineno">  700</span>&#160;        noexcept(noexcept(sequoia::swap(this-&gt;m_Partitions, other.m_Partitions)) &amp;&amp; noexcept(sequoia::swap(this-&gt;m_Storage, other.m_Storage)))</div>
 <div class="line"><a name="l00701"></a><span class="lineno">  701</span>&#160;      {</div>
 <div class="line"><a name="l00702"></a><span class="lineno">  702</span>&#160;        sequoia::swap(m_Partitions, other.m_Partitions);</div>
 <div class="line"><a name="l00703"></a><span class="lineno">  703</span>&#160;        sequoia::swap(m_Storage, other.m_Storage);</div>
@@ -800,12 +800,12 @@ $(function() {
 <div class="line"><a name="l00735"></a><span class="lineno">  735</span>&#160;      <span class="keyword">template</span>&lt;<span class="keyword">class</span> Allocator, <span class="keyword">class</span> PartitionsAllocator&gt;</div>
 <div class="line"><a name="l00736"></a><span class="lineno">  736</span>&#160;      constexpr <a class="code" href="../../d1/d3a/classsequoia_1_1data__structures_1_1partitioned__sequence__base.html">partitioned_sequence_base</a>(<span class="keyword">const</span> <a class="code" href="../../d1/d3a/classsequoia_1_1data__structures_1_1partitioned__sequence__base.html">partitioned_sequence_base</a>&amp; in, <span class="keyword">const</span> Allocator&amp; allocator, <span class="keyword">const</span> PartitionsAllocator&amp; partitionsAllocator)</div>
 <div class="line"><a name="l00737"></a><span class="lineno">  737</span>&#160;        : <a class="code" href="../../d1/d3a/classsequoia_1_1data__structures_1_1partitioned__sequence__base.html">partitioned_sequence_base</a>(<a class="code" href="../../da/d46/structsequoia_1_1data__structures_1_1partition__impl_1_1copy__constant.html">partition_impl::copy_constant&lt;directCopy&gt;</a>{}, in, allocator, partitionsAllocator)</div>
-<div class="line"><a name="l00738"></a><span class="lineno">  738</span>&#160;      {};</div>
+<div class="line"><a name="l00738"></a><span class="lineno">  738</span>&#160;      {}</div>
 <div class="line"><a name="l00739"></a><span class="lineno">  739</span>&#160;      </div>
 <div class="line"><a name="l00740"></a><span class="lineno">  740</span>&#160;      <span class="keyword">template</span>&lt;<span class="keyword">class</span> Allocator, <span class="keyword">class</span> PartitionsAllocator&gt;</div>
 <div class="line"><a name="l00741"></a><span class="lineno">  741</span>&#160;      constexpr <a class="code" href="../../d1/d3a/classsequoia_1_1data__structures_1_1partitioned__sequence__base.html">partitioned_sequence_base</a>(<a class="code" href="../../d1/d3a/classsequoia_1_1data__structures_1_1partitioned__sequence__base.html">partitioned_sequence_base</a>&amp;&amp; in, <span class="keyword">const</span> Allocator&amp; allocator, <span class="keyword">const</span> PartitionsAllocator&amp; partitionsAllocator)</div>
 <div class="line"><a name="l00742"></a><span class="lineno">  742</span>&#160;        : m_Partitions{std::move(in.m_Partitions), partitionsAllocator}, m_Storage{std::move(in.m_Storage), allocator}</div>
-<div class="line"><a name="l00743"></a><span class="lineno">  743</span>&#160;      {};</div>
+<div class="line"><a name="l00743"></a><span class="lineno">  743</span>&#160;      {}</div>
 <div class="line"><a name="l00744"></a><span class="lineno">  744</span>&#160; </div>
 <div class="line"><a name="l00745"></a><span class="lineno">  745</span>&#160;      <span class="keywordtype">void</span> add_slot()</div>
 <div class="line"><a name="l00746"></a><span class="lineno">  746</span>&#160;      {</div>
@@ -889,12 +889,12 @@ $(function() {
 <div class="line"><a name="l00824"></a><span class="lineno">  824</span>&#160;        insert(index, maker, std::forward&lt;Args&gt;(args)...);</div>
 <div class="line"><a name="l00825"></a><span class="lineno">  825</span>&#160;      }</div>
 <div class="line"><a name="l00826"></a><span class="lineno">  826</span>&#160; </div>
-<div class="line"><a name="l00827"></a><span class="lineno">  827</span>&#160;      <span class="keywordtype">void</span> push_back_to_partition(<span class="keyword">const</span> index_type index, const_partition_iterator iter)</div>
+<div class="line"><a name="l00827"></a><span class="lineno">  827</span>&#160;      <span class="keywordtype">void</span> push_back_to_partition(<span class="keyword">const</span> index_type index, <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_partition_iterator</a> iter)</div>
 <div class="line"><a name="l00828"></a><span class="lineno">  828</span>&#160;      {</div>
 <div class="line"><a name="l00829"></a><span class="lineno">  829</span>&#160;        <span class="keywordflow">if</span> constexpr(throw_on_range_error) check_range(index);</div>
 <div class="line"><a name="l00830"></a><span class="lineno">  830</span>&#160; </div>
 <div class="line"><a name="l00831"></a><span class="lineno">  831</span>&#160;         <span class="keyword">auto</span> maker{</div>
-<div class="line"><a name="l00832"></a><span class="lineno">  832</span>&#160;          [](const_partition_iterator i) {</div>
+<div class="line"><a name="l00832"></a><span class="lineno">  832</span>&#160;          [](<a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_partition_iterator</a> i) {</div>
 <div class="line"><a name="l00833"></a><span class="lineno">  833</span>&#160;            <span class="keywordflow">return</span> *(i.base_iterator());</div>
 <div class="line"><a name="l00834"></a><span class="lineno">  834</span>&#160;          }</div>
 <div class="line"><a name="l00835"></a><span class="lineno">  835</span>&#160;        };</div>
@@ -903,7 +903,7 @@ $(function() {
 <div class="line"><a name="l00838"></a><span class="lineno">  838</span>&#160;      }</div>
 <div class="line"><a name="l00839"></a><span class="lineno">  839</span>&#160; </div>
 <div class="line"><a name="l00840"></a><span class="lineno">  840</span>&#160;      <span class="keyword">template</span>&lt;<span class="keyword">class</span>... Args&gt;</div>
-<div class="line"><a name="l00841"></a><span class="lineno">  841</span>&#160;      partition_iterator insert_to_partition(const_partition_iterator pos, Args&amp;&amp;... args)</div>
+<div class="line"><a name="l00841"></a><span class="lineno">  841</span>&#160;      <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">partition_iterator</a> insert_to_partition(<a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_partition_iterator</a> pos, Args&amp;&amp;... args)</div>
 <div class="line"><a name="l00842"></a><span class="lineno">  842</span>&#160;      {</div>
 <div class="line"><a name="l00843"></a><span class="lineno">  843</span>&#160;        <span class="keyword">auto</span> maker{</div>
 <div class="line"><a name="l00844"></a><span class="lineno">  844</span>&#160;          [](<span class="keyword">auto</span>&amp;&amp;... a) {</div>
@@ -914,10 +914,10 @@ $(function() {
 <div class="line"><a name="l00849"></a><span class="lineno">  849</span>&#160;        <span class="keywordflow">return</span> insert(pos, maker, std::forward&lt;Args&gt;(args)...);</div>
 <div class="line"><a name="l00850"></a><span class="lineno">  850</span>&#160;      }</div>
 <div class="line"><a name="l00851"></a><span class="lineno">  851</span>&#160; </div>
-<div class="line"><a name="l00852"></a><span class="lineno">  852</span>&#160;      partition_iterator insert_to_partition(const_partition_iterator pos, const_partition_iterator setFromIter)</div>
+<div class="line"><a name="l00852"></a><span class="lineno">  852</span>&#160;      <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">partition_iterator</a> insert_to_partition(<a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_partition_iterator</a> pos, <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_partition_iterator</a> setFromIter)</div>
 <div class="line"><a name="l00853"></a><span class="lineno">  853</span>&#160;      {</div>
 <div class="line"><a name="l00854"></a><span class="lineno">  854</span>&#160;        <span class="keyword">auto</span> maker{</div>
-<div class="line"><a name="l00855"></a><span class="lineno">  855</span>&#160;          [](const_partition_iterator i) {</div>
+<div class="line"><a name="l00855"></a><span class="lineno">  855</span>&#160;          [](<a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_partition_iterator</a> i) {</div>
 <div class="line"><a name="l00856"></a><span class="lineno">  856</span>&#160;            <span class="keywordflow">return</span> *(i.base_iterator());</div>
 <div class="line"><a name="l00857"></a><span class="lineno">  857</span>&#160;          }</div>
 <div class="line"><a name="l00858"></a><span class="lineno">  858</span>&#160;        };</div>
@@ -925,7 +925,7 @@ $(function() {
 <div class="line"><a name="l00860"></a><span class="lineno">  860</span>&#160;        <span class="keywordflow">return</span> insert(pos, maker, setFromIter);</div>
 <div class="line"><a name="l00861"></a><span class="lineno">  861</span>&#160;      }</div>
 <div class="line"><a name="l00862"></a><span class="lineno">  862</span>&#160; </div>
-<div class="line"><a name="l00863"></a><span class="lineno">  863</span>&#160;      partition_iterator erase_from_partition(<span class="keyword">const</span> index_type index, <span class="keyword">const</span> size_type pos)</div>
+<div class="line"><a name="l00863"></a><span class="lineno">  863</span>&#160;      <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">partition_iterator</a> erase_from_partition(<span class="keyword">const</span> index_type index, <span class="keyword">const</span> size_type pos)</div>
 <div class="line"><a name="l00864"></a><span class="lineno">  864</span>&#160;      {</div>
 <div class="line"><a name="l00865"></a><span class="lineno">  865</span>&#160;        <span class="keyword">auto</span> next{end_partition(index).base_iterator()};</div>
 <div class="line"><a name="l00866"></a><span class="lineno">  866</span>&#160;        <span class="keyword">auto</span> iter{begin_partition(index)};</div>
@@ -935,16 +935,16 @@ $(function() {
 <div class="line"><a name="l00870"></a><span class="lineno">  870</span>&#160;          decrement_partition_indices(index);</div>
 <div class="line"><a name="l00871"></a><span class="lineno">  871</span>&#160;        }</div>
 <div class="line"><a name="l00872"></a><span class="lineno">  872</span>&#160; </div>
-<div class="line"><a name="l00873"></a><span class="lineno">  873</span>&#160;        <span class="keywordflow">return</span> partition_iterator(next, index);</div>
+<div class="line"><a name="l00873"></a><span class="lineno">  873</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">partition_iterator</a>(next, index);</div>
 <div class="line"><a name="l00874"></a><span class="lineno">  874</span>&#160;      }</div>
 <div class="line"><a name="l00875"></a><span class="lineno">  875</span>&#160; </div>
-<div class="line"><a name="l00876"></a><span class="lineno">  876</span>&#160;      partition_iterator erase_from_partition(const_partition_iterator iter)</div>
+<div class="line"><a name="l00876"></a><span class="lineno">  876</span>&#160;      <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">partition_iterator</a> erase_from_partition(<a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_partition_iterator</a> iter)</div>
 <div class="line"><a name="l00877"></a><span class="lineno">  877</span>&#160;      {</div>
 <div class="line"><a name="l00878"></a><span class="lineno">  878</span>&#160;        <span class="keyword">const</span> <span class="keyword">auto</span> next{m_Storage.erase(iter.base_iterator())};</div>
 <div class="line"><a name="l00879"></a><span class="lineno">  879</span>&#160;        <span class="keyword">const</span> <span class="keyword">auto</span> index{iter.partition_index()};</div>
 <div class="line"><a name="l00880"></a><span class="lineno">  880</span>&#160;        decrement_partition_indices(index);</div>
 <div class="line"><a name="l00881"></a><span class="lineno">  881</span>&#160;          </div>
-<div class="line"><a name="l00882"></a><span class="lineno">  882</span>&#160;        <span class="keywordflow">return</span> partition_iterator{next, iter.partition_index()};</div>
+<div class="line"><a name="l00882"></a><span class="lineno">  882</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">partition_iterator</a>{next, iter.partition_index()};</div>
 <div class="line"><a name="l00883"></a><span class="lineno">  883</span>&#160;      }</div>
 <div class="line"><a name="l00884"></a><span class="lineno">  884</span>&#160;    <span class="keyword">private</span>:</div>
 <div class="line"><a name="l00885"></a><span class="lineno">  885</span>&#160;      <span class="keyword">template</span>&lt;<span class="keywordtype">bool</span> Direct&gt;</div>
@@ -1002,13 +1002,13 @@ $(function() {
 <div class="line"><a name="l00937"></a><span class="lineno">  937</span>&#160;      constexpr <a class="code" href="../../d1/d3a/classsequoia_1_1data__structures_1_1partitioned__sequence__base.html">partitioned_sequence_base</a>(<a class="code" href="../../da/d46/structsequoia_1_1data__structures_1_1partition__impl_1_1copy__constant.html">partition_impl::direct_copy_type</a>, <span class="keyword">const</span> <a class="code" href="../../d1/d3a/classsequoia_1_1data__structures_1_1partitioned__sequence__base.html">partitioned_sequence_base</a>&amp; in, <span class="keyword">const</span> Allocator&amp; allocator)</div>
 <div class="line"><a name="l00938"></a><span class="lineno">  938</span>&#160;        : m_Partitions{in.m_Partitions}</div>
 <div class="line"><a name="l00939"></a><span class="lineno">  939</span>&#160;        , m_Storage{in.m_Storage, allocator}</div>
-<div class="line"><a name="l00940"></a><span class="lineno">  940</span>&#160;      {};</div>
+<div class="line"><a name="l00940"></a><span class="lineno">  940</span>&#160;      {}</div>
 <div class="line"><a name="l00941"></a><span class="lineno">  941</span>&#160; </div>
 <div class="line"><a name="l00942"></a><span class="lineno">  942</span>&#160;      <span class="keyword">template</span>&lt;<span class="keyword">class</span> Allocator, <span class="keyword">class</span> PartitionsAllocator&gt;</div>
 <div class="line"><a name="l00943"></a><span class="lineno">  943</span>&#160;      constexpr <a class="code" href="../../d1/d3a/classsequoia_1_1data__structures_1_1partitioned__sequence__base.html">partitioned_sequence_base</a>(<a class="code" href="../../da/d46/structsequoia_1_1data__structures_1_1partition__impl_1_1copy__constant.html">partition_impl::direct_copy_type</a>, <span class="keyword">const</span> <a class="code" href="../../d1/d3a/classsequoia_1_1data__structures_1_1partitioned__sequence__base.html">partitioned_sequence_base</a>&amp; in, <span class="keyword">const</span> Allocator&amp; allocator, <span class="keyword">const</span> PartitionsAllocator&amp; partitionsAllocator)</div>
 <div class="line"><a name="l00944"></a><span class="lineno">  944</span>&#160;        : m_Partitions{in.m_Partitions, partitionsAllocator}</div>
 <div class="line"><a name="l00945"></a><span class="lineno">  945</span>&#160;        , m_Storage{in.m_Storage, allocator}</div>
-<div class="line"><a name="l00946"></a><span class="lineno">  946</span>&#160;      {};</div>
+<div class="line"><a name="l00946"></a><span class="lineno">  946</span>&#160;      {}</div>
 <div class="line"><a name="l00947"></a><span class="lineno">  947</span>&#160; </div>
 <div class="line"><a name="l00948"></a><span class="lineno">  948</span>&#160;      <span class="keywordtype">void</span> init(std::initializer_list&lt;std::initializer_list&lt;T&gt;&gt; list)</div>
 <div class="line"><a name="l00949"></a><span class="lineno">  949</span>&#160;      {</div>
@@ -1140,7 +1140,7 @@ $(function() {
 <div class="line"><a name="l01075"></a><span class="lineno"> 1075</span>&#160;      }</div>
 <div class="line"><a name="l01076"></a><span class="lineno"> 1076</span>&#160; </div>
 <div class="line"><a name="l01077"></a><span class="lineno"> 1077</span>&#160;      <span class="keyword">template</span>&lt;<span class="keyword">class </span>Maker, <span class="keyword">class</span>... Args&gt;</div>
-<div class="line"><a name="l01078"></a><span class="lineno"> 1078</span>&#160;      <span class="keyword">auto</span> insert(const_partition_iterator pos, Maker maker, Args&amp;&amp;... args)</div>
+<div class="line"><a name="l01078"></a><span class="lineno"> 1078</span>&#160;      <span class="keyword">auto</span> insert(<a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">const_partition_iterator</a> pos, Maker maker, Args&amp;&amp;... args)</div>
 <div class="line"><a name="l01079"></a><span class="lineno"> 1079</span>&#160;      {</div>
 <div class="line"><a name="l01080"></a><span class="lineno"> 1080</span>&#160;        <span class="keywordflow">if</span> constexpr(throw_on_range_error)</div>
 <div class="line"><a name="l01081"></a><span class="lineno"> 1081</span>&#160;        {</div>
@@ -1151,7 +1151,7 @@ $(function() {
 <div class="line"><a name="l01086"></a><span class="lineno"> 1086</span>&#160;        <span class="keyword">auto</span> iter{m_Storage.insert(pos.base_iterator(), maker(std::forward&lt;Args&gt;(args)...))};</div>
 <div class="line"><a name="l01087"></a><span class="lineno"> 1087</span>&#160;        increment_partition_indices(soure);</div>
 <div class="line"><a name="l01088"></a><span class="lineno"> 1088</span>&#160; </div>
-<div class="line"><a name="l01089"></a><span class="lineno"> 1089</span>&#160;        <span class="keywordflow">return</span> partition_iterator{iter, soure};</div>
+<div class="line"><a name="l01089"></a><span class="lineno"> 1089</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">partition_iterator</a>{iter, soure};</div>
 <div class="line"><a name="l01090"></a><span class="lineno"> 1090</span>&#160;      }</div>
 <div class="line"><a name="l01091"></a><span class="lineno"> 1091</span>&#160;      </div>
 <div class="line"><a name="l01092"></a><span class="lineno"> 1092</span>&#160;      <span class="keyword">template</span>&lt;<span class="keyword">class</span> PartitionIterator, <span class="keyword">class</span> Iterator&gt;</div>
@@ -1229,7 +1229,7 @@ $(function() {
 <div class="line"><a name="l01164"></a><span class="lineno"> 1164</span>&#160;      <a class="code" href="../../d0/db0/classsequoia_1_1data__structures_1_1partitioned__sequence.html">partitioned_sequence</a>&amp; operator=(<a class="code" href="../../d0/db0/classsequoia_1_1data__structures_1_1partitioned__sequence.html">partitioned_sequence</a>&amp;&amp;)      = <span class="keywordflow">default</span>;</div>
 <div class="line"><a name="l01165"></a><span class="lineno"> 1165</span>&#160; </div>
 <div class="line"><a name="l01166"></a><span class="lineno"> 1166</span>&#160;      <span class="keywordtype">void</span> swap(<a class="code" href="../../d0/db0/classsequoia_1_1data__structures_1_1partitioned__sequence.html">partitioned_sequence</a>&amp; other)</div>
-<div class="line"><a name="l01167"></a><span class="lineno"> 1167</span>&#160;        noexcept(noexcept(base_t::swap(other)))</div>
+<div class="line"><a name="l01167"></a><span class="lineno"> 1167</span>&#160;        noexcept(noexcept(this-&gt;base_t::swap(other)))</div>
 <div class="line"><a name="l01168"></a><span class="lineno"> 1168</span>&#160;      {</div>
 <div class="line"><a name="l01169"></a><span class="lineno"> 1169</span>&#160;        base_t::swap(other);</div>
 <div class="line"><a name="l01170"></a><span class="lineno"> 1170</span>&#160;      }</div>
@@ -1329,6 +1329,7 @@ $(function() {
 <div class="ttc" id="astructsequoia_1_1data__structures_1_1bucketed__storage__traits_html"><div class="ttname"><a href="../../dc/dec/structsequoia_1_1data__structures_1_1bucketed__storage__traits.html">sequoia::data_structures::bucketed_storage_traits</a></div><div class="ttdef"><b>Definition:</b> PartitionedData.hpp:62</div></div>
 <div class="ttc" id="astructsequoia_1_1data__structures_1_1static__partitioned__sequence__traits_html"><div class="ttname"><a href="../../d3/dff/structsequoia_1_1data__structures_1_1static__partitioned__sequence__traits.html">sequoia::data_structures::static_partitioned_sequence_traits</a></div><div class="ttdef"><b>Definition:</b> PartitionedData.hpp:1197</div></div>
 <div class="ttc" id="aAssignmentUtilities_8hpp_html"><div class="ttname"><a href="../../d0/dbb/AssignmentUtilities_8hpp.html">AssignmentUtilities.hpp</a></div><div class="ttdoc">Helper for dealing with allocator propagation during copy assignment.</div></div>
+<div class="ttc" id="aclasssequoia_1_1utilities_1_1iterator_html"><div class="ttname"><a href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">sequoia::utilities::iterator</a></div><div class="ttdoc">An iterator with policies controlling dereferencing and auxiliary data.</div><div class="ttdef"><b>Definition:</b> Iterator.hpp:104</div></div>
 <div class="ttc" id="aclasssequoia_1_1data__structures_1_1partition__impl_1_1data__duplicator_html"><div class="ttname"><a href="../../d2/d63/classsequoia_1_1data__structures_1_1partition__impl_1_1data__duplicator.html">sequoia::data_structures::partition_impl::data_duplicator</a></div><div class="ttdef"><b>Definition:</b> PartitionedDataDetails.hpp:167</div></div>
 <div class="ttc" id="aIterator_8hpp_html"><div class="ttname"><a href="../../d7/de4/Iterator_8hpp.html">Iterator.hpp</a></div><div class="ttdoc">Implementation for an iterator with policies controlling dereferencing and auxiliary data.</div></div>
 <div class="ttc" id="aAlgorithms_8hpp_html"><div class="ttname"><a href="../../d6/d07/Algorithms_8hpp.html">Algorithms.hpp</a></div><div class="ttdoc">A collection of constexpr algorithms.</div></div>
