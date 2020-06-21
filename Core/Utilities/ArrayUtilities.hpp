@@ -39,9 +39,9 @@ namespace sequoia::utilities
     
     template<class T, std::size_t N, class InitType, std::size_t... I, class Fn>
     [[nodiscard]]
-    constexpr std::array<T, N> to_array(std::initializer_list<InitType> l, std::index_sequence<I...>, Fn fn)
+    constexpr std::array<T, N> to_array([[maybe_unused]] std::initializer_list<InitType> l, [[maybe_unused]] std::index_sequence<I...>, Fn&& fn)
     {
-      return std::array<T, N>{ to_element<T>(l, I, fn)...};
+      return std::array<T, N>{ to_element<T>(l, I, std::forward<Fn>(fn))...};
     }
   }
 
