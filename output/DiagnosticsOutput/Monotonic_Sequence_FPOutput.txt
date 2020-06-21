@@ -2,7 +2,7 @@
 	Empty sequence inequivalent to a single value
 
 	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::maths::monotonic_sequence<int, std::less<int>, std::vector<int, std::allocator<int> > >>]
+	[sequoia::testing::equivalence_checker<sequoia::maths::monotonic_sequence<int, std::less<int>, std::vector<int, std::allocator<int> > > >]
 	With equivalent types:
 	[std::initializer_list<int>]
 	Container size wrong
@@ -17,7 +17,7 @@
 	Non-empty sequence inequivalent to empty list
 
 	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::maths::monotonic_sequence<int, std::less<int>, std::vector<int, std::allocator<int> > >>]
+	[sequoia::testing::equivalence_checker<sequoia::maths::monotonic_sequence<int, std::less<int>, std::vector<int, std::allocator<int> > > >]
 	With equivalent types:
 	[std::initializer_list<int>]
 	Container size wrong
@@ -32,7 +32,7 @@
 	Sequence of size one inequivalent to list with different value
 
 	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::maths::monotonic_sequence<int, std::less<int>, std::vector<int, std::allocator<int> > >>]
+	[sequoia::testing::equivalence_checker<sequoia::maths::monotonic_sequence<int, std::less<int>, std::vector<int, std::allocator<int> > > >]
 	With equivalent types:
 	[std::initializer_list<int>]
 	Element 0 of range incorrect
@@ -355,7 +355,7 @@
 	Inequivalent sequences of size two
 
 	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::maths::monotonic_sequence<int, std::less<int>, std::vector<int, std::allocator<int> > >>]
+	[sequoia::testing::equivalence_checker<sequoia::maths::monotonic_sequence<int, std::less<int>, std::vector<int, std::allocator<int> > > >]
 	With equivalent types:
 	[std::initializer_list<int>]
 	Element 1 of range incorrect
@@ -370,7 +370,7 @@
 	Inequivalent sequences of size two
 
 	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::maths::monotonic_sequence<int, std::less<int>, std::vector<int, std::allocator<int> > >>]
+	[sequoia::testing::equivalence_checker<sequoia::maths::monotonic_sequence<int, std::less<int>, std::vector<int, std::allocator<int> > > >]
 	With equivalent types:
 	[std::initializer_list<int>]
 	Element 0 of range incorrect

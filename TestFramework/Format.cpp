@@ -129,4 +129,17 @@ namespace sequoia::testing
 
     return info;
   }
+
+  void tidy_name(std::string& name)
+  {
+    auto pos{name.find("::__")};
+    while(pos != std::string::npos)
+    {
+      const auto pos2{name.find("::", pos+4)};
+      if(pos2 == std::string::npos) break;
+
+      name.erase(pos, pos2 - pos);
+      pos = name.find("::__", pos);
+    }
+  }
 }

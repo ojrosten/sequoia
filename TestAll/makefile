@@ -1,5 +1,6 @@
-#BUILDROOT  := ../build/native
-BUILDROOT    := ../build/gcc
+#BUILDROOT    := ../build/native
+#BUILDROOT    := ../build/gcc
+BUILDROOT    := ../build/clang
 BUILDDIR   := $(BUILDROOT)/TestAll
 LIBDIRS    := ../Core ../Maths ../Experimental ../Algorithms ../Parsing ../TestFramework ../TestCommon
 UTBUILDDIR := $(BUILDDIR)/Tests
@@ -16,8 +17,9 @@ OUTPUTSUBDIRS := $(addprefix $(OUTPUTDIR)/, $(UTSUBDIRS))
 
 .PHONY: all clean subdirs
 
-CC := g++-9 -fmax-errors=1 -Wno-comment 
+#CC := g++-9 -fmax-errors=1 -Wno-comment 
 #CC := clang++ -ferror-limit=1 -Wno-missing-braces
+CC := /usr/local/opt/llvm/bin/clang++ -ferror-limit=1 -Wno-missing-braces
 
 PREPROP :=
 #PREPROP += -D MINIMAL_GRAPH_TESTS
@@ -27,6 +29,8 @@ CFLAGS := -Wall -Wextra -Wpedantic -std=c++2a -O0 \
 	  $(PREPROP)						   \
 	  $(patsubst %,-I%, $(UTSUBDIRS))      \
       $(patsubst %,-I%, $(LIBSUBDIRS))
+
+CFLAGS += -I/usr/local/opt/llvm/include -I/usr/local/opt/llvm/include/c++/v1/
 
 EXE := $(BUILDDIR)/TestAll.exe
 
@@ -39,8 +43,11 @@ LIBSRCS := $(shell find $(LIBSUBDIRS) -name '*.cpp')
 LIBOBJS := $(addprefix $(UTBUILDDIR)/, $(LIBSRCS:%.cpp=%.o))
 LIBDEPS := $(addprefix $(UTBUILDDIR)/, $(LIBSRCS:%.cpp=%.d))
 
+LDFLAGS :=
+LDFLAGS += -L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib
+
 $(EXE) : $(UTOBJS) $(LIBOBJS)
-	$(CC) $(CFLAGS) $^ -o $@
+	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
 
 $(UTBUILDDIR)/%.o : %.cpp
 	$(CC) $(CFLAGS) -MMD -c $< -o $@

@@ -62,29 +62,24 @@ namespace sequoia::testing
 
   #define LINE(message) report_line(__FILE__, __LINE__, message)
 
-      
+  void tidy_name(std::string& name);
+
   template<class T>
   [[nodiscard]]
   std::string demangle()
   {
     #ifndef _MSC_VER_
       int status;
-      std::string_view name{abi::__cxa_demangle(typeid(T).name(), 0, 0, &status)};
-      if(name.starts_with("std::__"))
-      {
-        name.remove_prefix(5);
-        const auto pos{name.find_first_of("::")};
-        name.remove_prefix(pos + 1);
+      std::string name{abi::__cxa_demangle(typeid(T).name(), 0, 0, &status)};
 
-        return std::string{"std::"}.append(name); 
-      }
-      
-      return std::string{name};
+      tidy_name(name);
+
+      return name;
     #else
       return typeid(T).name();
     #endif
   }
-  
+
   /*! \brief Specialize this struct template to customize the way in which type info is generated for a given class.
       This is particularly useful for class templates where standard de-mangling may be hard to read!
       
