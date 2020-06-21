@@ -141,5 +141,12 @@ namespace sequoia::testing
       name.erase(pos, pos2 - pos);
       pos = name.find("::__", pos);
     }
+
+    pos = name.find(">>");
+    while(pos != std::string::npos)
+    {
+      name.insert(++pos, " ");
+      pos = name.find(">>", pos + 1);
+    }
   }
 }
