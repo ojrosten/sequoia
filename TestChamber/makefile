@@ -19,7 +19,7 @@ OUTPUTSUBDIRS := $(addprefix $(OUTPUTDIR)/, $(UTSUBDIRS))
 
 #CC := g++-9 -fmax-errors=1 -Wno-comment 
 #CC := clang++ -ferror-limit=1 -Wno-missing-braces
-CC := /usr/local/opt/llvm/bin/clang++ -ferror-limit=1 -Wno-missing-braces
+CC := /usr/local/opt/llvm/bin/clang++ -ferror-limit=1
 
 PREPROP :=
 #PREPROP += -D MINIMAL_GRAPH_TESTS
