@@ -114,13 +114,13 @@ namespace sequoia::testing
     if(name.empty())
       throw std::logic_error("Source files should have a non-trivial name!");
 
-    fs::path stripped{};
+    fs::path absolute{get_output_path("TestSummaries")};
     for(auto i{std::next(name.begin())}; i != name.end(); ++i)
     {
-      stripped /= *i;
+      absolute /= *i;
     }
 
-    return get_output_path("TestSummaries") /= stripped;
+    return absolute;
   }
 
   void test_family::summary_writer::to_file(const std::filesystem::path& filename, const log_summary& summary)
