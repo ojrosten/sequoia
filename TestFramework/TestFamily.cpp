@@ -24,8 +24,10 @@ namespace sequoia::testing
     bool diagnosticsToWrite{};    
     summary_writer writer{};
 
+    namespace fs = std::filesystem;
+    
     auto summarizer{
-      [&summaries, &diagnosticsToWrite, &writer](const log_summary& summary, std::string_view filename){
+      [&summaries, &diagnosticsToWrite, &writer](const log_summary& summary, const fs::path& filename){
         summaries.push_back(std::move(summary));
 
         if(!summary.diagnostics_output().empty()) diagnosticsToWrite = true;
@@ -44,7 +46,7 @@ namespace sequoia::testing
     }
     else
     {
-      using data = std::pair<log_summary, std::string>;
+      using data = std::pair<log_summary, std::filesystem::path>;
       std::vector<std::future<data>> results{};
       results.reserve(m_Tests.size());
       for(auto& pTest : m_Tests)
@@ -65,7 +67,7 @@ namespace sequoia::testing
     {
       if(auto filename{diagnostics_filename()}; !filename.empty())
       {
-        if(std::ofstream file{filename.data()})
+        if(std::ofstream file{filename})
         {           
           for(const auto& s : summaries)
           {           
@@ -82,33 +84,46 @@ namespace sequoia::testing
     return {steady_clock::now() - time, std::move(summaries)};
   }  
 
-  std::string test_family::diagnostics_filename() const
+  std::filesystem::path test_family::diagnostics_filename() const
   {
-    std::string name{m_Name};
-    for(auto& c : name) if(c == ' ') c = '_';
+    auto make_name{
+      [](std::string n){
+        for(auto& c : n) if(c == ' ') c = '_';
 
-    // TO DO: use filesystem
-    
-    return std::string{"../output/DiagnosticsOutput/"}.append(std::move(name)).append("_FPOutput.txt");
+        return n.append("_FPOutput.txt");
+      }
+    };
+
+    return get_output_path("DiagnosticsOutput").append(make_name(m_Name));
   }
 
-  std::string test_family::test_summary_filename(const test& t, const bool writeFiles)
+  std::filesystem::path test_family::get_output_path(std::string_view subDirectory)
+  {    
+    namespace fs = std::filesystem;
+    return fs::current_path().parent_path().append("output").append(subDirectory);
+  }
+     
+
+  std::filesystem::path test_family::test_summary_filename(const test& t, const bool writeFiles)
   {
+    namespace fs = std::filesystem;
+    
     if(!writeFiles) return "";
-    
-    // TO DO: use filesystem
 
-    std::string name{t.source_file_name()};    
-    name.erase(name.find_last_of('.') + 1);
-    name.append("txt");
-    
-    const auto pos{name.find_first_of('/')+1};
-    name = name.substr(pos);
+    const auto name{fs::path{t.source_file_name()}.replace_extension(".txt")};
+    if(name.empty())
+      throw std::logic_error("Source files should have a non-trivial name!");
 
-    return std::string{"../output/TestSummaries/"}.append(name);
+    fs::path stripped{};
+    for(auto i{std::next(name.begin())}; i != name.end(); ++i)
+    {
+      stripped /= *i;
+    }
+
+    return get_output_path("TestSummaries") /= stripped;
   }
 
-  void test_family::summary_writer::to_file(std::string_view filename, const log_summary& summary)
+  void test_family::summary_writer::to_file(const std::filesystem::path& filename, const log_summary& summary)
   {
     if(filename.empty()) return;
     
@@ -119,10 +134,10 @@ namespace sequoia::testing
     }
     else
     {
-      m_Record.insert(std::string{filename});
+      m_Record.insert(filename);
     }
 
-    if(std::ofstream file{filename.data(), mode})
+    if(std::ofstream file{filename, mode})
     {
       file << summarize(summary, log_verbosity::failure_messages, "", "");
     }

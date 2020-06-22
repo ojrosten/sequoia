@@ -17,6 +17,7 @@
 #include <vector>
 #include <future>
 #include <set>
+#include <filesystem>
 
 namespace sequoia::testing
 {
@@ -77,10 +78,13 @@ namespace sequoia::testing
     std::string m_Name{};
 
     [[nodiscard]]
-    std::string diagnostics_filename() const;
+    std::filesystem::path diagnostics_filename() const;
 
     [[nodiscard]]
-    static std::string test_summary_filename(const test& t, const bool writeFiles);
+    static std::filesystem::path get_output_path(std::string_view subDirectory);
+
+    [[nodiscard]]
+    static std::filesystem::path test_summary_filename(const test& t, const bool writeFiles);
 
     static void write_summary_to_file(const log_summary& summary, std::set<std::string>& record);
 
@@ -96,9 +100,9 @@ namespace sequoia::testing
     class summary_writer
     {
     public:
-      void to_file(std::string_view filename, const log_summary& summary);
+      void to_file(const std::filesystem::path& filename, const log_summary& summary);
     private:
-      std::set<std::string, std::less<>> m_Record{};
+      std::set<std::filesystem::path> m_Record{};
     };
   };
 
