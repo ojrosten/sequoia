@@ -95,14 +95,7 @@ namespace sequoia::testing
     };
 
     return get_output_path("DiagnosticsOutput").append(make_name(m_Name));
-  }
-
-  std::filesystem::path test_family::get_output_path(std::string_view subDirectory)
-  {    
-    namespace fs = std::filesystem;
-    return fs::current_path().parent_path().append("output").append(subDirectory);
-  }
-     
+  }     
 
   std::filesystem::path test_family::test_summary_filename(const test& t, const bool writeFiles)
   {
@@ -145,6 +138,12 @@ namespace sequoia::testing
     {
       throw std::runtime_error{std::string{"Unable to open summaries file "}.append(filename).append(" for writing\n")};
     }
+  }
+
+  std::filesystem::path get_output_path(std::string_view subDirectory)
+  {    
+    namespace fs = std::filesystem;
+    return fs::current_path().parent_path().append("output").append(subDirectory);
   }
 
   [[nodiscard]]

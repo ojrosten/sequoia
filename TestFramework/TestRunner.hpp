@@ -88,9 +88,10 @@ namespace sequoia::testing
   private:    
     struct nascent_test
     {
-      nascent_test(std::string dir, std::string qualifiedName);
-      
-      std::string directory, qualified_class_name, class_name;
+      nascent_test(std::filesystem::path dir, std::string qualifiedName);
+
+      std::filesystem::path directory;
+      std::string qualified_class_name, class_name;
     };    
 
     enum class file_comparison {failed, same, different};    
@@ -141,9 +142,6 @@ namespace sequoia::testing
     static std::string stringify(concurrency_mode mode);
 
     static void replace_all(std::string& text, std::string_view from, const std::string& to);
-
-    [[nodiscard]]
-    static bool file_exists(const std::string& path) noexcept;
 
     template<class Iter>
     static void create_files(Iter beginFiles, Iter endFiles, std::string_view message, const bool overwrite);

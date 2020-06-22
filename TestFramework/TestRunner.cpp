@@ -92,12 +92,6 @@ namespace sequoia::testing
     }
   }
 
-  bool test_runner::file_exists(const std::string& path) noexcept
-  {
-    // TO DO: use filesystem when available!
-    return static_cast<bool>(std::ifstream{path});    
-  }
-
   auto test_runner::compare_files(std::string_view referenceFile, std::string_view generatedFile) -> file_comparison
   {    
     std::ifstream file1{referenceFile.data()}, file2{generatedFile.data()};
@@ -158,7 +152,7 @@ namespace sequoia::testing
     }
   }
 
-  test_runner::nascent_test::nascent_test(std::string dir, std::string qualifiedName)
+  test_runner::nascent_test::nascent_test(std::filesystem::path dir, std::string qualifiedName)
     : directory{std::move(dir)}
     , qualified_class_name{std::move(qualifiedName)}
   {
@@ -230,10 +224,14 @@ namespace sequoia::testing
   }
 
   void test_runner::run_diagnostics()
-  {
-    const std::array<nascent_test, 1> diagnosticFiles{nascent_test{"../output/UnitTestCreationDiagnostics", "utilities::iterator"}};
+  {    
+    const std::array<nascent_test, 1>
+      diagnosticFiles{nascent_test{get_output_path("UnitTestCreationDiagnostics"), "utilities::iterator"}};
+
     create_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(),  "Running unit test creation tool diagnostics...\n", true);
+
     compare_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(), "  Comparing files against reference files...\n");
+
     false_positive_check(diagnosticFiles.front());
   }
 
@@ -346,16 +344,28 @@ namespace sequoia::testing
 
   void test_runner::create_file(const nascent_test& data, std::string_view partName, const bool overwrite)
   {
-    const auto outputPath{std::string{data.directory + "/" + to_camel_case(data.class_name)}.append(partName)};
-    if(!overwrite && file_exists(outputPath))
+    namespace fs = std::filesystem;
+    
+    const fs::directory_entry
+      outputFile{(data.directory / to_camel_case(data.class_name)) += partName};
+    if(!overwrite && outputFile.exists())
     {
-      std::cout << warning(outputPath).append(" already exists, so not created\n");
+      std::cout << warning(outputFile.path().string()).append(" already exists, so not created\n");
       return;
     }
+
+    auto makePath{
+      [partName](){
+        return fs::current_path().parent_path()
+          .append("aux_files")
+          .append("UnitTestCodeTemplates")
+          .append("CodeTemplates")
+          .append("MyClass") += partName;
+      }
+    };
     
     std::string text{};
-    if(auto path{std::string{"../aux_files/UnitTestCodeTemplates/CodeTemplates/MyClass"}.append(partName)};
-       std::ifstream ifile{path})
+    if(const auto inputPath{makePath()}; std::ifstream ifile{inputPath})
     {
       std::stringstream buffer{};
       buffer << ifile.rdbuf();
@@ -363,7 +373,7 @@ namespace sequoia::testing
     }
     else
     {
-      std::cout << warning("unable to open ").append(path);
+      std::cout << warning("unable to open ").append(inputPath.string());
     }
         
     if(!text.empty())
@@ -372,14 +382,14 @@ namespace sequoia::testing
       replace_all(text, "my_class", data.class_name);
       replace_all(text, "MyClass", to_camel_case(data.class_name));
 
-      if(std::ofstream ofile{outputPath})
+      if(std::ofstream ofile{outputFile})
       {
-        std::cout << "    Creating file " << outputPath << '\n';
+        std::cout << "    Creating file " << outputFile.path() << '\n';
         ofile << text;
       }
       else
       {
-        std::cout << warning("unable to create file ").append(outputPath);
+        std::cout << warning("unable to create file ").append(outputFile.path().string());
       }
     }
   }

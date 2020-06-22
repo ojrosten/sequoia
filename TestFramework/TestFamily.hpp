@@ -81,9 +81,6 @@ namespace sequoia::testing
     std::filesystem::path diagnostics_filename() const;
 
     [[nodiscard]]
-    static std::filesystem::path get_output_path(std::string_view subDirectory);
-
-    [[nodiscard]]
     static std::filesystem::path test_summary_filename(const test& t, const bool writeFiles);
 
     static void write_summary_to_file(const log_summary& summary, std::set<std::string>& record);
@@ -104,7 +101,10 @@ namespace sequoia::testing
     private:
       std::set<std::filesystem::path> m_Record{};
     };
-  };
+  };  
+
+  [[nodiscard]]
+  std::filesystem::path get_output_path(std::string_view subDirectory);
 
   [[nodiscard]]
   std::string summarize(const test_family::summary& summary, const log_verbosity suppression, std::string_view indent_0, std::string_view indent_1);
