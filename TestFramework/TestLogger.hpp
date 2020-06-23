@@ -27,6 +27,7 @@
 #include <array>
 #include <chrono>
 #include <functional>
+#include <filesystem>
 
 namespace sequoia::testing
 {
@@ -36,13 +37,12 @@ namespace sequoia::testing
       happened.
    */
   class output_manager
-  {    
-    // TO DO: use std::filesystem when available
-    inline static std::string st_RecoveryFile{};
+  {
+    inline static std::filesystem::path st_RecoveryFile{};
   public:
-    static void recovery_file(std::string_view recoveryFile) { st_RecoveryFile = std::string{recoveryFile}; }
+    static void recovery_file(const std::filesystem::path& recoveryFile) { st_RecoveryFile = std::string{recoveryFile}; }
 
-    static std::string_view recovery_file() noexcept { return st_RecoveryFile; }
+    static const std::filesystem::path& recovery_file() noexcept { return st_RecoveryFile; }
   };
 
   /*! \brief Specifies whether tests are run as standard tests or in false postive/negative mode .
@@ -92,7 +92,7 @@ namespace sequoia::testing
 
         if(auto file{output_manager::recovery_file()}; !file.empty())
         {
-          if(std::ofstream of{file.data()})
+          if(std::ofstream of{file})
             of << "Check started:\n" << message << "\n";
         }
       }
@@ -135,7 +135,7 @@ namespace sequoia::testing
 
         if(auto file{output_manager::recovery_file()}; !file.empty())
         {
-          if(std::ofstream of{file.data(), std::ios_base::app})
+          if(std::ofstream of{file, std::ios_base::app})
             of << "Check ended\n";
         }
       }
@@ -222,7 +222,7 @@ namespace sequoia::testing
       m_FailureMessages.append(message).append("\n");
       if(auto file{output_manager::recovery_file()}; !file.empty())
       {
-        if(std::ofstream of{file.data(), std::ios_base::app})
+        if(std::ofstream of{file, std::ios_base::app})
           of << "\nCritical Failure:\n" << message << "\n";
       }
     }

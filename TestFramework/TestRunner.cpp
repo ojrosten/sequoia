@@ -215,11 +215,11 @@ namespace sequoia::testing
                 const int i{std::clamp(std::stoi(args.front()), 0, 2)};
                 m_ConcurrencyMode = static_cast<concurrency_mode>(i);
               }, {"depth [0-2]"}, {"-ad"}} },
-          {"--verbose",  {[this](const param_list&) { m_Verbose    = true; },  {}, {"-v"} } },          
+          {"--verbose",  {[this](const param_list&) { m_Verbose    = true;  }, {}, {"-v"} } },          
           {"--nofiles",  {[this](const param_list&) { m_WriteFiles = false; }, {}, {"-n"} } },
-          {"--pause",    {[this](const param_list&) { m_Pause      = true; },  {}, {"-p"} } },
+          {"--pause",    {[this](const param_list&) { m_Pause      = true;  }, {}, {"-p"} } },
           {"--recovery", {[]    (const param_list&) {
-                output_manager::recovery_file("../output/Recovery/Recovery.txt"); }, {}, {"-r"}} }
+                output_manager::recovery_file(get_output_path("Recovery").append("Recovery.txt")); }, {}, {"-r"}} }
         })
     };
     
