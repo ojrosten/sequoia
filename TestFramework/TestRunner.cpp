@@ -205,7 +205,7 @@ namespace sequoia::testing
                 m_SelectedSources.emplace(args.front(), false);
               },         {"source_file_name"}, {"s"}} },
           {"create",     {[this](const param_list& args) {
-                m_NewFiles.push_back(nascent_test{args[0], args[1]});
+                m_NascentTests.push_back(nascent_test{args[0], args[1]});
               }, {"class_name", "directory"}, {"c"} } },
           {"--async",    {[this](const param_list&) {
                 if(m_ConcurrencyMode == concurrency_mode::serial)
@@ -318,47 +318,47 @@ namespace sequoia::testing
                        
   void test_runner::execute()
   {
-    create_files(m_NewFiles.cbegin(), m_NewFiles.cend(), "Creating files...\n", false);
+    create_files(m_NascentTests.cbegin(), m_NascentTests.cend(), "Creating files...\n", false);
     run_tests();
   }
 
   template<class Iter>
-  void test_runner::create_files(Iter beginFiles, Iter endFiles, std::string_view message, const bool overwrite)
+  void test_runner::create_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message, const bool overwrite)
   {    
-    if(std::distance(beginFiles, endFiles))
+    if(std::distance(beginNascentTests, endNascentTests))
     {
       std::cout << message;
 
-      while(beginFiles != endFiles)
+      while(beginNascentTests != endNascentTests)
       {
-        const auto& data{*beginFiles};
+        const auto& data{*beginNascentTests};
         for(const auto& stub : st_TestNameStubs)
         {
           create_file(data, stub, overwrite);
         }
 
-        ++beginFiles;
+        ++beginNascentTests;
       }
     }
   }
 
   template<class Iter>
-  void test_runner::compare_files(Iter beginFiles, Iter endFiles, std::string_view message)
+  void test_runner::compare_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message)
   {
-    if(std::distance(beginFiles, endFiles))
+    if(std::distance(beginNascentTests, endNascentTests))
     {
       std::cout << message;
 
-      while(beginFiles != endFiles)
+      while(beginNascentTests != endNascentTests)
       {
-        const auto& data{*beginFiles};
+        const auto& data{*beginNascentTests};
 
         for(const auto& stub : st_TestNameStubs)
         {
           compare_files(data, stub);
         }
         
-        ++beginFiles;
+        ++beginNascentTests;
       }
 
       static_assert(st_TestNameStubs.size() > 1, "Insufficient data for false-positive test");      
@@ -422,7 +422,7 @@ namespace sequoia::testing
     using namespace std::chrono;
     const auto time{steady_clock::now()};
 
-    if(!m_Families.empty() && (m_NewFiles.empty() || !m_SelectedFamilies.empty()))
+    if(!m_Families.empty() && (m_NascentTests.empty() || !m_SelectedFamilies.empty()))
     {
       std::cout << "Running unit tests...\n";
       log_summary summary{};

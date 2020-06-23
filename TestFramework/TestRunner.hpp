@@ -98,7 +98,7 @@ namespace sequoia::testing
 
     std::vector<test_family> m_Families{};
     std::map<std::string, bool, std::less<>> m_SelectedFamilies{}, m_SelectedSources{};
-    std::vector<nascent_test> m_NewFiles{};
+    std::vector<nascent_test> m_NascentTests{};
     
     bool m_Verbose{}, m_Pause{}, m_WriteFiles{true};
 
@@ -144,14 +144,14 @@ namespace sequoia::testing
     static void replace_all(std::string& text, std::string_view from, const std::string& to);
 
     template<class Iter>
-    static void create_files(Iter beginFiles, Iter endFiles, std::string_view message, const bool overwrite);
+    static void create_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message, const bool overwrite);
 
     static void create_file(const nascent_test& data, std::string_view partName, const bool overwrite);
 
     static auto compare_files(const std::filesystem::path& referenceFile, const std::filesystem::path& generatedFile) -> file_comparison;
 
     template<class Iter>
-    static void compare_files(Iter beginFiles, Iter endFiles, std::string_view message);
+    static void compare_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message);
 
     static void compare_files(const nascent_test& data, std::string_view partName);
 
