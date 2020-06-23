@@ -92,11 +92,11 @@ namespace sequoia::testing
     }
   }
 
-  auto test_runner::compare_files(std::string_view referenceFile, std::string_view generatedFile) -> file_comparison
+  auto test_runner::compare_files(const std::filesystem::path& referenceFile, const std::filesystem::path& generatedFile) -> file_comparison
   {    
-    std::ifstream file1{referenceFile.data()}, file2{generatedFile.data()};
-    if(!file1) warning("unable to open file ").append(referenceFile).append("\n");
-    if(!file2) warning("unable to open file ").append(generatedFile).append("\n");
+    std::ifstream file1{referenceFile}, file2{generatedFile};
+    if(!file1) warning("unable to open file ").append(referenceFile.string()).append("\n");
+    if(!file2) warning("unable to open file ").append(generatedFile.string()).append("\n");
     
     if(file1 && file2)
     {
@@ -112,8 +112,17 @@ namespace sequoia::testing
 
   void test_runner::compare_files(const nascent_test& data, std::string_view partName)
   {
-    const auto referenceFile{std::string{"../output/UnitTestCreationDiagnostics/" + to_camel_case(data.class_name)}.append(partName)};
-    const auto generatedFile{std::string{"../aux_files/UnitTestCodeTemplates/ReferenceExamples/" + to_camel_case(data.class_name)}.append(partName)};
+    namespace fs = std::filesystem;
+
+    const auto className{to_camel_case(data.class_name).append(partName)};
+
+    const auto referenceFile{
+      get_aux_path("UnitTestCodeTemplates").append("ReferenceExamples").append(className)
+    };
+    
+    const auto generatedFile{
+      get_output_path("UnitTestCreationDiagnostics").append(className)
+    };
 
     switch(compare_files(referenceFile, generatedFile))
     {
@@ -121,7 +130,11 @@ namespace sequoia::testing
       std::cout << "    passed\n";
       break;
     case file_comparison::different:
-      std::cout << warning("Contents of\n  " ).append(generatedFile).append("\n  no longer matches\n  ").append(referenceFile).append("\n");
+      std::cout << warning("Contents of\n  " )
+        .append(generatedFile.string())
+        .append("\n  no longer matches\n  ")
+        .append(referenceFile.string())
+        .append("\n");
       break;
     case file_comparison::failed:
       std::cout << warning("Unable to perform file comparison\n");
@@ -134,14 +147,24 @@ namespace sequoia::testing
     static_assert(st_TestNameStubs.size() > 1, "Insufficient data for false-positive test");
 
     std::cout << "  False-positive test for file comparison\n";
+
+    auto partPath{
+      [&data](){
+        return get_output_path("UnitTestCreationDiagnostics").append(to_camel_case(data.class_name));
+      }
+    };
     
-    const auto referenceFile1{std::string{"../output/UnitTestCreationDiagnostics/" + to_camel_case(data.class_name)}.append(st_TestNameStubs[0])};
-    const auto referenceFile2{std::string{"../output/UnitTestCreationDiagnostics/" + to_camel_case(data.class_name)}.append(st_TestNameStubs[1])};
+    const auto referenceFile1{partPath().concat(st_TestNameStubs[0])};
+    const auto referenceFile2{partPath().concat(st_TestNameStubs[1])};
 
     switch(compare_files(referenceFile1, referenceFile2))
     {
     case file_comparison::same:
-      std::cout << warning("Contents of\n  " ).append(referenceFile1).append("\n  spuriously comparing equal to\n  ").append(referenceFile2).append("\n");    
+      std::cout << warning("Contents of\n  " )
+        .append(referenceFile1)
+        .append("\n  spuriously comparing equal to\n  ")
+        .append(referenceFile2)
+        .append("\n");    
       break;
     case file_comparison::different:
       std::cout << "    passed\n";
@@ -435,5 +458,11 @@ namespace sequoia::testing
     }
 
     check_for_missing_tests();
+  }
+
+  std::filesystem::path get_aux_path(std::string_view subDirectory)
+  {    
+    namespace fs = std::filesystem;
+    return fs::current_path().parent_path().append("aux_files").append(subDirectory);
   }
 }

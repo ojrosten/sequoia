@@ -148,7 +148,7 @@ namespace sequoia::testing
 
     static void create_file(const nascent_test& data, std::string_view partName, const bool overwrite);
 
-    static auto compare_files(std::string_view referenceFile, std::string_view generatedFile) -> file_comparison;
+    static auto compare_files(const std::filesystem::path& referenceFile, const std::filesystem::path& generatedFile) -> file_comparison;
 
     template<class Iter>
     static void compare_files(Iter beginFiles, Iter endFiles, std::string_view message);
@@ -159,4 +159,7 @@ namespace sequoia::testing
     
     static void argument_processing_diagnostics();
   };
+
+  [[nodiscard]]
+  std::filesystem::path get_aux_path(std::string_view subDirectory);
 }
