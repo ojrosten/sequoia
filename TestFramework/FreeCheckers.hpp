@@ -250,16 +250,23 @@ namespace sequoia::testing
       if(!(prediction == value))
       {
         auto message{operator_message(info, "==", "false")};
+        
+        std::string advice{};
+        if constexpr(std::is_invocable_r_v<std::string, Advisor, T, T>)
+        {
+          advice = advisor(value, prediction);
+        }
+
         if constexpr(!delegate)
         {
-          std::string advice{};
-          if constexpr(std::is_invocable_r_v<std::string, Advisor, T, T>)
-          {
-            advice = advisor(value, prediction);
-          }
           
           append_indented(message, prediction_message(to_string(value), to_string(prediction), advice));
         }
+        else
+        {
+          append_indented(message, advice);
+        }
+
         logger.log_failure(std::move(message));
       }
     }
