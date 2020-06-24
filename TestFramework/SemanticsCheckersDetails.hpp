@@ -146,7 +146,7 @@ namespace sequoia::testing::impl
   //================================ swap ================================//
 
   template<test_mode Mode, class Actions, class T, class... Args>
-  void do_check_swap(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, T&& x, T& y, const T& xClone, const T& yClone, const Args&... args)
+  void do_check_swap(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, const Args&... args)
   {
     using std::swap;
     swap(x, y);
@@ -161,9 +161,9 @@ namespace sequoia::testing::impl
   }
 
   template<test_mode Mode, class Actions, class T>
-  void check_swap(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, T&& x, T& y, const T& xClone, const T& yClone)
+  void check_swap(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone)
   {
-    do_check_swap(description, sentry, actions, std::forward<T>(x), y, xClone, yClone);
+    do_check_swap(description, sentry, actions, std::move(x), std::move(y), xClone, yClone);
   }
 
   //================================  move construction ================================ //

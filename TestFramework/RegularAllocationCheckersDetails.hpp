@@ -54,9 +54,9 @@ namespace sequoia::testing::impl
        may be acquired before proceeding.
    */
   template<test_mode Mode, class Actions, class Container, class... Allocators, class... Predictions>
-  void check_copy_assign(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, Container& z, const Container& y, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
+  bool check_copy_assign(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, Container& z, const Container& y, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
   {
-    do_check_copy_assign(description, sentry, actions, z, y, dual_allocation_checker{checkers.info(), z, y}...);   
+    return do_check_copy_assign(description, sentry, actions, z, y, dual_allocation_checker{checkers.info(), z, y}...);   
   }
 
   template<test_mode Mode, class Container, class Mutator, class... Allocators, class... Predictions>
@@ -83,9 +83,9 @@ namespace sequoia::testing::impl
   }
 
   template<test_mode Mode, class Actions, class Container, class Mutator, class... Allocators, class... Predictions>
-  void check_swap(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, Container&& x, Container& y, const Container& xClone, const Container& yClone, Mutator yMutator, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
+  void check_swap(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, Container&& x, Container&& y, const Container& xClone, const Container& yClone, Mutator yMutator, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
   {
-    do_check_swap(description, sentry, actions, std::forward<Container>(x), y, xClone, yClone, std::move(yMutator), dual_allocation_checker{checkers.info(), x, y}...);
+    do_check_swap(description, sentry, actions, std::move(x), std::move(y), xClone, yClone, std::move(yMutator), dual_allocation_checker{checkers.info(), x, y}...);
   }
 
   /// Unpacks the tuple and feeds to the overload of check_semantics defined in RegularCheckersDetails.hpp

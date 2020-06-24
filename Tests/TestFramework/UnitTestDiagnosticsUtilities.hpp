@@ -92,10 +92,7 @@ namespace sequoia::testing
     std::vector<T, Allocator> x{};
 
     [[nodiscard]]
-    friend bool operator==(const broken_inequality& lhs, const broken_inequality& rhs) noexcept
-    {
-      return lhs.x != rhs.x;
-    }
+    friend bool operator==(const broken_inequality& lhs, const broken_inequality& rhs) noexcept = default;
 
     [[nodiscard]]
     friend bool operator!=(const broken_inequality& lhs, const broken_inequality& rhs) noexcept

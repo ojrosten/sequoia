@@ -381,7 +381,7 @@
 	Broken inequality
 
 	--Regular Semantics--
-	Equality operator is inconsistent
+	Inequality operator is inconsistent
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -398,24 +398,6 @@
 	operator== returned false
 	Obtained : 
 	Predicted: 1 
-
-	Inconsistent move assignment (from y)
-	[sequoia::testing::broken_copy<int, std::allocator<int> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 2 
-
-	Inconsistent Swap (y)
-	[sequoia::testing::broken_copy<int, std::allocator<int> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 1 
-
-	Inconsistent Swap (x)
-	[sequoia::testing::broken_copy<int, std::allocator<int> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 2 
 
 	=======================================
 
@@ -436,12 +418,6 @@
 
 	--Regular Semantics--
 	Inconsistent copy assignment (from y)
-	[sequoia::testing::broken_copy_assignment<int, std::allocator<int> >]
-	operator== returned false
-	Obtained : 1 
-	Predicted: 2 
-
-	Inconsistent move construction
 	[sequoia::testing::broken_copy_assignment<int, std::allocator<int> >]
 	operator== returned false
 	Obtained : 1 
@@ -774,24 +750,24 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-	Fast Task duration: 0.00131549s +- 4 * 5.91858e-05
-	Slow Task duration: 0.00131162s +- 4 * 6.05398e-05 [0.997055; (2, 2)]
+	Fast Task duration: 0.00138814s +- 4 * 1.15018e-05
+	Slow Task duration: 0.00134814s +- 4 * 0.000133041 [0.971189; (2, 2)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-	Fast Task duration: 0.00125461s +- 4 * 0.000146488
-	Slow Task duration: 0.00124859s +- 4 * 0.000108977 [0.995206; (2, 3)]
+	Fast Task duration: 0.00129309s +- 4 * 9.56217e-05
+	Slow Task duration: 0.00127225s +- 4 * 7.69746e-05 [0.983882; (2, 3)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-	Fast Task duration: 0.00125963s +- 4 * 0.000134574
-	Slow Task duration: 0.00483864s +- 4 * 0.000433087 [3.84133; (2, 2.5)]
+	Fast Task duration: 0.00133731s +- 4 * 0.00013258
+	Slow Task duration: 0.00495788s +- 4 * 0.000416007 [3.70735; (2, 2.5)]
 
 	=======================================
 
@@ -873,7 +849,7 @@
 	Broken inequality
 
 	--Regular Semantics--
-	Equality operator is inconsistent
+	Inequality operator is inconsistent
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -907,7 +883,7 @@
 	Unexpected allocation detected for copy construction (x)
 	[int]
 	operator== returned false
-	Obtained : 2
+	Obtained : 3
 	Predicted: 1
 
 	Unexpected allocation detected for copy assignment (y)
@@ -922,43 +898,11 @@
 	Broken copy
 
 	--Regular Semantics--
-	[shared_counting_allocator<
-		int,
-		Propagate on copy assignment = false,
-		Propagate on move assignment = false,
-		Propagate on swap = false
-	>]
-	Unexpected allocation detected for copy construction (x)
-	[int]
-	operator== returned false
-	Obtained : -1
-	Predicted: 1
-	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
-
-	Unexpected allocation detected for copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : -1
-	Predicted: 1
-	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
-
 	Inconsistent copy constructor (x)
 	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
 	operator== returned false
 	Obtained : 
 	Predicted: 1 
-
-	Inconsistent move assignment (from y)
-	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 5 6 
-
-	Unexpected allocation detected for move assignment (x)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
 
 	=======================================
 
@@ -1009,18 +953,6 @@
 	Predicted: 0
 	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
-	Inconsistent para-move construction
-	[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 5 6 
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
@@ -1067,24 +999,6 @@
 	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
 	operator== returned false
 	Obtained : 1 
-	Predicted: 5 6 
-
-	Unexpected allocation detected for copy assignment (x)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
-	Inconsistent move construction
-	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
-	operator== returned false
-	Obtained : 1 
-	Predicted: 5 6 
-
-	Inconsistent copy assignment (from mutated y)
-	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
-	operator== returned false
-	Obtained : 5 6 1 
 	Predicted: 5 6 
 
 	=======================================
@@ -1142,13 +1056,6 @@
 	Obtained : false
 	Predicted: true
 
-	Mutation is not doing anything following move
-	allocation assignment
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 154
@@ -1156,13 +1063,6 @@
 
 	--Regular Semantics--
 	Mutation is not doing anything following copy assignment/ broken value semantics
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
-	Mutation is not doing anything following move
-	allocation assignment
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -1284,18 +1184,6 @@
 	Obtained : 1
 	Predicted: 0
 
-	Unexpected allocation detected for para-copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 232
@@ -1339,11 +1227,6 @@
 	Obtained : 1
 	Predicted: 0
 
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 253
@@ -1375,18 +1258,6 @@
 		Propagate on swap = false
 	>]
 	Unexpected allocation detected for copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for para-copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for para-move construction (y)
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -1435,11 +1306,6 @@
 	Obtained : 0
 	Predicted: 1
 
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 52
@@ -1458,7 +1324,7 @@
 	Broken inequality
 
 	--Regular Semantics--
-	Equality operator is inconsistent
+	Inequality operator is inconsistent
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -1492,7 +1358,7 @@
 	Unexpected allocation detected for copy construction (x)
 	[int]
 	operator== returned false
-	Obtained : 2
+	Obtained : 3
 	Predicted: 1
 
 	Unexpected allocation detected for copy assignment (y)
@@ -1519,61 +1385,11 @@
 	Broken copy
 
 	--Regular Semantics--
-	[shared_counting_allocator<
-		int,
-		Propagate on copy assignment = false,
-		Propagate on move assignment = false,
-		Propagate on swap = true
-	>]
-	Unexpected allocation detected for copy construction (x)
-	[int]
-	operator== returned false
-	Obtained : -1
-	Predicted: 1
-	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
-
-	Unexpected allocation detected for copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : -1
-	Predicted: 1
-	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
-
 	Inconsistent copy constructor (x)
 	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
 	operator== returned false
 	Obtained : 
 	Predicted: 1 
-
-	Inconsistent move assignment (from y)
-	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 5 6 
-
-	Unexpected allocation detected for move assignment (x)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
-	Inconsistent Swap (y)
-	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 1 
-
-	Inconsistent Swap (x)
-	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 5 6 
-
-	Mutation after swap pre-condition violated
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
 
 	=======================================
 
@@ -1624,18 +1440,6 @@
 	Predicted: 0
 	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
-	Inconsistent para-move construction
-	[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 5 6 
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
@@ -1682,24 +1486,6 @@
 	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
 	operator== returned false
 	Obtained : 1 
-	Predicted: 5 6 
-
-	Unexpected allocation detected for copy assignment (x)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
-	Inconsistent move construction
-	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
-	operator== returned false
-	Obtained : 1 
-	Predicted: 5 6 
-
-	Inconsistent copy assignment (from mutated y)
-	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
-	operator== returned false
-	Obtained : 5 6 1 
 	Predicted: 5 6 
 
 	=======================================
@@ -1763,13 +1549,6 @@
 	Obtained : false
 	Predicted: true
 
-	Mutation is not doing anything following move
-	allocation assignment
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 154
@@ -1777,13 +1556,6 @@
 
 	--Regular Semantics--
 	Mutation is not doing anything following copy assignment/ broken value semantics
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
-	Mutation is not doing anything following move
-	allocation assignment
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -1905,18 +1677,6 @@
 	Obtained : 1
 	Predicted: 0
 
-	Unexpected allocation detected for para-copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 232
@@ -1966,11 +1726,6 @@
 	Obtained : 1
 	Predicted: 0
 
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 253
@@ -2002,18 +1757,6 @@
 		Propagate on swap = true
 	>]
 	Unexpected allocation detected for copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for para-copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for para-move construction (y)
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -2068,11 +1811,6 @@
 	Obtained : 0
 	Predicted: 1
 
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 52
@@ -2091,7 +1829,7 @@
 	Broken inequality
 
 	--Regular Semantics--
-	Equality operator is inconsistent
+	Inequality operator is inconsistent
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -2125,7 +1863,7 @@
 	Unexpected allocation detected for copy construction (x)
 	[int]
 	operator== returned false
-	Obtained : 2
+	Obtained : 3
 	Predicted: 1
 
 	Unexpected allocation detected for copy assignment (y)
@@ -2146,37 +1884,11 @@
 	Broken copy
 
 	--Regular Semantics--
-	[shared_counting_allocator<
-		int,
-		Propagate on copy assignment = false,
-		Propagate on move assignment = true,
-		Propagate on swap = false
-	>]
-	Unexpected allocation detected for copy construction (x)
-	[int]
-	operator== returned false
-	Obtained : -1
-	Predicted: 1
-	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
-
-	Unexpected allocation detected for copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : -1
-	Predicted: 1
-	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
-
 	Inconsistent copy constructor (x)
 	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
 	operator== returned false
 	Obtained : 
 	Predicted: 1 
-
-	Inconsistent move assignment (from y)
-	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 5 6 
 
 	=======================================
 
@@ -2227,18 +1939,6 @@
 	Predicted: 0
 	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
-	Inconsistent para-move construction
-	[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 5 6 
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
@@ -2285,24 +1985,6 @@
 	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
 	operator== returned false
 	Obtained : 1 
-	Predicted: 5 6 
-
-	Unexpected allocation detected for copy assignment (x)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
-	Inconsistent move construction
-	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
-	operator== returned false
-	Obtained : 1 
-	Predicted: 5 6 
-
-	Inconsistent copy assignment (from mutated y)
-	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
-	operator== returned false
-	Obtained : 5 6 1 
 	Predicted: 5 6 
 
 	=======================================
@@ -2360,13 +2042,6 @@
 	Obtained : false
 	Predicted: true
 
-	Mutation is not doing anything following move
-	allocation assignment
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 154
@@ -2374,13 +2049,6 @@
 
 	--Regular Semantics--
 	Mutation is not doing anything following copy assignment/ broken value semantics
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
-	Mutation is not doing anything following move
-	allocation assignment
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -2502,18 +2170,6 @@
 	Obtained : 1
 	Predicted: 0
 
-	Unexpected allocation detected for para-copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 232
@@ -2551,11 +2207,6 @@
 	Obtained : 1
 	Predicted: 0
 
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 253
@@ -2587,18 +2238,6 @@
 		Propagate on swap = false
 	>]
 	Unexpected allocation detected for copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for para-copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for para-move construction (y)
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -2641,11 +2280,6 @@
 	Obtained : 0
 	Predicted: 1
 
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 52
@@ -2664,7 +2298,7 @@
 	Broken inequality
 
 	--Regular Semantics--
-	Equality operator is inconsistent
+	Inequality operator is inconsistent
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -2698,7 +2332,7 @@
 	Unexpected allocation detected for copy construction (x)
 	[int]
 	operator== returned false
-	Obtained : 2
+	Obtained : 3
 	Predicted: 1
 
 	Unexpected allocation detected for copy assignment (y)
@@ -2743,55 +2377,11 @@
 	Broken copy
 
 	--Regular Semantics--
-	[shared_counting_allocator<
-		int,
-		Propagate on copy assignment = false,
-		Propagate on move assignment = true,
-		Propagate on swap = true
-	>]
-	Unexpected allocation detected for copy construction (x)
-	[int]
-	operator== returned false
-	Obtained : -1
-	Predicted: 1
-	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
-
-	Unexpected allocation detected for copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : -1
-	Predicted: 1
-	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
-
 	Inconsistent copy constructor (x)
 	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
 	operator== returned false
 	Obtained : 
 	Predicted: 1 
-
-	Inconsistent move assignment (from y)
-	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 5 6 
-
-	Inconsistent Swap (y)
-	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 1 
-
-	Inconsistent Swap (x)
-	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 5 6 
-
-	Mutation after swap pre-condition violated
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
 
 	=======================================
 
@@ -2842,18 +2432,6 @@
 	Predicted: 0
 	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
-	Inconsistent para-move construction
-	[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 5 6 
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
@@ -2900,24 +2478,6 @@
 	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
 	operator== returned false
 	Obtained : 1 
-	Predicted: 5 6 
-
-	Unexpected allocation detected for copy assignment (x)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
-	Inconsistent move construction
-	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
-	operator== returned false
-	Obtained : 1 
-	Predicted: 5 6 
-
-	Inconsistent copy assignment (from mutated y)
-	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
-	operator== returned false
-	Obtained : 5 6 1 
 	Predicted: 5 6 
 
 	=======================================
@@ -2981,13 +2541,6 @@
 	Obtained : false
 	Predicted: true
 
-	Mutation is not doing anything following move
-	allocation assignment
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 154
@@ -2995,13 +2548,6 @@
 
 	--Regular Semantics--
 	Mutation is not doing anything following copy assignment/ broken value semantics
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
-	Mutation is not doing anything following move
-	allocation assignment
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -3123,18 +2669,6 @@
 	Obtained : 1
 	Predicted: 0
 
-	Unexpected allocation detected for para-copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 232
@@ -3178,11 +2712,6 @@
 	Obtained : 1
 	Predicted: 0
 
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 253
@@ -3214,18 +2743,6 @@
 		Propagate on swap = true
 	>]
 	Unexpected allocation detected for copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for para-copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for para-move construction (y)
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -3274,11 +2791,6 @@
 	Obtained : 0
 	Predicted: 1
 
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 52
@@ -3297,7 +2809,7 @@
 	Broken inequality
 
 	--Regular Semantics--
-	Equality operator is inconsistent
+	Inequality operator is inconsistent
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -3331,7 +2843,7 @@
 	Unexpected allocation detected for copy construction (x)
 	[int]
 	operator== returned false
-	Obtained : 2
+	Obtained : 3
 	Predicted: 1
 
 	Unexpected allocation detected for copy assignment (x)
@@ -3358,43 +2870,11 @@
 	Broken copy
 
 	--Regular Semantics--
-	[shared_counting_allocator<
-		int,
-		Propagate on copy assignment = true,
-		Propagate on move assignment = false,
-		Propagate on swap = false
-	>]
-	Unexpected allocation detected for copy construction (x)
-	[int]
-	operator== returned false
-	Obtained : -1
-	Predicted: 1
-	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
-
-	Unexpected allocation detected for copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : -1
-	Predicted: 1
-	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
-
 	Inconsistent copy constructor (x)
 	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
 	operator== returned false
 	Obtained : 
 	Predicted: 1 
-
-	Inconsistent move assignment (from y)
-	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 5 6 
-
-	Unexpected allocation detected for move assignment (x)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
 
 	=======================================
 
@@ -3444,18 +2924,6 @@
 	Obtained : -3
 	Predicted: 0
 	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
-
-	Inconsistent para-move construction
-	[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 5 6 
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
 
 	=======================================
 
@@ -3505,30 +2973,6 @@
 	Obtained : 1 
 	Predicted: 5 6 
 
-	Unexpected allocation detected for copy assignment (x)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
-	Unexpected allocation detected for copy assignment (y)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
-	Inconsistent move construction
-	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
-	operator== returned false
-	Obtained : 1 
-	Predicted: 5 6 
-
-	Inconsistent copy assignment (from mutated y)
-	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
-	operator== returned false
-	Obtained : 5 6 1 
-	Predicted: 5 6 
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 125
@@ -3572,13 +3016,6 @@
 	Obtained : false
 	Predicted: true
 
-	Mutation is not doing anything following move
-	allocation assignment
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 154
@@ -3586,13 +3023,6 @@
 
 	--Regular Semantics--
 	Mutation is not doing anything following copy assignment/ broken value semantics
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
-	Mutation is not doing anything following move
-	allocation assignment
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -3714,18 +3144,6 @@
 	Obtained : 1
 	Predicted: 0
 
-	Unexpected allocation detected for para-copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 232
@@ -3769,11 +3187,6 @@
 	Obtained : 1
 	Predicted: 0
 
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 253
@@ -3805,18 +3218,6 @@
 		Propagate on swap = false
 	>]
 	Unexpected allocation detected for copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for para-copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for para-move construction (y)
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -3865,11 +3266,6 @@
 	Obtained : 0
 	Predicted: 1
 
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 52
@@ -3888,7 +3284,7 @@
 	Broken inequality
 
 	--Regular Semantics--
-	Equality operator is inconsistent
+	Inequality operator is inconsistent
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -3922,7 +3318,7 @@
 	Unexpected allocation detected for copy construction (x)
 	[int]
 	operator== returned false
-	Obtained : 2
+	Obtained : 3
 	Predicted: 1
 
 	Unexpected allocation detected for copy assignment (x)
@@ -3961,61 +3357,11 @@
 	Broken copy
 
 	--Regular Semantics--
-	[shared_counting_allocator<
-		int,
-		Propagate on copy assignment = true,
-		Propagate on move assignment = false,
-		Propagate on swap = true
-	>]
-	Unexpected allocation detected for copy construction (x)
-	[int]
-	operator== returned false
-	Obtained : -1
-	Predicted: 1
-	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
-
-	Unexpected allocation detected for copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : -1
-	Predicted: 1
-	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
-
 	Inconsistent copy constructor (x)
 	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
 	operator== returned false
 	Obtained : 
 	Predicted: 1 
-
-	Inconsistent move assignment (from y)
-	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 5 6 
-
-	Unexpected allocation detected for move assignment (x)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
-	Inconsistent Swap (y)
-	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 1 
-
-	Inconsistent Swap (x)
-	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 5 6 
-
-	Mutation after swap pre-condition violated
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
 
 	=======================================
 
@@ -4066,18 +3412,6 @@
 	Predicted: 0
 	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
-	Inconsistent para-move construction
-	[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 5 6 
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
@@ -4124,30 +3458,6 @@
 	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
 	operator== returned false
 	Obtained : 1 
-	Predicted: 5 6 
-
-	Unexpected allocation detected for copy assignment (x)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
-	Unexpected allocation detected for copy assignment (y)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
-	Inconsistent move construction
-	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
-	operator== returned false
-	Obtained : 1 
-	Predicted: 5 6 
-
-	Inconsistent copy assignment (from mutated y)
-	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
-	operator== returned false
-	Obtained : 5 6 1 
 	Predicted: 5 6 
 
 	=======================================
@@ -4199,13 +3509,6 @@
 	Obtained : false
 	Predicted: true
 
-	Mutation is not doing anything following move
-	allocation assignment
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 154
@@ -4213,13 +3516,6 @@
 
 	--Regular Semantics--
 	Mutation is not doing anything following copy assignment/ broken value semantics
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
-	Mutation is not doing anything following move
-	allocation assignment
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -4341,18 +3637,6 @@
 	Obtained : 1
 	Predicted: 0
 
-	Unexpected allocation detected for para-copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 232
@@ -4402,11 +3686,6 @@
 	Obtained : 1
 	Predicted: 0
 
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 253
@@ -4438,18 +3717,6 @@
 		Propagate on swap = true
 	>]
 	Unexpected allocation detected for copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for para-copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for para-move construction (y)
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -4504,11 +3771,6 @@
 	Obtained : 0
 	Predicted: 1
 
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 52
@@ -4527,7 +3789,7 @@
 	Broken inequality
 
 	--Regular Semantics--
-	Equality operator is inconsistent
+	Inequality operator is inconsistent
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -4561,7 +3823,7 @@
 	Unexpected allocation detected for copy construction (x)
 	[int]
 	operator== returned false
-	Obtained : 2
+	Obtained : 3
 	Predicted: 1
 
 	Unexpected allocation detected for copy assignment (x)
@@ -4594,37 +3856,11 @@
 	Broken copy
 
 	--Regular Semantics--
-	[shared_counting_allocator<
-		int,
-		Propagate on copy assignment = true,
-		Propagate on move assignment = true,
-		Propagate on swap = false
-	>]
-	Unexpected allocation detected for copy construction (x)
-	[int]
-	operator== returned false
-	Obtained : -1
-	Predicted: 1
-	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
-
-	Unexpected allocation detected for copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : -1
-	Predicted: 1
-	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
-
 	Inconsistent copy constructor (x)
 	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
 	operator== returned false
 	Obtained : 
 	Predicted: 1 
-
-	Inconsistent move assignment (from y)
-	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 5 6 
 
 	=======================================
 
@@ -4675,18 +3911,6 @@
 	Predicted: 0
 	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
-	Inconsistent para-move construction
-	[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 5 6 
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
@@ -4735,30 +3959,6 @@
 	Obtained : 1 
 	Predicted: 5 6 
 
-	Unexpected allocation detected for copy assignment (x)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
-	Unexpected allocation detected for copy assignment (y)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
-	Inconsistent move construction
-	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
-	operator== returned false
-	Obtained : 1 
-	Predicted: 5 6 
-
-	Inconsistent copy assignment (from mutated y)
-	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
-	operator== returned false
-	Obtained : 5 6 1 
-	Predicted: 5 6 
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 125
@@ -4803,13 +4003,6 @@
 	Obtained : false
 	Predicted: true
 
-	Mutation is not doing anything following move
-	allocation assignment
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 154
@@ -4817,13 +4010,6 @@
 
 	--Regular Semantics--
 	Mutation is not doing anything following copy assignment/ broken value semantics
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
-	Mutation is not doing anything following move
-	allocation assignment
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -4945,18 +4131,6 @@
 	Obtained : 1
 	Predicted: 0
 
-	Unexpected allocation detected for para-copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 232
@@ -5000,11 +4174,6 @@
 	Obtained : 1
 	Predicted: 0
 
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 253
@@ -5036,18 +4205,6 @@
 		Propagate on swap = false
 	>]
 	Unexpected allocation detected for copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for para-copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for para-move construction (y)
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -5096,11 +4253,6 @@
 	Obtained : 0
 	Predicted: 1
 
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 52
@@ -5119,7 +4271,7 @@
 	Broken inequality
 
 	--Regular Semantics--
-	Equality operator is inconsistent
+	Inequality operator is inconsistent
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -5153,7 +4305,7 @@
 	Unexpected allocation detected for copy construction (x)
 	[int]
 	operator== returned false
-	Obtained : 2
+	Obtained : 3
 	Predicted: 1
 
 	Unexpected allocation detected for copy assignment (x)
@@ -5210,55 +4362,11 @@
 	Broken copy
 
 	--Regular Semantics--
-	[shared_counting_allocator<
-		int,
-		Propagate on copy assignment = true,
-		Propagate on move assignment = true,
-		Propagate on swap = true
-	>]
-	Unexpected allocation detected for copy construction (x)
-	[int]
-	operator== returned false
-	Obtained : -1
-	Predicted: 1
-	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
-
-	Unexpected allocation detected for copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : -1
-	Predicted: 1
-	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
-
 	Inconsistent copy constructor (x)
 	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
 	operator== returned false
 	Obtained : 
 	Predicted: 1 
-
-	Inconsistent move assignment (from y)
-	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 5 6 
-
-	Inconsistent Swap (y)
-	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 1 
-
-	Inconsistent Swap (x)
-	[sequoia::testing::broken_copy<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 5 6 
-
-	Mutation after swap pre-condition violated
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
 
 	=======================================
 
@@ -5309,18 +4417,6 @@
 	Predicted: 0
 	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
-	Inconsistent para-move construction
-	[sequoia::testing::broken_move<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 5 6 
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
@@ -5367,30 +4463,6 @@
 	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
 	operator== returned false
 	Obtained : 1 
-	Predicted: 5 6 
-
-	Unexpected allocation detected for copy assignment (x)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
-	Unexpected allocation detected for copy assignment (y)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
-	Inconsistent move construction
-	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
-	operator== returned false
-	Obtained : 1 
-	Predicted: 5 6 
-
-	Inconsistent copy assignment (from mutated y)
-	[sequoia::testing::broken_copy_assignment<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
-	operator== returned false
-	Obtained : 5 6 1 
 	Predicted: 5 6 
 
 	=======================================
@@ -5443,13 +4515,6 @@
 	Obtained : false
 	Predicted: true
 
-	Mutation is not doing anything following move
-	allocation assignment
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 154
@@ -5457,13 +4522,6 @@
 
 	--Regular Semantics--
 	Mutation is not doing anything following copy assignment/ broken value semantics
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
-	Mutation is not doing anything following move
-	allocation assignment
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -5585,18 +4643,6 @@
 	Obtained : 1
 	Predicted: 0
 
-	Unexpected allocation detected for para-copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 232
@@ -5646,11 +4692,6 @@
 	Obtained : 1
 	Predicted: 0
 
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 253
@@ -5682,18 +4723,6 @@
 		Propagate on swap = true
 	>]
 	Unexpected allocation detected for copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for para-copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for para-move construction (y)
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -5743,11 +4772,6 @@
 	Predicted: 1
 
 	Unexpected allocation detected following mutation after swap (y)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -6229,18 +5253,6 @@
 	Obtained : 1
 	Predicted: 0
 
-	Unexpected allocation detected for para-copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
 	=======================================
 
 	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 108
@@ -6255,11 +5267,6 @@
 		Propagate on move assignment = false,
 		Propagate on swap = false
 	>]
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 2
-
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -6361,18 +5368,6 @@
 	Obtained : 2
 	Predicted: 0
 
-	Unexpected allocation detected for para-copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 2
-	Predicted: 0
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 2
-	Predicted: 0
-
 	=======================================
 
 	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 138
@@ -6387,11 +5382,6 @@
 		Propagate on move assignment = false,
 		Propagate on swap = false
 	>]
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 3
-
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -6493,18 +5483,6 @@
 	Obtained : 1
 	Predicted: 0
 
-	Unexpected allocation detected for para-copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
 	=======================================
 
 	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 108
@@ -6525,11 +5503,6 @@
 	Predicted: 2
 
 	Unexpected allocation detected following mutation after swap (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 2
-
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -6631,18 +5604,6 @@
 	Obtained : 2
 	Predicted: 0
 
-	Unexpected allocation detected for para-copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 2
-	Predicted: 0
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 2
-	Predicted: 0
-
 	=======================================
 
 	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 138
@@ -6663,11 +5624,6 @@
 	Predicted: 3
 
 	Unexpected allocation detected following mutation after swap (y)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 3
-
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -6769,18 +5725,6 @@
 	Obtained : 1
 	Predicted: 0
 
-	Unexpected allocation detected for para-copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
 	=======================================
 
 	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 108
@@ -6795,11 +5739,6 @@
 		Propagate on move assignment = true,
 		Propagate on swap = false
 	>]
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 2
-
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -6895,18 +5834,6 @@
 	Obtained : 2
 	Predicted: 0
 
-	Unexpected allocation detected for para-copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 2
-	Predicted: 0
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 2
-	Predicted: 0
-
 	=======================================
 
 	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 138
@@ -6921,11 +5848,6 @@
 		Propagate on move assignment = true,
 		Propagate on swap = false
 	>]
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 3
-
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -7021,18 +5943,6 @@
 	Obtained : 1
 	Predicted: 0
 
-	Unexpected allocation detected for para-copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
 	=======================================
 
 	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 108
@@ -7053,11 +5963,6 @@
 	Predicted: 2
 
 	Unexpected allocation detected following mutation after swap (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 2
-
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -7153,18 +6058,6 @@
 	Obtained : 2
 	Predicted: 0
 
-	Unexpected allocation detected for para-copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 2
-	Predicted: 0
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 2
-	Predicted: 0
-
 	=======================================
 
 	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 138
@@ -7185,11 +6078,6 @@
 	Predicted: 3
 
 	Unexpected allocation detected following mutation after swap (y)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 3
-
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -7285,18 +6173,6 @@
 	Obtained : 1
 	Predicted: 0
 
-	Unexpected allocation detected for para-copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
 	=======================================
 
 	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 108
@@ -7311,11 +6187,6 @@
 		Propagate on move assignment = false,
 		Propagate on swap = false
 	>]
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 2
-
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -7423,18 +6294,6 @@
 	Obtained : 2
 	Predicted: 0
 
-	Unexpected allocation detected for para-copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 2
-	Predicted: 0
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 2
-	Predicted: 0
-
 	=======================================
 
 	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 138
@@ -7449,11 +6308,6 @@
 		Propagate on move assignment = false,
 		Propagate on swap = false
 	>]
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 3
-
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -7561,18 +6415,6 @@
 	Obtained : 1
 	Predicted: 0
 
-	Unexpected allocation detected for para-copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
 	=======================================
 
 	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 108
@@ -7593,11 +6435,6 @@
 	Predicted: 2
 
 	Unexpected allocation detected following mutation after swap (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 2
-
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -7705,18 +6542,6 @@
 	Obtained : 2
 	Predicted: 0
 
-	Unexpected allocation detected for para-copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 2
-	Predicted: 0
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 2
-	Predicted: 0
-
 	=======================================
 
 	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 138
@@ -7737,11 +6562,6 @@
 	Predicted: 3
 
 	Unexpected allocation detected following mutation after swap (y)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 3
-
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -7849,18 +6669,6 @@
 	Obtained : 1
 	Predicted: 0
 
-	Unexpected allocation detected for para-copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
 	=======================================
 
 	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 108
@@ -7875,11 +6683,6 @@
 		Propagate on move assignment = true,
 		Propagate on swap = false
 	>]
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 2
-
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -7981,18 +6784,6 @@
 	Obtained : 2
 	Predicted: 0
 
-	Unexpected allocation detected for para-copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 2
-	Predicted: 0
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 2
-	Predicted: 0
-
 	=======================================
 
 	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 138
@@ -8007,11 +6798,6 @@
 		Propagate on move assignment = true,
 		Propagate on swap = false
 	>]
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 3
-
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -8113,18 +6899,6 @@
 	Obtained : 1
 	Predicted: 0
 
-	Unexpected allocation detected for para-copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
 	=======================================
 
 	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 108
@@ -8145,11 +6919,6 @@
 	Predicted: 2
 
 	Unexpected allocation detected following mutation after swap (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 2
-
 	[int]
 	operator== returned false
 	Obtained : 1
@@ -8251,18 +7020,6 @@
 	Obtained : 2
 	Predicted: 0
 
-	Unexpected allocation detected for para-copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 2
-	Predicted: 0
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 2
-	Predicted: 0
-
 	=======================================
 
 	../Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 138
@@ -8283,11 +7040,6 @@
 	Predicted: 3
 
 	Unexpected allocation detected following mutation after swap (y)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 3
-
 	[int]
 	operator== returned false
 	Obtained : 0
@@ -8882,8 +7634,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67
 	Performance Test which should pass
 
-	Fast Task duration: 0.0012735s +- 4 * 0.000145955
-	Slow Task duration: 0.00249916s +- 4 * 0.00021654 [1.96244; (1.8, 2.1)]
+	Fast Task duration: 0.00128036s +- 4 * 0.000141262
+	Slow Task duration: 0.00241791s +- 4 * 0.000311084 [1.88846; (1.8, 2.1)]
 
 
 	=======================================
@@ -8892,8 +7644,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68
 	Performance Test which should pass
 
-	Fast Task duration: 0.00132014s +- 4 * 9.00191e-05
-	Slow Task duration: 0.00493983s +- 4 * 0.000431514 [3.7419; (3.6, 4.1)]
+	Fast Task duration: 0.00121013s +- 4 * 0.000122164
+	Slow Task duration: 0.00491317s +- 4 * 0.000993434 [4.06005; (3.6, 4.1)]
 
 
 	=======================================

@@ -180,7 +180,7 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-      test_logger<Mode>& logger() noexcept { return m_Logger.get(); }
+    test_logger<Mode>& logger() noexcept { return m_Logger.get(); }
   private:
     std::reference_wrapper<test_logger<Mode>> m_Logger;
     std::size_t m_PriorFailures{}, m_PriorDeepChecks{};
