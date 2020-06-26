@@ -51,9 +51,9 @@ namespace sequoia::impl
 namespace sequoia
 {
   template<class Fn, class... Ts, std::size_t... I>
-  void invoke_with_specified_args(Fn f, std::index_sequence<I...>, Ts&&... ts)
+  auto invoke_with_specified_args(Fn f, std::index_sequence<I...>, Ts&&... ts)
   {
-    f(std::get<I>(std::tuple<Ts&&...>{std::forward<Ts>(ts)...})...);
+    return f(std::get<I>(std::tuple<Ts&&...>{std::forward<Ts>(ts)...})...);
   }
 
   template<class Excluded, template<class> class TypeToType, class... Ts>

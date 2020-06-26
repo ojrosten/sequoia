@@ -13,7 +13,7 @@
 	operator== returned false
 	Obtained : false
 	Predicted: true
-	Advice   : I pity the fool who confuses the bool.
+	Advice: I pity the fool who confuses the bool.
 
 	=======================================
 
@@ -33,7 +33,7 @@
 	operator== returned false
 	Obtained : 6.5
 	Predicted: 5.6
-	Advice   : Double, double, toil and trouble
+	Advice: Double, double, toil and trouble
 
 	=======================================
 
@@ -73,14 +73,14 @@
 	operator== returned false
 	Obtained : 5
 	Predicted: -5
-	Advice   : Integer advice
+	Advice: Integer advice
 
 	Second element of pair is incorrect
 	[double]
 	operator== returned false
 	Obtained : 7.8
 	Predicted: 6.8
-	Advice   : Double advice
+	Advice: Double advice
 
 	=======================================
 
@@ -107,7 +107,7 @@
 	operator== returned false
 	Obtained : 3.4
 	Predicted: 0
-	Advice   : Double advice
+	Advice: Double advice
 
 	=======================================
 
@@ -177,7 +177,7 @@
 	operator== returned false
 	Obtained : 1
 	Predicted: 2
-	Advice   : Vector element advice
+	Advice: Vector element advice
 
 	=======================================
 
@@ -343,7 +343,7 @@
 	operator== returned false
 	Obtained : 1
 	Predicted: 2
-	Advice   : Nested int advice
+	Advice: Nested int advice
 
 	=======================================
 
@@ -355,7 +355,7 @@
 	Element 1 of tuple incorrect
 	[std::set<double, std::less<double>, std::allocator<double> >]
 	operator== returned false
-	Note reordering of elements upon set construction
+	Advice: Note reordering of elements upon set construction
 
 	Element 2 of range incorrect
 	[double]
@@ -503,6 +503,7 @@
 	[sequoia::testing::equivalence_checker<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
 	With equivalent types:
 	[char [3]]
+
 	[std::basic_string_view<char, std::char_traits<char> >]
 	operator== returned false
 
@@ -520,6 +521,7 @@
 	[sequoia::testing::equivalence_checker<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
 	With equivalent types:
 	[char [4]]
+
 	[std::basic_string_view<char, std::char_traits<char> >]
 	operator== returned false
 
@@ -528,7 +530,7 @@
 	operator== returned false
 	Obtained : o
 	Predicted: b
-	Advice   : Sort your chars out!
+	Advice: Sort your chars out!
 
 	=======================================
 
@@ -540,6 +542,7 @@
 	[sequoia::testing::equivalence_checker<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
 	With equivalent types:
 	[std::basic_string_view<char, std::char_traits<char> >]
+
 	[std::basic_string_view<char, std::char_traits<char> >]
 	operator== returned false
 
@@ -559,6 +562,7 @@
 	[sequoia::testing::equivalence_checker<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
 	With equivalent types:
 	[std::basic_string_view<char, std::char_traits<char> >]
+
 	[std::basic_string_view<char, std::char_traits<char> >]
 	operator== returned false
 
@@ -567,7 +571,7 @@
 	operator== returned false
 	Obtained : b
 	Predicted: c
-	Advice   : Ah, chars. So easy to get wrong.
+	Advice: Ah, chars. So easy to get wrong.
 
 	=======================================
 
@@ -577,6 +581,7 @@
 	[sequoia::testing::weak_equivalence_checker<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
 	With equivalent types:
 	[std::initializer_list<int>]
+
 	Element 1 of range incorrect
 	[int]
 	operator== returned false
@@ -591,12 +596,13 @@
 	[sequoia::testing::weak_equivalence_checker<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
 	With equivalent types:
 	[std::initializer_list<int>]
+
 	Element 1 of range incorrect
 	[int]
 	operator== returned false
 	Obtained : 2
 	Predicted: 1
-	Advice   : Don't mess with the beast.
+	Advice: Don't mess with the beast.
 
 	=======================================
 
@@ -608,6 +614,7 @@
 	[sequoia::testing::weak_equivalence_checker<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
 	With equivalent types:
 	[std::initializer_list<int>]
+
 	Element 1 of range incorrect
 	[int]
 	operator== returned false
@@ -624,12 +631,13 @@
 	[sequoia::testing::weak_equivalence_checker<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
 	With equivalent types:
 	[std::initializer_list<int>]
+
 	Element 1 of range incorrect
 	[int]
 	operator== returned false
 	Obtained : 4
 	Predicted: 5
-	Advice   : Or at least don't mess with a vector of beasts.
+	Advice: Or at least don't mess with a vector of beasts.
 
 	=======================================
 
@@ -750,24 +758,24 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-	Fast Task duration: 0.00138814s +- 4 * 1.15018e-05
-	Slow Task duration: 0.00134814s +- 4 * 0.000133041 [0.971189; (2, 2)]
+	Fast Task duration: 0.00136657s +- 4 * 5.25697e-05
+	Slow Task duration: 0.00130237s +- 4 * 0.000103892 [0.953021; (2, 2)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-	Fast Task duration: 0.00129309s +- 4 * 9.56217e-05
-	Slow Task duration: 0.00127225s +- 4 * 7.69746e-05 [0.983882; (2, 3)]
+	Fast Task duration: 0.00120534s +- 4 * 9.25925e-05
+	Slow Task duration: 0.00122885s +- 4 * 0.000118534 [1.01951; (2, 3)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-	Fast Task duration: 0.00133731s +- 4 * 0.00013258
-	Slow Task duration: 0.00495788s +- 4 * 0.000416007 [3.70735; (2, 2.5)]
+	Fast Task duration: 0.00115739s +- 4 * 8.20346e-05
+	Slow Task duration: 0.00436581s +- 4 * 0.000390933 [3.77212; (2, 2.5)]
 
 	=======================================
 
@@ -951,7 +959,7 @@
 	operator== returned false
 	Obtained : -3
 	Predicted: 0
-	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
+	Advice: A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
 	=======================================
 
@@ -1438,7 +1446,7 @@
 	operator== returned false
 	Obtained : -3
 	Predicted: 0
-	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
+	Advice: A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
 	=======================================
 
@@ -1937,7 +1945,7 @@
 	operator== returned false
 	Obtained : -3
 	Predicted: 0
-	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
+	Advice: A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
 	=======================================
 
@@ -2430,7 +2438,7 @@
 	operator== returned false
 	Obtained : -3
 	Predicted: 0
-	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
+	Advice: A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
 	=======================================
 
@@ -2923,7 +2931,7 @@
 	operator== returned false
 	Obtained : -3
 	Predicted: 0
-	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
+	Advice: A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
 	=======================================
 
@@ -3410,7 +3418,7 @@
 	operator== returned false
 	Obtained : -3
 	Predicted: 0
-	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
+	Advice: A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
 	=======================================
 
@@ -3909,7 +3917,7 @@
 	operator== returned false
 	Obtained : -3
 	Predicted: 0
-	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
+	Advice: A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
 	=======================================
 
@@ -3976,7 +3984,7 @@
 	operator== returned false
 	Obtained : -1
 	Predicted: 0
-	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
+	Advice: A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
 	=======================================
 
@@ -4415,7 +4423,7 @@
 	operator== returned false
 	Obtained : -3
 	Predicted: 0
-	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
+	Advice: A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
 	=======================================
 
@@ -4482,7 +4490,7 @@
 	operator== returned false
 	Obtained : -1
 	Predicted: 0
-	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
+	Advice: A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
 	=======================================
 
@@ -7586,11 +7594,6 @@
 	False Positive Failure:
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 239
 
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
-	With equivalent types:
-	[char [4]]
-
 
 	=======================================
 
@@ -7604,11 +7607,6 @@
 
 	False Positive Failure:
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 247
-
-	Comparison performed using:
-	[sequoia::testing::weak_equivalence_checker<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
-	With equivalent types:
-	[std::initializer_list<int>]
 
 
 	=======================================
@@ -7634,8 +7632,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67
 	Performance Test which should pass
 
-	Fast Task duration: 0.00128036s +- 4 * 0.000141262
-	Slow Task duration: 0.00241791s +- 4 * 0.000311084 [1.88846; (1.8, 2.1)]
+	Fast Task duration: 0.00122385s +- 4 * 3.47475e-05
+	Slow Task duration: 0.00219773s +- 4 * 0.000123552 [1.79576; (1.8, 2.1)]
 
 
 	=======================================
@@ -7644,8 +7642,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68
 	Performance Test which should pass
 
-	Fast Task duration: 0.00121013s +- 4 * 0.000122164
-	Slow Task duration: 0.00491317s +- 4 * 0.000993434 [4.06005; (3.6, 4.1)]
+	Fast Task duration: 0.00126572s +- 4 * 4.16647e-05
+	Slow Task duration: 0.00447911s +- 4 * 0.000435494 [3.53879; (3.6, 4.1)]
 
 
 	=======================================

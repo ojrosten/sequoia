@@ -162,6 +162,19 @@ namespace sequoia::testing
     || ((sizeof...(U)  > 1) && (is_advisor_v<tail_of_t<U...>, T> || std::is_same_v<std::remove_cvref_t<tail_of_t<U...>>, null_advisor>))
   };
 
+  template<class EquivChecker, class T, class... U>
+  [[nodiscard]]
+  std::string make_equivalence_message(std::string_view description, const T&, const U&...)
+  {
+    std::string info{append_indented(description, "Comparison performed using:")};
+    append_indented(info, make_type_info<EquivChecker>());
+    append_indented(info, "With equivalent types:");
+    append_indented(info, make_type_info<T, U...>());
+    info.append("\n");
+
+    return info;
+  }
+
   /*! \brief generic function that generates a check from any class providing a static check method.
 
       This employs a \ref test_logger_primary "sentinel" and so can be used naively.
@@ -169,7 +182,10 @@ namespace sequoia::testing
   
   template<class EquivChecker, test_mode Mode, class T, class S, class... U>
   bool general_equivalence_check(std::string_view description, test_logger<Mode>& logger, const T& value, const S& s, const U&... u)
-  {
+  {    
+    sentinel<Mode> sentry{logger, description};
+
+    
     const auto message{
       [description](){
         std::string info{description};
@@ -178,12 +194,11 @@ namespace sequoia::testing
         append_indented(info, make_type_info<EquivChecker>());
         append_indented(info, "With equivalent types:");
         append_indented(info, make_type_info<S, U...>());
+        info.append("\n");
 
         return info;
       }()
     };
-      
-    sentinel<Mode> sentry{logger, message};
 
     if constexpr(check_method_is_invocable_v<Mode, EquivChecker, T, S, U...>)
     {
@@ -230,10 +245,10 @@ namespace sequoia::testing
       The input type, T, must either be equality comparable or possess a detailed_equality_checker, or both. 
       Generally, it will be the case that T does indeed overload operator==; anything beyond 
       the simplest user-defined types should be furnished with a detailed_equality_checker.
-   */  
+   */
   
   template<test_mode Mode, class T, class Advisor=null_advisor>
-  bool dispatch_check(std::string_view description, test_logger<Mode>& logger, equality_tag, const T& value, const T& prediction, [[maybe_unused]] Advisor advisor=Advisor{})
+  bool dispatch_check(std::string_view description, test_logger<Mode>& logger, equality_tag, const T& obtained, const T& prediction, [[maybe_unused]] Advisor advisor=Advisor{})
   {
     constexpr bool delegate{has_detailed_equality_checker_v<T> || is_container_v<T>};
 
@@ -247,25 +262,16 @@ namespace sequoia::testing
     if constexpr(is_equal_to_comparable_v<T>)
     {
       s.log_check();
-      if(!(prediction == value))
+      if(!(prediction == obtained))
       {
         auto message{operator_message(info, "==", "false")};
-        
-        std::string advice{};
-        if constexpr(std::is_invocable_r_v<std::string, Advisor, T, T>)
-        {
-          advice = advisor(value, prediction);
-        }
 
         if constexpr(!delegate)
-        {
-          
-          append_indented(message, prediction_message(to_string(value), to_string(prediction), advice));
+        {          
+          append_indented(message, prediction_message(to_string(obtained), to_string(prediction)));
         }
-        else
-        {
-          append_indented(message, advice);
-        }
+
+        append_advice(message, {advisor, obtained, prediction});
 
         logger.log_failure(std::move(message));
       }
@@ -278,16 +284,16 @@ namespace sequoia::testing
       {
         if constexpr(check_method_is_invocable_v<Mode, detailed_equality_checker<T>, T, T>)
         {          
-          detailed_equality_checker<T>::check(desc, logger, value, prediction);
+          detailed_equality_checker<T>::check(desc, logger, obtained, prediction);
         }
         else
         {
-          detailed_equality_checker<T>::check(desc, logger, value, prediction, advisor);
+          detailed_equality_checker<T>::check(desc, logger, obtained, prediction, advisor);
         }
       }
       else if constexpr(is_container_v<T>)
       {
-        check_range(desc, logger, std::begin(value), std::end(value), std::begin(prediction), std::end(prediction), advisor);
+        check_range(desc, logger, std::begin(obtained), std::end(obtained), std::begin(prediction), std::end(prediction), advisor);
       }      
       else
       {

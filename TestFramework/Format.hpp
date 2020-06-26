@@ -53,7 +53,7 @@ namespace sequoia::testing
   std::string operator_message(std::string_view description, std::string_view op, std::string_view retVal);
 
   [[nodiscard]]
-  std::string prediction_message(std::string_view obtained, std::string_view predicted, std::string_view advice="");
+  std::string prediction_message(std::string_view obtained, std::string_view predicted);
 
   std::string footer(std::string_view indentation=tab);
 
@@ -119,15 +119,7 @@ namespace sequoia::testing
   std::string make_type_info([[maybe_unused]] std::string_view indent=tab)
   {
     std::string info{"["};
-    if constexpr (sizeof...(U) > 0)
-    {
-      info.append(type_list_demangler<T>::make(indent));
-    }
-    else
-    {
-      info.append(type_demangler<T>::make());
-    }
-
+    info.append(type_list_demangler<T, U...>::make(indent));
     info.append("]");
 
     return info;
@@ -142,4 +134,28 @@ namespace sequoia::testing
 
     return info;
   }
+
+  class advice_data
+  {
+  public:
+    template<class Advisor, class T>
+    advice_data(const Advisor& advisor, const T& value, const T& prediction)
+    {
+      if constexpr(std::is_invocable_r_v<std::string, Advisor, T, T>)
+      {
+        m_Advice = advisor(value, prediction);
+      }
+
+      
+      m_AdviceTypeName = type_demangler<Advisor>::make();
+    }
+
+    void append_and_tidy(std::string& message) const;    
+  private:
+    std::string m_Advice{}, m_AdviceTypeName{};
+    
+    void tidy(std::string& message) const;
+  };
+
+  void append_advice(std::string& message, const advice_data& adviceData);
 }

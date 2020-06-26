@@ -108,17 +108,48 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string prediction_message(std::string_view obtained, std::string_view predicted, std::string_view advice)
+  std::string prediction_message(std::string_view obtained, std::string_view predicted)
   {
     auto info{std::string{"Obtained : "}.append(obtained)};
     append_indented(info, "Predicted: ").append(predicted);
-    
-    if(!advice.empty())
-    {
-      append_indented(info, "Advice   : ").append(advice);
-    }
 
     return info;
+  }
+
+  void advice_data::append_and_tidy(std::string& message) const
+  {
+    if(!m_Advice.empty())
+    {
+      append_indented(message, "Advice: ").append(m_Advice);
+    }
+
+    tidy(message);
+  }
+
+  void advice_data::tidy(std::string& message) const
+  {
+    if(!m_AdviceTypeName.empty())
+    {
+      auto pos{message.find(m_AdviceTypeName)};
+      while(pos != std::string::npos)
+      {
+        const auto posBack{message.rfind(',', pos)};
+        const auto posFwd{message.find('\n', pos)};
+
+        if((posBack != std::string::npos) && (posFwd != std::string::npos))
+        {        
+          const auto count{posFwd - posBack - 1};
+          message.erase(posBack, count); 
+        }
+
+        pos = message.find(m_AdviceTypeName);
+      }
+    }
+  }
+
+  void append_advice(std::string& message, const advice_data& adviceData)
+  {
+    adviceData.append_and_tidy(message);
   }
   
   [[nodiscard]]
