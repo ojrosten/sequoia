@@ -1,6 +1,6 @@
 Alloction False Positive Diagnostics
-[68ms]
+[49ms]
 False Positive Checks:                   200;  Failures:  0
 Allocation False Negative Diagnostics
-[22ms]
+[32ms]
 False Negative Checks:                    64;  Failures:  0

@@ -5,6 +5,7 @@
 	[sequoia::testing::equivalence_checker<sequoia::maths::monotonic_sequence<int, std::less<int>, std::vector<int, std::allocator<int> > > >]
 	With equivalent types:
 	[std::initializer_list<int>]
+
 	Container size wrong
 	[long]
 	operator== returned false
@@ -20,6 +21,7 @@
 	[sequoia::testing::equivalence_checker<sequoia::maths::monotonic_sequence<int, std::less<int>, std::vector<int, std::allocator<int> > > >]
 	With equivalent types:
 	[std::initializer_list<int>]
+
 	Container size wrong
 	[long]
 	operator== returned false
@@ -35,6 +37,7 @@
 	[sequoia::testing::equivalence_checker<sequoia::maths::monotonic_sequence<int, std::less<int>, std::vector<int, std::allocator<int> > > >]
 	With equivalent types:
 	[std::initializer_list<int>]
+
 	Element 0 of range incorrect
 	[int]
 	operator== returned false
@@ -358,6 +361,7 @@
 	[sequoia::testing::equivalence_checker<sequoia::maths::monotonic_sequence<int, std::less<int>, std::vector<int, std::allocator<int> > > >]
 	With equivalent types:
 	[std::initializer_list<int>]
+
 	Element 1 of range incorrect
 	[int]
 	operator== returned false
@@ -373,6 +377,7 @@
 	[sequoia::testing::equivalence_checker<sequoia::maths::monotonic_sequence<int, std::less<int>, std::vector<int, std::allocator<int> > > >]
 	With equivalent types:
 	[std::initializer_list<int>]
+
 	Element 0 of range incorrect
 	[int]
 	operator== returned false
