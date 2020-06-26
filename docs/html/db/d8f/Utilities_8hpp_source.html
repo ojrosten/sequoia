@@ -116,9 +116,9 @@ $(function() {
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keyword">namespace </span>sequoia</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;{</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class </span>Fn, <span class="keyword">class</span>... Ts, std::size_t... I&gt;</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;  <span class="keywordtype">void</span> invoke_with_specified_args(Fn f, std::index_sequence&lt;I...&gt;, Ts&amp;&amp;... ts)</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;  <span class="keyword">auto</span> invoke_with_specified_args(Fn f, std::index_sequence&lt;I...&gt;, Ts&amp;&amp;... ts)</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;  {</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    f(std::get&lt;I&gt;(std::tuple&lt;Ts&amp;&amp;...&gt;{std::forward&lt;Ts&gt;(ts)...})...);</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    <span class="keywordflow">return</span> f(std::get&lt;I&gt;(std::tuple&lt;Ts&amp;&amp;...&gt;{std::forward&lt;Ts&gt;(ts)...})...);</div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  }</div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
 <div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> Excluded, <span class="keyword">template</span>&lt;<span class="keyword">class</span>&gt; <span class="keyword">class </span>TypeToType, <span class="keyword">class</span>... Ts&gt;</div>

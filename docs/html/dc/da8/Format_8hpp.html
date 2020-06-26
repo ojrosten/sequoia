@@ -89,6 +89,8 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d23/structsequoia_1_1testing_1_1type__list__demangler.html">sequoia::testing::type_list_demangler&lt; T, U &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/dd8/classsequoia_1_1testing_1_1advice__data.html">sequoia::testing::advice_data</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
@@ -119,15 +121,18 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testi
 <tr class="memitem:a3521c4694d7f0f0b3f9c1e2b81ee4005"><td class="memItemLeft" align="right" valign="top"><a id="a3521c4694d7f0f0b3f9c1e2b81ee4005"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::operator_message</b> (std::string_view description, std::string_view op, std::string_view opRetVal)</td></tr>
 <tr class="separator:a3521c4694d7f0f0b3f9c1e2b81ee4005"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a624970cb0baa86805a746eddb202b7dd"><td class="memItemLeft" align="right" valign="top"><a id="a624970cb0baa86805a746eddb202b7dd"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::prediction_message</b> (std::string_view obtained, std::string_view predicted, std::string_view advice)</td></tr>
-<tr class="separator:a624970cb0baa86805a746eddb202b7dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4920803b93e71aca04aadb6af056dd69"><td class="memItemLeft" align="right" valign="top"><a id="a4920803b93e71aca04aadb6af056dd69"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::prediction_message</b> (std::string_view obtained, std::string_view predicted)</td></tr>
+<tr class="separator:a4920803b93e71aca04aadb6af056dd69"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a834321a431f571145e29a4db88b6a92c"><td class="memItemLeft" align="right" valign="top"><a id="a834321a431f571145e29a4db88b6a92c"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::footer</b> (std::string_view indentation)</td></tr>
 <tr class="separator:a834321a431f571145e29a4db88b6a92c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2557d7c4e6b5ca4dbcec41665c5ab3c4"><td class="memItemLeft" align="right" valign="top"><a id="a2557d7c4e6b5ca4dbcec41665c5ab3c4"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::report_line</b> (std::string_view file, const int line, const std::string_view message)</td></tr>
 <tr class="separator:a2557d7c4e6b5ca4dbcec41665c5ab3c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae3ce38189bb733f70c2cc0fe0756b2f6"><td class="memItemLeft" align="right" valign="top"><a id="ae3ce38189bb733f70c2cc0fe0756b2f6"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::tidy_name</b> (std::string &amp;name)</td></tr>
+<tr class="separator:ae3ce38189bb733f70c2cc0fe0756b2f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a26100ff488193b64a29f3e10e1551269"><td class="memTemplParams" colspan="2"><a id="a26100ff488193b64a29f3e10e1551269"></a>
 template&lt;class T &gt; </td></tr>
 <tr class="memitem:a26100ff488193b64a29f3e10e1551269"><td class="memTemplItemLeft" align="right" valign="top">std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::demangle</b> ()</td></tr>
@@ -140,6 +145,9 @@ template&lt;class T , class... U&gt; </td></tr>
 template&lt;class T , class... U&gt; </td></tr>
 <tr class="memitem:a6dabd4581b95e2355c260ea65a6eff42"><td class="memTemplItemLeft" align="right" valign="top">std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::add_type_info</b> (std::string_view description, std::string_view indent=tab)</td></tr>
 <tr class="separator:a6dabd4581b95e2355c260ea65a6eff42"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a79b42c218d88c54362c6e96f59420ea4"><td class="memItemLeft" align="right" valign="top"><a id="a79b42c218d88c54362c6e96f59420ea4"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::append_advice</b> (std::string &amp;message, const advice_data &amp;adviceData)</td></tr>
+<tr class="separator:a79b42c218d88c54362c6e96f59420ea4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>

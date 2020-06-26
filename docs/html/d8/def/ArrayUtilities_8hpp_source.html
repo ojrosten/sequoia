@@ -103,9 +103,9 @@ $(function() {
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    </div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class </span>T, std::size_t N, <span class="keyword">class </span>InitType, std::size_t... I, <span class="keyword">class </span>Fn&gt;</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    [[nodiscard]]</div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    constexpr std::array&lt;T, N&gt; to_array(std::initializer_list&lt;InitType&gt; l, std::index_sequence&lt;I...&gt;, Fn fn)</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    constexpr std::array&lt;T, N&gt; to_array([[maybe_unused]] std::initializer_list&lt;InitType&gt; l, [[maybe_unused]] std::index_sequence&lt;I...&gt;, Fn&amp;&amp; fn)</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    {</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;      <span class="keywordflow">return</span> std::array&lt;T, N&gt;{ to_element&lt;T&gt;(l, I, fn)...};</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;      <span class="keywordflow">return</span> std::array&lt;T, N&gt;{ to_element&lt;T&gt;(l, I, std::forward&lt;Fn&gt;(fn))...};</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    }</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;  }</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
