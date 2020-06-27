@@ -66,6 +66,9 @@ namespace sequoia::testing
     check(LINE(""), false, [](bool, bool){
         return std::string{"I pity the fool who confuses the bool."};
       });
+    check(LINE("Advisor ignored"), false, [](const std::string&, const std::string&){
+        return std::string{"I pity the fool who confuses the bool."};
+      });
       
     check_equality(LINE("Integers which should compare different"), 5, 4);
     check_equality(LINE(""), 6.5, 5.6, [](double, double){
