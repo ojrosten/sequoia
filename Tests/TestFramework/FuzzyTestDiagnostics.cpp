@@ -29,7 +29,7 @@ namespace sequoia::testing
     check_approx_equality(LINE(""), within_tolerance{1.0}, 3.0, 5.0);
     check_approx_equality(LINE(""), within_tolerance{1.0}, 7.0, 5.0,
                           [](double, double){
-                            return std::string{"Tweak your tolerance!"};
+                            return "Tweak your tolerance!";
                           });
 
     check_approx_equality(LINE(""), [](const double& lhs, const double& rhs){
@@ -41,6 +41,10 @@ namespace sequoia::testing
   {
     std::vector<double> v{0.5, 0.6}, p{-0.1, 1.0};
     check_range_approx(LINE(""), within_tolerance{0.5}, v.cbegin(), v.cend(), p.cbegin(), p.cend());
+    check_range_approx(LINE(""), within_tolerance{0.5}, v.cbegin(), v.cend(), p.cbegin(), p.cend(),
+                       [](double, double){
+                         return "Consider increasing tolerance!";
+                       });
 
     p = {0.5, 1.2};
     check_range_approx(LINE(""), within_tolerance{0.5}, v.cbegin(), v.cend(), p.cbegin(), p.cend());
