@@ -83,9 +83,9 @@ namespace sequoia::testing::impl
   }
 
   template<test_mode Mode, class Actions, class Container, class Mutator, class... Allocators, class... Predictions>
-  void check_swap(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, Container&& x, Container&& y, const Container& xClone, const Container& yClone, Mutator yMutator, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
+  bool check_swap(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, Container&& x, Container&& y, const Container& xClone, const Container& yClone, Mutator yMutator, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
   {
-    do_check_swap(description, sentry, actions, std::move(x), std::move(y), xClone, yClone, std::move(yMutator), dual_allocation_checker{checkers.info(), x, y}...);
+    return do_check_swap(description, sentry, actions, std::move(x), std::move(y), xClone, yClone, std::move(yMutator), dual_allocation_checker{checkers.info(), x, y}...);
   }
 
   /// Unpacks the tuple and feeds to the overload of check_semantics defined in RegularCheckersDetails.hpp

@@ -31,8 +31,10 @@ namespace sequoia::testing::impl
       
     if constexpr (do_swap<Args...>::value)
     {
-      check_swap(description, sentry, actions, std::move(*opt), std::move(y), xClone, yClone, args...);
-      check_move_assign(description, sentry, actions, y, std::move(*opt), yClone, std::move(m), args...);
+      if(check_swap(description, sentry, actions, std::move(*opt), std::move(y), xClone, yClone, args...))
+      {
+        check_move_assign(description, sentry, actions, y, std::move(*opt), yClone, std::move(m), args...);
+      }
     }
     else
     {      

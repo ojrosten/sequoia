@@ -27,9 +27,9 @@ namespace sequoia::testing::impl
   {};
 
   template<test_mode Mode, class Actions, class Container, class... Allocators, class... Predictions>
-  void check_swap(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, Container&& x, Container&& y, const Container& xClone, const Container& yClone, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
+  bool check_swap(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, Container&& x, Container&& y, const Container& xClone, const Container& yClone, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
   {
-    do_check_swap(description, sentry, actions, std::move(x), std::move(y), xClone, yClone, dual_allocation_checker{checkers.info(), x, y}...);
+    return do_check_swap(description, sentry, actions, std::move(x), std::move(y), xClone, yClone, dual_allocation_checker{checkers.info(), x, y}...);
   }
 
   template<test_mode Mode, class Container, class... Allocators, class... Predictions>

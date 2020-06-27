@@ -703,12 +703,6 @@
 	Obtained : 1 
 	Predicted: 2 
 
-	Inconsistent move assignment (from y)
-	[sequoia::testing::move_only_broken_swap<int, std::allocator<int> >]
-	operator== returned false
-	Obtained : 1 
-	Predicted: 2 
-
 	=======================================
 
 	../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 30
@@ -762,24 +756,24 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-	Fast Task duration: 0.00138257s +- 4 * 3.25723e-05
-	Slow Task duration: 0.00139281s +- 4 * 1.99295e-05 [1.00741; (2, 2)]
+	Fast Task duration: 0.00187657s +- 4 * 0.00118507
+	Slow Task duration: 0.00138672s +- 4 * 3.77484e-05 [0.738965; (2, 2)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-	Fast Task duration: 0.0013233s +- 4 * 4.83961e-05
-	Slow Task duration: 0.001321s +- 4 * 3.52529e-05 [0.998262; (2, 3)]
+	Fast Task duration: 0.00128485s +- 4 * 6.00948e-05
+	Slow Task duration: 0.00135388s +- 4 * 5.29832e-05 [1.05373; (2, 3)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-	Fast Task duration: 0.00131735s +- 4 * 2.80469e-05
-	Slow Task duration: 0.00551431s +- 4 * 0.00164304 [4.18592; (2, 2.5)]
+	Fast Task duration: 0.00130615s +- 4 * 9.88333e-05
+	Slow Task duration: 0.00489401s +- 4 * 0.00025057 [3.74689; (2, 2.5)]
 
 	=======================================
 
@@ -4880,12 +4874,6 @@
 	Obtained : 1 
 	Predicted: 2 
 
-	Inconsistent move assignment (from y)
-	[sequoia::testing::move_only_broken_swap<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
-	operator== returned false
-	Obtained : 1 
-	Predicted: 2 
-
 	=======================================
 
 	../Tests/TestFramework/MoveOnlyAllocationTestDiagnostics.cpp, Line 110
@@ -5078,12 +5066,6 @@
 	Predicted: 1 
 
 	Inconsistent Swap (x)
-	[sequoia::testing::move_only_broken_swap<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
-	operator== returned false
-	Obtained : 1 
-	Predicted: 2 
-
-	Inconsistent move assignment (from y)
 	[sequoia::testing::move_only_broken_swap<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
 	operator== returned false
 	Obtained : 1 
@@ -7530,8 +7512,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67
 	Performance Test which should pass
 
-	Fast Task duration: 0.00127213s +- 4 * 0.000121236
-	Slow Task duration: 0.00247991s +- 4 * 0.000253579 [1.94941; (1.8, 2.1)]
+	Fast Task duration: 0.00126524s +- 4 * 0.000219546
+	Slow Task duration: 0.00239927s +- 4 * 0.000227998 [1.8963; (1.8, 2.1)]
 
 
 	=======================================
@@ -7540,8 +7522,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68
 	Performance Test which should pass
 
-	Fast Task duration: 0.00123327s +- 4 * 0.000112479
-	Slow Task duration: 0.00492543s +- 4 * 0.00184784 [3.99381; (3.6, 4.1)]
+	Fast Task duration: 0.0014887s +- 4 * 0.000754906
+	Slow Task duration: 0.004703s +- 4 * 0.000504882 [3.15912; (3.6, 4.1)]
 
 
 	=======================================
