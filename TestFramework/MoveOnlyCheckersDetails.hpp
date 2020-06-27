@@ -26,16 +26,17 @@ namespace sequoia::testing::impl
 
     if(!check(sentry.add_details(description, "Precondition - for checking regular semantics, y and yClone are assumed to be equal"), sentry.logger(), y == yClone)) return;
 
-    T z{check_move_construction(description, sentry, actions, std::move(x), xClone, args...)};    
-
+    auto opt{check_move_construction(description, sentry, actions, std::move(x), xClone, args...)};
+    if(!opt) return;
+      
     if constexpr (do_swap<Args...>::value)
     {
-      check_swap(description, sentry, actions, std::move(z), std::move(y), xClone, yClone, args...);
-      check_move_assign(description, sentry, actions, y, std::move(z), yClone, std::move(m), args...);
+      check_swap(description, sentry, actions, std::move(*opt), std::move(y), xClone, yClone, args...);
+      check_move_assign(description, sentry, actions, y, std::move(*opt), yClone, std::move(m), args...);
     }
     else
     {      
-      check_move_assign(description, sentry, actions, z, std::move(y), yClone, std::move(m), args...);
+      check_move_assign(description, sentry, actions, *opt, std::move(y), yClone, std::move(m), args...);
     }
   }
 }

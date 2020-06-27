@@ -685,12 +685,6 @@
 	Obtained : 
 	Predicted: 1 
 
-	Inconsistent Swap (y)
-	[sequoia::testing::move_only_broken_move<int, std::allocator<int> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 1 
-
 	=======================================
 
 	../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 29
@@ -768,24 +762,24 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-	Fast Task duration: 0.00138214s +- 4 * 5.2233e-05
-	Slow Task duration: 0.00140225s +- 4 * 2.11648e-05 [1.01455; (2, 2)]
+	Fast Task duration: 0.00138257s +- 4 * 3.25723e-05
+	Slow Task duration: 0.00139281s +- 4 * 1.99295e-05 [1.00741; (2, 2)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-	Fast Task duration: 0.00133671s +- 4 * 4.38664e-05
-	Slow Task duration: 0.00131553s +- 4 * 3.62779e-05 [0.984152; (2, 3)]
+	Fast Task duration: 0.0013233s +- 4 * 4.83961e-05
+	Slow Task duration: 0.001321s +- 4 * 3.52529e-05 [0.998262; (2, 3)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-	Fast Task duration: 0.00135081s +- 4 * 0.000110818
-	Slow Task duration: 0.00556402s +- 4 * 0.00150512 [4.11904; (2, 2.5)]
+	Fast Task duration: 0.00131735s +- 4 * 2.80469e-05
+	Slow Task duration: 0.00551431s +- 4 * 0.00164304 [4.18592; (2, 2.5)]
 
 	=======================================
 
@@ -964,13 +958,6 @@
 	Obtained : 
 	Predicted: 5 6 
 
-	Unexpected allocation detected for move construction (y)
-	[int]
-	operator== returned false
-	Obtained : -3
-	Predicted: 0
-	Advice: A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
@@ -1030,12 +1017,6 @@
 	operator== returned false
 	Obtained : 1 
 	Predicted: 5 6 
-
-	Unexpected allocation detected for move assignment (x)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
 
 	=======================================
 
@@ -1451,13 +1432,6 @@
 	Obtained : 
 	Predicted: 5 6 
 
-	Unexpected allocation detected for move construction (y)
-	[int]
-	operator== returned false
-	Obtained : -3
-	Predicted: 0
-	Advice: A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
@@ -1517,12 +1491,6 @@
 	operator== returned false
 	Obtained : 1 
 	Predicted: 5 6 
-
-	Unexpected allocation detected for move assignment (x)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
 
 	=======================================
 
@@ -1950,13 +1918,6 @@
 	Obtained : 
 	Predicted: 5 6 
 
-	Unexpected allocation detected for move construction (y)
-	[int]
-	operator== returned false
-	Obtained : -3
-	Predicted: 0
-	Advice: A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
@@ -2016,12 +1977,6 @@
 	operator== returned false
 	Obtained : 1 
 	Predicted: 5 6 
-
-	Unexpected allocation detected for move assignment (x)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
 
 	=======================================
 
@@ -2443,13 +2398,6 @@
 	Obtained : 
 	Predicted: 5 6 
 
-	Unexpected allocation detected for move construction (y)
-	[int]
-	operator== returned false
-	Obtained : -3
-	Predicted: 0
-	Advice: A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
@@ -2509,12 +2457,6 @@
 	operator== returned false
 	Obtained : 1 
 	Predicted: 5 6 
-
-	Unexpected allocation detected for move assignment (x)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
 
 	=======================================
 
@@ -2936,13 +2878,6 @@
 	Obtained : 
 	Predicted: 5 6 
 
-	Unexpected allocation detected for move construction (y)
-	[int]
-	operator== returned false
-	Obtained : -3
-	Predicted: 0
-	Advice: A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
@@ -3002,12 +2937,6 @@
 	operator== returned false
 	Obtained : 1 
 	Predicted: 5 6 
-
-	Unexpected allocation detected for move assignment (x)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
 
 	=======================================
 
@@ -3423,13 +3352,6 @@
 	Obtained : 
 	Predicted: 5 6 
 
-	Unexpected allocation detected for move construction (y)
-	[int]
-	operator== returned false
-	Obtained : -3
-	Predicted: 0
-	Advice: A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
@@ -3489,12 +3411,6 @@
 	operator== returned false
 	Obtained : 1 
 	Predicted: 5 6 
-
-	Unexpected allocation detected for move assignment (x)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
 
 	=======================================
 
@@ -3922,13 +3838,6 @@
 	Obtained : 
 	Predicted: 5 6 
 
-	Unexpected allocation detected for move construction (y)
-	[int]
-	operator== returned false
-	Obtained : -3
-	Predicted: 0
-	Advice: A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
@@ -3988,13 +3897,6 @@
 	operator== returned false
 	Obtained : 1 
 	Predicted: 5 6 
-
-	Unexpected allocation detected for move assignment (x)
-	[int]
-	operator== returned false
-	Obtained : -1
-	Predicted: 0
-	Advice: A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
 	=======================================
 
@@ -4428,13 +4330,6 @@
 	Obtained : 
 	Predicted: 5 6 
 
-	Unexpected allocation detected for move construction (y)
-	[int]
-	operator== returned false
-	Obtained : -3
-	Predicted: 0
-	Advice: A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
@@ -4494,13 +4389,6 @@
 	operator== returned false
 	Obtained : 1 
 	Predicted: 5 6 
-
-	Unexpected allocation detected for move assignment (x)
-	[int]
-	operator== returned false
-	Obtained : -1
-	Predicted: 0
-	Advice: A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
 	=======================================
 
@@ -7642,8 +7530,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67
 	Performance Test which should pass
 
-	Fast Task duration: 0.00139658s +- 4 * 1.72894e-05
-	Slow Task duration: 0.00264726s +- 4 * 3.37235e-05 [1.89553; (1.8, 2.1)]
+	Fast Task duration: 0.00127213s +- 4 * 0.000121236
+	Slow Task duration: 0.00247991s +- 4 * 0.000253579 [1.94941; (1.8, 2.1)]
 
 
 	=======================================
@@ -7652,8 +7540,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68
 	Performance Test which should pass
 
-	Fast Task duration: 0.00135548s +- 4 * 0.000114929
-	Slow Task duration: 0.00496504s +- 4 * 0.000434445 [3.66295; (3.6, 4.1)]
+	Fast Task duration: 0.00123327s +- 4 * 0.000112479
+	Slow Task duration: 0.00492543s +- 4 * 0.00184784 [3.99381; (3.6, 4.1)]
 
 
 	=======================================

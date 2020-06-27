@@ -58,6 +58,7 @@
 */
 
 #include "TestLogger.hpp"
+#include <optional>
 
 namespace sequoia::testing::impl
 {
@@ -129,7 +130,8 @@ namespace sequoia::testing::impl
   void do_check_move_assign(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, T& z, T&& y, const T& yClone, Mutator&& yMutator, const Args&... args)
   {
     z = std::move(y);
-    check_equality(sentry.add_details(description, "Inconsistent move assignment (from y)"), sentry.logger(), z, yClone);
+    if(!check_equality(sentry.add_details(description, "Inconsistent move assignment (from y)"), sentry.logger(), z, yClone))
+       return;
 
     if constexpr(Actions::has_post_move_assign_action)
     {
@@ -169,10 +171,11 @@ namespace sequoia::testing::impl
   //================================  move construction ================================ //
 
   template<test_mode Mode, class Actions, class T, class... Args>
-  T do_check_move_construction(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, T&& z, const T& y, const Args&... args)
+  std::optional<T> do_check_move_construction(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, T&& z, const T& y, const Args&... args)
   {
     T w{std::move(z)};
-    check_equality(sentry.add_details(description, "Inconsistent move construction"), sentry.logger(), w, y);
+    if(!check_equality(sentry.add_details(description, "Inconsistent move construction"), sentry.logger(), w, y))
+      return {};
 
     if constexpr(Actions::has_post_move_action)
     {
@@ -183,7 +186,7 @@ namespace sequoia::testing::impl
   }
 
   template<test_mode Mode, class Actions, class T>
-  T check_move_construction(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, T&& z, const T& y)
+  std::optional<T> check_move_construction(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, T&& z, const T& y)
   {
     return do_check_move_construction(description, sentry, actions, std::forward<T>(z), y);
   }

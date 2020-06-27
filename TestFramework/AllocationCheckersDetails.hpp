@@ -536,7 +536,7 @@ namespace sequoia::testing::impl
   }
 
   template<test_mode Mode, class Actions, class Container, class... Allocators, class... Predictions>
-  Container check_move_construction(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, Container&& z, const Container& y, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
+  std::optional<Container> check_move_construction(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, Container&& z, const Container& y, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
   {
     return do_check_move_construction(description, sentry, actions, std::forward<Container>(z), y, allocation_checker{checkers.info(), z}...);
   }
