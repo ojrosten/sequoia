@@ -756,24 +756,24 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-	Fast Task duration: 0.00187657s +- 4 * 0.00118507
-	Slow Task duration: 0.00138672s +- 4 * 3.77484e-05 [0.738965; (2, 2)]
+	Fast Task duration: 0.0013903s +- 4 * 1.4762e-05
+	Slow Task duration: 0.00139895s +- 4 * 1.94294e-05 [1.00623; (2, 2)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-	Fast Task duration: 0.00128485s +- 4 * 6.00948e-05
-	Slow Task duration: 0.00135388s +- 4 * 5.29832e-05 [1.05373; (2, 3)]
+	Fast Task duration: 0.00127727s +- 4 * 8.44974e-05
+	Slow Task duration: 0.00134198s +- 4 * 6.07771e-05 [1.05066; (2, 3)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-	Fast Task duration: 0.00130615s +- 4 * 9.88333e-05
-	Slow Task duration: 0.00489401s +- 4 * 0.00025057 [3.74689; (2, 2.5)]
+	Fast Task duration: 0.00134915s +- 4 * 0.000121136
+	Slow Task duration: 0.00493667s +- 4 * 0.000260336 [3.65911; (2, 2.5)]
 
 	=======================================
 
@@ -790,10 +790,11 @@
 	[double]
 	Obtained : 7
 	Predicted: 5 +/- 1
+	Advice: Tweak your tolerance!
 
 	=======================================
 
-	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 32
+	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 35
 
 	[double]
 	Fuzzy comparison failed
@@ -802,7 +803,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 40
+	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 43
 
 	Element 0 of range incorrect
 	[double]
@@ -811,7 +812,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 43
+	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 46
 
 	Element 1 of range incorrect
 	[double]
@@ -820,7 +821,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 48
+	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 51
 
 	Element 1 of range incorrect
 	[double]
@@ -829,7 +830,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 51
+	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 54
 
 	Element 1 of range incorrect
 	Element 0 of range incorrect
@@ -7512,8 +7513,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67
 	Performance Test which should pass
 
-	Fast Task duration: 0.00126524s +- 4 * 0.000219546
-	Slow Task duration: 0.00239927s +- 4 * 0.000227998 [1.8963; (1.8, 2.1)]
+	Fast Task duration: 0.00121932s +- 4 * 0.000161353
+	Slow Task duration: 0.00228987s +- 4 * 0.000236239 [1.87798; (1.8, 2.1)]
 
 
 	=======================================
@@ -7522,24 +7523,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68
 	Performance Test which should pass
 
-	Fast Task duration: 0.0014887s +- 4 * 0.000754906
-	Slow Task duration: 0.004703s +- 4 * 0.000504882 [3.15912; (3.6, 4.1)]
-
-
-	=======================================
-
-	False Positive Failure:
-	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 69
-
-	[double]
-
-
-	=======================================
-
-	False Positive Failure:
-	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 70
-
-	[double]
+	Fast Task duration: 0.00124813s +- 4 * 0.000110556
+	Slow Task duration: 0.00476159s +- 4 * 0.000455486 [3.81498; (3.6, 4.1)]
 
 
 	=======================================
@@ -7561,13 +7546,29 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 79
+	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 75
+
+	[double]
 
 
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 84
+	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 76
+
+	[double]
+
+
+	=======================================
+
+	False Positive Failure:
+	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 82
+
+
+	=======================================
+
+	False Positive Failure:
+	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 87
 
 	[std::vector<double, std::allocator<double> >]
 
@@ -7575,7 +7576,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 87
+	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 90
 
 	[std::vector<std::vector<double, std::allocator<double> >, std::allocator<std::vector<double, std::allocator<double> > > >]
 

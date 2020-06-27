@@ -27,7 +27,10 @@ namespace sequoia::testing
   void fuzzy_false_positive_diagnostics::basic_tests()
   {  
     check_approx_equality(LINE(""), within_tolerance{1.0}, 3.0, 5.0);
-    check_approx_equality(LINE(""), within_tolerance{1.0}, 7.0, 5.0);
+    check_approx_equality(LINE(""), within_tolerance{1.0}, 7.0, 5.0,
+                          [](double, double){
+                            return std::string{"Tweak your tolerance!"};
+                          });
 
     check_approx_equality(LINE(""), [](const double& lhs, const double& rhs){
         return std::abs(lhs - rhs) < 0.3;
