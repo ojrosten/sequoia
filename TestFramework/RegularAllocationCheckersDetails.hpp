@@ -67,7 +67,7 @@ namespace sequoia::testing::impl
       auto make{
         [description, &sentry, &y](auto&... info){
           Container u{y, info.make_allocator()...};
-          check_equality(sentry.add_details(description, "Inconsistent para-copy construction"), sentry.logger(), u, y);
+          check_equality(sentry.generate_message("Inconsistent para-copy construction"), sentry.logger(), u, y);
           check_para_copy_y_allocation(description, sentry, u, std::tuple_cat(make_allocation_checkers(info)...));
 
           return u;
@@ -76,7 +76,7 @@ namespace sequoia::testing::impl
 
       Container v{make(info...), info.make_allocator()...};
 
-      check_equality(sentry.add_details(description, "Inconsistent para-move construction"), sentry.logger(), v, y);    
+      check_equality(sentry.generate_message("Inconsistent para-move construction"), sentry.logger(), v, y);    
       check_para_move_y_allocation(description, sentry, v, std::tuple_cat(make_allocation_checkers(info)...));
       check_mutation_after_move(description, "allocation assignment", sentry, v, y, std::move(yMutator), std::tuple_cat(make_allocation_checkers(info, v)...));
     }

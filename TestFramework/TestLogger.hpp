@@ -81,7 +81,8 @@ namespace sequoia::testing
   {
   public:
     sentinel(test_logger<Mode>& logger, std::string_view message)
-      : m_Logger{logger}
+      : m_Logger{logger}    
+      , m_Message{message}
       , m_PriorFailures{logger.failures()}
       , m_PriorDeepChecks{logger.deep_checks()}
     {
@@ -151,9 +152,14 @@ namespace sequoia::testing
     sentinel& operator=(sentinel&&)      = delete;
 
     [[nodiscard]]
-    std::string add_details(std::string_view description, std::string_view details) const
+    std::string generate_message(std::string_view details) const
     {
-      std::string_view desc{checks_registered() && failure_detected() ? "" : description};
+      std::string desc{
+        checks_registered() && failure_detected() ? "" : m_Message
+      };
+
+      if(!desc.empty()) desc.append("\n");
+
       return append_indented(desc, details);
     }
 
@@ -183,6 +189,7 @@ namespace sequoia::testing
     test_logger<Mode>& logger() noexcept { return m_Logger.get(); }
   private:
     std::reference_wrapper<test_logger<Mode>> m_Logger;
+    std::string m_Message;
     std::size_t m_PriorFailures{}, m_PriorDeepChecks{};
   };
 

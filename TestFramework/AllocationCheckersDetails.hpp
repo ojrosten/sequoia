@@ -31,7 +31,7 @@ namespace sequoia::testing::impl
   static void check_allocation(std::string_view description, std::string_view detail, sentinel<Mode>& sentry, const Container& container, const basic_allocation_info<Container, Allocator, Predictions>& info, const int previous, const int prediction)
   {
     const auto current{info.count(container)};      
-    auto message{sentry.add_details(description, detail)};
+    auto message{sentry.generate_message(detail)};
 
     check_equality(std::move(message), sentry.logger(), current - previous, prediction, allocation_advice{});
   }
@@ -85,8 +85,8 @@ namespace sequoia::testing::impl
     template<test_mode Mode>
     void check_no_allocation(std::string_view description, sentinel<Mode>& sentry, const Container& x, const Container& y) const
     {
-      check_allocation(description, "Unexpected allocation detected (x)", sentry, x, info(), first_count(), 0);
-      check_allocation(description, "Unexpected allocation detected (y)", sentry, y, info(), second_count(), 0);
+      check_allocation("", append_indented(description, "Unexpected allocation detected (x)"), sentry, x, info(), first_count(), 0);
+      check_allocation("", append_indented(description, "Unexpected allocation detected (y)"), sentry, y, info(), second_count(), 0);
     }
 
     template<test_mode Mode>
@@ -305,7 +305,7 @@ namespace sequoia::testing::impl
   void check_allocation(std::string_view description, sentinel<Mode>& sentry, CheckFn check, const Checker& checker, const Checkers&... moreCheckers)
   {
     using Allocator = typename Checker::allocator_type;
-    check(add_type_info<Allocator>(description), checker);
+    check(description, checker);
 
     if constexpr (sizeof...(Checkers) > 0)
     {
@@ -366,12 +366,12 @@ namespace sequoia::testing::impl
   template<test_mode Mode, class Container, class Mutator, class... Allocators, class... Predictions>
   void check_mutation_after_swap(std::string_view description, sentinel<Mode>& sentry, Container& lhs, const Container& rhs, const Container& y, Mutator yMutator, dual_allocation_checker<Container, Allocators, Predictions>... checkers)
   {
-    if(check(sentry.add_details(description, "Mutation after swap pre-condition violated"), sentry.logger(), lhs == y))
+    if(check(sentry.generate_message("Mutation after swap pre-condition violated"), sentry.logger(), lhs == y))
     {    
       yMutator(lhs);
-      check_mutation_allocation(sentry.add_details(description, "Unexpected allocation detected following mutation after swap"), sentry, lhs, rhs, checkers...);
+      check_mutation_allocation(sentry.generate_message("Unexpected allocation detected following mutation after swap"), sentry, lhs, rhs, checkers...);
 
-      check(sentry.add_details(description, "Mutation is not doing anything following copy then swap"), sentry.logger(), lhs != y);
+      check(sentry.generate_message("Mutation is not doing anything following copy then swap"), sentry.logger(), lhs != y);
     }
   }
 
@@ -404,7 +404,7 @@ namespace sequoia::testing::impl
   }
 
   template<test_mode Mode, class Container, class Allocator, class Prediction, class... Allocators, class... Predictions>
-  void check_move_y_allocation(std::string_view description, sentinel<Mode>& sentry, const Container& container, const allocation_checker<Container, Allocator, Prediction>& checker, const allocation_checker<Container, Allocators, Predictions>&... moreCheckers)
+  void check_move_y_allocation(sentinel<Mode>& sentry, const Container& container, const allocation_checker<Container, Allocator, Prediction>& checker, const allocation_checker<Container, Allocators, Predictions>&... moreCheckers)
   {
     auto checkFn{
       [&sentry, &container](std::string_view message, const auto& checker){
@@ -412,7 +412,7 @@ namespace sequoia::testing::impl
       }
     };
 
-    check_allocation(description, sentry, checkFn, checker, moreCheckers...);
+    check_allocation("", sentry, checkFn, checker, moreCheckers...);
   }
 
   template<test_mode Mode, class Container, class Allocator, class Prediction, class... Allocators, class... Predictions>
@@ -489,19 +489,19 @@ namespace sequoia::testing::impl
     template<test_mode Mode, class Container, class... Allocators, class... Predictions>
     static void post_equality_action(std::string_view description, sentinel<Mode>& sentry, const Container& x, const Container& y, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
     {
-      check_no_allocation(sentry.add_details(description, "Unexpected allocation detected for operator=="), sentry, x, y, checkers...);
+      check_no_allocation("Unexpected allocation detected for operator==", sentry, x, y, checkers...);
     }
 
     template<test_mode Mode, class Container, class... Allocators, class... Predictions>
     static void post_nequality_action(std::string_view description, sentinel<Mode>& sentry, const Container& x, const Container& y, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
     {
-      check_no_allocation(sentry.add_details(description, "Unexpected allocation detected for operator!="), sentry, x, y, checkers...);
+      check_no_allocation("Unexpected allocation detected for operator!=", sentry, x, y, checkers...);
     }
 
     template<test_mode Mode, class Container, class... Allocators, class... Predictions>
-    static void post_move_action(std::string_view description, sentinel<Mode>& sentry, const Container& y, const allocation_checker<Container, Allocators, Predictions>&... checkers)
+    static void post_move_action(sentinel<Mode>& sentry, const Container& y, const allocation_checker<Container, Allocators, Predictions>&... checkers)
     {
-      check_move_y_allocation(description, sentry, y, checkers...);
+      check_move_y_allocation(sentry, y, checkers...);
     }
 
     template<test_mode Mode, class Container, class Mutator, class... Allocators, class... Predictions>
@@ -517,7 +517,7 @@ namespace sequoia::testing::impl
       if constexpr(((   std::allocator_traits<Allocators>::propagate_on_container_move_assignment::value
                      && std::allocator_traits<Allocators>::propagate_on_container_swap::value) && ... ))
       {
-        check_no_allocation(sentry.add_details(description, "Unexpected allocation detected for swap"), sentry, y, x, checkers...);
+        check_no_allocation(sentry.generate_message("Unexpected allocation detected for swap"), sentry, y, x, checkers...);
       }
     }
   };
@@ -536,9 +536,9 @@ namespace sequoia::testing::impl
   }
 
   template<test_mode Mode, class Actions, class Container, class... Allocators, class... Predictions>
-  std::optional<Container> check_move_construction(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, Container&& z, const Container& y, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
+  std::optional<Container> check_move_construction(sentinel<Mode>& sentry, const Actions& actions, Container&& z, const Container& y, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
   {
-    return do_check_move_construction(description, sentry, actions, std::forward<Container>(z), y, allocation_checker{checkers.info(), z}...);
+    return do_check_move_construction(sentry, actions, std::forward<Container>(z), y, allocation_checker{checkers.info(), z}...);
   }
 
   template<test_mode Mode, class Actions, class Container, class Mutator, class... Allocators, class... Predictions>
@@ -552,10 +552,10 @@ namespace sequoia::testing::impl
   {
     yMutator(u);
     auto mess{append_indented("mutation after move", moveType)};
-    check_mutation_allocation(append_indented(description, std::move(mess)), sentry, u, checkers...);
+    check_mutation_allocation(append_indented(description, mess), sentry, u, checkers...);
 
     mess = append_indented("Mutation is not doing anything following move", moveType);
-    check(sentry.add_details(description, std::move(mess)), sentry.logger(), u != y);    
+    check(sentry.generate_message(mess), sentry.logger(), u != y);    
   }
 
   template<test_mode Mode, class Container, class Mutator, class... Checkers, std::size_t... I>

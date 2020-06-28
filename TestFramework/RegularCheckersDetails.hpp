@@ -21,7 +21,7 @@ namespace sequoia::testing::impl
   {
     z = y;
     const bool consistent{
-       check_equality(sentry.add_details(description, "Inconsistent copy assignment (from y)"), sentry.logger(), z, y)
+       check_equality(sentry.generate_message("Inconsistent copy assignment (from y)"), sentry.logger(), z, y)
     };
 
     if constexpr(Actions::has_post_copy_assign_action)
@@ -56,7 +56,7 @@ namespace sequoia::testing::impl
         
     T z{x};
     const bool consistentCopy{
-      check_equality(sentry.add_details(description, "Inconsistent copy constructor (x)"),
+      check_equality(sentry.generate_message("Inconsistent copy constructor (x)"),
                      sentry.logger(), z, x)
     };
 
@@ -73,7 +73,7 @@ namespace sequoia::testing::impl
 
     if(consistentCopyAssign)
     {
-      check_move_construction(description, sentry, actions, std::move(z), y, args...);
+      check_move_construction(sentry, actions, std::move(z), y, args...);
     }
 
     if(!consistentCopy)
@@ -97,14 +97,14 @@ namespace sequoia::testing::impl
         T v{y};
         yMutator(v);
 
-        check(sentry.add_details(description, "Either mutation is not doing anything following copy construction or value semantics are broken, with mutation of an object also changing the object from which it was copied"), sentry.logger(), v != y);
+        check(sentry.generate_message("Either mutation is not doing anything following copy construction or value semantics are broken, with mutation of an object also changing the object from which it was copied"), sentry.logger(), v != y);
 
         v = y;
-        check_equality(sentry.add_details(description, "Inconsistent copy assignment (from mutated y)"), sentry.logger(), v, y);
+        check_equality(sentry.generate_message("Inconsistent copy assignment (from mutated y)"), sentry.logger(), v, y);
 
         yMutator(v);
 
-        check(sentry.add_details(description, "Mutation is not doing anything following copy assignment/ broken value semantics"), sentry.logger(), v != y);
+        check(sentry.generate_message("Mutation is not doing anything following copy assignment/ broken value semantics"), sentry.logger(), v != y);
       }
     }
 

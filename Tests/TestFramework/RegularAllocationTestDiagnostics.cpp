@@ -65,7 +65,7 @@ namespace sequoia::testing
         using allocator = typename beast::allocator_type;
         
         
-        check_semantics(LINE("Broken equality"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info<beast, allocator>{allocGetter, {1_c, {1_c,1_mu}, {1_awp,1_anp}}});
+        check_semantics(LINE("Inefficient equality"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info<beast, allocator>{allocGetter, {1_c, {1_c,1_mu}, {1_awp,1_anp}}});
       }
       
 

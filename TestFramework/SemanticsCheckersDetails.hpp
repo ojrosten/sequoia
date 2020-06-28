@@ -79,7 +79,7 @@ namespace sequoia::testing::impl
     template<test_mode Mode, class T, class... Allocators>
     static bool check_preconditions(std::string_view description, sentinel<Mode>& sentry, const T& x, const T& y)
     {
-      return check(sentry.add_details(description, "Precondition - for checking regular semantics, x and y are assumed to be different"), sentry.logger(), x != y);
+      return check(sentry.generate_message("Precondition - for checking regular semantics, x and y are assumed to be different"), sentry.logger(), x != y);
     }
   };
   
@@ -99,7 +99,7 @@ namespace sequoia::testing::impl
   template<test_mode Mode, class Actions, class T, class... Args>
   bool do_check_preconditions(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, const T& x, const T& y, const Args&... args)
   {
-    if(!check(sentry.add_details(description, "Equality operator is inconsistent"), sentry.logger(), x == x))
+    if(!check(sentry.generate_message("Equality operator is inconsistent"), sentry.logger(), x == x))
       return false;
 
     if constexpr (Actions::has_post_equality_action)
@@ -107,7 +107,7 @@ namespace sequoia::testing::impl
       actions.post_equality_action(description, sentry, x, y, args...);
     }
     
-    if(!check(sentry.add_details(description, "Inequality operator is inconsistent"), sentry.logger(), !(x != x)))
+    if(!check(sentry.generate_message("Inequality operator is inconsistent"), sentry.logger(), !(x != x)))
       return false;
 
     if constexpr (Actions::has_post_nequality_action)
@@ -130,7 +130,7 @@ namespace sequoia::testing::impl
   void do_check_move_assign(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, T& z, T&& y, const T& yClone, Mutator&& yMutator, const Args&... args)
   {
     z = std::move(y);
-    if(!check_equality(sentry.add_details(description, "Inconsistent move assignment (from y)"), sentry.logger(), z, yClone))
+    if(!check_equality(sentry.generate_message("Inconsistent move assignment (from y)"), sentry.logger(), z, yClone))
        return;
 
     if constexpr(Actions::has_post_move_assign_action)
@@ -154,11 +154,11 @@ namespace sequoia::testing::impl
     swap(x, y);
 
     const bool swapy{
-      check_equality(sentry.add_details(description, "Inconsistent Swap (y)"), sentry.logger(), y, xClone)
+      check_equality(sentry.generate_message("Inconsistent Swap (y)"), sentry.logger(), y, xClone)
     };
     
     const bool swapx{
-      check_equality(sentry.add_details(description, "Inconsistent Swap (x)"), sentry.logger(), x, yClone)
+      check_equality(sentry.generate_message("Inconsistent Swap (x)"), sentry.logger(), x, yClone)
     };
       
     if constexpr(Actions::has_post_swap_action)
@@ -181,23 +181,23 @@ namespace sequoia::testing::impl
   //================================  move construction ================================ //
 
   template<test_mode Mode, class Actions, class T, class... Args>
-  std::optional<T> do_check_move_construction(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, T&& z, const T& y, const Args&... args)
+  std::optional<T> do_check_move_construction(sentinel<Mode>& sentry, const Actions& actions, T&& z, const T& y, const Args&... args)
   {
     T w{std::move(z)};
-    if(!check_equality(sentry.add_details(description, "Inconsistent move construction"), sentry.logger(), w, y))
+    if(!check_equality(sentry.generate_message("Inconsistent move construction"), sentry.logger(), w, y))
       return {};
 
     if constexpr(Actions::has_post_move_action)
     {
-      actions.post_move_action(description, sentry, w, args...);
+      actions.post_move_action(sentry, w, args...);
     }
 
     return w;
   }
 
   template<test_mode Mode, class Actions, class T>
-  std::optional<T> check_move_construction(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, T&& z, const T& y)
+  std::optional<T> check_move_construction(sentinel<Mode>& sentry, const Actions& actions, T&& z, const T& y)
   {
-    return do_check_move_construction(description, sentry, actions, std::forward<T>(z), y);
+    return do_check_move_construction(sentry, actions, std::forward<T>(z), y);
   }
 }
