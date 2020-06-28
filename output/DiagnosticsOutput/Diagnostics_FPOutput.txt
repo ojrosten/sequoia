@@ -491,7 +491,7 @@
 	Obtained : false
 	Predicted: true
 
-	Mutation is not doing anything following copy assignment/ broken value semantics
+	Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -505,7 +505,7 @@
 	--Regular Semantics--
 	[sequoia::testing::broken_copy_assignment_value_semantics<int, std::shared_ptr<int>, std::allocator<std::shared_ptr<int> > >]
 
-	Mutation is not doing anything following copy assignment/ broken value semantics
+	Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -792,24 +792,24 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-	Fast Task duration: 0.00114616s +- 4 * 7.98016e-05
-	Slow Task duration: 0.00119422s +- 4 * 7.88343e-05 [1.04192; (2, 2)]
+	Fast Task duration: 0.00135098s +- 4 * 0.000109885
+	Slow Task duration: 0.00138341s +- 4 * 1.26335e-05 [1.024; (2, 2)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-	Fast Task duration: 0.00108055s +- 4 * 6.76221e-05
-	Slow Task duration: 0.00112834s +- 4 * 0.000101595 [1.04422; (2, 3)]
+	Fast Task duration: 0.00133699s +- 4 * 4.29803e-05
+	Slow Task duration: 0.00130801s +- 4 * 0.000110818 [0.978325; (2, 3)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-	Fast Task duration: 0.00114968s +- 4 * 0.000123684
-	Slow Task duration: 0.00454145s +- 4 * 0.000415193 [3.95018; (2, 2.5)]
+	Fast Task duration: 0.0012522s +- 4 * 0.000165542
+	Slow Task duration: 0.00505204s +- 4 * 0.000212501 [4.03454; (2, 2.5)]
 
 	=======================================
 
@@ -1094,7 +1094,7 @@
 	Obtained : false
 	Predicted: true
 
-	Mutation is not doing anything following copy assignment/ broken value semantics
+	Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -1108,7 +1108,7 @@
 	--Regular Semantics--
 	[sequoia::testing::broken_copy_assignment_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, false, false> >]
 
-	Mutation is not doing anything following copy assignment/ broken value semantics
+	Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -1532,7 +1532,7 @@
 	Obtained : false
 	Predicted: true
 
-	Mutation is not doing anything following copy assignment/ broken value semantics
+	Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -1546,7 +1546,7 @@
 	--Regular Semantics--
 	[sequoia::testing::broken_copy_assignment_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, false, true> >]
 
-	Mutation is not doing anything following copy assignment/ broken value semantics
+	Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -1970,7 +1970,7 @@
 	Obtained : false
 	Predicted: true
 
-	Mutation is not doing anything following copy assignment/ broken value semantics
+	Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -1984,7 +1984,7 @@
 	--Regular Semantics--
 	[sequoia::testing::broken_copy_assignment_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, true, false> >]
 
-	Mutation is not doing anything following copy assignment/ broken value semantics
+	Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -2416,7 +2416,7 @@
 	Obtained : false
 	Predicted: true
 
-	Mutation is not doing anything following copy assignment/ broken value semantics
+	Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -2430,7 +2430,7 @@
 	--Regular Semantics--
 	[sequoia::testing::broken_copy_assignment_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, false, true, true> >]
 
-	Mutation is not doing anything following copy assignment/ broken value semantics
+	Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -2842,7 +2842,7 @@
 	Obtained : false
 	Predicted: true
 
-	Mutation is not doing anything following copy assignment/ broken value semantics
+	Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -2856,7 +2856,7 @@
 	--Regular Semantics--
 	[sequoia::testing::broken_copy_assignment_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, false, false> >]
 
-	Mutation is not doing anything following copy assignment/ broken value semantics
+	Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -3286,7 +3286,7 @@
 	Obtained : false
 	Predicted: true
 
-	Mutation is not doing anything following copy assignment/ broken value semantics
+	Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -3300,7 +3300,7 @@
 	--Regular Semantics--
 	[sequoia::testing::broken_copy_assignment_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, false, true> >]
 
-	Mutation is not doing anything following copy assignment/ broken value semantics
+	Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -3730,7 +3730,7 @@
 	Obtained : false
 	Predicted: true
 
-	Mutation is not doing anything following copy assignment/ broken value semantics
+	Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -3744,7 +3744,7 @@
 	--Regular Semantics--
 	[sequoia::testing::broken_copy_assignment_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, true, false> >]
 
-	Mutation is not doing anything following copy assignment/ broken value semantics
+	Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -4194,7 +4194,7 @@
 	Obtained : false
 	Predicted: true
 
-	Mutation is not doing anything following copy assignment/ broken value semantics
+	Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -4208,7 +4208,7 @@
 	--Regular Semantics--
 	[sequoia::testing::broken_copy_assignment_value_semantics<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, true, true> >]
 
-	Mutation is not doing anything following copy assignment/ broken value semantics
+	Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -6712,8 +6712,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67
 	Performance Test which should pass
 
-	Fast Task duration: 0.00118416s +- 4 * 8.52108e-05
-	Slow Task duration: 0.00232623s +- 4 * 0.000224965 [1.96445; (1.8, 2.1)]
+	Fast Task duration: 0.00140162s +- 4 * 1.43095e-05
+	Slow Task duration: 0.00263995s +- 4 * 1.07636e-05 [1.8835; (1.8, 2.1)]
 
 
 	=======================================
@@ -6722,8 +6722,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68
 	Performance Test which should pass
 
-	Fast Task duration: 0.00137199s +- 4 * 5.50274e-05
-	Slow Task duration: 0.00489063s +- 4 * 0.000501236 [3.56462; (3.6, 4.1)]
+	Fast Task duration: 0.0013429s +- 4 * 4.95358e-05
+	Slow Task duration: 0.00469903s +- 4 * 0.000470736 [3.49917; (3.6, 4.1)]
 
 
 	=======================================
