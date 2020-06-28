@@ -27,7 +27,10 @@ namespace sequoia::testing
   void fuzzy_false_positive_diagnostics::basic_tests()
   {  
     check_approx_equality(LINE(""), within_tolerance{1.0}, 3.0, 5.0);
-    check_approx_equality(LINE(""), within_tolerance{1.0}, 7.0, 5.0);
+    check_approx_equality(LINE(""), within_tolerance{1.0}, 7.0, 5.0,
+                          [](double, double){
+                            return "Tweak your tolerance!";
+                          });
 
     check_approx_equality(LINE(""), [](const double& lhs, const double& rhs){
         return std::abs(lhs - rhs) < 0.3;
@@ -38,6 +41,10 @@ namespace sequoia::testing
   {
     std::vector<double> v{0.5, 0.6}, p{-0.1, 1.0};
     check_range_approx(LINE(""), within_tolerance{0.5}, v.cbegin(), v.cend(), p.cbegin(), p.cend());
+    check_range_approx(LINE(""), within_tolerance{0.5}, v.cbegin(), v.cend(), p.cbegin(), p.cend(),
+                       [](double, double){
+                         return "Consider increasing tolerance!";
+                       });
 
     p = {0.5, 1.2};
     check_range_approx(LINE(""), within_tolerance{0.5}, v.cbegin(), v.cend(), p.cbegin(), p.cend());

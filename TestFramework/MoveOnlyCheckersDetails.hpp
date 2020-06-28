@@ -16,26 +16,29 @@
 namespace sequoia::testing::impl
 {
   template<test_mode Mode, class Actions, class T, class Mutator, class... Args>
-  void check_semantics(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, const Args&... args)
+  void check_semantics(sentinel<Mode>& sentry, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, const Args&... args)
   {
     // Preconditions
-    if(!check_preconditions(description, sentry, actions, x, y, args...))
+    if(!check_preconditions(sentry, actions, x, y, args...))
       return;
 
-    if(!check(sentry.add_details(description, "Precondition - for checking regular semantics, x and xClone are assumed to be equal"), sentry.logger(), x == xClone)) return;
+    if(!check(sentry.generate_message("Precondition - for checking regular semantics, x and xClone are assumed to be equal"), sentry.logger(), x == xClone)) return;
 
-    if(!check(sentry.add_details(description, "Precondition - for checking regular semantics, y and yClone are assumed to be equal"), sentry.logger(), y == yClone)) return;
+    if(!check(sentry.generate_message("Precondition - for checking regular semantics, y and yClone are assumed to be equal"), sentry.logger(), y == yClone)) return;
 
-    T z{check_move_construction(description, sentry, actions, std::move(x), xClone, args...)};    
-
+    auto opt{check_move_construction(sentry, actions, std::move(x), xClone, args...)};
+    if(!opt) return;
+      
     if constexpr (do_swap<Args...>::value)
     {
-      check_swap(description, sentry, actions, std::move(z), std::move(y), xClone, yClone, args...);
-      check_move_assign(description, sentry, actions, y, std::move(z), yClone, std::move(m), args...);
+      if(check_swap(sentry, actions, std::move(*opt), std::move(y), xClone, yClone, args...))
+      {
+        check_move_assign(sentry, actions, y, std::move(*opt), yClone, std::move(m), args...);
+      }
     }
     else
     {      
-      check_move_assign(description, sentry, actions, z, std::move(y), yClone, std::move(m), args...);
+      check_move_assign(sentry, actions, *opt, std::move(y), yClone, std::move(m), args...);
     }
   }
 }

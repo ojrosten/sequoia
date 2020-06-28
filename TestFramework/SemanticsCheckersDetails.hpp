@@ -58,6 +58,7 @@
 */
 
 #include "TestLogger.hpp"
+#include <optional>
 
 namespace sequoia::testing::impl
 {
@@ -76,9 +77,9 @@ namespace sequoia::testing::impl
   struct pre_condition_actions
   {
     template<test_mode Mode, class T, class... Allocators>
-    static bool check_preconditions(std::string_view description, sentinel<Mode>& sentry, const T& x, const T& y)
+    static bool check_preconditions(sentinel<Mode>& sentry, const T& x, const T& y)
     {
-      return check(sentry.add_details(description, "Precondition - for checking regular semantics, x and y are assumed to be different"), sentry.logger(), x != y);
+      return check(sentry.generate_message("Precondition - for checking regular semantics, x and y are assumed to be different"), sentry.logger(), x != y);
     }
   };
   
@@ -96,95 +97,107 @@ namespace sequoia::testing::impl
   //================================ preconditions ================================//
  
   template<test_mode Mode, class Actions, class T, class... Args>
-  bool do_check_preconditions(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, const T& x, const T& y, const Args&... args)
+  bool do_check_preconditions(sentinel<Mode>& sentry, const Actions& actions, const T& x, const T& y, const Args&... args)
   {
-    if(!check(sentry.add_details(description, "Equality operator is inconsistent"), sentry.logger(), x == x))
+    if(!check(sentry.generate_message("Equality operator is inconsistent"), sentry.logger(), x == x))
       return false;
 
     if constexpr (Actions::has_post_equality_action)
     {
-      actions.post_equality_action(description, sentry, x, y, args...);
+      actions.post_equality_action(sentry, x, y, args...);
     }
     
-    if(!check(sentry.add_details(description, "Inequality operator is inconsistent"), sentry.logger(), !(x != x)))
+    if(!check(sentry.generate_message("Inequality operator is inconsistent"), sentry.logger(), !(x != x)))
       return false;
 
     if constexpr (Actions::has_post_nequality_action)
     {
-      actions.post_nequality_action(description, sentry, x, y, args...);
+      actions.post_nequality_action(sentry, x, y, args...);
     }
 
-    return actions.check_preconditions(description, sentry, x, y);
+    return actions.check_preconditions(sentry, x, y);
   }
 
   template<test_mode Mode, class Actions, class T>
-  bool check_preconditions(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, const T& x, const T& y)
+  bool check_preconditions(sentinel<Mode>& sentry, const Actions& actions, const T& x, const T& y)
   {
-    return do_check_preconditions(description, sentry, actions, x, y);
+    return do_check_preconditions(sentry, actions, x, y);
   }
 
   //================================ move assign ================================//
 
   template<test_mode Mode, class Actions, class T, class Mutator, class... Args>
-  void do_check_move_assign(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, T& z, T&& y, const T& yClone, Mutator&& yMutator, const Args&... args)
+  void do_check_move_assign(sentinel<Mode>& sentry, const Actions& actions, T& z, T&& y, const T& yClone, Mutator&& yMutator, const Args&... args)
   {
     z = std::move(y);
-    check_equality(sentry.add_details(description, "Inconsistent move assignment (from y)"), sentry.logger(), z, yClone);
+    if(!check_equality(sentry.generate_message("Inconsistent move assignment (from y)"), sentry.logger(), z, yClone))
+       return;
 
     if constexpr(Actions::has_post_move_assign_action)
     {
-      actions.post_move_assign_action(description, sentry, z, yClone, std::move(yMutator), args...);
+      actions.post_move_assign_action(sentry, z, yClone, std::move(yMutator), args...);
     }
   }
   
   template<test_mode Mode, class Actions, class T, class Mutator>
-  void check_move_assign(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, T& z, T&& y, const T& yClone, Mutator m)
+  void check_move_assign(sentinel<Mode>& sentry, const Actions& actions, T& z, T&& y, const T& yClone, Mutator m)
   {
-    do_check_move_assign(description, sentry, actions, z, std::forward<T>(y), yClone, std::move(m));
+    do_check_move_assign(sentry, actions, z, std::forward<T>(y), yClone, std::move(m));
   }
 
   //================================ swap ================================//
 
   template<test_mode Mode, class Actions, class T, class... Args>
-  void do_check_swap(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, const Args&... args)
+  bool do_check_swap(sentinel<Mode>& sentry, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, const Args&... args)
   {
     using std::swap;
     swap(x, y);
 
-    check_equality(sentry.add_details(description, "Inconsistent Swap (y)"), sentry.logger(), y, xClone);
-    check_equality(sentry.add_details(description, "Inconsistent Swap (x)"), sentry.logger(), x, yClone);
+    const bool swapy{
+      check_equality(sentry.generate_message("Inconsistent Swap (y)"), sentry.logger(), y, xClone)
+    };
     
+    const bool swapx{
+      check_equality(sentry.generate_message("Inconsistent Swap (x)"), sentry.logger(), x, yClone)
+    };
+      
     if constexpr(Actions::has_post_swap_action)
     {
-      actions.post_swap_action(description, sentry, x, y, yClone, args...);
+      if(swapx && swapy)
+      {
+        actions.post_swap_action(sentry, x, y, yClone, args...);
+      }
     }
+
+    return swapx && swapy;
   }
 
   template<test_mode Mode, class Actions, class T>
-  void check_swap(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone)
+  bool check_swap(sentinel<Mode>& sentry, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone)
   {
-    do_check_swap(description, sentry, actions, std::move(x), std::move(y), xClone, yClone);
+    return do_check_swap(sentry, actions, std::move(x), std::move(y), xClone, yClone);
   }
 
   //================================  move construction ================================ //
 
   template<test_mode Mode, class Actions, class T, class... Args>
-  T do_check_move_construction(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, T&& z, const T& y, const Args&... args)
+  std::optional<T> do_check_move_construction(sentinel<Mode>& sentry, const Actions& actions, T&& z, const T& y, const Args&... args)
   {
     T w{std::move(z)};
-    check_equality(sentry.add_details(description, "Inconsistent move construction"), sentry.logger(), w, y);
+    if(!check_equality(sentry.generate_message("Inconsistent move construction"), sentry.logger(), w, y))
+      return {};
 
     if constexpr(Actions::has_post_move_action)
     {
-      actions.post_move_action(description, sentry, w, args...);
+      actions.post_move_action(sentry, w, args...);
     }
 
     return w;
   }
 
   template<test_mode Mode, class Actions, class T>
-  T check_move_construction(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, T&& z, const T& y)
+  std::optional<T> check_move_construction(sentinel<Mode>& sentry, const Actions& actions, T&& z, const T& y)
   {
-    return do_check_move_construction(description, sentry, actions, std::forward<T>(z), y);
+    return do_check_move_construction(sentry, actions, std::forward<T>(z), y);
   }
 }

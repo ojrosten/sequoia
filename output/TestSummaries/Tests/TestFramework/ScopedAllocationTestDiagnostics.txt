@@ -1,6 +1,6 @@
 Scoped Allocation False Negative Diagnostics
-[41ms]
+[30ms]
 False Positive Checks:                    96;  Failures:  0
 Scoped Allocation False Negative Diagnostics
-[10ms]
+[5ms]
 False Negative Checks:                    16;  Failures:  0
