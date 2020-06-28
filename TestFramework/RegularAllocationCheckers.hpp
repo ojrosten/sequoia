@@ -107,9 +107,9 @@ namespace sequoia::testing
   {
     sentinel<Mode> s{logger, add_type_info<T>(description)};
       
-    if(impl::check_semantics(description, s, impl::regular_allocation_actions{}, x, y, yMutator, std::tuple_cat(impl::make_dual_allocation_checkers(info, x, y)...)))
+    if(impl::check_semantics(s, impl::regular_allocation_actions{}, x, y, yMutator, std::tuple_cat(impl::make_dual_allocation_checkers(info, x, y)...)))
     {
-      impl::check_para_constructor_allocations(description, s, y, yMutator, info...);
+      impl::check_para_constructor_allocations(s, y, yMutator, info...);
     }
   }
 }

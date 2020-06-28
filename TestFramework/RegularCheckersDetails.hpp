@@ -17,7 +17,7 @@
 namespace sequoia::testing::impl
 {
   template<test_mode Mode, class Actions, class T, class... Args>
-  bool do_check_copy_assign(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, T& z, const T& y, const Args&... args)
+  bool do_check_copy_assign(sentinel<Mode>& sentry, const Actions& actions, T& z, const T& y, const Args&... args)
   {
     z = y;
     const bool consistent{
@@ -28,7 +28,7 @@ namespace sequoia::testing::impl
     {
       if(consistent)
       {
-        actions.post_copy_assign_action(description, sentry, z, y, args...);
+        actions.post_copy_assign_action(sentry, z, y, args...);
       }
     }
 
@@ -36,22 +36,22 @@ namespace sequoia::testing::impl
   }
   
   template<test_mode Mode, class Actions, class T>
-  bool check_copy_assign(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, T& z, const T& y)
+  bool check_copy_assign(sentinel<Mode>& sentry, const Actions& actions, T& z, const T& y)
   {
-    return do_check_copy_assign(description, sentry, actions, z, y);   
+    return do_check_copy_assign(sentry, actions, z, y);   
   }
   
   template<test_mode Mode, class Actions, class T, class Mutator, std::enable_if_t<std::is_invocable_v<Mutator, T&>, int> = 0>
-  bool check_swap(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator yMutator)
+  bool check_swap(sentinel<Mode>& sentry, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator yMutator)
   {
-    return do_check_swap(description, sentry, actions, std::move(x), std::move(y), xClone, yClone, std::move(yMutator));
+    return do_check_swap(sentry, actions, std::move(x), std::move(y), xClone, yClone, std::move(yMutator));
   }
 
   template<test_mode Mode, class Actions, class T, class Mutator, class... Args>
-  bool check_semantics(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, const T& x, const T& y, Mutator yMutator, const Args&... args)
+  bool check_semantics(sentinel<Mode>& sentry, const Actions& actions, const T& x, const T& y, Mutator yMutator, const Args&... args)
   {    
     // Preconditions
-    if(!check_preconditions(description, sentry, actions, x, y, args...))
+    if(!check_preconditions(sentry, actions, x, y, args...))
       return false;
         
     T z{x};
@@ -64,11 +64,11 @@ namespace sequoia::testing::impl
     {
       if(consistentCopy)
       {
-        actions.post_copy_action(description, sentry, z, T{y}, args...);
+        actions.post_copy_action(sentry, z, T{y}, args...);
       }
     }
 
-    const bool consistentCopyAssign{check_copy_assign(description, sentry, actions, z, y, args...)};
+    const bool consistentCopyAssign{check_copy_assign(sentry, actions, z, y, args...)};
     // z == y, if copy assign is consistent, even if copy construction is not
 
     if(consistentCopyAssign)
@@ -80,13 +80,13 @@ namespace sequoia::testing::impl
       return false;
 
     T w{x};
-    check_move_assign(description, sentry, actions, w, T{y}, y, yMutator, args...);
+    check_move_assign(sentry, actions, w, T{y}, y, yMutator, args...);
 
     if constexpr (do_swap<Args...>::value)
     {
       if (consistentCopy)
       {
-        check_swap(description, sentry, actions, T{x}, T{y}, x, y, yMutator, args...);
+        check_swap(sentry, actions, T{x}, T{y}, x, y, yMutator, args...);
       }
     }
 
