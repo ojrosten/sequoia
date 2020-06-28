@@ -304,7 +304,6 @@ namespace sequoia::testing::impl
   template<test_mode Mode, class CheckFn, class Checker, class... Checkers>
   void check_allocation(std::string_view description, sentinel<Mode>& sentry, CheckFn check, const Checker& checker, const Checkers&... moreCheckers)
   {
-    using Allocator = typename Checker::allocator_type;
     check(description, checker);
 
     if constexpr (sizeof...(Checkers) > 0)
