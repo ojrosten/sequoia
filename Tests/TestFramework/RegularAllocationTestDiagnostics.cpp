@@ -82,7 +82,7 @@ namespace sequoia::testing
         using allocator = typename beast::allocator_type;
         
         
-        check_semantics(LINE("Broken copy alloc"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info<beast, allocator>{allocGetter, {1_c, {1_c,1_mu}, {1_awp,1_anp}}});
+        check_semantics(LINE("Broken para-copy"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info<beast, allocator>{allocGetter, {1_c, {1_c,1_mu}, {1_awp,1_anp}}});
       }
 
       {
@@ -98,7 +98,7 @@ namespace sequoia::testing
         using allocator = typename beast::allocator_type;
         
         
-        check_semantics(LINE("Broken move alloc"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info<beast, allocator>{allocGetter, {1_c, {1_c,1_mu}, {1_awp,1_anp}}});
+        check_semantics(LINE("Broken para-move"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info<beast, allocator>{allocGetter, {1_c, {1_c,1_mu}, {1_awp,1_anp}}});
       }
 
       {

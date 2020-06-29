@@ -22,9 +22,9 @@ namespace sequoia::testing::impl
     if(!check_preconditions(sentry, actions, x, y, args...))
       return;
 
-    if(!check(sentry.generate_message("Precondition - for checking regular semantics, x and xClone are assumed to be equal"), sentry.logger(), x == xClone)) return;
+    if(!check(sentry.generate_message("Precondition - for checking move-only semantics, x and xClone are assumed to be equal"), sentry.logger(), x == xClone)) return;
 
-    if(!check(sentry.generate_message("Precondition - for checking regular semantics, y and yClone are assumed to be equal"), sentry.logger(), y == yClone)) return;
+    if(!check(sentry.generate_message("Precondition - for checking move-only semantics, y and yClone are assumed to be equal"), sentry.logger(), y == yClone)) return;
 
     auto opt{check_move_construction(sentry, actions, std::move(x), xClone, args...)};
     if(!opt) return;

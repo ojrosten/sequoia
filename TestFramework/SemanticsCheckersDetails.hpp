@@ -79,7 +79,7 @@ namespace sequoia::testing::impl
     template<test_mode Mode, class T, class... Allocators>
     static bool check_preconditions(sentinel<Mode>& sentry, const T& x, const T& y)
     {
-      return check(sentry.generate_message("Precondition - for checking regular semantics, x and y are assumed to be different"), sentry.logger(), x != y);
+      return check(sentry.generate_message("Precondition - for checking semantics, x and y are assumed to be different"), sentry.logger(), x != y);
     }
   };
   
@@ -104,7 +104,8 @@ namespace sequoia::testing::impl
 
     if constexpr (Actions::has_post_equality_action)
     {
-      actions.post_equality_action(sentry, x, y, args...);
+      if(!actions.post_equality_action(sentry, x, y, args...))
+        return false;
     }
     
     if(!check(sentry.generate_message("Inequality operator is inconsistent"), sentry.logger(), !(x != x)))

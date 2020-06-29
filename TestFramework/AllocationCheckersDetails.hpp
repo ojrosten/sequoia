@@ -490,9 +490,10 @@ namespace sequoia::testing::impl
     constexpr static bool has_post_swap_action{true};
 
     template<test_mode Mode, class Container, class... Allocators, class... Predictions>
-    static void post_equality_action(sentinel<Mode>& sentry, const Container& x, const Container& y, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
+    static bool post_equality_action(sentinel<Mode>& sentry, const Container& x, const Container& y, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
     {
       check_no_allocation("Unexpected allocation detected for operator==", sentry, x, y, checkers...);
+      return !sentry.failure_detected();
     }
 
     template<test_mode Mode, class Container, class... Allocators, class... Predictions>

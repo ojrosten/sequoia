@@ -519,7 +519,7 @@
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >]
 
-	Precondition - for checking regular semantics, x and y are assumed to be different
+	Precondition - for checking semantics, x and y are assumed to be different
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -753,7 +753,7 @@
 	--Move-only Semantics--
 	[sequoia::testing::move_only_beast<int, std::allocator<int> >]
 
-	Precondition - for checking regular semantics, x and y are assumed to be different
+	Precondition - for checking semantics, x and y are assumed to be different
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -767,7 +767,7 @@
 	--Move-only Semantics--
 	[sequoia::testing::move_only_beast<int, std::allocator<int> >]
 
-	Precondition - for checking regular semantics, x and xClone are assumed to be equal
+	Precondition - for checking move-only semantics, x and xClone are assumed to be equal
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -781,7 +781,7 @@
 	--Move-only Semantics--
 	[sequoia::testing::move_only_beast<int, std::allocator<int> >]
 
-	Precondition - for checking regular semantics, x and xClone are assumed to be equal
+	Precondition - for checking move-only semantics, x and xClone are assumed to be equal
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -792,24 +792,24 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-	Fast Task duration: 0.00135098s +- 4 * 0.000109885
-	Slow Task duration: 0.00138341s +- 4 * 1.26335e-05 [1.024; (2, 2)]
+	Fast Task duration: 0.00139932s +- 4 * 6.69645e-06
+	Slow Task duration: 0.0013834s +- 4 * 3.6122e-05 [0.988626; (2, 2)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-	Fast Task duration: 0.00133699s +- 4 * 4.29803e-05
-	Slow Task duration: 0.00130801s +- 4 * 0.000110818 [0.978325; (2, 3)]
+	Fast Task duration: 0.00134022s +- 4 * 4.40549e-05
+	Slow Task duration: 0.00133784s +- 4 * 5.28407e-05 [0.998222; (2, 3)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-	Fast Task duration: 0.0012522s +- 4 * 0.000165542
-	Slow Task duration: 0.00505204s +- 4 * 0.000212501 [4.03454; (2, 2.5)]
+	Fast Task duration: 0.00132075s +- 4 * 0.00010761
+	Slow Task duration: 0.00510486s +- 4 * 7.86267e-05 [3.86511; (2, 2.5)]
 
 	=======================================
 
@@ -927,25 +927,6 @@
 	Obtained : 1
 	Predicted: 0
 
-	Unexpected allocation detected for operator!=
-	Unexpected allocation detected (x)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for copy construction (x)
-	[int]
-	operator== returned false
-	Obtained : 3
-	Predicted: 1
-
-	Unexpected allocation detected for copy assignment (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 77
@@ -963,7 +944,7 @@
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 85
-	Broken copy alloc
+	Broken para-copy
 
 	--Regular Semantics--
 	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
@@ -1009,7 +990,7 @@
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
-	Broken move alloc
+	Broken para-move
 
 	--Regular Semantics--
 	[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
@@ -1174,7 +1155,7 @@
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
 
-	Precondition - for checking regular semantics, x and y are assumed to be different
+	Precondition - for checking semantics, x and y are assumed to be different
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -1347,37 +1328,6 @@
 	Obtained : 1
 	Predicted: 0
 
-	Unexpected allocation detected for operator!=
-	Unexpected allocation detected (x)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for copy construction (x)
-	[int]
-	operator== returned false
-	Obtained : 3
-	Predicted: 1
-
-	Unexpected allocation detected for copy assignment (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected following mutation after swap (y)
-	[int]
-	operator== returned false
-	Obtained : 3
-	Predicted: 1
-
-	Unexpected allocation detected following mutation after swap (x)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 77
@@ -1395,7 +1345,7 @@
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 85
-	Broken copy alloc
+	Broken para-copy
 
 	--Regular Semantics--
 	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
@@ -1441,7 +1391,7 @@
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
-	Broken move alloc
+	Broken para-move
 
 	--Regular Semantics--
 	[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
@@ -1612,7 +1562,7 @@
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
 
-	Precondition - for checking regular semantics, x and y are assumed to be different
+	Precondition - for checking semantics, x and y are assumed to be different
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -1797,31 +1747,6 @@
 	Obtained : 1
 	Predicted: 0
 
-	Unexpected allocation detected for operator!=
-	Unexpected allocation detected (x)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for copy construction (x)
-	[int]
-	operator== returned false
-	Obtained : 3
-	Predicted: 1
-
-	Unexpected allocation detected for copy assignment (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for move assignment (x)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 77
@@ -1839,7 +1764,7 @@
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 85
-	Broken copy alloc
+	Broken para-copy
 
 	--Regular Semantics--
 	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
@@ -1885,7 +1810,7 @@
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
-	Broken move alloc
+	Broken para-move
 
 	--Regular Semantics--
 	[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
@@ -2050,7 +1975,7 @@
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
 
-	Precondition - for checking regular semantics, x and y are assumed to be different
+	Precondition - for checking semantics, x and y are assumed to be different
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -2211,57 +2136,6 @@
 	Obtained : 1
 	Predicted: 0
 
-	Unexpected allocation detected for operator!=
-	Unexpected allocation detected (x)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for copy construction (x)
-	[int]
-	operator== returned false
-	Obtained : 3
-	Predicted: 1
-
-	Unexpected allocation detected for copy assignment (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for move assignment (x)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for swap
-	Unexpected allocation detected (x)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for swap
-	Unexpected allocation detected (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected following mutation after swap (y)
-	[int]
-	operator== returned false
-	Obtained : 3
-	Predicted: 1
-
-	Unexpected allocation detected following mutation after swap (x)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 77
@@ -2279,7 +2153,7 @@
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 85
-	Broken copy alloc
+	Broken para-copy
 
 	--Regular Semantics--
 	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
@@ -2325,7 +2199,7 @@
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
-	Broken move alloc
+	Broken para-move
 
 	--Regular Semantics--
 	[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
@@ -2496,7 +2370,7 @@
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
 
-	Precondition - for checking regular semantics, x and y are assumed to be different
+	Precondition - for checking semantics, x and y are assumed to be different
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -2669,37 +2543,6 @@
 	Obtained : 1
 	Predicted: 0
 
-	Unexpected allocation detected for operator!=
-	Unexpected allocation detected (x)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for copy construction (x)
-	[int]
-	operator== returned false
-	Obtained : 3
-	Predicted: 1
-
-	Unexpected allocation detected for copy assignment (x)
-	[int]
-	operator== returned false
-	Obtained : 2
-	Predicted: 1
-
-	Unexpected allocation detected for copy assignment (y)
-	[int]
-	operator== returned false
-	Obtained : 2
-	Predicted: 1
-
-	Unexpected allocation detected for move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 77
@@ -2717,7 +2560,7 @@
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 85
-	Broken copy alloc
+	Broken para-copy
 
 	--Regular Semantics--
 	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
@@ -2763,7 +2606,7 @@
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
-	Broken move alloc
+	Broken para-move
 
 	--Regular Semantics--
 	[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
@@ -2922,7 +2765,7 @@
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
 
-	Precondition - for checking regular semantics, x and y are assumed to be different
+	Precondition - for checking semantics, x and y are assumed to be different
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -3095,49 +2938,6 @@
 	Obtained : 1
 	Predicted: 0
 
-	Unexpected allocation detected for operator!=
-	Unexpected allocation detected (x)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for copy construction (x)
-	[int]
-	operator== returned false
-	Obtained : 3
-	Predicted: 1
-
-	Unexpected allocation detected for copy assignment (x)
-	[int]
-	operator== returned false
-	Obtained : 2
-	Predicted: 1
-
-	Unexpected allocation detected for copy assignment (y)
-	[int]
-	operator== returned false
-	Obtained : 2
-	Predicted: 1
-
-	Unexpected allocation detected for move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected following mutation after swap (y)
-	[int]
-	operator== returned false
-	Obtained : 3
-	Predicted: 1
-
-	Unexpected allocation detected following mutation after swap (x)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 77
@@ -3155,7 +2955,7 @@
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 85
-	Broken copy alloc
+	Broken para-copy
 
 	--Regular Semantics--
 	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
@@ -3201,7 +3001,7 @@
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
-	Broken move alloc
+	Broken para-move
 
 	--Regular Semantics--
 	[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
@@ -3366,7 +3166,7 @@
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
 
-	Precondition - for checking regular semantics, x and y are assumed to be different
+	Precondition - for checking semantics, x and y are assumed to be different
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -3551,43 +3351,6 @@
 	Obtained : 1
 	Predicted: 0
 
-	Unexpected allocation detected for operator!=
-	Unexpected allocation detected (x)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for copy construction (x)
-	[int]
-	operator== returned false
-	Obtained : 3
-	Predicted: 1
-
-	Unexpected allocation detected for copy assignment (x)
-	[int]
-	operator== returned false
-	Obtained : 2
-	Predicted: 1
-
-	Unexpected allocation detected for copy assignment (y)
-	[int]
-	operator== returned false
-	Obtained : 2
-	Predicted: 1
-
-	Unexpected allocation detected for move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for move assignment (x)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 77
@@ -3605,7 +3368,7 @@
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 85
-	Broken copy alloc
+	Broken para-copy
 
 	--Regular Semantics--
 	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
@@ -3651,7 +3414,7 @@
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
-	Broken move alloc
+	Broken para-move
 
 	--Regular Semantics--
 	[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
@@ -3810,7 +3573,7 @@
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
 
-	Precondition - for checking regular semantics, x and y are assumed to be different
+	Precondition - for checking semantics, x and y are assumed to be different
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -3983,69 +3746,6 @@
 	Obtained : 1
 	Predicted: 0
 
-	Unexpected allocation detected for operator!=
-	Unexpected allocation detected (x)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for copy construction (x)
-	[int]
-	operator== returned false
-	Obtained : 3
-	Predicted: 1
-
-	Unexpected allocation detected for copy assignment (x)
-	[int]
-	operator== returned false
-	Obtained : 2
-	Predicted: 1
-
-	Unexpected allocation detected for copy assignment (y)
-	[int]
-	operator== returned false
-	Obtained : 2
-	Predicted: 1
-
-	Unexpected allocation detected for move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for move assignment (x)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for swap
-	Unexpected allocation detected (x)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected for swap
-	Unexpected allocation detected (y)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
-	Unexpected allocation detected following mutation after swap (y)
-	[int]
-	operator== returned false
-	Obtained : 3
-	Predicted: 1
-
-	Unexpected allocation detected following mutation after swap (x)
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 77
@@ -4063,7 +3763,7 @@
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 85
-	Broken copy alloc
+	Broken para-copy
 
 	--Regular Semantics--
 	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
@@ -4109,7 +3809,7 @@
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
-	Broken move alloc
+	Broken para-move
 
 	--Regular Semantics--
 	[sequoia::testing::broken_para_move<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
@@ -4274,7 +3974,7 @@
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
 
-	Precondition - for checking regular semantics, x and y are assumed to be different
+	Precondition - for checking semantics, x and y are assumed to be different
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -4462,7 +4162,7 @@
 	--Move-only Semantics--
 	[sequoia::testing::move_only_broken_move<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
 
-	Precondition - for checking regular semantics, y and yClone are assumed to be equal
+	Precondition - for checking move-only semantics, y and yClone are assumed to be equal
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -4553,7 +4253,7 @@
 	--Move-only Semantics--
 	[sequoia::testing::move_only_broken_move<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
 
-	Precondition - for checking regular semantics, y and yClone are assumed to be equal
+	Precondition - for checking move-only semantics, y and yClone are assumed to be equal
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -4650,7 +4350,7 @@
 	--Move-only Semantics--
 	[sequoia::testing::move_only_broken_move<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
 
-	Precondition - for checking regular semantics, y and yClone are assumed to be equal
+	Precondition - for checking move-only semantics, y and yClone are assumed to be equal
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -4728,7 +4428,7 @@
 	--Move-only Semantics--
 	[sequoia::testing::move_only_broken_move<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
 
-	Precondition - for checking regular semantics, y and yClone are assumed to be equal
+	Precondition - for checking move-only semantics, y and yClone are assumed to be equal
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -6712,8 +6412,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67
 	Performance Test which should pass
 
-	Fast Task duration: 0.00140162s +- 4 * 1.43095e-05
-	Slow Task duration: 0.00263995s +- 4 * 1.07636e-05 [1.8835; (1.8, 2.1)]
+	Fast Task duration: 0.00118012s +- 4 * 7.65267e-05
+	Slow Task duration: 0.00222545s +- 4 * 0.000246732 [1.88579; (1.8, 2.1)]
 
 
 	=======================================
@@ -6722,8 +6422,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68
 	Performance Test which should pass
 
-	Fast Task duration: 0.0013429s +- 4 * 4.95358e-05
-	Slow Task duration: 0.00469903s +- 4 * 0.000470736 [3.49917; (3.6, 4.1)]
+	Fast Task duration: 0.00127879s +- 4 * 8.67362e-05
+	Slow Task duration: 0.00433909s +- 4 * 0.000361015 [3.39313; (3.6, 4.1)]
 
 
 	=======================================
