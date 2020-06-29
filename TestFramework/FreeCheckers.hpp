@@ -357,22 +357,21 @@ namespace sequoia::testing
   template<test_mode Mode, class ElementDispatchDiscriminator, class Iter, class PredictionIter, class Advisor=null_advisor>
   bool check_range(std::string_view description, test_logger<Mode>& logger, ElementDispatchDiscriminator discriminator, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, Advisor advisor=Advisor{})
   {
-    sentinel<Mode> r{logger, description};
+    sentinel<Mode> sentry{logger, description};
     bool equal{true};
 
     using std::distance;
     using std::advance;
 
     const auto predictedSize{distance(predictionFirst, predictionLast)};
-    if(check_equality(append_indented(description, "Container size wrong"), logger, distance(first, last), predictedSize))
+    if(check_equality(sentry.generate_message("Container size wrong"), logger, distance(first, last), predictedSize))
     {
       auto predictionIter{predictionFirst};
       auto iter{first};
       for(; predictionIter != predictionLast; advance(predictionIter, 1), advance(iter, 1))
       {
         const auto dist{distance(predictionFirst, predictionIter)};
-        std::string_view desc{equal ? description : ""};
-        std::string mess{append_indented(desc, "Element ")
+        std::string mess{sentry.generate_message("Element ")
             .append(std::to_string(dist)).append(" of range incorrect")};
         if(!dispatch_check(std::move(mess), logger, discriminator, *iter, *predictionIter, advisor)) equal = false;
       }

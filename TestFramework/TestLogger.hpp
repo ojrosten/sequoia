@@ -158,7 +158,10 @@ namespace sequoia::testing
         checks_registered() && failure_detected() ? "" : m_Message
       };
 
-      if(!desc.empty()) desc.append("\n");
+      if(!desc.empty() && (desc.back() != '\n'))
+      {
+        desc.append("\n");
+      }
 
       return append_indented(desc, details);
     }

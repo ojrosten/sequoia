@@ -567,6 +567,7 @@
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 156
 
 	[std::vector<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > >]
+
 	Element 1 of range incorrect
 	Comparison performed using:
 	[sequoia::testing::equivalence_checker<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
@@ -587,6 +588,7 @@
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 158
 
 	[std::vector<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > >]
+
 	Element 1 of range incorrect
 	Comparison performed using:
 	[sequoia::testing::equivalence_checker<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
@@ -639,6 +641,7 @@
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 172
 
 	[std::vector<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >, std::allocator<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > > >]
+
 	Element 1 of range incorrect
 	Comparison performed using:
 	[sequoia::testing::weak_equivalence_checker<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
@@ -656,6 +659,7 @@
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 173
 
 	[std::vector<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >, std::allocator<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > > >]
+
 	Element 1 of range incorrect
 	Comparison performed using:
 	[sequoia::testing::weak_equivalence_checker<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
@@ -792,24 +796,24 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-	Fast Task duration: 0.00139517s +- 4 * 1.52597e-05
-	Slow Task duration: 0.00139838s +- 4 * 2.16713e-05 [1.0023; (2, 2)]
+	Fast Task duration: 0.00138062s +- 4 * 2.40327e-05
+	Slow Task duration: 0.00140199s +- 4 * 1.49124e-05 [1.01548; (2, 2)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-	Fast Task duration: 0.00134172s +- 4 * 5.82058e-05
-	Slow Task duration: 0.00134472s +- 4 * 4.54685e-05 [1.00224; (2, 3)]
+	Fast Task duration: 0.00135657s +- 4 * 4.80986e-05
+	Slow Task duration: 0.00134295s +- 4 * 5.0171e-05 [0.989961; (2, 3)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-	Fast Task duration: 0.00138123s +- 4 * 4.06868e-05
-	Slow Task duration: 0.00490893s +- 4 * 0.000351297 [3.55403; (2, 2.5)]
+	Fast Task duration: 0.00139523s +- 4 * 2.18033e-05
+	Slow Task duration: 0.0049467s +- 4 * 0.000216214 [3.54544; (2, 2.5)]
 
 	=======================================
 
@@ -879,6 +883,7 @@
 	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 58
 
 	Element 1 of range incorrect
+
 	Element 0 of range incorrect
 	[double]
 	Obtained : 5.1
@@ -6532,8 +6537,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67
 	Performance Test which should pass
 
-	Fast Task duration: 0.00139594s +- 4 * 2.20747e-05
-	Slow Task duration: 0.00262672s +- 4 * 2.03102e-05 [1.88168; (1.8, 2.1)]
+	Fast Task duration: 0.00106863s +- 4 * 5.89706e-05
+	Slow Task duration: 0.00211991s +- 4 * 4.90014e-05 [1.98376; (1.8, 2.1)]
 
 
 	=======================================
@@ -6542,8 +6547,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68
 	Performance Test which should pass
 
-	Fast Task duration: 0.0017554s +- 4 * 0.000980387
-	Slow Task duration: 0.0048995s +- 4 * 0.000447144 [2.79109; (3.6, 4.1)]
+	Fast Task duration: 0.00137762s +- 4 * 3.77717e-05
+	Slow Task duration: 0.00493266s +- 4 * 0.000496648 [3.58056; (3.6, 4.1)]
 
 
 	=======================================
