@@ -325,7 +325,7 @@ namespace sequoia::testing::impl
 
     check_allocation(sentry, checkFn, checker, moreCheckers...);
   }
-      
+
   template<test_mode Mode, class Container, class Allocator, class Prediction, class... Allocators, class... Predictions>
   void check_copy_assign_allocation(sentinel<Mode>& sentry, const Container& xContainer, const Container& yContainer, const dual_allocation_checker<Container, Allocator, Prediction>& checker, const dual_allocation_checker<Container, Allocators, Predictions>&... moreCheckers)
   {

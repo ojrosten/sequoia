@@ -67,6 +67,14 @@ namespace sequoia::testing
         
         check_semantics(LINE("Inefficient equality"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info<beast, allocator>{allocGetter, {1_c, {1_c,1_mu}, {1_awp,1_anp}}});
       }
+
+      {
+        using beast = inefficient_equality<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
+        using allocator = typename beast::allocator_type;
+        
+        
+        check_semantics(LINE("Inefficient inequality"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info<beast, allocator>{allocGetter, {1_c, {1_c,1_mu}, {1_awp,1_anp}}});
+      }
       
 
       {
