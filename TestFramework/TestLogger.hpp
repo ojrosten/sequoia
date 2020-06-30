@@ -52,29 +52,34 @@ namespace sequoia::testing
   enum class test_mode { standard, false_positive, false_negative };
 
   /*! \class
-      \brief logs checks and failures within a test.
-
-      The process of logging checks and failures is marshalled by sentinels. At a basic
-      level, this RAII class ensures robust treatment in the presence of exceptions.
-      But beyond this, it caters for some of the complexity of the testing framework in
-      a localized and simple manner. In particular, a given check may actually be
-      composed of many sub-checks. For standard checks, we want to count this as a
-      single 'top-level' check. For false-positive checks success is counted as a failure
-      of one or more of the sub-checks.
-
-      The sentinels deal with all of this in a way which clients of the framework can
-      generally ignore. For example, when composing a new specialization of the 
-      detailed_equality_checker, there is no need for clients to add sentinels of their
-      own.
-
-      The sentinels also take care of writing to the auxiliary file associated with
-      false-positive/negative tests.
+      \brief Logs test results.
 
       \anchor test_logger_primary
    */
-
+  
   template<test_mode Mode>
   class test_logger;
+
+  /*! \class
+      \brief Marshals the logging of checks and failures.
+
+      The sentinel class template serves several purposes.
+
+      1. This RAII class ensures robust treatment in the presence of exceptions.
+
+      2. sentinel is befriended by test_logger and provides access to the private, mutating
+      part of the test_logger interface. The point of this is that test_logger is 
+      exposed to clients of the test framework. However, clients should use it, directly,
+      only very sparingly. This is encouraged by the extra level of indirection provided
+      by the sentinels.
+
+      3. sentinel caters for some of the complexity of the testing framework in
+      a localized and simple manner. In particular, a given check may actually be
+      composed of many sub-checks. For standard checks, we want to count this as a
+      single 'top-level' check. For false-positive checks success is counted as a failure
+      of one or more of the sub-checks. The sentinels deal with all of this in a way which
+      clients of the framework can generally ignore.        
+  */
 
   template<test_mode Mode>
   class [[nodiscard]] sentinel
@@ -176,6 +181,21 @@ namespace sequoia::testing
       m_Logger.get().log_check();
     }
 
+    void log_failure(std::string_view message)
+    {
+      m_Logger.get().log_failure(message);
+    }
+
+    void log_performance_failure(std::string_view message)
+    {
+      m_Logger.get().log_performance_failure(message);
+    }
+
+    void log_critical_failure(std::string_view message)
+    {
+      m_Logger.get().log_critical_failure(message);
+    }
+
     [[nodiscard]]
     bool failure_detected() const noexcept
     {
@@ -187,9 +207,6 @@ namespace sequoia::testing
     {
       return m_Logger.get().deep_checks() != m_PriorDeepChecks;
     }
-
-    [[nodiscard]]
-    test_logger<Mode>& logger() noexcept { return m_Logger.get(); }
   private:
     std::reference_wrapper<test_logger<Mode>> m_Logger;
     std::string m_Message;
@@ -211,31 +228,6 @@ namespace sequoia::testing
     test_logger& operator=(test_logger&&)      = delete;
 
     constexpr static test_mode mode{Mode};
-     
-    void log_failure(std::string_view message)
-    {
-      ++m_Failures;
-      m_CurrentMessage = message;
-
-      update_output(m_CurrentMessage, 2, "");
-    }
-
-    void log_performance_failure(std::string_view message)
-    {
-      ++m_PerformanceFailures;
-      log_failure(message);
-    }
-
-    void log_critical_failure(std::string_view message)
-    {
-      ++m_CriticalFailures;
-      m_FailureMessages.append(message).append("\n");
-      if(auto file{output_manager::recovery_file()}; !file.empty())
-      {
-        if(std::ofstream of{file, std::ios_base::app})
-          of << "\nCritical Failure:\n" << message << "\n";
-      }
-    }
 
     [[nodiscard]]
     std::size_t failures() const noexcept { return m_Failures; }
@@ -266,8 +258,6 @@ namespace sequoia::testing
 
     [[nodiscard]]
     std::string_view diagnostics_output() const noexcept { return m_DiagnosticsOutput; }
-
-    void exceptions_detected_by_sentinel(const int n) { m_ExceptionsInFlight = n; }
 
     [[nodiscard]]
     int exceptions_detected_by_sentinel() const noexcept { return m_ExceptionsInFlight; }
@@ -306,6 +296,31 @@ namespace sequoia::testing
       ++m_PerformanceChecks;
     }
 
+    void log_failure(std::string_view message)
+    {
+      ++m_Failures;
+      m_CurrentMessage = message;
+
+      update_output(m_CurrentMessage, 2, "");
+    }
+
+    void log_performance_failure(std::string_view message)
+    {
+      ++m_PerformanceFailures;
+      log_failure(message);
+    }
+
+    void log_critical_failure(std::string_view message)
+    {
+      ++m_CriticalFailures;
+      m_FailureMessages.append(message).append("\n");
+      if(auto file{output_manager::recovery_file()}; !file.empty())
+      {
+        if(std::ofstream of{file, std::ios_base::app})
+          of << "\nCritical Failure:\n" << message << "\n";
+      }
+    }
+
     void log_top_level_failure(std::string_view message)
     {
       ++m_TopLevelFailures;
@@ -316,6 +331,8 @@ namespace sequoia::testing
     {
       m_CurrentMessage = message;
     }
+
+    void exceptions_detected_by_sentinel(const int n) { m_ExceptionsInFlight = n; }
 
     void append_to_diagnostics_output(std::string message)
     {

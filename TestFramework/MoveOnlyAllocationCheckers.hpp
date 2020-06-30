@@ -61,11 +61,11 @@ namespace sequoia::testing
   template<test_mode Mode, class T, class Mutator, class... Allocators>
   void check_semantics(std::string_view description, test_logger<Mode>& logger, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, move_only_allocation_info<T, Allocators>... info)
   {
-    sentinel<Mode> s{logger, add_type_info<T>(description)};
+    sentinel<Mode> sentry{logger, add_type_info<T>(description)};
 
-    if(auto opt{impl::check_para_constructor_allocations(s, std::forward<T>(y), yClone, info...)})
+    if(auto opt{impl::check_para_constructor_allocations(logger, sentry, std::forward<T>(y), yClone, info...)})
     {
-      check_semantics(s, impl::move_only_allocation_actions{}, std::forward<T>(x), std::move(*opt), xClone, yClone, std::move(m), std::tuple_cat(impl::make_dual_allocation_checkers(info, x, y)...));
+      check_semantics(logger, sentry, impl::move_only_allocation_actions{}, std::forward<T>(x), std::move(*opt), xClone, yClone, std::move(m), std::tuple_cat(impl::make_dual_allocation_checkers(info, x, y)...));
     }
   }
 }

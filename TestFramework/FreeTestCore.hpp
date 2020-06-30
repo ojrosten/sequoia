@@ -100,12 +100,14 @@ namespace sequoia::testing
         run_tests();
       }
       catch(const std::exception& e)
-      {         
-        Checker::log_critical_failure(exception_message("Unexpected", e.what()));
+      {
+        auto sentry{Checker::make_sentinel("")};
+        sentry.log_critical_failure(exception_message("Unexpected", e.what()));
       }
       catch(...)
       {
-        Checker::log_critical_failure(exception_message("Unknown", ""));
+        auto sentry{Checker::make_sentinel("")};
+        sentry.log_critical_failure(exception_message("Unknown", ""));
       }
 
       return summarize(time);

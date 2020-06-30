@@ -273,7 +273,7 @@ namespace sequoia::testing
 
         append_advice(message, {advisor, obtained, prediction});
 
-        logger.log_failure(std::move(message));
+        s.log_failure(std::move(message));
       }
     }
 
@@ -397,12 +397,12 @@ namespace sequoia::testing
       }()
     };
 
-    sentinel<Mode> r{logger, message};
-    r.log_check();
+    sentinel<Mode> sentry{logger, message};
+    sentry.log_check();
     try
     {
       function();
-      logger.log_failure(append_indented(message, "No exception thrown"));
+      sentry.log_failure(append_indented(message, "No exception thrown"));
       return false;
     }
     catch(const E&)
@@ -414,12 +414,12 @@ namespace sequoia::testing
       append_indented(message, "Unexpected exception thrown (caught by std::exception&):");
       append_indented(message, "\"").append(e.what()).append("\"\n");
         
-      logger.log_failure(message);
+      sentry.log_failure(message);
       return false;
     }
     catch(...)
     {
-      logger.log_failure(append_indented(message, "Unknown exception thrown\n"));
+      sentry.log_failure(append_indented(message, "Unknown exception thrown\n"));
       return false;
     }
   }
@@ -557,10 +557,6 @@ namespace sequoia::testing
     {}
 
     ~checker() = default;
-
-    void log_critical_failure(std::string_view message) { logger().log_critical_failure(message); }
-      
-    void log_failure(std::string_view message) { logger().log_failure(message); }
 
     [[nodiscard]]
     std::size_t checks() const noexcept { return logger().checks(); }

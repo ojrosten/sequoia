@@ -50,7 +50,7 @@ namespace sequoia::testing
     static_assert(has_regular_semantics_v<T>);
 
     sentinel<Mode> sentry{logger, add_type_info<T>(description)};
-    impl::check_semantics(sentry, impl::default_actions{}, x, y, yMutator);
+    impl::check_semantics(logger, sentry, impl::default_actions{}, x, y, yMutator);
   }
 
   /// Precondition: x!=y
@@ -60,6 +60,6 @@ namespace sequoia::testing
     static_assert(has_regular_semantics_v<T>);
 
     sentinel<Mode> sentry{logger, add_type_info<T>(description)};
-    impl::check_semantics(sentry, impl::default_actions{}, x, y, impl::null_mutator{});
+    impl::check_semantics(logger, sentry, impl::default_actions{}, x, y, impl::null_mutator{});
   }
 }

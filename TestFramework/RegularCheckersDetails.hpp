@@ -17,18 +17,18 @@
 namespace sequoia::testing::impl
 {
   template<test_mode Mode, class Actions, class T, class... Args>
-  bool do_check_copy_assign(sentinel<Mode>& sentry, const Actions& actions, T& z, const T& y, const Args&... args)
+  bool do_check_copy_assign(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T& z, const T& y, const Args&... args)
   {
     z = y;
     const bool consistent{
-       check_equality(sentry.generate_message("Inconsistent copy assignment (from y)"), sentry.logger(), z, y)
+       check_equality(sentry.generate_message("Inconsistent copy assignment (from y)"), logger, z, y)
     };
 
     if constexpr(Actions::has_post_copy_assign_action)
     {
       if(consistent)
       {
-        actions.post_copy_assign_action(sentry, z, y, args...);
+        actions.post_copy_assign_action(logger, sentry, z, y, args...);
       }
     }
 
@@ -36,57 +36,56 @@ namespace sequoia::testing::impl
   }
   
   template<test_mode Mode, class Actions, class T>
-  bool check_copy_assign(sentinel<Mode>& sentry, const Actions& actions, T& z, const T& y)
+  bool check_copy_assign(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T& z, const T& y)
   {
-    return do_check_copy_assign(sentry, actions, z, y);   
+    return do_check_copy_assign(logger, sentry, actions, z, y);   
   }
   
   template<test_mode Mode, class Actions, class T, class Mutator, std::enable_if_t<std::is_invocable_v<Mutator, T&>, int> = 0>
-  bool check_swap(sentinel<Mode>& sentry, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator yMutator)
+  bool check_swap(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator yMutator)
   {
-    return do_check_swap(sentry, actions, std::move(x), std::move(y), xClone, yClone, std::move(yMutator));
+    return do_check_swap(logger, sentry, actions, std::move(x), std::move(y), xClone, yClone, std::move(yMutator));
   }
 
   template<test_mode Mode, class Actions, class T, class Mutator, class... Args>
-  bool check_semantics(sentinel<Mode>& sentry, const Actions& actions, const T& x, const T& y, Mutator yMutator, const Args&... args)
+  bool check_semantics(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, const T& x, const T& y, Mutator yMutator, const Args&... args)
   {    
     // Preconditions
-    if(!check_preconditions(sentry, actions, x, y, args...))
+    if(!check_preconditions(logger, sentry, actions, x, y, args...))
       return false;
         
     T z{x};
     const bool consistentCopy{
-      check_equality(sentry.generate_message("Inconsistent copy constructor (x)"),
-                     sentry.logger(), z, x)
+      check_equality(sentry.generate_message("Inconsistent copy constructor (x)"), logger, z, x)
     };
 
     if constexpr(Actions::has_post_copy_action)
     {
       if(consistentCopy)
       {
-        actions.post_copy_action(sentry, z, T{y}, args...);
+        actions.post_copy_action(logger, sentry, z, T{y}, args...);
       }
     }
 
-    const bool consistentCopyAssign{check_copy_assign(sentry, actions, z, y, args...)};
+    const bool consistentCopyAssign{check_copy_assign(logger, sentry, actions, z, y, args...)};
     // z == y, if copy assign is consistent, even if copy construction is not
 
     if(consistentCopyAssign)
     {
-      check_move_construction(sentry, actions, std::move(z), y, args...);
+      check_move_construction(logger, sentry, actions, std::move(z), y, args...);
     }
 
     if(!consistentCopy)
       return false;
 
     T w{x};
-    check_move_assign(sentry, actions, w, T{y}, y, yMutator, args...);
+    check_move_assign(logger, sentry, actions, w, T{y}, y, yMutator, args...);
 
     if constexpr (do_swap<Args...>::value)
     {
       if (consistentCopy)
       {
-        check_swap(sentry, actions, T{x}, T{y}, x, y, yMutator, args...);
+        check_swap(logger, sentry, actions, T{x}, T{y}, x, y, yMutator, args...);
       }
     }
 
@@ -100,17 +99,17 @@ namespace sequoia::testing::impl
         check(sentry.generate_message(
           "Either mutation is not doing anything following copy construction"
           " or value semantics are broken, with mutation of an object also changing"
-          " the object from which it was copied"), sentry.logger(), v != y);
+          " the object from which it was copied"), logger, v != y);
 
         v = y;
-        check_equality(sentry.generate_message("Inconsistent copy assignment (from mutated y)"), sentry.logger(), v, y);
+        check_equality(sentry.generate_message("Inconsistent copy assignment (from mutated y)"), logger, v, y);
 
         yMutator(v);
 
         check(sentry.generate_message(
           "Either mutation is not doing anything following copy assignment"
           " or value semantics are broken, with mutation of an object also changing"
-          " the object from which it was assigned"), sentry.logger(), v != y);
+          " the object from which it was assigned"), logger, v != y);
       }
     }
 

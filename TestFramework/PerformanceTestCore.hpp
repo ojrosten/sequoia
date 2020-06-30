@@ -182,12 +182,12 @@ namespace sequoia::testing
 
       message.append(summary);
 
-      sentinel<Mode> r{logger, message};
-      r.log_performance_check();
+      sentinel<Mode> sentry{logger, message};
+      sentry.log_performance_check();
 
       if(!results.passed)
       {        
-        logger.log_performance_failure(message);
+        sentry.log_performance_failure(message);
       }
 
       return results;

@@ -13,12 +13,12 @@
     The general pattern in this file is of paired function templates of the form
 
     template<test_mode Mode, class Actions, class T, class... Args>
-    ret_type do_check_foo(std::string_view, sentinel<Mode>&, const Actions&, const T&, const T&, const Args&...);
+    ret_type do_check_foo(std::string_view, test_logger<Mode>& logger, const sentinel<Mode>&, const Actions&, const T&, const T&, const Args&...);
 
     template<test_mode Mode, class Actions, class T>
-    ret_type check_foo(std::string_view description, sentinel<Mode>& sentry, const Actions& actions, const T& x , const T&y)
+    ret_type check_foo(std::string_view description, test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, const T& x , const T&y)
     {
-      return do_check_foo(description, sentry, actions, x, y);
+      return do_check_foo(description, logger, sentry, actions, x, y);
     }
 
     The idea is that the implementation of check_foo in this file is appropriate for types without allocators.
@@ -77,9 +77,9 @@ namespace sequoia::testing::impl
   struct pre_condition_actions
   {
     template<test_mode Mode, class T, class... Allocators>
-    static bool check_preconditions(sentinel<Mode>& sentry, const T& x, const T& y)
+    static bool check_preconditions(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& x, const T& y)
     {
-      return check(sentry.generate_message("Precondition - for checking semantics, x and y are assumed to be different"), sentry.logger(), x != y);
+      return check(sentry.generate_message("Precondition - for checking semantics, x and y are assumed to be different"), logger, x != y);
     }
   };
   
@@ -97,76 +97,76 @@ namespace sequoia::testing::impl
   //================================ preconditions ================================//
  
   template<test_mode Mode, class Actions, class T, class... Args>
-  bool do_check_preconditions(sentinel<Mode>& sentry, const Actions& actions, const T& x, const T& y, const Args&... args)
+  bool do_check_preconditions(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, const T& x, const T& y, const Args&... args)
   {
-    if(!check(sentry.generate_message("Equality operator is inconsistent"), sentry.logger(), x == x))
+    if(!check(sentry.generate_message("Equality operator is inconsistent"), logger, x == x))
       return false;
 
     if constexpr (Actions::has_post_equality_action)
     {
-      if(!actions.post_equality_action(sentry, x, y, args...))
+      if(!actions.post_equality_action(logger, sentry, x, y, args...))
         return false;
     }
     
-    if(!check(sentry.generate_message("Inequality operator is inconsistent"), sentry.logger(), !(x != x)))
+    if(!check(sentry.generate_message("Inequality operator is inconsistent"), logger, !(x != x)))
       return false;
 
     if constexpr (Actions::has_post_nequality_action)
     {
-      actions.post_nequality_action(sentry, x, y, args...);
+      actions.post_nequality_action(logger, sentry, x, y, args...);
     }
 
-    return actions.check_preconditions(sentry, x, y);
+    return actions.check_preconditions(logger, sentry, x, y);
   }
 
   template<test_mode Mode, class Actions, class T>
-  bool check_preconditions(sentinel<Mode>& sentry, const Actions& actions, const T& x, const T& y)
+  bool check_preconditions(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, const T& x, const T& y)
   {
-    return do_check_preconditions(sentry, actions, x, y);
+    return do_check_preconditions(logger, sentry, actions, x, y);
   }
 
   //================================ move assign ================================//
 
   template<test_mode Mode, class Actions, class T, class Mutator, class... Args>
-  void do_check_move_assign(sentinel<Mode>& sentry, const Actions& actions, T& z, T&& y, const T& yClone, Mutator&& yMutator, const Args&... args)
+  void do_check_move_assign(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T& z, T&& y, const T& yClone, Mutator&& yMutator, const Args&... args)
   {
     z = std::move(y);
-    if(!check_equality(sentry.generate_message("Inconsistent move assignment (from y)"), sentry.logger(), z, yClone))
+    if(!check_equality(sentry.generate_message("Inconsistent move assignment (from y)"), logger, z, yClone))
        return;
 
     if constexpr(Actions::has_post_move_assign_action)
     {
-      actions.post_move_assign_action(sentry, z, yClone, std::move(yMutator), args...);
+      actions.post_move_assign_action(logger, sentry, z, yClone, std::move(yMutator), args...);
     }
   }
   
   template<test_mode Mode, class Actions, class T, class Mutator>
-  void check_move_assign(sentinel<Mode>& sentry, const Actions& actions, T& z, T&& y, const T& yClone, Mutator m)
+  void check_move_assign(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T& z, T&& y, const T& yClone, Mutator m)
   {
-    do_check_move_assign(sentry, actions, z, std::forward<T>(y), yClone, std::move(m));
+    do_check_move_assign(logger, sentry, actions, z, std::forward<T>(y), yClone, std::move(m));
   }
 
   //================================ swap ================================//
 
   template<test_mode Mode, class Actions, class T, class... Args>
-  bool do_check_swap(sentinel<Mode>& sentry, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, const Args&... args)
+  bool do_check_swap(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, const Args&... args)
   {
     using std::swap;
     swap(x, y);
 
     const bool swapy{
-      check_equality(sentry.generate_message("Inconsistent Swap (y)"), sentry.logger(), y, xClone)
+      check_equality(sentry.generate_message("Inconsistent Swap (y)"), logger, y, xClone)
     };
     
     const bool swapx{
-      check_equality(sentry.generate_message("Inconsistent Swap (x)"), sentry.logger(), x, yClone)
+      check_equality(sentry.generate_message("Inconsistent Swap (x)"), logger, x, yClone)
     };
       
     if constexpr(Actions::has_post_swap_action)
     {
       if(swapx && swapy)
       {
-        actions.post_swap_action(sentry, x, y, yClone, args...);
+        actions.post_swap_action(logger, sentry, x, y, yClone, args...);
       }
     }
 
@@ -174,31 +174,31 @@ namespace sequoia::testing::impl
   }
 
   template<test_mode Mode, class Actions, class T>
-  bool check_swap(sentinel<Mode>& sentry, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone)
+  bool check_swap(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone)
   {
-    return do_check_swap(sentry, actions, std::move(x), std::move(y), xClone, yClone);
+    return do_check_swap(logger, sentry, actions, std::move(x), std::move(y), xClone, yClone);
   }
 
   //================================  move construction ================================ //
 
   template<test_mode Mode, class Actions, class T, class... Args>
-  std::optional<T> do_check_move_construction(sentinel<Mode>& sentry, const Actions& actions, T&& z, const T& y, const Args&... args)
+  std::optional<T> do_check_move_construction(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T&& z, const T& y, const Args&... args)
   {
     T w{std::move(z)};
-    if(!check_equality(sentry.generate_message("Inconsistent move construction"), sentry.logger(), w, y))
+    if(!check_equality(sentry.generate_message("Inconsistent move construction"), logger, w, y))
       return {};
 
     if constexpr(Actions::has_post_move_action)
     {
-      actions.post_move_action(sentry, w, args...);
+      actions.post_move_action(logger, sentry, w, args...);
     }
 
     return w;
   }
 
   template<test_mode Mode, class Actions, class T>
-  std::optional<T> check_move_construction(sentinel<Mode>& sentry, const Actions& actions, T&& z, const T& y)
+  std::optional<T> check_move_construction(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T&& z, const T& y)
   {
-    return do_check_move_construction(sentry, actions, std::forward<T>(z), y);
+    return do_check_move_construction(logger, sentry, actions, std::forward<T>(z), y);
   }
 }

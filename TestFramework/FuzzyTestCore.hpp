@@ -99,7 +99,7 @@ namespace sequoia::testing
        
         append_advice(message, {advisor, obtained, prediction});
           
-        logger.log_failure(message);
+        sentry.log_failure(message);
       }
 
       return !sentry.failure_detected();
