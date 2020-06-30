@@ -1,6 +1,6 @@
 Move-Only Alloction False Positive Diagnostics
-[5ms]
+[10ms]
 False Positive Checks:                    28;  Failures:  0
 Move-Only Allocation False Negative Diagnostics
-[0ms]
+[2ms]
 False Negative Checks:                     8;  Failures:  0
