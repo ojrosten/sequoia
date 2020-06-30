@@ -67,18 +67,29 @@ namespace sequoia::testing
 
       1. This RAII class ensures robust treatment in the presence of exceptions.
 
-      2. sentinel is befriended by test_logger and provides access to the private, mutating
-      part of the test_logger interface. The point of this is that test_logger is 
-      exposed to clients of the test framework. However, clients should use it, directly,
-      only very sparingly. This is encouraged by the extra level of indirection provided
-      by the sentinels.
+      2. sentinel is befriended by test_logger and effectively provides access to a limited
+      component of the the private, mutating part of the test_logger interface. The point of
+      this is that while test_logger is exposed to clients of the test framework clients
+      should use it, directly, only very sparingly. This is encouraged by the extra level
+      of indirection provided by the sentinels.
 
       3. sentinel caters for some of the complexity of the testing framework in
       a localized and simple manner. In particular, a given check may actually be
       composed of many sub-checks. For standard checks, we want to count this as a
       single 'top-level' check. For false-positive checks success is counted as a failure
-      of one or more of the sub-checks. The sentinels deal with all of this in a way which
-      clients of the framework can generally ignore.        
+      of one or more of the sub-checks. The sentinels deal with all of this smoothly
+      in a way which clients of the framework can generally ignore.
+
+      4. sentinel may be used to beautify output. A particular use-case is where clients
+      provide specialization of the 
+      \ref detailed_equality_checker_primary "detailed_equality_checker" or
+      \ref equivalence_checker_primary "equivalence_checker" or
+      \ref weak_equivalence_checker_primary "equivalence_checker". Such specializations
+      typically contain a sequence of successive checks, each of which is fed the
+      top-level description (as a string_view). However, if multpile checks fail, the
+      top-level description is repeated which may creat unwanted noise. Feeding in the
+      description via sentinel::generate_message ensures that the overall descripion appears
+      only once.
   */
 
   template<test_mode Mode>
