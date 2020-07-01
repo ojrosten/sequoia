@@ -790,24 +790,24 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-	Fast Task duration: 0.00140151s +- 4 * 1.04152e-05
-	Slow Task duration: 0.00138448s +- 4 * 1.57711e-05 [0.987851; (2, 2)]
+	Fast Task duration: 0.00134693s +- 4 * 8.10077e-05
+	Slow Task duration: 0.00135842s +- 4 * 7.91415e-05 [1.00853; (2, 2)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-	Fast Task duration: 0.00134602s +- 4 * 4.77029e-05
-	Slow Task duration: 0.00133773s +- 4 * 4.85986e-05 [0.993839; (2, 3)]
+	Fast Task duration: 0.00128854s +- 4 * 0.000121048
+	Slow Task duration: 0.00134595s +- 4 * 4.7066e-05 [1.04455; (2, 3)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-	Fast Task duration: 0.00132462s +- 4 * 0.000134031
-	Slow Task duration: 0.00506213s +- 4 * 0.000179437 [3.82156; (2, 2.5)]
+	Fast Task duration: 0.00138556s +- 4 * 2.8032e-05
+	Slow Task duration: 0.00510002s +- 4 * 8.58925e-05 [3.68082; (2, 2.5)]
 
 	=======================================
 
@@ -969,24 +969,6 @@
 	Obtained : 
 	Predicted: 5 6 
 
-	Unexpected allocation detected for para-copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
-	Inconsistent para-move construction
-	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 5 6 
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
@@ -1014,12 +996,6 @@
 	operator== returned false
 	Obtained : 
 	Predicted: 5 6 
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
 
 	=======================================
 
@@ -1379,24 +1355,6 @@
 	Obtained : 
 	Predicted: 5 6 
 
-	Unexpected allocation detected for para-copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
-	Inconsistent para-move construction
-	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 5 6 
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
@@ -1424,12 +1382,6 @@
 	operator== returned false
 	Obtained : 
 	Predicted: 5 6 
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
 
 	=======================================
 
@@ -1807,24 +1759,6 @@
 	Obtained : 
 	Predicted: 5 6 
 
-	Unexpected allocation detected for para-copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
-	Inconsistent para-move construction
-	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 5 6 
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
@@ -1852,12 +1786,6 @@
 	operator== returned false
 	Obtained : 
 	Predicted: 5 6 
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
 
 	=======================================
 
@@ -2205,24 +2133,6 @@
 	Obtained : 
 	Predicted: 5 6 
 
-	Unexpected allocation detected for para-copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
-	Inconsistent para-move construction
-	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 5 6 
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
@@ -2250,12 +2160,6 @@
 	operator== returned false
 	Obtained : 
 	Predicted: 5 6 
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
 
 	=======================================
 
@@ -2621,24 +2525,6 @@
 	Obtained : 
 	Predicted: 5 6 
 
-	Unexpected allocation detected for para-copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
-	Inconsistent para-move construction
-	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 5 6 
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
@@ -2666,12 +2552,6 @@
 	operator== returned false
 	Obtained : 
 	Predicted: 5 6 
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
 
 	=======================================
 
@@ -3025,24 +2905,6 @@
 	Obtained : 
 	Predicted: 5 6 
 
-	Unexpected allocation detected for para-copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
-	Inconsistent para-move construction
-	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 5 6 
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
@@ -3070,12 +2932,6 @@
 	operator== returned false
 	Obtained : 
 	Predicted: 5 6 
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
 
 	=======================================
 
@@ -3447,24 +3303,6 @@
 	Obtained : 
 	Predicted: 5 6 
 
-	Unexpected allocation detected for para-copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
-	Inconsistent para-move construction
-	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 5 6 
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
@@ -3492,12 +3330,6 @@
 	operator== returned false
 	Obtained : 
 	Predicted: 5 6 
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
 
 	=======================================
 
@@ -3851,24 +3683,6 @@
 	Obtained : 
 	Predicted: 5 6 
 
-	Unexpected allocation detected for para-copy construction (y)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
-	Inconsistent para-move construction
-	[sequoia::testing::broken_para_copy<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
-	operator== returned false
-	Obtained : 
-	Predicted: 5 6 
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 101
@@ -3896,12 +3710,6 @@
 	operator== returned false
 	Obtained : 
 	Predicted: 5 6 
-
-	Unexpected allocation detected for para-move construction (y)
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
 
 	=======================================
 
@@ -6483,8 +6291,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67
 	Performance Test which should pass
 
-	Fast Task duration: 0.00126869s +- 4 * 0.000145759
-	Slow Task duration: 0.00222478s +- 4 * 0.000264489 [1.75361; (1.8, 2.1)]
+	Fast Task duration: 0.00138899s +- 4 * 1.22049e-05
+	Slow Task duration: 0.0025202s +- 4 * 0.000252984 [1.8144; (1.8, 2.1)]
 
 
 	=======================================
@@ -6493,8 +6301,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68
 	Performance Test which should pass
 
-	Fast Task duration: 0.00120409s +- 4 * 0.000131587
-	Slow Task duration: 0.00437457s +- 4 * 0.000336217 [3.63309; (3.6, 4.1)]
+	Fast Task duration: 0.00136368s +- 4 * 6.04372e-05
+	Slow Task duration: 0.0046116s +- 4 * 0.000523675 [3.38173; (3.6, 4.1)]
 
 
 	=======================================
