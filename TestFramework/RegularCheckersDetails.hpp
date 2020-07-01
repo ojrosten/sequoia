@@ -96,20 +96,22 @@ namespace sequoia::testing::impl
         T v{y};
         yMutator(v);
 
-        check(sentry.generate_message(
+        if(check(sentry.generate_message(
           "Either mutation is not doing anything following copy construction"
           " or value semantics are broken, with mutation of an object also changing"
-          " the object from which it was copied"), logger, v != y);
+          " the object from which it was copied"), logger, v != y))
+        {
+          v = y;
+          if(check_equality(sentry.generate_message("Inconsistent copy assignment (from mutated y)"), logger, v, y))
+          {
+            yMutator(v);
 
-        v = y;
-        check_equality(sentry.generate_message("Inconsistent copy assignment (from mutated y)"), logger, v, y);
-
-        yMutator(v);
-
-        check(sentry.generate_message(
-          "Either mutation is not doing anything following copy assignment"
-          " or value semantics are broken, with mutation of an object also changing"
-          " the object from which it was assigned"), logger, v != y);
+            check(sentry.generate_message(
+              "Either mutation is not doing anything following copy assignment"
+              " or value semantics are broken, with mutation of an object also changing"
+              " the object from which it was assigned"), logger, v != y);
+          }
+        }
       }
     }
 

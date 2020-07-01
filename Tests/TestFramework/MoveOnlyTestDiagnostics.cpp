@@ -30,7 +30,7 @@ namespace sequoia::testing
     check_semantics(LINE("Broken move assignment"), move_only_broken_move_assignment{1}, move_only_broken_move_assignment{2}, move_only_broken_move_assignment{1}, move_only_broken_move_assignment{2});
     check_semantics(LINE("Broken check invariant"), move_only_beast{1}, move_only_beast{1}, move_only_beast{1}, move_only_beast{1});
     check_semantics(LINE("Broken check invariant"), move_only_beast{1}, move_only_beast{3}, move_only_beast{2}, move_only_beast{3});
-    check_semantics(LINE("Broken check invariant"), move_only_beast{1}, move_only_beast{2}, move_only_beast{3}, move_only_beast{2});
+    check_semantics(LINE("Broken check invariant"), move_only_beast{2}, move_only_beast{1}, move_only_beast{2}, move_only_beast{3});
   }
 
 

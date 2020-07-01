@@ -491,12 +491,6 @@
 	Obtained : false
 	Predicted: true
 
-	Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
 	=======================================
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 144
@@ -785,7 +779,7 @@
 	--Move-only Semantics--
 	[sequoia::testing::move_only_beast<int, std::allocator<int> >]
 
-	Precondition - for checking move-only semantics, x and xClone are assumed to be equal
+	Precondition - for checking move-only semantics, y and yClone are assumed to be equal
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -796,24 +790,24 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-	Fast Task duration: 0.00117046s +- 4 * 0.000121038
-	Slow Task duration: 0.00124859s +- 4 * 0.000109113 [1.06675; (2, 2)]
+	Fast Task duration: 0.00140151s +- 4 * 1.04152e-05
+	Slow Task duration: 0.00138448s +- 4 * 1.57711e-05 [0.987851; (2, 2)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-	Fast Task duration: 0.00121023s +- 4 * 0.000138515
-	Slow Task duration: 0.00121618s +- 4 * 0.000108586 [1.00492; (2, 3)]
+	Fast Task duration: 0.00134602s +- 4 * 4.77029e-05
+	Slow Task duration: 0.00133773s +- 4 * 4.85986e-05 [0.993839; (2, 3)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-	Fast Task duration: 0.00119193s +- 4 * 0.000124694
-	Slow Task duration: 0.00453199s +- 4 * 0.000385065 [3.80223; (2, 2.5)]
+	Fast Task duration: 0.00132462s +- 4 * 0.000134031
+	Slow Task duration: 0.00506213s +- 4 * 0.000179437 [3.82156; (2, 2.5)]
 
 	=======================================
 
@@ -1090,12 +1084,6 @@
 	Predicted: true
 
 	Either mutation is not doing anything following copy construction or value semantics are broken, with mutation of an object also changing the object from which it was copied
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
-	Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -1512,12 +1500,6 @@
 	Predicted: true
 
 	Either mutation is not doing anything following copy construction or value semantics are broken, with mutation of an object also changing the object from which it was copied
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
-	Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -1945,12 +1927,6 @@
 	Obtained : false
 	Predicted: true
 
-	Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 162
@@ -2355,12 +2331,6 @@
 	Obtained : false
 	Predicted: true
 
-	Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 162
@@ -2760,12 +2730,6 @@
 	Predicted: true
 
 	Either mutation is not doing anything following copy construction or value semantics are broken, with mutation of an object also changing the object from which it was copied
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
-	Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -3176,12 +3140,6 @@
 	Predicted: true
 
 	Either mutation is not doing anything following copy construction or value semantics are broken, with mutation of an object also changing the object from which it was copied
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
-	Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -3603,12 +3561,6 @@
 	Obtained : false
 	Predicted: true
 
-	Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 162
@@ -4014,12 +3966,6 @@
 	Predicted: true
 
 	Either mutation is not doing anything following copy construction or value semantics are broken, with mutation of an object also changing the object from which it was copied
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
-
-	Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
 	[bool]
 	operator== returned false
 	Obtained : false
@@ -6537,8 +6483,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67
 	Performance Test which should pass
 
-	Fast Task duration: 0.00119064s +- 4 * 0.000113274
-	Slow Task duration: 0.00233874s +- 4 * 0.000224871 [1.96427; (1.8, 2.1)]
+	Fast Task duration: 0.00126869s +- 4 * 0.000145759
+	Slow Task duration: 0.00222478s +- 4 * 0.000264489 [1.75361; (1.8, 2.1)]
 
 
 	=======================================
@@ -6547,8 +6493,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68
 	Performance Test which should pass
 
-	Fast Task duration: 0.00120951s +- 4 * 0.000114084
-	Slow Task duration: 0.0043869s +- 4 * 0.000421641 [3.627; (3.6, 4.1)]
+	Fast Task duration: 0.00120409s +- 4 * 0.000131587
+	Slow Task duration: 0.00437457s +- 4 * 0.000336217 [3.63309; (3.6, 4.1)]
 
 
 	=======================================
