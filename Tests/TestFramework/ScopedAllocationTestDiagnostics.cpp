@@ -6,7 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "ScopedAllocationTestDiagnostics.hpp"
-#include "ScopedAllocationTestDiagnosticUtilities.hpp"
+#include "ScopedAllocationTestDiagnosticsUtilities.hpp"
 
 namespace sequoia::testing
 {

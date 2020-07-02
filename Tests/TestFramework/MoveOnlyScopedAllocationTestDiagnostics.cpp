@@ -6,7 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "MoveOnlyScopedAllocationTestDiagnostics.hpp"
-#include "MoveOnlyScopedAllocationTestDiagnosticUtilities.hpp"
+#include "MoveOnlyScopedAllocationTestDiagnosticsUtilities.hpp"
 
 namespace sequoia::testing
 {
