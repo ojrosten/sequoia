@@ -52,6 +52,6 @@ namespace sequoia::testing::impl
       }
     };
 
-    std::apply(fn, checkers);
+    std::apply(fn, std::move(checkers));
   }
 }
