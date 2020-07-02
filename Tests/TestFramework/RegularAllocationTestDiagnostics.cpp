@@ -112,14 +112,6 @@ namespace sequoia::testing
       }
 
       {
-        using beast = inefficient_move<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
-        using allocator = typename beast::allocator_type;
-        
-        
-        check_semantics(LINE("Inefficient move"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info<beast, allocator>{allocGetter, {1_c, {1_c,1_mu}, {1_awp,1_anp}}});
-      }
-
-      {
         using beast = broken_copy_assignment<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
         using allocator = typename beast::allocator_type;
         
@@ -176,8 +168,15 @@ namespace sequoia::testing
         };
 
         
-        check_semantics(LINE(""), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info<beast, allocator>{allocGetter, {2_c, {3_c,1_mu,1_pc,1_pm}, {1_awp,1_anp}}});
-        check_semantics(LINE(""), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info<beast, allocator>{allocGetter, {3_c, {2_c,1_mu,1_pc,1_pm}, {1_awp,1_anp}}});
+        check_semantics(LINE("Inefficient copy"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info<beast, allocator>{allocGetter, {2_c, {3_c,1_mu,1_pc,1_pm}, {1_awp,1_anp}}});
+        check_semantics(LINE("Inefficient copy"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info<beast, allocator>{allocGetter, {3_c, {2_c,1_mu,1_pc,1_pm}, {1_awp,1_anp}}});
+      }
+
+      {
+        using beast = inefficient_move<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
+        using allocator = typename beast::allocator_type;
+                
+        check_semantics(LINE("Inefficient move"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info<beast, allocator>{allocGetter, {1_c, {1_c,1_mu}, {1_awp,1_anp}}});
       }
 
       {
@@ -190,8 +189,7 @@ namespace sequoia::testing
             b.x.push_back(1);
           }
         };
-
-        
+       
         check_semantics(LINE("Inefficient para-copy"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info<beast, allocator>{allocGetter, {1_c, {1_c,1_mu,3_pc,1_pm}, {1_awp,1_anp}}});
       }
 
@@ -205,7 +203,6 @@ namespace sequoia::testing
             b.x.push_back(1);
           }
         };
-
         
         check_semantics(LINE("Inefficient para-move"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info<beast, allocator>{allocGetter, {1_c, {1_c,1_mu,1_pc,3_pm}, {1_awp,1_anp}}});
       }
@@ -213,38 +210,34 @@ namespace sequoia::testing
       {
         using beast = perfectly_normal_beast<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
         using allocator = typename beast::allocator_type;
-
-
-        
+      
         check_semantics(LINE("Broken check invariant"), beast{{1}, allocator{}}, beast{{1}, allocator{}}, mutator, allocation_info<beast, allocator>{allocGetter, {0_c, {0_c,1_mu}, {0_awp,0_anp}}});
       }
 
       {
         using beast = perfectly_normal_beast<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
         using allocator = typename beast::allocator_type;
+          
+        check_semantics(LINE("Incorrect copy x allocs"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info<beast, allocator>{allocGetter, {0_c, {1_c,1_mu}, {1_awp,1_anp}}});
 
-        {
+        check_semantics(LINE("Incorrect copy y allocs"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info<beast, allocator>{allocGetter, {1_c, {0_c,1_mu}, {1_awp,1_anp}}});
           
-          check_semantics(LINE("Incorrect copy x allocs"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info<beast, allocator>{allocGetter, {0_c, {1_c,1_mu}, {1_awp,1_anp}}});
-        }
-        {
-          
-          check_semantics(LINE("Incorrect copy y allocs"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info<beast, allocator>{allocGetter, {1_c, {0_c,1_mu}, {1_awp,1_anp}}});
-        }
-        {
-          allocation_predictions predictions{1_c, {1_c,1_mu}, {0_awp,1_anp}};
-          if constexpr(!std::allocator_traits<shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>::propagate_on_container_copy_assignment::value)
-          {
-            predictions = allocation_predictions{1_c, {1_c,1_mu}, {1_awp,0_anp}};
+        check_semantics(LINE("Incorrect mutation allocs"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info<beast, allocator>{allocGetter, {1_c, {1_c,0_mu}, {1_awp,1_anp}}});
+
+        auto predictions{
+          []() -> allocation_predictions {
+            if constexpr(!std::allocator_traits<shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>::propagate_on_container_copy_assignment::value)
+            {
+              return {1_c, {1_c,1_mu}, {1_awp,0_anp}};
+            }
+            else
+            {
+              return {1_c, {1_c,1_mu}, {0_awp,1_anp}};
+            }
           }
-
+        };
           
-          check_semantics(LINE("Incorrect copy assign y to x allocs"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info<beast, allocator>{allocGetter, predictions});
-        }
-        {
-          
-          check_semantics(LINE("Incorrect mutation allocs"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info<beast, allocator>{allocGetter, {1_c, {1_c,0_mu}, {1_awp,1_anp}}});
-        }
+        check_semantics(LINE("Incorrect copy assign y to x allocs"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info<beast, allocator>{allocGetter, predictions()});
       }
 
       {
@@ -257,29 +250,27 @@ namespace sequoia::testing
             *b.x.front() = 9;
           }
         };
-        
-        {
-          
-          check_semantics(LINE("Incorrect copy x allocs"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, m, allocation_info<beast, allocator>{allocGetter, {0_c, {1_c,0_mu}, {1_awp,1_anp}}});
-        }
-        {
-          
-          check_semantics(LINE("Incorrect copy y allocs"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, m, allocation_info<beast, allocator>{allocGetter, {1_c, {0_c,0_mu}, {1_awp,1_anp}}});
-        }
-        {
-          allocation_predictions predictions{1_c, {1_c,0_mu}, {0_awp,1_anp}};
-          if constexpr(!std::allocator_traits<shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>::propagate_on_container_copy_assignment::value)
-          {
-            predictions = allocation_predictions{1_c, {1_c,0_mu}, {1_awp,0_anp}};
-          }
 
+        check_semantics(LINE("Incorrect copy x allocs"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, m, allocation_info<beast, allocator>{allocGetter, {0_c, {1_c,0_mu}, {1_awp,1_anp}}});
           
-          check_semantics(LINE("Incorrect copy assign y to x allocs"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, m, allocation_info<beast, allocator>{allocGetter, predictions});
-        }
-        {
-          
-          check_semantics(LINE("Incorrect mutation allocs"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, m, allocation_info<beast, allocator>{allocGetter, {1_c, {1_c,1_mu}, {1_awp,1_anp}}});
-        }
+        check_semantics(LINE("Incorrect copy y allocs"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, m, allocation_info<beast, allocator>{allocGetter, {1_c, {0_c,0_mu}, {1_awp,1_anp}}});
+        
+        check_semantics(LINE("Incorrect mutation allocs"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, m, allocation_info<beast, allocator>{allocGetter, {1_c, {1_c,1_mu}, {1_awp,1_anp}}});
+
+        auto predictions{
+          []() -> allocation_predictions {
+            if constexpr(!std::allocator_traits<shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>::propagate_on_container_copy_assignment::value)
+            {
+              return {1_c, {1_c,0_mu}, {1_awp,0_anp}};
+            }
+            else
+            {
+              return {1_c, {1_c,0_mu}, {0_awp,1_anp}};
+            }
+          }
+        };                  
+
+        check_semantics(LINE("Incorrect copy assign y to x allocs"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, m, allocation_info<beast, allocator>{allocGetter, predictions()});          
       }
     }    
   }
