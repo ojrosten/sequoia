@@ -122,6 +122,25 @@ namespace sequoia::testing
       check_semantics(LINE("Inefficient move assignment"), beast{1}, beast{2}, beast{1}, beast{2}, mutator,
                               move_only_allocation_info{allocGetter, move_only_allocation_predictions{0_anp, 1_mu, 1_pm}});
     }
+    
+    {
+      using beast = move_only_beast<int, shared_counting_allocator<int, true, PropagateMove, PropagateSwap>>;
+
+      auto allocGetter{
+        [](const beast& beast){
+          return beast.x.get_allocator();
+        }
+      };
+
+      check_semantics(LINE("Invariant violated: x != xClone"), beast{1}, beast{2}, beast{3}, beast{2}, mutator,
+                              move_only_allocation_info{allocGetter, move_only_allocation_predictions{0_anp, 1_mu, 1_pm}});
+
+      check_semantics(LINE("Invariant violated: y != YClone"), beast{1}, beast{2}, beast{1}, beast{3}, mutator,
+                              move_only_allocation_info{allocGetter, move_only_allocation_predictions{0_anp, 1_mu, 1_pm}});
+
+      check_semantics(LINE("Invariant violated: x == y"), beast{1}, beast{1}, beast{1}, beast{1}, mutator,
+                              move_only_allocation_info{allocGetter, move_only_allocation_predictions{0_anp, 1_mu, 1_pm}});
+    }
   }
 
   [[nodiscard]]
