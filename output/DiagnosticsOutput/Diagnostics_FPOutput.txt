@@ -790,24 +790,24 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-	Fast Task duration: 0.00139885s +- 4 * 1.67521e-05
-	Slow Task duration: 0.00129809s +- 4 * 0.000125914 [0.927973; (2, 2)]
+	Fast Task duration: 0.00135828s +- 4 * 4.81998e-05
+	Slow Task duration: 0.00138565s +- 4 * 3.51508e-05 [1.02015; (2, 2)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-	Fast Task duration: 0.00127019s +- 4 * 0.000130823
-	Slow Task duration: 0.00129439s +- 4 * 0.0001084 [1.01905; (2, 3)]
+	Fast Task duration: 0.00130216s +- 4 * 3.85485e-05
+	Slow Task duration: 0.00125942s +- 4 * 9.34543e-05 [0.967179; (2, 3)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-	Fast Task duration: 0.00132518s +- 4 * 4.47993e-05
-	Slow Task duration: 0.00483319s +- 4 * 0.000364603 [3.6472; (2, 2.5)]
+	Fast Task duration: 0.00137319s +- 4 * 2.38135e-05
+	Slow Task duration: 0.00465249s +- 4 * 0.000495049 [3.38808; (2, 2.5)]
 
 	=======================================
 
@@ -4077,11 +4077,11 @@
 	--Move-only Semantics--
 	[sequoia::testing::move_only_broken_move<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
 
-	Precondition - for checking move-only semantics, y and yClone are assumed to be equal
-	[bool]
+	Inconsistent move construction
+	[sequoia::testing::move_only_broken_move<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
 	operator== returned false
-	Obtained : false
-	Predicted: true
+	Obtained : 
+	Predicted: 2 
 
 	=======================================
 
@@ -4175,11 +4175,11 @@
 	--Move-only Semantics--
 	[sequoia::testing::move_only_broken_move<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
 
-	Precondition - for checking move-only semantics, y and yClone are assumed to be equal
-	[bool]
+	Inconsistent move construction
+	[sequoia::testing::move_only_broken_move<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
 	operator== returned false
-	Obtained : false
-	Predicted: true
+	Obtained : 
+	Predicted: 2 
 
 	=======================================
 
@@ -4279,11 +4279,11 @@
 	--Move-only Semantics--
 	[sequoia::testing::move_only_broken_move<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
 
-	Precondition - for checking move-only semantics, y and yClone are assumed to be equal
-	[bool]
+	Inconsistent move construction
+	[sequoia::testing::move_only_broken_move<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
 	operator== returned false
-	Obtained : false
-	Predicted: true
+	Obtained : 
+	Predicted: 2 
 
 	=======================================
 
@@ -4363,11 +4363,11 @@
 	--Move-only Semantics--
 	[sequoia::testing::move_only_broken_move<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
 
-	Precondition - for checking move-only semantics, y and yClone are assumed to be equal
-	[bool]
+	Inconsistent move construction
+	[sequoia::testing::move_only_broken_move<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
 	operator== returned false
-	Obtained : false
-	Predicted: true
+	Obtained : 
+	Predicted: 2 
 
 	=======================================
 
@@ -6351,8 +6351,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67
 	Performance Test which should pass
 
-	Fast Task duration: 0.00113378s +- 4 * 0.000101564
-	Slow Task duration: 0.00229916s +- 4 * 0.000208369 [2.02788; (1.8, 2.1)]
+	Fast Task duration: 0.00117658s +- 4 * 5.78668e-05
+	Slow Task duration: 0.00213698s +- 4 * 0.000117529 [1.81626; (1.8, 2.1)]
 
 
 	=======================================
@@ -6361,8 +6361,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68
 	Performance Test which should pass
 
-	Fast Task duration: 0.00126455s +- 4 * 0.00010208
-	Slow Task duration: 0.00475538s +- 4 * 0.000456241 [3.76052; (3.6, 4.1)]
+	Fast Task duration: 0.00115656s +- 4 * 0.000112696
+	Slow Task duration: 0.00438354s +- 4 * 0.000309073 [3.79016; (3.6, 4.1)]
 
 
 	=======================================

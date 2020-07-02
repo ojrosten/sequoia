@@ -2,5 +2,5 @@ Performance False Positive Diagnostics
 [58ms]
 False Positive Performance Checks:         3;  Failures:  0
 Performance False Negative Diagnostics
-[48ms]
+[45ms]
 False Negative Performance Checks:         2;  Failures:  0

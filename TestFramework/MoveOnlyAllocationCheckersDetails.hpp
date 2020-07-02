@@ -35,6 +35,8 @@ namespace sequoia::testing::impl
   template<test_mode Mode, class Container, class... Allocators, class... Predictions>
   std::optional<Container> check_para_constructor_allocations(test_logger<Mode>& logger, const sentinel<Mode>& sentry, Container&& y, const Container& yClone, const basic_allocation_info<Container, Allocators, Predictions>&... info)
   {
+    if(!check(sentry.generate_message("Precondition - for checking move-only semantics, y and yClone are assumed to be equal"), logger, y == yClone)) return{};
+    
     Container u{std::move(y), info.make_allocator()...};
     check_para_move_y_allocation(logger, sentry, u, std::tuple_cat(make_allocation_checkers(info)...));
     const bool success{check_equality(sentry.generate_message("Inonsistent para-move constructor"), logger, u, yClone)};

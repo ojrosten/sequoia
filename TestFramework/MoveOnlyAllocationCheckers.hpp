@@ -65,7 +65,10 @@ namespace sequoia::testing
 
     if(auto opt{impl::check_para_constructor_allocations(logger, sentry, std::forward<T>(y), yClone, info...)})
     {
-      check_semantics(logger, sentry, impl::move_only_allocation_actions{}, std::forward<T>(x), std::move(*opt), xClone, yClone, std::move(m), std::tuple_cat(impl::make_dual_allocation_checkers(info, x, y)...));
+      if(check_equality(sentry.generate_message("Inconsistent move construction"), logger, *opt, yClone))
+      {      
+        check_semantics(logger, sentry, impl::move_only_allocation_actions{}, std::forward<T>(x), std::move(*opt), xClone, yClone, std::move(m), std::tuple_cat(impl::make_dual_allocation_checkers(info, x, y)...));
+      }
     }
   }
 }
