@@ -71,7 +71,7 @@ namespace sequoia::testing
       }
 
       {
-        using beast = inefficient_equality<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
+        using beast = inefficient_inequality<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
         using allocator = typename beast::allocator_type;
         
         
@@ -192,7 +192,7 @@ namespace sequoia::testing
         };
 
         
-        check_semantics(LINE(""), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info<beast, allocator>{allocGetter, {1_c, {1_c,1_mu,3_pc,1_pm}, {1_awp,1_anp}}});
+        check_semantics(LINE("Inefficient para-copy"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info<beast, allocator>{allocGetter, {1_c, {1_c,1_mu,3_pc,1_pm}, {1_awp,1_anp}}});
       }
 
       {
@@ -207,7 +207,7 @@ namespace sequoia::testing
         };
 
         
-        check_semantics(LINE(""), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info<beast, allocator>{allocGetter, {1_c, {1_c,1_mu,1_pc,3_pm}, {1_awp,1_anp}}});
+        check_semantics(LINE("Inefficient para-move"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info<beast, allocator>{allocGetter, {1_c, {1_c,1_mu,1_pc,3_pm}, {1_awp,1_anp}}});
       }
       
       {

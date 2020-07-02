@@ -790,24 +790,24 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-	Fast Task duration: 0.00125378s +- 4 * 0.000126615
-	Slow Task duration: 0.00138877s +- 4 * 6.3998e-05 [1.10767; (2, 2)]
+	Fast Task duration: 0.00134045s +- 4 * 7.5216e-05
+	Slow Task duration: 0.00133009s +- 4 * 0.000108902 [0.992274; (2, 2)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-	Fast Task duration: 0.00154151s +- 4 * 0.000410327
-	Slow Task duration: 0.00134226s +- 4 * 5.836e-05 [0.87075; (2, 3)]
+	Fast Task duration: 0.00134548s +- 4 * 3.98625e-05
+	Slow Task duration: 0.00129674s +- 4 * 0.000128019 [0.96377; (2, 3)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-	Fast Task duration: 0.00126631s +- 4 * 0.000130514
-	Slow Task duration: 0.00464933s +- 4 * 0.000505138 [3.67156; (2, 2.5)]
+	Fast Task duration: 0.00118324s +- 4 * 0.000120359
+	Slow Task duration: 0.00487377s +- 4 * 0.000332657 [4.11899; (2, 2.5)]
 
 	=======================================
 
@@ -932,9 +932,9 @@
 	Inefficient inequality
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
+	[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
 
-	Unexpected allocation detected for operator==
+	Unexpected allocation detected for operator!=
 	Unexpected allocation detected (x)
 	[int]
 	operator== returned false
@@ -1108,6 +1108,7 @@
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 195
+	Inefficient para-copy
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
@@ -1121,6 +1122,7 @@
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 210
+	Inefficient para-move
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
@@ -1318,9 +1320,9 @@
 	Inefficient inequality
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
+	[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
 
-	Unexpected allocation detected for operator==
+	Unexpected allocation detected for operator!=
 	Unexpected allocation detected (x)
 	[int]
 	operator== returned false
@@ -1500,6 +1502,7 @@
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 195
+	Inefficient para-copy
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
@@ -1513,6 +1516,7 @@
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 210
+	Inefficient para-move
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
@@ -1722,9 +1726,9 @@
 	Inefficient inequality
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
+	[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
 
-	Unexpected allocation detected for operator==
+	Unexpected allocation detected for operator!=
 	Unexpected allocation detected (x)
 	[int]
 	operator== returned false
@@ -1898,6 +1902,7 @@
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 195
+	Inefficient para-copy
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
@@ -1911,6 +1916,7 @@
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 210
+	Inefficient para-move
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
@@ -2096,9 +2102,9 @@
 	Inefficient inequality
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
+	[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
 
-	Unexpected allocation detected for operator==
+	Unexpected allocation detected for operator!=
 	Unexpected allocation detected (x)
 	[int]
 	operator== returned false
@@ -2278,6 +2284,7 @@
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 195
+	Inefficient para-copy
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
@@ -2291,6 +2298,7 @@
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 210
+	Inefficient para-move
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
@@ -2488,9 +2496,9 @@
 	Inefficient inequality
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
+	[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
 
-	Unexpected allocation detected for operator==
+	Unexpected allocation detected for operator!=
 	Unexpected allocation detected (x)
 	[int]
 	operator== returned false
@@ -2658,6 +2666,7 @@
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 195
+	Inefficient para-copy
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
@@ -2671,6 +2680,7 @@
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 210
+	Inefficient para-move
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
@@ -2868,9 +2878,9 @@
 	Inefficient inequality
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
+	[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
 
-	Unexpected allocation detected for operator==
+	Unexpected allocation detected for operator!=
 	Unexpected allocation detected (x)
 	[int]
 	operator== returned false
@@ -3044,6 +3054,7 @@
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 195
+	Inefficient para-copy
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
@@ -3057,6 +3068,7 @@
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 210
+	Inefficient para-move
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
@@ -3266,9 +3278,9 @@
 	Inefficient inequality
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
+	[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
 
-	Unexpected allocation detected for operator==
+	Unexpected allocation detected for operator!=
 	Unexpected allocation detected (x)
 	[int]
 	operator== returned false
@@ -3436,6 +3448,7 @@
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 195
+	Inefficient para-copy
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
@@ -3449,6 +3462,7 @@
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 210
+	Inefficient para-move
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
@@ -3646,9 +3660,9 @@
 	Inefficient inequality
 
 	--Regular Semantics--
-	[sequoia::testing::inefficient_equality<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
+	[sequoia::testing::inefficient_inequality<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
 
-	Unexpected allocation detected for operator==
+	Unexpected allocation detected for operator!=
 	Unexpected allocation detected (x)
 	[int]
 	operator== returned false
@@ -3822,6 +3836,7 @@
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 195
+	Inefficient para-copy
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_para_copy<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
@@ -3835,6 +3850,7 @@
 	=======================================
 
 	../Tests/TestFramework/RegularAllocationTestDiagnostics.cpp, Line 210
+	Inefficient para-move
 
 	--Regular Semantics--
 	[sequoia::testing::inefficient_para_move<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
@@ -6291,8 +6307,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67
 	Performance Test which should pass
 
-	Fast Task duration: 0.0012845s +- 4 * 0.000134572
-	Slow Task duration: 0.00249244s +- 4 * 0.0001845 [1.9404; (1.8, 2.1)]
+	Fast Task duration: 0.00125072s +- 4 * 0.000133051
+	Slow Task duration: 0.00247701s +- 4 * 0.000203594 [1.98047; (1.8, 2.1)]
 
 
 	=======================================
@@ -6301,8 +6317,8 @@
 		../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68
 	Performance Test which should pass
 
-	Fast Task duration: 0.00177052s +- 4 * 0.000575288
-	Slow Task duration: 0.00478437s +- 4 * 0.000895919 [2.70224; (3.6, 4.1)]
+	Fast Task duration: 0.00121398s +- 4 * 0.0001151
+	Slow Task duration: 0.00464561s +- 4 * 0.000434418 [3.82675; (3.6, 4.1)]
 
 
 	=======================================

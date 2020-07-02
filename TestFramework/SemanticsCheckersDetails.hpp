@@ -113,7 +113,8 @@ namespace sequoia::testing::impl
 
     if constexpr (Actions::has_post_nequality_action)
     {
-      actions.post_nequality_action(logger, sentry, x, y, args...);
+      if(!actions.post_nequality_action(logger, sentry, x, y, args...))
+        return false;
     }
 
     return actions.check_preconditions(logger, sentry, x, y);

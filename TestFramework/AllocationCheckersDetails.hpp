@@ -492,14 +492,21 @@ namespace sequoia::testing::impl
     template<test_mode Mode, class Container, class... Allocators, class... Predictions>
     static bool post_equality_action(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Container& x, const Container& y, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
     {
+      sentinel<Mode> s{logger, ""};
+      
       check_no_allocation("Unexpected allocation detected for operator==", logger, sentry, x, y, checkers...);
-      return !sentry.failure_detected();
+
+      return !s.failure_detected();
     }
 
     template<test_mode Mode, class Container, class... Allocators, class... Predictions>
-    static void post_nequality_action(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Container& x, const Container& y, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
+    static bool post_nequality_action(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Container& x, const Container& y, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
     {
+      sentinel<Mode> s{logger, ""};
+
       check_no_allocation("Unexpected allocation detected for operator!=", logger, sentry, x, y, checkers...);
+
+      return !s.failure_detected();
     }
 
     template<test_mode Mode, class Container, class... Allocators, class... Predictions>
