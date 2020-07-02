@@ -5,8 +5,10 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "UnitTestDiagnosticsUtilities.hpp"
 #include "RegularAllocationTestDiagnostics.hpp"
+
+#include "UnitTestDiagnosticsUtilities.hpp"
+#include "AllocationTestDiagnosticsUtilities.hpp"
 
 #include <vector>
 
