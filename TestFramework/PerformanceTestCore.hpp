@@ -89,108 +89,111 @@ namespace sequoia::testing
     using namespace std::chrono;
     using namespace maths;
 
-    std::string
-      message{description.empty() ? "" : std::string{"\t"}.append(description).append("\n")},
-      summary{};  
+    std::string summary{};  
 
-      std::size_t remainingAttempts{maxAttempts};
+    std::size_t remainingAttempts{maxAttempts};
 
-      while(remainingAttempts > 0)
+    while(remainingAttempts > 0)
+    {
+      std::vector<double> fastData, slowData;
+      fastData.reserve(trials);
+      slowData.reserve(trials);
+        
+      std::random_device generator;
+      const auto adjustedTrials{trials*(maxAttempts - remainingAttempts + 1)};
+      for(std::size_t i{}; i < adjustedTrials; ++i)
       {
-        std::vector<double> fastData, slowData;
-        fastData.reserve(trials);
-        slowData.reserve(trials);
-        
-        std::random_device generator;
-        const auto adjustedTrials{trials*(maxAttempts - remainingAttempts + 1)};
-        for(std::size_t i{}; i < adjustedTrials; ++i)
-        {
-          std::packaged_task<R()> fastTask{fast}, slowTask{slow};
+        std::packaged_task<R()> fastTask{fast}, slowTask{slow};
 
-          results.fast_futures.emplace_back(std::move(fastTask.get_future()));
-          results.slow_futures.emplace_back(std::move(slowTask.get_future()));
+        results.fast_futures.emplace_back(std::move(fastTask.get_future()));
+        results.slow_futures.emplace_back(std::move(slowTask.get_future()));
 
-          steady_clock::time_point start, end;
+        steady_clock::time_point start, end;
 
-          std::uniform_real_distribution<double> distribution{0.0, 1.0};
-          const bool fastFirst{(distribution(generator) < 0.5)};
+        std::uniform_real_distribution<double> distribution{0.0, 1.0};
+        const bool fastFirst{(distribution(generator) < 0.5)};
 
-          start = steady_clock::now();
-          fastFirst ? fastTask() : slowTask();
-          end = steady_clock::now();
+        start = steady_clock::now();
+        fastFirst ? fastTask() : slowTask();
+        end = steady_clock::now();
 
-          duration<double> duration = end - start;
-          fastFirst ? fastData.push_back(duration.count()) : slowData.push_back(duration.count());
+        duration<double> duration = end - start;
+        fastFirst ? fastData.push_back(duration.count()) : slowData.push_back(duration.count());
 
-          start = steady_clock::now();
-          fastFirst ? slowTask() : fastTask();
-          end = steady_clock::now();
+        start = steady_clock::now();
+        fastFirst ? slowTask() : fastTask();
+        end = steady_clock::now();
 
-          duration = end - start;
-          fastFirst ? slowData.push_back(duration.count()) : fastData.push_back(duration.count());
+        duration = end - start;
+        fastFirst ? slowData.push_back(duration.count()) : fastData.push_back(duration.count());
+      }
+
+      auto compute_stats{
+        [](auto first, auto last) {
+          const auto data{sample_standard_deviation(first, last)};
+          return std::make_pair(data.first.value(), data.second.value());
         }
-
-        auto compute_stats{
-          [](auto first, auto last) {
-            const auto data{sample_standard_deviation(first, last)};
-            return std::make_pair(data.first.value(), data.second.value());
-          }
-        };
+      };
       
-        const auto [sig_f, m_f]{compute_stats(fastData.cbegin(), fastData.cend())};
-        const auto [sig_s, m_s]{compute_stats(slowData.cbegin(), slowData.cend())};
+      const auto [sig_f, m_f]{compute_stats(fastData.cbegin(), fastData.cend())};
+      const auto [sig_s, m_s]{compute_stats(slowData.cbegin(), slowData.cend())};
 
-        using namespace maths::bias;
-        if(m_f + sig_f < m_s - sig_s)
+      using namespace maths::bias;
+      if(m_f + sig_f < m_s - sig_s)
+      {
+        if(sig_f >= sig_s)
         {
-          if(sig_f >= sig_s)
-          {
-            results.passed = (minSpeedUp * m_f <= (m_s + num_sds * sig_s))
-              && (maxSpeedUp * m_f >= (m_s - num_sds * sig_s));
-          }
-          else
-          {
-            results.passed = (m_s / maxSpeedUp <= (m_f + num_sds * sig_f))
-              && (m_s / minSpeedUp >= (m_f - num_sds * sig_f));
-          }
+          results.passed = (minSpeedUp * m_f <= (m_s + num_sds * sig_s))
+                        && (maxSpeedUp * m_f >= (m_s - num_sds * sig_s));
         }
-
-        auto serializer{
-          [m_f=m_f,sig_f=sig_f,m_s=m_s,sig_s=sig_s,num_sds,minSpeedUp,maxSpeedUp](){
-            std::ostringstream message{};
-            message << "\tFast Task duration: " << m_f << "s";
-            message << " +- " << num_sds << " * " << sig_f;
-            message << "\n\tSlow Task duration: " << m_s << "s";
-            message << " +- " << num_sds << " * " << sig_s;
-            message << " [" << m_s / m_f << "; (" << minSpeedUp << ", " << maxSpeedUp << ")]\n";
-
-            return message.str();
-          }
-        };
-        
-        summary = serializer();
-
-        if((test_logger<Mode>::mode == test_mode::false_positive) ? !results.passed : results.passed)
+        else
         {
-          break;
+          results.passed = (m_s / maxSpeedUp <= (m_f + num_sds * sig_f))
+                        && (m_s / minSpeedUp >= (m_f - num_sds * sig_f));
         }
-        
-        --remainingAttempts;
-        if(remainingAttempts)
-          results = performance_results<R>{};      
       }
 
-      message.append(summary);
+      auto stats{
+        [num_sds](std::string_view prefix, const auto mean, const auto sig){
+            
+          std::ostringstream message{};
+          message << mean << "s" << " +- " << num_sds << " * " << sig;
 
-      sentinel<Mode> sentry{logger, message};
-      sentry.log_performance_check();
+          return std::string{prefix}.append(" Task duration: ").append(message.str());
+        }
+      };
 
-      if(!results.passed)
-      {        
-        sentry.log_performance_failure(message);
+      auto summarizer{
+        [m_f{m_f},m_s{m_s},minSpeedUp,maxSpeedUp](){
+          std::ostringstream message{};
+          message << " [" << m_s / m_f << "; (" << minSpeedUp << ", " << maxSpeedUp << ")]";
+
+          return message.str();
+        }
+      };
+        
+      summary = stats("Fast", m_f, sig_f);
+      append_indented(summary, stats("Slow", m_s, sig_s)).append(summarizer());
+          
+      if((test_logger<Mode>::mode == test_mode::false_positive) ? !results.passed : results.passed)
+      {
+        break;
       }
+        
+      --remainingAttempts;
+      if(remainingAttempts)
+        results = performance_results<R>{};      
+    }
 
-      return results;
+    sentinel<Mode> sentry{logger, append_indented(description, summary)};
+    sentry.log_performance_check();
+
+    if(!results.passed)
+    {        
+      sentry.log_performance_failure(sentry.message());
+    }
+
+    return results;
   }
 
   /*! \brief class template for plugging into the checker class template

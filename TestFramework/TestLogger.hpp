@@ -218,6 +218,12 @@ namespace sequoia::testing
     {
       return m_Logger.get().deep_checks() != m_PriorDeepChecks;
     }
+
+    [[nodiscard]]
+    std::string_view message() const noexcept
+    {
+      return m_Message;
+    }
   private:
     std::reference_wrapper<test_logger<Mode>> m_Logger;
     std::string m_Message;
@@ -310,7 +316,7 @@ namespace sequoia::testing
     void log_failure(std::string_view message)
     {
       ++m_Failures;
-      m_CurrentMessage = message;
+      m_CurrentMessage = indent(message);
 
       update_output(m_CurrentMessage, 2, "");
     }

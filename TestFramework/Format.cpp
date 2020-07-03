@@ -100,11 +100,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string operator_message(std::string_view description, std::string_view op, std::string_view opRetVal)
   {
-    std::string info{indent(description)};
-    append_indented(info, "operator");
-    info.append(op).append(" returned ").append(opRetVal);
-
-    return info;
+    return append_indented(description, "operator").append(op).append(" returned ").append(opRetVal);
   }
 
   [[nodiscard]]

@@ -389,8 +389,7 @@ namespace sequoia::testing
   {
     auto message{
       [description](){
-        std::string info{indent(description)};
-        append_indented(info, "Expected Exception Type:");
+        std::string info{append_indented(description, "Expected Exception Type:")};
         append_indented(info, make_type_info<E>());
 
         return info;
