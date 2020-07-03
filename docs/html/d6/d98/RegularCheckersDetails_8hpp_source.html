@@ -160,26 +160,28 @@ $(function() {
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        T v{y};</div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;        yMutator(v);</div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160; </div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        check(sentry.generate_message(</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        <span class="keywordflow">if</span>(check(sentry.generate_message(</div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;          <span class="stringliteral">&quot;Either mutation is not doing anything following copy construction&quot;</span></div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;          <span class="stringliteral">&quot; or value semantics are broken, with mutation of an object also changing&quot;</span></div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;          <span class="stringliteral">&quot; the object from which it was copied&quot;</span>), logger, v != y);</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160; </div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        v = y;</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        check_equality(sentry.generate_message(<span class="stringliteral">&quot;Inconsistent copy assignment (from mutated y)&quot;</span>), logger, v, y);</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160; </div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        yMutator(v);</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;          <span class="stringliteral">&quot; the object from which it was copied&quot;</span>), logger, v != y))</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;        {</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;          v = y;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;          <span class="keywordflow">if</span>(check_equality(sentry.generate_message(<span class="stringliteral">&quot;Inconsistent copy assignment (from mutated y)&quot;</span>), logger, v, y))</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;          {</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;            yMutator(v);</div>
 <div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;        check(sentry.generate_message(</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;          <span class="stringliteral">&quot;Either mutation is not doing anything following copy assignment&quot;</span></div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;          <span class="stringliteral">&quot; or value semantics are broken, with mutation of an object also changing&quot;</span></div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;          <span class="stringliteral">&quot; the object from which it was assigned&quot;</span>), logger, v != y);</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;      }</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    }</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160; </div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <span class="keywordflow">return</span> !sentry.failure_detected();</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;  }</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;}</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;            check(sentry.generate_message(</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;              <span class="stringliteral">&quot;Either mutation is not doing anything following copy assignment&quot;</span></div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;              <span class="stringliteral">&quot; or value semantics are broken, with mutation of an object also changing&quot;</span></div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;              <span class="stringliteral">&quot; the object from which it was assigned&quot;</span>), logger, v != y);</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;          }</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;        }</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;      }</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    }</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160; </div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    <span class="keywordflow">return</span> !sentry.failure_detected();</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;  }</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aTestLogger_8hpp_html_ae4e97c9d45a89647799f0d308ba6d244"><div class="ttname"><a href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">sequoia::testing::test_mode</a></div><div class="ttdeci">test_mode</div><div class="ttdoc">Specifies whether tests are run as standard tests or in false postive/negative mode .</div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:52</div></div>
 <div class="ttc" id="aRegularAllocationCheckersDetails_8hpp_html_a049d33a11cc2dbffd8f87b143b835699"><div class="ttname"><a href="../../d0/dce/RegularAllocationCheckersDetails_8hpp.html#a049d33a11cc2dbffd8f87b143b835699">sequoia::testing::impl::check_copy_assign</a></div><div class="ttdeci">bool check_copy_assign(test_logger&lt; Mode &gt; &amp;logger, const sentinel&lt; Mode &gt; &amp;sentry, const Actions &amp;actions, Container &amp;z, const Container &amp;y, const dual_allocation_checker&lt; Container, Allocators, Predictions &gt; &amp;... checkers)</div><div class="ttdef"><b>Definition:</b> RegularAllocationCheckersDetails.hpp:57</div></div>
