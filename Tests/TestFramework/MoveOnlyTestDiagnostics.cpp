@@ -6,7 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "MoveOnlyTestDiagnostics.hpp"
-#include "MoveOnlyTestDiagnosticUtilities.hpp"
+#include "MoveOnlyTestDiagnosticsUtilities.hpp"
 
 namespace sequoia::testing
 {

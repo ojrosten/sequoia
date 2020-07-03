@@ -6,7 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "MoveOnlyAllocationTestDiagnostics.hpp"
-#include "MoveOnlyTestDiagnosticUtilities.hpp"
+#include "MoveOnlyTestDiagnosticsUtilities.hpp"
 
 #include <vector>
 
