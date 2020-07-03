@@ -39,9 +39,16 @@ namespace sequoia::testing::impl
     
     Container u{std::move(y), info.make_allocator()...};
     check_para_move_y_allocation(logger, sentry, u, std::tuple_cat(make_allocation_checkers(info)...));
-    const bool success{check_equality(sentry.generate_message("Inonsistent para-move constructor"), logger, u, yClone)};
+    if(check_equality(sentry.generate_message("Inonsistent para-move constructor"), logger, u, yClone))
+    {
+      std::optional<Container> v{std::move(u)};
+      if(check_equality(sentry.generate_message("Inconsistent move construction"), logger, *v, yClone))
+      {
+        return std::move(v);
+      }
+    }
 
-    return success ? std::optional<Container>{std::move(u)} : std::nullopt;
+    return std::nullopt;
   }
 
   /// Unpacks the tuple and feeds to the overload of check_semantics defined in MoveOnlyCheckersDetails.hpp

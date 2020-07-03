@@ -64,11 +64,8 @@ namespace sequoia::testing
     sentinel<Mode> sentry{logger, add_type_info<T>(description)};
 
     if(auto opt{impl::check_para_constructor_allocations(logger, sentry, std::forward<T>(y), yClone, info...)})
-    {
-      if(check_equality(sentry.generate_message("Inconsistent move construction"), logger, *opt, yClone))
-      {      
-        check_semantics(logger, sentry, impl::move_only_allocation_actions{}, std::forward<T>(x), std::move(*opt), xClone, yClone, std::move(m), std::tuple_cat(impl::make_dual_allocation_checkers(info, x, y)...));
-      }
+    {    
+      check_semantics(logger, sentry, impl::move_only_allocation_actions{}, std::forward<T>(x), std::move(*opt), xClone, yClone, std::move(m), std::tuple_cat(impl::make_dual_allocation_checkers(info, x, y)...));
     }
   }
 }
