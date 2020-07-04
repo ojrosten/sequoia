@@ -9,6 +9,8 @@
     \brief Concepts mostly, but not exclusively, replicating things which will appear in std at some point.
  */
 
+#include "Algorithms.hpp"
+
 #include <type_traits>
 #include <utility>
 
@@ -54,7 +56,7 @@ namespace sequoia
   template< class T >
   concept swappable =
     requires(T& a, T& b) {
-      std::swap(a, b);
+      sequoia::swap(a, b);
     };
   
   template <class T>

@@ -11,11 +11,11 @@
     \brief Implementation details for checking move-only semantics.
 */
 
-#include "AllocationCheckersDetails.hpp"
+#include "SemanticsCheckersDetails.hpp"
 
 namespace sequoia::testing::impl
 {
-  template<test_mode Mode, class Actions, class T, class Mutator, class... Args>
+  template<test_mode Mode, class Actions, moveonly T, class Mutator, class... Args>
   void check_semantics(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, const Args&... args)
   {
     // Preconditions

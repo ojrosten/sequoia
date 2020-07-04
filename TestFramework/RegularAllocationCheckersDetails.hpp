@@ -96,7 +96,7 @@ namespace sequoia::testing::impl
   }
 
   /// Unpacks the tuple and feeds to the overload of check_semantics defined in RegularCheckersDetails.hpp
-  template<test_mode Mode, class Actions, class T, class Mutator, class... Allocators, class... Predictions>
+  template<test_mode Mode, class Actions, pseudoregular T, class Mutator, class... Allocators, class... Predictions>
   bool check_semantics(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, const T& x, const T& y, Mutator yMutator, std::tuple<dual_allocation_checker<T, Allocators, Predictions>...> checkers)
   {
     auto fn{

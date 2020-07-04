@@ -47,7 +47,7 @@ namespace sequoia::testing::impl
     return do_check_swap(logger, sentry, actions, std::move(x), std::move(y), xClone, yClone, std::move(yMutator));
   }
 
-  template<test_mode Mode, class Actions, class T, class Mutator, class... Args>
+  template<test_mode Mode, class Actions, pseudoregular T, class Mutator, class... Args>
   bool check_semantics(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, const T& x, const T& y, Mutator yMutator, const Args&... args)
   {    
     // Preconditions

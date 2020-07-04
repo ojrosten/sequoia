@@ -58,6 +58,8 @@
 */
 
 #include "TestLogger.hpp"
+#include "Concepts.hpp"
+
 #include <optional>
 
 namespace sequoia::testing::impl

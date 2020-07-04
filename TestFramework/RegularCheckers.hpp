@@ -41,8 +41,6 @@
 #include "FreeCheckers.hpp"
 #include "RegularCheckersDetails.hpp"
 
-#include "Concepts.hpp"
-
 namespace sequoia::testing
 {
   /// Precondition: x!=y

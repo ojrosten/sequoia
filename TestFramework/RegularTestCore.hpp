@@ -36,13 +36,13 @@ namespace sequoia::testing
     regular_extender& operator=(const regular_extender&) = delete;
     regular_extender& operator=(regular_extender&&)      = delete;
 
-    template<class T>
+    template<pseudoregular T>
     void check_semantics(std::string_view description, const T& x, const T& y)
     {
       testing::check_semantics(append_indented(description, emphasise("Regular Semantics")), m_Logger, x, y);
     }
 
-    template<class T, class Mutator>
+    template<pseudoregular T, class Mutator>
     void check_semantics(std::string_view description, const T& x, const T& y, Mutator m)
     {
       testing::check_semantics(append_indented(description, emphasise("Regular Semantics")), m_Logger, x, y, m);
