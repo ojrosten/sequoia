@@ -46,7 +46,7 @@ namespace sequoia::testing
       y == yClone
       x != y
    */
-  template<test_mode Mode, class T>
+  template<test_mode Mode, moveonly T>
   void check_semantics(std::string_view description, test_logger<Mode>& logger, T&& x, T&& y, const T& xClone, const T& yClone)
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(description)};

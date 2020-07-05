@@ -59,6 +59,7 @@ namespace sequoia::testing
     -> move_only_allocation_info<std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::arg>, std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::ret>>;
   
   template<test_mode Mode, moveonly T, class Mutator, class... Allocators>
+    requires invocable<Mutator, T&>
   void check_semantics(std::string_view description, test_logger<Mode>& logger, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, move_only_allocation_info<T, Allocators>... info)
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(description)};

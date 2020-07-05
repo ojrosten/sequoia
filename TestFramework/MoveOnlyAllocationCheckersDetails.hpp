@@ -26,22 +26,22 @@ namespace sequoia::testing::impl
   struct move_only_allocation_actions : allocation_actions
   {};
 
-  template<test_mode Mode, class Actions, class Container, class... Allocators, class... Predictions>
-  bool check_swap(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, Container&& x, Container&& y, const Container& xClone, const Container& yClone, const dual_allocation_checker<Container, Allocators, Predictions>&... checkers)
+  template<test_mode Mode, class Actions, moveonly T, class... Allocators, class... Predictions>
+  bool check_swap(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, const dual_allocation_checker<T, Allocators, Predictions>&... checkers)
   {
     return do_check_swap(logger, sentry, actions, std::move(x), std::move(y), xClone, yClone, dual_allocation_checker{checkers.info(), x, y}...);
   }
 
-  template<test_mode Mode, class Container, class... Allocators, class... Predictions>
-  std::optional<Container> check_para_constructor_allocations(test_logger<Mode>& logger, const sentinel<Mode>& sentry, Container&& y, const Container& yClone, const basic_allocation_info<Container, Allocators, Predictions>&... info)
+  template<test_mode Mode, moveonly T, class... Allocators, class... Predictions>
+  std::optional<T> check_para_constructor_allocations(test_logger<Mode>& logger, const sentinel<Mode>& sentry, T&& y, const T& yClone, const basic_allocation_info<T, Allocators, Predictions>&... info)
   {
     if(!check(sentry.generate_message("Precondition - for checking move-only semantics, y and yClone are assumed to be equal"), logger, y == yClone)) return{};
     
-    Container u{std::move(y), info.make_allocator()...};
+    T u{std::move(y), info.make_allocator()...};
     check_para_move_y_allocation(logger, sentry, u, std::tuple_cat(make_allocation_checkers(info)...));
     if(check_equality(sentry.generate_message("Inonsistent para-move constructor"), logger, u, yClone))
     {
-      std::optional<Container> v{std::move(u)};
+      std::optional<T> v{std::move(u)};
       if(check_equality(sentry.generate_message("Inconsistent move construction"), logger, *v, yClone))
       {
         return std::move(v);
@@ -53,6 +53,7 @@ namespace sequoia::testing::impl
 
   /// Unpacks the tuple and feeds to the overload of check_semantics defined in MoveOnlyCheckersDetails.hpp
   template<test_mode Mode, class Actions, moveonly T, class Mutator, class... Allocators>
+    requires invocable<Mutator, T&>
   void check_semantics(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, std::tuple<dual_allocation_checker<T, Allocators, move_only_allocation_predictions>...> checkers)
   {
     auto fn{
