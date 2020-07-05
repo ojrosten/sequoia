@@ -95,13 +95,13 @@ Public Member Functions</h2></td></tr>
 <a class="el" href="../../d4/d5d/classsequoia_1_1testing_1_1regular__extender.html">regular_extender</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../d4/d5d/classsequoia_1_1testing_1_1regular__extender.html">regular_extender</a> &amp;&amp;)=delete</td></tr>
 <tr class="separator:ab52eaf11e92387cf590ba97196a66a26"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a31449c6143f9bfee5b598cb83e86dac1"><td class="memTemplParams" colspan="2"><a id="a31449c6143f9bfee5b598cb83e86dac1"></a>
-template&lt;class T &gt; </td></tr>
+template&lt;pseudoregular T&gt; </td></tr>
 <tr class="memitem:a31449c6143f9bfee5b598cb83e86dac1"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (std::string_view description, const T &amp;x, const T &amp;y)</td></tr>
 <tr class="separator:a31449c6143f9bfee5b598cb83e86dac1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1ac78339637ba1fc151107c5d21cd176"><td class="memTemplParams" colspan="2"><a id="a1ac78339637ba1fc151107c5d21cd176"></a>
-template&lt;class T , class Mutator &gt; </td></tr>
-<tr class="memitem:a1ac78339637ba1fc151107c5d21cd176"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (std::string_view description, const T &amp;x, const T &amp;y, Mutator m)</td></tr>
-<tr class="separator:a1ac78339637ba1fc151107c5d21cd176"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7d3e88bbe777c48bffb309f53e4abf7d"><td class="memTemplParams" colspan="2"><a id="a7d3e88bbe777c48bffb309f53e4abf7d"></a>
+template&lt;pseudoregular T, class Mutator &gt; </td></tr>
+<tr class="memitem:a7d3e88bbe777c48bffb309f53e4abf7d"><td class="memTemplItemLeft" align="right" valign="top">requires invocable&lt; Mutator, T &amp; &gt; void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (std::string_view description, const T &amp;x, const T &amp;y, Mutator m)</td></tr>
+<tr class="separator:a7d3e88bbe777c48bffb309f53e4abf7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>

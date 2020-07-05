@@ -76,36 +76,37 @@ $(function() {
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="comment"></span> </div>
 <div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../d2/d0d/FreeCheckers_8hpp.html">FreeCheckers.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../d6/d98/RegularCheckersDetails_8hpp.html">RegularCheckersDetails.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="keyword">namespace </span>sequoia::testing</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;{</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;  <span class="keyword">template</span>&lt;test_mode Mode, <span class="keyword">class</span> T, <span class="keyword">class</span> Mutator&gt;</div>
-<div class="line"><a name="l00048"></a><span class="lineno"><a class="line" href="../../d1/db7/RegularCheckers_8hpp.html#a38a2b3cef41484963c530ab8cc1a4eb2">   48</a></span>&#160;  <span class="keywordtype">void</span> check_semantics(std::string_view description, <a class="code" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger&lt;Mode&gt;</a>&amp; logger, <span class="keyword">const</span> T&amp; x, <span class="keyword">const</span> T&amp; y, Mutator yMutator)</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;  {</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    static_assert(has_regular_semantics_v&lt;T&gt;);</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    <a class="code" href="../../d1/d8f/classsequoia_1_1testing_1_1sentinel.html">sentinel&lt;Mode&gt;</a> sentry{logger, add_type_info&lt;T&gt;(description)};</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    impl::check_semantics(logger, sentry, <a class="code" href="../../d2/dfc/structsequoia_1_1testing_1_1impl_1_1default__actions.html">impl::default_actions</a>{}, x, y, yMutator);</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;  }</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;  <span class="keyword">template</span>&lt;test_mode Mode, <span class="keyword">class</span> T&gt;</div>
-<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="../../d1/db7/RegularCheckers_8hpp.html#a2c67b08bff5cf4cf2709f890dff8fe9a">   58</a></span>&#160;  <span class="keywordtype">void</span> check_semantics(std::string_view description, <a class="code" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger&lt;Mode&gt;</a>&amp; logger, <span class="keyword">const</span> T&amp; x, <span class="keyword">const</span> T&amp; y)</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  {</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    static_assert(has_regular_semantics_v&lt;T&gt;);</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    <a class="code" href="../../d1/d8f/classsequoia_1_1testing_1_1sentinel.html">sentinel&lt;Mode&gt;</a> sentry{logger, add_type_info&lt;T&gt;(description)};</div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    impl::check_semantics(logger, sentry, <a class="code" href="../../d2/dfc/structsequoia_1_1testing_1_1impl_1_1default__actions.html">impl::default_actions</a>{}, x, y, <a class="code" href="../../d2/da1/structsequoia_1_1testing_1_1impl_1_1null__mutator.html">impl::null_mutator</a>{});</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;  }</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;}</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../d2/d0d/FreeCheckers_8hpp.html">FreeCheckers.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../d6/d98/RegularCheckersDetails_8hpp.html">RegularCheckersDetails.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="keyword">namespace </span>sequoia::testing</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;{</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;  <span class="keyword">template</span>&lt;test_mode Mode, pseudoregular T, <span class="keyword">class</span> Mutator&gt;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    requires invocable&lt;Mutator, T&amp;&gt;</div>
+<div class="line"><a name="l00050"></a><span class="lineno"><a class="line" href="../../d1/db7/RegularCheckers_8hpp.html#ac42851d3e2d84849f83982600d331158">   50</a></span>&#160;  <span class="keywordtype">void</span> check_semantics(std::string_view description, <a class="code" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger&lt;Mode&gt;</a>&amp; logger, <span class="keyword">const</span> T&amp; x, <span class="keyword">const</span> T&amp; y, Mutator yMutator)</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;  {</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    static_assert(has_regular_semantics_v&lt;T&gt;);</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    <a class="code" href="../../d1/d8f/classsequoia_1_1testing_1_1sentinel.html">sentinel&lt;Mode&gt;</a> sentry{logger, add_type_info&lt;T&gt;(description)};</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;    impl::check_semantics(logger, sentry, <a class="code" href="../../d2/dfc/structsequoia_1_1testing_1_1impl_1_1default__actions.html">impl::default_actions</a>{}, x, y, yMutator);</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;  }</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;  <span class="keyword">template</span>&lt;test_mode Mode, pseudoregular T&gt;</div>
+<div class="line"><a name="l00060"></a><span class="lineno"><a class="line" href="../../d1/db7/RegularCheckers_8hpp.html#a2c67b08bff5cf4cf2709f890dff8fe9a">   60</a></span>&#160;  <span class="keywordtype">void</span> check_semantics(std::string_view description, <a class="code" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger&lt;Mode&gt;</a>&amp; logger, <span class="keyword">const</span> T&amp; x, <span class="keyword">const</span> T&amp; y)</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;  {</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    static_assert(has_regular_semantics_v&lt;T&gt;);</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <a class="code" href="../../d1/d8f/classsequoia_1_1testing_1_1sentinel.html">sentinel&lt;Mode&gt;</a> sentry{logger, add_type_info&lt;T&gt;(description)};</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    impl::check_semantics(logger, sentry, <a class="code" href="../../d2/dfc/structsequoia_1_1testing_1_1impl_1_1default__actions.html">impl::default_actions</a>{}, x, y, <a class="code" href="../../d2/da1/structsequoia_1_1testing_1_1impl_1_1null__mutator.html">impl::null_mutator</a>{});</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;  }</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aclasssequoia_1_1testing_1_1sentinel_html"><div class="ttname"><a href="../../d1/d8f/classsequoia_1_1testing_1_1sentinel.html">sequoia::testing::sentinel</a></div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:97</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1test__logger_html"><div class="ttname"><a href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">sequoia::testing::test_logger</a></div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:61</div></div>
 <div class="ttc" id="aFreeCheckers_8hpp_html"><div class="ttname"><a href="../../d2/d0d/FreeCheckers_8hpp.html">FreeCheckers.hpp</a></div><div class="ttdoc">Free functions for performing checks, together with the 'checker' class template which wraps them.</div></div>
-<div class="ttc" id="astructsequoia_1_1testing_1_1impl_1_1null__mutator_html"><div class="ttname"><a href="../../d2/da1/structsequoia_1_1testing_1_1impl_1_1null__mutator.html">sequoia::testing::impl::null_mutator</a></div><div class="ttdef"><b>Definition:</b> SemanticsCheckersDetails.hpp:73</div></div>
+<div class="ttc" id="astructsequoia_1_1testing_1_1impl_1_1null__mutator_html"><div class="ttname"><a href="../../d2/da1/structsequoia_1_1testing_1_1impl_1_1null__mutator.html">sequoia::testing::impl::null_mutator</a></div><div class="ttdef"><b>Definition:</b> SemanticsCheckersDetails.hpp:75</div></div>
 <div class="ttc" id="aRegularCheckersDetails_8hpp_html"><div class="ttname"><a href="../../d6/d98/RegularCheckersDetails_8hpp.html">RegularCheckersDetails.hpp</a></div><div class="ttdoc">Implementation details for checking regular semantics.</div></div>
-<div class="ttc" id="astructsequoia_1_1testing_1_1impl_1_1default__actions_html"><div class="ttname"><a href="../../d2/dfc/structsequoia_1_1testing_1_1impl_1_1default__actions.html">sequoia::testing::impl::default_actions</a></div><div class="ttdef"><b>Definition:</b> SemanticsCheckersDetails.hpp:87</div></div>
+<div class="ttc" id="astructsequoia_1_1testing_1_1impl_1_1default__actions_html"><div class="ttname"><a href="../../d2/dfc/structsequoia_1_1testing_1_1impl_1_1default__actions.html">sequoia::testing::impl::default_actions</a></div><div class="ttdef"><b>Definition:</b> SemanticsCheckersDetails.hpp:89</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

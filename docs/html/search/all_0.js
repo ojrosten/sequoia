@@ -21,7 +21,7 @@ var searchData=
   ['allocation_5ffalse_5fpositive_5fdiagnostics_18',['allocation_false_positive_diagnostics',['../df/d21/classsequoia_1_1testing_1_1allocation__false__positive__diagnostics.html',1,'sequoia::testing']]],
   ['allocation_5finfo_19',['allocation_info',['../d5/d62/classsequoia_1_1testing_1_1allocation__info.html',1,'sequoia::testing']]],
   ['allocation_5finfo_5fbase_20',['allocation_info_base',['../db/df4/classsequoia_1_1testing_1_1allocation__info__base.html',1,'sequoia::testing']]],
-  ['allocation_5finfo_5fbase_3c_20container_2c_20std_3a_3ascoped_5fallocator_5fadaptor_3c_20allocators_2e_2e_2e_20_3e_20_3e_21',['allocation_info_base&lt; Container, std::scoped_allocator_adaptor&lt; Allocators... &gt; &gt;',['../db/df4/classsequoia_1_1testing_1_1allocation__info__base.html',1,'sequoia::testing']]],
+  ['allocation_5finfo_5fbase_3c_20t_2c_20std_3a_3ascoped_5fallocator_5fadaptor_3c_20allocators_2e_2e_2e_20_3e_20_3e_21',['allocation_info_base&lt; T, std::scoped_allocator_adaptor&lt; Allocators... &gt; &gt;',['../db/df4/classsequoia_1_1testing_1_1allocation__info__base.html',1,'sequoia::testing']]],
   ['allocation_5fpredictions_22',['allocation_predictions',['../de/d67/structsequoia_1_1testing_1_1allocation__predictions.html',1,'sequoia::testing']]],
   ['allocationcheckers_2ehpp_23',['AllocationCheckers.hpp',['../d3/dfb/AllocationCheckers_8hpp.html',1,'']]],
   ['allocationcheckersdetails_2ecpp_24',['AllocationCheckersDetails.cpp',['../dd/d68/AllocationCheckersDetails_8cpp.html',1,'']]],

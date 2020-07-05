@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['log_5fsummary_1056',['log_summary',['../d2/daa/classsequoia_1_1testing_1_1log__summary.html',1,'sequoia::testing']]],
-  ['loop_5fprocessor_1057',['loop_processor',['../dc/d07/classsequoia_1_1maths_1_1graph__impl_1_1loop__processor.html',1,'sequoia::maths::graph_impl']]],
-  ['loop_5fprocessor_3c_20g_20_3e_1058',['loop_processor&lt; G &gt;',['../dc/d07/classsequoia_1_1maths_1_1graph__impl_1_1loop__processor.html',1,'sequoia::maths::graph_impl']]],
-  ['loop_5fprocessor_3c_20g_2c_20graph_5fflavour_3a_3aundirected_20_3e_1059',['loop_processor&lt; G, graph_flavour::undirected &gt;',['../dc/d1a/classsequoia_1_1maths_1_1graph__impl_1_1loop__processor_3_01G_00_01graph__flavour_1_1undirected_01_4.html',1,'sequoia::maths::graph_impl']]]
+  ['log_5fsummary_1057',['log_summary',['../d2/daa/classsequoia_1_1testing_1_1log__summary.html',1,'sequoia::testing']]],
+  ['loop_5fprocessor_1058',['loop_processor',['../dc/d07/classsequoia_1_1maths_1_1graph__impl_1_1loop__processor.html',1,'sequoia::maths::graph_impl']]],
+  ['loop_5fprocessor_3c_20g_20_3e_1059',['loop_processor&lt; G &gt;',['../dc/d07/classsequoia_1_1maths_1_1graph__impl_1_1loop__processor.html',1,'sequoia::maths::graph_impl']]],
+  ['loop_5fprocessor_3c_20g_2c_20graph_5fflavour_3a_3aundirected_20_3e_1060',['loop_processor&lt; G, graph_flavour::undirected &gt;',['../dc/d1a/classsequoia_1_1maths_1_1graph__impl_1_1loop__processor_3_01G_00_01graph__flavour_1_1undirected_01_4.html',1,'sequoia::maths::graph_impl']]]
 ];

@@ -96,10 +96,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8c37377376662f22139e1b409ef42c0d"><td class="memItemLeft" align="right" valign="top"><a id="a8c37377376662f22139e1b409ef42c0d"></a>
 <a class="el" href="../../d7/d8c/classsequoia_1_1testing_1_1move__only__allocation__extender.html">move_only_allocation_extender</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../d7/d8c/classsequoia_1_1testing_1_1move__only__allocation__extender.html">move_only_allocation_extender</a> &amp;&amp;)=delete</td></tr>
 <tr class="separator:a8c37377376662f22139e1b409ef42c0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afc67ec3c10cafe9528f62678ce387497"><td class="memTemplParams" colspan="2"><a id="afc67ec3c10cafe9528f62678ce387497"></a>
-template&lt;class T , class Mutator , class... Allocators&gt; </td></tr>
-<tr class="memitem:afc67ec3c10cafe9528f62678ce387497"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (std::string_view description, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone, Mutator yMutator, <a class="el" href="../../dd/ddf/classsequoia_1_1testing_1_1move__only__allocation__info.html">move_only_allocation_info</a>&lt; T, Allocators &gt;... info)</td></tr>
-<tr class="separator:afc67ec3c10cafe9528f62678ce387497"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af8b1b6700cb524b365c86cc38dcb2c15"><td class="memTemplParams" colspan="2"><a id="af8b1b6700cb524b365c86cc38dcb2c15"></a>
+template&lt;moveonly T, class Mutator , class... Allocators&gt; </td></tr>
+<tr class="memitem:af8b1b6700cb524b365c86cc38dcb2c15"><td class="memTemplItemLeft" align="right" valign="top">requires invocable&lt; Mutator, T &amp; &gt; void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (std::string_view description, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone, Mutator yMutator, <a class="el" href="../../dd/ddf/classsequoia_1_1testing_1_1move__only__allocation__info.html">move_only_allocation_info</a>&lt; T, Allocators &gt;... info)</td></tr>
+<tr class="separator:af8b1b6700cb524b365c86cc38dcb2c15"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
