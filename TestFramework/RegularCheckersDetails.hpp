@@ -16,7 +16,7 @@
 
 namespace sequoia::testing::impl
 {
-  template<test_mode Mode, class Actions, class T, class... Args>
+  template<test_mode Mode, class Actions, pseudoregular T, class... Args>
   bool do_check_copy_assign(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T& z, const T& y, const Args&... args)
   {
     z = y;
@@ -35,13 +35,14 @@ namespace sequoia::testing::impl
     return consistent;
   }
   
-  template<test_mode Mode, class Actions, class T>
+  template<test_mode Mode, class Actions, pseudoregular T>
   bool check_copy_assign(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T& z, const T& y)
   {
     return do_check_copy_assign(logger, sentry, actions, z, y);   
   }
   
-  template<test_mode Mode, class Actions, class T, class Mutator, std::enable_if_t<std::is_invocable_v<Mutator, T&>, int> = 0>
+  template<test_mode Mode, class Actions, pseudoregular T, class Mutator>
+    requires invocable<Mutator, T&>
   bool check_swap(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator yMutator)
   {
     return do_check_swap(logger, sentry, actions, std::move(x), std::move(y), xClone, yClone, std::move(yMutator));
@@ -49,6 +50,7 @@ namespace sequoia::testing::impl
 
   template<test_mode Mode, class Actions, pseudoregular T, class Mutator, class... Args>
   bool check_semantics(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, const T& x, const T& y, Mutator yMutator, const Args&... args)
+    requires invocable<Mutator, T&>
   {    
     // Preconditions
     if(!check_preconditions(logger, sentry, actions, x, y, args...))

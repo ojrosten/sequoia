@@ -46,6 +46,7 @@ namespace sequoia::testing
   /// Precondition: x!=y
   template<test_mode Mode, pseudoregular T, class Mutator>
   void check_semantics(std::string_view description, test_logger<Mode>& logger, const T& x, const T& y, Mutator yMutator)
+    requires invocable<Mutator, T&>
   {
     static_assert(has_regular_semantics_v<T>);
 

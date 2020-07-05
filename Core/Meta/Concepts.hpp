@@ -132,4 +132,10 @@ namespace sequoia
 
   template <class T>
   concept moveonly = movable<T> && !copyable<T> && equality_comparable<T>;
+
+  template< class F, class... Args >
+  concept invocable =
+    requires(F&& f, Args&&... args) {
+      std::invoke(std::forward<F>(f), std::forward<Args>(args)...);
+  };
 }

@@ -44,6 +44,7 @@ namespace sequoia::testing
 
     template<pseudoregular T, class Mutator>
     void check_semantics(std::string_view description, const T& x, const T& y, Mutator m)
+      requires invocable<Mutator, T&>
     {
       testing::check_semantics(append_indented(description, emphasise("Regular Semantics")), m_Logger, x, y, m);
     }
