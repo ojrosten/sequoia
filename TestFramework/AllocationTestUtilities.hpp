@@ -82,15 +82,11 @@ namespace sequoia::testing
 
     [[nodiscard]]
     friend bool operator==(const shared_counting_allocator& lhs, const shared_counting_allocator& rhs) noexcept
-    {
-      return (lhs.m_pAllocs == rhs.m_pAllocs) && (lhs.m_pDeallocs == rhs.m_pDeallocs);
-    }
+      = default;
 
     [[nodiscard]]
     friend bool operator!=(const shared_counting_allocator& lhs, const shared_counting_allocator& rhs) noexcept
-    {
-      return !(lhs == rhs);
-    }
+      = default;
   private:
     std::shared_ptr<int> m_pAllocs{}, m_pDeallocs{};
   };
