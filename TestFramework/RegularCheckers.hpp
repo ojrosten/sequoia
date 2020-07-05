@@ -21,7 +21,8 @@
     operator==
     operator!=
 
-    Note that a default constructor is not a strict requirement. Types additionally
+    Note that a default constructor is not a strict requirement. To distinguish this
+    Concept from std::regular, the Concept pseudoregular is used. Types additionally
     possessing the remaining comparison operators will be referred to as having
     ordered semantics.
 

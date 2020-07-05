@@ -127,7 +127,7 @@ namespace sequoia::testing
       The class is designed for inheritance but not for the purpose of type erasure and so
       has a protected destructor etc.
    */
-  template<class Container, class Allocator>
+  template<stronglymovable T, class Allocator>
   class allocation_info_base
   {
   public:
@@ -142,7 +142,7 @@ namespace sequoia::testing
     allocation_info_base(const allocation_info_base&) = default;
 
     [[nodiscard]]
-    int count(const Container& c) const noexcept
+    int count(const T& c) const noexcept
     {        
       return m_AllocatorGetter(c).allocs();
     }
@@ -155,7 +155,7 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    Allocator allocator(const Container& c) const
+    Allocator allocator(const T& c) const
     {
       return m_AllocatorGetter(c);
     }
@@ -167,7 +167,7 @@ namespace sequoia::testing
     allocation_info_base& operator=(const allocation_info_base&)     = default;
     allocation_info_base& operator=(allocation_info_base&&) noexcept = default;
 
-    using getter = std::function<Allocator(const Container&)>;
+    using getter = std::function<Allocator(const T&)>;
 
     [[nodiscard]]
     getter make_getter() const
@@ -185,13 +185,13 @@ namespace sequoia::testing
       of an allocator from a container. On top of this, the class holds predictions
       for the various allocation events.
    */
-  template<class Container, class Allocator, class Predictions>
-  class basic_allocation_info : public allocation_info_base<Container, Allocator>
+  template<stronglymovable T, class Allocator, class Predictions>
+  class basic_allocation_info : public allocation_info_base<T, Allocator>
   {
   private:
-    using base_t = allocation_info_base<Container, Allocator>;
+    using base_t = allocation_info_base<T, Allocator>;
   public:
-    using container_type   = Container;
+    using container_type   = T;
     using allocator_type   = Allocator;
     using predictions_type = Predictions;
       
@@ -215,18 +215,18 @@ namespace sequoia::testing
       The essential difference to the primary template is that multiple sets of predictions must
       be supplied, one for each level within the scoped_allocator_adaptor.
    */
-  template<class Container, class... Allocators, class Predictions>
-  class basic_allocation_info<Container, std::scoped_allocator_adaptor<Allocators...>, Predictions>
-    : public allocation_info_base<Container, std::scoped_allocator_adaptor<Allocators...>>
+  template<stronglymovable T, class... Allocators, class Predictions>
+  class basic_allocation_info<T, std::scoped_allocator_adaptor<Allocators...>, Predictions>
+    : public allocation_info_base<T, std::scoped_allocator_adaptor<Allocators...>>
   {
   private:
-    using base_t = allocation_info_base<Container, std::scoped_allocator_adaptor<Allocators...>>;
+    using base_t = allocation_info_base<T, std::scoped_allocator_adaptor<Allocators...>>;
   public:
     constexpr static auto N{sizeof...(Allocators)};
 
     static_assert(N > 0);
 
-    using container_type   = Container;
+    using container_type   = T;
     using allocator_type   = std::scoped_allocator_adaptor<Allocators...>;
     using predictions_type = Predictions;
 
@@ -242,14 +242,14 @@ namespace sequoia::testing
     [[nodiscard]]
     decltype(auto) unpack() const
     {
-      auto scopedGetter{[getter=this->make_getter()](const Container& c){
+      auto scopedGetter{[getter=this->make_getter()](const T& c){
           return get<I>(getter(c));
         }
       };
 
-      using Alloc = decltype(scopedGetter(std::declval<Container>()));
+      using Alloc = decltype(scopedGetter(std::declval<T>()));
 
-      return basic_allocation_info<Container, Alloc, Predictions>{scopedGetter, m_Predictions[I]};
+      return basic_allocation_info<T, Alloc, Predictions>{scopedGetter, m_Predictions[I]};
     }
 
   private:
