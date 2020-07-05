@@ -86,12 +86,12 @@ namespace sequoia::testing
   // in order to make use of CTAD. Should be able to revert
   // to using in C++20...
 
-  template<class Container, class Allocator>
+  template<class T, class Allocator>
   class allocation_info
-    : public basic_allocation_info<Container, Allocator, allocation_predictions>
+    : public basic_allocation_info<T, Allocator, allocation_predictions>
   {
   public:
-    using basic_allocation_info<Container, Allocator, allocation_predictions>::basic_allocation_info;
+    using basic_allocation_info<T, Allocator, allocation_predictions>::basic_allocation_info;
   };
 
   template<class Fn>

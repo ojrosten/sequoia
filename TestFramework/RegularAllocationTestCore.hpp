@@ -38,6 +38,7 @@ namespace sequoia::testing
     regular_allocation_extender& operator=(regular_allocation_extender&&)      = delete;
 
     template<pseudoregular T, class Mutator, class... Allocators>
+      requires invocable<Mutator, T&>
     void check_semantics(std::string_view description, const T& x, const T& y, Mutator m, allocation_info<T, Allocators>... info)
     {
       testing::check_semantics(append_indented(description, emphasise("Regular Semantics")), m_Logger, x, y, m, info...);

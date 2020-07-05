@@ -49,8 +49,8 @@ namespace sequoia::testing::impl
   }
 
   template<test_mode Mode, class Actions, pseudoregular T, class Mutator, class... Args>
+     requires invocable<Mutator, T&>
   bool check_semantics(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, const T& x, const T& y, Mutator yMutator, const Args&... args)
-    requires invocable<Mutator, T&>
   {    
     // Preconditions
     if(!check_preconditions(logger, sentry, actions, x, y, args...))
