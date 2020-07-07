@@ -102,7 +102,8 @@ namespace sequoia::testing
   allocation_info(Fn&& allocGetter, std::initializer_list<allocation_predictions> predictions)
     -> allocation_info<std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::arg>, std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::ret>>;
     
-  template<test_mode Mode, pseudoregular T, class Mutator, class... Allocators>
+  template<test_mode Mode, pseudoregular T, class Mutator, counting_alloc... Allocators>
+    requires invocable<Mutator, T&>
   void check_semantics(std::string_view description, test_logger<Mode>& logger, const T& x, const T& y, Mutator yMutator, allocation_info<T, Allocators>... info)
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(description)};
