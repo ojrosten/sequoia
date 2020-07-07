@@ -11,6 +11,7 @@
     \brief Utilities for allocation testing.
  */
 
+#include "TypeTraits.hpp"
 
 namespace sequoia::testing
 {  
@@ -110,5 +111,5 @@ namespace sequoia::testing
 
       return info;
     }
-  };
+  };  
 }

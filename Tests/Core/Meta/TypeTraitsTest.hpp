@@ -40,14 +40,12 @@ namespace sequoia::testing
     void test_is_container();
 
     void test_is_allocator();
+
+    void test_counts_allocations();
     
     void test_has_default_constructor();
 
     void test_has_allocator_type();
-    
-    void test_has_regular_semantics();
-
-    void test_has_move_only_semantics();
 
     void test_serializability();
 

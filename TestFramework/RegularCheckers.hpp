@@ -49,8 +49,6 @@ namespace sequoia::testing
     requires invocable<Mutator, T&>
   void check_semantics(std::string_view description, test_logger<Mode>& logger, const T& x, const T& y, Mutator yMutator)
   {
-    static_assert(has_regular_semantics_v<T>);
-
     sentinel<Mode> sentry{logger, add_type_info<T>(description)};
     impl::check_semantics(logger, sentry, impl::default_actions{}, x, y, yMutator);
   }
@@ -59,8 +57,6 @@ namespace sequoia::testing
   template<test_mode Mode, pseudoregular T>
   void check_semantics(std::string_view description, test_logger<Mode>& logger, const T& x, const T& y)
   {
-    static_assert(has_regular_semantics_v<T>);
-
     sentinel<Mode> sentry{logger, add_type_info<T>(description)};
     impl::check_semantics(logger, sentry, impl::default_actions{}, x, y, impl::null_mutator{});
   }

@@ -9,6 +9,8 @@
 
 #include "TypeTraits.hpp"
 
+#include "AllocationTestUtilities.hpp"
+
 #include <complex>
 #include <set>
 #include <vector>
@@ -51,10 +53,9 @@ namespace sequoia::testing
     test_is_not_equal_to_comparable();
     test_is_container();
     test_is_allocator();
+    test_counts_allocations();
     test_has_default_constructor();
-    test_has_allocator_type();    
-    test_has_regular_semantics();
-    test_has_move_only_semantics();
+    test_has_allocator_type();
     test_serializability();
     test_class_template_instantantiability();
   }
@@ -650,6 +651,33 @@ namespace sequoia::testing
         return true;
       }()
     );
+  }
+
+  void type_traits_test::test_counts_allocations()
+  {
+    check(LINE(""), []() {
+        static_assert(std::is_same_v<std::false_type, counts_allocations_t<std::allocator<int>>>);
+        return true;
+      }()
+    );
+
+    check(LINE(""), []() {
+        static_assert(!counts_allocations_v<std::allocator<int>>);
+        return true;
+      }()
+    );
+
+    check(LINE(""), []() {
+        static_assert(std::is_same_v<std::true_type, counts_allocations_t<shared_counting_allocator<int>>>);
+        return true;
+      }()
+    );
+
+    check(LINE(""), []() {
+        static_assert(counts_allocations_v<shared_counting_allocator<int>>);
+        return true;
+      }()
+    );
   }  
 
   void type_traits_test::test_has_default_constructor()
@@ -700,40 +728,6 @@ namespace sequoia::testing
 
     check(LINE(""), []() {
         static_assert(!has_default_constructor_v<no_default_constructor>);
-        return true;
-      }()
-    );
-  }
-
-  void type_traits_test::test_has_regular_semantics()
-  {
-    check(LINE(""), []() {
-        static_assert(has_regular_semantics_v<int>);
-        static_assert(std::is_same_v<has_regular_semantics_t<int>, std::true_type>);
-        return true;
-      }()
-    );
-
-    check(LINE(""), []() {
-        static_assert(!has_regular_semantics_v<std::unique_ptr<int>>);
-        static_assert(std::is_same_v<has_regular_semantics_t<std::unique_ptr<int>>, std::false_type>);
-        return true;
-      }()
-    );
-  }
-
-  void type_traits_test::test_has_move_only_semantics()
-  {
-    check(LINE(""), []() {
-        static_assert(!has_move_only_semantics_v<int>);
-        static_assert(std::is_same_v<has_move_only_semantics_t<int>, std::false_type>);
-        return true;
-      }()
-    );
-
-    check(LINE(""), []() {
-        static_assert(has_move_only_semantics_v<std::unique_ptr<int>>);
-        static_assert(std::is_same_v<has_move_only_semantics_t<std::unique_ptr<int>>, std::true_type>);
         return true;
       }()
     );

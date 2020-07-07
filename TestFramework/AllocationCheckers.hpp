@@ -127,11 +127,12 @@ namespace sequoia::testing
       The class is designed for inheritance but not for the purpose of type erasure and so
       has a protected destructor etc.
    */
-  template<stronglymovable T, class Allocator>
+  template<stronglymovable T, counting_alloc Allocator>
   class allocation_info_base
   {
   public:
     template<class Fn>
+      requires alloc_getter<Fn , T>
     explicit allocation_info_base(Fn&& allocGetter)
       : m_AllocatorGetter{std::forward<Fn>(allocGetter)}
     {
@@ -185,7 +186,7 @@ namespace sequoia::testing
       of an allocator from a container. On top of this, the class holds predictions
       for the various allocation events.
    */
-  template<stronglymovable T, class Allocator, class Predictions>
+  template<stronglymovable T, counting_alloc Allocator, class Predictions>
   class basic_allocation_info : public allocation_info_base<T, Allocator>
   {
   private:
@@ -196,6 +197,7 @@ namespace sequoia::testing
     using predictions_type = Predictions;
       
     template<class Fn>
+      requires alloc_getter<Fn , T>
     basic_allocation_info(Fn&& allocGetter, Predictions predictions)
       : base_t{std::forward<Fn>(allocGetter)}
       , m_Predictions{std::move(predictions)}
@@ -215,7 +217,7 @@ namespace sequoia::testing
       The essential difference to the primary template is that multiple sets of predictions must
       be supplied, one for each level within the scoped_allocator_adaptor.
    */
-  template<stronglymovable T, class... Allocators, class Predictions>
+  template<stronglymovable T, counting_alloc... Allocators, class Predictions>
   class basic_allocation_info<T, std::scoped_allocator_adaptor<Allocators...>, Predictions>
     : public allocation_info_base<T, std::scoped_allocator_adaptor<Allocators...>>
   {
@@ -231,6 +233,7 @@ namespace sequoia::testing
     using predictions_type = Predictions;
 
     template<class Fn>
+      requires alloc_getter<Fn , T>
     basic_allocation_info(Fn&& allocGetter, std::initializer_list<Predictions> predictions)
       : base_t{std::forward<Fn>(allocGetter)}
       , m_Predictions{utilities::to_array<Predictions, N>(predictions)}
@@ -253,7 +256,7 @@ namespace sequoia::testing
     }
 
   private:
-    template<std::size_t I, class... As>
+    template<std::size_t I, counting_alloc... As>
     [[nodiscard]]
     static auto get(const std::scoped_allocator_adaptor<As...>& alloc)
     {

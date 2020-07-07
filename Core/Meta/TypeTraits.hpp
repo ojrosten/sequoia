@@ -185,17 +185,17 @@ namespace sequoia
 
   // is_allocator
 
-  template<class T, class = std::void_t<>> struct is_allocator : std::false_type
+  template<class A, class = std::void_t<>> struct is_allocator : std::false_type
   {};
   
-  template<class T> struct is_allocator<T, std::void_t<decltype(std::declval<T>().allocate(0))>>
+  template<class A> struct is_allocator<A, std::void_t<decltype(std::declval<A>().allocate(0))>>
     : std::true_type
-  {};
+  {};  
 
-  template<class T> constexpr bool is_allocator_v{is_allocator<T>::value};
+  template<class A> constexpr bool is_allocator_v{is_allocator<A>::value};
 
-  template<class T>
-  using is_allocator_t = typename is_allocator<T>::type;
+  template<class A>
+  using is_allocator_t = typename is_allocator<A>::type;
 
   // is_serializable
 
@@ -234,65 +234,7 @@ namespace sequoia
   constexpr bool class_template_is_instantiable_v{class_template_is_instantiable<std::void_t<>, T, Args...>::value};
 
   template <template<class...> class T, class... Args>
-  using class_template_is_instantiable_t = typename class_template_is_instantiable<std::void_t<>, T, Args...>::type;
-
-  // has_regular_semantics
-
-  template<class T>
-  struct has_regular_semantics
-    : std::bool_constant<
-           std::is_copy_constructible_v<T>
-        && std::is_move_constructible_v<T>
-        && std::is_copy_assignable_v<T>
-        && std::is_move_assignable_v<T>
-        && std::is_swappable_v<T>
-        && is_equal_to_comparable_v<T>
-        && is_not_equal_to_comparable_v<T>
-      >
-  {};
-
-  template<class T>
-  constexpr bool has_regular_semantics_v{has_regular_semantics<T>::value};
-
-  template<class T>
-  using has_regular_semantics_t = typename has_regular_semantics<T>::type;
-
-  // has_move_only_semantics
-
-  template<class T>
-  struct has_move_only_semantics
-    : std::bool_constant<
-           !std::is_copy_constructible_v<T>
-        && std::is_move_constructible_v<T>
-        && !std::is_copy_assignable_v<T>
-        && std::is_move_assignable_v<T>
-        && std::is_swappable_v<T>
-        && is_equal_to_comparable_v<T>
-        && is_not_equal_to_comparable_v<T>
-      >
-  {};
-
-  template<class T>
-  constexpr bool has_move_only_semantics_v{has_move_only_semantics<T>::value};
-
-  template<class T>
-  using has_move_only_semantics_t = typename has_move_only_semantics<T>::type;
-
-  // has_default_constructor
-
-  template<class T, class = std::void_t<>>
-  struct has_default_constructor : std::false_type
-  {};
-
-  template<class T>
-  struct has_default_constructor<T, std::void_t<decltype(new T{})>> : std::true_type
-  {};
-
-  template<class T>
-  constexpr bool has_default_constructor_v{has_default_constructor<T>::value};
-
-  template<class T>
-  using has_default_constructor_t = typename has_default_constructor<T>::type;
+  using class_template_is_instantiable_t = typename class_template_is_instantiable<std::void_t<>, T, Args...>::type;  
 
   // has_allocator_type
 
@@ -306,7 +248,7 @@ namespace sequoia
 
   template<class T> constexpr bool has_allocator_type_v = has_allocator_type<T>::value;
 
-  template<class T> using has_allocator_type_t = typename has_allocator_type<T>::type;
+  template<class T> using has_allocator_type_t = typename has_allocator_type<T>::type;  
 
   // dependent_false
   

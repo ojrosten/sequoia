@@ -118,7 +118,7 @@ namespace sequoia
       { u != t } -> boolean;
     };
 
-  template < class T >
+  template <class T>
   concept equality_comparable = weak_equality_comparable_with<T, T>;
   
   template <class T>
@@ -136,9 +136,12 @@ namespace sequoia
   template <class T>
   concept stronglymovable = movable<T> && equality_comparable<T>;
 
-  template< class F, class... Args >
+  template <class F, class... Args>
   concept invocable =
     requires(F&& f, Args&&... args) {
       std::invoke(std::forward<F>(f), std::forward<Args>(args)...);
   };
+
+  template <class A>
+  concept allocator_c = is_allocator_v<A>;  
 }
