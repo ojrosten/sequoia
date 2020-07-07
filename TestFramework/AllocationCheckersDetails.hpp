@@ -17,7 +17,7 @@
 
 namespace sequoia::testing
 {
-  template<stronglymovable T, counting_alloc Allocator, class Predictions>
+  template<strongly_movable T, counting_alloc Allocator, class Predictions>
   class basic_allocation_info;
 }
 
@@ -28,7 +28,7 @@ namespace sequoia::testing::impl
     std::string operator()(int count, int) const;
   };
 
-  template<test_mode Mode, stronglymovable T, counting_alloc Allocator, class Predictions>
+  template<test_mode Mode, strongly_movable T, counting_alloc Allocator, class Predictions>
   static void check_allocation(std::string_view detail, test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& container, const basic_allocation_info<T, Allocator, Predictions>& info, const int previous, const int prediction)
   {
     const auto current{info.count(container)};      
@@ -49,7 +49,7 @@ namespace sequoia::testing::impl
 
       The main complication is dealing correctly with the various propagation traits.
    */
-  template<stronglymovable T, counting_alloc Allocator, class Predictions>
+  template<strongly_movable T, counting_alloc Allocator, class Predictions>
   class dual_allocation_checker
   {
   public:
@@ -154,7 +154,7 @@ namespace sequoia::testing::impl
 
   //================================ Deduction guide ================================//
 
-  template<stronglymovable T, counting_alloc Allocator, class Predictions>
+  template<strongly_movable T, counting_alloc Allocator, class Predictions>
   dual_allocation_checker(basic_allocation_info<T, Allocator, Predictions>, const T&, const T&)
     -> dual_allocation_checker<T, Allocator, Predictions>;
 
@@ -168,7 +168,7 @@ namespace sequoia::testing::impl
       computed, which is then compared with the prediction.
    */
 
-  template<stronglymovable T, counting_alloc Allocator, class Predictions>
+  template<strongly_movable T, counting_alloc Allocator, class Predictions>
   class allocation_checker
   {
   public:
@@ -205,11 +205,11 @@ namespace sequoia::testing::impl
 
   //================================ Deduction guides ================================//
 
-  template<stronglymovable T, counting_alloc Allocator, class Predictions>
+  template<strongly_movable T, counting_alloc Allocator, class Predictions>
   allocation_checker(basic_allocation_info<T, Allocator, Predictions>, const T&)
     -> allocation_checker<T, Allocator, Predictions>;
 
-  template<stronglymovable T, counting_alloc Allocator, class Predictions>
+  template<strongly_movable T, counting_alloc Allocator, class Predictions>
   allocation_checker(basic_allocation_info<T, Allocator, Predictions>, int)
     -> allocation_checker<T, Allocator, Predictions>;
 
@@ -238,7 +238,7 @@ namespace sequoia::testing::impl
   template
   <
     template<class, class, class> class Checker,
-    stronglymovable T,
+    strongly_movable T,
     class Predictions,
     counting_alloc... Allocators,
     class... Args,
@@ -253,7 +253,7 @@ namespace sequoia::testing::impl
   template
   <
     template<class, class, class> class Checker,
-    stronglymovable T,
+    strongly_movable T,
     class Predictions,
     counting_alloc... Allocators,
     class... Args
@@ -266,14 +266,14 @@ namespace sequoia::testing::impl
 
   //================================ make_dual_allocation_checkers ================================//
 
-  template<stronglymovable T, class Predictions, class... Args, counting_alloc... Allocators>
+  template<strongly_movable T, class Predictions, class... Args, counting_alloc... Allocators>
   [[nodiscard]]
   auto make_dual_allocation_checkers(const basic_allocation_info<T, std::scoped_allocator_adaptor<Allocators...>, Predictions>& info, Args&&... args)
   {
     return make_scoped_allocation_checkers<dual_allocation_checker>(info, std::forward<Args>(args)...);
   }
 
-  template<stronglymovable T, counting_alloc Allocator, class Predictions, class... Args>
+  template<strongly_movable T, counting_alloc Allocator, class Predictions, class... Args>
   [[nodiscard]]
   std::tuple<dual_allocation_checker<T, Allocator, Predictions>>
   make_dual_allocation_checkers(const basic_allocation_info<T, Allocator, Predictions>& info, Args&&... args)
@@ -284,14 +284,14 @@ namespace sequoia::testing::impl
 
   //================================ make_allocation_checkers ================================//
 
-  template<stronglymovable T, class Predictions, class... Args, counting_alloc... Allocators>
+  template<strongly_movable T, class Predictions, class... Args, counting_alloc... Allocators>
   [[nodiscard]]
   auto make_allocation_checkers(const basic_allocation_info<T, std::scoped_allocator_adaptor<Allocators...>, Predictions>& info, Args&&... args)
   {
     return make_scoped_allocation_checkers<allocation_checker>(info, std::forward<Args>(args)...);
   }
 
-  template<stronglymovable T, counting_alloc Allocator, class Predictions, class... Args>
+  template<strongly_movable T, counting_alloc Allocator, class Predictions, class... Args>
   [[nodiscard]]
   std::tuple<allocation_checker<T, Allocator, Predictions>>
   make_allocation_checkers(const basic_allocation_info<T, Allocator, Predictions>& info, Args&&... args)
@@ -315,7 +315,7 @@ namespace sequoia::testing::impl
 
   //================================ checks using dual_allocation_checker ================================//
 
-  template<test_mode Mode, stronglymovable T, counting_alloc Allocator, class Prediction, counting_alloc... Allocators, class... Predictions>
+  template<test_mode Mode, strongly_movable T, counting_alloc Allocator, class Prediction, counting_alloc... Allocators, class... Predictions>
   void check_no_allocation(std::string_view detail, test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& x, const T& y, const dual_allocation_checker<T, Allocator, Prediction>& checker, const dual_allocation_checker<T, Allocators, Predictions>&... moreCheckers)
   {
     auto checkFn{
@@ -327,7 +327,7 @@ namespace sequoia::testing::impl
     check_allocation(logger, sentry, checkFn, checker, moreCheckers...);
   }
 
-  template<test_mode Mode, stronglymovable T, counting_alloc Allocator, class Prediction, counting_alloc... Allocators, class... Predictions>
+  template<test_mode Mode, strongly_movable T, counting_alloc Allocator, class Prediction, counting_alloc... Allocators, class... Predictions>
   void check_copy_assign_allocation(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& x, const T& y, const dual_allocation_checker<T, Allocator, Prediction>& checker, const dual_allocation_checker<T, Allocators, Predictions>&... moreCheckers)
   {
     auto checkFn{
@@ -339,7 +339,7 @@ namespace sequoia::testing::impl
     check_allocation(logger, sentry, checkFn, checker, moreCheckers...);
   }
 
-  template<test_mode Mode, stronglymovable T, counting_alloc Allocator, class Prediction, counting_alloc... Allocators, class... Predictions>
+  template<test_mode Mode, strongly_movable T, counting_alloc Allocator, class Prediction, counting_alloc... Allocators, class... Predictions>
   void check_move_assign_allocation(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& x, const dual_allocation_checker<T, Allocator, Prediction>& checker, const dual_allocation_checker<T, Allocators, Predictions>&... moreCheckers)
   {
     auto checkFn{
@@ -351,7 +351,7 @@ namespace sequoia::testing::impl
     check_allocation(logger, sentry, checkFn, checker, moreCheckers...);
   }
 
-  template<test_mode Mode, stronglymovable T, counting_alloc Allocator, class Prediction, counting_alloc... Allocators, class... Predictions>
+  template<test_mode Mode, strongly_movable T, counting_alloc Allocator, class Prediction, counting_alloc... Allocators, class... Predictions>
   void check_mutation_after_swap(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& x, const T& y, const dual_allocation_checker<T, Allocator, Prediction>& checker, const dual_allocation_checker<T, Allocators, Predictions>&... moreCheckers)
   {
     auto checkFn{
@@ -363,7 +363,7 @@ namespace sequoia::testing::impl
     check_allocation(logger, sentry, checkFn, checker, moreCheckers...);
   }
 
-  template<test_mode Mode, stronglymovable T, class Mutator, counting_alloc... Allocators, class... Predictions>
+  template<test_mode Mode, strongly_movable T, class Mutator, counting_alloc... Allocators, class... Predictions>
     requires invocable<Mutator, T&>
   void check_mutation_after_swap(test_logger<Mode>& logger, const sentinel<Mode>& sentry, T& lhs, const T& rhs, const T& y, Mutator yMutator, dual_allocation_checker<T, Allocators, Predictions>... checkers)
   {
@@ -378,7 +378,7 @@ namespace sequoia::testing::impl
 
   //================================ checks using allocation_checker ================================//
 
-  template<test_mode Mode, stronglymovable T, counting_alloc Allocator, class Prediction, counting_alloc... Allocators, class... Predictions>
+  template<test_mode Mode, strongly_movable T, counting_alloc Allocator, class Prediction, counting_alloc... Allocators, class... Predictions>
   void check_copy_x_allocation(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& container, const allocation_checker<T, Allocator, Prediction>& checker, const allocation_checker<T, Allocators, Predictions>&... moreCheckers)
   {
     auto checkFn{
@@ -391,7 +391,7 @@ namespace sequoia::testing::impl
     check_allocation(logger, sentry, checkFn, checker, moreCheckers...);
   }
 
-  template<test_mode Mode, stronglymovable T, counting_alloc Allocator, class Prediction, counting_alloc... Allocators, class... Predictions>
+  template<test_mode Mode, strongly_movable T, counting_alloc Allocator, class Prediction, counting_alloc... Allocators, class... Predictions>
   void check_copy_y_allocation(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& container, const allocation_checker<T, Allocator, Prediction>& checker, const allocation_checker<T, Allocators, Predictions>&... moreCheckers)
   {
     auto checkFn{
@@ -404,7 +404,7 @@ namespace sequoia::testing::impl
     check_allocation(logger, sentry, checkFn, checker, moreCheckers...);
   }
 
-  template<test_mode Mode, stronglymovable T, counting_alloc Allocator, class Prediction, counting_alloc... Allocators, class... Predictions>
+  template<test_mode Mode, strongly_movable T, counting_alloc Allocator, class Prediction, counting_alloc... Allocators, class... Predictions>
   void check_move_y_allocation(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& container, const allocation_checker<T, Allocator, Prediction>& checker, const allocation_checker<T, Allocators, Predictions>&... moreCheckers)
   {
     auto checkFn{
@@ -416,7 +416,7 @@ namespace sequoia::testing::impl
     check_allocation(logger, sentry, checkFn, checker, moreCheckers...);
   }
 
-  template<test_mode Mode, stronglymovable T, counting_alloc Allocator, class Prediction, counting_alloc... Allocators, class... Predictions>
+  template<test_mode Mode, strongly_movable T, counting_alloc Allocator, class Prediction, counting_alloc... Allocators, class... Predictions>
   void check_mutation_allocation(std::string_view priorOp, test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& y, const allocation_checker<T, Allocator, Prediction>& checker, const allocation_checker<T, Allocators, Predictions>&... moreCheckers)
   {
     auto checkFn{
@@ -433,7 +433,7 @@ namespace sequoia::testing::impl
     check_allocation(logger, sentry, checkFn, checker, moreCheckers...);
   }
 
-  template<test_mode Mode, stronglymovable T, counting_alloc Allocator, class Prediction, counting_alloc... Allocators, class... Predictions>
+  template<test_mode Mode, strongly_movable T, counting_alloc Allocator, class Prediction, counting_alloc... Allocators, class... Predictions>
   void check_para_copy_y_allocation(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& container, const allocation_checker<T, Allocator, Prediction>& checker, const allocation_checker<T, Allocators, Predictions>&... moreCheckers)
   {
     auto checkFn{
@@ -446,7 +446,7 @@ namespace sequoia::testing::impl
     check_allocation(logger, sentry, checkFn, checker, moreCheckers...);
   }
   
-  template<test_mode Mode, stronglymovable T, counting_alloc... Allocators, class... Predictions>
+  template<test_mode Mode, strongly_movable T, counting_alloc... Allocators, class... Predictions>
   void check_para_copy_y_allocation(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& container, std::tuple<allocation_checker<T, Allocators, Predictions>...> checkers)
   {
     auto fn{[&logger, &sentry,&container](auto&&... checkers){
@@ -457,7 +457,7 @@ namespace sequoia::testing::impl
     std::apply(fn, checkers);
   }
 
-  template<test_mode Mode, stronglymovable T, class Prediction, counting_alloc Allocator, counting_alloc... Allocators, class... Predictions>
+  template<test_mode Mode, strongly_movable T, class Prediction, counting_alloc Allocator, counting_alloc... Allocators, class... Predictions>
   void check_para_move_y_allocation(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& container, const allocation_checker<T, Allocator, Prediction>& checker, const allocation_checker<T, Allocators, Predictions>&... moreCheckers)
   {
     auto checkFn{
@@ -470,7 +470,7 @@ namespace sequoia::testing::impl
     check_allocation(logger, sentry, checkFn, checker, moreCheckers...);
   }
   
-  template<test_mode Mode, stronglymovable T, counting_alloc... Allocators, class... Predictions>
+  template<test_mode Mode, strongly_movable T, counting_alloc... Allocators, class... Predictions>
   void check_para_move_y_allocation(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& container, std::tuple<allocation_checker<T, Allocators, Predictions>...> checkers)
   {
     auto fn{[&logger, &sentry,&container](auto&&... checkers){
@@ -491,7 +491,7 @@ namespace sequoia::testing::impl
     constexpr static bool has_post_move_assign_action{true};
     constexpr static bool has_post_swap_action{true};
 
-    template<test_mode Mode, stronglymovable T, counting_alloc... Allocators, class... Predictions>
+    template<test_mode Mode, strongly_movable T, counting_alloc... Allocators, class... Predictions>
     static bool post_equality_action(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& x, const T& y, const dual_allocation_checker<T, Allocators, Predictions>&... checkers)
     {
       sentinel<Mode> s{logger, ""};
@@ -501,7 +501,7 @@ namespace sequoia::testing::impl
       return !s.failure_detected();
     }
 
-    template<test_mode Mode, stronglymovable T, counting_alloc... Allocators, class... Predictions>
+    template<test_mode Mode, strongly_movable T, counting_alloc... Allocators, class... Predictions>
     static bool post_nequality_action(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& x, const T& y, const dual_allocation_checker<T, Allocators, Predictions>&... checkers)
     {
       sentinel<Mode> s{logger, ""};
@@ -511,13 +511,13 @@ namespace sequoia::testing::impl
       return !s.failure_detected();
     }
 
-    template<test_mode Mode, stronglymovable T, counting_alloc... Allocators, class... Predictions>
+    template<test_mode Mode, strongly_movable T, counting_alloc... Allocators, class... Predictions>
     static void post_move_action(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& y, const allocation_checker<T, Allocators, Predictions>&... checkers)
     {
       check_move_y_allocation(logger, sentry, y, checkers...);
     }
 
-    template<test_mode Mode, stronglymovable T, class Mutator, counting_alloc... Allocators, class... Predictions>
+    template<test_mode Mode, strongly_movable T, class Mutator, counting_alloc... Allocators, class... Predictions>
       requires invocable<Mutator, T&>
     static void post_move_assign_action(test_logger<Mode>& logger, const sentinel<Mode>& sentry, T& y, const T& yClone, Mutator yMutator, const dual_allocation_checker<T, Allocators, Predictions>&... checkers)
     {
@@ -525,7 +525,7 @@ namespace sequoia::testing::impl
       check_mutation_after_move("assignment", logger, sentry, y, yClone, std::move(yMutator), allocation_checker{checkers.info(), y}...);
     }
 
-    template<test_mode Mode, stronglymovable T, counting_alloc... Allocators, class... Predictions>
+    template<test_mode Mode, strongly_movable T, counting_alloc... Allocators, class... Predictions>
     static void post_swap_action(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& x, const T& y, const T&, const dual_allocation_checker<T, Allocators, Predictions>&... checkers)
     {
       if constexpr(((   std::allocator_traits<Allocators>::propagate_on_container_move_assignment::value
@@ -543,26 +543,26 @@ namespace sequoia::testing::impl
       the current number of allocations may be acquired before proceeding
    */
  
-  template<test_mode Mode, class Actions, stronglymovable T, counting_alloc... Allocators, class... Predictions>
+  template<test_mode Mode, class Actions, strongly_movable T, counting_alloc... Allocators, class... Predictions>
   bool check_preconditions(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, const T& x, const T& y, const dual_allocation_checker<T, Allocators, Predictions>&... checkers)
   {
     return do_check_preconditions(logger, sentry, actions, x, y, dual_allocation_checker<T, Allocators, Predictions>{checkers.info(), x, y}...);
   }
 
-  template<test_mode Mode, class Actions, stronglymovable T, counting_alloc... Allocators, class... Predictions>
+  template<test_mode Mode, class Actions, strongly_movable T, counting_alloc... Allocators, class... Predictions>
   std::optional<T> check_move_construction(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T&& z, const T& y, const dual_allocation_checker<T, Allocators, Predictions>&... checkers)
   {
     return do_check_move_construction(logger, sentry, actions, std::forward<T>(z), y, allocation_checker{checkers.info(), z}...);
   }
 
-  template<test_mode Mode, class Actions, stronglymovable T, class Mutator, counting_alloc... Allocators, class... Predictions>
+  template<test_mode Mode, class Actions, strongly_movable T, class Mutator, counting_alloc... Allocators, class... Predictions>
     requires invocable<Mutator, T&>
   void check_move_assign(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T& u, T&& v, const T& y, Mutator yMutator, const dual_allocation_checker<T, Allocators, Predictions>&... checkers)
   {
     do_check_move_assign(logger, sentry, actions, u, std::forward<T>(v), y, std::move(yMutator), dual_allocation_checker{checkers.info(), u, v}...);
   }
 
-  template<test_mode Mode, stronglymovable T, class Mutator, class... Checkers>
+  template<test_mode Mode, strongly_movable T, class Mutator, class... Checkers>
     requires invocable<Mutator, T&>
   void check_mutation_after_move(std::string_view moveType, test_logger<Mode>& logger, const sentinel<Mode>& sentry, T& u, const T& y, Mutator yMutator, Checkers... checkers)
   {
@@ -575,14 +575,14 @@ namespace sequoia::testing::impl
     check(sentry.generate_message(mess), logger, u != y);    
   }
 
-  template<test_mode Mode, stronglymovable T, class Mutator, class... Checkers, std::size_t... I>
+  template<test_mode Mode, strongly_movable T, class Mutator, class... Checkers, std::size_t... I>
     requires invocable<Mutator, T&>
   void check_mutation_after_move(std::string_view moveType, test_logger<Mode>& logger, const sentinel<Mode>& sentry, T& u, const T& y, Mutator yMutator, std::tuple<Checkers...> checkers, std::index_sequence<I...>)
   {
     check_mutation_after_move(moveType, logger, sentry, u, y, std::move(yMutator), std::get<I>(checkers)...);
   }
 
-  template<test_mode Mode, stronglymovable T, class Mutator, class... Checkers>
+  template<test_mode Mode, strongly_movable T, class Mutator, class... Checkers>
     requires invocable<Mutator, T&>
   void check_mutation_after_move(std::string_view moveType, test_logger<Mode>& logger, const sentinel<Mode>& sentry, T& u, const T& y, Mutator yMutator, std::tuple<Checkers...> checkers)
   {

@@ -127,7 +127,7 @@ namespace sequoia::testing
       The class is designed for inheritance but not for the purpose of type erasure and so
       has a protected destructor etc.
    */
-  template<stronglymovable T, counting_alloc Allocator>
+  template<strongly_movable T, counting_alloc Allocator>
   class allocation_info_base
   {
   public:
@@ -186,7 +186,7 @@ namespace sequoia::testing
       of an allocator from a container. On top of this, the class holds predictions
       for the various allocation events.
    */
-  template<stronglymovable T, counting_alloc Allocator, class Predictions>
+  template<strongly_movable T, counting_alloc Allocator, class Predictions>
   class basic_allocation_info : public allocation_info_base<T, Allocator>
   {
   private:
@@ -217,7 +217,7 @@ namespace sequoia::testing
       The essential difference to the primary template is that multiple sets of predictions must
       be supplied, one for each level within the scoped_allocator_adaptor.
    */
-  template<stronglymovable T, counting_alloc... Allocators, class Predictions>
+  template<strongly_movable T, counting_alloc... Allocators, class Predictions>
   class basic_allocation_info<T, std::scoped_allocator_adaptor<Allocators...>, Predictions>
     : public allocation_info_base<T, std::scoped_allocator_adaptor<Allocators...>>
   {

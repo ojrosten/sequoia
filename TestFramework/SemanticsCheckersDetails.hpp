@@ -12,10 +12,10 @@
 
     The general pattern in this file is of paired function templates of the form
 
-    template<test_mode Mode, class Actions, stronglymovable T, class... Args>
+    template<test_mode Mode, class Actions, strongly_movable T, class... Args>
     ret_type do_check_foo(std::string_view, test_logger<Mode>& logger, const sentinel<Mode>&, const Actions&, const T&, const T&, const Args&...);
 
-    template<test_mode Mode, class Actions, stronglymovable T>
+    template<test_mode Mode, class Actions, strongly_movable T>
     ret_type check_foo(std::string_view description, test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, const T& x , const T&y)
     {
       return do_check_foo(description, logger, sentry, actions, x, y);
@@ -78,7 +78,7 @@ namespace sequoia::testing::impl
 
   struct pre_condition_actions
   {
-    template<test_mode Mode, stronglymovable T>
+    template<test_mode Mode, strongly_movable T>
     static bool check_preconditions(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& x, const T& y)
     {
       return check(sentry.generate_message("Precondition - for checking semantics, x and y are assumed to be different"), logger, x != y);
@@ -98,7 +98,7 @@ namespace sequoia::testing::impl
 
   //================================ preconditions ================================//
  
-  template<test_mode Mode, class Actions, stronglymovable T, class... Args>
+  template<test_mode Mode, class Actions, strongly_movable T, class... Args>
   bool do_check_preconditions(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, const T& x, const T& y, const Args&... args)
   {
     if(!check(sentry.generate_message("Equality operator is inconsistent"), logger, x == x))
@@ -122,7 +122,7 @@ namespace sequoia::testing::impl
     return actions.check_preconditions(logger, sentry, x, y);
   }
 
-  template<test_mode Mode, class Actions, stronglymovable T>
+  template<test_mode Mode, class Actions, strongly_movable T>
   bool check_preconditions(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, const T& x, const T& y)
   {
     return do_check_preconditions(logger, sentry, actions, x, y);
@@ -130,7 +130,7 @@ namespace sequoia::testing::impl
 
   //================================ move assign ================================//
 
-  template<test_mode Mode, class Actions, stronglymovable T, class Mutator, class... Args>
+  template<test_mode Mode, class Actions, strongly_movable T, class Mutator, class... Args>
     requires invocable<Mutator, T&>
   void do_check_move_assign(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T& z, T&& y, const T& yClone, Mutator&& yMutator, const Args&... args)
   {
@@ -144,7 +144,7 @@ namespace sequoia::testing::impl
     }
   }
   
-  template<test_mode Mode, class Actions, stronglymovable T, class Mutator>
+  template<test_mode Mode, class Actions, strongly_movable T, class Mutator>
     requires invocable<Mutator, T&>
   void check_move_assign(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T& z, T&& y, const T& yClone, Mutator m)
   {
@@ -153,7 +153,7 @@ namespace sequoia::testing::impl
 
   //================================ swap ================================//
 
-  template<test_mode Mode, class Actions, stronglymovable T, class... Args>
+  template<test_mode Mode, class Actions, strongly_movable T, class... Args>
   bool do_check_swap(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, const Args&... args)
   {
     using std::swap;
@@ -178,7 +178,7 @@ namespace sequoia::testing::impl
     return swapx && swapy;
   }
 
-  template<test_mode Mode, class Actions, stronglymovable T>
+  template<test_mode Mode, class Actions, strongly_movable T>
   bool check_swap(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone)
   {
     return do_check_swap(logger, sentry, actions, std::move(x), std::move(y), xClone, yClone);
@@ -186,7 +186,7 @@ namespace sequoia::testing::impl
 
   //================================  move construction ================================ //
 
-  template<test_mode Mode, class Actions, stronglymovable T, class... Args>
+  template<test_mode Mode, class Actions, strongly_movable T, class... Args>
   std::optional<T> do_check_move_construction(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T&& z, const T& y, const Args&... args)
   {
     T w{std::move(z)};
@@ -201,7 +201,7 @@ namespace sequoia::testing::impl
     return w;
   }
 
-  template<test_mode Mode, class Actions, stronglymovable T>
+  template<test_mode Mode, class Actions, strongly_movable T>
   std::optional<T> check_move_construction(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T&& z, const T& y)
   {
     return do_check_move_construction(logger, sentry, actions, std::forward<T>(z), y);

@@ -134,7 +134,7 @@ namespace sequoia
   concept moveonly = movable<T> && !copyable<T> && equality_comparable<T>;
 
   template <class T>
-  concept stronglymovable = movable<T> && equality_comparable<T>;
+  concept strongly_movable = movable<T> && equality_comparable<T>;
 
   template <class F, class... Args>
   concept invocable =
