@@ -17,6 +17,8 @@
 
 #include "ConcreteEqualityCheckers.hpp"
 
+#include "Concepts.hpp"
+
 namespace sequoia::testing
 {
 
@@ -56,6 +58,9 @@ namespace sequoia::testing
   private:
     std::string m_Name;
   };
+
+  template<class T>
+  concept concrete_test = derived_from<T, test> && !std::is_abstract_v<T>;
 
   /*! \brief class template from which all concrete tests should derive.
 

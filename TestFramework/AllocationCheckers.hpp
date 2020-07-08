@@ -131,8 +131,7 @@ namespace sequoia::testing
   class allocation_info_base
   {
   public:
-    template<class Fn>
-      requires alloc_getter<Fn , T>
+    template<alloc_getter<T> Fn>
     explicit allocation_info_base(Fn&& allocGetter)
       : m_AllocatorGetter{std::forward<Fn>(allocGetter)}
     {
@@ -196,8 +195,7 @@ namespace sequoia::testing
     using allocator_type   = Allocator;
     using predictions_type = Predictions;
       
-    template<class Fn>
-      requires alloc_getter<Fn , T>
+    template<alloc_getter<T> Fn>
     basic_allocation_info(Fn&& allocGetter, Predictions predictions)
       : base_t{std::forward<Fn>(allocGetter)}
       , m_Predictions{std::move(predictions)}
@@ -232,8 +230,7 @@ namespace sequoia::testing
     using allocator_type   = std::scoped_allocator_adaptor<Allocators...>;
     using predictions_type = Predictions;
 
-    template<class Fn>
-      requires alloc_getter<Fn , T>
+    template<alloc_getter<T> Fn>
     basic_allocation_info(Fn&& allocGetter, std::initializer_list<Predictions> predictions)
       : base_t{std::forward<Fn>(allocGetter)}
       , m_Predictions{utilities::to_array<Predictions, N>(predictions)}
@@ -272,4 +269,7 @@ namespace sequoia::testing
       
     std::array<Predictions, N> m_Predictions;
   };
+
+  //template<class T, test_mode Mode, extender<Mode> Extender>
+  //concept alloc_test = derived_from<T, basic_test<checker<Mode, Extender>>> && !std::is_abstract_v<T>;
 }

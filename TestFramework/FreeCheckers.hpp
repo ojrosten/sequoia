@@ -483,17 +483,17 @@ namespace sequoia::testing
       \anchor checker_primary
    */
 
-  template<test_mode Mode, class... Extenders>
+  template<class T, test_mode Mode>
+  concept extender = requires(test_logger<Mode>& logger) {
+    new T{logger};
+  };
+
+  template<test_mode Mode, extender<Mode>... Extenders>
   class checker : private test_logger<Mode>, public Extenders...
   {
   public:
     constexpr static test_mode mode{Mode};
     using logger_type = test_logger<Mode>;
-
-    static_assert(((sizeof(Extenders) == sizeof(logger_type*)) && ...),
-                  "The state of any Extenders must comprise precisely a reference to a Logger");
- 
-    static_assert(((mode == Extenders::mode) && ...));
       
     checker() : Extenders{logger()}... {}
       

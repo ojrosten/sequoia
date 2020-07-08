@@ -49,7 +49,7 @@ namespace sequoia::testing
       log_summary log{};
     };
     
-    template<class... Tests>
+    template<concrete_test... Tests>
     explicit test_family(std::string_view name, Tests&&... tests) : m_Name{name}
     {
       if constexpr(sizeof...(Tests) > 0)
@@ -59,10 +59,10 @@ namespace sequoia::testing
       }
     }
 
-    template<class Test>
-    void add_test(Test&& test)
+    template<class concrete_test>
+    void add_test(concrete_test&& test)
     {
-      m_Tests.emplace_back(std::make_unique<Test>(std::forward<Test>(test)));
+      m_Tests.emplace_back(std::make_unique<concrete_test>(std::forward<concrete_test>(test)));
     }
 
     [[nodiscard]]

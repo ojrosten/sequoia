@@ -5,6 +5,8 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+#pragma once
+
 /*! \file
     \brief Concepts mostly, but not exclusively, replicating things which will appear in std at some point.
  */
@@ -127,6 +129,19 @@ namespace sequoia
   template <class T>
   concept regular = semiregular<T> && equality_comparable<T>;
 
+  template <class Derived, class Base>
+  concept derived_from =
+       std::is_base_of_v<Base, Derived>
+    && std::is_convertible_v<const volatile Derived*, const volatile Base*>;
+
+  template <class F, class... Args>
+  concept invocable =
+    requires(F&& f, Args&&... args) {
+      std::invoke(std::forward<F>(f), std::forward<Args>(args)...);
+  };
+
+  // concepts for specifically for sequoia
+
   template <class T>
   concept pseudoregular = copyable<T> && equality_comparable<T>;
 
@@ -135,12 +150,6 @@ namespace sequoia
 
   template <class T>
   concept strongly_movable = movable<T> && equality_comparable<T>;
-
-  template <class F, class... Args>
-  concept invocable =
-    requires(F&& f, Args&&... args) {
-      std::invoke(std::forward<F>(f), std::forward<Args>(args)...);
-  };
 
   template <class A>
   concept allocator_c = is_allocator_v<A>;  
