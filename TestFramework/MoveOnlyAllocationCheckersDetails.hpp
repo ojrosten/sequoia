@@ -26,7 +26,7 @@ namespace sequoia::testing::impl
   struct move_only_allocation_actions : allocation_actions
   {};
 
-  template<test_mode Mode, class Actions, moveonly T, class... Allocators, class... Predictions>
+  template<test_mode Mode, class Actions, moveonly T, counting_alloc... Allocators, class... Predictions>
   bool check_swap(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, const dual_allocation_checker<T, Allocators, Predictions>&... checkers)
   {
     return do_check_swap(logger, sentry, actions, std::move(x), std::move(y), xClone, yClone, dual_allocation_checker{checkers.info(), x, y}...);
@@ -52,7 +52,7 @@ namespace sequoia::testing::impl
   }
 
   /// Unpacks the tuple and feeds to the overload of check_semantics defined in MoveOnlyCheckersDetails.hpp
-  template<test_mode Mode, class Actions, moveonly T, class Mutator, class... Allocators>
+  template<test_mode Mode, class Actions, moveonly T, class Mutator, counting_alloc... Allocators>
     requires invocable<Mutator, T&>
   void check_semantics(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, std::tuple<dual_allocation_checker<T, Allocators, move_only_allocation_predictions>...> checkers)
   {

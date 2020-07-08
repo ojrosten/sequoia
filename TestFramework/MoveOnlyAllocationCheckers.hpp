@@ -42,7 +42,7 @@ namespace sequoia::testing
   // in order to make use of CTAD. Should be able to revert
   // to 'using' in C++20...
     
-  template<class Container, class Allocator>
+  template<class Container, counting_alloc Allocator>
   class move_only_allocation_info
     : public basic_allocation_info<Container, Allocator, move_only_allocation_predictions>
   {
@@ -58,7 +58,7 @@ namespace sequoia::testing
   move_only_allocation_info(Fn&& allocGetter, std::initializer_list<move_only_allocation_predictions> predictions)
     -> move_only_allocation_info<std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::arg>, std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::ret>>;
   
-  template<test_mode Mode, moveonly T, class Mutator, class... Allocators>
+  template<test_mode Mode, moveonly T, class Mutator, counting_alloc... Allocators>
     requires invocable<Mutator, T&>
   void check_semantics(std::string_view description, test_logger<Mode>& logger, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, move_only_allocation_info<T, Allocators>... info)
   {

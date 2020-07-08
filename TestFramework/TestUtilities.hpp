@@ -23,15 +23,11 @@ namespace sequoia::testing
 
     [[nodiscard]]
     constexpr friend bool operator==(const no_default_constructor& lhs, const no_default_constructor& rhs) noexcept
-    {
-      return lhs.get() == rhs.get();
-    }
+      = default;
 
     [[nodiscard]]
     constexpr friend bool operator!=(const no_default_constructor& lhs, const no_default_constructor& rhs) noexcept
-    {
-      return !(lhs == rhs);
-    }
+     = default;
 
     template<class Stream>
     friend Stream& operator<<(Stream& stream, const no_default_constructor& ndc)
