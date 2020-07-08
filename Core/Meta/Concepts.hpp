@@ -152,5 +152,5 @@ namespace sequoia
   concept strongly_movable = movable<T> && equality_comparable<T>;
 
   template <class A>
-  concept allocator_c = is_allocator_v<A>;  
+  concept alloc = is_allocator_v<A>;  
 }

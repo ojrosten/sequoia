@@ -130,8 +130,7 @@ namespace sequoia::testing::impl
 
   //================================ move assign ================================//
 
-  template<test_mode Mode, class Actions, strongly_movable T, class Mutator, class... Args>
-    requires invocable<Mutator, T&>
+  template<test_mode Mode, class Actions, strongly_movable T, invocable<T&> Mutator, class... Args>
   void do_check_move_assign(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T& z, T&& y, const T& yClone, Mutator&& yMutator, const Args&... args)
   {
     z = std::move(y);
@@ -144,8 +143,7 @@ namespace sequoia::testing::impl
     }
   }
   
-  template<test_mode Mode, class Actions, strongly_movable T, class Mutator>
-    requires invocable<Mutator, T&>
+  template<test_mode Mode, class Actions, strongly_movable T, invocable<T&> Mutator>
   void check_move_assign(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T& z, T&& y, const T& yClone, Mutator m)
   {
     do_check_move_assign(logger, sentry, actions, z, std::forward<T>(y), yClone, std::move(m));

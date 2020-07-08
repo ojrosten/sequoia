@@ -32,7 +32,7 @@ namespace sequoia::testing::impl
     return do_check_swap(logger, sentry, actions, std::move(x), std::move(y), xClone, yClone, dual_allocation_checker{checkers.info(), x, y}...);
   }
 
-  template<test_mode Mode, moveonly T, class... Allocators, class... Predictions>
+  template<test_mode Mode, moveonly T, counting_alloc... Allocators, class... Predictions>
   std::optional<T> check_para_constructor_allocations(test_logger<Mode>& logger, const sentinel<Mode>& sentry, T&& y, const T& yClone, const basic_allocation_info<T, Allocators, Predictions>&... info)
   {
     if(!check(sentry.generate_message("Precondition - for checking move-only semantics, y and yClone are assumed to be equal"), logger, y == yClone)) return{};
@@ -52,8 +52,7 @@ namespace sequoia::testing::impl
   }
 
   /// Unpacks the tuple and feeds to the overload of check_semantics defined in MoveOnlyCheckersDetails.hpp
-  template<test_mode Mode, class Actions, moveonly T, class Mutator, counting_alloc... Allocators>
-    requires invocable<Mutator, T&>
+  template<test_mode Mode, class Actions, moveonly T, invocable<T&> Mutator, counting_alloc... Allocators>
   void check_semantics(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, std::tuple<dual_allocation_checker<T, Allocators, move_only_allocation_predictions>...> checkers)
   {
     auto fn{

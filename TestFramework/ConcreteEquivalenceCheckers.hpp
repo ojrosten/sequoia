@@ -12,12 +12,14 @@
 */
 
 #include "FreeCheckers.hpp"
+#include "Concepts.hpp"
+
 #include <tuple>
 
 namespace sequoia::testing
 {
   /*! \brief Checks equivalence of std::basic_string to char[] and string_view */
-  template<class Char, class Traits, class Allocator>
+  template<class Char, class Traits, alloc Allocator>
   struct equivalence_checker<std::basic_string<Char, Traits, Allocator>>
   {
     using string_type = std::basic_string<Char, Traits, Allocator>;

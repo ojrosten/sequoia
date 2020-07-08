@@ -363,8 +363,7 @@ namespace sequoia::testing::impl
     check_allocation(logger, sentry, checkFn, checker, moreCheckers...);
   }
 
-  template<test_mode Mode, strongly_movable T, class Mutator, counting_alloc... Allocators, class... Predictions>
-    requires invocable<Mutator, T&>
+  template<test_mode Mode, strongly_movable T, invocable<T&> Mutator, counting_alloc... Allocators, class... Predictions>
   void check_mutation_after_swap(test_logger<Mode>& logger, const sentinel<Mode>& sentry, T& lhs, const T& rhs, const T& y, Mutator yMutator, dual_allocation_checker<T, Allocators, Predictions>... checkers)
   {
     if(check(sentry.generate_message("Mutation after swap pre-condition violated"), logger, lhs == y))
@@ -517,8 +516,7 @@ namespace sequoia::testing::impl
       check_move_y_allocation(logger, sentry, y, checkers...);
     }
 
-    template<test_mode Mode, strongly_movable T, class Mutator, counting_alloc... Allocators, class... Predictions>
-      requires invocable<Mutator, T&>
+    template<test_mode Mode, strongly_movable T, invocable<T&> Mutator, counting_alloc... Allocators, class... Predictions>
     static void post_move_assign_action(test_logger<Mode>& logger, const sentinel<Mode>& sentry, T& y, const T& yClone, Mutator yMutator, const dual_allocation_checker<T, Allocators, Predictions>&... checkers)
     {
       check_move_assign_allocation(logger, sentry, y, checkers...);
@@ -555,15 +553,13 @@ namespace sequoia::testing::impl
     return do_check_move_construction(logger, sentry, actions, std::forward<T>(z), y, allocation_checker{checkers.info(), z}...);
   }
 
-  template<test_mode Mode, class Actions, strongly_movable T, class Mutator, counting_alloc... Allocators, class... Predictions>
-    requires invocable<Mutator, T&>
+  template<test_mode Mode, class Actions, strongly_movable T, invocable<T&> Mutator, counting_alloc... Allocators, class... Predictions>
   void check_move_assign(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T& u, T&& v, const T& y, Mutator yMutator, const dual_allocation_checker<T, Allocators, Predictions>&... checkers)
   {
     do_check_move_assign(logger, sentry, actions, u, std::forward<T>(v), y, std::move(yMutator), dual_allocation_checker{checkers.info(), u, v}...);
   }
 
-  template<test_mode Mode, strongly_movable T, class Mutator, class... Checkers>
-    requires invocable<Mutator, T&>
+  template<test_mode Mode, strongly_movable T, invocable<T&> Mutator, class... Checkers>
   void check_mutation_after_move(std::string_view moveType, test_logger<Mode>& logger, const sentinel<Mode>& sentry, T& u, const T& y, Mutator yMutator, Checkers... checkers)
   {
     yMutator(u);
@@ -575,15 +571,13 @@ namespace sequoia::testing::impl
     check(sentry.generate_message(mess), logger, u != y);    
   }
 
-  template<test_mode Mode, strongly_movable T, class Mutator, class... Checkers, std::size_t... I>
-    requires invocable<Mutator, T&>
+  template<test_mode Mode, strongly_movable T, invocable<T&> Mutator, class... Checkers, std::size_t... I>
   void check_mutation_after_move(std::string_view moveType, test_logger<Mode>& logger, const sentinel<Mode>& sentry, T& u, const T& y, Mutator yMutator, std::tuple<Checkers...> checkers, std::index_sequence<I...>)
   {
     check_mutation_after_move(moveType, logger, sentry, u, y, std::move(yMutator), std::get<I>(checkers)...);
   }
 
-  template<test_mode Mode, strongly_movable T, class Mutator, class... Checkers>
-    requires invocable<Mutator, T&>
+  template<test_mode Mode, strongly_movable T, invocable<T&> Mutator, class... Checkers>
   void check_mutation_after_move(std::string_view moveType, test_logger<Mode>& logger, const sentinel<Mode>& sentry, T& u, const T& y, Mutator yMutator, std::tuple<Checkers...> checkers)
   {
     check_mutation_after_move(moveType, logger, sentry, u, y, std::move(yMutator), std::move(checkers), std::make_index_sequence<sizeof...(Checkers)>{});

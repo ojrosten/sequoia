@@ -38,8 +38,7 @@ namespace sequoia::testing
     move_only_allocation_extender& operator=(const move_only_allocation_extender&) = delete;  
     move_only_allocation_extender& operator=(move_only_allocation_extender&&)      = delete;
 
-    template<moveonly T, class Mutator, class... Allocators>
-      requires invocable<Mutator, T&>
+    template<moveonly T, invocable<T&> Mutator, counting_alloc... Allocators>
     void check_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone, Mutator yMutator, move_only_allocation_info<T, Allocators>... info)
     {
       testing::check_semantics(append_indented(description, emphasise("Move-only Semantics")), m_Logger, std::move(x), std::move(y), xClone, yClone, std::move(yMutator), info...);

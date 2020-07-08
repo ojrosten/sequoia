@@ -37,7 +37,7 @@ namespace sequoia::testing
     move_only_extender& operator=(const move_only_extender&) = delete;
     move_only_extender& operator=(move_only_extender&&)      = delete;
 
-    template<moveonly T, class... Allocators>
+    template<moveonly T>
     void check_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone)
     {
       testing::check_semantics(append_indented(description, emphasise("Move-only Semantics")), m_Logger, std::move(x), std::move(y), xClone, yClone);

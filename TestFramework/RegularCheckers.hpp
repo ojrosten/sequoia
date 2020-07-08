@@ -45,8 +45,7 @@
 namespace sequoia::testing
 {
   /// Precondition: x!=y
-  template<test_mode Mode, pseudoregular T, class Mutator>
-    requires invocable<Mutator, T&>
+  template<test_mode Mode, pseudoregular T, invocable<T&> Mutator>
   void check_semantics(std::string_view description, test_logger<Mode>& logger, const T& x, const T& y, Mutator yMutator)
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(description)};

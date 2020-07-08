@@ -41,15 +41,13 @@ namespace sequoia::testing::impl
     return do_check_copy_assign(logger, sentry, actions, z, y);   
   }
   
-  template<test_mode Mode, class Actions, pseudoregular T, class Mutator>
-    requires invocable<Mutator, T&>
+  template<test_mode Mode, class Actions, pseudoregular T, invocable<T&> Mutator>
   bool check_swap(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator yMutator)
   {
     return do_check_swap(logger, sentry, actions, std::move(x), std::move(y), xClone, yClone, std::move(yMutator));
   }
 
-  template<test_mode Mode, class Actions, pseudoregular T, class Mutator, class... Args>
-     requires invocable<Mutator, T&>
+  template<test_mode Mode, class Actions, pseudoregular T, invocable<T&> Mutator, class... Args>
   bool check_semantics(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, const T& x, const T& y, Mutator yMutator, const Args&... args)
   {    
     // Preconditions

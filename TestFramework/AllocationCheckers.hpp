@@ -269,7 +269,4 @@ namespace sequoia::testing
       
     std::array<Predictions, N> m_Predictions;
   };
-
-  //template<class T, test_mode Mode, extender<Mode> Extender>
-  //concept alloc_test = derived_from<T, basic_test<checker<Mode, Extender>>> && !std::is_abstract_v<T>;
 }
