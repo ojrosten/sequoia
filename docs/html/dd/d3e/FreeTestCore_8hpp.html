@@ -68,7 +68,8 @@ $(function() {
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
-<a href="#enum-members">Enumerations</a>  </div>
+<a href="#enum-members">Enumerations</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">FreeTestCore.hpp File Reference</div>  </div>
 </div><!--header-->
@@ -77,6 +78,7 @@ $(function() {
 <p>Core functionality for the testing framework.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="../../da/d95/ConcreteEqualityCheckers_8hpp_source.html">ConcreteEqualityCheckers.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d3/d84/Concepts_8hpp_source.html">Concepts.hpp</a>&quot;</code><br />
 </div>
 <p><a href="../../dd/d3e/FreeTestCore_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -113,6 +115,13 @@ Enumerations</h2></td></tr>
  }</td></tr>
 <tr class="memdesc:a5bf3cc5ec793288c6c7da7ceeb3249a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specifies the granularity at which concurrent execution is applied. <br /></td></tr>
 <tr class="separator:a5bf3cc5ec793288c6c7da7ceeb3249a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a120e5890beac15289513f384755a9551"><td class="memTemplParams" colspan="2"><a id="a120e5890beac15289513f384755a9551"></a>
+template&lt;class T &gt; </td></tr>
+<tr class="memitem:a120e5890beac15289513f384755a9551"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::concrete_test</b> = derived_from&lt;T, test&gt; &amp;&amp; !std::is_abstract_v&lt;T&gt;</td></tr>
+<tr class="separator:a120e5890beac15289513f384755a9551"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Core functionality for the testing framework. </p>

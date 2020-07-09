@@ -97,10 +97,10 @@ template&lt;class Fn &gt; </td></tr>
 template&lt;class Fn &gt; </td></tr>
 <tr class="memitem:ab2dea8f6c2491c1b387d0a80583861b5"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::move_only_allocation_info</b> (Fn &amp;&amp;allocGetter, std::initializer_list&lt; move_only_allocation_predictions &gt; predictions) -&gt; move_only_allocation_info&lt; std::decay_t&lt; typename function_signature&lt; decltype(&amp;std::decay_t&lt; Fn &gt;::operator())&gt;::arg &gt;, std::decay_t&lt; typename function_signature&lt; decltype(&amp;std::decay_t&lt; Fn &gt;::operator())&gt;::ret &gt;&gt;</td></tr>
 <tr class="separator:ab2dea8f6c2491c1b387d0a80583861b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a88b438024f562c1447ea1ba68e36902e"><td class="memTemplParams" colspan="2"><a id="a88b438024f562c1447ea1ba68e36902e"></a>
-template&lt;test_mode Mode, moveonly T, class Mutator , class... Allocators&gt; </td></tr>
-<tr class="memitem:a88b438024f562c1447ea1ba68e36902e"><td class="memTemplItemLeft" align="right" valign="top">requires invocable&lt; Mutator, T &amp; &gt; void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_semantics</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone, Mutator m, move_only_allocation_info&lt; T, Allocators &gt;... info)</td></tr>
-<tr class="separator:a88b438024f562c1447ea1ba68e36902e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a559fe2b2ea70aadfdabc3605b4e64146"><td class="memTemplParams" colspan="2"><a id="a559fe2b2ea70aadfdabc3605b4e64146"></a>
+template&lt;test_mode Mode, moveonly T, invocable&lt; T &amp; &gt; Mutator, counting_alloc... Allocators&gt; </td></tr>
+<tr class="memitem:a559fe2b2ea70aadfdabc3605b4e64146"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_semantics</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone, Mutator m, move_only_allocation_info&lt; T, Allocators &gt;... info)</td></tr>
+<tr class="separator:a559fe2b2ea70aadfdabc3605b4e64146"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Utilities for performing allocation checks of move-only types. </p>

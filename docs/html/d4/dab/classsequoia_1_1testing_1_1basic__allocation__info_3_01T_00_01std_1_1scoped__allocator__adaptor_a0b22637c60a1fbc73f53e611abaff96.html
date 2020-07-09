@@ -104,7 +104,7 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>predictions_type</b>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a181c1dd954af865e6214f4da475298a3"><td class="memTemplParams" colspan="2"><a id="a181c1dd954af865e6214f4da475298a3"></a>
-template&lt;class Fn &gt; </td></tr>
+template&lt;alloc_getter&lt; T &gt; Fn&gt; </td></tr>
 <tr class="memitem:a181c1dd954af865e6214f4da475298a3"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>basic_allocation_info</b> (Fn &amp;&amp;allocGetter, std::initializer_list&lt; Predictions &gt; predictions)</td></tr>
 <tr class="separator:a181c1dd954af865e6214f4da475298a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2a29df91d56d4e5f0da32a61f23997fe"><td class="memTemplParams" colspan="2">template&lt;std::size_t I&gt; </td></tr>
@@ -121,10 +121,10 @@ template&lt;class Fn &gt; </td></tr>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>count</b> (const T &amp;c) const noexcept</td></tr>
 <tr class="separator:ab56e98e39dad4e2e8e3ddb3a048ef77b inherit pub_methods_classsequoia_1_1testing_1_1allocation__info__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa5eb360cf762cd51652e48fc46b9297e inherit pub_methods_classsequoia_1_1testing_1_1allocation__info__base"><td class="memItemLeft" align="right" valign="top"><a id="aa5eb360cf762cd51652e48fc46b9297e"></a>
-std::scoped_allocator_adaptor&lt; Allocators... &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>make_allocator</b> (Args &amp;&amp;... args) const</td></tr>
+Allocator&#160;</td><td class="memItemRight" valign="bottom"><b>make_allocator</b> (Args &amp;&amp;... args) const</td></tr>
 <tr class="separator:aa5eb360cf762cd51652e48fc46b9297e inherit pub_methods_classsequoia_1_1testing_1_1allocation__info__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a374f81166c7d5419e16265e1b7fd5fb9 inherit pub_methods_classsequoia_1_1testing_1_1allocation__info__base"><td class="memItemLeft" align="right" valign="top"><a id="a374f81166c7d5419e16265e1b7fd5fb9"></a>
-std::scoped_allocator_adaptor&lt; Allocators... &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>allocator</b> (const T &amp;c) const</td></tr>
+Allocator&#160;</td><td class="memItemRight" valign="bottom"><b>allocator</b> (const T &amp;c) const</td></tr>
 <tr class="separator:a374f81166c7d5419e16265e1b7fd5fb9 inherit pub_methods_classsequoia_1_1testing_1_1allocation__info__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
@@ -137,7 +137,7 @@ constexpr static auto&#160;</td><td class="memItemRight" valign="bottom"><b>N</b
 Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pro_types_classsequoia_1_1testing_1_1allocation__info__base"><td colspan="2" onclick="javascript:toggleInherit('pro_types_classsequoia_1_1testing_1_1allocation__info__base')"><img src="../../closed.png" alt="-"/>&#160;Protected Types inherited from <a class="el" href="../../db/df4/classsequoia_1_1testing_1_1allocation__info__base.html">sequoia::testing::allocation_info_base&lt; T, std::scoped_allocator_adaptor&lt; Allocators... &gt; &gt;</a></td></tr>
 <tr class="memitem:a814e71c99cf416c5dc8ca2ae956c8677 inherit pro_types_classsequoia_1_1testing_1_1allocation__info__base"><td class="memItemLeft" align="right" valign="top"><a id="a814e71c99cf416c5dc8ca2ae956c8677"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>getter</b> = std::function&lt; std::scoped_allocator_adaptor&lt; Allocators... &gt;(const T &amp;)&gt;</td></tr>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>getter</b> = std::function&lt; Allocator(const T &amp;)&gt;</td></tr>
 <tr class="separator:a814e71c99cf416c5dc8ca2ae956c8677 inherit pro_types_classsequoia_1_1testing_1_1allocation__info__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pro_methods_classsequoia_1_1testing_1_1allocation__info__base"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classsequoia_1_1testing_1_1allocation__info__base')"><img src="../../closed.png" alt="-"/>&#160;Protected Member Functions inherited from <a class="el" href="../../db/df4/classsequoia_1_1testing_1_1allocation__info__base.html">sequoia::testing::allocation_info_base&lt; T, std::scoped_allocator_adaptor&lt; Allocators... &gt; &gt;</a></td></tr>
 <tr class="memitem:ae65271118f2ee37b40fd0c6fbb7cd086 inherit pro_methods_classsequoia_1_1testing_1_1allocation__info__base"><td class="memItemLeft" align="right" valign="top"><a id="ae65271118f2ee37b40fd0c6fbb7cd086"></a>
@@ -154,7 +154,7 @@ getter&#160;</td><td class="memItemRight" valign="bottom"><b>make_getter</b> () 
 <tr class="separator:a3e290ffed9f35b85ae90785bfe2787e6 inherit pro_methods_classsequoia_1_1testing_1_1allocation__info__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><h3>template&lt;stronglymovable T, class... Allocators, class Predictions&gt;<br />
+<div class="textblock"><h3>template&lt;strongly_movable T, counting_alloc... Allocators, class Predictions&gt;<br />
 class sequoia::testing::basic_allocation_info&lt; T, std::scoped_allocator_adaptor&lt; Allocators... &gt;, Predictions &gt;</h3>
 
 <p>A specialization of <a class="el" href="../../dd/d5b/classsequoia_1_1testing_1_1basic__allocation__info.html" title="Class for use with a container possessing a (shared counting) allocator.">basic_allocation_info</a> appropriate for std::scoped_allocator_adaptor. </p>
@@ -166,7 +166,7 @@ class sequoia::testing::basic_allocation_info&lt; T, std::scoped_allocator_adapt
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;stronglymovable T, class... Allocators, class Predictions &gt; </div>
+template&lt;strongly_movable T, counting_alloc... Allocators, class Predictions &gt; </div>
 <div class="memtemplate">
 template&lt;std::size_t I&gt; </div>
 <table class="mlabels">

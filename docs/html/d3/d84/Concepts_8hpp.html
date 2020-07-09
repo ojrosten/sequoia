@@ -135,6 +135,12 @@ template&lt;class T &gt; </td></tr>
 template&lt;class T &gt; </td></tr>
 <tr class="memitem:a7fbf2d0635d125dce8ec46a896e3da84"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::regular</b> = semiregular&lt;T&gt; &amp;&amp; equality_comparable&lt;T&gt;</td></tr>
 <tr class="separator:a7fbf2d0635d125dce8ec46a896e3da84"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2f8510db5875827881ff4248dc5eae5"><td class="memTemplParams" colspan="2">template&lt;class Derived , class Base &gt; </td></tr>
+<tr class="memitem:ae2f8510db5875827881ff4248dc5eae5"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::derived_from</b></td></tr>
+<tr class="separator:ae2f8510db5875827881ff4248dc5eae5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57bd22ecb817be5340e1d5158db19d70"><td class="memTemplParams" colspan="2">template&lt;class F , class... Args&gt; </td></tr>
+<tr class="memitem:a57bd22ecb817be5340e1d5158db19d70"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::invocable</b></td></tr>
+<tr class="separator:a57bd22ecb817be5340e1d5158db19d70"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2baf39013db8bd2730a063a6c3f7d954"><td class="memTemplParams" colspan="2"><a id="a2baf39013db8bd2730a063a6c3f7d954"></a>
 template&lt;class T &gt; </td></tr>
 <tr class="memitem:a2baf39013db8bd2730a063a6c3f7d954"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::pseudoregular</b> = copyable&lt;T&gt; &amp;&amp; equality_comparable&lt;T&gt;</td></tr>
@@ -143,13 +149,14 @@ template&lt;class T &gt; </td></tr>
 template&lt;class T &gt; </td></tr>
 <tr class="memitem:a0547a7f828b6468aca6f23352fec88d6"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::moveonly</b> = movable&lt;T&gt; &amp;&amp; !copyable&lt;T&gt; &amp;&amp; equality_comparable&lt;T&gt;</td></tr>
 <tr class="separator:a0547a7f828b6468aca6f23352fec88d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa7b131f686aaa0f816d2aebe77656faa"><td class="memTemplParams" colspan="2"><a id="aa7b131f686aaa0f816d2aebe77656faa"></a>
+<tr class="memitem:a8e2a818af3c26cced0760e4bf6b519a3"><td class="memTemplParams" colspan="2"><a id="a8e2a818af3c26cced0760e4bf6b519a3"></a>
 template&lt;class T &gt; </td></tr>
-<tr class="memitem:aa7b131f686aaa0f816d2aebe77656faa"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::stronglymovable</b> = movable&lt;T&gt; &amp;&amp; equality_comparable&lt;T&gt;</td></tr>
-<tr class="separator:aa7b131f686aaa0f816d2aebe77656faa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a57bd22ecb817be5340e1d5158db19d70"><td class="memTemplParams" colspan="2">template&lt;class F , class... Args&gt; </td></tr>
-<tr class="memitem:a57bd22ecb817be5340e1d5158db19d70"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::invocable</b></td></tr>
-<tr class="separator:a57bd22ecb817be5340e1d5158db19d70"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8e2a818af3c26cced0760e4bf6b519a3"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::strongly_movable</b> = movable&lt;T&gt; &amp;&amp; equality_comparable&lt;T&gt;</td></tr>
+<tr class="separator:a8e2a818af3c26cced0760e4bf6b519a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6565d46b3cd3a40598191fa9a618e132"><td class="memTemplParams" colspan="2"><a id="a6565d46b3cd3a40598191fa9a618e132"></a>
+template&lt;class A &gt; </td></tr>
+<tr class="memitem:a6565d46b3cd3a40598191fa9a618e132"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::alloc</b> = is_allocator_v&lt;A&gt;</td></tr>
+<tr class="separator:a6565d46b3cd3a40598191fa9a618e132"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Concepts mostly, but not exclusively, replicating things which will appear in std at some point. </p>
@@ -308,6 +315,25 @@ template&lt;class T &gt; </div>
 <div class="line">       constructible_from&lt;T&gt;</div>
 <div class="line">    &amp;&amp; requires { T{}; }</div>
 <div class="line">    &amp;&amp; requires { ::new (<span class="keyword">static_cast&lt;</span><span class="keywordtype">void</span>*<span class="keyword">&gt;</span>(<span class="keyword">nullptr</span>)) T; }</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="ae2f8510db5875827881ff4248dc5eae5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae2f8510db5875827881ff4248dc5eae5">&#9670;&nbsp;</a></span>derived_from</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Derived , class Base &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">concept sequoia::derived_from</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">=</div>
+<div class="line">       std::is_base_of_v&lt;Base, Derived&gt;</div>
+<div class="line">    &amp;&amp; std::is_convertible_v&lt;const volatile Derived*, const volatile Base*&gt;</div>
 </div><!-- fragment -->
 </div>
 </div>

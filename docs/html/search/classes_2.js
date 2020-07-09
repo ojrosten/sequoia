@@ -30,8 +30,10 @@ var searchData=
   ['const_5freference_806',['const_reference',['../d4/de7/structsequoia_1_1data__structures_1_1partition__impl_1_1const__reference.html',1,'sequoia::data_structures::partition_impl']]],
   ['contiguous_5fedge_5fstorage_5ftraits_807',['contiguous_edge_storage_traits',['../d6/d64/structsequoia_1_1maths_1_1contiguous__edge__storage__traits.html',1,'sequoia::maths']]],
   ['copy_5fconstant_808',['copy_constant',['../da/d46/structsequoia_1_1data__structures_1_1partition__impl_1_1copy__constant.html',1,'sequoia::data_structures::partition_impl']]],
-  ['custom_5fallocator_5fbucketed_5fedge_5fstorage_5ftraits_809',['custom_allocator_bucketed_edge_storage_traits',['../dc/dc1/structsequoia_1_1testing_1_1custom__allocator__bucketed__edge__storage__traits.html',1,'sequoia::testing']]],
-  ['custom_5fallocator_5fcontiguous_5fedge_5fstorage_5ftraits_810',['custom_allocator_contiguous_edge_storage_traits',['../da/dc0/structsequoia_1_1testing_1_1custom__allocator__contiguous__edge__storage__traits.html',1,'sequoia::testing']]],
-  ['custom_5fbucketed_5fstorage_5ftraits_811',['custom_bucketed_storage_traits',['../d2/d4e/structsequoia_1_1testing_1_1custom__bucketed__storage__traits.html',1,'sequoia::testing']]],
-  ['custom_5fpartitioned_5fsequence_5ftraits_812',['custom_partitioned_sequence_traits',['../dd/d86/structsequoia_1_1testing_1_1custom__partitioned__sequence__traits.html',1,'sequoia::testing']]]
+  ['counts_5fallocations_809',['counts_allocations',['../d1/dc6/structsequoia_1_1testing_1_1counts__allocations.html',1,'sequoia::testing']]],
+  ['counts_5fallocations_3c_20a_2c_20std_3a_3avoid_5ft_3c_20decltype_28std_3a_3adeclval_3c_20a_20_3e_28_29_2eallocs_28_29_29_3e_20_3e_810',['counts_allocations&lt; A, std::void_t&lt; decltype(std::declval&lt; A &gt;().allocs())&gt; &gt;',['../d6/d30/structsequoia_1_1testing_1_1counts__allocations_3_01A_00_01std_1_1void__t_3_01decltype_07std_1_1b0f627c9da5ff61109b829415d6abfd7.html',1,'sequoia::testing']]],
+  ['custom_5fallocator_5fbucketed_5fedge_5fstorage_5ftraits_811',['custom_allocator_bucketed_edge_storage_traits',['../dc/dc1/structsequoia_1_1testing_1_1custom__allocator__bucketed__edge__storage__traits.html',1,'sequoia::testing']]],
+  ['custom_5fallocator_5fcontiguous_5fedge_5fstorage_5ftraits_812',['custom_allocator_contiguous_edge_storage_traits',['../da/dc0/structsequoia_1_1testing_1_1custom__allocator__contiguous__edge__storage__traits.html',1,'sequoia::testing']]],
+  ['custom_5fbucketed_5fstorage_5ftraits_813',['custom_bucketed_storage_traits',['../d2/d4e/structsequoia_1_1testing_1_1custom__bucketed__storage__traits.html',1,'sequoia::testing']]],
+  ['custom_5fpartitioned_5fsequence_5ftraits_814',['custom_partitioned_sequence_traits',['../dd/d86/structsequoia_1_1testing_1_1custom__partitioned__sequence__traits.html',1,'sequoia::testing']]]
 ];

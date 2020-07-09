@@ -152,11 +152,11 @@ $(function() {
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <span class="keywordflow">return</span> assign_prop_prediction{<span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(n)};</div>
 <div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;  }</div>
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160; </div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;  <span class="keyword">template</span>&lt;stronglymovable T, <span class="keyword">class</span> Allocator&gt;</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;  <span class="keyword">template</span>&lt;strongly_movable T, counting_alloc Allocator&gt;</div>
 <div class="line"><a name="l00131"></a><span class="lineno"><a class="line" href="../../db/df4/classsequoia_1_1testing_1_1allocation__info__base.html">  131</a></span>&#160;  <span class="keyword">class </span><a class="code" href="../../db/df4/classsequoia_1_1testing_1_1allocation__info__base.html">allocation_info_base</a></div>
 <div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;  {</div>
 <div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;  <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Fn&gt;</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    <span class="keyword">template</span>&lt;alloc_getter&lt;T&gt; Fn&gt;</div>
 <div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="../../db/df4/classsequoia_1_1testing_1_1allocation__info__base.html">allocation_info_base</a>(Fn&amp;&amp; allocGetter)</div>
 <div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;      : m_AllocatorGetter{std::forward&lt;Fn&gt;(allocGetter)}</div>
 <div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    {</div>
@@ -204,7 +204,7 @@ $(function() {
 <div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;    getter m_AllocatorGetter;</div>
 <div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;  };</div>
 <div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160; </div>
-<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;  <span class="keyword">template</span>&lt;stronglymovable T, <span class="keyword">class</span> Allocator, <span class="keyword">class</span> Predictions&gt;</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160;  <span class="keyword">template</span>&lt;strongly_movable T, counting_alloc Allocator, <span class="keyword">class</span> Predictions&gt;</div>
 <div class="line"><a name="l00189"></a><span class="lineno"><a class="line" href="../../dd/d5b/classsequoia_1_1testing_1_1basic__allocation__info.html">  189</a></span>&#160;  <span class="keyword">class </span><a class="code" href="../../dd/d5b/classsequoia_1_1testing_1_1basic__allocation__info.html">basic_allocation_info</a> : <span class="keyword">public</span> <a class="code" href="../../db/df4/classsequoia_1_1testing_1_1allocation__info__base.html">allocation_info_base</a>&lt;T, Allocator&gt;</div>
 <div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;  {</div>
 <div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;  <span class="keyword">private</span>:</div>
@@ -214,7 +214,7 @@ $(function() {
 <div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;    <span class="keyword">using</span> allocator_type   = Allocator;</div>
 <div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;    <span class="keyword">using</span> predictions_type = Predictions;</div>
 <div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;      </div>
-<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Fn&gt;</div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;    <span class="keyword">template</span>&lt;alloc_getter&lt;T&gt; Fn&gt;</div>
 <div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;    <a class="code" href="../../dd/d5b/classsequoia_1_1testing_1_1basic__allocation__info.html">basic_allocation_info</a>(Fn&amp;&amp; allocGetter, Predictions predictions)</div>
 <div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;      : <a class="code" href="../../db/df4/classsequoia_1_1testing_1_1allocation__info__base.html">base_t</a>{std::forward&lt;Fn&gt;(allocGetter)}</div>
 <div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;      , m_Predictions{std::move(predictions)}</div>
@@ -229,7 +229,7 @@ $(function() {
 <div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;    Predictions m_Predictions;</div>
 <div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;  };</div>
 <div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160; </div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;  <span class="keyword">template</span>&lt;stronglymovable T, <span class="keyword">class</span>... Allocators, <span class="keyword">class </span>Predictions&gt;</div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;  <span class="keyword">template</span>&lt;strongly_movable T, counting_alloc... Allocators, <span class="keyword">class </span>Predictions&gt;</div>
 <div class="line"><a name="l00219"></a><span class="lineno"><a class="line" href="../../d4/dab/classsequoia_1_1testing_1_1basic__allocation__info_3_01T_00_01std_1_1scoped__allocator__adaptor_a0b22637c60a1fbc73f53e611abaff96.html">  219</a></span>&#160;  <span class="keyword">class </span><a class="code" href="../../dd/d5b/classsequoia_1_1testing_1_1basic__allocation__info.html">basic_allocation_info</a>&lt;T, std::scoped_allocator_adaptor&lt;Allocators...&gt;, Predictions&gt;</div>
 <div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;    : <span class="keyword">public</span> <a class="code" href="../../db/df4/classsequoia_1_1testing_1_1allocation__info__base.html">allocation_info_base</a>&lt;T, std::scoped_allocator_adaptor&lt;Allocators...&gt;&gt;</div>
 <div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;  {</div>
@@ -244,7 +244,7 @@ $(function() {
 <div class="line"><a name="l00230"></a><span class="lineno">  230</span>&#160;    <span class="keyword">using</span> allocator_type   = std::scoped_allocator_adaptor&lt;Allocators...&gt;;</div>
 <div class="line"><a name="l00231"></a><span class="lineno">  231</span>&#160;    <span class="keyword">using</span> predictions_type = Predictions;</div>
 <div class="line"><a name="l00232"></a><span class="lineno">  232</span>&#160; </div>
-<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Fn&gt;</div>
+<div class="line"><a name="l00233"></a><span class="lineno">  233</span>&#160;    <span class="keyword">template</span>&lt;alloc_getter&lt;T&gt; Fn&gt;</div>
 <div class="line"><a name="l00234"></a><span class="lineno">  234</span>&#160;    <a class="code" href="../../dd/d5b/classsequoia_1_1testing_1_1basic__allocation__info.html">basic_allocation_info</a>(Fn&amp;&amp; allocGetter, std::initializer_list&lt;Predictions&gt; predictions)</div>
 <div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;      : <a class="code" href="../../db/df4/classsequoia_1_1testing_1_1allocation__info__base.html">base_t</a>{std::forward&lt;Fn&gt;(allocGetter)}</div>
 <div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;      , m_Predictions{utilities::to_array&lt;Predictions, N&gt;(predictions)}</div>
@@ -265,7 +265,7 @@ $(function() {
 <div class="line"><a name="l00253"></a><span class="lineno">  253</span>&#160;    }</div>
 <div class="line"><a name="l00254"></a><span class="lineno">  254</span>&#160; </div>
 <div class="line"><a name="l00255"></a><span class="lineno">  255</span>&#160;  <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;    <span class="keyword">template</span>&lt;std::size_t I, <span class="keyword">class</span>... As&gt;</div>
+<div class="line"><a name="l00256"></a><span class="lineno">  256</span>&#160;    <span class="keyword">template</span>&lt;std::size_t I, counting_alloc... As&gt;</div>
 <div class="line"><a name="l00257"></a><span class="lineno">  257</span>&#160;    [[nodiscard]]</div>
 <div class="line"><a name="l00258"></a><span class="lineno">  258</span>&#160;    <span class="keyword">static</span> <span class="keyword">auto</span> get(<span class="keyword">const</span> std::scoped_allocator_adaptor&lt;As...&gt;&amp; alloc)</div>
 <div class="line"><a name="l00259"></a><span class="lineno">  259</span>&#160;    {</div>

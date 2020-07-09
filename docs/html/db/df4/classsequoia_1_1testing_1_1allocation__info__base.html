@@ -96,7 +96,7 @@ Inheritance diagram for sequoia::testing::allocation_info_base&lt; T, Allocator 
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ae5e4828abe6f97b57043a0eea7216ee7"><td class="memTemplParams" colspan="2"><a id="ae5e4828abe6f97b57043a0eea7216ee7"></a>
-template&lt;class Fn &gt; </td></tr>
+template&lt;alloc_getter&lt; T &gt; Fn&gt; </td></tr>
 <tr class="memitem:ae5e4828abe6f97b57043a0eea7216ee7"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>allocation_info_base</b> (Fn &amp;&amp;allocGetter)</td></tr>
 <tr class="separator:ae5e4828abe6f97b57043a0eea7216ee7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a858e651ec87e656c2015fbfc52405965"><td class="memItemLeft" align="right" valign="top"><a id="a858e651ec87e656c2015fbfc52405965"></a>
@@ -135,7 +135,7 @@ getter&#160;</td><td class="memItemRight" valign="bottom"><b>make_getter</b> () 
 <tr class="separator:a3e290ffed9f35b85ae90785bfe2787e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><h3>template&lt;stronglymovable T, class Allocator&gt;<br />
+<div class="textblock"><h3>template&lt;strongly_movable T, counting_alloc Allocator&gt;<br />
 class sequoia::testing::allocation_info_base&lt; T, Allocator &gt;</h3>
 
 <p>Base class for use with both plain (shared counting) allocators and std::scoped_allocator_adaptor. </p>

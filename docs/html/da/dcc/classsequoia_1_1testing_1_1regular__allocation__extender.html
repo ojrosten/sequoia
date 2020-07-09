@@ -74,7 +74,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>class template for plugging into the <a class="el" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html#checker_primary">checker</a> class template to provide allocation checks for regular types.  
+<p>class template for plugging into the <a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#checker_primary">checker</a> class template to provide allocation checks for regular types.  
  <a href="../../da/dcc/classsequoia_1_1testing_1_1regular__allocation__extender.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="../../d8/da2/RegularAllocationTestCore_8hpp_source.html">RegularAllocationTestCore.hpp</a>&gt;</code></p>
@@ -96,10 +96,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8e261ef8b8d414b4fcbc69364ce3d6a0"><td class="memItemLeft" align="right" valign="top"><a id="a8e261ef8b8d414b4fcbc69364ce3d6a0"></a>
 <a class="el" href="../../da/dcc/classsequoia_1_1testing_1_1regular__allocation__extender.html">regular_allocation_extender</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../da/dcc/classsequoia_1_1testing_1_1regular__allocation__extender.html">regular_allocation_extender</a> &amp;&amp;)=delete</td></tr>
 <tr class="separator:a8e261ef8b8d414b4fcbc69364ce3d6a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4f67a45bfe9b59b861c715aa64d7fa72"><td class="memTemplParams" colspan="2"><a id="a4f67a45bfe9b59b861c715aa64d7fa72"></a>
-template&lt;pseudoregular T, class Mutator , class... Allocators&gt; </td></tr>
-<tr class="memitem:a4f67a45bfe9b59b861c715aa64d7fa72"><td class="memTemplItemLeft" align="right" valign="top">requires invocable&lt; Mutator, T &amp; &gt; void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (std::string_view description, const T &amp;x, const T &amp;y, Mutator m, <a class="el" href="../../d5/d62/classsequoia_1_1testing_1_1allocation__info.html">allocation_info</a>&lt; T, Allocators &gt;... info)</td></tr>
-<tr class="separator:a4f67a45bfe9b59b861c715aa64d7fa72"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a11193af4194a20e770a54149f7e1efea"><td class="memTemplParams" colspan="2"><a id="a11193af4194a20e770a54149f7e1efea"></a>
+template&lt;pseudoregular T, invocable&lt; T &amp; &gt; Mutator, counting_alloc... Allocators&gt; </td></tr>
+<tr class="memitem:a11193af4194a20e770a54149f7e1efea"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (std::string_view description, const T &amp;x, const T &amp;y, Mutator m, <a class="el" href="../../d5/d62/classsequoia_1_1testing_1_1allocation__info.html">allocation_info</a>&lt; T, Allocators &gt;... info)</td></tr>
+<tr class="separator:a11193af4194a20e770a54149f7e1efea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
@@ -111,7 +111,7 @@ constexpr static <a class="el" href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d
 <div class="textblock"><h3>template&lt;test_mode Mode&gt;<br />
 class sequoia::testing::regular_allocation_extender&lt; Mode &gt;</h3>
 
-<p>class template for plugging into the <a class="el" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html#checker_primary">checker</a> class template to provide allocation checks for regular types. </p>
+<p>class template for plugging into the <a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#checker_primary">checker</a> class template to provide allocation checks for regular types. </p>
 <p><a class="anchor" id="regular_allocation_extender_primary"></a></p>
 </div><hr/>The documentation for this class was generated from the following file:<ul>
 <li>/Users/Claire/Dropbox/Sequoia/TestFramework/<a class="el" href="../../d8/da2/RegularAllocationTestCore_8hpp_source.html">RegularAllocationTestCore.hpp</a></li>

@@ -19,7 +19,7 @@ var searchData=
   ['is_5fadvisor_352',['is_advisor',['../d3/d94/structsequoia_1_1testing_1_1is__advisor.html',1,'sequoia::testing']]],
   ['is_5fadvisor_3c_20void_2c_20t_20_3e_353',['is_advisor&lt; void, T &gt;',['../d2/d45/structsequoia_1_1testing_1_1is__advisor_3_01void_00_01T_01_4.html',1,'sequoia::testing']]],
   ['is_5fallocator_354',['is_allocator',['../da/d00/structsequoia_1_1is__allocator.html',1,'sequoia']]],
-  ['is_5fallocator_3c_20t_2c_20std_3a_3avoid_5ft_3c_20decltype_28std_3a_3adeclval_3c_20t_20_3e_28_29_2eallocate_280_29_29_3e_20_3e_355',['is_allocator&lt; T, std::void_t&lt; decltype(std::declval&lt; T &gt;().allocate(0))&gt; &gt;',['../d8/d7d/structsequoia_1_1is__allocator_3_01T_00_01std_1_1void__t_3_01decltype_07std_1_1declval_3_01T_01_d2cecd0cb219ad5d8c3dcb7f0193007d.html',1,'sequoia']]],
+  ['is_5fallocator_3c_20a_2c_20std_3a_3avoid_5ft_3c_20decltype_28std_3a_3adeclval_3c_20a_20_3e_28_29_2eallocate_280_29_29_3e_20_3e_355',['is_allocator&lt; A, std::void_t&lt; decltype(std::declval&lt; A &gt;().allocate(0))&gt; &gt;',['../d0/db3/structsequoia_1_1is__allocator_3_01A_00_01std_1_1void__t_3_01decltype_07std_1_1declval_3_01A_01_8d14c7a3513f289487ef1685790db603.html',1,'sequoia']]],
   ['is_5fbase_5fof_5fhead_356',['is_base_of_head',['../d4/d2e/structsequoia_1_1is__base__of__head.html',1,'sequoia']]],
   ['is_5fconst_5fpointer_357',['is_const_pointer',['../dd/d5a/structsequoia_1_1is__const__pointer.html',1,'sequoia']]],
   ['is_5fconst_5fpointer_3c_20const_20t_20_2a_20_3e_358',['is_const_pointer&lt; const T * &gt;',['../db/dc2/structsequoia_1_1is__const__pointer_3_01const_01T_01_5_01_4.html',1,'sequoia']]],
