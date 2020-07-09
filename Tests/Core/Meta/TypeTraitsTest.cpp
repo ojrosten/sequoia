@@ -53,8 +53,6 @@ namespace sequoia::testing
     test_is_not_equal_to_comparable();
     test_is_container();
     test_is_allocator();
-    test_counts_allocations();
-    test_has_default_constructor();
     test_has_allocator_type();
     test_serializability();
     test_class_template_instantantiability();
@@ -648,86 +646,6 @@ namespace sequoia::testing
 
     check(LINE(""), []() {
         static_assert(is_allocator_v<std::allocator<int>>);
-        return true;
-      }()
-    );
-  }
-
-  void type_traits_test::test_counts_allocations()
-  {
-    check(LINE(""), []() {
-        static_assert(std::is_same_v<std::false_type, counts_allocations_t<std::allocator<int>>>);
-        return true;
-      }()
-    );
-
-    check(LINE(""), []() {
-        static_assert(!counts_allocations_v<std::allocator<int>>);
-        return true;
-      }()
-    );
-
-    check(LINE(""), []() {
-        static_assert(std::is_same_v<std::true_type, counts_allocations_t<shared_counting_allocator<int>>>);
-        return true;
-      }()
-    );
-
-    check(LINE(""), []() {
-        static_assert(counts_allocations_v<shared_counting_allocator<int>>);
-        return true;
-      }()
-    );
-  }  
-
-  void type_traits_test::test_has_default_constructor()
-  {
-    struct protected_destructor
-    {
-      protected_destructor() = default;
-    protected:
-      ~protected_destructor() = default;
-    };
-
-    struct no_default_constructor
-    {
-      no_default_constructor(int) {}
-    };
-    
-    check(LINE(""), []() {
-        static_assert(std::is_same_v<std::true_type, has_default_constructor_t<std::vector<double>>>);
-        return true;
-      }()
-    );
-
-    check(LINE(""), []() {
-        static_assert(has_default_constructor_v<std::vector<double>>);
-        return true;
-      }()
-    );
-
-    check(LINE(""), []() {
-        static_assert(std::is_same_v<std::true_type, has_default_constructor_t<protected_destructor>>);
-        static_assert(std::is_same_v<std::false_type, typename std::is_constructible<protected_destructor>::type>);
-        return true;
-      }()
-    );
-
-    check(LINE(""), []() {
-        static_assert(has_default_constructor_v<protected_destructor>);
-        static_assert(!std::is_constructible_v<protected_destructor>);
-        return true;
-      }()
-    );
-
-    check(LINE(""), []() {
-        static_assert(std::is_same_v<std::false_type, has_default_constructor_t<no_default_constructor>>);
-        return true;
-      }()
-    );
-
-    check(LINE(""), []() {
-        static_assert(!has_default_constructor_v<no_default_constructor>);
         return true;
       }()
     );

@@ -1,3 +1,3 @@
 Weighted Graph Tests
-[1266ms]
+[1502ms]
 Standard Top Level Checks:              5520;  Failures:  0  [Deep checks: 260320]

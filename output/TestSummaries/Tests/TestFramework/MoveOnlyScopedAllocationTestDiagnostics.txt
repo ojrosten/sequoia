@@ -1,5 +1,5 @@
 Move-Only Scoped Allocation False Negative Diagnostics
-[6ms]
+[5ms]
 False Positive Checks:                    20;  Failures:  0
 Move-Only Scoped Allocation False Negative Diagnostics
 [1ms]

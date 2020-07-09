@@ -1,4 +1,4 @@
 Traversals
-[1284ms]
-Standard Top Level Checks:              1775;  Failures:  0  [Deep checks: 6725]
+[1145ms]
+Standard Top Level Checks:              1760;  Failures:  0  [Deep checks: 6620]
 Standard Performance Checks:              40;  Failures:  0
