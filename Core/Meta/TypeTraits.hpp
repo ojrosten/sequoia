@@ -76,7 +76,7 @@ namespace sequoia
   
   template<class T, class... Args>
   struct is_base_of_head
-    : std::is_base_of<std::decay_t<T>, std::decay_t<typename variadic_traits<Args...>::head>>
+    : std::is_base_of<std::remove_cvref_t<T>, std::remove_cvref_t<typename variadic_traits<Args...>::head>>
   {};
 
   template<class T, class... Args>
@@ -91,7 +91,7 @@ namespace sequoia
   struct resolve_to_copy_constructor
     : std::bool_constant<
            (variadic_traits<Args...>::size() == 1)
-        && (   std::is_same_v<std::decay_t<typename variadic_traits<Args...>::head>, std::decay_t<T>>
+        && (   std::is_same_v<std::remove_cvref_t<typename variadic_traits<Args...>::head>, std::remove_cvref_t<T>>
             || is_base_of_head_v<T, Args...>)
       >
   {};

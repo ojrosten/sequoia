@@ -31,7 +31,9 @@ namespace sequoia
   template <class From, class To>
   concept convertible_to =
        std::is_convertible_v<From, To>
-    && requires(std::add_rvalue_reference_t<From> (&f)()) { static_cast<To>(f()); };
+    && requires(std::add_rvalue_reference_t<From> (&f)()) {
+         static_cast<To>(f());
+       };
 
   /*template < class T, class U >
   concept common_reference_with =
@@ -152,5 +154,8 @@ namespace sequoia
   concept strongly_movable = movable<T> && equality_comparable<T>;
 
   template <class A>
-  concept alloc = is_allocator_v<A>;  
+  concept alloc = is_allocator_v<A>;
+
+  template<class T, class... Args>
+  concept resolve_to_copy = resolve_to_copy_constructor_v<T, Args...>;
 }
