@@ -50,6 +50,14 @@ namespace sequoia::testing
     test_logger<Mode>& m_Logger;
   };
 
+  template<class Test, test_mode Mode>
+  concept move_only_alloc_test =
+       derived_from<Test, basic_test<checker<Mode, move_only_allocation_extender<Mode>>>>
+    && !std::is_abstract_v<Test>
+    && requires{
+         std::declval<Test>().template test_allocation<true, true>();
+  };
+
 
   /*!  \brief Templated on the test_mode, this forms the basis of all allocation tests for move-only types.
 
@@ -83,7 +91,7 @@ namespace sequoia::testing
   protected:
     basic_move_only_allocation_test(basic_move_only_allocation_test&&) noexcept = default;
 
-    template<class Test>
+    template<move_only_alloc_test<Mode> Test>
     static void do_allocation_tests(Test& test)
     {
       test.template test_allocation<false, false>();
