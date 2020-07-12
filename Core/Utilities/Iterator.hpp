@@ -11,7 +11,7 @@
 
 #include <iterator>
 
-/*! \file Iterator.hpp
+/*! \file
     \brief Implementation for an iterator with policies controlling dereferencing and auxiliary data.
  */
 
