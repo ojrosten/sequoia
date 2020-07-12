@@ -14,6 +14,8 @@
 
 #include "TypeTraits.hpp"
 
+#include <compare>
+
 namespace sequoia::utilities
 {
   /*! \class protective_wrapper
@@ -50,42 +52,6 @@ namespace sequoia::utilities
 
     [[nodiscard]]
     constexpr const T& get() const noexcept { return m_Type; }
-
-    [[nodiscard]]
-    friend constexpr bool operator==(const protective_wrapper& lhs, const protective_wrapper& rhs) noexcept
-    {
-      return lhs.get() == rhs.get();
-    }
-  
-    [[nodiscard]]
-    friend constexpr bool operator!=(const protective_wrapper& lhs, const protective_wrapper& rhs) noexcept
-    {
-      return !(lhs == rhs);
-    }
-
-    [[nodiscard]]
-    friend constexpr bool operator<(const protective_wrapper& lhs, const protective_wrapper& rhs) noexcept
-    {
-      return lhs.get() < rhs.get();
-    }
-  
-    [[nodiscard]]
-    friend constexpr bool operator>(const protective_wrapper& lhs, const protective_wrapper& rhs) noexcept
-    {
-      return lhs.get() > rhs.get();
-    }
-
-    [[nodiscard]]
-    friend constexpr bool operator>=(const protective_wrapper& lhs, const protective_wrapper& rhs) noexcept
-    {
-      return !(lhs.get() < rhs.get());
-    }
-
-    [[nodiscard]]
-    friend constexpr bool operator<=(const protective_wrapper& lhs, const protective_wrapper& rhs) noexcept
-    {
-      return !(lhs.get() > rhs.get());
-    }
   private:
     T m_Type;
   };
@@ -97,23 +63,14 @@ namespace sequoia::utilities
   };
 
   template<equality_comparable T>
-    requires (!three_way_comparable<T>)
   [[nodiscard]]
   constexpr bool operator==(const protective_wrapper<T>& lhs, const protective_wrapper<T>& rhs) noexcept
   {
     return lhs.get() == rhs.get();
   }
 
-  template<equality_comparable T>
-    requires (!three_way_comparable<T>)
-  [[nodiscard]]
-  constexpr bool operator!=(const protective_wrapper<T>& lhs, const protective_wrapper<T>& rhs) noexcept
-  {
-    return !(lhs == rhs);
-  }
-
   template<three_way_comparable T>
-  constexpr bool operator<=>(const protective_wrapper<T>& lhs, const protective_wrapper<T>& rhs) noexcept
+  constexpr auto operator<=>(const protective_wrapper<T>& lhs, const protective_wrapper<T>& rhs) noexcept
   {
     return lhs.get() <=> rhs.get();
   }
