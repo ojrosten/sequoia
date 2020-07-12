@@ -106,10 +106,10 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>pointer</b> = typena
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a2d28594491f7f299c8386446d1a2e681"><td class="memTemplParams" colspan="2"><a id="a2d28594491f7f299c8386446d1a2e681"></a>
-template&lt;class... Args, std::enable_if_t&lt;!resolve_to_copy_constructor_v&lt; identity_dereference_policy, Args... &gt;, int &gt;  = 0&gt; </td></tr>
-<tr class="memitem:a2d28594491f7f299c8386446d1a2e681"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>identity_dereference_policy</b> (Args &amp;&amp;... args)</td></tr>
-<tr class="separator:a2d28594491f7f299c8386446d1a2e681"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3753744519c945ce1eadc40b783a4eb7"><td class="memTemplParams" colspan="2"><a id="a3753744519c945ce1eadc40b783a4eb7"></a>
+template&lt;class... Args&gt; </td></tr>
+<tr class="memitem:a3753744519c945ce1eadc40b783a4eb7"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (!resolve_to_copy&lt; <a class="el" href="../../da/deb/structsequoia_1_1utilities_1_1identity__dereference__policy.html">identity_dereference_policy</a>, Args... &gt;) const expr explicit <a class="el" href="../../da/deb/structsequoia_1_1utilities_1_1identity__dereference__policy.html">identity_dereference_policy</a>(Args &amp;&amp;... args)</td></tr>
+<tr class="separator:a3753744519c945ce1eadc40b783a4eb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaae3ebf97a09d947a15e243361470946"><td class="memItemLeft" align="right" valign="top"><a id="aaae3ebf97a09d947a15e243361470946"></a>
 constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>identity_dereference_policy</b> (const <a class="el" href="../../da/deb/structsequoia_1_1utilities_1_1identity__dereference__policy.html">identity_dereference_policy</a> &amp;)=default</td></tr>
 <tr class="separator:aaae3ebf97a09d947a15e243361470946"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -150,12 +150,12 @@ constexpr <a class="el" href="../../d1/d81/structsequoia_1_1utilities_1_1null__d
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
 Friends</h2></td></tr>
-<tr class="memitem:a3edb174bc1ec6062ec633d9c1d87f51f"><td class="memItemLeft" align="right" valign="top"><a id="a3edb174bc1ec6062ec633d9c1d87f51f"></a>
-constexpr friend bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="../../da/deb/structsequoia_1_1utilities_1_1identity__dereference__policy.html">identity_dereference_policy</a> &amp;lhs, const <a class="el" href="../../da/deb/structsequoia_1_1utilities_1_1identity__dereference__policy.html">identity_dereference_policy</a> &amp;rhs) noexcept</td></tr>
-<tr class="separator:a3edb174bc1ec6062ec633d9c1d87f51f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aad823dd0e75894941d102a89f062f079"><td class="memItemLeft" align="right" valign="top"><a id="aad823dd0e75894941d102a89f062f079"></a>
-constexpr friend bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator!=</b> (const <a class="el" href="../../da/deb/structsequoia_1_1utilities_1_1identity__dereference__policy.html">identity_dereference_policy</a> &amp;lhs, const <a class="el" href="../../da/deb/structsequoia_1_1utilities_1_1identity__dereference__policy.html">identity_dereference_policy</a> &amp;rhs) noexcept</td></tr>
-<tr class="separator:aad823dd0e75894941d102a89f062f079"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a79dbfbd99207d8065961d003680e76cb"><td class="memItemLeft" align="right" valign="top"><a id="a79dbfbd99207d8065961d003680e76cb"></a>
+constexpr friend bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="../../da/deb/structsequoia_1_1utilities_1_1identity__dereference__policy.html">identity_dereference_policy</a> &amp;, const <a class="el" href="../../da/deb/structsequoia_1_1utilities_1_1identity__dereference__policy.html">identity_dereference_policy</a> &amp;) noexcept=default</td></tr>
+<tr class="separator:a79dbfbd99207d8065961d003680e76cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a24e867a7aebbbb1ed64837da1713d93b"><td class="memItemLeft" align="right" valign="top"><a id="a24e867a7aebbbb1ed64837da1713d93b"></a>
+constexpr friend bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator!=</b> (const <a class="el" href="../../da/deb/structsequoia_1_1utilities_1_1identity__dereference__policy.html">identity_dereference_policy</a> &amp;, const <a class="el" href="../../da/deb/structsequoia_1_1utilities_1_1identity__dereference__policy.html">identity_dereference_policy</a> &amp;) noexcept=default</td></tr>
+<tr class="separator:a24e867a7aebbbb1ed64837da1713d93b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>/Users/Claire/Dropbox/Sequoia/Core/Utilities/<a class="el" href="../../d7/de4/Iterator_8hpp_source.html">Iterator.hpp</a></li>

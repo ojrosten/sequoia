@@ -140,7 +140,7 @@ $(function() {
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;  </div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class </span>T, <span class="keyword">class</span>... Args&gt;</div>
 <div class="line"><a name="l00078"></a><span class="lineno"><a class="line" href="../../d4/d2e/structsequoia_1_1is__base__of__head.html">   78</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../d4/d2e/structsequoia_1_1is__base__of__head.html">is_base_of_head</a></div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    : std::is_base_of&lt;std::decay_t&lt;T&gt;, std::decay_t&lt;typename variadic_traits&lt;Args...&gt;::head&gt;&gt;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    : std::is_base_of&lt;std::remove_cvref_t&lt;T&gt;, std::remove_cvref_t&lt;typename variadic_traits&lt;Args...&gt;::head&gt;&gt;</div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;  {};</div>
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class </span>T, <span class="keyword">class</span>... Args&gt;</div>
@@ -155,7 +155,7 @@ $(function() {
 <div class="line"><a name="l00091"></a><span class="lineno"><a class="line" href="../../db/d27/structsequoia_1_1resolve__to__copy__constructor.html">   91</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../db/d27/structsequoia_1_1resolve__to__copy__constructor.html">resolve_to_copy_constructor</a></div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    : std::bool_constant&lt;</div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;           (variadic_traits&lt;Args...&gt;::size() == 1)</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        &amp;&amp; (   std::is_same_v&lt;std::decay_t&lt;typename variadic_traits&lt;Args...&gt;::head&gt;, std::decay_t&lt;T&gt;&gt;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        &amp;&amp; (   std::is_same_v&lt;std::remove_cvref_t&lt;typename variadic_traits&lt;Args...&gt;::head&gt;, std::remove_cvref_t&lt;T&gt;&gt;</div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;            || is_base_of_head_v&lt;T, Args...&gt;)</div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;      &gt;</div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;  {};</div>

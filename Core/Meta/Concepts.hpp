@@ -31,7 +31,9 @@ namespace sequoia
   template <class From, class To>
   concept convertible_to =
        std::is_convertible_v<From, To>
-    && requires(std::add_rvalue_reference_t<From> (&f)()) { static_cast<To>(f()); };
+    && requires(std::add_rvalue_reference_t<From> (&f)()) {
+         static_cast<To>(f());
+       };
 
   /*template < class T, class U >
   concept common_reference_with =
@@ -40,7 +42,7 @@ namespace sequoia
     && convertible_to<U, std::common_reference_t<T, U>>;
   */
 
-  template<class LHS, class RHS>
+  template <class LHS, class RHS>
   concept assignable_from =
        std::is_lvalue_reference_v<LHS>
     /*&& common_reference_with<
@@ -51,11 +53,11 @@ namespace sequoia
          { lhs = std::forward<RHS>(rhs) } -> same_as<LHS>;
        };
   
-  template<class T>
+  template <class T>
   concept move_constructible =
     constructible_from<T, T> && convertible_to<T, T>;
 
-  template< class T >
+  template <class T>
   concept swappable =
     requires(T& a, T& b) {
       sequoia::swap(a, b);
@@ -83,13 +85,13 @@ namespace sequoia
     && assignable_from<T&, const T&>
     && assignable_from<T&, const T>;
 
-  template<class T>
+  template <class T>
   concept default_initializable =
        constructible_from<T>
     && requires { T{}; }
     && requires { ::new (static_cast<void*>(nullptr)) T; };
 
-  template<class B>
+  template <class B>
   concept boolean =
        movable<std::remove_cvref_t<B>>
     && requires(const std::remove_reference_t<B>& b1,
@@ -110,7 +112,7 @@ namespace sequoia
       {  a != b2 } -> convertible_to<bool>;
     };
 
-  template<class T, class U>
+  template <class T, class U>
   concept weak_equality_comparable_with =
     requires(const std::remove_reference_t<T>& t,
              const std::remove_reference_t<U>& u) {
@@ -142,6 +144,12 @@ namespace sequoia
 
   // concepts for specifically for sequoia
 
+  template<class T>
+  concept empty = std::is_empty_v<T>;
+
+  template<class T>
+  concept stateful = !empty<T>;
+
   template <class T>
   concept pseudoregular = copyable<T> && equality_comparable<T>;
 
@@ -152,5 +160,13 @@ namespace sequoia
   concept strongly_movable = movable<T> && equality_comparable<T>;
 
   template <class A>
-  concept alloc = is_allocator_v<A>;  
+  concept alloc = is_allocator_v<A>;
+
+  template<class T, class... Args>
+  concept resolve_to_copy = resolve_to_copy_constructor_v<T, Args...>;
+
+  template<class T>
+  concept three_way_comparable = requires(const T& lhs, const T& rhs) {
+    lhs <=> rhs;
+  };
 }

@@ -45,7 +45,7 @@ namespace sequoia::testing
     template<pseudoregular T, invocable<T&> Mutator>
     void check_semantics(std::string_view description, const T& x, const T& y, Mutator m)
     {
-      testing::check_semantics(append_indented(description, emphasise("Regular Semantics")), m_Logger, x, y, m);
+      testing::check_semantics(append_indented(description, emphasise("Regular Semantics")), m_Logger, x, y, std::move(m));
     }
   protected:
     regular_extender(regular_extender&&) noexcept = default;

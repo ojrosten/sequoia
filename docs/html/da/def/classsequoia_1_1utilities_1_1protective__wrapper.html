@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: sequoia::utilities::protective_wrapper&lt; T, bool &gt; Class Template Reference</title>
+<title>Sequoia: sequoia::utilities::protective_wrapper&lt; T &gt; Class Template Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -68,10 +68,9 @@ $(function() {
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#friends">Friends</a> &#124;
 <a href="../../d9/d73/classsequoia_1_1utilities_1_1protective__wrapper-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">sequoia::utilities::protective_wrapper&lt; T, bool &gt; Class Template Reference</div>  </div>
+<div class="title">sequoia::utilities::protective_wrapper&lt; T &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
@@ -82,64 +81,31 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a497db7be596dbe8cb452e33d9b9ecc80"><td class="memItemLeft" align="right" valign="top"><a id="a497db7be596dbe8cb452e33d9b9ecc80"></a>
+<tr class="memitem:a730de7f51c07b25db30da44486b1890a"><td class="memItemLeft" align="right" valign="top"><a id="a730de7f51c07b25db30da44486b1890a"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>value_type</b> = T</td></tr>
-<tr class="separator:a497db7be596dbe8cb452e33d9b9ecc80"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a730de7f51c07b25db30da44486b1890a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aa7651891300f5d42583392aae4868c54"><td class="memTemplParams" colspan="2"><a id="aa7651891300f5d42583392aae4868c54"></a>
-template&lt;class... Args, std::enable_if_t&lt;!resolve_to_copy_constructor_v&lt; protective_wrapper, Args... &gt;, int &gt;  = 0&gt; </td></tr>
-<tr class="memitem:aa7651891300f5d42583392aae4868c54"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>protective_wrapper</b> (Args &amp;&amp;... args)</td></tr>
-<tr class="separator:aa7651891300f5d42583392aae4868c54"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7dc48bc5d3ee87f99726b27e7fcd23a5"><td class="memItemLeft" align="right" valign="top"><a id="a7dc48bc5d3ee87f99726b27e7fcd23a5"></a>
-constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>protective_wrapper</b> (const <a class="el" href="../../da/def/classsequoia_1_1utilities_1_1protective__wrapper.html">protective_wrapper</a> &amp;)=default</td></tr>
-<tr class="separator:a7dc48bc5d3ee87f99726b27e7fcd23a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aebc3cd6cc965477ffab94f28c6d4366c"><td class="memItemLeft" align="right" valign="top"><a id="aebc3cd6cc965477ffab94f28c6d4366c"></a>
-constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>protective_wrapper</b> (<a class="el" href="../../da/def/classsequoia_1_1utilities_1_1protective__wrapper.html">protective_wrapper</a> &amp;&amp;) noexcept=default</td></tr>
-<tr class="separator:aebc3cd6cc965477ffab94f28c6d4366c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaf1d871a25b5b8e913f16d0b4adbdedf"><td class="memItemLeft" align="right" valign="top"><a id="aaf1d871a25b5b8e913f16d0b4adbdedf"></a>
-constexpr <a class="el" href="../../da/def/classsequoia_1_1utilities_1_1protective__wrapper.html">protective_wrapper</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="../../da/def/classsequoia_1_1utilities_1_1protective__wrapper.html">protective_wrapper</a> &amp;)=default</td></tr>
-<tr class="separator:aaf1d871a25b5b8e913f16d0b4adbdedf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a31fe2a2a281d0a38d4470586636f1c7a"><td class="memItemLeft" align="right" valign="top"><a id="a31fe2a2a281d0a38d4470586636f1c7a"></a>
-constexpr <a class="el" href="../../da/def/classsequoia_1_1utilities_1_1protective__wrapper.html">protective_wrapper</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../da/def/classsequoia_1_1utilities_1_1protective__wrapper.html">protective_wrapper</a> &amp;&amp;) noexcept=default</td></tr>
-<tr class="separator:a31fe2a2a281d0a38d4470586636f1c7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aae4552413bb78efb8f59c85db2d02689"><td class="memTemplParams" colspan="2"><a id="aae4552413bb78efb8f59c85db2d02689"></a>
+<tr class="memitem:ae0636b279620fef494daa752e43ee4bd"><td class="memTemplParams" colspan="2"><a id="ae0636b279620fef494daa752e43ee4bd"></a>
+template&lt;class... Args&gt; </td></tr>
+<tr class="memitem:ae0636b279620fef494daa752e43ee4bd"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (!resolve_to_copy&lt; <a class="el" href="../../da/def/classsequoia_1_1utilities_1_1protective__wrapper.html">protective_wrapper</a>, Args... &gt;) const expr explicit <a class="el" href="../../da/def/classsequoia_1_1utilities_1_1protective__wrapper.html">protective_wrapper</a>(Args &amp;&amp;... args)</td></tr>
+<tr class="separator:ae0636b279620fef494daa752e43ee4bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96bd18f6e1d76495c71f3591909c9faa"><td class="memTemplParams" colspan="2"><a id="a96bd18f6e1d76495c71f3591909c9faa"></a>
 template&lt;class Arg , class... Args&gt; </td></tr>
-<tr class="memitem:aae4552413bb78efb8f59c85db2d02689"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>set</b> (Arg &amp;&amp;arg, Args &amp;&amp;... args)</td></tr>
-<tr class="separator:aae4552413bb78efb8f59c85db2d02689"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4d844f4ff80def39faef80441b8d8fe6"><td class="memTemplParams" colspan="2"><a id="a4d844f4ff80def39faef80441b8d8fe6"></a>
-template&lt;class Fn &gt; </td></tr>
-<tr class="memitem:a4d844f4ff80def39faef80441b8d8fe6"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>mutate</b> (Fn fn)</td></tr>
-<tr class="separator:a4d844f4ff80def39faef80441b8d8fe6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad23e29b565082f9b5336d7bc47026955"><td class="memItemLeft" align="right" valign="top"><a id="ad23e29b565082f9b5336d7bc47026955"></a>
+<tr class="memitem:a96bd18f6e1d76495c71f3591909c9faa"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>set</b> (Arg &amp;&amp;arg, Args &amp;&amp;... args)</td></tr>
+<tr class="separator:a96bd18f6e1d76495c71f3591909c9faa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a545eddf0d2916d1845f5a513c99b8d31"><td class="memTemplParams" colspan="2"><a id="a545eddf0d2916d1845f5a513c99b8d31"></a>
+template&lt;invocable&lt; T &amp; &gt; Fn&gt; </td></tr>
+<tr class="memitem:a545eddf0d2916d1845f5a513c99b8d31"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>mutate</b> (Fn fn)</td></tr>
+<tr class="separator:a545eddf0d2916d1845f5a513c99b8d31"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa16a57fee289205e46806659d1b405d"><td class="memItemLeft" align="right" valign="top"><a id="aaa16a57fee289205e46806659d1b405d"></a>
 constexpr const T &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>get</b> () const noexcept</td></tr>
-<tr class="separator:ad23e29b565082f9b5336d7bc47026955"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
-Friends</h2></td></tr>
-<tr class="memitem:a8af28c91b066e99a2444b4a13d1137b7"><td class="memItemLeft" align="right" valign="top"><a id="a8af28c91b066e99a2444b4a13d1137b7"></a>
-constexpr friend bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="../../da/def/classsequoia_1_1utilities_1_1protective__wrapper.html">protective_wrapper</a> &amp;lhs, const <a class="el" href="../../da/def/classsequoia_1_1utilities_1_1protective__wrapper.html">protective_wrapper</a> &amp;rhs) noexcept</td></tr>
-<tr class="separator:a8af28c91b066e99a2444b4a13d1137b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a37e5aa1b0b047e027b19d64bc09070ba"><td class="memItemLeft" align="right" valign="top"><a id="a37e5aa1b0b047e027b19d64bc09070ba"></a>
-constexpr friend bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator!=</b> (const <a class="el" href="../../da/def/classsequoia_1_1utilities_1_1protective__wrapper.html">protective_wrapper</a> &amp;lhs, const <a class="el" href="../../da/def/classsequoia_1_1utilities_1_1protective__wrapper.html">protective_wrapper</a> &amp;rhs) noexcept</td></tr>
-<tr class="separator:a37e5aa1b0b047e027b19d64bc09070ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9a3b6ae62e0d4ef48aad0140bc2e0587"><td class="memItemLeft" align="right" valign="top"><a id="a9a3b6ae62e0d4ef48aad0140bc2e0587"></a>
-constexpr friend bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;</b> (const <a class="el" href="../../da/def/classsequoia_1_1utilities_1_1protective__wrapper.html">protective_wrapper</a> &amp;lhs, const <a class="el" href="../../da/def/classsequoia_1_1utilities_1_1protective__wrapper.html">protective_wrapper</a> &amp;rhs) noexcept</td></tr>
-<tr class="separator:a9a3b6ae62e0d4ef48aad0140bc2e0587"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a392c7b855df2bc9c44dfdf351bf79df1"><td class="memItemLeft" align="right" valign="top"><a id="a392c7b855df2bc9c44dfdf351bf79df1"></a>
-constexpr friend bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator&gt;</b> (const <a class="el" href="../../da/def/classsequoia_1_1utilities_1_1protective__wrapper.html">protective_wrapper</a> &amp;lhs, const <a class="el" href="../../da/def/classsequoia_1_1utilities_1_1protective__wrapper.html">protective_wrapper</a> &amp;rhs) noexcept</td></tr>
-<tr class="separator:a392c7b855df2bc9c44dfdf351bf79df1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1d7046de7fe0fe96c59955dd6c96bc0b"><td class="memItemLeft" align="right" valign="top"><a id="a1d7046de7fe0fe96c59955dd6c96bc0b"></a>
-constexpr friend bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator&gt;=</b> (const <a class="el" href="../../da/def/classsequoia_1_1utilities_1_1protective__wrapper.html">protective_wrapper</a> &amp;lhs, const <a class="el" href="../../da/def/classsequoia_1_1utilities_1_1protective__wrapper.html">protective_wrapper</a> &amp;rhs) noexcept</td></tr>
-<tr class="separator:a1d7046de7fe0fe96c59955dd6c96bc0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeab1150fa5774ad0fa2979e8fb2c2bc8"><td class="memItemLeft" align="right" valign="top"><a id="aeab1150fa5774ad0fa2979e8fb2c2bc8"></a>
-constexpr friend bool&#160;</td><td class="memItemRight" valign="bottom"><b>operator&lt;=</b> (const <a class="el" href="../../da/def/classsequoia_1_1utilities_1_1protective__wrapper.html">protective_wrapper</a> &amp;lhs, const <a class="el" href="../../da/def/classsequoia_1_1utilities_1_1protective__wrapper.html">protective_wrapper</a> &amp;rhs) noexcept</td></tr>
-<tr class="separator:aeab1150fa5774ad0fa2979e8fb2c2bc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:aaa16a57fee289205e46806659d1b405d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><h3>template&lt;class T, bool = std::is_empty_v&lt;T&gt;&gt;<br />
-class sequoia::utilities::protective_wrapper&lt; T, bool &gt;</h3>
+<div class="textblock"><h3>template&lt;class T&gt;<br />
+class sequoia::utilities::protective_wrapper&lt; T &gt;</h3>
 
 <p>A wrapper which allows for getting, setting and mutation of its stored value. </p>
 <p>This wrapper is designed for use alongside classes which expose proxies to the underlying data of interest. Throughout sequoia, such proxies should have the same get/set/mutate interface as <a class="el" href="../../da/def/classsequoia_1_1utilities_1_1protective__wrapper.html" title="A wrapper which allows for getting, setting and mutation of its stored value.">protective_wrapper</a>. Thus the <a class="el" href="../../da/def/classsequoia_1_1utilities_1_1protective__wrapper.html" title="A wrapper which allows for getting, setting and mutation of its stored value.">protective_wrapper</a> allows for a homogeneous treatment of families of classes, some of which must necessarily use proxies but all of which are desired to have the same semantics in terms of getting/setting/mutating the underlying data. </p>

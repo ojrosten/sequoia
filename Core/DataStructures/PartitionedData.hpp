@@ -28,28 +28,28 @@ namespace sequoia
   {
     //===================================A Custom Iterator===================================//
     
-    template<class Traits, class SharingPolicy, class IndexType>
+    template<class Traits, sharing_policy SharingPolicy, class IndexType>
     using partition_iterator
       = utilities::iterator<
           typename partition_impl::partition_iterator_generator<Traits, SharingPolicy, partition_impl::mutable_reference, false>::iterator,
           partition_impl::dereference_policy<SharingPolicy, partition_impl::mutable_reference, partition_impl::partition_index_policy<false, IndexType>>
         >;
 
-    template<class Traits, class SharingPolicy, class IndexType>
+    template<class Traits, sharing_policy SharingPolicy, class IndexType>
     using const_partition_iterator
       = utilities::iterator<
           typename partition_impl::partition_iterator_generator<Traits, SharingPolicy, partition_impl::const_reference, false>::iterator,
         partition_impl::dereference_policy<SharingPolicy, partition_impl::const_reference, partition_impl::partition_index_policy<false, IndexType>>
       >;
 
-    template<class Traits, class SharingPolicy, class IndexType>
+    template<class Traits, sharing_policy SharingPolicy, class IndexType>
     using reverse_partition_iterator
       = utilities::iterator<
           typename partition_impl::partition_iterator_generator<Traits, SharingPolicy, partition_impl::mutable_reference, true>::iterator,
         partition_impl::dereference_policy<SharingPolicy, partition_impl::mutable_reference, partition_impl::partition_index_policy<true, IndexType>>
       >;
 
-    template<class Traits, class SharingPolicy, class IndexType>
+    template<class Traits, sharing_policy SharingPolicy, class IndexType>
     using const_reverse_partition_iterator
       = utilities::iterator<
           typename partition_impl::partition_iterator_generator<Traits, SharingPolicy, partition_impl::const_reference, true>::iterator,
@@ -58,7 +58,7 @@ namespace sequoia
         
     //===================================Storage using buckets===================================//
 
-    template<class T, class SharingPolicy> struct bucketed_storage_traits
+    template<class T, sharing_policy SharingPolicy> struct bucketed_storage_traits
     {
       constexpr static bool throw_on_range_error{true};
       
@@ -69,7 +69,7 @@ namespace sequoia
       using buckets_type = std::vector<std::vector<S>>;
     };
     
-    template<class T, class SharingPolicy=data_sharing::independent<T>, class Traits=bucketed_storage_traits<T, SharingPolicy>>
+    template<class T, sharing_policy SharingPolicy=data_sharing::independent<T>, class Traits=bucketed_storage_traits<T, SharingPolicy>>
     class bucketed_storage
     {
     private:
@@ -479,7 +479,7 @@ namespace sequoia
 
     //===================================Contiguous storage===================================//
 
-    template<class T, class SharingPolicy, class Traits>
+    template<class T, sharing_policy SharingPolicy, class Traits>
     class partitioned_sequence_base
     {
       friend struct sequoia::impl::assignment_helper;
@@ -1113,7 +1113,7 @@ namespace sequoia
       
     };
 
-    template<class T, class SharingPolicy> struct partitioned_sequence_traits
+    template<class T, sharing_policy SharingPolicy> struct partitioned_sequence_traits
     {
       constexpr static bool static_storage_v{false};
       constexpr static bool throw_on_range_error{true};
@@ -1126,7 +1126,7 @@ namespace sequoia
       template<class S> using container_type = std::vector<S, std::allocator<S>>;
     };
 
-    template<class T, class SharingPolicy=data_sharing::independent<T>, class Traits=partitioned_sequence_traits<T, SharingPolicy>>
+    template<class T, sharing_policy SharingPolicy=data_sharing::independent<T>, class Traits=partitioned_sequence_traits<T, SharingPolicy>>
     class partitioned_sequence : public partitioned_sequence_base<T, SharingPolicy, Traits>
     {
     private:

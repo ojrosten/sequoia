@@ -14,9 +14,9 @@
 namespace sequoia::testing
 {
   template<class T>
-  struct detailed_equality_checker<utilities::protective_wrapper<T, std::is_empty_v<T>>>
+  struct detailed_equality_checker<utilities::protective_wrapper<T>>
   {
-    using type = utilities::protective_wrapper<T, std::is_empty_v<T>>;
+    using type = utilities::protective_wrapper<T>;
     
     template<test_mode Mode>
     static void check(std::string_view description, test_logger<Mode>& logger, const type& wrapper, const type& prediction)
@@ -31,15 +31,9 @@ namespace sequoia::testing
     int a;
     double b;
 
-    friend constexpr bool operator==(const data& lhs, const data& rhs)
-    {
-      return (lhs.a == rhs.a) && (lhs.b == rhs.b);
-    }
+    friend constexpr bool operator==(const data& lhs, const data& rhs) noexcept = default;
 
-    friend constexpr bool operator!=(const data& lhs, const data& rhs)
-    {
-      return !(lhs == rhs);
-    }
+    friend constexpr bool operator!=(const data& lhs, const data& rhs) noexcept = default;
 
     template<class Stream> friend Stream& operator<<(Stream& stream, const data& p)
     {

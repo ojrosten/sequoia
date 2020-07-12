@@ -9,7 +9,7 @@
 
 #include "TypeTraits.hpp"
 
-/*! \file IteratorDetails.hpp
+/*! \file
     \brief Implementation details for iterator.
  */
 

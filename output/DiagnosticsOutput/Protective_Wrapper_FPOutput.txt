@@ -1,6 +1,6 @@
 	../Tests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 32
 
-	[sequoia::utilities::protective_wrapper<int, false>]
+	[sequoia::utilities::protective_wrapper<int>]
 	operator== returned false
 
 	[int]
@@ -12,7 +12,7 @@
 
 	../Tests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 40
 
-	[sequoia::utilities::protective_wrapper<std::vector<int, std::allocator<int> >, false>]
+	[sequoia::utilities::protective_wrapper<std::vector<int, std::allocator<int> > >]
 	operator== returned false
 
 	[std::vector<int, std::allocator<int> >]
@@ -28,7 +28,7 @@
 
 	../Tests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 43
 
-	[sequoia::utilities::protective_wrapper<std::vector<int, std::allocator<int> >, false>]
+	[sequoia::utilities::protective_wrapper<std::vector<int, std::allocator<int> > >]
 	operator== returned false
 
 	[std::vector<int, std::allocator<int> >]
@@ -44,7 +44,7 @@
 
 	../Tests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 46
 
-	[sequoia::utilities::protective_wrapper<std::vector<int, std::allocator<int> >, false>]
+	[sequoia::utilities::protective_wrapper<std::vector<int, std::allocator<int> > >]
 	operator== returned false
 
 	[std::vector<int, std::allocator<int> >]
@@ -60,7 +60,7 @@
 
 	../Tests/Core/Utilities/ProtectiveWrapperTestingDiagnostics.cpp, Line 54
 
-	[sequoia::utilities::protective_wrapper<sequoia::testing::data, false>]
+	[sequoia::utilities::protective_wrapper<sequoia::testing::data>]
 	operator== returned false
 
 	[sequoia::testing::data]

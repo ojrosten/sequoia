@@ -397,28 +397,34 @@ namespace sequoia::testing
       using namespace data_sharing;
 
       using testuu = TemplateTestClass<GraphType, EdgeWeight, NodeWeight, unpooled<EdgeWeight>, unpooled<NodeWeight>, EdgeStorageTraits, NodeStorageTraits>;
-      using testud = TemplateTestClass<GraphType, EdgeWeight, NodeWeight, unpooled<EdgeWeight>, data_pool<NodeWeight>, EdgeStorageTraits, NodeStorageTraits>;  
-      using testdu = TemplateTestClass<GraphType, EdgeWeight, NodeWeight, data_pool<EdgeWeight>, unpooled<NodeWeight>, EdgeStorageTraits, NodeStorageTraits>;
-      using testdd = TemplateTestClass<GraphType, EdgeWeight, NodeWeight, data_pool<EdgeWeight>, data_pool<NodeWeight>, EdgeStorageTraits, NodeStorageTraits>;
 
       run_graph_test(testuu{});
- 
-      if constexpr(!std::is_empty_v<EdgeWeight> && !std::is_empty_v<NodeWeight>)
-      {
-        if constexpr(!minimal_graph_tests())
-        {     
+
+      
+      if constexpr(!minimal_graph_tests())
+      { 
+        if constexpr(!std::is_empty_v<EdgeWeight> && !std::is_empty_v<NodeWeight>)
+        {
+          using testud = TemplateTestClass<GraphType, EdgeWeight, NodeWeight, unpooled<EdgeWeight>, data_pool<NodeWeight>, EdgeStorageTraits, NodeStorageTraits>;
+          using testdu = TemplateTestClass<GraphType, EdgeWeight, NodeWeight, data_pool<EdgeWeight>, unpooled<NodeWeight>, EdgeStorageTraits, NodeStorageTraits>;
+          using testdd = TemplateTestClass<GraphType, EdgeWeight, NodeWeight, data_pool<EdgeWeight>, data_pool<NodeWeight>, EdgeStorageTraits, NodeStorageTraits>;
+
           run_graph_test(testud{});
           run_graph_test(testdu{});
           run_graph_test(testdd{});
         }
-      }
-      else if constexpr(!std::is_empty_v<EdgeWeight>)
-      {
-        run_graph_test(testdu{});
-      }
-      else if constexpr(!std::is_empty_v<NodeWeight>)
-      {
-        run_graph_test(testud{});
+        else if constexpr(!std::is_empty_v<EdgeWeight>)
+        {
+          using testdu = TemplateTestClass<GraphType, EdgeWeight, NodeWeight, data_pool<EdgeWeight>, unpooled<NodeWeight>, EdgeStorageTraits, NodeStorageTraits>;
+
+          run_graph_test(testdu{});
+        }
+        else if constexpr(!std::is_empty_v<NodeWeight>)
+        {
+          using testud = TemplateTestClass<GraphType, EdgeWeight, NodeWeight, unpooled<EdgeWeight>, data_pool<NodeWeight>, EdgeStorageTraits, NodeStorageTraits>;
+        
+          run_graph_test(testud{});
+        }
       }
     }
       

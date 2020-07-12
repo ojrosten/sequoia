@@ -7,12 +7,14 @@
 
 #pragma once
 
-/*! \file ProtectiveWrapper.hpp
-    \brief A class which allows homogenous semantics for families of classes at least one of
-    which must use proxies to underlying data.
+/*! \file
+    \brief A class which allows homogenous semantics for families of classes, particularly
+    where at least one uses proxies to underlying data.
  */
 
-#include "TypeTraits.hpp"
+#include "Concepts.hpp"
+
+#include <compare>
 
 namespace sequoia::utilities
 {
@@ -27,20 +29,14 @@ namespace sequoia::utilities
       of getting/setting/mutating the underlying data.
    */
   
-  template <class T, bool=std::is_empty_v<T>> class protective_wrapper
+  template <class T> class protective_wrapper
   {
   public:
     using value_type = T;
       
-    template<class... Args, std::enable_if_t<!resolve_to_copy_constructor_v<protective_wrapper, Args...>, int> = 0>
+    template<class... Args>
+      requires (!resolve_to_copy<protective_wrapper, Args...>)
     constexpr explicit protective_wrapper(Args&&... args) : m_Type{std::forward<Args>(args)...} {}
-
-    constexpr protective_wrapper(const protective_wrapper&)     = default;
-    constexpr protective_wrapper(protective_wrapper&&) noexcept = default;
-    ~protective_wrapper() = default;
-      
-    constexpr protective_wrapper& operator=(const protective_wrapper&)     = default;
-    constexpr protective_wrapper& operator=(protective_wrapper&&) noexcept = default;
 
     template<class Arg, class... Args>
     constexpr void set(Arg&& arg, Args&&... args)
@@ -48,7 +44,7 @@ namespace sequoia::utilities
       m_Type = T{std::forward<Arg>(arg), std::forward<Args>(args)...};
     }
 
-    template<class Fn>
+    template<invocable<T&> Fn>
     constexpr void mutate(Fn fn)
     {
       fn(m_Type);
@@ -56,55 +52,26 @@ namespace sequoia::utilities
 
     [[nodiscard]]
     constexpr const T& get() const noexcept { return m_Type; }
-
-    [[nodiscard]]
-    friend constexpr bool operator==(const protective_wrapper& lhs, const protective_wrapper& rhs) noexcept
-    {
-      return lhs.get() == rhs.get();
-    }
-  
-    [[nodiscard]]
-    friend constexpr bool operator!=(const protective_wrapper& lhs, const protective_wrapper& rhs) noexcept
-    {
-      return !(lhs == rhs);
-    }
-
-    [[nodiscard]]
-    friend constexpr bool operator<(const protective_wrapper& lhs, const protective_wrapper& rhs) noexcept
-    {
-      return lhs.get() < rhs.get();
-    }
-  
-    [[nodiscard]]
-    friend constexpr bool operator>(const protective_wrapper& lhs, const protective_wrapper& rhs) noexcept
-    {
-      return lhs.get() > rhs.get();
-    }
-
-    [[nodiscard]]
-    friend constexpr bool operator>=(const protective_wrapper& lhs, const protective_wrapper& rhs) noexcept
-    {
-      return !(lhs.get() < rhs.get());
-    }
-
-    [[nodiscard]]
-    friend constexpr bool operator<=(const protective_wrapper& lhs, const protective_wrapper& rhs) noexcept
-    {
-      return !(lhs.get() > rhs.get());
-    }
   private:
     T m_Type;
   };
 
-  template<class T> class protective_wrapper<T, true>
+  template<empty T> class protective_wrapper<T>
   {
   public:
     using value_type = T;
-      
-    constexpr protective_wrapper(const protective_wrapper&)                = default;
-    constexpr protective_wrapper(protective_wrapper&&) noexcept            = default;
-    constexpr protective_wrapper& operator=(const protective_wrapper&)     = default;
-    constexpr protective_wrapper& operator=(protective_wrapper&&) noexcept = default;
-  private:
   };
+
+  template<equality_comparable T>
+  [[nodiscard]]
+  constexpr bool operator==(const protective_wrapper<T>& lhs, const protective_wrapper<T>& rhs) noexcept
+  {
+    return lhs.get() == rhs.get();
+  }
+
+  template<three_way_comparable T>
+  constexpr auto operator<=>(const protective_wrapper<T>& lhs, const protective_wrapper<T>& rhs) noexcept
+  {
+    return lhs.get() <=> rhs.get();
+  }
 }

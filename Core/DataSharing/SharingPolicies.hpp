@@ -7,11 +7,13 @@
 
 #pragma once
 
-/*! \file SharingPolicies.hpp
+/*! \file
     \brief Structs to enable homogenous treatment of data which is/is not
     handled via shared pointers.
 
  */
+
+#include "SharingPolicyTraits.hpp"
 
 #include <memory>
 

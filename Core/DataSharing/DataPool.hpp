@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file DataPool.hpp
+/*! \file
     \brief Classes to allow homogenous treatment of pooled/unpooled data.
 
  */
@@ -37,17 +37,10 @@ namespace sequoia::data_sharing
     }
 
     [[nodiscard]]
-    friend constexpr bool operator==(const unpooled&, const unpooled&) noexcept
-    {
-      return true;
-    }
+    friend constexpr bool operator==(const unpooled&, const unpooled&) noexcept = default;
 
     [[nodiscard]]
-    friend constexpr bool operator!=(const unpooled& lhs, const unpooled& rhs) noexcept
-    {
-      return !(lhs == rhs);
-    }
-  private:
+    friend constexpr bool operator!=(const unpooled& lhs, const unpooled& rhs) noexcept = default;
   };
 
   namespace impl
@@ -80,11 +73,11 @@ namespace sequoia::data_sharing
     using pool_iterator = utilities::iterator<Iterator, pool_deref_policy<Wrapper>>;
   }
 
-  template<class T, class Allocator=std::allocator<T>> class data_pool
+  template<stateful T, class Allocator=std::allocator<T>>
+  class data_pool
   {
     friend class data_wrapper;
   public:
-    static_assert(!std::is_empty_v<T>, "Makes no sense to pool an empty weight!");
 
     class data_wrapper
     {
@@ -93,7 +86,8 @@ namespace sequoia::data_sharing
     public:
       using value_type = T;
   
-      template<class... Args> data_wrapper(data_pool& pool, Args&&... args) : m_pPool{&pool}, m_Data{std::forward<Args>(args)...} {}
+      template<class... Args>
+      data_wrapper(data_pool& pool, Args&&... args) : m_pPool{&pool}, m_Data{std::forward<Args>(args)...} {}
 
       [[nodiscard]]
       const T& get() const noexcept { return m_Data; }
@@ -306,7 +300,8 @@ namespace sequoia::data_sharing
   private:
     container m_Data;
 
-    template<class... Args> wrapper_handle make_data_wrapper(Args&&... args)
+    template<class... Args>
+    wrapper_handle make_data_wrapper(Args&&... args)
     {
       const T nascent{std::forward<Args>(args)...};
       const auto found{

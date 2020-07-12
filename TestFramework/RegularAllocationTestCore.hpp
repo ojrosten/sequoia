@@ -49,6 +49,14 @@ namespace sequoia::testing
     test_logger<Mode>& m_Logger;
   };
 
+  template<class Test, test_mode Mode>
+  concept reg_alloc_test =
+       derived_from<Test, basic_test<checker<Mode, regular_allocation_extender<Mode>>>>
+    && !std::is_abstract_v<Test>
+    && requires{
+         std::declval<Test>().template test_allocation<true, true, true>();
+  };
+
   /*!  \brief Templated on the test_mode, this forms the basis of all allocation tests for regular types.
 
        This class template provides a mechanism to help with the automatic generation of checks with
@@ -80,7 +88,7 @@ namespace sequoia::testing
   protected:
     basic_regular_allocation_test(basic_regular_allocation_test&&) noexcept = default;
 
-    template<class Test>
+    template<reg_alloc_test<Mode> Test>
     static void do_allocation_tests(Test& test)
     {
       test.template test_allocation<false, false, false>();

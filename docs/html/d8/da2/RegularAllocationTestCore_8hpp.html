@@ -67,7 +67,8 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#typedef-members">Typedefs</a>  </div>
+<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">RegularAllocationTestCore.hpp File Reference</div>  </div>
 </div><!--header-->
@@ -100,6 +101,12 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::re
 <tr class="memitem:a49d6d9e2dcc26ba8bbb036e3e09ce507"><td class="memItemLeft" align="right" valign="top"><a id="a49d6d9e2dcc26ba8bbb036e3e09ce507"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::regular_allocation_false_positive_test</b> = basic_regular_allocation_test&lt; test_mode::false_positive &gt;</td></tr>
 <tr class="separator:a49d6d9e2dcc26ba8bbb036e3e09ce507"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a2718733a3b5504214de560753f8f11f0"><td class="memTemplParams" colspan="2">template&lt;class Test , test_mode Mode&gt; </td></tr>
+<tr class="memitem:a2718733a3b5504214de560753f8f11f0"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::reg_alloc_test</b></td></tr>
+<tr class="separator:a2718733a3b5504214de560753f8f11f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Extension for checking allocations for types with regular semantics, see <a class="el" href="../../d1/db7/RegularCheckers_8hpp.html#regular_semantics_definition">here</a>. </p>
@@ -117,6 +124,29 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::re
 </div><div class="memdoc">
 <p><a class="anchor" id="regular_allocation_test_alias"></a> </p>
 
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="a2718733a3b5504214de560753f8f11f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2718733a3b5504214de560753f8f11f0">&#9670;&nbsp;</a></span>reg_alloc_test</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Test , test_mode Mode&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">concept sequoia::testing::reg_alloc_test</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">=</div>
+<div class="line">       derived_from&lt;Test, basic_test&lt;checker&lt;Mode, regular_allocation_extender&lt;Mode&gt;&gt;&gt;&gt;</div>
+<div class="line">    &amp;&amp; !std::is_abstract_v&lt;Test&gt;</div>
+<div class="line">    &amp;&amp; requires{</div>
+<div class="line">         std::declval&lt;Test&gt;().template test_allocation&lt;true, true, true&gt;();</div>
+<div class="line">  }</div>
+</div><!-- fragment -->
 </div>
 </div>
 </div><!-- contents -->
