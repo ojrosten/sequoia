@@ -7,6 +7,10 @@
 
 #pragma once
 
+/*! \file
+    \brief Traits and concepts for data structures.
+ */
+
 #include <type_traits>
 
 namespace sequoia
@@ -22,4 +26,7 @@ namespace sequoia
   template<class T> constexpr bool has_partitions_allocator_type_v{has_partitions_allocator_type<T>::value};
 
   template<class T> using has_partitions_allocator_type_t = typename has_partitions_allocator_type<T>::type;
+
+  template<class T>
+  concept has_partitions_allocator = has_partitions_allocator_type_v<T>;
 }

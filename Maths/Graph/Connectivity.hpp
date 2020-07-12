@@ -16,6 +16,7 @@
 #include "Algorithms.hpp"
 #include "TypeTraits.hpp"
 #include "AssignmentUtilities.hpp"
+#include "SharingPolicyTraits.hpp"
 
 #include <limits>
 #include <set>
@@ -25,10 +26,10 @@ namespace sequoia
 {
   namespace data_structures
   {
-    template <class, class, class> class bucketed_storage;
-    template <class, class> struct bucketed_storage_traits;
-    template <class, class, class> class partitioned_sequence;
-    template <class, class> struct partitioned_sequence_traits;
+    template <class, sharing_policy, class> class bucketed_storage;
+    template <class, sharing_policy> struct bucketed_storage_traits;
+    template <class, sharing_policy, class> class partitioned_sequence;
+    template <class, sharing_policy> struct partitioned_sequence_traits;
     template <class, std::size_t, std::size_t, class> class static_partitioned_sequence;
     class static_data_base;
   }

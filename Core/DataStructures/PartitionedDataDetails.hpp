@@ -12,7 +12,6 @@
  */
 
 #include "SharingPolicies.hpp"
-#include "TypeTraits.hpp"
 
 #include <map>
 
@@ -32,31 +31,31 @@ namespace sequoia::data_structures::partition_impl
     using pointer   = T*;
   };
 
-  template<class Traits, class SharingPolicy> struct storage_type_generator
+  template<class Traits, sharing_policy SharingPolicy> struct storage_type_generator
   {
     using held_type      = typename SharingPolicy::handle_type;
     using container_type = typename Traits::template container_type<held_type>;
   };
     
-  template<class Traits, class SharingPolicy, template<class> class ReferencePolicy, bool Reversed>
+  template<class Traits, sharing_policy SharingPolicy, template<class> class ReferencePolicy, bool Reversed>
   struct partition_iterator_generator
   {
     using iterator = typename storage_type_generator<Traits, SharingPolicy>::container_type::iterator;
   };
 
-  template<class Traits, class SharingPolicy>
+  template<class Traits, sharing_policy SharingPolicy>
   struct partition_iterator_generator<Traits, SharingPolicy, mutable_reference, true>
   {
     using iterator = typename storage_type_generator<Traits,SharingPolicy>::container_type::reverse_iterator;
   };
     
-  template<class Traits, class SharingPolicy>
+  template<class Traits, sharing_policy SharingPolicy>
   struct partition_iterator_generator<Traits, SharingPolicy, const_reference, false>
   {
     using iterator = typename storage_type_generator<Traits, SharingPolicy>::container_type::const_iterator;
   };
 
-  template<class Traits, class SharingPolicy>
+  template<class Traits, sharing_policy SharingPolicy>
   struct partition_iterator_generator<Traits, SharingPolicy, const_reference, true>
   {
     using iterator = typename storage_type_generator<Traits, SharingPolicy>::container_type::const_reverse_iterator;
@@ -77,16 +76,10 @@ namespace sequoia::data_structures::partition_impl
     constexpr static bool reversed() noexcept { return Reversed; }
 
     [[nodiscard]]
-    friend constexpr bool operator==(const partition_index_policy& lhs, const partition_index_policy& rhs) noexcept
-    {
-      return lhs.m_Partition == rhs.m_Partition;
-    }
+    friend constexpr bool operator==(const partition_index_policy& lhs, const partition_index_policy& rhs) noexcept = default;
 
     [[nodiscard]]
-    friend constexpr bool operator!=(const partition_index_policy& lhs, const partition_index_policy& rhs) noexcept
-    {
-      return !(lhs == rhs);
-    }
+    friend constexpr bool operator!=(const partition_index_policy& lhs, const partition_index_policy& rhs) noexcept = default;
 
     [[nodiscard]]
     constexpr IndexType partition_index() const noexcept { return m_Partition; }
@@ -102,7 +95,7 @@ namespace sequoia::data_structures::partition_impl
   };
 
   template<
-    class SharingPolicy,
+    sharing_policy SharingPolicy,
     template<class> class ReferencePolicy,
     class AuxiliaryDataPolicy
   >
@@ -161,7 +154,7 @@ namespace sequoia::data_structures::partition_impl
          || std::allocator_traits<Allocator>::is_always_equal::value)
   };
 
-  template<class SharingPolicy, class T>
+  template<sharing_policy SharingPolicy, class T>
   constexpr static bool direct_copy_v{std::is_same_v<SharingPolicy, data_sharing::independent<T>>};
   
   template<class T> class data_duplicator;
