@@ -113,7 +113,6 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d45/structsequoia_1_1testing_1_1is__advisor_3_01void_00_01T_01_4.html">sequoia::testing::is_advisor&lt; void, T &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">sequoia::testing::checker&lt; Mode, Extenders &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exposes elementary check methods, with the option to plug in arbitrary Extenders to compose functionality.  <a href="../../d7/de5/classsequoia_1_1testing_1_1checker.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
@@ -130,112 +129,6 @@ template&lt;class EquivChecker , class T , class... U&gt; </td></tr>
 <tr class="memitem:aad1dd9129ae28daf8a4da6b42ba3b959"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#aad1dd9129ae28daf8a4da6b42ba3b959">sequoia::testing::general_equivalence_check</a> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;value, const S &amp;s, const U &amp;... u)</td></tr>
 <tr class="memdesc:aad1dd9129ae28daf8a4da6b42ba3b959"><td class="mdescLeft">&#160;</td><td class="mdescRight">generic function that generates a check from any class providing a static check method.  <a href="../../d2/d0d/FreeCheckers_8hpp.html#aad1dd9129ae28daf8a4da6b42ba3b959">More...</a><br /></td></tr>
 <tr class="separator:aad1dd9129ae28daf8a4da6b42ba3b959"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr><td colspan="2"><div class="groupHeader">dispatch_check basic overload set</div></td></tr>
-<tr><td colspan="2"><div class="groupText"><p>The next three functions form an overload set, dedicated to appropiately dispatching requests to check equality, equivalence and weak equivalence. This set may be supplemented by extenders of the testing framework, see <a class="el" href="../../d8/d43/FuzzyTestCore_8hpp.html" title="Extension of testing framework for inexact comparisons.">FuzzyTestCore.hpp</a> for an example.</p>
-<p>In each case, the final argument may be utilized to supply custom advice, targeted at particular failures which may benefit from explanation. To active this, clients must supply a function object, with operator() overloaded to take two instances of a type and returning a string. Internally, reflection is used to invoke this function only when the matching type is obtained. Therefore, advice for type T can be supplied to a check of e.g. std::vector&lt;T&gt;, and the advice will find its way to the correct invocation site.</p>
-<p><a class="anchor" id="dispatch_check_free_overloads"></a></p>
-</div></td></tr>
-<tr class="memitem:af8062f92a8839f434c874ceefd3149c9"><td class="memTemplParams" colspan="2">template&lt;test_mode Mode, class T , class Advisor  = null_advisor&gt; </td></tr>
-<tr class="memitem:af8062f92a8839f434c874ceefd3149c9"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#af8062f92a8839f434c874ceefd3149c9">sequoia::testing::dispatch_check</a> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, equality_tag, const T &amp;obtained, const T &amp;prediction, [[maybe_unused]] Advisor advisor=Advisor{})</td></tr>
-<tr class="memdesc:af8062f92a8839f434c874ceefd3149c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">The workhorse of equality checking, which takes responsibility for reflecting upon types and then dispatching, appropriately.  <a href="../../d2/d0d/FreeCheckers_8hpp.html#af8062f92a8839f434c874ceefd3149c9">More...</a><br /></td></tr>
-<tr class="separator:af8062f92a8839f434c874ceefd3149c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac5e40556136bb09f6265a46293a91ef1"><td class="memTemplParams" colspan="2">template&lt;test_mode Mode, class T , class S , class... U&gt; </td></tr>
-<tr class="memitem:ac5e40556136bb09f6265a46293a91ef1"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#ac5e40556136bb09f6265a46293a91ef1">sequoia::testing::dispatch_check</a> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, equivalence_tag, const T &amp;value, S &amp;&amp;s, U &amp;&amp;... u)</td></tr>
-<tr class="memdesc:ac5e40556136bb09f6265a46293a91ef1"><td class="mdescLeft">&#160;</td><td class="mdescRight">The workhorse for equivalence checking.  <a href="../../d2/d0d/FreeCheckers_8hpp.html#ac5e40556136bb09f6265a46293a91ef1">More...</a><br /></td></tr>
-<tr class="separator:ac5e40556136bb09f6265a46293a91ef1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b33834db9998057330de5758a25ad24"><td class="memTemplParams" colspan="2">template&lt;test_mode Mode, class T , class S , class... U&gt; </td></tr>
-<tr class="memitem:a2b33834db9998057330de5758a25ad24"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#a2b33834db9998057330de5758a25ad24">sequoia::testing::dispatch_check</a> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, weak_equivalence_tag, const T &amp;value, S &amp;&amp;s, U &amp;&amp;... u)</td></tr>
-<tr class="memdesc:a2b33834db9998057330de5758a25ad24"><td class="mdescLeft">&#160;</td><td class="mdescRight">The workhorse for weak equivalence checking.  <a href="../../d2/d0d/FreeCheckers_8hpp.html#a2b33834db9998057330de5758a25ad24">More...</a><br /></td></tr>
-<tr class="separator:a2b33834db9998057330de5758a25ad24"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acab37776a07317f440cc5ea4b6f18e35"><td class="memTemplParams" colspan="2"><a id="acab37776a07317f440cc5ea4b6f18e35"></a>
-template&lt;test_mode Mode, class ElementDispatchDiscriminator , class Iter , class PredictionIter , class Advisor  = null_advisor&gt; </td></tr>
-<tr class="memitem:acab37776a07317f440cc5ea4b6f18e35"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_range</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, ElementDispatchDiscriminator discriminator, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, Advisor advisor=Advisor{})</td></tr>
-<tr class="separator:acab37776a07317f440cc5ea4b6f18e35"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4cc0f6dec6a730caea876b6383db8f91"><td class="memTemplParams" colspan="2"><a id="a4cc0f6dec6a730caea876b6383db8f91"></a>
-template&lt;class E , test_mode Mode, class Fn &gt; </td></tr>
-<tr class="memitem:a4cc0f6dec6a730caea876b6383db8f91"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_exception_thrown</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, Fn &amp;&amp;function)</td></tr>
-<tr class="separator:a4cc0f6dec6a730caea876b6383db8f91"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae9c7bb98844ada3bdb0c272de55b3c78"><td class="memTemplParams" colspan="2"><a id="ae9c7bb98844ada3bdb0c272de55b3c78"></a>
-template&lt;test_mode Mode, class T , class Advisor  = null_advisor&gt; </td></tr>
-<tr class="memitem:ae9c7bb98844ada3bdb0c272de55b3c78"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_equality</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;value, const T &amp;prediction, Advisor advisor=Advisor{})</td></tr>
-<tr class="separator:ae9c7bb98844ada3bdb0c272de55b3c78"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aee413d8eaa5b9f8f41551479ada9831b"><td class="memTemplParams" colspan="2"><a id="aee413d8eaa5b9f8f41551479ada9831b"></a>
-template&lt;test_mode Mode, class T , class S , class... U&gt; </td></tr>
-<tr class="memitem:aee413d8eaa5b9f8f41551479ada9831b"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_equivalence</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;value, S &amp;&amp;s, U &amp;&amp;... u)</td></tr>
-<tr class="separator:aee413d8eaa5b9f8f41551479ada9831b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afccdced94b1f4c361c16336b20598577"><td class="memTemplParams" colspan="2"><a id="afccdced94b1f4c361c16336b20598577"></a>
-template&lt;test_mode Mode, class T , class S , class... U&gt; </td></tr>
-<tr class="memitem:afccdced94b1f4c361c16336b20598577"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_weak_equivalence</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;value, S &amp;&amp;s, U &amp;&amp;... u)</td></tr>
-<tr class="separator:afccdced94b1f4c361c16336b20598577"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a365d8ad3c382c7750418457513672aa5"><td class="memTemplParams" colspan="2"><a id="a365d8ad3c382c7750418457513672aa5"></a>
-template&lt;test_mode Mode, class Advisor  = null_advisor&gt; </td></tr>
-<tr class="memitem:a365d8ad3c382c7750418457513672aa5"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const bool value, Advisor advisor=Advisor{})</td></tr>
-<tr class="separator:a365d8ad3c382c7750418457513672aa5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a915ff60765c26224be751701f5edfa85"><td class="memTemplParams" colspan="2"><a id="a915ff60765c26224be751701f5edfa85"></a>
-template&lt;test_mode Mode, class Iter , class PredictionIter , class Advisor  = null_advisor&gt; </td></tr>
-<tr class="memitem:a915ff60765c26224be751701f5edfa85"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_range</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, Advisor advisor=Advisor{})</td></tr>
-<tr class="separator:a915ff60765c26224be751701f5edfa85"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a515928c339134980ba35c0f15b8add3d"><td class="memTemplParams" colspan="2"><a id="a515928c339134980ba35c0f15b8add3d"></a>
-template&lt;test_mode Mode, class Iter , class PredictionIter &gt; </td></tr>
-<tr class="memitem:a515928c339134980ba35c0f15b8add3d"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_range_equivalence</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)</td></tr>
-<tr class="separator:a515928c339134980ba35c0f15b8add3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abfdf446883365a266bc44b755ae54437"><td class="memTemplParams" colspan="2"><a id="abfdf446883365a266bc44b755ae54437"></a>
-template&lt;test_mode Mode, class Iter , class PredictionIter &gt; </td></tr>
-<tr class="memitem:abfdf446883365a266bc44b755ae54437"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_range_weak_equivalence</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)</td></tr>
-<tr class="separator:abfdf446883365a266bc44b755ae54437"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr><td colspan="2"><div class="groupHeader">dispatch_check basic overload set</div></td></tr>
-<tr><td colspan="2"><div class="groupText"><p>The next three functions form an overload set, dedicated to appropiately dispatching requests to check equality, equivalence and weak equivalence. This set may be supplemented by extenders of the testing framework, see <a class="el" href="../../d8/d43/FuzzyTestCore_8hpp.html" title="Extension of testing framework for inexact comparisons.">FuzzyTestCore.hpp</a> for an example.</p>
-<p>In each case, the final argument may be utilized to supply custom advice, targeted at particular failures which may benefit from explanation. To active this, clients must supply a function object, with operator() overloaded to take two instances of a type and returning a string. Internally, reflection is used to invoke this function only when the matching type is obtained. Therefore, advice for type T can be supplied to a check of e.g. std::vector&lt;T&gt;, and the advice will find its way to the correct invocation site.</p>
-<p><a class="anchor" id="dispatch_check_free_overloads"></a></p>
-</div></td></tr>
-<tr class="memitem:af8062f92a8839f434c874ceefd3149c9"><td class="memTemplParams" colspan="2">template&lt;test_mode Mode, class T , class Advisor  = null_advisor&gt; </td></tr>
-<tr class="memitem:af8062f92a8839f434c874ceefd3149c9"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#af8062f92a8839f434c874ceefd3149c9">sequoia::testing::dispatch_check</a> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, equality_tag, const T &amp;obtained, const T &amp;prediction, [[maybe_unused]] Advisor advisor=Advisor{})</td></tr>
-<tr class="memdesc:af8062f92a8839f434c874ceefd3149c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">The workhorse of equality checking, which takes responsibility for reflecting upon types and then dispatching, appropriately.  <a href="../../d2/d0d/FreeCheckers_8hpp.html#af8062f92a8839f434c874ceefd3149c9">More...</a><br /></td></tr>
-<tr class="separator:af8062f92a8839f434c874ceefd3149c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac5e40556136bb09f6265a46293a91ef1"><td class="memTemplParams" colspan="2">template&lt;test_mode Mode, class T , class S , class... U&gt; </td></tr>
-<tr class="memitem:ac5e40556136bb09f6265a46293a91ef1"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#ac5e40556136bb09f6265a46293a91ef1">sequoia::testing::dispatch_check</a> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, equivalence_tag, const T &amp;value, S &amp;&amp;s, U &amp;&amp;... u)</td></tr>
-<tr class="memdesc:ac5e40556136bb09f6265a46293a91ef1"><td class="mdescLeft">&#160;</td><td class="mdescRight">The workhorse for equivalence checking.  <a href="../../d2/d0d/FreeCheckers_8hpp.html#ac5e40556136bb09f6265a46293a91ef1">More...</a><br /></td></tr>
-<tr class="separator:ac5e40556136bb09f6265a46293a91ef1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b33834db9998057330de5758a25ad24"><td class="memTemplParams" colspan="2">template&lt;test_mode Mode, class T , class S , class... U&gt; </td></tr>
-<tr class="memitem:a2b33834db9998057330de5758a25ad24"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#a2b33834db9998057330de5758a25ad24">sequoia::testing::dispatch_check</a> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, weak_equivalence_tag, const T &amp;value, S &amp;&amp;s, U &amp;&amp;... u)</td></tr>
-<tr class="memdesc:a2b33834db9998057330de5758a25ad24"><td class="mdescLeft">&#160;</td><td class="mdescRight">The workhorse for weak equivalence checking.  <a href="../../d2/d0d/FreeCheckers_8hpp.html#a2b33834db9998057330de5758a25ad24">More...</a><br /></td></tr>
-<tr class="separator:a2b33834db9998057330de5758a25ad24"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acab37776a07317f440cc5ea4b6f18e35"><td class="memTemplParams" colspan="2"><a id="acab37776a07317f440cc5ea4b6f18e35"></a>
-template&lt;test_mode Mode, class ElementDispatchDiscriminator , class Iter , class PredictionIter , class Advisor  = null_advisor&gt; </td></tr>
-<tr class="memitem:acab37776a07317f440cc5ea4b6f18e35"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_range</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, ElementDispatchDiscriminator discriminator, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, Advisor advisor=Advisor{})</td></tr>
-<tr class="separator:acab37776a07317f440cc5ea4b6f18e35"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4cc0f6dec6a730caea876b6383db8f91"><td class="memTemplParams" colspan="2"><a id="a4cc0f6dec6a730caea876b6383db8f91"></a>
-template&lt;class E , test_mode Mode, class Fn &gt; </td></tr>
-<tr class="memitem:a4cc0f6dec6a730caea876b6383db8f91"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_exception_thrown</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, Fn &amp;&amp;function)</td></tr>
-<tr class="separator:a4cc0f6dec6a730caea876b6383db8f91"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae9c7bb98844ada3bdb0c272de55b3c78"><td class="memTemplParams" colspan="2"><a id="ae9c7bb98844ada3bdb0c272de55b3c78"></a>
-template&lt;test_mode Mode, class T , class Advisor  = null_advisor&gt; </td></tr>
-<tr class="memitem:ae9c7bb98844ada3bdb0c272de55b3c78"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_equality</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;value, const T &amp;prediction, Advisor advisor=Advisor{})</td></tr>
-<tr class="separator:ae9c7bb98844ada3bdb0c272de55b3c78"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aee413d8eaa5b9f8f41551479ada9831b"><td class="memTemplParams" colspan="2"><a id="aee413d8eaa5b9f8f41551479ada9831b"></a>
-template&lt;test_mode Mode, class T , class S , class... U&gt; </td></tr>
-<tr class="memitem:aee413d8eaa5b9f8f41551479ada9831b"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_equivalence</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;value, S &amp;&amp;s, U &amp;&amp;... u)</td></tr>
-<tr class="separator:aee413d8eaa5b9f8f41551479ada9831b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afccdced94b1f4c361c16336b20598577"><td class="memTemplParams" colspan="2"><a id="afccdced94b1f4c361c16336b20598577"></a>
-template&lt;test_mode Mode, class T , class S , class... U&gt; </td></tr>
-<tr class="memitem:afccdced94b1f4c361c16336b20598577"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_weak_equivalence</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;value, S &amp;&amp;s, U &amp;&amp;... u)</td></tr>
-<tr class="separator:afccdced94b1f4c361c16336b20598577"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a365d8ad3c382c7750418457513672aa5"><td class="memTemplParams" colspan="2"><a id="a365d8ad3c382c7750418457513672aa5"></a>
-template&lt;test_mode Mode, class Advisor  = null_advisor&gt; </td></tr>
-<tr class="memitem:a365d8ad3c382c7750418457513672aa5"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const bool value, Advisor advisor=Advisor{})</td></tr>
-<tr class="separator:a365d8ad3c382c7750418457513672aa5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a915ff60765c26224be751701f5edfa85"><td class="memTemplParams" colspan="2"><a id="a915ff60765c26224be751701f5edfa85"></a>
-template&lt;test_mode Mode, class Iter , class PredictionIter , class Advisor  = null_advisor&gt; </td></tr>
-<tr class="memitem:a915ff60765c26224be751701f5edfa85"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_range</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, Advisor advisor=Advisor{})</td></tr>
-<tr class="separator:a915ff60765c26224be751701f5edfa85"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a515928c339134980ba35c0f15b8add3d"><td class="memTemplParams" colspan="2"><a id="a515928c339134980ba35c0f15b8add3d"></a>
-template&lt;test_mode Mode, class Iter , class PredictionIter &gt; </td></tr>
-<tr class="memitem:a515928c339134980ba35c0f15b8add3d"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_range_equivalence</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)</td></tr>
-<tr class="separator:a515928c339134980ba35c0f15b8add3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abfdf446883365a266bc44b755ae54437"><td class="memTemplParams" colspan="2"><a id="abfdf446883365a266bc44b755ae54437"></a>
-template&lt;test_mode Mode, class Iter , class PredictionIter &gt; </td></tr>
-<tr class="memitem:abfdf446883365a266bc44b755ae54437"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_range_weak_equivalence</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)</td></tr>
-<tr class="separator:abfdf446883365a266bc44b755ae54437"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -262,6 +155,65 @@ template&lt;class A , class T &gt; </td></tr>
 <tr class="memitem:afe5ba70f0c91d467280a0c2ddaa7fc34"><td class="memTemplParams" colspan="2">template&lt;class T , class... U&gt; </td></tr>
 <tr class="memitem:afe5ba70f0c91d467280a0c2ddaa7fc34"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::strip_advisor_v</b></td></tr>
 <tr class="separator:afe5ba70f0c91d467280a0c2ddaa7fc34"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="member-group"></a>
+dispatch_check basic overload set</h2></td></tr>
+<tr><td class="ititle" colspan="2"><p><a class="anchor" id="amgrp5d910c0f2c58303f585b6b2acacdebb2"></a>The next three functions form an overload set, dedicated to appropiately dispatching requests to check equality, equivalence and weak equivalence. This set may be supplemented by extenders of the testing framework, see <a class="el" href="../../d8/d43/FuzzyTestCore_8hpp.html" title="Extension of testing framework for inexact comparisons.">FuzzyTestCore.hpp</a> for an example.</p>
+<p>In each case, the final argument may be utilized to supply custom advice, targeted at particular failures which may benefit from explanation. To active this, clients must supply a function object, with operator() overloaded to take two instances of a type and returning a string. Internally, reflection is used to invoke this function only when the matching type is obtained. Therefore, advice for type T can be supplied to a check of e.g. std::vector&lt;T&gt;, and the advice will find its way to the correct invocation site.</p>
+<p><a class="anchor" id="dispatch_check_free_overloads"></a></p>
+</td></tr>
+<tr class="memitem:ac460355a425fb4db86211989c86e9af1"><td class="memTemplParams" colspan="2">template&lt;class T , test_mode Mode&gt; </td></tr>
+<tr class="memitem:ac460355a425fb4db86211989c86e9af1"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#ac460355a425fb4db86211989c86e9af1">sequoia::testing::extender</a></td></tr>
+<tr class="memdesc:ac460355a425fb4db86211989c86e9af1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exposes elementary check methods, with the option to plug in arbitrary Extenders to compose functionality.  <a href="../../d2/d0d/FreeCheckers_8hpp.html#ac460355a425fb4db86211989c86e9af1">More...</a><br /></td></tr>
+<tr class="separator:ac460355a425fb4db86211989c86e9af1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af8062f92a8839f434c874ceefd3149c9"><td class="memTemplParams" colspan="2">template&lt;test_mode Mode, class T , class Advisor  = null_advisor&gt; </td></tr>
+<tr class="memitem:af8062f92a8839f434c874ceefd3149c9"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#af8062f92a8839f434c874ceefd3149c9">sequoia::testing::dispatch_check</a> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, equality_tag, const T &amp;obtained, const T &amp;prediction, [[maybe_unused]] Advisor advisor=Advisor{})</td></tr>
+<tr class="memdesc:af8062f92a8839f434c874ceefd3149c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">The workhorse of equality checking, which takes responsibility for reflecting upon types and then dispatching, appropriately.  <a href="../../d2/d0d/FreeCheckers_8hpp.html#af8062f92a8839f434c874ceefd3149c9">More...</a><br /></td></tr>
+<tr class="separator:af8062f92a8839f434c874ceefd3149c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5e40556136bb09f6265a46293a91ef1"><td class="memTemplParams" colspan="2">template&lt;test_mode Mode, class T , class S , class... U&gt; </td></tr>
+<tr class="memitem:ac5e40556136bb09f6265a46293a91ef1"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#ac5e40556136bb09f6265a46293a91ef1">sequoia::testing::dispatch_check</a> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, equivalence_tag, const T &amp;value, S &amp;&amp;s, U &amp;&amp;... u)</td></tr>
+<tr class="memdesc:ac5e40556136bb09f6265a46293a91ef1"><td class="mdescLeft">&#160;</td><td class="mdescRight">The workhorse for equivalence checking.  <a href="../../d2/d0d/FreeCheckers_8hpp.html#ac5e40556136bb09f6265a46293a91ef1">More...</a><br /></td></tr>
+<tr class="separator:ac5e40556136bb09f6265a46293a91ef1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b33834db9998057330de5758a25ad24"><td class="memTemplParams" colspan="2">template&lt;test_mode Mode, class T , class S , class... U&gt; </td></tr>
+<tr class="memitem:a2b33834db9998057330de5758a25ad24"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#a2b33834db9998057330de5758a25ad24">sequoia::testing::dispatch_check</a> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, weak_equivalence_tag, const T &amp;value, S &amp;&amp;s, U &amp;&amp;... u)</td></tr>
+<tr class="memdesc:a2b33834db9998057330de5758a25ad24"><td class="mdescLeft">&#160;</td><td class="mdescRight">The workhorse for weak equivalence checking.  <a href="../../d2/d0d/FreeCheckers_8hpp.html#a2b33834db9998057330de5758a25ad24">More...</a><br /></td></tr>
+<tr class="separator:a2b33834db9998057330de5758a25ad24"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acab37776a07317f440cc5ea4b6f18e35"><td class="memTemplParams" colspan="2"><a id="acab37776a07317f440cc5ea4b6f18e35"></a>
+template&lt;test_mode Mode, class ElementDispatchDiscriminator , class Iter , class PredictionIter , class Advisor  = null_advisor&gt; </td></tr>
+<tr class="memitem:acab37776a07317f440cc5ea4b6f18e35"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_range</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, ElementDispatchDiscriminator discriminator, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, Advisor advisor=Advisor{})</td></tr>
+<tr class="separator:acab37776a07317f440cc5ea4b6f18e35"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4cc0f6dec6a730caea876b6383db8f91"><td class="memTemplParams" colspan="2"><a id="a4cc0f6dec6a730caea876b6383db8f91"></a>
+template&lt;class E , test_mode Mode, class Fn &gt; </td></tr>
+<tr class="memitem:a4cc0f6dec6a730caea876b6383db8f91"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_exception_thrown</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, Fn &amp;&amp;function)</td></tr>
+<tr class="separator:a4cc0f6dec6a730caea876b6383db8f91"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9c7bb98844ada3bdb0c272de55b3c78"><td class="memTemplParams" colspan="2"><a id="ae9c7bb98844ada3bdb0c272de55b3c78"></a>
+template&lt;test_mode Mode, class T , class Advisor  = null_advisor&gt; </td></tr>
+<tr class="memitem:ae9c7bb98844ada3bdb0c272de55b3c78"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_equality</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;value, const T &amp;prediction, Advisor advisor=Advisor{})</td></tr>
+<tr class="separator:ae9c7bb98844ada3bdb0c272de55b3c78"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee413d8eaa5b9f8f41551479ada9831b"><td class="memTemplParams" colspan="2"><a id="aee413d8eaa5b9f8f41551479ada9831b"></a>
+template&lt;test_mode Mode, class T , class S , class... U&gt; </td></tr>
+<tr class="memitem:aee413d8eaa5b9f8f41551479ada9831b"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_equivalence</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;value, S &amp;&amp;s, U &amp;&amp;... u)</td></tr>
+<tr class="separator:aee413d8eaa5b9f8f41551479ada9831b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afccdced94b1f4c361c16336b20598577"><td class="memTemplParams" colspan="2"><a id="afccdced94b1f4c361c16336b20598577"></a>
+template&lt;test_mode Mode, class T , class S , class... U&gt; </td></tr>
+<tr class="memitem:afccdced94b1f4c361c16336b20598577"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_weak_equivalence</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;value, S &amp;&amp;s, U &amp;&amp;... u)</td></tr>
+<tr class="separator:afccdced94b1f4c361c16336b20598577"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a365d8ad3c382c7750418457513672aa5"><td class="memTemplParams" colspan="2"><a id="a365d8ad3c382c7750418457513672aa5"></a>
+template&lt;test_mode Mode, class Advisor  = null_advisor&gt; </td></tr>
+<tr class="memitem:a365d8ad3c382c7750418457513672aa5"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const bool value, Advisor advisor=Advisor{})</td></tr>
+<tr class="separator:a365d8ad3c382c7750418457513672aa5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a915ff60765c26224be751701f5edfa85"><td class="memTemplParams" colspan="2"><a id="a915ff60765c26224be751701f5edfa85"></a>
+template&lt;test_mode Mode, class Iter , class PredictionIter , class Advisor  = null_advisor&gt; </td></tr>
+<tr class="memitem:a915ff60765c26224be751701f5edfa85"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_range</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, Advisor advisor=Advisor{})</td></tr>
+<tr class="separator:a915ff60765c26224be751701f5edfa85"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a515928c339134980ba35c0f15b8add3d"><td class="memTemplParams" colspan="2"><a id="a515928c339134980ba35c0f15b8add3d"></a>
+template&lt;test_mode Mode, class Iter , class PredictionIter &gt; </td></tr>
+<tr class="memitem:a515928c339134980ba35c0f15b8add3d"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_range_equivalence</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)</td></tr>
+<tr class="separator:a515928c339134980ba35c0f15b8add3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abfdf446883365a266bc44b755ae54437"><td class="memTemplParams" colspan="2"><a id="abfdf446883365a266bc44b755ae54437"></a>
+template&lt;test_mode Mode, class Iter , class PredictionIter &gt; </td></tr>
+<tr class="memitem:abfdf446883365a266bc44b755ae54437"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_range_weak_equivalence</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast)</td></tr>
+<tr class="separator:abfdf446883365a266bc44b755ae54437"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Free functions for performing checks, together with the 'checker' class template which wraps them. </p>
@@ -495,6 +447,31 @@ template&lt;class EquivChecker , test_mode Mode, class T , class S , class... U&
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>
+<a id="ac460355a425fb4db86211989c86e9af1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac460355a425fb4db86211989c86e9af1">&#9670;&nbsp;</a></span>extender</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T , test_mode Mode&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">concept sequoia::testing::extender</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= requires(test_logger&lt;Mode&gt;&amp; logger) {</div>
+<div class="line">    <span class="keyword">new</span> T{logger};</div>
+<div class="line">  }</div>
+</div><!-- fragment -->
+<p>Exposes elementary check methods, with the option to plug in arbitrary Extenders to compose functionality. </p>
+<p>This class template is templated on the enum class test_mode, together with a variadic set of Extenders.</p>
+<p>In its unextended form, the class is appropriate for plugging into basic_test to generate a base class appropriate for testing free functions. Within the unit test framework various Extenders are defined. For example, there are extensions to test types with regular semantics, types with move-only semantics, to do performance tests, and more, besides. The template design allows extenders to be conveniently mixed and matched via using declarations.</p>
+<p>Each extender must be initialized with a reference to the test_logger held by the checker. To ensure the correct order of initialization, the test_logger is inherited privately.</p>
+<p><a class="anchor" id="checker_primary"></a></p>
+
+</div>
+</div>
 <a id="afe5ba70f0c91d467280a0c2ddaa7fc34"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afe5ba70f0c91d467280a0c2ddaa7fc34">&#9670;&nbsp;</a></span>strip_advisor_v</h2>
 

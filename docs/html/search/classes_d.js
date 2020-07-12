@@ -31,7 +31,7 @@ var searchData=
   ['priority_5fqueue_5fselector_3c_20g_2c_20compare_2c_20false_20_3e_1164',['priority_queue_selector&lt; G, Compare, false &gt;',['../da/d06/structsequoia_1_1maths_1_1graph__impl_1_1priority__queue__selector_3_01G_00_01Compare_00_01false_01_4.html',1,'sequoia::maths::graph_impl']]],
   ['priority_5fqueue_5fselector_3c_20g_2c_20compare_2c_20true_20_3e_1165',['priority_queue_selector&lt; G, Compare, true &gt;',['../db/db8/structsequoia_1_1maths_1_1graph__impl_1_1priority__queue__selector_3_01G_00_01Compare_00_01true_01_4.html',1,'sequoia::maths::graph_impl']]],
   ['protective_5fwrapper_1166',['protective_wrapper',['../da/def/classsequoia_1_1utilities_1_1protective__wrapper.html',1,'sequoia::utilities']]],
-  ['protective_5fwrapper_3c_20t_2c_20true_20_3e_1167',['protective_wrapper&lt; T, true &gt;',['../d9/d5d/classsequoia_1_1utilities_1_1protective__wrapper_3_01T_00_01true_01_4.html',1,'sequoia::utilities']]],
+  ['protective_5fwrapper_3c_20t_20_3e_1167',['protective_wrapper&lt; T &gt;',['../d2/d32/classsequoia_1_1utilities_1_1protective__wrapper_3_01T_01_4.html',1,'sequoia::utilities']]],
   ['protective_5fwrapper_5ffalse_5fpositive_5ftest_1168',['protective_wrapper_false_positive_test',['../d6/dff/classsequoia_1_1testing_1_1protective__wrapper__false__positive__test.html',1,'sequoia::testing']]],
   ['protective_5fwrapper_5ftest_1169',['protective_wrapper_test',['../d5/d07/classsequoia_1_1testing_1_1protective__wrapper__test.html',1,'sequoia::testing']]],
   ['provides_5fproxy_5ftype_1170',['provides_proxy_type',['../d2/dcd/structsequoia_1_1utilities_1_1impl_1_1provides__proxy__type.html',1,'sequoia::utilities::impl']]],

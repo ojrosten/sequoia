@@ -103,7 +103,7 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>predictions_type</b>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:aabeb4da9fe643d9bc0dc4b8d09075ccf"><td class="memTemplParams" colspan="2"><a id="aabeb4da9fe643d9bc0dc4b8d09075ccf"></a>
-template&lt;class Fn &gt; </td></tr>
+template&lt;alloc_getter&lt; T &gt; Fn&gt; </td></tr>
 <tr class="memitem:aabeb4da9fe643d9bc0dc4b8d09075ccf"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>basic_allocation_info</b> (Fn &amp;&amp;allocGetter, Predictions predictions)</td></tr>
 <tr class="separator:aabeb4da9fe643d9bc0dc4b8d09075ccf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aee188b56b667f22b0f955558ad549e82"><td class="memItemLeft" align="right" valign="top"><a id="aee188b56b667f22b0f955558ad549e82"></a>
@@ -111,7 +111,7 @@ const Predictions &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>ge
 <tr class="separator:aee188b56b667f22b0f955558ad549e82"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classsequoia_1_1testing_1_1allocation__info__base"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classsequoia_1_1testing_1_1allocation__info__base')"><img src="../../closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="../../db/df4/classsequoia_1_1testing_1_1allocation__info__base.html">sequoia::testing::allocation_info_base&lt; T, Allocator &gt;</a></td></tr>
 <tr class="memitem:ae5e4828abe6f97b57043a0eea7216ee7 inherit pub_methods_classsequoia_1_1testing_1_1allocation__info__base"><td class="memTemplParams" colspan="2"><a id="ae5e4828abe6f97b57043a0eea7216ee7"></a>
-template&lt;class Fn &gt; </td></tr>
+template&lt;alloc_getter&lt; T &gt; Fn&gt; </td></tr>
 <tr class="memitem:ae5e4828abe6f97b57043a0eea7216ee7 inherit pub_methods_classsequoia_1_1testing_1_1allocation__info__base"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>allocation_info_base</b> (Fn &amp;&amp;allocGetter)</td></tr>
 <tr class="separator:ae5e4828abe6f97b57043a0eea7216ee7 inherit pub_methods_classsequoia_1_1testing_1_1allocation__info__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a858e651ec87e656c2015fbfc52405965 inherit pub_methods_classsequoia_1_1testing_1_1allocation__info__base"><td class="memItemLeft" align="right" valign="top"><a id="a858e651ec87e656c2015fbfc52405965"></a>
@@ -149,7 +149,7 @@ getter&#160;</td><td class="memItemRight" valign="bottom"><b>make_getter</b> () 
 <tr class="separator:a3e290ffed9f35b85ae90785bfe2787e6 inherit pro_methods_classsequoia_1_1testing_1_1allocation__info__base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><h3>template&lt;stronglymovable T, class Allocator, class Predictions&gt;<br />
+<div class="textblock"><h3>template&lt;strongly_movable T, counting_alloc Allocator, class Predictions&gt;<br />
 class sequoia::testing::basic_allocation_info&lt; T, Allocator, Predictions &gt;</h3>
 
 <p>Class for use with a container possessing a (shared counting) allocator. </p>

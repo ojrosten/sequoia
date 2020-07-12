@@ -66,28 +66,41 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a>  </div>
+<a href="#nested-classes">Classes</a> &#124;
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">ProtectiveWrapper.hpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>A class which allows homogenous semantics for families of classes at least one of which must use proxies to underlying data.  
+<p>A class which allows homogenous semantics for families of classes, particularly where at least one uses proxies to underlying data.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="../../d0/d81/TypeTraits_8hpp_source.html">TypeTraits.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="../../d3/d84/Concepts_8hpp_source.html">Concepts.hpp</a>&quot;</code><br />
+<code>#include &lt;compare&gt;</code><br />
 </div>
 <p><a href="../../da/d52/ProtectiveWrapper_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/def/classsequoia_1_1utilities_1_1protective__wrapper.html">sequoia::utilities::protective_wrapper&lt; T, bool &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/def/classsequoia_1_1utilities_1_1protective__wrapper.html">sequoia::utilities::protective_wrapper&lt; T &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A wrapper which allows for getting, setting and mutation of its stored value.  <a href="../../da/def/classsequoia_1_1utilities_1_1protective__wrapper.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d5d/classsequoia_1_1utilities_1_1protective__wrapper_3_01T_00_01true_01_4.html">sequoia::utilities::protective_wrapper&lt; T, true &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d32/classsequoia_1_1utilities_1_1protective__wrapper_3_01T_01_4.html">sequoia::utilities::protective_wrapper&lt; T &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a3c04481b06dfb3c93bf60c6dd7fbaa07"><td class="memTemplParams" colspan="2"><a id="a3c04481b06dfb3c93bf60c6dd7fbaa07"></a>
+template&lt;equality_comparable T&gt; </td></tr>
+<tr class="memitem:a3c04481b06dfb3c93bf60c6dd7fbaa07"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::utilities::operator==</b> (const protective_wrapper&lt; T &gt; &amp;lhs, const protective_wrapper&lt; T &gt; &amp;rhs) noexcept</td></tr>
+<tr class="separator:a3c04481b06dfb3c93bf60c6dd7fbaa07"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6154355bfdc7adbb588608da67daf875"><td class="memTemplParams" colspan="2"><a id="a6154355bfdc7adbb588608da67daf875"></a>
+template&lt;three_way_comparable T&gt; </td></tr>
+<tr class="memitem:a6154355bfdc7adbb588608da67daf875"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::utilities::operator&lt;=&gt;</b> (const protective_wrapper&lt; T &gt; &amp;lhs, const protective_wrapper&lt; T &gt; &amp;rhs) noexcept</td></tr>
+<tr class="separator:a6154355bfdc7adbb588608da67daf875"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>A class which allows homogenous semantics for families of classes at least one of which must use proxies to underlying data. </p>
+<div class="textblock"><p>A class which allows homogenous semantics for families of classes, particularly where at least one uses proxies to underlying data. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

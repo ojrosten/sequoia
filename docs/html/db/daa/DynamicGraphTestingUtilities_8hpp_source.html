@@ -466,79 +466,85 @@ $(function() {
 <div class="line"><a name="l00397"></a><span class="lineno">  397</span>&#160;      <span class="keyword">using namespace </span>data_sharing;</div>
 <div class="line"><a name="l00398"></a><span class="lineno">  398</span>&#160; </div>
 <div class="line"><a name="l00399"></a><span class="lineno">  399</span>&#160;      <span class="keyword">using</span> testuu = TemplateTestClass&lt;GraphType, EdgeWeight, NodeWeight, unpooled&lt;EdgeWeight&gt;, unpooled&lt;NodeWeight&gt;, EdgeStorageTraits, NodeStorageTraits&gt;;</div>
-<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160;      <span class="keyword">using</span> testud = TemplateTestClass&lt;GraphType, EdgeWeight, NodeWeight, unpooled&lt;EdgeWeight&gt;, data_pool&lt;NodeWeight&gt;, EdgeStorageTraits, NodeStorageTraits&gt;;  </div>
-<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;      <span class="keyword">using</span> testdu = TemplateTestClass&lt;GraphType, EdgeWeight, NodeWeight, data_pool&lt;EdgeWeight&gt;, unpooled&lt;NodeWeight&gt;, EdgeStorageTraits, NodeStorageTraits&gt;;</div>
-<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160;      <span class="keyword">using</span> testdd = TemplateTestClass&lt;GraphType, EdgeWeight, NodeWeight, data_pool&lt;EdgeWeight&gt;, data_pool&lt;NodeWeight&gt;, EdgeStorageTraits, NodeStorageTraits&gt;;</div>
-<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160; </div>
-<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;      run_graph_test(testuu{});</div>
-<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160; </div>
-<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;      <span class="keywordflow">if</span> constexpr(!std::is_empty_v&lt;EdgeWeight&gt; &amp;&amp; !std::is_empty_v&lt;NodeWeight&gt;)</div>
-<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;      {</div>
-<div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;        <span class="keywordflow">if</span> constexpr(!minimal_graph_tests())</div>
-<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;        {     </div>
-<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;          run_graph_test(testud{});</div>
-<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160;          run_graph_test(testdu{});</div>
-<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;          run_graph_test(testdd{});</div>
-<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;        }</div>
-<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;      }</div>
-<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;      <span class="keywordflow">else</span> <span class="keywordflow">if</span> constexpr(!std::is_empty_v&lt;EdgeWeight&gt;)</div>
-<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;      {</div>
-<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;        run_graph_test(testdu{});</div>
-<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;      }</div>
-<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160;      <span class="keywordflow">else</span> <span class="keywordflow">if</span> constexpr(!std::is_empty_v&lt;NodeWeight&gt;)</div>
-<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;      {</div>
-<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;        run_graph_test(testud{});</div>
-<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;      }</div>
-<div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;    }</div>
-<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;      </div>
-<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;    <span class="keyword">template</span></div>
-<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;    &lt;</div>
-<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;      maths::graph_flavour GraphType,</div>
-<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;      <span class="keyword">template</span></div>
-<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;      &lt;</div>
-<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;        maths::graph_flavour,</div>
-<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;        <span class="keyword">class</span>...</div>
-<div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;      &gt;</div>
-<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;      <span class="keyword">class </span>TemplateTestClass</div>
-<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;    &gt;</div>
-<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;    void run_graph_flavour_tests()</div>
-<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;    {</div>
-<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;      <span class="keyword">using namespace </span>data_structures;</div>
-<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;        </div>
-<div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;      graph_storage_tests&lt;GraphType, maths::contiguous_edge_storage_traits, maths::node_weight_storage_traits&lt;NodeWeight&gt;, TemplateTestClass&gt;();</div>
-<div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160;      <span class="keywordflow">if</span> constexpr (!minimal_graph_tests())</div>
-<div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160;      {</div>
-<div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;        graph_storage_tests&lt;GraphType, maths::bucketed_edge_storage_traits, maths::node_weight_storage_traits&lt;NodeWeight&gt;, TemplateTestClass&gt;();</div>
-<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;      }</div>
-<div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160;    }</div>
-<div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160; </div>
-<div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Test&gt;</div>
-<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;    <span class="keywordtype">void</span> run_graph_test(Test&amp;&amp; <a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>)</div>
-<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;    {</div>
-<div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160;      <span class="keywordflow">try</span></div>
-<div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;      {</div>
-<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160;        std::visit(</div>
-<div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160;            <a class="code" href="../../dc/daf/structsequoia_1_1variant__visitor.html">variant_visitor</a>{</div>
-<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160;              [<a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>{std::move(<a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>)}](<a class="code" href="../../d2/daa/classsequoia_1_1testing_1_1log__summary.html">log_summary</a>&amp; s) <span class="keyword">mutable</span> { s += <a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>.run(); },</div>
-<div class="line"><a name="l00454"></a><span class="lineno">  454</span>&#160;              [<a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>{std::move(<a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>)}] (std::vector&lt;std::future&lt;log_summary&gt;&gt;&amp; s) <span class="keyword">mutable</span> {</div>
-<div class="line"><a name="l00455"></a><span class="lineno">  455</span>&#160;                s.emplace_back(std::async([<a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>{std::move(<a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>)}]() <span class="keyword">mutable</span> { <span class="keywordflow">return</span> <a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>.run(); }));</div>
-<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;              }</div>
-<div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160;            }</div>
-<div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160;            , m_Summary);</div>
-<div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160;      }</div>
-<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;      <span class="keywordflow">catch</span>(...)</div>
-<div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160;      {</div>
-<div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160;        <span class="keywordflow">if</span>(std::holds_alternative&lt;log_summary&gt;(m_Summary))</div>
-<div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;        {</div>
-<div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160;          <span class="keyword">auto</span>&amp; s{std::get&lt;log_summary&gt;(m_Summary)};</div>
-<div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160;          s += <a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>.recover_summary();</div>
-<div class="line"><a name="l00466"></a><span class="lineno">  466</span>&#160;        }</div>
-<div class="line"><a name="l00467"></a><span class="lineno">  467</span>&#160; </div>
-<div class="line"><a name="l00468"></a><span class="lineno">  468</span>&#160;        <span class="keywordflow">throw</span>;</div>
-<div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160;      }</div>
-<div class="line"><a name="l00470"></a><span class="lineno">  470</span>&#160;    }</div>
-<div class="line"><a name="l00471"></a><span class="lineno">  471</span>&#160;  };</div>
-<div class="line"><a name="l00472"></a><span class="lineno">  472</span>&#160;}</div>
+<div class="line"><a name="l00400"></a><span class="lineno">  400</span>&#160; </div>
+<div class="line"><a name="l00401"></a><span class="lineno">  401</span>&#160;      run_graph_test(testuu{});</div>
+<div class="line"><a name="l00402"></a><span class="lineno">  402</span>&#160; </div>
+<div class="line"><a name="l00403"></a><span class="lineno">  403</span>&#160;      </div>
+<div class="line"><a name="l00404"></a><span class="lineno">  404</span>&#160;      <span class="keywordflow">if</span> constexpr(!minimal_graph_tests())</div>
+<div class="line"><a name="l00405"></a><span class="lineno">  405</span>&#160;      { </div>
+<div class="line"><a name="l00406"></a><span class="lineno">  406</span>&#160;        <span class="keywordflow">if</span> constexpr(!std::is_empty_v&lt;EdgeWeight&gt; &amp;&amp; !std::is_empty_v&lt;NodeWeight&gt;)</div>
+<div class="line"><a name="l00407"></a><span class="lineno">  407</span>&#160;        {</div>
+<div class="line"><a name="l00408"></a><span class="lineno">  408</span>&#160;          <span class="keyword">using</span> testud = TemplateTestClass&lt;GraphType, EdgeWeight, NodeWeight, unpooled&lt;EdgeWeight&gt;, data_pool&lt;NodeWeight&gt;, EdgeStorageTraits, NodeStorageTraits&gt;;</div>
+<div class="line"><a name="l00409"></a><span class="lineno">  409</span>&#160;          <span class="keyword">using</span> testdu = TemplateTestClass&lt;GraphType, EdgeWeight, NodeWeight, data_pool&lt;EdgeWeight&gt;, unpooled&lt;NodeWeight&gt;, EdgeStorageTraits, NodeStorageTraits&gt;;</div>
+<div class="line"><a name="l00410"></a><span class="lineno">  410</span>&#160;          <span class="keyword">using</span> testdd = TemplateTestClass&lt;GraphType, EdgeWeight, NodeWeight, data_pool&lt;EdgeWeight&gt;, data_pool&lt;NodeWeight&gt;, EdgeStorageTraits, NodeStorageTraits&gt;;</div>
+<div class="line"><a name="l00411"></a><span class="lineno">  411</span>&#160; </div>
+<div class="line"><a name="l00412"></a><span class="lineno">  412</span>&#160;          run_graph_test(testud{});</div>
+<div class="line"><a name="l00413"></a><span class="lineno">  413</span>&#160;          run_graph_test(testdu{});</div>
+<div class="line"><a name="l00414"></a><span class="lineno">  414</span>&#160;          run_graph_test(testdd{});</div>
+<div class="line"><a name="l00415"></a><span class="lineno">  415</span>&#160;        }</div>
+<div class="line"><a name="l00416"></a><span class="lineno">  416</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> constexpr(!std::is_empty_v&lt;EdgeWeight&gt;)</div>
+<div class="line"><a name="l00417"></a><span class="lineno">  417</span>&#160;        {</div>
+<div class="line"><a name="l00418"></a><span class="lineno">  418</span>&#160;          <span class="keyword">using</span> testdu = TemplateTestClass&lt;GraphType, EdgeWeight, NodeWeight, data_pool&lt;EdgeWeight&gt;, unpooled&lt;NodeWeight&gt;, EdgeStorageTraits, NodeStorageTraits&gt;;</div>
+<div class="line"><a name="l00419"></a><span class="lineno">  419</span>&#160; </div>
+<div class="line"><a name="l00420"></a><span class="lineno">  420</span>&#160;          run_graph_test(testdu{});</div>
+<div class="line"><a name="l00421"></a><span class="lineno">  421</span>&#160;        }</div>
+<div class="line"><a name="l00422"></a><span class="lineno">  422</span>&#160;        <span class="keywordflow">else</span> <span class="keywordflow">if</span> constexpr(!std::is_empty_v&lt;NodeWeight&gt;)</div>
+<div class="line"><a name="l00423"></a><span class="lineno">  423</span>&#160;        {</div>
+<div class="line"><a name="l00424"></a><span class="lineno">  424</span>&#160;          <span class="keyword">using</span> testud = TemplateTestClass&lt;GraphType, EdgeWeight, NodeWeight, unpooled&lt;EdgeWeight&gt;, data_pool&lt;NodeWeight&gt;, EdgeStorageTraits, NodeStorageTraits&gt;;</div>
+<div class="line"><a name="l00425"></a><span class="lineno">  425</span>&#160;        </div>
+<div class="line"><a name="l00426"></a><span class="lineno">  426</span>&#160;          run_graph_test(testud{});</div>
+<div class="line"><a name="l00427"></a><span class="lineno">  427</span>&#160;        }</div>
+<div class="line"><a name="l00428"></a><span class="lineno">  428</span>&#160;      }</div>
+<div class="line"><a name="l00429"></a><span class="lineno">  429</span>&#160;    }</div>
+<div class="line"><a name="l00430"></a><span class="lineno">  430</span>&#160;      </div>
+<div class="line"><a name="l00431"></a><span class="lineno">  431</span>&#160;    <span class="keyword">template</span></div>
+<div class="line"><a name="l00432"></a><span class="lineno">  432</span>&#160;    &lt;</div>
+<div class="line"><a name="l00433"></a><span class="lineno">  433</span>&#160;      maths::graph_flavour GraphType,</div>
+<div class="line"><a name="l00434"></a><span class="lineno">  434</span>&#160;      <span class="keyword">template</span></div>
+<div class="line"><a name="l00435"></a><span class="lineno">  435</span>&#160;      &lt;</div>
+<div class="line"><a name="l00436"></a><span class="lineno">  436</span>&#160;        maths::graph_flavour,</div>
+<div class="line"><a name="l00437"></a><span class="lineno">  437</span>&#160;        <span class="keyword">class</span>...</div>
+<div class="line"><a name="l00438"></a><span class="lineno">  438</span>&#160;      &gt;</div>
+<div class="line"><a name="l00439"></a><span class="lineno">  439</span>&#160;      <span class="keyword">class </span>TemplateTestClass</div>
+<div class="line"><a name="l00440"></a><span class="lineno">  440</span>&#160;    &gt;</div>
+<div class="line"><a name="l00441"></a><span class="lineno">  441</span>&#160;    void run_graph_flavour_tests()</div>
+<div class="line"><a name="l00442"></a><span class="lineno">  442</span>&#160;    {</div>
+<div class="line"><a name="l00443"></a><span class="lineno">  443</span>&#160;      <span class="keyword">using namespace </span>data_structures;</div>
+<div class="line"><a name="l00444"></a><span class="lineno">  444</span>&#160;        </div>
+<div class="line"><a name="l00445"></a><span class="lineno">  445</span>&#160;      graph_storage_tests&lt;GraphType, maths::contiguous_edge_storage_traits, maths::node_weight_storage_traits&lt;NodeWeight&gt;, TemplateTestClass&gt;();</div>
+<div class="line"><a name="l00446"></a><span class="lineno">  446</span>&#160;      <span class="keywordflow">if</span> constexpr (!minimal_graph_tests())</div>
+<div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;      {</div>
+<div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160;        graph_storage_tests&lt;GraphType, maths::bucketed_edge_storage_traits, maths::node_weight_storage_traits&lt;NodeWeight&gt;, TemplateTestClass&gt;();</div>
+<div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160;      }</div>
+<div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;    }</div>
+<div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160; </div>
+<div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Test&gt;</div>
+<div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160;    <span class="keywordtype">void</span> run_graph_test(Test&amp;&amp; <a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>)</div>
+<div class="line"><a name="l00454"></a><span class="lineno">  454</span>&#160;    {</div>
+<div class="line"><a name="l00455"></a><span class="lineno">  455</span>&#160;      <span class="keywordflow">try</span></div>
+<div class="line"><a name="l00456"></a><span class="lineno">  456</span>&#160;      {</div>
+<div class="line"><a name="l00457"></a><span class="lineno">  457</span>&#160;        std::visit(</div>
+<div class="line"><a name="l00458"></a><span class="lineno">  458</span>&#160;            <a class="code" href="../../dc/daf/structsequoia_1_1variant__visitor.html">variant_visitor</a>{</div>
+<div class="line"><a name="l00459"></a><span class="lineno">  459</span>&#160;              [<a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>{std::move(<a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>)}](<a class="code" href="../../d2/daa/classsequoia_1_1testing_1_1log__summary.html">log_summary</a>&amp; s) <span class="keyword">mutable</span> { s += <a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>.run(); },</div>
+<div class="line"><a name="l00460"></a><span class="lineno">  460</span>&#160;              [<a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>{std::move(<a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>)}] (std::vector&lt;std::future&lt;log_summary&gt;&gt;&amp; s) <span class="keyword">mutable</span> {</div>
+<div class="line"><a name="l00461"></a><span class="lineno">  461</span>&#160;                s.emplace_back(std::async([<a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>{std::move(<a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>)}]() <span class="keyword">mutable</span> { <span class="keywordflow">return</span> <a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>.run(); }));</div>
+<div class="line"><a name="l00462"></a><span class="lineno">  462</span>&#160;              }</div>
+<div class="line"><a name="l00463"></a><span class="lineno">  463</span>&#160;            }</div>
+<div class="line"><a name="l00464"></a><span class="lineno">  464</span>&#160;            , m_Summary);</div>
+<div class="line"><a name="l00465"></a><span class="lineno">  465</span>&#160;      }</div>
+<div class="line"><a name="l00466"></a><span class="lineno">  466</span>&#160;      <span class="keywordflow">catch</span>(...)</div>
+<div class="line"><a name="l00467"></a><span class="lineno">  467</span>&#160;      {</div>
+<div class="line"><a name="l00468"></a><span class="lineno">  468</span>&#160;        <span class="keywordflow">if</span>(std::holds_alternative&lt;log_summary&gt;(m_Summary))</div>
+<div class="line"><a name="l00469"></a><span class="lineno">  469</span>&#160;        {</div>
+<div class="line"><a name="l00470"></a><span class="lineno">  470</span>&#160;          <span class="keyword">auto</span>&amp; s{std::get&lt;log_summary&gt;(m_Summary)};</div>
+<div class="line"><a name="l00471"></a><span class="lineno">  471</span>&#160;          s += <a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>.recover_summary();</div>
+<div class="line"><a name="l00472"></a><span class="lineno">  472</span>&#160;        }</div>
+<div class="line"><a name="l00473"></a><span class="lineno">  473</span>&#160; </div>
+<div class="line"><a name="l00474"></a><span class="lineno">  474</span>&#160;        <span class="keywordflow">throw</span>;</div>
+<div class="line"><a name="l00475"></a><span class="lineno">  475</span>&#160;      }</div>
+<div class="line"><a name="l00476"></a><span class="lineno">  476</span>&#160;    }</div>
+<div class="line"><a name="l00477"></a><span class="lineno">  477</span>&#160;  };</div>
+<div class="line"><a name="l00478"></a><span class="lineno">  478</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aTestLogger_8hpp_html_ae4e97c9d45a89647799f0d308ba6d244"><div class="ttname"><a href="../../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244">sequoia::testing::test_mode</a></div><div class="ttdeci">test_mode</div><div class="ttdoc">Specifies whether tests are run as standard tests or in false postive/negative mode .</div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:52</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1basic__graph__operations_html"><div class="ttname"><a href="../../d2/d79/classsequoia_1_1testing_1_1basic__graph__operations.html">sequoia::testing::basic_graph_operations</a></div><div class="ttdef"><b>Definition:</b> DynamicGraphTestingUtilities.hpp:187</div></div>
@@ -547,8 +553,8 @@ $(function() {
 <div class="ttc" id="aDynamicGraph_8hpp_html"><div class="ttname"><a href="../../d8/d97/DynamicGraph_8hpp.html">DynamicGraph.hpp</a></div><div class="ttdoc">Edge &amp; Node storage traits, base class and final classes for dynamic graphs.</div></div>
 <div class="ttc" id="astructsequoia_1_1testing_1_1independent__bucketed__edge__storage__traits_html"><div class="ttname"><a href="../../d3/d59/structsequoia_1_1testing_1_1independent__bucketed__edge__storage__traits.html">sequoia::testing::independent_bucketed_edge_storage_traits</a></div><div class="ttdef"><b>Definition:</b> DynamicGraphTestingUtilities.hpp:109</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1log__summary_html"><div class="ttname"><a href="../../d2/daa/classsequoia_1_1testing_1_1log__summary.html">sequoia::testing::log_summary</a></div><div class="ttdoc">Summaries data generated by the logger, for the purposes of reporting.</div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:398</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1test_html"><div class="ttname"><a href="../../da/d6f/classsequoia_1_1testing_1_1test.html">sequoia::testing::test</a></div><div class="ttdoc">Abstract base class used for type-erasure of the template class basic_test.</div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:35</div></div>
-<div class="ttc" id="aFreeTestCore_8hpp_html_a5bf3cc5ec793288c6c7da7ceeb3249a7"><div class="ttname"><a href="../../dd/d3e/FreeTestCore_8hpp.html#a5bf3cc5ec793288c6c7da7ceeb3249a7">sequoia::testing::concurrency_mode</a></div><div class="ttdeci">concurrency_mode</div><div class="ttdoc">Specifies the granularity at which concurrent execution is applied.</div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:150</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1test_html"><div class="ttname"><a href="../../da/d6f/classsequoia_1_1testing_1_1test.html">sequoia::testing::test</a></div><div class="ttdoc">Abstract base class used for type-erasure of the template class basic_test.</div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:37</div></div>
+<div class="ttc" id="aFreeTestCore_8hpp_html_a5bf3cc5ec793288c6c7da7ceeb3249a7"><div class="ttname"><a href="../../dd/d3e/FreeTestCore_8hpp.html#a5bf3cc5ec793288c6c7da7ceeb3249a7">sequoia::testing::concurrency_mode</a></div><div class="ttdeci">concurrency_mode</div><div class="ttdoc">Specifies the granularity at which concurrent execution is applied.</div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:155</div></div>
 <div class="ttc" id="aTestPreprocessorDefinitions_8hpp_html"><div class="ttname"><a href="../../dc/de3/TestPreprocessorDefinitions_8hpp.html">TestPreprocessorDefinitions.hpp</a></div><div class="ttdoc">Central location for pre-processor options.</div></div>
 <div class="ttc" id="aFormat_8cpp_html_a3610f5124224711b4b8c8c480d14f76d"><div class="ttname"><a href="../../d7/d96/Format_8cpp.html#a3610f5124224711b4b8c8c480d14f76d">sequoia::testing::append_indented</a></div><div class="ttdeci">std::string &amp; append_indented(std::string &amp;s1, std::string_view s2, std::string_view indentation)</div><div class="ttdef"><b>Definition:</b> Format.cpp:26</div></div>
 <div class="ttc" id="astructsequoia_1_1testing_1_1equivalence__checker_html"><div class="ttname"><a href="../../d2/d52/structsequoia_1_1testing_1_1equivalence__checker.html">sequoia::testing::equivalence_checker</a></div><div class="ttdoc">class template, specializations of which implement comparision of two equivalent types</div><div class="ttdef"><b>Definition:</b> FreeCheckers.hpp:91</div></div>

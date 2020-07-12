@@ -89,15 +89,15 @@ Classes</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a8d34508013a8a5f5c8c89fdaff143001"><td class="memTemplParams" colspan="2"><a id="a8d34508013a8a5f5c8c89fdaff143001"></a>
-template&lt;class T , class InitType , class Fn &gt; </td></tr>
+template&lt;class T , class InitType , invocable&lt; InitType &gt; Fn&gt; </td></tr>
 <tr class="memitem:a8d34508013a8a5f5c8c89fdaff143001"><td class="memTemplItemLeft" align="right" valign="top">constexpr T&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::utilities::impl::to_element</b> (std::initializer_list&lt; InitType &gt; l, const std::size_t i, Fn fn)</td></tr>
 <tr class="separator:a8d34508013a8a5f5c8c89fdaff143001"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a988d6289255463db1828efc013a398b0"><td class="memTemplParams" colspan="2"><a id="a988d6289255463db1828efc013a398b0"></a>
-template&lt;class T , std::size_t N, class InitType , std::size_t... I, class Fn &gt; </td></tr>
+template&lt;class T , std::size_t N, class InitType , std::size_t... I, invocable&lt; InitType &gt; Fn&gt; </td></tr>
 <tr class="memitem:a988d6289255463db1828efc013a398b0"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::array&lt; T, N &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::utilities::impl::to_array</b> ([[maybe_unused]] std::initializer_list&lt; InitType &gt; l, [[maybe_unused]] std::index_sequence&lt; I... &gt;, Fn &amp;&amp;fn)</td></tr>
 <tr class="separator:a988d6289255463db1828efc013a398b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a233db7547fe75fcb014d118c6d5ee093"><td class="memTemplParams" colspan="2"><a id="a233db7547fe75fcb014d118c6d5ee093"></a>
-template&lt;class T , std::size_t N, class InitType  = T, class Fn  = identity_transform&lt;T&gt;&gt; </td></tr>
+template&lt;class T , std::size_t N, class InitType  = T, invocable&lt; InitType &gt; Fn = identity_transform&lt;InitType&gt;&gt; </td></tr>
 <tr class="memitem:a233db7547fe75fcb014d118c6d5ee093"><td class="memTemplItemLeft" align="right" valign="top">constexpr std::array&lt; T, N &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::utilities::to_array</b> (std::initializer_list&lt; InitType &gt; l, Fn fn=Fn{})</td></tr>
 <tr class="separator:a233db7547fe75fcb014d118c6d5ee093"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>

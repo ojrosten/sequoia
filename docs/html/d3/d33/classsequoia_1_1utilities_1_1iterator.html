@@ -68,6 +68,7 @@ $(function() {
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#friends">Friends</a> &#124;
 <a href="../../d9/d1e/classsequoia_1_1utilities_1_1iterator-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -115,14 +116,10 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>const_dereference_ty
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:abb9343e661b7f73543c203ace549fb86"><td class="memTemplParams" colspan="2"><a id="abb9343e661b7f73543c203ace549fb86"></a>
-template&lt;class Arg , class... Args, std::enable_if_t&lt; sizeof...(Args)||!resolve_to_copy_constructor_v&lt; Arg, iterator &gt;, int &gt;  = 0&gt; </td></tr>
-<tr class="memitem:abb9343e661b7f73543c203ace549fb86"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>iterator</b> (Arg &amp;&amp;baseIterArg, Args &amp;&amp;... args)</td></tr>
-<tr class="separator:abb9343e661b7f73543c203ace549fb86"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af293b5756d9679b3274e087b5c2a46c2"><td class="memTemplParams" colspan="2"><a id="af293b5756d9679b3274e087b5c2a46c2"></a>
-template&lt;class Iter , class DerefPol , std::enable_if_t&lt; !std::is_same_v&lt; Iter, Iterator &gt; &amp;&amp;std::is_convertible_v&lt; Iter, base_iterator_type &gt; &amp;&amp;impl::are_compatible_v&lt; DereferencePolicy, DerefPol &gt; &amp;&amp;std::is_same_v&lt; std::decay_t&lt; impl::type_generator_t&lt; DereferencePolicy &gt;&gt;, std::decay_t&lt; impl::type_generator_t&lt; DerefPol &gt;&gt; &gt;, int &gt;  = 0&gt; </td></tr>
-<tr class="memitem:af293b5756d9679b3274e087b5c2a46c2"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>iterator</b> (<a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a>&lt; Iter, DerefPol &gt; iter)</td></tr>
-<tr class="separator:af293b5756d9679b3274e087b5c2a46c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae4fe2e9e1341d24251a81cc59bd2cdd8"><td class="memTemplParams" colspan="2"><a id="ae4fe2e9e1341d24251a81cc59bd2cdd8"></a>
+template&lt;class Arg , class... Args&gt; </td></tr>
+<tr class="memitem:ae4fe2e9e1341d24251a81cc59bd2cdd8"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (!resolve_to_copy&lt; <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a>, Arg, Args... &gt;) const expr explicit <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a>(Arg &amp;&amp;baseIterArg</td></tr>
+<tr class="separator:ae4fe2e9e1341d24251a81cc59bd2cdd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a68167a4c5176f4d1fb330b7bb49982f1"><td class="memItemLeft" align="right" valign="top"><a id="a68167a4c5176f4d1fb330b7bb49982f1"></a>
 constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>iterator</b> (const <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a> &amp;)=default</td></tr>
 <tr class="separator:a68167a4c5176f4d1fb330b7bb49982f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -141,24 +138,24 @@ constexpr base_iterator_type&#160;</td><td class="memItemRight" valign="bottom">
 <tr class="memitem:ab65494552d1eaf92b58d9f6b52010fcc"><td class="memItemLeft" align="right" valign="top"><a id="ab65494552d1eaf92b58d9f6b52010fcc"></a>
 constexpr const_dereference_type&#160;</td><td class="memItemRight" valign="bottom"><b>operator*</b> () const</td></tr>
 <tr class="separator:ab65494552d1eaf92b58d9f6b52010fcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ade97c536a8ae3e0ecce076e0b7bb33f2"><td class="memTemplParams" colspan="2"><a id="ade97c536a8ae3e0ecce076e0b7bb33f2"></a>
-template&lt;class DerefPol  = DereferencePolicy, std::enable_if_t&lt; impl::provides_mutable_reference_v&lt; DerefPol &gt;, int &gt;  = 0&gt; </td></tr>
-<tr class="memitem:ade97c536a8ae3e0ecce076e0b7bb33f2"><td class="memTemplItemLeft" align="right" valign="top">constexpr reference&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator*</b> ()</td></tr>
-<tr class="separator:ade97c536a8ae3e0ecce076e0b7bb33f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a33241cdc4b63f9f56e97d675f33f8759"><td class="memTemplParams" colspan="2"><a id="a33241cdc4b63f9f56e97d675f33f8759"></a>
+template&lt;class DerefPol  = DereferencePolicy&gt; </td></tr>
+<tr class="memitem:a33241cdc4b63f9f56e97d675f33f8759"><td class="memTemplItemLeft" align="right" valign="top">requires constexpr impl::provides_mutable_reference_v&lt; DerefPol &gt; reference&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator*</b> ()</td></tr>
+<tr class="separator:a33241cdc4b63f9f56e97d675f33f8759"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af2493fba35c33be454d38bd54602a5e4"><td class="memItemLeft" align="right" valign="top"><a id="af2493fba35c33be454d38bd54602a5e4"></a>
 constexpr const_dereference_type&#160;</td><td class="memItemRight" valign="bottom"><b>operator[]</b> (const difference_type n) const</td></tr>
 <tr class="separator:af2493fba35c33be454d38bd54602a5e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4fee41f54f3ba22085701837a791cf28"><td class="memTemplParams" colspan="2"><a id="a4fee41f54f3ba22085701837a791cf28"></a>
-template&lt;class DerefPol  = DereferencePolicy, std::enable_if_t&lt; impl::provides_mutable_reference_v&lt; DerefPol &gt;, int &gt;  = 0&gt; </td></tr>
-<tr class="memitem:a4fee41f54f3ba22085701837a791cf28"><td class="memTemplItemLeft" align="right" valign="top">constexpr reference&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator[]</b> (const difference_type n)</td></tr>
-<tr class="separator:a4fee41f54f3ba22085701837a791cf28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a029fb67223161d8c99b5c5b1b3d8b96d"><td class="memTemplParams" colspan="2"><a id="a029fb67223161d8c99b5c5b1b3d8b96d"></a>
+template&lt;class DerefPol  = DereferencePolicy&gt; </td></tr>
+<tr class="memitem:a029fb67223161d8c99b5c5b1b3d8b96d"><td class="memTemplItemLeft" align="right" valign="top">requires constexpr impl::provides_mutable_reference_v&lt; DerefPol &gt; reference&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator[]</b> (const difference_type n)</td></tr>
+<tr class="separator:a029fb67223161d8c99b5c5b1b3d8b96d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a56660c9fb33092feedda4e925ec529f2"><td class="memItemLeft" align="right" valign="top"><a id="a56660c9fb33092feedda4e925ec529f2"></a>
 constexpr std::conditional_t&lt; is_const_pointer_v&lt; pointer &gt;, pointer, const pointer &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>operator-&gt;</b> () const</td></tr>
 <tr class="separator:a56660c9fb33092feedda4e925ec529f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2a18293726291c435fde5e1ca96ec90d"><td class="memTemplParams" colspan="2"><a id="a2a18293726291c435fde5e1ca96ec90d"></a>
-template&lt;class Ptr  = pointer, std::enable_if_t&lt;!is_const_pointer_v&lt; Ptr &gt;, int &gt;  = 0&gt; </td></tr>
-<tr class="memitem:a2a18293726291c435fde5e1ca96ec90d"><td class="memTemplItemLeft" align="right" valign="top">constexpr pointer&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator-&gt;</b> ()</td></tr>
-<tr class="separator:a2a18293726291c435fde5e1ca96ec90d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a5a95e0a8f43829b3b0a3f07ae2edc2"><td class="memTemplParams" colspan="2"><a id="a9a5a95e0a8f43829b3b0a3f07ae2edc2"></a>
+template&lt;class Ptr  = pointer&gt; </td></tr>
+<tr class="memitem:a9a5a95e0a8f43829b3b0a3f07ae2edc2"><td class="memTemplItemLeft" align="right" valign="top">requires constexpr is_const_pointer_v&lt; Ptr &gt; pointer&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator-&gt;</b> ()</td></tr>
+<tr class="separator:a9a5a95e0a8f43829b3b0a3f07ae2edc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a71ba91bf890e56ac074efe06ce730a6b"><td class="memItemLeft" align="right" valign="top"><a id="a71ba91bf890e56ac074efe06ce730a6b"></a>
 constexpr <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator++</b> ()</td></tr>
 <tr class="separator:a71ba91bf890e56ac074efe06ce730a6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -177,6 +174,14 @@ constexpr <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator
 <tr class="memitem:a805e4f587882879f16b945ca663f02ca"><td class="memItemLeft" align="right" valign="top"><a id="a805e4f587882879f16b945ca663f02ca"></a>
 constexpr <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><b>operator--</b> (int)</td></tr>
 <tr class="separator:a805e4f587882879f16b945ca663f02ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a8490d26bc291abe082129c63012c4577"><td class="memItemLeft" align="right" valign="top"><a id="a8490d26bc291abe082129c63012c4577"></a>
+Args &amp;&amp;&#160;</td><td class="memItemRight" valign="bottom"><b>args</b>: DereferencePolicy{std::forward&lt;Args&gt;(args)...}</td></tr>
+<tr class="separator:a8490d26bc291abe082129c63012c4577"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a19250ac18577615c69adfadaf1172257"><td class="memItemLeft" align="right" valign="top">Args&#160;</td><td class="memItemRight" valign="bottom"><b>m_BaseIterator</b></td></tr>
+<tr class="separator:a19250ac18577615c69adfadaf1172257"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
 Friends</h2></td></tr>
@@ -217,7 +222,36 @@ class sequoia::utilities::iterator&lt; Iterator, DereferencePolicy &gt;</h3>
 
 <p>An iterator with policies controlling dereferencing and auxiliary data. </p>
 <p>The DereferencePolicy allows customisation of the various dereferencing operators. In principle it is therefore possible that deferencing will not return a reference. This is forbidden in the case that the underlying iterator is non-const since the semantics could then be rather confusing. However, for const iterators this is tacitly allowed. </p>
-</div><hr/>The documentation for this class was generated from the following file:<ul>
+</div><h2 class="groupheader">Member Data Documentation</h2>
+<a id="a19250ac18577615c69adfadaf1172257"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a19250ac18577615c69adfadaf1172257">&#9670;&nbsp;</a></span>m_BaseIterator</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Iterator , class DereferencePolicy &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">Args <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">sequoia::utilities::iterator</a>&lt; Iterator, DereferencePolicy &gt;::m_BaseIterator</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">{std::forward&lt;Arg&gt;(baseIterArg)}</div>
+<div class="line">    {}</div>
+<div class="line"> </div>
+<div class="line">    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Iter, <span class="keyword">class</span> DerefPol&gt;</div>
+<div class="line">      requires (   !std::is_same_v&lt;Iter, Iterator&gt;</div>
+<div class="line">                &amp;&amp; std::is_convertible_v&lt;Iter, base_iterator_type&gt;</div>
+<div class="line">                &amp;&amp; impl::are_compatible_v&lt;DereferencePolicy, DerefPol&gt;</div>
+<div class="line">                &amp;&amp; std::is_same_v&lt;</div>
+<div class="line">                     std::remove_cvref_t&lt;impl::type_generator_t&lt;DereferencePolicy&gt;&gt;,</div>
+<div class="line">                     std::remove_cvref_t&lt;impl::type_generator_t&lt;DerefPol&gt;&gt;&gt;)</div>
+<div class="line">    constexpr iterator(iterator&lt;Iter, DerefPol&gt; iter)</div>
+<div class="line">      : DereferencePolicy{<span class="keyword">static_cast&lt;</span>DerefPol&amp;<span class="keyword">&gt;</span>(iter)}</div>
+</div><!-- fragment -->
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
 <li>/Users/Claire/Dropbox/Sequoia/Core/Utilities/<a class="el" href="../../d7/de4/Iterator_8hpp_source.html">Iterator.hpp</a></li>
 </ul>
 </div><!-- contents -->
