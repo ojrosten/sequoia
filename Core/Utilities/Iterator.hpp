@@ -32,16 +32,10 @@ namespace sequoia::utilities
     constexpr null_data_policy& operator=(null_data_policy&&) noexcept = default;
 
     [[nodiscard]]
-    friend constexpr bool operator==(const null_data_policy&, const null_data_policy&) noexcept
-    {
-      return true;
-    }
+    friend constexpr bool operator==(const null_data_policy&, const null_data_policy&) noexcept = default;
 
     [[nodiscard]]
-    friend constexpr bool operator!=(const null_data_policy& lhs, const null_data_policy& rhs) noexcept
-    {
-      return !(lhs == rhs);
-    }
+    friend constexpr bool operator!=(const null_data_policy&, const null_data_policy&) noexcept = default;
   };
   
   template<class Iterator, class AuxiliaryDataPolicy=null_data_policy>
@@ -55,11 +49,8 @@ namespace sequoia::utilities
     using pointer    = typename std::iterator_traits<Iterator>::pointer;
 
 
-    template
-    <
-      class... Args,
-      std::enable_if_t<!resolve_to_copy_constructor_v<identity_dereference_policy, Args...>, int> = 0
-    >
+    template<class... Args>
+      requires (!resolve_to_copy<identity_dereference_policy, Args...>)
     constexpr explicit identity_dereference_policy(Args&&... args) : AuxiliaryDataPolicy{std::forward<Args>(args)...} {}
 
     constexpr identity_dereference_policy(const identity_dereference_policy&) = default;
@@ -71,16 +62,10 @@ namespace sequoia::utilities
     static constexpr pointer get_ptr(reference ref) noexcept { return &ref; }
 
     [[nodiscard]]
-    friend constexpr bool operator==(const identity_dereference_policy& lhs, const identity_dereference_policy& rhs) noexcept
-    {
-      return static_cast<const AuxiliaryDataPolicy&>(lhs) == static_cast<const AuxiliaryDataPolicy&>(rhs);
-    }
+    friend constexpr bool operator==(const identity_dereference_policy&, const identity_dereference_policy&) noexcept = default;
 
     [[nodiscard]]
-    friend constexpr bool operator!=(const identity_dereference_policy& lhs, const identity_dereference_policy& rhs) noexcept
-    {
-      return !(lhs == rhs);
-    }
+    friend constexpr bool operator!=(const identity_dereference_policy&, const identity_dereference_policy&) noexcept = default;
   protected:
     constexpr identity_dereference_policy(identity_dereference_policy&&) noexcept = default;
     
@@ -116,35 +101,20 @@ namespace sequoia::utilities
     static_assert(impl::is_valid_v<DereferencePolicy>,
       "The DereferencePolicy must supply exacly one type called either reference or proxy");
 
-    template
-    <
-      class Arg,
-      class... Args,
-      std::enable_if_t<sizeof...(Args) || !resolve_to_copy_constructor_v<Arg, iterator>, int> = 0
-     >
+    template<class Arg, class... Args>
+      requires (!resolve_to_copy<iterator, Arg, Args...>)
     constexpr explicit iterator(Arg&& baseIterArg, Args&&... args)
       : DereferencePolicy{std::forward<Args>(args)...}
       , m_BaseIterator{std::forward<Arg>(baseIterArg)}
-    {
-    }
+    {}
 
-    template
-    <
-      class Iter,
-      class DerefPol,
-      std::enable_if_t
-      <
-           !std::is_same_v<Iter, Iterator>
-        && std::is_convertible_v<Iter, base_iterator_type>
-        && impl::are_compatible_v<DereferencePolicy, DerefPol>
-        && std::is_same_v<
-             std::decay_t<impl::type_generator_t<DereferencePolicy>>,
-             std::decay_t<impl::type_generator_t<DerefPol>>
-           >
-        ,
-        int
-      > = 0
-    >
+    template<class Iter, class DerefPol>
+      requires (   !std::is_same_v<Iter, Iterator>
+                && std::is_convertible_v<Iter, base_iterator_type>
+                && impl::are_compatible_v<DereferencePolicy, DerefPol>
+                && std::is_same_v<
+                     std::remove_cvref_t<impl::type_generator_t<DereferencePolicy>>,
+                     std::remove_cvref_t<impl::type_generator_t<DerefPol>>>)
     constexpr iterator(iterator<Iter, DerefPol> iter)
       : DereferencePolicy{static_cast<DerefPol&>(iter)}
       , m_BaseIterator{iter.base_iterator()} 
@@ -167,10 +137,8 @@ namespace sequoia::utilities
       return DereferencePolicy::get(*m_BaseIterator);
     }
 
-    template<
-      class DerefPol = DereferencePolicy,
-      std::enable_if_t<impl::provides_mutable_reference_v<DerefPol>, int> = 0
-    >
+    template<class DerefPol = DereferencePolicy>
+      requires impl::provides_mutable_reference_v<DerefPol>
     [[nodiscard]]
     constexpr reference operator*()
     {
@@ -183,10 +151,8 @@ namespace sequoia::utilities
       return DereferencePolicy::get(m_BaseIterator[n]);
     }
 
-    template<
-      class DerefPol = DereferencePolicy,
-      std::enable_if_t<impl::provides_mutable_reference_v<DerefPol>, int> = 0
-    >
+    template<class DerefPol = DereferencePolicy>
+      requires impl::provides_mutable_reference_v<DerefPol>
     [[nodiscard]]
     constexpr reference operator[](const difference_type n)
     {
@@ -198,7 +164,8 @@ namespace sequoia::utilities
       return DereferencePolicy::get_ptr(*m_BaseIterator);
     }
 
-    template<class Ptr=pointer, std::enable_if_t<!is_const_pointer_v<Ptr>, int> = 0>
+    template<class Ptr=pointer>
+      requires is_const_pointer_v<Ptr>
     constexpr pointer operator->()
     {
       return DereferencePolicy::get_ptr(*m_BaseIterator);

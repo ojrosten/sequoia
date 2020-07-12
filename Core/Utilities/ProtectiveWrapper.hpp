@@ -12,7 +12,7 @@
     where at least one uses proxies to underlying data.
  */
 
-#include "TypeTraits.hpp"
+#include "Concepts.hpp"
 
 #include <compare>
 
@@ -44,7 +44,7 @@ namespace sequoia::utilities
       m_Type = T{std::forward<Arg>(arg), std::forward<Args>(args)...};
     }
 
-    template<class Fn>
+    template<invocable<T&> Fn>
     constexpr void mutate(Fn fn)
     {
       fn(m_Type);
