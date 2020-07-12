@@ -790,24 +790,24 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-	Fast Task duration: 0.00133855s +- 4 * 0.000123735
-	Slow Task duration: 0.00139731s +- 4 * 2.75347e-05 [1.0439; (2, 2)]
+	Fast Task duration: 0.00122199s +- 4 * 0.000128788
+	Slow Task duration: 0.00137226s +- 4 * 4.13424e-05 [1.12297; (2, 2)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-	Fast Task duration: 0.00125133s +- 4 * 0.000115603
-	Slow Task duration: 0.00126987s +- 4 * 0.000119662 [1.01482; (2, 3)]
+	Fast Task duration: 0.00130073s +- 4 * 1.32905e-05
+	Slow Task duration: 0.00124876s +- 4 * 0.000105331 [0.960048; (2, 3)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-	Fast Task duration: 0.00140118s +- 4 * 3.13431e-05
-	Slow Task duration: 0.00498043s +- 4 * 0.00020794 [3.55444; (2, 2.5)]
+	Fast Task duration: 0.00130892s +- 4 * 0.000123058
+	Slow Task duration: 0.00491628s +- 4 * 0.000442706 [3.75599; (2, 2.5)]
 
 	=======================================
 
@@ -6519,8 +6519,8 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67
 	Performance Test which should pass
 
-	Fast Task duration: 0.00119492s +- 4 * 9.12966e-05
-	Slow Task duration: 0.00237903s +- 4 * 0.000257127 [1.99096; (1.8, 2.1)]
+	Fast Task duration: 0.0013405s +- 4 * 8.46451e-05
+	Slow Task duration: 0.00246193s +- 4 * 0.000252493 [1.83657; (1.8, 2.1)]
 
 
 	=======================================
@@ -6529,8 +6529,8 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68
 	Performance Test which should pass
 
-	Fast Task duration: 0.00125008s +- 4 * 0.000124942
-	Slow Task duration: 0.00469206s +- 4 * 0.000418895 [3.7534; (3.6, 4.1)]
+	Fast Task duration: 0.0013636s +- 4 * 8.68399e-05
+	Slow Task duration: 0.00498849s +- 4 * 0.000167279 [3.65832; (3.6, 4.1)]
 
 
 	=======================================

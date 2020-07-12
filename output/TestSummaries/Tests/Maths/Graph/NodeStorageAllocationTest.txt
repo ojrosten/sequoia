@@ -1,3 +1,3 @@
 Allocation Test
-[13ms]
+[18ms]
 Standard Top Level Checks:                80;  Failures:  0  [Deep checks: 1656]
