@@ -144,6 +144,12 @@ namespace sequoia
 
   // concepts for specifically for sequoia
 
+  template<class T>
+  concept empty = std::is_empty_v<T>;
+
+  template<class T>
+  concept stateful = !empty<T>;
+
   template <class T>
   concept pseudoregular = copyable<T> && equality_comparable<T>;
 
@@ -158,4 +164,9 @@ namespace sequoia
 
   template<class T, class... Args>
   concept resolve_to_copy = resolve_to_copy_constructor_v<T, Args...>;
+
+  template<class T>
+  concept three_way_comparable = requires(const T& lhs, const T& rhs) {
+    lhs <=> rhs;
+  };
 }

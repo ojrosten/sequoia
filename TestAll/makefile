@@ -22,7 +22,7 @@ OUTPUTSUBDIRS := $(addprefix $(OUTPUTDIR)/, $(UTSUBDIRS))
 CC := /usr/local/opt/llvm/bin/clang++ -ferror-limit=1
 
 PREPROP :=
-#PREPROP += -D MINIMAL_GRAPH_TESTS
+PREPROP += -D MINIMAL_GRAPH_TESTS
 
 CFLAGS := -Wall -Wextra -Wpedantic -std=c++2a -O0 \
 	  -ftemplate-backtrace-limit=0	       \
