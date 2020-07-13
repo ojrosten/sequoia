@@ -102,11 +102,7 @@ $(function() {
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    <span class="keyword">template</span>&lt;pseudoregular T, invocable&lt;T&amp;&gt; Mutator&gt;</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="keywordtype">void</span> check_semantics(std::string_view description, <span class="keyword">const</span> T&amp; x, <span class="keyword">const</span> T&amp; y, Mutator m)</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    {</div>
-<<<<<<< HEAD
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;      testing::check_semantics(<a class="code" href="../../d7/d96/Format_8cpp.html#a3610f5124224711b4b8c8c480d14f76d">append_indented</a>(description, emphasise(<span class="stringliteral">&quot;Regular Semantics&quot;</span>)), m_Logger, x, y, m);</div>
-=======
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;      testing::check_semantics(<a class="code" href="../../d7/d96/Format_8cpp.html#a3610f5124224711b4b8c8c480d14f76d">append_indented</a>(description, emphasise(<span class="stringliteral">&quot;Regular Semantics&quot;</span>)), m_Logger, x, y, std::move(m));</div>
->>>>>>> working
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    }</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;  <span class="keyword">protected</span>:</div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <a class="code" href="../../d4/d5d/classsequoia_1_1testing_1_1regular__extender.html">regular_extender</a>(<a class="code" href="../../d4/d5d/classsequoia_1_1testing_1_1regular__extender.html">regular_extender</a>&amp;&amp;) noexcept = <span class="keywordflow">default</span>;</div>
