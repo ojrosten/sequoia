@@ -165,6 +165,7 @@ namespace sequoia::data_sharing
   private:
     using container = std::vector<wrapper_handle, allocator_type>;
   public:
+    using value_type             = T;
     using const_iterator         = impl::pool_iterator<typename container::const_iterator, data_wrapper>;
     using const_reverse_iterator = impl::pool_iterator<typename container::const_reverse_iterator, data_wrapper>;
 
@@ -213,7 +214,7 @@ namespace sequoia::data_sharing
       return *this;
     }
 
-    void swap(data_pool& rhs)
+    void swap(data_pool& rhs) noexcept
     {
       std::swap(this->m_Data, rhs.m_Data);
       for(auto& pData : this->m_Data) pData->m_pPool = this;

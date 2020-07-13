@@ -23,5 +23,6 @@ namespace sequoia
 
     { t.get(std::declval<typename T::handle_type>()) } -> same_as<const typename T::elementary_type&>;
     { t.get_ptr(std::declval<typename T::handle_type>()) } -> same_as<const typename T::elementary_type*>;
+    { T::make() } -> same_as<typename T::handle_type>;
   };
 }
