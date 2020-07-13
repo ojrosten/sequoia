@@ -396,7 +396,7 @@ namespace sequoia::testing
     {
       using namespace data_sharing;
 
-      using testuu = TemplateTestClass<GraphType, EdgeWeight, NodeWeight, unpooled<EdgeWeight>, unpooled<NodeWeight>, EdgeStorageTraits, NodeStorageTraits>;
+      using testuu = TemplateTestClass<GraphType, EdgeWeight, NodeWeight, spawner<EdgeWeight>, spawner<NodeWeight>, EdgeStorageTraits, NodeStorageTraits>;
 
       run_graph_test(testuu{});
 
@@ -405,8 +405,8 @@ namespace sequoia::testing
       { 
         if constexpr(!std::is_empty_v<EdgeWeight> && !std::is_empty_v<NodeWeight>)
         {
-          using testud = TemplateTestClass<GraphType, EdgeWeight, NodeWeight, unpooled<EdgeWeight>, data_pool<NodeWeight>, EdgeStorageTraits, NodeStorageTraits>;
-          using testdu = TemplateTestClass<GraphType, EdgeWeight, NodeWeight, data_pool<EdgeWeight>, unpooled<NodeWeight>, EdgeStorageTraits, NodeStorageTraits>;
+          using testud = TemplateTestClass<GraphType, EdgeWeight, NodeWeight, spawner<EdgeWeight>, data_pool<NodeWeight>, EdgeStorageTraits, NodeStorageTraits>;
+          using testdu = TemplateTestClass<GraphType, EdgeWeight, NodeWeight, data_pool<EdgeWeight>, spawner<NodeWeight>, EdgeStorageTraits, NodeStorageTraits>;
           using testdd = TemplateTestClass<GraphType, EdgeWeight, NodeWeight, data_pool<EdgeWeight>, data_pool<NodeWeight>, EdgeStorageTraits, NodeStorageTraits>;
 
           run_graph_test(testud{});
@@ -415,13 +415,13 @@ namespace sequoia::testing
         }
         else if constexpr(!std::is_empty_v<EdgeWeight>)
         {
-          using testdu = TemplateTestClass<GraphType, EdgeWeight, NodeWeight, data_pool<EdgeWeight>, unpooled<NodeWeight>, EdgeStorageTraits, NodeStorageTraits>;
+          using testdu = TemplateTestClass<GraphType, EdgeWeight, NodeWeight, data_pool<EdgeWeight>, spawner<NodeWeight>, EdgeStorageTraits, NodeStorageTraits>;
 
           run_graph_test(testdu{});
         }
         else if constexpr(!std::is_empty_v<NodeWeight>)
         {
-          using testud = TemplateTestClass<GraphType, EdgeWeight, NodeWeight, unpooled<EdgeWeight>, data_pool<NodeWeight>, EdgeStorageTraits, NodeStorageTraits>;
+          using testud = TemplateTestClass<GraphType, EdgeWeight, NodeWeight, spawner<EdgeWeight>, data_pool<NodeWeight>, EdgeStorageTraits, NodeStorageTraits>;
         
           run_graph_test(testud{});
         }

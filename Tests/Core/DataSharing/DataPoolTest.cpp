@@ -20,7 +20,7 @@ namespace sequoia::testing
   {
     test_pooled();
     test_multi_pools();
-    test_unpooled();
+    test_spawner();
   }
 
   data_sharing::data_pool<int> data_pool_test::make_int_pool(const int val)
@@ -195,10 +195,10 @@ namespace sequoia::testing
     check_equality(LINE(""), elt3.get(), 7);
   }
 
-  void data_pool_test::test_unpooled()
+  void data_pool_test::test_spawner()
   {
     using namespace data_sharing;
-    constexpr auto x = unpooled<double>::make(3.0);
+    constexpr auto x = spawner<double>::make(3.0);
     check_equality(LINE(""), x.get(), 3.0);
   }
 }

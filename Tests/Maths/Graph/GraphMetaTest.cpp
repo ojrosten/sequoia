@@ -47,13 +47,13 @@ namespace sequoia::testing
     using namespace data_sharing;
 
     {
-      weight_maker<unpooled<int>> maker;
+      weight_maker<spawner<int>> maker;
       auto proxy = maker.make(2);
       check_equality(LINE(""), proxy.get(), 2);
     }
 
     {
-      weight_maker<unpooled<float>> maker;
+      weight_maker<spawner<float>> maker;
 
       auto proxy = maker.make(3.0f);
       check_equality(LINE(""), proxy.get(), 3.0f);
@@ -144,24 +144,24 @@ namespace sequoia::testing
   >
   void test_graph_meta::test_undirected()
   {    
-    test_undirected_unshared<GraphFlavour, int, data_sharing::unpooled<int>, EdgeType>();
+    test_undirected_unshared<GraphFlavour, int, data_sharing::spawner<int>, EdgeType>();
     test_undirected_unshared<GraphFlavour, int, data_sharing::data_pool<int>, EdgeType>();
-    test_undirected_unshared<GraphFlavour, wrapper<int>, data_sharing::unpooled<wrapper<int>>, EdgeType>();
+    test_undirected_unshared<GraphFlavour, wrapper<int>, data_sharing::spawner<wrapper<int>>, EdgeType>();
     test_undirected_unshared<GraphFlavour, wrapper<int>, data_sharing::data_pool<wrapper<int>>, EdgeType>();
 
-    test_undirected_unshared<GraphFlavour, double, data_sharing::unpooled<double>, EdgeType>();
+    test_undirected_unshared<GraphFlavour, double, data_sharing::spawner<double>, EdgeType>();
     test_undirected_unshared<GraphFlavour, double, data_sharing::data_pool<double>, EdgeType>();
-    test_undirected_unshared<GraphFlavour, wrapper<double>, data_sharing::unpooled<wrapper<double>>, EdgeType>();
+    test_undirected_unshared<GraphFlavour, wrapper<double>, data_sharing::spawner<wrapper<double>>, EdgeType>();
     test_undirected_unshared<GraphFlavour, wrapper<double>, data_sharing::data_pool<wrapper<double>>, EdgeType>();
 
-    test_undirected_unshared<GraphFlavour, std::tuple<double, double>, data_sharing::unpooled<std::tuple<double, double>>, EdgeType>();
+    test_undirected_unshared<GraphFlavour, std::tuple<double, double>, data_sharing::spawner<std::tuple<double, double>>, EdgeType>();
     test_undirected_unshared<GraphFlavour, std::tuple<double, double>, data_sharing::data_pool<std::tuple<double, double>>, EdgeType>();
 
-    test_undirected_shared<GraphFlavour, std::tuple<double, double, double>, data_sharing::unpooled<std::tuple<double, double, double>>, EdgeType>();
+    test_undirected_shared<GraphFlavour, std::tuple<double, double, double>, data_sharing::spawner<std::tuple<double, double, double>>, EdgeType>();
     // For the data pool, the sizeof the proxy is just the size of a shared_ptr
     test_undirected_unshared<GraphFlavour, std::tuple<double, double, double>, data_sharing::data_pool<std::tuple<double, double, double>>, EdgeType>();
 
-    test_undirected_shared<GraphFlavour, std::vector<int>, data_sharing::unpooled<std::vector<int>>, EdgeType>();
+    test_undirected_shared<GraphFlavour, std::vector<int>, data_sharing::spawner<std::vector<int>>, EdgeType>();
     test_undirected_unshared<GraphFlavour, std::vector<int>, data_sharing::data_pool<std::vector<int>>, EdgeType>();
   }
 
@@ -205,10 +205,10 @@ namespace sequoia::testing
   {
     using namespace maths;
 
-    test_directed_impl<int, data_sharing::unpooled<int>>();
+    test_directed_impl<int, data_sharing::spawner<int>>();
     test_directed_impl<int, data_sharing::data_pool<int>>();
 
-    test_directed_impl<std::tuple<double,double,double>, data_sharing::unpooled<std::tuple<double,double,double>>>();
+    test_directed_impl<std::tuple<double,double,double>, data_sharing::spawner<std::tuple<double,double,double>>>();
     test_directed_impl<std::tuple<double,double,double>, data_sharing::data_pool<std::tuple<double,double,double>>>();
   }
 
@@ -217,10 +217,10 @@ namespace sequoia::testing
   {
     using namespace maths;
 
-    test_directed_embedded_impl<int, data_sharing::unpooled<int>>();
+    test_directed_embedded_impl<int, data_sharing::spawner<int>>();
     test_directed_embedded_impl<int, data_sharing::data_pool<int>>();
 
-    test_directed_embedded_impl<std::tuple<double,double,double>, data_sharing::unpooled<std::tuple<double,double,double>>>();
+    test_directed_embedded_impl<std::tuple<double,double,double>, data_sharing::spawner<std::tuple<double,double,double>>>();
     test_directed_embedded_impl<std::tuple<double,double,double>, data_sharing::data_pool<std::tuple<double,double,double>>>();
   }  
 }

@@ -8,7 +8,7 @@
 #pragma once
 
 /*! \file
-    \brief Classes to allow homogenous treatment of pooled/unpooled data.
+    \brief Classes to allow homogenous treatment of pooled/spawner data.
 
  */
 
@@ -23,7 +23,7 @@
 
 namespace sequoia::data_sharing
 {
-  template<class T> class unpooled
+  template<class T> class spawner
   {
   public:
     using proxy = utilities::protective_wrapper<T>;
@@ -37,10 +37,10 @@ namespace sequoia::data_sharing
     }
 
     [[nodiscard]]
-    friend constexpr bool operator==(const unpooled&, const unpooled&) noexcept = default;
+    friend constexpr bool operator==(const spawner&, const spawner&) noexcept = default;
 
     [[nodiscard]]
-    friend constexpr bool operator!=(const unpooled& lhs, const unpooled& rhs) noexcept = default;
+    friend constexpr bool operator!=(const spawner& lhs, const spawner& rhs) noexcept = default;
   };
 
   namespace impl

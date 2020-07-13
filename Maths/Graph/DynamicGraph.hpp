@@ -433,8 +433,8 @@ namespace sequoia::maths
     directed_flavour Directedness,      
     class EdgeWeight,
     class NodeWeight,      
-    class EdgeWeightPooling=data_sharing::unpooled<EdgeWeight>,
-    class NodeWeightPooling=data_sharing::unpooled<NodeWeight>,
+    class EdgeWeightPooling=data_sharing::spawner<EdgeWeight>,
+    class NodeWeightPooling=data_sharing::spawner<NodeWeight>,
     class EdgeStorageTraits = bucketed_edge_storage_traits,
     class NodeWeightStorageTraits = node_weight_storage_traits<NodeWeight>
   >
@@ -492,8 +492,8 @@ namespace sequoia::maths
     directed_flavour Directedness,      
     class EdgeWeight,
     class NodeWeight,      
-    class EdgeWeightPooling=data_sharing::unpooled<EdgeWeight>,
-    class NodeWeightPooling=data_sharing::unpooled<NodeWeight>,
+    class EdgeWeightPooling=data_sharing::spawner<EdgeWeight>,
+    class NodeWeightPooling=data_sharing::spawner<NodeWeight>,
     class EdgeStorageTraits=bucketed_edge_storage_traits,
     class NodeWeightStorageTraits=node_weight_storage_traits<NodeWeight>
   >

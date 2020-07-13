@@ -25,7 +25,7 @@ namespace sequoia::testing
 
     void test_pooled();
     void test_multi_pools();
-    void test_unpooled();
+    void test_spawner();
 
     data_sharing::data_pool<int> make_int_pool(const int val);
   };
