@@ -23,8 +23,6 @@ namespace sequoia::testing
 
     void test_method_detectors();
 
-    void test_weight_makers();
-
     template
     <
       maths::graph_flavour GraphFlavour,
@@ -75,14 +73,8 @@ namespace sequoia::testing
   {
     T val{};
 
-    [[nodiscard]] friend constexpr bool operator==(const wrapper& lhs, const wrapper& rhs) noexcept
-    {
-      return lhs.val == rhs.val;
-    }
+    [[nodiscard]] friend constexpr bool operator==(const wrapper& lhs, const wrapper& rhs) noexcept = default;
 
-    [[nodiscard]] friend constexpr bool operator!=(const wrapper& lhs, const wrapper& rhs) noexcept
-    {
-      return !(lhs == rhs);
-    }
+    [[nodiscard]] friend constexpr bool operator!=(const wrapper& lhs, const wrapper& rhs) noexcept = default;
   };
 }

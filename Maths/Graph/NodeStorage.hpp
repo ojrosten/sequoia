@@ -55,16 +55,16 @@ namespace sequoia::maths::graph_impl
     constexpr proxy_dereference_policy& operator=(proxy_dereference_policy&&) noexcept = default;
   };
 
-  template<class WeightMaker, class Traits, bool=std::is_empty_v<typename WeightMaker::weight_proxy::value_type>>
+  template<class WeightMaker, class Traits, bool=std::is_empty_v<typename WeightMaker::proxy::value_type>>
   class node_storage : private WeightMaker
   {
     friend struct sequoia::impl::assignment_helper;
     
   private:
     template<class S> using Container = typename Traits::template container_type<S>;
-  public:
-    using node_weight_container_type = Container<typename WeightMaker::weight_proxy>;
-    using weight_proxy_type          = typename WeightMaker::weight_proxy;
+  public:    
+    using weight_proxy_type          = typename WeightMaker::proxy;
+    using node_weight_container_type = Container<weight_proxy_type>;
     using weight_type                = typename weight_proxy_type::value_type;
     using size_type                  = typename node_weight_container_type::size_type;
 
@@ -410,7 +410,7 @@ namespace sequoia::maths::graph_impl
   class node_storage<WeightMaker, Traits, true>
   {
   public:
-    using weight_proxy_type = typename WeightMaker::weight_proxy;
+    using weight_proxy_type = typename WeightMaker::proxy;
     using weight_type       = typename weight_proxy_type::value_type;
     using size_type         = std::size_t;
     

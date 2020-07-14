@@ -41,9 +41,9 @@ namespace sequoia::maths
       <
         Directedness,
         graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected, Order, Size, EdgeWeight, typename Traits::edge_index_type>,
-        graph_impl::weight_maker<data_sharing::spawner<EdgeWeight>>
+        data_sharing::spawner<EdgeWeight>
       >,
-      graph_impl::static_node_storage<graph_impl::weight_maker<data_sharing::spawner<NodeWeight>>, Order>
+      graph_impl::static_node_storage<data_sharing::spawner<NodeWeight>, Order>
     >
   {
   private:
@@ -54,9 +54,9 @@ namespace sequoia::maths
         <
           Directedness,
           graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected, Order, Size, EdgeWeight, typename Traits::edge_index_type>,
-          graph_impl::weight_maker<data_sharing::spawner<EdgeWeight>>
+          data_sharing::spawner<EdgeWeight>
         >,
-        graph_impl::static_node_storage<graph_impl::weight_maker<data_sharing::spawner<NodeWeight>>, Order>
+        graph_impl::static_node_storage<data_sharing::spawner<NodeWeight>, Order>
       >;
       
   public:
@@ -78,9 +78,9 @@ namespace sequoia::maths
         <
           Directedness,
           graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected, Order, Size, EdgeWeight, typename Traits::edge_index_type>,
-          graph_impl::weight_maker<data_sharing::spawner<EdgeWeight>>
+          data_sharing::spawner<EdgeWeight>
         >,
-        graph_impl::static_node_storage<graph_impl::weight_maker<data_sharing::spawner<NodeWeight>>, Order>
+        graph_impl::static_node_storage<data_sharing::spawner<NodeWeight>, Order>
       >::graph_primitive;
 
     using primitive_type::swap_nodes;
@@ -110,9 +110,9 @@ namespace sequoia::maths
       <
         Directedness,
         graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded, Order, Size, EdgeWeight, typename Traits::edge_index_type>,
-        graph_impl::weight_maker<data_sharing::spawner<EdgeWeight>>
+        data_sharing::spawner<EdgeWeight>
       >,
-      graph_impl::static_node_storage<graph_impl::weight_maker<data_sharing::spawner<NodeWeight>>, Order>
+      graph_impl::static_node_storage<data_sharing::spawner<NodeWeight>, Order>
     >
   {
   private:
@@ -123,9 +123,9 @@ namespace sequoia::maths
         <
           Directedness,
           graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded, Order, Size, EdgeWeight, typename Traits::edge_index_type>,
-          graph_impl::weight_maker<data_sharing::spawner<EdgeWeight>>
+          data_sharing::spawner<EdgeWeight>
         >,
-        graph_impl::static_node_storage<graph_impl::weight_maker<data_sharing::spawner<NodeWeight>>, Order>
+        graph_impl::static_node_storage<data_sharing::spawner<NodeWeight>, Order>
       >;
       
   public:
@@ -147,9 +147,9 @@ namespace sequoia::maths
         <
           Directedness,
           graph_impl::static_edge_traits<(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded, Order, Size, EdgeWeight, typename Traits::edge_index_type>,
-          graph_impl::weight_maker<data_sharing::spawner<EdgeWeight>>
+          data_sharing::spawner<EdgeWeight>
         >,
-        graph_impl::static_node_storage<graph_impl::weight_maker<data_sharing::spawner<NodeWeight>>, Order>
+        graph_impl::static_node_storage<data_sharing::spawner<NodeWeight>, Order>
       >::graph_primitive;
 
     using primitive::swap_nodes;

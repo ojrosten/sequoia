@@ -296,41 +296,6 @@ namespace sequoia
         template<class EdgeType>
         using edge_storage_sharing_policy = data_sharing::shared<EdgeType>;
       };
-      
-      // Weight Makers
-      
-      template<creator WeightCreator, bool=std::is_empty_v<WeightCreator>>
-      class weight_maker
-      {
-      public:
-        using weight_proxy = typename WeightCreator::proxy;
-        using weight_type = typename weight_proxy::value_type;
-
-        template<class... Args>
-        [[nodiscard]]
-        constexpr static weight_proxy make(Args&&... args)
-        {
-          return WeightCreator::make(std::forward<Args>(args)...);
-        }
-      private:
-      };
-
-      template<creator WeightCreator>
-      class weight_maker<WeightCreator, false>
-      {
-      public:
-        using weight_proxy = typename WeightCreator::proxy;
-        using weight_type = typename weight_proxy::value_type;
-
-        template<class... Args>
-        [[nodiscard]]
-        weight_proxy make(Args&&... args)
-        {
-          return m_Pool.make(std::forward<Args>(args)...);
-        }
-      private:
-        WeightCreator m_Pool;
-      };
                            
       // Determine dynamic reservartion type etc
 

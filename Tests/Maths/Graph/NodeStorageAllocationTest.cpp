@@ -36,7 +36,7 @@ namespace sequoia:: testing
     
     using namespace maths::graph_impl;
     
-    using storage = node_storage_tester<weight_maker<Sharing>, PropagateCopy, PropagateMove, PropagateSwap>;
+    using storage = node_storage_tester<Sharing, PropagateCopy, PropagateMove, PropagateSwap>;
     using allocator = typename storage::allocator_type; 
 
     storage s(allocator{});

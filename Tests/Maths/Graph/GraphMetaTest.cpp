@@ -22,7 +22,6 @@ namespace sequoia::testing
     using namespace maths;
 
     test_method_detectors();
-    test_weight_makers();
     test_static_edge_index_generator();
     
     test_undirected<graph_flavour::undirected, partial_edge>();
@@ -39,37 +38,6 @@ namespace sequoia::testing
 
     static_assert(has_reservable_partitions_v<bucketed_storage<int>>);
     static_assert(!has_reservable_partitions_v<partitioned_sequence<int>>);
-  }
-
-  void test_graph_meta::test_weight_makers()
-  {
-    using namespace maths::graph_impl;
-    using namespace data_sharing;
-
-    {
-      weight_maker<spawner<int>> maker;
-      auto proxy = maker.make(2);
-      check_equality(LINE(""), proxy.get(), 2);
-    }
-
-    {
-      weight_maker<spawner<float>> maker;
-
-      auto proxy = maker.make(3.0f);
-      check_equality(LINE(""), proxy.get(), 3.0f);
-    }
-
-    {
-      weight_maker<data_pool<int>> maker;
-      auto proxy = maker.make(2);
-      check_equality(LINE(""), proxy.get(), 2);
-    }
-
-    {
-      weight_maker<data_pool<float>> maker;
-      auto proxy = maker.make(3.0f);
-      check_equality(LINE(""), proxy.get(), 3.0f);
-    }
   }
 
   void test_graph_meta::test_static_edge_index_generator()

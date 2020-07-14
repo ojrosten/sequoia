@@ -68,11 +68,11 @@ namespace sequoia::maths
       <
         to_directedness(GraphFlavour),
         graph_impl::dynamic_edge_traits<GraphFlavour, EdgeWeight, EdgeWeightCreator, EdgeStorageTraits, std::size_t>,
-        graph_impl::weight_maker<EdgeWeightCreator>
+        EdgeWeightCreator
       >,
       graph_impl::node_storage
       <     
-        graph_impl::weight_maker<NodeWeightCreator>,
+        NodeWeightCreator,
         NodeWeightStorageTraits
       >
     >
@@ -82,7 +82,7 @@ namespace sequoia::maths
     using node_storage_type
       = graph_impl::node_storage
         <
-          graph_impl::weight_maker<NodeWeightCreator>,
+          NodeWeightCreator,
           NodeWeightStorageTraits
         >; 
   public:
@@ -93,11 +93,11 @@ namespace sequoia::maths
         <
           to_directedness(GraphFlavour),
           edge_traits_type,
-          graph_impl::weight_maker<EdgeWeightCreator>
+          EdgeWeightCreator
         >,      
         graph_impl::node_storage
         <
-          graph_impl::weight_maker<NodeWeightCreator>,
+          NodeWeightCreator,
           NodeWeightStorageTraits
         >
       >;

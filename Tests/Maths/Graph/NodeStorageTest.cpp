@@ -34,7 +34,7 @@ namespace sequoia:: testing
   {
     using namespace maths::graph_impl;
 
-    using storage = node_storage_tester<weight_maker<Sharing>>;
+    using storage = node_storage_tester<Sharing>;
 
     storage store{};
     check_equivalence(LINE(""), store, std::initializer_list<double>{});
@@ -112,7 +112,7 @@ namespace sequoia:: testing
   void node_storage_test::test_static_node_storage()
   {
     using namespace maths::graph_impl;
-    using storage = static_node_storage_tester<weight_maker<data_sharing::spawner<int>>, 4>;
+    using storage = static_node_storage_tester<data_sharing::spawner<int>, 4>;
 
     constexpr storage store{4, 4, 7, 9};
 

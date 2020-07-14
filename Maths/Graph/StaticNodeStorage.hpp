@@ -20,7 +20,7 @@ namespace sequoia::maths::graph_impl
   <
     class WeightMaker,
     std::size_t N,
-    bool=std::is_empty_v<typename WeightMaker::weight_proxy::value_type>
+    bool=std::is_empty_v<typename WeightMaker::proxy::value_type>
   >
   struct static_node_storage_traits
   {
@@ -39,7 +39,7 @@ namespace sequoia::maths::graph_impl
   <
     class WeightMaker,
     std::size_t N,
-    bool=std::is_empty_v<typename WeightMaker::weight_proxy::value_type>
+    bool=std::is_empty_v<typename WeightMaker::proxy::value_type>
   >
   class static_node_storage : public node_storage<WeightMaker, static_node_storage_traits<WeightMaker, N>>
   {
@@ -50,7 +50,7 @@ namespace sequoia::maths::graph_impl
   class static_node_storage<WeightMaker, N, true>
   {
   public:
-    using weight_proxy_type = typename WeightMaker::weight_proxy;
+    using weight_proxy_type = typename WeightMaker::proxy;
     using weight_type       = typename weight_proxy_type::value_type;
     using size_type         = std::size_t;
         
