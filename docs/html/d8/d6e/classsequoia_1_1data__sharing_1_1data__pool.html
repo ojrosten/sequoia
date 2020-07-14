@@ -88,6 +88,9 @@ Public Types</h2></td></tr>
 <tr class="memitem:a25d0eaf744ff1529566c876f91b14506"><td class="memItemLeft" align="right" valign="top"><a id="a25d0eaf744ff1529566c876f91b14506"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>allocator_type</b> = typename std::allocator_traits&lt; Allocator &gt;::template rebind_alloc&lt; wrapper_handle &gt;</td></tr>
 <tr class="separator:a25d0eaf744ff1529566c876f91b14506"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44651c96c6a1b8af11c6f15c01ba38ec"><td class="memItemLeft" align="right" valign="top"><a id="a44651c96c6a1b8af11c6f15c01ba38ec"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>value_type</b> = T</td></tr>
+<tr class="separator:a44651c96c6a1b8af11c6f15c01ba38ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af60982f7230e987e555861278577109a"><td class="memItemLeft" align="right" valign="top"><a id="af60982f7230e987e555861278577109a"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>const_iterator</b> = <a class="el" href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">impl::pool_iterator</a>&lt; typename container::const_iterator, <a class="el" href="../../d0/d8e/classsequoia_1_1data__sharing_1_1data__pool_1_1data__wrapper.html">data_wrapper</a> &gt;</td></tr>
 <tr class="separator:af60982f7230e987e555861278577109a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -115,9 +118,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a0eb027a3abd0085cb2b781017fc4d3d9"><td class="memItemLeft" align="right" valign="top"><a id="a0eb027a3abd0085cb2b781017fc4d3d9"></a>
 <a class="el" href="../../d8/d6e/classsequoia_1_1data__sharing_1_1data__pool.html">data_pool</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../d8/d6e/classsequoia_1_1data__sharing_1_1data__pool.html">data_pool</a> &amp;&amp;other) noexcept</td></tr>
 <tr class="separator:a0eb027a3abd0085cb2b781017fc4d3d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a85770dfcd00614a71eee29538841ae6c"><td class="memItemLeft" align="right" valign="top"><a id="a85770dfcd00614a71eee29538841ae6c"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>swap</b> (<a class="el" href="../../d8/d6e/classsequoia_1_1data__sharing_1_1data__pool.html">data_pool</a> &amp;rhs)</td></tr>
-<tr class="separator:a85770dfcd00614a71eee29538841ae6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a79634f0209e1191350e8c71429a4e975"><td class="memItemLeft" align="right" valign="top"><a id="a79634f0209e1191350e8c71429a4e975"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>swap</b> (<a class="el" href="../../d8/d6e/classsequoia_1_1data__sharing_1_1data__pool.html">data_pool</a> &amp;rhs) noexcept</td></tr>
+<tr class="separator:a79634f0209e1191350e8c71429a4e975"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac2effe644581c4eaed400eef3335f85c"><td class="memItemLeft" align="right" valign="top"><a id="ac2effe644581c4eaed400eef3335f85c"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>empty</b> () const noexcept</td></tr>
 <tr class="separator:ac2effe644581c4eaed400eef3335f85c"><td class="memSeparator" colspan="2">&#160;</td></tr>

@@ -100,12 +100,15 @@ template&lt;class T &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= requires(<span class="keyword">const</span> T&amp; t) {</div>
+<b>Initial value:</b><div class="fragment"><div class="line">= requires() {</div>
 <div class="line">    <span class="keyword">typename</span> T::handle_type;</div>
 <div class="line">    <span class="keyword">typename</span> T::elementary_type;</div>
 <div class="line"> </div>
-<div class="line">    { t.get(std::declval&lt;typename T::handle_type&gt;()) } -&gt; same_as&lt;const typename T::elementary_type&amp;&gt;;</div>
-<div class="line">    { t.get_ptr(std::declval&lt;typename T::handle_type&gt;()) } -&gt; same_as&lt;const typename T::elementary_type*&gt;;</div>
+<div class="line">    { T::get(std::declval&lt;typename T::handle_type&gt;()) } -&gt; same_as&lt;const typename T::elementary_type&amp;&gt;;</div>
+<div class="line">    { T::get_ptr(std::declval&lt;typename T::handle_type&gt;()) } -&gt; same_as&lt;const typename T::elementary_type*&gt;;</div>
+<div class="line">    { T::get(makelval&lt;typename T::handle_type&gt;()) } -&gt; same_as&lt;typename T::elementary_type&amp;&gt;;</div>
+<div class="line">    { T::get_ptr(makelval&lt;typename T::handle_type&gt;()) } -&gt; same_as&lt;typename T::elementary_type*&gt;;</div>
+<div class="line">    { T::make() } -&gt; same_as&lt;typename T::handle_type&gt;;</div>
 <div class="line">  }</div>
 </div><!-- fragment -->
 </div>

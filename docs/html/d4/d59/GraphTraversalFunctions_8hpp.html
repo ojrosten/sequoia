@@ -66,7 +66,8 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">GraphTraversalFunctions.hpp File Reference</div>  </div>
 </div><!--header-->
@@ -81,34 +82,164 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a3ea9f3dfd70336b9bedfdcb3a0e2abbb"><td class="memTemplParams" colspan="2"><a id="a3ea9f3dfd70336b9bedfdcb3a0e2abbb"></a>
-template&lt;class TaskProcessingModel  = concurrency::serial&lt;void&gt;, class G  = void, class NFBE  = null_functor, class NFAE  = null_functor, class EFTF  = null_functor, class ESTF  = null_functor, std::enable_if_t&lt; G::directedness !=directed_flavour::directed, int &gt;  = 0&gt; </td></tr>
-<tr class="memitem:a3ea9f3dfd70336b9bedfdcb3a0e2abbb"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::breadth_first_search</b> (const G &amp;graph, const bool findDisconnectedPieces=true, const std::size_t start=0, NFBE &amp;&amp;nodeFunctorBeforeEdges=null_functor{}, NFAE &amp;&amp;nodeFunctorAfterEdges=null_functor{}, EFTF &amp;&amp;edgeFirstTraversalFunctor=null_functor{}, ESTF &amp;&amp;edgeSecondTraversalFunctor=null_functor{}, TaskProcessingModel &amp;&amp;taskProcessingModel=TaskProcessingModel{})</td></tr>
-<tr class="separator:a3ea9f3dfd70336b9bedfdcb3a0e2abbb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0c8827742994dbcec63e4ef2e8482b58"><td class="memTemplParams" colspan="2"><a id="a0c8827742994dbcec63e4ef2e8482b58"></a>
-template&lt;class TaskProcessingModel  = concurrency::serial&lt;void&gt;, class G  = void, class NFBE  = null_functor, class NFAE  = null_functor, class EFTF  = null_functor, std::enable_if_t&lt; G::directedness==directed_flavour::directed, int &gt;  = 0&gt; </td></tr>
-<tr class="memitem:a0c8827742994dbcec63e4ef2e8482b58"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::breadth_first_search</b> (const G &amp;graph, const bool findDisconnectedPieces=true, const std::size_t start=0, NFBE &amp;&amp;nodeFunctorBeforeEdges=null_functor{}, NFAE &amp;&amp;nodeFunctorAfterEdges=null_functor{}, EFTF &amp;&amp;edgeFirstTraversalFunctor=null_functor{}, TaskProcessingModel &amp;&amp;taskProcessingModel=TaskProcessingModel{})</td></tr>
-<tr class="separator:a0c8827742994dbcec63e4ef2e8482b58"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac732e0c0a2a6224de2cbe74658e12cdf"><td class="memTemplParams" colspan="2"><a id="ac732e0c0a2a6224de2cbe74658e12cdf"></a>
-template&lt;class TaskProcessingModel  = concurrency::serial&lt;void&gt;, class G  = void, class NFBE  = null_functor, class NFAE  = null_functor, class EFTF  = null_functor, class ESTF  = null_functor, std::enable_if_t&lt; G::directedness !=directed_flavour::directed, int &gt;  = 0&gt; </td></tr>
-<tr class="memitem:ac732e0c0a2a6224de2cbe74658e12cdf"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::depth_first_search</b> (const G &amp;graph, const bool findDisconnectedPieces=true, const std::size_t start=0, NFBE &amp;&amp;nodeFunctorBeforeEdges=null_functor{}, NFAE &amp;&amp;nodeFunctorAfterEdges=null_functor{}, EFTF &amp;&amp;edgeFirstTraversalFunctor=null_functor{}, ESTF &amp;&amp;edgeSecondTraversalFunctor=null_functor{}, TaskProcessingModel &amp;&amp;taskProcessingModel=TaskProcessingModel{})</td></tr>
-<tr class="separator:ac732e0c0a2a6224de2cbe74658e12cdf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2383ecf5901ca67068888578816067b5"><td class="memTemplParams" colspan="2"><a id="a2383ecf5901ca67068888578816067b5"></a>
-template&lt;class TaskProcessingModel  = concurrency::serial&lt;void&gt;, class G  = void, class NFBE  = null_functor, class NFAE  = null_functor, class EFTF  = null_functor, std::enable_if_t&lt; G::directedness==directed_flavour::directed, int &gt;  = 0&gt; </td></tr>
-<tr class="memitem:a2383ecf5901ca67068888578816067b5"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::depth_first_search</b> (const G &amp;graph, const bool findDisconnectedPieces=true, const std::size_t start=0, NFBE &amp;&amp;nodeFunctorBeforeEdges=null_functor{}, NFAE &amp;&amp;nodeFunctorAfterEdges=null_functor{}, EFTF &amp;&amp;edgeFirstTraversalFunctor=null_functor{}, TaskProcessingModel &amp;&amp;taskProcessingModel=TaskProcessingModel{})</td></tr>
-<tr class="separator:a2383ecf5901ca67068888578816067b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0f65b9a14ef1f2ada6e3e5b825aee999"><td class="memTemplParams" colspan="2"><a id="a0f65b9a14ef1f2ada6e3e5b825aee999"></a>
-template&lt;class TaskProcessingModel  = concurrency::serial&lt;void&gt;, class G  = void, class NFBE  = null_functor, class NFAE  = null_functor, class EFTF  = null_functor, class ESTF  = null_functor, class QCompare  = graph_impl::node_comparer&lt;G, std::less&lt;typename G::node_weight_type&gt;&gt;, std::enable_if_t&lt; G::directedness !=directed_flavour::directed, int &gt;  = 0&gt; </td></tr>
-<tr class="memitem:a0f65b9a14ef1f2ada6e3e5b825aee999"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::priority_search</b> (const G &amp;graph, const bool findDisconnectedPieces=true, const std::size_t start=0, NFBE &amp;&amp;nodeFunctorBeforeEdges=null_functor{}, NFAE &amp;&amp;nodeFunctorAfterEdges=null_functor{}, EFTF &amp;&amp;edgeFirstTraversalFunctor=null_functor{}, ESTF &amp;&amp;edgeSecondTraversalFunctor=null_functor{}, TaskProcessingModel &amp;&amp;taskProcessingModel=TaskProcessingModel{})</td></tr>
-<tr class="separator:a0f65b9a14ef1f2ada6e3e5b825aee999"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9afcdbbee2d5db09604517590ee7476c"><td class="memTemplParams" colspan="2"><a id="a9afcdbbee2d5db09604517590ee7476c"></a>
-template&lt;class TaskProcessingModel  = concurrency::serial&lt;void&gt;, class G  = void, class NFBE  = null_functor, class NFAE  = null_functor, class EFTF  = null_functor, class QCompare  = graph_impl::node_comparer&lt;G, std::less&lt;typename G::node_weight_type&gt;&gt;, std::enable_if_t&lt; G::directedness==directed_flavour::directed, int &gt;  = 0&gt; </td></tr>
-<tr class="memitem:a9afcdbbee2d5db09604517590ee7476c"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::priority_search</b> (const G &amp;graph, const bool findDisconnectedPieces=true, const std::size_t start=0, NFBE &amp;&amp;nodeFunctorBeforeEdges=null_functor{}, NFAE &amp;&amp;nodeFunctorAfterEdges=null_functor{}, EFTF &amp;&amp;edgeFirstTraversalFunctor=null_functor{}, TaskProcessingModel &amp;&amp;taskProcessingModel=TaskProcessingModel{})</td></tr>
-<tr class="separator:a9afcdbbee2d5db09604517590ee7476c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afdffdb912f50ebe1fd6841ca8de68024"><td class="memTemplParams" colspan="2"><a id="afdffdb912f50ebe1fd6841ca8de68024"></a>
+template&lt;class TaskProcessingModel  = concurrency::serial&lt;void&gt;, class G  = void, class NFBE  = null_functor, class NFAE  = null_functor, class EFTF  = null_functor, class ESTF  = null_functor&gt; </td></tr>
+<tr class="memitem:afdffdb912f50ebe1fd6841ca8de68024"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::maths::requires</b> (G::directedness !=directed_flavour::directed) const expr auto breadth_first_search(const G &amp;graph</td></tr>
+<tr class="separator:afdffdb912f50ebe1fd6841ca8de68024"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a2f6e07932284af58c8a3095b1dd33d38"><td class="memItemLeft" align="right" valign="top"><a id="a2f6e07932284af58c8a3095b1dd33d38"></a>
+const bool&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::findDisconnectedPieces</b> = true</td></tr>
+<tr class="separator:a2f6e07932284af58c8a3095b1dd33d38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a033f5994109e48f85fb75796a2e775c0"><td class="memItemLeft" align="right" valign="top"><a id="a033f5994109e48f85fb75796a2e775c0"></a>
+const bool const std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::start</b> = 0</td></tr>
+<tr class="separator:a033f5994109e48f85fb75796a2e775c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd034474356992eab0071cf06892cf1b"><td class="memItemLeft" align="right" valign="top"><a id="acd034474356992eab0071cf06892cf1b"></a>
+const bool const std::size_t NFBE &amp;&amp;&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::nodeFunctorBeforeEdges</b> = null_functor{}</td></tr>
+<tr class="separator:acd034474356992eab0071cf06892cf1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac4275b8028869cc26167c0894ae532ab"><td class="memItemLeft" align="right" valign="top"><a id="ac4275b8028869cc26167c0894ae532ab"></a>
+const bool const std::size_t NFBE NFAE &amp;&amp;&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::nodeFunctorAfterEdges</b> = null_functor{}</td></tr>
+<tr class="separator:ac4275b8028869cc26167c0894ae532ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a298b461065894d0da3bcc60eec3bcf66"><td class="memItemLeft" align="right" valign="top"><a id="a298b461065894d0da3bcc60eec3bcf66"></a>
+const bool const std::size_t NFBE NFAE EFTF &amp;&amp;&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::edgeFirstTraversalFunctor</b> = null_functor{}</td></tr>
+<tr class="separator:a298b461065894d0da3bcc60eec3bcf66"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e57eb095fc1c1a0815e77bf1df249ca"><td class="memItemLeft" align="right" valign="top"><a id="a3e57eb095fc1c1a0815e77bf1df249ca"></a>
+const bool const std::size_t NFBE NFAE EFTF ESTF &amp;&amp;&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::edgeSecondTraversalFunctor</b> = null_functor{}</td></tr>
+<tr class="separator:a3e57eb095fc1c1a0815e77bf1df249ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e73c9d4f27a2c4df1bc745e5586e309"><td class="memItemLeft" align="right" valign="top">const bool const std::size_t NFBE NFAE EFTF ESTF TaskProcessingModel &amp;&amp;&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::taskProcessingModel</b></td></tr>
+<tr class="separator:a3e73c9d4f27a2c4df1bc745e5586e309"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad5646f2e8207e2acf4bb8b68beedc973"><td class="memItemLeft" align="right" valign="top"><a id="ad5646f2e8207e2acf4bb8b68beedc973"></a>
+const bool const std::size_t NFBE NFAE EFTF ESTF TaskProcessingModel class&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::G</b> = void</td></tr>
+<tr class="separator:ad5646f2e8207e2acf4bb8b68beedc973"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f1e221225c68cfd5fda91f7209de541"><td class="memItemLeft" align="right" valign="top"><a id="a1f1e221225c68cfd5fda91f7209de541"></a>
+const bool const std::size_t NFBE NFAE EFTF ESTF TaskProcessingModel class class&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::NFBE</b> = null_functor</td></tr>
+<tr class="separator:a1f1e221225c68cfd5fda91f7209de541"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a43a83df84c45a99ad972473b65264167"><td class="memItemLeft" align="right" valign="top"><a id="a43a83df84c45a99ad972473b65264167"></a>
+const bool const std::size_t NFBE NFAE EFTF ESTF TaskProcessingModel class class class&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::NFAE</b> = null_functor</td></tr>
+<tr class="separator:a43a83df84c45a99ad972473b65264167"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6049687409629b0554218c223dcda89e"><td class="memItemLeft" align="right" valign="top">const bool const std::size_t NFBE NFAE EFTF ESTF TaskProcessingModel class class class class&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::EFTF</b></td></tr>
+<tr class="separator:a6049687409629b0554218c223dcda89e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa455803a40f1be43d9943bc661f3e226"><td class="memItemLeft" align="right" valign="top">const bool const std::size_t NFBE NFAE EFTF ESTF TaskProcessingModel class class class class class class class class class&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::maths::ESTF</b></td></tr>
+<tr class="separator:aa455803a40f1be43d9943bc661f3e226"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Breadth first, depth first and priority searches. </p>
-</div></div><!-- contents -->
+</div><h2 class="groupheader">Variable Documentation</h2>
+<a id="a6049687409629b0554218c223dcda89e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6049687409629b0554218c223dcda89e">&#9670;&nbsp;</a></span>EFTF</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const bool const std::size_t NFBE NFAE EFTF ESTF TaskProcessingModel class class class class class class class class class class class class class class class class class sequoia::maths::EFTF</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= null_functor</div>
+<div class="line">  &gt;</div>
+<div class="line">    requires (G::directedness == directed_flavour::directed)</div>
+<div class="line">  constexpr <span class="keyword">auto</span> breadth_first_search(<span class="keyword">const</span> G&amp; graph, <span class="keyword">const</span> <span class="keywordtype">bool</span> findDisconnectedPieces = <span class="keyword">true</span>,</div>
+<div class="line">                 <span class="keyword">const</span> std::size_t start = 0,</div>
+<div class="line">                 NFBE&amp;&amp; nodeFunctorBeforeEdges     = null_functor{},</div>
+<div class="line">                 NFAE&amp;&amp; nodeFunctorAfterEdges      = null_functor{},</div>
+<div class="line">                 EFTF&amp;&amp; edgeFirstTraversalFunctor  = null_functor{},</div>
+<div class="line">                 TaskProcessingModel&amp;&amp; taskProcessingModel = TaskProcessingModel{})</div>
+<div class="line">  {</div>
+<div class="line">    <span class="keyword">using</span> queue_type = <span class="keyword">typename</span> graph_impl::queue_selector&lt;G&gt;::queue_type;</div>
+<div class="line">    <span class="keywordflow">return</span> graph_impl::traversal_helper&lt;G&gt;{}.template traverse&lt;queue_type&gt;(</div>
+<div class="line">             graph,</div>
+<div class="line">             findDisconnectedPieces,</div>
+<div class="line">             start,</div>
+<div class="line">             std::forward&lt;NFBE&gt;(nodeFunctorBeforeEdges),</div>
+<div class="line">             std::forward&lt;NFAE&gt;(nodeFunctorAfterEdges),</div>
+<div class="line">             std::forward&lt;EFTF&gt;(edgeFirstTraversalFunctor),</div>
+<div class="line">             null_functor{},</div>
+<div class="line">             std::forward&lt;TaskProcessingModel&gt;(taskProcessingModel)</div>
+<div class="line">           );</div>
+<div class="line">  }</div>
+<div class="line"> </div>
+<div class="line">  <span class="keyword">template</span></div>
+<div class="line">  &lt;    </div>
+<div class="line">    <span class="keyword">class </span>TaskProcessingModel = concurrency::serial&lt;void&gt;</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="aa455803a40f1be43d9943bc661f3e226"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa455803a40f1be43d9943bc661f3e226">&#9670;&nbsp;</a></span>ESTF</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const bool const std::size_t NFBE NFAE EFTF ESTF TaskProcessingModel class class class class class class class class class class class class class class class class class class sequoia::maths::ESTF</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= null_functor</div>
+<div class="line">  &gt;</div>
+<div class="line">    requires (G::directedness != directed_flavour::directed)</div>
+<div class="line">  constexpr <span class="keyword">auto</span> depth_first_search(<span class="keyword">const</span> G&amp; graph, <span class="keyword">const</span> <span class="keywordtype">bool</span> findDisconnectedPieces = <span class="keyword">true</span>,</div>
+<div class="line">                 <span class="keyword">const</span> std::size_t start = 0,</div>
+<div class="line">                 NFBE&amp;&amp; nodeFunctorBeforeEdges     = null_functor{},</div>
+<div class="line">                 NFAE&amp;&amp; nodeFunctorAfterEdges      = null_functor{},</div>
+<div class="line">                 EFTF&amp;&amp; edgeFirstTraversalFunctor  = null_functor{},</div>
+<div class="line">                 ESTF&amp;&amp; edgeSecondTraversalFunctor = null_functor{},</div>
+<div class="line">                 TaskProcessingModel&amp;&amp; taskProcessingModel = TaskProcessingModel{})</div>
+<div class="line">  {</div>
+<div class="line">    <span class="keyword">using</span> stack_type = <span class="keyword">typename</span> graph_impl::stack_selector&lt;G&gt;::stack_type;</div>
+<div class="line">    <span class="keywordflow">return</span> graph_impl::traversal_helper&lt;G&gt;{}.template traverse&lt;stack_type&gt;(</div>
+<div class="line">             graph,</div>
+<div class="line">             findDisconnectedPieces,</div>
+<div class="line">             start,</div>
+<div class="line">             std::forward&lt;NFBE&gt;(nodeFunctorBeforeEdges),</div>
+<div class="line">             std::forward&lt;NFAE&gt;(nodeFunctorAfterEdges),</div>
+<div class="line">             std::forward&lt;EFTF&gt;(edgeFirstTraversalFunctor),</div>
+<div class="line">             std::forward&lt;ESTF&gt;(edgeSecondTraversalFunctor),</div>
+<div class="line">             std::forward&lt;TaskProcessingModel&gt;(taskProcessingModel)</div>
+<div class="line">           );</div>
+<div class="line">  }</div>
+<div class="line"> </div>
+<div class="line">  <span class="keyword">template</span></div>
+<div class="line">  &lt;    </div>
+<div class="line">    <span class="keyword">class </span>TaskProcessingModel = concurrency::serial&lt;void&gt;</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a3e73c9d4f27a2c4df1bc745e5586e309"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e73c9d4f27a2c4df1bc745e5586e309">&#9670;&nbsp;</a></span>taskProcessingModel</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const bool const std::size_t NFBE NFAE EFTF ESTF TaskProcessingModel&amp;&amp; sequoia::maths::taskProcessingModel</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= TaskProcessingModel{})</div>
+<div class="line">  {</div>
+<div class="line">    <span class="keyword">using</span> queue_type = <span class="keyword">typename</span> graph_impl::queue_selector&lt;G&gt;::queue_type;</div>
+<div class="line">    <span class="keywordflow">return</span> graph_impl::traversal_helper&lt;G&gt;{}.template traverse&lt;queue_type&gt;(</div>
+<div class="line">             graph,</div>
+<div class="line">             findDisconnectedPieces,</div>
+<div class="line">             start,</div>
+<div class="line">             std::forward&lt;NFBE&gt;(nodeFunctorBeforeEdges),</div>
+<div class="line">             std::forward&lt;NFAE&gt;(nodeFunctorAfterEdges),</div>
+<div class="line">             std::forward&lt;EFTF&gt;(edgeFirstTraversalFunctor),</div>
+<div class="line">             std::forward&lt;ESTF&gt;(edgeSecondTraversalFunctor),</div>
+<div class="line">             std::forward&lt;TaskProcessingModel&gt;(taskProcessingModel)</div>
+<div class="line">           );</div>
+<div class="line">  }</div>
+<div class="line"> </div>
+<div class="line">  <span class="keyword">template</span></div>
+<div class="line">  &lt;    </div>
+<div class="line">    <span class="keyword">class </span>TaskProcessingModel = concurrency::serial&lt;void&gt;</div>
+</div><!-- fragment -->
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

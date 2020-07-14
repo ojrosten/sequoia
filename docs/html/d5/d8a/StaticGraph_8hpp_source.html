@@ -105,9 +105,9 @@ $(function() {
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;      &lt;</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;        Directedness,</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;        graph_impl::static_edge_traits&lt;(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected, Order, Size, EdgeWeight, typename Traits::edge_index_type&gt;,</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        graph_impl::weight_maker&lt;data_sharing::unpooled&lt;EdgeWeight&gt;&gt;</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;        data_sharing::spawner&lt;EdgeWeight&gt;</div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;      &gt;,</div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;      graph_impl::static_node_storage&lt;graph_impl::weight_maker&lt;data_sharing::unpooled&lt;NodeWeight&gt;&gt;, Order&gt;</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;      graph_impl::static_node_storage&lt;data_sharing::spawner&lt;NodeWeight&gt;, Order&gt;</div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    &gt;</div>
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;  {</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;  <span class="keyword">private</span>:</div>
@@ -118,9 +118,9 @@ $(function() {
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;        &lt;</div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;          Directedness,</div>
 <div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;          <a class="code" href="../../d8/d74/structsequoia_1_1maths_1_1graph__impl_1_1static__edge__traits.html">graph_impl::static_edge_traits</a>&lt;(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected, Order, Size, EdgeWeight, <span class="keyword">typename</span> Traits::edge_index_type&gt;,</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;          <a class="code" href="../../df/d98/classsequoia_1_1maths_1_1graph__impl_1_1weight__maker.html">graph_impl::weight_maker</a>&lt;<a class="code" href="../../df/d21/classsequoia_1_1data__sharing_1_1unpooled.html">data_sharing::unpooled&lt;EdgeWeight&gt;</a>&gt;</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;          <a class="code" href="../../de/d19/classsequoia_1_1data__sharing_1_1spawner.html">data_sharing::spawner&lt;EdgeWeight&gt;</a></div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;        &gt;,</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <a class="code" href="../../d7/d30/classsequoia_1_1maths_1_1graph__impl_1_1static__node__storage.html">graph_impl::static_node_storage</a>&lt;<a class="code" href="../../df/d98/classsequoia_1_1maths_1_1graph__impl_1_1weight__maker.html">graph_impl::weight_maker</a>&lt;<a class="code" href="../../df/d21/classsequoia_1_1data__sharing_1_1unpooled.html">data_sharing::unpooled&lt;NodeWeight&gt;</a>&gt;, Order&gt;</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;        <a class="code" href="../../d7/d30/classsequoia_1_1maths_1_1graph__impl_1_1static__node__storage.html">graph_impl::static_node_storage</a>&lt;<a class="code" href="../../de/d19/classsequoia_1_1data__sharing_1_1spawner.html">data_sharing::spawner&lt;NodeWeight&gt;</a>, Order&gt;</div>
 <div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;      &gt;;</div>
 <div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;      </div>
 <div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;  <span class="keyword">public</span>:</div>
@@ -142,9 +142,9 @@ $(function() {
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        &lt;</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;          Directedness,</div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;          <a class="code" href="../../d8/d74/structsequoia_1_1maths_1_1graph__impl_1_1static__edge__traits.html">graph_impl::static_edge_traits</a>&lt;(Directedness == directed_flavour::directed) ? graph_flavour::directed : graph_flavour::undirected, Order, Size, EdgeWeight, <span class="keyword">typename</span> Traits::edge_index_type&gt;,</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;          <a class="code" href="../../df/d98/classsequoia_1_1maths_1_1graph__impl_1_1weight__maker.html">graph_impl::weight_maker</a>&lt;<a class="code" href="../../df/d21/classsequoia_1_1data__sharing_1_1unpooled.html">data_sharing::unpooled&lt;EdgeWeight&gt;</a>&gt;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;          <a class="code" href="../../de/d19/classsequoia_1_1data__sharing_1_1spawner.html">data_sharing::spawner&lt;EdgeWeight&gt;</a></div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;        &gt;,</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <a class="code" href="../../d7/d30/classsequoia_1_1maths_1_1graph__impl_1_1static__node__storage.html">graph_impl::static_node_storage</a>&lt;<a class="code" href="../../df/d98/classsequoia_1_1maths_1_1graph__impl_1_1weight__maker.html">graph_impl::weight_maker</a>&lt;<a class="code" href="../../df/d21/classsequoia_1_1data__sharing_1_1unpooled.html">data_sharing::unpooled&lt;NodeWeight&gt;</a>&gt;, Order&gt;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <a class="code" href="../../d7/d30/classsequoia_1_1maths_1_1graph__impl_1_1static__node__storage.html">graph_impl::static_node_storage</a>&lt;<a class="code" href="../../de/d19/classsequoia_1_1data__sharing_1_1spawner.html">data_sharing::spawner&lt;NodeWeight&gt;</a>, Order&gt;</div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;      &gt;::<a class="code" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>;</div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    <span class="keyword">using</span> primitive_type::swap_nodes;</div>
@@ -174,9 +174,9 @@ $(function() {
 <div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;      &lt;</div>
 <div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;        Directedness,</div>
 <div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        graph_impl::static_edge_traits&lt;(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded, Order, Size, EdgeWeight, typename Traits::edge_index_type&gt;,</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        graph_impl::weight_maker&lt;data_sharing::unpooled&lt;EdgeWeight&gt;&gt;</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;        data_sharing::spawner&lt;EdgeWeight&gt;</div>
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;      &gt;,</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;      graph_impl::static_node_storage&lt;graph_impl::weight_maker&lt;data_sharing::unpooled&lt;NodeWeight&gt;&gt;, Order&gt;</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;      graph_impl::static_node_storage&lt;data_sharing::spawner&lt;NodeWeight&gt;, Order&gt;</div>
 <div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    &gt;</div>
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;  {</div>
 <div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;  <span class="keyword">private</span>:</div>
@@ -187,9 +187,9 @@ $(function() {
 <div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        &lt;</div>
 <div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;          Directedness,</div>
 <div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;          <a class="code" href="../../d8/d74/structsequoia_1_1maths_1_1graph__impl_1_1static__edge__traits.html">graph_impl::static_edge_traits</a>&lt;(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded, Order, Size, EdgeWeight, <span class="keyword">typename</span> Traits::edge_index_type&gt;,</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;          <a class="code" href="../../df/d98/classsequoia_1_1maths_1_1graph__impl_1_1weight__maker.html">graph_impl::weight_maker</a>&lt;<a class="code" href="../../df/d21/classsequoia_1_1data__sharing_1_1unpooled.html">data_sharing::unpooled&lt;EdgeWeight&gt;</a>&gt;</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;          <a class="code" href="../../de/d19/classsequoia_1_1data__sharing_1_1spawner.html">data_sharing::spawner&lt;EdgeWeight&gt;</a></div>
 <div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        &gt;,</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        <a class="code" href="../../d7/d30/classsequoia_1_1maths_1_1graph__impl_1_1static__node__storage.html">graph_impl::static_node_storage</a>&lt;<a class="code" href="../../df/d98/classsequoia_1_1maths_1_1graph__impl_1_1weight__maker.html">graph_impl::weight_maker</a>&lt;<a class="code" href="../../df/d21/classsequoia_1_1data__sharing_1_1unpooled.html">data_sharing::unpooled&lt;NodeWeight&gt;</a>&gt;, Order&gt;</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        <a class="code" href="../../d7/d30/classsequoia_1_1maths_1_1graph__impl_1_1static__node__storage.html">graph_impl::static_node_storage</a>&lt;<a class="code" href="../../de/d19/classsequoia_1_1data__sharing_1_1spawner.html">data_sharing::spawner&lt;NodeWeight&gt;</a>, Order&gt;</div>
 <div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;      &gt;;</div>
 <div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;      </div>
 <div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;  <span class="keyword">public</span>:</div>
@@ -211,9 +211,9 @@ $(function() {
 <div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;        &lt;</div>
 <div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;          Directedness,</div>
 <div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;          <a class="code" href="../../d8/d74/structsequoia_1_1maths_1_1graph__impl_1_1static__edge__traits.html">graph_impl::static_edge_traits</a>&lt;(Directedness == directed_flavour::directed) ? graph_flavour::directed_embedded : graph_flavour::undirected_embedded, Order, Size, EdgeWeight, <span class="keyword">typename</span> Traits::edge_index_type&gt;,</div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;          <a class="code" href="../../df/d98/classsequoia_1_1maths_1_1graph__impl_1_1weight__maker.html">graph_impl::weight_maker</a>&lt;<a class="code" href="../../df/d21/classsequoia_1_1data__sharing_1_1unpooled.html">data_sharing::unpooled&lt;EdgeWeight&gt;</a>&gt;</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;          <a class="code" href="../../de/d19/classsequoia_1_1data__sharing_1_1spawner.html">data_sharing::spawner&lt;EdgeWeight&gt;</a></div>
 <div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;        &gt;,</div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;        <a class="code" href="../../d7/d30/classsequoia_1_1maths_1_1graph__impl_1_1static__node__storage.html">graph_impl::static_node_storage</a>&lt;<a class="code" href="../../df/d98/classsequoia_1_1maths_1_1graph__impl_1_1weight__maker.html">graph_impl::weight_maker</a>&lt;<a class="code" href="../../df/d21/classsequoia_1_1data__sharing_1_1unpooled.html">data_sharing::unpooled&lt;NodeWeight&gt;</a>&gt;, Order&gt;</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;        <a class="code" href="../../d7/d30/classsequoia_1_1maths_1_1graph__impl_1_1static__node__storage.html">graph_impl::static_node_storage</a>&lt;<a class="code" href="../../de/d19/classsequoia_1_1data__sharing_1_1spawner.html">data_sharing::spawner&lt;NodeWeight&gt;</a>, Order&gt;</div>
 <div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;      &gt;::<a class="code" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>;</div>
 <div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160; </div>
 <div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;    <span class="keyword">using</span> primitive::swap_nodes;</div>
@@ -221,17 +221,16 @@ $(function() {
 <div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aclasssequoia_1_1maths_1_1connectivity_html"><div class="ttname"><a href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">sequoia::maths::connectivity</a></div><div class="ttdef"><b>Definition:</b> Connectivity.hpp:48</div></div>
+<div class="ttc" id="aclasssequoia_1_1data__sharing_1_1spawner_html"><div class="ttname"><a href="../../de/d19/classsequoia_1_1data__sharing_1_1spawner.html">sequoia::data_sharing::spawner&lt; EdgeWeight &gt;</a></div></div>
 <div class="ttc" id="astructsequoia_1_1maths_1_1graph__impl_1_1static__edge__traits_html"><div class="ttname"><a href="../../d8/d74/structsequoia_1_1maths_1_1graph__impl_1_1static__edge__traits.html">sequoia::maths::graph_impl::static_edge_traits</a></div><div class="ttdef"><b>Definition:</b> StaticGraphImpl.hpp:28</div></div>
-<div class="ttc" id="aclasssequoia_1_1maths_1_1graph__impl_1_1weight__maker_html"><div class="ttname"><a href="../../df/d98/classsequoia_1_1maths_1_1graph__impl_1_1weight__maker.html">sequoia::maths::graph_impl::weight_maker</a></div><div class="ttdef"><b>Definition:</b> GraphDetails.hpp:303</div></div>
 <div class="ttc" id="astructsequoia_1_1maths_1_1static__graph__traits_html"><div class="ttname"><a href="../../d6/db8/structsequoia_1_1maths_1_1static__graph__traits.html">sequoia::maths::static_graph_traits</a></div><div class="ttdef"><b>Definition:</b> StaticGraph.hpp:24</div></div>
-<div class="ttc" id="aclasssequoia_1_1maths_1_1graph__impl_1_1static__node__storage_html"><div class="ttname"><a href="../../d7/d30/classsequoia_1_1maths_1_1graph__impl_1_1static__node__storage.html">sequoia::maths::graph_impl::static_node_storage</a></div><div class="ttdef"><b>Definition:</b> StaticNodeStorage.hpp:45</div></div>
+<div class="ttc" id="aclasssequoia_1_1maths_1_1graph__impl_1_1static__node__storage_html"><div class="ttname"><a href="../../d7/d30/classsequoia_1_1maths_1_1graph__impl_1_1static__node__storage.html">sequoia::maths::graph_impl::static_node_storage</a></div><div class="ttdef"><b>Definition:</b> StaticNodeStorage.hpp:42</div></div>
 <div class="ttc" id="aStaticNodeStorage_8hpp_html"><div class="ttname"><a href="../../de/ddb/StaticNodeStorage_8hpp.html">StaticNodeStorage.hpp</a></div><div class="ttdoc">Classes for node storage that may be used in a constexpr context.</div></div>
 <div class="ttc" id="astructsequoia_1_1maths_1_1static__embedded__graph__traits_html"><div class="ttname"><a href="../../dd/dd1/structsequoia_1_1maths_1_1static__embedded__graph__traits.html">sequoia::maths::static_embedded_graph_traits</a></div><div class="ttdef"><b>Definition:</b> StaticGraph.hpp:93</div></div>
 <div class="ttc" id="aclasssequoia_1_1maths_1_1graph__primitive_html"><div class="ttname"><a href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">sequoia::maths::graph_primitive</a></div><div class="ttdef"><b>Definition:</b> GraphImpl.hpp:24</div></div>
 <div class="ttc" id="aclasssequoia_1_1maths_1_1static__graph_html"><div class="ttname"><a href="../../d1/dde/classsequoia_1_1maths_1_1static__graph.html">sequoia::maths::static_graph</a></div><div class="ttdef"><b>Definition:</b> StaticGraph.hpp:48</div></div>
 <div class="ttc" id="aclasssequoia_1_1maths_1_1static__embedded__graph_html"><div class="ttname"><a href="../../de/d58/classsequoia_1_1maths_1_1static__embedded__graph.html">sequoia::maths::static_embedded_graph</a></div><div class="ttdef"><b>Definition:</b> StaticGraph.hpp:117</div></div>
 <div class="ttc" id="aGraphImpl_8hpp_html"><div class="ttname"><a href="../../d8/d78/GraphImpl_8hpp.html">GraphImpl.hpp</a></div><div class="ttdoc">Underlying class for the various different graph species.</div></div>
-<div class="ttc" id="aclasssequoia_1_1data__sharing_1_1unpooled_html"><div class="ttname"><a href="../../df/d21/classsequoia_1_1data__sharing_1_1unpooled.html">sequoia::data_sharing::unpooled</a></div><div class="ttdef"><b>Definition:</b> DataPool.hpp:27</div></div>
 <div class="ttc" id="aStaticGraphImpl_8hpp_html"><div class="ttname"><a href="../../dc/d49/StaticGraphImpl_8hpp.html">StaticGraphImpl.hpp</a></div><div class="ttdoc">Edge traits for static homogeneous graphs.</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

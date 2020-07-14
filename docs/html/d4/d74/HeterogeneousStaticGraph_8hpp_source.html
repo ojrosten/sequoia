@@ -112,7 +112,7 @@ $(function() {
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;          EdgeWeight,</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;          typename heterogeneous_graph_traits&lt;Size, Order, EdgeWeight&gt;::edge_index_type</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;        &gt;,</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        graph_impl::weight_maker&lt;data_sharing::unpooled&lt;EdgeWeight&gt;&gt;</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;        data_sharing::spawner&lt;EdgeWeight&gt;</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;      &gt;,</div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;      graph_impl::heterogeneous_node_storage&lt;NodeWeights...&gt;</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    &gt;</div>
@@ -132,7 +132,7 @@ $(function() {
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;            EdgeWeight,</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;            <span class="keyword">typename</span> heterogeneous_graph_traits&lt;Size, Order, EdgeWeight&gt;::edge_index_type</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;          &gt;,</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;          <a class="code" href="../../df/d98/classsequoia_1_1maths_1_1graph__impl_1_1weight__maker.html">graph_impl::weight_maker</a>&lt;<a class="code" href="../../df/d21/classsequoia_1_1data__sharing_1_1unpooled.html">data_sharing::unpooled&lt;EdgeWeight&gt;</a>&gt;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;          <a class="code" href="../../de/d19/classsequoia_1_1data__sharing_1_1spawner.html">data_sharing::spawner&lt;EdgeWeight&gt;</a></div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        &gt;,</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <a class="code" href="../../d3/dea/classsequoia_1_1maths_1_1graph__impl_1_1heterogeneous__node__storage.html">graph_impl::heterogeneous_node_storage&lt;NodeWeights...&gt;</a></div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;      &gt;;</div>
@@ -164,7 +164,7 @@ $(function() {
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;            EdgeWeight,</div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;            <span class="keyword">typename</span> heterogeneous_graph_traits&lt;Size, Order, EdgeWeight&gt;::edge_index_type</div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;          &gt;,</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;          <a class="code" href="../../df/d98/classsequoia_1_1maths_1_1graph__impl_1_1weight__maker.html">graph_impl::weight_maker</a>&lt;<a class="code" href="../../df/d21/classsequoia_1_1data__sharing_1_1unpooled.html">data_sharing::unpooled&lt;EdgeWeight&gt;</a>&gt;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;          <a class="code" href="../../de/d19/classsequoia_1_1data__sharing_1_1spawner.html">data_sharing::spawner&lt;EdgeWeight&gt;</a></div>
 <div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        &gt;,</div>
 <div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;        <a class="code" href="../../d3/dea/classsequoia_1_1maths_1_1graph__impl_1_1heterogeneous__node__storage.html">graph_impl::heterogeneous_node_storage&lt;NodeWeights...&gt;</a></div>
 <div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;      &gt;::<a class="code" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>;</div>
@@ -203,7 +203,7 @@ $(function() {
 <div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;          EdgeWeight,</div>
 <div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;          typename heterogeneous_embedded_graph_traits&lt;Size, Order, EdgeWeight&gt;::edge_index_type</div>
 <div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;        &gt;,</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;        graph_impl::weight_maker&lt;data_sharing::unpooled&lt;EdgeWeight&gt;&gt;</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;        data_sharing::spawner&lt;EdgeWeight&gt;</div>
 <div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;      &gt;,</div>
 <div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;      graph_impl::heterogeneous_node_storage&lt;NodeWeights...&gt;</div>
 <div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;    &gt;</div>
@@ -223,7 +223,7 @@ $(function() {
 <div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;            EdgeWeight,</div>
 <div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;            <span class="keyword">typename</span> heterogeneous_embedded_graph_traits&lt;Size, Order, EdgeWeight&gt;::edge_index_type</div>
 <div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;          &gt;,</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;          <a class="code" href="../../df/d98/classsequoia_1_1maths_1_1graph__impl_1_1weight__maker.html">graph_impl::weight_maker</a>&lt;<a class="code" href="../../df/d21/classsequoia_1_1data__sharing_1_1unpooled.html">data_sharing::unpooled&lt;EdgeWeight&gt;</a>&gt;</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;          <a class="code" href="../../de/d19/classsequoia_1_1data__sharing_1_1spawner.html">data_sharing::spawner&lt;EdgeWeight&gt;</a></div>
 <div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;        &gt;,</div>
 <div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;        <a class="code" href="../../d3/dea/classsequoia_1_1maths_1_1graph__impl_1_1heterogeneous__node__storage.html">graph_impl::heterogeneous_node_storage&lt;NodeWeights...&gt;</a></div>
 <div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;      &gt;;</div>
@@ -253,7 +253,7 @@ $(function() {
 <div class="line"><a name="l00189"></a><span class="lineno">  189</span>&#160;            EdgeWeight,</div>
 <div class="line"><a name="l00190"></a><span class="lineno">  190</span>&#160;            <span class="keyword">typename</span> heterogeneous_embedded_graph_traits&lt;Size, Order, EdgeWeight&gt;::edge_index_type</div>
 <div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;          &gt;,</div>
-<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;          <a class="code" href="../../df/d98/classsequoia_1_1maths_1_1graph__impl_1_1weight__maker.html">graph_impl::weight_maker</a>&lt;<a class="code" href="../../df/d21/classsequoia_1_1data__sharing_1_1unpooled.html">data_sharing::unpooled&lt;EdgeWeight&gt;</a>&gt;</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;          <a class="code" href="../../de/d19/classsequoia_1_1data__sharing_1_1spawner.html">data_sharing::spawner&lt;EdgeWeight&gt;</a></div>
 <div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160;        &gt;,</div>
 <div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;        <a class="code" href="../../d3/dea/classsequoia_1_1maths_1_1graph__impl_1_1heterogeneous__node__storage.html">graph_impl::heterogeneous_node_storage&lt;NodeWeights...&gt;</a></div>
 <div class="line"><a name="l00195"></a><span class="lineno">  195</span>&#160;      &gt;::<a class="code" href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">graph_primitive</a>;</div>
@@ -265,16 +265,15 @@ $(function() {
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aclasssequoia_1_1maths_1_1graph__impl_1_1heterogeneous__node__storage_html"><div class="ttname"><a href="../../d3/dea/classsequoia_1_1maths_1_1graph__impl_1_1heterogeneous__node__storage.html">sequoia::maths::graph_impl::heterogeneous_node_storage&lt; NodeWeights... &gt;</a></div></div>
 <div class="ttc" id="aclasssequoia_1_1maths_1_1connectivity_html"><div class="ttname"><a href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">sequoia::maths::connectivity</a></div><div class="ttdef"><b>Definition:</b> Connectivity.hpp:48</div></div>
+<div class="ttc" id="aclasssequoia_1_1data__sharing_1_1spawner_html"><div class="ttname"><a href="../../de/d19/classsequoia_1_1data__sharing_1_1spawner.html">sequoia::data_sharing::spawner&lt; EdgeWeight &gt;</a></div></div>
 <div class="ttc" id="astructsequoia_1_1maths_1_1heterogeneous__embedded__graph__traits_html"><div class="ttname"><a href="../../df/dd2/structsequoia_1_1maths_1_1heterogeneous__embedded__graph__traits.html">sequoia::maths::heterogeneous_embedded_graph_traits</a></div><div class="ttdef"><b>Definition:</b> HeterogeneousStaticGraph.hpp:116</div></div>
 <div class="ttc" id="astructsequoia_1_1maths_1_1graph__impl_1_1static__edge__traits_html"><div class="ttname"><a href="../../d8/d74/structsequoia_1_1maths_1_1graph__impl_1_1static__edge__traits.html">sequoia::maths::graph_impl::static_edge_traits</a></div><div class="ttdef"><b>Definition:</b> StaticGraphImpl.hpp:28</div></div>
 <div class="ttc" id="aHeterogeneousNodeStorage_8hpp_html"><div class="ttname"><a href="../../d5/dea/HeterogeneousNodeStorage_8hpp.html">HeterogeneousNodeStorage.hpp</a></div><div class="ttdoc">Node storage for graphs with heterogeneous node weights.</div></div>
-<div class="ttc" id="aclasssequoia_1_1maths_1_1graph__impl_1_1weight__maker_html"><div class="ttname"><a href="../../df/d98/classsequoia_1_1maths_1_1graph__impl_1_1weight__maker.html">sequoia::maths::graph_impl::weight_maker</a></div><div class="ttdef"><b>Definition:</b> GraphDetails.hpp:303</div></div>
 <div class="ttc" id="aclasssequoia_1_1maths_1_1graph__primitive_html"><div class="ttname"><a href="../../dd/dad/classsequoia_1_1maths_1_1graph__primitive.html">sequoia::maths::graph_primitive</a></div><div class="ttdef"><b>Definition:</b> GraphImpl.hpp:24</div></div>
 <div class="ttc" id="aclasssequoia_1_1maths_1_1heterogeneous__embedded__static__graph_html"><div class="ttname"><a href="../../d0/d69/classsequoia_1_1maths_1_1heterogeneous__embedded__static__graph.html">sequoia::maths::heterogeneous_embedded_static_graph</a></div><div class="ttdef"><b>Definition:</b> HeterogeneousStaticGraph.hpp:146</div></div>
 <div class="ttc" id="aclasssequoia_1_1maths_1_1heterogeneous__static__graph_html"><div class="ttname"><a href="../../d2/dba/classsequoia_1_1maths_1_1heterogeneous__static__graph.html">sequoia::maths::heterogeneous_static_graph</a></div><div class="ttdef"><b>Definition:</b> HeterogeneousStaticGraph.hpp:55</div></div>
 <div class="ttc" id="astructsequoia_1_1maths_1_1heterogeneous__graph__traits_html"><div class="ttname"><a href="../../d7/dd0/structsequoia_1_1maths_1_1heterogeneous__graph__traits.html">sequoia::maths::heterogeneous_graph_traits</a></div><div class="ttdef"><b>Definition:</b> HeterogeneousStaticGraph.hpp:25</div></div>
 <div class="ttc" id="aGraphImpl_8hpp_html"><div class="ttname"><a href="../../d8/d78/GraphImpl_8hpp.html">GraphImpl.hpp</a></div><div class="ttdoc">Underlying class for the various different graph species.</div></div>
-<div class="ttc" id="aclasssequoia_1_1data__sharing_1_1unpooled_html"><div class="ttname"><a href="../../df/d21/classsequoia_1_1data__sharing_1_1unpooled.html">sequoia::data_sharing::unpooled</a></div><div class="ttdef"><b>Definition:</b> DataPool.hpp:27</div></div>
 <div class="ttc" id="aStaticGraphImpl_8hpp_html"><div class="ttname"><a href="../../dc/d49/StaticGraphImpl_8hpp.html">StaticGraphImpl.hpp</a></div><div class="ttdoc">Edge traits for static homogeneous graphs.</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

@@ -67,6 +67,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="../../d0/d9c/structsequoia_1_1testing_1_1impl_1_1graph__weak__equivalence__checker-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -89,16 +90,19 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>node_weight_type</b>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>nodes_equivalent_type</b> = std::initializer_list&lt; node_weight_type &gt;</td></tr>
 <tr class="separator:ad394cbfe5952506fdc0a0e22ef8bb733"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:ab9ba7355c462690190c88163de0c080c"><td class="memTemplParams" colspan="2"><a id="ab9ba7355c462690190c88163de0c080c"></a>
+template&lt;test_mode Mode, class W  = node_weight_type&gt; </td></tr>
+<tr class="memitem:ab9ba7355c462690190c88163de0c080c"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (!empty&lt; W &gt;) static void check(std</td></tr>
+<tr class="separator:ab9ba7355c462690190c88163de0c080c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a22daec02a734d0d2ecb49be71974ce69"><td class="memTemplParams" colspan="2"><a id="a22daec02a734d0d2ecb49be71974ce69"></a>
-template&lt;test_mode Mode, class W  = node_weight_type, std::enable_if_t&lt;!std::is_empty_v&lt; W &gt;, int &gt;  = 0&gt; </td></tr>
-<tr class="memitem:a22daec02a734d0d2ecb49be71974ce69"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check</b> (std::string_view description, <a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;logger, const type &amp;graph, connectivity_equivalent_type connPrediction, nodes_equivalent_type nodesPrediction)</td></tr>
-<tr class="separator:a22daec02a734d0d2ecb49be71974ce69"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af9f0ffec43ee5e5cb998ee2de6869353"><td class="memTemplParams" colspan="2"><a id="af9f0ffec43ee5e5cb998ee2de6869353"></a>
-template&lt;test_mode Mode, class W  = node_weight_type, std::enable_if_t&lt; std::is_empty_v&lt; W &gt;, int &gt;  = 0&gt; </td></tr>
-<tr class="memitem:af9f0ffec43ee5e5cb998ee2de6869353"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check</b> (std::string_view description, <a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;logger, const type &amp;graph, connectivity_equivalent_type connPrediction)</td></tr>
-<tr class="separator:af9f0ffec43ee5e5cb998ee2de6869353"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c77711c684d0859776f82bbde233dbf"><td class="memTemplParams" colspan="2"><a id="a2c77711c684d0859776f82bbde233dbf"></a>
+template&lt;test_mode Mode, class W  = node_weight_type&gt; </td></tr>
+<tr class="memitem:a2c77711c684d0859776f82bbde233dbf"><td class="memTemplItemLeft" align="right" valign="top">requires static empty&lt; W &gt; void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check</b> (std::string_view description, <a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;logger, const type &amp;graph, connectivity_equivalent_type connPrediction)</td></tr>
+<tr class="separator:a2c77711c684d0859776f82bbde233dbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>/Users/Claire/Dropbox/Sequoia/Tests/Maths/Graph/<a class="el" href="../../d3/d0b/GraphTestingUtilities_8hpp_source.html">GraphTestingUtilities.hpp</a></li>
