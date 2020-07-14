@@ -19,7 +19,7 @@ namespace sequoia::testing
 {
   namespace impl
   {
-    template<class Nodes, bool=std::is_empty_v<typename Nodes::weight_type>>
+    template<class Nodes>
     struct node_detailed_equality_checker
     {
       using type = Nodes;
@@ -36,7 +36,8 @@ namespace sequoia::testing
     };
 
     template<class Nodes>
-    struct node_detailed_equality_checker<Nodes, true>
+      requires empty<typename Nodes::weight_type>
+    struct node_detailed_equality_checker<Nodes>
     {
       using type = Nodes;
       
@@ -46,7 +47,7 @@ namespace sequoia::testing
       }
     };
 
-    template<class Nodes, bool=std::is_empty_v<typename Nodes::weight_type>>
+    template<class Nodes>
     struct node_equivalence_checker
     {
       using type = Nodes;
@@ -63,7 +64,8 @@ namespace sequoia::testing
     };
 
     template<class Nodes>
-    struct node_equivalence_checker<Nodes, true>
+      requires empty<typename Nodes::weight_type>
+    struct node_equivalence_checker<Nodes>
     {
       using type = Nodes;
 
@@ -79,31 +81,31 @@ namespace sequoia::testing
 
   // Details Checkers
   
-  template<class WeightMaker, class Traits, bool IsEmpty>
-  struct detailed_equality_checker<maths::graph_impl::node_storage<WeightMaker, Traits, IsEmpty>>
-    : impl::node_detailed_equality_checker<maths::graph_impl::node_storage<WeightMaker, Traits, IsEmpty>>
+  template<class WeightMaker, class Traits>
+  struct detailed_equality_checker<maths::graph_impl::node_storage<WeightMaker, Traits>>
+    : impl::node_detailed_equality_checker<maths::graph_impl::node_storage<WeightMaker, Traits>>
   {   
   };
 
   // Equivalence Checkers
 
-  template<class WeightMaker, class Traits, bool IsEmpty>
-  struct equivalence_checker<maths::graph_impl::node_storage<WeightMaker, Traits, IsEmpty>>
-    : impl::node_equivalence_checker<maths::graph_impl::node_storage<WeightMaker, Traits, IsEmpty>>
+  template<class WeightMaker, class Traits>
+  struct equivalence_checker<maths::graph_impl::node_storage<WeightMaker, Traits>>
+    : impl::node_equivalence_checker<maths::graph_impl::node_storage<WeightMaker, Traits>>
   {
   };
 
   // Static
 
-  template<class WeightMaker, std::size_t N, bool IsEmpty>
-  struct detailed_equality_checker<maths::graph_impl::static_node_storage<WeightMaker, N, IsEmpty>>
-    : impl::node_detailed_equality_checker<maths::graph_impl::static_node_storage<WeightMaker, N, IsEmpty>>
+  template<class WeightMaker, std::size_t N>
+  struct detailed_equality_checker<maths::graph_impl::static_node_storage<WeightMaker, N>>
+    : impl::node_detailed_equality_checker<maths::graph_impl::static_node_storage<WeightMaker, N>>
   {
   };
 
-  template<class WeightMaker, std::size_t N, bool IsEmpty>
-  struct equivalence_checker<maths::graph_impl::static_node_storage<WeightMaker, N, IsEmpty>>
-    : impl::node_equivalence_checker<maths::graph_impl::static_node_storage<WeightMaker, N, IsEmpty>>
+  template<class WeightMaker, std::size_t N>
+  struct equivalence_checker<maths::graph_impl::static_node_storage<WeightMaker, N>>
+    : impl::node_equivalence_checker<maths::graph_impl::static_node_storage<WeightMaker, N>>
   {
   };
 

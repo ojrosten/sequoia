@@ -22,6 +22,7 @@
 #include "Iterator.hpp"
 #include "ProtectiveWrapper.hpp"
 #include "Algorithms.hpp"
+#include "DataPoolTraits.hpp"
 
 #include <type_traits>
 
@@ -55,7 +56,10 @@ namespace sequoia::maths::graph_impl
     constexpr proxy_dereference_policy& operator=(proxy_dereference_policy&&) noexcept = default;
   };
 
-  template<class WeightMaker, class Traits, bool=std::is_empty_v<typename WeightMaker::proxy::value_type>>
+  template<class T>
+  concept empty_proxy = creator<T> && empty<typename T::proxy::value_type>;
+
+  template<class WeightMaker, class Traits>
   class node_storage : private WeightMaker
   {
     friend struct sequoia::impl::assignment_helper;
@@ -406,8 +410,8 @@ namespace sequoia::maths::graph_impl
     }
   };
   
-  template<class WeightMaker, class Traits>
-  class node_storage<WeightMaker, Traits, true>
+  template<empty_proxy WeightMaker, class Traits>
+  class node_storage<WeightMaker, Traits>
   {
   public:
     using weight_proxy_type = typename WeightMaker::proxy;

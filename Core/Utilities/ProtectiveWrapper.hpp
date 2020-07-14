@@ -38,10 +38,10 @@ namespace sequoia::utilities
       requires (!resolve_to_copy<protective_wrapper, Args...>)
     constexpr explicit protective_wrapper(Args&&... args) : m_Type{std::forward<Args>(args)...} {}
 
-    template<class Arg, class... Args>
-    constexpr void set(Arg&& arg, Args&&... args)
+    template<class... Args>
+    constexpr void set(Args&&... args)
     {
-      m_Type = T{std::forward<Arg>(arg), std::forward<Args>(args)...};
+      m_Type = T{std::forward<Args>(args)...};
     }
 
     template<invocable<T&> Fn>
@@ -54,12 +54,6 @@ namespace sequoia::utilities
     constexpr const T& get() const noexcept { return m_Type; }
   private:
     T m_Type;
-  };
-
-  template<empty T> class protective_wrapper<T>
-  {
-  public:
-    using value_type = T;
   };
 
   template<equality_comparable T>
