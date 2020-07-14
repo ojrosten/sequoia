@@ -203,14 +203,12 @@ namespace sequoia
       using edge_iterator = typename edge_storage_type::partition_iterator;      
       using init_t = std::initializer_list<std::initializer_list<edge_init_type>>;
 
-      template
-      <
-        class Allocator,
-        class... Allocators,
-        std::enable_if_t<(sizeof...(Allocators) > 0) || !std::is_same_v<std::decay_t<Allocator>, connectivity> , int> = 0
-      >
-      constexpr connectivity(const Allocator& a, const Allocators&... as)
-        : m_Edges(a, as...)
+      //template< alloc Allocator, alloc... Allocators>
+      //  requires ((sizeof...(Allocators) > 0) || !same_as<std::remove_cvref_t<Allocator>, connectivity>)
+      //constexpr connectivity(const Allocator& a, const Allocators&... as)
+      template<alloc... Allocators>
+      constexpr connectivity(const Allocators&... as)
+        : m_Edges(as...)
       {}
 
       template<class Allocator, class... Allocators>
