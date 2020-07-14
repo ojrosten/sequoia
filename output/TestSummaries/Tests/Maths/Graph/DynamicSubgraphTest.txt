@@ -1,3 +1,3 @@
 Subgraph
-[243ms]
+[207ms]
 Standard Top Level Checks:              1200;  Failures:  0  [Deep checks: 28480]

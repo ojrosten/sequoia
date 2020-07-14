@@ -203,29 +203,26 @@ namespace sequoia
       using edge_iterator = typename edge_storage_type::partition_iterator;      
       using init_t = std::initializer_list<std::initializer_list<edge_init_type>>;
 
-      //template< alloc Allocator, alloc... Allocators>
-      //  requires ((sizeof...(Allocators) > 0) || !same_as<std::remove_cvref_t<Allocator>, connectivity>)
-      //constexpr connectivity(const Allocator& a, const Allocators&... as)
       template<alloc... Allocators>
       constexpr connectivity(const Allocators&... as)
         : m_Edges(as...)
       {}
 
-      template<class Allocator, class... Allocators>
-      constexpr connectivity(init_t edges, const Allocator& a, const Allocators&... as)
-        : connectivity(direct_edge_init(), edges, a, as...)
+      template<alloc... Allocators>
+      constexpr connectivity(init_t edges, const Allocators&... as)
+        : connectivity(direct_edge_init(), edges, as...)
       {}
       
-      template<class Allocator, class... Allocators>
-      constexpr connectivity(const connectivity& c, const Allocator& a, const Allocators&... as)
-        : connectivity(direct_edge_copy(), c, a, as...)
+      template<alloc... Allocators>
+      constexpr connectivity(const connectivity& c, const Allocators&... as)
+        : connectivity(direct_edge_copy(), c, as...)
       {}
       
       constexpr connectivity(connectivity&&) noexcept = default;
 
-      template<class Allocator, class... Allocators>
-      constexpr connectivity(connectivity&& c, const Allocator& a, const Allocators&... as)
-        : m_Edges{std::move(c.m_Edges), a, as...}
+      template<alloc... Allocators>
+      constexpr connectivity(connectivity&& c, const Allocators&... as)
+        : m_Edges{std::move(c.m_Edges), as...}
       {}
 
       ~connectivity() = default;
@@ -323,11 +320,8 @@ namespace sequoia
         return m_Edges.get_allocator();
       }
 
-      template
-      <
-        class T=edge_storage_type,
-        std::enable_if_t<has_partitions_allocator_type_v<T>, int> = 0
-      >
+      template<class T=edge_storage_type>
+        requires has_partitions_allocator_type_v<T>
       auto get_edge_allocator(partitions_allocator_tag) const
       {
         return m_Edges.get_partitions_allocator();
@@ -344,26 +338,30 @@ namespace sequoia
         return m_Edges.num_partitions_capacity();
       }
 
-      template<class T=edge_storage_type, std::enable_if_t<graph_impl::has_reservable_partitions_v<T>, int> = 0>      
+      template<class T=edge_storage_type>
+        requires graph_impl::has_reservable_partitions_v<T>
       void reserve_edges(const edge_index_type partition, const edge_index_type size)
       {
         m_Edges.reserve_partition(partition, size);
       }
 
-      template<class T=edge_storage_type, std::enable_if_t<!graph_impl::has_reservable_partitions_v<T>, int> = 0>
+      template<class T=edge_storage_type>
+      requires (!graph_impl::has_reservable_partitions_v<T>)
       void reserve_edges(const edge_index_type size)
       {
         m_Edges.reserve(size);
       }
 
-      template<class T=edge_storage_type, std::enable_if_t<graph_impl::has_reservable_partitions_v<T>, int> = 0>
+      template<class T=edge_storage_type>
+        requires graph_impl::has_reservable_partitions_v<T>
       [[nodiscard]]
       size_type edges_capacity(const edge_index_type partition) const
       {
         return m_Edges.partition_capacity(partition);
       }
 
-      template<class T=edge_storage_type, std::enable_if_t<!graph_impl::has_reservable_partitions_v<T>, int> = 0>
+      template<class T=edge_storage_type>
+        requires (!graph_impl::has_reservable_partitions_v<T>)
       [[nodiscard]]
       size_type edges_capacity() const noexcept
       {
@@ -923,7 +921,7 @@ namespace sequoia
       edge_storage_type m_Edges;
 
       // constructor implementations
-      template<class... Allocators>
+      template<alloc... Allocators>
       constexpr connectivity(direct_edge_init_type, init_t edges, const Allocators&... as)
         : m_Edges{edges, as...}
       {
@@ -936,26 +934,22 @@ namespace sequoia
          process_edges(edges);
       }
 
-      template
-      <        
-        class EdgeAllocator,
-        class PartitionAllocator,
-        std::enable_if_t<std::is_constructible_v<edge_storage_type, EdgeAllocator, PartitionAllocator>, int> = 0
-      >
+      template<alloc EdgeAllocator, alloc PartitionAllocator>
+        requires constructible_from<edge_storage_type, EdgeAllocator, PartitionAllocator>
       constexpr connectivity(indirect_edge_init_type, init_t edges, const EdgeAllocator& edgeAllocator, const PartitionAllocator& partitionAllocator)
         : m_Edges(edgeAllocator, partitionAllocator)
       {
          process_edges(edges);
       }
 
-      template<class EdgeAllocator>
+      template<alloc EdgeAllocator>
       constexpr connectivity(indirect_edge_init_type, init_t edges, const EdgeAllocator& edgeAllocator)
         : m_Edges(edgeAllocator)
       {
          process_edges(edges);
       }
 
-      template<class... Allocators>
+      template<alloc... Allocators>
       constexpr connectivity(direct_edge_copy_type, const connectivity& in, const Allocators&... as)
         : m_Edges{in.m_Edges, as...}
       {}
@@ -977,12 +971,8 @@ namespace sequoia
         copy_edges(in);
       }
 
-      template
-      <
-        class EdgeAllocator,
-        class PartitionAllocator,
-        std::enable_if_t<std::is_constructible_v<edge_storage_type, EdgeAllocator, PartitionAllocator>, int> = 0
-      >
+      template<alloc EdgeAllocator, alloc PartitionAllocator>
+        requires constructible_from<edge_storage_type, EdgeAllocator, PartitionAllocator>
       constexpr connectivity(indirect_edge_copy_type, const connectivity& in, const EdgeAllocator& edgeAllocator, const PartitionAllocator& partitionAllocator)
         : m_Edges(std::allocator_traits<EdgeAllocator>::select_on_container_copy_construction(edgeAllocator),
                   std::allocator_traits<PartitionAllocator>::select_on_container_copy_construction(partitionAllocator))
@@ -990,11 +980,8 @@ namespace sequoia
          copy_edges(in);
       }
 
-      template
-      <
-        class EdgeAllocator,
-        std::enable_if_t<std::is_constructible_v<edge_storage_type, EdgeAllocator>, int> = 0
-      >
+      template<alloc EdgeAllocator>
+        requires constructible_from<edge_storage_type, EdgeAllocator>
       constexpr connectivity(indirect_edge_copy_type, const connectivity& in, const EdgeAllocator& edgeAllocator)
         : m_Edges(std::allocator_traits<EdgeAllocator>::select_on_container_copy_construction(edgeAllocator))
       {
@@ -1185,7 +1172,7 @@ namespace sequoia
         return end;
       }
       
-      template<class Edges, class... Allocators>
+      template<class Edges, alloc... Allocators>
       constexpr void process_edges(Edges& orderedEdges, const Allocators&... allocs)
       {
         constexpr bool sortWeights{!std::is_empty_v<edge_weight_type> && is_orderable_v<edge_weight_type>};

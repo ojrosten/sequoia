@@ -1,3 +1,3 @@
 Dynamic Graph Fixed Topology
-[56ms]
+[55ms]
 Standard Top Level Checks:                72;  Failures:  0  [Deep checks: 5652]
