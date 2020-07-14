@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file GraphTraversalFunctions.hpp
+/*! \file
     \brief Breadth first, depth first and priority searches.
 
  */
@@ -24,9 +24,9 @@ namespace sequoia::maths
     class NFBE = null_functor,
     class NFAE = null_functor,
     class EFTF = null_functor,
-    class ESTF = null_functor,
-    std::enable_if_t<G::directedness != directed_flavour::directed, int> = 0
+    class ESTF = null_functor
   >
+    requires (G::directedness != directed_flavour::directed)
   constexpr auto breadth_first_search(const G& graph, const bool findDisconnectedPieces = true,
                  const std::size_t start = 0,
                  NFBE&& nodeFunctorBeforeEdges     = null_functor{},
@@ -54,9 +54,9 @@ namespace sequoia::maths
     class G = void,
     class NFBE = null_functor,
     class NFAE = null_functor,
-    class EFTF = null_functor,
-    std::enable_if_t<G::directedness == directed_flavour::directed, int> = 0
+    class EFTF = null_functor
   >
+    requires (G::directedness == directed_flavour::directed)
   constexpr auto breadth_first_search(const G& graph, const bool findDisconnectedPieces = true,
                  const std::size_t start = 0,
                  NFBE&& nodeFunctorBeforeEdges     = null_functor{},
@@ -84,9 +84,9 @@ namespace sequoia::maths
     class NFBE = null_functor,
     class NFAE = null_functor,
     class EFTF = null_functor,
-    class ESTF = null_functor,
-    std::enable_if_t<G::directedness != directed_flavour::directed, int> = 0
+    class ESTF = null_functor
   >
+    requires (G::directedness != directed_flavour::directed)
   constexpr auto depth_first_search(const G& graph, const bool findDisconnectedPieces = true,
                  const std::size_t start = 0,
                  NFBE&& nodeFunctorBeforeEdges     = null_functor{},
@@ -114,9 +114,9 @@ namespace sequoia::maths
     class G = void,
     class NFBE = null_functor,
     class NFAE = null_functor,
-    class EFTF = null_functor,
-    std::enable_if_t<G::directedness == directed_flavour::directed, int> = 0
+    class EFTF = null_functor
   >
+    requires (G::directedness == directed_flavour::directed)
   constexpr auto depth_first_search(const G& graph, const bool findDisconnectedPieces = true,
                  const std::size_t start = 0,
                  NFBE&& nodeFunctorBeforeEdges     = null_functor{},
@@ -145,9 +145,9 @@ namespace sequoia::maths
     class NFAE = null_functor,
     class EFTF = null_functor,
     class ESTF = null_functor,
-    class QCompare = graph_impl::node_comparer<G, std::less<typename G::node_weight_type>>,
-    std::enable_if_t<G::directedness != directed_flavour::directed, int> = 0
+    class QCompare = graph_impl::node_comparer<G, std::less<typename G::node_weight_type>>
   >
+    requires (G::directedness != directed_flavour::directed)
   constexpr auto priority_search(const G& graph, const bool findDisconnectedPieces = true,
                  const std::size_t start = 0,
                  NFBE&& nodeFunctorBeforeEdges     = null_functor{},
@@ -176,9 +176,9 @@ namespace sequoia::maths
     class NFBE = null_functor,
     class NFAE = null_functor,
     class EFTF = null_functor,
-    class QCompare = graph_impl::node_comparer<G, std::less<typename G::node_weight_type>>,
-    std::enable_if_t<G::directedness == directed_flavour::directed, int> = 0
+    class QCompare = graph_impl::node_comparer<G, std::less<typename G::node_weight_type>>
   >
+    requires (G::directedness == directed_flavour::directed)
   constexpr auto priority_search(const G& graph, const bool findDisconnectedPieces = true,
                  const std::size_t start = 0,
                  NFBE&& nodeFunctorBeforeEdges     = null_functor{},

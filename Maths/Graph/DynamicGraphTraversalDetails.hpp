@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file DynamicGraphTraversalDetails.hpp
+/*! \file
     \brief Meta-prorgamming utilities for traversals of dynamic graphs.
 
  */
