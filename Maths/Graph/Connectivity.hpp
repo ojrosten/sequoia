@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file Connectivity.hpp
+/*! \file
     \brief Implementation for the storage of graph edges.
  */
 

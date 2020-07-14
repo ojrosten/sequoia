@@ -17,12 +17,14 @@
 namespace sequoia
 {
   template<class T>
-  concept sharing_policy = requires(const T& t) {
+  concept sharing_policy = requires() {
     typename T::handle_type;
     typename T::elementary_type;
 
-    { t.get(std::declval<typename T::handle_type>()) } -> same_as<const typename T::elementary_type&>;
-    { t.get_ptr(std::declval<typename T::handle_type>()) } -> same_as<const typename T::elementary_type*>;
+    { T::get(std::declval<typename T::handle_type>()) } -> same_as<const typename T::elementary_type&>;
+    { T::get_ptr(std::declval<typename T::handle_type>()) } -> same_as<const typename T::elementary_type*>;
+    { T::get(makelval<typename T::handle_type>()) } -> same_as<typename T::elementary_type&>;
+    { T::get_ptr(makelval<typename T::handle_type>()) } -> same_as<typename T::elementary_type*>;
     { T::make() } -> same_as<typename T::handle_type>;
   };
 }

@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file Edge.hpp
+/*! \file
     \brief Various edge types for use by graphs.
 
     The fundamental building block of the edge types is the edge_base. This
@@ -47,7 +47,7 @@ namespace sequoia
         'target node' to which the edge points.
     */
     
-    template<class IndexType>
+    template<integral IndexType>
     class edge_base
     {   
     public:
@@ -98,8 +98,7 @@ namespace sequoia
       class Weight,
       template <class> class WeightSharingPolicy,
       class WeightProxy,
-      class IndexType,
-      bool=std::is_empty_v<Weight>
+      integral IndexType
     >
     class weighting
     {
@@ -139,17 +138,8 @@ namespace sequoia
     protected:
       ~weighting() = default;
       
-      template
-      <
-        class... Args,
-        std::enable_if_t
-        <
-             !resolve_to_copy_constructor_v<weighting, Args...>
-          && !is_base_of_head_v<weighting, Args...>
-          ,
-          int
-        > = 0
-      >
+      template<class... Args>
+        requires (!resolve_to_copy<weighting, Args...> && !is_base_of_head_v<weighting, Args...>)
       constexpr explicit weighting(Args&&... args) : m_Weight{wrapped_weight::make(std::forward<Args>(args)...)}
       {}
 
@@ -182,22 +172,22 @@ namespace sequoia
 
     template
     <
-      class Weight,
+      empty Weight,
       template <class> class WeightSharingPolicy,
       class WeightProxy,
-      class IndexType
+      integral IndexType
     >
-    class weighting<Weight, WeightSharingPolicy, WeightProxy, IndexType, true>
+    class weighting<Weight, WeightSharingPolicy, WeightProxy, IndexType>
     {
     public:
       using weight_type = Weight;
       using weight_proxy_type = WeightProxy;
 
       [[nodiscard]]
-      friend constexpr bool operator==(const weighting&, const weighting&) noexcept { return true; }
+      friend constexpr bool operator==(const weighting&, const weighting&) noexcept = default;
       
       [[nodiscard]]
-      friend constexpr bool operator!=(const weighting&, const weighting&) noexcept { return false; }
+      friend constexpr bool operator!=(const weighting&, const weighting&) noexcept = default;
     protected:
       constexpr weighting() = default;      
       ~weighting() = default;
@@ -222,7 +212,7 @@ namespace sequoia
       class Weight,
       template <class> class WeightSharingPolicy,
       class WeightProxy,
-      class IndexType
+      integral IndexType
     >
     class partial_edge_base : public edge_base<IndexType>, public weighting<Weight, WeightSharingPolicy, WeightProxy, IndexType>
     {
@@ -231,11 +221,8 @@ namespace sequoia
       using index_type = IndexType;
       using weight_proxy_type = WeightProxy;
 
-      template
-      <
-        class... Args,
-        std::enable_if_t<!resolve_to_copy_constructor_v<partial_edge_base, Args...>, int> = 0
-      >
+      template<class... Args>
+        requires (!resolve_to_copy<partial_edge_base, Args...>)
       constexpr explicit partial_edge_base(const index_type target, Args&&... args)
         : edge_base<IndexType>{target}
         , weighting<Weight, WeightSharingPolicy, WeightProxy, IndexType>{std::forward<Args>(args)...}
@@ -251,16 +238,9 @@ namespace sequoia
       constexpr partial_edge_base(partial_edge_base&& in) noexcept = default;
 
       [[nodiscard]]
-      friend constexpr bool operator==(const partial_edge_base& lhs, const partial_edge_base& rhs) noexcept
-      {
-        return (static_cast<const edge_base<IndexType>&>(lhs) == static_cast<const edge_base<IndexType>&>(rhs))
-            && (static_cast<const weighting<Weight, WeightSharingPolicy, WeightProxy, IndexType>&>(lhs) == static_cast<const weighting<Weight, WeightSharingPolicy, WeightProxy, IndexType>&>(rhs));
-      }
+      friend constexpr bool operator==(const partial_edge_base& lhs, const partial_edge_base& rhs) noexcept = default;
 
-      friend constexpr bool operator!=(const partial_edge_base& lhs, const partial_edge_base& rhs) noexcept
-      {
-        return !(lhs == rhs);
-      }
+      friend constexpr bool operator!=(const partial_edge_base& lhs, const partial_edge_base& rhs) noexcept = default;
     protected:      
       ~partial_edge_base() = default;
 
@@ -284,7 +264,7 @@ namespace sequoia
       class Weight,
       template <class> class WeightSharingPolicy,
       class WeightProxy,
-      class IndexType=std::size_t
+      integral IndexType=std::size_t
     >
     class partial_edge : public partial_edge_base<Weight, WeightSharingPolicy, WeightProxy, IndexType>
     {
@@ -305,7 +285,7 @@ namespace sequoia
       class Weight,
       template <class> class WeightSharingPolicy,
       class WeightProxy,
-      class IndexType=std::size_t
+      integral IndexType=std::size_t
     >
     class decorated_edge_base : public partial_edge_base<Weight, WeightSharingPolicy, WeightProxy, IndexType>
     {
@@ -313,11 +293,8 @@ namespace sequoia
       using weight_type = typename partial_edge_base<Weight, WeightSharingPolicy, WeightProxy, IndexType>::weight_type;
       using index_type = typename partial_edge_base<Weight, WeightSharingPolicy, WeightProxy, IndexType>::index_type;
 
-      template
-      <
-        class... Args,
-        std::enable_if_t<!resolve_to_copy_constructor_v<decorated_edge_base, Args...>, int> = 0
-      >
+      template<class... Args>
+        requires (!resolve_to_copy<decorated_edge_base, Args...>)
       constexpr decorated_edge_base(const index_type target, const index_type auxIndex, Args&&... args)
         : partial_edge_base<Weight, WeightSharingPolicy, WeightProxy, IndexType>{target, std::forward<Args>(args)...}
         , m_AuxiliaryIndex{auxIndex}
@@ -334,17 +311,10 @@ namespace sequoia
       constexpr decorated_edge_base& operator=(decorated_edge_base&&)          = default;
 
       [[nodiscard]]
-      friend constexpr bool operator==(const decorated_edge_base& lhs, const decorated_edge_base& rhs) noexcept
-      {
-        return (static_cast<const partial_edge_base<Weight, WeightSharingPolicy, WeightProxy, IndexType>&>(lhs) == static_cast<const partial_edge_base<Weight, WeightSharingPolicy, WeightProxy, IndexType>&>(rhs))
-        && (lhs.auxiliary_index() == rhs.auxiliary_index());
-      }
+      friend constexpr bool operator==(const decorated_edge_base& lhs, const decorated_edge_base& rhs) noexcept = default;
 
       [[nodiscard]]
-      friend constexpr bool operator!=(const decorated_edge_base& lhs, const decorated_edge_base& rhs) noexcept
-      {
-        return !(lhs == rhs);
-      }
+      friend constexpr bool operator!=(const decorated_edge_base& lhs, const decorated_edge_base& rhs) noexcept = default;
     protected:      
       ~decorated_edge_base() = default;
 
@@ -369,7 +339,7 @@ namespace sequoia
       class Weight,
       template <class> class WeightSharingPolicy,
       class WeightProxy,
-      class IndexType=std::size_t
+      integral IndexType=std::size_t
     >
     class embedded_partial_edge : public decorated_edge_base<Weight, WeightSharingPolicy, WeightProxy, IndexType>
     {
@@ -400,7 +370,7 @@ namespace sequoia
     <
       class Weight,
       class WeightProxy,
-      class IndexType=std::size_t
+      integral IndexType=std::size_t
     >
     class edge : public decorated_edge_base<Weight, data_sharing::independent, WeightProxy, IndexType>
     {
@@ -410,11 +380,8 @@ namespace sequoia
       using index_type = typename decorated_edge_base<Weight, data_sharing::independent, WeightProxy, IndexType>::index_type;
       using weight_proxy_type = WeightProxy;
 
-      template
-      <
-        class... Args,
-        std::enable_if_t<!resolve_to_copy_constructor_v<edge, Args...>, int> = 0
-      >
+      template<class... Args>
+        requires (!resolve_to_copy<edge, Args...>)
       constexpr edge(const index_type source, const index_type target, Args&&... args)
         : decorated_edge_base<Weight, data_sharing::independent, WeightProxy, IndexType>{target, source, std::forward<Args>(args)...}
       {
@@ -470,7 +437,7 @@ namespace sequoia
       class Weight,
       template <class> class WeightSharingPolicy,
       class WeightProxy,
-      class IndexType=std::size_t
+      integral IndexType=std::size_t
     >
     class embedded_edge : public decorated_edge_base<Weight, WeightSharingPolicy, WeightProxy, IndexType>
     {
@@ -479,11 +446,8 @@ namespace sequoia
       using weight_type = typename decorated_edge_base<Weight, WeightSharingPolicy, WeightProxy, IndexType>::weight_type;
       using index_type = typename decorated_edge_base<Weight, WeightSharingPolicy, WeightProxy, IndexType>::index_type;
 
-      template
-      <
-        class... Args,
-        std::enable_if_t<!resolve_to_copy_constructor_v<embedded_edge, Args...>, int> = 0
-      >
+      template<class... Args>
+      requires (!resolve_to_copy<embedded_edge, Args...>)
       constexpr embedded_edge(const index_type source, const index_type target, const index_type auxIndex, Args&&... args)
         : decorated_edge_base<Weight, WeightSharingPolicy, WeightProxy, IndexType>{target, auxIndex, std::forward<Args>(args)...}
         , m_HostIndex{source}

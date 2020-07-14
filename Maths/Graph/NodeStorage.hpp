@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file NodeStorage.hpp
+/*! \file
     \brief Classes to allow homogeneous treatment of graphs with empty/non-empty node weights.
 
     These classes are designed to be inherited from publically, in order that graphs may aggregate
@@ -61,7 +61,7 @@ namespace sequoia::maths::graph_impl
     friend struct sequoia::impl::assignment_helper;
     
   private:
-    template<class S> using Container = typename Traits::template container_type<S>;    
+    template<class S> using Container = typename Traits::template container_type<S>;
   public:
     using node_weight_container_type = Container<typename WeightMaker::weight_proxy>;
     using weight_proxy_type          = typename WeightMaker::weight_proxy;
@@ -135,22 +135,19 @@ namespace sequoia::maths::graph_impl
     }
 
     [[nodiscard]]
-    friend constexpr bool operator!=(const node_storage& lhs, const node_storage& rhs) noexcept
-    {
-      return !(lhs == rhs);
-    }
+    friend constexpr bool operator!=(const node_storage&, const node_storage&) noexcept = default;
   protected:
-    template<class Allocator>
+    template<alloc Allocator>
     constexpr explicit node_storage(const Allocator& allocator)
       : m_NodeWeights(allocator)
     {}
 
-    template<class Allocator>
+    template<alloc Allocator>
     constexpr node_storage(const size_t n, const Allocator& allocator)
       : m_NodeWeights(init(n), allocator)
     {}
 
-    template<class Allocator>
+    template<alloc Allocator>
     constexpr node_storage(std::initializer_list<weight_type> weights, const Allocator& allocator)
       : m_NodeWeights(init(weights), allocator)
     {}
@@ -159,14 +156,14 @@ namespace sequoia::maths::graph_impl
       : node_storage{direct_copy(), in}
     {}
 
-    template<class Allocator>
+    template<alloc Allocator>
     constexpr node_storage(const node_storage& in, const Allocator& allocator)
       : node_storage{direct_copy(), in, allocator}
     {}
       
     constexpr node_storage(node_storage&&) noexcept = default;
 
-    template<class Allocator>
+    template<alloc Allocator>
     constexpr node_storage(node_storage&& s, const Allocator& allocator) noexcept
       : m_NodeWeights{std::move(s.m_NodeWeights), allocator}
     {}
@@ -198,7 +195,7 @@ namespace sequoia::maths::graph_impl
       sequoia::swap(m_NodeWeights, other.m_NodeWeights);
     }
 
-    template<class Allocator>
+    template<alloc Allocator>
     void reset(const Allocator& allocator) noexcept
     {
       const node_weight_container_type storage(allocator);
@@ -321,7 +318,7 @@ namespace sequoia::maths::graph_impl
       : m_NodeWeights{in.m_NodeWeights}
     {}
 
-    template<class Allocator>
+    template<alloc Allocator>
     constexpr node_storage(direct_copy_type, const node_storage& in, const Allocator& allocator)
       : m_NodeWeights{in.m_NodeWeights, allocator}
     {}
@@ -330,7 +327,7 @@ namespace sequoia::maths::graph_impl
       : m_NodeWeights{clone(in.m_NodeWeights, in.m_NodeWeights.get_allocator())}
     {}
 
-    template<class Allocator>
+    template<alloc Allocator>
     constexpr node_storage(indirect_copy_type, const node_storage& in, const Allocator& allocator)
       : m_NodeWeights{clone(in.m_NodeWeights, allocator)}
     {}
@@ -363,7 +360,7 @@ namespace sequoia::maths::graph_impl
       return nodeWeights;
     }
 
-    template<class Allocator>
+    template<alloc Allocator>
     [[nodiscard]]
     node_weight_container_type clone(const node_weight_container_type& from, const Allocator& alloc)
     {
@@ -420,10 +417,10 @@ namespace sequoia::maths::graph_impl
     constexpr node_storage() noexcept = default;
 
     [[nodiscard]]
-    constexpr friend bool operator==(const node_storage&, const node_storage&) noexcept { return true;}
+    constexpr friend bool operator==(const node_storage&, const node_storage&) noexcept = default;
 
     [[nodiscard]]
-    constexpr friend bool operator!=(const node_storage& lhs, const node_storage& rhs) noexcept { return !(lhs == rhs);}
+    constexpr friend bool operator!=(const node_storage&, const node_storage&) noexcept = default;
   protected:
     constexpr node_storage(const node_storage&) noexcept = default;
     constexpr node_storage(node_storage&&)      noexcept = default;

@@ -8,7 +8,7 @@
 #pragma once
 
 /*! \file
-    \brief Classes to allow homogenous treatment of pooled/spawner data.
+    \brief Classes to allow homogenous treatment of pooled/spawned data.
 
  */
 
@@ -40,7 +40,7 @@ namespace sequoia::data_sharing
     friend constexpr bool operator==(const spawner&, const spawner&) noexcept = default;
 
     [[nodiscard]]
-    friend constexpr bool operator!=(const spawner& lhs, const spawner& rhs) noexcept = default;
+    friend constexpr bool operator!=(const spawner&, const spawner&) noexcept = default;
   };
 
   namespace impl
@@ -278,7 +278,8 @@ namespace sequoia::data_sharing
     }
 
     template<class... Args>
-    [[nodiscard]] proxy make(Args&&... args)
+    [[nodiscard]]
+    proxy make(Args&&... args)
     {
       const T nascent{std::forward<Args>(args)...};
       const auto found = std::find_if(m_Data.begin(), m_Data.end(), [&nascent](const auto& pData) { return pData->get() == nascent;});

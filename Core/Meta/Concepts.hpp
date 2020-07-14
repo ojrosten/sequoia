@@ -142,6 +142,9 @@ namespace sequoia
       std::invoke(std::forward<F>(f), std::forward<Args>(args)...);
   };
 
+  template < class T >
+  concept integral = std::is_integral_v<T>;
+
   // concepts for specifically for sequoia
 
   template<class T>

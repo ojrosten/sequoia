@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file DynamicGraphImpl.hpp
+/*! \file
     \brief Implementation details for edge traits.
 
  */
@@ -44,9 +44,9 @@ namespace sequoia::maths::graph_impl
   <        
     graph_flavour GraphFlavour,
     class EdgeWeight,
-    class EdgeWeightPooling,
+    creator EdgeWeightPooling,
     class EdgeStorageTraits,
-    class IndexType
+    integral IndexType
   >
   struct dynamic_edge_traits : public
     edge_type_generator

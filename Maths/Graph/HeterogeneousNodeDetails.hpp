@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file HeterogeneousNodeDetails.hpp
+/*! \file
     \brief Implementation details for heterogeneous nodes.
 
  */

@@ -7,12 +7,13 @@
 
 #pragma once
 
-/*! \file GraphDetails.hpp
+/*! \file
     \brief Meta-programming elements for graph implementation.
 
  */
 
 #include "Edge.hpp"
+#include "DataPoolTraits.hpp"
 
 namespace sequoia
 {
@@ -77,33 +78,33 @@ namespace sequoia
 
       // Edge Weight Wrapper
 
-      template<class EdgeWeight, class EdgeWeightPooling, bool=std::is_empty_v<EdgeWeight>>
+      template<class EdgeWeight, creator EdgeWeightCreator>
       struct edge_weight_wrapper
       {
-        using proxy = typename EdgeWeightPooling::proxy;
+        using proxy = typename EdgeWeightCreator::proxy;
       };
 
 
-      template<class EdgeWeight, class EdgeWeightPooling>
-      struct edge_weight_wrapper<EdgeWeight, EdgeWeightPooling, true>
+      template<empty EdgeWeight, creator EdgeWeightCreator>
+      struct edge_weight_wrapper<EdgeWeight, EdgeWeightCreator>
       {
         using proxy = typename utilities::protective_wrapper<EdgeWeight>;
       };
       
       // Edge (Weight) Sharing      
        
-      template<class EdgeWeight, class EdgeWeightPooling>
+      template<class EdgeWeight, creator EdgeWeightCreator>
       constexpr bool big_proxy() noexcept
       {        
         // 2 * sizeof(proxy) > 2 * sizeof(proxy*) + sizeof(proxy)
-        return sizeof(typename edge_weight_wrapper<EdgeWeight, EdgeWeightPooling>::proxy)
-          > 2*sizeof(typename edge_weight_wrapper<EdgeWeight,EdgeWeightPooling>::proxy*);
+        return sizeof(typename edge_weight_wrapper<EdgeWeight, EdgeWeightCreator>::proxy)
+          > 2*sizeof(typename edge_weight_wrapper<EdgeWeight,EdgeWeightCreator>::proxy*);
       }
 
-      template<class EdgeWeight, class EdgeWeightPooling>
+      template<class EdgeWeight, creator EdgeWeightCreator>
       constexpr bool copy_constructible_proxy() noexcept
       {
-        using proxy = typename edge_weight_wrapper<EdgeWeight, EdgeWeightPooling>::proxy;
+        using proxy = typename edge_weight_wrapper<EdgeWeight, EdgeWeightCreator>::proxy;
         return std::is_copy_constructible_v<proxy>;
       }
 
@@ -112,14 +113,14 @@ namespace sequoia
         graph_flavour GraphFlavour,
         edge_sharing_preference SharingPreference,
         class EdgeWeight,
-        class EdgeWeightPooling
+        creator EdgeWeightCreator
       >
       struct sharing_traits
       {
       private:
         constexpr static bool default_weight_sharing{
               undirected(GraphFlavour)
-           && (big_proxy<EdgeWeight, EdgeWeightPooling>() || !copy_constructible_proxy<EdgeWeight, EdgeWeightPooling>())
+           && (big_proxy<EdgeWeight, EdgeWeightCreator>() || !copy_constructible_proxy<EdgeWeight, EdgeWeightCreator>())
         };
       public:
         static_assert((GraphFlavour != graph_flavour::directed) || (SharingPreference != edge_sharing_preference::shared_weight), "A directed graph without embedding cannot have shared weights");
@@ -189,18 +190,18 @@ namespace sequoia
       <
         graph_flavour GraphFlavour,
         class EdgeWeight,
-        class EdgeWeightPooling,
-        class IndexType,
+        creator EdgeWeightCreator,
+        integral IndexType,
         edge_sharing_preference SharingPreference,
-        bool SharedEdge=sharing_traits<GraphFlavour, SharingPreference, EdgeWeight, EdgeWeightPooling>::shared_edge_v
+        bool SharedEdge=sharing_traits<GraphFlavour, SharingPreference, EdgeWeight, EdgeWeightCreator>::shared_edge_v
       >
       struct edge_type_generator
       {
-        using sharing = sharing_traits<GraphFlavour, SharingPreference, EdgeWeight, EdgeWeightPooling>;
+        using sharing = sharing_traits<GraphFlavour, SharingPreference, EdgeWeight, EdgeWeightCreator>;
         constexpr static bool shared_weight_v{sharing::shared_weight_v};
         constexpr static bool shared_edge_v{SharedEdge};
         
-        using edge_weight_proxy = typename edge_weight_wrapper<EdgeWeight, EdgeWeightPooling>::proxy;
+        using edge_weight_proxy = typename edge_weight_wrapper<EdgeWeight, EdgeWeightCreator>::proxy;
         using edge_type = partial_edge<EdgeWeight, sharing_v_to_type<shared_weight_v>::template policy, edge_weight_proxy, IndexType>;
         using edge_init_type = typename edge_init_type_generator<edge_type, GraphFlavour>::edge_init_type;
         
@@ -211,25 +212,25 @@ namespace sequoia
       template
       <
         class EdgeWeight,
-        class EdgeWeightPooling,
-        class IndexType,
+        creator EdgeWeightCreator,
+        integral IndexType,
         edge_sharing_preference SharingPreference,
         bool SharedEdge
       >
       struct edge_type_generator<
         graph_flavour::undirected_embedded,
         EdgeWeight,
-        EdgeWeightPooling,
+        EdgeWeightCreator,
         IndexType,
         SharingPreference,
         SharedEdge
       >
       {
-        using sharing = sharing_traits<graph_flavour::undirected_embedded, SharingPreference, EdgeWeight, EdgeWeightPooling>;
+        using sharing = sharing_traits<graph_flavour::undirected_embedded, SharingPreference, EdgeWeight, EdgeWeightCreator>;
         constexpr static bool shared_weight_v{sharing::shared_weight_v};
         constexpr static bool shared_edge_v{sharing::shared_edge_v};
         
-        using edge_weight_proxy = typename edge_weight_wrapper<EdgeWeight, EdgeWeightPooling>::proxy;
+        using edge_weight_proxy = typename edge_weight_wrapper<EdgeWeight, EdgeWeightCreator>::proxy;
         using edge_type = embedded_partial_edge<EdgeWeight, sharing_v_to_type<shared_weight_v>::template policy, edge_weight_proxy, IndexType>;
         using edge_init_type = typename edge_init_type_generator<edge_type, graph_flavour::undirected_embedded>::edge_init_type;
 
@@ -240,18 +241,18 @@ namespace sequoia
       template
       <
         class EdgeWeight,
-        class EdgeWeightPooling,
-        class IndexType,
+        creator EdgeWeightCreator,
+        integral IndexType,
         edge_sharing_preference SharingPreference
       >
-      struct edge_type_generator<graph_flavour::directed_embedded, EdgeWeight, EdgeWeightPooling, IndexType, SharingPreference, true>
+      struct edge_type_generator<graph_flavour::directed_embedded, EdgeWeight, EdgeWeightCreator, IndexType, SharingPreference, true>
       {
-        using sharing = sharing_traits<graph_flavour::directed_embedded, SharingPreference, EdgeWeight, EdgeWeightPooling>;
+        using sharing = sharing_traits<graph_flavour::directed_embedded, SharingPreference, EdgeWeight, EdgeWeightCreator>;
         constexpr static bool shared_weight_v{sharing::shared_weight_v};
         constexpr static bool shared_edge_v{sharing::shared_edge_v};
         static_assert(shared_edge_v && !shared_weight_v);
 
-        using edge_weight_proxy = typename edge_weight_wrapper<EdgeWeight, EdgeWeightPooling>::proxy;
+        using edge_weight_proxy = typename edge_weight_wrapper<EdgeWeight, EdgeWeightCreator>::proxy;
         using edge_type = edge<EdgeWeight, edge_weight_proxy, IndexType>;
         using edge_init_type = typename edge_init_type_generator<edge_type, graph_flavour::directed_embedded>::edge_init_type;
         
@@ -261,19 +262,19 @@ namespace sequoia
       // directed_embedded: embedded edge
       template
       <
-        class EdgeWeight,        
-        class EdgeWeightPooling,
-        class IndexType,
+        class EdgeWeight,
+        creator EdgeWeightCreator,
+        integral IndexType,
         edge_sharing_preference SharingPreference
       >
-      struct edge_type_generator<graph_flavour::directed_embedded, EdgeWeight, EdgeWeightPooling, IndexType, SharingPreference, false>
+      struct edge_type_generator<graph_flavour::directed_embedded, EdgeWeight, EdgeWeightCreator, IndexType, SharingPreference, false>
       {
-        using sharing = sharing_traits<graph_flavour::directed_embedded, SharingPreference, EdgeWeight, EdgeWeightPooling>;
+        using sharing = sharing_traits<graph_flavour::directed_embedded, SharingPreference, EdgeWeight, EdgeWeightCreator>;
         constexpr static bool shared_weight_v{sharing::shared_weight_v};
         constexpr static bool shared_edge_v{sharing::shared_edge_v};      
         static_assert(!sharing::shared_edge_v);
         
-        using edge_weight_proxy = typename edge_weight_wrapper<EdgeWeight, EdgeWeightPooling>::proxy;
+        using edge_weight_proxy = typename edge_weight_wrapper<EdgeWeight, EdgeWeightCreator>::proxy;
         using edge_type = embedded_edge<EdgeWeight, sharing_v_to_type<shared_weight_v>::template policy, edge_weight_proxy, IndexType>;
         using edge_init_type = typename edge_init_type_generator<edge_type, graph_flavour::directed_embedded>::edge_init_type;
         
@@ -298,27 +299,27 @@ namespace sequoia
       
       // Weight Makers
       
-      template<class WeightPooling, bool=std::is_empty_v<WeightPooling>>
+      template<creator WeightCreator, bool=std::is_empty_v<WeightCreator>>
       class weight_maker
       {
       public:
-        using weight_proxy = typename WeightPooling::proxy;
+        using weight_proxy = typename WeightCreator::proxy;
         using weight_type = typename weight_proxy::value_type;
 
         template<class... Args>
         [[nodiscard]]
         constexpr static weight_proxy make(Args&&... args)
         {
-          return WeightPooling::make(std::forward<Args>(args)...);
+          return WeightCreator::make(std::forward<Args>(args)...);
         }
       private:
       };
 
-      template<class WeightPooling>
-      class weight_maker<WeightPooling, false>
+      template<creator WeightCreator>
+      class weight_maker<WeightCreator, false>
       {
       public:
-        using weight_proxy = typename WeightPooling::proxy;
+        using weight_proxy = typename WeightCreator::proxy;
         using weight_type = typename weight_proxy::value_type;
 
         template<class... Args>
@@ -328,7 +329,7 @@ namespace sequoia
           return m_Pool.make(std::forward<Args>(args)...);
         }
       private:
-        WeightPooling m_Pool;
+        WeightCreator m_Pool;
       };
                            
       // Determine dynamic reservartion type etc

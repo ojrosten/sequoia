@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file StaticGraphImpl.hpp
+/*! \file
     \brief Edge traits for static homogeneous graphs.
  */
 
@@ -21,7 +21,7 @@ namespace sequoia::maths::graph_impl
     std::size_t Order,
     std::size_t Size,
     class EdgeWeight,
-    class IndexType
+    integral IndexType
   >
   struct static_edge_traits
     : public edge_type_generator<GraphFlavour, EdgeWeight, data_sharing::spawner<EdgeWeight>, IndexType, edge_sharing_preference::independent>

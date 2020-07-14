@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file HeterogeneousStaticGraph.hpp
+/*! \file
     \brief Traits and classes for static graphs with heterogeneous node weights.
 
  */

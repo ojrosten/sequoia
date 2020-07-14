@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file StaticNodeStorage.hpp
+/*! \file
     \brief Classes for node storage that may be used in a constexpr context.
 
  */
@@ -58,10 +58,10 @@ namespace sequoia::maths::graph_impl
     constexpr static_node_storage(const std::size_t) {}
 
     [[nodiscard]]
-    constexpr friend bool operator==(const static_node_storage&, const static_node_storage&) noexcept { return true;}
+    constexpr friend bool operator==(const static_node_storage&, const static_node_storage&) noexcept = default;
 
     [[nodiscard]]
-    constexpr friend bool operator!=(const static_node_storage& lhs, const static_node_storage& rhs) noexcept { return !(lhs == rhs);}
+    constexpr friend bool operator!=(const static_node_storage&, const static_node_storage&) noexcept = default;
 
     [[nodiscard]]
     constexpr static std::size_t size() noexcept { return N; }

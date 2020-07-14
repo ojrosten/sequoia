@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file HeterogeneousNodeStorage.hpp
+/*! \file
     \brief Node storage for graphs with heterogeneous node weights.
 
  */
@@ -85,15 +85,11 @@ namespace sequoia::maths::graph_impl
 
     [[nodiscard]]
     friend constexpr bool operator==(const heterogeneous_node_storage& lhs, const heterogeneous_node_storage& rhs) noexcept
-    {
-      return lhs.m_NodeWeights == rhs.m_NodeWeights;
-    }
+      = default;
 
     [[nodiscard]]
     friend constexpr bool operator!=(const heterogeneous_node_storage& lhs, const heterogeneous_node_storage& rhs) noexcept
-    {
-      return !(lhs == rhs);
-    }
+      = default;
   protected:    
     struct null_proxy_tag {};
     
