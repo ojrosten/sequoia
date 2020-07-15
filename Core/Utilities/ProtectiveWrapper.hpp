@@ -52,20 +52,13 @@ namespace sequoia::utilities
 
     [[nodiscard]]
     constexpr const T& get() const noexcept { return m_Type; }
+
+    [[nodiscard]]
+    friend bool operator==(const protective_wrapper&, const protective_wrapper&) noexcept = default;
+
+    [[nodiscard]]
+    friend auto operator<=>(const protective_wrapper&, const protective_wrapper&) noexcept = default;
   private:
     T m_Type;
   };
-
-  template<equality_comparable T>
-  [[nodiscard]]
-  constexpr bool operator==(const protective_wrapper<T>& lhs, const protective_wrapper<T>& rhs) noexcept
-  {
-    return lhs.get() == rhs.get();
-  }
-
-  template<three_way_comparable T>
-  constexpr auto operator<=>(const protective_wrapper<T>& lhs, const protective_wrapper<T>& rhs) noexcept
-  {
-    return lhs.get() <=> rhs.get();
-  }
 }
