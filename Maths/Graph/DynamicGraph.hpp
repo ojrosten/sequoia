@@ -95,10 +95,10 @@ namespace sequoia::maths
         >
       >;
     
-    using node_weight_type           = NodeWeight;
-    using size_type                  = typename primitive_type::size_type;
-    using edges_initializer          = typename primitive_type::edges_initializer;
-    using edge_allocator_type        = typename edge_traits_type::edge_allocator_type;
+    using node_weight_type    = NodeWeight;
+    using size_type           = typename primitive_type::size_type;
+    using edges_initializer   = typename primitive_type::edges_initializer;
+    using edge_allocator_type = typename edge_traits_type::edge_allocator_type;
 
     graph_base() = default;
 
