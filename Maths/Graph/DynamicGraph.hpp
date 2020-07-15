@@ -102,104 +102,89 @@ namespace sequoia::maths
         >
       >;
     
-    using node_weight_type    = NodeWeight;
-    using size_type           = typename primitive_type::size_type;
-    using edges_initializer   = typename primitive_type::edges_initializer;    
-    using edge_allocator_type = typename edge_traits_type::edge_allocator_type;
+    using node_weight_type           = NodeWeight;
+    using size_type                  = typename primitive_type::size_type;
+    using edges_initializer          = typename primitive_type::edges_initializer;    
+    using edge_allocator_type        = typename edge_traits_type::edge_allocator_type;
 
     graph_base() = default;
 
-    template
-    <
-      alloc EdgeAllocator = edge_allocator_type,
-      class N             = NodeWeight
-    >
+    template<class N = NodeWeight>
       requires empty<N>
-    graph_base(const EdgeAllocator& edgeAllocator)
+    graph_base(const edge_allocator_type& edgeAllocator)
       : primitive_type(edgeAllocator)
     {}
 
     template
     <
-      alloc EdgeAllocator           = edge_allocator_type,
-      class N                       = node_storage_type,
-      alloc NodeWeightAllocator     = typename graph_impl::node_allocator_generator<N>::allocator_type
+      class NodeStorage         = node_storage_type,
+      class NodeWeightAllocator = typename graph_impl::node_allocator_generator<NodeStorage>::allocator_type
     >
-      requires (!empty<N>)
-    graph_base(const EdgeAllocator& edgeAllocator, const NodeWeightAllocator& nodeWeightAllocator)
+    graph_base(const edge_allocator_type& edgeAllocator, const NodeWeightAllocator& nodeWeightAllocator)
       : primitive_type(edgeAllocator, nodeWeightAllocator)
     {}
 
     template
     <
-      alloc EdgeAllocator           = edge_allocator_type,
       class EdgeStorage             = typename edge_traits_type::edge_storage_type,
       alloc EdgePartitionsAllocator = typename EdgeStorage::partitions_allocator_type,
       class N                       = NodeWeight
     >
-      requires (empty<N> && !std::is_convertible_v<EdgeAllocator&, graph_base&>)
-    graph_base(const EdgeAllocator& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator)
+      requires empty<N>
+    graph_base(const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator)
       : primitive_type(edgeAllocator, edgePartitionsAllocator)
     {}
 
     template
     <
-      alloc EdgeAllocator           = edge_allocator_type,
       class EdgeStorage             = typename edge_traits_type::edge_storage_type,
       alloc EdgePartitionsAllocator = typename EdgeStorage::partitions_allocator_type,
       class N                       = node_storage_type,
       alloc NodeWeightAllocator     = typename graph_impl::node_allocator_generator<N>::allocator_type
     >
-      requires (!empty<N> && !std::is_convertible_v<EdgeAllocator&, graph_base&>)
-    graph_base(const EdgeAllocator& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator, const NodeWeightAllocator& nodeWeightAllocator)
+      requires (!empty<N>)
+    graph_base(const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator, const NodeWeightAllocator& nodeWeightAllocator)
       : primitive_type(edgeAllocator, edgePartitionsAllocator, nodeWeightAllocator)
     {}
 
     graph_base(edges_initializer edges) : primitive_type{edges} {}
 
-    template
-    <
-      alloc EdgeAllocator           = edge_allocator_type,     
-      class N                       = NodeWeight
-    >
+    template<class N = NodeWeight>
       requires empty<N>
-    graph_base(edges_initializer edges, const EdgeAllocator& edgeAllocator)
+    graph_base(edges_initializer edges, const edge_allocator_type& edgeAllocator)
       : primitive_type{edges, edgeAllocator}
     {}
     
     template
     <
-      alloc EdgeAllocator           = edge_allocator_type,
       class EdgeStorage             = typename edge_traits_type::edge_storage_type,
       alloc EdgePartitionsAllocator = typename EdgeStorage::partitions_allocator_type,     
       class N                       = NodeWeight
     >
       requires empty<N>
-    graph_base(edges_initializer edges, const EdgeAllocator& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator)
+    graph_base(edges_initializer edges, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator)
       : primitive_type{edges, edgeAllocator, edgePartitionsAllocator}
     {}
 
     template
-    <
-      alloc EdgeAllocator           = edge_allocator_type,     
+    <   
       class N                       = node_storage_type,
       alloc NodeWeightAllocator     = typename graph_impl::node_allocator_generator<N>::allocator_type
     >
     requires (!empty<N>)
-    graph_base(edges_initializer edges, const EdgeAllocator& edgeAllocator, const NodeWeightAllocator& nodeWeightAllocator)
+    graph_base(edges_initializer edges, const edge_allocator_type& edgeAllocator, const NodeWeightAllocator& nodeWeightAllocator)
       : primitive_type{edges, edgeAllocator, nodeWeightAllocator}
     {}
     
     template
     <
-      alloc EdgeAllocator           = edge_allocator_type,
       class EdgeStorage             = typename edge_traits_type::edge_storage_type,
       class EdgePartitionsAllocator = typename EdgeStorage::partitions_allocator_type,     
       class N                       = node_storage_type,
       alloc NodeWeightAllocator     = typename graph_impl::node_allocator_generator<N>::allocator_type
     >
       requires (!empty<N>)
-    graph_base(edges_initializer edges, const EdgeAllocator& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator, const NodeWeightAllocator& nodeWeightAllocator)
+    graph_base(edges_initializer edges, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator, const NodeWeightAllocator& nodeWeightAllocator)
       : primitive_type{edges, edgeAllocator, edgePartitionsAllocator, nodeWeightAllocator}
     {}
 
@@ -210,122 +195,102 @@ namespace sequoia::maths
     {}
 
     template
-    <
-      alloc EdgeAllocator           = edge_allocator_type,     
+    <   
       class N                       = node_storage_type,
       alloc NodeWeightAllocator     = typename graph_impl::node_allocator_generator<N>::allocator_type
     >
     requires (!empty<N>)
-    graph_base(edges_initializer edges, const EdgeAllocator& edgeAllocator, std::initializer_list<node_weight_type> nodeWeights, const NodeWeightAllocator& nodeWeightAllocator)
+    graph_base(edges_initializer edges, const edge_allocator_type& edgeAllocator, std::initializer_list<node_weight_type> nodeWeights, const NodeWeightAllocator& nodeWeightAllocator)
       : primitive_type{edges, edgeAllocator, nodeWeights, nodeWeightAllocator}
     {}
 
     template
     <
-      alloc EdgeAllocator           = edge_allocator_type,
       class EdgeStorage             = typename edge_traits_type::edge_storage_type,
       alloc EdgePartitionsAllocator = typename EdgeStorage::partitions_allocator_type,      
       class N                       = node_storage_type,
       alloc NodeWeightAllocator     = typename graph_impl::node_allocator_generator<N>::allocator_type
     >
      requires(!empty<N>)
-    graph_base(edges_initializer edges, const EdgeAllocator& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator, std::initializer_list<node_weight_type> nodeWeights, const NodeWeightAllocator& nodeWeightAllocator)
+    graph_base(edges_initializer edges, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator, std::initializer_list<node_weight_type> nodeWeights, const NodeWeightAllocator& nodeWeightAllocator)
       : primitive_type{edges, edgeAllocator, edgePartitionsAllocator, nodeWeights, nodeWeightAllocator}
     {}
 
     graph_base(const graph_base&) = default;
 
-    template
-    <   
-      alloc EdgeAllocator           = edge_allocator_type,
-      class N                       = NodeWeight
-    >
+    template<class N = NodeWeight>
       requires (empty<N>)
-    graph_base(const graph_base& in, const EdgeAllocator& edgeAllocator)
+    graph_base(const graph_base& in, const edge_allocator_type& edgeAllocator)
       : primitive_type{in, edgeAllocator}
     {}
 
     template
-    <   
-      alloc EdgeAllocator           = edge_allocator_type,
+    <
       class EdgeStorage             = typename edge_traits_type::edge_storage_type,
       alloc EdgePartitionsAllocator = typename EdgeStorage::partitions_allocator_type,
       class N                       = NodeWeight
     >
       requires empty<N>
-    graph_base(const graph_base& in, const EdgeAllocator& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator)
+    graph_base(const graph_base& in, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator)
       : primitive_type{in, edgeAllocator, edgePartitionsAllocator}
     {}
 
     template
     <
-      alloc EdgeAllocator           = edge_allocator_type,
-      class N                       = node_storage_type,
-      alloc NodeWeightAllocator     = typename graph_impl::node_allocator_generator<N>::allocator_type
+      class NodeStorage             = node_storage_type,
+      alloc NodeWeightAllocator     = typename graph_impl::node_allocator_generator<NodeStorage>::allocator_type
     >
-      requires (!empty<N>)
-    graph_base(const graph_base& in, const EdgeAllocator& edgeAllocator, const NodeWeightAllocator& nodeWeightAllocator)
+    graph_base(const graph_base& in, const edge_allocator_type& edgeAllocator, const NodeWeightAllocator& nodeWeightAllocator)
       : primitive_type{in, edgeAllocator, nodeWeightAllocator}
     {}
 
     template
     <
-      alloc EdgeAllocator           = edge_allocator_type,
       class EdgeStorage             = typename edge_traits_type::edge_storage_type,
       alloc EdgePartitionsAllocator = typename EdgeStorage::partitions_allocator_type,
-      class N                       = node_storage_type,
-      alloc NodeWeightAllocator     = typename graph_impl::node_allocator_generator<N>::allocator_type
+      class NodeStorage             = node_storage_type,
+      alloc NodeWeightAllocator     = typename graph_impl::node_allocator_generator<NodeStorage>::allocator_type
     >
-      requires (!empty<N>)
-    graph_base(const graph_base& in, const EdgeAllocator& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator, const NodeWeightAllocator& nodeWeightAllocator)
+    graph_base(const graph_base& in, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator, const NodeWeightAllocator& nodeWeightAllocator)
       : primitive_type{in, edgeAllocator, edgePartitionsAllocator, nodeWeightAllocator}
     {}
     
     graph_base(graph_base&&) noexcept = default;
 
-    template
-    <
-      alloc EdgeAllocator           = edge_allocator_type,     
-      class N                       = NodeWeight
-    >
+    template<class N = NodeWeight>
       requires empty<N>
-    graph_base(graph_base&& in, const EdgeAllocator& edgeAllocator)
+    graph_base(graph_base&& in, const edge_allocator_type& edgeAllocator)
       : primitive_type{std::move(in), edgeAllocator}
     {}
     
     template
     <
-      alloc EdgeAllocator           = edge_allocator_type,
       class EdgeStorage             = typename edge_traits_type::edge_storage_type,
       alloc EdgePartitionsAllocator = typename EdgeStorage::partitions_allocator_type,     
       class N                       = NodeWeight
     >
       requires empty<N>
-    graph_base(graph_base&& in, const EdgeAllocator& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator)
+    graph_base(graph_base&& in, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator)
       : primitive_type{std::move(in), edgeAllocator, edgePartitionsAllocator}
     {}
 
     template
-    <      
-      alloc EdgeAllocator           = edge_allocator_type,
-      class N                       = node_storage_type,
-      alloc NodeWeightAllocator     = typename graph_impl::node_allocator_generator<N>::allocator_type
+    <
+      class NodeStorage          = node_storage_type,
+      alloc NodeWeightAllocator  = typename graph_impl::node_allocator_generator<NodeStorage>::allocator_type
     >
-      requires (!empty<N>)
-    graph_base(graph_base&& in, const EdgeAllocator& edgeAllocator, const NodeWeightAllocator& nodeWeightAllocator)
+    graph_base(graph_base&& in, const edge_allocator_type& edgeAllocator, const NodeWeightAllocator& nodeWeightAllocator)
       : primitive_type{std::move(in), edgeAllocator, nodeWeightAllocator}
     {}
 
     template
-    <      
-      alloc EdgeAllocator           = edge_allocator_type,
+    <
       class EdgeStorage             = typename edge_traits_type::edge_storage_type,
       alloc EdgePartitionsAllocator = typename EdgeStorage::partitions_allocator_type,
-      class N                       = node_storage_type,
-      alloc NodeWeightAllocator     = typename graph_impl::node_allocator_generator<N>::allocator_type
+      class NodeStorage             = node_storage_type,
+      alloc NodeWeightAllocator     = typename graph_impl::node_allocator_generator<NodeStorage>::allocator_type
     >
-      requires (!empty<N>)
-    graph_base(graph_base&& in, const EdgeAllocator& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator, const NodeWeightAllocator& nodeWeightAllocator)
+    graph_base(graph_base&& in, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator, const NodeWeightAllocator& nodeWeightAllocator)
       : primitive_type{std::move(in), edgeAllocator, edgePartitionsAllocator, nodeWeightAllocator}
     {}
     
@@ -374,14 +339,14 @@ namespace sequoia::maths
     class NodeWeightStorageTraits
   >
   class graph_base<
-    GraphFlavour,
-    EdgeWeight,
-    NodeWeight,
-    EdgeWeightCreator,
-    NodeWeightCreator,
-    EdgeStorageTraits,
-    NodeWeightStorageTraits,
-    false
+      GraphFlavour,
+      EdgeWeight,
+      NodeWeight,
+      EdgeWeightCreator,
+      NodeWeightCreator,
+      EdgeStorageTraits,
+      NodeWeightStorageTraits,
+      false
     > : public graph_base<
                  GraphFlavour,
                  EdgeWeight,
