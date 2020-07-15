@@ -76,42 +76,42 @@ namespace sequoia::testing
   using assign_prediction      = alloc_prediction<allocation_event::assign>;
 
   [[nodiscard]]
-  constexpr copy_prediction
+  consteval copy_prediction
   operator "" _c(unsigned long long int n) noexcept
   {
     return copy_prediction{static_cast<int>(n)};
   }
 
   [[nodiscard]]
-  constexpr mutation_prediction
+  consteval mutation_prediction
   operator "" _mu(unsigned long long int n) noexcept
   {
     return mutation_prediction{static_cast<int>(n)};
   }
 
   [[nodiscard]]
-  constexpr para_copy_prediction
+  consteval para_copy_prediction
   operator "" _pc(unsigned long long int n) noexcept
   {
     return para_copy_prediction{static_cast<int>(n)};
   }
 
   [[nodiscard]]
-  constexpr para_move_prediction
+  consteval para_move_prediction
   operator "" _pm(unsigned long long int n) noexcept
   {
     return para_move_prediction{static_cast<int>(n)};
   }
 
   [[nodiscard]]
-  constexpr assign_prediction
+  consteval assign_prediction
   operator "" _anp(unsigned long long int n) noexcept
   {
     return assign_prediction{static_cast<int>(n)};
   }
 
   [[nodiscard]]
-  constexpr assign_prop_prediction
+  consteval assign_prop_prediction
   operator "" _awp(unsigned long long int n) noexcept
   {
     return assign_prop_prediction{static_cast<int>(n)};
