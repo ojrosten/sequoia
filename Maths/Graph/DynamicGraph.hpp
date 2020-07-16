@@ -49,6 +49,12 @@ namespace sequoia::maths
   {
     constexpr static bool has_allocator{};
   };
+
+  template<class Traits>
+  concept allocatable_partitions = requires(){
+    typename Traits::edge_storage_type;
+    typename Traits::edge_storage_type::partitions_allocator_type;
+  };
   
   template
   <
@@ -106,11 +112,8 @@ namespace sequoia::maths
       : primitive_type(edgeAllocator)
     {}
 
-    template
-    <
-      class EdgeStorage             = typename edge_traits_type::edge_storage_type,
-      alloc EdgePartitionsAllocator = typename EdgeStorage::partitions_allocator_type
-    >
+    template<alloc EdgePartitionsAllocator>
+      requires allocatable_partitions<edge_traits_type>
     graph_base(const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator)
       : primitive_type(edgeAllocator, edgePartitionsAllocator)
     {}
@@ -121,11 +124,8 @@ namespace sequoia::maths
       : primitive_type{edges, edgeAllocator}
     {}
     
-    template
-    <
-      class EdgeStorage             = typename edge_traits_type::edge_storage_type,
-      alloc EdgePartitionsAllocator = typename EdgeStorage::partitions_allocator_type  
-    >
+    template<alloc EdgePartitionsAllocator>
+      requires allocatable_partitions<edge_traits_type>
     graph_base(edges_initializer edges, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator)
       : primitive_type{edges, edgeAllocator, edgePartitionsAllocator}
     {}
@@ -138,11 +138,8 @@ namespace sequoia::maths
       : primitive_type{in, edgeAllocator}
     {}
 
-    template
-    <
-      class EdgeStorage             = typename edge_traits_type::edge_storage_type,
-      alloc EdgePartitionsAllocator = typename EdgeStorage::partitions_allocator_type
-    >
+    template<alloc EdgePartitionsAllocator>
+      requires allocatable_partitions<edge_traits_type>
     graph_base(const graph_base& in, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator)
       : primitive_type{in, edgeAllocator, edgePartitionsAllocator}
     {}
@@ -153,11 +150,8 @@ namespace sequoia::maths
       : primitive_type{std::move(in), edgeAllocator}
     {}
     
-    template
-    <
-      class EdgeStorage             = typename edge_traits_type::edge_storage_type,
-      alloc EdgePartitionsAllocator = typename EdgeStorage::partitions_allocator_type
-    >
+    template<alloc EdgePartitionsAllocator>
+      requires allocatable_partitions<edge_traits_type>
     graph_base(graph_base&& in, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator)
       : primitive_type{std::move(in), edgeAllocator, edgePartitionsAllocator}
     {}
@@ -264,11 +258,8 @@ namespace sequoia::maths
       : primitive_type(edgeAllocator, nodeWeightAllocator)
     {}
 
-    template
-    <
-      class EdgeStorage             = typename edge_traits_type::edge_storage_type,
-      alloc EdgePartitionsAllocator = typename EdgeStorage::partitions_allocator_type
-    >
+    template<alloc EdgePartitionsAllocator>
+      requires allocatable_partitions<edge_traits_type>
     graph_base(const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator, const node_weight_allocator_type& nodeWeightAllocator)
       : primitive_type(edgeAllocator, edgePartitionsAllocator, nodeWeightAllocator)
     {}
@@ -277,11 +268,8 @@ namespace sequoia::maths
       : primitive_type{edges, edgeAllocator, nodeWeightAllocator}
     {}
         
-    template
-    <
-      class EdgeStorage             = typename edge_traits_type::edge_storage_type,
-      class EdgePartitionsAllocator = typename EdgeStorage::partitions_allocator_type
-    >
+    template<alloc EdgePartitionsAllocator>
+      requires allocatable_partitions<edge_traits_type>
     graph_base(edges_initializer edges, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator, const node_weight_allocator_type& nodeWeightAllocator)
       : primitive_type{edges, edgeAllocator, edgePartitionsAllocator, nodeWeightAllocator}
     {}
@@ -294,11 +282,8 @@ namespace sequoia::maths
       : primitive_type{edges, edgeAllocator, nodeWeights, nodeWeightAllocator}
     {}
 
-    template
-    <
-      class EdgeStorage             = typename edge_traits_type::edge_storage_type,
-      alloc EdgePartitionsAllocator = typename EdgeStorage::partitions_allocator_type
-    >
+    template<alloc EdgePartitionsAllocator>
+      requires allocatable_partitions<edge_traits_type>
     graph_base(edges_initializer edges, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator, std::initializer_list<node_weight_type> nodeWeights, const node_weight_allocator_type& nodeWeightAllocator)
       : primitive_type{edges, edgeAllocator, edgePartitionsAllocator, nodeWeights, nodeWeightAllocator}
     {}
@@ -307,11 +292,8 @@ namespace sequoia::maths
       : primitive_type{in, edgeAllocator, nodeWeightAllocator}
     {}
 
-    template
-    <
-      class EdgeStorage             = typename edge_traits_type::edge_storage_type,
-      alloc EdgePartitionsAllocator = typename EdgeStorage::partitions_allocator_type
-    >
+    template<alloc EdgePartitionsAllocator>
+      requires allocatable_partitions<edge_traits_type>
     graph_base(const graph_base& in, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator, const node_weight_allocator_type& nodeWeightAllocator)
       : primitive_type{in, edgeAllocator, edgePartitionsAllocator, nodeWeightAllocator}
     {}
@@ -321,11 +303,8 @@ namespace sequoia::maths
       : primitive_type{std::move(in), edgeAllocator, nodeWeightAllocator}
     {}
 
-    template
-    <
-      class EdgeStorage             = typename edge_traits_type::edge_storage_type,
-      alloc EdgePartitionsAllocator = typename EdgeStorage::partitions_allocator_type
-    >
+    template<alloc EdgePartitionsAllocator>
+      requires allocatable_partitions<edge_traits_type>
     graph_base(graph_base&& in, const edge_allocator_type& edgeAllocator, const EdgePartitionsAllocator& edgePartitionsAllocator, const node_weight_allocator_type& nodeWeightAllocator)
       : primitive_type{std::move(in), edgeAllocator, edgePartitionsAllocator, nodeWeightAllocator}
     {}
