@@ -89,14 +89,14 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ad2088aa6e9faa9a598ba665a014c824f"><td class="memTemplParams" colspan="2"><a id="ad2088aa6e9faa9a598ba665a014c824f"></a>
-template&lt;class Fn &gt; </td></tr>
-<tr class="memitem:ad2088aa6e9faa9a598ba665a014c824f"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::move_only_allocation_info</b> (Fn &amp;&amp;allocGetter, move_only_allocation_predictions predictions) -&gt; move_only_allocation_info&lt; std::decay_t&lt; typename function_signature&lt; decltype(&amp;std::decay_t&lt; Fn &gt;::operator())&gt;::arg &gt;, std::decay_t&lt; typename function_signature&lt; decltype(&amp;std::decay_t&lt; Fn &gt;::operator())&gt;::ret &gt;&gt;</td></tr>
-<tr class="separator:ad2088aa6e9faa9a598ba665a014c824f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab2dea8f6c2491c1b387d0a80583861b5"><td class="memTemplParams" colspan="2"><a id="ab2dea8f6c2491c1b387d0a80583861b5"></a>
-template&lt;class Fn &gt; </td></tr>
-<tr class="memitem:ab2dea8f6c2491c1b387d0a80583861b5"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::move_only_allocation_info</b> (Fn &amp;&amp;allocGetter, std::initializer_list&lt; move_only_allocation_predictions &gt; predictions) -&gt; move_only_allocation_info&lt; std::decay_t&lt; typename function_signature&lt; decltype(&amp;std::decay_t&lt; Fn &gt;::operator())&gt;::arg &gt;, std::decay_t&lt; typename function_signature&lt; decltype(&amp;std::decay_t&lt; Fn &gt;::operator())&gt;::ret &gt;&gt;</td></tr>
-<tr class="separator:ab2dea8f6c2491c1b387d0a80583861b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ac4bd2a61b1a3d0874f27585f46e966"><td class="memTemplParams" colspan="2"><a id="a5ac4bd2a61b1a3d0874f27585f46e966"></a>
+template&lt;class Fn , class Signature  = function_signature&lt;decltype(&amp;std::remove_cvref_t&lt;Fn&gt;::operator())&gt;&gt; </td></tr>
+<tr class="memitem:a5ac4bd2a61b1a3d0874f27585f46e966"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::move_only_allocation_info</b> (Fn &amp;&amp;allocGetter, move_only_allocation_predictions predictions) -&gt; move_only_allocation_info&lt; std::remove_cvref_t&lt; typename Signature::arg &gt;, std::remove_cvref_t&lt; typename Signature::ret &gt;&gt;</td></tr>
+<tr class="separator:a5ac4bd2a61b1a3d0874f27585f46e966"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e0a09677095be0ca41fc605f7462895"><td class="memTemplParams" colspan="2"><a id="a0e0a09677095be0ca41fc605f7462895"></a>
+template&lt;class Fn , class Signature  = function_signature&lt;decltype(&amp;std::remove_cvref_t&lt;Fn&gt;::operator())&gt;&gt; </td></tr>
+<tr class="memitem:a0e0a09677095be0ca41fc605f7462895"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::move_only_allocation_info</b> (Fn &amp;&amp;allocGetter, std::initializer_list&lt; move_only_allocation_predictions &gt; predictions) -&gt; move_only_allocation_info&lt; std::remove_cvref_t&lt; typename Signature::arg &gt;, std::remove_cvref_t&lt; typename Signature::ret &gt;&gt;</td></tr>
+<tr class="separator:a0e0a09677095be0ca41fc605f7462895"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a559fe2b2ea70aadfdabc3605b4e64146"><td class="memTemplParams" colspan="2"><a id="a559fe2b2ea70aadfdabc3605b4e64146"></a>
 template&lt;test_mode Mode, moveonly T, invocable&lt; T &amp; &gt; Mutator, counting_alloc... Allocators&gt; </td></tr>
 <tr class="memitem:a559fe2b2ea70aadfdabc3605b4e64146"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_semantics</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone, Mutator m, move_only_allocation_info&lt; T, Allocators &gt;... info)</td></tr>

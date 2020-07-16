@@ -93,14 +93,14 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a00797ce728ed97c55f37050b3bc498d2"><td class="memTemplParams" colspan="2"><a id="a00797ce728ed97c55f37050b3bc498d2"></a>
-template&lt;class Fn &gt; </td></tr>
-<tr class="memitem:a00797ce728ed97c55f37050b3bc498d2"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::allocation_info</b> (Fn &amp;&amp;allocGetter, allocation_predictions predictions) -&gt; allocation_info&lt; std::decay_t&lt; typename function_signature&lt; decltype(&amp;std::decay_t&lt; Fn &gt;::operator())&gt;::arg &gt;, std::decay_t&lt; typename function_signature&lt; decltype(&amp;std::decay_t&lt; Fn &gt;::operator())&gt;::ret &gt;&gt;</td></tr>
-<tr class="separator:a00797ce728ed97c55f37050b3bc498d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaebf5fe51e63bc42fc3594e025ddcc4b"><td class="memTemplParams" colspan="2"><a id="aaebf5fe51e63bc42fc3594e025ddcc4b"></a>
-template&lt;class Fn &gt; </td></tr>
-<tr class="memitem:aaebf5fe51e63bc42fc3594e025ddcc4b"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::allocation_info</b> (Fn &amp;&amp;allocGetter, std::initializer_list&lt; allocation_predictions &gt; predictions) -&gt; allocation_info&lt; std::decay_t&lt; typename function_signature&lt; decltype(&amp;std::decay_t&lt; Fn &gt;::operator())&gt;::arg &gt;, std::decay_t&lt; typename function_signature&lt; decltype(&amp;std::decay_t&lt; Fn &gt;::operator())&gt;::ret &gt;&gt;</td></tr>
-<tr class="separator:aaebf5fe51e63bc42fc3594e025ddcc4b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8ed8675f98e3e51ab9883296216d2781"><td class="memTemplParams" colspan="2"><a id="a8ed8675f98e3e51ab9883296216d2781"></a>
+template&lt;class Fn , class Signature  = function_signature&lt;decltype(&amp;std::remove_cvref_t&lt;Fn&gt;::operator())&gt;&gt; </td></tr>
+<tr class="memitem:a8ed8675f98e3e51ab9883296216d2781"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::allocation_info</b> (Fn &amp;&amp;allocGetter, allocation_predictions predictions) -&gt; allocation_info&lt; std::remove_cvref_t&lt; typename Signature::arg &gt;, std::remove_cvref_t&lt; typename Signature::ret &gt;&gt;</td></tr>
+<tr class="separator:a8ed8675f98e3e51ab9883296216d2781"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa673b0e3e1d96b8c6a7ba886f806b118"><td class="memTemplParams" colspan="2"><a id="aa673b0e3e1d96b8c6a7ba886f806b118"></a>
+template&lt;class Fn , class Signature  = function_signature&lt;decltype(&amp;std::remove_cvref_t&lt;Fn&gt;::operator())&gt;&gt; </td></tr>
+<tr class="memitem:aa673b0e3e1d96b8c6a7ba886f806b118"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::allocation_info</b> (Fn &amp;&amp;allocGetter, std::initializer_list&lt; allocation_predictions &gt; predictions) -&gt; allocation_info&lt; std::remove_cvref_t&lt; typename Signature::arg &gt;, std::remove_cvref_t&lt; typename Signature::ret &gt;&gt;</td></tr>
+<tr class="separator:aa673b0e3e1d96b8c6a7ba886f806b118"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2d27ee04c44840a01b085a9295b76255"><td class="memTemplParams" colspan="2"><a id="a2d27ee04c44840a01b085a9295b76255"></a>
 template&lt;test_mode Mode, pseudoregular T, invocable&lt; T &amp; &gt; Mutator, counting_alloc... Allocators&gt; </td></tr>
 <tr class="memitem:a2d27ee04c44840a01b085a9295b76255"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_semantics</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y, Mutator yMutator, allocation_info&lt; T, Allocators &gt;... info)</td></tr>
