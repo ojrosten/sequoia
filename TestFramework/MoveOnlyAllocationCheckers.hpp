@@ -50,13 +50,21 @@ namespace sequoia::testing
     using basic_allocation_info<Container, Allocator, move_only_allocation_predictions>::basic_allocation_info;
   };
 
-  template<class Fn>
+  template
+  <
+    class Fn,
+    class Signature=function_signature<decltype(&std::remove_cvref_t<Fn>::operator())>
+  >
   move_only_allocation_info(Fn&& allocGetter, move_only_allocation_predictions predictions)
-    -> move_only_allocation_info<std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::arg>, std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::ret>>;
+    -> move_only_allocation_info<std::remove_cvref_t<typename Signature::arg>, std::remove_cvref_t<typename Signature::ret>>;
 
-  template<class Fn>
+  template
+  <
+    class Fn,
+    class Signature=function_signature<decltype(&std::remove_cvref_t<Fn>::operator())>
+  >
   move_only_allocation_info(Fn&& allocGetter, std::initializer_list<move_only_allocation_predictions> predictions)
-    -> move_only_allocation_info<std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::arg>, std::decay_t<typename function_signature<decltype(&std::decay_t<Fn>::operator())>::ret>>;
+    -> move_only_allocation_info<std::remove_cvref_t<typename Signature::arg>, std::remove_cvref_t<typename Signature::ret>>;
   
   template<test_mode Mode, moveonly T, invocable<T&> Mutator, counting_alloc... Allocators>
   void check_semantics(std::string_view description, test_logger<Mode>& logger, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, move_only_allocation_info<T, Allocators>... info)
