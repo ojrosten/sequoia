@@ -293,7 +293,7 @@ namespace sequoia::testing
     template
     <
       class EdgeStorageTraits,
-      template <class, bool> class NodeStorageTraits,
+      class NodeStorageTraits,
       template
       <
         maths::graph_flavour,
@@ -306,15 +306,13 @@ namespace sequoia::testing
     {        
       using flavour = maths::graph_flavour;
       sentry<Test> s{unitTest, m_Summary};
-
-      using NodeStorage = NodeStorageTraits<NodeWeight, std::is_empty_v<NodeWeight>>;
       
-      graph_storage_tests<flavour::undirected, EdgeStorageTraits, NodeStorage, TemplateTestClass>();
+      graph_storage_tests<flavour::undirected, EdgeStorageTraits, NodeStorageTraits, TemplateTestClass>();
       if constexpr (!minimal_graph_tests())
       {
-        graph_storage_tests<flavour::undirected_embedded, EdgeStorageTraits, NodeStorage, TemplateTestClass>();
-        graph_storage_tests<flavour::directed,            EdgeStorageTraits, NodeStorage, TemplateTestClass>();
-        graph_storage_tests<flavour::directed_embedded,   EdgeStorageTraits, NodeStorage, TemplateTestClass>();
+        graph_storage_tests<flavour::undirected_embedded, EdgeStorageTraits, NodeStorageTraits, TemplateTestClass>();
+        graph_storage_tests<flavour::directed,            EdgeStorageTraits, NodeStorageTraits, TemplateTestClass>();
+        graph_storage_tests<flavour::directed_embedded,   EdgeStorageTraits, NodeStorageTraits, TemplateTestClass>();
       }
     }
       
