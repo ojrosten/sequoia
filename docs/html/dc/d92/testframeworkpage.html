@@ -107,7 +107,7 @@ Generics-Friendliness</h1>
 <p>When writing generic code, it is natural to want to test it with a variety of appropriate types. This leads to the idea of templated unit tests; within sequoia this is most naturally achieved by leaving the test classes plain (rather than templated) but templating various methods inside. However, a challenge with doing this is interpreting failures. The line at which the failure occurs is no longer enough to uniquely disambiguate, since this line may correspond to several different template instantiations.</p>
 <p>Consequently, sequoia reports failures with plenty of type information. For example, the following output is typical of what to expect when checking the equality of two instances of std::pair&lt;int,double&gt;:</p>
 <p>../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 51<br  />
- [std::__1::pair&lt;int, double&gt;]<br  />
+ [std::pair&lt;int, double&gt;]<br  />
  operator== returned false</p>
 <p>Second element of pair is incorrect<br  />
  [double]<br  />

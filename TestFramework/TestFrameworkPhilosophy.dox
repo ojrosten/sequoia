@@ -214,7 +214,7 @@
     of std::pair<int,double>:
 
     ../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 51\n 
-	[std::__1::pair<int, double>]\n 
+	[std::pair<int, double>]\n 
 	operator== returned false
 
     Second element of pair is incorrect\n 

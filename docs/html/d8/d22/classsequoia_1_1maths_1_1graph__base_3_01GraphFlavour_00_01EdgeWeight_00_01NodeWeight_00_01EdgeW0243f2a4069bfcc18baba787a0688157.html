@@ -176,41 +176,41 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a5be881fd130e84a0d542496c80ea3196"><td class="memItemLeft" align="right" valign="top"><a id="a5be881fd130e84a0d542496c80ea3196"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>graph_base</b> (const edge_allocator_type &amp;edgeAllocator, const node_weight_allocator_type &amp;nodeWeightAllocator)</td></tr>
 <tr class="separator:a5be881fd130e84a0d542496c80ea3196"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7cd344dd0c815484e5baf1515b554c0e"><td class="memTemplParams" colspan="2"><a id="a7cd344dd0c815484e5baf1515b554c0e"></a>
-template&lt;class EdgeStorage  = typename edge_traits_type::edge_storage_type, alloc EdgePartitionsAllocator = typename EdgeStorage::partitions_allocator_type&gt; </td></tr>
-<tr class="memitem:a7cd344dd0c815484e5baf1515b554c0e"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>graph_base</b> (const edge_allocator_type &amp;edgeAllocator, const EdgePartitionsAllocator &amp;edgePartitionsAllocator, const node_weight_allocator_type &amp;nodeWeightAllocator)</td></tr>
-<tr class="separator:a7cd344dd0c815484e5baf1515b554c0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ed74830e57b2375dd0072e4275b90da"><td class="memTemplParams" colspan="2"><a id="a4ed74830e57b2375dd0072e4275b90da"></a>
+template&lt;alloc EdgePartitionsAllocator&gt; </td></tr>
+<tr class="memitem:a4ed74830e57b2375dd0072e4275b90da"><td class="memTemplItemLeft" align="right" valign="top">requires allocatable_partitions&lt; <a class="el" href="../../d5/de5/structsequoia_1_1maths_1_1graph__impl_1_1dynamic__edge__traits.html">edge_traits_type</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>graph_base</b> (const edge_allocator_type &amp;edgeAllocator, const EdgePartitionsAllocator &amp;edgePartitionsAllocator, const node_weight_allocator_type &amp;nodeWeightAllocator)</td></tr>
+<tr class="separator:a4ed74830e57b2375dd0072e4275b90da"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa2eb542752c3ac4d9d43edda9119919f"><td class="memItemLeft" align="right" valign="top"><a id="aa2eb542752c3ac4d9d43edda9119919f"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>graph_base</b> (edges_initializer edges, const edge_allocator_type &amp;edgeAllocator, const node_weight_allocator_type &amp;nodeWeightAllocator)</td></tr>
 <tr class="separator:aa2eb542752c3ac4d9d43edda9119919f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b2f003ec9d7ba2661155a311b4f91d2"><td class="memTemplParams" colspan="2"><a id="a2b2f003ec9d7ba2661155a311b4f91d2"></a>
-template&lt;class EdgeStorage  = typename edge_traits_type::edge_storage_type, class EdgePartitionsAllocator  = typename EdgeStorage::partitions_allocator_type&gt; </td></tr>
-<tr class="memitem:a2b2f003ec9d7ba2661155a311b4f91d2"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>graph_base</b> (edges_initializer edges, const edge_allocator_type &amp;edgeAllocator, const EdgePartitionsAllocator &amp;edgePartitionsAllocator, const node_weight_allocator_type &amp;nodeWeightAllocator)</td></tr>
-<tr class="separator:a2b2f003ec9d7ba2661155a311b4f91d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec34119c670881dcf74774156cea9e83"><td class="memTemplParams" colspan="2"><a id="aec34119c670881dcf74774156cea9e83"></a>
+template&lt;alloc EdgePartitionsAllocator&gt; </td></tr>
+<tr class="memitem:aec34119c670881dcf74774156cea9e83"><td class="memTemplItemLeft" align="right" valign="top">requires allocatable_partitions&lt; <a class="el" href="../../d5/de5/structsequoia_1_1maths_1_1graph__impl_1_1dynamic__edge__traits.html">edge_traits_type</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>graph_base</b> (edges_initializer edges, const edge_allocator_type &amp;edgeAllocator, const EdgePartitionsAllocator &amp;edgePartitionsAllocator, const node_weight_allocator_type &amp;nodeWeightAllocator)</td></tr>
+<tr class="separator:aec34119c670881dcf74774156cea9e83"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeaa58f1a7a608590d9912f6cfb19db8d"><td class="memItemLeft" align="right" valign="top"><a id="aeaa58f1a7a608590d9912f6cfb19db8d"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>graph_base</b> (edges_initializer edges, std::initializer_list&lt; node_weight_type &gt; nodeWeights)</td></tr>
 <tr class="separator:aeaa58f1a7a608590d9912f6cfb19db8d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3560e2d7cd6fc015e379df6d56f130d5"><td class="memItemLeft" align="right" valign="top"><a id="a3560e2d7cd6fc015e379df6d56f130d5"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>graph_base</b> (edges_initializer edges, const edge_allocator_type &amp;edgeAllocator, std::initializer_list&lt; node_weight_type &gt; nodeWeights, const node_weight_allocator_type &amp;nodeWeightAllocator)</td></tr>
 <tr class="separator:a3560e2d7cd6fc015e379df6d56f130d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4b0350f84497f407149bdd8936e16e0d"><td class="memTemplParams" colspan="2"><a id="a4b0350f84497f407149bdd8936e16e0d"></a>
-template&lt;class EdgeStorage  = typename edge_traits_type::edge_storage_type, alloc EdgePartitionsAllocator = typename EdgeStorage::partitions_allocator_type&gt; </td></tr>
-<tr class="memitem:a4b0350f84497f407149bdd8936e16e0d"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>graph_base</b> (edges_initializer edges, const edge_allocator_type &amp;edgeAllocator, const EdgePartitionsAllocator &amp;edgePartitionsAllocator, std::initializer_list&lt; node_weight_type &gt; nodeWeights, const node_weight_allocator_type &amp;nodeWeightAllocator)</td></tr>
-<tr class="separator:a4b0350f84497f407149bdd8936e16e0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad4eea2d0451825093f93d7eacb3adf8f"><td class="memTemplParams" colspan="2"><a id="ad4eea2d0451825093f93d7eacb3adf8f"></a>
+template&lt;alloc EdgePartitionsAllocator&gt; </td></tr>
+<tr class="memitem:ad4eea2d0451825093f93d7eacb3adf8f"><td class="memTemplItemLeft" align="right" valign="top">requires allocatable_partitions&lt; <a class="el" href="../../d5/de5/structsequoia_1_1maths_1_1graph__impl_1_1dynamic__edge__traits.html">edge_traits_type</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>graph_base</b> (edges_initializer edges, const edge_allocator_type &amp;edgeAllocator, const EdgePartitionsAllocator &amp;edgePartitionsAllocator, std::initializer_list&lt; node_weight_type &gt; nodeWeights, const node_weight_allocator_type &amp;nodeWeightAllocator)</td></tr>
+<tr class="separator:ad4eea2d0451825093f93d7eacb3adf8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abc7f09fa0646537dc46d628af2f10f48"><td class="memItemLeft" align="right" valign="top"><a id="abc7f09fa0646537dc46d628af2f10f48"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>graph_base</b> (const <a class="el" href="../../de/d2b/classsequoia_1_1maths_1_1graph__base.html">graph_base</a> &amp;in, const edge_allocator_type &amp;edgeAllocator, const node_weight_allocator_type &amp;nodeWeightAllocator)</td></tr>
 <tr class="separator:abc7f09fa0646537dc46d628af2f10f48"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad62a9f7b6c61c5db0493889f1252b8b4"><td class="memTemplParams" colspan="2"><a id="ad62a9f7b6c61c5db0493889f1252b8b4"></a>
-template&lt;class EdgeStorage  = typename edge_traits_type::edge_storage_type, alloc EdgePartitionsAllocator = typename EdgeStorage::partitions_allocator_type&gt; </td></tr>
-<tr class="memitem:ad62a9f7b6c61c5db0493889f1252b8b4"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>graph_base</b> (const <a class="el" href="../../de/d2b/classsequoia_1_1maths_1_1graph__base.html">graph_base</a> &amp;in, const edge_allocator_type &amp;edgeAllocator, const EdgePartitionsAllocator &amp;edgePartitionsAllocator, const node_weight_allocator_type &amp;nodeWeightAllocator)</td></tr>
-<tr class="separator:ad62a9f7b6c61c5db0493889f1252b8b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f97cafaeb9f6fb3f27fdcaacb9488bd"><td class="memTemplParams" colspan="2"><a id="a8f97cafaeb9f6fb3f27fdcaacb9488bd"></a>
+template&lt;alloc EdgePartitionsAllocator&gt; </td></tr>
+<tr class="memitem:a8f97cafaeb9f6fb3f27fdcaacb9488bd"><td class="memTemplItemLeft" align="right" valign="top">requires allocatable_partitions&lt; <a class="el" href="../../d5/de5/structsequoia_1_1maths_1_1graph__impl_1_1dynamic__edge__traits.html">edge_traits_type</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>graph_base</b> (const <a class="el" href="../../de/d2b/classsequoia_1_1maths_1_1graph__base.html">graph_base</a> &amp;in, const edge_allocator_type &amp;edgeAllocator, const EdgePartitionsAllocator &amp;edgePartitionsAllocator, const node_weight_allocator_type &amp;nodeWeightAllocator)</td></tr>
+<tr class="separator:a8f97cafaeb9f6fb3f27fdcaacb9488bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a225e4d1dde7e0529bdf30e2125a9153a"><td class="memItemLeft" align="right" valign="top"><a id="a225e4d1dde7e0529bdf30e2125a9153a"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>graph_base</b> (<a class="el" href="../../de/d2b/classsequoia_1_1maths_1_1graph__base.html">graph_base</a> &amp;&amp;in, const edge_allocator_type &amp;edgeAllocator, const node_weight_allocator_type &amp;nodeWeightAllocator)</td></tr>
 <tr class="separator:a225e4d1dde7e0529bdf30e2125a9153a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acf526f5e09d0e0ad69e0478e43fec51f"><td class="memTemplParams" colspan="2"><a id="acf526f5e09d0e0ad69e0478e43fec51f"></a>
-template&lt;class EdgeStorage  = typename edge_traits_type::edge_storage_type, alloc EdgePartitionsAllocator = typename EdgeStorage::partitions_allocator_type&gt; </td></tr>
-<tr class="memitem:acf526f5e09d0e0ad69e0478e43fec51f"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>graph_base</b> (<a class="el" href="../../de/d2b/classsequoia_1_1maths_1_1graph__base.html">graph_base</a> &amp;&amp;in, const edge_allocator_type &amp;edgeAllocator, const EdgePartitionsAllocator &amp;edgePartitionsAllocator, const node_weight_allocator_type &amp;nodeWeightAllocator)</td></tr>
-<tr class="separator:acf526f5e09d0e0ad69e0478e43fec51f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a591bd88800bfd70a36f54bc1fb7f4059"><td class="memTemplParams" colspan="2"><a id="a591bd88800bfd70a36f54bc1fb7f4059"></a>
+template&lt;alloc EdgePartitionsAllocator&gt; </td></tr>
+<tr class="memitem:a591bd88800bfd70a36f54bc1fb7f4059"><td class="memTemplItemLeft" align="right" valign="top">requires allocatable_partitions&lt; <a class="el" href="../../d5/de5/structsequoia_1_1maths_1_1graph__impl_1_1dynamic__edge__traits.html">edge_traits_type</a> &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>graph_base</b> (<a class="el" href="../../de/d2b/classsequoia_1_1maths_1_1graph__base.html">graph_base</a> &amp;&amp;in, const edge_allocator_type &amp;edgeAllocator, const EdgePartitionsAllocator &amp;edgePartitionsAllocator, const node_weight_allocator_type &amp;nodeWeightAllocator)</td></tr>
+<tr class="separator:a591bd88800bfd70a36f54bc1fb7f4059"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a60318ee0ef0d9f13d78eae4e46c8941b"><td class="memItemLeft" align="right" valign="top"><a id="a60318ee0ef0d9f13d78eae4e46c8941b"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>graph_base</b> (const <a class="el" href="../../de/d2b/classsequoia_1_1maths_1_1graph__base.html">graph_base</a> &amp;)=default</td></tr>
 <tr class="separator:a60318ee0ef0d9f13d78eae4e46c8941b"><td class="memSeparator" colspan="2">&#160;</td></tr>
