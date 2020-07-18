@@ -165,6 +165,12 @@ namespace sequoia
   template <class A>
   concept alloc = is_allocator_v<A>;
 
+  template <class A>
+  concept scoped_alloc = is_allocator_v<A> && requires() {
+    typename A::outer_allocator_type;
+    typename A::inner_allocator_type;
+  };
+
   template<class T, class... Args>
   concept resolve_to_copy = resolve_to_copy_constructor_v<T, Args...>;
 

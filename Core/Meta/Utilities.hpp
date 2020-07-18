@@ -11,8 +11,11 @@
     \brief Meta-programming utilities
  */
 
+#include "Concepts.hpp"
+
 #include <utility>
 #include <tuple>
+#include <scoped_allocator>
 
 namespace sequoia::impl
 {
@@ -111,4 +114,16 @@ namespace sequoia
 
   template<class... Ts> struct variant_visitor : Ts... { using Ts::operator()...; };
   template<class... Ts> variant_visitor(Ts...) -> variant_visitor<Ts...>;
+
+  template<alloc A>
+  struct alloc_count
+  {
+    static constexpr std::size_t size{1};
+  };
+
+  template<alloc OuterAlloc, alloc... InnerAlloc>
+  struct alloc_count<std::scoped_allocator_adaptor<OuterAlloc, InnerAlloc...>>
+  {
+    static constexpr std::size_t size{1 + sizeof...(InnerAlloc)};
+  };
 }

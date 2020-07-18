@@ -46,8 +46,6 @@
 #include "ArrayUtilities.hpp"
 #include "Utilities.hpp"
 
-#include <functional>
-
 namespace sequoia::testing
 {
   enum class allocation_event { copy, mutation, para_copy, para_move, assign_prop, assign};
@@ -127,17 +125,15 @@ namespace sequoia::testing
       The class is designed for inheritance but not for the purpose of type erasure and so
       has a protected destructor etc.
    */
-  template<strongly_movable T, counting_alloc Allocator>
+  template<strongly_movable T, alloc_getter<T> Getter>
   class allocation_info_base
   {
   public:
-    template<alloc_getter<T> Fn>
-    explicit allocation_info_base(Fn&& allocGetter)
-      : m_AllocatorGetter{std::forward<Fn>(allocGetter)}
-    {
-      if(!m_AllocatorGetter)
-        throw std::logic_error("allocation_info must be supplied with a non-null function object");
-    }
+    using allocator_type = std::invoke_result_t<Getter, T>;
+    
+    explicit allocation_info_base(Getter allocGetter)
+      : m_AllocatorGetter{std::move(allocGetter)}
+    {}
 
     allocation_info_base(const allocation_info_base&) = default;
 
@@ -149,13 +145,13 @@ namespace sequoia::testing
 
     template<class... Args>
     [[nodiscard]]
-    Allocator make_allocator(Args&&... args) const
+    allocator_type make_allocator(Args&&... args) const
     {
-      return Allocator{std::forward<Args>(args)...};
+      return {std::forward<Args>(args)...};
     }
 
     [[nodiscard]]
-    Allocator allocator(const T& c) const
+    allocator_type allocator(const T& c) const
     {
       return m_AllocatorGetter(c);
     }
@@ -167,16 +163,14 @@ namespace sequoia::testing
     allocation_info_base& operator=(const allocation_info_base&)     = default;
     allocation_info_base& operator=(allocation_info_base&&) noexcept = default;
 
-    using getter = std::function<Allocator(const T&)>;
-
     [[nodiscard]]
-    getter make_getter() const
+    Getter make_getter() const
     {
       return m_AllocatorGetter;
     }
   private:
 
-    getter m_AllocatorGetter;
+    Getter m_AllocatorGetter;
   };
 
   /*! \brief Class for use with a container possessing a (shared counting) allocator
@@ -185,19 +179,18 @@ namespace sequoia::testing
       of an allocator from a container. On top of this, the class holds predictions
       for the various allocation events.
    */
-  template<strongly_movable T, counting_alloc Allocator, class Predictions>
-  class basic_allocation_info : public allocation_info_base<T, Allocator>
+  template<strongly_movable T, alloc_getter<T> Getter, class Predictions>
+  class basic_allocation_info : public allocation_info_base<T, Getter>
   {
   private:
-    using base_t = allocation_info_base<T, Allocator>;
+    using base_t = allocation_info_base<T, Getter>;
   public:
-    using container_type   = T;
-    using allocator_type   = Allocator;
+    using value_type       = T;
+    using allocator_type   = typename base_t::allocator_type;
     using predictions_type = Predictions;
       
-    template<alloc_getter<T> Fn>
-    basic_allocation_info(Fn&& allocGetter, Predictions predictions)
-      : base_t{std::forward<Fn>(allocGetter)}
+    basic_allocation_info(Getter allocGetter, Predictions predictions)
+      : base_t{std::move(allocGetter)}
       , m_Predictions{std::move(predictions)}
     {}
 
@@ -215,25 +208,23 @@ namespace sequoia::testing
       The essential difference to the primary template is that multiple sets of predictions must
       be supplied, one for each level within the scoped_allocator_adaptor.
    */
-  template<strongly_movable T, counting_alloc... Allocators, class Predictions>
-  class basic_allocation_info<T, std::scoped_allocator_adaptor<Allocators...>, Predictions>
-    : public allocation_info_base<T, std::scoped_allocator_adaptor<Allocators...>>
+  template<strongly_movable T, alloc_getter<T> Getter, class Predictions>
+    requires scoped_alloc<std::invoke_result_t<Getter, T>>
+  class basic_allocation_info<T, Getter, Predictions>
+    : public allocation_info_base<T, Getter>
   {
   private:
-    using base_t = allocation_info_base<T, std::scoped_allocator_adaptor<Allocators...>>;
+    using base_t = allocation_info_base<T, Getter>;
   public:
-    constexpr static auto N{sizeof...(Allocators)};
-
-    static_assert(N > 0);
-
-    using container_type   = T;
-    using allocator_type   = std::scoped_allocator_adaptor<Allocators...>;
+    using value_type       = T;
+    using allocator_type   = typename base_t::allocator_type;
     using predictions_type = Predictions;
 
-    template<alloc_getter<T> Fn>
-    basic_allocation_info(Fn&& allocGetter, std::initializer_list<Predictions> predictions)
-      : base_t{std::forward<Fn>(allocGetter)}
-      , m_Predictions{utilities::to_array<Predictions, N>(predictions)}
+    constexpr static std::size_t size{alloc_count<allocator_type>::size};
+    
+    basic_allocation_info(Getter allocGetter, std::initializer_list<Predictions> predictions)
+      : base_t{std::move(allocGetter)}
+      , m_Predictions{utilities::to_array<Predictions, size>(predictions)}
     {}
 
     /// unpacks the scoped_allocator_adaptor, returning basic_allocation_info for the
@@ -247,9 +238,7 @@ namespace sequoia::testing
         }
       };
 
-      using Alloc = decltype(scopedGetter(std::declval<T>()));
-
-      return basic_allocation_info<T, Alloc, Predictions>{scopedGetter, m_Predictions[I]};
+      return basic_allocation_info<T, decltype(scopedGetter), Predictions>{scopedGetter, m_Predictions[I]};
     }
 
   private:
@@ -267,6 +256,6 @@ namespace sequoia::testing
       }
     }
       
-    std::array<Predictions, N> m_Predictions;
+    std::array<Predictions, size> m_Predictions;
   };
 }

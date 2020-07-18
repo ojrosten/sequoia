@@ -37,8 +37,8 @@ namespace sequoia::testing
     regular_allocation_extender& operator=(const regular_allocation_extender&) = delete;  
     regular_allocation_extender& operator=(regular_allocation_extender&&)      = delete;
 
-    template<pseudoregular T, invocable<T&> Mutator, counting_alloc... Allocators>
-    void check_semantics(std::string_view description, const T& x, const T& y, Mutator m, allocation_info<T, Allocators>... info)
+    template<pseudoregular T, invocable<T&> Mutator, alloc_getter<T>... Getters>
+    void check_semantics(std::string_view description, const T& x, const T& y, Mutator m, allocation_info<T, Getters>... info)
     {
       testing::check_semantics(append_indented(description, emphasise("Regular Semantics")), m_Logger, x, y, m, info...);
     }

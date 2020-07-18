@@ -26,14 +26,14 @@ namespace sequoia::testing::impl
   struct move_only_allocation_actions : allocation_actions
   {};
 
-  template<test_mode Mode, class Actions, moveonly T, counting_alloc... Allocators, class... Predictions>
-  bool check_swap(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, const dual_allocation_checker<T, Allocators, Predictions>&... checkers)
+  template<test_mode Mode, class Actions, moveonly T, alloc_getter<T>... Getters, class... Predictions>
+  bool check_swap(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
   {
     return do_check_swap(logger, sentry, actions, std::move(x), std::move(y), xClone, yClone, dual_allocation_checker{checkers.info(), x, y}...);
   }
 
-  template<test_mode Mode, moveonly T, counting_alloc... Allocators, class... Predictions>
-  std::optional<T> check_para_constructor_allocations(test_logger<Mode>& logger, const sentinel<Mode>& sentry, T&& y, const T& yClone, const basic_allocation_info<T, Allocators, Predictions>&... info)
+  template<test_mode Mode, moveonly T, alloc_getter<T>... Getters, class... Predictions>
+  std::optional<T> check_para_constructor_allocations(test_logger<Mode>& logger, const sentinel<Mode>& sentry, T&& y, const T& yClone, const basic_allocation_info<T, Getters, Predictions>&... info)
   {
     if(!check(sentry.generate_message("Precondition - for checking move-only semantics, y and yClone are assumed to be equal"), logger, y == yClone)) return{};
     
@@ -52,8 +52,8 @@ namespace sequoia::testing::impl
   }
 
   /// Unpacks the tuple and feeds to the overload of check_semantics defined in MoveOnlyCheckersDetails.hpp
-  template<test_mode Mode, class Actions, moveonly T, invocable<T&> Mutator, counting_alloc... Allocators>
-  void check_semantics(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, std::tuple<dual_allocation_checker<T, Allocators, move_only_allocation_predictions>...> checkers)
+  template<test_mode Mode, class Actions, moveonly T, invocable<T&> Mutator, alloc_getter<T>... Getters>
+  void check_semantics(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, std::tuple<dual_allocation_checker<T, Getters, move_only_allocation_predictions>...> checkers)
   {
     auto fn{
       [&logger, &sentry, &actions, &x, &y, &xClone, &yClone, m{std::move(m)}](auto&&... checkers){
