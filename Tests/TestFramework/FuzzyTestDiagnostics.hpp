@@ -17,7 +17,7 @@ namespace sequoia:: testing
     using fuzzy_false_positive_test::fuzzy_false_positive_test;
 
     [[nodiscard]]
-    std::string_view source_file_name() const noexcept final;
+    std::string_view source_file() const noexcept final;
   private:
     void run_tests() final;
 
@@ -32,7 +32,7 @@ namespace sequoia:: testing
     using fuzzy_false_negative_test::fuzzy_false_negative_test;
 
     [[nodiscard]]
-    std::string_view source_file_name() const noexcept final;
+    std::string_view source_file() const noexcept final;
   private:
     void run_tests() final;
 

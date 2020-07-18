@@ -22,7 +22,7 @@ namespace sequoia
   {
 
     [[nodiscard]]
-    std::string_view test_edges::source_file_name() const noexcept
+    std::string_view test_edges::source_file() const noexcept
     {
       return __FILE__;
     }

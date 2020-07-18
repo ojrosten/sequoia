@@ -16,7 +16,7 @@ namespace sequoia::testing
     using performance_false_positive_test::performance_false_positive_test;
 
     [[nodiscard]]
-    std::string_view source_file_name() const noexcept final;
+    std::string_view source_file() const noexcept final;
   private:
     void run_tests() final;
 
@@ -29,7 +29,7 @@ namespace sequoia::testing
     using performance_false_negative_test::performance_false_negative_test;
 
     [[nodiscard]]
-    std::string_view source_file_name() const noexcept final;
+    std::string_view source_file() const noexcept final;
   private:
     void run_tests() final;
 

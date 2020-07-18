@@ -10,7 +10,7 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::string_view test_heterogeneous_node_storage::source_file_name() const noexcept
+  std::string_view test_heterogeneous_node_storage::source_file() const noexcept
   {
     return __FILE__;
   }

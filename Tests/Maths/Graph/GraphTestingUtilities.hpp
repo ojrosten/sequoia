@@ -307,7 +307,7 @@ namespace sequoia::testing
     using time_point = typename base_t::time_point;
 
     [[nodiscard]]
-    log_summary summarize(const time_point start) override
+    log_summary summarize(const time_point start) const override
     {
       return base_t::summarize(start) += m_AccumulatedSummaries;
     }
@@ -338,16 +338,10 @@ namespace sequoia::testing
     int x{};
 
     [[nodiscard]]
-    friend constexpr bool operator==(const unsortable& lhs, const unsortable& rhs) noexcept
-    {
-      return lhs.x == rhs.x;
-    }
+    friend constexpr bool operator==(const unsortable& lhs, const unsortable& rhs) noexcept = default;
 
     [[nodiscard]]
-    friend constexpr bool operator!=(const unsortable& lhs, const unsortable& rhs) noexcept
-    {
-      return !(lhs == rhs);
-    }
+    friend constexpr bool operator!=(const unsortable& lhs, const unsortable& rhs) noexcept = default;
       
     template<class Stream> friend Stream& operator<<(Stream& s, const unsortable& u)
     {
@@ -360,18 +354,9 @@ namespace sequoia::testing
   {
     int w{}, x{1}, y{2}, z{3};
 
-    friend constexpr bool operator==(const big_unsortable& lhs, const big_unsortable& rhs) noexcept
-    {
-      return (lhs.w == rhs.w)
-        && (lhs.x == rhs.x)
-        && (lhs.y == rhs.y)
-        && (lhs.z == rhs.z);
-    }
+    friend constexpr bool operator==(const big_unsortable& lhs, const big_unsortable& rhs) noexcept = default;
 
-    friend constexpr bool operator!=(const big_unsortable& lhs, const big_unsortable& rhs) noexcept
-    {
-      return !(lhs == rhs);
-    }
+    friend constexpr bool operator!=(const big_unsortable& lhs, const big_unsortable& rhs) noexcept = default;
 
     template<class Stream> friend Stream& operator<<(Stream& s, const big_unsortable& u)
     {

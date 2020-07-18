@@ -10,7 +10,7 @@ namespace sequoia::testing
     using false_positive_regular_test::false_positive_regular_test;    
 
     [[nodiscard]]
-    std::string_view source_file_name() const noexcept final;
+    std::string_view source_file() const noexcept final;
   private:
     struct null_weight{};
     

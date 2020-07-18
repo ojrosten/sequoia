@@ -11,7 +11,7 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::string_view move_only_scoped_allocation_false_negative_diagnostics::source_file_name() const noexcept
+  std::string_view move_only_scoped_allocation_false_negative_diagnostics::source_file() const noexcept
   {
     return __FILE__;
   }
@@ -56,7 +56,7 @@ namespace sequoia::testing
 
 
   [[nodiscard]]
-  std::string_view move_only_scoped_allocation_false_positive_diagnostics::source_file_name() const noexcept
+  std::string_view move_only_scoped_allocation_false_positive_diagnostics::source_file() const noexcept
   {
     return __FILE__;
   }

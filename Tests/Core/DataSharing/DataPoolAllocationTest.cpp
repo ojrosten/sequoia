@@ -11,7 +11,7 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::string_view data_pool_allocation_test::source_file_name() const noexcept
+  std::string_view data_pool_allocation_test::source_file() const noexcept
   {
     return __FILE__;
   }

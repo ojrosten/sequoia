@@ -19,7 +19,7 @@ namespace sequoia::testing
     using regular_allocation_test::regular_allocation_test;
 
     [[nodiscard]]
-    std::string_view source_file_name() const noexcept final;
+    std::string_view source_file() const noexcept final;
 
     template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
     void test_allocation();

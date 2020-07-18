@@ -17,7 +17,7 @@ namespace sequoia::testing
     using regular_test::regular_test;
 
     [[nodiscard]]
-    std::string_view source_file_name() const noexcept final;
+    std::string_view source_file() const noexcept final;
   private:
     void run_tests() final;
 

@@ -16,7 +16,7 @@ namespace sequoia
   namespace testing
   {
     [[nodiscard]]
-    std::string_view partitioned_data_test::source_file_name() const noexcept
+    std::string_view partitioned_data_test::source_file() const noexcept
     {
       return __FILE__;
     }
