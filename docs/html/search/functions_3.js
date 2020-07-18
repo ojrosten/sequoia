@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['execute_1417',['execute',['../da/d6f/classsequoia_1_1testing_1_1test.html#aae25c1c1dac489431d1f7de73df0d5fa',1,'sequoia::testing::test::execute()'],['../d0/d16/classsequoia_1_1testing_1_1basic__test.html#aa4abc80c9be5e015c70cee5e2628dbe2',1,'sequoia::testing::basic_test::execute()']]]
+  ['general_5fequivalence_5fcheck_1418',['general_equivalence_check',['../d2/d0d/FreeCheckers_8hpp.html#aad1dd9129ae28daf8a4da6b42ba3b959',1,'sequoia::testing']]]
 ];

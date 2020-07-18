@@ -147,14 +147,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ab55e8b6d9ef23bea65e4742039b446ee"><td class="memItemLeft" align="right" valign="top"><a id="ab55e8b6d9ef23bea65e4742039b446ee"></a>
 <a class="el" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a> &amp;&amp;)=delete</td></tr>
 <tr class="separator:ab55e8b6d9ef23bea65e4742039b446ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aae25c1c1dac489431d1f7de73df0d5fa"><td class="memItemLeft" align="right" valign="top"><a id="aae25c1c1dac489431d1f7de73df0d5fa"></a>
-virtual <a class="el" href="../../d2/daa/classsequoia_1_1testing_1_1log__summary.html">log_summary</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d6f/classsequoia_1_1testing_1_1test.html#aae25c1c1dac489431d1f7de73df0d5fa">execute</a> ()=0</td></tr>
-<tr class="memdesc:aae25c1c1dac489431d1f7de73df0d5fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pure virtual method, the overrides of which determine the fine details of test execution. <br /></td></tr>
-<tr class="separator:aae25c1c1dac489431d1f7de73df0d5fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9771f3acff238cab5056de70bbf42311"><td class="memItemLeft" align="right" valign="top"><a id="a9771f3acff238cab5056de70bbf42311"></a>
-virtual std::string_view&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d6f/classsequoia_1_1testing_1_1test.html#a9771f3acff238cab5056de70bbf42311">source_file_name</a> () const noexcept=0</td></tr>
-<tr class="memdesc:a9771f3acff238cab5056de70bbf42311"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pure virtual method which should be overridden in a concrete test's cpp file in order to provide the correct <b>FILE</b> <br /></td></tr>
-<tr class="separator:a9771f3acff238cab5056de70bbf42311"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ed22dd2f95775e092455be0fa2e6165"><td class="memItemLeft" align="right" valign="top"><a id="a1ed22dd2f95775e092455be0fa2e6165"></a>
+<a class="el" href="../../d2/daa/classsequoia_1_1testing_1_1log__summary.html">log_summary</a>&#160;</td><td class="memItemRight" valign="bottom"><b>execute</b> ()</td></tr>
+<tr class="separator:a1ed22dd2f95775e092455be0fa2e6165"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28b10876d861618cc35d88041b2a59d0"><td class="memItemLeft" align="right" valign="top"><a id="a28b10876d861618cc35d88041b2a59d0"></a>
+std::string_view&#160;</td><td class="memItemRight" valign="bottom"><b>source_file_name</b> () const noexcept</td></tr>
+<tr class="separator:a28b10876d861618cc35d88041b2a59d0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a431a64e494ddbbb90e326e9e9c212be8"><td class="memItemLeft" align="right" valign="top"><a id="a431a64e494ddbbb90e326e9e9c212be8"></a>
 std::string_view&#160;</td><td class="memItemRight" valign="bottom"><b>name</b> () const noexcept</td></tr>
 <tr class="separator:a431a64e494ddbbb90e326e9e9c212be8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -164,6 +162,14 @@ Protected Member Functions</h2></td></tr>
 <tr class="memitem:a6d02c180aff9e7ae225f6c12e70e2e0d"><td class="memItemLeft" align="right" valign="top"><a id="a6d02c180aff9e7ae225f6c12e70e2e0d"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>test</b> (<a class="el" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a> &amp;&amp;) noexcept=default</td></tr>
 <tr class="separator:a6d02c180aff9e7ae225f6c12e70e2e0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3cd13c830731a9b239d3f33f3eff328f"><td class="memItemLeft" align="right" valign="top"><a id="a3cd13c830731a9b239d3f33f3eff328f"></a>
+virtual <a class="el" href="../../d2/daa/classsequoia_1_1testing_1_1log__summary.html">log_summary</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d6f/classsequoia_1_1testing_1_1test.html#a3cd13c830731a9b239d3f33f3eff328f">do_execute</a> ()=0</td></tr>
+<tr class="memdesc:a3cd13c830731a9b239d3f33f3eff328f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pure virtual method, the overrides of which determine the fine details of test execution. <br /></td></tr>
+<tr class="separator:a3cd13c830731a9b239d3f33f3eff328f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af45829b6c878446b52dab1107616995f"><td class="memItemLeft" align="right" valign="top"><a id="af45829b6c878446b52dab1107616995f"></a>
+virtual std::string_view&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d6f/classsequoia_1_1testing_1_1test.html#af45829b6c878446b52dab1107616995f">source_file</a> () const noexcept=0</td></tr>
+<tr class="memdesc:af45829b6c878446b52dab1107616995f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pure virtual method which should be overridden in a concrete test's cpp file in order to provide the correct <b>FILE</b> <br /></td></tr>
+<tr class="separator:af45829b6c878446b52dab1107616995f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Abstract base class used for type-erasure of the template class <a class="el" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html" title="class template from which all concrete tests should derive.">basic_test</a>. </p>

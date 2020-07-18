@@ -31,13 +31,13 @@ var menudata={children:[
 {text:"Class Hierarchy",url:"hierarchy.html"},
 {text:"Class Members",url:"functions.html",children:[
 {text:"All",url:"functions.html",children:[
-{text:"e",url:"functions.html#index_e"},
+{text:"d",url:"functions.html#index_d"},
 {text:"m",url:"functions.html#index_m"},
 {text:"r",url:"functions.html#index_r"},
 {text:"s",url:"functions.html#index_s"},
 {text:"u",url:"functions.html#index_u"}]},
 {text:"Functions",url:"functions_func.html",children:[
-{text:"e",url:"functions_func.html#index_e"},
+{text:"d",url:"functions_func.html#index_d"},
 {text:"m",url:"functions_func.html#index_m"},
 {text:"r",url:"functions_func.html#index_r"},
 {text:"s",url:"functions_func.html#index_s"},
