@@ -88,19 +88,19 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ae2590393bacc9c8dc655816a119e8097"><td class="memTemplParams" colspan="2"><a id="ae2590393bacc9c8dc655816a119e8097"></a>
-template&lt;test_mode Mode, class Actions , moveonly T, counting_alloc... Allocators, class... Predictions&gt; </td></tr>
-<tr class="memitem:ae2590393bacc9c8dc655816a119e8097"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_swap</b> (test_logger&lt; Mode &gt; &amp;logger, const sentinel&lt; Mode &gt; &amp;sentry, const Actions &amp;actions, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone, const dual_allocation_checker&lt; T, Allocators, Predictions &gt; &amp;... checkers)</td></tr>
-<tr class="separator:ae2590393bacc9c8dc655816a119e8097"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a778c21143ad7530787a7c6f12df94e3e"><td class="memTemplParams" colspan="2"><a id="a778c21143ad7530787a7c6f12df94e3e"></a>
-template&lt;test_mode Mode, moveonly T, counting_alloc... Allocators, class... Predictions&gt; </td></tr>
-<tr class="memitem:a778c21143ad7530787a7c6f12df94e3e"><td class="memTemplItemLeft" align="right" valign="top">std::optional&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_para_constructor_allocations</b> (test_logger&lt; Mode &gt; &amp;logger, const sentinel&lt; Mode &gt; &amp;sentry, T &amp;&amp;y, const T &amp;yClone, const basic_allocation_info&lt; T, Allocators, Predictions &gt; &amp;... info)</td></tr>
-<tr class="separator:a778c21143ad7530787a7c6f12df94e3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af25284a427164305a9c09bf5a794629e"><td class="memTemplParams" colspan="2"><a id="af25284a427164305a9c09bf5a794629e"></a>
-template&lt;test_mode Mode, class Actions , moveonly T, invocable&lt; T &amp; &gt; Mutator, counting_alloc... Allocators&gt; </td></tr>
-<tr class="memitem:af25284a427164305a9c09bf5a794629e"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../df/d57/MoveOnlyAllocationCheckersDetails_8hpp.html#af25284a427164305a9c09bf5a794629e">sequoia::testing::impl::check_semantics</a> (test_logger&lt; Mode &gt; &amp;logger, const sentinel&lt; Mode &gt; &amp;sentry, const Actions &amp;actions, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone, Mutator m, std::tuple&lt; dual_allocation_checker&lt; T, Allocators, move_only_allocation_predictions &gt;... &gt; checkers)</td></tr>
-<tr class="memdesc:af25284a427164305a9c09bf5a794629e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unpacks the tuple and feeds to the overload of check_semantics defined in <a class="el" href="../../d0/d79/MoveOnlyCheckersDetails_8hpp.html" title="Implementation details for checking move-only semantics.">MoveOnlyCheckersDetails.hpp</a>. <br /></td></tr>
-<tr class="separator:af25284a427164305a9c09bf5a794629e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a7f8fa3bc276fa7c72b772d0900b400"><td class="memTemplParams" colspan="2"><a id="a1a7f8fa3bc276fa7c72b772d0900b400"></a>
+template&lt;test_mode Mode, class Actions , moveonly T, alloc_getter&lt; T &gt;... Getters, class... Predictions&gt; </td></tr>
+<tr class="memitem:a1a7f8fa3bc276fa7c72b772d0900b400"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_swap</b> (test_logger&lt; Mode &gt; &amp;logger, const sentinel&lt; Mode &gt; &amp;sentry, const Actions &amp;actions, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone, const dual_allocation_checker&lt; T, Getters, Predictions &gt; &amp;... checkers)</td></tr>
+<tr class="separator:a1a7f8fa3bc276fa7c72b772d0900b400"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a22927ef3ef4c95bc855842d850946e7a"><td class="memTemplParams" colspan="2"><a id="a22927ef3ef4c95bc855842d850946e7a"></a>
+template&lt;test_mode Mode, moveonly T, alloc_getter&lt; T &gt;... Getters, class... Predictions&gt; </td></tr>
+<tr class="memitem:a22927ef3ef4c95bc855842d850946e7a"><td class="memTemplItemLeft" align="right" valign="top">std::optional&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_para_constructor_allocations</b> (test_logger&lt; Mode &gt; &amp;logger, const sentinel&lt; Mode &gt; &amp;sentry, T &amp;&amp;y, const T &amp;yClone, const basic_allocation_info&lt; T, Getters, Predictions &gt; &amp;... info)</td></tr>
+<tr class="separator:a22927ef3ef4c95bc855842d850946e7a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aec1e4ce9d4dc2cac2e85ad63983757db"><td class="memTemplParams" colspan="2"><a id="aec1e4ce9d4dc2cac2e85ad63983757db"></a>
+template&lt;test_mode Mode, class Actions , moveonly T, invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; </td></tr>
+<tr class="memitem:aec1e4ce9d4dc2cac2e85ad63983757db"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../df/d57/MoveOnlyAllocationCheckersDetails_8hpp.html#aec1e4ce9d4dc2cac2e85ad63983757db">sequoia::testing::impl::check_semantics</a> (test_logger&lt; Mode &gt; &amp;logger, const sentinel&lt; Mode &gt; &amp;sentry, const Actions &amp;actions, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone, Mutator m, std::tuple&lt; dual_allocation_checker&lt; T, Getters, move_only_allocation_predictions &gt;... &gt; checkers)</td></tr>
+<tr class="memdesc:aec1e4ce9d4dc2cac2e85ad63983757db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unpacks the tuple and feeds to the overload of check_semantics defined in <a class="el" href="../../d0/d79/MoveOnlyCheckersDetails_8hpp.html" title="Implementation details for checking move-only semantics.">MoveOnlyCheckersDetails.hpp</a>. <br /></td></tr>
+<tr class="separator:aec1e4ce9d4dc2cac2e85ad63983757db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implementation details specific to allocation checks for move-only types. </p>

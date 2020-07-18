@@ -169,6 +169,9 @@ template&lt;class T &gt; </td></tr>
 template&lt;class A &gt; </td></tr>
 <tr class="memitem:a6565d46b3cd3a40598191fa9a618e132"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::alloc</b> = is_allocator_v&lt;A&gt;</td></tr>
 <tr class="separator:a6565d46b3cd3a40598191fa9a618e132"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb4b3e7b0e948ddaaf891928a67c30a0"><td class="memTemplParams" colspan="2">template&lt;class A &gt; </td></tr>
+<tr class="memitem:abb4b3e7b0e948ddaaf891928a67c30a0"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::scoped_alloc</b></td></tr>
+<tr class="separator:abb4b3e7b0e948ddaaf891928a67c30a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afb9483b9fd4c6966690c4155c66aedf9"><td class="memTemplParams" colspan="2"><a id="afb9483b9fd4c6966690c4155c66aedf9"></a>
 template&lt;class T , class... Args&gt; </td></tr>
 <tr class="memitem:afb9483b9fd4c6966690c4155c66aedf9"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::resolve_to_copy</b> = resolve_to_copy_constructor_v&lt;T, Args...&gt;</td></tr>
@@ -414,6 +417,26 @@ template&lt;class T &gt; </div>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">=</div>
 <div class="line">    constructible_from&lt;T, T&gt; &amp;&amp; convertible_to&lt;T, T&gt;</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="abb4b3e7b0e948ddaaf891928a67c30a0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb4b3e7b0e948ddaaf891928a67c30a0">&#9670;&nbsp;</a></span>scoped_alloc</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class A &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">concept sequoia::scoped_alloc</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= is_allocator_v&lt;A&gt; &amp;&amp; requires() {</div>
+<div class="line">    <span class="keyword">typename</span> A::outer_allocator_type;</div>
+<div class="line">    <span class="keyword">typename</span> A::inner_allocator_type;</div>
+<div class="line">  }</div>
 </div><!-- fragment -->
 </div>
 </div>

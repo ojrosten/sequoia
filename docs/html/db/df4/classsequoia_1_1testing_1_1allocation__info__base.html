@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: sequoia::testing::allocation_info_base&lt; T, Allocator &gt; Class Template Reference</title>
+<title>Sequoia: sequoia::testing::allocation_info_base&lt; T, Getter &gt; Class Template Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -66,12 +66,12 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pro-types">Protected Types</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="../../dd/d38/classsequoia_1_1testing_1_1allocation__info__base-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">sequoia::testing::allocation_info_base&lt; T, Allocator &gt; Class Template Reference</div>  </div>
+<div class="title">sequoia::testing::allocation_info_base&lt; T, Getter &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
@@ -80,63 +80,63 @@ $(function() {
 
 <p><code>#include &lt;<a class="el" href="../../d3/dfb/AllocationCheckers_8hpp_source.html">AllocationCheckers.hpp</a>&gt;</code></p>
 <div class="dynheader">
-Inheritance diagram for sequoia::testing::allocation_info_base&lt; T, Allocator &gt;:</div>
+Inheritance diagram for sequoia::testing::allocation_info_base&lt; T, Getter &gt;:</div>
 <div class="dyncontent">
  <div class="center">
-  <img src="../../db/df4/classsequoia_1_1testing_1_1allocation__info__base.png" usemap="#sequoia::testing::allocation_5Finfo_5Fbase_3C_20T_2C_20Allocator_20_3E_map" alt=""/>
-  <map id="sequoia::testing::allocation_5Finfo_5Fbase_3C_20T_2C_20Allocator_20_3E_map" name="sequoia::testing::allocation_5Finfo_5Fbase_3C_20T_2C_20Allocator_20_3E_map">
-<area href="../../dd/d5b/classsequoia_1_1testing_1_1basic__allocation__info.html" alt="sequoia::testing::basic_allocation_info&lt; Container, Allocator, move_only_allocation_predictions &gt;" shape="rect" coords="0,56,561,80"/>
-<area href="../../dd/d5b/classsequoia_1_1testing_1_1basic__allocation__info.html" alt="sequoia::testing::basic_allocation_info&lt; T, Allocator, allocation_predictions &gt;" shape="rect" coords="571,56,1132,80"/>
-<area href="../../dd/d5b/classsequoia_1_1testing_1_1basic__allocation__info.html" title="Class for use with a container possessing a (shared counting) allocator." alt="sequoia::testing::basic_allocation_info&lt; T, Allocator, Predictions &gt;" shape="rect" coords="1142,56,1703,80"/>
-<area href="../../dd/ddf/classsequoia_1_1testing_1_1move__only__allocation__info.html" alt="sequoia::testing::move_only_allocation_info&lt; Container, Allocator &gt;" shape="rect" coords="0,112,561,136"/>
-<area href="../../d5/d62/classsequoia_1_1testing_1_1allocation__info.html" alt="sequoia::testing::allocation_info&lt; T, Allocator &gt;" shape="rect" coords="571,112,1132,136"/>
+  <img src="../../db/df4/classsequoia_1_1testing_1_1allocation__info__base.png" usemap="#sequoia::testing::allocation_5Finfo_5Fbase_3C_20T_2C_20Getter_20_3E_map" alt=""/>
+  <map id="sequoia::testing::allocation_5Finfo_5Fbase_3C_20T_2C_20Getter_20_3E_map" name="sequoia::testing::allocation_5Finfo_5Fbase_3C_20T_2C_20Getter_20_3E_map">
+<area href="../../dd/d5b/classsequoia_1_1testing_1_1basic__allocation__info.html" alt="sequoia::testing::basic_allocation_info&lt; T, Getter, allocation_predictions &gt;" shape="rect" coords="0,56,496,80"/>
+<area href="../../dd/d5b/classsequoia_1_1testing_1_1basic__allocation__info.html" alt="sequoia::testing::basic_allocation_info&lt; T, Getter, move_only_allocation_predictions &gt;" shape="rect" coords="506,56,1002,80"/>
+<area href="../../dd/d5b/classsequoia_1_1testing_1_1basic__allocation__info.html" title="Class for use with a container possessing a (shared counting) allocator." alt="sequoia::testing::basic_allocation_info&lt; T, Getter, Predictions &gt;" shape="rect" coords="1012,56,1508,80"/>
+<area href="../../d3/db9/classsequoia_1_1testing_1_1basic__allocation__info_3_01T_00_01Getter_00_01Predictions_01_4.html" title="A specialization of basic_allocation_info appropriate for std::scoped_allocator_adaptor." alt="sequoia::testing::basic_allocation_info&lt; T, Getter, Predictions &gt;" shape="rect" coords="1518,56,2014,80"/>
+<area href="../../d5/d62/classsequoia_1_1testing_1_1allocation__info.html" alt="sequoia::testing::allocation_info&lt; T, Getter &gt;" shape="rect" coords="0,112,496,136"/>
+<area href="../../dd/ddf/classsequoia_1_1testing_1_1move__only__allocation__info.html" alt="sequoia::testing::move_only_allocation_info&lt; T, Getter &gt;" shape="rect" coords="506,112,1002,136"/>
   </map>
 </div></div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a6a6017903df34a61a0ac76703b503727"><td class="memItemLeft" align="right" valign="top"><a id="a6a6017903df34a61a0ac76703b503727"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>allocator_type</b> = std::invoke_result_t&lt; Getter, T &gt;</td></tr>
+<tr class="separator:a6a6017903df34a61a0ac76703b503727"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ae5e4828abe6f97b57043a0eea7216ee7"><td class="memTemplParams" colspan="2"><a id="ae5e4828abe6f97b57043a0eea7216ee7"></a>
-template&lt;alloc_getter&lt; T &gt; Fn&gt; </td></tr>
-<tr class="memitem:ae5e4828abe6f97b57043a0eea7216ee7"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>allocation_info_base</b> (Fn &amp;&amp;allocGetter)</td></tr>
-<tr class="separator:ae5e4828abe6f97b57043a0eea7216ee7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a858e651ec87e656c2015fbfc52405965"><td class="memItemLeft" align="right" valign="top"><a id="a858e651ec87e656c2015fbfc52405965"></a>
+<tr class="memitem:a02c712bab46677e7d1426c62650cc0f6"><td class="memItemLeft" align="right" valign="top"><a id="a02c712bab46677e7d1426c62650cc0f6"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>allocation_info_base</b> (Getter allocGetter)</td></tr>
+<tr class="separator:a02c712bab46677e7d1426c62650cc0f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5eec8f8f3f36f87c759eaf147b3322c2"><td class="memItemLeft" align="right" valign="top"><a id="a5eec8f8f3f36f87c759eaf147b3322c2"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>allocation_info_base</b> (const <a class="el" href="../../db/df4/classsequoia_1_1testing_1_1allocation__info__base.html">allocation_info_base</a> &amp;)=default</td></tr>
-<tr class="separator:a858e651ec87e656c2015fbfc52405965"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab56e98e39dad4e2e8e3ddb3a048ef77b"><td class="memItemLeft" align="right" valign="top"><a id="ab56e98e39dad4e2e8e3ddb3a048ef77b"></a>
+<tr class="separator:a5eec8f8f3f36f87c759eaf147b3322c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abbc2613af75f25b75dc6e07a2f97ecd5"><td class="memItemLeft" align="right" valign="top"><a id="abbc2613af75f25b75dc6e07a2f97ecd5"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>count</b> (const T &amp;c) const noexcept</td></tr>
-<tr class="separator:ab56e98e39dad4e2e8e3ddb3a048ef77b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa5eb360cf762cd51652e48fc46b9297e"><td class="memTemplParams" colspan="2"><a id="aa5eb360cf762cd51652e48fc46b9297e"></a>
+<tr class="separator:abbc2613af75f25b75dc6e07a2f97ecd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a026ebcecd55e8ab3bc9d50ce86df7d9c"><td class="memTemplParams" colspan="2"><a id="a026ebcecd55e8ab3bc9d50ce86df7d9c"></a>
 template&lt;class... Args&gt; </td></tr>
-<tr class="memitem:aa5eb360cf762cd51652e48fc46b9297e"><td class="memTemplItemLeft" align="right" valign="top">Allocator&#160;</td><td class="memTemplItemRight" valign="bottom"><b>make_allocator</b> (Args &amp;&amp;... args) const</td></tr>
-<tr class="separator:aa5eb360cf762cd51652e48fc46b9297e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a374f81166c7d5419e16265e1b7fd5fb9"><td class="memItemLeft" align="right" valign="top"><a id="a374f81166c7d5419e16265e1b7fd5fb9"></a>
-Allocator&#160;</td><td class="memItemRight" valign="bottom"><b>allocator</b> (const T &amp;c) const</td></tr>
-<tr class="separator:a374f81166c7d5419e16265e1b7fd5fb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-types"></a>
-Protected Types</h2></td></tr>
-<tr class="memitem:a814e71c99cf416c5dc8ca2ae956c8677"><td class="memItemLeft" align="right" valign="top"><a id="a814e71c99cf416c5dc8ca2ae956c8677"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>getter</b> = std::function&lt; Allocator(const T &amp;)&gt;</td></tr>
-<tr class="separator:a814e71c99cf416c5dc8ca2ae956c8677"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a026ebcecd55e8ab3bc9d50ce86df7d9c"><td class="memTemplItemLeft" align="right" valign="top">allocator_type&#160;</td><td class="memTemplItemRight" valign="bottom"><b>make_allocator</b> (Args &amp;&amp;... args) const</td></tr>
+<tr class="separator:a026ebcecd55e8ab3bc9d50ce86df7d9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a216e4b6b478da6b78f4f8484ae8268a7"><td class="memItemLeft" align="right" valign="top"><a id="a216e4b6b478da6b78f4f8484ae8268a7"></a>
+allocator_type&#160;</td><td class="memItemRight" valign="bottom"><b>allocator</b> (const T &amp;c) const</td></tr>
+<tr class="separator:a216e4b6b478da6b78f4f8484ae8268a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:ae65271118f2ee37b40fd0c6fbb7cd086"><td class="memItemLeft" align="right" valign="top"><a id="ae65271118f2ee37b40fd0c6fbb7cd086"></a>
+<tr class="memitem:a5749a8592534ea95656da63350c41378"><td class="memItemLeft" align="right" valign="top"><a id="a5749a8592534ea95656da63350c41378"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>allocation_info_base</b> (<a class="el" href="../../db/df4/classsequoia_1_1testing_1_1allocation__info__base.html">allocation_info_base</a> &amp;&amp;) noexcept=default</td></tr>
-<tr class="separator:ae65271118f2ee37b40fd0c6fbb7cd086"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a81b1cf1f691b14737b8994b666a7cdc3"><td class="memItemLeft" align="right" valign="top"><a id="a81b1cf1f691b14737b8994b666a7cdc3"></a>
+<tr class="separator:a5749a8592534ea95656da63350c41378"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a981ab78b183e0c7f45f7a4b976472890"><td class="memItemLeft" align="right" valign="top"><a id="a981ab78b183e0c7f45f7a4b976472890"></a>
 <a class="el" href="../../db/df4/classsequoia_1_1testing_1_1allocation__info__base.html">allocation_info_base</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="../../db/df4/classsequoia_1_1testing_1_1allocation__info__base.html">allocation_info_base</a> &amp;)=default</td></tr>
-<tr class="separator:a81b1cf1f691b14737b8994b666a7cdc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1d04ef4c0b2f5d9f5dc453078032aa39"><td class="memItemLeft" align="right" valign="top"><a id="a1d04ef4c0b2f5d9f5dc453078032aa39"></a>
+<tr class="separator:a981ab78b183e0c7f45f7a4b976472890"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aecf53238d073c79896eaa2cfa9fe73b8"><td class="memItemLeft" align="right" valign="top"><a id="aecf53238d073c79896eaa2cfa9fe73b8"></a>
 <a class="el" href="../../db/df4/classsequoia_1_1testing_1_1allocation__info__base.html">allocation_info_base</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="../../db/df4/classsequoia_1_1testing_1_1allocation__info__base.html">allocation_info_base</a> &amp;&amp;) noexcept=default</td></tr>
-<tr class="separator:a1d04ef4c0b2f5d9f5dc453078032aa39"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3e290ffed9f35b85ae90785bfe2787e6"><td class="memItemLeft" align="right" valign="top"><a id="a3e290ffed9f35b85ae90785bfe2787e6"></a>
-getter&#160;</td><td class="memItemRight" valign="bottom"><b>make_getter</b> () const</td></tr>
-<tr class="separator:a3e290ffed9f35b85ae90785bfe2787e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:aecf53238d073c79896eaa2cfa9fe73b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adbba9f811ea8911cea4c0e6872c75860"><td class="memItemLeft" align="right" valign="top"><a id="adbba9f811ea8911cea4c0e6872c75860"></a>
+Getter&#160;</td><td class="memItemRight" valign="bottom"><b>make_getter</b> () const</td></tr>
+<tr class="separator:adbba9f811ea8911cea4c0e6872c75860"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><h3>template&lt;strongly_movable T, counting_alloc Allocator&gt;<br />
-class sequoia::testing::allocation_info_base&lt; T, Allocator &gt;</h3>
+<div class="textblock"><h3>template&lt;strongly_movable T, alloc_getter&lt; T &gt; Getter&gt;<br />
+class sequoia::testing::allocation_info_base&lt; T, Getter &gt;</h3>
 
 <p>Base class for use with both plain (shared counting) allocators and std::scoped_allocator_adaptor. </p>
 <p>This class wraps one of the essential ingredients for allocation testing: a function object which can acquire a copy of a container's allocator. Note that a container with multiple independent allocators will generally be associated with multiple instantiations of this class. (Each of these independent allocators may be scoped.)</p>

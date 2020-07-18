@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: sequoia::testing::impl::dual_allocation_checker&lt; T, Allocator, Predictions &gt; Class Template Reference</title>
+<title>Sequoia: sequoia::testing::impl::dual_allocation_checker&lt; T, Getter, Predictions &gt; Class Template Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -70,7 +70,7 @@ $(function() {
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="../../dd/d87/classsequoia_1_1testing_1_1impl_1_1dual__allocation__checker-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">sequoia::testing::impl::dual_allocation_checker&lt; T, Allocator, Predictions &gt; Class Template Reference</div>  </div>
+<div class="title">sequoia::testing::impl::dual_allocation_checker&lt; T, Getter, Predictions &gt; Class Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
@@ -81,53 +81,53 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a9be4bcc8bd54331b29f89ee15caabc70"><td class="memItemLeft" align="right" valign="top"><a id="a9be4bcc8bd54331b29f89ee15caabc70"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>container_type</b> = T</td></tr>
-<tr class="separator:a9be4bcc8bd54331b29f89ee15caabc70"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8edb5bff3abf6df92654acb3b755620d"><td class="memItemLeft" align="right" valign="top"><a id="a8edb5bff3abf6df92654acb3b755620d"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>allocator_type</b> = Allocator</td></tr>
-<tr class="separator:a8edb5bff3abf6df92654acb3b755620d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad66957cbb585dd693865acd8b003a0d8"><td class="memItemLeft" align="right" valign="top"><a id="ad66957cbb585dd693865acd8b003a0d8"></a>
+<tr class="memitem:a85758b561688039dd9500289def1faf3"><td class="memItemLeft" align="right" valign="top"><a id="a85758b561688039dd9500289def1faf3"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>value_type</b> = T</td></tr>
+<tr class="separator:a85758b561688039dd9500289def1faf3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a36993f0d2543650878ffde6ba5ebacd1"><td class="memItemLeft" align="right" valign="top"><a id="a36993f0d2543650878ffde6ba5ebacd1"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>predictions_type</b> = Predictions</td></tr>
-<tr class="separator:ad66957cbb585dd693865acd8b003a0d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac1382891e1755eb41bb0b4a90529f4bc"><td class="memItemLeft" align="right" valign="top"><a id="ac1382891e1755eb41bb0b4a90529f4bc"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>alloc_info</b> = <a class="el" href="../../dd/d5b/classsequoia_1_1testing_1_1basic__allocation__info.html">basic_allocation_info</a>&lt; T, Allocator, Predictions &gt;</td></tr>
-<tr class="separator:ac1382891e1755eb41bb0b4a90529f4bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a36993f0d2543650878ffde6ba5ebacd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a99d032e3c50962c19ccbb1249ab77a"><td class="memItemLeft" align="right" valign="top"><a id="a7a99d032e3c50962c19ccbb1249ab77a"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>alloc_info</b> = <a class="el" href="../../dd/d5b/classsequoia_1_1testing_1_1basic__allocation__info.html">basic_allocation_info</a>&lt; T, Getter, Predictions &gt;</td></tr>
+<tr class="separator:a7a99d032e3c50962c19ccbb1249ab77a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a91b0a2c1b037c5d9091ec4aad6641986"><td class="memItemLeft" align="right" valign="top"><a id="a91b0a2c1b037c5d9091ec4aad6641986"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>allocator_type</b> = typename alloc_info::allocator_type</td></tr>
+<tr class="separator:a91b0a2c1b037c5d9091ec4aad6641986"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a3a665b9237b89f7604462c06a4fca2fa"><td class="memItemLeft" align="right" valign="top"><a id="a3a665b9237b89f7604462c06a4fca2fa"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>dual_allocation_checker</b> (<a class="el" href="../../dd/d5b/classsequoia_1_1testing_1_1basic__allocation__info.html">alloc_info</a> i, const T &amp;x, const T &amp;y)</td></tr>
-<tr class="separator:a3a665b9237b89f7604462c06a4fca2fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab84b01a3e3544ea8a393737b152480fb"><td class="memItemLeft" align="right" valign="top"><a id="ab84b01a3e3544ea8a393737b152480fb"></a>
-const <a class="el" href="../../dd/d5b/classsequoia_1_1testing_1_1basic__allocation__info.html">alloc_info</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>info</b> () const noexcept</td></tr>
-<tr class="separator:ab84b01a3e3544ea8a393737b152480fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad4096ec3e0af8789aa1556061bd25f88"><td class="memItemLeft" align="right" valign="top"><a id="ad4096ec3e0af8789aa1556061bd25f88"></a>
+<tr class="memitem:adc7f960823a1c502b7fb7b1de7811c5a"><td class="memItemLeft" align="right" valign="top"><a id="adc7f960823a1c502b7fb7b1de7811c5a"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>dual_allocation_checker</b> (<a class="el" href="../../d3/db9/classsequoia_1_1testing_1_1basic__allocation__info_3_01T_00_01Getter_00_01Predictions_01_4.html">alloc_info</a> i, const T &amp;x, const T &amp;y)</td></tr>
+<tr class="separator:adc7f960823a1c502b7fb7b1de7811c5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac4bbdbcfb8f581c64617033cafab7f5"><td class="memItemLeft" align="right" valign="top"><a id="aac4bbdbcfb8f581c64617033cafab7f5"></a>
+const <a class="el" href="../../d3/db9/classsequoia_1_1testing_1_1basic__allocation__info_3_01T_00_01Getter_00_01Predictions_01_4.html">alloc_info</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>info</b> () const noexcept</td></tr>
+<tr class="separator:aac4bbdbcfb8f581c64617033cafab7f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad732e13b53ac5648d0de286114dfb8fe"><td class="memItemLeft" align="right" valign="top"><a id="ad732e13b53ac5648d0de286114dfb8fe"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>first_count</b> () const noexcept</td></tr>
-<tr class="separator:ad4096ec3e0af8789aa1556061bd25f88"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a17be9b8a0febac120823ec2960acbe3a"><td class="memItemLeft" align="right" valign="top"><a id="a17be9b8a0febac120823ec2960acbe3a"></a>
+<tr class="separator:ad732e13b53ac5648d0de286114dfb8fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17bf0a993f40149c9a069a595d74c2b0"><td class="memItemLeft" align="right" valign="top"><a id="a17bf0a993f40149c9a069a595d74c2b0"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>second_count</b> () const noexcept</td></tr>
-<tr class="separator:a17be9b8a0febac120823ec2960acbe3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1cede3946d4ce1d7c3fc36b63454dc94"><td class="memTemplParams" colspan="2"><a id="a1cede3946d4ce1d7c3fc36b63454dc94"></a>
+<tr class="separator:a17bf0a993f40149c9a069a595d74c2b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae9e3c239ae9da23f5d02454f14b2ac4d"><td class="memTemplParams" colspan="2"><a id="ae9e3c239ae9da23f5d02454f14b2ac4d"></a>
 template&lt;test_mode Mode&gt; </td></tr>
-<tr class="memitem:a1cede3946d4ce1d7c3fc36b63454dc94"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_no_allocation</b> (std::string_view detail, <a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;logger, const <a class="el" href="../../d1/d8f/classsequoia_1_1testing_1_1sentinel.html">sentinel</a>&lt; Mode &gt; &amp;sentry, const T &amp;x, const T &amp;y) const</td></tr>
-<tr class="separator:a1cede3946d4ce1d7c3fc36b63454dc94"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a142b4ca872cd911108839fa8a8990a2e"><td class="memTemplParams" colspan="2"><a id="a142b4ca872cd911108839fa8a8990a2e"></a>
+<tr class="memitem:ae9e3c239ae9da23f5d02454f14b2ac4d"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_no_allocation</b> (std::string_view detail, <a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;logger, const <a class="el" href="../../d1/d8f/classsequoia_1_1testing_1_1sentinel.html">sentinel</a>&lt; Mode &gt; &amp;sentry, const T &amp;x, const T &amp;y) const</td></tr>
+<tr class="separator:ae9e3c239ae9da23f5d02454f14b2ac4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71ef5c02e8cfe260503365831c2da237"><td class="memTemplParams" colspan="2"><a id="a71ef5c02e8cfe260503365831c2da237"></a>
 template&lt;test_mode Mode&gt; </td></tr>
-<tr class="memitem:a142b4ca872cd911108839fa8a8990a2e"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_copy_assign_y_to_x</b> (<a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;logger, const <a class="el" href="../../d1/d8f/classsequoia_1_1testing_1_1sentinel.html">sentinel</a>&lt; Mode &gt; &amp;sentry, const T &amp;x, const T &amp;y) const</td></tr>
-<tr class="separator:a142b4ca872cd911108839fa8a8990a2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1770dcb733b231a7f2b3d8e0d0d0953b"><td class="memTemplParams" colspan="2"><a id="a1770dcb733b231a7f2b3d8e0d0d0953b"></a>
+<tr class="memitem:a71ef5c02e8cfe260503365831c2da237"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_copy_assign_y_to_x</b> (<a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;logger, const <a class="el" href="../../d1/d8f/classsequoia_1_1testing_1_1sentinel.html">sentinel</a>&lt; Mode &gt; &amp;sentry, const T &amp;x, const T &amp;y) const</td></tr>
+<tr class="separator:a71ef5c02e8cfe260503365831c2da237"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6586a0670e509a79650e46b3438489e6"><td class="memTemplParams" colspan="2"><a id="a6586a0670e509a79650e46b3438489e6"></a>
 template&lt;test_mode Mode&gt; </td></tr>
-<tr class="memitem:a1770dcb733b231a7f2b3d8e0d0d0953b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_move_assign_y_to_x</b> (<a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;logger, const <a class="el" href="../../d1/d8f/classsequoia_1_1testing_1_1sentinel.html">sentinel</a>&lt; Mode &gt; &amp;sentry, const T &amp;x) const</td></tr>
-<tr class="separator:a1770dcb733b231a7f2b3d8e0d0d0953b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae0b2200577c7fbcdbc5af07cbb180ecf"><td class="memTemplParams" colspan="2"><a id="ae0b2200577c7fbcdbc5af07cbb180ecf"></a>
+<tr class="memitem:a6586a0670e509a79650e46b3438489e6"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_move_assign_y_to_x</b> (<a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;logger, const <a class="el" href="../../d1/d8f/classsequoia_1_1testing_1_1sentinel.html">sentinel</a>&lt; Mode &gt; &amp;sentry, const T &amp;x) const</td></tr>
+<tr class="separator:a6586a0670e509a79650e46b3438489e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f5feb7cb8d7c9105f5f74de01b585d7"><td class="memTemplParams" colspan="2"><a id="a1f5feb7cb8d7c9105f5f74de01b585d7"></a>
 template&lt;test_mode Mode&gt; </td></tr>
-<tr class="memitem:ae0b2200577c7fbcdbc5af07cbb180ecf"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_mutation_after_swap</b> (<a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;logger, const <a class="el" href="../../d1/d8f/classsequoia_1_1testing_1_1sentinel.html">sentinel</a>&lt; Mode &gt; &amp;sentry, const T &amp;lhs, const T &amp;rhs) const</td></tr>
-<tr class="separator:ae0b2200577c7fbcdbc5af07cbb180ecf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f5feb7cb8d7c9105f5f74de01b585d7"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_mutation_after_swap</b> (<a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;logger, const <a class="el" href="../../d1/d8f/classsequoia_1_1testing_1_1sentinel.html">sentinel</a>&lt; Mode &gt; &amp;sentry, const T &amp;lhs, const T &amp;rhs) const</td></tr>
+<tr class="separator:a1f5feb7cb8d7c9105f5f74de01b585d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><h3>template&lt;strongly_movable T, counting_alloc Allocator, class Predictions&gt;<br />
-class sequoia::testing::impl::dual_allocation_checker&lt; T, Allocator, Predictions &gt;</h3>
+<div class="textblock"><h3>template&lt;strongly_movable T, alloc_getter&lt; T &gt; Getter, class Predictions&gt;<br />
+class sequoia::testing::impl::dual_allocation_checker&lt; T, Getter, Predictions &gt;</h3>
 
 <p>Wraps <a class="el" href="../../dd/d5b/classsequoia_1_1testing_1_1basic__allocation__info.html" title="Class for use with a container possessing a (shared counting) allocator.">basic_allocation_info</a>, together with two prior allocation counts. </p>
 <p>Consider two containers, x and y, which in some way interact e.g. via copy/move or swap followed by mutation. The class holds allocation counts (for a given allocator) of both x and y, prior to the operation of interest being performed. The number of allocations after the operation may be acquired by inspecting the Container via the function object stored in <a class="el" href="../../dd/d5b/classsequoia_1_1testing_1_1basic__allocation__info.html" title="Class for use with a container possessing a (shared counting) allocator.">basic_allocation_info</a>. Combining this with the result of invoking either first_count() or second_count(), as appropriate, gives a number which may be compared to the appropriate prediction stored within <a class="el" href="../../dd/d5b/classsequoia_1_1testing_1_1basic__allocation__info.html" title="Class for use with a container possessing a (shared counting) allocator.">basic_allocation_info</a>.</p>

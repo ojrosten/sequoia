@@ -88,23 +88,23 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d67/structsequoia_1_1testing_1_1allocation__predictions.html">sequoia::testing::allocation_predictions</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d62/classsequoia_1_1testing_1_1allocation__info.html">sequoia::testing::allocation_info&lt; T, Allocator &gt;</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d62/classsequoia_1_1testing_1_1allocation__info.html">sequoia::testing::allocation_info&lt; T, Getter &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a8ed8675f98e3e51ab9883296216d2781"><td class="memTemplParams" colspan="2"><a id="a8ed8675f98e3e51ab9883296216d2781"></a>
+<tr class="memitem:ac702ff59f24958b7cc5a654c90778fbf"><td class="memTemplParams" colspan="2"><a id="ac702ff59f24958b7cc5a654c90778fbf"></a>
 template&lt;class Fn , class Signature  = function_signature&lt;decltype(&amp;std::remove_cvref_t&lt;Fn&gt;::operator())&gt;&gt; </td></tr>
-<tr class="memitem:a8ed8675f98e3e51ab9883296216d2781"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::allocation_info</b> (Fn &amp;&amp;allocGetter, allocation_predictions predictions) -&gt; allocation_info&lt; std::remove_cvref_t&lt; typename Signature::arg &gt;, std::remove_cvref_t&lt; typename Signature::ret &gt;&gt;</td></tr>
-<tr class="separator:a8ed8675f98e3e51ab9883296216d2781"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa673b0e3e1d96b8c6a7ba886f806b118"><td class="memTemplParams" colspan="2"><a id="aa673b0e3e1d96b8c6a7ba886f806b118"></a>
+<tr class="memitem:ac702ff59f24958b7cc5a654c90778fbf"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::allocation_info</b> (Fn allocGetter, allocation_predictions predictions) -&gt; allocation_info&lt; std::remove_cvref_t&lt; typename Signature::arg &gt;, Fn &gt;</td></tr>
+<tr class="separator:ac702ff59f24958b7cc5a654c90778fbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a860d146ec83162c83b044d7b8c612965"><td class="memTemplParams" colspan="2"><a id="a860d146ec83162c83b044d7b8c612965"></a>
 template&lt;class Fn , class Signature  = function_signature&lt;decltype(&amp;std::remove_cvref_t&lt;Fn&gt;::operator())&gt;&gt; </td></tr>
-<tr class="memitem:aa673b0e3e1d96b8c6a7ba886f806b118"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::allocation_info</b> (Fn &amp;&amp;allocGetter, std::initializer_list&lt; allocation_predictions &gt; predictions) -&gt; allocation_info&lt; std::remove_cvref_t&lt; typename Signature::arg &gt;, std::remove_cvref_t&lt; typename Signature::ret &gt;&gt;</td></tr>
-<tr class="separator:aa673b0e3e1d96b8c6a7ba886f806b118"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2d27ee04c44840a01b085a9295b76255"><td class="memTemplParams" colspan="2"><a id="a2d27ee04c44840a01b085a9295b76255"></a>
-template&lt;test_mode Mode, pseudoregular T, invocable&lt; T &amp; &gt; Mutator, counting_alloc... Allocators&gt; </td></tr>
-<tr class="memitem:a2d27ee04c44840a01b085a9295b76255"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_semantics</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y, Mutator yMutator, allocation_info&lt; T, Allocators &gt;... info)</td></tr>
-<tr class="separator:a2d27ee04c44840a01b085a9295b76255"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a860d146ec83162c83b044d7b8c612965"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::allocation_info</b> (Fn allocGetter, std::initializer_list&lt; allocation_predictions &gt; predictions) -&gt; allocation_info&lt; std::remove_cvref_t&lt; typename Signature::arg &gt;, Fn &gt;</td></tr>
+<tr class="separator:a860d146ec83162c83b044d7b8c612965"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20e0ae8dc84089c430451f75d9bd0ef4"><td class="memTemplParams" colspan="2"><a id="a20e0ae8dc84089c430451f75d9bd0ef4"></a>
+template&lt;test_mode Mode, pseudoregular T, invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters&gt; </td></tr>
+<tr class="memitem:a20e0ae8dc84089c430451f75d9bd0ef4"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_semantics</b> (std::string_view description, test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y, Mutator yMutator, const allocation_info&lt; T, Getters &gt; &amp;... info)</td></tr>
+<tr class="separator:a20e0ae8dc84089c430451f75d9bd0ef4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Utilities for performing allocation checks for regular types, see <a class="el" href="../../d1/db7/RegularCheckers_8hpp.html#regular_semantics_definition">here</a>. </p>

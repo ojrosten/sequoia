@@ -230,14 +230,20 @@ $(function() {
 <div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">class</span> A&gt;</div>
 <div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;  concept alloc = is_allocator_v&lt;A&gt;;</div>
 <div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160; </div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class </span>T, <span class="keyword">class</span>... Args&gt;</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;  concept resolve_to_copy = resolve_to_copy_constructor_v&lt;T, Args...&gt;;</div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160; </div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;  concept three_way_comparable = requires(<span class="keyword">const</span> T&amp; lhs, <span class="keyword">const</span> T&amp; rhs) {</div>
-<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;    lhs &lt;=&gt; rhs;</div>
-<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;  };</div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;}</div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;  <span class="keyword">template</span> &lt;<span class="keyword">class</span> A&gt;</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;  concept scoped_alloc = is_allocator_v&lt;A&gt; &amp;&amp; requires() {</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;    <span class="keyword">typename</span> A::outer_allocator_type;</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;    <span class="keyword">typename</span> A::inner_allocator_type;</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;  };</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160; </div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class </span>T, <span class="keyword">class</span>... Args&gt;</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;  concept resolve_to_copy = resolve_to_copy_constructor_v&lt;T, Args...&gt;;</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160; </div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt;</div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;  concept three_way_comparable = requires(<span class="keyword">const</span> T&amp; lhs, <span class="keyword">const</span> T&amp; rhs) {</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;    lhs &lt;=&gt; rhs;</div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;  };</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aAlgorithms_8hpp_html"><div class="ttname"><a href="../../d6/d07/Algorithms_8hpp.html">Algorithms.hpp</a></div><div class="ttdoc">A collection of constexpr algorithms.</div></div>
 <!-- start footer part -->
