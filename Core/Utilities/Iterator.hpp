@@ -51,7 +51,9 @@ namespace sequoia::utilities
 
     template<class... Args>
       requires (!resolve_to_copy_v<identity_dereference_policy, Args...>)
-    constexpr explicit identity_dereference_policy(Args&&... args) : AuxiliaryDataPolicy{std::forward<Args>(args)...} {}
+    constexpr explicit identity_dereference_policy(Args&&... args)
+      : AuxiliaryDataPolicy{std::forward<Args>(args)...}
+    {}
 
     constexpr identity_dereference_policy(const identity_dereference_policy&) = default;
 
@@ -84,7 +86,7 @@ namespace sequoia::utilities
       be rather confusing. However, for const iterators this is tacitly allowed.
    */
 
-  template<class Iterator, class DereferencePolicy>
+  template<class Iterator, dereference_policy DereferencePolicy>
   class iterator : public DereferencePolicy
   {
   public:    
@@ -97,9 +99,6 @@ namespace sequoia::utilities
     using pointer                = typename DereferencePolicy::pointer;
     using reference              = typename DereferencePolicy::reference;
     using const_dereference_type = impl::type_generator_t<DereferencePolicy>;
-
-    static_assert(impl::is_valid_v<DereferencePolicy>,
-      "The DereferencePolicy must supply exacly one type called either reference or proxy");
 
     template<class Arg, class... Args>
       requires (!resolve_to_copy_v<iterator, Arg, Args...>)

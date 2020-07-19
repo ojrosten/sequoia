@@ -343,7 +343,7 @@ namespace sequoia
 
           auto edgePartitionsAllocGetter{
             [](const graph_primitive& in){
-              if constexpr(has_partitions_allocator_type_v<edge_storage>)
+              if constexpr(has_partitions_allocator<edge_storage>)
               {
                 return in.get_edge_allocator(partitions_allocator_tag{});
               }

@@ -244,7 +244,7 @@ namespace sequoia
 
           auto partitionsAllocGetter{
             [](const connectivity& in){
-              if constexpr(has_partitions_allocator_type_v<edge_storage_type>)
+              if constexpr(has_partitions_allocator<edge_storage_type>)
               {
                 return in.m_Edges.get_partitions_allocator();
               }
@@ -321,7 +321,7 @@ namespace sequoia
       }
 
       template<class T=edge_storage_type>
-        requires has_partitions_allocator_type_v<T>
+        requires has_partitions_allocator<T>
       auto get_edge_allocator(partitions_allocator_tag) const
       {
         return m_Edges.get_partitions_allocator();
@@ -955,7 +955,7 @@ namespace sequoia
       {}
 
       constexpr connectivity(indirect_edge_copy_type, const connectivity& in)
-        : connectivity(has_partitions_alloc_constant<has_partitions_allocator_type_v<edge_storage_type>>{}, in)
+        : connectivity(has_partitions_alloc_constant<has_partitions_allocator<edge_storage_type>>{}, in)
       {}
 
       constexpr connectivity(has_partitions_alloc_type, const connectivity& in)

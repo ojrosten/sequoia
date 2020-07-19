@@ -15,18 +15,8 @@
 
 namespace sequoia
 {
-  template<class T, class = std::void_t<>>
-  struct has_partitions_allocator_type : std::false_type
-  {};
-
   template<class T>
-  struct has_partitions_allocator_type<T, std::void_t<typename T::partitions_allocator_type>> : std::true_type
-  {};
-
-  template<class T> constexpr bool has_partitions_allocator_type_v{has_partitions_allocator_type<T>::value};
-
-  template<class T> using has_partitions_allocator_type_t = typename has_partitions_allocator_type<T>::type;
-
-  template<class T>
-  concept has_partitions_allocator = has_partitions_allocator_type_v<T>;
+  concept has_partitions_allocator = requires() {
+    typename T::partitions_allocator_type;
+  };
 }

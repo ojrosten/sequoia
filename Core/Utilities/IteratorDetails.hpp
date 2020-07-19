@@ -15,65 +15,47 @@
 
 namespace sequoia::utilities
 {
+  template<class Policy>
+  concept dereference_policy = requires() {
+    typename Policy::value_type;
+    typename Policy::reference;
+    typename Policy::pointer;
+  };
+
   namespace impl
   {
-    template<class DereferencePolicy, class=std::void_t<>>
-    struct provides_reference_type : std::false_type
-    {};
-
-    template<class DereferencePolicy>
-    struct provides_reference_type<DereferencePolicy, std::void_t<typename DereferencePolicy::reference>>
-      : std::true_type
-    {};
-    
-    template<class DereferencePolicy>
-    constexpr bool provides_reference_type_v{provides_reference_type<DereferencePolicy>::value};
-
-    
-    template<class DereferencePolicy, class=std::void_t<>>
-    struct provides_proxy_type : std::false_type
-    {};
-
-    template<class DereferencePolicy>
-    struct provides_proxy_type<DereferencePolicy, std::void_t<typename DereferencePolicy::proxy>>
-      : std::true_type
-    {};
-    
-    template<class DereferencePolicy>
-    constexpr bool provides_proxy_type_v{provides_proxy_type<DereferencePolicy>::value};
-
-    template<class DereferencePolicy>
-    constexpr bool is_valid_v{provides_reference_type_v<DereferencePolicy>};
-
-    template<class DerefPolicy1, class DerefPolicy2>
+    template<class Policy>
+    concept has_proxy_type = requires() {
+      typename Policy::proxy;
+    };
+                                         
+    template<dereference_policy DerefPolicy1, dereference_policy DerefPolicy2>
     constexpr bool are_compatible_v{
-         (is_valid_v<DerefPolicy1> && is_valid_v<DerefPolicy2>)
-      && (   (provides_proxy_type_v<DerefPolicy1> && provides_proxy_type_v<DerefPolicy2>)
-          || (!provides_proxy_type_v<DerefPolicy1> && !provides_proxy_type_v<DerefPolicy2>))
+         (   (has_proxy_type<DerefPolicy1> && has_proxy_type<DerefPolicy2>)
+          || (!has_proxy_type<DerefPolicy1> && !has_proxy_type<DerefPolicy2>))
     };       
     
-    template<
-      class DereferencePolicy,
-      bool=provides_proxy_type_v<DereferencePolicy>
-    >
+    template<dereference_policy DereferencePolicy>
     struct type_generator
-    {
-      using type = typename DereferencePolicy::proxy;
-    };
-
-    template<class DereferencePolicy>
-    struct type_generator<DereferencePolicy, false>
     {
       using reference = typename DereferencePolicy::reference;
       using type = std::conditional_t<std::is_lvalue_reference_v<reference>, std::remove_reference_t<reference> const&, reference>;
     };
+
+    template<dereference_policy DereferencePolicy>
+      requires has_proxy_type<DereferencePolicy>
+    struct type_generator<DereferencePolicy>
+    {
+      using type = typename DereferencePolicy::proxy;
+    };
+
 
     template<class DereferencePolicy>
     using type_generator_t = typename type_generator<DereferencePolicy>::type;
 
     template<class DereferencePolicy>
     constexpr bool provides_mutable_reference_v{
-           !provides_proxy_type_v<DereferencePolicy>
+           !has_proxy_type<DereferencePolicy>
         &&  std::is_reference_v<typename DereferencePolicy::reference>
         && !is_const_reference_v<typename DereferencePolicy::reference>
     };
