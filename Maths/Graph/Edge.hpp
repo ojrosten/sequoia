@@ -139,7 +139,7 @@ namespace sequoia
       ~weighting() = default;
       
       template<class... Args>
-        requires (!resolve_to_copy<weighting, Args...> && !is_base_of_head_v<weighting, Args...>)
+        requires (!resolve_to_copy_v<weighting, Args...> && !is_base_of_head_v<weighting, Args...>)
       constexpr explicit weighting(Args&&... args) : m_Weight{wrapped_weight::make(std::forward<Args>(args)...)}
       {}
 
@@ -222,7 +222,7 @@ namespace sequoia
       using weight_proxy_type = WeightProxy;
 
       template<class... Args>
-        requires (!resolve_to_copy<partial_edge_base, Args...>)
+        requires (!resolve_to_copy_v<partial_edge_base, Args...>)
       constexpr explicit partial_edge_base(const index_type target, Args&&... args)
         : edge_base<IndexType>{target}
         , weighting<Weight, WeightSharingPolicy, WeightProxy, IndexType>{std::forward<Args>(args)...}
@@ -294,7 +294,7 @@ namespace sequoia
       using index_type = typename partial_edge_base<Weight, WeightSharingPolicy, WeightProxy, IndexType>::index_type;
 
       template<class... Args>
-        requires (!resolve_to_copy<decorated_edge_base, Args...>)
+        requires (!resolve_to_copy_v<decorated_edge_base, Args...>)
       constexpr decorated_edge_base(const index_type target, const index_type auxIndex, Args&&... args)
         : partial_edge_base<Weight, WeightSharingPolicy, WeightProxy, IndexType>{target, std::forward<Args>(args)...}
         , m_AuxiliaryIndex{auxIndex}
@@ -381,7 +381,7 @@ namespace sequoia
       using weight_proxy_type = WeightProxy;
 
       template<class... Args>
-        requires (!resolve_to_copy<edge, Args...>)
+        requires (!resolve_to_copy_v<edge, Args...>)
       constexpr edge(const index_type source, const index_type target, Args&&... args)
         : decorated_edge_base<Weight, data_sharing::independent, WeightProxy, IndexType>{target, source, std::forward<Args>(args)...}
       {
@@ -447,7 +447,7 @@ namespace sequoia
       using index_type = typename decorated_edge_base<Weight, WeightSharingPolicy, WeightProxy, IndexType>::index_type;
 
       template<class... Args>
-      requires (!resolve_to_copy<embedded_edge, Args...>)
+      requires (!resolve_to_copy_v<embedded_edge, Args...>)
       constexpr embedded_edge(const index_type source, const index_type target, const index_type auxIndex, Args&&... args)
         : decorated_edge_base<Weight, WeightSharingPolicy, WeightProxy, IndexType>{target, auxIndex, std::forward<Args>(args)...}
         , m_HostIndex{source}

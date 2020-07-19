@@ -50,7 +50,7 @@ namespace sequoia::utilities
 
 
     template<class... Args>
-      requires (!resolve_to_copy<identity_dereference_policy, Args...>)
+      requires (!resolve_to_copy_v<identity_dereference_policy, Args...>)
     constexpr explicit identity_dereference_policy(Args&&... args) : AuxiliaryDataPolicy{std::forward<Args>(args)...} {}
 
     constexpr identity_dereference_policy(const identity_dereference_policy&) = default;
@@ -102,7 +102,7 @@ namespace sequoia::utilities
       "The DereferencePolicy must supply exacly one type called either reference or proxy");
 
     template<class Arg, class... Args>
-      requires (!resolve_to_copy<iterator, Arg, Args...>)
+      requires (!resolve_to_copy_v<iterator, Arg, Args...>)
     constexpr explicit iterator(Arg&& baseIterArg, Args&&... args)
       : DereferencePolicy{std::forward<Args>(args)...}
       , m_BaseIterator{std::forward<Arg>(baseIterArg)}

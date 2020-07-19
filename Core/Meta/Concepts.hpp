@@ -171,9 +171,6 @@ namespace sequoia
     typename A::inner_allocator_type;
   };
 
-  template<class T, class... Args>
-  concept resolve_to_copy = resolve_to_copy_constructor_v<T, Args...>;
-
   template<class T>
   concept three_way_comparable = requires(const T& lhs, const T& rhs) {
     lhs <=> rhs;

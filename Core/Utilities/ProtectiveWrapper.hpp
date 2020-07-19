@@ -35,7 +35,7 @@ namespace sequoia::utilities
     using value_type = T;
       
     template<class... Args>
-      requires (!resolve_to_copy<protective_wrapper, Args...>)
+      requires (!resolve_to_copy_v<protective_wrapper, Args...>)
     constexpr explicit protective_wrapper(Args&&... args) : m_Type{std::forward<Args>(args)...} {}
 
     template<class... Args>

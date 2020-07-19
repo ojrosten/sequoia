@@ -45,7 +45,7 @@ namespace sequoia::testing
   {
     test_variadic_traits();
     test_base_of_head();
-    test_resolve_to_copy_constructor();
+    test_resolve_to_copy();
     test_is_const_pointer();
     test_is_const_reference();
     test_is_orderable();
@@ -230,10 +230,10 @@ namespace sequoia::testing
     );
   }
   
-  void type_traits_test::test_resolve_to_copy_constructor()
+  void type_traits_test::test_resolve_to_copy()
   {
     {
-      using d = resolve_to_copy_constructor<int>;
+      using d = resolve_to_copy<int>;
       
       check(LINE(""), []() {
           static_assert(std::is_same_v<std::false_type, d::type>);
@@ -242,20 +242,20 @@ namespace sequoia::testing
       );
 
       check(LINE(""), []() {
-          static_assert(std::is_same_v<std::false_type, resolve_to_copy_constructor_t<int>>);
+          static_assert(std::is_same_v<std::false_type, resolve_to_copy_t<int>>);
           return true;
         }()
       );
 
       check(LINE(""), []() {
-          static_assert(!resolve_to_copy_constructor_v<int>);
+          static_assert(!resolve_to_copy_v<int>);
           return true;
         }()
       );
     }
 
     {
-      using d = resolve_to_copy_constructor<int, int>;
+      using d = resolve_to_copy<int, int>;
       
       check(LINE(""), []() {
           static_assert(std::is_same_v<std::true_type, d::type>);
@@ -264,20 +264,20 @@ namespace sequoia::testing
       );
 
       check(LINE(""), []() {
-          static_assert(std::is_same_v<std::true_type, resolve_to_copy_constructor_t<int, int>>);
+          static_assert(std::is_same_v<std::true_type, resolve_to_copy_t<int, int>>);
           return true;
         }()
       );
 
       check(LINE(""), []() {
-          static_assert(resolve_to_copy_constructor_v<int, int>);
+          static_assert(resolve_to_copy_v<int, int>);
           return true;
         }()
       );
     }
 
     {
-      using d = resolve_to_copy_constructor<int&, int>;
+      using d = resolve_to_copy<int&, int>;
       
       check(LINE(""), []() {
           static_assert(std::is_same_v<std::true_type, d::type>);
@@ -286,20 +286,20 @@ namespace sequoia::testing
       );
 
       check(LINE(""), []() {
-          static_assert(std::is_same_v<std::true_type, resolve_to_copy_constructor_t<int&, int>>);
+          static_assert(std::is_same_v<std::true_type, resolve_to_copy_t<int&, int>>);
           return true;
         }()
       );
 
       check(LINE(""), []() {
-          static_assert(resolve_to_copy_constructor_v<int&, int>);
+          static_assert(resolve_to_copy_v<int&, int>);
           return true;
         }()
       );
     }
 
     {
-      using d = resolve_to_copy_constructor<int, int&>;
+      using d = resolve_to_copy<int, int&>;
       
       check(LINE(""), []() {
           static_assert(std::is_same_v<std::true_type, d::type>);
@@ -308,20 +308,20 @@ namespace sequoia::testing
       );
 
       check(LINE(""), []() {
-          static_assert(std::is_same_v<std::true_type, resolve_to_copy_constructor_t<int, int&>>);
+          static_assert(std::is_same_v<std::true_type, resolve_to_copy_t<int, int&>>);
           return true;
         }()
       );
 
       check(LINE(""), []() {
-          static_assert(resolve_to_copy_constructor_v<int, int&>);
+          static_assert(resolve_to_copy_v<int, int&>);
           return true;
         }()
       );
     }
 
     {
-      using d = resolve_to_copy_constructor<const int&, volatile int&>;
+      using d = resolve_to_copy<const int&, volatile int&>;
       
       check(LINE(""), []() {
           static_assert(std::is_same_v<std::true_type, d::type>);
@@ -330,20 +330,20 @@ namespace sequoia::testing
       );
 
       check(LINE(""), []() {
-          static_assert(std::is_same_v<std::true_type, resolve_to_copy_constructor_t<const int&, volatile int&>>);
+          static_assert(std::is_same_v<std::true_type, resolve_to_copy_t<const int&, volatile int&>>);
           return true;
         }()
       );
 
       check(LINE(""), []() {
-          static_assert(resolve_to_copy_constructor_v<const int&, volatile int&>);
+          static_assert(resolve_to_copy_v<const int&, volatile int&>);
           return true;
         }()
       );
     }
 
     {
-      using d = resolve_to_copy_constructor<int, double>;
+      using d = resolve_to_copy<int, double>;
       
       check(LINE(""), []() {
           static_assert(std::is_same_v<std::false_type, d::type>);
@@ -352,20 +352,20 @@ namespace sequoia::testing
       );
 
       check(LINE(""), []() {
-          static_assert(std::is_same_v<std::false_type, resolve_to_copy_constructor_t<int, double>>);
+          static_assert(std::is_same_v<std::false_type, resolve_to_copy_t<int, double>>);
           return true;
         }()
       );
 
       check(LINE(""), []() {
-          static_assert(!resolve_to_copy_constructor_v<int, double>);
+          static_assert(!resolve_to_copy_v<int, double>);
           return true;
         }()
       );
     }
 
     {
-      using d = resolve_to_copy_constructor<int, int, int>;
+      using d = resolve_to_copy<int, int, int>;
       
       check(LINE(""), []() {
           static_assert(std::is_same_v<std::false_type, d::type>);
@@ -374,13 +374,13 @@ namespace sequoia::testing
       );
 
       check(LINE(""), []() {
-          static_assert(std::is_same_v<std::false_type, resolve_to_copy_constructor_t<int, int, double>>);
+          static_assert(std::is_same_v<std::false_type, resolve_to_copy_t<int, int, double>>);
           return true;
         }()
       );
 
       check(LINE(""), []() {
-          static_assert(!resolve_to_copy_constructor_v<int, int, int>);
+          static_assert(!resolve_to_copy_v<int, int, int>);
           return true;
         }()
       );

@@ -107,7 +107,7 @@ namespace sequoia::data_structures::partition_impl
     using pointer         = typename ReferencePolicy<elementary_type>::pointer;
 
     template<class... Args>
-      requires (!resolve_to_copy<dereference_policy, Args...>)
+      requires (!resolve_to_copy_v<dereference_policy, Args...>)
     constexpr dereference_policy(Args&&... args) : AuxiliaryDataPolicy{std::forward<Args>(args)...} {}
     
     constexpr dereference_policy(const dereference_policy&) = default;    

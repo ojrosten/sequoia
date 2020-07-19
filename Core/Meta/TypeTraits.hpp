@@ -85,10 +85,10 @@ namespace sequoia
   template<class T, class... Args>
   using is_base_of_head_t = typename is_base_of_head<T, Args...>::type;
 
-  // resolve_to_copy_constructor
+  // resolve_to_copy
 
   template<class T, class... Args>
-  struct resolve_to_copy_constructor
+  struct resolve_to_copy
     : std::bool_constant<
            (variadic_traits<Args...>::size() == 1)
         && (   std::is_same_v<std::remove_cvref_t<typename variadic_traits<Args...>::head>, std::remove_cvref_t<T>>
@@ -97,10 +97,10 @@ namespace sequoia
   {};
 
   template<class T, class... Args>
-  constexpr bool resolve_to_copy_constructor_v{resolve_to_copy_constructor<T, Args...>::value};
+  constexpr bool resolve_to_copy_v{resolve_to_copy<T, Args...>::value};
 
   template<class T, class... Args>
-  using resolve_to_copy_constructor_t = typename resolve_to_copy_constructor<T, Args...>::type;
+  using resolve_to_copy_t = typename resolve_to_copy<T, Args...>::type;
 
   // is_const_pointer
   

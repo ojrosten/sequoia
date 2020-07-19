@@ -25,7 +25,7 @@ namespace sequoia::testing
 
     void test_base_of_head();
     
-    void test_resolve_to_copy_constructor();
+    void test_resolve_to_copy();
 
     void test_is_const_pointer();
 
