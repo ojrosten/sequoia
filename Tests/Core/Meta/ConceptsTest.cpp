@@ -95,8 +95,8 @@ namespace sequoia::testing
   void concepts_test::test_is_class_template_instantiable()
   {
     check(LINE(""), []() {
-        static_assert(class_template_is_instantiable<foo, int>);
-        static_assert(!class_template_is_instantiable<foo, double>);
+        static_assert(class_template_is_default_instantiable<foo, int>);
+        static_assert(!class_template_is_default_instantiable<foo, double>);
         return true;
       }()
     );

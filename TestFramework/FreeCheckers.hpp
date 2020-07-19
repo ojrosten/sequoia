@@ -100,9 +100,9 @@ namespace sequoia::testing
   struct equivalence_tag{};
   struct weak_equivalence_tag{};
   
-  template<class T> constexpr bool has_equivalence_checker_v{class_template_is_instantiable<equivalence_checker, T>};
-  template<class T> constexpr bool has_weak_equivalence_checker_v{class_template_is_instantiable<weak_equivalence_checker, T>};
-  template<class T> constexpr bool has_detailed_equality_checker_v{class_template_is_instantiable<detailed_equality_checker, T>};
+  template<class T> constexpr bool has_equivalence_checker_v{class_template_is_default_instantiable<equivalence_checker, T>};
+  template<class T> constexpr bool has_weak_equivalence_checker_v{class_template_is_default_instantiable<weak_equivalence_checker, T>};
+  template<class T> constexpr bool has_detailed_equality_checker_v{class_template_is_default_instantiable<detailed_equality_checker, T>};
 
   /*! \brief Specialize this struct template to provide custom serialization of a given class.
       \anchor serializer_primary
@@ -315,7 +315,7 @@ namespace sequoia::testing
   template<test_mode Mode, class T, class S, class... U>
   bool dispatch_check(std::string_view description, test_logger<Mode>& logger, equivalence_tag, const T& value, S&& s, U&&... u)
   {
-    if constexpr(class_template_is_instantiable<equivalence_checker, T>)
+    if constexpr(class_template_is_default_instantiable<equivalence_checker, T>)
     {      
       return general_equivalence_check<equivalence_checker<T>>(description, logger, value, std::forward<S>(s), std::forward<U>(u)...);
     }
@@ -340,7 +340,7 @@ namespace sequoia::testing
   template<test_mode Mode, class T, class S, class... U>
   bool dispatch_check(std::string_view description, test_logger<Mode>& logger, weak_equivalence_tag, const T& value, S&& s, U&&... u)
   {
-    if constexpr(class_template_is_instantiable<weak_equivalence_checker, T>)
+    if constexpr(class_template_is_default_instantiable<weak_equivalence_checker, T>)
     {      
       return general_equivalence_check<weak_equivalence_checker<T>>(description, logger, value, std::forward<S>(s), std::forward<U>(u)...);
     }

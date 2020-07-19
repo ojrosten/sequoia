@@ -40,22 +40,9 @@ namespace sequoia::testing
     Compare compare;
   };
 
-  /*! \brief Reflection for whether a given type, Compare, behaves as a function object capable of comparing
-      two instances of a type, T
-   */
-  template<class Compare, class T, class=std::void_t<>>
-  struct compares_type : std::false_type
-  {};
+  
 
-  template<class Compare, class T>
-  struct compares_type<Compare, T, std::void_t<std::invoke_result_t<Compare, T, T>>>
-    : std::true_type
-  {};
-
-  template<class Compare, class T>
-  constexpr bool compares_type_v{compares_type<Compare, T>::value};
-
-  /*! \brief Reflection for wether an object of type Compare defines a function, report, which accepts
+  /*! \brief Concept for wether an object of type Compare defines a function, report, which accepts
       two instance of a type, T.
 
       Generally, when writing a new comparison class, it is desirable to provide detailed information
@@ -63,17 +50,11 @@ namespace sequoia::testing
       automatically used by
       \ref dispatch_check_fuzzy "dispatch_check"
    */
-  template<class Compare, class T, class=std::void_t<>>
-  struct reports_for_type : std::false_type
-  {};
 
   template<class Compare, class T>
-  struct reports_for_type<Compare, T, std::void_t<decltype(std::declval<Compare>().report(std::declval<T>(), std::declval<T>()))>>
-    : std::true_type
-  {};
-
-  template<class Compare, class T>
-  constexpr bool reports_for_type_v{reports_for_type<Compare, T>::value};
+  concept fuzzy_reporter = requires(Compare& c, const std::remove_reference_t<T>& t) {
+   c.report(t, t);
+  };
 
   /*! \brief Adds to the overload set dispatch_check_free_overloads */
   template<test_mode Mode, class Compare, class T, class Advisor>
@@ -81,13 +62,13 @@ namespace sequoia::testing
   {  
     sentinel<Mode> sentry{logger, add_type_info<T>(description)};
 
-    if constexpr(compares_type_v<Compare, T>)
+    if constexpr(invocable<Compare, T, T>)
     {
       sentry.log_check();
       if(!c.compare(prediction, obtained))
       {
         std::string message{sentry.message()};
-        if constexpr(reports_for_type_v<Compare, T>)
+        if constexpr(fuzzy_reporter<Compare, T>)
         {
           append_indented(message, c.compare.report(obtained, prediction));
         }
