@@ -104,7 +104,7 @@ namespace sequoia::testing
 
       return !sentry.failure_detected();
     }
-    else if constexpr(is_container_v<T>)
+    else if constexpr(range<T>)
     {
       return check_range(description, logger, std::move(c), obtained.begin(), obtained.end(), prediction.begin(), prediction.end(), advisor);
     }

@@ -9,12 +9,10 @@
 
 #include "TypeTraits.hpp"
 
-#include "AllocationTestUtilities.hpp"
 
 #include <complex>
 #include <set>
 #include <vector>
-#include <thread>
 
 namespace sequoia::testing
 {
@@ -24,38 +22,13 @@ namespace sequoia::testing
     return __FILE__;
   }
 
-  struct serializable
-  {
-    template<class Stream>
-    friend Stream& operator<<(Stream& s, const serializable&)
-    {
-      return s;
-    }
-  };
-
-  struct non_serializable
-  {};
-
-  template<class> struct foo;
-
-  template<>
-  struct foo<int> {};
-
   void type_traits_test::run_tests()
   {
     test_variadic_traits();
     test_base_of_head();
     test_resolve_to_copy();
     test_is_const_pointer();
-    test_is_const_reference();
-    test_is_orderable();
-    test_is_equal_to_comparable();
-    test_is_not_equal_to_comparable();
-    test_is_container();
-    test_is_allocator();
-    test_has_allocator_type();
-    test_serializability();
-    test_class_template_instantantiability();
+    test_is_const_reference();    
   }
 
   void type_traits_test::test_variadic_traits()
@@ -478,245 +451,5 @@ namespace sequoia::testing
         return true;
       }()
     );
-  }
-
-  void type_traits_test::test_is_orderable()
-  {
-    check(LINE(""), []() {
-        static_assert(std::is_same_v<std::true_type, is_orderable_t<double>>);
-        return true;
-      }()
-    );
-
-    check(LINE(""), []() {
-        static_assert(is_orderable_v<double>);
-        return true;
-      }()
-    );
-
-    check(LINE(""), []() {
-        static_assert(std::is_same_v<std::true_type, is_orderable_t<std::set<double>>>);
-        return true;
-      }()
-    );
-
-    check(LINE(""), []() {
-        static_assert(is_orderable_v<std::set<double>>);
-        return true;
-      }()
-    );
-    
-    check(LINE(""), []() {
-        static_assert(std::is_same_v<std::false_type, is_orderable_t<std::complex<double>>>);
-        return true;
-      }()
-    );
-
-    check(LINE(""), []() {
-        static_assert(!is_orderable_v<std::complex<double>>);
-        return true;
-      }()
-    );
-  }
-
-  void type_traits_test::test_is_equal_to_comparable()
-  {
-    check(LINE(""), []() {
-        static_assert(std::is_same_v<std::true_type, is_equal_to_comparable_t<double>>);
-        return true;
-      }()
-    );
-
-    check(LINE(""), []() {
-        static_assert(is_equal_to_comparable_v<double>);
-        return true;
-      }()
-    );
-
-    check(LINE(""), []() {
-        static_assert(std::is_same_v<std::true_type, is_equal_to_comparable_t<std::vector<double>>>);
-        return true;
-      }()
-    );
-
-    check(LINE(""), []() {
-        static_assert(is_equal_to_comparable_v<std::vector<double>>);
-        return true;
-      }()
-    );
-
-    check(LINE(""), []() {
-        static_assert(std::is_same_v<std::false_type, is_equal_to_comparable_t<std::thread>>);
-        return true;
-      }()
-    );
-
-    check(LINE(""), []() {
-        static_assert(!is_equal_to_comparable_v<std::thread>);
-        return true;
-      }()
-    );
-  }
-
-  void type_traits_test::test_is_not_equal_to_comparable()
-  {
-    check(LINE(""), []() {
-        static_assert(std::is_same_v<std::true_type, is_not_equal_to_comparable_t<double>>);
-        return true;
-      }()
-    );
-
-    check(LINE(""), []() {
-        static_assert(is_not_equal_to_comparable_v<double>);
-        return true;
-      }()
-    );
-
-    check(LINE(""), []() {
-        static_assert(std::is_same_v<std::true_type, is_not_equal_to_comparable_t<std::vector<double>>>);
-        return true;
-      }()
-    );
-
-    check(LINE(""), []() {
-        static_assert(is_not_equal_to_comparable_v<std::vector<double>>);
-        return true;
-      }()
-    );
-
-    check(LINE(""), []() {
-        static_assert(std::is_same_v<std::false_type, is_not_equal_to_comparable_t<std::thread>>);
-        return true;
-      }()
-    );
-
-    check(LINE(""), []() {
-        static_assert(!is_not_equal_to_comparable_v<std::thread>);
-        return true;
-      }()
-    );
-  }
-
-  void type_traits_test::test_is_container()
-  {
-    check(LINE(""), []() {
-        static_assert(std::is_same_v<std::true_type, is_container_t<std::vector<double>>>);
-        return true;
-      }()
-    );
-
-    check(LINE(""), []() {
-        static_assert(is_container_v<std::vector<double>>);
-        return true;
-      }()
-    );
-
-    check(LINE(""), []() {
-        static_assert(std::is_same_v<std::false_type, is_container_t<double>>);
-        return true;
-      }()
-    );
-
-    check(LINE(""), []() {
-        static_assert(!is_container_v<double>);
-        return true;
-      }()
-    );
-  }
-
-  void type_traits_test::test_is_allocator()
-  {
-    check(LINE(""), []() {
-        static_assert(std::is_same_v<std::false_type, is_allocator_t<int>>);
-        return true;
-      }()
-    );
-
-    check(LINE(""), []() {
-        static_assert(!is_allocator_v<int>);
-        return true;
-      }()
-    );
-
-    check(LINE(""), []() {
-        static_assert(std::is_same_v<std::true_type, is_allocator_t<std::allocator<int>>>);
-        return true;
-      }()
-    );
-
-    check(LINE(""), []() {
-        static_assert(is_allocator_v<std::allocator<int>>);
-        return true;
-      }()
-    );
-  }
-
-  void type_traits_test::test_has_allocator_type()
-  {
-    check(LINE(""), []() {
-        static_assert(std::is_same_v<std::true_type, has_allocator_type_t<std::vector<double>>>);
-        return true;
-      }()
-    );
-
-    check(LINE(""), []() {
-        static_assert(has_allocator_type_v<std::vector<double>>);
-        return true;
-      }()
-    );
-
-    check(LINE(""), []() {
-        static_assert(std::is_same_v<std::false_type, has_allocator_type_t<double>>);
-        return true;
-      }()
-    );
-
-    check(LINE(""), []() {
-        static_assert(!has_allocator_type_v<double>);
-        return true;
-      }()
-    );
-  }
-
-  void type_traits_test::test_serializability()
-  {
-    
-    check(LINE("ints are serializable"), []() {
-        static_assert(is_serializable_v<int>);
-        static_assert(std::is_same_v<is_serializable_t<int>, std::true_type>);
-        return true;
-      }()
-    );
-
-    check(LINE("Serializable class is serializable"), []() {
-        static_assert(is_serializable_v<serializable>);
-        static_assert(std::is_same_v<is_serializable_t<serializable>, std::true_type>);
-        return true;
-      }()
-    );
-
-    check(LINE("Non-serializable is not serializable"), []() {
-        static_assert(!is_serializable_v<non_serializable>);
-        static_assert(!std::is_same_v<is_serializable_t<non_serializable>, std::true_type>);
-        return true;
-      }()
-    );
-  }
-
-  void type_traits_test::test_class_template_instantantiability()
-  {
-    check(LINE("class template foo instantialble with int"), []() {
-        static_assert(class_template_is_instantiable_v<foo, int>);
-        static_assert(std::is_same_v<class_template_is_instantiable_t<foo, int>, std::true_type>);
-        return true;
-      }()
-    );
-
-    check(LINE("class template foo not instantialble with double int"), []() {
-        static_assert(!class_template_is_instantiable_v<foo, double>);
-        static_assert(std::is_same_v<class_template_is_instantiable_t<foo, double>, std::false_type>);
-        return true;
-      }()
-    );
-  }
+  }  
 }

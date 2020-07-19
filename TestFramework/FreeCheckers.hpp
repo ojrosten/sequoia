@@ -100,9 +100,9 @@ namespace sequoia::testing
   struct equivalence_tag{};
   struct weak_equivalence_tag{};
   
-  template<class T> constexpr bool has_equivalence_checker_v{class_template_is_instantiable_v<equivalence_checker, T>};
-  template<class T> constexpr bool has_weak_equivalence_checker_v{class_template_is_instantiable_v<weak_equivalence_checker, T>};
-  template<class T> constexpr bool has_detailed_equality_checker_v{class_template_is_instantiable_v<detailed_equality_checker, T>};
+  template<class T> constexpr bool has_equivalence_checker_v{class_template_is_instantiable<equivalence_checker, T>};
+  template<class T> constexpr bool has_weak_equivalence_checker_v{class_template_is_instantiable<weak_equivalence_checker, T>};
+  template<class T> constexpr bool has_detailed_equality_checker_v{class_template_is_instantiable<detailed_equality_checker, T>};
 
   /*! \brief Specialize this struct template to provide custom serialization of a given class.
       \anchor serializer_primary
@@ -111,7 +111,7 @@ namespace sequoia::testing
   template<class T>
   struct serializer
   {
-    static_assert(is_serializable_v<T>);
+    static_assert(serializable_to<T, std::stringstream>);
     
     [[nodiscard]]
     static std::string make(const T& val)
@@ -250,16 +250,16 @@ namespace sequoia::testing
   template<test_mode Mode, class T, class Advisor=null_advisor>
   bool dispatch_check(std::string_view description, test_logger<Mode>& logger, equality_tag, const T& obtained, const T& prediction, [[maybe_unused]] Advisor advisor=Advisor{})
   {
-    constexpr bool delegate{has_detailed_equality_checker_v<T> || is_container_v<T>};
+    constexpr bool delegate{has_detailed_equality_checker_v<T> || range<T>};
 
-    static_assert(delegate || is_equal_to_comparable_v<T>,
+    static_assert(delegate || equality_comparable<T>,
                   "Provide either a specialization of detailed_equality_checker or"
-                  "ensure operator== exists, together with a specialization of serializer");
+                  "ensure operator== and != exists, together with a specialization of serializer");
 
     const auto info{add_type_info<T>(description)};
     sentinel<Mode> s{logger, info};
 
-    if constexpr(is_equal_to_comparable_v<T>)
+    if constexpr(equality_comparable<T>)
     {
       s.log_check();
       if(!(prediction == obtained))
@@ -291,7 +291,7 @@ namespace sequoia::testing
           detailed_equality_checker<T>::check(desc, logger, obtained, prediction, advisor);
         }
       }
-      else if constexpr(is_container_v<T>)
+      else if constexpr(range<T>)
       {
         check_range(desc, logger, std::begin(obtained), std::end(obtained), std::begin(prediction), std::end(prediction), advisor);
       }      
@@ -315,11 +315,11 @@ namespace sequoia::testing
   template<test_mode Mode, class T, class S, class... U>
   bool dispatch_check(std::string_view description, test_logger<Mode>& logger, equivalence_tag, const T& value, S&& s, U&&... u)
   {
-    if constexpr(class_template_is_instantiable_v<equivalence_checker, T>)
+    if constexpr(class_template_is_instantiable<equivalence_checker, T>)
     {      
       return general_equivalence_check<equivalence_checker<T>>(description, logger, value, std::forward<S>(s), std::forward<U>(u)...);
     }
-    else if constexpr(is_container_v<T>)
+    else if constexpr(range<T>)
     {      
       return check_range(add_type_info<T>(description), logger, equivalence_tag{}, std::begin(value), std::end(value), std::begin(std::forward<S>(s)), std::end(std::forward<S>(s)), std::forward<U>(u)...);
     }
@@ -340,11 +340,11 @@ namespace sequoia::testing
   template<test_mode Mode, class T, class S, class... U>
   bool dispatch_check(std::string_view description, test_logger<Mode>& logger, weak_equivalence_tag, const T& value, S&& s, U&&... u)
   {
-    if constexpr(class_template_is_instantiable_v<weak_equivalence_checker, T>)
+    if constexpr(class_template_is_instantiable<weak_equivalence_checker, T>)
     {      
       return general_equivalence_check<weak_equivalence_checker<T>>(description, logger, value, std::forward<S>(s), std::forward<U>(u)...);
     }
-    else if constexpr(is_container_v<T>)
+    else if constexpr(range<T>)
     {
       return check_range(add_type_info<T>(description), logger, weak_equivalence_tag{}, std::begin(value), std::end(value), std::begin(std::forward<S>(s)), std::end(std::forward<S>(s)), std::forward<U...>(u)...);
     }

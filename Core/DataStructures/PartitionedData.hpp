@@ -664,7 +664,7 @@ namespace sequoia
           
           auto allocGetter{
             [](const partitioned_sequence_base& in){
-              if constexpr(has_allocator_type_v<container_type>)
+              if constexpr(has_allocator_type<container_type>)
               {
                 return in.m_Storage.get_allocator();
               }
@@ -673,7 +673,7 @@ namespace sequoia
 
           auto partitionsAllocGetter{
             [](const partitioned_sequence_base& in){
-              if constexpr(has_allocator_type_v<PartitionsType>)
+              if constexpr(has_allocator_type<PartitionsType>)
               {
                 return in.m_Partitions.get_allocator();
               }

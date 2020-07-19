@@ -184,7 +184,7 @@ namespace sequoia::testing
 
     graph.mutate_edge_weight(graph.cbegin_edges(0),
         [](auto& val) {
-        if constexpr(is_container_v<edge_weight_t>)
+        if constexpr(range<edge_weight_t>)
         {
           val[0] *= 2;
         }
@@ -258,7 +258,7 @@ namespace sequoia::testing
     {
       graph_t g{{{edge_init_t{0,1}, edge_init_t{0,1}, edge_init_t{0,-1}, edge_init_t{0,-1}}}, {{1.1,-4.3}}};
 
-      if constexpr(is_orderable_v<edge_weight_t>)
+      if constexpr(orderable<edge_weight_t>)
       {
         g.sort_edges(g.cbegin_edges(0), g.cend_edges(0),
                    [](const auto& l , const auto& r){ return l.weight() > r.weight(); }
@@ -290,7 +290,7 @@ namespace sequoia::testing
     {
       graph_t g{{{edge_init_t{0,1}, edge_init_t{0,1}, edge_init_t{0,-4}, edge_init_t{0,-4}}}, {{1.1,-4.3}}};
 
-      if constexpr(is_orderable_v<edge_weight_t>)
+      if constexpr(orderable<edge_weight_t>)
       {
         g.sort_edges(g.cbegin_edges(0), g.cend_edges(0),
                    [](const auto& l , const auto& r){ return l.weight() > r.weight(); }
@@ -323,7 +323,7 @@ namespace sequoia::testing
     {
       graph_t g{{{edge_init_t{0,1}, edge_init_t{0,1}, edge_init_t{0,-4}, edge_init_t{0,-4}}, {}}, {{1.1,-4.3}, {}}};
 
-      if constexpr(is_orderable_v<edge_weight_t>)
+      if constexpr(orderable<edge_weight_t>)
       {
         g.sort_edges(g.cbegin_edges(0), g.cend_edges(0),
                    [](const auto& l , const auto& r){ return l.weight() > r.weight(); }
@@ -357,7 +357,7 @@ namespace sequoia::testing
                 {edge_init_t{0, 6}}
                }, {{1.1,-4.3}, {}}};
 
-      if constexpr(is_orderable_v<edge_weight_t>)
+      if constexpr(orderable<edge_weight_t>)
       {
         g.sort_edges(g.cbegin_edges(0), g.cend_edges(0) - 1,
                    [](const auto& l , const auto& r){ return l.weight() > r.weight(); }
@@ -394,7 +394,7 @@ namespace sequoia::testing
       
       g.sort_edges(g.cbegin_edges(1), g.cend_edges(1),
                    [](const auto& l , const auto& r){
-                       if constexpr(is_orderable_v<edge_weight_t>)
+                       if constexpr(orderable<edge_weight_t>)
                        {
                          return (l.target_node() == r.target_node()) ? (l.weight() > r.weight()) : (l.target_node() > r.target_node());
                        }
@@ -434,7 +434,7 @@ namespace sequoia::testing
                  {edge_init_t{0, 6}}
                 }, {{1.1,-4.3}, {}}};
 
-      if constexpr(is_orderable_v<edge_weight_t>)
+      if constexpr(orderable<edge_weight_t>)
       {
         g.sort_edges(g.cbegin_edges(0), g.cend_edges(0) - 1,
                    [](const auto& l , const auto& r){ return l.weight() > r.weight(); }
@@ -474,7 +474,7 @@ namespace sequoia::testing
                 {edge_init_t{0, 7}}
                }, {{1.1,-4.3}, {}}};
 
-      if constexpr(is_orderable_v<edge_weight_t>)
+      if constexpr(orderable<edge_weight_t>)
       {
         g.sort_edges(g.cbegin_edges(0), g.cend_edges(0) - 1,
                    [](const auto& l , const auto& r){ return l.weight() > r.weight(); }
@@ -514,7 +514,7 @@ namespace sequoia::testing
                 {edge_init_t{0, 6}}
                }, {{1.1,-4.3}, {}}};
 
-      if constexpr(is_orderable_v<edge_weight_t>)
+      if constexpr(orderable<edge_weight_t>)
       {
         g.sort_edges(g.cbegin_edges(0), g.cend_edges(0) - 1,
                    [](const auto& l , const auto& r){ return l.weight() > r.weight(); }
@@ -554,7 +554,7 @@ namespace sequoia::testing
                 {edge_init_t{0,7}, edge_init_t{0,6}}
                }, {{1.1,-4.3}, {}}};
 
-      if constexpr(is_orderable_v<edge_weight_t>)
+      if constexpr(orderable<edge_weight_t>)
       {
         g.sort_edges(g.cbegin_edges(0), g.cend_edges(0) - 2,
                    [](const auto& l , const auto& r){ return l.weight() > r.weight(); }
@@ -599,7 +599,7 @@ namespace sequoia::testing
                  {edge_init_t{0,8}, edge_init_t{0,6}, edge_init_t{0,7}}
                }, {{1.1,-4.3}, {}}};
 
-      if constexpr(is_orderable_v<edge_weight_t>)
+      if constexpr(orderable<edge_weight_t>)
       {
         g.sort_edges(g.cbegin_edges(0), g.cend_edges(0) - 3,
                    [](const auto& l , const auto& r){ return l.weight() > r.weight(); }
@@ -663,7 +663,7 @@ namespace sequoia::testing
         
     graph.mutate_edge_weight(graph.cbegin_edges(0) + (mutual_info(GraphFlavour) ?  3 : 2),
       [](auto& val){
-        if constexpr(is_container_v<edge_weight_t>)
+        if constexpr(range<edge_weight_t>)
         {
           val[0] = 6;
         }
@@ -732,7 +732,7 @@ namespace sequoia::testing
                 {edge_init_t{0,8}, edge_init_t{0,10}, edge_init_t{0,6}}
                }, {{1.1,-4.3}, {}}};
 
-      if constexpr(is_orderable_v<edge_weight_t>)
+      if constexpr(orderable<edge_weight_t>)
       {
         g.sort_edges(g.cbegin_edges(0) + 3, g.cend_edges(0),
                    [](const auto& l , const auto& r){ return l.weight() > r.weight(); }
@@ -771,7 +771,7 @@ namespace sequoia::testing
 
     graph.mutate_edge_weight(graph.cbegin_edges(0) + (mutual_info(GraphFlavour) ?  4 : 1),
       [](auto& val){
-        if constexpr(is_container_v<edge_weight_t>)
+        if constexpr(range<edge_weight_t>)
         {
           val[0] = 10;
         }
@@ -802,7 +802,7 @@ namespace sequoia::testing
                 {edge_init_t{0,6}, edge_init_t{0,10}, edge_init_t{0,10}}
                }, {{1.1,-4.3}, {}}};
 
-      if constexpr(is_orderable_v<edge_weight_t>)
+      if constexpr(orderable<edge_weight_t>)
       {
         g.sort_edges(g.cbegin_edges(1), g.cbegin_edges(1) + 2,
                    [](const auto& l , const auto& r){ return l.weight() > r.weight(); }
@@ -837,7 +837,7 @@ namespace sequoia::testing
 
     graph.mutate_edge_weight(graph.cbegin_edges(0) + (mutual_info(GraphFlavour) ?  4 : 2),
       [](auto& val){
-        if constexpr(is_container_v<edge_weight_t>)
+        if constexpr(range<edge_weight_t>)
         {
           val[0] = 7;
         }
@@ -867,7 +867,7 @@ namespace sequoia::testing
                 {edge_init_t{0,6}, edge_init_t{0,10}, edge_init_t{0,7}}
                }, {{1.1,-4.3}, {}}};
 
-      if constexpr(is_orderable_v<edge_weight_t>)
+      if constexpr(orderable<edge_weight_t>)
       {
         g.sort_edges(g.cbegin_edges(0) + 3, g.cend_edges(0),
                    [](const auto& l , const auto& r){ return l.weight() > r.weight(); }
@@ -960,7 +960,7 @@ namespace sequoia::testing
     }
 
     graph.mutate_node_weight(graph.cbegin_node_weights(), [](auto& val){
-        if constexpr(is_container_v<node_weight_t>)
+        if constexpr(range<node_weight_t>)
         {
           val[0] *= 2;
           val[1] *= 2;

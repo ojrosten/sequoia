@@ -48,6 +48,7 @@ int main(int argc, char** argv)
     runner.add_test_family(
       "Meta",
       type_traits_test{"Type Traits"},
+      concepts_test{"Concepts"},
       utilities_test{"Utilities"}
     );
     

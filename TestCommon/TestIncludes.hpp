@@ -12,6 +12,7 @@
 #include "MonotonicSequenceAllocationTest.hpp"
 
 #include "TypeTraitsTest.hpp"
+#include "ConceptsTest.hpp"
 #include "UtilitiesTest.hpp"
 
 #include "ArrayUtilitiesTest.hpp"

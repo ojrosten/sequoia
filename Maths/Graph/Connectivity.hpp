@@ -235,7 +235,7 @@ namespace sequoia
         {          
           auto allocGetter{
             [](const connectivity& in){
-              if constexpr(has_allocator_type_v<edge_storage_type>)
+              if constexpr(has_allocator_type<edge_storage_type>)
               {
                 return in.m_Edges.get_allocator();
               }
@@ -1175,8 +1175,8 @@ namespace sequoia
       template<class Edges, alloc... Allocators>
       constexpr void process_edges(Edges& orderedEdges, const Allocators&... allocs)
       {
-        constexpr bool sortWeights{!std::is_empty_v<edge_weight_type> && is_orderable_v<edge_weight_type>};
-        constexpr bool clusterEdges{!std::is_empty_v<edge_weight_type> && !is_orderable_v<edge_weight_type>};
+        constexpr bool sortWeights{!std::is_empty_v<edge_weight_type> && orderable<edge_weight_type>};
+        constexpr bool clusterEdges{!std::is_empty_v<edge_weight_type> && !orderable<edge_weight_type>};
 
         auto edgeComparer{
           [](const auto& e1, const auto& e2){

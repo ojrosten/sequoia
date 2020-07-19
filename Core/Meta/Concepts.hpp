@@ -11,8 +11,6 @@
     \brief Concepts mostly, but not exclusively, replicating things which will appear in std at some point.
  */
 
-#include "Algorithms.hpp"
-
 #include <type_traits>
 #include <utility>
 
@@ -60,7 +58,7 @@ namespace sequoia
   template <class T>
   concept swappable =
     requires(T& a, T& b) {
-      sequoia::swap(a, b);
+      std::swap(a, b);
     };
   
   template <class T>
@@ -142,15 +140,15 @@ namespace sequoia
       std::invoke(std::forward<F>(f), std::forward<Args>(args)...);
   };
 
-  template < class T >
+  template <class T>
   concept integral = std::is_integral_v<T>;
 
   // concepts for specifically for sequoia
 
-  template<class T>
+  template <class T>
   concept empty = std::is_empty_v<T>;
 
-  template<class T>
+  template <class T>
   concept stateful = !empty<T>;
 
   template <class T>
@@ -162,17 +160,42 @@ namespace sequoia
   template <class T>
   concept strongly_movable = movable<T> && equality_comparable<T>;
 
-  template <class A>
-  concept alloc = is_allocator_v<A>;
+  template<class T>
+  concept orderable = requires(const std::remove_reference_t<T>& t,
+             const std::remove_reference_t<T>& u) {
+    { t < u } -> boolean;
+  };
 
   template <class A>
-  concept scoped_alloc = is_allocator_v<A> && requires() {
+  concept alloc = requires(A& a) {
+    a.allocate(0);
+  };
+
+  template <class A>
+  concept scoped_alloc = alloc<A> && requires() {
     typename A::outer_allocator_type;
     typename A::inner_allocator_type;
   };
 
   template<class T>
-  concept three_way_comparable = requires(const T& lhs, const T& rhs) {
-    lhs <=> rhs;
+  concept has_allocator_type = requires() {
+    typename T::allocator_type;
   };
+
+  template<class T, class Stream>
+  concept serializable_to = requires(std::remove_reference_t<Stream>& stream, const std::remove_reference_t<T>& t) {
+   stream << t;
+  };
+
+  template<class T>
+  concept range = requires(T& t) {
+    std::begin(t);
+    std::end(t);
+  };
+
+  template<template<class...> class T, class... Args>
+  concept class_template_is_instantiable = requires() {
+    T<Args...>{};
+  };
+             
 }

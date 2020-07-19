@@ -7,22 +7,22 @@
 
 #pragma once
 
-/*! \file Algorithms.hpp
+/*! \file
     \brief A collection of constexpr algorithms.
 
     These algorithms have been written as they have been required by other
     parts of the library; many will be retired once C++20 arrives.
 */
 
-#include "TypeTraits.hpp"
+#include "Concepts.hpp"
 
 #include <functional>
 
 namespace sequoia
 {
-  template<class T> constexpr void swap(T& a, T& b)
+  template<class T> constexpr void swap(T& a, T& b) noexcept(noexcept(std::swap(a,b)))
   {
-    if constexpr (has_allocator_type_v<T>)
+    if constexpr (has_allocator_type<T>)
     {
       using std::swap;
       swap(a,b);

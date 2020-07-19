@@ -334,7 +334,7 @@ namespace sequoia
 
           auto edgeAllocGetter{
             [](const graph_primitive& in){
-              if constexpr(has_allocator_type_v<edge_storage>)
+              if constexpr(has_allocator_type<edge_storage>)
               {
                 return in.get_edge_allocator();
               }
@@ -355,7 +355,7 @@ namespace sequoia
               if constexpr(!heteroNodes && !emptyNodes)
               {
                 using node_storage = typename Nodes::node_weight_container_type;
-                if constexpr(has_allocator_type_v<node_storage>)
+                if constexpr(has_allocator_type<node_storage>)
                 {
                   return in.get_node_allocator();
                 }

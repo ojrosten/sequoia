@@ -22,7 +22,7 @@ namespace sequoia::maths::impl
     constexpr static std::size_t size() noexcept { return N; }
   };
 
-  template<class C, bool=has_allocator_type_v<C>>
+  template<class C, bool=has_allocator_type<C>>
   struct noexcept_spec
     : std::bool_constant<
            std::allocator_traits<typename C::allocator_type>::propagate_on_container_swap::value

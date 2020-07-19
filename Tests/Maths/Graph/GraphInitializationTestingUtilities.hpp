@@ -724,7 +724,7 @@ namespace sequoia
         
         using NodeWeight = typename Graph::node_weight_type;
 
-        if constexpr (!is_orderable_v<edge_weight_type>)
+        if constexpr (!orderable<edge_weight_type>)
         {
           check_graph(LINE(""), g, {{edge{1,0}, edge{1,1}, edge{2,1}}, {edge{0,1}, edge{0,0}, edge{2,1}}, {edge{0,1}, edge{1,1}}}, {NodeWeight{}, NodeWeight{}, NodeWeight{}});
         }

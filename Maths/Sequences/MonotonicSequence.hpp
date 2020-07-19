@@ -242,7 +242,7 @@ namespace sequoia::maths
   {    
     using base_t = monotonic_sequence_base<T, C, Compare>;
   public:
-    static_assert(has_allocator_type_v<C>);
+    static_assert(has_allocator_type<C>);
     
     using allocator_type = typename C::allocator_type;
     
