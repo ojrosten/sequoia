@@ -87,7 +87,7 @@ $(function() {
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    constexpr <span class="keyword">static</span> std::size_t size() noexcept { <span class="keywordflow">return</span> N; }</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;  };</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160; </div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> C, <span class="keywordtype">bool</span>=has_allocator_type_v&lt;C&gt;&gt;</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> C, <span class="keywordtype">bool</span>=has_allocator_type&lt;C&gt;&gt;</div>
 <div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="../../de/d17/structsequoia_1_1maths_1_1impl_1_1noexcept__spec.html">   26</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../de/d17/structsequoia_1_1maths_1_1impl_1_1noexcept__spec.html">noexcept_spec</a></div>
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    : std::bool_constant&lt;</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;           std::allocator_traits&lt;typename C::allocator_type&gt;::propagate_on_container_swap::value</div>

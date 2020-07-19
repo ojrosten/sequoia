@@ -168,7 +168,7 @@ $(function() {
 <div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;      ~<a class="code" href="../../dc/de5/classsequoia_1_1maths_1_1weighting.html">weighting</a>() = <span class="keywordflow">default</span>;</div>
 <div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;      </div>
 <div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;      <span class="keyword">template</span>&lt;<span class="keyword">class</span>... Args&gt;</div>
-<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;        requires (!resolve_to_copy&lt;weighting, Args...&gt; &amp;&amp; !is_base_of_head_v&lt;weighting, Args...&gt;)</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;        requires (!resolve_to_copy_v&lt;weighting, Args...&gt; &amp;&amp; !is_base_of_head_v&lt;weighting, Args...&gt;)</div>
 <div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;      constexpr <span class="keyword">explicit</span> <a class="code" href="../../dc/de5/classsequoia_1_1maths_1_1weighting.html">weighting</a>(Args&amp;&amp;... args) : m_Weight{wrapped_weight::make(std::forward&lt;Args&gt;(args)...)}</div>
 <div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;      {}</div>
 <div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160; </div>
@@ -241,7 +241,7 @@ $(function() {
 <div class="line"><a name="l00222"></a><span class="lineno">  222</span>&#160;      <span class="keyword">using</span> weight_proxy_type = WeightProxy;</div>
 <div class="line"><a name="l00223"></a><span class="lineno">  223</span>&#160; </div>
 <div class="line"><a name="l00224"></a><span class="lineno">  224</span>&#160;      <span class="keyword">template</span>&lt;<span class="keyword">class</span>... Args&gt;</div>
-<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;        requires (!resolve_to_copy&lt;partial_edge_base, Args...&gt;)</div>
+<div class="line"><a name="l00225"></a><span class="lineno">  225</span>&#160;        requires (!resolve_to_copy_v&lt;partial_edge_base, Args...&gt;)</div>
 <div class="line"><a name="l00226"></a><span class="lineno">  226</span>&#160;      constexpr <span class="keyword">explicit</span> <a class="code" href="../../d5/de0/classsequoia_1_1maths_1_1partial__edge__base.html">partial_edge_base</a>(<span class="keyword">const</span> index_type target, Args&amp;&amp;... args)</div>
 <div class="line"><a name="l00227"></a><span class="lineno">  227</span>&#160;        : <a class="code" href="../../d2/d60/classsequoia_1_1maths_1_1edge__base.html">edge_base&lt;IndexType&gt;</a>{target}</div>
 <div class="line"><a name="l00228"></a><span class="lineno">  228</span>&#160;        , <a class="code" href="../../d1/d04/classsequoia_1_1maths_1_1weighting_3_01Weight_00_01WeightSharingPolicy_00_01WeightProxy_00_01IndexType_01_4.html">weighting&lt;Weight, WeightSharingPolicy, WeightProxy, IndexType&gt;</a>{std::forward&lt;Args&gt;(args)...}</div>
@@ -303,7 +303,7 @@ $(function() {
 <div class="line"><a name="l00294"></a><span class="lineno">  294</span>&#160;      <span class="keyword">using</span> index_type = <span class="keyword">typename</span> partial_edge_base&lt;Weight, WeightSharingPolicy, WeightProxy, IndexType&gt;::index_type;</div>
 <div class="line"><a name="l00295"></a><span class="lineno">  295</span>&#160; </div>
 <div class="line"><a name="l00296"></a><span class="lineno">  296</span>&#160;      <span class="keyword">template</span>&lt;<span class="keyword">class</span>... Args&gt;</div>
-<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;        requires (!resolve_to_copy&lt;decorated_edge_base, Args...&gt;)</div>
+<div class="line"><a name="l00297"></a><span class="lineno">  297</span>&#160;        requires (!resolve_to_copy_v&lt;decorated_edge_base, Args...&gt;)</div>
 <div class="line"><a name="l00298"></a><span class="lineno">  298</span>&#160;      constexpr <a class="code" href="../../d4/d41/classsequoia_1_1maths_1_1decorated__edge__base.html">decorated_edge_base</a>(<span class="keyword">const</span> index_type target, <span class="keyword">const</span> index_type auxIndex, Args&amp;&amp;... args)</div>
 <div class="line"><a name="l00299"></a><span class="lineno">  299</span>&#160;        : <a class="code" href="../../d5/de0/classsequoia_1_1maths_1_1partial__edge__base.html">partial_edge_base&lt;Weight, WeightSharingPolicy, WeightProxy, IndexType&gt;</a>{target, std::forward&lt;Args&gt;(args)...}</div>
 <div class="line"><a name="l00300"></a><span class="lineno">  300</span>&#160;        , m_AuxiliaryIndex{auxIndex}</div>
@@ -379,7 +379,7 @@ $(function() {
 <div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;      <span class="keyword">using</span> weight_proxy_type = WeightProxy;</div>
 <div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160; </div>
 <div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160;      <span class="keyword">template</span>&lt;<span class="keyword">class</span>... Args&gt;</div>
-<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;        requires (!resolve_to_copy&lt;edge, Args...&gt;)</div>
+<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;        requires (!resolve_to_copy_v&lt;edge, Args...&gt;)</div>
 <div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;      constexpr <a class="code" href="../../d1/de6/classsequoia_1_1maths_1_1edge.html">edge</a>(<span class="keyword">const</span> index_type source, <span class="keyword">const</span> index_type target, Args&amp;&amp;... args)</div>
 <div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;        : <a class="code" href="../../d4/d41/classsequoia_1_1maths_1_1decorated__edge__base.html">decorated_edge_base&lt;Weight, data_sharing::independent, WeightProxy, IndexType&gt;</a>{target, source, std::forward&lt;Args&gt;(args)...}</div>
 <div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;      {</div>
@@ -439,7 +439,7 @@ $(function() {
 <div class="line"><a name="l00447"></a><span class="lineno">  447</span>&#160;      <span class="keyword">using</span> index_type = <span class="keyword">typename</span> decorated_edge_base&lt;Weight, WeightSharingPolicy, WeightProxy, IndexType&gt;::index_type;</div>
 <div class="line"><a name="l00448"></a><span class="lineno">  448</span>&#160; </div>
 <div class="line"><a name="l00449"></a><span class="lineno">  449</span>&#160;      <span class="keyword">template</span>&lt;<span class="keyword">class</span>... Args&gt;</div>
-<div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;      requires (!resolve_to_copy&lt;embedded_edge, Args...&gt;)</div>
+<div class="line"><a name="l00450"></a><span class="lineno">  450</span>&#160;      requires (!resolve_to_copy_v&lt;embedded_edge, Args...&gt;)</div>
 <div class="line"><a name="l00451"></a><span class="lineno">  451</span>&#160;      constexpr <a class="code" href="../../db/db0/classsequoia_1_1maths_1_1embedded__edge.html">embedded_edge</a>(<span class="keyword">const</span> index_type source, <span class="keyword">const</span> index_type target, <span class="keyword">const</span> index_type auxIndex, Args&amp;&amp;... args)</div>
 <div class="line"><a name="l00452"></a><span class="lineno">  452</span>&#160;        : <a class="code" href="../../d4/d41/classsequoia_1_1maths_1_1decorated__edge__base.html">decorated_edge_base&lt;Weight, WeightSharingPolicy, WeightProxy, IndexType&gt;</a>{target, auxIndex, std::forward&lt;Args&gt;(args)...}</div>
 <div class="line"><a name="l00453"></a><span class="lineno">  453</span>&#160;        , m_HostIndex{source}</div>

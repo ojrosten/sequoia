@@ -74,17 +74,17 @@ $(function() {
 
 <p>A collection of constexpr algorithms.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="../../d0/d81/TypeTraits_8hpp_source.html">TypeTraits.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="../../d3/d84/Concepts_8hpp_source.html">Concepts.hpp</a>&quot;</code><br />
 <code>#include &lt;functional&gt;</code><br />
 </div>
 <p><a href="../../d6/d07/Algorithms_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:aff5a8fa509c290cb9cbeaf0600391f01"><td class="memTemplParams" colspan="2"><a id="aff5a8fa509c290cb9cbeaf0600391f01"></a>
+<tr class="memitem:a683cf18120cb353ed0b5bea64145278e"><td class="memTemplParams" colspan="2"><a id="a683cf18120cb353ed0b5bea64145278e"></a>
 template&lt;class T &gt; </td></tr>
-<tr class="memitem:aff5a8fa509c290cb9cbeaf0600391f01"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::swap</b> (T &amp;a, T &amp;b)</td></tr>
-<tr class="separator:aff5a8fa509c290cb9cbeaf0600391f01"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a683cf18120cb353ed0b5bea64145278e"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::swap</b> (T &amp;a, T &amp;b) noexcept(noexcept(std::swap(a, b)))</td></tr>
+<tr class="separator:a683cf18120cb353ed0b5bea64145278e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3c76b567c9b9db3ea221ebf5aa5174a9"><td class="memTemplParams" colspan="2"><a id="a3c76b567c9b9db3ea221ebf5aa5174a9"></a>
 template&lt;class Iter &gt; </td></tr>
 <tr class="memitem:a3c76b567c9b9db3ea221ebf5aa5174a9"><td class="memTemplItemLeft" align="right" valign="top">constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::iter_swap</b> (Iter a, Iter b)</td></tr>

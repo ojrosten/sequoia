@@ -729,7 +729,7 @@ $(function() {
 <div class="line"><a name="l00664"></a><span class="lineno">  664</span>&#160;          </div>
 <div class="line"><a name="l00665"></a><span class="lineno">  665</span>&#160;          <span class="keyword">auto</span> allocGetter{</div>
 <div class="line"><a name="l00666"></a><span class="lineno">  666</span>&#160;            [](<span class="keyword">const</span> <a class="code" href="../../d1/d3a/classsequoia_1_1data__structures_1_1partitioned__sequence__base.html">partitioned_sequence_base</a>&amp; in){</div>
-<div class="line"><a name="l00667"></a><span class="lineno">  667</span>&#160;              <span class="keywordflow">if</span> constexpr(has_allocator_type_v&lt;container_type&gt;)</div>
+<div class="line"><a name="l00667"></a><span class="lineno">  667</span>&#160;              <span class="keywordflow">if</span> constexpr(has_allocator_type&lt;container_type&gt;)</div>
 <div class="line"><a name="l00668"></a><span class="lineno">  668</span>&#160;              {</div>
 <div class="line"><a name="l00669"></a><span class="lineno">  669</span>&#160;                <span class="keywordflow">return</span> in.m_Storage.get_allocator();</div>
 <div class="line"><a name="l00670"></a><span class="lineno">  670</span>&#160;              }</div>
@@ -738,7 +738,7 @@ $(function() {
 <div class="line"><a name="l00673"></a><span class="lineno">  673</span>&#160; </div>
 <div class="line"><a name="l00674"></a><span class="lineno">  674</span>&#160;          <span class="keyword">auto</span> partitionsAllocGetter{</div>
 <div class="line"><a name="l00675"></a><span class="lineno">  675</span>&#160;            [](<span class="keyword">const</span> <a class="code" href="../../d1/d3a/classsequoia_1_1data__structures_1_1partitioned__sequence__base.html">partitioned_sequence_base</a>&amp; in){</div>
-<div class="line"><a name="l00676"></a><span class="lineno">  676</span>&#160;              <span class="keywordflow">if</span> constexpr(has_allocator_type_v&lt;PartitionsType&gt;)</div>
+<div class="line"><a name="l00676"></a><span class="lineno">  676</span>&#160;              <span class="keywordflow">if</span> constexpr(has_allocator_type&lt;PartitionsType&gt;)</div>
 <div class="line"><a name="l00677"></a><span class="lineno">  677</span>&#160;              {</div>
 <div class="line"><a name="l00678"></a><span class="lineno">  678</span>&#160;                <span class="keywordflow">return</span> in.m_Partitions.get_allocator();</div>
 <div class="line"><a name="l00679"></a><span class="lineno">  679</span>&#160;              }</div>
@@ -1329,7 +1329,7 @@ $(function() {
 <div class="ttc" id="astructsequoia_1_1data__structures_1_1bucketed__storage__traits_html"><div class="ttname"><a href="../../dc/dec/structsequoia_1_1data__structures_1_1bucketed__storage__traits.html">sequoia::data_structures::bucketed_storage_traits</a></div><div class="ttdef"><b>Definition:</b> PartitionedData.hpp:62</div></div>
 <div class="ttc" id="astructsequoia_1_1data__structures_1_1static__partitioned__sequence__traits_html"><div class="ttname"><a href="../../d3/dff/structsequoia_1_1data__structures_1_1static__partitioned__sequence__traits.html">sequoia::data_structures::static_partitioned_sequence_traits</a></div><div class="ttdef"><b>Definition:</b> PartitionedData.hpp:1197</div></div>
 <div class="ttc" id="aAssignmentUtilities_8hpp_html"><div class="ttname"><a href="../../d0/dbb/AssignmentUtilities_8hpp.html">AssignmentUtilities.hpp</a></div><div class="ttdoc">Helper for dealing with allocator propagation during copy assignment.</div></div>
-<div class="ttc" id="aclasssequoia_1_1utilities_1_1iterator_html"><div class="ttname"><a href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">sequoia::utilities::iterator</a></div><div class="ttdoc">An iterator with policies controlling dereferencing and auxiliary data.</div><div class="ttdef"><b>Definition:</b> Iterator.hpp:89</div></div>
+<div class="ttc" id="aclasssequoia_1_1utilities_1_1iterator_html"><div class="ttname"><a href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">sequoia::utilities::iterator</a></div><div class="ttdoc">An iterator with policies controlling dereferencing and auxiliary data.</div><div class="ttdef"><b>Definition:</b> Iterator.hpp:91</div></div>
 <div class="ttc" id="aclasssequoia_1_1data__structures_1_1partition__impl_1_1data__duplicator_html"><div class="ttname"><a href="../../d2/d63/classsequoia_1_1data__structures_1_1partition__impl_1_1data__duplicator.html">sequoia::data_structures::partition_impl::data_duplicator</a></div><div class="ttdef"><b>Definition:</b> PartitionedDataDetails.hpp:157</div></div>
 <div class="ttc" id="aIterator_8hpp_html"><div class="ttname"><a href="../../d7/de4/Iterator_8hpp.html">Iterator.hpp</a></div><div class="ttdoc">Implementation for an iterator with policies controlling dereferencing and auxiliary data.</div></div>
 <div class="ttc" id="aAlgorithms_8hpp_html"><div class="ttname"><a href="../../d6/d07/Algorithms_8hpp.html">Algorithms.hpp</a></div><div class="ttdoc">A collection of constexpr algorithms.</div></div>

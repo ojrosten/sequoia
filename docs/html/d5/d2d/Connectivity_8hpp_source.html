@@ -300,7 +300,7 @@ $(function() {
 <div class="line"><a name="l00235"></a><span class="lineno">  235</span>&#160;        {          </div>
 <div class="line"><a name="l00236"></a><span class="lineno">  236</span>&#160;          <span class="keyword">auto</span> allocGetter{</div>
 <div class="line"><a name="l00237"></a><span class="lineno">  237</span>&#160;            [](<span class="keyword">const</span> <a class="code" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a>&amp; in){</div>
-<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;              <span class="keywordflow">if</span> constexpr(has_allocator_type_v&lt;edge_storage_type&gt;)</div>
+<div class="line"><a name="l00238"></a><span class="lineno">  238</span>&#160;              <span class="keywordflow">if</span> constexpr(has_allocator_type&lt;edge_storage_type&gt;)</div>
 <div class="line"><a name="l00239"></a><span class="lineno">  239</span>&#160;              {</div>
 <div class="line"><a name="l00240"></a><span class="lineno">  240</span>&#160;                <span class="keywordflow">return</span> in.m_Edges.get_allocator();</div>
 <div class="line"><a name="l00241"></a><span class="lineno">  241</span>&#160;              }</div>
@@ -309,7 +309,7 @@ $(function() {
 <div class="line"><a name="l00244"></a><span class="lineno">  244</span>&#160; </div>
 <div class="line"><a name="l00245"></a><span class="lineno">  245</span>&#160;          <span class="keyword">auto</span> partitionsAllocGetter{</div>
 <div class="line"><a name="l00246"></a><span class="lineno">  246</span>&#160;            [](<span class="keyword">const</span> <a class="code" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a>&amp; in){</div>
-<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;              <span class="keywordflow">if</span> constexpr(has_partitions_allocator_type_v&lt;edge_storage_type&gt;)</div>
+<div class="line"><a name="l00247"></a><span class="lineno">  247</span>&#160;              <span class="keywordflow">if</span> constexpr(has_partitions_allocator&lt;edge_storage_type&gt;)</div>
 <div class="line"><a name="l00248"></a><span class="lineno">  248</span>&#160;              {</div>
 <div class="line"><a name="l00249"></a><span class="lineno">  249</span>&#160;                <span class="keywordflow">return</span> in.m_Edges.get_partitions_allocator();</div>
 <div class="line"><a name="l00250"></a><span class="lineno">  250</span>&#160;              }</div>
@@ -386,7 +386,7 @@ $(function() {
 <div class="line"><a name="l00321"></a><span class="lineno">  321</span>&#160;      }</div>
 <div class="line"><a name="l00322"></a><span class="lineno">  322</span>&#160; </div>
 <div class="line"><a name="l00323"></a><span class="lineno">  323</span>&#160;      <span class="keyword">template</span>&lt;<span class="keyword">class</span> T=edge_storage_type&gt;</div>
-<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;        requires has_partitions_allocator_type_v&lt;T&gt;</div>
+<div class="line"><a name="l00324"></a><span class="lineno">  324</span>&#160;        requires has_partitions_allocator&lt;T&gt;</div>
 <div class="line"><a name="l00325"></a><span class="lineno">  325</span>&#160;      <span class="keyword">auto</span> get_edge_allocator(<a class="code" href="../../d4/dd4/structsequoia_1_1maths_1_1partitions__allocator__tag.html">partitions_allocator_tag</a>)<span class="keyword"> const</span></div>
 <div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;<span class="keyword">      </span>{</div>
 <div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;        <span class="keywordflow">return</span> m_Edges.get_partitions_allocator();</div>
@@ -1020,7 +1020,7 @@ $(function() {
 <div class="line"><a name="l00955"></a><span class="lineno">  955</span>&#160;      {}</div>
 <div class="line"><a name="l00956"></a><span class="lineno">  956</span>&#160; </div>
 <div class="line"><a name="l00957"></a><span class="lineno">  957</span>&#160;      constexpr <a class="code" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a>(indirect_edge_copy_type, <span class="keyword">const</span> <a class="code" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a>&amp; in)</div>
-<div class="line"><a name="l00958"></a><span class="lineno">  958</span>&#160;        : <a class="code" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a>(has_partitions_alloc_constant&lt;has_partitions_allocator_type_v&lt;edge_storage_type&gt;&gt;{}, in)</div>
+<div class="line"><a name="l00958"></a><span class="lineno">  958</span>&#160;        : <a class="code" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a>(has_partitions_alloc_constant&lt;has_partitions_allocator&lt;edge_storage_type&gt;&gt;{}, in)</div>
 <div class="line"><a name="l00959"></a><span class="lineno">  959</span>&#160;      {}</div>
 <div class="line"><a name="l00960"></a><span class="lineno">  960</span>&#160; </div>
 <div class="line"><a name="l00961"></a><span class="lineno">  961</span>&#160;      constexpr <a class="code" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a>(has_partitions_alloc_type, <span class="keyword">const</span> <a class="code" href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">connectivity</a>&amp; in)</div>
@@ -1240,8 +1240,8 @@ $(function() {
 <div class="line"><a name="l01175"></a><span class="lineno"> 1175</span>&#160;      <span class="keyword">template</span>&lt;<span class="keyword">class </span>Edges, alloc... Allocators&gt;</div>
 <div class="line"><a name="l01176"></a><span class="lineno"> 1176</span>&#160;      constexpr <span class="keywordtype">void</span> process_edges(Edges&amp; orderedEdges, <span class="keyword">const</span> Allocators&amp;... allocs)</div>
 <div class="line"><a name="l01177"></a><span class="lineno"> 1177</span>&#160;      {</div>
-<div class="line"><a name="l01178"></a><span class="lineno"> 1178</span>&#160;        constexpr <span class="keywordtype">bool</span> sortWeights{!std::is_empty_v&lt;edge_weight_type&gt; &amp;&amp; is_orderable_v&lt;edge_weight_type&gt;};</div>
-<div class="line"><a name="l01179"></a><span class="lineno"> 1179</span>&#160;        constexpr <span class="keywordtype">bool</span> clusterEdges{!std::is_empty_v&lt;edge_weight_type&gt; &amp;&amp; !is_orderable_v&lt;edge_weight_type&gt;};</div>
+<div class="line"><a name="l01178"></a><span class="lineno"> 1178</span>&#160;        constexpr <span class="keywordtype">bool</span> sortWeights{!std::is_empty_v&lt;edge_weight_type&gt; &amp;&amp; orderable&lt;edge_weight_type&gt;};</div>
+<div class="line"><a name="l01179"></a><span class="lineno"> 1179</span>&#160;        constexpr <span class="keywordtype">bool</span> clusterEdges{!std::is_empty_v&lt;edge_weight_type&gt; &amp;&amp; !orderable&lt;edge_weight_type&gt;};</div>
 <div class="line"><a name="l01180"></a><span class="lineno"> 1180</span>&#160; </div>
 <div class="line"><a name="l01181"></a><span class="lineno"> 1181</span>&#160;        <span class="keyword">auto</span> edgeComparer{</div>
 <div class="line"><a name="l01182"></a><span class="lineno"> 1182</span>&#160;          [](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; e1, <span class="keyword">const</span> <span class="keyword">auto</span>&amp; e2){</div>
@@ -1820,7 +1820,7 @@ $(function() {
 <div class="ttc" id="aAssignmentUtilities_8hpp_html"><div class="ttname"><a href="../../d0/dbb/AssignmentUtilities_8hpp.html">AssignmentUtilities.hpp</a></div><div class="ttdoc">Helper for dealing with allocator propagation during copy assignment.</div></div>
 <div class="ttc" id="aclasssequoia_1_1maths_1_1connectivity_html"><div class="ttname"><a href="../../d2/dd1/classsequoia_1_1maths_1_1connectivity.html">sequoia::maths::connectivity</a></div><div class="ttdef"><b>Definition:</b> Connectivity.hpp:48</div></div>
 <div class="ttc" id="astructsequoia_1_1maths_1_1partitions__allocator__tag_html"><div class="ttname"><a href="../../d4/dd4/structsequoia_1_1maths_1_1partitions__allocator__tag.html">sequoia::maths::partitions_allocator_tag</a></div><div class="ttdef"><b>Definition:</b> Connectivity.hpp:39</div></div>
-<div class="ttc" id="astructsequoia_1_1dependent__false_html"><div class="ttname"><a href="../../dd/ded/structsequoia_1_1dependent__false.html">sequoia::dependent_false</a></div><div class="ttdef"><b>Definition:</b> TypeTraits.hpp:255</div></div>
+<div class="ttc" id="astructsequoia_1_1dependent__false_html"><div class="ttname"><a href="../../dd/ded/structsequoia_1_1dependent__false.html">sequoia::dependent_false</a></div><div class="ttdef"><b>Definition:</b> TypeTraits.hpp:136</div></div>
 <div class="ttc" id="aSharingPolicyTraits_8hpp_html"><div class="ttname"><a href="../../d4/d7e/SharingPolicyTraits_8hpp.html">SharingPolicyTraits.hpp</a></div><div class="ttdoc">Traits and Concepts for Sharing Policies.</div></div>
 <div class="ttc" id="aAlgorithms_8hpp_html"><div class="ttname"><a href="../../d6/d07/Algorithms_8hpp.html">Algorithms.hpp</a></div><div class="ttdoc">A collection of constexpr algorithms.</div></div>
 <div class="ttc" id="aDataStructuresTypeTraits_8hpp_html"><div class="ttname"><a href="../../de/d27/DataStructuresTypeTraits_8hpp.html">DataStructuresTypeTraits.hpp</a></div><div class="ttdoc">Traits and concepts for data structures.</div></div>

@@ -86,16 +86,6 @@ $(function() {
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d8f/structsequoia_1_1testing_1_1fuzzy__compare.html">sequoia::testing::fuzzy_compare&lt; Compare &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d84/structsequoia_1_1testing_1_1compares__type.html">sequoia::testing::compares_type&lt; Compare, T, class &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reflection for whether a given type, Compare, behaves as a function object capable of comparing two instances of a type, T.  <a href="../../d1/d84/structsequoia_1_1testing_1_1compares__type.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/dfd/structsequoia_1_1testing_1_1compares__type_3_01Compare_00_01T_00_01std_1_1void__t_3_01std_1_1inv3694060d5195e3f35e3b837c74eff71a.html">sequoia::testing::compares_type&lt; Compare, T, std::void_t&lt; std::invoke_result_t&lt; Compare, T, T &gt; &gt; &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d0b/structsequoia_1_1testing_1_1reports__for__type.html">sequoia::testing::reports_for_type&lt; Compare, T, class &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reflection for wether an object of type Compare defines a function, report, which accepts two instance of a type, T.  <a href="../../dd/d0b/structsequoia_1_1testing_1_1reports__for__type.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d65/structsequoia_1_1testing_1_1reports__for__type_3_01Compare_00_01T_00_01std_1_1void__t_3_01decltyf8456013810de1d5fbc24b90113c93f0.html">sequoia::testing::reports_for_type&lt; Compare, T, std::void_t&lt; decltype(std::declval&lt; Compare &gt;().report(std::declval&lt; T &gt;(), std::declval&lt; T &gt;()))&gt; &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d4b/classsequoia_1_1testing_1_1fuzzy__extender.html">sequoia::testing::fuzzy_extender&lt; Mode &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">class template for plugging into the <a class="el" href="../../d2/d0d/FreeCheckers_8hpp.html#checker_primary">checker</a> class template to provide fuzzy checks.  <a href="../../d0/d4b/classsequoia_1_1testing_1_1fuzzy__extender.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -140,14 +130,10 @@ template&lt;test_mode Mode, class Iter , class PredictionIter , class Compare , 
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a872e148a67f65dfec9458bec9e6d23a9"><td class="memTemplParams" colspan="2"><a id="a872e148a67f65dfec9458bec9e6d23a9"></a>
-template&lt;class Compare , class T &gt; </td></tr>
-<tr class="memitem:a872e148a67f65dfec9458bec9e6d23a9"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::compares_type_v</b> {compares_type&lt;Compare, T&gt;::value}</td></tr>
-<tr class="separator:a872e148a67f65dfec9458bec9e6d23a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0b8f7f6747542832d912468beae0e538"><td class="memTemplParams" colspan="2"><a id="a0b8f7f6747542832d912468beae0e538"></a>
-template&lt;class Compare , class T &gt; </td></tr>
-<tr class="memitem:a0b8f7f6747542832d912468beae0e538"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::reports_for_type_v</b> {reports_for_type&lt;Compare, T&gt;::value}</td></tr>
-<tr class="separator:a0b8f7f6747542832d912468beae0e538"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aba59820ff13a87fe4672e7159928f3e7"><td class="memTemplParams" colspan="2">template&lt;class Compare , class T &gt; </td></tr>
+<tr class="memitem:aba59820ff13a87fe4672e7159928f3e7"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d8/d43/FuzzyTestCore_8hpp.html#aba59820ff13a87fe4672e7159928f3e7">sequoia::testing::fuzzy_reporter</a></td></tr>
+<tr class="memdesc:aba59820ff13a87fe4672e7159928f3e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Concept for wether an object of type Compare defines a function, report, which accepts two instance of a type, T.  <a href="../../d8/d43/FuzzyTestCore_8hpp.html#aba59820ff13a87fe4672e7159928f3e7">More...</a><br /></td></tr>
+<tr class="separator:aba59820ff13a87fe4672e7159928f3e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Extension of testing framework for inexact comparisons. </p>
@@ -166,6 +152,29 @@ template&lt;class Compare , class T &gt; </td></tr>
       </table>
 </div><div class="memdoc">
 <p><a class="anchor" id="fuzzy_test_alias"></a> </p>
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="aba59820ff13a87fe4672e7159928f3e7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aba59820ff13a87fe4672e7159928f3e7">&#9670;&nbsp;</a></span>fuzzy_reporter</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Compare , class T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">concept sequoia::testing::fuzzy_reporter</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= requires(Compare&amp; c, <span class="keyword">const</span> std::remove_reference_t&lt;T&gt;&amp; t) {</div>
+<div class="line">   c.report(t, t);</div>
+<div class="line">  }</div>
+</div><!-- fragment -->
+<p>Concept for wether an object of type Compare defines a function, report, which accepts two instance of a type, T. </p>
+<p>Generally, when writing a new comparison class, it is desirable to provide detailed information in the case that the comparison fails. If this is done via a function, report, it will be automatically used by dispatch_check </p>
 
 </div>
 </div>

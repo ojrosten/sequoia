@@ -66,8 +66,6 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
-<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">DataStructuresTypeTraits.hpp File Reference</div>  </div>
@@ -80,34 +78,35 @@ $(function() {
 </div>
 <p><a href="../../de/d27/DataStructuresTypeTraits_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/df8/structsequoia_1_1has__partitions__allocator__type.html">sequoia::has_partitions_allocator_type&lt; T, class &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d70/structsequoia_1_1has__partitions__allocator__type_3_01T_00_01std_1_1void__t_3_01typename_01T_1_1e16e0a40503bacbbb127f3af35357d6d.html">sequoia::has_partitions_allocator_type&lt; T, std::void_t&lt; typename T::partitions_allocator_type &gt; &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
-Typedefs</h2></td></tr>
-<tr class="memitem:ad72ca893bee0f43f3008270a189ce299"><td class="memTemplParams" colspan="2"><a id="ad72ca893bee0f43f3008270a189ce299"></a>
-template&lt;class T &gt; </td></tr>
-<tr class="memitem:ad72ca893bee0f43f3008270a189ce299"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::has_partitions_allocator_type_t</b> = typename has_partitions_allocator_type&lt; T &gt;::type</td></tr>
-<tr class="separator:ad72ca893bee0f43f3008270a189ce299"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a735ae6b5842f10d3e906bab8087d8c92"><td class="memTemplParams" colspan="2"><a id="a735ae6b5842f10d3e906bab8087d8c92"></a>
-template&lt;class T &gt; </td></tr>
-<tr class="memitem:a735ae6b5842f10d3e906bab8087d8c92"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::has_partitions_allocator_type_v</b> {has_partitions_allocator_type&lt;T&gt;::value}</td></tr>
-<tr class="separator:a735ae6b5842f10d3e906bab8087d8c92"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a02693af607df727b89116b636a33ca21"><td class="memTemplParams" colspan="2"><a id="a02693af607df727b89116b636a33ca21"></a>
-template&lt;class T &gt; </td></tr>
-<tr class="memitem:a02693af607df727b89116b636a33ca21"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::has_partitions_allocator</b> = has_partitions_allocator_type_v&lt;T&gt;</td></tr>
+<tr class="memitem:a02693af607df727b89116b636a33ca21"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:a02693af607df727b89116b636a33ca21"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::has_partitions_allocator</b></td></tr>
 <tr class="separator:a02693af607df727b89116b636a33ca21"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Traits and concepts for data structures. </p>
-</div></div><!-- contents -->
+</div><h2 class="groupheader">Variable Documentation</h2>
+<a id="a02693af607df727b89116b636a33ca21"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a02693af607df727b89116b636a33ca21">&#9670;&nbsp;</a></span>has_partitions_allocator</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">concept sequoia::has_partitions_allocator</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= requires() {</div>
+<div class="line">    <span class="keyword">typename</span> T::partitions_allocator_type;</div>
+<div class="line">  }</div>
+</div><!-- fragment -->
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

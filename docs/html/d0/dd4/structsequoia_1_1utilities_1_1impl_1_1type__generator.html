@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: sequoia::utilities::impl::type_generator&lt; DereferencePolicy, bool &gt; Struct Template Reference</title>
+<title>Sequoia: sequoia::utilities::impl::type_generator&lt; DereferencePolicy &gt; Struct Template Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -69,15 +69,18 @@ $(function() {
 <a href="#pub-types">Public Types</a> &#124;
 <a href="../../d6/d4b/structsequoia_1_1utilities_1_1impl_1_1type__generator-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">sequoia::utilities::impl::type_generator&lt; DereferencePolicy, bool &gt; Struct Template Reference</div>  </div>
+<div class="title">sequoia::utilities::impl::type_generator&lt; DereferencePolicy &gt; Struct Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:aeed77374ac631efc39d104609b1729a4"><td class="memItemLeft" align="right" valign="top"><a id="aeed77374ac631efc39d104609b1729a4"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>type</b> = typename DereferencePolicy::proxy</td></tr>
-<tr class="separator:aeed77374ac631efc39d104609b1729a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5a14d7348fdb863ea870b679c7a4b34"><td class="memItemLeft" align="right" valign="top"><a id="aa5a14d7348fdb863ea870b679c7a4b34"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>reference</b> = typename DereferencePolicy::reference</td></tr>
+<tr class="separator:aa5a14d7348fdb863ea870b679c7a4b34"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99156a60724faaec7727dbdcc5120890"><td class="memItemLeft" align="right" valign="top"><a id="a99156a60724faaec7727dbdcc5120890"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>type</b> = std::conditional_t&lt; std::is_lvalue_reference_v&lt; reference &gt;, std::remove_reference_t&lt; reference &gt; const  &amp;, reference &gt;</td></tr>
+<tr class="separator:a99156a60724faaec7727dbdcc5120890"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>/Users/Claire/Dropbox/Sequoia/Core/Utilities/<a class="el" href="../../dc/dce/IteratorDetails_8hpp_source.html">IteratorDetails.hpp</a></li>

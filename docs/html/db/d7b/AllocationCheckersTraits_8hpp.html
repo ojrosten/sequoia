@@ -66,8 +66,6 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
-<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">AllocationCheckersTraits.hpp File Reference</div>  </div>
@@ -76,32 +74,14 @@ $(function() {
 
 <p>Traits and Concepts for allocation checks.  
 <a href="#details">More...</a></p>
-
+<div class="textblock"><code>#include &quot;<a class="el" href="../../d3/d84/Concepts_8hpp_source.html">Concepts.hpp</a>&quot;</code><br />
+</div>
 <p><a href="../../db/d7b/AllocationCheckersTraits_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/dc6/structsequoia_1_1testing_1_1counts__allocations.html">sequoia::testing::counts_allocations&lt; A, class &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d30/structsequoia_1_1testing_1_1counts__allocations_3_01A_00_01std_1_1void__t_3_01decltype_07std_1_1b0f627c9da5ff61109b829415d6abfd7.html">sequoia::testing::counts_allocations&lt; A, std::void_t&lt; decltype(std::declval&lt; A &gt;().allocs())&gt; &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
-Typedefs</h2></td></tr>
-<tr class="memitem:aad122ecbfaa66163f06ce3130d392984"><td class="memTemplParams" colspan="2"><a id="aad122ecbfaa66163f06ce3130d392984"></a>
-template&lt;class A &gt; </td></tr>
-<tr class="memitem:aad122ecbfaa66163f06ce3130d392984"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::counts_allocations_t</b> = typename counts_allocations&lt; A &gt;::type</td></tr>
-<tr class="separator:aad122ecbfaa66163f06ce3130d392984"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a2a672d6e8c7ae6044b92384c79158473"><td class="memTemplParams" colspan="2"><a id="a2a672d6e8c7ae6044b92384c79158473"></a>
-template&lt;class A &gt; </td></tr>
-<tr class="memitem:a2a672d6e8c7ae6044b92384c79158473"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::counts_allocations_v</b> {counts_allocations&lt;A&gt;::value}</td></tr>
-<tr class="separator:a2a672d6e8c7ae6044b92384c79158473"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a67df2413d0e503af5a12378811a7e134"><td class="memTemplParams" colspan="2"><a id="a67df2413d0e503af5a12378811a7e134"></a>
-template&lt;class A &gt; </td></tr>
-<tr class="memitem:a67df2413d0e503af5a12378811a7e134"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::counting_alloc</b> = is_allocator_v&lt;A&gt; &amp;&amp; counts_allocations_v&lt;A&gt;</td></tr>
+<tr class="memitem:a67df2413d0e503af5a12378811a7e134"><td class="memTemplParams" colspan="2">template&lt;class A &gt; </td></tr>
+<tr class="memitem:a67df2413d0e503af5a12378811a7e134"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::counting_alloc</b></td></tr>
 <tr class="separator:a67df2413d0e503af5a12378811a7e134"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af94f387ffc151fff26d7f82b3d11414c"><td class="memTemplParams" colspan="2">template&lt;class Fn , class T &gt; </td></tr>
 <tr class="memitem:af94f387ffc151fff26d7f82b3d11414c"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::alloc_getter</b></td></tr>
@@ -123,8 +103,27 @@ template&lt;class Fn , class T &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= requires(Fn fn, <span class="keyword">const</span> T&amp; t) {</div>
-<div class="line">    counts_allocations_v&lt;decltype(fn(t))&gt; == <span class="keyword">true</span>;                            </div>
+<b>Initial value:</b><div class="fragment"><div class="line">= requires(Fn fn, <span class="keyword">const</span> std::remove_reference_t&lt;T&gt;&amp; t) {</div>
+<div class="line">    { fn(t) } -&gt; counting_alloc;                           </div>
+<div class="line">  }</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a67df2413d0e503af5a12378811a7e134"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a67df2413d0e503af5a12378811a7e134">&#9670;&nbsp;</a></span>counting_alloc</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class A &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">concept sequoia::testing::counting_alloc</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= alloc&lt;A&gt; &amp;&amp; requires(<span class="keyword">const</span> std::remove_reference_t&lt;A&gt;&amp; a) {</div>
+<div class="line">     a.allocs();</div>
 <div class="line">  }</div>
 </div><!-- fragment -->
 </div>

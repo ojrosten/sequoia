@@ -88,7 +88,7 @@ $(function() {
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">using</span> value_type = T;</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;      </div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span>... Args&gt;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;      requires (!resolve_to_copy&lt;protective_wrapper, Args...&gt;)</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;      requires (!resolve_to_copy_v&lt;protective_wrapper, Args...&gt;)</div>
 <div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    constexpr <span class="keyword">explicit</span> <a class="code" href="../../da/def/classsequoia_1_1utilities_1_1protective__wrapper.html">protective_wrapper</a>(Args&amp;&amp;... args) : m_Type{std::forward&lt;Args&gt;(args)...} {}</div>
 <div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160; </div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span>... Args&gt;</div>

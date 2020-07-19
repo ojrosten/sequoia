@@ -121,39 +121,45 @@ $(function() {
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    [[nodiscard]]</div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    constexpr value_type scale() <span class="keyword">const</span> noexcept { <span class="keywordflow">return</span> m_Scale; }</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;  <span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    constexpr <a class="code" href="../../d8/dcb/classsequoia_1_1testing_1_1scaling__dereference__policy.html">scaling_dereference_policy</a>(<a class="code" href="../../d8/dcb/classsequoia_1_1testing_1_1scaling__dereference__policy.html">scaling_dereference_policy</a>&amp;&amp;) = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    ~<a class="code" href="../../d8/dcb/classsequoia_1_1testing_1_1scaling__dereference__policy.html">scaling_dereference_policy</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160; </div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    constexpr <a class="code" href="../../d8/dcb/classsequoia_1_1testing_1_1scaling__dereference__policy.html">scaling_dereference_policy</a>&amp; operator=(<span class="keyword">const</span> <a class="code" href="../../d8/dcb/classsequoia_1_1testing_1_1scaling__dereference__policy.html">scaling_dereference_policy</a>&amp;) = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    constexpr <a class="code" href="../../d8/dcb/classsequoia_1_1testing_1_1scaling__dereference__policy.html">scaling_dereference_policy</a>&amp; operator=(<a class="code" href="../../d8/dcb/classsequoia_1_1testing_1_1scaling__dereference__policy.html">scaling_dereference_policy</a>&amp;&amp;)      = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    </div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    [[nodiscard]]</div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    constexpr proxy get(<span class="keyword">typename</span> std::iterator_traits&lt;Iterator&gt;::reference ref) <span class="keyword">const</span> noexcept</div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    {</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;      <span class="keywordflow">return</span> ref*m_Scale;</div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    }</div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160; </div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    [[nodiscard]]</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    <span class="keyword">friend</span> constexpr <span class="keywordtype">bool</span> operator==(<span class="keyword">const</span> <a class="code" href="../../d8/dcb/classsequoia_1_1testing_1_1scaling__dereference__policy.html">scaling_dereference_policy</a>&amp;, <span class="keyword">const</span> <a class="code" href="../../d8/dcb/classsequoia_1_1testing_1_1scaling__dereference__policy.html">scaling_dereference_policy</a>&amp;) noexcept = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    [[nodiscard]]</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    <span class="keyword">friend</span> constexpr <span class="keywordtype">bool</span> operator!=(<span class="keyword">const</span> <a class="code" href="../../d8/dcb/classsequoia_1_1testing_1_1scaling__dereference__policy.html">scaling_dereference_policy</a>&amp;, <span class="keyword">const</span> <a class="code" href="../../d8/dcb/classsequoia_1_1testing_1_1scaling__dereference__policy.html">scaling_dereference_policy</a>&amp;) noexcept = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;  <span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    constexpr <a class="code" href="../../d8/dcb/classsequoia_1_1testing_1_1scaling__dereference__policy.html">scaling_dereference_policy</a>(<a class="code" href="../../d8/dcb/classsequoia_1_1testing_1_1scaling__dereference__policy.html">scaling_dereference_policy</a>&amp;&amp;) = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160; </div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    ~<a class="code" href="../../d8/dcb/classsequoia_1_1testing_1_1scaling__dereference__policy.html">scaling_dereference_policy</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    constexpr <a class="code" href="../../d8/dcb/classsequoia_1_1testing_1_1scaling__dereference__policy.html">scaling_dereference_policy</a>&amp; operator=(<span class="keyword">const</span> <a class="code" href="../../d8/dcb/classsequoia_1_1testing_1_1scaling__dereference__policy.html">scaling_dereference_policy</a>&amp;) = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    constexpr <a class="code" href="../../d8/dcb/classsequoia_1_1testing_1_1scaling__dereference__policy.html">scaling_dereference_policy</a>&amp; operator=(<a class="code" href="../../d8/dcb/classsequoia_1_1testing_1_1scaling__dereference__policy.html">scaling_dereference_policy</a>&amp;&amp;)      = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    </div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    [[nodiscard]]</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    <span class="keyword">static</span> constexpr pointer get_ptr(reference ref) noexcept { <span class="keywordflow">return</span> &amp;ref; }</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;  <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    value_type m_Scale{1};</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;  };</div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    constexpr proxy get(<span class="keyword">typename</span> std::iterator_traits&lt;Iterator&gt;::reference ref) <span class="keyword">const</span> noexcept</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    {</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;      <span class="keywordflow">return</span> ref*m_Scale;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    }</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> DerefPolicy, <span class="keyword">class</span>=std::<span class="keywordtype">void</span>_t&lt;&gt;&gt;</div>
-<div class="line"><a name="l00076"></a><span class="lineno"><a class="line" href="../../d5/d13/structsequoia_1_1testing_1_1is__scaling.html">   76</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../d5/d13/structsequoia_1_1testing_1_1is__scaling.html">is_scaling</a> : std::false_type</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;  {};</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> DerefPolicy&gt;</div>
-<div class="line"><a name="l00080"></a><span class="lineno"><a class="line" href="../../d8/d7b/structsequoia_1_1testing_1_1is__scaling_3_01DerefPolicy_00_01std_1_1void__t_3_01decltype_07std_1f4c402200302915c5534d5a63e3c7897.html">   80</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../d5/d13/structsequoia_1_1testing_1_1is__scaling.html">is_scaling</a>&lt;DerefPolicy, std::void_t&lt;decltype(std::declval&lt;DerefPolicy&gt;().scale())&gt;&gt; : std::true_type</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;  {};</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> DerefPolicy&gt;</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;  constexpr <span class="keywordtype">bool</span> is_scaling_v{<a class="code" href="../../d5/d13/structsequoia_1_1testing_1_1is__scaling.html">is_scaling&lt;DerefPolicy&gt;::value</a>};</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;}</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    [[nodiscard]]</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keyword">static</span> constexpr pointer get_ptr(reference ref) noexcept { <span class="keywordflow">return</span> &amp;ref; }</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;  <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    value_type m_Scale{1};</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;  };</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> DerefPolicy, <span class="keyword">class</span>=std::<span class="keywordtype">void</span>_t&lt;&gt;&gt;</div>
+<div class="line"><a name="l00082"></a><span class="lineno"><a class="line" href="../../d5/d13/structsequoia_1_1testing_1_1is__scaling.html">   82</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../d5/d13/structsequoia_1_1testing_1_1is__scaling.html">is_scaling</a> : std::false_type</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;  {};</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> DerefPolicy&gt;</div>
+<div class="line"><a name="l00086"></a><span class="lineno"><a class="line" href="../../d8/d7b/structsequoia_1_1testing_1_1is__scaling_3_01DerefPolicy_00_01std_1_1void__t_3_01decltype_07std_1f4c402200302915c5534d5a63e3c7897.html">   86</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../d5/d13/structsequoia_1_1testing_1_1is__scaling.html">is_scaling</a>&lt;DerefPolicy, std::void_t&lt;decltype(std::declval&lt;DerefPolicy&gt;().scale())&gt;&gt; : std::true_type</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;  {};</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> DerefPolicy&gt;</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;  constexpr <span class="keywordtype">bool</span> is_scaling_v{<a class="code" href="../../d5/d13/structsequoia_1_1testing_1_1is__scaling.html">is_scaling&lt;DerefPolicy&gt;::value</a>};</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="astructsequoia_1_1testing_1_1is__scaling_html"><div class="ttname"><a href="../../d5/d13/structsequoia_1_1testing_1_1is__scaling.html">sequoia::testing::is_scaling</a></div><div class="ttdef"><b>Definition:</b> IteratorTest.hpp:77</div></div>
+<div class="ttc" id="astructsequoia_1_1testing_1_1is__scaling_html"><div class="ttname"><a href="../../d5/d13/structsequoia_1_1testing_1_1is__scaling.html">sequoia::testing::is_scaling</a></div><div class="ttdef"><b>Definition:</b> IteratorTest.hpp:83</div></div>
 <div class="ttc" id="aRegularTestCore_8hpp_html"><div class="ttname"><a href="../../d9/daf/RegularTestCore_8hpp.html">RegularTestCore.hpp</a></div><div class="ttdoc">Utilities for checking regular semantics.</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1scaling__dereference__policy_html"><div class="ttname"><a href="../../d8/dcb/classsequoia_1_1testing_1_1scaling__dereference__policy.html">sequoia::testing::scaling_dereference_policy</a></div><div class="ttdef"><b>Definition:</b> IteratorTest.hpp:43</div></div>
 <div class="ttc" id="aRegularTestCore_8hpp_html_aef38d8778074b365d465f7775bb74dab"><div class="ttname"><a href="../../d9/daf/RegularTestCore_8hpp.html#aef38d8778074b365d465f7775bb74dab">sequoia::testing::regular_test</a></div><div class="ttdeci">canonical_regular_test&lt; test_mode::standard &gt; regular_test</div><div class="ttdef"><b>Definition:</b> RegularTestCore.hpp:64</div></div>
