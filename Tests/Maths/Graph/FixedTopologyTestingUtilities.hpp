@@ -12,6 +12,8 @@
 
 namespace sequoia
 {
+  using namespace maths;
+
   namespace testing
   {
     template<class Checker>
@@ -23,7 +25,7 @@ namespace sequoia
       template<class Graph>
       void check_all()
       {
-        static_assert(!is_static_graph_v<Graph>, "This call only makes sense for dynamic graphs, which are of the same type for all orders/sizes");
+        static_assert(!static_nodes<Graph>, "This call only makes sense for dynamic graphs, which are of the same type for all orders/sizes");
 
         check_2_2<Graph>();
         check_2_4<Graph>();
@@ -50,7 +52,7 @@ namespace sequoia
       template<class Graph>
       void check_2_4()
       {
-        if constexpr(is_static_graph_v<Graph>)
+        if constexpr(static_nodes<Graph>)
         {
           constexpr Graph g{make_2_4<Graph>()};
           check_2_4(g);
@@ -121,7 +123,7 @@ namespace sequoia
       template<class Graph>
       void check_all()
       {
-        static_assert(!is_static_graph_v<Graph>, "This call only makes sense for dynamic graphs, which are of the same type for all orders/sizes");
+        static_assert(!static_nodes<Graph>, "This call only makes sense for dynamic graphs, which are of the same type for all orders/sizes");
 
         check_3_10<Graph>();
       }
@@ -129,7 +131,7 @@ namespace sequoia
       template<class Graph>
       void check_3_10()
       {
-        if constexpr(is_static_graph_v<Graph>)
+        if constexpr(static_nodes<Graph>)
         {
           constexpr Graph g{make_3_10<Graph>()};
           check_3_10(g);
@@ -217,7 +219,7 @@ namespace sequoia
       template<class Graph>
       void check_all()
       {
-        static_assert(!is_static_graph_v<Graph>, "This call only makes sense for dynamic graphs, which are of the same type for all orders/sizes");
+        static_assert(!static_nodes<Graph>, "This call only makes sense for dynamic graphs, which are of the same type for all orders/sizes");
 
         check_2_2<Graph>();
       }
@@ -225,7 +227,7 @@ namespace sequoia
       template<class Graph>
       void check_2_2()
       {
-        if constexpr(is_static_graph_v<Graph>)
+        if constexpr(static_nodes<Graph>)
         {
           constexpr Graph g{make_2_2<Graph>()};
           check_2_2(g);
@@ -290,7 +292,7 @@ namespace sequoia
       template<class Graph>
       void check_all()
       {
-        static_assert(!is_static_graph_v<Graph>, "This call only makes sense for dynamic graphs, which are of the same type for all orders/sizes");
+        static_assert(!static_nodes<Graph>, "This call only makes sense for dynamic graphs, which are of the same type for all orders/sizes");
 
         check_2_2<Graph>();
       }
@@ -298,7 +300,7 @@ namespace sequoia
       template<class Graph>
       void check_2_2()
       {
-        if constexpr(is_static_graph_v<Graph>)
+        if constexpr(static_nodes<Graph>)
         {
           constexpr Graph g{make_2_2<Graph>()};
           check_2_2(g);

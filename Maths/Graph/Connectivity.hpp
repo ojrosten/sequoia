@@ -13,6 +13,7 @@
 
 #include "DataStructuresTypeTraits.hpp"
 #include "GraphDetails.hpp"
+#include "GraphTraits.hpp"
 #include "Algorithms.hpp"
 #include "TypeTraits.hpp"
 #include "AssignmentUtilities.hpp"
@@ -35,7 +36,7 @@ namespace sequoia
   }
 
   namespace maths
-  {
+  {    
     struct partitions_allocator_tag{};
     
     template
@@ -339,21 +340,21 @@ namespace sequoia
       }
 
       template<class T=edge_storage_type>
-        requires graph_impl::has_reservable_partitions_v<T>
+        requires graph_impl::has_reservable_partitions<T>
       void reserve_edges(const edge_index_type partition, const edge_index_type size)
       {
         m_Edges.reserve_partition(partition, size);
       }
 
       template<class T=edge_storage_type>
-      requires (!graph_impl::has_reservable_partitions_v<T>)
+      requires (!graph_impl::has_reservable_partitions<T>)
       void reserve_edges(const edge_index_type size)
       {
         m_Edges.reserve(size);
       }
 
       template<class T=edge_storage_type>
-        requires graph_impl::has_reservable_partitions_v<T>
+        requires graph_impl::has_reservable_partitions<T>
       [[nodiscard]]
       size_type edges_capacity(const edge_index_type partition) const
       {
@@ -361,7 +362,7 @@ namespace sequoia
       }
 
       template<class T=edge_storage_type>
-        requires (!graph_impl::has_reservable_partitions_v<T>)
+        requires (!graph_impl::has_reservable_partitions<T>)
       [[nodiscard]]
       size_type edges_capacity() const noexcept
       {
@@ -474,7 +475,7 @@ namespace sequoia
 
       void reserve_for_join([[maybe_unused]] const edge_index_type node1, [[maybe_unused]] const edge_index_type node2)
       {
-        if constexpr (graph_impl::has_reservable_partitions_v<edge_storage_type>)
+        if constexpr (graph_impl::has_reservable_partitions<edge_storage_type>)
         {
           if(node1 == node2)
           {
@@ -1481,14 +1482,14 @@ namespace sequoia
       void copy_edges(const connectivity& in, Processor processor)
       {
         reserve_nodes(in.m_Edges.num_partitions());
-        if constexpr(!graph_impl::has_reservable_partitions_v<edge_storage_type>)
+        if constexpr(!graph_impl::has_reservable_partitions<edge_storage_type>)
         {
           reserve_edges(in.m_Edges.size());
         }
         for(size_type i{}; i<in.order(); ++i)
         {
           m_Edges.add_slot();          
-          if constexpr(graph_impl::has_reservable_partitions_v<edge_storage_type>)
+          if constexpr(graph_impl::has_reservable_partitions<edge_storage_type>)
           {
             using std::distance;
             reserve_edges(i, distance(in.cbegin_edges(i), in.cend_edges(i)));

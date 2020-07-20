@@ -107,10 +107,13 @@ namespace sequoia::testing
   /*! \brief Specialize this struct template to provide custom serialization of a given class.
       \anchor serializer_primary
    */
+
+  template<class T>
+  struct serializer;
   
   template<serializable_to<std::stringstream> T>
-  struct serializer
-  {    
+  struct serializer<T>
+  {
     [[nodiscard]]
     static std::string make(const T& val)
     {        

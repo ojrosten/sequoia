@@ -77,15 +77,4 @@ namespace sequoia::testing
   private:
     value_type m_Scale{1};
   };
-
-  template<class DerefPolicy, class=std::void_t<>>
-  struct is_scaling : std::false_type
-  {};
-
-  template<class DerefPolicy>
-  struct is_scaling<DerefPolicy, std::void_t<decltype(std::declval<DerefPolicy>().scale())>> : std::true_type
-  {};
-
-  template<class DerefPolicy>
-  constexpr bool is_scaling_v{is_scaling<DerefPolicy>::value};
 }

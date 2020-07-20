@@ -86,27 +86,21 @@ namespace sequoia::maths::graph_impl
       return data_structures::static_priority_queue<std::size_t, G::order(), Comparer>{Comparer{g}};
     }
   };
-
-  template<class G, bool> struct stack_selector;
  
-  template<class G>
-  struct stack_selector<G, true>
+  template<static_network G>
+  struct stack_selector<G>
   {
     using stack_type = data_structures::static_stack<std::size_t, G::order()>;
   };
 
-  template<class G, bool> struct queue_selector;
-
-  template<class G>
-  struct queue_selector<G, true>
+  template<static_network G>
+  struct queue_selector<G>
   {
     using queue_type = data_structures::static_queue<std::size_t, G::order()>;
   };
 
-  template<class G, class Compare, bool> struct priority_queue_selector;
-
-  template<class G, class Compare>
-  struct priority_queue_selector<G, Compare, true>
+  template<static_network G, class Compare>
+  struct priority_queue_selector<G, Compare>
   {
     using queue_type = data_structures::static_priority_queue<std::size_t, G::order(), Compare>;
   };

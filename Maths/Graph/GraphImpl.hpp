@@ -19,7 +19,7 @@ namespace sequoia
 {
   namespace maths
   {
-    template<class Connectivity, class Nodes>
+    template<network Connectivity, class Nodes>
     class graph_primitive : public Connectivity, public Nodes
     {
     private:

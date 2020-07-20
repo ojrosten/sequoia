@@ -78,26 +78,20 @@ namespace sequoia::maths::graph_impl
     }
   };
 
-  template<class G, bool> struct stack_selector;
-
-  template<class G>
-  struct stack_selector<G, false>
+  template<dynamic_network G>
+  struct stack_selector<G>
   {
     using stack_type = std::stack<std::size_t>;
   };
-  
-  template<class G, bool> struct queue_selector; 
 
-  template<class G>
-  struct queue_selector<G, false>
+  template<dynamic_network G>
+  struct queue_selector<G>
   {
     using queue_type = std::queue<std::size_t>;
   };
 
-  template<class G, class Compare, bool> struct priority_queue_selector;
-
-  template<class G, class Compare>
-  struct priority_queue_selector<G, Compare, false>
+  template<dynamic_network G, class Compare>
+  struct priority_queue_selector<G, Compare>
   {
     using queue_type = std::priority_queue<std::size_t, std::vector<size_t>, Compare>;
   };

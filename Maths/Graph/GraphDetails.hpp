@@ -299,15 +299,10 @@ namespace sequoia
                            
       // Determine dynamic reservartion type etc
 
-      template<class T, class = std::void_t<>>
-      struct has_reservable_partitions : std::false_type
-      {};
-
       template<class T>
-      struct has_reservable_partitions<T, std::void_t<decltype(std::declval<T>().reserve_partition(0, 0))>> : std::true_type
-      {};
-
-      template<class T> constexpr bool has_reservable_partitions_v{has_reservable_partitions<T>::value};
+      concept has_reservable_partitions = requires(T& t) {
+        t.reserve_partition(0, 0);
+      };
 
       // IndexType for Static Graphs
 

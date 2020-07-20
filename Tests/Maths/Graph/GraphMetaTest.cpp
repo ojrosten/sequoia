@@ -36,8 +36,8 @@ namespace sequoia::testing
 
     using namespace data_structures;
 
-    static_assert(has_reservable_partitions_v<bucketed_storage<int>>);
-    static_assert(!has_reservable_partitions_v<partitioned_sequence<int>>);
+    static_assert(has_reservable_partitions<bucketed_storage<int>>);
+    static_assert(!has_reservable_partitions<partitioned_sequence<int>>);
   }
 
   void test_graph_meta::test_static_edge_index_generator()

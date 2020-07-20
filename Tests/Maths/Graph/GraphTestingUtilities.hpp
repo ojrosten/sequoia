@@ -14,6 +14,7 @@
 #include "PartitionedData.hpp"
 #include "DataPool.hpp"
 #include "GraphImpl.hpp"
+#include "GraphTraits.hpp"
 
 #include "PerformanceTestCore.hpp"
 
@@ -198,18 +199,7 @@ namespace sequoia::testing
     }    
   };
 
-  struct null_weight{};
-
-  template<class G, class = std::void_t<>>
-  struct is_static_graph : std::true_type
-  {};
-
-  template<class G>
-  struct is_static_graph<G, std::void_t<decltype(std::declval<G>().add_node())>> : std::false_type
-  {};
-
-  template<class G>
-  constexpr bool is_static_graph_v{is_static_graph<G>::value};    
+  struct null_weight{};  
 
   constexpr bool mutual_info(const maths::graph_flavour flavour) noexcept
   {

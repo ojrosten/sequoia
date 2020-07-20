@@ -12,6 +12,10 @@
 
 namespace sequoia::testing
 {
+  template<class DerefPolicy>
+  concept scaling = sequoia::utilities::dereference_policy<DerefPolicy>
+    && requires(DerefPolicy& d) { d.scale(); };
+
   [[nodiscard]]
   std::string_view iterator_test::source_file() const noexcept
   {
@@ -220,12 +224,18 @@ namespace sequoia::testing
     
     CustomIter i{begin, args...};
 
-    value_type scale{1};
-    if constexpr(is_scaling_v<deref_pol>)
-    {
-      scale = i.scale();
-    }
-    
+
+    const auto scale{
+      [](CustomIter iter) -> value_type {
+        if constexpr(scaling<deref_pol>)
+        {
+          return iter.scale();
+        }
+
+        return {1};
+      }(i)
+    };
+
     check_equality(LINE(message), *i, *begin * scale);
     check_equality(LINE(message), i[0], begin[0] * scale);
     check_equality(LINE(message), i[1], begin[1] * scale);

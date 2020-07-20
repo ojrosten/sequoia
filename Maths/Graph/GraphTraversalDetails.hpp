@@ -12,6 +12,8 @@
 
  */
 
+#include "GraphTraits.hpp"
+
 namespace sequoia::maths
 {
   enum class graph_flavour;
@@ -42,45 +44,10 @@ namespace sequoia::maths::graph_impl
     constexpr static auto end(const G& graph, const std::size_t nodeIndex) { return graph.crend_edges(nodeIndex); }
   };
 
-  template<class G, class = void> struct static_graph_detector : std::true_type
-  {
-  };
-
-  template<class G> struct static_graph_detector<G, std::void_t<decltype(std::declval<G>().add_node())>> : std::false_type
-  {
-  };
-
-  template<class G> constexpr bool static_graph_detector_v{static_graph_detector<G>::value};
-
-
   template<class Q> struct traversal_traits_base;
 
-  
-  template<class G, class Q, bool=static_graph_detector_v<G>> struct traversal_traits : public traversal_traits_base<Q>
-  {
-    [[nodiscard]]
-    static auto begin(const G& graph, const std::size_t nodeIndex)
-    {
-      return iterator_getter<traversal_traits_base<Q>::uses_forward_iterator()>::begin(graph, nodeIndex);
-    }
-
-    [[nodiscard]]
-    static auto end(const G& graph, const std::size_t nodeIndex)
-    {
-      return iterator_getter<traversal_traits_base<Q>::uses_forward_iterator()>::end(graph, nodeIndex);
-    }
-
-    using bitset = std::vector<bool>;
-
-    [[nodiscard]]
-    static bitset make_bitset(const G& g)
-    {
-      return bitset(g.order(), false);
-    }
-  };
-
-  template<class G, class Q>
-  struct traversal_traits<G, Q, true> : public traversal_traits_base<Q>
+  template<network G, class Q>
+  struct traversal_traits : public traversal_traits_base<Q>
   {
     [[nodiscard]]
     constexpr static auto begin(const G& graph, const std::size_t nodeIndex)
@@ -100,6 +67,30 @@ namespace sequoia::maths::graph_impl
     constexpr static bitset make_bitset(const G&)
     {
       return bitset{};
+    }
+  };
+  
+  template<dynamic_network G, class Q>
+  struct traversal_traits<G, Q> : public traversal_traits_base<Q>
+  {
+    [[nodiscard]]
+    static auto begin(const G& graph, const std::size_t nodeIndex)
+    {
+      return iterator_getter<traversal_traits_base<Q>::uses_forward_iterator()>::begin(graph, nodeIndex);
+    }
+
+    [[nodiscard]]
+    static auto end(const G& graph, const std::size_t nodeIndex)
+    {
+      return iterator_getter<traversal_traits_base<Q>::uses_forward_iterator()>::end(graph, nodeIndex);
+    }
+
+    using bitset = std::vector<bool>;
+
+    [[nodiscard]]
+    static bitset make_bitset(const G& g)
+    {
+      return bitset(g.order(), false);
     }
   };
   
@@ -187,38 +178,39 @@ namespace sequoia::maths::graph_impl
     constexpr static void process(ProcessingModel&, null_functor, Args...) {}
   };
 
-  template<class G, class = void> struct comp_index_detector : std::false_type
-  {
-  };
-
-  template<class G> struct comp_index_detector<G, std::void_t<decltype(std::declval<typename G::edge_type>().complementary_index())>> : std::true_type
-  {
-  };
-
-  template<class G> constexpr bool comp_index_detector_v{comp_index_detector<G>::value};
-
-  template<class G, graph_flavour GraphFlavour=G::flavour> class loop_processor
+  template<class G, graph_flavour GraphFlavour=G::flavour>
+  class loop_processor
   {
   public:
     template<class Iter>
     [[nodiscard]]
     constexpr static bool loop_matched(Iter begin, Iter current)
     {
-      if constexpr (comp_index_detector_v<G>)
+      for(auto i{begin}; i != current; ++i)
       {
-        using index_type = typename G::edge_index_type;
-        const auto dist{static_cast<index_type>(distance(begin, current))};
-        return (current->complementary_index() < dist);
+        if(&(*i) == &(*current)) return true;
       }
-      else
-      {
-        for(auto i{begin}; i != current; ++i)
-        {
-          if(&(*i) == &(*current)) return true;
-        }
 
-        return false;
-      }
+      return false;
+    }
+
+    constexpr void reset() noexcept {}
+  };
+
+  template<class G, graph_flavour GraphFlavour>
+  requires requires() {
+    std::declval<typename G::edge_type>().complementary_index();
+  }
+  class loop_processor<G, GraphFlavour>
+  {
+  public:
+    template<class Iter>
+    [[nodiscard]]
+    constexpr static bool loop_matched(Iter begin, Iter current)
+    {
+      using index_type = typename G::edge_index_type;
+      const auto dist{static_cast<index_type>(distance(begin, current))};
+      return (current->complementary_index() < dist);
     }
 
     constexpr void reset() noexcept {}
@@ -244,11 +236,11 @@ namespace sequoia::maths::graph_impl
     bool m_Matched{true};
   };
 
-  template<class G, bool=static_graph_detector_v<G>> struct stack_selector;
+  template<class G> struct stack_selector;
 
-  template<class G, bool=static_graph_detector_v<G>> struct queue_selector;
+  template<class G> struct queue_selector;
 
-  template<class G, class Compare, bool=static_graph_detector_v<G>> struct priority_queue_selector;
+  template<class G, class Compare> struct priority_queue_selector;
   
   
   template<class G>

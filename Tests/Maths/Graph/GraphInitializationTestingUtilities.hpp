@@ -12,6 +12,8 @@
 
 namespace sequoia
 {
+  using namespace maths;
+  
   namespace testing
   {
     template<class Checker>
@@ -45,7 +47,7 @@ namespace sequoia
       template<class Graph>
       void check_0_0()
       {
-        if constexpr(is_static_graph_v<Graph>)
+        if constexpr(static_nodes<Graph>)
         {
           // TO DO Should work in C++ 20;
           // the issue is std::array<T,0> doesn't work
@@ -68,10 +70,10 @@ namespace sequoia
         if constexpr(!std::is_empty_v<NodeWeight>)
         {
           // Remove restriction in C++20
-          if constexpr(!is_static_graph_v<Graph>)
+          if constexpr(!static_nodes<Graph>)
                         m_Checker.template check_exception_thrown<std::logic_error>(LINE("Mismatched nodes and edges"), [](){ Graph{{{},{}}, {NodeWeight{}}}; });
           
-          if constexpr(is_static_graph_v<Graph>)
+          if constexpr(static_nodes<Graph>)
           {
             // Should work in C++ 20;
             // the issue is std::array<T,0> doesn't work
@@ -95,10 +97,10 @@ namespace sequoia
         if constexpr(!std::is_empty_v<NodeWeight>)
         {
           // Remove restriction in C++20
-          if constexpr(!is_static_graph_v<Graph>)
+          if constexpr(!static_nodes<Graph>)
                         m_Checker.template check_exception_thrown<std::logic_error>(LINE("Mismatched nodes and edges"), [](){ Graph{{{}}, {NodeWeight{}, NodeWeight{}}}; });
           
-          if constexpr(is_static_graph_v<Graph>)
+          if constexpr(static_nodes<Graph>)
           {
             // Should work in C++ 20;
             // the issue is std::array<T,0> doesn't work
@@ -152,7 +154,7 @@ namespace sequoia
       template<class Graph>
       void check_all()
       {
-        static_assert(!is_static_graph_v<Graph>, "This call only makes sense for dynamic graphs, which are of the same type for all orders/sizes");
+        static_assert(!static_nodes<Graph>, "This call only makes sense for dynamic graphs, which are of the same type for all orders/sizes");
         check_0_0<Graph>();
         check_1_0<Graph>();
         check_1_1<Graph>();
@@ -171,7 +173,7 @@ namespace sequoia
         // the issue is std::array<T,0> doesn't work
         // for types without a default constructor...
 
-        //if constexpr(is_static_graph_v<Graph>)
+        //if constexpr(static_nodes<Graph>)
         //{
         //  using edge = typename Graph::edge_init_type;
 
@@ -203,10 +205,10 @@ namespace sequoia
       {
         using edge = typename Graph::edge_init_type;
 
-        if constexpr(is_static_graph_v<Graph>) m_Checker.template check_exception_thrown<std::logic_error>(LINE("Too few elements in initializer list"), [](){ Graph{{edge{0}}}; });
+        if constexpr(static_nodes<Graph>) m_Checker.template check_exception_thrown<std::logic_error>(LINE("Too few elements in initializer list"), [](){ Graph{{edge{0}}}; });
         m_Checker.template check_exception_thrown<std::logic_error>(LINE("First partial index of loop out of range"), [](){ Graph{{edge{1}, edge{0}}}; });
         m_Checker.template check_exception_thrown<std::logic_error>(LINE("Second partial index of loop out of range"), [](){ Graph{{edge{0}, edge{1}}}; });
-        if constexpr(is_static_graph_v<Graph>) m_Checker.template check_exception_thrown<std::logic_error>(LINE("Initializer list too long"), [](){ Graph{{}, {}}; });
+        if constexpr(static_nodes<Graph>) m_Checker.template check_exception_thrown<std::logic_error>(LINE("Initializer list too long"), [](){ Graph{{}, {}}; });
 
         using edge_weight = typename edge::weight_type;
         if constexpr(!std::is_empty_v<edge_weight>)
@@ -218,7 +220,7 @@ namespace sequoia
         //  \/
         //   x
 
-        if constexpr(is_static_graph_v<Graph>)
+        if constexpr(static_nodes<Graph>)
         {
           {
             constexpr Graph g{{edge{0}, edge{0}}};
@@ -252,7 +254,7 @@ namespace sequoia
 
           m_Checker.template check_exception_thrown<std::logic_error>(LINE("Mismatch between node and edge init"), [](){ Graph{{{edge{0}, edge{0}}}, {node_weight{}, node_weight{}}}; });
           
-          if constexpr(is_static_graph_v<Graph>)
+          if constexpr(static_nodes<Graph>)
           {
             {
               constexpr Graph g{{{edge{0}, edge{0}}}, {node_weight{}}};
@@ -302,7 +304,7 @@ namespace sequoia
         //  /\
         //  \/
 
-        if constexpr(is_static_graph_v<Graph>)
+        if constexpr(static_nodes<Graph>)
         {
           {
             constexpr Graph g{{edge{0}, edge{0}, edge{0}, edge{0}}};
@@ -341,7 +343,7 @@ namespace sequoia
       {
         using edge = typename Graph::edge_init_type;
 
-        if constexpr(is_static_graph_v<Graph>) m_Checker.template check_exception_thrown<std::logic_error>(LINE("Too few elements in both sub-initializer list"), [](){ Graph{{}, {}}; });
+        if constexpr(static_nodes<Graph>) m_Checker.template check_exception_thrown<std::logic_error>(LINE("Too few elements in both sub-initializer list"), [](){ Graph{{}, {}}; });
         m_Checker.template check_exception_thrown<std::logic_error>(LINE("Too few elements in first sub-initializer list"), [](){ Graph{{}, {edge{0}}}; });
         m_Checker.template check_exception_thrown<std::logic_error>(LINE("Too few elements in second sub-initializer list"), [](){ Graph{{edge{0}}, {}}; });
 
@@ -358,7 +360,7 @@ namespace sequoia
             
 
         // x------x
-        if constexpr(is_static_graph_v<Graph>)
+        if constexpr(static_nodes<Graph>)
         {
           {
             constexpr Graph g{{edge{1}}, {edge{0}}};
@@ -392,7 +394,7 @@ namespace sequoia
       {
         using edge = typename Graph::edge_init_type;
 
-        if constexpr(is_static_graph_v<Graph>) m_Checker.template check_exception_thrown<std::logic_error>(LINE("Too few elements in sub-initializer list"), [](){ Graph{{edge{1}}, {edge{0}}, {}}; });
+        if constexpr(static_nodes<Graph>) m_Checker.template check_exception_thrown<std::logic_error>(LINE("Too few elements in sub-initializer list"), [](){ Graph{{edge{1}}, {edge{0}}, {}}; });
         m_Checker.template check_exception_thrown<std::logic_error>(LINE("Mismatched partial indices"), [](){ Graph{{edge{1}}, {edge{0}, edge{0}}, {edge{1}}}; });
 
         using edge_weight = typename edge::weight_type;
@@ -403,7 +405,7 @@ namespace sequoia
         }
       
         // x-----x-----x
-        if constexpr(is_static_graph_v<Graph>)
+        if constexpr(static_nodes<Graph>)
         {
           {
             constexpr Graph
@@ -461,7 +463,7 @@ namespace sequoia
         //      \/
         // x-----x-----x
 
-        if constexpr(is_static_graph_v<Graph>)
+        if constexpr(static_nodes<Graph>)
         {
           {
             constexpr Graph
@@ -505,7 +507,7 @@ namespace sequoia
         //  /   \
         // x-----x
 
-        if constexpr(is_static_graph_v<Graph>)
+        if constexpr(static_nodes<Graph>)
         {
           {
             constexpr Graph g{{edge{2}, edge{1}}, {edge{2}, edge{0}}, {edge{1}, edge{0}}};
@@ -549,7 +551,7 @@ namespace sequoia
         //  /   \
         // x=====x
 
-        if constexpr(is_static_graph_v<Graph>)
+        if constexpr(static_nodes<Graph>)
         {
           {
             constexpr Graph g{{edge{2}, edge{1}, edge{1}}, {edge{2}, edge{0}, edge{0}}, {edge{1}, edge{0}}};
@@ -745,7 +747,7 @@ namespace sequoia
       template<class Graph>
       void check_all()
       {
-        static_assert(!is_static_graph_v<Graph>, "This call only makes sense for dynamic graphs, which are of the same type for all orders/sizes");
+        static_assert(!static_nodes<Graph>, "This call only makes sense for dynamic graphs, which are of the same type for all orders/sizes");
         check_0_0<Graph>();
         check_1_0<Graph>();
         check_1_1<Graph>();
@@ -763,7 +765,7 @@ namespace sequoia
         // the issue is std::array<T,0> doesn't work
         // for types without a default constructor...
 
-        //if constexpr(is_static_graph_v<Graph>)
+        //if constexpr(static_nodes<Graph>)
         //{
         //  using edge = typename Graph::edge_init_type;
 
@@ -798,7 +800,7 @@ namespace sequoia
         m_Checker.template check_exception_thrown<std::logic_error>(LINE("Too few elements in initializer list"), [](){ Graph{{edge{0,1}}}; });
         m_Checker.template check_exception_thrown<std::logic_error>(LINE("First partial index of loop out of range"), [](){ Graph{{edge{1,1}, edge{0,1}}}; });
         m_Checker.template check_exception_thrown<std::logic_error>(LINE("Second partial index of loop out of range"), [](){ Graph{{edge{0,1}, edge{1,0}}}; });
-        if constexpr (is_static_graph_v<Graph>) m_Checker.template check_exception_thrown<std::logic_error>(LINE("Initializer list too long"), [](){ Graph{{}, {}}; });
+        if constexpr (static_nodes<Graph>) m_Checker.template check_exception_thrown<std::logic_error>(LINE("Initializer list too long"), [](){ Graph{{}, {}}; });
         m_Checker.template check_exception_thrown<std::logic_error>(LINE("First complementary index is self-referential"), [](){ Graph{{edge{0,0}, edge{0,0}}}; });
         m_Checker.template check_exception_thrown<std::logic_error>(LINE("Second complementary index is self-referential"), [](){ Graph{{edge{0,0}, edge{0,1}}}; });
         m_Checker.template check_exception_thrown<std::logic_error>(LINE("First complementary index is out of range"), [](){ Graph{{edge{0,2}, edge{0,0}}}; });
@@ -814,7 +816,7 @@ namespace sequoia
         //  \/
         //   x
 
-        if constexpr(is_static_graph_v<Graph>)
+        if constexpr(static_nodes<Graph>)
         {
           {
             constexpr Graph g{{edge{0,1}, edge{0,0}}};
@@ -850,7 +852,7 @@ namespace sequoia
 
           m_Checker.template check_exception_thrown<std::logic_error>(LINE("Mismatch between node and edge init"), [](){ Graph{{{edge{0,1}, edge{0,0}}}, {node_weight{}, node_weight{}}}; });
           
-          if constexpr(is_static_graph_v<Graph>)
+          if constexpr(static_nodes<Graph>)
           {
             {
               constexpr Graph g{{{edge{0,1}, edge{0,0}}}, {node_weight{}}};
@@ -902,7 +904,7 @@ namespace sequoia
         //  /\
         //  \/
       
-        if constexpr(is_static_graph_v<Graph>)
+        if constexpr(static_nodes<Graph>)
         {
           constexpr Graph g{{edge{0,2}, edge{0,3}, edge{0,0}, edge{0,1}}};
           check_1_2(g);
@@ -919,7 +921,7 @@ namespace sequoia
       {
         using edge = typename Graph::edge_init_type;
 
-        if constexpr(is_static_graph_v<Graph>) m_Checker.template check_exception_thrown<std::logic_error>(LINE("Too few elements in both sub-initializer lists"), [](){ Graph{{}, {}}; });
+        if constexpr(static_nodes<Graph>) m_Checker.template check_exception_thrown<std::logic_error>(LINE("Too few elements in both sub-initializer lists"), [](){ Graph{{}, {}}; });
         m_Checker.template check_exception_thrown<std::logic_error>(LINE("Too few elements in first sub-initializer list"), [](){ Graph{{}, {edge{0,0}}}; });
         m_Checker.template check_exception_thrown<std::logic_error>(LINE("Too few elements in second sub-initializer list"), [](){ Graph{{edge{1,0}}, {}}; });
 
@@ -936,7 +938,7 @@ namespace sequoia
         }
       
         // x------x
-        if constexpr(is_static_graph_v<Graph>)
+        if constexpr(static_nodes<Graph>)
         {
           {
             constexpr Graph g{{edge{1,0}}, {edge{0,0}}};      
@@ -981,7 +983,7 @@ namespace sequoia
       {
         using edge = typename Graph::edge_init_type;
 
-        if constexpr(is_static_graph_v<Graph>) m_Checker.template check_exception_thrown<std::logic_error>(LINE("Too few elements in sub-initializer list"), [](){ Graph{{edge{1,0}}, {edge{0,0}}, {}}; });
+        if constexpr(static_nodes<Graph>) m_Checker.template check_exception_thrown<std::logic_error>(LINE("Too few elements in sub-initializer list"), [](){ Graph{{edge{1,0}}, {edge{0,0}}, {}}; });
         m_Checker.template check_exception_thrown<std::logic_error>(LINE("Mismatched partial indices"), [](){ Graph{{edge{1,0}}, {edge{0,0}, edge{0,0}}, {edge{1,0}}}; });
         m_Checker.template check_exception_thrown<std::logic_error>(LINE("Mismatched complementary indices"), [](){ Graph{{edge{1,1}}, {edge{0,0}, edge{2,0}}, {edge{1,0}}}; });
 
@@ -993,7 +995,7 @@ namespace sequoia
         
         // x-----x-----x
         
-        if constexpr(is_static_graph_v<Graph>)
+        if constexpr(static_nodes<Graph>)
         {
           constexpr Graph
             g{{edge{1,0}}, {edge{0,0}, edge{2,0}}, {edge{1,1}}},
@@ -1029,7 +1031,7 @@ namespace sequoia
         //      \/
         // x-----x-----x
         
-        if constexpr(is_static_graph_v<Graph>)
+        if constexpr(static_nodes<Graph>)
         {
           constexpr Graph
             g{{edge{1,1}}, {edge{1,2}, edge{0,0}, edge{1,0}, edge{2,0}}, {edge{1,3}}},
@@ -1053,7 +1055,7 @@ namespace sequoia
         //  /   \
         // x-----x
 
-        if constexpr(is_static_graph_v<Graph>)
+        if constexpr(static_nodes<Graph>)
         {
           constexpr Graph g{{edge{2,1}, edge{1,1}}, {edge{2,0}, edge{0,1}}, {edge{1,0}, edge{0,0}}};
           check_3_3_equilateral(g);
@@ -1171,7 +1173,7 @@ namespace sequoia
       template<class Graph>
       void check_all()
       {
-        static_assert(!is_static_graph_v<Graph>, "This call only makes sense for dynamic graphs, which are of the same type for all orders/sizes");
+        static_assert(!static_nodes<Graph>, "This call only makes sense for dynamic graphs, which are of the same type for all orders/sizes");
         check_0_0<Graph>();
         check_1_0<Graph>();
         check_1_1<Graph>();
@@ -1189,7 +1191,7 @@ namespace sequoia
         // the issue is std::array<T,0> doesn't work
         // for types without a default constructor...
 
-        //if constexpr(is_static_graph_v<Graph>)
+        //if constexpr(static_nodes<Graph>)
         //{
         //  using edge = typename Graph::edge_init_type;
 
@@ -1228,7 +1230,7 @@ namespace sequoia
         //   x
 
         using edge_weight = typename edge::weight_type;
-        if constexpr(is_static_graph_v<Graph>)
+        if constexpr(static_nodes<Graph>)
         {
           {
             constexpr Graph g{{edge{0}}};
@@ -1262,7 +1264,7 @@ namespace sequoia
 
           m_Checker.template check_exception_thrown<std::logic_error>(LINE("Mismatch between node and edge init"), [](){ Graph{{{edge{0}}}, {node_weight{}, node_weight{}}}; });
           
-          if constexpr(is_static_graph_v<Graph>)
+          if constexpr(static_nodes<Graph>)
           {
             {
               constexpr Graph g{{{edge{0}}}, {node_weight{}}};
@@ -1296,7 +1298,7 @@ namespace sequoia
       {
         using edge = typename Graph::edge_init_type;
 
-        if constexpr(is_static_graph_v<Graph>)
+        if constexpr(static_nodes<Graph>)
         {
           m_Checker.template check_exception_thrown<std::logic_error>(LINE("Too few elements in initializer lists"), [](){ Graph{{edge{0}}}; });
           m_Checker.template check_exception_thrown<std::logic_error>(LINE("Too many elements in initializer lists"), [](){ Graph{{edge{0}, edge{0}, edge{0}}}; });
@@ -1309,7 +1311,7 @@ namespace sequoia
         //  / \
         //  \</
 
-        if constexpr(is_static_graph_v<Graph>)
+        if constexpr(static_nodes<Graph>)
         {
           constexpr Graph g{{edge{0}, edge{0}}};
           check_1_2(g);
@@ -1326,7 +1328,7 @@ namespace sequoia
       {
         using edge = typename Graph::edge_init_type;
 
-        if constexpr(is_static_graph_v<Graph>)
+        if constexpr(static_nodes<Graph>)
         {
           m_Checker.template check_exception_thrown<std::logic_error>(LINE("Too few elements in initializer lists"), [](){ Graph{{edge{1}}}; });
           m_Checker.template check_exception_thrown<std::logic_error>(LINE("Too many elements in initializer lists"), [](){ Graph{{edge{1}}, {edge{0}}}; });
@@ -1335,7 +1337,7 @@ namespace sequoia
         m_Checker.template check_exception_thrown<std::logic_error>(LINE("Partial index out of range"), [](){ Graph{{edge{2}}, {}}; });
 
         // x-->---x
-        if constexpr(is_static_graph_v<Graph>)
+        if constexpr(static_nodes<Graph>)
         {      
           constexpr Graph g{{edge{1}}, {}};      
           check_2_1(g);
@@ -1352,7 +1354,7 @@ namespace sequoia
       {
         using edge = typename Graph::edge_init_type;
 
-        if constexpr(is_static_graph_v<Graph>)
+        if constexpr(static_nodes<Graph>)
         {
           m_Checker.template check_exception_thrown<std::logic_error>(LINE("Only one element in initializer lists"), [](){ Graph{{edge{1}}}; });
           m_Checker.template check_exception_thrown<std::logic_error>(LINE("Only two elements in initializer lists"), [](){ Graph{{edge{1}}, {edge{0}}}; });
@@ -1362,7 +1364,7 @@ namespace sequoia
         // x-->--x--<--x
         // x--<--x-->--x
 
-        if constexpr(is_static_graph_v<Graph>)
+        if constexpr(static_nodes<Graph>)
         {
           constexpr Graph
             g{{edge{1}}, {}, {edge{1}}},
@@ -1389,7 +1391,7 @@ namespace sequoia
         //        \ /
         // x  x    x-->--x
 
-        if constexpr(is_static_graph_v<Graph>)
+        if constexpr(static_nodes<Graph>)
         {
           constexpr Graph g{{}, {}, {edge{2}, edge{3}}, {}};
           check_4_2(g);
@@ -1478,7 +1480,7 @@ namespace sequoia
       template<class Graph>
       void check_all()
       {
-        static_assert(!is_static_graph_v<Graph>, "This call only makes sense for dynamic graphs, which are of the same type for all orders/sizes");
+        static_assert(!static_nodes<Graph>, "This call only makes sense for dynamic graphs, which are of the same type for all orders/sizes");
         check_0_0<Graph>();
         check_1_0<Graph>();
         check_1_1<Graph>();
@@ -1495,7 +1497,7 @@ namespace sequoia
         // the issue is std::array<T,0> doesn't work
         // for types without a default constructor...
 
-        //if constexpr(is_static_graph_v<Graph>)
+        //if constexpr(static_nodes<Graph>)
         //{
         //  using edge = typename Graph::edge_init_type;
 
@@ -1536,7 +1538,7 @@ namespace sequoia
         //   x     x
 
         using edge_weight = typename edge::weight_type;
-        if constexpr(is_static_graph_v<Graph>)
+        if constexpr(static_nodes<Graph>)
         {
           {
             constexpr Graph
@@ -1578,7 +1580,7 @@ namespace sequoia
 
           m_Checker.template check_exception_thrown<std::logic_error>(LINE("Mismatch between node and edge init"), [](){ Graph{{{edge{0,0,1}, edge{0,0,0}}}, {node_weight{}, node_weight{}}}; });
           
-          if constexpr(is_static_graph_v<Graph>)
+          if constexpr(static_nodes<Graph>)
           {
             {
               constexpr Graph
@@ -1624,7 +1626,7 @@ namespace sequoia
 
         // x--<--x  x-->--x
 
-        if constexpr(is_static_graph_v<Graph>)
+        if constexpr(static_nodes<Graph>)
         {
           constexpr Graph
             g{{edge{0,1,0}}, {edge{0,1,0}}},
@@ -1653,7 +1655,7 @@ namespace sequoia
         //    \ /
         // x   x  x
 
-        if constexpr(is_static_graph_v<Graph>)
+        if constexpr(static_nodes<Graph>)
         {
           constexpr Graph g{{}, {edge{1,1,1}, edge{1,1,0}}, {}};
           check_3_1(g);
@@ -1673,7 +1675,7 @@ namespace sequoia
         // x-->--x-->--x
         // x--<--x--<--x
 
-        if constexpr(is_static_graph_v<Graph>)
+        if constexpr(static_nodes<Graph>)
         {
           constexpr Graph
             g{{edge{0,1,0}}, {edge{0,1,0}, edge{1,2,0}}, {edge{1,2,1}}},
