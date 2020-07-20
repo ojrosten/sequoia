@@ -146,24 +146,12 @@ $(function() {
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;  <span class="keyword">private</span>:</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    value_type m_Scale{1};</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;  };</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> DerefPolicy, <span class="keyword">class</span>=std::<span class="keywordtype">void</span>_t&lt;&gt;&gt;</div>
-<div class="line"><a name="l00082"></a><span class="lineno"><a class="line" href="../../d5/d13/structsequoia_1_1testing_1_1is__scaling.html">   82</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../d5/d13/structsequoia_1_1testing_1_1is__scaling.html">is_scaling</a> : std::false_type</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;  {};</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> DerefPolicy&gt;</div>
-<div class="line"><a name="l00086"></a><span class="lineno"><a class="line" href="../../d8/d7b/structsequoia_1_1testing_1_1is__scaling_3_01DerefPolicy_00_01std_1_1void__t_3_01decltype_07std_1f4c402200302915c5534d5a63e3c7897.html">   86</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../d5/d13/structsequoia_1_1testing_1_1is__scaling.html">is_scaling</a>&lt;DerefPolicy, std::void_t&lt;decltype(std::declval&lt;DerefPolicy&gt;().scale())&gt;&gt; : std::true_type</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;  {};</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> DerefPolicy&gt;</div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;  constexpr <span class="keywordtype">bool</span> is_scaling_v{<a class="code" href="../../d5/d13/structsequoia_1_1testing_1_1is__scaling.html">is_scaling&lt;DerefPolicy&gt;::value</a>};</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;}</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="astructsequoia_1_1testing_1_1is__scaling_html"><div class="ttname"><a href="../../d5/d13/structsequoia_1_1testing_1_1is__scaling.html">sequoia::testing::is_scaling</a></div><div class="ttdef"><b>Definition:</b> IteratorTest.hpp:83</div></div>
 <div class="ttc" id="aRegularTestCore_8hpp_html"><div class="ttname"><a href="../../d9/daf/RegularTestCore_8hpp.html">RegularTestCore.hpp</a></div><div class="ttdoc">Utilities for checking regular semantics.</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1scaling__dereference__policy_html"><div class="ttname"><a href="../../d8/dcb/classsequoia_1_1testing_1_1scaling__dereference__policy.html">sequoia::testing::scaling_dereference_policy</a></div><div class="ttdef"><b>Definition:</b> IteratorTest.hpp:43</div></div>
 <div class="ttc" id="aRegularTestCore_8hpp_html_aef38d8778074b365d465f7775bb74dab"><div class="ttname"><a href="../../d9/daf/RegularTestCore_8hpp.html#aef38d8778074b365d465f7775bb74dab">sequoia::testing::regular_test</a></div><div class="ttdeci">canonical_regular_test&lt; test_mode::standard &gt; regular_test</div><div class="ttdef"><b>Definition:</b> RegularTestCore.hpp:64</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1iterator__test_html_aa96346a4e54cb47985eec06a62216993"><div class="ttname"><a href="../../d9/d53/classsequoia_1_1testing_1_1iterator__test.html#aa96346a4e54cb47985eec06a62216993">sequoia::testing::iterator_test::source_file</a></div><div class="ttdeci">std::string_view source_file() const noexcept final</div><div class="ttdoc">Pure virtual method which should be overridden in a concrete test's cpp file in order to provide the ...</div><div class="ttdef"><b>Definition:</b> IteratorTest.cpp:16</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1iterator__test_html_aa96346a4e54cb47985eec06a62216993"><div class="ttname"><a href="../../d9/d53/classsequoia_1_1testing_1_1iterator__test.html#aa96346a4e54cb47985eec06a62216993">sequoia::testing::iterator_test::source_file</a></div><div class="ttdeci">std::string_view source_file() const noexcept final</div><div class="ttdoc">Pure virtual method which should be overridden in a concrete test's cpp file in order to provide the ...</div><div class="ttdef"><b>Definition:</b> IteratorTest.cpp:20</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

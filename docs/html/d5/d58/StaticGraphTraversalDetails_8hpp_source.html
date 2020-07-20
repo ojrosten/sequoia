@@ -151,43 +151,35 @@ $(function() {
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    }</div>
 <div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;  };</div>
 <div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> G, <span class="keywordtype">bool</span>&gt; <span class="keyword">struct </span><a class="code" href="../../d4/db0/structsequoia_1_1maths_1_1graph__impl_1_1stack__selector.html">stack_selector</a>;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> G&gt;</div>
-<div class="line"><a name="l00093"></a><span class="lineno"><a class="line" href="../../d7/db1/structsequoia_1_1maths_1_1graph__impl_1_1stack__selector_3_01G_00_01true_01_4.html">   93</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../d4/db0/structsequoia_1_1maths_1_1graph__impl_1_1stack__selector.html">stack_selector</a>&lt;G, true&gt;</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;  {</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    <span class="keyword">using</span> <a class="code" href="../../d3/d6f/classsequoia_1_1data__structures_1_1static__stack.html">stack_type</a> = <a class="code" href="../../d3/d6f/classsequoia_1_1data__structures_1_1static__stack.html">data_structures::static_stack</a>&lt;std::size_t, G::order()&gt;;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;  };</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> G, <span class="keywordtype">bool</span>&gt; <span class="keyword">struct </span><a class="code" href="../../dc/d19/structsequoia_1_1maths_1_1graph__impl_1_1queue__selector.html">queue_selector</a>;</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> G&gt;</div>
-<div class="line"><a name="l00101"></a><span class="lineno"><a class="line" href="../../df/d52/structsequoia_1_1maths_1_1graph__impl_1_1queue__selector_3_01G_00_01true_01_4.html">  101</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../dc/d19/structsequoia_1_1maths_1_1graph__impl_1_1queue__selector.html">queue_selector</a>&lt;G, true&gt;</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;  {</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keyword">using</span> <a class="code" href="../../d7/d29/classsequoia_1_1data__structures_1_1static__queue.html">queue_type</a> = <a class="code" href="../../d7/d29/classsequoia_1_1data__structures_1_1static__queue.html">data_structures::static_queue</a>&lt;std::size_t, G::order()&gt;;</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;  };</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> G, <span class="keyword">class</span> Compare, <span class="keywordtype">bool</span>&gt; <span class="keyword">struct </span><a class="code" href="../../d8/d68/structsequoia_1_1maths_1_1graph__impl_1_1priority__queue__selector.html">priority_queue_selector</a>;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160; </div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> G, <span class="keyword">class</span> Compare&gt;</div>
-<div class="line"><a name="l00109"></a><span class="lineno"><a class="line" href="../../db/db8/structsequoia_1_1maths_1_1graph__impl_1_1priority__queue__selector_3_01G_00_01Compare_00_01true_01_4.html">  109</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../d8/d68/structsequoia_1_1maths_1_1graph__impl_1_1priority__queue__selector.html">priority_queue_selector</a>&lt;G, Compare, true&gt;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;  {</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    <span class="keyword">using</span> <a class="code" href="../../de/de3/classsequoia_1_1data__structures_1_1static__priority__queue.html">queue_type</a> = <a class="code" href="../../de/de3/classsequoia_1_1data__structures_1_1static__priority__queue.html">data_structures::static_priority_queue</a>&lt;std::size_t, G::order(), Compare&gt;;</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;  };</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;  </div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;}</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;  <span class="keyword">template</span>&lt;static_network G&gt;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;  <span class="keyword">struct </span><a class="code" href="../../d4/db0/structsequoia_1_1maths_1_1graph__impl_1_1stack__selector.html">stack_selector</a>&lt;G&gt;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;  {</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    <span class="keyword">using</span> stack_type = <a class="code" href="../../d3/d6f/classsequoia_1_1data__structures_1_1static__stack.html">data_structures::static_stack</a>&lt;std::size_t, G::order()&gt;;</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;  };</div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160; </div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;  <span class="keyword">template</span>&lt;static_network G&gt;</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;  <span class="keyword">struct </span>queue_selector&lt;G&gt;</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;  {</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="keyword">using</span> queue_type = <a class="code" href="../../d7/d29/classsequoia_1_1data__structures_1_1static__queue.html">data_structures::static_queue</a>&lt;std::size_t, G::order()&gt;;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;  };</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160; </div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;  <span class="keyword">template</span>&lt;static_network G, <span class="keyword">class</span> Compare&gt;</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;  <span class="keyword">struct </span>priority_queue_selector&lt;G, Compare&gt;</div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;  {</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    <span class="keyword">using</span> queue_type = <a class="code" href="../../de/de3/classsequoia_1_1data__structures_1_1static__priority__queue.html">data_structures::static_priority_queue</a>&lt;std::size_t, G::order(), Compare&gt;;</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;  };</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;  </div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="astructsequoia_1_1maths_1_1graph__impl_1_1queue__constructor_html"><div class="ttname"><a href="../../df/dc9/structsequoia_1_1maths_1_1graph__impl_1_1queue__constructor.html">sequoia::maths::graph_impl::queue_constructor</a></div><div class="ttdef"><b>Definition:</b> GraphTraversalDetails.hpp:126</div></div>
+<div class="ttc" id="astructsequoia_1_1maths_1_1graph__impl_1_1queue__constructor_html"><div class="ttname"><a href="../../df/dc9/structsequoia_1_1maths_1_1graph__impl_1_1queue__constructor.html">sequoia::maths::graph_impl::queue_constructor</a></div><div class="ttdef"><b>Definition:</b> GraphTraversalDetails.hpp:117</div></div>
 <div class="ttc" id="aclasssequoia_1_1data__structures_1_1static__queue_html"><div class="ttname"><a href="../../d7/d29/classsequoia_1_1data__structures_1_1static__queue.html">sequoia::data_structures::static_queue</a></div><div class="ttdoc">A queue suitable for constexpr contexts.</div><div class="ttdef"><b>Definition:</b> StaticQueue.hpp:27</div></div>
-<div class="ttc" id="astructsequoia_1_1maths_1_1graph__impl_1_1queue__selector_html"><div class="ttname"><a href="../../dc/d19/structsequoia_1_1maths_1_1graph__impl_1_1queue__selector.html">sequoia::maths::graph_impl::queue_selector</a></div><div class="ttdef"><b>Definition:</b> DynamicGraphTraversalDetails.hpp:89</div></div>
 <div class="ttc" id="aStaticQueue_8hpp_html"><div class="ttname"><a href="../../d2/da8/StaticQueue_8hpp.html">StaticQueue.hpp</a></div><div class="ttdoc">A constexpr queue.</div></div>
 <div class="ttc" id="aStaticStack_8hpp_html"><div class="ttname"><a href="../../d9/db3/StaticStack_8hpp.html">StaticStack.hpp</a></div><div class="ttdoc">A constexpr stack.</div></div>
 <div class="ttc" id="aStaticPriorityQueue_8hpp_html"><div class="ttname"><a href="../../d6/da5/StaticPriorityQueue_8hpp.html">StaticPriorityQueue.hpp</a></div><div class="ttdoc">A constexpr prority queue.</div></div>
-<div class="ttc" id="astructsequoia_1_1maths_1_1graph__impl_1_1stack__selector_html"><div class="ttname"><a href="../../d4/db0/structsequoia_1_1maths_1_1graph__impl_1_1stack__selector.html">sequoia::maths::graph_impl::stack_selector</a></div><div class="ttdef"><b>Definition:</b> DynamicGraphTraversalDetails.hpp:81</div></div>
+<div class="ttc" id="astructsequoia_1_1maths_1_1graph__impl_1_1stack__selector_html"><div class="ttname"><a href="../../d4/db0/structsequoia_1_1maths_1_1graph__impl_1_1stack__selector.html">sequoia::maths::graph_impl::stack_selector</a></div><div class="ttdef"><b>Definition:</b> GraphTraversalDetails.hpp:239</div></div>
 <div class="ttc" id="aclasssequoia_1_1data__structures_1_1static__priority__queue_html"><div class="ttname"><a href="../../de/de3/classsequoia_1_1data__structures_1_1static__priority__queue.html">sequoia::data_structures::static_priority_queue</a></div><div class="ttdoc">A priority_queue suitable for constexpr contexts.</div><div class="ttdef"><b>Definition:</b> StaticPriorityQueue.hpp:29</div></div>
-<div class="ttc" id="astructsequoia_1_1maths_1_1graph__impl_1_1traversal__traits__base_html"><div class="ttname"><a href="../../dd/dfa/structsequoia_1_1maths_1_1graph__impl_1_1traversal__traits__base.html">sequoia::maths::graph_impl::traversal_traits_base</a></div><div class="ttdef"><b>Definition:</b> GraphTraversalDetails.hpp:56</div></div>
+<div class="ttc" id="astructsequoia_1_1maths_1_1graph__impl_1_1traversal__traits__base_html"><div class="ttname"><a href="../../dd/dfa/structsequoia_1_1maths_1_1graph__impl_1_1traversal__traits__base.html">sequoia::maths::graph_impl::traversal_traits_base</a></div><div class="ttdef"><b>Definition:</b> GraphTraversalDetails.hpp:47</div></div>
 <div class="ttc" id="aclasssequoia_1_1data__structures_1_1static__stack_html"><div class="ttname"><a href="../../d3/d6f/classsequoia_1_1data__structures_1_1static__stack.html">sequoia::data_structures::static_stack</a></div><div class="ttdoc">A stack suitable for constexpr contexts.</div><div class="ttdef"><b>Definition:</b> StaticStack.hpp:27</div></div>
-<div class="ttc" id="astructsequoia_1_1maths_1_1graph__impl_1_1priority__queue__selector_html"><div class="ttname"><a href="../../d8/d68/structsequoia_1_1maths_1_1graph__impl_1_1priority__queue__selector.html">sequoia::maths::graph_impl::priority_queue_selector</a></div><div class="ttdef"><b>Definition:</b> DynamicGraphTraversalDetails.hpp:97</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

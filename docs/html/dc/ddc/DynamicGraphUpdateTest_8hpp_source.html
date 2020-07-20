@@ -100,7 +100,7 @@ $(function() {
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> G&gt;</div>
 <div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    std::tuple&lt;std::size_t, std::size_t, std::size_t&gt;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    nth_connection_indices(<span class="keyword">const</span> G&amp; graph, <span class="keyword">const</span> std::size_t node, <span class="keyword">const</span> std::size_t localEdgeIndex);</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    nth_connection_indices(<span class="keyword">const</span> G&amp; <a class="code" href="../../d8/d87/classsequoia_1_1maths_1_1graph.html">graph</a>, <span class="keyword">const</span> std::size_t node, <span class="keyword">const</span> std::size_t localEdgeIndex);</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;    <span class="comment">//=======================================================================================//</span></div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;    <span class="comment">// Class which will be used to provide graph update functions</span></div>
@@ -109,7 +109,7 @@ $(function() {
 <div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="../../df/dd9/classsequoia_1_1testing_1_1graph__updater.html">   40</a></span>&#160;    <span class="keyword">class </span><a class="code" href="../../df/dd9/classsequoia_1_1testing_1_1graph__updater.html">graph_updater</a></div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    {</div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;      <a class="code" href="../../df/dd9/classsequoia_1_1testing_1_1graph__updater.html">graph_updater</a>(G&amp; graph) : m_Graph(graph) {}</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;      <a class="code" href="../../df/dd9/classsequoia_1_1testing_1_1graph__updater.html">graph_updater</a>(G&amp; <a class="code" href="../../d8/d87/classsequoia_1_1maths_1_1graph.html">graph</a>) : m_Graph(<a class="code" href="../../d8/d87/classsequoia_1_1maths_1_1graph.html">graph</a>) {}</div>
 <div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;      </div>
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;      <span class="keywordtype">void</span> firstNodeTraversal(<span class="keyword">const</span> std::size_t index)</div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;      {</div>
@@ -183,10 +183,10 @@ $(function() {
 <div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;      <span class="keyword">static</span> constexpr <span class="keywordtype">bool</span> undirected{maths::undirected(GraphFlavour)};</div>
 <div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160; </div>
 <div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;      <span class="keyword">auto</span> make_graph() -&gt; graph_t;</div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;      <span class="keywordtype">void</span> check_setup(<span class="keyword">const</span> graph_t&amp; graph);</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;      <span class="keywordtype">void</span> check_df_update(graph_t graph);</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;      <span class="keywordtype">void</span> check_bf_update(graph_t graph);</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;      <span class="keywordtype">void</span> check_pr_update(graph_t graph);</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;      <span class="keywordtype">void</span> check_setup(<span class="keyword">const</span> graph_t&amp; <a class="code" href="../../d8/d87/classsequoia_1_1maths_1_1graph.html">graph</a>);</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;      <span class="keywordtype">void</span> check_df_update(graph_t <a class="code" href="../../d8/d87/classsequoia_1_1maths_1_1graph.html">graph</a>);</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;      <span class="keywordtype">void</span> check_bf_update(graph_t <a class="code" href="../../d8/d87/classsequoia_1_1maths_1_1graph.html">graph</a>);</div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;      <span class="keywordtype">void</span> check_pr_update(graph_t <a class="code" href="../../d8/d87/classsequoia_1_1maths_1_1graph.html">graph</a>);</div>
 <div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;      </div>
 <div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;      <span class="keywordtype">void</span> execute_operations() <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    };</div>
@@ -223,7 +223,7 @@ $(function() {
 <div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;      </div>
 <div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;      <span class="keywordtype">void</span> execute_operations() <span class="keyword">override</span>;</div>
 <div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160; </div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;      <span class="keywordtype">void</span> test_second_edge_traversal_update(graph_t&amp; graph);</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;      <span class="keywordtype">void</span> test_second_edge_traversal_update(graph_t&amp; <a class="code" href="../../d8/d87/classsequoia_1_1maths_1_1graph.html">graph</a>);</div>
 <div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    };</div>
 <div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;  }</div>
 <div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;}</div>
@@ -232,11 +232,12 @@ $(function() {
 <div class="ttc" id="aDynamicGraphTraversals_8hpp_html"><div class="ttname"><a href="../../db/d71/DynamicGraphTraversals_8hpp.html">DynamicGraphTraversals.hpp</a></div><div class="ttdoc">Headers for traversals of dynamic graphs.</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1test__graph__update_html"><div class="ttname"><a href="../../d9/d45/classsequoia_1_1testing_1_1test__graph__update.html">sequoia::testing::test_graph_update</a></div><div class="ttdef"><b>Definition:</b> DynamicGraphUpdateTest.hpp:22</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1test__graph__update_html_aa7c31c36a4eaf406e7c3329216b9a5e7"><div class="ttname"><a href="../../d9/d45/classsequoia_1_1testing_1_1test__graph__update.html#aa7c31c36a4eaf406e7c3329216b9a5e7">sequoia::testing::test_graph_update::source_file</a></div><div class="ttdeci">std::string_view source_file() const noexcept final</div><div class="ttdoc">Pure virtual method which should be overridden in a concrete test's cpp file in order to provide the ...</div><div class="ttdef"><b>Definition:</b> DynamicGraphUpdateTest.cpp:35</div></div>
+<div class="ttc" id="aclasssequoia_1_1maths_1_1graph_html"><div class="ttname"><a href="../../d8/d87/classsequoia_1_1maths_1_1graph.html">sequoia::maths::graph</a></div><div class="ttdef"><b>Definition:</b> DynamicGraph.hpp:371</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1graph__updater_html"><div class="ttname"><a href="../../df/dd9/classsequoia_1_1testing_1_1graph__updater.html">sequoia::testing::graph_updater</a></div><div class="ttdef"><b>Definition:</b> DynamicGraphUpdateTest.hpp:41</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1test__update_html"><div class="ttname"><a href="../../df/d3a/classsequoia_1_1testing_1_1test__update.html">sequoia::testing::test_update</a></div><div class="ttdef"><b>Definition:</b> DynamicGraphUpdateTest.hpp:100</div></div>
 <div class="ttc" id="aConcurrencyModels_8hpp_html"><div class="ttname"><a href="../../d9/d70/ConcurrencyModels_8hpp.html">ConcurrencyModels.hpp</a></div><div class="ttdoc">Classes with a queue-like behaviour to which tasks can be pushed and results recovered,...</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1test__bf__update_html"><div class="ttname"><a href="../../d4/df1/classsequoia_1_1testing_1_1test__bf__update.html">sequoia::testing::test_bf_update</a></div><div class="ttdef"><b>Definition:</b> DynamicGraphUpdateTest.hpp:141</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1graph__basic__test_html"><div class="ttname"><a href="../../d8/db8/classsequoia_1_1testing_1_1graph__basic__test.html">sequoia::testing::graph_basic_test</a></div><div class="ttdef"><b>Definition:</b> GraphTestingUtilities.hpp:282</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1graph__basic__test_html"><div class="ttname"><a href="../../d8/db8/classsequoia_1_1testing_1_1graph__basic__test.html">sequoia::testing::graph_basic_test</a></div><div class="ttdef"><b>Definition:</b> GraphTestingUtilities.hpp:272</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1graph__checker_html"><div class="ttname"><a href="../../d2/d97/classsequoia_1_1testing_1_1graph__checker.html">sequoia::testing::graph_checker&lt; Mode, Extenders... &gt;</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

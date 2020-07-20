@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['test_5fmode_1382',['test_mode',['../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244',1,'sequoia::testing']]]
+  ['test_5fmode_1340',['test_mode',['../d5/d05/TestLogger_8hpp.html#ae4e97c9d45a89647799f0d308ba6d244',1,'sequoia::testing']]]
 ];

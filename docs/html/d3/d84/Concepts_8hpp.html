@@ -148,6 +148,9 @@ template&lt;class T &gt; </td></tr>
 template&lt;class T &gt; </td></tr>
 <tr class="memitem:a4d4ebd9cc8b98c9b3f7aa89c3a5779d3"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::empty</b> = std::is_empty_v&lt;T&gt;</td></tr>
 <tr class="separator:a4d4ebd9cc8b98c9b3f7aa89c3a5779d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2485b8f6ef28434e29041786b74eee8"><td class="memTemplParams" colspan="2">template&lt;class F , class R , class... Args&gt; </td></tr>
+<tr class="memitem:ac2485b8f6ef28434e29041786b74eee8"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::invocable_r</b></td></tr>
+<tr class="separator:ac2485b8f6ef28434e29041786b74eee8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:affcbc72378c7730177a854dfbdb6d727"><td class="memTemplParams" colspan="2"><a id="affcbc72378c7730177a854dfbdb6d727"></a>
 template&lt;class T &gt; </td></tr>
 <tr class="memitem:affcbc72378c7730177a854dfbdb6d727"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::stateful</b> = !empty&lt;T&gt;</td></tr>
@@ -439,6 +442,26 @@ template&lt;class F , class... Args&gt; </div>
 <b>Initial value:</b><div class="fragment"><div class="line">=</div>
 <div class="line">    requires(F&amp;&amp; f, Args&amp;&amp;... args) {</div>
 <div class="line">      std::invoke(std::forward&lt;F&gt;(f), std::forward&lt;Args&gt;(args)...);</div>
+<div class="line">  }</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="ac2485b8f6ef28434e29041786b74eee8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac2485b8f6ef28434e29041786b74eee8">&#9670;&nbsp;</a></span>invocable_r</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class F , class R , class... Args&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">concept sequoia::invocable_r</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">=</div>
+<div class="line">    requires(F&amp;&amp; f, Args&amp;&amp;... args) {</div>
+<div class="line">      { std::invoke(std::forward&lt;F&gt;(f), std::forward&lt;Args&gt;(args)...) } -&gt; same_as&lt;R&gt;;</div>
 <div class="line">  }</div>
 </div><!-- fragment -->
 </div>

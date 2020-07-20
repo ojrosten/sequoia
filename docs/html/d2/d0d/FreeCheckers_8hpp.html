@@ -101,16 +101,10 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d39/structsequoia_1_1testing_1_1serializer.html">sequoia::testing::serializer&lt; T &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialize this struct template to provide custom serialization of a given class.  <a href="../../d6/d39/structsequoia_1_1testing_1_1serializer.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d99/structsequoia_1_1testing_1_1serializer_3_01T_01_4.html">sequoia::testing::serializer&lt; T &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d10/structsequoia_1_1testing_1_1null__advisor.html">sequoia::testing::null_advisor</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents the absence of advice.  <a href="../../da/d10/structsequoia_1_1testing_1_1null__advisor.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/dcc/structsequoia_1_1testing_1_1check__method__is__invocable.html">sequoia::testing::check_method_is_invocable&lt; Mode, Checker, class, Ts &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d9e/structsequoia_1_1testing_1_1check__method__is__invocable_3_01Mode_00_01Checker_00_01std_1_1void_8bd7fba2554467967b5b66b2f8cab55b.html">sequoia::testing::check_method_is_invocable&lt; Mode, Checker, std::void_t&lt; decltype(Checker::check(std::string_view{}, makelval&lt; test_logger&lt; Mode &gt;&gt;(), std::declval&lt; Ts &gt;()...))&gt;, Ts... &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d94/structsequoia_1_1testing_1_1is__advisor.html">sequoia::testing::is_advisor&lt; A, T &gt;</a></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d45/structsequoia_1_1testing_1_1is__advisor_3_01void_00_01T_01_4.html">sequoia::testing::is_advisor&lt; void, T &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/de5/classsequoia_1_1testing_1_1checker.html">sequoia::testing::checker&lt; Mode, Extenders &gt;</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -144,14 +138,13 @@ template&lt;class T &gt; </td></tr>
 template&lt;class T &gt; </td></tr>
 <tr class="memitem:a8d2e512e2b7c131257657ebf885f0b95"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::has_detailed_equality_checker_v</b> {class_template_is_default_instantiable&lt;detailed_equality_checker, T&gt;}</td></tr>
 <tr class="separator:a8d2e512e2b7c131257657ebf885f0b95"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a15971ad1b7a0363247eba64a38440355"><td class="memTemplParams" colspan="2"><a id="a15971ad1b7a0363247eba64a38440355"></a>
-template&lt;test_mode Mode, class Checker , class... Ts&gt; </td></tr>
-<tr class="memitem:a15971ad1b7a0363247eba64a38440355"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::check_method_is_invocable_v</b> {check_method_is_invocable&lt;Mode, Checker, std::void_t&lt;&gt;, Ts...&gt;::value}</td></tr>
-<tr class="separator:a15971ad1b7a0363247eba64a38440355"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aea590459a87ec43e7cfc5dbdb7fbeaa4"><td class="memTemplParams" colspan="2"><a id="aea590459a87ec43e7cfc5dbdb7fbeaa4"></a>
-template&lt;class A , class T &gt; </td></tr>
-<tr class="memitem:aea590459a87ec43e7cfc5dbdb7fbeaa4"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::is_advisor_v</b> {is_advisor&lt;A, T&gt;::value}</td></tr>
-<tr class="separator:aea590459a87ec43e7cfc5dbdb7fbeaa4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e7c7394e54bdf2833d7e1165f11ca10"><td class="memTemplParams" colspan="2">template&lt;class Checker , test_mode Mode, class... Args&gt; </td></tr>
+<tr class="memitem:a4e7c7394e54bdf2833d7e1165f11ca10"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::checker_for</b></td></tr>
+<tr class="separator:a4e7c7394e54bdf2833d7e1165f11ca10"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f620fd0ecdc45783fd2abda157d390d"><td class="memTemplParams" colspan="2"><a id="a5f620fd0ecdc45783fd2abda157d390d"></a>
+template&lt;class Advisor , class T &gt; </td></tr>
+<tr class="memitem:a5f620fd0ecdc45783fd2abda157d390d"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::advisor_for</b> = invocable_r&lt;Advisor, std::string, T&gt;</td></tr>
+<tr class="separator:a5f620fd0ecdc45783fd2abda157d390d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afe5ba70f0c91d467280a0c2ddaa7fc34"><td class="memTemplParams" colspan="2">template&lt;class T , class... U&gt; </td></tr>
 <tr class="memitem:afe5ba70f0c91d467280a0c2ddaa7fc34"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::strip_advisor_v</b></td></tr>
 <tr class="separator:afe5ba70f0c91d467280a0c2ddaa7fc34"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -447,6 +440,25 @@ template&lt;class EquivChecker , test_mode Mode, class T , class S , class... U&
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>
+<a id="a4e7c7394e54bdf2833d7e1165f11ca10"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4e7c7394e54bdf2833d7e1165f11ca10">&#9670;&nbsp;</a></span>checker_for</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Checker , test_mode Mode, class... Args&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">concept sequoia::testing::checker_for</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= requires(test_logger&lt;Mode&gt;&amp; logger, Args&amp;&amp;... args) {</div>
+<div class="line">    Checker::check(std::string_view{}, logger, std::forward&lt;Args&gt;(args)...);</div>
+<div class="line">  }</div>
+</div><!-- fragment -->
+</div>
+</div>
 <a id="ac460355a425fb4db86211989c86e9af1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac460355a425fb4db86211989c86e9af1">&#9670;&nbsp;</a></span>extender</h2>
 
@@ -494,8 +506,8 @@ template&lt;class T , class... U&gt; </div>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
-<div class="line">       ((<span class="keyword">sizeof</span>...(U) == 1) &amp;&amp; (is_advisor_v&lt;head_of_t&lt;U...&gt;, T&gt; || std::is_same_v&lt;std::remove_cvref_t&lt;head_of_t&lt;U...&gt;&gt;, null_advisor&gt;))</div>
-<div class="line">    || ((<span class="keyword">sizeof</span>...(U)  &gt; 1) &amp;&amp; (is_advisor_v&lt;tail_of_t&lt;U...&gt;, T&gt; || std::is_same_v&lt;std::remove_cvref_t&lt;tail_of_t&lt;U...&gt;&gt;, null_advisor&gt;))</div>
+<div class="line">       ((<span class="keyword">sizeof</span>...(U) == 1) &amp;&amp; (advisor_for&lt;head_of_t&lt;U...&gt;, T&gt; || std::is_same_v&lt;std::remove_cvref_t&lt;head_of_t&lt;U...&gt;&gt;, null_advisor&gt;))</div>
+<div class="line">    || ((<span class="keyword">sizeof</span>...(U)  &gt; 1) &amp;&amp; (advisor_for&lt;tail_of_t&lt;U...&gt;, T&gt; || std::is_same_v&lt;std::remove_cvref_t&lt;tail_of_t&lt;U...&gt;&gt;, null_advisor&gt;))</div>
 <div class="line">  }</div>
 </div><!-- fragment -->
 </div>
