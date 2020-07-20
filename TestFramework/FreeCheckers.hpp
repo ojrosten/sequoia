@@ -108,11 +108,9 @@ namespace sequoia::testing
       \anchor serializer_primary
    */
   
-  template<class T>
+  template<serializable_to<std::stringstream> T>
   struct serializer
-  {
-    static_assert(serializable_to<T, std::stringstream>);
-    
+  {    
     [[nodiscard]]
     static std::string make(const T& val)
     {        
@@ -133,33 +131,18 @@ namespace sequoia::testing
   struct null_advisor
   {};
 
-  template<test_mode Mode, class Checker, class=std::void_t<>, class... Ts>
-  struct check_method_is_invocable : std::false_type
-  {};
+  template<class Checker, test_mode Mode, class... Args>
+  concept checker_for = requires(test_logger<Mode>& logger, Args&&... args) {
+    Checker::check(std::string_view{}, logger, std::forward<Args>(args)...);
+  };
 
-  template<test_mode Mode, class Checker, class... Ts>
-  struct check_method_is_invocable<Mode, Checker, std::void_t<decltype(Checker::check(std::string_view{}, makelval<test_logger<Mode>>(), std::declval<Ts>()...))>, Ts...>
-    : std::true_type
-  {};
-
-  template<test_mode Mode, class Checker, class... Ts>
-  constexpr bool check_method_is_invocable_v{check_method_is_invocable<Mode, Checker, std::void_t<>, Ts...>::value};
-
-  template<class A, class T>
-  struct is_advisor : std::is_invocable_r<std::string, A, T>
-  {};
-
-  template<class T>
-  struct is_advisor<void, T> : std::false_type
-  {};
-
-  template<class A, class T>
-  constexpr bool is_advisor_v{is_advisor<A, T>::value};
+  template<class Advisor, class T>
+  concept advisor_for = invocable_r<Advisor, std::string, T>;
 
   template<class T, class... U>
   constexpr bool strip_advisor_v{
-       ((sizeof...(U) == 1) && (is_advisor_v<head_of_t<U...>, T> || std::is_same_v<std::remove_cvref_t<head_of_t<U...>>, null_advisor>))
-    || ((sizeof...(U)  > 1) && (is_advisor_v<tail_of_t<U...>, T> || std::is_same_v<std::remove_cvref_t<tail_of_t<U...>>, null_advisor>))
+       ((sizeof...(U) == 1) && (advisor_for<head_of_t<U...>, T> || std::is_same_v<std::remove_cvref_t<head_of_t<U...>>, null_advisor>))
+    || ((sizeof...(U)  > 1) && (advisor_for<tail_of_t<U...>, T> || std::is_same_v<std::remove_cvref_t<tail_of_t<U...>>, null_advisor>))
   };
 
   template<class EquivChecker, class T, class... U>
@@ -200,7 +183,7 @@ namespace sequoia::testing
       }()
     };
 
-    if constexpr(check_method_is_invocable_v<Mode, EquivChecker, T, S, U...>)
+    if constexpr(checker_for<EquivChecker, Mode, T, S, U...>)
     {
       EquivChecker::check(message, logger, value, s, u...);
     }
@@ -282,7 +265,7 @@ namespace sequoia::testing
       std::string_view desc{s.checks_registered() ? "" : description};
       if constexpr(has_detailed_equality_checker_v<T>)
       {
-        if constexpr(check_method_is_invocable_v<Mode, detailed_equality_checker<T>, T, T>)
+        if constexpr(checker_for<detailed_equality_checker<T>, Mode, T, T>)
         {          
           detailed_equality_checker<T>::check(desc, logger, obtained, prediction);
         }

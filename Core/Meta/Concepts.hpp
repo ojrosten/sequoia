@@ -148,6 +148,12 @@ namespace sequoia
   template <class T>
   concept empty = std::is_empty_v<T>;
 
+  template <class F, class R, class... Args>
+  concept invocable_r =
+    requires(F&& f, Args&&... args) {
+      { std::invoke(std::forward<F>(f), std::forward<Args>(args)...) } -> same_as<R>;
+  };
+
   template <class T>
   concept stateful = !empty<T>;
 
