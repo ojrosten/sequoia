@@ -112,25 +112,25 @@ namespace sequoia::testing
   >
   void test_graph_meta::test_undirected()
   {    
-    test_undirected_unshared<GraphFlavour, int, data_sharing::spawner<int>, EdgeType>();
-    test_undirected_unshared<GraphFlavour, int, data_sharing::data_pool<int>, EdgeType>();
-    test_undirected_unshared<GraphFlavour, wrapper<int>, data_sharing::spawner<wrapper<int>>, EdgeType>();
-    test_undirected_unshared<GraphFlavour, wrapper<int>, data_sharing::data_pool<wrapper<int>>, EdgeType>();
+    test_undirected_unshared<GraphFlavour, int, ownership::spawner<int>, EdgeType>();
+    test_undirected_unshared<GraphFlavour, int, ownership::data_pool<int>, EdgeType>();
+    test_undirected_unshared<GraphFlavour, wrapper<int>, ownership::spawner<wrapper<int>>, EdgeType>();
+    test_undirected_unshared<GraphFlavour, wrapper<int>, ownership::data_pool<wrapper<int>>, EdgeType>();
 
-    test_undirected_unshared<GraphFlavour, double, data_sharing::spawner<double>, EdgeType>();
-    test_undirected_unshared<GraphFlavour, double, data_sharing::data_pool<double>, EdgeType>();
-    test_undirected_unshared<GraphFlavour, wrapper<double>, data_sharing::spawner<wrapper<double>>, EdgeType>();
-    test_undirected_unshared<GraphFlavour, wrapper<double>, data_sharing::data_pool<wrapper<double>>, EdgeType>();
+    test_undirected_unshared<GraphFlavour, double, ownership::spawner<double>, EdgeType>();
+    test_undirected_unshared<GraphFlavour, double, ownership::data_pool<double>, EdgeType>();
+    test_undirected_unshared<GraphFlavour, wrapper<double>, ownership::spawner<wrapper<double>>, EdgeType>();
+    test_undirected_unshared<GraphFlavour, wrapper<double>, ownership::data_pool<wrapper<double>>, EdgeType>();
 
-    test_undirected_unshared<GraphFlavour, std::tuple<double, double>, data_sharing::spawner<std::tuple<double, double>>, EdgeType>();
-    test_undirected_unshared<GraphFlavour, std::tuple<double, double>, data_sharing::data_pool<std::tuple<double, double>>, EdgeType>();
+    test_undirected_unshared<GraphFlavour, std::tuple<double, double>, ownership::spawner<std::tuple<double, double>>, EdgeType>();
+    test_undirected_unshared<GraphFlavour, std::tuple<double, double>, ownership::data_pool<std::tuple<double, double>>, EdgeType>();
 
-    test_undirected_shared<GraphFlavour, std::tuple<double, double, double>, data_sharing::spawner<std::tuple<double, double, double>>, EdgeType>();
+    test_undirected_shared<GraphFlavour, std::tuple<double, double, double>, ownership::spawner<std::tuple<double, double, double>>, EdgeType>();
     // For the data pool, the sizeof the proxy is just the size of a shared_ptr
-    test_undirected_unshared<GraphFlavour, std::tuple<double, double, double>, data_sharing::data_pool<std::tuple<double, double, double>>, EdgeType>();
+    test_undirected_unshared<GraphFlavour, std::tuple<double, double, double>, ownership::data_pool<std::tuple<double, double, double>>, EdgeType>();
 
-    test_undirected_shared<GraphFlavour, std::vector<int>, data_sharing::spawner<std::vector<int>>, EdgeType>();
-    test_undirected_unshared<GraphFlavour, std::vector<int>, data_sharing::data_pool<std::vector<int>>, EdgeType>();
+    test_undirected_shared<GraphFlavour, std::vector<int>, ownership::spawner<std::vector<int>>, EdgeType>();
+    test_undirected_unshared<GraphFlavour, std::vector<int>, ownership::data_pool<std::vector<int>>, EdgeType>();
   }
 
   template
@@ -143,7 +143,7 @@ namespace sequoia::testing
     using namespace maths;
     using namespace graph_impl;
     using namespace data_structures;
-    using namespace data_sharing;
+    using namespace ownership;
 
     using gen_t = dynamic_edge_traits<graph_flavour::directed, EdgeWeight, EdgeWeightPooling, contiguous_edge_storage_traits, std::size_t>;
     using edge_t = typename gen_t::edge_type;
@@ -161,7 +161,7 @@ namespace sequoia::testing
     using namespace maths;
     using namespace graph_impl;
     using namespace data_structures;
-    using namespace data_sharing;
+    using namespace ownership;
 
     using gen_t = dynamic_edge_traits<graph_flavour::directed_embedded, EdgeWeight, EdgeWeightPooling, contiguous_edge_storage_traits, std::size_t>;
     using edge_t = typename gen_t::edge_type;
@@ -173,11 +173,11 @@ namespace sequoia::testing
   {
     using namespace maths;
 
-    test_directed_impl<int, data_sharing::spawner<int>>();
-    test_directed_impl<int, data_sharing::data_pool<int>>();
+    test_directed_impl<int, ownership::spawner<int>>();
+    test_directed_impl<int, ownership::data_pool<int>>();
 
-    test_directed_impl<std::tuple<double,double,double>, data_sharing::spawner<std::tuple<double,double,double>>>();
-    test_directed_impl<std::tuple<double,double,double>, data_sharing::data_pool<std::tuple<double,double,double>>>();
+    test_directed_impl<std::tuple<double,double,double>, ownership::spawner<std::tuple<double,double,double>>>();
+    test_directed_impl<std::tuple<double,double,double>, ownership::data_pool<std::tuple<double,double,double>>>();
   }
 
 
@@ -185,10 +185,10 @@ namespace sequoia::testing
   {
     using namespace maths;
 
-    test_directed_embedded_impl<int, data_sharing::spawner<int>>();
-    test_directed_embedded_impl<int, data_sharing::data_pool<int>>();
+    test_directed_embedded_impl<int, ownership::spawner<int>>();
+    test_directed_embedded_impl<int, ownership::data_pool<int>>();
 
-    test_directed_embedded_impl<std::tuple<double,double,double>, data_sharing::spawner<std::tuple<double,double,double>>>();
-    test_directed_embedded_impl<std::tuple<double,double,double>, data_sharing::data_pool<std::tuple<double,double,double>>>();
+    test_directed_embedded_impl<std::tuple<double,double,double>, ownership::spawner<std::tuple<double,double,double>>>();
+    test_directed_embedded_impl<std::tuple<double,double,double>, ownership::data_pool<std::tuple<double,double,double>>>();
   }  
 }

@@ -27,6 +27,6 @@ namespace sequoia::testing
     void test_multi_pools();
     void test_spawner();
 
-    data_sharing::data_pool<int> make_int_pool(const int val);
+    ownership::data_pool<int> make_int_pool(const int val);
   };
 }

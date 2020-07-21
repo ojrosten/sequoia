@@ -17,7 +17,7 @@
 #include "Algorithms.hpp"
 #include "TypeTraits.hpp"
 #include "AssignmentUtilities.hpp"
-#include "OwnershipTraits.hpp"
+#include "HandlerTraits.hpp"
 
 #include <limits>
 #include <set>
@@ -27,10 +27,10 @@ namespace sequoia
 {
   namespace data_structures
   {
-    template <class, ownership, class> class bucketed_storage;
-    template <class, ownership> struct bucketed_storage_traits;
-    template <class, ownership, class> class partitioned_sequence;
-    template <class, ownership> struct partitioned_sequence_traits;
+    template <class, handler, class> class bucketed_storage;
+    template <class, handler> struct bucketed_storage_traits;
+    template <class, handler, class> class partitioned_sequence;
+    template <class, handler> struct partitioned_sequence_traits;
     template <class, std::size_t, std::size_t, class> class static_partitioned_sequence;
     class static_data_base;
   }
@@ -1150,8 +1150,8 @@ namespace sequoia
       constexpr void process_edges(indirect_edge_init_type, init_t edges)
       {
         using namespace data_structures;
-        using traits_t = partitioned_sequence_traits<edge_init_type, data_sharing::independent<edge_init_type>>;
-        partitioned_sequence<edge_init_type, data_sharing::independent<edge_init_type>, traits_t> edgesForChecking{edges};
+        using traits_t = partitioned_sequence_traits<edge_init_type, ownership::independent<edge_init_type>>;
+        partitioned_sequence<edge_init_type, ownership::independent<edge_init_type>, traits_t> edgesForChecking{edges};
         process_edges(edgesForChecking);
       }
 

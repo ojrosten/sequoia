@@ -17,7 +17,7 @@
 namespace sequoia
 {
   template<class T>
-  concept ownership = requires() {
+  concept handler = requires() {
     typename T::handle_type;
     typename T::elementary_type;
 

@@ -13,11 +13,11 @@
 
  */
 
-#include "OwnershipTraits.hpp"
+#include "HandlerTraits.hpp"
 
 #include <memory>
 
-namespace sequoia::data_sharing
+namespace sequoia::ownership
 {
   template<class T, class... Args>
   [[nodiscard]]

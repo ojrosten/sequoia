@@ -23,9 +23,9 @@ namespace sequoia::testing
     test_spawner();
   }
 
-  data_sharing::data_pool<int> data_pool_test::make_int_pool(const int val)
+  ownership::data_pool<int> data_pool_test::make_int_pool(const int val)
   {
-    using namespace data_sharing;
+    using namespace ownership;
     using pool_t = data_pool<int>;
     
     using prediction_t = typename weak_equivalence_checker<pool_t>::prediction_type;
@@ -45,7 +45,7 @@ namespace sequoia::testing
 
   void data_pool_test::test_multi_pools()
   {
-    using namespace data_sharing;
+    using namespace ownership;
     using pool_t = data_pool<int>;
     
     using prediction_t = typename weak_equivalence_checker<pool_t>::prediction_type;
@@ -119,7 +119,7 @@ namespace sequoia::testing
     
   void data_pool_test::test_pooled()
   {
-    using namespace data_sharing;
+    using namespace ownership;
     using pool_t = data_pool<int>;
     
     using prediction_t = typename weak_equivalence_checker<pool_t>::prediction_type;
@@ -197,7 +197,7 @@ namespace sequoia::testing
 
   void data_pool_test::test_spawner()
   {
-    using namespace data_sharing;
+    using namespace ownership;
     constexpr auto x = spawner<double>::make(3.0);
     check_equality(LINE(""), x.get(), 3.0);
   }

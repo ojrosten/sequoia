@@ -72,10 +72,10 @@ namespace sequoia::testing
     }
   }
   
-  template<class T, class Ownership, class Traits>
-  struct detailed_equality_checker<data_structures::bucketed_storage<T, Ownership, Traits>>
+  template<class T, class Handler, class Traits>
+  struct detailed_equality_checker<data_structures::bucketed_storage<T, Handler, Traits>>
   {
-    using type = data_structures::bucketed_storage<T, Ownership, Traits>;
+    using type = data_structures::bucketed_storage<T, Handler, Traits>;
     
     template<test_mode Mode>
     static void check(std::string_view description, test_logger<Mode>& logger, const type& data, const type& prediction)
@@ -84,10 +84,10 @@ namespace sequoia::testing
     }
   };
 
-  template<class T, class Ownership, class Traits>
-  struct equivalence_checker<data_structures::bucketed_storage<T, Ownership, Traits>>
+  template<class T, class Handler, class Traits>
+  struct equivalence_checker<data_structures::bucketed_storage<T, Handler, Traits>>
   {
-    using type = data_structures::bucketed_storage<T, Ownership, Traits>;
+    using type = data_structures::bucketed_storage<T, Handler, Traits>;
     
     template<test_mode Mode>
     static void check(std::string_view description, test_logger<Mode>& logger, const type& data, std::initializer_list<std::initializer_list<T>> prediction)
@@ -96,10 +96,10 @@ namespace sequoia::testing
     }
   };
 
-  template<class T, class Ownership, class Traits>
-  struct detailed_equality_checker<data_structures::partitioned_sequence<T, Ownership, Traits>>
+  template<class T, class Handler, class Traits>
+  struct detailed_equality_checker<data_structures::partitioned_sequence<T, Handler, Traits>>
   {
-    using type = data_structures::partitioned_sequence<T, Ownership, Traits>;
+    using type = data_structures::partitioned_sequence<T, Handler, Traits>;
     
     template<test_mode Mode>
     static void check(std::string_view description, test_logger<Mode>& logger, const type& data, const type& prediction)
@@ -108,10 +108,10 @@ namespace sequoia::testing
     }
   };
 
-  template<class T, class Ownership, class Traits>
-  struct equivalence_checker<data_structures::partitioned_sequence<T, Ownership, Traits>>
+  template<class T, class Handler, class Traits>
+  struct equivalence_checker<data_structures::partitioned_sequence<T, Handler, Traits>>
   {
-    using type = data_structures::partitioned_sequence<T, Ownership, Traits>;
+    using type = data_structures::partitioned_sequence<T, Handler, Traits>;
     using equivalent_type = std::initializer_list<std::initializer_list<T>>;
     
     template<test_mode Mode>

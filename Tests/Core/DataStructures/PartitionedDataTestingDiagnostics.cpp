@@ -24,13 +24,13 @@ namespace sequoia::testing
   template<class T> void partitioned_data_false_positive_test::test_set()
   {
     using namespace data_structures;
-    using namespace data_sharing;
+    using namespace ownership;
     
-    test<bucketed_storage<T, data_sharing::independent<T>>>();
-    test<bucketed_storage<T, data_sharing::shared<T>>>();
+    test<bucketed_storage<T, ownership::independent<T>>>();
+    test<bucketed_storage<T, ownership::shared<T>>>();
 
-    test<partitioned_sequence<T, data_sharing::independent<T>>>();
-    test<partitioned_sequence<T, data_sharing::shared<T>>>();
+    test<partitioned_sequence<T, ownership::independent<T>>>();
+    test<partitioned_sequence<T, ownership::shared<T>>>();
   }
   
   template<class PartitionedData> void partitioned_data_false_positive_test::test()

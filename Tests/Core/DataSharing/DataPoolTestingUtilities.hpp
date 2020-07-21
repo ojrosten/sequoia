@@ -12,9 +12,9 @@
 namespace sequoia::testing
 {
   template<class T, class Allocator>
-  struct weak_equivalence_checker<data_sharing::data_pool<T, Allocator>>
+  struct weak_equivalence_checker<ownership::data_pool<T, Allocator>>
   {
-    using type = data_sharing::data_pool<T, Allocator>;
+    using type = ownership::data_pool<T, Allocator>;
     using prediction_type = std::initializer_list<std::pair<T, long>>;
     
     template<test_mode Mode>

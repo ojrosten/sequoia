@@ -17,7 +17,7 @@
 
 namespace sequoia
 {
-  namespace data_sharing
+  namespace ownership
   {
     template <class> struct shared;
     template <class> struct independent;
@@ -67,13 +67,13 @@ namespace sequoia
       template<bool Sharing>
       struct sharing_v_to_type
       {
-        template<class W> using policy = data_sharing::shared<W>;
+        template<class W> using policy = ownership::shared<W>;
       };
 
       template<>
       struct sharing_v_to_type<false>
       {
-        template<class W> using policy = data_sharing::independent<W>;
+        template<class W> using policy = ownership::independent<W>;
       };
 
       // Edge Weight Wrapper
@@ -287,14 +287,14 @@ namespace sequoia
       struct shared_edge_v_to_policy
       {
         template<class EdgeType>
-        using edge_storage_ownership = data_sharing::independent<EdgeType>;
+        using edge_storage_handler = ownership::independent<EdgeType>;
       };
 
       template<>
       struct shared_edge_v_to_policy<true>
       {
         template<class EdgeType>
-        using edge_storage_ownership = data_sharing::shared<EdgeType>;
+        using edge_storage_handler = ownership::shared<EdgeType>;
       };
                            
       // Determine dynamic reservartion type etc

@@ -27,10 +27,10 @@ namespace sequoia::testing
 
     void run_tests() final;
 
-    template<class T, class Ownership, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
+    template<class T, class Handler, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
     void test_bucketed_allocation();
 
-    template<class T, class Ownership, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
+    template<class T, class Handler, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
     void test_contiguous_allocation();
   };
 }

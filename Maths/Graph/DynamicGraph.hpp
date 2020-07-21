@@ -352,8 +352,8 @@ namespace sequoia::maths
     directed_flavour Directedness,      
     class EdgeWeight,
     class NodeWeight,      
-    creator EdgeWeightCreator=data_sharing::spawner<EdgeWeight>,
-    creator NodeWeightCreator=data_sharing::spawner<NodeWeight>,
+    creator EdgeWeightCreator=ownership::spawner<EdgeWeight>,
+    creator NodeWeightCreator=ownership::spawner<NodeWeight>,
     class EdgeStorageTraits = bucketed_edge_storage_traits,
     class NodeWeightStorageTraits = node_weight_storage_traits<NodeWeight>
   >
@@ -411,8 +411,8 @@ namespace sequoia::maths
     directed_flavour Directedness,      
     class EdgeWeight,
     class NodeWeight,      
-    creator EdgeWeightCreator=data_sharing::spawner<EdgeWeight>,
-    creator NodeWeightCreator=data_sharing::spawner<NodeWeight>,
+    creator EdgeWeightCreator=ownership::spawner<EdgeWeight>,
+    creator NodeWeightCreator=ownership::spawner<NodeWeight>,
     class EdgeStorageTraits=bucketed_edge_storage_traits,
     class NodeWeightStorageTraits=node_weight_storage_traits<NodeWeight>
   >

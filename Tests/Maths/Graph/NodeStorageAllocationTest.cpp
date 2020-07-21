@@ -26,8 +26,8 @@ namespace sequoia:: testing
   template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
   void node_storage_allocation_test::test_allocation()
   {   
-    test_allocation_impl<data_sharing::spawner<int>, PropagateCopy, PropagateMove, PropagateSwap>();
-    test_allocation_impl<data_sharing::data_pool<int>, PropagateCopy, PropagateMove, PropagateSwap>();
+    test_allocation_impl<ownership::spawner<int>, PropagateCopy, PropagateMove, PropagateSwap>();
+    test_allocation_impl<ownership::data_pool<int>, PropagateCopy, PropagateMove, PropagateSwap>();
   }
 
   template<class Sharing, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>

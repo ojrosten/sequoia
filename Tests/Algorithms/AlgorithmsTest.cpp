@@ -11,7 +11,7 @@
 #include "Algorithms.hpp"
 #include "ProtectiveWrapper.hpp"
 #include "Edge.hpp"
-#include "Ownership.hpp"
+#include "Handler.hpp"
 
 #include <array>
 
@@ -127,7 +127,7 @@ namespace sequoia
     void algorithms_test::sort_partial_edge()
     {
       struct null_weight{};
-      using edge = maths::partial_edge<null_weight, data_sharing::independent, null_weight>;
+      using edge = maths::partial_edge<null_weight, ownership::independent, null_weight>;
       constexpr std::array<edge, 3> a{edge{1}, edge{2}, edge{0}};
       constexpr auto b = sort(a, [](const edge& lhs, const edge& rhs) { return lhs.target_node() < rhs.target_node();});
 
@@ -274,7 +274,7 @@ namespace sequoia
     void algorithms_test::lower_bound_partial_edge()
     {
       struct null_weight{};
-      using edge = maths::partial_edge<null_weight, data_sharing::independent, null_weight>;
+      using edge = maths::partial_edge<null_weight, ownership::independent, null_weight>;
       constexpr std::array<edge, 3> a{edge{0}, edge{2}, edge{3}};
       constexpr auto e{*lower_bound(a.begin(), a.end(), edge{1}, [](const edge& lhs, const edge& rhs) {
             return lhs.target_node() < rhs.target_node();

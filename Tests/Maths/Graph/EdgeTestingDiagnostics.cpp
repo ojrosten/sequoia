@@ -7,7 +7,7 @@
 
 #include "EdgeTestingDiagnostics.hpp"
 
-#include "Ownership.hpp"
+#include "Handler.hpp"
 #include "ProtectiveWrapper.hpp"
 
 namespace sequoia::testing
@@ -40,7 +40,7 @@ namespace sequoia::testing
   void test_edge_false_positives::test_plain_partial_edge()
   {
     using namespace maths;
-    using namespace data_sharing;      
+    using namespace ownership;      
     using edge_t = partial_edge<null_weight, independent, utilities::protective_wrapper<null_weight>>;
 
     check_equality(LINE("Differing target indices"), edge_t{0}, edge_t{1});
@@ -53,7 +53,7 @@ namespace sequoia::testing
   void test_edge_false_positives::test_partial_edge_indep_weight()
   {
     using namespace maths;
-    using namespace data_sharing;
+    using namespace ownership;
 
     using edge_t = partial_edge<int, independent, utilities::protective_wrapper<int>>;
 
@@ -68,7 +68,7 @@ namespace sequoia::testing
   void test_edge_false_positives::test_partial_edge_shared_weight()
   {
     using namespace maths;
-    using namespace data_sharing;
+    using namespace ownership;
 
     using edge_t = partial_edge<int, shared, utilities::protective_wrapper<int>>;
 
@@ -83,7 +83,7 @@ namespace sequoia::testing
   void test_edge_false_positives::test_plain_embedded_partial_edge()
   {
     using namespace maths;
-    using namespace data_sharing;
+    using namespace ownership;
 
     using edge_t = partial_edge<int, shared, utilities::protective_wrapper<int>>;
 
@@ -98,7 +98,7 @@ namespace sequoia::testing
   void test_edge_false_positives::test_embedded_partial_edge_indep_weight()
   {
     using namespace maths;
-    using namespace data_sharing;
+    using namespace ownership;
 
     using edge_t = embedded_partial_edge<double, independent, utilities::protective_wrapper<double>>;
 
@@ -124,7 +124,7 @@ namespace sequoia::testing
   void test_edge_false_positives::test_embedded_partial_edge_shared_weight()
   {
     using namespace maths;
-    using namespace data_sharing;
+    using namespace ownership;
 
      using edge_t = embedded_partial_edge<double, independent, utilities::protective_wrapper<double>>;
 
@@ -150,7 +150,7 @@ namespace sequoia::testing
   void test_edge_false_positives::test_plain_edge()
   {
     using namespace maths;
-    using namespace data_sharing;
+    using namespace ownership;
 
     using edge_t = edge<null_weight, utilities::protective_wrapper<null_weight>>;
 
@@ -168,7 +168,7 @@ namespace sequoia::testing
   void test_edge_false_positives::test_weighted_edge()
   {
     using namespace maths;
-    using namespace data_sharing;
+    using namespace ownership;
 
     using edge_t = edge<double, utilities::protective_wrapper<double>>;
 
@@ -195,7 +195,7 @@ namespace sequoia::testing
   void test_edge_false_positives::test_plain_embedded_edge()
   {
     using namespace maths;
-    using namespace data_sharing;
+    using namespace ownership;
 
     using edge_t = embedded_edge<null_weight, independent, utilities::protective_wrapper<null_weight>>;
 
@@ -222,7 +222,7 @@ namespace sequoia::testing
   void test_edge_false_positives::test_embedded_edge_indep_weight()
   {
     using namespace maths;
-    using namespace data_sharing;
+    using namespace ownership;
 
     using edge_t = embedded_edge<double, independent, utilities::protective_wrapper<double>>;
 
@@ -237,7 +237,7 @@ namespace sequoia::testing
   void test_edge_false_positives::test_embedded_edge_shared_weight()
   {
     using namespace maths;
-    using namespace data_sharing;
+    using namespace ownership;
 
     using edge_t = embedded_edge<double, shared, utilities::protective_wrapper<double>>;
 

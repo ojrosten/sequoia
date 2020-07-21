@@ -27,16 +27,16 @@ namespace sequoia::testing
 
     void test_static_storage();
 
-    template<class T, class Ownership, bool ThrowOnRangeError>
+    template<class T, class Handler, bool ThrowOnRangeError>
     void test_contiguous_capacity();
 
-    template<class T, class Ownership, bool ThrowOnRangeError>
+    template<class T, class Handler, bool ThrowOnRangeError>
     void test_bucketed_capacity();
       
-    template<class Traits, template<class> class Ownership, template<class> class ReferencePolicy>
+    template<class Traits, template<class> class Handler, template<class> class ReferencePolicy>
     void test_generic_iterator_properties();
       
-    template<template<class> class Ownership> void test_iterators();
+    template<template<class> class Handler> void test_iterators();
 
     struct traits
     {

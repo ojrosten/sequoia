@@ -9,7 +9,7 @@
 
 #include "EdgeTestingUtilities.hpp"
 
-#include "Ownership.hpp"
+#include "Handler.hpp"
 #include "ProtectiveWrapper.hpp"
 
 #include <complex>
@@ -48,7 +48,7 @@ namespace sequoia
     void test_edges::test_plain_partial_edge()
     {
       using namespace maths;
-      using namespace data_sharing;
+      using namespace ownership;
 
       using edge_t = partial_edge<null_weight, independent, utilities::protective_wrapper<null_weight>>;
       static_assert(sizeof(std::size_t) == sizeof(edge_t));
@@ -71,7 +71,7 @@ namespace sequoia
     void test_edges::test_partial_edge_shared_weight()
     {
       using namespace maths;
-      using namespace data_sharing;
+      using namespace ownership;
 
       using edge_t = partial_edge<int, shared, utilities::protective_wrapper<int>>;
 
@@ -139,7 +139,7 @@ namespace sequoia
     void test_edges::test_partial_edge_indep_weight()
     {
       using namespace maths;
-      using namespace data_sharing;
+      using namespace ownership;
 
       using edge_t = partial_edge<int, independent, utilities::protective_wrapper<int>>;
       static_assert(2 * sizeof(std::size_t) == sizeof(edge_t));
@@ -167,7 +167,7 @@ namespace sequoia
     void test_edges::test_plain_embedded_partial_edge()
     {
       using namespace maths;
-      using namespace data_sharing;     
+      using namespace ownership;     
       
       using edge_t = embedded_partial_edge<null_weight, independent, utilities::protective_wrapper<null_weight>>;
       static_assert(2*sizeof(std::size_t) == sizeof(edge_t));
@@ -194,7 +194,7 @@ namespace sequoia
     void test_edges::test_embedded_partial_edge_indep_weight()
     {
       using namespace maths;
-      using namespace data_sharing;
+      using namespace ownership;
 
       using edge_t = embedded_partial_edge<double, independent, utilities::protective_wrapper<double>>;
       static_assert(2*sizeof(std::size_t) + sizeof(double) == sizeof(edge_t));
@@ -220,7 +220,7 @@ namespace sequoia
     void test_edges::test_embedded_partial_edge_shared_weight()
     {
       using namespace maths;
-      using namespace data_sharing;
+      using namespace ownership;
 
       using edge_t = embedded_partial_edge<double, shared, utilities::protective_wrapper<double>>;
       
@@ -349,7 +349,7 @@ namespace sequoia
     void test_edges::test_plain_embedded_edge()
     {
       using namespace maths;
-      using namespace data_sharing;
+      using namespace ownership;
 
       using edge_t = embedded_edge<null_weight, independent, utilities::protective_wrapper<null_weight>>;
       check_equality(LINE(""), sizeof(edge_t), 3*sizeof(std::size_t));
@@ -385,7 +385,7 @@ namespace sequoia
     void test_edges::test_embedded_edge_indep_weight()
     {
       using namespace maths;
-      using namespace data_sharing;
+      using namespace ownership;
 
       using edge_t = embedded_edge<double, independent, utilities::protective_wrapper<double>>;
       check_equality(LINE(""), sizeof(edge_t), 3*sizeof(std::size_t) + sizeof(double));
@@ -416,7 +416,7 @@ namespace sequoia
     void test_edges::test_embedded_edge_shared_weight()
     {
       using namespace maths;
-      using namespace data_sharing;
+      using namespace ownership;
 
       using edge_t = embedded_edge<double, shared, utilities::protective_wrapper<double>>;
 

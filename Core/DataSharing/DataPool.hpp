@@ -12,7 +12,7 @@
 
  */
 
-#include "Ownership.hpp"
+#include "Handlers.hpp"
 
 #include "Utilities/ProtectiveWrapper.hpp"
 #include "Utilities/Iterator.hpp"
@@ -21,7 +21,7 @@
 #include <memory>
 #include <algorithm>
 
-namespace sequoia::data_sharing
+namespace sequoia::ownership
 {
   template<class T> class spawner
   {

@@ -392,7 +392,7 @@ namespace sequoia::testing
     >
     void graph_storage_tests()
     {
-      using namespace data_sharing;
+      using namespace ownership;
 
       using testuu = TemplateTestClass<GraphType, EdgeWeight, NodeWeight, spawner<EdgeWeight>, spawner<NodeWeight>, EdgeStorageTraits, NodeStorageTraits>;
 

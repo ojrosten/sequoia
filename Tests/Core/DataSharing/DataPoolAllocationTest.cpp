@@ -24,7 +24,7 @@ namespace sequoia::testing
   template<bool PropagateMove, bool PropagateSwap>
   void data_pool_allocation_test::test_allocation()
   {
-    using namespace data_sharing;
+    using namespace ownership;
     using pool_t = data_pool<int, shared_counting_allocator<int, true, PropagateMove, PropagateSwap>>;
     using prediction_t = typename weak_equivalence_checker<pool_t>::prediction_type;
 
