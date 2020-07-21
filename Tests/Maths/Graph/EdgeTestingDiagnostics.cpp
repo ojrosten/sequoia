@@ -7,7 +7,7 @@
 
 #include "EdgeTestingDiagnostics.hpp"
 
-#include "Handler.hpp"
+#include "Handlers.hpp"
 #include "ProtectiveWrapper.hpp"
 
 namespace sequoia::testing

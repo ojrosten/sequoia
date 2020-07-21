@@ -9,7 +9,7 @@
 
 #include "EdgeTestingUtilities.hpp"
 
-#include "Handler.hpp"
+#include "Handlers.hpp"
 #include "ProtectiveWrapper.hpp"
 
 #include <complex>
