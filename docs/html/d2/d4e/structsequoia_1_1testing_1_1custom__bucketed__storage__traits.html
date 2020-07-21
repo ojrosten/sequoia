@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: sequoia::testing::custom_bucketed_storage_traits&lt; T, SharingPolicy, PropagateCopy, PropagateMove, PropagateSwap &gt; Struct Template Reference</title>
+<title>Sequoia: sequoia::testing::custom_bucketed_storage_traits&lt; T, Handler, PropagateCopy, PropagateMove, PropagateSwap &gt; Struct Template Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -70,34 +70,34 @@ $(function() {
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="../../d8/dad/structsequoia_1_1testing_1_1custom__bucketed__storage__traits-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">sequoia::testing::custom_bucketed_storage_traits&lt; T, SharingPolicy, PropagateCopy, PropagateMove, PropagateSwap &gt; Struct Template Reference</div>  </div>
+<div class="title">sequoia::testing::custom_bucketed_storage_traits&lt; T, Handler, PropagateCopy, PropagateMove, PropagateSwap &gt; Struct Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a65fb8b88ad96e06ef0afb35384ab26d6"><td class="memTemplParams" colspan="2"><a id="a65fb8b88ad96e06ef0afb35384ab26d6"></a>
+<tr class="memitem:a146e9a94635cae0f0ec49b826d8fa5a4"><td class="memTemplParams" colspan="2"><a id="a146e9a94635cae0f0ec49b826d8fa5a4"></a>
 template&lt;class S &gt; </td></tr>
-<tr class="memitem:a65fb8b88ad96e06ef0afb35384ab26d6"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>allocator_template</b> = <a class="el" href="../../d7/db0/classsequoia_1_1testing_1_1shared__counting__allocator.html">shared_counting_allocator</a>&lt; S, PropagateCopy, PropagateMove, PropagateSwap &gt;</td></tr>
-<tr class="separator:a65fb8b88ad96e06ef0afb35384ab26d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a44070ccd80031c1f2addca95fe035bae"><td class="memTemplParams" colspan="2"><a id="a44070ccd80031c1f2addca95fe035bae"></a>
+<tr class="memitem:a146e9a94635cae0f0ec49b826d8fa5a4"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>allocator_template</b> = <a class="el" href="../../d7/db0/classsequoia_1_1testing_1_1shared__counting__allocator.html">shared_counting_allocator</a>&lt; S, PropagateCopy, PropagateMove, PropagateSwap &gt;</td></tr>
+<tr class="separator:a146e9a94635cae0f0ec49b826d8fa5a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a662e271ace373cea0d8e3cc932a5ca44"><td class="memTemplParams" colspan="2"><a id="a662e271ace373cea0d8e3cc932a5ca44"></a>
 template&lt;class S &gt; </td></tr>
-<tr class="memitem:a44070ccd80031c1f2addca95fe035bae"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>allocator_type</b> = std::scoped_allocator_adaptor&lt; <a class="el" href="../../d7/db0/classsequoia_1_1testing_1_1shared__counting__allocator.html">allocator_template</a>&lt; S &gt;, <a class="el" href="../../d7/db0/classsequoia_1_1testing_1_1shared__counting__allocator.html">allocator_template</a>&lt; typename S::value_type &gt; &gt;</td></tr>
-<tr class="separator:a44070ccd80031c1f2addca95fe035bae"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a96d3c1d8b55938dd60e555918d5ec730"><td class="memTemplParams" colspan="2"><a id="a96d3c1d8b55938dd60e555918d5ec730"></a>
+<tr class="memitem:a662e271ace373cea0d8e3cc932a5ca44"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>allocator_type</b> = std::scoped_allocator_adaptor&lt; <a class="el" href="../../d7/db0/classsequoia_1_1testing_1_1shared__counting__allocator.html">allocator_template</a>&lt; S &gt;, <a class="el" href="../../d7/db0/classsequoia_1_1testing_1_1shared__counting__allocator.html">allocator_template</a>&lt; typename S::value_type &gt; &gt;</td></tr>
+<tr class="separator:a662e271ace373cea0d8e3cc932a5ca44"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d3bf64395d04f93c2e585274cb40c72"><td class="memTemplParams" colspan="2"><a id="a3d3bf64395d04f93c2e585274cb40c72"></a>
 template&lt;class S &gt; </td></tr>
-<tr class="memitem:a96d3c1d8b55938dd60e555918d5ec730"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>container_type</b> = std::vector&lt; S, <a class="el" href="../../d7/db0/classsequoia_1_1testing_1_1shared__counting__allocator.html">allocator_template</a>&lt; S &gt; &gt;</td></tr>
-<tr class="separator:a96d3c1d8b55938dd60e555918d5ec730"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2174c78ec4f172d94992b8a48909a9f5"><td class="memTemplParams" colspan="2"><a id="a2174c78ec4f172d94992b8a48909a9f5"></a>
+<tr class="memitem:a3d3bf64395d04f93c2e585274cb40c72"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>container_type</b> = std::vector&lt; S, <a class="el" href="../../d7/db0/classsequoia_1_1testing_1_1shared__counting__allocator.html">allocator_template</a>&lt; S &gt; &gt;</td></tr>
+<tr class="separator:a3d3bf64395d04f93c2e585274cb40c72"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af67c4173f1c7ac5453c025d0c10e5d74"><td class="memTemplParams" colspan="2"><a id="af67c4173f1c7ac5453c025d0c10e5d74"></a>
 template&lt;class S &gt; </td></tr>
-<tr class="memitem:a2174c78ec4f172d94992b8a48909a9f5"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>buckets_type</b> = std::vector&lt; container_type&lt; S &gt;, allocator_type&lt; container_type&lt; S &gt; &gt;&gt;</td></tr>
-<tr class="separator:a2174c78ec4f172d94992b8a48909a9f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af67c4173f1c7ac5453c025d0c10e5d74"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><b>buckets_type</b> = std::vector&lt; container_type&lt; S &gt;, allocator_type&lt; container_type&lt; S &gt; &gt;&gt;</td></tr>
+<tr class="separator:af67c4173f1c7ac5453c025d0c10e5d74"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr class="memitem:a104b2208b2f239bbb90678e0f720141d"><td class="memItemLeft" align="right" valign="top"><a id="a104b2208b2f239bbb90678e0f720141d"></a>
+<tr class="memitem:a40ca745aade3b211884f671eb62da6c5"><td class="memItemLeft" align="right" valign="top"><a id="a40ca745aade3b211884f671eb62da6c5"></a>
 constexpr static bool&#160;</td><td class="memItemRight" valign="bottom"><b>throw_on_range_error</b> {true}</td></tr>
-<tr class="separator:a104b2208b2f239bbb90678e0f720141d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="separator:a40ca745aade3b211884f671eb62da6c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>/Users/Claire/Dropbox/Sequoia/Tests/Core/DataStructures/<a class="el" href="../../d7/dd6/PartitionedDataAllocationTestingUtilities_8hpp_source.html">PartitionedDataAllocationTestingUtilities.hpp</a></li>

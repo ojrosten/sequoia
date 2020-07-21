@@ -135,14 +135,14 @@ $(function() {
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keyword">using</span> edge_type = <span class="keyword">typename</span> <a class="code" href="../../da/d14/classsequoia_1_1maths_1_1partial__edge.html">edge_type_gen::edge_type</a>;</div>
 <div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    constexpr <span class="keyword">static</span> <span class="keywordtype">bool</span> shared_edge_v{edge_type_gen::shared_edge_v};</div>
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        </div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keyword">using</span> edge_storage_sharing_policy</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;      = <span class="keyword">typename</span> <a class="code" href="../../d6/dcb/structsequoia_1_1maths_1_1graph__impl_1_1shared__edge__v__to__policy.html">shared_edge_v_to_policy&lt;shared_edge_v&gt;::template</a> edge_storage_sharing_policy&lt;edge_type&gt;;</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keyword">using</span> edge_storage_handler</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;      = <span class="keyword">typename</span> <a class="code" href="../../d6/dcb/structsequoia_1_1maths_1_1graph__impl_1_1shared__edge__v__to__policy.html">shared_edge_v_to_policy&lt;shared_edge_v&gt;::template</a> edge_storage_handler&lt;edge_type&gt;;</div>
 <div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keyword">using</span> edge_storage_traits</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;      = <span class="keyword">typename</span> EdgeStorageTraits::template traits_type&lt;edge_type, edge_storage_sharing_policy&gt;;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;      = <span class="keyword">typename</span> EdgeStorageTraits::template traits_type&lt;edge_type, edge_storage_handler&gt;;</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="keyword">using</span> edge_storage_type</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;      = <span class="keyword">typename</span> EdgeStorageTraits::template storage_type&lt;edge_type, edge_storage_sharing_policy, edge_storage_traits&gt;;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;      = <span class="keyword">typename</span> EdgeStorageTraits::template storage_type&lt;edge_type, edge_storage_handler, edge_storage_traits&gt;;</div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    <span class="keyword">using</span> edge_allocator_type = <span class="keyword">typename</span> edge_storage_type::allocator_type;</div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>

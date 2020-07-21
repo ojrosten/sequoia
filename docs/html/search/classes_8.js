@@ -3,7 +3,7 @@ var searchData=
   ['identity_940',['identity',['../dd/dac/structsequoia_1_1testing_1_1identity.html',1,'sequoia::testing']]],
   ['identity_5fdereference_5fpolicy_941',['identity_dereference_policy',['../da/deb/structsequoia_1_1utilities_1_1identity__dereference__policy.html',1,'sequoia::utilities']]],
   ['identity_5ftransform_942',['identity_transform',['../d4/dc1/structsequoia_1_1utilities_1_1identity__transform.html',1,'sequoia::utilities']]],
-  ['independent_943',['independent',['../d3/d33/structsequoia_1_1data__sharing_1_1independent.html',1,'sequoia::data_sharing']]],
+  ['independent_943',['independent',['../de/db9/structsequoia_1_1ownership_1_1independent.html',1,'sequoia::ownership']]],
   ['independent_5fbucketed_5fedge_5fstorage_5ftraits_944',['independent_bucketed_edge_storage_traits',['../d3/d59/structsequoia_1_1testing_1_1independent__bucketed__edge__storage__traits.html',1,'sequoia::testing']]],
   ['independent_5fcontiguous_5fedge_5fstorage_5ftraits_945',['independent_contiguous_edge_storage_traits',['../dd/d29/structsequoia_1_1testing_1_1independent__contiguous__edge__storage__traits.html',1,'sequoia::testing']]],
   ['individual_5fallocation_5fpredictions_946',['individual_allocation_predictions',['../d3/d2d/structsequoia_1_1testing_1_1individual__allocation__predictions.html',1,'sequoia::testing']]],

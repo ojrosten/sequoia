@@ -1,8 +1,6 @@
 var searchData=
 [
-  ['semanticscheckersdetails_2ehpp_1294',['SemanticsCheckersDetails.hpp',['../df/dd3/SemanticsCheckersDetails_8hpp.html',1,'']]],
-  ['sharingpolicies_2ehpp_1295',['SharingPolicies.hpp',['../d6/dcf/SharingPolicies_8hpp.html',1,'']]],
-  ['sharingpolicytraits_2ehpp_1296',['SharingPolicyTraits.hpp',['../d4/d7e/SharingPolicyTraits_8hpp.html',1,'']]],
+  ['semanticscheckersdetails_2ehpp_1296',['SemanticsCheckersDetails.hpp',['../df/dd3/SemanticsCheckersDetails_8hpp.html',1,'']]],
   ['staticgraph_2ehpp_1297',['StaticGraph.hpp',['../d5/d8a/StaticGraph_8hpp.html',1,'']]],
   ['staticgraphimpl_2ehpp_1298',['StaticGraphImpl.hpp',['../dc/d49/StaticGraphImpl_8hpp.html',1,'']]],
   ['staticgraphtraversaldetails_2ehpp_1299',['StaticGraphTraversalDetails.hpp',['../d5/d58/StaticGraphTraversalDetails_8hpp.html',1,'']]],

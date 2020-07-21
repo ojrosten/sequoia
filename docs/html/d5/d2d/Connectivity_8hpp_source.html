@@ -82,7 +82,7 @@ $(function() {
 <div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../d6/d07/Algorithms_8hpp.html">Algorithms.hpp</a>&quot;</span></div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../d0/d81/TypeTraits_8hpp.html">TypeTraits.hpp</a>&quot;</span></div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../d0/dbb/AssignmentUtilities_8hpp.html">AssignmentUtilities.hpp</a>&quot;</span></div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../d4/d7e/SharingPolicyTraits_8hpp.html">SharingPolicyTraits.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="../../d5/d43/HandlerTraits_8hpp.html">HandlerTraits.hpp</a>&quot;</span></div>
 <div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;<span class="preprocessor">#include &lt;limits&gt;</span></div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#include &lt;set&gt;</span></div>
@@ -92,10 +92,10 @@ $(function() {
 <div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;{</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;  <span class="keyword">namespace </span>data_structures</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;  {</div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">class</span>, sharing_policy, <span class="keyword">class</span>&gt; <span class="keyword">class </span>bucketed_storage;</div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">class</span>, sharing_policy&gt; <span class="keyword">struct </span>bucketed_storage_traits;</div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">class</span>, sharing_policy, <span class="keyword">class</span>&gt; <span class="keyword">class </span>partitioned_sequence;</div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">class</span>, sharing_policy&gt; <span class="keyword">struct </span>partitioned_sequence_traits;</div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">class</span>, handler, <span class="keyword">class</span>&gt; <span class="keyword">class </span>bucketed_storage;</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">class</span>, handler&gt; <span class="keyword">struct </span>bucketed_storage_traits;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">class</span>, handler, <span class="keyword">class</span>&gt; <span class="keyword">class </span>partitioned_sequence;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">class</span>, handler&gt; <span class="keyword">struct </span>partitioned_sequence_traits;</div>
 <div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">class</span>, std::<span class="keywordtype">size_t</span>, std::<span class="keywordtype">size_t</span>, <span class="keyword">class</span>&gt; <span class="keyword">class </span>static_partitioned_sequence;</div>
 <div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;    <span class="keyword">class </span>static_data_base;</div>
 <div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;  }</div>
@@ -1215,8 +1215,8 @@ $(function() {
 <div class="line"><a name="l01150"></a><span class="lineno"> 1150</span>&#160;      constexpr <span class="keywordtype">void</span> process_edges(indirect_edge_init_type, init_t edges)</div>
 <div class="line"><a name="l01151"></a><span class="lineno"> 1151</span>&#160;      {</div>
 <div class="line"><a name="l01152"></a><span class="lineno"> 1152</span>&#160;        <span class="keyword">using namespace </span>data_structures;</div>
-<div class="line"><a name="l01153"></a><span class="lineno"> 1153</span>&#160;        <span class="keyword">using</span> traits_t = partitioned_sequence_traits&lt;edge_init_type, data_sharing::independent&lt;edge_init_type&gt;&gt;;</div>
-<div class="line"><a name="l01154"></a><span class="lineno"> 1154</span>&#160;        partitioned_sequence&lt;edge_init_type, data_sharing::independent&lt;edge_init_type&gt;, traits_t&gt; edgesForChecking{edges};</div>
+<div class="line"><a name="l01153"></a><span class="lineno"> 1153</span>&#160;        <span class="keyword">using</span> traits_t = partitioned_sequence_traits&lt;edge_init_type, ownership::independent&lt;edge_init_type&gt;&gt;;</div>
+<div class="line"><a name="l01154"></a><span class="lineno"> 1154</span>&#160;        partitioned_sequence&lt;edge_init_type, ownership::independent&lt;edge_init_type&gt;, traits_t&gt; edgesForChecking{edges};</div>
 <div class="line"><a name="l01155"></a><span class="lineno"> 1155</span>&#160;        process_edges(edgesForChecking);</div>
 <div class="line"><a name="l01156"></a><span class="lineno"> 1156</span>&#160;      }</div>
 <div class="line"><a name="l01157"></a><span class="lineno"> 1157</span>&#160; </div>
@@ -1823,10 +1823,10 @@ $(function() {
 <div class="ttc" id="aGraphTraits_8hpp_html"><div class="ttname"><a href="../../d9/d96/GraphTraits_8hpp.html">GraphTraits.hpp</a></div><div class="ttdoc">Traits and Concepts for graphs.</div></div>
 <div class="ttc" id="astructsequoia_1_1maths_1_1partitions__allocator__tag_html"><div class="ttname"><a href="../../d4/dd4/structsequoia_1_1maths_1_1partitions__allocator__tag.html">sequoia::maths::partitions_allocator_tag</a></div><div class="ttdef"><b>Definition:</b> Connectivity.hpp:40</div></div>
 <div class="ttc" id="astructsequoia_1_1dependent__false_html"><div class="ttname"><a href="../../dd/ded/structsequoia_1_1dependent__false.html">sequoia::dependent_false</a></div><div class="ttdef"><b>Definition:</b> TypeTraits.hpp:136</div></div>
-<div class="ttc" id="aSharingPolicyTraits_8hpp_html"><div class="ttname"><a href="../../d4/d7e/SharingPolicyTraits_8hpp.html">SharingPolicyTraits.hpp</a></div><div class="ttdoc">Traits and Concepts for Sharing Policies.</div></div>
 <div class="ttc" id="aAlgorithms_8hpp_html"><div class="ttname"><a href="../../d6/d07/Algorithms_8hpp.html">Algorithms.hpp</a></div><div class="ttdoc">A collection of constexpr algorithms.</div></div>
 <div class="ttc" id="aDataStructuresTypeTraits_8hpp_html"><div class="ttname"><a href="../../de/d27/DataStructuresTypeTraits_8hpp.html">DataStructuresTypeTraits.hpp</a></div><div class="ttdoc">Traits and concepts for data structures.</div></div>
 <div class="ttc" id="aTypeTraits_8hpp_html"><div class="ttname"><a href="../../d0/d81/TypeTraits_8hpp.html">TypeTraits.hpp</a></div><div class="ttdoc">Traits added as required by other components of the library.</div></div>
+<div class="ttc" id="aHandlerTraits_8hpp_html"><div class="ttname"><a href="../../d5/d43/HandlerTraits_8hpp.html">HandlerTraits.hpp</a></div><div class="ttdoc">Traits and Concepts for Sharing Policies.</div></div>
 <div class="ttc" id="aGraphDetails_8hpp_html"><div class="ttname"><a href="../../d3/d76/GraphDetails_8hpp.html">GraphDetails.hpp</a></div><div class="ttdoc">Meta-programming elements for graph implementation.</div></div>
 <div class="ttc" id="astructsequoia_1_1impl_1_1assignment__helper_html"><div class="ttname"><a href="../../d6/d69/structsequoia_1_1impl_1_1assignment__helper.html">sequoia::impl::assignment_helper</a></div><div class="ttdef"><b>Definition:</b> AssignmentUtilities.hpp:37</div></div>
 <div class="ttc" id="astructsequoia_1_1maths_1_1inversion__constant_html"><div class="ttname"><a href="../../d8/dc0/structsequoia_1_1maths_1_1inversion__constant.html">sequoia::maths::inversion_constant</a></div><div class="ttdef"><b>Definition:</b> Edge.hpp:360</div></div>

@@ -91,15 +91,15 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_type_gen</b> = 
 <tr class="memitem:ada4f0120b281cf0b0bd386a4c2753887"><td class="memItemLeft" align="right" valign="top"><a id="ada4f0120b281cf0b0bd386a4c2753887"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_type</b> = typename <a class="el" href="../../da/d14/classsequoia_1_1maths_1_1partial__edge.html">edge_type_gen::edge_type</a></td></tr>
 <tr class="separator:ada4f0120b281cf0b0bd386a4c2753887"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a21c44b080625b3a66ff6a29d971b7d61"><td class="memItemLeft" align="right" valign="top"><a id="a21c44b080625b3a66ff6a29d971b7d61"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_storage_sharing_policy</b> = typename <a class="el" href="../../d6/dcb/structsequoia_1_1maths_1_1graph__impl_1_1shared__edge__v__to__policy.html">shared_edge_v_to_policy</a>&lt; shared_edge_v &gt;::template edge_storage_sharing_policy&lt; edge_type &gt;</td></tr>
-<tr class="separator:a21c44b080625b3a66ff6a29d971b7d61"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a677d4417c794e60f276497861e5c7a94"><td class="memItemLeft" align="right" valign="top"><a id="a677d4417c794e60f276497861e5c7a94"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_storage_traits</b> = typename EdgeStorageTraits::template traits_type&lt; edge_type, edge_storage_sharing_policy &gt;</td></tr>
-<tr class="separator:a677d4417c794e60f276497861e5c7a94"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a86778e60d53a46986030741c9fbf221d"><td class="memItemLeft" align="right" valign="top"><a id="a86778e60d53a46986030741c9fbf221d"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_storage_type</b> = typename EdgeStorageTraits::template storage_type&lt; edge_type, edge_storage_sharing_policy, edge_storage_traits &gt;</td></tr>
-<tr class="separator:a86778e60d53a46986030741c9fbf221d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae57ab9f8d286017c3f122c159f2f5d74"><td class="memItemLeft" align="right" valign="top"><a id="ae57ab9f8d286017c3f122c159f2f5d74"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_storage_handler</b> = typename <a class="el" href="../../d6/dcb/structsequoia_1_1maths_1_1graph__impl_1_1shared__edge__v__to__policy.html">shared_edge_v_to_policy</a>&lt; shared_edge_v &gt;::template edge_storage_handler&lt; edge_type &gt;</td></tr>
+<tr class="separator:ae57ab9f8d286017c3f122c159f2f5d74"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada4bce41c84443849b1323abe5161609"><td class="memItemLeft" align="right" valign="top"><a id="ada4bce41c84443849b1323abe5161609"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_storage_traits</b> = typename EdgeStorageTraits::template traits_type&lt; edge_type, edge_storage_handler &gt;</td></tr>
+<tr class="separator:ada4bce41c84443849b1323abe5161609"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20cc46a74a2bf6f60a52c1ca685d6761"><td class="memItemLeft" align="right" valign="top"><a id="a20cc46a74a2bf6f60a52c1ca685d6761"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_storage_type</b> = typename EdgeStorageTraits::template storage_type&lt; edge_type, edge_storage_handler, edge_storage_traits &gt;</td></tr>
+<tr class="separator:a20cc46a74a2bf6f60a52c1ca685d6761"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab77446ef0955f25cea24a981266e3a45"><td class="memItemLeft" align="right" valign="top"><a id="ab77446ef0955f25cea24a981266e3a45"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>edge_allocator_type</b> = typename edge_storage_type::allocator_type</td></tr>
 <tr class="separator:ab77446ef0955f25cea24a981266e3a45"><td class="memSeparator" colspan="2">&#160;</td></tr>

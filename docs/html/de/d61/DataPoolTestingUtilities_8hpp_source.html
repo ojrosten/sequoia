@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.18"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Tests/Core/DataSharing/DataPoolTestingUtilities.hpp Source File</title>
+<title>Sequoia: /Users/Claire/Dropbox/Sequoia/Tests/Core/Ownership/DataPoolTestingUtilities.hpp Source File</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -61,7 +61,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="../../dir_33c78a012c8d08979f57a54a07694c46.html">Tests</a></li><li class="navelem"><a class="el" href="../../dir_bb8c3f2b84935750cb759437463c9cbd.html">Core</a></li><li class="navelem"><a class="el" href="../../dir_20d433a64cf4e23227d0505d0c5a4058.html">DataSharing</a></li>  </ul>
+<li class="navelem"><a class="el" href="../../dir_33c78a012c8d08979f57a54a07694c46.html">Tests</a></li><li class="navelem"><a class="el" href="../../dir_bb8c3f2b84935750cb759437463c9cbd.html">Core</a></li><li class="navelem"><a class="el" href="../../dir_024c1593ed8161af27d6a67004158fe1.html">Ownership</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -81,13 +81,13 @@ $(function() {
 <div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">namespace </span>sequoia::testing</div>
 <div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;{</div>
 <div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> Allocator&gt;</div>
-<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="../../d7/d3f/structsequoia_1_1testing_1_1weak__equivalence__checker_3_01data__sharing_1_1data__pool_3_01T_00_01Allocator_01_4_01_4.html">   15</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../df/dff/structsequoia_1_1testing_1_1weak__equivalence__checker.html">weak_equivalence_checker</a>&lt;data_sharing::data_pool&lt;T, Allocator&gt;&gt;</div>
+<div class="line"><a name="l00015"></a><span class="lineno"><a class="line" href="../../d0/d79/structsequoia_1_1testing_1_1weak__equivalence__checker_3_01ownership_1_1data__pool_3_01T_00_01Allocator_01_4_01_4.html">   15</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../df/dff/structsequoia_1_1testing_1_1weak__equivalence__checker.html">weak_equivalence_checker</a>&lt;ownership::data_pool&lt;T, Allocator&gt;&gt;</div>
 <div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;  {</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keyword">using</span> <a class="code" href="../../d8/d6e/classsequoia_1_1data__sharing_1_1data__pool.html">type</a> = <a class="code" href="../../d8/d6e/classsequoia_1_1data__sharing_1_1data__pool.html">data_sharing::data_pool&lt;T, Allocator&gt;</a>;</div>
+<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    <span class="keyword">using</span> <a class="code" href="../../d3/d2a/classsequoia_1_1ownership_1_1data__pool.html">type</a> = <a class="code" href="../../d3/d2a/classsequoia_1_1ownership_1_1data__pool.html">ownership::data_pool&lt;T, Allocator&gt;</a>;</div>
 <div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;    <span class="keyword">using</span> prediction_type = std::initializer_list&lt;std::pair&lt;T, long&gt;&gt;;</div>
 <div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    </div>
 <div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <span class="keyword">template</span>&lt;test_mode Mode&gt;</div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> check(std::string_view description, <a class="code" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger&lt;Mode&gt;</a>&amp; logger, <span class="keyword">const</span> <a class="code" href="../../d8/d6e/classsequoia_1_1data__sharing_1_1data__pool.html">type</a>&amp; pool, prediction_type prediction)</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <span class="keyword">static</span> <span class="keywordtype">void</span> check(std::string_view description, <a class="code" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger&lt;Mode&gt;</a>&amp; logger, <span class="keyword">const</span> <a class="code" href="../../d3/d2a/classsequoia_1_1ownership_1_1data__pool.html">type</a>&amp; pool, prediction_type prediction)</div>
 <div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    {</div>
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;      check_equality(<a class="code" href="../../d7/d96/Format_8cpp.html#a3610f5124224711b4b8c8c480d14f76d">append_indented</a>(description, <span class="stringliteral">&quot;empty&quot;</span>), logger, pool.empty(), prediction.size() == 0);</div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;      check_equality(<a class="code" href="../../d7/d96/Format_8cpp.html#a3610f5124224711b4b8c8c480d14f76d">append_indented</a>(description, <span class="stringliteral">&quot;size&quot;</span>), logger, pool.size(), prediction.size());</div>
@@ -100,7 +100,7 @@ $(function() {
 <div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;  };</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aclasssequoia_1_1data__sharing_1_1data__pool_html"><div class="ttname"><a href="../../d8/d6e/classsequoia_1_1data__sharing_1_1data__pool.html">sequoia::data_sharing::data_pool</a></div><div class="ttdef"><b>Definition:</b> DataPool.hpp:78</div></div>
+<div class="ttc" id="aclasssequoia_1_1ownership_1_1data__pool_html"><div class="ttname"><a href="../../d3/d2a/classsequoia_1_1ownership_1_1data__pool.html">sequoia::ownership::data_pool</a></div><div class="ttdef"><b>Definition:</b> DataPool.hpp:78</div></div>
 <div class="ttc" id="aFormat_8cpp_html_a3610f5124224711b4b8c8c480d14f76d"><div class="ttname"><a href="../../d7/d96/Format_8cpp.html#a3610f5124224711b4b8c8c480d14f76d">sequoia::testing::append_indented</a></div><div class="ttdeci">std::string &amp; append_indented(std::string &amp;s1, std::string_view s2, std::string_view indentation)</div><div class="ttdef"><b>Definition:</b> Format.cpp:26</div></div>
 <div class="ttc" id="astructsequoia_1_1testing_1_1weak__equivalence__checker_html"><div class="ttname"><a href="../../df/dff/structsequoia_1_1testing_1_1weak__equivalence__checker.html">sequoia::testing::weak_equivalence_checker</a></div><div class="ttdoc">class template, specializations of which implement comparision of two weakly equivalent types;</div><div class="ttdef"><b>Definition:</b> FreeCheckers.hpp:97</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1test__logger_html"><div class="ttname"><a href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">sequoia::testing::test_logger</a></div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:61</div></div>
