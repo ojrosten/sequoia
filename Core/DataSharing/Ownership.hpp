@@ -13,7 +13,7 @@
 
  */
 
-#include "SharingPolicyTraits.hpp"
+#include "OwnershipTraits.hpp"
 
 #include <memory>
 

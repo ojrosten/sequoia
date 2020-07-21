@@ -33,12 +33,12 @@ namespace sequoia::testing
     test_contiguous_allocation<int, shared<int>, PropagateCopy, PropagateMove, PropagateSwap>();
   }
 
-  template<class T, class SharingPolicy, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
+  template<class T, class Ownership, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
   void partitioned_data_allocation_test::test_bucketed_allocation()
   {
     using namespace data_structures;
 
-    using storage = bucketed_storage<T, SharingPolicy, custom_bucketed_storage_traits<T, SharingPolicy, PropagateCopy, PropagateMove, PropagateSwap>>;
+    using storage = bucketed_storage<T, Ownership, custom_bucketed_storage_traits<T, Ownership, PropagateCopy, PropagateMove, PropagateSwap>>;
     using allocator = typename storage::allocator_type;
     using prediction = std::initializer_list<std::initializer_list<int>>;
 
@@ -97,12 +97,12 @@ namespace sequoia::testing
                     allocation_info{allocGetter, {{1_c, {1_c,1_mu}, {1_awp,1_anp}}, {0_c, {2_c,1_mu}, {2_awp,2_anp}}}});
   }
   
-  template<class T, class SharingPolicy, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
+  template<class T, class Ownership, bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
   void partitioned_data_allocation_test::test_contiguous_allocation()
   {
     using namespace data_structures;
       
-    using storage = partitioned_sequence<T, SharingPolicy, custom_partitioned_sequence_traits<T, SharingPolicy, PropagateCopy, PropagateMove, PropagateSwap>>;
+    using storage = partitioned_sequence<T, Ownership, custom_partitioned_sequence_traits<T, Ownership, PropagateCopy, PropagateMove, PropagateSwap>>;
     using allocator = typename storage::allocator_type;
     using partitions_allocator = typename storage::traits_type::partitions_allocator_type;
     using prediction = std::initializer_list<std::initializer_list<int>>;

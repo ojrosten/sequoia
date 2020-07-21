@@ -12,7 +12,7 @@
 
  */
 
-#include "SharingPolicies.hpp"
+#include "Ownership.hpp"
 
 #include "Utilities/ProtectiveWrapper.hpp"
 #include "Utilities/Iterator.hpp"

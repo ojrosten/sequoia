@@ -15,7 +15,7 @@ namespace sequoia::testing
   template
   <
     class T,
-    class SharingPolicy,    
+    class Ownership,    
     bool PropagateCopy=true,
     bool PropagateMove=true,
     bool PropagateSwap=true
@@ -44,7 +44,7 @@ namespace sequoia::testing
   template
   <
     class T,
-    class SharingPolicy,    
+    class Ownership,    
     bool PropagateCopy=true,
     bool PropagateMove=true,
     bool PropagateSwap=true

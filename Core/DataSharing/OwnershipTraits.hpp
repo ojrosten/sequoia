@@ -17,7 +17,7 @@
 namespace sequoia
 {
   template<class T>
-  concept sharing_policy = requires() {
+  concept ownership = requires() {
     typename T::handle_type;
     typename T::elementary_type;
 

@@ -9,7 +9,7 @@
 
 #include "EdgeTestingUtilities.hpp"
 
-#include "SharingPolicies.hpp"
+#include "Ownership.hpp"
 #include "ProtectiveWrapper.hpp"
 
 #include <complex>

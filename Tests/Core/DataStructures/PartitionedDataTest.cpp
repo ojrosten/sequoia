@@ -136,7 +136,7 @@ namespace sequoia
       using value_type = typename Storage::value_type;
       using equivalent_type = std::initializer_list<std::initializer_list<value_type>>;
 
-      constexpr bool sharedData{std::is_same<typename Storage::sharing_policy_type, shared<typename Storage::value_type>>::value};
+      constexpr bool sharedData{std::is_same<typename Storage::ownership_type, shared<typename Storage::value_type>>::value};
 
       Storage storage;
 
@@ -579,75 +579,75 @@ namespace sequoia
       return storage;
     }
 
-    template<template<class> class SharingPolicy>
+    template<template<class> class Ownership>
     void partitioned_data_test::test_iterators()
     {
       using namespace data_structures;
 
-      test_generic_iterator_properties<traits, SharingPolicy, partition_impl::mutable_reference>();
-      test_generic_iterator_properties<traits, SharingPolicy, partition_impl::const_reference>();
+      test_generic_iterator_properties<traits, Ownership, partition_impl::mutable_reference>();
+      test_generic_iterator_properties<traits, Ownership, partition_impl::const_reference>();
     }
 
-    template<class Traits, template<class> class SharingPolicy, template<class> class ReferencePolicy>
+    template<class Traits, template<class> class Ownership, template<class> class ReferencePolicy>
     void partitioned_data_test::test_generic_iterator_properties()
     {
       using namespace data_structures;
 
-      using container_t = std::vector<typename SharingPolicy<int>::handle_type>;
+      using container_t = std::vector<typename Ownership<int>::handle_type>;
 
-      container_t vec{SharingPolicy<int>::make(1), SharingPolicy<int>::make(2), SharingPolicy<int>::make(3)};
+      container_t vec{Ownership<int>::make(1), Ownership<int>::make(2), Ownership<int>::make(3)};
 
       using p_i_t
         = utilities::iterator<
-            typename partition_impl::partition_iterator_generator<Traits, SharingPolicy<int>, ReferencePolicy, false>::iterator,
-            partition_impl::dereference_policy<SharingPolicy<int>, ReferencePolicy, partition_impl::partition_index_policy<false, std::size_t>>
+            typename partition_impl::partition_iterator_generator<Traits, Ownership<int>, ReferencePolicy, false>::iterator,
+            partition_impl::dereference_policy<Ownership<int>, ReferencePolicy, partition_impl::partition_index_policy<false, std::size_t>>
           >;
 
       p_i_t iter(vec.begin(), 4u);
 
       if constexpr(std::is_same_v<ReferencePolicy<int>, partition_impl::mutable_reference<int>>)
       {
-        check_equality(LINE(""), iter.operator->(), &SharingPolicy<int>::get(*vec.begin()));
+        check_equality(LINE(""), iter.operator->(), &Ownership<int>::get(*vec.begin()));
       }
       else
       {
-        check_equality(LINE(""), iter.operator->(), &SharingPolicy<int>::get(*vec.cbegin()));
+        check_equality(LINE(""), iter.operator->(), &Ownership<int>::get(*vec.cbegin()));
       }
       
       
-      check_equality(LINE(""), SharingPolicy<int>::get(vec[0]),*iter);
+      check_equality(LINE(""), Ownership<int>::get(vec[0]),*iter);
       check_equality(LINE(""), iter.partition_index(), 4ul);
 
       ++iter;
-      check_equality(LINE(""), *iter, SharingPolicy<int>::get(vec[1]));
+      check_equality(LINE(""), *iter, Ownership<int>::get(vec[1]));
       check_equality(LINE(""), iter.partition_index(), 4ul);
 
       iter++;
-      check_equality(LINE(""), *iter, SharingPolicy<int>::get(vec[2]));
+      check_equality(LINE(""), *iter, Ownership<int>::get(vec[2]));
 
       --iter;
-      check_equality(LINE(""), *iter, SharingPolicy<int>::get(vec[1]));
+      check_equality(LINE(""), *iter, Ownership<int>::get(vec[1]));
       check_equality(LINE(""), iter.partition_index(), 4ul);
 
       iter--;
-      check_equality(LINE(""), *iter, SharingPolicy<int>::get(vec[0]));
+      check_equality(LINE(""), *iter, Ownership<int>::get(vec[0]));
 
-      check_equality(LINE(""), iter[0], SharingPolicy<int>::get(vec[0]));
-      check_equality(LINE(""), iter[1], SharingPolicy<int>::get(vec[1]));
-      check_equality(LINE(""), iter[2], SharingPolicy<int>::get(vec[2]));
+      check_equality(LINE(""), iter[0], Ownership<int>::get(vec[0]));
+      check_equality(LINE(""), iter[1], Ownership<int>::get(vec[1]));
+      check_equality(LINE(""), iter[2], Ownership<int>::get(vec[2]));
 
       iter+=1;
-      check_equality(LINE(""), iter[0], SharingPolicy<int>::get(vec[1]));
+      check_equality(LINE(""), iter[0], Ownership<int>::get(vec[1]));
 
       iter-=1;
-      check_equality(LINE(""), iter[0], SharingPolicy<int>::get(vec[0]));
+      check_equality(LINE(""), iter[0], Ownership<int>::get(vec[0]));
 
       auto iter2 = iter + 2;
-      check_equality(LINE(""), iter[0], SharingPolicy<int>::get(vec[0]));
-      check_equality(LINE(""), iter2[0], SharingPolicy<int>::get(vec[2]));
+      check_equality(LINE(""), iter[0], Ownership<int>::get(vec[0]));
+      check_equality(LINE(""), iter2[0], Ownership<int>::get(vec[2]));
 
       auto iter3 = iter2 - 2;
-      check_equality(LINE(""), iter3[0], SharingPolicy<int>::get(vec[0]));
+      check_equality(LINE(""), iter3[0], Ownership<int>::get(vec[0]));
 
       check(LINE(""), iter == iter3);
       check(LINE(""), iter2 != iter3);
@@ -662,15 +662,15 @@ namespace sequoia
 
       auto std_iter = iter.base_iterator();
 
-      check_equality(LINE(""), SharingPolicy<int>::get(*std_iter), 1);
+      check_equality(LINE(""), Ownership<int>::get(*std_iter), 1);
     }
 
-    template<class T, class SharingPolicy, bool ThrowOnRangeError>
+    template<class T, class Ownership, bool ThrowOnRangeError>
     void partitioned_data_test::test_contiguous_capacity()
     {
       using namespace data_structures;
        
-      partitioned_sequence<T, SharingPolicy> s{};
+      partitioned_sequence<T, Ownership> s{};
       check_equality(LINE(""), s.capacity(), 0ul);
       check_equality(LINE(""), s.num_partitions_capacity(), 0ul);
 
@@ -687,12 +687,12 @@ namespace sequoia
       check_equality(LINE(""), s.num_partitions_capacity(), 0ul);
     }
 
-    template<class T, class SharingPolicy, bool ThrowOnRangeError>
+    template<class T, class Ownership, bool ThrowOnRangeError>
     void partitioned_data_test::test_bucketed_capacity()
     {
       using namespace data_structures;
        
-      bucketed_storage<T, SharingPolicy> s{};
+      bucketed_storage<T, Ownership> s{};
 
       check_equality(LINE(""), s.num_partitions_capacity(), 0ul);
       if constexpr(ThrowOnRangeError) check_exception_thrown<std::out_of_range>(LINE(""), [&s](){ return s.partition_capacity(0); });

@@ -7,7 +7,7 @@
 
 #include "EdgeTestingDiagnostics.hpp"
 
-#include "SharingPolicies.hpp"
+#include "Ownership.hpp"
 #include "ProtectiveWrapper.hpp"
 
 namespace sequoia::testing

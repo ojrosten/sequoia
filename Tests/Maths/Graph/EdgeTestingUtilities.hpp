@@ -43,13 +43,13 @@ namespace sequoia::testing
   template
   <
     class Weight,
-    template <class> class WeightSharingPolicy,
+    template <class> class WeightOwnership,
     class WeightProxy,
     class IndexType
   >
-  struct detailed_equality_checker<maths::partial_edge<Weight, WeightSharingPolicy, WeightProxy, IndexType>>
+  struct detailed_equality_checker<maths::partial_edge<Weight, WeightOwnership, WeightProxy, IndexType>>
   {
-    using type = maths::partial_edge<Weight, WeightSharingPolicy, WeightProxy, IndexType>;
+    using type = maths::partial_edge<Weight, WeightOwnership, WeightProxy, IndexType>;
     
     template<test_mode Mode>
     static void check(std::string_view description, test_logger<Mode>& logger, const type& edge, const type& prediction)
@@ -62,13 +62,13 @@ namespace sequoia::testing
   template
   <
     class Weight,
-    template <class> class WeightSharingPolicy,
+    template <class> class WeightOwnership,
     class WeightProxy,
     class IndexType
   >
-  struct equivalence_checker<maths::partial_edge<Weight, WeightSharingPolicy, WeightProxy, IndexType>>
+  struct equivalence_checker<maths::partial_edge<Weight, WeightOwnership, WeightProxy, IndexType>>
   {
-    using type = maths::partial_edge<Weight, WeightSharingPolicy, WeightProxy, IndexType>;
+    using type = maths::partial_edge<Weight, WeightOwnership, WeightProxy, IndexType>;
     
     template<test_mode Mode, template <class> class OtherWSPolicy, class OtherWProxy>
     static void check(std::string_view description, test_logger<Mode>& logger, const type& edge, const maths::partial_edge<Weight, OtherWSPolicy, OtherWProxy, IndexType>& prediction)
@@ -81,13 +81,13 @@ namespace sequoia::testing
   template
   <
     class Weight,
-    template <class> class WeightSharingPolicy,
+    template <class> class WeightOwnership,
     class WeightProxy,
     class IndexType
   >
-  struct detailed_equality_checker<maths::embedded_partial_edge<Weight, WeightSharingPolicy, WeightProxy, IndexType>>
+  struct detailed_equality_checker<maths::embedded_partial_edge<Weight, WeightOwnership, WeightProxy, IndexType>>
   {
-    using type = maths::embedded_partial_edge<Weight, WeightSharingPolicy, WeightProxy, IndexType>;
+    using type = maths::embedded_partial_edge<Weight, WeightOwnership, WeightProxy, IndexType>;
     
     template<test_mode Mode>
     static void check(std::string_view description, test_logger<Mode>& logger, const type& edge, const type& prediction)
@@ -100,13 +100,13 @@ namespace sequoia::testing
   template
   <
     class Weight,
-    template <class> class WeightSharingPolicy,
+    template <class> class WeightOwnership,
     class WeightProxy,
     class IndexType
   >
-  struct equivalence_checker<maths::embedded_partial_edge<Weight, WeightSharingPolicy, WeightProxy, IndexType>>
+  struct equivalence_checker<maths::embedded_partial_edge<Weight, WeightOwnership, WeightProxy, IndexType>>
   {
-    using type = maths::embedded_partial_edge<Weight, WeightSharingPolicy, WeightProxy, IndexType>;
+    using type = maths::embedded_partial_edge<Weight, WeightOwnership, WeightProxy, IndexType>;
     
     template<test_mode Mode, template <class> class OtherWSPolicy, class OtherWProxy>
     static void check(std::string_view description, test_logger<Mode>& logger, const type& edge, const maths::embedded_partial_edge<Weight, OtherWSPolicy, OtherWProxy, IndexType>& prediction)
@@ -155,13 +155,13 @@ namespace sequoia::testing
   template
   <
     class Weight,
-    template <class> class WeightSharingPolicy,
+    template <class> class WeightOwnership,
     class WeightProxy,
     class IndexType
   >
-  struct detailed_equality_checker<maths::embedded_edge<Weight, WeightSharingPolicy, WeightProxy, IndexType>>
+  struct detailed_equality_checker<maths::embedded_edge<Weight, WeightOwnership, WeightProxy, IndexType>>
   {
-    using type = maths::embedded_edge<Weight, WeightSharingPolicy, WeightProxy, IndexType>;
+    using type = maths::embedded_edge<Weight, WeightOwnership, WeightProxy, IndexType>;
     
     template<test_mode Mode>
     static void check(std::string_view description, test_logger<Mode>& logger, const type& edge, const type& prediction)
@@ -175,13 +175,13 @@ namespace sequoia::testing
   template
   <
     class Weight,
-    template <class> class WeightSharingPolicy,
+    template <class> class WeightOwnership,
     class WeightProxy,
     class IndexType
   >
-  struct equivalence_checker<maths::embedded_edge<Weight, WeightSharingPolicy, WeightProxy, IndexType>>
+  struct equivalence_checker<maths::embedded_edge<Weight, WeightOwnership, WeightProxy, IndexType>>
   {
-    using type = maths::embedded_edge<Weight, WeightSharingPolicy, WeightProxy, IndexType>;
+    using type = maths::embedded_edge<Weight, WeightOwnership, WeightProxy, IndexType>;
     
     template<test_mode Mode, template <class> class OtherWSPolicy, class OtherWProxy>
     static void check(std::string_view description, test_logger<Mode>& logger, const type& edge, const maths::embedded_edge<Weight, OtherWSPolicy, OtherWProxy, IndexType>& prediction)

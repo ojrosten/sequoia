@@ -11,7 +11,7 @@
     \brief Metaprogramming components for partitioned data.
  */
 
-#include "SharingPolicies.hpp"
+#include "Ownership.hpp"
 
 #include <map>
 
@@ -31,34 +31,34 @@ namespace sequoia::data_structures::partition_impl
     using pointer   = T*;
   };
 
-  template<class Traits, sharing_policy SharingPolicy> struct storage_type_generator
+  template<class Traits, ownership Ownership> struct storage_type_generator
   {
-    using held_type      = typename SharingPolicy::handle_type;
+    using held_type      = typename Ownership::handle_type;
     using container_type = typename Traits::template container_type<held_type>;
   };
     
-  template<class Traits, sharing_policy SharingPolicy, template<class> class ReferencePolicy, bool Reversed>
+  template<class Traits, ownership Ownership, template<class> class ReferencePolicy, bool Reversed>
   struct partition_iterator_generator
   {
-    using iterator = typename storage_type_generator<Traits, SharingPolicy>::container_type::iterator;
+    using iterator = typename storage_type_generator<Traits, Ownership>::container_type::iterator;
   };
 
-  template<class Traits, sharing_policy SharingPolicy>
-  struct partition_iterator_generator<Traits, SharingPolicy, mutable_reference, true>
+  template<class Traits, ownership Ownership>
+  struct partition_iterator_generator<Traits, Ownership, mutable_reference, true>
   {
-    using iterator = typename storage_type_generator<Traits,SharingPolicy>::container_type::reverse_iterator;
+    using iterator = typename storage_type_generator<Traits,Ownership>::container_type::reverse_iterator;
   };
     
-  template<class Traits, sharing_policy SharingPolicy>
-  struct partition_iterator_generator<Traits, SharingPolicy, const_reference, false>
+  template<class Traits, ownership Ownership>
+  struct partition_iterator_generator<Traits, Ownership, const_reference, false>
   {
-    using iterator = typename storage_type_generator<Traits, SharingPolicy>::container_type::const_iterator;
+    using iterator = typename storage_type_generator<Traits, Ownership>::container_type::const_iterator;
   };
 
-  template<class Traits, sharing_policy SharingPolicy>
-  struct partition_iterator_generator<Traits, SharingPolicy, const_reference, true>
+  template<class Traits, ownership Ownership>
+  struct partition_iterator_generator<Traits, Ownership, const_reference, true>
   {
-    using iterator = typename storage_type_generator<Traits, SharingPolicy>::container_type::const_reverse_iterator;
+    using iterator = typename storage_type_generator<Traits, Ownership>::container_type::const_reverse_iterator;
   };
   
   template<bool Reversed, class IndexType>
@@ -95,13 +95,13 @@ namespace sequoia::data_structures::partition_impl
   };
 
   template<
-    sharing_policy SharingPolicy,
+    ownership Ownership,
     template<class> class ReferencePolicy,
     class AuxiliaryDataPolicy
   >
-  struct dereference_policy : public SharingPolicy, public AuxiliaryDataPolicy
+  struct dereference_policy : public Ownership, public AuxiliaryDataPolicy
   {
-    using elementary_type = typename SharingPolicy::elementary_type;
+    using elementary_type = typename Ownership::elementary_type;
     using value_type      = elementary_type;
     using reference       = typename ReferencePolicy<elementary_type>::reference;
     using pointer         = typename ReferencePolicy<elementary_type>::pointer;
@@ -151,8 +151,8 @@ namespace sequoia::data_structures::partition_impl
          || std::allocator_traits<Allocator>::is_always_equal::value)
   };
 
-  template<sharing_policy SharingPolicy, class T>
-  constexpr static bool direct_copy_v{std::is_same_v<SharingPolicy, data_sharing::independent<T>>};
+  template<ownership Ownership, class T>
+  constexpr static bool direct_copy_v{std::is_same_v<Ownership, data_sharing::independent<T>>};
   
   template<class T> class data_duplicator;
     

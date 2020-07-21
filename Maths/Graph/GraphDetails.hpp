@@ -287,14 +287,14 @@ namespace sequoia
       struct shared_edge_v_to_policy
       {
         template<class EdgeType>
-        using edge_storage_sharing_policy = data_sharing::independent<EdgeType>;
+        using edge_storage_ownership = data_sharing::independent<EdgeType>;
       };
 
       template<>
       struct shared_edge_v_to_policy<true>
       {
         template<class EdgeType>
-        using edge_storage_sharing_policy = data_sharing::shared<EdgeType>;
+        using edge_storage_ownership = data_sharing::shared<EdgeType>;
       };
                            
       // Determine dynamic reservartion type etc

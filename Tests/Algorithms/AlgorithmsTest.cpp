@@ -11,7 +11,7 @@
 #include "Algorithms.hpp"
 #include "ProtectiveWrapper.hpp"
 #include "Edge.hpp"
-#include "SharingPolicies.hpp"
+#include "Ownership.hpp"
 
 #include <array>
 

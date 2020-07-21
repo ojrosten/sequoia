@@ -28,37 +28,37 @@ namespace sequoia
   {
     //===================================A Custom Iterator===================================//
     
-    template<class Traits, sharing_policy SharingPolicy, class IndexType>
+    template<class Traits, ownership Ownership, class IndexType>
     using partition_iterator
       = utilities::iterator<
-          typename partition_impl::partition_iterator_generator<Traits, SharingPolicy, partition_impl::mutable_reference, false>::iterator,
-          partition_impl::dereference_policy<SharingPolicy, partition_impl::mutable_reference, partition_impl::partition_index_policy<false, IndexType>>
+          typename partition_impl::partition_iterator_generator<Traits, Ownership, partition_impl::mutable_reference, false>::iterator,
+          partition_impl::dereference_policy<Ownership, partition_impl::mutable_reference, partition_impl::partition_index_policy<false, IndexType>>
         >;
 
-    template<class Traits, sharing_policy SharingPolicy, class IndexType>
+    template<class Traits, ownership Ownership, class IndexType>
     using const_partition_iterator
       = utilities::iterator<
-          typename partition_impl::partition_iterator_generator<Traits, SharingPolicy, partition_impl::const_reference, false>::iterator,
-        partition_impl::dereference_policy<SharingPolicy, partition_impl::const_reference, partition_impl::partition_index_policy<false, IndexType>>
+          typename partition_impl::partition_iterator_generator<Traits, Ownership, partition_impl::const_reference, false>::iterator,
+        partition_impl::dereference_policy<Ownership, partition_impl::const_reference, partition_impl::partition_index_policy<false, IndexType>>
       >;
 
-    template<class Traits, sharing_policy SharingPolicy, class IndexType>
+    template<class Traits, ownership Ownership, class IndexType>
     using reverse_partition_iterator
       = utilities::iterator<
-          typename partition_impl::partition_iterator_generator<Traits, SharingPolicy, partition_impl::mutable_reference, true>::iterator,
-        partition_impl::dereference_policy<SharingPolicy, partition_impl::mutable_reference, partition_impl::partition_index_policy<true, IndexType>>
+          typename partition_impl::partition_iterator_generator<Traits, Ownership, partition_impl::mutable_reference, true>::iterator,
+        partition_impl::dereference_policy<Ownership, partition_impl::mutable_reference, partition_impl::partition_index_policy<true, IndexType>>
       >;
 
-    template<class Traits, sharing_policy SharingPolicy, class IndexType>
+    template<class Traits, ownership Ownership, class IndexType>
     using const_reverse_partition_iterator
       = utilities::iterator<
-          typename partition_impl::partition_iterator_generator<Traits, SharingPolicy, partition_impl::const_reference, true>::iterator,
-          partition_impl::dereference_policy<SharingPolicy, partition_impl::const_reference, partition_impl::partition_index_policy<true, IndexType>>
+          typename partition_impl::partition_iterator_generator<Traits, Ownership, partition_impl::const_reference, true>::iterator,
+          partition_impl::dereference_policy<Ownership, partition_impl::const_reference, partition_impl::partition_index_policy<true, IndexType>>
       >;
         
     //===================================Storage using buckets===================================//
 
-    template<class T, sharing_policy SharingPolicy> struct bucketed_storage_traits
+    template<class T, ownership Ownership> struct bucketed_storage_traits
     {
       constexpr static bool throw_on_range_error{true};
       
@@ -69,25 +69,25 @@ namespace sequoia
       using buckets_type = std::vector<std::vector<S>>;
     };
     
-    template<class T, sharing_policy SharingPolicy=data_sharing::independent<T>, class Traits=bucketed_storage_traits<T, SharingPolicy>>
+    template<class T, ownership Ownership=data_sharing::independent<T>, class Traits=bucketed_storage_traits<T, Ownership>>
     class bucketed_storage
     {
     private:
       friend struct sequoia::impl::assignment_helper;
 
-      using held_type    = typename SharingPolicy::handle_type;
+      using held_type    = typename Ownership::handle_type;
       using storage_type = typename Traits::template buckets_type<held_type>;
     public:
       using value_type           = T;
       using size_type            = typename storage_type::size_type;
       using index_type           = size_type;
       using allocator_type       = typename storage_type::allocator_type;
-      using sharing_policy_type  = SharingPolicy;
+      using ownership_type  = Ownership;
 
-      using partition_iterator               = data_structures::partition_iterator<Traits, SharingPolicy, size_type>;
-      using const_partition_iterator         = data_structures::const_partition_iterator<Traits, SharingPolicy, size_type>;
-      using reverse_partition_iterator       = data_structures::reverse_partition_iterator<Traits, SharingPolicy, size_type>;
-      using const_reverse_partition_iterator = data_structures::const_reverse_partition_iterator<Traits, SharingPolicy, size_type>;
+      using partition_iterator               = data_structures::partition_iterator<Traits, Ownership, size_type>;
+      using const_partition_iterator         = data_structures::const_partition_iterator<Traits, Ownership, size_type>;
+      using reverse_partition_iterator       = data_structures::reverse_partition_iterator<Traits, Ownership, size_type>;
+      using const_reverse_partition_iterator = data_structures::const_reverse_partition_iterator<Traits, Ownership, size_type>;
 
       constexpr static bool throw_on_range_error{Traits::throw_on_range_error};
       
@@ -122,7 +122,7 @@ namespace sequoia
       {
         m_Buckets.reserve(in.m_Buckets.size());
 
-        partition_impl::data_duplicator<SharingPolicy> duplicator;
+        partition_impl::data_duplicator<Ownership> duplicator;
         for(auto i{in.m_Buckets.cbegin()}; i != in.m_Buckets.cend(); ++i)
         {
           const auto& bucket{*i};
@@ -288,7 +288,7 @@ namespace sequoia
       {
         if constexpr(throw_on_range_error) check_range(index);
 
-        m_Buckets[index].push_back(SharingPolicy::make(std::forward<Args>(args)...));
+        m_Buckets[index].push_back(Ownership::make(std::forward<Args>(args)...));
       }
 
       void push_back_to_partition(const size_type index, const_partition_iterator iter)
@@ -307,7 +307,7 @@ namespace sequoia
         }
         
         const auto soure{pos.partition_index()};        
-        auto iter{m_Buckets[soure].insert(pos.base_iterator(), SharingPolicy::make(std::forward<Args>(args)...))};
+        auto iter{m_Buckets[soure].insert(pos.base_iterator(), Ownership::make(std::forward<Args>(args)...))};
 
         return partition_iterator{iter, soure};
       }
@@ -423,7 +423,7 @@ namespace sequoia
       [[nodiscard]]
       friend bool operator==(const bucketed_storage& lhs, const bucketed_storage& rhs) noexcept
       {
-        if constexpr(std::is_same_v<SharingPolicy, data_sharing::independent<T>>)
+        if constexpr(std::is_same_v<Ownership, data_sharing::independent<T>>)
         {
           return lhs.m_Buckets == rhs.m_Buckets;
         }
@@ -440,7 +440,7 @@ namespace sequoia
       }
     private:
       constexpr static auto npos{partition_iterator::npos};
-      constexpr static bool directCopy{partition_impl::direct_copy_v<SharingPolicy, T>};
+      constexpr static bool directCopy{partition_impl::direct_copy_v<Ownership, T>};
 
       storage_type m_Buckets;
 
@@ -479,24 +479,24 @@ namespace sequoia
 
     //===================================Contiguous storage===================================//
 
-    template<class T, sharing_policy SharingPolicy, class Traits>
+    template<class T, ownership Ownership, class Traits>
     class partitioned_sequence_base
     {
       friend struct sequoia::impl::assignment_helper;
       
     public:
       using value_type          = T;
-      using sharing_policy_type = SharingPolicy;
+      using ownership_type = Ownership;
       using traits_type         = Traits;
       
-      using container_type      = typename partition_impl::storage_type_generator<Traits, SharingPolicy>::container_type;
+      using container_type      = typename partition_impl::storage_type_generator<Traits, Ownership>::container_type;
       using size_type           = std::common_type_t<typename Traits::partition_index_type, typename container_type::size_type>;
       using index_type          = typename Traits::index_type;
 
-      using partition_iterator               = data_structures::partition_iterator<Traits, SharingPolicy, index_type>;
-      using const_partition_iterator         = data_structures::const_partition_iterator<Traits, SharingPolicy, index_type>;
-      using reverse_partition_iterator       = data_structures::reverse_partition_iterator<Traits, SharingPolicy, index_type>;
-      using const_reverse_partition_iterator = data_structures::const_reverse_partition_iterator<Traits, SharingPolicy, index_type>;
+      using partition_iterator               = data_structures::partition_iterator<Traits, Ownership, index_type>;
+      using const_partition_iterator         = data_structures::const_partition_iterator<Traits, Ownership, index_type>;
+      using reverse_partition_iterator       = data_structures::reverse_partition_iterator<Traits, Ownership, index_type>;
+      using const_reverse_partition_iterator = data_structures::const_reverse_partition_iterator<Traits, Ownership, index_type>;
 
       constexpr static bool throw_on_range_error{Traits::throw_on_range_error};
       
@@ -637,7 +637,7 @@ namespace sequoia
       [[nodiscard]]
       friend constexpr bool operator==(const partitioned_sequence_base& lhs, const partitioned_sequence_base& rhs) noexcept
       {
-        if constexpr(std::is_same_v<SharingPolicy, data_sharing::independent<T>>)
+        if constexpr(std::is_same_v<Ownership, data_sharing::independent<T>>)
         {
           return (lhs.m_Storage == rhs.m_Storage) && (lhs.m_Partitions == rhs.m_Partitions);
         }
@@ -817,7 +817,7 @@ namespace sequoia
         if constexpr(throw_on_range_error) check_range(index);
         auto maker{
           [](auto&&... a) {
-            return SharingPolicy::make(std::forward<decltype(a)>(a)...);
+            return Ownership::make(std::forward<decltype(a)>(a)...);
           }
         };
         
@@ -842,7 +842,7 @@ namespace sequoia
       {
         auto maker{
           [](auto&&... a) {
-            return SharingPolicy::make(std::forward<decltype(a)>(a)...);
+            return Ownership::make(std::forward<decltype(a)>(a)...);
           }
         };
 
@@ -890,7 +890,7 @@ namespace sequoia
       using dynamic_init_type = init_constant<false>;      
 
       constexpr static bool staticStorage{Traits::static_storage_v};
-      constexpr static bool directCopy{partition_impl::direct_copy_v<SharingPolicy, T>};
+      constexpr static bool directCopy{partition_impl::direct_copy_v<Ownership, T>};
 
       using PartitionsType = typename Traits::partitions_type;
       constexpr static index_type npos{partition_iterator::npos};
@@ -963,7 +963,7 @@ namespace sequoia
       void init(const container_type& c)
       {
         m_Storage.reserve(c.size());
-        partition_impl::data_duplicator<SharingPolicy> duplicator;
+        partition_impl::data_duplicator<Ownership> duplicator;
         for(const auto& elt : c)
         {
           m_Storage.push_back(duplicator.duplicate(elt));
@@ -980,7 +980,7 @@ namespace sequoia
 
         auto index{partition ? i - m_Partitions[partition-1] : i};
         
-        return SharingPolicy::make(*((list.begin() + partition)->begin() + index));
+        return Ownership::make(*((list.begin() + partition)->begin() + index));
       }
 
       template<size_type... Inds>
@@ -1113,7 +1113,7 @@ namespace sequoia
       
     };
 
-    template<class T, sharing_policy SharingPolicy> struct partitioned_sequence_traits
+    template<class T, ownership Ownership> struct partitioned_sequence_traits
     {
       constexpr static bool static_storage_v{false};
       constexpr static bool throw_on_range_error{true};
@@ -1126,36 +1126,36 @@ namespace sequoia
       template<class S> using container_type = std::vector<S, std::allocator<S>>;
     };
 
-    template<class T, sharing_policy SharingPolicy=data_sharing::independent<T>, class Traits=partitioned_sequence_traits<T, SharingPolicy>>
-    class partitioned_sequence : public partitioned_sequence_base<T, SharingPolicy, Traits>
+    template<class T, ownership Ownership=data_sharing::independent<T>, class Traits=partitioned_sequence_traits<T, Ownership>>
+    class partitioned_sequence : public partitioned_sequence_base<T, Ownership, Traits>
     {
     private:
-      using base_t = partitioned_sequence_base<T, SharingPolicy, Traits>;
+      using base_t = partitioned_sequence_base<T, Ownership, Traits>;
     public:
-      using container_type            = typename partitioned_sequence_base<T, SharingPolicy, Traits>::container_type;
+      using container_type            = typename partitioned_sequence_base<T, Ownership, Traits>::container_type;
       using allocator_type            = typename container_type::allocator_type;
       using partitions_allocator_type = typename Traits::partitions_allocator_type;
 
       partitioned_sequence() = default;
 
       partitioned_sequence(const allocator_type& allocator, const partitions_allocator_type& partitionAllocator) noexcept
-        : partitioned_sequence_base<T, SharingPolicy, Traits>(allocator, partitionAllocator)
+        : partitioned_sequence_base<T, Ownership, Traits>(allocator, partitionAllocator)
       {}
 
       partitioned_sequence(std::initializer_list<std::initializer_list<T>> list, const allocator_type& allocator=allocator_type{}, const partitions_allocator_type& partitionAllocator=partitions_allocator_type{})
-        : partitioned_sequence_base<T, SharingPolicy, Traits>(list, allocator, partitionAllocator)
+        : partitioned_sequence_base<T, Ownership, Traits>(list, allocator, partitionAllocator)
       {}
 
       partitioned_sequence(const partitioned_sequence&) = default;
 
       partitioned_sequence(const partitioned_sequence& s, const allocator_type& allocator, const partitions_allocator_type& partitionAllocator)
-        : partitioned_sequence_base<T, SharingPolicy, Traits>(s, allocator, partitionAllocator)
+        : partitioned_sequence_base<T, Ownership, Traits>(s, allocator, partitionAllocator)
       {}
       
       partitioned_sequence(partitioned_sequence&&) noexcept = default;
 
       partitioned_sequence(partitioned_sequence&& s, const allocator_type& allocator, const partitions_allocator_type& partitionAllocator)
-        : partitioned_sequence_base<T, SharingPolicy, Traits>(std::move(s), allocator, partitionAllocator)
+        : partitioned_sequence_base<T, Ownership, Traits>(std::move(s), allocator, partitionAllocator)
       {}
 
       ~partitioned_sequence() = default;
