@@ -486,7 +486,7 @@ namespace sequoia
       
     public:
       using value_type          = T;
-      using handler_type = Handler;
+      using handler_type        = Handler;
       using traits_type         = Traits;
       
       using container_type      = typename partition_impl::storage_type_generator<Traits, Handler>::container_type;
@@ -686,7 +686,7 @@ namespace sequoia
         return *this;
       }
 
-      template<class Allocator, class PartitionsAllocator>
+      template<alloc Allocator, alloc PartitionsAllocator>
       void reset(const Allocator& allocator, const PartitionsAllocator& partitionsAllocator) noexcept
       {
         const PartitionsType partitions(partitionsAllocator);
@@ -713,18 +713,18 @@ namespace sequoia
         return m_Partitions.get_allocator();
       }
       
-      template<class Allocator>
+      template<alloc Allocator>
       constexpr explicit partitioned_sequence_base(const Allocator& allocator) noexcept
         : m_Storage(allocator)
       {}
 
-      template<class Allocator, class PartitionsAllocator>
+      template<alloc Allocator, alloc PartitionsAllocator>
       constexpr partitioned_sequence_base(const Allocator& allocator, const PartitionsAllocator& partitionsAllocator) noexcept
         : m_Partitions(partitionsAllocator)
         , m_Storage(allocator)
       {}
 
-      template<class Allocator, class PartitionsAllocator>
+      template<alloc Allocator, alloc PartitionsAllocator>
       constexpr partitioned_sequence_base(std::initializer_list<std::initializer_list<T>> list, const Allocator& allocator, const PartitionsAllocator& partitionsAllocator)
         : m_Partitions(partitionsAllocator)
         , m_Storage(allocator)
@@ -732,12 +732,12 @@ namespace sequoia
         init(list);
       }
       
-      template<class Allocator, class PartitionsAllocator>
+      template<alloc Allocator, alloc PartitionsAllocator>
       constexpr partitioned_sequence_base(const partitioned_sequence_base& in, const Allocator& allocator, const PartitionsAllocator& partitionsAllocator)
         : partitioned_sequence_base(partition_impl::copy_constant<directCopy>{}, in, allocator, partitionsAllocator)
       {}
       
-      template<class Allocator, class PartitionsAllocator>
+      template<alloc Allocator, alloc PartitionsAllocator>
       constexpr partitioned_sequence_base(partitioned_sequence_base&& in, const Allocator& allocator, const PartitionsAllocator& partitionsAllocator)
         : m_Partitions{std::move(in.m_Partitions), partitionsAllocator}, m_Storage{std::move(in.m_Storage), allocator}
       {}
@@ -895,7 +895,7 @@ namespace sequoia
       using PartitionsType = typename Traits::partitions_type;
       constexpr static index_type npos{partition_iterator::npos};
 
-      PartitionsType m_Partitions;
+      PartitionsType m_Partitions [[no_unique_address]];
       container_type m_Storage;
 
       constexpr partitioned_sequence_base(static_init_type, std::initializer_list<std::initializer_list<T>> list)
@@ -912,7 +912,7 @@ namespace sequoia
         : partitioned_sequence_base(partition_impl::indirect_copy_type{}, in, in.m_Storage.get_allocator())
       {}
 
-      template<class Allocator>
+      template<alloc Allocator>
       constexpr partitioned_sequence_base(partition_impl::indirect_copy_type, const partitioned_sequence_base& in, const Allocator& allocator)
         : m_Partitions{in.m_Partitions}
         , m_Storage(std::allocator_traits<Allocator>::select_on_container_copy_construction(allocator))
@@ -920,7 +920,7 @@ namespace sequoia
         init(in.m_Storage);
       }
 
-      template<class Allocator, class PartitionsAllocator>
+      template<alloc Allocator, alloc PartitionsAllocator>
       constexpr partitioned_sequence_base(partition_impl::indirect_copy_type, const partitioned_sequence_base& in, const Allocator& allocator, const PartitionsAllocator& partitionsAllocator)
         : m_Partitions{in.m_Partitions, partitionsAllocator}
         , m_Storage(std::allocator_traits<Allocator>::select_on_container_copy_construction(allocator))        
@@ -933,13 +933,13 @@ namespace sequoia
         , m_Storage{in.m_Storage}
       {}
 
-      template<class Allocator>
+      template<alloc Allocator>
       constexpr partitioned_sequence_base(partition_impl::direct_copy_type, const partitioned_sequence_base& in, const Allocator& allocator)
         : m_Partitions{in.m_Partitions}
         , m_Storage{in.m_Storage, allocator}
       {}
 
-      template<class Allocator, class PartitionsAllocator>
+      template<alloc Allocator, alloc PartitionsAllocator>
       constexpr partitioned_sequence_base(partition_impl::direct_copy_type, const partitioned_sequence_base& in, const Allocator& allocator, const PartitionsAllocator& partitionsAllocator)
         : m_Partitions{in.m_Partitions, partitionsAllocator}
         , m_Storage{in.m_Storage, allocator}
@@ -1193,7 +1193,8 @@ namespace sequoia
       using base_t::erase_from_partition;
     };
 
-    template<class T, std::size_t Npartitions, std::size_t Nelements, class IndexType> struct static_partitioned_sequence_traits
+    template<class T, std::size_t Npartitions, std::size_t Nelements, class IndexType>
+    struct static_partitioned_sequence_traits
     {
       constexpr static bool static_storage_v{true};
       constexpr static bool throw_on_range_error{true};
