@@ -7,11 +7,11 @@
 
 #pragma once
 
-/*! \file MonotonicSequenceDetails.hpp
+/*! \file
     \brief Implementation details for monotonic sequences.
  */
 
-#include "TypeTraits.hpp"
+#include "Concepts.hpp"
 
 namespace sequoia::maths::impl
 {
@@ -22,7 +22,7 @@ namespace sequoia::maths::impl
     constexpr static std::size_t size() noexcept { return N; }
   };
 
-  template<class C, bool=has_allocator_type<C>>
+  template<class C>
   struct noexcept_spec
     : std::bool_constant<
            std::allocator_traits<typename C::allocator_type>::propagate_on_container_swap::value
@@ -31,7 +31,8 @@ namespace sequoia::maths::impl
   {};
 
   template<class C>
-  struct noexcept_spec<C, false> : std::true_type
+    requires has_allocator_type<C>
+  struct noexcept_spec<C> : std::true_type
   {};
 
   template<class C> constexpr bool noexcept_spec_v{noexcept_spec<C>::value};

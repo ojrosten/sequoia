@@ -623,7 +623,7 @@ namespace sequoia
 
             if(len_i != len_j)
             {
-              m_Partitions.template mutate<false>(m_Partitions.begin() + i, m_Partitions.begin() + j,
+              m_Partitions.mutate(maths::unsafe_t{}, m_Partitions.begin() + i, m_Partitions.begin() + j,
                                   [len_i, len_j](const auto index){ return index + len_j - len_i;});
             }     
           }
@@ -773,7 +773,7 @@ namespace sequoia
             m_Storage.erase(m_Storage.begin() + offset, m_Storage.begin() + m_Partitions[n]);
           }
           m_Partitions.erase(m_Partitions.begin() + n);
-          m_Partitions.template mutate<false>(m_Partitions.begin() + n, m_Partitions.end(), [erased](const auto index){ return index - erased; });
+          m_Partitions.mutate(maths::unsafe_t{}, m_Partitions.begin() + n, m_Partitions.end(), [erased](const auto index){ return index - erased; });
         }
       }
 
@@ -895,7 +895,7 @@ namespace sequoia
       using PartitionsType = typename Traits::partitions_type;
       constexpr static index_type npos{partition_iterator::npos};
 
-      PartitionsType m_Partitions [[no_unique_address]];
+      [[no_unique_address]] PartitionsType m_Partitions;
       container_type m_Storage;
 
       constexpr partitioned_sequence_base(static_init_type, std::initializer_list<std::initializer_list<T>> list)
@@ -1023,12 +1023,12 @@ namespace sequoia
 
       void increment_partition_indices(const size_type first) noexcept
       {
-        m_Partitions.template mutate<false>(m_Partitions.begin() + first, m_Partitions.end(), [](const auto index){ return index + 1; });
+        m_Partitions.mutate(maths::unsafe_t{}, m_Partitions.begin() + first, m_Partitions.end(), [](const auto index){ return index + 1; });
       }
 
       void decrement_partition_indices(const size_type first) noexcept
       {
-        m_Partitions.template mutate<false>(m_Partitions.begin() + first, m_Partitions.end(), [](const auto index){ return index - 1; });
+        m_Partitions.mutate(maths::unsafe_t{}, m_Partitions.begin() + first, m_Partitions.end(), [](const auto index){ return index - 1; });
       }
 
       void check_range(const size_type index) const

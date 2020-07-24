@@ -114,7 +114,14 @@ namespace sequoia::testing
 
     static_monotonic_sequence<int, 6, std::greater<int>> s{-1,0,1,1,2,6};
 
-    s.mutate<Check>(s.begin(), s.end(), [](const int i) { return i * 2; });
+    if constexpr(Check)
+    {
+      s.mutate(s.begin(), s.end(), [](const int i) { return i * 2; });
+    }
+    else
+    {
+      s.mutate(unsafe_t{}, s.begin(), s.end(), [](const int i) { return i * 2; });
+    }
     
     return s;
   }

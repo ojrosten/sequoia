@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file MonotonicSequence.hpp
+/*! \file
     \brief Classes implementing the concept of a monotonic sequence.
  */
 
@@ -18,7 +18,9 @@
 #include <vector>
 
 namespace sequoia::maths
-{  
+{
+  struct unsafe_t {};
+  
   template<class T, class C, class Compare> class monotonic_sequence_base
   {
   public:
@@ -47,84 +49,96 @@ namespace sequoia::maths
 
     [[nodiscard]]
     constexpr bool empty() const noexcept { return m_Sequence.empty(); }
-      
+
+    [[nodiscard]]
     constexpr const_iterator begin() const noexcept { return m_Sequence.begin(); }
+
+    [[nodiscard]]
     constexpr const_iterator end() const noexcept { return m_Sequence.end(); }
-      
+
+    [[nodiscard]]
     constexpr const_iterator cbegin() const noexcept { return m_Sequence.cbegin(); }
+
+    [[nodiscard]]
     constexpr const_iterator cend() const noexcept { return m_Sequence.cend(); }
-          
+
+    [[nodiscard]]
     constexpr const_reverse_iterator rbegin() const noexcept { return m_Sequence.rbegin(); }
+
+    [[nodiscard]]
     constexpr const_reverse_iterator rend() const noexcept { return m_Sequence.rend(); }
-      
+
+    [[nodiscard]]
     constexpr const_reverse_iterator crbegin() const noexcept { return m_Sequence.crbegin(); }
+
+    [[nodiscard]]
     constexpr const_reverse_iterator crend() const noexcept { return m_Sequence.crend(); }
 
+    [[nodiscard]]
     constexpr const T& operator[](const size_type i) const { return m_Sequence[i]; }
 
+    [[nodiscard]]
     constexpr const T& back() const { return *(end() - 1); }
+
+    [[nodiscard]]
     constexpr const T& front() const { return *begin(); }
 
-    template<bool Checked=true, class UnaryOp>
+    template<class UnaryOp>
     constexpr void mutate(const_iterator first, const_iterator last, UnaryOp op)
     {
       using std::distance;
-      if constexpr(Checked)
+      if(first != last)
       {
-        if(first != last)
-        {
-          auto tmp{m_Sequence};
-          auto f{tmp.begin() + distance(cbegin(), first)};
-          auto l{tmp.begin() + distance(cbegin(), last)};
+        auto tmp{m_Sequence};
+        auto f{tmp.begin() + distance(cbegin(), first)};
+        auto l{tmp.begin() + distance(cbegin(), last)};
         
-          for(auto i{f}; i != l; ++i)
-          {
-            *i = op(*i);
-          }
-
-          if(f != tmp.begin()) --f;
-          if(l != tmp.end()) ++l;
-
-          while((f != l) && (f + 1) != tmp.end())
-          {
-            if(Compare{}(*f, *(f+1)))
-              throw std::logic_error("monotonic_sequence::mutate - monotonicity violated");
-
-            ++f;
-          }
-
-          m_Sequence = std::move(tmp);
-        }
-      }
-      else
-      {
-        while(first != last)
+        for(auto i{f}; i != l; ++i)
         {
-          auto pos{m_Sequence.begin() + distance(cbegin(), first++)};                    
-          *pos = op(*pos);
+          *i = op(*i);
         }
+
+        if(f != tmp.begin()) --f;
+        if(l != tmp.end()) ++l;
+
+        while((f != l) && (f + 1) != tmp.end())
+        {
+          if(Compare{}(*f, *(f+1)))
+            throw std::logic_error("monotonic_sequence::mutate - monotonicity violated");
+
+          ++f;
+        }
+
+        m_Sequence = std::move(tmp);
+      }
+    }
+
+    template<class UnaryOp>
+    constexpr void mutate(unsafe_t, const_iterator first, const_iterator last, UnaryOp op)
+    {
+      using std::distance;
+      while(first != last)
+      {
+        auto pos{m_Sequence.begin() + distance(cbegin(), first++)};                    
+        *pos = op(*pos);
       }      
     }
 
     [[nodiscard]]
-    constexpr friend bool operator==(const monotonic_sequence_base& lhs, const monotonic_sequence_base& rhs) noexcept
-    {
-      return lhs.m_Sequence == rhs.m_Sequence;
-    }
+    friend bool operator==(const monotonic_sequence_base& lhs, const monotonic_sequence_base& rhs) noexcept
+      = default;
 
     [[nodiscard]]
-    constexpr friend bool operator!=(const monotonic_sequence_base& lhs, const monotonic_sequence_base& rhs) noexcept
-    {
-      return !(lhs == rhs);
-    }
+    friend bool operator!=(const monotonic_sequence_base& lhs, const monotonic_sequence_base& rhs) noexcept
+      = default;
     
   protected:
-    template<class Allocator>
+    template<alloc Allocator>
     constexpr explicit monotonic_sequence_base(const Allocator& allocator) noexcept
       : m_Sequence(allocator)
     {}
 
-    template<class Allocator>
+    template<alloc Allocator>
     constexpr monotonic_sequence_base(std::initializer_list<T> list, const Allocator& allocator)
       : m_Sequence{list, allocator}
     {
@@ -133,12 +147,12 @@ namespace sequoia::maths
     
     constexpr monotonic_sequence_base(monotonic_sequence_base&&) noexcept = default;
 
-    template<class Allocator>
+    template<alloc Allocator>
     constexpr monotonic_sequence_base(const monotonic_sequence_base& s, const Allocator& allocator)
       : m_Sequence{s.m_Sequence, allocator}
     {}
 
-    template<class Allocator>
+    template<alloc Allocator>
     constexpr monotonic_sequence_base(monotonic_sequence_base&& s, const Allocator& allocator)
       : m_Sequence{std::move(s.m_Sequence), allocator}
     {}
