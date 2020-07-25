@@ -34,7 +34,7 @@ namespace sequoia::testing
     using type = maths::linear_sequence<T, Index>;
     
     template<test_mode Mode>
-    static void check( std::string_view description, test_logger<Mode>& logger, const type& sequence, const T& start, const T& step)
+    static void check(std::string_view description, test_logger<Mode>& logger, const type& sequence, const T& start, const T& step)
     {
       sentinel<Mode> s{logger, description};
       

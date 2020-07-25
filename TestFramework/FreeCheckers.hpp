@@ -148,19 +148,6 @@ namespace sequoia::testing
     || ((sizeof...(U)  > 1) && (advisor_for<tail_of_t<U...>, T> || std::is_same_v<std::remove_cvref_t<tail_of_t<U...>>, null_advisor>))
   };
 
-  template<class EquivChecker, class T, class... U>
-  [[nodiscard]]
-  std::string make_equivalence_message(std::string_view description, const T&, const U&...)
-  {
-    std::string info{append_indented(description, "Comparison performed using:")};
-    append_indented(info, make_type_info<EquivChecker>());
-    append_indented(info, "With equivalent types:");
-    append_indented(info, make_type_info<T, U...>());
-    info.append("\n");
-
-    return info;
-  }
-
   /*! \brief generic function that generates a check from any class providing a static check method.
 
       This employs a \ref test_logger_primary "sentinel" and so can be used naively.
@@ -168,14 +155,10 @@ namespace sequoia::testing
   
   template<class EquivChecker, test_mode Mode, class T, class S, class... U>
   bool general_equivalence_check(std::string_view description, test_logger<Mode>& logger, const T& value, const S& s, const U&... u)
-  {    
-    sentinel<Mode> sentry{logger, description};
-
-    
-    const auto message{
+  {  
+    const auto msg{
       [description](){
         std::string info{description};
-    
         append_indented(info, "Comparison performed using:");
         append_indented(info, make_type_info<EquivChecker>());
         append_indented(info, "With equivalent types:");
@@ -185,16 +168,18 @@ namespace sequoia::testing
         return info;
       }()
     };
+ 
+    sentinel<Mode> sentry{logger, msg};
 
     if constexpr(checker_for<EquivChecker, Mode, T, S, U...>)
     {
-      EquivChecker::check(message, logger, value, s, u...);
+      EquivChecker::check(sentry.generate_message(""), logger, value, s, u...);
     }
     else if constexpr(strip_advisor_v<T, U...>)
     {
       auto fn{
-        [message,&logger,&value](auto&&... predictions){
-          EquivChecker::check(message, logger, value, std::forward<decltype(predictions)>(predictions)...);
+        [&sentry,&logger,&value](auto&&... predictions){
+          EquivChecker::check(sentry.generate_message(""), logger, value, std::forward<decltype(predictions)>(predictions)...);
         }
       };
 
@@ -202,7 +187,7 @@ namespace sequoia::testing
     }
     else
     {
-      EquivChecker::check(message, logger, value, s, u..., null_advisor{});
+      EquivChecker::check(sentry.generate_message(""), logger, value, s, u..., null_advisor{});
     }
       
     return !sentry.failure_detected();
@@ -243,11 +228,11 @@ namespace sequoia::testing
                   "ensure operator== and != exists, together with a specialization of serializer");
 
     const auto info{add_type_info<T>(description)};
-    sentinel<Mode> s{logger, info};
+    sentinel<Mode> sentry{logger, info};
 
     if constexpr(equality_comparable<T>)
     {
-      s.log_check();
+      sentry.log_check();
       if(!(prediction == obtained))
       {
         auto message{operator_message(info, "==", "false")};
@@ -259,27 +244,26 @@ namespace sequoia::testing
 
         append_advice(message, {advisor, obtained, prediction});
 
-        s.log_failure(std::move(message));
+        sentry.log_failure(std::move(message));
       }
     }
 
     if constexpr(delegate)
     {
-      std::string_view desc{s.checks_registered() ? "" : description};
       if constexpr(has_detailed_equality_checker_v<T>)
       {
         if constexpr(checker_for<detailed_equality_checker<T>, Mode, T, T>)
         {          
-          detailed_equality_checker<T>::check(desc, logger, obtained, prediction);
+          detailed_equality_checker<T>::check(sentry.generate_message(""), logger, obtained, prediction);
         }
         else
         {
-          detailed_equality_checker<T>::check(desc, logger, obtained, prediction, advisor);
+          detailed_equality_checker<T>::check(sentry.generate_message(""), logger, obtained, prediction, advisor);
         }
       }
       else if constexpr(range<T>)
       {
-        check_range(desc, logger, std::begin(obtained), std::end(obtained), std::begin(prediction), std::end(prediction), advisor);
+        check_range(sentry.generate_message(""), logger, std::begin(obtained), std::end(obtained), std::begin(prediction), std::end(prediction), advisor);
       }      
       else
       {
@@ -287,7 +271,7 @@ namespace sequoia::testing
       }
     }
 
-    return !s.failure_detected();
+    return !sentry.failure_detected();
   }
 
   /*! \brief The workhorse for equivalence checking

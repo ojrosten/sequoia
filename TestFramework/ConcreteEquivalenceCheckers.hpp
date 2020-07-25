@@ -37,8 +37,8 @@ namespace sequoia::testing
     }
   };
 
-  /*! \brief Checks equivalence of std::pair<S,T> and std::pair<U,V> where the decays
-      of S,U and T,V are each the same
+  /*! \brief Checks equivalence of std::pair<S,T> and std::pair<U,V> where,
+      after removing references and cv-qualifiers, S,U and T,V are each the same
    */
   template<class S, class T>
   struct equivalence_checker<std::pair<S, T>>
@@ -46,14 +46,18 @@ namespace sequoia::testing
     template<test_mode Mode, class U, class V, class Advisor>
     static void check(std::string_view description, test_logger<Mode>& logger, const std::pair<S, T>& value, const std::pair<U, V>& prediction, const Advisor& advisor)
     {        
-      static_assert(std::is_same_v<std::decay_t<S>, std::decay_t<U>> && std::is_same_v<std::decay_t<T>, std::decay_t<V>>);
+      static_assert(   std::is_same_v<std::remove_cvref_t<S>, std::remove_cvref_t<U>>
+                    && std::is_same_v<std::remove_cvref_t<T>, std::remove_cvref_t<V>>);
 
       check_equality(append_indented(description, "First element of pair is incorrect"), logger, value.first, prediction.first, advisor);
       check_equality(append_indented(description, "Second element of pair is incorrect"), logger, value.second, prediction.second, advisor);
     }
   };
 
-  /*! \brief Checks equivalence of std::tuple<T...> and std::tuple<U...> where T... and U... are the same size and the decays of respective elements are the same*/
+  /*! \brief Checks equivalence of std::tuple<T...> and std::tuple<U...> where T... and U...
+      are the same size and, after removing references and cv-qualifiers, the respective elements
+      are of the same type
+   */
   template<class... T>
   struct equivalence_checker<std::tuple<T...>>
   {
@@ -74,7 +78,7 @@ namespace sequoia::testing
     static void check(std::string_view description, test_logger<Mode>& logger, const std::tuple<T...>& value, const std::tuple<U...>& prediction, Advisor advisor)
     {
       static_assert(sizeof...(T) == sizeof...(U));
-      static_assert((std::is_same_v<std::decay_t<T>, std::decay_t<U>> && ...));      
+      static_assert((std::is_same_v<std::remove_cvref_t<T>, std::remove_cvref_t<U>> && ...));      
 
       check_tuple_elements(description, logger, value, prediction, advisor);
     }
