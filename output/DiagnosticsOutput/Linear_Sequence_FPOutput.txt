@@ -12,14 +12,6 @@
 	Obtained : 1
 	Predicted: 0
 
-	../Tests/Maths/Sequences/LinearSequenceTestingDiagnostics.cpp, Line 23
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::maths::linear_sequence<int, unsigned long> >]
-	With equivalent types:
-	[int,
-	int]
-
 	Step wrong
 	[int]
 	operator== returned false
