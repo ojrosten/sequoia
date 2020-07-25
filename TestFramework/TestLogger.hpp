@@ -28,6 +28,7 @@
 #include <chrono>
 #include <functional>
 #include <filesystem>
+#include <vector>
 
 namespace sequoia::testing
 {
@@ -80,16 +81,7 @@ namespace sequoia::testing
       of one or more of the sub-checks. The sentinels deal with all of this smoothly
       in a way which clients of the framework can generally ignore.
 
-      4. sentinel may be used to beautify output. A particular use-case is where clients
-      provide specialization of the 
-      \ref detailed_equality_checker_primary "detailed_equality_checker" or
-      \ref equivalence_checker_primary "equivalence_checker" or
-      \ref weak_equivalence_checker_primary "equivalence_checker". Such specializations
-      typically contain a sequence of successive checks, each of which is fed the
-      top-level description (as a string_view). However, if multpile checks fail, the
-      top-level description is repeated which may creat unwanted noise. Feeding in the
-      description via sentinel::generate_message ensures that the overall descripion appears
-      only once.
+      4. sentinel may be used to help coordinate output.
   */
 
   template<test_mode Mode>
@@ -104,7 +96,6 @@ namespace sequoia::testing
     {
       if(!logger.depth())
       {
-        logger.current_message(message);
         logger.log_top_level_check();
 
         if(auto file{output_manager::recovery_file()}; !file.empty())
@@ -114,6 +105,7 @@ namespace sequoia::testing
         }
       }
 
+      logger.push_message(message);
       logger.increment_depth();
     }
 
@@ -134,7 +126,7 @@ namespace sequoia::testing
         auto messageMaker{
           [&logger](){
             auto mess{indent("False Positive Failure:")};
-            append_indented(mess, logger.current_message());
+            append_indented(mess, logger.top_level_message());
             end_block(mess, 3, footer());
 
             return mess;
@@ -155,10 +147,11 @@ namespace sequoia::testing
           if(std::ofstream of{file, std::ios_base::app})
             of << "Check ended\n";
         }
+        
+        logger.exceptions_detected_by_sentinel(std::uncaught_exceptions());
       }
 
-      if(!logger.depth())
-        logger.exceptions_detected_by_sentinel(std::uncaught_exceptions());
+      logger.pop_message();
     }
 
     sentinel(const sentinel&) = delete;
@@ -166,21 +159,6 @@ namespace sequoia::testing
 
     sentinel& operator=(const sentinel&) = delete;
     sentinel& operator=(sentinel&&)      = delete;
-
-    [[nodiscard]]
-    std::string generate_message(std::string_view details) const
-    {
-      std::string desc{
-        checks_registered() && failure_detected() ? "" : m_Message
-      };
-
-      if(!desc.empty() && (desc.back() != '\n'))
-      {
-        desc.append("\n");
-      }
-
-      return append_indented(desc, details);
-    }
 
     void log_performance_check()
     {
@@ -217,12 +195,6 @@ namespace sequoia::testing
     bool checks_registered() const noexcept
     {
       return m_Logger.get().deep_checks() != m_PriorDeepChecks;
-    }
-
-    [[nodiscard]]
-    std::string_view message() const noexcept
-    {
-      return m_Message;
     }
   private:
     std::reference_wrapper<test_logger<Mode>> m_Logger;
@@ -271,18 +243,18 @@ namespace sequoia::testing
     std::string_view failure_messages() const noexcept{ return m_FailureMessages; }
 
     [[nodiscard]]
-    std::string_view current_message() const noexcept { return m_CurrentMessage; }
-
-    [[nodiscard]]
     std::string_view diagnostics_output() const noexcept { return m_DiagnosticsOutput; }
 
     [[nodiscard]]
     int exceptions_detected_by_sentinel() const noexcept { return m_ExceptionsInFlight; }
   private:
     std::string
+      m_TopLevelMessage,
       m_FailureMessages,
       m_CurrentMessage,
       m_DiagnosticsOutput;
+
+    std::vector<std::string> m_LevelMessages;
 
     int m_ExceptionsInFlight{};
       
@@ -295,6 +267,7 @@ namespace sequoia::testing
       m_Checks{},
       m_PerformanceChecks{},
       m_Depth{};
+    
 
     [[nodiscard]]
     std::size_t depth() const noexcept { return m_Depth; }
@@ -316,9 +289,33 @@ namespace sequoia::testing
     void log_failure(std::string_view message)
     {
       ++m_Failures;
-      m_CurrentMessage = indent(message);
 
-      update_output(m_CurrentMessage, 2, "");
+      std::string msg{};
+      auto build{
+        [&msg](auto&& text){
+          if(msg.empty())
+          {
+            msg = indent(std::forward<decltype(text)>(text));
+          }
+          else
+          {
+            append_indented(msg, std::forward<decltype(text)>(text));
+          }
+        }
+      };
+     
+      for(auto& s : m_LevelMessages)
+      {
+        if(s.empty()) continue;
+
+        build(std::move(s));
+
+        s.clear();
+      }
+
+      build(message);
+      
+      update_output(msg, 2, "");
     }
 
     void log_performance_failure(std::string_view message)
@@ -344,11 +341,6 @@ namespace sequoia::testing
       m_FailureMessages.append(message).append("\n");
     }
 
-    void current_message(std::string_view message)
-    {
-      m_CurrentMessage = message;
-    }
-
     void exceptions_detected_by_sentinel(const int n) { m_ExceptionsInFlight = n; }
 
     void append_to_diagnostics_output(std::string message)
@@ -356,9 +348,25 @@ namespace sequoia::testing
       m_DiagnosticsOutput.append(message);
     }
 
+    void push_message(std::string_view message)
+    {
+      m_LevelMessages.push_back(std::string{message});
+    }
+
+    void pop_message()
+    {
+      m_LevelMessages.pop_back();
+    }
+    
     void end_message()
     {
-      if(!m_CurrentMessage.empty()) update_output("", 2, footer());
+      update_output("", 2, footer());
+    }
+
+    [[nodiscard]]
+    std::string top_level_message() const
+    {
+      return !m_LevelMessages.empty() ? m_LevelMessages.front() : "";
     }
 
     void update_output(std::string_view message, std::size_t newLines, std::string foot)
@@ -404,7 +412,7 @@ namespace sequoia::testing
     template<test_mode Mode> log_summary(std::string_view name, const test_logger<Mode>& logger, const duration delta)
       : m_Name{name}
       , m_FailureMessages{logger.failure_messages()}
-      , m_CurrentMessage{logger.current_message()}
+        //, m_CurrentMessage{logger.current_message()}
       , m_Duration{delta}
     {
       switch(Mode)

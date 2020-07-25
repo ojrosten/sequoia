@@ -67,14 +67,14 @@ namespace sequoia::testing
       sentry.log_check();
       if(!c.compare(prediction, obtained))
       {
-        std::string message{sentry.message()};
+        std::string message{};
         if constexpr(fuzzy_reporter<Compare, T>)
         {
-          append_indented(message, c.compare.report(obtained, prediction));
+          message = c.compare.report(obtained, prediction);
         }
         else
         {
-          append_indented(message, "Fuzzy comparison failed");
+          message = "Fuzzy comparison failed";
           append_indented(message, prediction_message(to_string(obtained), to_string(prediction)));
         }
        
@@ -87,7 +87,7 @@ namespace sequoia::testing
     }
     else if constexpr(range<T>)
     {
-      return check_range(description, logger, std::move(c), obtained.begin(), obtained.end(), prediction.begin(), prediction.end(), advisor);
+      return check_range("", logger, std::move(c), obtained.begin(), obtained.end(), prediction.begin(), prediction.end(), advisor);
     }
     else
     {

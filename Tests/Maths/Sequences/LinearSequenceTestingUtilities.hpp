@@ -20,11 +20,9 @@ namespace sequoia::testing
     
     template<test_mode Mode>
     static void check(std::string_view description, test_logger<Mode>& logger, const type& sequence, const type& prediction)
-    {
-      sentinel<Mode> s{logger, description};
-      
-      check_equality(s.generate_message("Start"), logger, sequence.start(), prediction.start());
-      check_equality(s.generate_message("Step"), logger, sequence.step(), prediction.step());
+    {      
+      check_equality("Start", logger, sequence.start(), prediction.start());
+      check_equality("Step", logger, sequence.step(), prediction.step());
     }
   };
 
@@ -35,11 +33,9 @@ namespace sequoia::testing
     
     template<test_mode Mode>
     static void check(std::string_view description, test_logger<Mode>& logger, const type& sequence, const T& start, const T& step)
-    {
-      sentinel<Mode> s{logger, description};
-      
-      check_equality(s.generate_message("Start wrong"), logger, sequence.start(), start);
-      check_equality(s.generate_message("Step wrong"), logger, sequence.step(), step);
+    {      
+      check_equality("Start wrong", logger, sequence.start(), start);
+      check_equality("Step wrong", logger, sequence.step(), step);
     }
   };
 }

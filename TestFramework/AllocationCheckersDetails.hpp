@@ -29,12 +29,11 @@ namespace sequoia::testing::impl
   };
 
   template<test_mode Mode, strongly_movable T, alloc_getter<T> Getter, class Predictions>
-  static void check_allocation(std::string_view detail, test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& container, const basic_allocation_info<T, Getter, Predictions>& info, const int previous, const int prediction)
+  static void check_allocation(std::string_view detail, test_logger<Mode>& logger, const T& container, const basic_allocation_info<T, Getter, Predictions>& info, const int previous, const int prediction)
   {
-    const auto current{info.count(container)};      
-    auto message{sentry.generate_message(detail)};
+    const auto current{info.count(container)};
 
-    check_equality(std::move(message), logger, current - previous, prediction, allocation_advice{});
+    check_equality(detail, logger, current - previous, prediction, allocation_advice{});
   }
 
   /*! \brief Wraps basic_allocation_info, together with two prior allocation counts.
@@ -84,14 +83,14 @@ namespace sequoia::testing::impl
     }
 
     template<test_mode Mode>
-    void check_no_allocation(std::string_view detail, test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& x, const T& y) const
+    void check_no_allocation(std::string_view detail, test_logger<Mode>& logger, const T& x, const T& y) const
     {
-      check_allocation(append_indented(detail, "Unexpected allocation detected (x)"), logger, sentry, x, info(), first_count(), 0);
-      check_allocation(append_indented(detail, "Unexpected allocation detected (y)"), logger, sentry, y, info(), second_count(), 0);
+      check_allocation(append_indented(detail, "Unexpected allocation detected (x)"), logger, x, info(), first_count(), 0);
+      check_allocation(append_indented(detail, "Unexpected allocation detected (y)"), logger, y, info(), second_count(), 0);
     }
 
     template<test_mode Mode>
-    void check_copy_assign_y_to_x(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& x, const T& y) const
+    void check_copy_assign_y_to_x(test_logger<Mode>& logger, const T& x, const T& y) const
     {
       constexpr bool propagate{std::allocator_traits<allocator_type>::propagate_on_container_copy_assignment::value};
       
@@ -99,19 +98,19 @@ namespace sequoia::testing::impl
       if constexpr(propagate)
       {
         yPrediction = info().get_predictions().assign_y_to_x.with_propagation;        
-        check_allocation("Unexpected allocation detected for copy assignment (x)", logger, sentry, x, info(), second_count(), yPrediction);
+        check_allocation("Unexpected allocation detected for copy assignment (x)", logger, x, info(), second_count(), yPrediction);
       }
       else
       {
         const int xPrediction{info().get_predictions().assign_y_to_x.without_propagation};        
-        check_allocation("Unexpected allocation detected for copy assignment (x)", logger, sentry, x, info(), first_count(), xPrediction);
+        check_allocation("Unexpected allocation detected for copy assignment (x)", logger, x, info(), first_count(), xPrediction);
       }
 
-      check_allocation("Unexpected allocation detected for copy assignment (y)", logger, sentry, y, info(), second_count(), yPrediction);
+      check_allocation("Unexpected allocation detected for copy assignment (y)", logger, y, info(), second_count(), yPrediction);
     }
 
     template<test_mode Mode>
-    void check_move_assign_y_to_x(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& x) const
+    void check_move_assign_y_to_x(test_logger<Mode>& logger, const T& x) const
     {
       constexpr bool propagate{std::allocator_traits<allocator_type>::propagate_on_container_move_assignment::value};
 
@@ -123,16 +122,16 @@ namespace sequoia::testing::impl
       
       if constexpr(propagate)
       {
-        check_allocation("Unexpected allocation detected for move assignment (x)", logger, sentry, x, info(), second_count(), xPrediction);
+        check_allocation("Unexpected allocation detected for move assignment (x)", logger, x, info(), second_count(), xPrediction);
       }
       else
       {
-        check_allocation("Unexpected allocation detected for move assignment (x)", logger, sentry, x, info(), first_count(), xPrediction);
+        check_allocation("Unexpected allocation detected for move assignment (x)", logger, x, info(), first_count(), xPrediction);
       }
     }
 
     template<test_mode Mode>
-    void check_mutation_after_swap(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& lhs, const T& rhs) const
+    void check_mutation_after_swap(test_logger<Mode>& logger, const T& lhs, const T& rhs) const
     {
       const auto prediction{info().get_predictions().mutation_allocs()};
       auto lhCount{first_count()}, rhCount{second_count()};
@@ -143,8 +142,8 @@ namespace sequoia::testing::impl
         swap(lhCount, rhCount);
       }
 
-      check_allocation("Unexpected allocation detected following mutation after swap (y)", logger, sentry, lhs, info(), lhCount, prediction);
-      check_allocation("Unexpected allocation detected following mutation after swap (x)", logger, sentry, rhs, info(), rhCount, 0);
+      check_allocation("Unexpected allocation detected following mutation after swap (y)", logger, lhs, info(), lhCount, prediction);
+      check_allocation("Unexpected allocation detected following mutation after swap (x)", logger, rhs, info(), rhCount, 0);
     }
   private:    
     alloc_info m_Info{};    
@@ -188,9 +187,9 @@ namespace sequoia::testing::impl
     {}
 
     template<test_mode Mode>
-    void check(std::string_view detail, test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& container, const int prediction) const
+    void check(std::string_view detail, test_logger<Mode>& logger, const T& container, const int prediction) const
     {
-      check_allocation(detail, logger, sentry, container, info(), m_PriorCount, prediction);
+      check_allocation(detail, logger, container, info(), m_PriorCount, prediction);
     }
 
     [[nodiscard]]
@@ -306,153 +305,153 @@ namespace sequoia::testing::impl
   //================================ Variadic Allocation Checking ================================//
 
   template<test_mode Mode, class CheckFn, class Checker, class... Checkers>
-  void check_allocation(test_logger<Mode>& logger, const sentinel<Mode>& sentry, CheckFn check, const Checker& checker, const Checkers&... moreCheckers)
+  void check_allocation(test_logger<Mode>& logger, CheckFn check, const Checker& checker, const Checkers&... moreCheckers)
   {
     check(checker);
 
     if constexpr (sizeof...(Checkers) > 0)
     {
-      check_allocation(logger, sentry, check, moreCheckers...); 
+      check_allocation(logger, check, moreCheckers...); 
     }
   }
 
   //================================ checks using dual_allocation_checker ================================//
 
   template<test_mode Mode, strongly_movable T, alloc_getter<T> Getter, class Prediction, alloc_getter<T>... Getters, class... Predictions>
-  void check_no_allocation(std::string_view detail, test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& x, const T& y, const dual_allocation_checker<T, Getter, Prediction>& checker, const dual_allocation_checker<T, Getters, Predictions>&... moreCheckers)
+  void check_no_allocation(std::string_view detail, test_logger<Mode>& logger, const T& x, const T& y, const dual_allocation_checker<T, Getter, Prediction>& checker, const dual_allocation_checker<T, Getters, Predictions>&... moreCheckers)
   {
     auto checkFn{
-        [detail, &logger, &sentry, &x, &y](const auto& checker){
-        checker.check_no_allocation(detail, logger, sentry, x, y);
+        [detail, &logger, &x, &y](const auto& checker){
+        checker.check_no_allocation(detail, logger, x, y);
       }
     };
 
-    check_allocation(logger, sentry, checkFn, checker, moreCheckers...);
+    check_allocation(logger, checkFn, checker, moreCheckers...);
   }
 
   template<test_mode Mode, strongly_movable T, alloc_getter<T> Getter, class Prediction, alloc_getter<T>... Getters, class... Predictions>
-  void check_copy_assign_allocation(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& x, const T& y, const dual_allocation_checker<T, Getter, Prediction>& checker, const dual_allocation_checker<T, Getters, Predictions>&... moreCheckers)
+  void check_copy_assign_allocation(test_logger<Mode>& logger, const T& x, const T& y, const dual_allocation_checker<T, Getter, Prediction>& checker, const dual_allocation_checker<T, Getters, Predictions>&... moreCheckers)
   {
     auto checkFn{
-      [&logger, &sentry, &x, &y](const auto& checker){
-        checker.check_copy_assign_y_to_x(logger, sentry, x, y);
+      [&logger, &x, &y](const auto& checker){
+        checker.check_copy_assign_y_to_x(logger, x, y);
       }
     };
 
-    check_allocation(logger, sentry, checkFn, checker, moreCheckers...);
+    check_allocation(logger, checkFn, checker, moreCheckers...);
   }
 
   template<test_mode Mode, strongly_movable T, alloc_getter<T> Getter, class Prediction, alloc_getter<T>... Getters, class... Predictions>
-  void check_move_assign_allocation(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& x, const dual_allocation_checker<T, Getter, Prediction>& checker, const dual_allocation_checker<T, Getters, Predictions>&... moreCheckers)
+  void check_move_assign_allocation(test_logger<Mode>& logger, const T& x, const dual_allocation_checker<T, Getter, Prediction>& checker, const dual_allocation_checker<T, Getters, Predictions>&... moreCheckers)
   {
     auto checkFn{
-      [&logger, &sentry, &x](const auto& checker){
-        checker.check_move_assign_y_to_x(logger, sentry, x);
+      [&logger, &x](const auto& checker){
+        checker.check_move_assign_y_to_x(logger, x);
       }
     };
 
-    check_allocation(logger, sentry, checkFn, checker, moreCheckers...);
+    check_allocation(logger, checkFn, checker, moreCheckers...);
   }
 
   template<test_mode Mode, strongly_movable T, alloc_getter<T> Getter, class Prediction, alloc_getter<T>... Getters, class... Predictions>
-  void check_mutation_after_swap(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& x, const T& y, const dual_allocation_checker<T, Getter, Prediction>& checker, const dual_allocation_checker<T, Getters, Predictions>&... moreCheckers)
+  void check_mutation_after_swap(test_logger<Mode>& logger, const T& x, const T& y, const dual_allocation_checker<T, Getter, Prediction>& checker, const dual_allocation_checker<T, Getters, Predictions>&... moreCheckers)
   {
     auto checkFn{
-      [&logger, &sentry, &x, &y](const auto& checker){
-        checker.check_mutation_after_swap(logger, sentry, x, y);
+      [&logger, &x, &y](const auto& checker){
+        checker.check_mutation_after_swap(logger, x, y);
       }
     };
 
-    check_allocation(logger, sentry, checkFn, checker, moreCheckers...);
+    check_allocation(logger, checkFn, checker, moreCheckers...);
   }
 
   template<test_mode Mode, strongly_movable T, invocable<T&> Mutator, alloc_getter<T>... Getters, class... Predictions>
-  void check_mutation_after_swap(test_logger<Mode>& logger, const sentinel<Mode>& sentry, T& lhs, const T& rhs, const T& y, Mutator yMutator, dual_allocation_checker<T, Getters, Predictions>... checkers)
+  void check_mutation_after_swap(test_logger<Mode>& logger, T& lhs, const T& rhs, const T& y, Mutator yMutator, dual_allocation_checker<T, Getters, Predictions>... checkers)
   {
-    if(check(sentry.generate_message("Mutation after swap pre-condition violated"), logger, lhs == y))
+    if(check("Mutation after swap pre-condition violated", logger, lhs == y))
     {    
       yMutator(lhs);
-      check_mutation_after_swap(logger, sentry, lhs, rhs, checkers...);
+      check_mutation_after_swap(logger, lhs, rhs, checkers...);
 
-      check(sentry.generate_message("Mutation is not doing anything following copy then swap"), logger, lhs != y);
+      check("Mutation is not doing anything following copy then swap", logger, lhs != y);
     }
   }
 
   //================================ checks using allocation_checker ================================//
 
   template<test_mode Mode, strongly_movable T, alloc_getter<T> Getter, class Prediction, alloc_getter<T>... Getters, class... Predictions>
-  void check_copy_x_allocation(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& container, const allocation_checker<T, Getter, Prediction>& checker, const allocation_checker<T, Getters, Predictions>&... moreCheckers)
+  void check_copy_x_allocation(test_logger<Mode>& logger, const T& container, const allocation_checker<T, Getter, Prediction>& checker, const allocation_checker<T, Getters, Predictions>&... moreCheckers)
   {
     auto checkFn{
-      [&logger, &sentry, &container](const auto& checker){
+      [&logger, &container](const auto& checker){
         const auto prediction{checker.info().get_predictions().copy_x};
-        checker.check("Unexpected allocation detected for copy construction (x)", logger, sentry, container, prediction);
+        checker.check("Unexpected allocation detected for copy construction (x)", logger, container, prediction);
       }
     };
 
-    check_allocation(logger, sentry, checkFn, checker, moreCheckers...);
+    check_allocation(logger, checkFn, checker, moreCheckers...);
   }
 
   template<test_mode Mode, strongly_movable T, alloc_getter<T> Getter, class Prediction, alloc_getter<T>... Getters, class... Predictions>
-  void check_copy_y_allocation(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& container, const allocation_checker<T, Getter, Prediction>& checker, const allocation_checker<T, Getters, Predictions>&... moreCheckers)
+  void check_copy_y_allocation(test_logger<Mode>& logger, const T& container, const allocation_checker<T, Getter, Prediction>& checker, const allocation_checker<T, Getters, Predictions>&... moreCheckers)
   {
     auto checkFn{
-      [&logger, &sentry, &container](const auto& checker){
+      [&logger, &container](const auto& checker){
         const auto prediction{checker.info().get_predictions().y.copy};
-        checker.check("Unexpected allocation detected for copy construction (y)", logger, sentry, container, prediction);
+        checker.check("Unexpected allocation detected for copy construction (y)", logger, container, prediction);
       }
     };
 
-    check_allocation(logger, sentry, checkFn, checker, moreCheckers...);
+    check_allocation(logger, checkFn, checker, moreCheckers...);
   }
 
   template<test_mode Mode, strongly_movable T, alloc_getter<T> Getter, class Prediction, alloc_getter<T>... Getters, class... Predictions>
-  void check_move_y_allocation(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& container, const allocation_checker<T, Getter, Prediction>& checker, const allocation_checker<T, Getters, Predictions>&... moreCheckers)
+  void check_move_y_allocation(test_logger<Mode>& logger, const T& container, const allocation_checker<T, Getter, Prediction>& checker, const allocation_checker<T, Getters, Predictions>&... moreCheckers)
   {
     auto checkFn{
-      [&logger, &sentry, &container](const auto& checker){
-        checker.check("Unexpected allocation detected for move construction (y)", logger, sentry, container, 0);
+      [&logger, &container](const auto& checker){
+        checker.check("Unexpected allocation detected for move construction (y)", logger, container, 0);
       }
     };
 
-    check_allocation(logger, sentry, checkFn, checker, moreCheckers...);
+    check_allocation(logger, checkFn, checker, moreCheckers...);
   }
 
   template<test_mode Mode, strongly_movable T, alloc_getter<T> Getter, class Prediction, alloc_getter<T>... Getters, class... Predictions>
-  void check_mutation_allocation(std::string_view priorOp, test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& y, const allocation_checker<T, Getter, Prediction>& checker, const allocation_checker<T, Getters, Predictions>&... moreCheckers)
+  void check_mutation_allocation(std::string_view priorOp, test_logger<Mode>& logger, const T& y, const allocation_checker<T, Getter, Prediction>& checker, const allocation_checker<T, Getters, Predictions>&... moreCheckers)
   {
     auto checkFn{
-      [priorOp, &logger, &sentry, &y](const auto& checker){
+      [priorOp, &logger, &y](const auto& checker){
         const auto prediction{checker.info().get_predictions().mutation_allocs()};
         const auto mess{
           std::string{"Unexpected allocation detected following mutation after "}.append(priorOp)
         };
 
-        checker.check(mess, logger, sentry, y, prediction);
+        checker.check(mess, logger, y, prediction);
       }
     };
 
-    check_allocation(logger, sentry, checkFn, checker, moreCheckers...);
+    check_allocation(logger, checkFn, checker, moreCheckers...);
   }
 
   template<test_mode Mode, strongly_movable T, alloc_getter<T> Getter, class Prediction, alloc_getter<T>... Getters, class... Predictions>
-  void check_para_copy_y_allocation(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& container, const allocation_checker<T, Getter, Prediction>& checker, const allocation_checker<T, Getters, Predictions>&... moreCheckers)
+  void check_para_copy_y_allocation(test_logger<Mode>& logger, const T& container, const allocation_checker<T, Getter, Prediction>& checker, const allocation_checker<T, Getters, Predictions>&... moreCheckers)
   {
     auto checkFn{
-      [&logger, &sentry, &container](const auto& checker){
+      [&logger, &container](const auto& checker){
         const auto prediction{checker.info().get_predictions().y.para_copy};
-        checker.check("Unexpected allocation detected for para-copy construction (y)", logger, sentry, container, prediction);
+        checker.check("Unexpected allocation detected for para-copy construction (y)", logger, container, prediction);
       }
     };
 
-    check_allocation(logger, sentry, checkFn, checker, moreCheckers...);
+    check_allocation(logger, checkFn, checker, moreCheckers...);
   }
   
   template<test_mode Mode, strongly_movable T, alloc_getter<T>... Getters, class... Predictions>
-  void check_para_copy_y_allocation(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& container, std::tuple<allocation_checker<T, Getters, Predictions>...> checkers)
+  void check_para_copy_y_allocation(test_logger<Mode>& logger, const T& container, std::tuple<allocation_checker<T, Getters, Predictions>...> checkers)
   {
-    auto fn{[&logger, &sentry,&container](auto&&... checkers){
-        check_para_copy_y_allocation(logger, sentry, container, std::forward<decltype(checkers)>(checkers)...);
+    auto fn{[&logger,&container](auto&&... checkers){
+        check_para_copy_y_allocation(logger, container, std::forward<decltype(checkers)>(checkers)...);
       }
     };
 
@@ -460,23 +459,23 @@ namespace sequoia::testing::impl
   }
 
   template<test_mode Mode, strongly_movable T, class Prediction, alloc_getter<T> Getter, alloc_getter<T>... Getters, class... Predictions>
-  void check_para_move_y_allocation(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& container, const allocation_checker<T, Getter, Prediction>& checker, const allocation_checker<T, Getters, Predictions>&... moreCheckers)
+  void check_para_move_y_allocation(test_logger<Mode>& logger, const T& container, const allocation_checker<T, Getter, Prediction>& checker, const allocation_checker<T, Getters, Predictions>&... moreCheckers)
   {
     auto checkFn{
-      [&logger, &sentry, &container](const auto& checker){
+      [&logger, &container](const auto& checker){
         const auto prediction{checker.info().get_predictions().para_move_allocs()};
-        checker.check("Unexpected allocation detected for para-move construction (y)", logger, sentry, container, prediction);
+        checker.check("Unexpected allocation detected for para-move construction (y)", logger, container, prediction);
       }
     };
 
-    check_allocation(logger, sentry, checkFn, checker, moreCheckers...);
+    check_allocation(logger, checkFn, checker, moreCheckers...);
   }
   
   template<test_mode Mode, strongly_movable T, alloc_getter<T>... Getters, class... Predictions>
-  void check_para_move_y_allocation(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& container, std::tuple<allocation_checker<T, Getters, Predictions>...> checkers)
+  void check_para_move_y_allocation(test_logger<Mode>& logger, const T& container, std::tuple<allocation_checker<T, Getters, Predictions>...> checkers)
   {
-    auto fn{[&logger, &sentry,&container](auto&&... checkers){
-        check_para_move_y_allocation(logger, sentry, container, std::forward<decltype(checkers)>(checkers)...);
+    auto fn{[&logger, &container](auto&&... checkers){
+        check_para_move_y_allocation(logger, container, std::forward<decltype(checkers)>(checkers)...);
       }
     };
 
@@ -494,45 +493,45 @@ namespace sequoia::testing::impl
     constexpr static bool has_post_swap_action{true};
 
     template<test_mode Mode, strongly_movable T, alloc_getter<T>... Getters, class... Predictions>
-    static bool post_equality_action(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& x, const T& y, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
+    static bool post_equality_action(test_logger<Mode>& logger, const T& x, const T& y, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
     {
       sentinel<Mode> s{logger, ""};
       
-      check_no_allocation("Unexpected allocation detected for operator==", logger, sentry, x, y, checkers...);
+      check_no_allocation("Unexpected allocation detected for operator==", logger, x, y, checkers...);
 
       return !s.failure_detected();
     }
 
     template<test_mode Mode, strongly_movable T, alloc_getter<T>... Getters, class... Predictions>
-    static bool post_nequality_action(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& x, const T& y, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
+    static bool post_nequality_action(test_logger<Mode>& logger, const T& x, const T& y, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
     {
       sentinel<Mode> s{logger, ""};
 
-      check_no_allocation("Unexpected allocation detected for operator!=", logger, sentry, x, y, checkers...);
+      check_no_allocation("Unexpected allocation detected for operator!=", logger, x, y, checkers...);
 
       return !s.failure_detected();
     }
 
     template<test_mode Mode, strongly_movable T, alloc_getter<T>... Getters, class... Predictions>
-    static void post_move_action(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& y, const allocation_checker<T, Getters, Predictions>&... checkers)
+    static void post_move_action(test_logger<Mode>& logger, const T& y, const allocation_checker<T, Getters, Predictions>&... checkers)
     {
-      check_move_y_allocation(logger, sentry, y, checkers...);
+      check_move_y_allocation(logger, y, checkers...);
     }
 
     template<test_mode Mode, strongly_movable T, invocable<T&> Mutator, alloc_getter<T>... Getters, class... Predictions>
-    static void post_move_assign_action(test_logger<Mode>& logger, const sentinel<Mode>& sentry, T& y, const T& yClone, Mutator yMutator, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
+    static void post_move_assign_action(test_logger<Mode>& logger, T& y, const T& yClone, Mutator yMutator, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
     {
-      check_move_assign_allocation(logger, sentry, y, checkers...);
-      check_mutation_after_move("assignment", logger, sentry, y, yClone, std::move(yMutator), allocation_checker{checkers.info(), y}...);
+      check_move_assign_allocation(logger, y, checkers...);
+      check_mutation_after_move("assignment", logger, y, yClone, std::move(yMutator), allocation_checker{checkers.info(), y}...);
     }
 
     template<test_mode Mode, strongly_movable T, alloc_getter<T>... Getters, class... Predictions>
-    static void post_swap_action(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& x, const T& y, const T&, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
+    static void post_swap_action(test_logger<Mode>& logger, const T& x, const T& y, const T&, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
     {
       if constexpr(((   std::allocator_traits<typename dual_allocation_checker<T, Getters, Predictions>::allocator_type>::propagate_on_container_move_assignment::value
                      && std::allocator_traits<typename dual_allocation_checker<T, Getters, Predictions>::allocator_type>::propagate_on_container_swap::value) && ... ))
       {
-        check_no_allocation(sentry.generate_message("Unexpected allocation detected for swap"), logger, sentry, y, x, checkers...);
+        check_no_allocation("Unexpected allocation detected for swap", logger, y, x, checkers...);
       }
     }
   };
@@ -545,44 +544,44 @@ namespace sequoia::testing::impl
    */
  
   template<test_mode Mode, class Actions, strongly_movable T, alloc_getter<T>... Getters, class... Predictions>
-  bool check_preconditions(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, const T& x, const T& y, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
+  bool check_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
   {
-    return do_check_preconditions(logger, sentry, actions, x, y, dual_allocation_checker<T, Getters, Predictions>{checkers.info(), x, y}...);
+    return do_check_preconditions(logger, actions, x, y, dual_allocation_checker<T, Getters, Predictions>{checkers.info(), x, y}...);
   }
 
   template<test_mode Mode, class Actions, strongly_movable T, alloc_getter<T>... Getters, class... Predictions>
-  std::optional<T> check_move_construction(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T&& z, const T& y, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
+  std::optional<T> check_move_construction(test_logger<Mode>& logger, const Actions& actions, T&& z, const T& y, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
   {
-    return do_check_move_construction(logger, sentry, actions, std::forward<T>(z), y, allocation_checker{checkers.info(), z}...);
+    return do_check_move_construction(logger, actions, std::forward<T>(z), y, allocation_checker{checkers.info(), z}...);
   }
 
   template<test_mode Mode, class Actions, strongly_movable T, invocable<T&> Mutator, alloc_getter<T>... Getters, class... Predictions>
-  void check_move_assign(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T& u, T&& v, const T& y, Mutator yMutator, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
+  void check_move_assign(test_logger<Mode>& logger, const Actions& actions, T& u, T&& v, const T& y, Mutator yMutator, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
   {
-    do_check_move_assign(logger, sentry, actions, u, std::forward<T>(v), y, std::move(yMutator), dual_allocation_checker{checkers.info(), u, v}...);
+    do_check_move_assign(logger, actions, u, std::forward<T>(v), y, std::move(yMutator), dual_allocation_checker{checkers.info(), u, v}...);
   }
 
   template<test_mode Mode, strongly_movable T, invocable<T&> Mutator, class... Checkers>
-  void check_mutation_after_move(std::string_view moveType, test_logger<Mode>& logger, const sentinel<Mode>& sentry, T& u, const T& y, Mutator yMutator, Checkers... checkers)
+  void check_mutation_after_move(std::string_view moveType, test_logger<Mode>& logger, T& u, const T& y, Mutator yMutator, Checkers... checkers)
   {
     yMutator(u);
-    check_mutation_allocation(moveType, logger, sentry, u, checkers...);
+    check_mutation_allocation(moveType, logger, u, checkers...);
 
     const auto mess{
       std::string{"Mutation is not doing anything following move "}.append(moveType)
     };
-    check(sentry.generate_message(mess), logger, u != y);    
+    check(mess, logger, u != y);    
   }
 
   template<test_mode Mode, strongly_movable T, invocable<T&> Mutator, class... Checkers, std::size_t... I>
-  void check_mutation_after_move(std::string_view moveType, test_logger<Mode>& logger, const sentinel<Mode>& sentry, T& u, const T& y, Mutator yMutator, std::tuple<Checkers...> checkers, std::index_sequence<I...>)
+  void check_mutation_after_move(std::string_view moveType, test_logger<Mode>& logger, T& u, const T& y, Mutator yMutator, std::tuple<Checkers...> checkers, std::index_sequence<I...>)
   {
-    check_mutation_after_move(moveType, logger, sentry, u, y, std::move(yMutator), std::get<I>(checkers)...);
+    check_mutation_after_move(moveType, logger, u, y, std::move(yMutator), std::get<I>(checkers)...);
   }
 
   template<test_mode Mode, strongly_movable T, invocable<T&> Mutator, class... Checkers>
-  void check_mutation_after_move(std::string_view moveType, test_logger<Mode>& logger, const sentinel<Mode>& sentry, T& u, const T& y, Mutator yMutator, std::tuple<Checkers...> checkers)
+  void check_mutation_after_move(std::string_view moveType, test_logger<Mode>& logger, T& u, const T& y, Mutator yMutator, std::tuple<Checkers...> checkers)
   {
-    check_mutation_after_move(moveType, logger, sentry, u, y, std::move(yMutator), std::move(checkers), std::make_index_sequence<sizeof...(Checkers)>{});
+    check_mutation_after_move(moveType, logger, u, y, std::move(yMutator), std::move(checkers), std::make_index_sequence<sizeof...(Checkers)>{});
   }
 }

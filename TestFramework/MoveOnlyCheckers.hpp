@@ -49,8 +49,8 @@ namespace sequoia::testing
   template<test_mode Mode, moveonly T>
   void check_semantics(std::string_view description, test_logger<Mode>& logger, T&& x, T&& y, const T& xClone, const T& yClone)
   {
-    sentinel<Mode> sentry{logger, add_type_info<T>(description)};
+    sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
 
-    impl::check_semantics(logger, sentry, impl::default_actions{}, std::forward<T>(x), std::forward<T>(y), xClone, yClone, impl::null_mutator{});
+    impl::check_semantics(logger, impl::default_actions{}, std::forward<T>(x), std::forward<T>(y), xClone, yClone, impl::null_mutator{});
   }
 }

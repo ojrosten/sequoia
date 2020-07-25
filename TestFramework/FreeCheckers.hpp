@@ -173,13 +173,13 @@ namespace sequoia::testing
 
     if constexpr(checker_for<EquivChecker, Mode, T, S, U...>)
     {
-      EquivChecker::check(sentry.generate_message(""), logger, value, s, u...);
+      EquivChecker::check("", logger, value, s, u...);
     }
     else if constexpr(strip_advisor_v<T, U...>)
     {
       auto fn{
         [&sentry,&logger,&value](auto&&... predictions){
-          EquivChecker::check(sentry.generate_message(""), logger, value, std::forward<decltype(predictions)>(predictions)...);
+          EquivChecker::check("", logger, value, std::forward<decltype(predictions)>(predictions)...);
         }
       };
 
@@ -187,7 +187,7 @@ namespace sequoia::testing
     }
     else
     {
-      EquivChecker::check(sentry.generate_message(""), logger, value, s, u..., null_advisor{});
+      EquivChecker::check("", logger, value, s, u..., null_advisor{});
     }
       
     return !sentry.failure_detected();
@@ -227,15 +227,14 @@ namespace sequoia::testing
                   "Provide either a specialization of detailed_equality_checker or"
                   "ensure operator== and != exists, together with a specialization of serializer");
 
-    const auto info{add_type_info<T>(description)};
-    sentinel<Mode> sentry{logger, info};
+    sentinel<Mode> sentry{logger, add_type_info<T>(description)};
 
     if constexpr(equality_comparable<T>)
     {
       sentry.log_check();
       if(!(prediction == obtained))
       {
-        auto message{operator_message(info, "==", "false")};
+        auto message{operator_message("==", "false")};
 
         if constexpr(!delegate)
         {          
@@ -254,16 +253,16 @@ namespace sequoia::testing
       {
         if constexpr(checker_for<detailed_equality_checker<T>, Mode, T, T>)
         {          
-          detailed_equality_checker<T>::check(sentry.generate_message(""), logger, obtained, prediction);
+          detailed_equality_checker<T>::check("", logger, obtained, prediction);
         }
         else
         {
-          detailed_equality_checker<T>::check(sentry.generate_message(""), logger, obtained, prediction, advisor);
+          detailed_equality_checker<T>::check("", logger, obtained, prediction, advisor);
         }
       }
       else if constexpr(range<T>)
       {
-        check_range(sentry.generate_message(""), logger, std::begin(obtained), std::end(obtained), std::begin(prediction), std::end(prediction), advisor);
+        check_range("", logger, std::begin(obtained), std::end(obtained), std::begin(prediction), std::end(prediction), advisor);
       }      
       else
       {
@@ -334,14 +333,14 @@ namespace sequoia::testing
     using std::advance;
 
     const auto predictedSize{distance(predictionFirst, predictionLast)};
-    if(check_equality(sentry.generate_message("Container size wrong"), logger, distance(first, last), predictedSize))
+    if(check_equality("Container size wrong", logger, distance(first, last), predictedSize))
     {
       auto predictionIter{predictionFirst};
       auto iter{first};
       for(; predictionIter != predictionLast; advance(predictionIter, 1), advance(iter, 1))
       {
         const auto dist{distance(predictionFirst, predictionIter)};
-        std::string mess{sentry.generate_message("Element ")
+        auto mess{std::string{"Element "}
             .append(std::to_string(dist)).append(" of range incorrect")};
         if(!dispatch_check(std::move(mess), logger, discriminator, *iter, *predictionIter, advisor)) equal = false;
       }
@@ -371,7 +370,7 @@ namespace sequoia::testing
     try
     {
       function();
-      sentry.log_failure(append_indented(message, "No exception thrown"));
+      sentry.log_failure("No exception thrown");
       return false;
     }
     catch(const E&)
@@ -380,15 +379,15 @@ namespace sequoia::testing
     }
     catch(const std::exception& e)
     {
-      append_indented(message, "Unexpected exception thrown (caught by std::exception&):");
-      append_indented(message, "\"").append(e.what()).append("\"\n");
+      std::string msg{"Unexpected exception thrown (caught by std::exception&):"};
+      append_indented(msg, "\"").append(e.what()).append("\"\n");
         
-      sentry.log_failure(message);
+      sentry.log_failure(msg);
       return false;
     }
     catch(...)
     {
-      sentry.log_failure(append_indented(message, "Unknown exception thrown\n"));
+      sentry.log_failure("Unknown exception thrown\n");
       return false;
     }
   }
@@ -534,7 +533,7 @@ namespace sequoia::testing
     std::size_t failures() const noexcept { return logger().failures(); }
 
     [[nodiscard]]
-    std::string_view current_message() const noexcept{ return logger().current_message(); }
+      std::string_view current_message() const noexcept{ return "";/*logger().current_message();*/ }
 
     [[nodiscard]]
     int exceptions_detected_by_sentinel() const noexcept { return logger().exceptions_detected_by_sentinel(); }

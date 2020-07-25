@@ -49,14 +49,14 @@ namespace sequoia::testing
   void check_semantics(std::string_view description, test_logger<Mode>& logger, const T& x, const T& y, Mutator yMutator)
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(description)};
-    impl::check_semantics(logger, sentry, impl::default_actions{}, x, y, yMutator);
+    impl::check_semantics(logger, impl::default_actions{}, x, y, yMutator);
   }
 
   /// Precondition: x!=y
   template<test_mode Mode, pseudoregular T>
   void check_semantics(std::string_view description, test_logger<Mode>& logger, const T& x, const T& y)
   {
-    sentinel<Mode> sentry{logger, add_type_info<T>(description)};
-    impl::check_semantics(logger, sentry, impl::default_actions{}, x, y, impl::null_mutator{});
+    sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
+    impl::check_semantics(logger, impl::default_actions{}, x, y, impl::null_mutator{});
   }
 }

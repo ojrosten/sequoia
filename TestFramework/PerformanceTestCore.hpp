@@ -83,7 +83,7 @@ namespace sequoia::testing
 
     if(num_sds <=1)
       throw std::logic_error("Number of standard deviations is required to be > 1");
-      
+          
     performance_results<R> results;      
       
     using namespace std::chrono;
@@ -190,7 +190,7 @@ namespace sequoia::testing
 
     if(!results.passed)
     {        
-      sentry.log_performance_failure(sentry.message());
+      sentry.log_performance_failure("");
     }
 
     return results;

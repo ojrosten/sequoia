@@ -49,8 +49,8 @@ namespace sequoia::testing
       static_assert(   std::is_same_v<std::remove_cvref_t<S>, std::remove_cvref_t<U>>
                     && std::is_same_v<std::remove_cvref_t<T>, std::remove_cvref_t<V>>);
 
-      check_equality(append_indented(description, "First element of pair is incorrect"), logger, value.first, prediction.first, advisor);
-      check_equality(append_indented(description, "Second element of pair is incorrect"), logger, value.second, prediction.second, advisor);
+      check_equality("First element of pair is incorrect", logger, value.first, prediction.first, advisor);
+      check_equality("Second element of pair is incorrect", logger, value.second, prediction.second, advisor);
     }
   };
 
@@ -68,7 +68,7 @@ namespace sequoia::testing
       if constexpr(I < sizeof...(T))
       {
         const std::string message{"Element " + std::to_string(I) + " of tuple incorrect"};
-        check_equality(append_indented(description, message), logger, std::get<I>(value), std::get<I>(prediction), advisor);
+        check_equality(message, logger, std::get<I>(value), std::get<I>(prediction), advisor);
         check_tuple_elements<Mode, I+1>(description, logger, value, prediction, advisor);
       }
     }

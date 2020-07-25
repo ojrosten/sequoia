@@ -113,11 +113,11 @@ namespace sequoia::testing
   template<test_mode Mode, pseudoregular T, invocable<T&> Mutator, alloc_getter<T>... Getters>
   void check_semantics(std::string_view description, test_logger<Mode>& logger, const T& x, const T& y, Mutator yMutator, const allocation_info<T, Getters>&... info)
   {
-    sentinel<Mode> sentry{logger, add_type_info<T>(description)};
+    sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
       
-    if(impl::check_semantics(logger, sentry, impl::regular_allocation_actions{}, x, y, yMutator, std::tuple_cat(impl::make_dual_allocation_checkers(info, x, y)...)))
+    if(impl::check_semantics(logger, impl::regular_allocation_actions{}, x, y, yMutator, std::tuple_cat(impl::make_dual_allocation_checkers(info, x, y)...)))
     {
-      impl::check_para_constructor_allocations(logger, sentry, y, yMutator, info...);
+      impl::check_para_constructor_allocations(logger, y, yMutator, info...);
     }
   }
 }

@@ -13,12 +13,12 @@
     The general pattern in this file is of paired function templates of the form
 
     template<test_mode Mode, class Actions, strongly_movable T, class... Args>
-    ret_type do_check_foo(std::string_view, test_logger<Mode>& logger, const sentinel<Mode>&, const Actions&, const T&, const T&, const Args&...);
+    ret_type do_check_foo(std::string_view, test_logger<Mode>& logger, const Actions&, const T&, const T&, const Args&...);
 
     template<test_mode Mode, class Actions, strongly_movable T>
     ret_type check_foo(std::string_view description, test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, const T& x , const T&y)
     {
-      return do_check_foo(description, logger, sentry, actions, x, y);
+      return do_check_foo(description, logger, actions, x, y);
     }
 
     The idea is that the implementation of check_foo in this file is appropriate for types without allocators.
@@ -79,9 +79,9 @@ namespace sequoia::testing::impl
   struct pre_condition_actions
   {
     template<test_mode Mode, strongly_movable T>
-    static bool check_preconditions(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& x, const T& y)
+    static bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y)
     {
-      return check(sentry.generate_message("Precondition - for checking semantics, x and y are assumed to be different"), logger, x != y);
+      return check("Precondition - for checking semantics, x and y are assumed to be different", logger, x != y);
     }
   };
   
@@ -99,77 +99,77 @@ namespace sequoia::testing::impl
   //================================ preconditions ================================//
  
   template<test_mode Mode, class Actions, strongly_movable T, class... Args>
-  bool do_check_preconditions(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, const T& x, const T& y, const Args&... args)
+  bool do_check_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
   {
-    if(!check(sentry.generate_message("Equality operator is inconsistent"), logger, x == x))
+    if(!check("Equality operator is inconsistent", logger, x == x))
       return false;
 
     if constexpr (Actions::has_post_equality_action)
     {
-      if(!actions.post_equality_action(logger, sentry, x, y, args...))
+      if(!actions.post_equality_action(logger, x, y, args...))
         return false;
     }
     
-    if(!check(sentry.generate_message("Inequality operator is inconsistent"), logger, !(x != x)))
+    if(!check("Inequality operator is inconsistent", logger, !(x != x)))
       return false;
 
     if constexpr (Actions::has_post_nequality_action)
     {
-      if(!actions.post_nequality_action(logger, sentry, x, y, args...))
+      if(!actions.post_nequality_action(logger, x, y, args...))
         return false;
     }
 
-    return actions.check_preconditions(logger, sentry, x, y);
+    return actions.check_preconditions(logger, x, y);
   }
 
   template<test_mode Mode, class Actions, strongly_movable T>
-  bool check_preconditions(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, const T& x, const T& y)
+  bool check_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y)
   {
-    return do_check_preconditions(logger, sentry, actions, x, y);
+    return do_check_preconditions(logger, actions, x, y);
   }
 
   //================================ move assign ================================//
 
   template<test_mode Mode, class Actions, strongly_movable T, invocable<T&> Mutator, class... Args>
-  void do_check_move_assign(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T& z, T&& y, const T& yClone, Mutator&& yMutator, const Args&... args)
+  void do_check_move_assign(test_logger<Mode>& logger, const Actions& actions, T& z, T&& y, const T& yClone, Mutator&& yMutator, const Args&... args)
   {
     z = std::move(y);
-    if(!check_equality(sentry.generate_message("Inconsistent move assignment (from y)"), logger, z, yClone))
+    if(!check_equality("Inconsistent move assignment (from y)", logger, z, yClone))
        return;
 
     if constexpr(Actions::has_post_move_assign_action)
     {
-      actions.post_move_assign_action(logger, sentry, z, yClone, std::move(yMutator), args...);
+      actions.post_move_assign_action(logger, z, yClone, std::move(yMutator), args...);
     }
   }
   
   template<test_mode Mode, class Actions, strongly_movable T, invocable<T&> Mutator>
-  void check_move_assign(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T& z, T&& y, const T& yClone, Mutator m)
+  void check_move_assign(test_logger<Mode>& logger, const Actions& actions, T& z, T&& y, const T& yClone, Mutator m)
   {
-    do_check_move_assign(logger, sentry, actions, z, std::forward<T>(y), yClone, std::move(m));
+    do_check_move_assign(logger, actions, z, std::forward<T>(y), yClone, std::move(m));
   }
 
   //================================ swap ================================//
 
   template<test_mode Mode, class Actions, strongly_movable T, class... Args>
-  bool do_check_swap(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, const Args&... args)
+  bool do_check_swap(test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, const Args&... args)
   {
     using std::swap;
     swap(x, y);
 
     const bool swapy{
-      check_equality(sentry.generate_message("Inconsistent Swap (y)"), logger, y, xClone)
+      check_equality("Inconsistent Swap (y)", logger, y, xClone)
     };
     
     const bool swapx{
-      check_equality(sentry.generate_message("Inconsistent Swap (x)"), logger, x, yClone)
+      check_equality("Inconsistent Swap (x)", logger, x, yClone)
     };
       
     if constexpr(Actions::has_post_swap_action)
     {
       if(swapx && swapy)
       {
-        actions.post_swap_action(logger, sentry, x, y, yClone, args...);
+        actions.post_swap_action(logger, x, y, yClone, args...);
       }
     }
 
@@ -177,31 +177,31 @@ namespace sequoia::testing::impl
   }
 
   template<test_mode Mode, class Actions, strongly_movable T>
-  bool check_swap(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone)
+  bool check_swap(test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone)
   {
-    return do_check_swap(logger, sentry, actions, std::move(x), std::move(y), xClone, yClone);
+    return do_check_swap(logger, actions, std::move(x), std::move(y), xClone, yClone);
   }
 
   //================================  move construction ================================ //
 
   template<test_mode Mode, class Actions, strongly_movable T, class... Args>
-  std::optional<T> do_check_move_construction(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T&& z, const T& y, const Args&... args)
+  std::optional<T> do_check_move_construction(test_logger<Mode>& logger, const Actions& actions, T&& z, const T& y, const Args&... args)
   {
     T w{std::move(z)};
-    if(!check_equality(sentry.generate_message("Inconsistent move construction"), logger, w, y))
+    if(!check_equality("Inconsistent move construction", logger, w, y))
       return {};
 
     if constexpr(Actions::has_post_move_action)
     {
-      actions.post_move_action(logger, sentry, w, args...);
+      actions.post_move_action(logger, w, args...);
     }
 
     return w;
   }
 
   template<test_mode Mode, class Actions, strongly_movable T>
-  std::optional<T> check_move_construction(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T&& z, const T& y)
+  std::optional<T> check_move_construction(test_logger<Mode>& logger, const Actions& actions, T&& z, const T& y)
   {
-    return do_check_move_construction(logger, sentry, actions, std::forward<T>(z), y);
+    return do_check_move_construction(logger, actions, std::forward<T>(z), y);
   }
 }

@@ -50,7 +50,7 @@ namespace sequoia::testing
   std::string exception_message(std::string_view tag, std::string_view currentMessage, std::string_view exceptionMessage, const bool exceptionsDetected);
 
   [[nodiscard]]
-  std::string operator_message(std::string_view description, std::string_view op, std::string_view retVal);
+  std::string operator_message(std::string_view op, std::string_view retVal);
 
   [[nodiscard]]
   std::string prediction_message(std::string_view obtained, std::string_view predicted);

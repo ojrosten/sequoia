@@ -28,25 +28,25 @@ namespace sequoia::testing::impl
     constexpr static bool has_post_copy_assign_action{true};
 
     template<test_mode Mode, pseudoregular T, alloc_getter<T>... Getters, class... Predictions>
-    static void post_copy_action(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& xCopy, const T& yCopy, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
+    static void post_copy_action(test_logger<Mode>& logger, const T& xCopy, const T& yCopy, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
     {
       
-      check_copy_x_allocation(logger, sentry, xCopy, allocation_checker{checkers.info(), checkers.first_count()}...);
+      check_copy_x_allocation(logger, xCopy, allocation_checker{checkers.info(), checkers.first_count()}...);
 
-      check_copy_y_allocation(logger, sentry, yCopy, allocation_checker{checkers.info(), checkers.second_count()}...);
+      check_copy_y_allocation(logger, yCopy, allocation_checker{checkers.info(), checkers.second_count()}...);
     }
 
     template<test_mode Mode, pseudoregular T, alloc_getter<T>... Getters, class... Predictions>
-    static void post_copy_assign_action(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& lhs, const T& rhs, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
+    static void post_copy_assign_action(test_logger<Mode>& logger, const T& lhs, const T& rhs, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
     {
-      check_copy_assign_allocation(logger, sentry, lhs, rhs, checkers...);
+      check_copy_assign_allocation(logger, lhs, rhs, checkers...);
     }
 
     template<test_mode Mode, pseudoregular T, invocable<T&> Mutator, alloc_getter<T>... Getters, class... Predictions>
-    static void post_swap_action(test_logger<Mode>& logger, const sentinel<Mode>& sentry, T& x, const T& y, const T& yClone, Mutator yMutator, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
+    static void post_swap_action(test_logger<Mode>& logger, T& x, const T& y, const T& yClone, Mutator yMutator, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
     {
-      allocation_actions::post_swap_action(logger, sentry, x, y, yClone, checkers...);      
-      check_mutation_after_swap(logger, sentry, x, y, yClone, std::move(yMutator), checkers...);
+      allocation_actions::post_swap_action(logger, x, y, yClone, checkers...);      
+      check_mutation_after_swap(logger, x, y, yClone, std::move(yMutator), checkers...);
     }
   };
 
@@ -54,22 +54,22 @@ namespace sequoia::testing::impl
        may be acquired before proceeding.
    */
   template<test_mode Mode, class Actions, pseudoregular T, alloc_getter<T>... Getters, class... Predictions>
-  bool check_copy_assign(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T& z, const T& y, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
+  bool check_copy_assign(test_logger<Mode>& logger, const Actions& actions, T& z, const T& y, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
   {
-    return do_check_copy_assign(logger, sentry, actions, z, y, dual_allocation_checker{checkers.info(), z, y}...);   
+    return do_check_copy_assign(logger, actions, z, y, dual_allocation_checker{checkers.info(), z, y}...);   
   }
 
   template<test_mode Mode, pseudoregular T, invocable<T&> Mutator, alloc_getter<T>... Getters, class... Predictions>
-  void check_para_constructor_allocations(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const T& y, Mutator yMutator, const basic_allocation_info<T, Getters, Predictions>&... info)
+  void check_para_constructor_allocations(test_logger<Mode>& logger, const T& y, Mutator yMutator, const basic_allocation_info<T, Getters, Predictions>&... info)
   {    
     if constexpr(sizeof...(Getters) > 0)
     {
       auto make{
-        [&logger, &sentry, &y](auto&... info){
+        [&logger, &y](auto&... info){
           T u{y, info.make_allocator()...};
-          if(check_equality(sentry.generate_message("Inconsistent para-copy construction"), logger, u, y))
+          if(check_equality("Inconsistent para-copy construction", logger, u, y))
           {
-            check_para_copy_y_allocation(logger, sentry, u, std::tuple_cat(make_allocation_checkers(info)...));
+            check_para_copy_y_allocation(logger, u, std::tuple_cat(make_allocation_checkers(info)...));
             return std::optional<T>{u};
           }
           return std::optional<T>{};
@@ -80,10 +80,10 @@ namespace sequoia::testing::impl
       {
         T v{std::move(*c), info.make_allocator()...};
 
-        if(check_equality(sentry.generate_message("Inconsistent para-move construction"), logger, v, y))
+        if(check_equality("Inconsistent para-move construction", logger, v, y))
         {
-          check_para_move_y_allocation(logger, sentry, v, std::tuple_cat(make_allocation_checkers(info)...));
-          check_mutation_after_move("para-move", logger, sentry, v, y, std::move(yMutator), std::tuple_cat(make_allocation_checkers(info, v)...));
+          check_para_move_y_allocation(logger, v, std::tuple_cat(make_allocation_checkers(info)...));
+          check_mutation_after_move("para-move", logger, v, y, std::move(yMutator), std::tuple_cat(make_allocation_checkers(info, v)...));
         }
       }
     }
@@ -98,9 +98,9 @@ namespace sequoia::testing::impl
     alloc_getter<T>... Getters,
     class... Predictions
   >
-  bool check_swap(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator yMutator, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
+  bool check_swap(test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator yMutator, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
   {
-    return do_check_swap(logger, sentry, actions, std::move(x), std::move(y), xClone, yClone, std::move(yMutator), dual_allocation_checker{checkers.info(), x, y}...);
+    return do_check_swap(logger, actions, std::move(x), std::move(y), xClone, yClone, std::move(yMutator), dual_allocation_checker{checkers.info(), x, y}...);
   }
 
   /// Unpacks the tuple and feeds to the overload of check_semantics defined in RegularCheckersDetails.hpp
@@ -113,11 +113,11 @@ namespace sequoia::testing::impl
     alloc_getter<T>... Getters,
     class... Predictions
   >
-  bool check_semantics(test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, const T& x, const T& y, Mutator yMutator, std::tuple<dual_allocation_checker<T, Getters, Predictions>...> checkers)
+  bool check_semantics(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, Mutator yMutator, std::tuple<dual_allocation_checker<T, Getters, Predictions>...> checkers)
   {
     auto fn{
-      [&logger, &sentry, &actions, &x, &y, m{std::move(yMutator)}](auto&&... checkers){
-        return check_semantics(logger, sentry, actions, x, y, m, std::forward<decltype(checkers)>(checkers)...);
+      [&logger, &actions, &x, &y, m{std::move(yMutator)}](auto&&... checkers){
+        return check_semantics(logger, actions, x, y, m, std::forward<decltype(checkers)>(checkers)...);
       }
     };
 
