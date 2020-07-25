@@ -5,18 +5,20 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "IteratorTestingUtilities.hpp"
+#include "LinearSequenceTest.hpp"
+
+// #include "LinearSequence.hpp"
 
 namespace sequoia::testing
 {
-  class iterator_false_positive_test final : public false_positive_regular_test
+  [[nodiscard]]
+  std::string_view linear_sequence_test::source_file() const noexcept
   {
-  public:
-    using false_positive_regular_test::false_positive_regular_test;    
+    return __FILE__;
+  }
 
-    [[nodiscard]]
-    std::string_view source_file() const noexcept final;
-  private:    
-    void run_tests() final;
-  };
+  void linear_sequence_test::run_tests()
+  {
+    // TO DO
+  }
 }

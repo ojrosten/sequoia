@@ -10,6 +10,8 @@
 #include "MonotonicSequenceTestingDiagnostics.hpp"
 #include "MonotonicSequenceTest.hpp"
 #include "MonotonicSequenceAllocationTest.hpp"
+#include "LinearSequenceTestingDiagnostics.hpp"
+#include "LinearSequenceTest.hpp"
 
 #include "TypeTraitsTest.hpp"
 #include "ConceptsTest.hpp"

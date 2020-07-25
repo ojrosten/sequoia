@@ -206,7 +206,7 @@ namespace sequoia::testing
               },         {"source_file_name"}, {"s"}} },
           {"create",     {[this](const param_list& args) {
                 m_NascentTests.push_back(nascent_test{args[0], args[1]});
-              }, {"class_name", "directory"}, {"c"} } },
+              }, { "directory", "class_name" }, {"c"} } },
           {"--async",    {[this](const param_list&) {
                 if(m_ConcurrencyMode == concurrency_mode::serial)
                   m_ConcurrencyMode = concurrency_mode::family;

@@ -70,6 +70,12 @@ int main(int argc, char** argv)
     );
 
     runner.add_test_family(
+      "Linear Sequence",
+      linear_sequence_false_positive_test{"False Positive Diagnostics"},
+      linear_sequence_test{"Unit Test"}
+    );
+
+    runner.add_test_family(
       "Array Utilities",
       array_utilities_test{"Unit Test"}
     );

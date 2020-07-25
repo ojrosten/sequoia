@@ -7,19 +7,19 @@
 
 #pragma once
 
-#include "UnitTestUtils.hpp"
+#include "RegularTestCore.hpp"
 
 //#include "MyClass.hpp"
 
 namespace sequoia::testing
 {
   //template<???>
-  struct details_checker<::my_class/*<???>*/>
+  struct detailed_equality_checker<::my_class/*<???>*/>
   {
     using type = ::my_class/*<???>*/;
     
     template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const type& reference, const type& actual, std::string_view description)
+      static void check(std::string_view description, test_logger<Mode>& logger, const type& actual, const type& prediction)
     {
       // TO DO
     }
@@ -31,7 +31,7 @@ namespace sequoia::testing
     using type = ::my_class/*<???>*/;
     
     template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const type& actual, /*???*/ refVals, std::string_view description)
+    static void check(std::string_view description, test_logger<Mode>& logger, const type& actual, /*???*/ predictions)
     {
       // TO DO
     }
