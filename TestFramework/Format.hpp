@@ -96,10 +96,11 @@ namespace sequoia::testing
     }
   };
 
+  
+  /// Demangles T; if U... is not empty, indents each demangled element of U
   template<class T, class... U>
   struct type_list_demangler
   {
-    /// Demangles T; if U... is not empty, indents each demangled element of U
     [[nodiscard]]
     static std::string make([[maybe_unused]] std::string_view indent=tab)
     {
@@ -113,7 +114,7 @@ namespace sequoia::testing
       return info;
     }
   };
-  
+
   template<class T, class... U>
   [[nodiscard]]
   std::string make_type_info([[maybe_unused]] std::string_view indent=tab)

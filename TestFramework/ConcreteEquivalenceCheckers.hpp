@@ -25,15 +25,15 @@ namespace sequoia::testing
     using string_type = std::basic_string<Char, Traits, Allocator>;
     
     template<test_mode Mode, std::size_t N, class Advisor>
-    static void check(std::string_view description, test_logger<Mode>& logger, const string_type& s, char const (&prediction)[N], Advisor advisor)
+    static void check(test_logger<Mode>& logger, const string_type& s, char const (&prediction)[N], Advisor advisor)
     {
-      check_equality(description, logger, std::string_view{s}, std::string_view{prediction}, std::move(advisor));
+      check_equality("", logger, std::string_view{s}, std::string_view{prediction}, std::move(advisor));
     }
 
     template<test_mode Mode, class Advisor>
-    static void check(std::string_view description, test_logger<Mode>& logger, const string_type& s, std::basic_string_view<Char, Traits> prediction, Advisor advisor)
+    static void check(test_logger<Mode>& logger, const string_type& s, std::basic_string_view<Char, Traits> prediction, Advisor advisor)
     {
-      check_equality(description, logger, std::string_view{s}, prediction, std::move(advisor));
+      check_equality("", logger, std::string_view{s}, prediction, std::move(advisor));
     }
   };
 
@@ -44,7 +44,7 @@ namespace sequoia::testing
   struct equivalence_checker<std::pair<S, T>>
   {
     template<test_mode Mode, class U, class V, class Advisor>
-    static void check(std::string_view description, test_logger<Mode>& logger, const std::pair<S, T>& value, const std::pair<U, V>& prediction, const Advisor& advisor)
+    static void check(test_logger<Mode>& logger, const std::pair<S, T>& value, const std::pair<U, V>& prediction, const Advisor& advisor)
     {        
       static_assert(   std::is_same_v<std::remove_cvref_t<S>, std::remove_cvref_t<U>>
                     && std::is_same_v<std::remove_cvref_t<T>, std::remove_cvref_t<V>>);
@@ -63,24 +63,24 @@ namespace sequoia::testing
   {
   private:
     template<test_mode Mode, std::size_t I = 0, class... U, class Advisor>
-    static void check_tuple_elements([[maybe_unused]] std::string_view description, test_logger<Mode>& logger, const std::tuple<T...>& value, const std::tuple<U...>& prediction, const Advisor& advisor)
+    static void check_tuple_elements(test_logger<Mode>& logger, const std::tuple<T...>& value, const std::tuple<U...>& prediction, const Advisor& advisor)
     {
       if constexpr(I < sizeof...(T))
       {
         const std::string message{"Element " + std::to_string(I) + " of tuple incorrect"};
         check_equality(message, logger, std::get<I>(value), std::get<I>(prediction), advisor);
-        check_tuple_elements<Mode, I+1>(description, logger, value, prediction, advisor);
+        check_tuple_elements<Mode, I+1>(logger, value, prediction, advisor);
       }
     }
       
   public:
     template<test_mode Mode, class... U, class Advisor>
-    static void check(std::string_view description, test_logger<Mode>& logger, const std::tuple<T...>& value, const std::tuple<U...>& prediction, Advisor advisor)
+    static void check(test_logger<Mode>& logger, const std::tuple<T...>& value, const std::tuple<U...>& prediction, Advisor advisor)
     {
       static_assert(sizeof...(T) == sizeof...(U));
       static_assert((std::is_same_v<std::remove_cvref_t<T>, std::remove_cvref_t<U>> && ...));      
 
-      check_tuple_elements(description, logger, value, prediction, advisor);
+      check_tuple_elements(logger, value, prediction, advisor);
     }
   };
 }

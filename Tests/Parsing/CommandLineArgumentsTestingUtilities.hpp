@@ -18,12 +18,12 @@ namespace sequoia::testing
     using type = sequoia::parsing::commandline::operation;
 
     template<test_mode Mode>
-    static void check(std::string_view description, test_logger<Mode>& logger, const type& operation, const type& prediction, null_advisor)
+    static void check(test_logger<Mode>& logger, const type& operation, const type& prediction, null_advisor)
     {
       const bool consistent{((operation.fn != nullptr) && (prediction.fn != nullptr))
           || ((operation.fn == nullptr) && (prediction.fn == nullptr))};
-      testing::check(append_indented(description, "Existence of function objects differes"), logger, consistent);
-      check_equality(append_indented(description, "Operation Parameters differ"), logger, operation.parameters, prediction.parameters);
+      testing::check("Existence of function objects differes", logger, consistent);
+      check_equality("Operation Parameters differ", logger, operation.parameters, prediction.parameters);
     }
   };
 

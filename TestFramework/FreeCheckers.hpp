@@ -136,7 +136,7 @@ namespace sequoia::testing
 
   template<class Checker, test_mode Mode, class... Args>
   concept checker_for = requires(test_logger<Mode>& logger, Args&&... args) {
-    Checker::check(std::string_view{}, logger, std::forward<Args>(args)...);
+    Checker::check(logger, std::forward<Args>(args)...);
   };
 
   template<class Advisor, class T>
@@ -173,13 +173,13 @@ namespace sequoia::testing
 
     if constexpr(checker_for<EquivChecker, Mode, T, S, U...>)
     {
-      EquivChecker::check("", logger, value, s, u...);
+      EquivChecker::check(logger, value, s, u...);
     }
     else if constexpr(strip_advisor_v<T, U...>)
     {
       auto fn{
-        [&sentry,&logger,&value](auto&&... predictions){
-          EquivChecker::check("", logger, value, std::forward<decltype(predictions)>(predictions)...);
+        [&logger,&value](auto&&... predictions){
+          EquivChecker::check(logger, value, std::forward<decltype(predictions)>(predictions)...);
         }
       };
 
@@ -187,7 +187,7 @@ namespace sequoia::testing
     }
     else
     {
-      EquivChecker::check("", logger, value, s, u..., null_advisor{});
+      EquivChecker::check(logger, value, s, u..., null_advisor{});
     }
       
     return !sentry.failure_detected();
@@ -253,11 +253,11 @@ namespace sequoia::testing
       {
         if constexpr(checker_for<detailed_equality_checker<T>, Mode, T, T>)
         {          
-          detailed_equality_checker<T>::check("", logger, obtained, prediction);
+          detailed_equality_checker<T>::check(logger, obtained, prediction);
         }
         else
         {
-          detailed_equality_checker<T>::check("", logger, obtained, prediction, advisor);
+          detailed_equality_checker<T>::check(logger, obtained, prediction, advisor);
         }
       }
       else if constexpr(range<T>)

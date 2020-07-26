@@ -18,15 +18,15 @@ namespace sequoia::testing
   struct weak_equivalence_checker<perfectly_normal_beast<T>>
   {
     template<class Logger>
-    static void check(std::string_view description, Logger& logger, const perfectly_normal_beast<T>& beast, std::initializer_list<T> prediction)
+    static void check(Logger& logger, const perfectly_normal_beast<T>& beast, std::initializer_list<T> prediction)
     {
-      check_range(description, logger, std::begin(beast.x), std::end(beast.x), std::begin(prediction), std::end(prediction));
+      check_range("", logger, std::begin(beast.x), std::end(beast.x), std::begin(prediction), std::end(prediction));
     }
 
     template<class Logger, class Advisor>
-    static void check(std::string_view description, Logger& logger, const perfectly_normal_beast<T>& beast, std::initializer_list<T> prediction, Advisor advisor)
+    static void check(Logger& logger, const perfectly_normal_beast<T>& beast, std::initializer_list<T> prediction, Advisor advisor)
     {
-      check_range(description, logger, std::begin(beast.x), std::end(beast.x), std::begin(prediction), std::end(prediction), std::move(advisor));
+      check_range("", logger, std::begin(beast.x), std::end(beast.x), std::begin(prediction), std::end(prediction), std::move(advisor));
     }
   };
 
