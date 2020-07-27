@@ -136,6 +136,30 @@ namespace sequoia::testing
     Checker::check(logger, std::forward<Args>(args)...);
   };
 
+  template<class... Ts>
+  struct equivalent_type_processor
+  {
+    static constexpr bool ends_with_tutor{};
+
+    static std::string info()
+    {
+      return make_type_info<Ts...>();
+    }
+  };
+
+  template<class... Ts>
+    requires ends_with_tutor_v<Ts...>
+  struct equivalent_type_processor<Ts...>
+  {
+    static constexpr bool ends_with_tutor{true};
+
+    static std::string info()
+    {
+      return make_type_info<Ts...>();
+    }
+  };
+  
+
   /*! \brief generic function that generates a check from any class providing a static check method.
 
       This employs a \ref test_logger_primary "sentinel" and so can be used naively.
@@ -143,14 +167,16 @@ namespace sequoia::testing
   
   template<class EquivChecker, test_mode Mode, class T, class S, class... U>
   bool general_equivalence_check(std::string_view description, test_logger<Mode>& logger, const T& value, const S& s, const U&... u)
-  {  
+  {
+    constexpr equivalent_type_processor<S, U...> processor{};
+    
     const auto msg{
-      [description](){
+      [description, types{processor.info()}](){
         std::string info{description};
         append_indented(info, "Comparison performed using:");
         append_indented(info, make_type_info<EquivChecker>());
         append_indented(info, "With equivalent types:");
-        append_indented(info, make_type_info<S, U...>());
+        append_indented(info, types);
         info.append("\n");
 
         return info;
@@ -163,7 +189,7 @@ namespace sequoia::testing
     {
       EquivChecker::check(logger, value, s, u...);
     }
-    else if constexpr(has_tutor_v<U...>)
+    else if constexpr(processor.ends_with_tutor)
     {
       auto fn{
         [&logger,&value](auto&&... predictions){
@@ -174,7 +200,7 @@ namespace sequoia::testing
       invoke_with_specified_args(fn, std::make_index_sequence<sizeof...(u)>(), s, u...);
     }
     else
-    {
+    {      
       EquivChecker::check(logger, value, s, u..., tutor<null_advisor>{});
     }
       

@@ -54,14 +54,22 @@ namespace sequoia::testing
 
   template<class A>
   concept teacher = requires() {
-    typename A::sequoia_advisor_type;
+    typename std::remove_cvref_t<A>::sequoia_advisor_type;
   };
 
   template<class... U>
-  constexpr bool has_tutor_v{
-       ((sizeof...(U) == 1) && (teacher<head_of_t<U...>>))
-    || ((sizeof...(U)  > 1) && (teacher<tail_of_t<U...>>))
-  };
+  struct ends_with_tutor : std::false_type
+  {};
+
+  template<class... U>
+  requires    (sizeof...(U) > 0u)
+           && teacher<decltype(std::get<sizeof...(U) - 1>(std::declval<std::tuple<U...>>()))>
+  struct ends_with_tutor<U...> : std::true_type
+  {};
+
+
+  template<class... U>
+  constexpr bool ends_with_tutor_v{ends_with_tutor<U...>::value};
 
   class advice_data
   {

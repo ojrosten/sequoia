@@ -24,11 +24,6 @@ namespace sequoia
     {
       using head = H;
       using tail = variadic_traits_helper<T...>;
-
-      static constexpr std::size_t size() noexcept
-      {
-        return 1 + variadic_traits_helper<T...>::size();
-      }
     };
 
     template<class H>
@@ -36,10 +31,6 @@ namespace sequoia
     {
       using head = H;
       using tail = void;
-      static constexpr std::size_t size() noexcept
-      {
-        return 1;
-      }
     };
   }
 
@@ -48,11 +39,6 @@ namespace sequoia
   {
     using head = typename impl::variadic_traits_helper<T...>::head;
     using tail = typename impl::variadic_traits_helper<T...>::tail;
-
-    static constexpr std::size_t size() noexcept
-    {
-      return impl::variadic_traits_helper<T...>::size();
-    }
   };
      
   template<>
@@ -60,23 +46,16 @@ namespace sequoia
   {
     using head = void;
     using tail = void;
-    static constexpr std::size_t size() noexcept
-    {
-      return 0u;
-    }
   };
 
   template<class... T>
   using head_of_t = typename variadic_traits<T...>::head;
-  
-  template<class... T>
-  using tail_of_t = typename variadic_traits<T...>::tail;
- 
+
   // is_base_of_head
   
   template<class T, class... Args>
   struct is_base_of_head
-    : std::is_base_of<std::remove_cvref_t<T>, std::remove_cvref_t<typename variadic_traits<Args...>::head>>
+    : std::is_base_of<std::remove_cvref_t<T>, std::remove_cvref_t<head_of_t<Args...>>>
   {};
 
   template<class T, class... Args>
