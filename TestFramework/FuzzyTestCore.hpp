@@ -58,7 +58,7 @@ namespace sequoia::testing
 
   /*! \brief Adds to the overload set dispatch_check_free_overloads */
   template<test_mode Mode, class Compare, class T, class Advisor>
-  bool dispatch_check(std::string_view description, test_logger<Mode>& logger, fuzzy_compare<Compare> c, const T& obtained, const T& prediction, const Advisor& advisor)
+  bool dispatch_check(std::string_view description, test_logger<Mode>& logger, fuzzy_compare<Compare> c, const T& obtained, const T& prediction, tutor<Advisor> advisor)
   {  
     sentinel<Mode> sentry{logger, add_type_info<T>(description)};
 
@@ -98,13 +98,13 @@ namespace sequoia::testing
   //================= namespace-level convenience functions =================//
 
   template<test_mode Mode, class Compare, class T, class Advisor>
-  bool check_approx_equality(std::string_view description, test_logger<Mode>& logger, Compare&& compare, const T& obtained, const T& prediction, Advisor advisor)
+  bool check_approx_equality(std::string_view description, test_logger<Mode>& logger, Compare&& compare, const T& obtained, const T& prediction, tutor<Advisor> advisor)
   {
     return dispatch_check(description, logger, fuzzy_compare<Compare>{compare}, obtained, prediction, std::move(advisor));
   }
 
   template<test_mode Mode, class Iter, class PredictionIter, class Compare, class Advisor>
-  bool check_range_approx(std::string_view description, test_logger<Mode>& logger, Compare compare, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, Advisor advisor)
+  bool check_range_approx(std::string_view description, test_logger<Mode>& logger, Compare compare, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, tutor<Advisor> advisor)
   {
     return check_range(description, logger, fuzzy_compare{std::move(compare)}, first, last, predictionFirst, predictionLast, std::move(advisor));
   }
@@ -128,13 +128,13 @@ namespace sequoia::testing
     fuzzy_extender& operator=(fuzzy_extender&&)      = delete;
 
     template<class T, class Compare, class Advisor=null_advisor>
-    bool check_approx_equality(std::string_view description, Compare compare, const T& obtained, const T& prediction, Advisor advisor=Advisor{})
+    bool check_approx_equality(std::string_view description, Compare compare, const T& obtained, const T& prediction, tutor<Advisor> advisor=tutor<Advisor>{})
     {
       return testing::check_approx_equality(description, m_Logger, std::move(compare), obtained, prediction, std::move(advisor));      
     }
 
     template<class Iter, class PredictionIter, class Compare, class Advisor=null_advisor>
-    bool check_range_approx(std::string_view description, Compare compare, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, Advisor advisor=Advisor{})
+    bool check_range_approx(std::string_view description, Compare compare, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, tutor<Advisor> advisor=tutor<Advisor>{})
     {
       return testing::check_range_approx(description, m_Logger, std::move(compare), first, last, predictionFirst, predictionLast, std::move(advisor));      
     }

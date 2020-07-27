@@ -75,6 +75,7 @@
     types representing these structures.
 */
 
+#include "Advice.hpp"
 #include "TestLogger.hpp"
 #include "Utilities.hpp"
 
@@ -130,22 +131,9 @@ namespace sequoia::testing
     return serializer<T>::make(value);    
   }
 
-  /// \brief Represents the absence of advice
-  struct null_advisor
-  {};
-
   template<class Checker, test_mode Mode, class... Args>
   concept checker_for = requires(test_logger<Mode>& logger, Args&&... args) {
     Checker::check(logger, std::forward<Args>(args)...);
-  };
-
-  template<class Advisor, class T>
-  concept advisor_for = invocable_r<Advisor, std::string, T>;
-
-  template<class T, class... U>
-  constexpr bool strip_advisor_v{
-       ((sizeof...(U) == 1) && (advisor_for<head_of_t<U...>, T> || std::is_same_v<std::remove_cvref_t<head_of_t<U...>>, null_advisor>))
-    || ((sizeof...(U)  > 1) && (advisor_for<tail_of_t<U...>, T> || std::is_same_v<std::remove_cvref_t<tail_of_t<U...>>, null_advisor>))
   };
 
   /*! \brief generic function that generates a check from any class providing a static check method.
@@ -175,7 +163,7 @@ namespace sequoia::testing
     {
       EquivChecker::check(logger, value, s, u...);
     }
-    else if constexpr(strip_advisor_v<T, U...>)
+    else if constexpr(has_tutor_v<U...>)
     {
       auto fn{
         [&logger,&value](auto&&... predictions){
@@ -187,7 +175,7 @@ namespace sequoia::testing
     }
     else
     {
-      EquivChecker::check(logger, value, s, u..., null_advisor{});
+      EquivChecker::check(logger, value, s, u..., tutor<null_advisor>{});
     }
       
     return !sentry.failure_detected();
@@ -219,7 +207,7 @@ namespace sequoia::testing
    */
   
   template<test_mode Mode, class T, class Advisor=null_advisor>
-  bool dispatch_check(std::string_view description, test_logger<Mode>& logger, equality_tag, const T& obtained, const T& prediction, [[maybe_unused]] Advisor advisor=Advisor{})
+  bool dispatch_check(std::string_view description, test_logger<Mode>& logger, equality_tag, const T& obtained, const T& prediction, [[maybe_unused]] tutor<Advisor> advisor=tutor<Advisor>{})
   {
     constexpr bool delegate{has_detailed_equality_checker_v<T> || range<T>};
 
@@ -251,13 +239,13 @@ namespace sequoia::testing
     {
       if constexpr(has_detailed_equality_checker_v<T>)
       {
-        if constexpr(checker_for<detailed_equality_checker<T>, Mode, T, T>)
+        if constexpr(checker_for<detailed_equality_checker<T>, Mode, T, T, tutor<Advisor>>)
         {          
-          detailed_equality_checker<T>::check(logger, obtained, prediction);
+          detailed_equality_checker<T>::check(logger, obtained, prediction, advisor);
         }
         else
         {
-          detailed_equality_checker<T>::check(logger, obtained, prediction, advisor);
+          detailed_equality_checker<T>::check(logger, obtained, prediction);
         }
       }
       else if constexpr(range<T>)
@@ -324,7 +312,7 @@ namespace sequoia::testing
   }
 
   template<test_mode Mode, class ElementDispatchDiscriminator, class Iter, class PredictionIter, class Advisor=null_advisor>
-  bool check_range(std::string_view description, test_logger<Mode>& logger, ElementDispatchDiscriminator discriminator, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, Advisor advisor=Advisor{})
+  bool check_range(std::string_view description, test_logger<Mode>& logger, ElementDispatchDiscriminator discriminator, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, tutor<Advisor> advisor=tutor<Advisor>{})
   {
     sentinel<Mode> sentry{logger, description};
     bool equal{true};
@@ -395,7 +383,7 @@ namespace sequoia::testing
   //================= namespace-level convenience functions =================//
 
   template<test_mode Mode, class T, class Advisor=null_advisor>
-  bool check_equality(std::string_view description, test_logger<Mode>& logger, const T& value, const T& prediction, Advisor advisor=Advisor{})
+  bool check_equality(std::string_view description, test_logger<Mode>& logger, const T& value, const T& prediction, tutor<Advisor> advisor=tutor<Advisor>{})
   {
     return dispatch_check(description, logger, equality_tag{}, value, prediction, std::move(advisor));
   }
@@ -413,13 +401,13 @@ namespace sequoia::testing
   }
 
   template<test_mode Mode, class Advisor=null_advisor>
-  bool check(std::string_view description, test_logger<Mode>& logger, const bool value, Advisor advisor=Advisor{})
+  bool check(std::string_view description, test_logger<Mode>& logger, const bool value, tutor<Advisor> advisor=tutor<Advisor>{})
   {
     return check_equality(description, logger, value, true, std::move(advisor));
   }
     
   template<test_mode Mode, class Iter, class PredictionIter, class Advisor=null_advisor>
-  bool check_range(std::string_view description, test_logger<Mode>& logger, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, Advisor advisor=Advisor{})
+  bool check_range(std::string_view description, test_logger<Mode>& logger, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, tutor<Advisor> advisor=tutor<Advisor>{})
   {
     return check_range(description, logger, equality_tag{}, first, last, predictionFirst, predictionLast, std::move(advisor));
   }
@@ -471,7 +459,7 @@ namespace sequoia::testing
     checker& operator=(checker&&)      = delete;
 
     template<class T, class Advisor=null_advisor>
-    bool check_equality(std::string_view description, const T& value, const T& prediction, Advisor advisor=Advisor{})
+    bool check_equality(std::string_view description, const T& value, const T& prediction, tutor<Advisor> advisor=tutor<Advisor>{})
     {
       return testing::check_equality(description, logger(), value, prediction, std::move(advisor));
     }
@@ -489,7 +477,7 @@ namespace sequoia::testing
     }
 
     template<class Advisor=null_advisor>
-    bool check(std::string_view description, const bool value, Advisor advisor=Advisor{})
+    bool check(std::string_view description, const bool value, tutor<Advisor> advisor=tutor<Advisor>{})
     {
       return testing::check(description, logger(), value, std::move(advisor));
     }
@@ -501,7 +489,7 @@ namespace sequoia::testing
     }
 
     template<class Iter, class PredictionIter, class Advisor=null_advisor>
-    bool check_range(std::string_view description, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, Advisor advisor=Advisor{})
+    bool check_range(std::string_view description, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, tutor<Advisor> advisor=tutor<Advisor>{})
     {
       return testing::check_range(description, logger(), first, last, predictionFirst, predictionLast, std::move(advisor));
     }

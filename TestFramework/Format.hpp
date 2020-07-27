@@ -135,28 +135,4 @@ namespace sequoia::testing
 
     return info;
   }
-
-  class advice_data
-  {
-  public:
-    template<class Advisor, class T>
-    advice_data(const Advisor& advisor, const T& value, const T& prediction)
-    {
-      if constexpr(std::is_invocable_r_v<std::string, Advisor, T, T>)
-      {
-        m_Advice = advisor(value, prediction);
-      }
-
-      
-      m_AdviceTypeName = type_demangler<Advisor>::make();
-    }
-
-    void append_and_tidy(std::string& message) const;    
-  private:
-    std::string m_Advice{}, m_AdviceTypeName{};
-    
-    void tidy(std::string& message) const;
-  };
-
-  void append_advice(std::string& message, const advice_data& adviceData);
 }

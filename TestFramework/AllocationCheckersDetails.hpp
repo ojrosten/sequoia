@@ -13,6 +13,8 @@
 
 #include "SemanticsCheckersDetails.hpp"
 #include "AllocationCheckersTraits.hpp"
+#include "FreeCheckers.hpp"
+
 #include <scoped_allocator>
 
 namespace sequoia::testing
@@ -33,7 +35,7 @@ namespace sequoia::testing::impl
   {
     const auto current{info.count(container)};
 
-    check_equality(detail, logger, current - previous, prediction, allocation_advice{});
+    check_equality(detail, logger, current - previous, prediction, tutor{allocation_advice{}});
   }
 
   /*! \brief Wraps basic_allocation_info, together with two prior allocation counts.

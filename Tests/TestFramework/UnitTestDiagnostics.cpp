@@ -24,13 +24,13 @@ namespace sequoia::testing
     }
 
     template<class Logger, class Advisor>
-    static void check(Logger& logger, const perfectly_normal_beast<T>& beast, std::initializer_list<T> prediction, Advisor advisor)
+    static void check(Logger& logger, const perfectly_normal_beast<T>& beast, std::initializer_list<T> prediction, tutor<Advisor> advisor)
     {
       check_range("", logger, std::begin(beast.x), std::end(beast.x), std::begin(prediction), std::end(prediction), std::move(advisor));
     }
   };
 
-  struct advisor
+  struct bland
   {
     std::string operator()(int, int) const
     {
@@ -63,24 +63,24 @@ namespace sequoia::testing
   void false_positive_diagnostics::basic_tests()
   {
     check(LINE(""), false);
-    check(LINE(""), false, [](bool, bool){
+    check(LINE(""), false, tutor{[](bool, bool){
         return std::string{"I pity the fool who confuses the bool."};
-      });
-    check(LINE("Advisor ignored"), false, [](const std::string&, const std::string&){
-        return std::string{"I pity the fool who confuses the bool."};
+      }});
+    check(LINE("Advisor ignored"), false, tutor{[](const std::string&, const std::string&){
+        return std::string{"I pity the fool who confuses the bool."};}
       });
       
     check_equality(LINE("Integers which should compare different"), 5, 4);
-    check_equality(LINE(""), 6.5, 5.6, [](double, double){
+    check_equality(LINE(""), 6.5, 5.6, tutor{[](double, double){
         return std::string{"Double, double, toil and trouble"};
-      });
+      }});
 
     check_equality(LINE(""), std::pair<int, double>{5, 7.8}, std::pair<int, double>{5, -7.8});
     check_equality(LINE(""), std::pair<int, double>{5, 7.8}, std::pair<int, double>{-5, 7.8});
-    check_equality(LINE(""), std::pair<int, double>{5, 7.8}, std::pair<int, double>{-5, 6.8}, advisor{});
+    check_equality(LINE(""), std::pair<int, double>{5, 7.8}, std::pair<int, double>{-5, 6.8}, tutor{bland{}});
 
     check_equality(LINE(""), std::tuple<int, double, float>{4, 3.4, -9.2f}, std::tuple<int, double, float>{0, 3.4, -9.2f});
-    check_equality(LINE(""), std::tuple<int, double, float>{4, 3.4, -9.2f}, std::tuple<int, double, float>{4, 0.0, -9.2f}, advisor{});
+    check_equality(LINE(""), std::tuple<int, double, float>{4, 3.4, -9.2f}, std::tuple<int, double, float>{4, 0.0, -9.2f}, tutor{bland{}});
     check_equality(LINE(""), std::tuple<int, double, float>{4, 3.4, -9.2f}, std::tuple<int, double, float>{4, 3.4, -0.0f});
 
     check_exception_thrown<std::runtime_error>(LINE("Exception expected but nothing thrown"), [](){});
@@ -92,7 +92,7 @@ namespace sequoia::testing
   {
     check_equality(LINE("Empty vector check which should fail"), std::vector<double>{}, std::vector<double>{1});
     check_equality(LINE("One element vector check which should fail due to wrong value"), std::vector<double>{1}, std::vector<double>{2},
-                   [](double, double) { return "Vector element advice"; });
+                   tutor{[](double, double) { return "Vector element advice"; }});
     check_equality(LINE("One element vector check which should fail due to differing sizes"), std::vector<double>{1}, std::vector<double>{1,2});
     check_equality(LINE("Multi-element vector comparison which should fail due to last element"), std::vector<double>{1,5}, std::vector<double>{1,4});
     check_equality(LINE("Multi-element vector comparison which should fail due to first element"), std::vector<double>{1,5}, std::vector<double>{0,5});
@@ -120,14 +120,14 @@ namespace sequoia::testing
 
     {
       type b{t_0{{2, 2.1f}, {2, 2.8f}}, {3.3, -9.6, 3.2}, {1.1, 0.2}};
-      check_equality(LINE(""), a, b, [](int, int){ return "Nested int advice";});
+      check_equality(LINE(""), a, b, tutor{[](int, int){ return "Nested int advice";}});
     }
 
     {
       type b{t_0{{1, 2.1f}, {2, 2.8f}}, {3.4, -9.6, 3.2}, {1.1, 0.2}};
-      check_equality(LINE(""), a, b, [](const std::set<double>&, const std::set<double>&){
+      check_equality(LINE(""), a, b, tutor{[](const std::set<double>&, const std::set<double>&){
                                        return "Note reordering of elements upon set construction";
-                                     });
+                                     }});
     }
   }
 
@@ -149,15 +149,15 @@ namespace sequoia::testing
   void false_positive_diagnostics::test_equivalence_checks()
   {
     check_equivalence(LINE(""), std::string{"foo"}, "fo");
-    check_equivalence(LINE(""), std::string{"foo"}, "fob", [](char, char){
+    check_equivalence(LINE(""), std::string{"foo"}, "fob", tutor{[](char, char){
         return "Sort your chars out!";
-      });
+      }});
 
     check_equivalence(LINE(""), std::vector<std::string>{{"a"}, {"b"}}, std::initializer_list<std::string_view>{"a", "c"});
 
-    check_equivalence(LINE(""), std::vector<std::string>{{"a"}, {"b"}}, std::initializer_list<std::string_view>{"a", "c"}, [](char, char){
+    check_equivalence(LINE(""), std::vector<std::string>{{"a"}, {"b"}}, std::initializer_list<std::string_view>{"a", "c"}, tutor{[](char, char){
         return "Ah, chars. So easy to get wrong.";
-      });
+                                                                                                                                 }});
 
     check_equivalence(LINE(""), std::pair<const int&, double>{5, 7.8}, std::pair<int, const double&>{-5, 6.8});
     check_equivalence(LINE(""), std::tuple<const int&, double>{5, 7.8}, std::tuple<int, const double&>{-5, 6.8});
@@ -167,16 +167,16 @@ namespace sequoia::testing
   {
     using beast = perfectly_normal_beast<int>;
     check_weak_equivalence(LINE(""), beast{1, 2}, std::initializer_list<int>{1, 1});
-    check_weak_equivalence(LINE(""), beast{1, 2}, std::initializer_list<int>{1, 1}, [](int, int){
+    check_weak_equivalence(LINE(""), beast{1, 2}, std::initializer_list<int>{1, 1}, tutor{[](int, int){
         return "Don't mess with the beast.";
-      });
+      }});
 
     using prediction = std::initializer_list<std::initializer_list<int>>;
     check_weak_equivalence(LINE(""), std::vector<beast>{{1, 2}, {3, 4}}, prediction{{1, 2}, {3, 5}});
     check_weak_equivalence(LINE(""), std::vector<beast>{{1, 2}, {3, 4}}, prediction{{1, 2}, {3, 5}},
-                           [](int, int){
+                           tutor{[](int, int){
                              return "Or at least don't mess with a vector of beasts.";
-                           });
+                           }});
   }
 
   [[nodiscard]]
