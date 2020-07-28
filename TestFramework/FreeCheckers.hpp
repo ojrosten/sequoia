@@ -347,7 +347,14 @@ namespace sequoia::testing
   template<test_mode Mode, class ElementDispatchDiscriminator, class Iter, class PredictionIter, class Advisor=null_advisor>
   bool check_range(std::string_view description, test_logger<Mode>& logger, ElementDispatchDiscriminator discriminator, Iter first, Iter last, PredictionIter predictionFirst, PredictionIter predictionLast, tutor<Advisor> advisor=tutor<Advisor>{})
   {
-    sentinel<Mode> sentry{logger, description};
+    auto info{
+      [description](){        
+        return description.empty() || description.back() == '\n'
+          ? description : std::string{description}.append("\n");
+      }
+    };
+    
+    sentinel<Mode> sentry{logger, info()};
     bool equal{true};
 
     using std::distance;
