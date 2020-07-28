@@ -155,7 +155,14 @@ namespace sequoia::testing
 
     static std::string info()
     {
-      return make_type_info<Ts...>();
+      return info(std::make_index_sequence<sizeof...(Ts) - 1>{});
+    }
+  private:
+    template<std::size_t... I>
+    [[nodiscard]]
+    static std::string info(std::index_sequence<I...>)
+    {
+      return make_type_info<std::remove_cvref_t<decltype(std::get<I>(std::declval<std::tuple<Ts...>>()))>...>();
     }
   };
   
