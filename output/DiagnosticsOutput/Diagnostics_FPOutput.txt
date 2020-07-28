@@ -614,13 +614,6 @@
 	Obtained : 5
 	Predicted: -5
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 162
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<std::pair<int const&, double> >]
-	With equivalent types:
-	[std::pair<int, double const&>]
-
 	Second element of pair is incorrect
 	[double]
 	operator== returned false
@@ -641,13 +634,6 @@
 	operator== returned false
 	Obtained : 5
 	Predicted: -5
-
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 163
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<std::tuple<int const&, double> >]
-	With equivalent types:
-	[std::tuple<int, double const&>]
 
 	Element 1 of tuple incorrect
 	[double]
@@ -846,24 +832,24 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-	Fast Task duration: 0.00140093s +- 4 * 1.41601e-05
-	Slow Task duration: 0.00139267s +- 4 * 2.18322e-05 [0.994104; (2, 2)]
+	Fast Task duration: 0.00135036s +- 4 * 8.27978e-05
+	Slow Task duration: 0.0013988s +- 4 * 2.0089e-05 [1.03588; (2, 2)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-	Fast Task duration: 0.00132881s +- 4 * 4.60705e-05
-	Slow Task duration: 0.00136388s +- 4 * 5.84233e-05 [1.02639; (2, 3)]
+	Fast Task duration: 0.00138118s +- 4 * 3.2424e-05
+	Slow Task duration: 0.00138459s +- 4 * 1.19506e-05 [1.00247; (2, 3)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-	Fast Task duration: 0.00128238s +- 4 * 0.000149111
-	Slow Task duration: 0.00474064s +- 4 * 0.000552122 [3.69676; (2, 2.5)]
+	Fast Task duration: 0.00134567s +- 4 * 7.62565e-05
+	Slow Task duration: 0.00491322s +- 4 * 0.00039986 [3.65114; (2, 2.5)]
 
 	=======================================
 
@@ -923,6 +909,7 @@
 
 	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 55
 
+	[std::vector<double, std::allocator<double> >]
 	Element 1 of range incorrect
 	[double]
 	Obtained : -1
@@ -932,8 +919,9 @@
 
 	../Tests/TestFramework/FuzzyTestDiagnostics.cpp, Line 58
 
+	[std::vector<std::vector<double, std::allocator<double> >, std::allocator<std::vector<double, std::allocator<double> > > >]
 	Element 1 of range incorrect
-
+	[std::vector<double, std::allocator<double> >]
 	Element 0 of range incorrect
 	[double]
 	Obtained : 5.1
@@ -6585,8 +6573,8 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67
 	Performance Test which should pass
 
-	Fast Task duration: 0.00139198s +- 4 * 1.66084e-05
-	Slow Task duration: 0.00263912s +- 4 * 1.0242e-05 [1.89595; (1.8, 2.1)]
+	Fast Task duration: 0.00114453s +- 4 * 0.000123392
+	Slow Task duration: 0.00216541s +- 4 * 0.000169099 [1.89196; (1.8, 2.1)]
 
 
 	=======================================
@@ -6595,8 +6583,8 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68
 	Performance Test which should pass
 
-	Fast Task duration: 0.00137437s +- 4 * 5.16723e-05
-	Slow Task duration: 0.00495032s +- 4 * 0.000408192 [3.60189; (3.6, 4.1)]
+	Fast Task duration: 0.00114549s +- 4 * 9.88023e-05
+	Slow Task duration: 0.004286s +- 4 * 0.000443158 [3.74164; (3.6, 4.1)]
 
 
 	=======================================
