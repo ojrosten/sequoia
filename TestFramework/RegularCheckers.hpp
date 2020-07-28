@@ -48,7 +48,7 @@ namespace sequoia::testing
   template<test_mode Mode, pseudoregular T, invocable<T&> Mutator>
   void check_semantics(std::string_view description, test_logger<Mode>& logger, const T& x, const T& y, Mutator yMutator)
   {
-    sentinel<Mode> sentry{logger, add_type_info<T>(description)};
+    sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
     impl::check_semantics(logger, impl::default_actions{}, x, y, yMutator);
   }
 
