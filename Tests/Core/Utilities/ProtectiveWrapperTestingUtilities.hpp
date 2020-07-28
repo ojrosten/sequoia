@@ -19,9 +19,9 @@ namespace sequoia::testing
     using type = utilities::protective_wrapper<T>;
     
     template<test_mode Mode>
-    static void check(std::string_view description, test_logger<Mode>& logger, const type& wrapper, const type& prediction)
+    static void check(test_logger<Mode>& logger, const type& wrapper, const type& prediction)
     {
-      check_equality(description, logger, wrapper.get(), prediction.get());
+      check_equality("", logger, wrapper.get(), prediction.get());
     }
   };
 

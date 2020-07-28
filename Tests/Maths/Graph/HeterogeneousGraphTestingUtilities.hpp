@@ -25,13 +25,13 @@ namespace sequoia::testing
       using nodes_equivalent_type = std::tuple<NodeWeights...>;
 
       template<test_mode Mode>
-      static void check(std::string_view description, test_logger<Mode>& logger, const type& graph, connectivity_equivalent_type connPrediction, const nodes_equivalent_type& nodesPrediction)
+      static void check(test_logger<Mode>& logger, const type& graph, connectivity_equivalent_type connPrediction, const nodes_equivalent_type& nodesPrediction)
       {
         using connectivity_t = typename type::connectivity_type;
         using nodes_t = typename type::nodes_type;
 
-        check_equivalence(description, logger, static_cast<const connectivity_t&>(graph), connPrediction);
-        check_equivalence(description, logger, static_cast<const nodes_t&>(graph), nodesPrediction);
+        check_equivalence("", logger, static_cast<const connectivity_t&>(graph), connPrediction);
+        check_equivalence("", logger, static_cast<const nodes_t&>(graph), nodesPrediction);
       }
     };
   }

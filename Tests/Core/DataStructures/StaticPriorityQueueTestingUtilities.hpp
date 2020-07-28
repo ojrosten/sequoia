@@ -19,18 +19,18 @@ namespace sequoia::testing
     using type = data_structures::static_priority_queue<T, MaxDepth, Compare>;
     
     template<test_mode Mode>
-    static void check(std::string_view description, test_logger<Mode>& logger, const type& queue, const type& prediction)
+    static void check(test_logger<Mode>& logger, const type& queue, const type& prediction)
     {
-      check_equality(append_indented(description, "Inconsistent emptiness"), logger, queue.empty(), prediction.empty());
-      check_equality(append_indented(description, "Inconsistent size"), logger, queue.size(), prediction.size());
+      check_equality("Inconsistent emptiness", logger, queue.empty(), prediction.empty());
+      check_equality("Inconsistent size", logger, queue.size(), prediction.size());
 
       if(!prediction.empty() && !queue.empty())
       {
-        check_equality(append_indented(description, "Inconsistent top element"), logger, queue.top(), prediction.top());
+        check_equality("Inconsistent top element", logger, queue.top(), prediction.top());
       }
 
-      check_equality(append_indented(description, "Inconsistent Hidden state"), logger, prediction == queue, true);
-      check_equality(append_indented(description, "Inconsistent Hidden state, symmetry of =="), logger, queue == prediction, true);
+      check_equality("Inconsistent Hidden state", logger, prediction == queue, true);
+      check_equality("Inconsistent Hidden state, symmetry of ==", logger, queue == prediction, true);
     }
   };
 }

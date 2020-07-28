@@ -69,7 +69,7 @@ namespace sequoia
   template<class T, class... Args>
   struct resolve_to_copy
     : std::bool_constant<
-           (variadic_traits<Args...>::size() == 1)
+           (sizeof...(Args) == 1)
         && (   std::is_same_v<std::remove_cvref_t<typename variadic_traits<Args...>::head>, std::remove_cvref_t<T>>
             || is_base_of_head_v<T, Args...>)
       >

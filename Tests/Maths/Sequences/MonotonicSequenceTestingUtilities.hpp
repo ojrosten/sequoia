@@ -16,14 +16,14 @@ namespace sequoia::testing
   namespace impl
   {
     template<test_mode Mode, class T>
-    void check(std::string_view description, test_logger<Mode>& logger, const T& sequence, const T& prediction)
+    void check(test_logger<Mode>& logger, const T& sequence, const T& prediction)
     {
-      if(check_equality(append_indented(description, "Size incorrect"), logger, sequence.size(), prediction.size()))
+      if(check_equality("Size incorrect", logger, sequence.size(), prediction.size()))
       {
         if(!prediction.empty())
         {
-          check_equality(append_indented(description, "Back element wrong"), logger, sequence.back(), prediction.back());
-          check_equality(append_indented(description, "Front element wrong"), logger, sequence.front(), prediction.front());
+          check_equality("Back element wrong", logger, sequence.back(), prediction.back());
+          check_equality("Front element wrong", logger, sequence.front(), prediction.front());
         }
        
         auto i_prediction{prediction.begin()}, i{sequence.begin()};
@@ -35,22 +35,22 @@ namespace sequoia::testing
         {          
           using std::distance;
           const auto d{distance(prediction.begin(), i_prediction)};
-          const std::string mess{" for index " + std::to_string(d)};
+          const auto mess{std::string{" for index "}.append(std::to_string(d))};
           
-          check_equality(append_indented(description, "Dereferenced iterator wrong" + mess), logger, *i, *i_prediction);
-          check_equality(append_indented(description, "Dereferenced citerator wrong" + mess), logger, *ci, *ci_prediction);
+          check_equality(std::string{"Dereferenced iterator wrong"}.append(mess), logger, *i, *i_prediction);
+          check_equality(std::string{"Dereferenced citerator wrong"}.append(mess), logger, *ci, *ci_prediction);
 
-          check_equality(append_indented(description, "operator[] wrong" + mess), logger, sequence[d], prediction[d]);  
+          check_equality(std::string{"operator[] wrong"}.append(mess), logger, sequence[d], prediction[d]);  
 
           const auto shift{static_cast<int64_t>(prediction.size()) - d - 1};
-          check_equality(append_indented(description, "Dereferenced riterator wrong" + mess), logger, *(ri + shift), *(ri_prediction + shift));
-          check_equality(append_indented(description, "Dereferenced criterator wrong" + mess), logger, *(cri + shift), *(cri_prediction + shift));
+          check_equality(std::string{"Dereferenced riterator wrong"}.append(mess), logger, *(ri + shift), *(ri_prediction + shift));
+          check_equality(std::string{"Dereferenced criterator wrong"}.append(mess), logger, *(cri + shift), *(cri_prediction + shift));
         }
           
-        testing::check(append_indented(description, "iterator location wrong"), logger, i_prediction == prediction.end());
-        testing::check(append_indented(description, "citerator location wrong"), logger, ci_prediction == prediction.cend());
-        testing::check(append_indented(description, "riterator location wrong"), logger, ri_prediction == prediction.rend());
-        testing::check(append_indented(description, "criterator location wrong"), logger, cri_prediction == prediction.crend());
+        testing::check("iterator location wrong", logger, i_prediction == prediction.end());
+        testing::check("citerator location wrong", logger, ci_prediction == prediction.cend());
+        testing::check("riterator location wrong", logger, ri_prediction == prediction.rend());
+        testing::check("criterator location wrong", logger, cri_prediction == prediction.crend());
       }
     }
   }
@@ -61,9 +61,9 @@ namespace sequoia::testing
     using type = maths::monotonic_sequence<T, C, Compare>;
     
     template<test_mode Mode>
-    static void check(std::string_view description, test_logger<Mode>& logger, const type& sequence, const type& prediction)
+    static void check(test_logger<Mode>& logger, const type& sequence, const type& prediction)
     {
-      impl::check(description, logger, sequence, prediction);
+      impl::check(logger, sequence, prediction);
     }
   };
 
@@ -73,9 +73,9 @@ namespace sequoia::testing
     using type = maths::monotonic_sequence<T, C, Compare>;
     
     template<test_mode Mode>
-    static void check(std::string_view description, test_logger<Mode>& logger, const type& sequence, std::initializer_list<T> prediction)
+    static void check(test_logger<Mode>& logger, const type& sequence, std::initializer_list<T> prediction)
     {
-      check_range(description, logger, sequence.begin(), sequence.end(), prediction.begin(), prediction.end());            
+      check_range("", logger, sequence.begin(), sequence.end(), prediction.begin(), prediction.end());            
     }
   };
 
@@ -85,9 +85,9 @@ namespace sequoia::testing
     using type = maths::static_monotonic_sequence<T, N, Compare>;
     
     template<test_mode Mode>
-    static void check(std::string_view description, test_logger<Mode>& logger, const type& sequence, const type& prediction)
+    static void check(test_logger<Mode>& logger, const type& sequence, const type& prediction)
     {
-      impl::check(description, logger, sequence, prediction);
+      impl::check(logger, sequence, prediction);
     }
   };
 
@@ -97,9 +97,9 @@ namespace sequoia::testing
     using type = maths::static_monotonic_sequence<T, N, Compare>;
     
     template<test_mode Mode>
-    static void check(std::string_view description, test_logger<Mode>& logger, const type& sequence, std::initializer_list<T> prediction)
+    static void check(test_logger<Mode>& logger, const type& sequence, std::initializer_list<T> prediction)
     {
-      check_range(description, logger, sequence.begin(), sequence.end(), prediction.begin(), prediction.end());            
+      check_range("", logger, sequence.begin(), sequence.end(), prediction.begin(), prediction.end());            
     }
   };
 }

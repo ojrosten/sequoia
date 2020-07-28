@@ -37,12 +37,6 @@ namespace sequoia::testing
       using traits = variadic_traits<>;
 
       check(LINE(""), []() {
-          static_assert(!traits::size());
-          return true;
-        }()
-      );
-
-      check(LINE(""), []() {
           static_assert(std::is_same_v<traits::head, void>);
           return true;
         }()
@@ -59,12 +53,6 @@ namespace sequoia::testing
       using traits = variadic_traits<int>;
 
       check(LINE(""), []() {
-          static_assert(traits::size() == 1);
-          return true;
-        }()
-      );
-
-      check(LINE(""), []() {
           static_assert(std::is_same_v<traits::head, int>);
           return true;
         }()
@@ -79,12 +67,6 @@ namespace sequoia::testing
 
     {
       using traits = variadic_traits<int, double>;
-      
-      check(LINE(""), []() {
-          static_assert(traits::size() == 2);
-          return true;
-        }()
-      );
 
       check(LINE(""), []() {
           static_assert(std::is_same_v<traits::head, int>);
@@ -107,12 +89,6 @@ namespace sequoia::testing
 
     {
       using traits = variadic_traits<int, double, char>;
-
-      check(LINE(""), []() {
-          static_assert(traits::size() == 3);
-          return true;
-        }()
-      );
 
       check(LINE(""), []() {
           static_assert(std::is_same_v<traits::head, int>);
