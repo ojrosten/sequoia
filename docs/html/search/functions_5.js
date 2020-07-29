@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['make_1325',['make',['../dc/d23/structsequoia_1_1testing_1_1type__list__demangler.html#a884e13ff4f3a83493e906fc816d72f6b',1,'sequoia::testing::type_list_demangler']]]
+  ['run_5ftests_1354',['run_tests',['../d0/d16/classsequoia_1_1testing_1_1basic__test.html#a28b585b0b756a09e3d4a1e45cf6c8e3f',1,'sequoia::testing::basic_test']]]
 ];

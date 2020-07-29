@@ -189,7 +189,7 @@ constexpr <a class="el" href="../../d1/d3a/classsequoia_1_1data__structures_1_1p
 constexpr <a class="el" href="../../d1/d3a/classsequoia_1_1data__structures_1_1partitioned__sequence__base.html">partitioned_sequence_base</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (const <a class="el" href="../../d1/d3a/classsequoia_1_1data__structures_1_1partitioned__sequence__base.html">partitioned_sequence_base</a> &amp;in)</td></tr>
 <tr class="separator:aa672428989b729053995bcd6f5fef9f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a08e68ca11779ae11d843d6f58cd538b9"><td class="memTemplParams" colspan="2"><a id="a08e68ca11779ae11d843d6f58cd538b9"></a>
-template&lt;class Allocator , class PartitionsAllocator &gt; </td></tr>
+template&lt;alloc Allocator, alloc PartitionsAllocator&gt; </td></tr>
 <tr class="memitem:a08e68ca11779ae11d843d6f58cd538b9"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>reset</b> (const Allocator &amp;allocator, const PartitionsAllocator &amp;partitionsAllocator) noexcept</td></tr>
 <tr class="separator:a08e68ca11779ae11d843d6f58cd538b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a75b36fbf8a9f9f0a0be79e0a84d9905d"><td class="memItemLeft" align="right" valign="top"><a id="a75b36fbf8a9f9f0a0be79e0a84d9905d"></a>
@@ -202,23 +202,23 @@ auto&#160;</td><td class="memItemRight" valign="bottom"><b>get_allocator</b> () 
 auto&#160;</td><td class="memItemRight" valign="bottom"><b>get_partitions_allocator</b> () const</td></tr>
 <tr class="separator:a752b740dfc96656c25d1cc188e1c6b16"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8b98ee4d5753312d77b035834c168973"><td class="memTemplParams" colspan="2"><a id="a8b98ee4d5753312d77b035834c168973"></a>
-template&lt;class Allocator &gt; </td></tr>
+template&lt;alloc Allocator&gt; </td></tr>
 <tr class="memitem:a8b98ee4d5753312d77b035834c168973"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>partitioned_sequence_base</b> (const Allocator &amp;allocator) noexcept</td></tr>
 <tr class="separator:a8b98ee4d5753312d77b035834c168973"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a33e19f911251039cb173fa4845d68faf"><td class="memTemplParams" colspan="2"><a id="a33e19f911251039cb173fa4845d68faf"></a>
-template&lt;class Allocator , class PartitionsAllocator &gt; </td></tr>
+template&lt;alloc Allocator, alloc PartitionsAllocator&gt; </td></tr>
 <tr class="memitem:a33e19f911251039cb173fa4845d68faf"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>partitioned_sequence_base</b> (const Allocator &amp;allocator, const PartitionsAllocator &amp;partitionsAllocator) noexcept</td></tr>
 <tr class="separator:a33e19f911251039cb173fa4845d68faf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aac5eea20eb8330950563d20786070b9c"><td class="memTemplParams" colspan="2"><a id="aac5eea20eb8330950563d20786070b9c"></a>
-template&lt;class Allocator , class PartitionsAllocator &gt; </td></tr>
+template&lt;alloc Allocator, alloc PartitionsAllocator&gt; </td></tr>
 <tr class="memitem:aac5eea20eb8330950563d20786070b9c"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>partitioned_sequence_base</b> (std::initializer_list&lt; std::initializer_list&lt; T &gt;&gt; list, const Allocator &amp;allocator, const PartitionsAllocator &amp;partitionsAllocator)</td></tr>
 <tr class="separator:aac5eea20eb8330950563d20786070b9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aae3d2117d524470668ebb3428037ee38"><td class="memTemplParams" colspan="2"><a id="aae3d2117d524470668ebb3428037ee38"></a>
-template&lt;class Allocator , class PartitionsAllocator &gt; </td></tr>
+template&lt;alloc Allocator, alloc PartitionsAllocator&gt; </td></tr>
 <tr class="memitem:aae3d2117d524470668ebb3428037ee38"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>partitioned_sequence_base</b> (const <a class="el" href="../../d1/d3a/classsequoia_1_1data__structures_1_1partitioned__sequence__base.html">partitioned_sequence_base</a> &amp;in, const Allocator &amp;allocator, const PartitionsAllocator &amp;partitionsAllocator)</td></tr>
 <tr class="separator:aae3d2117d524470668ebb3428037ee38"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a05cec738081824753faa229463846c0f"><td class="memTemplParams" colspan="2"><a id="a05cec738081824753faa229463846c0f"></a>
-template&lt;class Allocator , class PartitionsAllocator &gt; </td></tr>
+template&lt;alloc Allocator, alloc PartitionsAllocator&gt; </td></tr>
 <tr class="memitem:a05cec738081824753faa229463846c0f"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>partitioned_sequence_base</b> (<a class="el" href="../../d1/d3a/classsequoia_1_1data__structures_1_1partitioned__sequence__base.html">partitioned_sequence_base</a> &amp;&amp;in, const Allocator &amp;allocator, const PartitionsAllocator &amp;partitionsAllocator)</td></tr>
 <tr class="separator:a05cec738081824753faa229463846c0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab66bc74095ebb476c7983da12ac68a6b"><td class="memItemLeft" align="right" valign="top"><a id="ab66bc74095ebb476c7983da12ac68a6b"></a>

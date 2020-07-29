@@ -551,7 +551,7 @@ $(function() {
 <div class="line"><a name="l00486"></a><span class="lineno">  486</span>&#160;      </div>
 <div class="line"><a name="l00487"></a><span class="lineno">  487</span>&#160;    <span class="keyword">public</span>:</div>
 <div class="line"><a name="l00488"></a><span class="lineno">  488</span>&#160;      <span class="keyword">using</span> value_type          = T;</div>
-<div class="line"><a name="l00489"></a><span class="lineno">  489</span>&#160;      <span class="keyword">using</span> handler_type = Handler;</div>
+<div class="line"><a name="l00489"></a><span class="lineno">  489</span>&#160;      <span class="keyword">using</span> handler_type        = Handler;</div>
 <div class="line"><a name="l00490"></a><span class="lineno">  490</span>&#160;      <span class="keyword">using</span> traits_type         = Traits;</div>
 <div class="line"><a name="l00491"></a><span class="lineno">  491</span>&#160;      </div>
 <div class="line"><a name="l00492"></a><span class="lineno">  492</span>&#160;      <span class="keyword">using</span> container_type      = <span class="keyword">typename</span> partition_impl::storage_type_generator&lt;Traits, Handler&gt;::container_type;</div>
@@ -688,7 +688,7 @@ $(function() {
 <div class="line"><a name="l00623"></a><span class="lineno">  623</span>&#160; </div>
 <div class="line"><a name="l00624"></a><span class="lineno">  624</span>&#160;            <span class="keywordflow">if</span>(len_i != len_j)</div>
 <div class="line"><a name="l00625"></a><span class="lineno">  625</span>&#160;            {</div>
-<div class="line"><a name="l00626"></a><span class="lineno">  626</span>&#160;              m_Partitions.template mutate&lt;false&gt;(m_Partitions.begin() + i, m_Partitions.begin() + j,</div>
+<div class="line"><a name="l00626"></a><span class="lineno">  626</span>&#160;              m_Partitions.mutate(<a class="code" href="../../db/d6f/structsequoia_1_1maths_1_1unsafe__t.html">maths::unsafe_t</a>{}, m_Partitions.begin() + i, m_Partitions.begin() + j,</div>
 <div class="line"><a name="l00627"></a><span class="lineno">  627</span>&#160;                                  [len_i, len_j](<span class="keyword">const</span> <span class="keyword">auto</span> index){ return index + len_j - len_i;});</div>
 <div class="line"><a name="l00628"></a><span class="lineno">  628</span>&#160;            }     </div>
 <div class="line"><a name="l00629"></a><span class="lineno">  629</span>&#160;          }</div>
@@ -751,7 +751,7 @@ $(function() {
 <div class="line"><a name="l00686"></a><span class="lineno">  686</span>&#160;        <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
 <div class="line"><a name="l00687"></a><span class="lineno">  687</span>&#160;      }</div>
 <div class="line"><a name="l00688"></a><span class="lineno">  688</span>&#160; </div>
-<div class="line"><a name="l00689"></a><span class="lineno">  689</span>&#160;      <span class="keyword">template</span>&lt;<span class="keyword">class</span> Allocator, <span class="keyword">class</span> PartitionsAllocator&gt;</div>
+<div class="line"><a name="l00689"></a><span class="lineno">  689</span>&#160;      <span class="keyword">template</span>&lt;alloc Allocator, alloc PartitionsAllocator&gt;</div>
 <div class="line"><a name="l00690"></a><span class="lineno">  690</span>&#160;      <span class="keywordtype">void</span> reset(<span class="keyword">const</span> Allocator&amp; allocator, <span class="keyword">const</span> PartitionsAllocator&amp; partitionsAllocator) noexcept</div>
 <div class="line"><a name="l00691"></a><span class="lineno">  691</span>&#160;      {</div>
 <div class="line"><a name="l00692"></a><span class="lineno">  692</span>&#160;        <span class="keyword">const</span> PartitionsType partitions(partitionsAllocator);</div>
@@ -778,18 +778,18 @@ $(function() {
 <div class="line"><a name="l00713"></a><span class="lineno">  713</span>&#160;        <span class="keywordflow">return</span> m_Partitions.get_allocator();</div>
 <div class="line"><a name="l00714"></a><span class="lineno">  714</span>&#160;      }</div>
 <div class="line"><a name="l00715"></a><span class="lineno">  715</span>&#160;      </div>
-<div class="line"><a name="l00716"></a><span class="lineno">  716</span>&#160;      <span class="keyword">template</span>&lt;<span class="keyword">class</span> Allocator&gt;</div>
+<div class="line"><a name="l00716"></a><span class="lineno">  716</span>&#160;      <span class="keyword">template</span>&lt;alloc Allocator&gt;</div>
 <div class="line"><a name="l00717"></a><span class="lineno">  717</span>&#160;      constexpr <span class="keyword">explicit</span> <a class="code" href="../../d1/d3a/classsequoia_1_1data__structures_1_1partitioned__sequence__base.html">partitioned_sequence_base</a>(<span class="keyword">const</span> Allocator&amp; allocator) noexcept</div>
 <div class="line"><a name="l00718"></a><span class="lineno">  718</span>&#160;        : m_Storage(allocator)</div>
 <div class="line"><a name="l00719"></a><span class="lineno">  719</span>&#160;      {}</div>
 <div class="line"><a name="l00720"></a><span class="lineno">  720</span>&#160; </div>
-<div class="line"><a name="l00721"></a><span class="lineno">  721</span>&#160;      <span class="keyword">template</span>&lt;<span class="keyword">class</span> Allocator, <span class="keyword">class</span> PartitionsAllocator&gt;</div>
+<div class="line"><a name="l00721"></a><span class="lineno">  721</span>&#160;      <span class="keyword">template</span>&lt;alloc Allocator, alloc PartitionsAllocator&gt;</div>
 <div class="line"><a name="l00722"></a><span class="lineno">  722</span>&#160;      constexpr <a class="code" href="../../d1/d3a/classsequoia_1_1data__structures_1_1partitioned__sequence__base.html">partitioned_sequence_base</a>(<span class="keyword">const</span> Allocator&amp; allocator, <span class="keyword">const</span> PartitionsAllocator&amp; partitionsAllocator) noexcept</div>
 <div class="line"><a name="l00723"></a><span class="lineno">  723</span>&#160;        : m_Partitions(partitionsAllocator)</div>
 <div class="line"><a name="l00724"></a><span class="lineno">  724</span>&#160;        , m_Storage(allocator)</div>
 <div class="line"><a name="l00725"></a><span class="lineno">  725</span>&#160;      {}</div>
 <div class="line"><a name="l00726"></a><span class="lineno">  726</span>&#160; </div>
-<div class="line"><a name="l00727"></a><span class="lineno">  727</span>&#160;      <span class="keyword">template</span>&lt;<span class="keyword">class</span> Allocator, <span class="keyword">class</span> PartitionsAllocator&gt;</div>
+<div class="line"><a name="l00727"></a><span class="lineno">  727</span>&#160;      <span class="keyword">template</span>&lt;alloc Allocator, alloc PartitionsAllocator&gt;</div>
 <div class="line"><a name="l00728"></a><span class="lineno">  728</span>&#160;      constexpr <a class="code" href="../../d1/d3a/classsequoia_1_1data__structures_1_1partitioned__sequence__base.html">partitioned_sequence_base</a>(std::initializer_list&lt;std::initializer_list&lt;T&gt;&gt; list, <span class="keyword">const</span> Allocator&amp; allocator, <span class="keyword">const</span> PartitionsAllocator&amp; partitionsAllocator)</div>
 <div class="line"><a name="l00729"></a><span class="lineno">  729</span>&#160;        : m_Partitions(partitionsAllocator)</div>
 <div class="line"><a name="l00730"></a><span class="lineno">  730</span>&#160;        , m_Storage(allocator)</div>
@@ -797,12 +797,12 @@ $(function() {
 <div class="line"><a name="l00732"></a><span class="lineno">  732</span>&#160;        init(list);</div>
 <div class="line"><a name="l00733"></a><span class="lineno">  733</span>&#160;      }</div>
 <div class="line"><a name="l00734"></a><span class="lineno">  734</span>&#160;      </div>
-<div class="line"><a name="l00735"></a><span class="lineno">  735</span>&#160;      <span class="keyword">template</span>&lt;<span class="keyword">class</span> Allocator, <span class="keyword">class</span> PartitionsAllocator&gt;</div>
+<div class="line"><a name="l00735"></a><span class="lineno">  735</span>&#160;      <span class="keyword">template</span>&lt;alloc Allocator, alloc PartitionsAllocator&gt;</div>
 <div class="line"><a name="l00736"></a><span class="lineno">  736</span>&#160;      constexpr <a class="code" href="../../d1/d3a/classsequoia_1_1data__structures_1_1partitioned__sequence__base.html">partitioned_sequence_base</a>(<span class="keyword">const</span> <a class="code" href="../../d1/d3a/classsequoia_1_1data__structures_1_1partitioned__sequence__base.html">partitioned_sequence_base</a>&amp; in, <span class="keyword">const</span> Allocator&amp; allocator, <span class="keyword">const</span> PartitionsAllocator&amp; partitionsAllocator)</div>
 <div class="line"><a name="l00737"></a><span class="lineno">  737</span>&#160;        : <a class="code" href="../../d1/d3a/classsequoia_1_1data__structures_1_1partitioned__sequence__base.html">partitioned_sequence_base</a>(<a class="code" href="../../da/d46/structsequoia_1_1data__structures_1_1partition__impl_1_1copy__constant.html">partition_impl::copy_constant&lt;directCopy&gt;</a>{}, in, allocator, partitionsAllocator)</div>
 <div class="line"><a name="l00738"></a><span class="lineno">  738</span>&#160;      {}</div>
 <div class="line"><a name="l00739"></a><span class="lineno">  739</span>&#160;      </div>
-<div class="line"><a name="l00740"></a><span class="lineno">  740</span>&#160;      <span class="keyword">template</span>&lt;<span class="keyword">class</span> Allocator, <span class="keyword">class</span> PartitionsAllocator&gt;</div>
+<div class="line"><a name="l00740"></a><span class="lineno">  740</span>&#160;      <span class="keyword">template</span>&lt;alloc Allocator, alloc PartitionsAllocator&gt;</div>
 <div class="line"><a name="l00741"></a><span class="lineno">  741</span>&#160;      constexpr <a class="code" href="../../d1/d3a/classsequoia_1_1data__structures_1_1partitioned__sequence__base.html">partitioned_sequence_base</a>(<a class="code" href="../../d1/d3a/classsequoia_1_1data__structures_1_1partitioned__sequence__base.html">partitioned_sequence_base</a>&amp;&amp; in, <span class="keyword">const</span> Allocator&amp; allocator, <span class="keyword">const</span> PartitionsAllocator&amp; partitionsAllocator)</div>
 <div class="line"><a name="l00742"></a><span class="lineno">  742</span>&#160;        : m_Partitions{std::move(in.m_Partitions), partitionsAllocator}, m_Storage{std::move(in.m_Storage), allocator}</div>
 <div class="line"><a name="l00743"></a><span class="lineno">  743</span>&#160;      {}</div>
@@ -838,7 +838,7 @@ $(function() {
 <div class="line"><a name="l00773"></a><span class="lineno">  773</span>&#160;            m_Storage.erase(m_Storage.begin() + offset, m_Storage.begin() + m_Partitions[n]);</div>
 <div class="line"><a name="l00774"></a><span class="lineno">  774</span>&#160;          }</div>
 <div class="line"><a name="l00775"></a><span class="lineno">  775</span>&#160;          m_Partitions.erase(m_Partitions.begin() + n);</div>
-<div class="line"><a name="l00776"></a><span class="lineno">  776</span>&#160;          m_Partitions.template mutate&lt;false&gt;(m_Partitions.begin() + n, m_Partitions.end(), [erased](<span class="keyword">const</span> <span class="keyword">auto</span> index){ return index - erased; });</div>
+<div class="line"><a name="l00776"></a><span class="lineno">  776</span>&#160;          m_Partitions.mutate(<a class="code" href="../../db/d6f/structsequoia_1_1maths_1_1unsafe__t.html">maths::unsafe_t</a>{}, m_Partitions.begin() + n, m_Partitions.end(), [erased](<span class="keyword">const</span> <span class="keyword">auto</span> index){ <span class="keywordflow">return</span> index - erased; });</div>
 <div class="line"><a name="l00777"></a><span class="lineno">  777</span>&#160;        }</div>
 <div class="line"><a name="l00778"></a><span class="lineno">  778</span>&#160;      }</div>
 <div class="line"><a name="l00779"></a><span class="lineno">  779</span>&#160; </div>
@@ -960,7 +960,7 @@ $(function() {
 <div class="line"><a name="l00895"></a><span class="lineno">  895</span>&#160;      <span class="keyword">using</span> PartitionsType = <span class="keyword">typename</span> Traits::partitions_type;</div>
 <div class="line"><a name="l00896"></a><span class="lineno">  896</span>&#160;      constexpr <span class="keyword">static</span> index_type npos{partition_iterator::npos};</div>
 <div class="line"><a name="l00897"></a><span class="lineno">  897</span>&#160; </div>
-<div class="line"><a name="l00898"></a><span class="lineno">  898</span>&#160;      PartitionsType m_Partitions;</div>
+<div class="line"><a name="l00898"></a><span class="lineno">  898</span>&#160;      [[no_unique_address]] PartitionsType m_Partitions;</div>
 <div class="line"><a name="l00899"></a><span class="lineno">  899</span>&#160;      container_type m_Storage;</div>
 <div class="line"><a name="l00900"></a><span class="lineno">  900</span>&#160; </div>
 <div class="line"><a name="l00901"></a><span class="lineno">  901</span>&#160;      constexpr <a class="code" href="../../d1/d3a/classsequoia_1_1data__structures_1_1partitioned__sequence__base.html">partitioned_sequence_base</a>(static_init_type, std::initializer_list&lt;std::initializer_list&lt;T&gt;&gt; list)</div>
@@ -977,7 +977,7 @@ $(function() {
 <div class="line"><a name="l00912"></a><span class="lineno">  912</span>&#160;        : <a class="code" href="../../d1/d3a/classsequoia_1_1data__structures_1_1partitioned__sequence__base.html">partitioned_sequence_base</a>(<a class="code" href="../../da/d46/structsequoia_1_1data__structures_1_1partition__impl_1_1copy__constant.html">partition_impl::indirect_copy_type</a>{}, in, in.m_Storage.get_allocator())</div>
 <div class="line"><a name="l00913"></a><span class="lineno">  913</span>&#160;      {}</div>
 <div class="line"><a name="l00914"></a><span class="lineno">  914</span>&#160; </div>
-<div class="line"><a name="l00915"></a><span class="lineno">  915</span>&#160;      <span class="keyword">template</span>&lt;<span class="keyword">class</span> Allocator&gt;</div>
+<div class="line"><a name="l00915"></a><span class="lineno">  915</span>&#160;      <span class="keyword">template</span>&lt;alloc Allocator&gt;</div>
 <div class="line"><a name="l00916"></a><span class="lineno">  916</span>&#160;      constexpr <a class="code" href="../../d1/d3a/classsequoia_1_1data__structures_1_1partitioned__sequence__base.html">partitioned_sequence_base</a>(<a class="code" href="../../da/d46/structsequoia_1_1data__structures_1_1partition__impl_1_1copy__constant.html">partition_impl::indirect_copy_type</a>, <span class="keyword">const</span> <a class="code" href="../../d1/d3a/classsequoia_1_1data__structures_1_1partitioned__sequence__base.html">partitioned_sequence_base</a>&amp; in, <span class="keyword">const</span> Allocator&amp; allocator)</div>
 <div class="line"><a name="l00917"></a><span class="lineno">  917</span>&#160;        : m_Partitions{in.m_Partitions}</div>
 <div class="line"><a name="l00918"></a><span class="lineno">  918</span>&#160;        , m_Storage(std::allocator_traits&lt;Allocator&gt;::select_on_container_copy_construction(allocator))</div>
@@ -985,7 +985,7 @@ $(function() {
 <div class="line"><a name="l00920"></a><span class="lineno">  920</span>&#160;        init(in.m_Storage);</div>
 <div class="line"><a name="l00921"></a><span class="lineno">  921</span>&#160;      }</div>
 <div class="line"><a name="l00922"></a><span class="lineno">  922</span>&#160; </div>
-<div class="line"><a name="l00923"></a><span class="lineno">  923</span>&#160;      <span class="keyword">template</span>&lt;<span class="keyword">class</span> Allocator, <span class="keyword">class</span> PartitionsAllocator&gt;</div>
+<div class="line"><a name="l00923"></a><span class="lineno">  923</span>&#160;      <span class="keyword">template</span>&lt;alloc Allocator, alloc PartitionsAllocator&gt;</div>
 <div class="line"><a name="l00924"></a><span class="lineno">  924</span>&#160;      constexpr <a class="code" href="../../d1/d3a/classsequoia_1_1data__structures_1_1partitioned__sequence__base.html">partitioned_sequence_base</a>(<a class="code" href="../../da/d46/structsequoia_1_1data__structures_1_1partition__impl_1_1copy__constant.html">partition_impl::indirect_copy_type</a>, <span class="keyword">const</span> <a class="code" href="../../d1/d3a/classsequoia_1_1data__structures_1_1partitioned__sequence__base.html">partitioned_sequence_base</a>&amp; in, <span class="keyword">const</span> Allocator&amp; allocator, <span class="keyword">const</span> PartitionsAllocator&amp; partitionsAllocator)</div>
 <div class="line"><a name="l00925"></a><span class="lineno">  925</span>&#160;        : m_Partitions{in.m_Partitions, partitionsAllocator}</div>
 <div class="line"><a name="l00926"></a><span class="lineno">  926</span>&#160;        , m_Storage(std::allocator_traits&lt;Allocator&gt;::select_on_container_copy_construction(allocator))        </div>
@@ -998,13 +998,13 @@ $(function() {
 <div class="line"><a name="l00933"></a><span class="lineno">  933</span>&#160;        , m_Storage{in.m_Storage}</div>
 <div class="line"><a name="l00934"></a><span class="lineno">  934</span>&#160;      {}</div>
 <div class="line"><a name="l00935"></a><span class="lineno">  935</span>&#160; </div>
-<div class="line"><a name="l00936"></a><span class="lineno">  936</span>&#160;      <span class="keyword">template</span>&lt;<span class="keyword">class</span> Allocator&gt;</div>
+<div class="line"><a name="l00936"></a><span class="lineno">  936</span>&#160;      <span class="keyword">template</span>&lt;alloc Allocator&gt;</div>
 <div class="line"><a name="l00937"></a><span class="lineno">  937</span>&#160;      constexpr <a class="code" href="../../d1/d3a/classsequoia_1_1data__structures_1_1partitioned__sequence__base.html">partitioned_sequence_base</a>(<a class="code" href="../../da/d46/structsequoia_1_1data__structures_1_1partition__impl_1_1copy__constant.html">partition_impl::direct_copy_type</a>, <span class="keyword">const</span> <a class="code" href="../../d1/d3a/classsequoia_1_1data__structures_1_1partitioned__sequence__base.html">partitioned_sequence_base</a>&amp; in, <span class="keyword">const</span> Allocator&amp; allocator)</div>
 <div class="line"><a name="l00938"></a><span class="lineno">  938</span>&#160;        : m_Partitions{in.m_Partitions}</div>
 <div class="line"><a name="l00939"></a><span class="lineno">  939</span>&#160;        , m_Storage{in.m_Storage, allocator}</div>
 <div class="line"><a name="l00940"></a><span class="lineno">  940</span>&#160;      {}</div>
 <div class="line"><a name="l00941"></a><span class="lineno">  941</span>&#160; </div>
-<div class="line"><a name="l00942"></a><span class="lineno">  942</span>&#160;      <span class="keyword">template</span>&lt;<span class="keyword">class</span> Allocator, <span class="keyword">class</span> PartitionsAllocator&gt;</div>
+<div class="line"><a name="l00942"></a><span class="lineno">  942</span>&#160;      <span class="keyword">template</span>&lt;alloc Allocator, alloc PartitionsAllocator&gt;</div>
 <div class="line"><a name="l00943"></a><span class="lineno">  943</span>&#160;      constexpr <a class="code" href="../../d1/d3a/classsequoia_1_1data__structures_1_1partitioned__sequence__base.html">partitioned_sequence_base</a>(<a class="code" href="../../da/d46/structsequoia_1_1data__structures_1_1partition__impl_1_1copy__constant.html">partition_impl::direct_copy_type</a>, <span class="keyword">const</span> <a class="code" href="../../d1/d3a/classsequoia_1_1data__structures_1_1partitioned__sequence__base.html">partitioned_sequence_base</a>&amp; in, <span class="keyword">const</span> Allocator&amp; allocator, <span class="keyword">const</span> PartitionsAllocator&amp; partitionsAllocator)</div>
 <div class="line"><a name="l00944"></a><span class="lineno">  944</span>&#160;        : m_Partitions{in.m_Partitions, partitionsAllocator}</div>
 <div class="line"><a name="l00945"></a><span class="lineno">  945</span>&#160;        , m_Storage{in.m_Storage, allocator}</div>
@@ -1088,12 +1088,12 @@ $(function() {
 <div class="line"><a name="l01023"></a><span class="lineno"> 1023</span>&#160; </div>
 <div class="line"><a name="l01024"></a><span class="lineno"> 1024</span>&#160;      <span class="keywordtype">void</span> increment_partition_indices(<span class="keyword">const</span> size_type first) noexcept</div>
 <div class="line"><a name="l01025"></a><span class="lineno"> 1025</span>&#160;      {</div>
-<div class="line"><a name="l01026"></a><span class="lineno"> 1026</span>&#160;        m_Partitions.template mutate&lt;false&gt;(m_Partitions.begin() + first, m_Partitions.end(), [](<span class="keyword">const</span> <span class="keyword">auto</span> index){ return index + 1; });</div>
+<div class="line"><a name="l01026"></a><span class="lineno"> 1026</span>&#160;        m_Partitions.mutate(<a class="code" href="../../db/d6f/structsequoia_1_1maths_1_1unsafe__t.html">maths::unsafe_t</a>{}, m_Partitions.begin() + first, m_Partitions.end(), [](<span class="keyword">const</span> <span class="keyword">auto</span> index){ return index + 1; });</div>
 <div class="line"><a name="l01027"></a><span class="lineno"> 1027</span>&#160;      }</div>
 <div class="line"><a name="l01028"></a><span class="lineno"> 1028</span>&#160; </div>
 <div class="line"><a name="l01029"></a><span class="lineno"> 1029</span>&#160;      <span class="keywordtype">void</span> decrement_partition_indices(<span class="keyword">const</span> size_type first) noexcept</div>
 <div class="line"><a name="l01030"></a><span class="lineno"> 1030</span>&#160;      {</div>
-<div class="line"><a name="l01031"></a><span class="lineno"> 1031</span>&#160;        m_Partitions.template mutate&lt;false&gt;(m_Partitions.begin() + first, m_Partitions.end(), [](<span class="keyword">const</span> <span class="keyword">auto</span> index){ return index - 1; });</div>
+<div class="line"><a name="l01031"></a><span class="lineno"> 1031</span>&#160;        m_Partitions.mutate(<a class="code" href="../../db/d6f/structsequoia_1_1maths_1_1unsafe__t.html">maths::unsafe_t</a>{}, m_Partitions.begin() + first, m_Partitions.end(), [](<span class="keyword">const</span> <span class="keyword">auto</span> index){ return index - 1; });</div>
 <div class="line"><a name="l01032"></a><span class="lineno"> 1032</span>&#160;      }</div>
 <div class="line"><a name="l01033"></a><span class="lineno"> 1033</span>&#160; </div>
 <div class="line"><a name="l01034"></a><span class="lineno"> 1034</span>&#160;      <span class="keywordtype">void</span> check_range(<span class="keyword">const</span> size_type index)<span class="keyword"> const</span></div>
@@ -1258,77 +1258,78 @@ $(function() {
 <div class="line"><a name="l01193"></a><span class="lineno"> 1193</span>&#160;      <span class="keyword">using</span> base_t::erase_from_partition;</div>
 <div class="line"><a name="l01194"></a><span class="lineno"> 1194</span>&#160;    };</div>
 <div class="line"><a name="l01195"></a><span class="lineno"> 1195</span>&#160; </div>
-<div class="line"><a name="l01196"></a><span class="lineno"><a class="line" href="../../d3/dff/structsequoia_1_1data__structures_1_1static__partitioned__sequence__traits.html"> 1196</a></span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> T, std::<span class="keywordtype">size_t</span> Npartitions, std::<span class="keywordtype">size_t</span> Nelements, <span class="keyword">class</span> IndexType&gt; <span class="keyword">struct </span><a class="code" href="../../d3/dff/structsequoia_1_1data__structures_1_1static__partitioned__sequence__traits.html">static_partitioned_sequence_traits</a></div>
-<div class="line"><a name="l01197"></a><span class="lineno"> 1197</span>&#160;    {</div>
-<div class="line"><a name="l01198"></a><span class="lineno"> 1198</span>&#160;      constexpr <span class="keyword">static</span> <span class="keywordtype">bool</span> static_storage_v{<span class="keyword">true</span>};</div>
-<div class="line"><a name="l01199"></a><span class="lineno"> 1199</span>&#160;      constexpr <span class="keyword">static</span> <span class="keywordtype">bool</span> throw_on_range_error{<span class="keyword">true</span>};</div>
-<div class="line"><a name="l01200"></a><span class="lineno"> 1200</span>&#160;      constexpr <span class="keyword">static</span> std::size_t num_partitions_v{Npartitions};</div>
-<div class="line"><a name="l01201"></a><span class="lineno"> 1201</span>&#160;      constexpr <span class="keyword">static</span> std::size_t num_elements_v{Nelements};</div>
-<div class="line"><a name="l01202"></a><span class="lineno"> 1202</span>&#160;      </div>
-<div class="line"><a name="l01203"></a><span class="lineno"> 1203</span>&#160;      <span class="keyword">using</span> index_type = IndexType;</div>
-<div class="line"><a name="l01204"></a><span class="lineno"> 1204</span>&#160;      <span class="keyword">using</span> partition_index_type = std::make_unsigned_t&lt;IndexType&gt;;      </div>
-<div class="line"><a name="l01205"></a><span class="lineno"> 1205</span>&#160;      <span class="keyword">using</span> <a class="code" href="../../dd/d5c/classsequoia_1_1maths_1_1static__monotonic__sequence.html">partitions_type</a> = <a class="code" href="../../dd/d5c/classsequoia_1_1maths_1_1static__monotonic__sequence.html">maths::static_monotonic_sequence&lt;partition_index_type, Npartitions, std::greater&lt;partition_index_type&gt;</a>&gt;;</div>
-<div class="line"><a name="l01206"></a><span class="lineno"> 1206</span>&#160;      </div>
-<div class="line"><a name="l01207"></a><span class="lineno"> 1207</span>&#160;      <span class="keyword">template</span>&lt;<span class="keyword">class</span> S&gt; <span class="keyword">using</span> container_type = std::array&lt;S, Nelements&gt;;</div>
-<div class="line"><a name="l01208"></a><span class="lineno"> 1208</span>&#160;    };</div>
-<div class="line"><a name="l01209"></a><span class="lineno"> 1209</span>&#160; </div>
-<div class="line"><a name="l01210"></a><span class="lineno"> 1210</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> T, std::<span class="keywordtype">size_t</span> Npartitions, std::<span class="keywordtype">size_t</span> Nelements, <span class="keyword">class</span> IndexType=std::<span class="keywordtype">size_t</span>&gt;</div>
-<div class="line"><a name="l01211"></a><span class="lineno"><a class="line" href="../../d1/d0b/classsequoia_1_1data__structures_1_1static__partitioned__sequence.html"> 1211</a></span>&#160;    <span class="keyword">class </span><a class="code" href="../../d1/d0b/classsequoia_1_1data__structures_1_1static__partitioned__sequence.html">static_partitioned_sequence</a> :</div>
-<div class="line"><a name="l01212"></a><span class="lineno"> 1212</span>&#160;      <span class="keyword">public</span> <a class="code" href="../../d1/d3a/classsequoia_1_1data__structures_1_1partitioned__sequence__base.html">partitioned_sequence_base</a>&lt;T, ownership::independent&lt;T&gt;, static_partitioned_sequence_traits&lt;T, Npartitions, Nelements,IndexType&gt;&gt;</div>
-<div class="line"><a name="l01213"></a><span class="lineno"> 1213</span>&#160;    {</div>
-<div class="line"><a name="l01214"></a><span class="lineno"> 1214</span>&#160;    <span class="keyword">public</span>:</div>
-<div class="line"><a name="l01215"></a><span class="lineno"> 1215</span>&#160;      <span class="keyword">using</span> <a class="code" href="../../d1/d3a/classsequoia_1_1data__structures_1_1partitioned__sequence__base.html">partitioned_sequence_base</a>&lt;</div>
-<div class="line"><a name="l01216"></a><span class="lineno"> 1216</span>&#160;        T,</div>
-<div class="line"><a name="l01217"></a><span class="lineno"> 1217</span>&#160;        <a class="code" href="../../de/db9/structsequoia_1_1ownership_1_1independent.html">ownership::independent&lt;T&gt;</a>,</div>
-<div class="line"><a name="l01218"></a><span class="lineno"> 1218</span>&#160;        <a class="code" href="../../d3/dff/structsequoia_1_1data__structures_1_1static__partitioned__sequence__traits.html">static_partitioned_sequence_traits&lt;T, Npartitions, Nelements,IndexType&gt;</a></div>
-<div class="line"><a name="l01219"></a><span class="lineno"> 1219</span>&#160;      &gt;<a class="code" href="../../d1/d3a/classsequoia_1_1data__structures_1_1partitioned__sequence__base.html">::partitioned_sequence_base</a>;</div>
-<div class="line"><a name="l01220"></a><span class="lineno"> 1220</span>&#160;    };</div>
-<div class="line"><a name="l01221"></a><span class="lineno"> 1221</span>&#160;    </div>
-<div class="line"><a name="l01222"></a><span class="lineno"> 1222</span>&#160; </div>
-<div class="line"><a name="l01223"></a><span class="lineno"> 1223</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Storage1, <span class="keyword">class</span> Storage2&gt;</div>
-<div class="line"><a name="l01224"></a><span class="lineno"> 1224</span>&#160;    constexpr <span class="keywordtype">bool</span> isomorphic(<span class="keyword">const</span> Storage1&amp; lhs, <span class="keyword">const</span> Storage2&amp; rhs) noexcept</div>
-<div class="line"><a name="l01225"></a><span class="lineno"> 1225</span>&#160;    {</div>
-<div class="line"><a name="l01226"></a><span class="lineno"> 1226</span>&#160;      <span class="keyword">using</span> size_type = std::common_type_t&lt;</div>
-<div class="line"><a name="l01227"></a><span class="lineno"> 1227</span>&#160;        <span class="keyword">typename</span> Storage1::size_type,</div>
-<div class="line"><a name="l01228"></a><span class="lineno"> 1228</span>&#160;        <span class="keyword">typename</span> Storage2::size_type</div>
-<div class="line"><a name="l01229"></a><span class="lineno"> 1229</span>&#160;      &gt;;</div>
-<div class="line"><a name="l01230"></a><span class="lineno"> 1230</span>&#160;      </div>
-<div class="line"><a name="l01231"></a><span class="lineno"> 1231</span>&#160;      <span class="keywordflow">if</span>(lhs.num_partitions() != rhs.num_partitions()) <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l01232"></a><span class="lineno"> 1232</span>&#160; </div>
-<div class="line"><a name="l01233"></a><span class="lineno"> 1233</span>&#160;      <span class="keywordflow">for</span>(size_type i{}; i &lt; lhs.num_partitions(); ++i)</div>
-<div class="line"><a name="l01234"></a><span class="lineno"> 1234</span>&#160;      {</div>
-<div class="line"><a name="l01235"></a><span class="lineno"> 1235</span>&#160;        <span class="keywordflow">if</span>(distance(lhs.cbegin_partition(i), lhs.cend_partition(i))</div>
-<div class="line"><a name="l01236"></a><span class="lineno"> 1236</span>&#160;          != distance(rhs.cbegin_partition(i), rhs.cend_partition(i)))</div>
-<div class="line"><a name="l01237"></a><span class="lineno"> 1237</span>&#160;        {</div>
-<div class="line"><a name="l01238"></a><span class="lineno"> 1238</span>&#160;          <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l01239"></a><span class="lineno"> 1239</span>&#160;        }</div>
-<div class="line"><a name="l01240"></a><span class="lineno"> 1240</span>&#160; </div>
-<div class="line"><a name="l01241"></a><span class="lineno"> 1241</span>&#160;        <span class="keyword">auto</span> iter1{lhs.cbegin_partition(i)};</div>
-<div class="line"><a name="l01242"></a><span class="lineno"> 1242</span>&#160;        <span class="keyword">auto</span> iter2{rhs.cbegin_partition(i)};</div>
-<div class="line"><a name="l01243"></a><span class="lineno"> 1243</span>&#160;        <span class="keywordflow">for</span>(; iter1 != lhs.cend_partition(i); ++iter1, ++iter2)</div>
-<div class="line"><a name="l01244"></a><span class="lineno"> 1244</span>&#160;        {</div>
-<div class="line"><a name="l01245"></a><span class="lineno"> 1245</span>&#160;          <span class="keywordflow">if</span>(*iter1 != *iter2) <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l01246"></a><span class="lineno"> 1246</span>&#160;        }</div>
-<div class="line"><a name="l01247"></a><span class="lineno"> 1247</span>&#160;      }</div>
-<div class="line"><a name="l01248"></a><span class="lineno"> 1248</span>&#160; </div>
-<div class="line"><a name="l01249"></a><span class="lineno"> 1249</span>&#160;      <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l01250"></a><span class="lineno"> 1250</span>&#160;    }    </div>
-<div class="line"><a name="l01251"></a><span class="lineno"> 1251</span>&#160;  }</div>
-<div class="line"><a name="l01252"></a><span class="lineno"> 1252</span>&#160; </div>
-<div class="line"><a name="l01253"></a><span class="lineno"> 1253</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> PartitionedData, <span class="keyword">class</span> Pred, <span class="keyword">class</span> Index=<span class="keyword">typename</span> PartitionedData::index_type&gt;</div>
-<div class="line"><a name="l01254"></a><span class="lineno"> 1254</span>&#160;  <span class="keywordtype">void</span> erase_from_partition_if(PartitionedData&amp; data, <span class="keyword">const</span> Index partitionIndex, Pred pred)</div>
-<div class="line"><a name="l01255"></a><span class="lineno"> 1255</span>&#160;  {</div>
-<div class="line"><a name="l01256"></a><span class="lineno"> 1256</span>&#160;    <span class="keyword">auto</span> i{data.begin_partition(partitionIndex)};</div>
-<div class="line"><a name="l01257"></a><span class="lineno"> 1257</span>&#160;    <span class="keywordflow">while</span>(i != data.end_partition(partitionIndex))</div>
-<div class="line"><a name="l01258"></a><span class="lineno"> 1258</span>&#160;    {</div>
-<div class="line"><a name="l01259"></a><span class="lineno"> 1259</span>&#160;      i = pred(*i) ? data.erase_from_partition(i) : std::next(i);</div>
-<div class="line"><a name="l01260"></a><span class="lineno"> 1260</span>&#160;    }</div>
-<div class="line"><a name="l01261"></a><span class="lineno"> 1261</span>&#160;  }  </div>
-<div class="line"><a name="l01262"></a><span class="lineno"> 1262</span>&#160;}</div>
+<div class="line"><a name="l01196"></a><span class="lineno"> 1196</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> T, std::<span class="keywordtype">size_t</span> Npartitions, std::<span class="keywordtype">size_t</span> Nelements, <span class="keyword">class</span> IndexType&gt;</div>
+<div class="line"><a name="l01197"></a><span class="lineno"><a class="line" href="../../d3/dff/structsequoia_1_1data__structures_1_1static__partitioned__sequence__traits.html"> 1197</a></span>&#160;    <span class="keyword">struct </span><a class="code" href="../../d3/dff/structsequoia_1_1data__structures_1_1static__partitioned__sequence__traits.html">static_partitioned_sequence_traits</a></div>
+<div class="line"><a name="l01198"></a><span class="lineno"> 1198</span>&#160;    {</div>
+<div class="line"><a name="l01199"></a><span class="lineno"> 1199</span>&#160;      constexpr <span class="keyword">static</span> <span class="keywordtype">bool</span> static_storage_v{<span class="keyword">true</span>};</div>
+<div class="line"><a name="l01200"></a><span class="lineno"> 1200</span>&#160;      constexpr <span class="keyword">static</span> <span class="keywordtype">bool</span> throw_on_range_error{<span class="keyword">true</span>};</div>
+<div class="line"><a name="l01201"></a><span class="lineno"> 1201</span>&#160;      constexpr <span class="keyword">static</span> std::size_t num_partitions_v{Npartitions};</div>
+<div class="line"><a name="l01202"></a><span class="lineno"> 1202</span>&#160;      constexpr <span class="keyword">static</span> std::size_t num_elements_v{Nelements};</div>
+<div class="line"><a name="l01203"></a><span class="lineno"> 1203</span>&#160;      </div>
+<div class="line"><a name="l01204"></a><span class="lineno"> 1204</span>&#160;      <span class="keyword">using</span> index_type = IndexType;</div>
+<div class="line"><a name="l01205"></a><span class="lineno"> 1205</span>&#160;      <span class="keyword">using</span> partition_index_type = std::make_unsigned_t&lt;IndexType&gt;;      </div>
+<div class="line"><a name="l01206"></a><span class="lineno"> 1206</span>&#160;      <span class="keyword">using</span> <a class="code" href="../../dd/d5c/classsequoia_1_1maths_1_1static__monotonic__sequence.html">partitions_type</a> = <a class="code" href="../../dd/d5c/classsequoia_1_1maths_1_1static__monotonic__sequence.html">maths::static_monotonic_sequence&lt;partition_index_type, Npartitions, std::greater&lt;partition_index_type&gt;</a>&gt;;</div>
+<div class="line"><a name="l01207"></a><span class="lineno"> 1207</span>&#160;      </div>
+<div class="line"><a name="l01208"></a><span class="lineno"> 1208</span>&#160;      <span class="keyword">template</span>&lt;<span class="keyword">class</span> S&gt; <span class="keyword">using</span> container_type = std::array&lt;S, Nelements&gt;;</div>
+<div class="line"><a name="l01209"></a><span class="lineno"> 1209</span>&#160;    };</div>
+<div class="line"><a name="l01210"></a><span class="lineno"> 1210</span>&#160; </div>
+<div class="line"><a name="l01211"></a><span class="lineno"> 1211</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> T, std::<span class="keywordtype">size_t</span> Npartitions, std::<span class="keywordtype">size_t</span> Nelements, <span class="keyword">class</span> IndexType=std::<span class="keywordtype">size_t</span>&gt;</div>
+<div class="line"><a name="l01212"></a><span class="lineno"><a class="line" href="../../d1/d0b/classsequoia_1_1data__structures_1_1static__partitioned__sequence.html"> 1212</a></span>&#160;    <span class="keyword">class </span><a class="code" href="../../d1/d0b/classsequoia_1_1data__structures_1_1static__partitioned__sequence.html">static_partitioned_sequence</a> :</div>
+<div class="line"><a name="l01213"></a><span class="lineno"> 1213</span>&#160;      <span class="keyword">public</span> <a class="code" href="../../d1/d3a/classsequoia_1_1data__structures_1_1partitioned__sequence__base.html">partitioned_sequence_base</a>&lt;T, ownership::independent&lt;T&gt;, static_partitioned_sequence_traits&lt;T, Npartitions, Nelements,IndexType&gt;&gt;</div>
+<div class="line"><a name="l01214"></a><span class="lineno"> 1214</span>&#160;    {</div>
+<div class="line"><a name="l01215"></a><span class="lineno"> 1215</span>&#160;    <span class="keyword">public</span>:</div>
+<div class="line"><a name="l01216"></a><span class="lineno"> 1216</span>&#160;      <span class="keyword">using</span> <a class="code" href="../../d1/d3a/classsequoia_1_1data__structures_1_1partitioned__sequence__base.html">partitioned_sequence_base</a>&lt;</div>
+<div class="line"><a name="l01217"></a><span class="lineno"> 1217</span>&#160;        T,</div>
+<div class="line"><a name="l01218"></a><span class="lineno"> 1218</span>&#160;        <a class="code" href="../../de/db9/structsequoia_1_1ownership_1_1independent.html">ownership::independent&lt;T&gt;</a>,</div>
+<div class="line"><a name="l01219"></a><span class="lineno"> 1219</span>&#160;        <a class="code" href="../../d3/dff/structsequoia_1_1data__structures_1_1static__partitioned__sequence__traits.html">static_partitioned_sequence_traits&lt;T, Npartitions, Nelements,IndexType&gt;</a></div>
+<div class="line"><a name="l01220"></a><span class="lineno"> 1220</span>&#160;      &gt;<a class="code" href="../../d1/d3a/classsequoia_1_1data__structures_1_1partitioned__sequence__base.html">::partitioned_sequence_base</a>;</div>
+<div class="line"><a name="l01221"></a><span class="lineno"> 1221</span>&#160;    };</div>
+<div class="line"><a name="l01222"></a><span class="lineno"> 1222</span>&#160;    </div>
+<div class="line"><a name="l01223"></a><span class="lineno"> 1223</span>&#160; </div>
+<div class="line"><a name="l01224"></a><span class="lineno"> 1224</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Storage1, <span class="keyword">class</span> Storage2&gt;</div>
+<div class="line"><a name="l01225"></a><span class="lineno"> 1225</span>&#160;    constexpr <span class="keywordtype">bool</span> isomorphic(<span class="keyword">const</span> Storage1&amp; lhs, <span class="keyword">const</span> Storage2&amp; rhs) noexcept</div>
+<div class="line"><a name="l01226"></a><span class="lineno"> 1226</span>&#160;    {</div>
+<div class="line"><a name="l01227"></a><span class="lineno"> 1227</span>&#160;      <span class="keyword">using</span> size_type = std::common_type_t&lt;</div>
+<div class="line"><a name="l01228"></a><span class="lineno"> 1228</span>&#160;        <span class="keyword">typename</span> Storage1::size_type,</div>
+<div class="line"><a name="l01229"></a><span class="lineno"> 1229</span>&#160;        <span class="keyword">typename</span> Storage2::size_type</div>
+<div class="line"><a name="l01230"></a><span class="lineno"> 1230</span>&#160;      &gt;;</div>
+<div class="line"><a name="l01231"></a><span class="lineno"> 1231</span>&#160;      </div>
+<div class="line"><a name="l01232"></a><span class="lineno"> 1232</span>&#160;      <span class="keywordflow">if</span>(lhs.num_partitions() != rhs.num_partitions()) <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l01233"></a><span class="lineno"> 1233</span>&#160; </div>
+<div class="line"><a name="l01234"></a><span class="lineno"> 1234</span>&#160;      <span class="keywordflow">for</span>(size_type i{}; i &lt; lhs.num_partitions(); ++i)</div>
+<div class="line"><a name="l01235"></a><span class="lineno"> 1235</span>&#160;      {</div>
+<div class="line"><a name="l01236"></a><span class="lineno"> 1236</span>&#160;        <span class="keywordflow">if</span>(distance(lhs.cbegin_partition(i), lhs.cend_partition(i))</div>
+<div class="line"><a name="l01237"></a><span class="lineno"> 1237</span>&#160;          != distance(rhs.cbegin_partition(i), rhs.cend_partition(i)))</div>
+<div class="line"><a name="l01238"></a><span class="lineno"> 1238</span>&#160;        {</div>
+<div class="line"><a name="l01239"></a><span class="lineno"> 1239</span>&#160;          <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l01240"></a><span class="lineno"> 1240</span>&#160;        }</div>
+<div class="line"><a name="l01241"></a><span class="lineno"> 1241</span>&#160; </div>
+<div class="line"><a name="l01242"></a><span class="lineno"> 1242</span>&#160;        <span class="keyword">auto</span> iter1{lhs.cbegin_partition(i)};</div>
+<div class="line"><a name="l01243"></a><span class="lineno"> 1243</span>&#160;        <span class="keyword">auto</span> iter2{rhs.cbegin_partition(i)};</div>
+<div class="line"><a name="l01244"></a><span class="lineno"> 1244</span>&#160;        <span class="keywordflow">for</span>(; iter1 != lhs.cend_partition(i); ++iter1, ++iter2)</div>
+<div class="line"><a name="l01245"></a><span class="lineno"> 1245</span>&#160;        {</div>
+<div class="line"><a name="l01246"></a><span class="lineno"> 1246</span>&#160;          <span class="keywordflow">if</span>(*iter1 != *iter2) <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l01247"></a><span class="lineno"> 1247</span>&#160;        }</div>
+<div class="line"><a name="l01248"></a><span class="lineno"> 1248</span>&#160;      }</div>
+<div class="line"><a name="l01249"></a><span class="lineno"> 1249</span>&#160; </div>
+<div class="line"><a name="l01250"></a><span class="lineno"> 1250</span>&#160;      <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l01251"></a><span class="lineno"> 1251</span>&#160;    }    </div>
+<div class="line"><a name="l01252"></a><span class="lineno"> 1252</span>&#160;  }</div>
+<div class="line"><a name="l01253"></a><span class="lineno"> 1253</span>&#160; </div>
+<div class="line"><a name="l01254"></a><span class="lineno"> 1254</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> PartitionedData, <span class="keyword">class</span> Pred, <span class="keyword">class</span> Index=<span class="keyword">typename</span> PartitionedData::index_type&gt;</div>
+<div class="line"><a name="l01255"></a><span class="lineno"> 1255</span>&#160;  <span class="keywordtype">void</span> erase_from_partition_if(PartitionedData&amp; data, <span class="keyword">const</span> Index partitionIndex, Pred pred)</div>
+<div class="line"><a name="l01256"></a><span class="lineno"> 1256</span>&#160;  {</div>
+<div class="line"><a name="l01257"></a><span class="lineno"> 1257</span>&#160;    <span class="keyword">auto</span> i{data.begin_partition(partitionIndex)};</div>
+<div class="line"><a name="l01258"></a><span class="lineno"> 1258</span>&#160;    <span class="keywordflow">while</span>(i != data.end_partition(partitionIndex))</div>
+<div class="line"><a name="l01259"></a><span class="lineno"> 1259</span>&#160;    {</div>
+<div class="line"><a name="l01260"></a><span class="lineno"> 1260</span>&#160;      i = pred(*i) ? data.erase_from_partition(i) : std::next(i);</div>
+<div class="line"><a name="l01261"></a><span class="lineno"> 1261</span>&#160;    }</div>
+<div class="line"><a name="l01262"></a><span class="lineno"> 1262</span>&#160;  }  </div>
+<div class="line"><a name="l01263"></a><span class="lineno"> 1263</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="astructsequoia_1_1ownership_1_1independent_html"><div class="ttname"><a href="../../de/db9/structsequoia_1_1ownership_1_1independent.html">sequoia::ownership::independent</a></div><div class="ttdef"><b>Definition:</b> Handlers.hpp:82</div></div>
 <div class="ttc" id="astructsequoia_1_1data__structures_1_1bucketed__storage__traits_html"><div class="ttname"><a href="../../dc/dec/structsequoia_1_1data__structures_1_1bucketed__storage__traits.html">sequoia::data_structures::bucketed_storage_traits</a></div><div class="ttdef"><b>Definition:</b> PartitionedData.hpp:62</div></div>
-<div class="ttc" id="astructsequoia_1_1data__structures_1_1static__partitioned__sequence__traits_html"><div class="ttname"><a href="../../d3/dff/structsequoia_1_1data__structures_1_1static__partitioned__sequence__traits.html">sequoia::data_structures::static_partitioned_sequence_traits</a></div><div class="ttdef"><b>Definition:</b> PartitionedData.hpp:1197</div></div>
+<div class="ttc" id="astructsequoia_1_1data__structures_1_1static__partitioned__sequence__traits_html"><div class="ttname"><a href="../../d3/dff/structsequoia_1_1data__structures_1_1static__partitioned__sequence__traits.html">sequoia::data_structures::static_partitioned_sequence_traits</a></div><div class="ttdef"><b>Definition:</b> PartitionedData.hpp:1198</div></div>
 <div class="ttc" id="aAssignmentUtilities_8hpp_html"><div class="ttname"><a href="../../d0/dbb/AssignmentUtilities_8hpp.html">AssignmentUtilities.hpp</a></div><div class="ttdoc">Helper for dealing with allocator propagation during copy assignment.</div></div>
 <div class="ttc" id="aclasssequoia_1_1utilities_1_1iterator_html"><div class="ttname"><a href="../../d3/d33/classsequoia_1_1utilities_1_1iterator.html">sequoia::utilities::iterator</a></div><div class="ttdoc">An iterator with policies controlling dereferencing and auxiliary data.</div><div class="ttdef"><b>Definition:</b> Iterator.hpp:91</div></div>
 <div class="ttc" id="aclasssequoia_1_1data__structures_1_1partition__impl_1_1data__duplicator_html"><div class="ttname"><a href="../../d2/d63/classsequoia_1_1data__structures_1_1partition__impl_1_1data__duplicator.html">sequoia::data_structures::partition_impl::data_duplicator</a></div><div class="ttdef"><b>Definition:</b> PartitionedDataDetails.hpp:157</div></div>
@@ -1338,14 +1339,15 @@ $(function() {
 <div class="ttc" id="aTypeTraits_8hpp_html"><div class="ttname"><a href="../../d0/d81/TypeTraits_8hpp.html">TypeTraits.hpp</a></div><div class="ttdoc">Traits added as required by other components of the library.</div></div>
 <div class="ttc" id="aPartitionedDataDetails_8hpp_html"><div class="ttname"><a href="../../d4/d71/PartitionedDataDetails_8hpp.html">PartitionedDataDetails.hpp</a></div><div class="ttdoc">Metaprogramming components for partitioned data.</div></div>
 <div class="ttc" id="aMonotonicSequence_8hpp_html"><div class="ttname"><a href="../../d7/d1c/MonotonicSequence_8hpp.html">MonotonicSequence.hpp</a></div><div class="ttdoc">Classes implementing the concept of a monotonic sequence.</div></div>
-<div class="ttc" id="aclasssequoia_1_1maths_1_1static__monotonic__sequence_html"><div class="ttname"><a href="../../dd/d5c/classsequoia_1_1maths_1_1static__monotonic__sequence.html">sequoia::maths::static_monotonic_sequence</a></div><div class="ttdef"><b>Definition:</b> MonotonicSequence.hpp:297</div></div>
+<div class="ttc" id="aclasssequoia_1_1maths_1_1static__monotonic__sequence_html"><div class="ttname"><a href="../../dd/d5c/classsequoia_1_1maths_1_1static__monotonic__sequence.html">sequoia::maths::static_monotonic_sequence</a></div><div class="ttdef"><b>Definition:</b> MonotonicSequence.hpp:311</div></div>
 <div class="ttc" id="aArrayUtilities_8hpp_html"><div class="ttname"><a href="../../d8/def/ArrayUtilities_8hpp.html">ArrayUtilities.hpp</a></div><div class="ttdoc">Utility to convert an initializer_list into an array, potentially transforming the inlitializer_list ...</div></div>
 <div class="ttc" id="astructsequoia_1_1impl_1_1assignment__helper_html"><div class="ttname"><a href="../../d6/d69/structsequoia_1_1impl_1_1assignment__helper.html">sequoia::impl::assignment_helper</a></div><div class="ttdef"><b>Definition:</b> AssignmentUtilities.hpp:37</div></div>
 <div class="ttc" id="aclasssequoia_1_1data__structures_1_1bucketed__storage_html"><div class="ttname"><a href="../../da/d7b/classsequoia_1_1data__structures_1_1bucketed__storage.html">sequoia::data_structures::bucketed_storage</a></div><div class="ttdef"><b>Definition:</b> PartitionedData.hpp:74</div></div>
 <div class="ttc" id="aclasssequoia_1_1data__structures_1_1partitioned__sequence__base_html"><div class="ttname"><a href="../../d1/d3a/classsequoia_1_1data__structures_1_1partitioned__sequence__base.html">sequoia::data_structures::partitioned_sequence_base</a></div><div class="ttdef"><b>Definition:</b> PartitionedData.hpp:484</div></div>
-<div class="ttc" id="aclasssequoia_1_1data__structures_1_1static__partitioned__sequence_html"><div class="ttname"><a href="../../d1/d0b/classsequoia_1_1data__structures_1_1static__partitioned__sequence.html">sequoia::data_structures::static_partitioned_sequence</a></div><div class="ttdef"><b>Definition:</b> PartitionedData.hpp:1213</div></div>
+<div class="ttc" id="astructsequoia_1_1maths_1_1unsafe__t_html"><div class="ttname"><a href="../../db/d6f/structsequoia_1_1maths_1_1unsafe__t.html">sequoia::maths::unsafe_t</a></div><div class="ttdef"><b>Definition:</b> MonotonicSequence.hpp:22</div></div>
+<div class="ttc" id="aclasssequoia_1_1data__structures_1_1static__partitioned__sequence_html"><div class="ttname"><a href="../../d1/d0b/classsequoia_1_1data__structures_1_1static__partitioned__sequence.html">sequoia::data_structures::static_partitioned_sequence</a></div><div class="ttdef"><b>Definition:</b> PartitionedData.hpp:1214</div></div>
 <div class="ttc" id="astructsequoia_1_1data__structures_1_1partitioned__sequence__traits_html"><div class="ttname"><a href="../../df/d61/structsequoia_1_1data__structures_1_1partitioned__sequence__traits.html">sequoia::data_structures::partitioned_sequence_traits</a></div><div class="ttdef"><b>Definition:</b> PartitionedData.hpp:1117</div></div>
-<div class="ttc" id="aclasssequoia_1_1maths_1_1monotonic__sequence_html"><div class="ttname"><a href="../../d7/ddc/classsequoia_1_1maths_1_1monotonic__sequence.html">sequoia::maths::monotonic_sequence</a></div><div class="ttdef"><b>Definition:</b> MonotonicSequence.hpp:242</div></div>
+<div class="ttc" id="aclasssequoia_1_1maths_1_1monotonic__sequence_html"><div class="ttname"><a href="../../d7/ddc/classsequoia_1_1maths_1_1monotonic__sequence.html">sequoia::maths::monotonic_sequence</a></div><div class="ttdef"><b>Definition:</b> MonotonicSequence.hpp:256</div></div>
 <div class="ttc" id="aclasssequoia_1_1data__structures_1_1partitioned__sequence_html"><div class="ttname"><a href="../../d0/db0/classsequoia_1_1data__structures_1_1partitioned__sequence.html">sequoia::data_structures::partitioned_sequence</a></div><div class="ttdef"><b>Definition:</b> PartitionedData.hpp:1131</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

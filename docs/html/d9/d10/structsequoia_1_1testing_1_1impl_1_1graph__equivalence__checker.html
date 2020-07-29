@@ -69,6 +69,7 @@ $(function() {
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="../../d0/d4d/structsequoia_1_1testing_1_1impl_1_1graph__equivalence__checker-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">sequoia::testing::impl::graph_equivalence_checker&lt; Graph &gt; Struct Template Reference</div>  </div>
@@ -89,21 +90,60 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>node_weight_type</b>
 <tr class="memitem:accd624a9faca0ddc07a63facd58474a0"><td class="memItemLeft" align="right" valign="top"><a id="accd624a9faca0ddc07a63facd58474a0"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>nodes_equivalent_type</b> = std::initializer_list&lt; node_weight_type &gt;</td></tr>
 <tr class="separator:accd624a9faca0ddc07a63facd58474a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a365af9130537ca2fefb04a09acffde44"><td class="memItemLeft" align="right" valign="top"><a id="a365af9130537ca2fefb04a09acffde44"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>nodes_t</b> = typename type::nodes_type</td></tr>
+<tr class="separator:a365af9130537ca2fefb04a09acffde44"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a7a7c859896f9581f2e8c393bb07c9b78"><td class="memTemplParams" colspan="2"><a id="a7a7c859896f9581f2e8c393bb07c9b78"></a>
+<tr class="memitem:a1cb554e364522d3726c694a6dbaee93a"><td class="memTemplParams" colspan="2"><a id="a1cb554e364522d3726c694a6dbaee93a"></a>
 template&lt;test_mode Mode, class W  = node_weight_type&gt; </td></tr>
-<tr class="memitem:a7a7c859896f9581f2e8c393bb07c9b78"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (!empty&lt; W &gt;) static void check(std</td></tr>
-<tr class="separator:a7a7c859896f9581f2e8c393bb07c9b78"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1cb554e364522d3726c694a6dbaee93a"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>requires</b> (!empty&lt; W &gt;) static void check(<a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;logger</td></tr>
+<tr class="separator:a1cb554e364522d3726c694a6dbaee93a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1d595ca1b2ebc20eadd1bd7ec3b0438"><td class="memItemLeft" align="right" valign="top"><a id="ad1d595ca1b2ebc20eadd1bd7ec3b0438"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>check_equivalence</b> (&quot;&quot;, logger, static_cast&lt; const connectivity_t &amp; &gt;(<a class="el" href="../../d8/d87/classsequoia_1_1maths_1_1graph.html">graph</a>), connPrediction)</td></tr>
+<tr class="separator:ad1d595ca1b2ebc20eadd1bd7ec3b0438"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a56d663550413f2a86eb02b2753390c1a"><td class="memItemLeft" align="right" valign="top"><a id="a56d663550413f2a86eb02b2753390c1a"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>check_equivalence</b> (&quot;&quot;, logger, static_cast&lt; const nodes_t &amp; &gt;(<a class="el" href="../../d8/d87/classsequoia_1_1maths_1_1graph.html">graph</a>), nodesPrediction)</td></tr>
+<tr class="separator:a56d663550413f2a86eb02b2753390c1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a9f663866db0ee568679174b47d3e1991"><td class="memTemplParams" colspan="2"><a id="a9f663866db0ee568679174b47d3e1991"></a>
+<tr class="memitem:a378c4aff20340eb6b48e07a63d3f6060"><td class="memTemplParams" colspan="2"><a id="a378c4aff20340eb6b48e07a63d3f6060"></a>
 template&lt;test_mode Mode, class W  = node_weight_type&gt; </td></tr>
-<tr class="memitem:a9f663866db0ee568679174b47d3e1991"><td class="memTemplItemLeft" align="right" valign="top">requires static empty&lt; W &gt; void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check</b> (std::string_view description, <a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;logger, const type &amp;<a class="el" href="../../d8/d87/classsequoia_1_1maths_1_1graph.html">graph</a>, connectivity_equivalent_type connPrediction)</td></tr>
-<tr class="separator:a9f663866db0ee568679174b47d3e1991"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a378c4aff20340eb6b48e07a63d3f6060"><td class="memTemplItemLeft" align="right" valign="top">requires static empty&lt; W &gt; void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check</b> (<a class="el" href="../../df/d20/classsequoia_1_1testing_1_1test__logger.html">test_logger</a>&lt; Mode &gt; &amp;logger, const type &amp;<a class="el" href="../../d8/d87/classsequoia_1_1maths_1_1graph.html">graph</a>, connectivity_equivalent_type connPrediction)</td></tr>
+<tr class="separator:a378c4aff20340eb6b48e07a63d3f6060"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a31b542be147ffbd268d3516e1a04ebd5"><td class="memItemLeft" align="right" valign="top"><a id="a31b542be147ffbd268d3516e1a04ebd5"></a>
+const type &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>graph</b></td></tr>
+<tr class="separator:a31b542be147ffbd268d3516e1a04ebd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a89ed94a7cdc4bde07ca8ec60f253eee1"><td class="memItemLeft" align="right" valign="top"><a id="a89ed94a7cdc4bde07ca8ec60f253eee1"></a>
+const type connectivity_equivalent_type&#160;</td><td class="memItemRight" valign="bottom"><b>connPrediction</b></td></tr>
+<tr class="separator:a89ed94a7cdc4bde07ca8ec60f253eee1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07dd2ef7642486bafe5aceb17956c48a"><td class="memItemLeft" align="right" valign="top">const type connectivity_equivalent_type nodes_equivalent_type&#160;</td><td class="memItemRight" valign="bottom"><b>nodesPrediction</b></td></tr>
+<tr class="separator:a07dd2ef7642486bafe5aceb17956c48a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a07dd2ef7642486bafe5aceb17956c48a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a07dd2ef7642486bafe5aceb17956c48a">&#9670;&nbsp;</a></span>nodesPrediction</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Graph &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">const type connectivity_equivalent_type nodes_equivalent_type <a class="el" href="../../d9/d10/structsequoia_1_1testing_1_1impl_1_1graph__equivalence__checker.html">sequoia::testing::impl::graph_equivalence_checker</a>&lt; Graph &gt;::nodesPrediction</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">{</div>
+<div class="line">        <span class="keyword">using</span> connectivity_t = <span class="keyword">typename</span> type::connectivity_type</div>
+</div><!-- fragment -->
+</div>
+</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>/Users/Claire/Dropbox/Sequoia/Tests/Maths/Graph/<a class="el" href="../../d3/d0b/GraphTestingUtilities_8hpp_source.html">GraphTestingUtilities.hpp</a></li>
 </ul>
