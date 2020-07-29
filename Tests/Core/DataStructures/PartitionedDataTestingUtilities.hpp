@@ -23,7 +23,7 @@ namespace sequoia::testing
       {
         for(std::size_t i{}; i<prediction.num_partitions(); ++i)
         {
-          const std::string message{"Partition " + std::to_string(i)};
+          const auto message{std::string{"Partition "}.append(std::to_string(i))};
           if(check_range(append_indented(message, "iterator (const)"), logger, data.begin_partition(i), data.end_partition(i), prediction.begin_partition(i), prediction.end_partition(i)))
           {
             for(int64_t j{}; j<distance(prediction.begin_partition(i), prediction.end_partition(i)); ++j)
@@ -55,7 +55,7 @@ namespace sequoia::testing
     void check_equivalence(test_logger<Mode>& logger, const PartitionedData& data, std::initializer_list<std::initializer_list<T>> prediction)
     {
       const auto numElements{std::accumulate(prediction.begin(), prediction.end(), std::size_t{},
-                                             [](std::size_t val, std::initializer_list<T> partition) { return val += partition.size();})};
+        [](std::size_t val, std::initializer_list<T> partition) { return val += partition.size();})};
 
       check_equality("Number of elements", logger, data.size(), numElements);
 
@@ -63,7 +63,7 @@ namespace sequoia::testing
       {
         for(std::size_t i{}; i<prediction.size(); ++i)
         {
-          const std::string message{"Partition " + std::to_string(i)};
+          const auto message{std::string{"Partition "}.append(std::to_string(i))};
           check_range(message + ": iterator", logger, data.begin_partition(i), data.end_partition(i), (prediction.begin() + i)->begin(), (prediction.begin() + i)->end());
 
           check_range(message + ": riterator", logger, data.rbegin_partition(i), data.rend_partition(i), std::rbegin(*(prediction.begin() + i)), std::rend(*(prediction.begin() + i)));

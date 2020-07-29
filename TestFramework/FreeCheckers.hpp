@@ -350,7 +350,7 @@ namespace sequoia::testing
     auto info{
       [description](){        
         return description.empty() || description.back() == '\n'
-          ? description : std::string{description}.append("\n");
+          ? std::string{description} : std::string{description}.append("\n");
       }
     };
     

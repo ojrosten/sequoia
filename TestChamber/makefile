@@ -35,6 +35,7 @@ CFLAGS += -I/usr/local/opt/llvm/include -I/usr/local/opt/llvm/include/c++/v1/
 EXE    := $(BUILDDIR)/TestChamber.exe
 
 UTSRCS := TestChamberMain.cpp
+UTSRCS += ../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp
 UTSRCS += $(shell find $(UTDIR)/TestFramework -name '*.cpp')
 UTSRCS += $(shell find $(UTDIR)/Parsing -name '*.cpp')
 

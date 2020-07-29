@@ -1,3 +1,3 @@
 Static Graph Init
-[73ms]
+[101ms]
 Standard Top Level Checks:               956;  Failures:  0  [Deep checks: 14155]

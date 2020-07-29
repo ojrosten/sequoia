@@ -54,7 +54,7 @@ namespace sequoia
         check_equivalence(LINE(""), storage, prediction_t{{5}});
         
         storage_t storage2{{3}};
-        check_equivalence(LINE(""), storage, prediction_t{{5}});
+        check_equivalence(LINE(""), storage2, prediction_t{{3}});
 
         check_semantics(LINE(""), storage, storage2);
 

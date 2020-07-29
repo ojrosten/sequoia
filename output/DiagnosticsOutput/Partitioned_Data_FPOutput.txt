@@ -12,14 +12,6 @@
 	Obtained : 0
 	Predicted: 1
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
-	Empty data inequivalent to non-empty data 
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::ownership::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::ownership::independent<int> > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<int> >]
-
 	Number of partitions
 	[unsigned long]
 	operator== returned false
@@ -42,14 +34,6 @@
 	Obtained : 1
 	Predicted: 0
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
-	Non-empty data inequivalent to empty data 
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::ownership::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::ownership::independent<int> > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<int> >]
-
 	Partition 0: iterator
 
 	Container size wrong
@@ -57,14 +41,6 @@
 	operator== returned false
 	Obtained : 1
 	Predicted: 0
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
-	Non-empty data inequivalent to empty data 
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::ownership::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::ownership::independent<int> > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<int> >]
 
 	Partition 0: riterator
 
@@ -91,14 +67,6 @@
 	operator== returned false
 	Obtained : 2
 	Predicted: 1
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
-	Single partitions holding different elements compare not equal
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::ownership::independent<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::ownership::independent<int> > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<int> >]
 
 	Partition 0: riterator
 
@@ -593,14 +561,6 @@
 	Obtained : 0
 	Predicted: 1
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
-	Empty data inequivalent to non-empty data 
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::ownership::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::ownership::shared<int> > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<int> >]
-
 	Number of partitions
 	[unsigned long]
 	operator== returned false
@@ -623,14 +583,6 @@
 	Obtained : 1
 	Predicted: 0
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
-	Non-empty data inequivalent to empty data 
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::ownership::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::ownership::shared<int> > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<int> >]
-
 	Partition 0: iterator
 
 	Container size wrong
@@ -638,14 +590,6 @@
 	operator== returned false
 	Obtained : 1
 	Predicted: 0
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
-	Non-empty data inequivalent to empty data 
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::ownership::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::ownership::shared<int> > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<int> >]
 
 	Partition 0: riterator
 
@@ -672,14 +616,6 @@
 	operator== returned false
 	Obtained : 2
 	Predicted: 1
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
-	Single partitions holding different elements compare not equal
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<int, sequoia::ownership::shared<int>, sequoia::data_structures::bucketed_storage_traits<int, sequoia::ownership::shared<int> > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<int> >]
 
 	Partition 0: riterator
 
@@ -1174,14 +1110,6 @@
 	Obtained : 0
 	Predicted: 1
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
-	Empty data inequivalent to non-empty data 
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::ownership::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::ownership::independent<int> > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<int> >]
-
 	Number of partitions
 	[unsigned long]
 	operator== returned false
@@ -1204,14 +1132,6 @@
 	Obtained : 1
 	Predicted: 0
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
-	Non-empty data inequivalent to empty data 
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::ownership::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::ownership::independent<int> > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<int> >]
-
 	Partition 0: iterator
 
 	Container size wrong
@@ -1219,14 +1139,6 @@
 	operator== returned false
 	Obtained : 1
 	Predicted: 0
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
-	Non-empty data inequivalent to empty data 
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::ownership::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::ownership::independent<int> > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<int> >]
 
 	Partition 0: riterator
 
@@ -1253,14 +1165,6 @@
 	operator== returned false
 	Obtained : 2
 	Predicted: 1
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
-	Single partitions holding different elements compare not equal
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::ownership::independent<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::ownership::independent<int> > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<int> >]
 
 	Partition 0: riterator
 
@@ -1755,14 +1659,6 @@
 	Obtained : 0
 	Predicted: 1
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
-	Empty data inequivalent to non-empty data 
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::ownership::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::ownership::shared<int> > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<int> >]
-
 	Number of partitions
 	[unsigned long]
 	operator== returned false
@@ -1785,14 +1681,6 @@
 	Obtained : 1
 	Predicted: 0
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
-	Non-empty data inequivalent to empty data 
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::ownership::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::ownership::shared<int> > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<int> >]
-
 	Partition 0: iterator
 
 	Container size wrong
@@ -1800,14 +1688,6 @@
 	operator== returned false
 	Obtained : 1
 	Predicted: 0
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
-	Non-empty data inequivalent to empty data 
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::ownership::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::ownership::shared<int> > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<int> >]
 
 	Partition 0: riterator
 
@@ -1834,14 +1714,6 @@
 	operator== returned false
 	Obtained : 2
 	Predicted: 1
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
-	Single partitions holding different elements compare not equal
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<int, sequoia::ownership::shared<int>, sequoia::data_structures::partitioned_sequence_traits<int, sequoia::ownership::shared<int> > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<int> >]
 
 	Partition 0: riterator
 
@@ -2336,14 +2208,6 @@
 	Obtained : 0
 	Predicted: 1
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
-	Empty data inequivalent to non-empty data 
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > > > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
-
 	Number of partitions
 	[unsigned long]
 	operator== returned false
@@ -2366,14 +2230,6 @@
 	Obtained : 1
 	Predicted: 0
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
-	Non-empty data inequivalent to empty data 
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > > > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
-
 	Partition 0: iterator
 
 	Container size wrong
@@ -2381,14 +2237,6 @@
 	operator== returned false
 	Obtained : 1
 	Predicted: 0
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
-	Non-empty data inequivalent to empty data 
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > > > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	Partition 0: riterator
 
@@ -2419,14 +2267,6 @@
 	operator== returned false
 	Obtained : 2
 	Predicted: 1
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
-	Single partitions holding different elements compare not equal
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > > > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	Partition 0: riterator
 
@@ -3077,14 +2917,6 @@
 	Obtained : 0
 	Predicted: 1
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
-	Empty data inequivalent to non-empty data 
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > > > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
-
 	Number of partitions
 	[unsigned long]
 	operator== returned false
@@ -3107,14 +2939,6 @@
 	Obtained : 1
 	Predicted: 0
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
-	Non-empty data inequivalent to empty data 
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > > > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
-
 	Partition 0: iterator
 
 	Container size wrong
@@ -3122,14 +2946,6 @@
 	operator== returned false
 	Obtained : 1
 	Predicted: 0
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
-	Non-empty data inequivalent to empty data 
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > > > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	Partition 0: riterator
 
@@ -3160,14 +2976,6 @@
 	operator== returned false
 	Obtained : 2
 	Predicted: 1
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
-	Single partitions holding different elements compare not equal
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::data_structures::bucketed_storage<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::bucketed_storage_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > > > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	Partition 0: riterator
 
@@ -3818,14 +3626,6 @@
 	Obtained : 0
 	Predicted: 1
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
-	Empty data inequivalent to non-empty data 
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > > > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
-
 	Number of partitions
 	[unsigned long]
 	operator== returned false
@@ -3848,14 +3648,6 @@
 	Obtained : 1
 	Predicted: 0
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
-	Non-empty data inequivalent to empty data 
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > > > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
-
 	Partition 0: iterator
 
 	Container size wrong
@@ -3863,14 +3655,6 @@
 	operator== returned false
 	Obtained : 1
 	Predicted: 0
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
-	Non-empty data inequivalent to empty data 
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > > > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	Partition 0: riterator
 
@@ -3901,14 +3685,6 @@
 	operator== returned false
 	Obtained : 2
 	Predicted: 1
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
-	Single partitions holding different elements compare not equal
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::independent<std::vector<double, std::allocator<double> > > > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	Partition 0: riterator
 
@@ -4559,14 +4335,6 @@
 	Obtained : 0
 	Predicted: 1
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 54
-	Empty data inequivalent to non-empty data 
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > > > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
-
 	Number of partitions
 	[unsigned long]
 	operator== returned false
@@ -4589,14 +4357,6 @@
 	Obtained : 1
 	Predicted: 0
 
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
-	Non-empty data inequivalent to empty data 
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > > > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
-
 	Partition 0: iterator
 
 	Container size wrong
@@ -4604,14 +4364,6 @@
 	operator== returned false
 	Obtained : 1
 	Predicted: 0
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 55
-	Non-empty data inequivalent to empty data 
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > > > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	Partition 0: riterator
 
@@ -4642,14 +4394,6 @@
 	operator== returned false
 	Obtained : 2
 	Predicted: 1
-
-	../Tests/Core/DataStructures/PartitionedDataTestingDiagnostics.cpp, Line 56
-	Single partitions holding different elements compare not equal
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<sequoia::data_structures::partitioned_sequence<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > >, sequoia::data_structures::partitioned_sequence_traits<std::vector<double, std::allocator<double> >, sequoia::ownership::shared<std::vector<double, std::allocator<double> > > > > >]
-	With equivalent types:
-	[std::initializer_list<std::initializer_list<std::vector<double, std::allocator<double> > > >]
 
 	Partition 0: riterator
 

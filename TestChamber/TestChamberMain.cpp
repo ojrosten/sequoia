@@ -43,6 +43,11 @@ int main(int argc, char** argv)
       commandline_arguments_test{"Unit Test"},
       commandline_arguments_false_positive_test{"False Positive Test"}
     );
+
+    runner.add_test_family(
+      "Partitioned Data",
+      partitioned_data_false_positive_test{"False Positive Diagnostics"}
+    );
       
     runner.execute();
   }
