@@ -23,7 +23,20 @@ namespace sequoia::testing
   struct null_advisor
   {};
 
-  /// \brief class template used to wrap function objects which profer advice.
+  /*! \brief class template used to wrap function objects which proffer advice.
+
+      An appropriate instantiation of this class template may be supplied as the
+      final argument of many of the check methods. For example, consider an int, x:
+
+      check_equality(LINE(""), x, 41, tutor{[](double val, double prediction) {\n
+        return x == 42 ? "Are you sure the universe isn't trying to tell you something?" : "";\n
+      }});\n
+
+      In the case the x != 41, not only will failure be reported in the usual manner
+      but, if x == 42, some spectacularly useful advice will be proffered.
+
+      \anchor tutor_primary
+   */
   template<class Advisor>
   class tutor
   {

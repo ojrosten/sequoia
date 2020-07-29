@@ -156,7 +156,14 @@ namespace sequoia::testing
     [[nodiscard]]
     sentinel<Checker::mode> make_sentinel()
     {
-      return Checker::make_sentinel(end_block(Checker::top_level_message(), 2, footer()));
+      if constexpr(Checker::mode == test_mode::false_positive)
+      {
+        return Checker::make_sentinel(end_block(Checker::top_level_message(), 2, footer()));
+      }
+      else
+      {
+        return Checker::make_sentinel(Checker::top_level_message());
+      }
     }
   };
   

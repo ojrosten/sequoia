@@ -232,9 +232,9 @@
     The focus of the testing framework's API is on providing useful primitives, such as check_equality and
     check_semantics, rather than providing classes with names like 'Then' and 'That'. However, in
     addition to encouraging clients to think seriously about providing each check with a descriptive
-    string (which, being the first argument of each check method, is hard to avoid), a facility is provided
+    string (which, being the first argument of each check method, is hard to avoid), there is the facility
     to provide customized advice in the event of particular failures. For example, within the allocation
-    testing framework it is possible for a negative number of allocations to be reported. This is rather
+    testing framework, it is possible for a negative number of allocations to be reported. This is rather
     counter-intuitive and, when encountered for the first time, may raise doubts as to the correctness
     of the framework. This is hopefully ameliorated by levaraging the advice functionality internally, giving
     typical output:
@@ -244,7 +244,8 @@
 	Advice   : A negative allocation count generally indicates an allocator propagting when it shouldn't or not propagating when it should.
 
     Clients may provided customized advice by calling many of the check methods with an extra function
-    object. If the latter overloads operator() in such a way that it takes two instances of a type and
+    object bound to an instance of the \ref tutor_primary "tutor" class template.
+    If operator() is overloaded in such a way that it takes two instances of a type and
     returns a string, then reflection is utilized to apply this function object whenever the
     appropriate overload may be invoked. For example, consider the case where a function object is supplied to
     provide advice for ints, under certain conditions. Suppose this
