@@ -47,6 +47,9 @@ namespace sequoia::testing
   void end_block(std::string& s, const std::size_t newlines, std::string footer="");
 
   [[nodiscard]]
+  std::string end_block(std::string_view s, const std::size_t newlines, std::string footer="");
+
+  [[nodiscard]]
   std::string exception_message(std::string_view tag, std::string_view currentMessage, std::string_view exceptionMessage, const bool exceptionsDetected);
 
   [[nodiscard]]

@@ -92,6 +92,7 @@ namespace sequoia::testing
       : m_Logger{logger}    
       , m_Message{message}
       , m_PriorFailures{logger.failures()}
+      , m_PriorCriticalFailures{logger.critical_failures()} 
       , m_PriorDeepChecks{logger.deep_checks()}
     {
       if(!logger.depth())
@@ -188,7 +189,7 @@ namespace sequoia::testing
     [[nodiscard]]
     bool failure_detected() const noexcept
     {
-      return m_Logger.get().failures() != m_PriorFailures;
+      return (m_Logger.get().failures() != m_PriorFailures) || (m_Logger.get().critical_failures() != m_PriorCriticalFailures);
     }
 
     [[nodiscard]]
@@ -199,7 +200,10 @@ namespace sequoia::testing
   private:
     std::reference_wrapper<test_logger<Mode>> m_Logger;
     std::string m_Message;
-    std::size_t m_PriorFailures{}, m_PriorDeepChecks{};
+    std::size_t
+      m_PriorFailures{},
+      m_PriorCriticalFailures{},
+      m_PriorDeepChecks{};
   };
 
   
@@ -249,15 +253,14 @@ namespace sequoia::testing
     int exceptions_detected_by_sentinel() const noexcept { return m_ExceptionsInFlight; }
 
     [[nodiscard]]
-    std::string top_level_message() const
+    std::string_view top_level_message() const
     {
-      return !m_LevelMessages.empty() ? m_LevelMessages.front() : "";
+      return m_TopLevelMessage;
     }
   private:
     std::string
       m_TopLevelMessage,
       m_FailureMessages,
-      m_CurrentMessage,
       m_DiagnosticsOutput;
 
     std::vector<std::string> m_LevelMessages;
@@ -347,7 +350,10 @@ namespace sequoia::testing
       m_FailureMessages.append(message).append("\n");
     }
 
-    void exceptions_detected_by_sentinel(const int n) { m_ExceptionsInFlight = n; }
+    void exceptions_detected_by_sentinel(const int n)
+    {
+      m_ExceptionsInFlight = n;
+    }
 
     void append_to_diagnostics_output(std::string message)
     {
@@ -356,6 +362,9 @@ namespace sequoia::testing
 
     void push_message(std::string_view message)
     {
+      if(m_LevelMessages.empty())
+        m_TopLevelMessage = std::string{message};
+
       m_LevelMessages.push_back(std::string{message});
     }
 

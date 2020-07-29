@@ -124,12 +124,12 @@ namespace sequoia::testing
       }
       catch(const std::exception& e)
       {
-        auto sentry{Checker::make_sentinel("")};
+        auto sentry{make_sentinel()};
         sentry.log_critical_failure(exception_message("Unexpected", e.what()));
       }
       catch(...)
       {
-        auto sentry{Checker::make_sentinel("")};
+        auto sentry{make_sentinel()};
         sentry.log_critical_failure(exception_message("Unknown", ""));
       }
 
@@ -151,6 +151,12 @@ namespace sequoia::testing
     std::string exception_message(std::string_view tag, std::string_view exceptionMessage) const
     {
       return testing::exception_message(tag, Checker::top_level_message(), exceptionMessage, Checker::exceptions_detected_by_sentinel());
+    }
+  private:
+    [[nodiscard]]
+    sentinel<Checker::mode> make_sentinel()
+    {
+      return Checker::make_sentinel(end_block(Checker::top_level_message(), 2, footer()));
     }
   };
   

@@ -69,6 +69,15 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
+  std::string end_block(std::string_view s, const std::size_t newlines, std::string footer)
+  {
+    std::string str{s};
+    end_block(str, newlines, footer);
+
+    return str;
+  }
+
+  [[nodiscard]]
   std::string emphasise(std::string_view s)
   {
     std::string_view emph{"--"};
@@ -91,7 +100,7 @@ namespace sequoia::testing
       append_indented(mess, "Exception thrown after check completed");
     }
 
-    append_indented(mess, "Last Recorded Message:");
+    append_indented(mess, "Last Recorded Message:\n");
     append_indented(mess, currentMessage);
  
     return mess;
