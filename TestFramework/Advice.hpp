@@ -28,8 +28,8 @@ namespace sequoia::testing
       An appropriate instantiation of this class template may be supplied as the
       final argument of many of the check methods. For example, consider an int, x:
 
-      check_equality(LINE(""), x, 41, tutor{[](double val, double prediction) {\n
-        return x == 42 ? "Are you sure the universe isn't trying to tell you something?" : "";\n
+      check_equality(LINE(""), x, 41, tutor{[](double value, double prediction) {\n
+        return value == 42 ? "Are you sure the universe isn't trying to tell you something?" : "";\n
       }});\n
 
       In the case the x != 41, not only will failure be reported in the usual manner
