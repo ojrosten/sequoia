@@ -148,12 +148,9 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    virtual std::string current_message() const { return std::string{Checker::current_message()}; }
-
-    [[nodiscard]]
     std::string exception_message(std::string_view tag, std::string_view exceptionMessage) const
     {
-      return testing::exception_message(tag, current_message(), exceptionMessage, Checker::exceptions_detected_by_sentinel());
+      return testing::exception_message(tag, Checker::top_level_message(), exceptionMessage, Checker::exceptions_detected_by_sentinel());
     }
   };
   

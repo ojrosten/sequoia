@@ -247,6 +247,12 @@ namespace sequoia::testing
 
     [[nodiscard]]
     int exceptions_detected_by_sentinel() const noexcept { return m_ExceptionsInFlight; }
+
+    [[nodiscard]]
+    std::string top_level_message() const
+    {
+      return !m_LevelMessages.empty() ? m_LevelMessages.front() : "";
+    }
   private:
     std::string
       m_TopLevelMessage,
@@ -363,12 +369,6 @@ namespace sequoia::testing
       update_output("", 2, footer());
     }
 
-    [[nodiscard]]
-    std::string top_level_message() const
-    {
-      return !m_LevelMessages.empty() ? m_LevelMessages.front() : "";
-    }
-
     void update_output(std::string_view message, std::size_t newLines, std::string foot)
     {
       auto append{
@@ -412,7 +412,6 @@ namespace sequoia::testing
     template<test_mode Mode> log_summary(std::string_view name, const test_logger<Mode>& logger, const duration delta)
       : m_Name{name}
       , m_FailureMessages{logger.failure_messages()}
-        //, m_CurrentMessage{logger.current_message()}
       , m_Duration{delta}
     {
       switch(Mode)
@@ -498,14 +497,6 @@ namespace sequoia::testing
     std::string_view diagnostics_output() const noexcept { return m_DiagnosticsOutput; }
 
     [[nodiscard]]
-    std::string current_message() const
-    {
-      return m_Name.empty()
-        ?  m_CurrentMessage
-        : append_indented(std::string{"["}.append(m_Name).append("]"), m_CurrentMessage);
-    }
-
-    [[nodiscard]]
     duration execution_time() const noexcept { return m_Duration; }
       
     log_summary& operator+=(const log_summary& rhs)
@@ -532,9 +523,6 @@ namespace sequoia::testing
       m_ExceptionsInFlight += rhs.m_ExceptionsInFlight;
       m_DiagnosticsOutput  += rhs.m_DiagnosticsOutput;
       m_Duration           += rhs.m_Duration;
-        
-      m_CurrentMessage      = rhs.m_CurrentMessage;
-
 
       return *this;
     }
@@ -553,7 +541,7 @@ namespace sequoia::testing
       return s;
     }
   private:
-    std::string m_Name, m_FailureMessages, m_CurrentMessage, m_DiagnosticsOutput;
+    std::string m_Name, m_FailureMessages, m_DiagnosticsOutput;
     std::size_t
       m_StandardTopLevelChecks{},
       m_StandardDeepChecks{},

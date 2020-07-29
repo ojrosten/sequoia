@@ -561,9 +561,6 @@ namespace sequoia::testing
     std::size_t failures() const noexcept { return logger().failures(); }
 
     [[nodiscard]]
-      std::string_view current_message() const noexcept{ return "";/*logger().current_message();*/ }
-
-    [[nodiscard]]
     int exceptions_detected_by_sentinel() const noexcept { return logger().exceptions_detected_by_sentinel(); }
 
     [[nodiscard]]
@@ -571,6 +568,13 @@ namespace sequoia::testing
     {
       return {logger(), message};
     }
+
+    [[nodiscard]]
+    std::string top_level_message() const
+    {
+      return logger().top_level_message();
+    }   
+      
   private:
     [[nodiscard]]
     test_logger<Mode>& logger() noexcept

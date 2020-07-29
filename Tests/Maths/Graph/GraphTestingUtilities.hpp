@@ -301,13 +301,6 @@ namespace sequoia::testing
     {
       return base_t::summarize(start) += m_AccumulatedSummaries;
     }
-    
-    [[nodiscard]]
-    virtual std::string current_message() const override
-    {
-      const log_summary s{this->summary("", log_summary::duration{}) + m_AccumulatedSummaries};
-      return s.current_message();
-    }
 
     [[nodiscard]]
     concurrency_mode concurrent_execution() const noexcept { return m_ConcurrencyMode; }
