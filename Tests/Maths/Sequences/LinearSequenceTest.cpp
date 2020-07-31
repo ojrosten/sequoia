@@ -7,7 +7,7 @@
 
 #include "LinearSequenceTest.hpp"
 
-// #include "LinearSequence.hpp"
+#include "LinearSequenceTestingUtilities.hpp"
 
 namespace sequoia::testing
 {
@@ -19,6 +19,20 @@ namespace sequoia::testing
 
   void linear_sequence_test::run_tests()
   {
-    // TO DO
+    using namespace maths;
+
+    linear_sequence<int, std::size_t> s{1, 3}, t{0,2};
+    check_equivalence(LINE(""), s, 1, 3);
+    check_equivalence(LINE(""), t, 0, 2);
+
+    check_semantics(LINE(""), s, t);
+
+    check_equality(LINE(""), s[0], 1);
+    check_equality(LINE(""), s[-1], -2);
+    check_equality(LINE(""), s[1], 4);
+
+    check_equality(LINE(""), t[0], 0);
+    check_equality(LINE(""), t[-1], -2);
+    check_equality(LINE(""), t[1], 2);
   }
 }

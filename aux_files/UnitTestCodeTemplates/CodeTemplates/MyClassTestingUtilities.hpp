@@ -19,7 +19,7 @@ namespace sequoia::testing
     using type = ::my_class/*<???>*/;
     
     template<test_mode Mode>
-    static void check(std::string_view description, test_logger<Mode>& logger, const type& actual, const type& prediction)
+    static void check(test_logger<Mode>& logger, const type& actual, const type& prediction)
     {
       // TO DO
     }
@@ -31,7 +31,7 @@ namespace sequoia::testing
     using type = ::my_class/*<???>*/;
     
     template<test_mode Mode>
-    static void check(std::string_view description, test_logger<Mode>& logger, const type& actual, /*???*/ predictions)
+    static void check(test_logger<Mode>& logger, const type& actual, /*???*/ predictions)
     {
       // TO DO
     }

@@ -5,7 +5,7 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "MyClassTest.hpp"
+#include "MyClassTestingUtilities.hpp"
 
 // #include "MyClass.hpp"
 

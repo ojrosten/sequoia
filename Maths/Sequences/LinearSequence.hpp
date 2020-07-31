@@ -34,10 +34,10 @@ namespace sequoia::maths
     constexpr T step() const noexcept { return m_Step; }
 
     [[nodiscard]]
-    friend bool operator==(const linear_sequence&, const linear_sequence&) noexcept = default;
+    friend constexpr bool operator==(const linear_sequence&, const linear_sequence&) noexcept = default;
 
     [[nodiscard]]
-    friend bool operator!=(const linear_sequence&, const linear_sequence&) noexcept = default;
+    friend constexpr bool operator!=(const linear_sequence&, const linear_sequence&) noexcept = default;
   private:
     T m_Start, m_Step;
   };
@@ -52,9 +52,9 @@ namespace sequoia::maths
     constexpr T operator[](const size_type i) { return start + i * step; }
 
     [[nodiscard]]
-    friend bool operator==(const static_linear_sequence&, const static_linear_sequence&) noexcept = default;
+    friend constexpr bool operator==(const static_linear_sequence&, const static_linear_sequence&) noexcept = default;
 
     [[nodiscard]]
-    friend bool operator!=(const static_linear_sequence&, const static_linear_sequence&) noexcept = default;
+    friend constexpr bool operator!=(const static_linear_sequence&, const static_linear_sequence&) noexcept = default;
   };
 }
