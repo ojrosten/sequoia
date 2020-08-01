@@ -7,7 +7,7 @@
 
 #pragma once
 
-/*! \file PartitionedData.hpp
+/*! \file
     \brief Classes implementing the concept of a sequence of data which is divided into partitions.
  */
 

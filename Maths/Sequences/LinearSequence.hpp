@@ -49,7 +49,7 @@ namespace sequoia::maths
     using size_type = Index;
 
     [[nodiscard]]
-    constexpr T operator[](const size_type i) { return start + i * step; }
+    constexpr T operator[](const size_type i) const { return start + i * step; }
 
     [[nodiscard]]
     friend constexpr bool operator==(const static_linear_sequence&, const static_linear_sequence&) noexcept = default;

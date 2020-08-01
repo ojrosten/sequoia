@@ -19,6 +19,12 @@ namespace sequoia::testing
 
   void linear_sequence_test::run_tests()
   {
+    test_linear_sequence();
+    test_static_linear_sequence();
+  }
+
+  void linear_sequence_test::test_linear_sequence()
+  {
     using namespace maths;
 
     linear_sequence<int, std::size_t> s{1, 3}, t{0,2};
@@ -34,5 +40,14 @@ namespace sequoia::testing
     check_equality(LINE(""), t[0], 0);
     check_equality(LINE(""), t[-1], -2);
     check_equality(LINE(""), t[1], 2);
+  }
+  
+  void linear_sequence_test::test_static_linear_sequence()
+  {
+    using namespace maths;
+
+    constexpr static_linear_sequence<std::size_t, 1, 3, std::size_t> s{};
+    constexpr auto val{s[2]};
+    check_equality(LINE(""), val, 7ul);
   }
 }
