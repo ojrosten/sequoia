@@ -12,4 +12,6 @@ output/Recovery
 
 output/UnitTestCreationDiagnostics
 
+output/FileEditingOutput
+
 SequoiaX/SequoiaX.xcodeproj/xcuserdata

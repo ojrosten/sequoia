@@ -94,7 +94,9 @@ namespace sequoia::testing
       std::string qualified_class_name, class_name;
     };    
 
-    enum class file_comparison {failed, same, different};    
+    enum class file_comparison {failed, same, different};
+    enum class false_positive_mode {yes, no};
+    enum class overwrite_mode {yes, no};
 
     std::vector<test_family> m_Families{};
     std::map<std::string, bool, std::less<>> m_SelectedFamilies{}, m_SelectedSources{};
@@ -144,16 +146,18 @@ namespace sequoia::testing
     static void replace_all(std::string& text, std::string_view from, const std::string& to);
 
     template<class Iter>
-    static void create_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message, const bool overwrite);
+    static void create_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message, const overwrite_mode overwrite);
 
-    static void create_file(const nascent_test& data, std::string_view partName, const bool overwrite);
+    static void create_file(const nascent_test& data, std::string_view partName, const overwrite_mode overwrite);
 
-    static auto compare_files(const std::filesystem::path& referenceFile, const std::filesystem::path& generatedFile) -> file_comparison;
+    static void compare_files(const std::filesystem::path& referenceFile, const std::filesystem::path& generatedFile, const false_positive_mode falsePositive);
 
     template<class Iter>
     static void compare_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message);
 
     static void compare_files(const nascent_test& data, std::string_view partName);
+
+    static void test_file_editing();
 
     static void false_positive_check(const nascent_test& data);
     

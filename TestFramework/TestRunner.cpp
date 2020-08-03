@@ -12,6 +12,7 @@
 #include "TestRunner.hpp"
 #include "CommandLineArguments.hpp"
 #include "Summary.hpp"
+#include "FileEditors.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -92,8 +93,10 @@ namespace sequoia::testing
     }
   }
 
-  auto test_runner::compare_files(const std::filesystem::path& referenceFile, const std::filesystem::path& generatedFile) -> file_comparison
-  {    
+  void test_runner::compare_files(const std::filesystem::path& referenceFile, const std::filesystem::path& generatedFile, const false_positive_mode falsePositive)
+  {
+    auto fcomp{file_comparison::failed};
+    
     std::ifstream file1{referenceFile}, file2{generatedFile};
     if(!file1) warning("unable to open file ").append(referenceFile.string()).append("\n");
     if(!file2) warning("unable to open file ").append(generatedFile.string()).append("\n");
@@ -104,10 +107,48 @@ namespace sequoia::testing
       buffer1 << file1.rdbuf();
       buffer2 << file2.rdbuf();
 
-      return (buffer1.str() == buffer2.str()) ? file_comparison::same : file_comparison::different;
+      fcomp =  (buffer1.str() == buffer2.str()) ? file_comparison::same : file_comparison::different;
     }
 
-    return file_comparison::failed;
+    switch(falsePositive)
+    {    
+    case false_positive_mode::yes:
+      switch(fcomp)
+      {
+      case file_comparison::same:
+        std::cout << warning("Contents of\n  " )
+          .append(generatedFile)
+          .append("\n  spuriously comparing equal to\n  ")
+          .append(referenceFile)
+          .append("\n");    
+        break;
+      case file_comparison::different:
+        std::cout << "    passed\n";
+        break;
+      case file_comparison::failed:
+        std::cout << warning("Unable to perform false-positive test\n");
+        break;
+      }
+      break;
+    case false_positive_mode::no:
+      switch(fcomp)
+      {
+      case file_comparison::same:
+        std::cout << "    passed\n";
+        break;
+      case file_comparison::different:
+        std::cout << warning("Contents of\n  " )
+          .append(generatedFile.string())
+          .append("\n  no longer matches\n  ")
+          .append(referenceFile.string())
+          .append("\n");
+        break;
+      case file_comparison::failed:
+        std::cout << warning("Unable to perform file comparison\n");
+        break;
+      }
+      break;
+    }
   }
 
   void test_runner::compare_files(const nascent_test& data, std::string_view partName)
@@ -124,29 +165,14 @@ namespace sequoia::testing
       get_output_path("UnitTestCreationDiagnostics").append(className)
     };
 
-    switch(compare_files(referenceFile, generatedFile))
-    {
-    case file_comparison::same:
-      std::cout << "    passed\n";
-      break;
-    case file_comparison::different:
-      std::cout << warning("Contents of\n  " )
-        .append(generatedFile.string())
-        .append("\n  no longer matches\n  ")
-        .append(referenceFile.string())
-        .append("\n");
-      break;
-    case file_comparison::failed:
-      std::cout << warning("Unable to perform file comparison\n");
-      break;
-    }
+    compare_files(referenceFile, generatedFile, false_positive_mode::no);
   }
 
   void test_runner::false_positive_check(const nascent_test& data)
   {
     static_assert(st_TestNameStubs.size() > 1, "Insufficient data for false-positive test");
 
-    std::cout << "  False-positive test for file comparison\n";
+    std::cout << "\n  False-positive test for file comparison\n";
 
     auto partPath{
       [&data](){
@@ -157,22 +183,7 @@ namespace sequoia::testing
     const auto referenceFile1{partPath().concat(st_TestNameStubs[0])};
     const auto referenceFile2{partPath().concat(st_TestNameStubs[1])};
 
-    switch(compare_files(referenceFile1, referenceFile2))
-    {
-    case file_comparison::same:
-      std::cout << warning("Contents of\n  " )
-        .append(referenceFile1)
-        .append("\n  spuriously comparing equal to\n  ")
-        .append(referenceFile2)
-        .append("\n");    
-      break;
-    case file_comparison::different:
-      std::cout << "    passed\n";
-      break;
-    case file_comparison::failed:
-      std::cout << warning("Unable to perform false-positive test\n");
-      break;
-    }
+    compare_files(referenceFile1, referenceFile2, false_positive_mode::yes);
   }
 
   test_runner::nascent_test::nascent_test(std::filesystem::path dir, std::string qualifiedName)
@@ -251,9 +262,11 @@ namespace sequoia::testing
     const std::array<nascent_test, 1>
       diagnosticFiles{nascent_test{get_output_path("UnitTestCreationDiagnostics"), "utilities::iterator"}};
 
-    create_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(),  "Running unit test creation tool diagnostics...\n", true);
+    create_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(),  "Running test creation tool diagnostics...\n", overwrite_mode::yes);
 
     compare_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(), "  Comparing files against reference files...\n");
+
+    test_file_editing();
 
     false_positive_check(diagnosticFiles.front());
   }
@@ -318,12 +331,12 @@ namespace sequoia::testing
                        
   void test_runner::execute()
   {
-    create_files(m_NascentTests.cbegin(), m_NascentTests.cend(), "Creating files...\n", false);
+    create_files(m_NascentTests.cbegin(), m_NascentTests.cend(), "Creating files...\n", overwrite_mode::no);
     run_tests();
   }
 
   template<class Iter>
-  void test_runner::create_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message, const bool overwrite)
+  void test_runner::create_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message, const overwrite_mode overwrite)
   {    
     if(std::distance(beginNascentTests, endNascentTests))
     {
@@ -365,13 +378,13 @@ namespace sequoia::testing
     }
   }
 
-  void test_runner::create_file(const nascent_test& data, std::string_view partName, const bool overwrite)
+  void test_runner::create_file(const nascent_test& data, std::string_view partName, const overwrite_mode overwrite)
   {
     namespace fs = std::filesystem;
     
     const fs::directory_entry
       outputFile{(data.directory / to_camel_case(data.class_name)) += partName};
-    if(!overwrite && outputFile.exists())
+    if((overwrite == overwrite_mode::no) && outputFile.exists())
     {
       std::cout << warning(outputFile.path().string()).append(" already exists, so not created\n");
       return;
@@ -415,6 +428,39 @@ namespace sequoia::testing
         std::cout << warning("unable to create file ").append(outputFile.path().string());
       }
     }
+  }
+
+  void test_runner::test_file_editing()
+  {
+    namespace fs = std::filesystem;
+
+    std::string_view includes{"Includes.hpp"};
+
+    for(auto& p : fs::directory_iterator(get_output_path("FileEditingOutput")))
+    {
+      fs::remove(p.path());
+    }
+
+    const auto initialRefFile{
+      get_aux_path("FileEditingTestMaterials").append("BeforeEditing").append(includes)
+    };
+
+    const auto sandboxFile{
+      get_output_path("FileEditingOutput").append(includes)
+    };
+
+    std::cout << "\n    Copying " << includes << " to " << get_output_path("FileEditingOutput") << '\n';
+    fs::copy_file(initialRefFile, sandboxFile);
+
+    std::cout << "    Adding #include to end of file\n";
+    add_include(sandboxFile, "Bar.hpp");
+
+    std::cout << "  Comparing against reference file...\n";
+    const auto finalRefFile{
+      get_aux_path("FileEditingTestMaterials").append("AfterEditing").append("Includes.hpp")
+    };
+
+    compare_files(finalRefFile, sandboxFile, false_positive_mode::no);
   }
 
   void test_runner::run_tests()
