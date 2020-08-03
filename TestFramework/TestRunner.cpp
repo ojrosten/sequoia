@@ -123,7 +123,7 @@ namespace sequoia::testing
           .append("\n");    
         break;
       case file_comparison::different:
-        std::cout << "    passed\n";
+        std::cout << "      passed\n";
         break;
       case file_comparison::failed:
         std::cout << warning("Unable to perform false-positive test\n");
@@ -134,7 +134,7 @@ namespace sequoia::testing
       switch(fcomp)
       {
       case file_comparison::same:
-        std::cout << "    passed\n";
+        std::cout << "      passed\n";
         break;
       case file_comparison::different:
         std::cout << warning("Contents of\n  " )
@@ -172,7 +172,7 @@ namespace sequoia::testing
   {
     static_assert(st_TestNameStubs.size() > 1, "Insufficient data for false-positive test");
 
-    std::cout << "\n  False-positive test for file comparison\n";
+    std::cout << "\n  Running false-positive test for file comparison...\n";
 
     auto partPath{
       [&data](){
@@ -262,9 +262,12 @@ namespace sequoia::testing
     const std::array<nascent_test, 1>
       diagnosticFiles{nascent_test{get_output_path("UnitTestCreationDiagnostics"), "utilities::iterator"}};
 
-    create_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(),  "Running test creation tool diagnostics...\n", overwrite_mode::yes);
+    std::cout << "Running self-diagnostics...\n";
 
-    compare_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(), "  Comparing files against reference files...\n");
+    std::string_view mess{"  Running test creation tool diagnostics...\n    Building Files:\n"};
+    create_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(),  mess, overwrite_mode::yes);
+
+    compare_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(), "\n    Comparing files against reference files...\n");
 
     test_file_editing();
 
@@ -355,29 +358,6 @@ namespace sequoia::testing
     }
   }
 
-  template<class Iter>
-  void test_runner::compare_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message)
-  {
-    if(std::distance(beginNascentTests, endNascentTests))
-    {
-      std::cout << message;
-
-      while(beginNascentTests != endNascentTests)
-      {
-        const auto& data{*beginNascentTests};
-
-        for(const auto& stub : st_TestNameStubs)
-        {
-          compare_files(data, stub);
-        }
-        
-        ++beginNascentTests;
-      }
-
-      static_assert(st_TestNameStubs.size() > 1, "Insufficient data for false-positive test");      
-    }
-  }
-
   void test_runner::create_file(const nascent_test& data, std::string_view partName, const overwrite_mode overwrite)
   {
     namespace fs = std::filesystem;
@@ -420,13 +400,37 @@ namespace sequoia::testing
 
       if(std::ofstream ofile{outputFile})
       {
-        std::cout << "    Creating file " << outputFile.path() << '\n';
+        std::cout << "      Creating file " << outputFile.path() << '\n';
         ofile << text;
       }
       else
       {
         std::cout << warning("unable to create file ").append(outputFile.path().string());
       }
+    }
+  }
+
+  
+  template<class Iter>
+  void test_runner::compare_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message)
+  {
+    if(std::distance(beginNascentTests, endNascentTests))
+    {
+      std::cout << message;
+
+      while(beginNascentTests != endNascentTests)
+      {
+        const auto& data{*beginNascentTests};
+
+        for(const auto& stub : st_TestNameStubs)
+        {
+          compare_files(data, stub);
+        }
+        
+        ++beginNascentTests;
+      }
+
+      static_assert(st_TestNameStubs.size() > 1, "Insufficient data for false-positive test");      
     }
   }
 
@@ -449,13 +453,14 @@ namespace sequoia::testing
       get_output_path("FileEditingOutput").append(includes)
     };
 
-    std::cout << "\n    Copying " << includes << " to " << get_output_path("FileEditingOutput") << '\n';
+    std::cout << "\n  Running file editing diagnostics...\n    Generating edited file\n";
+    std::cout << "      Copying " << includes << " to " << get_output_path("FileEditingOutput") << '\n';
     fs::copy_file(initialRefFile, sandboxFile);
 
-    std::cout << "    Adding #include to end of file\n";
+    std::cout << "      Adding #include to end of file\n";
     add_include(sandboxFile, "Bar.hpp");
 
-    std::cout << "  Comparing against reference file...\n";
+    std::cout << "\n    Comparing against reference file...\n";
     const auto finalRefFile{
       get_aux_path("FileEditingTestMaterials").append("AfterEditing").append("Includes.hpp")
     };
@@ -470,7 +475,7 @@ namespace sequoia::testing
 
     if(!m_Families.empty() && (m_NascentTests.empty() || !m_SelectedFamilies.empty()))
     {
-      std::cout << "Running unit tests...\n";
+      std::cout << "\nRunning unit tests...\n";
       log_summary summary{};
       if(!concurrent_execution())
       {
