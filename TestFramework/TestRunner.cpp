@@ -58,7 +58,8 @@ namespace sequoia::testing
     return text;
   }
 
-  [[nodiscard]] std::string test_runner::stringify(concurrency_mode mode)
+  [[nodiscard]]
+  std::string test_runner::stringify(concurrency_mode mode)
   {
     switch(mode)
     {
@@ -91,81 +92,6 @@ namespace sequoia::testing
       text.replace(pos, from.length(), to);
       pos += to.length();
     }
-  }
-
-  void test_runner::compare_files(const std::filesystem::path& referenceFile, const std::filesystem::path& generatedFile, const false_positive_mode falsePositive)
-  {
-    auto fcomp{file_comparison::failed};
-    
-    std::ifstream file1{referenceFile}, file2{generatedFile};
-    if(!file1) warning("unable to open file ").append(referenceFile.string()).append("\n");
-    if(!file2) warning("unable to open file ").append(generatedFile.string()).append("\n");
-    
-    if(file1 && file2)
-    {
-      std::stringstream buffer1{}, buffer2{};
-      buffer1 << file1.rdbuf();
-      buffer2 << file2.rdbuf();
-
-      fcomp =  (buffer1.str() == buffer2.str()) ? file_comparison::same : file_comparison::different;
-    }
-
-    switch(falsePositive)
-    {    
-    case false_positive_mode::yes:
-      switch(fcomp)
-      {
-      case file_comparison::same:
-        std::cout << warning("Contents of\n  " )
-          .append(generatedFile)
-          .append("\n  spuriously comparing equal to\n  ")
-          .append(referenceFile)
-          .append("\n");    
-        break;
-      case file_comparison::different:
-        std::cout << "      passed\n";
-        break;
-      case file_comparison::failed:
-        std::cout << warning("Unable to perform false-positive test\n");
-        break;
-      }
-      break;
-    case false_positive_mode::no:
-      switch(fcomp)
-      {
-      case file_comparison::same:
-        std::cout << "      passed\n";
-        break;
-      case file_comparison::different:
-        std::cout << warning("Contents of\n  " )
-          .append(generatedFile.string())
-          .append("\n  no longer matches\n  ")
-          .append(referenceFile.string())
-          .append("\n");
-        break;
-      case file_comparison::failed:
-        std::cout << warning("Unable to perform file comparison\n");
-        break;
-      }
-      break;
-    }
-  }
-
-  void test_runner::compare_files(const nascent_test& data, std::string_view partName)
-  {
-    namespace fs = std::filesystem;
-
-    const auto className{to_camel_case(data.class_name).append(partName)};
-
-    const auto referenceFile{
-      get_aux_path("UnitTestCodeTemplates").append("ReferenceExamples").append(className)
-    };
-    
-    const auto generatedFile{
-      get_output_path("UnitTestCreationDiagnostics").append(className)
-    };
-
-    compare_files(referenceFile, generatedFile, false_positive_mode::no);
   }
 
   void test_runner::false_positive_check(const nascent_test& data)
@@ -408,6 +334,81 @@ namespace sequoia::testing
         std::cout << warning("unable to create file ").append(outputFile.path().string());
       }
     }
+  }
+
+    void test_runner::compare_files(const std::filesystem::path& referenceFile, const std::filesystem::path& generatedFile, const false_positive_mode falsePositive)
+  {
+    auto fcomp{file_comparison::failed};
+    
+    std::ifstream file1{referenceFile}, file2{generatedFile};
+    if(!file1) warning("unable to open file ").append(referenceFile.string()).append("\n");
+    if(!file2) warning("unable to open file ").append(generatedFile.string()).append("\n");
+    
+    if(file1 && file2)
+    {
+      std::stringstream buffer1{}, buffer2{};
+      buffer1 << file1.rdbuf();
+      buffer2 << file2.rdbuf();
+
+      fcomp =  (buffer1.str() == buffer2.str()) ? file_comparison::same : file_comparison::different;
+    }
+
+    switch(falsePositive)
+    {    
+    case false_positive_mode::yes:
+      switch(fcomp)
+      {
+      case file_comparison::same:
+        std::cout << warning("Contents of\n  " )
+          .append(generatedFile)
+          .append("\n  spuriously comparing equal to\n  ")
+          .append(referenceFile)
+          .append("\n");    
+        break;
+      case file_comparison::different:
+        std::cout << "      passed\n";
+        break;
+      case file_comparison::failed:
+        std::cout << warning("Unable to perform false-positive test\n");
+        break;
+      }
+      break;
+    case false_positive_mode::no:
+      switch(fcomp)
+      {
+      case file_comparison::same:
+        std::cout << "      passed\n";
+        break;
+      case file_comparison::different:
+        std::cout << warning("Contents of\n  " )
+          .append(generatedFile.string())
+          .append("\n  no longer matches\n  ")
+          .append(referenceFile.string())
+          .append("\n");
+        break;
+      case file_comparison::failed:
+        std::cout << warning("Unable to perform file comparison\n");
+        break;
+      }
+      break;
+    }
+  }
+
+  void test_runner::compare_files(const nascent_test& data, std::string_view partName)
+  {
+    namespace fs = std::filesystem;
+
+    const auto className{to_camel_case(data.class_name).append(partName)};
+
+    const auto referenceFile{
+      get_aux_path("UnitTestCodeTemplates").append("ReferenceExamples").append(className)
+    };
+    
+    const auto generatedFile{
+      get_output_path("UnitTestCreationDiagnostics").append(className)
+    };
+
+    compare_files(referenceFile, generatedFile, false_positive_mode::no);
   }
 
   
