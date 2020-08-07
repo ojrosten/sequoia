@@ -336,7 +336,7 @@ namespace sequoia::testing
     }
   }
 
-    void test_runner::compare_files(const std::filesystem::path& referenceFile, const std::filesystem::path& generatedFile, const false_positive_mode falsePositive)
+  void test_runner::compare_files(const std::filesystem::path& referenceFile, const std::filesystem::path& generatedFile, const false_positive_mode falsePositive)
   {
     auto fcomp{file_comparison::failed};
     
