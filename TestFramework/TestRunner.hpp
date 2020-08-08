@@ -157,6 +157,10 @@ namespace sequoia::testing
 
     static void compare_files(const nascent_test& data, std::string_view partName);
 
+    template<class Fn>
+      requires invocable<Fn, std::filesystem::path>
+    static void test_file_editing(std::string_view fileName, Fn action);
+
     static void test_file_editing();
 
     static void false_positive_check(const nascent_test& data);

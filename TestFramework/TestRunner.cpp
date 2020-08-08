@@ -190,10 +190,10 @@ namespace sequoia::testing
 
     std::cout << "Running self-diagnostics...\n";
 
-    std::string_view mess{"  Running test creation tool diagnostics...\n    Building Files:\n"};
+    std::string_view mess{"  Running test creation tool diagnostics...\n    Building files:\n"};
     create_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(),  mess, overwrite_mode::yes);
 
-    compare_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(), "\n    Comparing files against reference files...\n");
+    compare_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(), "\n    Comparing against reference files...\n");
 
     test_file_editing();
 
@@ -435,38 +435,50 @@ namespace sequoia::testing
     }
   }
 
-  void test_runner::test_file_editing()
+  template<class Fn>
+    requires invocable<Fn, std::filesystem::path>
+  void test_runner::test_file_editing(std::string_view fileName, Fn action)
   {
     namespace fs = std::filesystem;
 
-    std::string_view includes{"Includes.hpp"};
+    std::cout << "    Building files...\n";
+
+    const auto initialRefFile{
+      get_aux_path("FileEditingTestMaterials").append("BeforeEditing").append(fileName)
+    };
+
+    const auto sandboxFile{
+      get_output_path("FileEditingOutput").append(fileName)
+    };
+
+    std::cout << "      Creating file " << sandboxFile << '\n';
+    fs::copy_file(initialRefFile, sandboxFile);
+
+    action(sandboxFile);
+
+    const auto finalRefFile{
+      get_aux_path("FileEditingTestMaterials").append("AfterEditing").append(fileName)
+    };
+
+    std::cout << "\n    Comparing against reference files...\n";
+    compare_files(finalRefFile, sandboxFile, false_positive_mode::no);
+  }
+
+  void test_runner::test_file_editing()
+  {
+    namespace fs = std::filesystem;
+    
+    std::cout << "\n  Running file editing diagnostics...\n";
 
     for(auto& p : fs::directory_iterator(get_output_path("FileEditingOutput")))
     {
       fs::remove(p.path());
     }
 
-    const auto initialRefFile{
-      get_aux_path("FileEditingTestMaterials").append("BeforeEditing").append(includes)
-    };
-
-    const auto sandboxFile{
-      get_output_path("FileEditingOutput").append(includes)
-    };
-
-    std::cout << "\n  Running file editing diagnostics...\n    Generating edited file\n";
-    std::cout << "      Copying " << includes << " to " << get_output_path("FileEditingOutput") << '\n';
-    fs::copy_file(initialRefFile, sandboxFile);
-
-    std::cout << "      Adding #include to end of file\n";
-    add_include(sandboxFile, "Bar.hpp");
-
-    std::cout << "\n    Comparing against reference file...\n";
-    const auto finalRefFile{
-      get_aux_path("FileEditingTestMaterials").append("AfterEditing").append("Includes.hpp")
-    };
-
-    compare_files(finalRefFile, sandboxFile, false_positive_mode::no);
+    test_file_editing("Includes.hpp", [](const fs::path& sandboxFile){
+      std::cout << "      Adding #include to end of file\n";
+      add_include(sandboxFile, "Bar.hpp");
+    });
   }
 
   void test_runner::run_tests()
