@@ -476,8 +476,12 @@ namespace sequoia::testing
     }
 
     test_file_editing("Includes.hpp", [](const fs::path& sandboxFile){
-      std::cout << "      Adding #include to end of file\n";
       add_include(sandboxFile, "Bar.hpp");
+    });
+
+    test_file_editing("FakeMain.cpp", [](const fs::path& sandboxFile){
+      add_to_family(sandboxFile, "New Family",
+        {{"fake_false_positive_test{\"False Positive Test\"}"}, {"fake_test{\"Unit Test\"}"}});
     });
   }
 

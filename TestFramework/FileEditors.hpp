@@ -18,6 +18,5 @@ namespace sequoia::testing
 {
   void add_include(const std::filesystem::path& filePath, std::string_view include);
 
-  // need new headers and new tests?
-  void add_to_family(const std::filesystem::path& filePath, std::string_view familyName, std::vector<std::string> tests);
+  void add_to_family(const std::filesystem::path& filePath, std::string_view familyName, const std::vector<std::string>& tests);
 }
