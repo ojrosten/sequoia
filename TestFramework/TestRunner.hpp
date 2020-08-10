@@ -150,7 +150,8 @@ namespace sequoia::testing
 
     static void create_file(const nascent_test& data, std::string_view partName, const overwrite_mode overwrite);
 
-    static void compare_files(const std::filesystem::path& referenceFile, const std::filesystem::path& generatedFile, const false_positive_mode falsePositive);
+    [[nodiscard]]
+    static std::string compare_files(const std::filesystem::path& referenceFile, const std::filesystem::path& generatedFile, const false_positive_mode falsePositive);
 
     template<class Iter>
     static void compare_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message);
@@ -159,7 +160,8 @@ namespace sequoia::testing
 
     template<class Fn>
       requires invocable<Fn, std::filesystem::path>
-    static void test_file_editing(std::string_view fileName, Fn action);
+    [[nodiscard]]
+    static std::string test_file_editing(std::string_view fileName, Fn action);
 
     static void test_file_editing();
 
