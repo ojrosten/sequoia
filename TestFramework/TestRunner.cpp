@@ -493,6 +493,14 @@ namespace sequoia::testing
                                         {{"fake_false_positive_test{\"False Positive Test\"}"}, {"fake_test{\"Unit Test\"}"}});
                         })
                 );
+
+    info.append(
+      test_file_editing("FakeMain2.cpp",
+                        [](const fs::path& sandboxFile){
+                          add_to_family(sandboxFile, "CommandLine Arguments",
+                                        {{"commandline_arguments_false_positive_test{\"False Positive Test\"}"}});
+                        })
+                );
     
     std::cout << "\n    Comparisons against reference files:\n";
     std::cout << info << '\n';

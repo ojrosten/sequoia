@@ -44,32 +44,51 @@ namespace sequoia::testing
             
       while(std::getline(ifile, line))
       {
+        bool lineAdded{};
         if(!inserted)
         {
-          constexpr auto npos{std::string::npos};
+          constexpr auto npos{std::string::npos};  
+
           if(auto pos{line.find(familyName)}; pos != npos)
           {
-            // TO DO
+            const auto indent{line.substr(0, pos)};
+            
+            text.reserve(line.size() + 1);
+            text.append(std::move(line));
+
+            for(const auto& t : tests)
+            {
+              append_indented(text, std::string{t}.append(","), indent);
+            }
+            text.append("\n");
+
+            lineAdded = true;
+            inserted = true;
           }
           else if(pos = line.find("runner.execute"); pos != npos)
-          {
+          {            
             const auto indent_0{line.substr(0, pos)};
             const auto indent_1{std::string{indent_0}.append("  ")};
-            
+
             append_indented(text, "runner.add_test_family(", indent_0);
             append_indented(text, std::string{"\""}.append(familyName).append("\","), indent_1);
-            for(auto i{tests.begin()}; i != tests.end() - 1; ++i)
+            for(auto i{tests.cbegin()}; i != tests.cend() - 1; ++i)
             {
               append_indented(text, std::string{*i}.append(","), indent_1);
             }
 
             append_indented(text, tests.back(), indent_1);
             append_indented(text, ");\n\n", indent_0);
+
+            inserted = true;
           }
         }
-          
-        text.reserve(line.size() + 1);
-        text.append(std::move(line)).append("\n");
+
+        if(!lineAdded)
+        {
+          text.reserve(line.size() + 1);
+          text.append(std::move(line)).append("\n");
+        }
       }
     }
     else
