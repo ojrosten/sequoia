@@ -85,7 +85,8 @@ namespace sequoia::testing
 
     [[nodiscard]]
     concurrency_mode concurrency() const noexcept { return m_ConcurrencyMode; }
-  private:    
+  private:
+    
     struct nascent_test
     {
       nascent_test(std::filesystem::path dir, std::string qualifiedName);
@@ -150,8 +151,12 @@ namespace sequoia::testing
 
     static void create_file(const nascent_test& data, std::string_view partName, const overwrite_mode overwrite);
 
+    template<class Fn>
+      requires invocable<Fn, std::filesystem::path>
+    static void create_file(const std::filesystem::path& source, const std::filesystem::path& target, Fn action);
+
     [[nodiscard]]
-    static std::string compare_files(const std::filesystem::path& referenceFile, const std::filesystem::path& generatedFile, const false_positive_mode falsePositive);
+    static std::string compare_files(const std::filesystem::path& file, const std::filesystem::path& prediction, const false_positive_mode falsePositive);
 
     template<class Iter>
     static void compare_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message);

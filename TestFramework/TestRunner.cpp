@@ -106,10 +106,10 @@ namespace sequoia::testing
       }
     };
     
-    const auto referenceFile1{partPath().concat(st_TestNameStubs[0])};
-    const auto referenceFile2{partPath().concat(st_TestNameStubs[1])};
+    const auto file1{partPath().concat(st_TestNameStubs[0])};
+    const auto file2{partPath().concat(st_TestNameStubs[1])};
 
-    std::cout << compare_files(referenceFile1, referenceFile2, false_positive_mode::yes);
+    std::cout << compare_files(file1, file2, false_positive_mode::yes);
   }
 
   test_runner::nascent_test::nascent_test(std::filesystem::path dir, std::string qualifiedName)
@@ -337,14 +337,14 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string test_runner::compare_files(const std::filesystem::path& referenceFile, const std::filesystem::path& generatedFile, const false_positive_mode falsePositive)
+  std::string test_runner::compare_files(const std::filesystem::path& file, const std::filesystem::path& prediction, const false_positive_mode falsePositive)
   {
     auto fcomp{file_comparison::failed};
     std::string info{};
     
-    std::ifstream file1{referenceFile}, file2{generatedFile};
-    if(!file1) warning("unable to open file ").append(referenceFile.string()).append("\n");
-    if(!file2) warning("unable to open file ").append(generatedFile.string()).append("\n");
+    std::ifstream file1{file}, file2{prediction};
+    if(!file1) warning("unable to open file ").append(file.string()).append("\n");
+    if(!file2) warning("unable to open file ").append(prediction.string()).append("\n");
     
     if(file1 && file2)
     {
@@ -352,7 +352,7 @@ namespace sequoia::testing
       buffer1 << file1.rdbuf();
       buffer2 << file2.rdbuf();
 
-      fcomp =  (buffer1.str() == buffer2.str()) ? file_comparison::same : file_comparison::different;
+      fcomp = (buffer1.str() == buffer2.str()) ? file_comparison::same : file_comparison::different;
     }
 
     switch(falsePositive)
@@ -362,9 +362,9 @@ namespace sequoia::testing
       {
       case file_comparison::same:
         info = warning("Contents of\n  " )
-          .append(generatedFile)
+          .append(file)
           .append("\n  spuriously comparing equal to\n  ")
-          .append(referenceFile)
+          .append(prediction)
           .append("\n");    
         break;
       case file_comparison::different:
@@ -383,9 +383,9 @@ namespace sequoia::testing
         break;
       case file_comparison::different:
         info = warning("Contents of\n  " )
-          .append(generatedFile.string())
+          .append(file.string())
           .append("\n  no longer matches\n  ")
-          .append(referenceFile.string())
+          .append(prediction.string())
           .append("\n");
         break;
       case file_comparison::failed:
@@ -404,15 +404,10 @@ namespace sequoia::testing
 
     const auto className{to_camel_case(data.class_name).append(partName)};
 
-    const auto referenceFile{
-      get_aux_path("UnitTestCodeTemplates").append("ReferenceExamples").append(className)
-    };
-    
-    const auto generatedFile{
-      get_output_path("UnitTestCreationDiagnostics").append(className)
-    };
+    const auto file{get_output_path("UnitTestCreationDiagnostics").append(className)};
+    const auto prediction{get_aux_path("UnitTestCodeTemplates").append("ReferenceExamples").append(className)};
 
-    std::cout << compare_files(referenceFile, generatedFile, false_positive_mode::no);
+    std::cout << compare_files(file, prediction, false_positive_mode::no);
   }
 
   
@@ -441,29 +436,30 @@ namespace sequoia::testing
 
   template<class Fn>
     requires invocable<Fn, std::filesystem::path>
+  void test_runner::create_file(const std::filesystem::path& source, const std::filesystem::path& target, Fn action)
+  {
+    namespace fs = std::filesystem;
+
+    fs::copy_file(source, target);
+    action(target);
+  }
+
+  template<class Fn>
+    requires invocable<Fn, std::filesystem::path>
   [[nodiscard]]
   std::string test_runner::test_file_editing(std::string_view fileName, Fn action)
   {
     namespace fs = std::filesystem;
 
-    const auto initialRefFile{
-      get_aux_path("FileEditingTestMaterials").append("BeforeEditing").append(fileName)
-    };
+    const auto source{get_aux_path("FileEditingTestMaterials").append("BeforeEditing").append(fileName)};
+    const auto target{get_output_path("FileEditingOutput").append(fileName)};
 
-    const auto sandboxFile{
-      get_output_path("FileEditingOutput").append(fileName)
-    };
+    create_file(source, target, action);
+    std::cout << "      " << target << '\n';
 
-    std::cout << "      " << sandboxFile << '\n';
-    fs::copy_file(initialRefFile, sandboxFile);
+    const auto prediction{get_aux_path("FileEditingTestMaterials").append("AfterEditing").append(fileName)};
 
-    action(sandboxFile);
-
-    const auto finalRefFile{
-      get_aux_path("FileEditingTestMaterials").append("AfterEditing").append(fileName)
-    };
-
-    return compare_files(finalRefFile, sandboxFile, false_positive_mode::no);
+    return compare_files(target, prediction, false_positive_mode::no);
   }
 
   void test_runner::test_file_editing()
