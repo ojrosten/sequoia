@@ -99,7 +99,7 @@ namespace sequoia::testing
     }
     else
     {
-      throw std::runtime_error{std::string{"Unable to open "}.append(filePath.string()).append(" for reading")};
+      throw std::runtime_error{std::string{"Unable to open "}.append(filePath).append(" for reading")};
     }
 
     const auto tempPath{fs::path{filePath}.concat("x")};
@@ -109,7 +109,7 @@ namespace sequoia::testing
     }
     else
     {
-      throw std::runtime_error{std::string{"Unable to open "}.append(tempPath.string()).append(" for writing")};
+      throw std::runtime_error{std::string{"Unable to open "}.append(tempPath).append(" for writing")};
     }
 
     fs::copy_file(tempPath, filePath, fs::copy_options::overwrite_existing);

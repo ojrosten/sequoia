@@ -288,11 +288,11 @@ namespace sequoia::testing
   {
     namespace fs = std::filesystem;
     
-    const fs::directory_entry
-      outputFile{(data.directory / to_camel_case(data.class_name)) += partName};
-    if((overwrite == overwrite_mode::no) && outputFile.exists())
+    const auto outputFile{(data.directory / to_camel_case(data.class_name)) += partName};
+
+    if((overwrite == overwrite_mode::no) && fs::exists(outputFile))
     {
-      std::cout << warning(outputFile.path().string()).append(" already exists, so not created\n");
+      std::cout << warning(outputFile.string()).append(" already exists, so not created\n");
       return;
     }
 
@@ -305,35 +305,41 @@ namespace sequoia::testing
           .append("MyClass") += partName;
       }
     };
-    
-    std::string text{};
-    if(const auto inputPath{makePath()}; std::ifstream ifile{inputPath})
-    {
-      std::stringstream buffer{};
-      buffer << ifile.rdbuf();
-      text = buffer.str();
-    }
-    else
-    {
-      std::cout << warning("unable to open ").append(inputPath.string());
-    }
-        
-    if(!text.empty())
-    {
-      replace_all(text, "::my_class", data.qualified_class_name);
-      replace_all(text, "my_class", data.class_name);
-      replace_all(text, "MyClass", to_camel_case(data.class_name));
 
-      if(std::ofstream ofile{outputFile})
-      {
-        std::cout << "      " << outputFile.path() << '\n';
-        ofile << text;
+    auto fn{
+            [&data,&outputFile](const fs::path& file) {
+        std::string text{};
+        if(const auto inputPath{file}; std::ifstream ifile{inputPath})
+        {
+          std::stringstream buffer{};
+          buffer << ifile.rdbuf();
+          text = buffer.str();
+        }
+        else
+        {
+          throw std::runtime_error{std::string{"Unable to open "}.append(inputPath).append(" for reading")};
+        }
+        
+        if(!text.empty())
+        {
+          replace_all(text, "::my_class", data.qualified_class_name);
+          replace_all(text, "my_class", data.class_name);
+          replace_all(text, "MyClass", to_camel_case(data.class_name));
+
+          if(std::ofstream ofile{outputFile})
+          {
+            ofile << text;
+          }
+          else
+          {
+            throw std::runtime_error{std::string{"Unable to open file "}.append(outputFile).append(" for writing")};
+          }
+        }
       }
-      else
-      {
-        std::cout << warning("unable to create file ").append(outputFile.path().string());
-      }
-    }
+    };
+
+    create_file(makePath(), outputFile, fn);
+    std::cout << "      " << outputFile << '\n';
   }
 
   [[nodiscard]]
@@ -343,8 +349,8 @@ namespace sequoia::testing
     std::string info{};
     
     std::ifstream file1{file}, file2{prediction};
-    if(!file1) warning("unable to open file ").append(file.string()).append("\n");
-    if(!file2) warning("unable to open file ").append(prediction.string()).append("\n");
+    if(!file1) warning("unable to open file ").append(file).append("\n");
+    if(!file2) warning("unable to open file ").append(prediction).append("\n");
     
     if(file1 && file2)
     {
@@ -383,9 +389,9 @@ namespace sequoia::testing
         break;
       case file_comparison::different:
         info = warning("Contents of\n  " )
-          .append(file.string())
+          .append(file)
           .append("\n  no longer matches\n  ")
-          .append(prediction.string())
+          .append(prediction)
           .append("\n");
         break;
       case file_comparison::failed:
@@ -440,7 +446,7 @@ namespace sequoia::testing
   {
     namespace fs = std::filesystem;
 
-    fs::copy_file(source, target);
+    fs::copy_file(source, target, fs::copy_options::overwrite_existing);
     action(target);
   }
 
