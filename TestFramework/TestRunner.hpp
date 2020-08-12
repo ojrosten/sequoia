@@ -52,6 +52,8 @@ namespace sequoia::testing
   private:
     std::filesystem::path m_Directory;
     std::string m_QualifiedClassName, m_ClassName;
+
+    void transform_file(const std::filesystem::path& file) const;
   };    
 
   /*! \brief Consumes command-line arguments and holds all test families

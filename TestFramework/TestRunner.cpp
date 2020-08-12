@@ -128,48 +128,43 @@ namespace sequoia::testing
 
     auto makePath{
       [partName](){
-        return fs::current_path().parent_path()
-          .append("aux_files")
-          .append("UnitTestCodeTemplates")
-          .append("CodeTemplates")
-          .append("MyClass") += partName;
+        return get_aux_path("UnitTestCodeTemplates").append("CodeTemplates").append("MyClass").concat(partName);
       }
     };
 
-    auto fn{
-      [this,&outputFile](const fs::path& file) {
-        std::string text{};
-        if(const auto inputPath{file}; std::ifstream ifile{inputPath})
-        {
-          std::stringstream buffer{};
-          buffer << ifile.rdbuf();
-          text = buffer.str();
-        }
-        else
-        {
-          throw std::runtime_error{std::string{"Unable to open "}.append(inputPath).append(" for reading")};
-        }
-        
-        if(!text.empty())
-        {
-          replace_all(text, "::my_class", m_QualifiedClassName);
-          replace_all(text, "my_class", m_ClassName);
-          replace_all(text, "MyClass", to_camel_case(m_ClassName));
-
-          if(std::ofstream ofile{outputFile})
-          {
-            ofile << text;
-          }
-          else
-          {
-            throw std::runtime_error{std::string{"Unable to open file "}.append(outputFile).append(" for writing")};
-          }
-        }
-      }
-    };
-
-    testing::create_file(makePath(), outputFile, fn);
+    testing::create_file(makePath(), outputFile, [this](const fs::path& file) { transform_file(file); });
     std::cout << "      " << outputFile << '\n';
+  }
+
+  void nascent_test::transform_file(const std::filesystem::path& file) const
+  {
+    std::string text{};
+    if(std::ifstream ifile{file})
+    {
+      std::stringstream buffer{};
+      buffer << ifile.rdbuf();
+      text = buffer.str();
+    }
+    else
+    {
+      throw std::runtime_error{std::string{"Unable to open "}.append(file).append(" for reading")};
+    }
+        
+    if(!text.empty())
+    {
+      replace_all(text, "::my_class", m_QualifiedClassName);
+      replace_all(text, "my_class", m_ClassName);
+      replace_all(text, "MyClass", to_camel_case(m_ClassName));
+
+      if(std::ofstream ofile{file})
+      {
+        ofile << text;
+      }
+      else
+      {
+        throw std::runtime_error{std::string{"Unable to open file "}.append(file).append(" for writing")};
+      }
+    }
   }
 
   void nascent_test::compare_files(std::string_view partName) const
