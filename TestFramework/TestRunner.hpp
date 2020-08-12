@@ -20,6 +20,40 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string report_time(const test_family::summary& s);
 
+  template<class Fn>
+    requires invocable<Fn, std::filesystem::path>
+  void create_file(const std::filesystem::path& source, const std::filesystem::path& target, Fn action)
+  {
+    namespace fs = std::filesystem;
+
+    fs::copy_file(source, target, fs::copy_options::overwrite_existing);
+    action(target);
+  }
+
+  [[nodiscard]]
+  std::string compare_files(const std::filesystem::path& file, const std::filesystem::path& prediction, const test_mode mode);
+
+
+  /*! \brief Holds data for the automated creation of new tests
+
+   */
+
+  class nascent_test
+  {
+  public:
+    nascent_test(std::filesystem::path dir, std::string qualifiedName);
+
+    void create_file(std::string_view partName, const std::filesystem::copy_options options) const;
+
+    void compare_files(std::string_view partName) const;
+
+    [[nodiscard]]
+    std::string_view class_name() const noexcept { return m_ClassName; }
+  private:
+    std::filesystem::path m_Directory;
+    std::string m_QualifiedClassName, m_ClassName;
+  };    
+
   /*! \brief Consumes command-line arguments and holds all test families
 
       The various arguments have the following effect:
@@ -86,19 +120,6 @@ namespace sequoia::testing
     [[nodiscard]]
     concurrency_mode concurrency() const noexcept { return m_ConcurrencyMode; }
   private:
-    
-    struct nascent_test
-    {
-      nascent_test(std::filesystem::path dir, std::string qualifiedName);
-
-      std::filesystem::path directory;
-      std::string qualified_class_name, class_name;
-    };    
-
-    enum class file_comparison {failed, same, different};
-    enum class false_positive_mode {yes, no};
-    enum class overwrite_mode {yes, no};
-
     std::vector<test_family> m_Families{};
     std::map<std::string, bool, std::less<>> m_SelectedFamilies{}, m_SelectedSources{};
     std::vector<nascent_test> m_NascentTests{};
@@ -107,7 +128,13 @@ namespace sequoia::testing
 
     concurrency_mode m_ConcurrencyMode{concurrency_mode::serial};
 
-    const static std::array<std::string_view, 5> st_TestNameStubs;
+    constexpr static std::array<std::string_view, 5> st_TestNameStubs {
+      "TestingUtilities.hpp",
+      "TestingDiagnostics.hpp",
+      "TestingDiagnostics.cpp",
+      "Test.hpp",
+      "Test.cpp"
+    };
 
     bool mark_family(std::string_view name);
 
@@ -142,21 +169,10 @@ namespace sequoia::testing
     static std::string stringify(concurrency_mode mode);
 
     template<class Iter>
-    static void create_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message, const overwrite_mode overwrite);
-
-    static void create_file(const nascent_test& data, std::string_view partName, const overwrite_mode overwrite);
-
-    template<class Fn>
-      requires invocable<Fn, std::filesystem::path>
-    static void create_file(const std::filesystem::path& source, const std::filesystem::path& target, Fn action);
-
-    [[nodiscard]]
-    static std::string compare_files(const std::filesystem::path& file, const std::filesystem::path& prediction, const false_positive_mode falsePositive);
+    static void create_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message, const std::filesystem::copy_options options);
 
     template<class Iter>
     static void compare_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message);
-
-    static void compare_files(const nascent_test& data, std::string_view partName);
 
     template<class Fn>
       requires invocable<Fn, std::filesystem::path>

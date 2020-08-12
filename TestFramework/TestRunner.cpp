@@ -31,66 +31,160 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string test_runner::stringify(concurrency_mode mode)
+  std::string compare_files(const std::filesystem::path& file, const std::filesystem::path& prediction, const test_mode mode)
   {
-    switch(mode)
-    {
-    case concurrency_mode::serial:
-      return "Serial";
-    case concurrency_mode::family:
-      return "Family";
-    case concurrency_mode::test:
-      return "Test";
-    case concurrency_mode::deep:
-      return "Deep";
-    default:      
-      throw std::logic_error("Missing treatment for a case of concurrency_mode");
-    }
-  }
+    enum class file_comparison {failed, same, different};
 
-  const std::array<std::string_view, 5> test_runner::st_TestNameStubs {
-    "TestingUtilities.hpp",
-    "TestingDiagnostics.hpp",
-    "TestingDiagnostics.cpp",
-    "Test.hpp",
-    "Test.cpp"
-  };
-
-  void test_runner::false_positive_check(const nascent_test& data)
-  {
-    static_assert(st_TestNameStubs.size() > 1, "Insufficient data for false-positive test");
-
-    std::cout << "  Running false-positive test for file comparison...\n";
-
-    auto partPath{
-      [&data](){
-        return get_output_path("UnitTestCreationDiagnostics").append(to_camel_case(data.class_name));
-      }
-    };
+    auto fcomp{file_comparison::failed};
+    std::string info{};
     
-    const auto file1{partPath().concat(st_TestNameStubs[0])};
-    const auto file2{partPath().concat(st_TestNameStubs[1])};
+    std::ifstream file1{file}, file2{prediction};
+    if(!file1) warning("unable to open file ").append(file).append("\n");
+    if(!file2) warning("unable to open file ").append(prediction).append("\n");
+    
+    if(file1 && file2)
+    {
+      std::stringstream buffer1{}, buffer2{};
+      buffer1 << file1.rdbuf();
+      buffer2 << file2.rdbuf();
 
-    std::cout << compare_files(file1, file2, false_positive_mode::yes);
+      fcomp = (buffer1.str() == buffer2.str()) ? file_comparison::same : file_comparison::different;
+    }
+
+    switch(mode)
+    {    
+    case test_mode::false_positive:
+      switch(fcomp)
+      {
+      case file_comparison::same:
+        info = warning("Contents of\n  " )
+          .append(file)
+          .append("\n  spuriously comparing equal to\n  ")
+          .append(prediction)
+          .append("\n");    
+        break;
+      case file_comparison::different:
+        info = "      passed\n";
+        break;
+      case file_comparison::failed:
+        info = warning("Unable to perform false-positive test\n");
+        break;
+      }
+      break;
+    default:
+      switch(fcomp)
+      {
+      case file_comparison::same:
+        info = "      passed\n";
+        break;
+      case file_comparison::different:
+        info = warning("Contents of\n  " )
+          .append(file)
+          .append("\n  no longer matches\n  ")
+          .append(prediction)
+          .append("\n");
+        break;
+      case file_comparison::failed:
+        info = warning("Unable to perform file comparison\n");
+        break;
+      }
+      break;
+    }
+
+    return info;
   }
 
-  test_runner::nascent_test::nascent_test(std::filesystem::path dir, std::string qualifiedName)
-    : directory{std::move(dir)}
-    , qualified_class_name{std::move(qualifiedName)}
+  //=========================================== nascent_test ===========================================//
+
+  nascent_test::nascent_test(std::filesystem::path dir, std::string qualifiedName)
+    : m_Directory{std::move(dir)}
+    , m_QualifiedClassName{std::move(qualifiedName)}
   {
           
-    if(auto pos{qualified_class_name.rfind("::")}; pos != std::string::npos)
+    if(auto pos{m_QualifiedClassName.rfind("::")}; pos != std::string::npos)
     {
-      if(pos < qualified_class_name.length() - 2)
+      if(pos < m_QualifiedClassName.length() - 2)
       {            
-        class_name = qualified_class_name.substr(pos+2);
+        m_ClassName = m_QualifiedClassName.substr(pos+2);
       }
     }
     else
     {
-      class_name = qualified_class_name;
+      m_ClassName = m_QualifiedClassName;
     }
   }
+
+  void nascent_test::create_file(std::string_view partName, const std::filesystem::copy_options options) const
+  {
+    namespace fs = std::filesystem;
+    
+    const auto outputFile{(m_Directory / to_camel_case(m_ClassName)) += partName};
+
+    if(((options & fs::copy_options::skip_existing) == fs::copy_options::skip_existing) && fs::exists(outputFile))
+    {
+      std::cout << warning(outputFile.string()).append(" already exists, so not created\n");
+      return;
+    }
+
+    auto makePath{
+      [partName](){
+        return fs::current_path().parent_path()
+          .append("aux_files")
+          .append("UnitTestCodeTemplates")
+          .append("CodeTemplates")
+          .append("MyClass") += partName;
+      }
+    };
+
+    auto fn{
+      [this,&outputFile](const fs::path& file) {
+        std::string text{};
+        if(const auto inputPath{file}; std::ifstream ifile{inputPath})
+        {
+          std::stringstream buffer{};
+          buffer << ifile.rdbuf();
+          text = buffer.str();
+        }
+        else
+        {
+          throw std::runtime_error{std::string{"Unable to open "}.append(inputPath).append(" for reading")};
+        }
+        
+        if(!text.empty())
+        {
+          replace_all(text, "::my_class", m_QualifiedClassName);
+          replace_all(text, "my_class", m_ClassName);
+          replace_all(text, "MyClass", to_camel_case(m_ClassName));
+
+          if(std::ofstream ofile{outputFile})
+          {
+            ofile << text;
+          }
+          else
+          {
+            throw std::runtime_error{std::string{"Unable to open file "}.append(outputFile).append(" for writing")};
+          }
+        }
+      }
+    };
+
+    testing::create_file(makePath(), outputFile, fn);
+    std::cout << "      " << outputFile << '\n';
+  }
+
+  void nascent_test::compare_files(std::string_view partName) const
+  {
+    namespace fs = std::filesystem;
+
+    const auto className{to_camel_case(m_ClassName).append(partName)};
+
+    const auto file{get_output_path("UnitTestCreationDiagnostics").append(className)};
+    const auto prediction{get_aux_path("UnitTestCodeTemplates").append("ReferenceExamples").append(className)};
+
+    std::cout << testing::compare_files(file, prediction, test_mode::standard);
+  }
+
+  //=========================================== test_runner ===========================================//
 
   test_runner::test_runner(int argc, char** argv)
   {
@@ -145,15 +239,53 @@ namespace sequoia::testing
       throw std::runtime_error{error("Can't run asynchronously in recovery mode\n")};
   }
 
+  [[nodiscard]]
+  std::string test_runner::stringify(concurrency_mode mode)
+  {
+    switch(mode)
+    {
+    case concurrency_mode::serial:
+      return "Serial";
+    case concurrency_mode::family:
+      return "Family";
+    case concurrency_mode::test:
+      return "Test";
+    case concurrency_mode::deep:
+      return "Deep";
+    default:      
+      throw std::logic_error("Missing treatment for a case of concurrency_mode");
+    }
+  }
+
+  void test_runner::false_positive_check(const nascent_test& data)
+  {
+    static_assert(st_TestNameStubs.size() > 1, "Insufficient data for false-positive test");
+
+    std::cout << "  Running false-positive test for file comparison...\n";
+
+    auto partPath{
+      [&data](){
+        return get_output_path("UnitTestCreationDiagnostics").append(to_camel_case(std::string{data.class_name()}));
+      }
+    };
+    
+    const auto file1{partPath().concat(st_TestNameStubs[0])};
+    const auto file2{partPath().concat(st_TestNameStubs[1])};
+
+    std::cout << testing::compare_files(file1, file2, test_mode::false_positive);
+  }
+
   void test_runner::run_diagnostics()
-  {    
+  {
+    namespace fs = std::filesystem;
+    
     const std::array<nascent_test, 1>
       diagnosticFiles{nascent_test{get_output_path("UnitTestCreationDiagnostics"), "utilities::iterator"}};
 
     std::cout << "Running self-diagnostics...\n";
 
     std::string_view mess{"  Running test creation tool diagnostics...\n    Files built:\n"};
-    create_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(),  mess, overwrite_mode::yes);
+    create_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(),  mess, fs::copy_options::overwrite_existing);
 
     compare_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(), "\n    Comparisons against reference files:\n");
 
@@ -222,12 +354,14 @@ namespace sequoia::testing
                        
   void test_runner::execute()
   {
-    create_files(m_NascentTests.cbegin(), m_NascentTests.cend(), "Creating files...\n", overwrite_mode::no);
+    namespace fs = std::filesystem;
+
+    create_files(m_NascentTests.cbegin(), m_NascentTests.cend(), "Creating files...\n", fs::copy_options::skip_existing);
     run_tests();
   }
 
   template<class Iter>
-  void test_runner::create_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message, const overwrite_mode overwrite)
+  void test_runner::create_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message, const std::filesystem::copy_options options)
   {    
     if(std::distance(beginNascentTests, endNascentTests))
     {
@@ -238,146 +372,13 @@ namespace sequoia::testing
         const auto& data{*beginNascentTests};
         for(const auto& stub : st_TestNameStubs)
         {
-          create_file(data, stub, overwrite);
+          data.create_file(stub, options);
         }
 
         ++beginNascentTests;
       }
     }
   }
-
-  void test_runner::create_file(const nascent_test& data, std::string_view partName, const overwrite_mode overwrite)
-  {
-    namespace fs = std::filesystem;
-    
-    const auto outputFile{(data.directory / to_camel_case(data.class_name)) += partName};
-
-    if((overwrite == overwrite_mode::no) && fs::exists(outputFile))
-    {
-      std::cout << warning(outputFile.string()).append(" already exists, so not created\n");
-      return;
-    }
-
-    auto makePath{
-      [partName](){
-        return fs::current_path().parent_path()
-          .append("aux_files")
-          .append("UnitTestCodeTemplates")
-          .append("CodeTemplates")
-          .append("MyClass") += partName;
-      }
-    };
-
-    auto fn{
-            [&data,&outputFile](const fs::path& file) {
-        std::string text{};
-        if(const auto inputPath{file}; std::ifstream ifile{inputPath})
-        {
-          std::stringstream buffer{};
-          buffer << ifile.rdbuf();
-          text = buffer.str();
-        }
-        else
-        {
-          throw std::runtime_error{std::string{"Unable to open "}.append(inputPath).append(" for reading")};
-        }
-        
-        if(!text.empty())
-        {
-          replace_all(text, "::my_class", data.qualified_class_name);
-          replace_all(text, "my_class", data.class_name);
-          replace_all(text, "MyClass", to_camel_case(data.class_name));
-
-          if(std::ofstream ofile{outputFile})
-          {
-            ofile << text;
-          }
-          else
-          {
-            throw std::runtime_error{std::string{"Unable to open file "}.append(outputFile).append(" for writing")};
-          }
-        }
-      }
-    };
-
-    create_file(makePath(), outputFile, fn);
-    std::cout << "      " << outputFile << '\n';
-  }
-
-  [[nodiscard]]
-  std::string test_runner::compare_files(const std::filesystem::path& file, const std::filesystem::path& prediction, const false_positive_mode falsePositive)
-  {
-    auto fcomp{file_comparison::failed};
-    std::string info{};
-    
-    std::ifstream file1{file}, file2{prediction};
-    if(!file1) warning("unable to open file ").append(file).append("\n");
-    if(!file2) warning("unable to open file ").append(prediction).append("\n");
-    
-    if(file1 && file2)
-    {
-      std::stringstream buffer1{}, buffer2{};
-      buffer1 << file1.rdbuf();
-      buffer2 << file2.rdbuf();
-
-      fcomp = (buffer1.str() == buffer2.str()) ? file_comparison::same : file_comparison::different;
-    }
-
-    switch(falsePositive)
-    {    
-    case false_positive_mode::yes:
-      switch(fcomp)
-      {
-      case file_comparison::same:
-        info = warning("Contents of\n  " )
-          .append(file)
-          .append("\n  spuriously comparing equal to\n  ")
-          .append(prediction)
-          .append("\n");    
-        break;
-      case file_comparison::different:
-        info = "      passed\n";
-        break;
-      case file_comparison::failed:
-        info = warning("Unable to perform false-positive test\n");
-        break;
-      }
-      break;
-    case false_positive_mode::no:
-      switch(fcomp)
-      {
-      case file_comparison::same:
-        info = "      passed\n";
-        break;
-      case file_comparison::different:
-        info = warning("Contents of\n  " )
-          .append(file)
-          .append("\n  no longer matches\n  ")
-          .append(prediction)
-          .append("\n");
-        break;
-      case file_comparison::failed:
-        info = warning("Unable to perform file comparison\n");
-        break;
-      }
-      break;
-    }
-
-    return info;
-  }
-
-  void test_runner::compare_files(const nascent_test& data, std::string_view partName)
-  {
-    namespace fs = std::filesystem;
-
-    const auto className{to_camel_case(data.class_name).append(partName)};
-
-    const auto file{get_output_path("UnitTestCreationDiagnostics").append(className)};
-    const auto prediction{get_aux_path("UnitTestCodeTemplates").append("ReferenceExamples").append(className)};
-
-    std::cout << compare_files(file, prediction, false_positive_mode::no);
-  }
-
   
   template<class Iter>
   void test_runner::compare_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message)
@@ -389,10 +390,9 @@ namespace sequoia::testing
       while(beginNascentTests != endNascentTests)
       {
         const auto& data{*beginNascentTests};
-
         for(const auto& stub : st_TestNameStubs)
         {
-          compare_files(data, stub);
+          data.compare_files(stub);
         }
         
         ++beginNascentTests;
@@ -400,16 +400,6 @@ namespace sequoia::testing
 
       static_assert(st_TestNameStubs.size() > 1, "Insufficient data for false-positive test");      
     }
-  }
-
-  template<class Fn>
-    requires invocable<Fn, std::filesystem::path>
-  void test_runner::create_file(const std::filesystem::path& source, const std::filesystem::path& target, Fn action)
-  {
-    namespace fs = std::filesystem;
-
-    fs::copy_file(source, target, fs::copy_options::overwrite_existing);
-    action(target);
   }
 
   template<class Fn>
@@ -427,7 +417,7 @@ namespace sequoia::testing
 
     const auto prediction{get_aux_path("FileEditingTestMaterials").append("AfterEditing").append(fileName)};
 
-    return compare_files(target, prediction, false_positive_mode::no);
+    return testing::compare_files(target, prediction, test_mode::standard);
   }
 
   void test_runner::test_file_editing()
