@@ -139,12 +139,7 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    static std::string to_camel_case(std::string text);
-
-    [[nodiscard]]
     static std::string stringify(concurrency_mode mode);
-
-    static void replace_all(std::string& text, std::string_view from, const std::string& to);
 
     template<class Iter>
     static void create_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message, const overwrite_mode overwrite);

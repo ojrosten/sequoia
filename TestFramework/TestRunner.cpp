@@ -31,34 +31,6 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string test_runner::to_camel_case(std::string text)
-  {
-    if(!text.empty())
-    {
-      if(std::isalpha(text.front()))
-      {
-        text.front() = std::toupper(text.front());
-      }
-
-      using size_t = std::string::size_type;
-
-      size_t pos{};
-      while((pos = text.find("_", pos)) != std::string::npos)
-      {
-        text.erase(pos, 1);
-        if((pos < text.length()) && std::isalpha(text[pos]))
-        {
-          text[pos] = std::toupper(text[pos]);
-        }
-
-        pos += 1;
-      }
-    }
-
-    return text;
-  }
-
-  [[nodiscard]]
   std::string test_runner::stringify(concurrency_mode mode)
   {
     switch(mode)
@@ -83,16 +55,6 @@ namespace sequoia::testing
     "Test.hpp",
     "Test.cpp"
   };
-
-  void test_runner::replace_all(std::string& text, std::string_view from, const std::string& to)
-  {
-    std::string::size_type pos{};
-    while((pos = text.find(from, pos)) != std::string::npos)
-    {
-      text.replace(pos, from.length(), to);
-      pos += to.length();
-    }
-  }
 
   void test_runner::false_positive_check(const nascent_test& data)
   {

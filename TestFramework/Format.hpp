@@ -58,7 +58,13 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string prediction_message(std::string_view obtained, std::string_view predicted);
 
+  [[nodiscard]]
   std::string footer(std::string_view indentation=tab);
+
+  [[nodiscard]]
+  std::string to_camel_case(std::string text);
+
+  std::string& replace_all(std::string& text, std::string_view from, std::string_view to);
 
   [[nodiscard]]
   std::string report_line(std::string_view file, const int line, const std::string_view message);
