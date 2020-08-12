@@ -183,7 +183,7 @@ namespace sequoia::testing
 
     static void test_file_editing();
 
-    static void false_positive_check(const nascent_test& data);
+    static void false_positive_check();
     
     static void argument_processing_diagnostics();
   };

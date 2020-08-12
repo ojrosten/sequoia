@@ -252,11 +252,13 @@ namespace sequoia::testing
     }
   }
 
-  void test_runner::false_positive_check(const nascent_test& data)
+  void test_runner::false_positive_check()
   {
     static_assert(st_TestNameStubs.size() > 1, "Insufficient data for false-positive test");
 
     std::cout << "  Running false-positive test for file comparison...\n";
+
+    const nascent_test data{get_output_path("UnitTestCreationDiagnostics"), "utilities::iterator"};
 
     auto partPath{
       [&data](){
@@ -267,7 +269,7 @@ namespace sequoia::testing
     const auto file1{partPath().concat(st_TestNameStubs[0])};
     const auto file2{partPath().concat(st_TestNameStubs[1])};
 
-    std::cout << testing::compare_files(file1, file2, test_mode::false_positive);
+    std::cout << testing::compare_files(file1, file2, test_mode::false_positive) << '\n';
   }
 
   void test_runner::run_diagnostics()
@@ -280,13 +282,13 @@ namespace sequoia::testing
     std::cout << "Running self-diagnostics...\n";
 
     std::string_view mess{"  Running test creation tool diagnostics...\n    Files built:\n"};
-    create_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(),  mess, fs::copy_options::overwrite_existing);
 
+    false_positive_check();
+
+    create_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(),  mess, fs::copy_options::overwrite_existing);
     compare_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(), "\n    Comparisons against reference files:\n");
 
     test_file_editing();
-
-    false_positive_check(diagnosticFiles.front());
   }
 
   bool test_runner::mark_family(std::string_view name)
@@ -452,7 +454,7 @@ namespace sequoia::testing
                 );
     
     std::cout << "\n    Comparisons against reference files:\n";
-    std::cout << info << '\n';
+    std::cout << info;
   }
 
   void test_runner::run_tests()
