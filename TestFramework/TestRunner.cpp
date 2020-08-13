@@ -31,6 +31,28 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
+  std::string report_file_issue(const std::filesystem::path& file, std::string_view description)
+  {
+    auto mess{std::string{"Unable to open file "}.append(file)};
+    if(!description.empty()) mess.append(" ").append(description);
+    mess.append("\n");
+
+    return mess;
+  }
+
+  [[nodiscard]]
+  std::string report_failed_read(const std::filesystem::path& file)
+  {
+    return report_file_issue(file, " for reading");
+  }
+
+  [[nodiscard]]
+  std::string report_failed_write(const std::filesystem::path& file)
+  {
+    return report_file_issue(file, " for writing");
+  }
+
+  [[nodiscard]]
   std::string compare_files(const std::filesystem::path& file, const std::filesystem::path& prediction, const test_mode mode)
   {
     enum class file_comparison {failed, same, different};
@@ -39,8 +61,8 @@ namespace sequoia::testing
     std::string info{};
     
     std::ifstream file1{file}, file2{prediction};
-    if(!file1) warning("unable to open file ").append(file).append("\n");
-    if(!file2) warning("unable to open file ").append(prediction).append("\n");
+    if(!file1) info = warning(report_failed_read(file));
+    if(!file2) info = warning(report_failed_read(prediction));
     
     if(file1 && file2)
     {
@@ -114,7 +136,8 @@ namespace sequoia::testing
     }
   }
 
-  void nascent_test::create_file(std::string_view partName, const std::filesystem::copy_options options) const
+  [[nodiscard]]
+  std::string nascent_test::create_file(std::string_view partName, const std::filesystem::copy_options options) const
   {
     namespace fs = std::filesystem;
     
@@ -122,8 +145,7 @@ namespace sequoia::testing
 
     if(((options & fs::copy_options::skip_existing) == fs::copy_options::skip_existing) && fs::exists(outputFile))
     {
-      std::cout << warning(outputFile.string()).append(" already exists, so not created\n");
-      return;
+      return warning(outputFile.string()).append(" already exists, so not created\n");
     }
 
     auto makePath{
@@ -133,7 +155,20 @@ namespace sequoia::testing
     };
 
     testing::create_file(makePath(), outputFile, [this](const fs::path& file) { transform_file(file); });
-    std::cout << "      " << outputFile << '\n';
+    return outputFile;
+  }
+
+  [[nodiscard]]
+  std::string nascent_test::compare_files(std::string_view partName) const
+  {
+    namespace fs = std::filesystem;
+
+    const auto className{to_camel_case(m_ClassName).append(partName)};
+
+    const auto file{get_output_path("UnitTestCreationDiagnostics").append(className)};
+    const auto prediction{get_aux_path("UnitTestCodeTemplates").append("ReferenceExamples").append(className)};
+
+    return testing::compare_files(file, prediction, test_mode::standard);
   }
 
   void nascent_test::transform_file(const std::filesystem::path& file) const
@@ -147,7 +182,7 @@ namespace sequoia::testing
     }
     else
     {
-      throw std::runtime_error{std::string{"Unable to open "}.append(file).append(" for reading")};
+      throw std::runtime_error{report_failed_read(file)};
     }
         
     if(!text.empty())
@@ -162,21 +197,9 @@ namespace sequoia::testing
       }
       else
       {
-        throw std::runtime_error{std::string{"Unable to open file "}.append(file).append(" for writing")};
+        throw std::runtime_error{report_failed_write(file)};
       }
     }
-  }
-
-  void nascent_test::compare_files(std::string_view partName) const
-  {
-    namespace fs = std::filesystem;
-
-    const auto className{to_camel_case(m_ClassName).append(partName)};
-
-    const auto file{get_output_path("UnitTestCreationDiagnostics").append(className)};
-    const auto prediction{get_aux_path("UnitTestCodeTemplates").append("ReferenceExamples").append(className)};
-
-    std::cout << testing::compare_files(file, prediction, test_mode::standard);
   }
 
   //=========================================== test_runner ===========================================//
@@ -247,8 +270,8 @@ namespace sequoia::testing
       return "Test";
     case concurrency_mode::deep:
       return "Deep";
-    default:      
-      throw std::logic_error("Missing treatment for a case of concurrency_mode");
+      //    default:      
+      //throw std::logic_error("Missing treatment for a case of concurrency_mode");
     }
   }
 
@@ -281,12 +304,13 @@ namespace sequoia::testing
 
     std::cout << "Running self-diagnostics...\n";
 
-    std::string_view mess{"  Running test creation tool diagnostics...\n    Files built:\n"};
-
     false_positive_check();
 
-    create_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(),  mess, fs::copy_options::overwrite_existing);
-    compare_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(), "\n    Comparisons against reference files:\n");
+    
+    std::string_view mess{"  Running test creation tool diagnostics...\n    Files built:"};
+
+    std::cout << create_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(),  mess, fs::copy_options::overwrite_existing);
+    std::cout << compare_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(), "\n    Comparisons against reference files:\n");
 
     test_file_editing();
   }
@@ -353,43 +377,48 @@ namespace sequoia::testing
   {
     namespace fs = std::filesystem;
 
-    create_files(m_NascentTests.cbegin(), m_NascentTests.cend(), "Creating files...\n", fs::copy_options::skip_existing);
+    std::cout << create_files(m_NascentTests.cbegin(), m_NascentTests.cend(), "Creating files...\n", fs::copy_options::skip_existing);
     run_tests();
   }
 
   template<class Iter>
-  void test_runner::create_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message, const std::filesystem::copy_options options)
-  {    
+  [[nodiscard]]
+  std::string test_runner::create_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message, const std::filesystem::copy_options options)
+  {
+    std::string mess{}; 
     if(std::distance(beginNascentTests, endNascentTests))
     {
-      std::cout << message;
-
+      mess = message;
       while(beginNascentTests != endNascentTests)
       {
         const auto& data{*beginNascentTests};
         for(const auto& stub : st_TestNameStubs)
         {
-          data.create_file(stub, options);
+          append_indented(mess, data.create_file(stub, options).append("\"") , "      \"");
         }
 
         ++beginNascentTests;
       }
     }
+
+    return mess;
   }
   
   template<class Iter>
-  void test_runner::compare_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message)
+  [[nodiscard]]
+  std::string test_runner::compare_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message)
   {
+    std::string mess{}; 
     if(std::distance(beginNascentTests, endNascentTests))
     {
-      std::cout << message;
+      mess = message;
 
       while(beginNascentTests != endNascentTests)
       {
         const auto& data{*beginNascentTests};
         for(const auto& stub : st_TestNameStubs)
         {
-          data.compare_files(stub);
+          mess.append(data.compare_files(stub));
         }
         
         ++beginNascentTests;
@@ -397,6 +426,8 @@ namespace sequoia::testing
 
       static_assert(st_TestNameStubs.size() > 1, "Insufficient data for false-positive test");      
     }
+
+    return mess;
   }
 
   template<class Fn>

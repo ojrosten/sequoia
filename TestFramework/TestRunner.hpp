@@ -20,6 +20,15 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string report_time(const test_family::summary& s);
 
+  [[nodiscard]]
+  std::string report_file_issue(const std::filesystem::path& file, std::string_view description);
+
+  [[nodiscard]]
+  std::string report_failed_read(const std::filesystem::path& file);
+
+  [[nodiscard]]
+  std::string report_failed_write(const std::filesystem::path& file);
+
   template<class Fn>
     requires invocable<Fn, std::filesystem::path>
   void create_file(const std::filesystem::path& source, const std::filesystem::path& target, Fn action)
@@ -43,9 +52,11 @@ namespace sequoia::testing
   public:
     nascent_test(std::filesystem::path dir, std::string qualifiedName);
 
-    void create_file(std::string_view partName, const std::filesystem::copy_options options) const;
+    [[nodiscard]]
+    std::string create_file(std::string_view partName, const std::filesystem::copy_options options) const;
 
-    void compare_files(std::string_view partName) const;
+    [[nodiscard]]
+    std::string compare_files(std::string_view partName) const;
 
     [[nodiscard]]
     std::string_view class_name() const noexcept { return m_ClassName; }
@@ -171,10 +182,12 @@ namespace sequoia::testing
     static std::string stringify(concurrency_mode mode);
 
     template<class Iter>
-    static void create_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message, const std::filesystem::copy_options options);
+    [[nodiscard]]
+    static std::string create_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message, const std::filesystem::copy_options options);
 
     template<class Iter>
-    static void compare_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message);
+    [[nodiscard]]
+    static std::string compare_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message);
 
     template<class Fn>
       requires invocable<Fn, std::filesystem::path>
