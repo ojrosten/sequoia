@@ -40,7 +40,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string compare_files(const std::filesystem::path& file, const std::filesystem::path& prediction, const test_mode mode, std::string_view indent="");
+  std::string compare_files(const std::filesystem::path& file, const std::filesystem::path& prediction, const test_mode mode, std::string_view indentation);
 
 
   /*! \brief Holds data for the automated creation of new tests
@@ -56,7 +56,7 @@ namespace sequoia::testing
     std::string create_file(std::string_view partName, const std::filesystem::copy_options options) const;
 
     [[nodiscard]]
-    std::string compare_files(std::string_view partName) const;
+    std::string compare_files(std::string_view partName, std::string_view indent) const;
 
     //[[nodiscard]]
     //std::string include() const;
