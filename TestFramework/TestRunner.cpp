@@ -53,7 +53,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string compare_files(const std::filesystem::path& file, const std::filesystem::path& prediction, const test_mode mode, std::string_view indentation)
+  std::string compare_files(const std::filesystem::path& file, const std::filesystem::path& prediction, const test_mode mode, indentation ind)
   {
     enum class file_comparison {failed, same, different};
 
@@ -79,16 +79,16 @@ namespace sequoia::testing
       switch(fcomp)
       {
       case file_comparison::same:
-        info = indent(warning("Contents of" ), indentation);
-        append_indented(info, file.string(), indentation);
-        append_indented(info, "spuriously comparing equal to", indentation);
-        append_indented(info, prediction.string(), indentation);
+        info = indent(warning("Contents of" ), ind);
+        append_indented(info, file.string(), ind);
+        append_indented(info, "spuriously comparing equal to", ind);
+        append_indented(info, prediction.string(), ind);
         break;
       case file_comparison::different:
-        info = indent("passed", indentation);
+        info = indent("passed", ind);
         break;
       case file_comparison::failed:
-        info = indent(warning("Unable to perform false-positive test"), indentation);
+        info = indent(warning("Unable to perform false-positive test"), ind);
         break;
       }
       break;
@@ -96,16 +96,16 @@ namespace sequoia::testing
       switch(fcomp)
       {
       case file_comparison::same:
-        info = indent("passed", indentation);
+        info = indent("passed", ind);
         break;
       case file_comparison::different:
-        info = indent(warning("Contents of" ), indentation);
-        append_indented(info, file.string(), indentation);
-        append_indented(info, "no longer matches", indentation);
-        append_indented(info, prediction.string(), indentation);
+        info = indent(warning("Contents of" ), ind);
+        append_indented(info, file.string(), ind);
+        append_indented(info, "no longer matches", ind);
+        append_indented(info, prediction.string(), ind);
         break;
       case file_comparison::failed:
-        info = indent(warning("Unable to perform file comparison"), indentation);
+        info = indent(warning("Unable to perform file comparison"), ind);
         break;
       }
       break;
@@ -157,7 +157,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string nascent_test::compare_files(std::string_view partName, std::string_view indent) const
+  std::string nascent_test::compare_files(std::string_view partName, indentation ind) const
   {
     namespace fs = std::filesystem;
 
@@ -166,7 +166,7 @@ namespace sequoia::testing
     const auto file{get_output_path("UnitTestCreationDiagnostics").append(className)};
     const auto prediction{get_aux_path("UnitTestCodeTemplates").append("ReferenceExamples").append(className)};
 
-    return testing::compare_files(file, prediction, test_mode::standard, indent);
+    return testing::compare_files(file, prediction, test_mode::standard, ind);
   }
 
   void nascent_test::transform_file(const std::filesystem::path& file) const
@@ -301,7 +301,7 @@ namespace sequoia::testing
     std::string output{};
     for(const auto& s : results.logs)
     {
-      if(m_Verbose) output += summarize(s, log_verbosity::failure_messages, "\t", "\t");
+      if(m_Verbose) output += summarize(s, log_verbosity::failure_messages, tab, tab);
       familySummary.log += s;
     }
           
@@ -311,7 +311,7 @@ namespace sequoia::testing
     }
     else
     {
-      output += summarize(familySummary, log_verbosity::failure_messages, "\t", "");
+      output += summarize(familySummary, log_verbosity::failure_messages, tab, indentation{""});
     }
 
     std::cout << output;
@@ -361,7 +361,7 @@ namespace sequoia::testing
         const auto& data{*beginNascentTests};
         for(const auto& stub : st_TestNameStubs)
         {
-          append_indented(mess, data.create_file(stub, options).append("\"") , st_Indent + "\"");
+          append_indented(mess, data.create_file(stub, options).append("\"") , indentation{ind().string().append("\"")});
         }
 
         ++beginNascentTests;
@@ -386,7 +386,7 @@ namespace sequoia::testing
         const auto& data{*beginNascentTests};
         for(const auto& stub : st_TestNameStubs)
         {
-          append_indented(mess, data.compare_files(stub, st_Indent), "");
+          append_indented(mess, data.compare_files(stub, ind()), indentation{""});
         }
         
         ++beginNascentTests;
@@ -402,10 +402,10 @@ namespace sequoia::testing
 
     sentinel s_0{};
 
-    std::cout << indent("Running false-positive tests...\n", st_Indent);
+    std::cout << indent("Running false-positive tests...\n", ind());
 
     sentinel s_1{};
-    std::cout << indent("File comparison:\n", st_Indent);
+    std::cout << indent("File comparison:\n", ind());
 
     sentinel s_2{};
     
@@ -420,7 +420,7 @@ namespace sequoia::testing
     const auto file1{partPath().concat(st_TestNameStubs[0])};
     const auto file2{partPath().concat(st_TestNameStubs[1])};
 
-    std::cout << testing::compare_files(file1, file2, test_mode::false_positive, st_Indent) << "\n\n";
+    std::cout << testing::compare_files(file1, file2, test_mode::false_positive, ind()) << "\n\n";
   }
 
   void test_runner::test_file_editing()
@@ -429,7 +429,7 @@ namespace sequoia::testing
 
     sentinel s_0{};
     
-    std::cout << indent("Running file editing diagnostics...\n", st_Indent);
+    std::cout << indent("Running file editing diagnostics...\n", ind());
     
     for(auto& p : fs::directory_iterator(get_output_path("FileEditingOutput")))
     {
@@ -438,9 +438,9 @@ namespace sequoia::testing
 
     sentinel s_1{};
 
-    std::cout << indent("Files built:\n", st_Indent);
+    std::cout << indent("Files built:\n", ind());
 
-    std::string info{indent("Comparisons against reference files:", st_Indent)};
+    std::string info{indent("Comparisons against reference files:", ind())};
 
     sentinel s_2{};
 
@@ -450,7 +450,7 @@ namespace sequoia::testing
                         [](const fs::path& sandboxFile){
                           add_include(sandboxFile, "Bar.hpp");
                         }),
-      "");
+      indentation{""});
 
     append_indented(
       info,
@@ -459,7 +459,7 @@ namespace sequoia::testing
                           add_to_family(sandboxFile, "New Family",
                                         {{"fake_false_positive_test{\"False Positive Test\"}"}, {"fake_test{\"Unit Test\"}"}});
                         }),
-      "");
+      indentation{""});
 
     append_indented(
       info,
@@ -468,7 +468,7 @@ namespace sequoia::testing
                           add_to_family(sandboxFile, "CommandLine Arguments",
                                         {{"commandline_arguments_false_positive_test{\"False Positive Test\"}"}});
                         }),
-      "");
+      indentation{""});
 
     std::cout << "\n" << info << "\n\n";
   }
@@ -484,11 +484,11 @@ namespace sequoia::testing
     const auto target{get_output_path("FileEditingOutput").append(fileName)};
 
     create_file(source, target, action);
-    std::cout << st_Indent << target << '\n';
+    std::cout << indent(target.string(), ind()) << '\n';
 
     const auto prediction{get_aux_path("FileEditingTestMaterials").append("AfterEditing").append(fileName)};
 
-    return testing::compare_files(target, prediction, test_mode::standard, st_Indent);
+    return testing::compare_files(target, prediction, test_mode::standard, ind());
   }
 
   void test_runner::test_creation()
@@ -497,15 +497,15 @@ namespace sequoia::testing
 
     sentinel s_0{};
     
-    std::cout << indent("Running test creation tool diagnostics...\n", st_Indent);
+    std::cout << indent("Running test creation tool diagnostics...\n", ind());
 
     sentinel s_1{};
 
     const std::array<nascent_test, 1>
       diagnosticFiles{nascent_test{get_output_path("UnitTestCreationDiagnostics"), "Iterator", "utilities::iterator"}};
 
-    std::cout << create_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(),  indent("Files built:", st_Indent), fs::copy_options::overwrite_existing);
-    std::cout << compare_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(), indent("Comparisons against reference files:", st_Indent));
+    std::cout << create_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(),  indent("Files built:", ind()), fs::copy_options::overwrite_existing);
+    std::cout << compare_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(), indent("Comparisons against reference files:", ind()));
     std::cout << '\n';
   }
 
@@ -546,7 +546,7 @@ namespace sequoia::testing
         }
       }
       std::cout <<  "\n-----------Grand Totals-----------\n";
-      std::cout << summarize(summary, steady_clock::now() - time, log_verbosity::absent_checks, "\t",  "");
+      std::cout << summarize(summary, steady_clock::now() - time, log_verbosity::absent_checks, indentation{"\t"},  indentation{""});
     }
 
     check_for_missing_tests();

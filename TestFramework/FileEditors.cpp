@@ -54,7 +54,7 @@ namespace sequoia::testing
 
           if(auto pos{line.find(familyName)}; pos != npos)
           {
-            const auto indent{line.substr(0, pos)};
+            const indentation indent{line.substr(0, pos)};
             
             text.reserve(line.size() + 1);
             text.append(std::move(line));
@@ -70,8 +70,8 @@ namespace sequoia::testing
           }
           else if(pos = line.find("runner.execute"); pos != npos)
           {            
-            const auto indent_0{line.substr(0, pos)};
-            const auto indent_1{std::string{indent_0}.append("  ")};
+            const indentation indent_0{line.substr(0, pos)};
+            const indentation indent_1{std::string{indent_0}.append("  ")};
 
             append_indented(text, "runner.add_test_family(", indent_0);
             append_indented(text, std::string{"\""}.append(familyName).append("\","), indent_1);

@@ -19,11 +19,31 @@
 
 namespace sequoia::testing
 {
-  constexpr std::string_view tab{"\t"};
+  struct indentation
+  {
+    constexpr explicit indentation(std::string_view sv)
+      : data{sv}
+    {}
+
+    [[nodiscard]]
+    std::string string() const
+    {
+      return std::string{data};
+    }
+    
+    operator std::string() const
+    {
+      return string();
+    }
+    
+    std::string_view data;
+  };
+  
+  constexpr indentation tab{"\t"};
   
   /// For a non-empty string_view prepends with an indentation; otherwise returns an empty string
   [[nodiscard]]
-  std::string indent(std::string_view s, std::string_view indentation=tab);
+  std::string indent(std::string_view s, indentation ind=tab);
 
   /*! \param s1 The target for appending 
       \param s2 The text to append
@@ -36,10 +56,10 @@ namespace sequoia::testing
 
       If s2 is empty, no action is taken.
    */
-  std::string& append_indented(std::string& s1, std::string_view s2, std::string_view indentation=tab);
+  std::string& append_indented(std::string& s1, std::string_view s2, indentation ind=tab);
 
   [[nodiscard]]
-  std::string append_indented(std::string_view s1, std::string_view s2, std::string_view indentation=tab);
+  std::string append_indented(std::string_view s1, std::string_view s2, indentation ind=tab);
 
   [[nodiscard]]
   std::string emphasise(std::string_view s);
@@ -59,7 +79,7 @@ namespace sequoia::testing
   std::string prediction_message(std::string_view obtained, std::string_view predicted);
 
   [[nodiscard]]
-  std::string footer(std::string_view indentation=tab);
+  std::string footer(indentation ind=tab);
 
   [[nodiscard]]
   std::string to_camel_case(std::string text);
@@ -111,13 +131,13 @@ namespace sequoia::testing
   struct type_list_demangler
   {
     [[nodiscard]]
-    static std::string make([[maybe_unused]] std::string_view indent=tab)
+    static std::string make([[maybe_unused]] indentation ind=tab)
     {
       auto info{type_demangler<T>::make()};
       if constexpr(sizeof...(U) > 0)
       {
         info += ',';
-        append_indented(info, type_list_demangler<U...>::make(), indent);
+        append_indented(info, type_list_demangler<U...>::make(), ind);
       }
 
       return info;
@@ -126,10 +146,10 @@ namespace sequoia::testing
 
   template<class T, class... U>
   [[nodiscard]]
-  std::string make_type_info([[maybe_unused]] std::string_view indent=tab)
+  std::string make_type_info([[maybe_unused]] indentation ind=tab)
   {
     std::string info{"["};
-    info.append(type_list_demangler<T, U...>::make(indent));
+    info.append(type_list_demangler<T, U...>::make(ind));
     info.append("]");
 
     return info;
@@ -137,10 +157,10 @@ namespace sequoia::testing
 
   template<class T, class... U>
   [[nodiscard]]
-  std::string add_type_info(std::string_view description, std::string_view indent=tab)
+  std::string add_type_info(std::string_view description, indentation ind=tab)
   {
     std::string info{description};
-    append_indented(info, make_type_info<T, U...>(indent), indent);
+    append_indented(info, make_type_info<T, U...>(ind), ind);
 
     return info;
   }

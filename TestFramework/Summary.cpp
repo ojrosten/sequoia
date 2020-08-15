@@ -35,13 +35,13 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string summarize(const log_summary& log, const opt_duration duration, const log_verbosity verbosity, std::string_view indent_0, std::string_view indent_1)
+  std::string summarize(const log_summary& log, const opt_duration duration, const log_verbosity verbosity, indentation ind_0, indentation ind_1)
   {
     constexpr std::size_t entries{6};
 
     auto indent{
-      [indent_0, indent_1](){
-        return std::string{indent_0}.append(indent_1);
+      [ind_0, ind_1](){
+        return std::string{ind_0}.append(ind_1);
       }
     };
 
@@ -100,8 +100,8 @@ namespace sequoia::testing
       }
     };
     
-    std::string summary{testing::indent(log.name(), indent_0)};
-    append_indented(summary, dur(), indent_0);
+    std::string summary{testing::indent(log.name(), ind_0)};
+    append_indented(summary, dur(), ind_0);
 
     if((verbosity & log_verbosity::absent_checks) == log_verbosity::absent_checks)
     {
@@ -134,15 +134,15 @@ namespace sequoia::testing
 
     if((verbosity & log_verbosity::failure_messages) == log_verbosity::failure_messages)
     {
-      append_indented(summary, log.failure_messages(), "");
+      append_indented(summary, log.failure_messages(), indentation{""});
     }
 
     return summary;
   }
 
   [[nodiscard]]
-  std::string summarize(const log_summary& log, const log_verbosity verbosity, std::string_view indent_0, std::string_view indent_1)
+  std::string summarize(const log_summary& log, const log_verbosity verbosity, indentation ind_0, indentation ind_1)
   {
-    return summarize(log, std::nullopt, verbosity, indent_0, indent_1);
+    return summarize(log, std::nullopt, verbosity, ind_0, ind_1);
   }
 }

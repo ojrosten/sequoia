@@ -107,5 +107,5 @@ namespace sequoia::testing
   std::filesystem::path get_output_path(std::string_view subDirectory);
 
   [[nodiscard]]
-  std::string summarize(const test_family::summary& summary, const log_verbosity suppression, std::string_view indent_0, std::string_view indent_1);
+  std::string summarize(const test_family::summary& summary, const log_verbosity suppression, indentation ind_0, indentation ind_1);
 }

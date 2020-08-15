@@ -59,8 +59,8 @@ namespace sequoia::testing
   std::string report_time(const log_summary& log, const opt_duration duration);
 
   [[nodiscard]]
-  std::string summarize(const log_summary& log, const opt_duration duration, const log_verbosity verbosity, std::string_view indent_0, std::string_view indent_1);
+  std::string summarize(const log_summary& log, const opt_duration duration, const log_verbosity verbosity, indentation ind_0, indentation ind_1);
 
   [[nodiscard]]
-  std::string summarize(const log_summary& log, const log_verbosity verbosity, std::string_view indent_0, std::string_view indent_1);
+  std::string summarize(const log_summary& log, const log_verbosity verbosity, indentation ind_0, indentation ind_1);
 }

@@ -40,7 +40,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string compare_files(const std::filesystem::path& file, const std::filesystem::path& prediction, const test_mode mode, std::string_view indentation);
+  std::string compare_files(const std::filesystem::path& file, const std::filesystem::path& prediction, const test_mode mode, indentation ind);
 
 
   /*! \brief Holds data for the automated creation of new tests
@@ -56,7 +56,7 @@ namespace sequoia::testing
     std::string create_file(std::string_view partName, const std::filesystem::copy_options options) const;
 
     [[nodiscard]]
-    std::string compare_files(std::string_view partName, std::string_view indent) const;
+    std::string compare_files(std::string_view partName, indentation ind) const;
 
     //[[nodiscard]]
     //std::string include() const;
@@ -156,6 +156,12 @@ namespace sequoia::testing
     std::map<std::string, bool, std::less<>> m_SelectedFamilies{}, m_SelectedSources{};
     std::vector<nascent_test> m_NascentTests{};
     static inline std::string st_Indent{};
+
+    [[nodiscard]]
+    static indentation ind()
+    {
+      return indentation{st_Indent};
+    }
     
     bool m_Verbose{}, m_Pause{}, m_WriteFiles{true};
 
