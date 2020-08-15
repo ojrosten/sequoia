@@ -40,7 +40,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string compare_files(const std::filesystem::path& file, const std::filesystem::path& prediction, const test_mode mode);
+  std::string compare_files(const std::filesystem::path& file, const std::filesystem::path& prediction, const test_mode mode, std::string_view indent="");
 
 
   /*! \brief Holds data for the automated creation of new tests
@@ -139,9 +139,23 @@ namespace sequoia::testing
     [[nodiscard]]
     concurrency_mode concurrency() const noexcept { return m_ConcurrencyMode; }
   private:
+    struct sentinel
+    {
+      sentinel()
+      {
+        st_Indent.append("  ");
+      }
+
+      ~sentinel()
+      {
+        st_Indent.erase(st_Indent.size() - 2);
+      }
+    };
+    
     std::vector<test_family> m_Families{};
     std::map<std::string, bool, std::less<>> m_SelectedFamilies{}, m_SelectedSources{};
     std::vector<nascent_test> m_NascentTests{};
+    static inline std::string st_Indent{};
     
     bool m_Verbose{}, m_Pause{}, m_WriteFiles{true};
 
