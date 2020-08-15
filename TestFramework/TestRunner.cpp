@@ -82,14 +82,13 @@ namespace sequoia::testing
         info = warning("Contents of\n  " )
           .append(file)
           .append("\n  spuriously comparing equal to\n  ")
-          .append(prediction)
-          .append("\n");    
+          .append(prediction);  
         break;
       case file_comparison::different:
-        info = "      passed\n";
+        info = "passed";
         break;
       case file_comparison::failed:
-        info = warning("Unable to perform false-positive test\n");
+        info = warning("Unable to perform false-positive test");
         break;
       }
       break;
@@ -97,17 +96,16 @@ namespace sequoia::testing
       switch(fcomp)
       {
       case file_comparison::same:
-        info = "      passed\n";
+        info = "passed";
         break;
       case file_comparison::different:
         info = warning("Contents of\n  " )
           .append(file)
           .append("\n  no longer matches\n  ")
-          .append(prediction)
-          .append("\n");
+          .append(prediction);
         break;
       case file_comparison::failed:
-        info = warning("Unable to perform file comparison\n");
+        info = warning("Unable to perform file comparison");
         break;
       }
       break;
@@ -118,11 +116,11 @@ namespace sequoia::testing
 
   //=========================================== nascent_test ===========================================//
 
-  nascent_test::nascent_test(std::filesystem::path dir, std::string qualifiedName)
+  nascent_test::nascent_test(std::filesystem::path dir, std::string family, std::string qualifiedName)
     : m_Directory{std::move(dir)}
+    , m_Family{std::move(family)}
     , m_QualifiedClassName{std::move(qualifiedName)}
-  {
-          
+  {          
     if(auto pos{m_QualifiedClassName.rfind("::")}; pos != std::string::npos)
     {
       if(pos < m_QualifiedClassName.length() - 2)
@@ -216,8 +214,8 @@ namespace sequoia::testing
                 m_SelectedSources.emplace(args.front(), false);
               },         {"source_file_name"}, {"s"}} },
           {"create",     {[this](const param_list& args) {
-                m_NascentTests.push_back(nascent_test{args[0], args[1]});
-              }, { "directory", "class_name" }, {"c"} } },
+                m_NascentTests.push_back(nascent_test{args[0], args[1], args[2]});
+              }, { "directory", "family", "qualified class name" }, {"c"} } },
           {"--async",    {[this](const param_list&) {
                 if(m_ConcurrencyMode == concurrency_mode::serial)
                   m_ConcurrencyMode = concurrency_mode::family;
@@ -273,44 +271,13 @@ namespace sequoia::testing
     }
   }
 
-  void test_runner::false_positive_check()
-  {
-    static_assert(st_TestNameStubs.size() > 1, "Insufficient data for false-positive test");
-
-    std::cout << "  Running false-positive test for file comparison...\n";
-
-    const nascent_test data{get_output_path("UnitTestCreationDiagnostics"), "utilities::iterator"};
-
-    auto partPath{
-      [&data](){
-        return get_output_path("UnitTestCreationDiagnostics").append(to_camel_case(std::string{data.class_name()}));
-      }
-    };
-    
-    const auto file1{partPath().concat(st_TestNameStubs[0])};
-    const auto file2{partPath().concat(st_TestNameStubs[1])};
-
-    std::cout << testing::compare_files(file1, file2, test_mode::false_positive) << '\n';
-  }
-
   void test_runner::run_diagnostics()
-  {
-    namespace fs = std::filesystem;
-    
-    const std::array<nascent_test, 1>
-      diagnosticFiles{nascent_test{get_output_path("UnitTestCreationDiagnostics"), "utilities::iterator"}};
-
+  {    
     std::cout << "Running self-diagnostics...\n";
 
-    false_positive_check();
-
-    
-    std::string_view mess{"  Running test creation tool diagnostics...\n    Files built:"};
-
-    std::cout << create_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(),  mess, fs::copy_options::overwrite_existing);
-    std::cout << compare_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(), "\n    Comparisons against reference files:\n");
-
+    false_positive_check();    
     test_file_editing();
+    test_creation();
   }
 
   bool test_runner::mark_family(std::string_view name)
@@ -399,7 +366,7 @@ namespace sequoia::testing
       }
     }
 
-    return mess;
+    return mess.append("\n");
   }
   
   template<class Iter>
@@ -410,22 +377,39 @@ namespace sequoia::testing
     if(std::distance(beginNascentTests, endNascentTests))
     {
       mess = message;
-
       while(beginNascentTests != endNascentTests)
       {
         const auto& data{*beginNascentTests};
         for(const auto& stub : st_TestNameStubs)
         {
-          mess.append(data.compare_files(stub));
+          append_indented(mess, data.compare_files(stub), "      ");
         }
         
         ++beginNascentTests;
-      }
-
-      static_assert(st_TestNameStubs.size() > 1, "Insufficient data for false-positive test");      
+      }    
     }
 
-    return mess;
+    return mess.append("\n");
+  }
+
+  void test_runner::false_positive_check()
+  {
+    static_assert(st_TestNameStubs.size() > 1, "Insufficient data for false-positive test");
+
+    std::cout << "  Running false-positive test for file comparison...\n";
+
+    const nascent_test data{get_output_path("UnitTestCreationDiagnostics"), "Iterator", "utilities::iterator"};
+
+    auto partPath{
+      [&data](){
+        return get_output_path("UnitTestCreationDiagnostics").append(to_camel_case(std::string{data.class_name()}));
+      }
+    };
+    
+    const auto file1{partPath().concat(st_TestNameStubs[0])};
+    const auto file2{partPath().concat(st_TestNameStubs[1])};
+
+    std::cout << indent(testing::compare_files(file1, file2, test_mode::false_positive), "      ") << "\n\n";
   }
 
   template<class Fn>
@@ -450,7 +434,7 @@ namespace sequoia::testing
   {
     namespace fs = std::filesystem;
     
-    std::cout << "\n  Running file editing diagnostics...\n";
+    std::cout << "  Running file editing diagnostics...\n";
     
     for(auto& p : fs::directory_iterator(get_output_path("FileEditingOutput")))
     {
@@ -459,31 +443,47 @@ namespace sequoia::testing
 
     std::cout << "    Files built:\n";
 
-    std::string info{
+    std::string info{"\n    Comparisons against reference files:"};
+
+    append_indented(
+      info,
       test_file_editing("Includes.hpp",
                         [](const fs::path& sandboxFile){
                           add_include(sandboxFile, "Bar.hpp");
-                        })
-    };
+                        }),
+      "      ");
 
-    info.append(
+    append_indented(
+      info,
       test_file_editing("FakeMain.cpp",
                         [](const fs::path& sandboxFile){
                           add_to_family(sandboxFile, "New Family",
                                         {{"fake_false_positive_test{\"False Positive Test\"}"}, {"fake_test{\"Unit Test\"}"}});
-                        })
-                );
+                        }),
+      "      ");
 
-    info.append(
+    append_indented(
+      info,
       test_file_editing("FakeMain2.cpp",
                         [](const fs::path& sandboxFile){
                           add_to_family(sandboxFile, "CommandLine Arguments",
                                         {{"commandline_arguments_false_positive_test{\"False Positive Test\"}"}});
-                        })
-                );
-    
-    std::cout << "\n    Comparisons against reference files:\n";
-    std::cout << info;
+                        }),
+      "      ");
+
+    std::cout << info << "\n\n";
+  }
+
+  void test_runner::test_creation()
+  {    
+    namespace fs = std::filesystem;
+    std::cout << "  Running test creation tool diagnostics...\n";
+
+    const std::array<nascent_test, 1>
+      diagnosticFiles{nascent_test{get_output_path("UnitTestCreationDiagnostics"), "Iterator", "utilities::iterator"}};
+
+    std::cout << create_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(),  "    Files built:", fs::copy_options::overwrite_existing);
+    std::cout << compare_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(), "\n    Comparisons against reference files:");
   }
 
   void test_runner::run_tests()
@@ -493,7 +493,7 @@ namespace sequoia::testing
 
     if(!m_Families.empty() && (m_NascentTests.empty() || !m_SelectedFamilies.empty()))
     {
-      std::cout << "\nRunning unit tests...\n";
+      std::cout << "Running unit tests...\n";
       log_summary summary{};
       if(!concurrent_execution())
       {

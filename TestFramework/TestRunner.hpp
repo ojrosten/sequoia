@@ -50,7 +50,7 @@ namespace sequoia::testing
   class nascent_test
   {
   public:
-    nascent_test(std::filesystem::path dir, std::string qualifiedName);
+    nascent_test(std::filesystem::path dir, std::string family, std::string qualifiedName);
 
     [[nodiscard]]
     std::string create_file(std::string_view partName, const std::filesystem::copy_options options) const;
@@ -58,11 +58,17 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string compare_files(std::string_view partName) const;
 
+    //[[nodiscard]]
+    //std::string include() const;
+
     [[nodiscard]]
     std::string_view class_name() const noexcept { return m_ClassName; }
   private:
     std::filesystem::path m_Directory;
-    std::string m_QualifiedClassName, m_ClassName;
+    std::string
+      m_Family,
+      m_QualifiedClassName,
+      m_ClassName;
 
     void transform_file(const std::filesystem::path& file) const;
   };    
@@ -194,11 +200,11 @@ namespace sequoia::testing
     [[nodiscard]]
     static std::string test_file_editing(std::string_view fileName, Fn action);
 
-    static void test_file_editing();
-
     static void false_positive_check();
     
-    static void argument_processing_diagnostics();
+    static void test_file_editing();
+
+    static void test_creation();
   };
 
   [[nodiscard]]
