@@ -79,10 +79,7 @@ namespace sequoia::testing
       switch(fcomp)
       {
       case file_comparison::same:
-        info = indent(warning("Contents of" ), ind);
-        append_indented(info, file.string(), ind);
-        append_indented(info, "spuriously comparing equal to", ind);
-        append_indented(info, prediction.string(), ind);
+        info = indent(warning("Contents of" ), file.string(), "spuriously comparing equal to", prediction.string(), ind);
         break;
       case file_comparison::different:
         info = indent("passed", ind);
@@ -99,10 +96,7 @@ namespace sequoia::testing
         info = indent("passed", ind);
         break;
       case file_comparison::different:
-        info = indent(warning("Contents of" ), ind);
-        append_indented(info, file.string(), ind);
-        append_indented(info, "no longer matches", ind);
-        append_indented(info, prediction.string(), ind);
+        info = indent(warning("Contents of" ), file.string(), "no longer matches", prediction.string(), ind);
         break;
       case file_comparison::failed:
         info = indent(warning("Unable to perform file comparison"), ind);
@@ -311,7 +305,7 @@ namespace sequoia::testing
     }
     else
     {
-      output += summarize(familySummary, log_verbosity::failure_messages, tab, indentation{""});
+      output += summarize(familySummary, log_verbosity::failure_messages, tab, no_indent);
     }
 
     std::cout << output;
@@ -386,7 +380,7 @@ namespace sequoia::testing
         const auto& data{*beginNascentTests};
         for(const auto& stub : st_TestNameStubs)
         {
-          append_indented(mess, data.compare_files(stub, ind()), indentation{""});
+          append_indented(mess, data.compare_files(stub, ind()), no_indent);
         }
         
         ++beginNascentTests;
@@ -450,7 +444,7 @@ namespace sequoia::testing
                         [](const fs::path& sandboxFile){
                           add_include(sandboxFile, "Bar.hpp");
                         }),
-      indentation{""});
+      no_indent);
 
     append_indented(
       info,
@@ -459,7 +453,7 @@ namespace sequoia::testing
                           add_to_family(sandboxFile, "New Family",
                                         {{"fake_false_positive_test{\"False Positive Test\"}"}, {"fake_test{\"Unit Test\"}"}});
                         }),
-      indentation{""});
+      no_indent);
 
     append_indented(
       info,
@@ -468,7 +462,7 @@ namespace sequoia::testing
                           add_to_family(sandboxFile, "CommandLine Arguments",
                                         {{"commandline_arguments_false_positive_test{\"False Positive Test\"}"}});
                         }),
-      indentation{""});
+      no_indent);
 
     std::cout << "\n" << info << "\n\n";
   }
@@ -546,7 +540,7 @@ namespace sequoia::testing
         }
       }
       std::cout <<  "\n-----------Grand Totals-----------\n";
-      std::cout << summarize(summary, steady_clock::now() - time, log_verbosity::absent_checks, indentation{"\t"},  indentation{""});
+      std::cout << summarize(summary, steady_clock::now() - time, log_verbosity::absent_checks, indentation{"\t"},  no_indent);
     }
 
     check_for_missing_tests();

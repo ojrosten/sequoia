@@ -134,7 +134,7 @@ namespace sequoia::testing
 
     if((verbosity & log_verbosity::failure_messages) == log_verbosity::failure_messages)
     {
-      append_indented(summary, log.failure_messages(), indentation{""});
+      append_indented(summary, log.failure_messages(), no_indent);
     }
 
     return summary;

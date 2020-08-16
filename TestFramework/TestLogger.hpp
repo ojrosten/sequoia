@@ -126,8 +126,7 @@ namespace sequoia::testing
 
         auto messageMaker{
           [&logger](){
-            auto mess{indent("False Positive Failure:")};
-            append_indented(mess, logger.top_level_message());
+            auto mess{indent("False Positive Failure:", logger.top_level_message(), tab)};
             end_block(mess, 3, footer());
 
             return mess;

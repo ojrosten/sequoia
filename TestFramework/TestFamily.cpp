@@ -132,7 +132,7 @@ namespace sequoia::testing
 
     if(std::ofstream file{filename, mode})
     {
-      file << summarize(summary, log_verbosity::failure_messages, indentation{""}, indentation{""});
+      file << summarize(summary, log_verbosity::failure_messages, no_indent, no_indent);
     }
     else
     {

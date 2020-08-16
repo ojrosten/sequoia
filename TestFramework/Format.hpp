@@ -19,6 +19,7 @@
 
 namespace sequoia::testing
 {
+  /*! \brief Type-safe mechanism for indentations */
   struct indentation
   {
     constexpr explicit indentation(std::string_view sv)
@@ -40,6 +41,7 @@ namespace sequoia::testing
   };
   
   constexpr indentation tab{"\t"};
+  constexpr indentation no_indent{""};
   
   /// For a non-empty string_view prepends with an indentation; otherwise returns an empty string
   [[nodiscard]]
@@ -60,6 +62,45 @@ namespace sequoia::testing
 
   [[nodiscard]]
   std::string append_indented(std::string_view s1, std::string_view s2, indentation ind=tab);
+
+
+  namespace impl
+  {
+    template<class... Ts, std::size_t... I>
+    std::string& append_indented_impl(std::string& s, std::tuple<Ts...> strs, std::index_sequence<I...>)
+    {
+      return (append_indented(s, std::get<I>(strs), std::get<sizeof...(Ts) - 1>(strs)), ...);
+    }
+
+    template<class... Ts>
+    std::string& append_indented_impl(std::string& s, std::tuple<Ts...> strs)
+    {
+      return append_indented_impl(s, strs, std::make_index_sequence<sizeof...(Ts) - 1>{});
+    }
+
+    template<class... Ts>
+    [[nodiscard]]
+    std::string indent(std::string_view sv, std::tuple<Ts...> strs)
+    {
+      auto s{indent(sv, std::get<sizeof...(Ts) - 1>(strs))};
+      return append_indented_impl(s, std::tuple<Ts...>{strs});
+    }
+  }
+  
+  /*  template<class... Ts>
+    requires (sizeof...(Ts) > 2)
+  std::string& append_indented(std::string& s, Ts... strs)
+  {
+    return impl::append_indented(s, std::tuple<Ts...>{strs...});
+    }*/
+
+  template<class... Ts>
+    requires (sizeof...(Ts) > 1)
+  [[nodiscard]]
+  std::string indent(std::string_view sv, Ts&&... strs)
+  {
+    return impl::indent(sv, std::tuple<Ts...>{std::forward<Ts>(strs)...});
+  }
 
   [[nodiscard]]
   std::string emphasise(std::string_view s);
