@@ -179,14 +179,8 @@ namespace sequoia::testing
     
     const auto msg{
       [description, types{processor.info()}](){
-        std::string info{description};
-        append_indented(info, "Comparison performed using:");
-        append_indented(info, make_type_info<EquivChecker>());
-        append_indented(info, "With equivalent types:");
-        append_indented(info, types);
-        info.append("\n");
-
-        return info;
+        return append_lines(description, "Comparison performed using:", make_type_info<EquivChecker>(), "With equivalent types:", types)
+          .append("\n");
       }()
     };
  
@@ -259,7 +253,7 @@ namespace sequoia::testing
 
         if constexpr(!delegate)
         {          
-          append_indented(message, prediction_message(to_string(obtained), to_string(prediction)));
+          append_lines(message, prediction_message(to_string(obtained), to_string(prediction)));
         }
 
         append_advice(message, {advisor, obtained, prediction});
@@ -386,10 +380,7 @@ namespace sequoia::testing
   {
     auto message{
       [description](){
-        std::string info{append_indented(description, "Expected Exception Type:")};
-        append_indented(info, make_type_info<E>());
-
-        return info;
+        return append_lines(description, "Expected Exception Type:", make_type_info<E>());
       }()
     };
 
@@ -407,8 +398,7 @@ namespace sequoia::testing
     }
     catch(const std::exception& e)
     {
-      std::string msg{"Unexpected exception thrown (caught by std::exception&):"};
-      append_indented(msg, "\"").append(e.what()).append("\"\n");
+      std::string msg{append_lines("Unexpected exception thrown (caught by std::exception&):", "\"").append(e.what()).append("\"\n")};
         
       sentry.log_failure(msg);
       return false;

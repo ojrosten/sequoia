@@ -380,7 +380,7 @@ namespace sequoia::testing
         const auto& data{*beginNascentTests};
         for(const auto& stub : st_TestNameStubs)
         {
-          append_indented(mess, data.compare_files(stub, ind()), no_indent);
+          append_lines(mess, data.compare_files(stub, ind()));
         }
         
         ++beginNascentTests;
@@ -438,31 +438,31 @@ namespace sequoia::testing
 
     sentinel s_2{};
 
-    append_indented(
+    append_lines(
       info,
       test_file_editing("Includes.hpp",
                         [](const fs::path& sandboxFile){
                           add_include(sandboxFile, "Bar.hpp");
-                        }),
-      no_indent);
+                        })
+    );
 
-    append_indented(
+    append_lines(
       info,
       test_file_editing("FakeMain.cpp",
                         [](const fs::path& sandboxFile){
                           add_to_family(sandboxFile, "New Family",
                                         {{"fake_false_positive_test{\"False Positive Test\"}"}, {"fake_test{\"Unit Test\"}"}});
-                        }),
-      no_indent);
+                        })
+    );
 
-    append_indented(
+    append_lines(
       info,
       test_file_editing("FakeMain2.cpp",
                         [](const fs::path& sandboxFile){
                           add_to_family(sandboxFile, "CommandLine Arguments",
                                         {{"commandline_arguments_false_positive_test{\"False Positive Test\"}"}});
-                        }),
-      no_indent);
+                        })
+    );
 
     std::cout << "\n" << info << "\n\n";
   }

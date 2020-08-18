@@ -172,8 +172,7 @@ namespace sequoia::testing
         }
       };
         
-      summary = stats("Fast", m_f, sig_f);
-      append_indented(summary, stats("Slow", m_s, sig_s)).append(summarizer());
+      summary = append_lines(stats("Fast", m_f, sig_f), stats("Slow", m_s, sig_s)).append(summarizer());
           
       if((test_logger<Mode>::mode == test_mode::false_positive) ? !results.passed : results.passed)
       {
@@ -185,7 +184,7 @@ namespace sequoia::testing
         results = performance_results<R>{};      
     }
 
-    sentinel<Mode> sentry{logger, append_indented(description, summary)};
+    sentinel<Mode> sentry{logger, append_lines(description, summary)};
     sentry.log_performance_check();
 
     if(!results.passed)

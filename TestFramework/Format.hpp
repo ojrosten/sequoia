@@ -45,7 +45,7 @@ namespace sequoia::testing
   
   /// For a non-empty string_view prepends with an indentation; otherwise returns an empty string
   [[nodiscard]]
-  std::string indent(std::string_view s, indentation ind=tab);
+  std::string indent(std::string_view s, indentation ind);
 
   /*! \param s1 The target for appending 
       \param s2 The text to append
@@ -58,41 +58,38 @@ namespace sequoia::testing
 
       If s2 is empty, no action is taken.
    */
-  std::string& append_indented(std::string& s1, std::string_view s2, indentation ind=tab);
-
-  [[nodiscard]]
-  std::string append_indented(std::string_view s1, std::string_view s2, indentation ind=tab);
-
+  std::string& append_indented(std::string& s1, std::string_view s2, indentation ind);
 
   namespace impl
   {
     template<class... Ts, std::size_t... I>
-    std::string& append_indented_impl(std::string& s, std::tuple<Ts...> strs, std::index_sequence<I...>)
+    std::string& append_indented(std::string& s, std::tuple<Ts...> strs, std::index_sequence<I...>)
     {
-      return (append_indented(s, std::get<I>(strs), std::get<sizeof...(Ts) - 1>(strs)), ...);
+      (append_indented(s, std::get<I>(strs), std::get<sizeof...(Ts) - 1>(strs)), ...);
+      return s;
     }
 
     template<class... Ts>
-    std::string& append_indented_impl(std::string& s, std::tuple<Ts...> strs)
+    std::string& append_indented(std::string& s, const std::tuple<Ts...>& strs)
     {
-      return append_indented_impl(s, strs, std::make_index_sequence<sizeof...(Ts) - 1>{});
+      return append_indented(s, strs, std::make_index_sequence<sizeof...(Ts) - 1>{});
     }
 
     template<class... Ts>
     [[nodiscard]]
-    std::string indent(std::string_view sv, std::tuple<Ts...> strs)
+    std::string indent(std::string_view sv, const std::tuple<Ts...>& strs)
     {
       auto s{indent(sv, std::get<sizeof...(Ts) - 1>(strs))};
-      return append_indented_impl(s, std::tuple<Ts...>{strs});
+      return append_indented(s, strs);
     }
   }
   
-  /*  template<class... Ts>
+  template<class... Ts>
     requires (sizeof...(Ts) > 2)
   std::string& append_indented(std::string& s, Ts... strs)
   {
     return impl::append_indented(s, std::tuple<Ts...>{strs...});
-    }*/
+  }
 
   template<class... Ts>
     requires (sizeof...(Ts) > 1)
@@ -102,13 +99,28 @@ namespace sequoia::testing
     return impl::indent(sv, std::tuple<Ts...>{std::forward<Ts>(strs)...});
   }
 
+  template<class... Ts>
+    requires (sizeof...(Ts) > 0)
+  std::string& append_lines(std::string& s, Ts&&... strs)
+  {
+    return append_indented(s, std::forward<Ts>(strs)..., no_indent);
+  }
+
+  template<class... Ts>
+    requires (sizeof...(Ts) > 0)
+  [[nodiscard]]
+  std::string append_lines(std::string_view sv, Ts&&... strs)
+  {
+    return indent(sv, std::forward<Ts>(strs)..., no_indent);
+  }  
+
   [[nodiscard]]
   std::string emphasise(std::string_view s);
 
-  void end_block(std::string& s, const std::size_t newlines, std::string footer="");
+  void end_block(std::string& s, const std::size_t newlines, std::string_view footer="");
 
   [[nodiscard]]
-  std::string end_block(std::string_view s, const std::size_t newlines, std::string footer="");
+  std::string end_block(std::string_view s, const std::size_t newlines, std::string_view footer="");
 
   [[nodiscard]]
   std::string exception_message(std::string_view tag, std::string_view currentMessage, std::string_view exceptionMessage, const bool exceptionsDetected);
@@ -120,7 +132,7 @@ namespace sequoia::testing
   std::string prediction_message(std::string_view obtained, std::string_view predicted);
 
   [[nodiscard]]
-  std::string footer(indentation ind=tab);
+  std::string footer();
 
   [[nodiscard]]
   std::string to_camel_case(std::string text);
@@ -167,18 +179,18 @@ namespace sequoia::testing
   };
 
   
-  /// Demangles T; if U... is not empty, indents each demangled element of U
+  /// Demangles T; if U... is not empty, appends each demangled element of U on a new line
   template<class T, class... U>
   struct type_list_demangler
   {
     [[nodiscard]]
-    static std::string make([[maybe_unused]] indentation ind=tab)
+    static std::string make()
     {
       auto info{type_demangler<T>::make()};
       if constexpr(sizeof...(U) > 0)
       {
         info += ',';
-        append_indented(info, type_list_demangler<U...>::make(), ind);
+        append_lines(info, type_list_demangler<U...>::make());
       }
 
       return info;
@@ -187,22 +199,15 @@ namespace sequoia::testing
 
   template<class T, class... U>
   [[nodiscard]]
-  std::string make_type_info([[maybe_unused]] indentation ind=tab)
+  std::string make_type_info()
   {
-    std::string info{"["};
-    info.append(type_list_demangler<T, U...>::make(ind));
-    info.append("]");
-
-    return info;
+    return std::string{"["}.append(type_list_demangler<T, U...>::make()).append("]");
   }
 
   template<class T, class... U>
   [[nodiscard]]
-  std::string add_type_info(std::string_view description, indentation ind=tab)
+  std::string add_type_info(std::string_view description)
   {
-    std::string info{description};
-    append_indented(info, make_type_info<T, U...>(ind), ind);
-
-    return info;
+    return append_lines(description, make_type_info<T, U...>());
   }
 }

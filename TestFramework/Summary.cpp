@@ -38,7 +38,7 @@ namespace sequoia::testing
   std::string summarize(const log_summary& log, const opt_duration duration, const log_verbosity verbosity, indentation ind_0, indentation ind_1)
   {
     constexpr std::size_t entries{6};
-
+    
     auto indent{
       [ind_0, ind_1](){
         return std::string{ind_0}.append(ind_1);
@@ -134,7 +134,7 @@ namespace sequoia::testing
 
     if((verbosity & log_verbosity::failure_messages) == log_verbosity::failure_messages)
     {
-      append_indented(summary, log.failure_messages(), no_indent);
+      append_lines(summary, log.failure_messages());
     }
 
     return summary;

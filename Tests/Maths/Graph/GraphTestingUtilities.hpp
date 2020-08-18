@@ -129,9 +129,9 @@ namespace sequoia::testing
         for(std::size_t i{}; i<connectivity.order(); ++i)
         {
           const auto message{std::string{"Partition "}.append(std::to_string(i))};
-          check_range(append_indented(message, "cedge_iterator"), logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), prediction.cbegin_edges(i), prediction.cend_edges(i));
+          check_range(append_lines(message, "cedge_iterator"), logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), prediction.cbegin_edges(i), prediction.cend_edges(i));
 
-          check_range(append_indented(message, "credge_iterator"), logger, connectivity.crbegin_edges(i), connectivity.crend_edges(i), prediction.crbegin_edges(i), prediction.crend_edges(i));
+          check_range(append_lines(message, "credge_iterator"), logger, connectivity.crbegin_edges(i), connectivity.crend_edges(i), prediction.crbegin_edges(i), prediction.crend_edges(i));
         }
       }
     } 
@@ -161,11 +161,11 @@ namespace sequoia::testing
 
           if constexpr(std::is_same_v<edge_type, edge_init_type>)
           {
-            check_range(append_indented(message, "cedge_iterator"), logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), (prediction.begin()+i)->begin(), (prediction.begin() + i)->end());
+            check_range(append_lines(message, "cedge_iterator"), logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), (prediction.begin()+i)->begin(), (prediction.begin() + i)->end());
           }
           else
           {
-            check_range_equivalence(append_indented(message, "cedge_iterator"), logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), (prediction.begin()+i)->begin(), (prediction.begin() + i)->end());
+            check_range_equivalence(append_lines(message, "cedge_iterator"), logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), (prediction.begin()+i)->begin(), (prediction.begin() + i)->end());
           }                
         }
       }
@@ -193,7 +193,7 @@ namespace sequoia::testing
         for(std::size_t i{}; i<connectivity.order(); ++i)
         {
           const std::string message{"Partition " + std::to_string(i)};
-          check_range_weak_equivalence(append_indented(message, "cedge_iterator"), logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), (prediction.begin()+i)->begin(), (prediction.begin() + i)->end());
+          check_range_weak_equivalence(append_lines(message, "cedge_iterator"), logger, connectivity.cbegin_edges(i), connectivity.cend_edges(i), (prediction.begin()+i)->begin(), (prediction.begin() + i)->end());
         }
       }
     }    
@@ -291,7 +291,7 @@ namespace sequoia::testing
 
     void report_async_exception(std::string_view sv)
     {
-      check(append_indented("Exception thrown during asynchronous execution of graph test:", sv), test_logger<Mode>::mode == test_mode::false_positive);
+      check(append_lines("Exception thrown during asynchronous execution of graph test:", sv), test_logger<Mode>::mode == test_mode::false_positive);
     }
   protected:
     using time_point = typename base_t::time_point;

@@ -74,8 +74,7 @@ namespace sequoia::testing
         }
         else
         {
-          message = "Fuzzy comparison failed";
-          append_indented(message, prediction_message(to_string(obtained), to_string(prediction)));
+          message = append_lines("Fuzzy comparison failed", prediction_message(to_string(obtained), to_string(prediction)));
         }
        
         append_advice(message, {advisor, obtained, prediction});

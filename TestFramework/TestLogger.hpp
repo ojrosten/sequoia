@@ -127,7 +127,7 @@ namespace sequoia::testing
         auto messageMaker{
           [&logger](){
             auto mess{indent("False Positive Failure:", logger.top_level_message(), tab)};
-            end_block(mess, 3, footer());
+            end_block(mess, 3, indent(footer(), tab));
 
             return mess;
           }
@@ -303,11 +303,11 @@ namespace sequoia::testing
         [&msg](auto&& text){
           if(msg.empty())
           {
-            msg = indent(std::forward<decltype(text)>(text));
+            msg = indent(std::forward<decltype(text)>(text), tab);
           }
           else
           {
-            append_indented(msg, std::forward<decltype(text)>(text));
+            append_indented(msg, std::forward<decltype(text)>(text), tab);
           }
         }
       };
@@ -377,12 +377,12 @@ namespace sequoia::testing
       update_output("", 2, footer());
     }
 
-    void update_output(std::string_view message, std::size_t newLines, std::string foot)
+    void update_output(std::string_view message, std::size_t newLines, std::string_view foot)
     {
       auto append{
-        [message, newLines, ft{std::move(foot)}](std::string& output) {
+        [message, newLines, foot](std::string& output) {
           output.append(message);
-          end_block(output, newLines, ft);
+          end_block(output, newLines, indent(foot, tab));
         }
       };
 

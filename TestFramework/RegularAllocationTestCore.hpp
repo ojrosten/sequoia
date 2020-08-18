@@ -40,7 +40,7 @@ namespace sequoia::testing
     template<pseudoregular T, invocable<T&> Mutator, alloc_getter<T>... Getters>
     void check_semantics(std::string_view description, const T& x, const T& y, Mutator m, allocation_info<T, Getters>... info)
     {
-      testing::check_semantics(append_indented(description, emphasise("Regular Semantics")), m_Logger, x, y, m, info...);
+      testing::check_semantics(append_lines(description, emphasise("Regular Semantics")), m_Logger, x, y, m, info...);
     }
   protected:
     ~regular_allocation_extender() = default;

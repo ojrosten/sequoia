@@ -13,14 +13,38 @@
 
 namespace sequoia::testing
 {
-  std::string footer(indentation ind)
+  std::string footer()
   {
-    return indent("=======================================\n\n", ind);
+    return "=======================================\n\n";
   }
   
   std::string indent(std::string_view s, indentation ind)
   {
-    return s.empty() ? std::string{} : ind.string().append(s);
+    if(s.empty()) return {};
+
+    constexpr auto npos{std::string::npos};
+
+    std::string str{};
+    std::string::size_type current{};
+    
+    while(current < s.size())
+    {
+      const auto dist{s.substr(current).find('\n')};
+
+      const auto count{dist == npos ? npos : dist + 1};
+      auto line{s.substr(current, count == npos ? npos : count)};
+      if(line.find_first_not_of('\n') != npos)
+        str.append(ind);
+      
+      str.append(line);
+
+      current = (count == npos) ? npos : current + count;
+    }
+    
+    
+    return str;
+
+    //    return s.empty() ? std::string{} : std::string{ind}.append(s);
   }
 
   std::string& append_indented(std::string& s1, std::string_view s2, indentation ind)
@@ -33,23 +57,14 @@ namespace sequoia::testing
       }
       else
       {
-        s1.append("\n").append(ind).append(s2);
+        s1.append("\n").append(indent(s2, ind));
       }
     }
 
     return s1;
   }
 
-  [[nodiscard]]
-  std::string append_indented(std::string_view s1, std::string_view s2, indentation ind)
-  {
-    std::string s{s1};
-    append_indented(s, s2, ind);
-
-    return s;
-  }
-
-  void end_block(std::string& s, const std::size_t newlines, std::string footer)
+  void end_block(std::string& s, const std::size_t newlines, std::string_view footer)
   {    
     if(!s.empty())
     {
@@ -64,12 +79,12 @@ namespace sequoia::testing
         s.append("\n");
       }
 
-      s.append(std::move(footer));
+      s.append(footer);
     }
   }
 
   [[nodiscard]]
-  std::string end_block(std::string_view s, const std::size_t newlines, std::string footer)
+  std::string end_block(std::string_view s, const std::size_t newlines, std::string_view footer)
   {
     std::string str{s};
     end_block(str, newlines, footer);
@@ -88,20 +103,18 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string exception_message(std::string_view tag, std::string_view currentMessage, std::string_view exceptionMessage, const bool exceptionsDetected)  
   {
-    auto mess{indent("Error -- ").append(tag).append(" Exception:")};
-    append_indented(mess, exceptionMessage).append("\n");
+    auto mess{append_lines(std::string{"Error -- "}.append(tag).append(" Exception:"), exceptionMessage).append("\n")};
         
     if(exceptionsDetected)
     {
-      append_indented(mess, "Exception thrown during last check");
+      append_lines(mess, "Exception thrown during last check");
     }
     else
     {
-      append_indented(mess, "Exception thrown after check completed");
+      append_lines(mess, "Exception thrown after check completed");
     }
 
-    append_indented(mess, "Last Recorded Message:\n");
-    append_indented(mess, currentMessage);
+    append_lines(mess, "Last Recorded Message:\n", currentMessage);
  
     return mess;
   }
@@ -115,10 +128,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string prediction_message(std::string_view obtained, std::string_view predicted)
   {
-    auto info{std::string{"Obtained : "}.append(obtained)};
-    append_indented(info, "Predicted: ").append(predicted);
-
-    return info;
+    return append_lines(std::string{"Obtained : "}.append(obtained), std::string{"Predicted: "}.append(predicted));
   }
 
   [[nodiscard]]
@@ -159,6 +169,12 @@ namespace sequoia::testing
     }
 
     return text;
+  }
+
+  [[nodiscard]]
+  std::string report_line(std::string_view file, const int line, const std::string_view message)
+  {
+    return append_lines(std::string{file}.append(", Line ").append(std::to_string(line)), message).append("\n");
   }
 
 }

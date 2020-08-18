@@ -17,7 +17,7 @@ namespace sequoia::testing
   {
     if(!m_Advice.empty())
     {
-      append_indented(message, "Advice: ").append(m_Advice);
+      append_lines(message, "Advice: ").append(m_Advice);
     }
 
     tidy(message);
@@ -47,15 +47,6 @@ namespace sequoia::testing
   void append_advice(std::string& message, const advice_data& adviceData)
   {
     adviceData.append_and_tidy(message);
-  }
-  
-  [[nodiscard]]
-  std::string report_line(std::string_view file, const int line, const std::string_view message)
-  {
-    auto info{std::string{file}.append(", Line ").append(std::to_string(line))};
-    append_indented(info, message).append("\n");
-
-    return info;
   }
 
   void tidy_name(std::string& name)

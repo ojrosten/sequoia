@@ -87,8 +87,8 @@ namespace sequoia::testing::impl
     template<test_mode Mode>
     void check_no_allocation(std::string_view detail, test_logger<Mode>& logger, const T& x, const T& y) const
     {
-      check_allocation(append_indented(detail, "Unexpected allocation detected (x)"), logger, x, info(), first_count(), 0);
-      check_allocation(append_indented(detail, "Unexpected allocation detected (y)"), logger, y, info(), second_count(), 0);
+      check_allocation(append_lines(detail, "Unexpected allocation detected (x)"), logger, x, info(), first_count(), 0);
+      check_allocation(append_lines(detail, "Unexpected allocation detected (y)"), logger, y, info(), second_count(), 0);
     }
 
     template<test_mode Mode>
