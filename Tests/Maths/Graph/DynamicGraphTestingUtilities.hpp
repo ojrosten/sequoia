@@ -361,11 +361,11 @@ namespace sequoia::testing
                 }
                 catch(const std::exception& e)
                 {
-                  test.report_async_exception(append_indented(test.name(), e.what(), "\n"));
+                  test.report_async_exception(append_lines(test.name(), e.what()));
                 }
                 catch(...)
                 {
-                  test.report_async_exception(append_indented(test.name(), "Unknown exception", "\n"));
+                  test.report_async_exception(append_lines(test.name(), "Unknown exception"));
                 }
 
                 s.clear();
