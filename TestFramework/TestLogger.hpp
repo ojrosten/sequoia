@@ -262,7 +262,17 @@ namespace sequoia::testing
       m_FailureMessages,
       m_DiagnosticsOutput;
 
-    std::vector<std::string> m_LevelMessages;
+    struct level_message
+    {
+      level_message(std::string_view m)
+        : message{m}
+      {}
+      
+      std::string message;
+      bool used{};
+    };
+
+    std::vector<level_message> m_LevelMessages;
 
     int m_ExceptionsInFlight{};
       
@@ -300,28 +310,34 @@ namespace sequoia::testing
 
       std::string msg{};
       auto build{
-        [&msg](auto&& text){
+        [&msg](auto&& text, indentation ind){
           if(msg.empty())
           {
-            msg = indent(std::forward<decltype(text)>(text), tab);
+            msg = indent(std::forward<decltype(text)>(text), ind);
           }
           else
           {
-            append_indented(msg, std::forward<decltype(text)>(text), tab);
+            append_indented(msg, std::forward<decltype(text)>(text), ind);
           }
         }
       };
-     
-      for(auto& s : m_LevelMessages)
+
+      std::string ind{tab};
+      int activeLevelMessages{};
+      for(auto& lm : m_LevelMessages)
       {
-        if(s.empty()) continue;
+        if(lm.message.empty()) continue;
 
-        build(std::move(s));
+        if(activeLevelMessages++ > 0)
+          ind.append("  ");
 
-        s.clear();
+        if(lm.used) continue;
+
+        build(lm.message, indentation{ind});
+        lm.used = true;
       }
 
-      build(message);
+      build(message, indentation{ind});
       
       update_output(msg, 2, "");
     }
@@ -364,7 +380,7 @@ namespace sequoia::testing
       if(m_LevelMessages.empty())
         m_TopLevelMessage = std::string{message};
 
-      m_LevelMessages.push_back(std::string{message});
+      m_LevelMessages.emplace_back(message);
     }
 
     void pop_message()

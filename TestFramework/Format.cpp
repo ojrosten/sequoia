@@ -22,13 +22,14 @@ namespace sequoia::testing
   {
     if(s.empty()) return {};
 
-    constexpr auto npos{std::string::npos};
-
     std::string str{};
+    str.reserve(s.size());
+    
     std::string::size_type current{};
     
     while(current < s.size())
-    {
+    {      
+      constexpr auto npos{std::string::npos};
       const auto dist{s.substr(current).find('\n')};
 
       const auto count{dist == npos ? npos : dist + 1};
@@ -39,12 +40,9 @@ namespace sequoia::testing
       str.append(line);
 
       current = (count == npos) ? npos : current + count;
-    }
-    
+    }    
     
     return str;
-
-    //    return s.empty() ? std::string{} : std::string{ind}.append(s);
   }
 
   std::string& append_indented(std::string& s1, std::string_view s2, indentation ind)
