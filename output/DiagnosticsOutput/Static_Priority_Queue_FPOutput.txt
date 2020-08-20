@@ -4,29 +4,29 @@
 	[sequoia::data_structures::static_priority_queue<int, 1ul, std::less<int> >]
 	operator== returned false
 
-	Inconsistent emptiness
-	[bool]
-	operator== returned false
-	Obtained : true
-	Predicted: false
+	  Inconsistent emptiness
+	  [bool]
+	  operator== returned false
+	  Obtained : true
+	  Predicted: false
 
-	Inconsistent size
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Inconsistent size
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
-	Inconsistent Hidden state
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
+	  Inconsistent Hidden state
+	  [bool]
+	  operator== returned false
+	  Obtained : false
+	  Predicted: true
 
-	Inconsistent Hidden state, symmetry of ==
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
+	  Inconsistent Hidden state, symmetry of ==
+	  [bool]
+	  operator== returned false
+	  Obtained : false
+	  Predicted: true
 
 	=======================================
 
@@ -36,23 +36,23 @@
 	[sequoia::data_structures::static_priority_queue<int, 1ul, std::less<int> >]
 	operator== returned false
 
-	Inconsistent top element
-	[int]
-	operator== returned false
-	Obtained : 2
-	Predicted: 1
+	  Inconsistent top element
+	  [int]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
 
-	Inconsistent Hidden state
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
+	  Inconsistent Hidden state
+	  [bool]
+	  operator== returned false
+	  Obtained : false
+	  Predicted: true
 
-	Inconsistent Hidden state, symmetry of ==
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
+	  Inconsistent Hidden state, symmetry of ==
+	  [bool]
+	  operator== returned false
+	  Obtained : false
+	  Predicted: true
 
 	=======================================
 
@@ -62,29 +62,29 @@
 	[sequoia::data_structures::static_priority_queue<int, 1ul, std::less<int> >]
 	operator== returned false
 
-	Inconsistent emptiness
-	[bool]
-	operator== returned false
-	Obtained : true
-	Predicted: false
+	  Inconsistent emptiness
+	  [bool]
+	  operator== returned false
+	  Obtained : true
+	  Predicted: false
 
-	Inconsistent size
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Inconsistent size
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
-	Inconsistent Hidden state
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
+	  Inconsistent Hidden state
+	  [bool]
+	  operator== returned false
+	  Obtained : false
+	  Predicted: true
 
-	Inconsistent Hidden state, symmetry of ==
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
+	  Inconsistent Hidden state, symmetry of ==
+	  [bool]
+	  operator== returned false
+	  Obtained : false
+	  Predicted: true
 
 	=======================================
 
@@ -94,29 +94,29 @@
 	[sequoia::data_structures::static_priority_queue<int, 2ul, std::less<int> >]
 	operator== returned false
 
-	Inconsistent size
-	[unsigned long]
-	operator== returned false
-	Obtained : 2
-	Predicted: 1
+	  Inconsistent size
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
 
-	Inconsistent top element
-	[int]
-	operator== returned false
-	Obtained : 2
-	Predicted: 1
+	  Inconsistent top element
+	  [int]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
 
-	Inconsistent Hidden state
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
+	  Inconsistent Hidden state
+	  [bool]
+	  operator== returned false
+	  Obtained : false
+	  Predicted: true
 
-	Inconsistent Hidden state, symmetry of ==
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
+	  Inconsistent Hidden state, symmetry of ==
+	  [bool]
+	  operator== returned false
+	  Obtained : false
+	  Predicted: true
 
 	=======================================
 

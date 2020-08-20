@@ -4,14 +4,14 @@
 	[sequoia::maths::graph<(sequoia::maths::directed_flavour)0, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
 	operator== returned false
 
-	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)0, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)0, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
-	operator== returned false
+	  [sequoia::maths::connectivity<(sequoia::maths::directed_flavour)0, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)0, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
+	  operator== returned false
 
-	Connectivity orders different
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	    Connectivity orders different
+	    [unsigned long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
 
 	=======================================
 
@@ -21,20 +21,20 @@
 	[sequoia::maths::graph<(sequoia::maths::directed_flavour)0, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
 	operator== returned false
 
-	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)0, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)0, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
-	operator== returned false
+	  [sequoia::maths::connectivity<(sequoia::maths::directed_flavour)0, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)0, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
+	  operator== returned false
 
-	Connectivity sizes different
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	    Connectivity sizes different
+	    [unsigned long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
 
-	Connectivity orders different
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	    Connectivity orders different
+	    [unsigned long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
 
 	=======================================
 
@@ -44,14 +44,14 @@
 	[sequoia::maths::graph<(sequoia::maths::directed_flavour)0, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
 	operator== returned false
 
-	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)0, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)0, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
-	operator== returned false
+	  [sequoia::maths::connectivity<(sequoia::maths::directed_flavour)0, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)0, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
+	  operator== returned false
 
-	Connectivity orders different
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	    Connectivity orders different
+	    [unsigned long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
 
 	=======================================
 
@@ -61,20 +61,20 @@
 	[sequoia::maths::graph<(sequoia::maths::directed_flavour)0, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
 	operator== returned false
 
-	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)0, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)0, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
-	operator== returned false
+	  [sequoia::maths::connectivity<(sequoia::maths::directed_flavour)0, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)0, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
+	  operator== returned false
 
-	Connectivity sizes different
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	    Connectivity sizes different
+	    [unsigned long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
 
-	Connectivity orders different
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	    Connectivity orders different
+	    [unsigned long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
 
 	=======================================
 
@@ -84,14 +84,14 @@
 	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)0, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
 	operator== returned false
 
-	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)0, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)1, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
-	operator== returned false
+	  [sequoia::maths::connectivity<(sequoia::maths::directed_flavour)0, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)1, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
+	  operator== returned false
 
-	Connectivity orders different
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	    Connectivity orders different
+	    [unsigned long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
 
 	=======================================
 
@@ -101,20 +101,20 @@
 	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)0, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
 	operator== returned false
 
-	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)0, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)1, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
-	operator== returned false
+	  [sequoia::maths::connectivity<(sequoia::maths::directed_flavour)0, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)1, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
+	  operator== returned false
 
-	Connectivity sizes different
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	    Connectivity sizes different
+	    [unsigned long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
 
-	Connectivity orders different
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	    Connectivity orders different
+	    [unsigned long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
 
 	=======================================
 
@@ -124,14 +124,14 @@
 	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)0, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
 	operator== returned false
 
-	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)0, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)1, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
-	operator== returned false
+	  [sequoia::maths::connectivity<(sequoia::maths::directed_flavour)0, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)1, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
+	  operator== returned false
 
-	Connectivity orders different
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	    Connectivity orders different
+	    [unsigned long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
 
 	=======================================
 
@@ -141,20 +141,20 @@
 	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)0, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
 	operator== returned false
 
-	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)0, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)1, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
-	operator== returned false
+	  [sequoia::maths::connectivity<(sequoia::maths::directed_flavour)0, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)1, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
+	  operator== returned false
 
-	Connectivity sizes different
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	    Connectivity sizes different
+	    [unsigned long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
 
-	Connectivity orders different
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	    Connectivity orders different
+	    [unsigned long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
 
 	=======================================
 
@@ -164,14 +164,14 @@
 	[sequoia::maths::graph<(sequoia::maths::directed_flavour)1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
 	operator== returned false
 
-	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)2, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
-	operator== returned false
+	  [sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)2, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
+	  operator== returned false
 
-	Connectivity orders different
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	    Connectivity orders different
+	    [unsigned long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
 
 	=======================================
 
@@ -181,20 +181,20 @@
 	[sequoia::maths::graph<(sequoia::maths::directed_flavour)1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
 	operator== returned false
 
-	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)2, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
-	operator== returned false
+	  [sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)2, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
+	  operator== returned false
 
-	Connectivity sizes different
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	    Connectivity sizes different
+	    [unsigned long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
 
-	Connectivity orders different
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	    Connectivity orders different
+	    [unsigned long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
 
 	=======================================
 
@@ -204,14 +204,14 @@
 	[sequoia::maths::graph<(sequoia::maths::directed_flavour)1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
 	operator== returned false
 
-	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)2, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
-	operator== returned false
+	  [sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)2, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
+	  operator== returned false
 
-	Connectivity orders different
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	    Connectivity orders different
+	    [unsigned long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
 
 	=======================================
 
@@ -221,20 +221,20 @@
 	[sequoia::maths::graph<(sequoia::maths::directed_flavour)1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
 	operator== returned false
 
-	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)2, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
-	operator== returned false
+	  [sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)2, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
+	  operator== returned false
 
-	Connectivity sizes different
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	    Connectivity sizes different
+	    [unsigned long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
 
-	Connectivity orders different
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	    Connectivity orders different
+	    [unsigned long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
 
 	=======================================
 
@@ -244,14 +244,14 @@
 	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
 	operator== returned false
 
-	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)3, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
-	operator== returned false
+	  [sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)3, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
+	  operator== returned false
 
-	Connectivity orders different
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	    Connectivity orders different
+	    [unsigned long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
 
 	=======================================
 
@@ -261,20 +261,20 @@
 	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
 	operator== returned false
 
-	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)3, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
-	operator== returned false
+	  [sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)3, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
+	  operator== returned false
 
-	Connectivity sizes different
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	    Connectivity sizes different
+	    [unsigned long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
 
-	Connectivity orders different
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	    Connectivity orders different
+	    [unsigned long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
 
 	=======================================
 
@@ -284,14 +284,14 @@
 	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
 	operator== returned false
 
-	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)3, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
-	operator== returned false
+	  [sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)3, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
+	  operator== returned false
 
-	Connectivity orders different
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	    Connectivity orders different
+	    [unsigned long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
 
 	=======================================
 
@@ -301,20 +301,20 @@
 	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
 	operator== returned false
 
-	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)3, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
-	operator== returned false
+	  [sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)3, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
+	  operator== returned false
 
-	Connectivity sizes different
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	    Connectivity sizes different
+	    [unsigned long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
 
-	Connectivity orders different
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	    Connectivity orders different
+	    [unsigned long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
 
 	=======================================
 
@@ -324,14 +324,14 @@
 	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::testing::independent_contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
 	operator== returned false
 
-	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)3, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::testing::independent_contiguous_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
-	operator== returned false
+	  [sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)3, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::testing::independent_contiguous_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
+	  operator== returned false
 
-	Connectivity orders different
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	    Connectivity orders different
+	    [unsigned long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
 
 	=======================================
 
@@ -341,20 +341,20 @@
 	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::testing::independent_contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
 	operator== returned false
 
-	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)3, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::testing::independent_contiguous_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
-	operator== returned false
+	  [sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)3, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::testing::independent_contiguous_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
+	  operator== returned false
 
-	Connectivity sizes different
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	    Connectivity sizes different
+	    [unsigned long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
 
-	Connectivity orders different
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	    Connectivity orders different
+	    [unsigned long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
 
 	=======================================
 
@@ -364,14 +364,14 @@
 	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::testing::independent_bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
 	operator== returned false
 
-	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)3, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::testing::independent_bucketed_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
-	operator== returned false
+	  [sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)3, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::testing::independent_bucketed_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
+	  operator== returned false
 
-	Connectivity orders different
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	    Connectivity orders different
+	    [unsigned long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
 
 	=======================================
 
@@ -381,20 +381,20 @@
 	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::testing::independent_bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
 	operator== returned false
 
-	[sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)3, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::testing::independent_bucketed_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
-	operator== returned false
+	  [sequoia::maths::connectivity<(sequoia::maths::directed_flavour)1, sequoia::maths::graph_impl::dynamic_edge_traits<(sequoia::maths::graph_flavour)3, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::testing::independent_bucketed_edge_storage_traits, unsigned long>, sequoia::ownership::spawner<sequoia::testing::null_weight> >]
+	  operator== returned false
 
-	Connectivity sizes different
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	    Connectivity sizes different
+	    [unsigned long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
 
-	Connectivity orders different
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	    Connectivity orders different
+	    [unsigned long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
 
 	=======================================
 

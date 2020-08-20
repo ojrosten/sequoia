@@ -3,10 +3,10 @@
 	[sequoia::utilities::protective_wrapper<int>]
 	operator== returned false
 
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
 
 	=======================================
 
@@ -15,14 +15,14 @@
 	[sequoia::utilities::protective_wrapper<std::vector<int, std::allocator<int> > >]
 	operator== returned false
 
-	[std::vector<int, std::allocator<int> >]
-	operator== returned false
+	  [std::vector<int, std::allocator<int> >]
+	  operator== returned false
 
-	Container size wrong
-	[long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	    Container size wrong
+	    [long]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
 
 	=======================================
 
@@ -31,14 +31,14 @@
 	[sequoia::utilities::protective_wrapper<std::vector<int, std::allocator<int> > >]
 	operator== returned false
 
-	[std::vector<int, std::allocator<int> >]
-	operator== returned false
+	  [std::vector<int, std::allocator<int> >]
+	  operator== returned false
 
-	Element 0 of range incorrect
-	[int]
-	operator== returned false
-	Obtained : 2
-	Predicted: 1
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 2
+	    Predicted: 1
 
 	=======================================
 
@@ -47,14 +47,14 @@
 	[sequoia::utilities::protective_wrapper<std::vector<int, std::allocator<int> > >]
 	operator== returned false
 
-	[std::vector<int, std::allocator<int> >]
-	operator== returned false
+	  [std::vector<int, std::allocator<int> >]
+	  operator== returned false
 
-	Element 0 of range incorrect
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
 
 	=======================================
 
@@ -63,10 +63,10 @@
 	[sequoia::utilities::protective_wrapper<sequoia::testing::data>]
 	operator== returned false
 
-	[sequoia::testing::data]
-	operator== returned false
-	Obtained : 00
-	Predicted: 12
+	  [sequoia::testing::data]
+	  operator== returned false
+	  Obtained : 00
+	  Predicted: 12
 
 	=======================================
 

@@ -4,11 +4,11 @@
 	[sequoia::maths::partial_edge<sequoia::testing::test_edge_false_positives::null_weight, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<sequoia::testing::test_edge_false_positives::null_weight>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -18,12 +18,12 @@
 	[sequoia::maths::partial_edge<sequoia::testing::test_edge_false_positives::null_weight, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<sequoia::testing::test_edge_false_positives::null_weight>, unsigned char>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned char]
-	operator== returned false
-	Obtained : 
+	  Target node incorrect
+	  [unsigned char]
+	  operator== returned false
+	  Obtained : 
 
-	Predicted: ÿ
+	  Predicted: ÿ
 
 	=======================================
 
@@ -33,11 +33,11 @@
 	[sequoia::maths::partial_edge<int, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<int>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -47,11 +47,11 @@
 	[sequoia::maths::partial_edge<int, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<int>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -61,11 +61,11 @@
 	[sequoia::maths::partial_edge<int, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<int>, unsigned long>]
 	operator== returned false
 
-	Weight incorrect
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Weight incorrect
+	  [int]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -75,11 +75,11 @@
 	[sequoia::maths::partial_edge<int, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<int>, unsigned long>]
 	operator== returned false
 
-	Weight incorrect
-	[int]
-	operator== returned false
-	Obtained : 5
-	Predicted: 6
+	  Weight incorrect
+	  [int]
+	  operator== returned false
+	  Obtained : 5
+	  Predicted: 6
 
 	=======================================
 
@@ -89,17 +89,17 @@
 	[sequoia::maths::partial_edge<int, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<int>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
-	Weight incorrect
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Weight incorrect
+	  [int]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -109,17 +109,17 @@
 	[sequoia::maths::partial_edge<int, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<int>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 2
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 2
 
-	Weight incorrect
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 3
+	  Weight incorrect
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 3
 
 	=======================================
 
@@ -129,11 +129,11 @@
 	[sequoia::maths::partial_edge<int, sequoia::ownership::shared, sequoia::utilities::protective_wrapper<int>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -143,11 +143,11 @@
 	[sequoia::maths::partial_edge<int, sequoia::ownership::shared, sequoia::utilities::protective_wrapper<int>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -157,11 +157,11 @@
 	[sequoia::maths::partial_edge<int, sequoia::ownership::shared, sequoia::utilities::protective_wrapper<int>, unsigned long>]
 	operator== returned false
 
-	Weight incorrect
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Weight incorrect
+	  [int]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -171,11 +171,11 @@
 	[sequoia::maths::partial_edge<int, sequoia::ownership::shared, sequoia::utilities::protective_wrapper<int>, unsigned long>]
 	operator== returned false
 
-	Weight incorrect
-	[int]
-	operator== returned false
-	Obtained : 5
-	Predicted: 6
+	  Weight incorrect
+	  [int]
+	  operator== returned false
+	  Obtained : 5
+	  Predicted: 6
 
 	=======================================
 
@@ -185,17 +185,17 @@
 	[sequoia::maths::partial_edge<int, sequoia::ownership::shared, sequoia::utilities::protective_wrapper<int>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
-	Weight incorrect
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Weight incorrect
+	  [int]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -205,17 +205,17 @@
 	[sequoia::maths::partial_edge<int, sequoia::ownership::shared, sequoia::utilities::protective_wrapper<int>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 2
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 2
 
-	Weight incorrect
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 3
+	  Weight incorrect
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 3
 
 	=======================================
 
@@ -225,11 +225,11 @@
 	[sequoia::maths::partial_edge<int, sequoia::ownership::shared, sequoia::utilities::protective_wrapper<int>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -239,11 +239,11 @@
 	[sequoia::maths::partial_edge<int, sequoia::ownership::shared, sequoia::utilities::protective_wrapper<int>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -253,11 +253,11 @@
 	[sequoia::maths::partial_edge<int, sequoia::ownership::shared, sequoia::utilities::protective_wrapper<int>, unsigned long>]
 	operator== returned false
 
-	Weight incorrect
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Weight incorrect
+	  [int]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -267,11 +267,11 @@
 	[sequoia::maths::partial_edge<int, sequoia::ownership::shared, sequoia::utilities::protective_wrapper<int>, unsigned long>]
 	operator== returned false
 
-	Weight incorrect
-	[int]
-	operator== returned false
-	Obtained : 5
-	Predicted: 6
+	  Weight incorrect
+	  [int]
+	  operator== returned false
+	  Obtained : 5
+	  Predicted: 6
 
 	=======================================
 
@@ -281,17 +281,17 @@
 	[sequoia::maths::partial_edge<int, sequoia::ownership::shared, sequoia::utilities::protective_wrapper<int>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
-	Weight incorrect
-	[int]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Weight incorrect
+	  [int]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -301,17 +301,17 @@
 	[sequoia::maths::partial_edge<int, sequoia::ownership::shared, sequoia::utilities::protective_wrapper<int>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
-	Weight incorrect
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
+	  Weight incorrect
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
 
 	=======================================
 
@@ -321,11 +321,11 @@
 	[sequoia::maths::embedded_partial_edge<double, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -335,11 +335,11 @@
 	[sequoia::maths::embedded_partial_edge<double, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
 
 	=======================================
 
@@ -349,11 +349,11 @@
 	[sequoia::maths::embedded_partial_edge<double, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -363,11 +363,11 @@
 	[sequoia::maths::embedded_partial_edge<double, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Complementary index incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Complementary index incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -377,11 +377,11 @@
 	[sequoia::maths::embedded_partial_edge<double, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Complementary index incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Complementary index incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -391,11 +391,11 @@
 	[sequoia::maths::embedded_partial_edge<double, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Complementary index incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Complementary index incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -405,11 +405,11 @@
 	[sequoia::maths::embedded_partial_edge<double, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Weight incorrect
-	[double]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Weight incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -419,11 +419,11 @@
 	[sequoia::maths::embedded_partial_edge<double, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Weight incorrect
-	[double]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Weight incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -433,11 +433,11 @@
 	[sequoia::maths::embedded_partial_edge<double, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Weight incorrect
-	[double]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Weight incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -447,17 +447,17 @@
 	[sequoia::maths::embedded_partial_edge<double, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
-	Complementary index incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
+	  Complementary index incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
 
 	=======================================
 
@@ -467,17 +467,17 @@
 	[sequoia::maths::embedded_partial_edge<double, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 2
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 2
 
-	Weight incorrect
-	[double]
-	operator== returned false
-	Obtained : 6
-	Predicted: 5
+	  Weight incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 6
+	  Predicted: 5
 
 	=======================================
 
@@ -487,17 +487,17 @@
 	[sequoia::maths::embedded_partial_edge<double, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Weight incorrect
-	[double]
-	operator== returned false
-	Obtained : 4
-	Predicted: 5
+	  Weight incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 4
+	  Predicted: 5
 
-	Complementary index incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 1
-	Predicted: 3
+	  Complementary index incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 3
 
 	=======================================
 
@@ -507,23 +507,23 @@
 	[sequoia::maths::embedded_partial_edge<double, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
-	Weight incorrect
-	[double]
-	operator== returned false
-	Obtained : 2
-	Predicted: 5
+	  Weight incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 5
 
-	Complementary index incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
+	  Complementary index incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
 
 	=======================================
 
@@ -533,11 +533,11 @@
 	[sequoia::maths::embedded_partial_edge<double, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -547,11 +547,11 @@
 	[sequoia::maths::embedded_partial_edge<double, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -561,11 +561,11 @@
 	[sequoia::maths::embedded_partial_edge<double, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -575,11 +575,11 @@
 	[sequoia::maths::embedded_partial_edge<double, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Complementary index incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Complementary index incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -589,11 +589,11 @@
 	[sequoia::maths::embedded_partial_edge<double, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Complementary index incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Complementary index incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -603,11 +603,11 @@
 	[sequoia::maths::embedded_partial_edge<double, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Complementary index incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Complementary index incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -617,11 +617,11 @@
 	[sequoia::maths::embedded_partial_edge<double, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Weight incorrect
-	[double]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Weight incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -631,11 +631,11 @@
 	[sequoia::maths::embedded_partial_edge<double, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Weight incorrect
-	[double]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Weight incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -645,11 +645,11 @@
 	[sequoia::maths::embedded_partial_edge<double, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Weight incorrect
-	[double]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Weight incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -659,17 +659,17 @@
 	[sequoia::maths::embedded_partial_edge<double, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
-	Complementary index incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
+	  Complementary index incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
 
 	=======================================
 
@@ -679,17 +679,17 @@
 	[sequoia::maths::embedded_partial_edge<double, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 2
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 2
 
-	Weight incorrect
-	[double]
-	operator== returned false
-	Obtained : 6
-	Predicted: 5
+	  Weight incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 6
+	  Predicted: 5
 
 	=======================================
 
@@ -699,17 +699,17 @@
 	[sequoia::maths::embedded_partial_edge<double, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Weight incorrect
-	[double]
-	operator== returned false
-	Obtained : 4
-	Predicted: 5
+	  Weight incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 4
+	  Predicted: 5
 
-	Complementary index incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 1
-	Predicted: 3
+	  Complementary index incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 3
 
 	=======================================
 
@@ -719,23 +719,23 @@
 	[sequoia::maths::embedded_partial_edge<double, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
-	Weight incorrect
-	[double]
-	operator== returned false
-	Obtained : 2
-	Predicted: 5
+	  Weight incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 5
 
-	Complementary index incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
+	  Complementary index incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
 
 	=======================================
 
@@ -745,11 +745,11 @@
 	[sequoia::maths::edge<sequoia::testing::test_edge_false_positives::null_weight, sequoia::utilities::protective_wrapper<sequoia::testing::test_edge_false_positives::null_weight>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -759,11 +759,11 @@
 	[sequoia::maths::edge<sequoia::testing::test_edge_false_positives::null_weight, sequoia::utilities::protective_wrapper<sequoia::testing::test_edge_false_positives::null_weight>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
 
 	=======================================
 
@@ -773,11 +773,11 @@
 	[sequoia::maths::edge<sequoia::testing::test_edge_false_positives::null_weight, sequoia::utilities::protective_wrapper<sequoia::testing::test_edge_false_positives::null_weight>, unsigned long>]
 	operator== returned false
 
-	Host node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Host node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -787,11 +787,11 @@
 	[sequoia::maths::edge<sequoia::testing::test_edge_false_positives::null_weight, sequoia::utilities::protective_wrapper<sequoia::testing::test_edge_false_positives::null_weight>, unsigned long>]
 	operator== returned false
 
-	Host node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
+	  Host node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
 
 	=======================================
 
@@ -801,17 +801,17 @@
 	[sequoia::maths::edge<sequoia::testing::test_edge_false_positives::null_weight, sequoia::utilities::protective_wrapper<sequoia::testing::test_edge_false_positives::null_weight>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
 
-	Host node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Host node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -821,11 +821,11 @@
 	[sequoia::maths::edge<sequoia::testing::test_edge_false_positives::null_weight, sequoia::utilities::protective_wrapper<sequoia::testing::test_edge_false_positives::null_weight>, unsigned long>]
 	operator== returned false
 
-	Inversion flag incorrect
-	[bool]
-	operator== returned false
-	Obtained : true
-	Predicted: false
+	  Inversion flag incorrect
+	  [bool]
+	  operator== returned false
+	  Obtained : true
+	  Predicted: false
 
 	=======================================
 
@@ -835,11 +835,11 @@
 	[sequoia::maths::edge<double, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -849,11 +849,11 @@
 	[sequoia::maths::edge<double, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Host node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Host node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -863,11 +863,11 @@
 	[sequoia::maths::edge<double, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Host node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Host node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -877,11 +877,11 @@
 	[sequoia::maths::edge<double, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Inversion flag incorrect
-	[bool]
-	operator== returned false
-	Obtained : true
-	Predicted: false
+	  Inversion flag incorrect
+	  [bool]
+	  operator== returned false
+	  Obtained : true
+	  Predicted: false
 
 	=======================================
 
@@ -891,11 +891,11 @@
 	[sequoia::maths::edge<double, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -905,11 +905,11 @@
 	[sequoia::maths::edge<double, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -919,11 +919,11 @@
 	[sequoia::maths::edge<double, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -933,11 +933,11 @@
 	[sequoia::maths::edge<double, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Weight incorrect
-	[double]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Weight incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -947,11 +947,11 @@
 	[sequoia::maths::edge<double, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Weight incorrect
-	[double]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Weight incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -961,11 +961,11 @@
 	[sequoia::maths::edge<double, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Weight incorrect
-	[double]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Weight incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -975,17 +975,17 @@
 	[sequoia::maths::edge<double, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
 
-	Host node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Host node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -995,17 +995,17 @@
 	[sequoia::maths::edge<double, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Weight incorrect
-	[double]
-	operator== returned false
-	Obtained : 6
-	Predicted: 5
+	  Weight incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 6
+	  Predicted: 5
 
-	Host node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 2
+	  Host node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 2
 
 	=======================================
 
@@ -1015,17 +1015,17 @@
 	[sequoia::maths::edge<double, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 1
-	Predicted: 3
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 3
 
-	Weight incorrect
-	[double]
-	operator== returned false
-	Obtained : 4
-	Predicted: 5
+	  Weight incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 4
+	  Predicted: 5
 
 	=======================================
 
@@ -1035,23 +1035,23 @@
 	[sequoia::maths::edge<double, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
 
-	Weight incorrect
-	[double]
-	operator== returned false
-	Obtained : 2
-	Predicted: 5
+	  Weight incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 5
 
-	Host node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Host node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -1061,11 +1061,11 @@
 	[sequoia::maths::embedded_edge<sequoia::testing::test_edge_false_positives::null_weight, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<sequoia::testing::test_edge_false_positives::null_weight>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -1075,11 +1075,11 @@
 	[sequoia::maths::embedded_edge<sequoia::testing::test_edge_false_positives::null_weight, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<sequoia::testing::test_edge_false_positives::null_weight>, unsigned long>]
 	operator== returned false
 
-	Host node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Host node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -1089,11 +1089,11 @@
 	[sequoia::maths::embedded_edge<sequoia::testing::test_edge_false_positives::null_weight, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<sequoia::testing::test_edge_false_positives::null_weight>, unsigned long>]
 	operator== returned false
 
-	Host node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Host node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -1103,11 +1103,11 @@
 	[sequoia::maths::embedded_edge<sequoia::testing::test_edge_false_positives::null_weight, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<sequoia::testing::test_edge_false_positives::null_weight>, unsigned long>]
 	operator== returned false
 
-	Inversion flag incorrect
-	[bool]
-	operator== returned false
-	Obtained : true
-	Predicted: false
+	  Inversion flag incorrect
+	  [bool]
+	  operator== returned false
+	  Obtained : true
+	  Predicted: false
 
 	=======================================
 
@@ -1117,11 +1117,11 @@
 	[sequoia::maths::embedded_edge<sequoia::testing::test_edge_false_positives::null_weight, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<sequoia::testing::test_edge_false_positives::null_weight>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -1131,11 +1131,11 @@
 	[sequoia::maths::embedded_edge<sequoia::testing::test_edge_false_positives::null_weight, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<sequoia::testing::test_edge_false_positives::null_weight>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -1145,11 +1145,11 @@
 	[sequoia::maths::embedded_edge<sequoia::testing::test_edge_false_positives::null_weight, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<sequoia::testing::test_edge_false_positives::null_weight>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -1159,11 +1159,11 @@
 	[sequoia::maths::embedded_edge<sequoia::testing::test_edge_false_positives::null_weight, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<sequoia::testing::test_edge_false_positives::null_weight>, unsigned long>]
 	operator== returned false
 
-	Complementary index incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Complementary index incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -1173,11 +1173,11 @@
 	[sequoia::maths::embedded_edge<sequoia::testing::test_edge_false_positives::null_weight, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<sequoia::testing::test_edge_false_positives::null_weight>, unsigned long>]
 	operator== returned false
 
-	Complementary index incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Complementary index incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -1187,11 +1187,11 @@
 	[sequoia::maths::embedded_edge<sequoia::testing::test_edge_false_positives::null_weight, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<sequoia::testing::test_edge_false_positives::null_weight>, unsigned long>]
 	operator== returned false
 
-	Complementary index incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Complementary index incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -1201,17 +1201,17 @@
 	[sequoia::maths::embedded_edge<sequoia::testing::test_edge_false_positives::null_weight, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<sequoia::testing::test_edge_false_positives::null_weight>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
 
-	Host node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Host node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -1221,17 +1221,17 @@
 	[sequoia::maths::embedded_edge<sequoia::testing::test_edge_false_positives::null_weight, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<sequoia::testing::test_edge_false_positives::null_weight>, unsigned long>]
 	operator== returned false
 
-	Complementary index incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 6
-	Predicted: 5
+	  Complementary index incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 6
+	  Predicted: 5
 
-	Host node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 2
+	  Host node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 2
 
 	=======================================
 
@@ -1241,17 +1241,17 @@
 	[sequoia::maths::embedded_edge<sequoia::testing::test_edge_false_positives::null_weight, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<sequoia::testing::test_edge_false_positives::null_weight>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 1
-	Predicted: 3
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 3
 
-	Complementary index incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 4
-	Predicted: 5
+	  Complementary index incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 4
+	  Predicted: 5
 
 	=======================================
 
@@ -1261,23 +1261,23 @@
 	[sequoia::maths::embedded_edge<sequoia::testing::test_edge_false_positives::null_weight, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<sequoia::testing::test_edge_false_positives::null_weight>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
 
-	Complementary index incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 2
-	Predicted: 1
+	  Complementary index incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
 
-	Host node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 2
+	  Host node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 2
 
 	=======================================
 
@@ -1287,11 +1287,11 @@
 	[sequoia::maths::embedded_edge<double, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -1301,11 +1301,11 @@
 	[sequoia::maths::embedded_edge<double, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Host node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
+	  Host node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
 
 	=======================================
 
@@ -1315,11 +1315,11 @@
 	[sequoia::maths::embedded_edge<double, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Complementary index incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Complementary index incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -1329,11 +1329,11 @@
 	[sequoia::maths::embedded_edge<double, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Weight incorrect
-	[double]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Weight incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -1343,11 +1343,11 @@
 	[sequoia::maths::embedded_edge<double, sequoia::ownership::independent, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Inversion flag incorrect
-	[bool]
-	operator== returned false
-	Obtained : true
-	Predicted: false
+	  Inversion flag incorrect
+	  [bool]
+	  operator== returned false
+	  Obtained : true
+	  Predicted: false
 
 	=======================================
 
@@ -1357,11 +1357,11 @@
 	[sequoia::maths::embedded_edge<double, sequoia::ownership::shared, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Target node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Target node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -1371,11 +1371,11 @@
 	[sequoia::maths::embedded_edge<double, sequoia::ownership::shared, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Host node incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
+	  Host node incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
 
 	=======================================
 
@@ -1385,11 +1385,11 @@
 	[sequoia::maths::embedded_edge<double, sequoia::ownership::shared, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Complementary index incorrect
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Complementary index incorrect
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -1399,11 +1399,11 @@
 	[sequoia::maths::embedded_edge<double, sequoia::ownership::shared, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Weight incorrect
-	[double]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Weight incorrect
+	  [double]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
 	=======================================
 
@@ -1413,11 +1413,11 @@
 	[sequoia::maths::embedded_edge<double, sequoia::ownership::shared, sequoia::utilities::protective_wrapper<double>, unsigned long>]
 	operator== returned false
 
-	Inversion flag incorrect
-	[bool]
-	operator== returned false
-	Obtained : true
-	Predicted: false
+	  Inversion flag incorrect
+	  [bool]
+	  operator== returned false
+	  Obtained : true
+	  Predicted: false
 
 	=======================================
 

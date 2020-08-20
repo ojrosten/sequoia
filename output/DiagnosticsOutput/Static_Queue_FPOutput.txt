@@ -24,29 +24,29 @@
 	[sequoia::data_structures::static_queue<int, 1ul>]
 	operator== returned false
 
-	Inconsistent emptiness
-	[bool]
-	operator== returned false
-	Obtained : true
-	Predicted: false
+	  Inconsistent emptiness
+	  [bool]
+	  operator== returned false
+	  Obtained : true
+	  Predicted: false
 
-	Inconsistent size
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Inconsistent size
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
-	Hidden state
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
+	  Hidden state
+	  [bool]
+	  operator== returned false
+	  Obtained : false
+	  Predicted: true
 
-	Hidden state, symmetry of operator==
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
+	  Hidden state, symmetry of operator==
+	  [bool]
+	  operator== returned false
+	  Obtained : false
+	  Predicted: true
 
 	=======================================
 
@@ -56,29 +56,29 @@
 	[sequoia::data_structures::static_queue<int, 1ul>]
 	operator== returned false
 
-	Inconsistent front element
-	[int]
-	operator== returned false
-	Obtained : 2
-	Predicted: 1
+	  Inconsistent front element
+	  [int]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
 
-	Inconsistent back element
-	[int]
-	operator== returned false
-	Obtained : 2
-	Predicted: 1
+	  Inconsistent back element
+	  [int]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
 
-	Hidden state
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
+	  Hidden state
+	  [bool]
+	  operator== returned false
+	  Obtained : false
+	  Predicted: true
 
-	Hidden state, symmetry of operator==
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
+	  Hidden state, symmetry of operator==
+	  [bool]
+	  operator== returned false
+	  Obtained : false
+	  Predicted: true
 
 	=======================================
 
@@ -88,29 +88,29 @@
 	[sequoia::data_structures::static_queue<int, 1ul>]
 	operator== returned false
 
-	Inconsistent emptiness
-	[bool]
-	operator== returned false
-	Obtained : true
-	Predicted: false
+	  Inconsistent emptiness
+	  [bool]
+	  operator== returned false
+	  Obtained : true
+	  Predicted: false
 
-	Inconsistent size
-	[unsigned long]
-	operator== returned false
-	Obtained : 0
-	Predicted: 1
+	  Inconsistent size
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
 
-	Hidden state
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
+	  Hidden state
+	  [bool]
+	  operator== returned false
+	  Obtained : false
+	  Predicted: true
 
-	Hidden state, symmetry of operator==
-	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
+	  Hidden state, symmetry of operator==
+	  [bool]
+	  operator== returned false
+	  Obtained : false
+	  Predicted: true
 
 	=======================================
 

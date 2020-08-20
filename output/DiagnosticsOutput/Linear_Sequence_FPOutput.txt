@@ -6,17 +6,17 @@
 	[int,
 	int]
 
-	Start wrong
-	[int]
-	operator== returned false
-	Obtained : 1
-	Predicted: 0
+	  Start wrong
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
 
-	Step wrong
-	[int]
-	operator== returned false
-	Obtained : 3
-	Predicted: 2
+	  Step wrong
+	  [int]
+	  operator== returned false
+	  Obtained : 3
+	  Predicted: 2
 
 	=======================================
 
