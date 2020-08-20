@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['free_5ftest_1376',['free_test',['../dd/d3e/FreeTestCore_8hpp.html#a58ef890d97adcfe24617ac1e9b266133',1,'sequoia::testing']]],
-  ['fuzzy_5ftest_1377',['fuzzy_test',['../d8/d43/FuzzyTestCore_8hpp.html#a50cabd04baa01607cb06f0c65a7387b0',1,'sequoia::testing']]]
+  ['free_5ftest_1378',['free_test',['../dd/d3e/FreeTestCore_8hpp.html#a58ef890d97adcfe24617ac1e9b266133',1,'sequoia::testing']]],
+  ['fuzzy_5ftest_1379',['fuzzy_test',['../d8/d43/FuzzyTestCore_8hpp.html#a50cabd04baa01607cb06f0c65a7387b0',1,'sequoia::testing']]]
 ];
