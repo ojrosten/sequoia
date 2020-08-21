@@ -53,7 +53,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string compare_files(const std::filesystem::path& file, const std::filesystem::path& prediction, const test_mode mode, indentation ind)
+  std::string compare_files(const std::filesystem::path& file, const std::filesystem::path& prediction, const test_mode mode, const indentation ind)
   {
     enum class file_comparison {failed, same, different};
 
@@ -315,21 +315,20 @@ namespace sequoia::testing
 
   void test_runner::check_for_missing_tests()
   {
-    for(const auto& test : m_SelectedFamilies)
-    {
-      if(!test.second)
-      {
-        std::cout << warning("Test Family '" + test.first + "' not found\n");
+    auto check{
+      [](const selection_map& tests, std::string_view type) {
+        for(const auto& test : tests)
+        {
+          if(!test.second)
+          {
+            std::cout << warning(std::string{"Test "}.append(type).append(" '").append(test.first).append("' not found\n"));
+          }
+        }
       }
-    }
+    };
 
-    for(const auto& test : m_SelectedSources)
-    {
-      if(!test.second)
-      {
-        std::cout << warning("Test File '" + test.first + "' not found\n");
-      }
-    }
+    check(m_SelectedFamilies, "Family");
+    check(m_SelectedSources, "File");
   }
                        
   void test_runner::execute()
@@ -349,7 +348,7 @@ namespace sequoia::testing
     {
       sentinel s{};
 
-      mess = message;
+      std::string mess{message};
       while(beginNascentTests != endNascentTests)
       {
         const auto& data{*beginNascentTests};
@@ -360,21 +359,22 @@ namespace sequoia::testing
 
         ++beginNascentTests;
       }
+
+      return mess.append("\n\n");
     }
 
-    return !mess.empty() ? mess.append("\n\n") : mess;
+    return "";
   }
   
   template<class Iter>
   [[nodiscard]]
   std::string test_runner::compare_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message)
-  {
-    std::string mess{}; 
+  { 
     if(std::distance(beginNascentTests, endNascentTests))
     {
       sentinel s{};
 
-      mess = message;
+      std::string mess{message};
       while(beginNascentTests != endNascentTests)
       {
         const auto& data{*beginNascentTests};
@@ -384,10 +384,13 @@ namespace sequoia::testing
         }
         
         ++beginNascentTests;
-      }    
+      }
+
+      return mess.append("\n");
     }
 
-    return mess.append("\n");
+    return "";
+    
   }
 
   void test_runner::false_positive_check()
@@ -467,24 +470,6 @@ namespace sequoia::testing
     std::cout << "\n" << info << "\n\n";
   }
 
-  template<class Fn>
-    requires invocable<Fn, std::filesystem::path>
-  [[nodiscard]]
-  std::string test_runner::test_file_editing(std::string_view fileName, Fn action)
-  {
-    namespace fs = std::filesystem;
-
-    const auto source{get_aux_path("FileEditingTestMaterials").append("BeforeEditing").append(fileName)};
-    const auto target{get_output_path("FileEditingOutput").append(fileName)};
-
-    create_file(source, target, action);
-    std::cout << indent(target.string(), ind()) << '\n';
-
-    const auto prediction{get_aux_path("FileEditingTestMaterials").append("AfterEditing").append(fileName)};
-
-    return testing::compare_files(target, prediction, test_mode::standard, ind());
-  }
-
   void test_runner::test_creation()
   {    
     namespace fs = std::filesystem;
@@ -501,6 +486,24 @@ namespace sequoia::testing
     std::cout << create_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(),  indent("Files built:", ind()), fs::copy_options::overwrite_existing);
     std::cout << compare_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(), indent("Comparisons against reference files:", ind()));
     std::cout << '\n';
+  }
+
+  template<class Fn>
+    requires invocable<Fn, std::filesystem::path>
+  [[nodiscard]]
+  std::string test_runner::test_file_editing(std::string_view fileName, Fn action)
+  {
+    namespace fs = std::filesystem;
+
+    const auto source{get_aux_path("FileEditingTestMaterials").append("BeforeEditing").append(fileName)};
+    const auto target{get_output_path("FileEditingOutput").append(fileName)};
+
+    create_file(source, target, action);
+    std::cout << indent(target.string(), ind()) << '\n';
+
+    const auto prediction{get_aux_path("FileEditingTestMaterials").append("AfterEditing").append(fileName)};
+
+    return testing::compare_files(target, prediction, test_mode::standard, ind());
   }
 
   void test_runner::run_tests()

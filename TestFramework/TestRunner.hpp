@@ -151,9 +151,11 @@ namespace sequoia::testing
         st_Indent.erase(st_Indent.size() - 2);
       }
     };
+
+    using selection_map = std::map<std::string, bool, std::less<>>;
     
     std::vector<test_family> m_Families{};
-    std::map<std::string, bool, std::less<>> m_SelectedFamilies{}, m_SelectedSources{};
+    selection_map m_SelectedFamilies{}, m_SelectedSources{};
     std::vector<nascent_test> m_NascentTests{};
     static inline std::string st_Indent{};
 
