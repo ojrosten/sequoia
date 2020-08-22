@@ -223,6 +223,10 @@ namespace sequoia::testing
 
     void report(std::string_view prefix, std::string_view message);
 
+    template<class Iter, class Filter>
+      requires invocable<Filter, test_runner::messages>
+    void report(std::string_view prefix, Iter begin, Iter end, Filter filter);
+
     [[nodiscard]]
     static std::string stringify(concurrency_mode mode);
 

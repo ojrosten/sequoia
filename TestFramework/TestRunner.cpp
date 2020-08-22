@@ -225,7 +225,7 @@ namespace sequoia::testing
                 output_manager::recovery_file(get_output_path("Recovery").append("Recovery.txt")); }, {}, {"-r"}} }
         })
     };
-    
+
     for(const auto& ops : operations)
     {
       ops.fn(ops.parameters);
@@ -402,6 +402,21 @@ namespace sequoia::testing
     }
   }
 
+  template<class Iter, class Filter>
+    requires invocable<Filter, test_runner::messages>
+  void test_runner::report(std::string_view prefix, Iter begin, Iter end, Filter filter)
+  {
+    sentinel block_1{*this};
+    std::cout << block_1.indent(prefix) << '\n';
+
+    sentinel block_2{*this};
+    std::for_each(begin, end, [&block_2, filter](const messages& mess){
+                                std::cout << block_2.indent(filter(mess)) << '\n';
+                              });
+
+    std::cout << '\n';
+  }
+
   void test_runner::false_positive_check()
   {
     static_assert(st_TestNameStubs.size() > 1, "Insufficient data for false-positive test");
@@ -436,7 +451,7 @@ namespace sequoia::testing
       fs::remove(p.path());
     }
 
-    std::array<messages, 3> mess{
+    const std::array<messages, 3> mess{
       test_file_editing("Includes.hpp",
                         [](const fs::path& sandboxFile){
                           add_include(sandboxFile, "Bar.hpp");
@@ -456,29 +471,8 @@ namespace sequoia::testing
       )
     };
 
-    sentinel block_1{*this};
-
-    std::cout << block_1.indent("Files built:\n");
-
-    {
-      sentinel block_2{*this};
-      for(const auto& m : mess)
-      {
-        std::cout << block_2.indent(m.creation) << '\n';
-      }
-    }
-
-    std::cout << '\n' << block_1.indent("Comparisons against reference files:\n");
-
-    {
-      sentinel block_2{*this};
-      for(const auto& m : mess)
-      {
-        std::cout << block_2.indent(m.comparison) << '\n';
-      }
-    }
-
-    std::cout << "\n";
+    report("Files built:", mess.cbegin(), mess.cend(), [](const messages& m) { return m.creation;});
+    report("Comparisons against reference files:", mess.cbegin(), mess.cend(), [](const messages& m) { return m.comparison;});
   }
 
   void test_runner::test_creation()
@@ -488,8 +482,6 @@ namespace sequoia::testing
     sentinel block_0{*this};
     
     std::cout << block_0.indent("Running test creation tool diagnostics...\n");
-
-    sentinel block_1{*this};
 
     const std::array<nascent_test, 1>
       diagnosticFiles{nascent_test{get_output_path("UnitTestCreationDiagnostics"), "Iterator", "utilities::iterator"}};
