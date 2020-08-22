@@ -353,7 +353,7 @@ namespace sequoia::testing
         const auto& data{*beginNascentTests};
         for(const auto& stub : st_TestNameStubs)
         {
-          fn(mess, data, stub, ind());
+          append_indented(mess, fn(data, stub), ind());
         }
 
         ++beginNascentTests;
@@ -370,8 +370,8 @@ namespace sequoia::testing
   std::string test_runner::create_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message, const std::filesystem::copy_options options)
   {
     auto action{
-      [options](std::string& message, const nascent_test& data, std::string_view stub, const indentation ind){
-        append_indented(message, std::string{"\""}.append(data.create_file(stub, options)).append("\""), ind);
+      [options](const nascent_test& data, std::string_view stub){
+        return std::string{"\""}.append(data.create_file(stub, options)).append("\"");
       }
     };
     
@@ -383,8 +383,8 @@ namespace sequoia::testing
   std::string test_runner::compare_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message)
   {
     auto action{
-      [](std::string& message, const nascent_test& data, std::string_view stub, const indentation ind){
-        append_lines(message, indent(data.compare_files(stub), ind));
+      [](const nascent_test& data, std::string_view stub){
+        return data.compare_files(stub);
       }
     };
 
