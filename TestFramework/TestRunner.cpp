@@ -345,7 +345,7 @@ namespace sequoia::testing
   {
     if(std::distance(beginNascentTests, endNascentTests))
     {
-      sentinel s{};
+      sentinel s{*this};
 
       std::string mess{message};
       while(beginNascentTests != endNascentTests)
@@ -353,7 +353,7 @@ namespace sequoia::testing
         const auto& data{*beginNascentTests};
         for(const auto& stub : st_TestNameStubs)
         {
-          append_indented(mess, fn(data, stub), ind());
+          s.append_indented(mess, fn(data, stub));
         }
 
         ++beginNascentTests;
@@ -395,14 +395,11 @@ namespace sequoia::testing
   {
     static_assert(st_TestNameStubs.size() > 1, "Insufficient data for false-positive test");
 
-    sentinel s_0{};
+    sentinel block_0{*this};
+    std::cout << block_0.indent("Running false-positive tests...\n");
 
-    std::cout << indent("Running false-positive tests...\n", ind());
-
-    sentinel s_1{};
-    std::cout << indent("File comparison:\n", ind());
-
-    sentinel s_2{};
+    sentinel block_1{*this};
+    std::cout << block_1.indent("File comparison:\n");
     
     const nascent_test data{get_output_path("UnitTestCreationDiagnostics"), "Iterator", "utilities::iterator"};
 
@@ -414,94 +411,107 @@ namespace sequoia::testing
     
     const auto file1{partPath().concat(st_TestNameStubs[0])};
     const auto file2{partPath().concat(st_TestNameStubs[1])};
-
-    std::cout << indent(testing::compare_files(file1, file2, test_mode::false_positive), ind()) << "\n\n";
+    
+    sentinel block_2{*this};
+    std::cout << block_2.indent(testing::compare_files(file1, file2, test_mode::false_positive)) << "\n\n";
   }
 
   void test_runner::test_file_editing()
   {
     namespace fs = std::filesystem;
 
-    sentinel s_0{};
+    sentinel block_0{*this};
     
-    std::cout << indent("Running file editing diagnostics...\n", ind());
+    std::cout << block_0.indent("Running file editing diagnostics...\n");
     
     for(auto& p : fs::directory_iterator(get_output_path("FileEditingOutput")))
     {
       fs::remove(p.path());
     }
 
-    sentinel s_1{};
-
-    std::cout << indent("Files built:\n", ind());
-
-    std::string info{indent("Comparisons against reference files:", ind())};
-
-    sentinel s_2{};
-
-    append_lines(
-      info,
+    std::array<messages, 3> mess{
       test_file_editing("Includes.hpp",
                         [](const fs::path& sandboxFile){
                           add_include(sandboxFile, "Bar.hpp");
-                        })
-    );
-
-    append_lines(
-      info,
+                        }
+      ),
       test_file_editing("FakeMain.cpp",
                         [](const fs::path& sandboxFile){
                           add_to_family(sandboxFile, "New Family",
                                         {{"fake_false_positive_test{\"False Positive Test\"}"}, {"fake_test{\"Unit Test\"}"}});
-                        })
-    );
-
-    append_lines(
-      info,
+                        }
+      ),
       test_file_editing("FakeMain2.cpp",
                         [](const fs::path& sandboxFile){
                           add_to_family(sandboxFile, "CommandLine Arguments",
                                         {{"commandline_arguments_false_positive_test{\"False Positive Test\"}"}});
-                        })
-    );
+                        }
+      )
+    };
 
-    std::cout << "\n" << info << "\n\n";
+    sentinel block_1{*this};
+
+    std::cout << block_1.indent("Files built:\n");
+
+    {
+      sentinel block_2{*this};
+      for(const auto& m : mess)
+      {
+        std::cout << block_2.indent(m.creation) << '\n';
+      }
+    }
+
+    std::cout << block_1.indent("Comparisons against reference files:\n");
+
+    {
+      sentinel block_2{*this};
+      for(const auto& m : mess)
+      {
+        std::cout << block_2.indent(m.comparison) << '\n';
+      }
+    }
+
+    std::cout << "\n";
   }
 
   void test_runner::test_creation()
   {    
     namespace fs = std::filesystem;
 
-    sentinel s_0{};
+    sentinel block_0{*this};
     
-    std::cout << indent("Running test creation tool diagnostics...\n", ind());
+    std::cout << block_0.indent("Running test creation tool diagnostics...\n");
 
-    sentinel s_1{};
+    sentinel block_1{*this};
 
     const std::array<nascent_test, 1>
       diagnosticFiles{nascent_test{get_output_path("UnitTestCreationDiagnostics"), "Iterator", "utilities::iterator"}};
 
-    std::cout << create_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(),  indent("Files built:", ind()), fs::copy_options::overwrite_existing);
-    std::cout << compare_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(), indent("Comparisons against reference files:", ind()));
+    std::cout << create_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(),  block_1.indent("Files built:"), fs::copy_options::overwrite_existing);
+    std::cout << compare_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(), block_1.indent("Comparisons against reference files:"));
     std::cout << '\n';
   }
 
   template<class Fn>
     requires invocable<Fn, std::filesystem::path>
   [[nodiscard]]
-  std::string test_runner::test_file_editing(std::string_view fileName, Fn action)
+  auto test_runner::test_file_editing(std::string_view fileName, Fn action) -> messages
   {
     namespace fs = std::filesystem;
+
+    messages m{};
 
     const auto source{get_aux_path("FileEditingTestMaterials").append("BeforeEditing").append(fileName)};
     const auto target{get_output_path("FileEditingOutput").append(fileName)};
 
     create_file(source, target, action);
-    std::cout << indent(target.string(), ind()) << '\n';
+    m.creation = target.string();
 
     const auto prediction{get_aux_path("FileEditingTestMaterials").append("AfterEditing").append(fileName)};
 
-    return indent(testing::compare_files(target, prediction, test_mode::standard), ind());
+    m.comparison = testing::compare_files(target, prediction, test_mode::standard);
+
+    return m;
   }
 
   void test_runner::run_tests()

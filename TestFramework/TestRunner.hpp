@@ -139,17 +139,38 @@ namespace sequoia::testing
     [[nodiscard]]
     concurrency_mode concurrency() const noexcept { return m_ConcurrencyMode; }
   private:
-    struct sentinel
+    class sentinel
     {
-      sentinel()
+    public:
+      sentinel(test_runner& runner)
+        : m_Runner{runner}
+        , m_Indentation(2*(++m_Runner.m_Depth), ' ')
       {
-        st_Indent.append("  ");
+      }
+      
+      [[nodiscard]]
+      std::string indent(std::string_view s) const
+      {
+        return testing::indent(s, indentation{m_Indentation});
+      }
+
+      std::string& append_indented(std::string& s1, std::string_view s2)
+      {
+        return testing::append_indented(s1, s2, indentation{m_Indentation});
       }
 
       ~sentinel()
       {
-        st_Indent.erase(st_Indent.size() - 2);
+        --m_Runner.m_Depth;
       }
+    private:
+      test_runner& m_Runner;
+      std::string m_Indentation;
+    };
+
+    struct messages
+    {
+      std::string creation, comparison;
     };
 
     using selection_map = std::map<std::string, bool, std::less<>>;
@@ -157,13 +178,7 @@ namespace sequoia::testing
     std::vector<test_family> m_Families{};
     selection_map m_SelectedFamilies{}, m_SelectedSources{};
     std::vector<nascent_test> m_NascentTests{};
-    static inline std::string st_Indent{};
-
-    [[nodiscard]]
-    static indentation ind()
-    {
-      return indentation{st_Indent};
-    }
+    std::string_view::size_type m_Depth{};
     
     bool m_Verbose{}, m_Pause{}, m_WriteFiles{true};
 
@@ -211,26 +226,26 @@ namespace sequoia::testing
 
     template<class Iter, class Fn>
     [[nodiscard]]
-    static std::string process_nascent_tests(Iter beginNascentTests, Iter endNascentTests, std::string_view message, Fn fn);
+    std::string process_nascent_tests(Iter beginNascentTests, Iter endNascentTests, std::string_view message, Fn fn);
 
     template<class Iter>
     [[nodiscard]]
-    static std::string create_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message, const std::filesystem::copy_options options);
+    std::string create_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message, const std::filesystem::copy_options options);
 
     template<class Iter>
     [[nodiscard]]
-    static std::string compare_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message);
+    std::string compare_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message);
 
     template<class Fn>
       requires invocable<Fn, std::filesystem::path>
     [[nodiscard]]
-    static std::string test_file_editing(std::string_view fileName, Fn action);
+    auto test_file_editing(std::string_view fileName, Fn action) -> messages;
 
-    static void false_positive_check();
+    void false_positive_check();
     
-    static void test_file_editing();
+    void test_file_editing();
 
-    static void test_creation();
+    void test_creation();
   };
 
   [[nodiscard]]
