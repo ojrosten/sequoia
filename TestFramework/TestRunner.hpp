@@ -209,6 +209,10 @@ namespace sequoia::testing
     [[nodiscard]]
     static std::string stringify(concurrency_mode mode);
 
+    template<class Iter, class Fn>
+    [[nodiscard]]
+    static std::string process_nascent_tests(Iter beginNascentTests, Iter endNascentTests, std::string_view message, Fn fn);
+
     template<class Iter>
     [[nodiscard]]
     static std::string create_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message, const std::filesystem::copy_options options);

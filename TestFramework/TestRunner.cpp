@@ -339,11 +339,10 @@ namespace sequoia::testing
     run_tests();
   }
 
-  template<class Iter>
+  template<class Iter, class Fn>
   [[nodiscard]]
-  std::string test_runner::create_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message, const std::filesystem::copy_options options)
+  std::string test_runner::process_nascent_tests(Iter beginNascentTests, Iter endNascentTests, std::string_view message, Fn fn)
   {
-    std::string mess{}; 
     if(std::distance(beginNascentTests, endNascentTests))
     {
       sentinel s{};
@@ -354,35 +353,9 @@ namespace sequoia::testing
         const auto& data{*beginNascentTests};
         for(const auto& stub : st_TestNameStubs)
         {
-          append_indented(mess, data.create_file(stub, options).append("\"") , indentation{ind().string().append("\"")});
+          fn(mess, data, stub, ind());
         }
 
-        ++beginNascentTests;
-      }
-
-      return mess.append("\n\n");
-    }
-
-    return "";
-  }
-  
-  template<class Iter>
-  [[nodiscard]]
-  std::string test_runner::compare_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message)
-  { 
-    if(std::distance(beginNascentTests, endNascentTests))
-    {
-      sentinel s{};
-
-      std::string mess{message};
-      while(beginNascentTests != endNascentTests)
-      {
-        const auto& data{*beginNascentTests};
-        for(const auto& stub : st_TestNameStubs)
-        {
-          append_lines(mess, data.compare_files(stub, ind()));
-        }
-        
         ++beginNascentTests;
       }
 
@@ -390,7 +363,32 @@ namespace sequoia::testing
     }
 
     return "";
+  }
+
+  template<class Iter>
+  [[nodiscard]]
+  std::string test_runner::create_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message, const std::filesystem::copy_options options)
+  {
+    auto action{
+      [options](std::string& message, const nascent_test& data, std::string_view stub, const indentation ind){
+        append_indented(message, std::string{"\""}.append(data.create_file(stub, options)).append("\""), ind);
+      }
+    };
     
+    return process_nascent_tests(beginNascentTests, endNascentTests, message, action);
+  }
+  
+  template<class Iter>
+  [[nodiscard]]
+  std::string test_runner::compare_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message)
+  {
+    auto action{
+      [](std::string& message, const nascent_test& data, std::string_view stub, const indentation ind){
+         append_lines(message, data.compare_files(stub, ind));
+       }
+    };
+
+    return process_nascent_tests(beginNascentTests, endNascentTests, message, action);    
   }
 
   void test_runner::false_positive_check()
