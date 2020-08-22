@@ -53,7 +53,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string compare_files(const std::filesystem::path& file, const std::filesystem::path& prediction, const test_mode mode, const indentation ind)
+  std::string compare_files(const std::filesystem::path& file, const std::filesystem::path& prediction, const test_mode mode)
   {
     enum class file_comparison {failed, same, different};
 
@@ -79,13 +79,13 @@ namespace sequoia::testing
       switch(fcomp)
       {
       case file_comparison::same:
-        info = indent(warning("Contents of" ), file.string(), "spuriously comparing equal to", prediction.string(), ind);
+        info = append_lines(warning("Contents of" ), file.string(), "spuriously comparing equal to", prediction.string());
         break;
       case file_comparison::different:
-        info = indent("passed", ind);
+        info = "passed";
         break;
       case file_comparison::failed:
-        info = indent(warning("Unable to perform false-positive test"), ind);
+        info = warning("Unable to perform false-positive test");
         break;
       }
       break;
@@ -93,13 +93,13 @@ namespace sequoia::testing
       switch(fcomp)
       {
       case file_comparison::same:
-        info = indent("passed", ind);
+        info = "passed";
         break;
       case file_comparison::different:
-        info = indent(warning("Contents of" ), file.string(), "no longer matches", prediction.string(), ind);
+        info = append_lines(warning("Contents of" ), file.string(), "no longer matches", prediction.string());
         break;
       case file_comparison::failed:
-        info = indent(warning("Unable to perform file comparison"), ind);
+        info = warning("Unable to perform file comparison");
         break;
       }
       break;
@@ -151,7 +151,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string nascent_test::compare_files(std::string_view partName, indentation ind) const
+  std::string nascent_test::compare_files(std::string_view partName) const
   {
     namespace fs = std::filesystem;
 
@@ -160,7 +160,7 @@ namespace sequoia::testing
     const auto file{get_output_path("UnitTestCreationDiagnostics").append(className)};
     const auto prediction{get_aux_path("UnitTestCodeTemplates").append("ReferenceExamples").append(className)};
 
-    return testing::compare_files(file, prediction, test_mode::standard, ind);
+    return testing::compare_files(file, prediction, test_mode::standard);
   }
 
   void nascent_test::transform_file(const std::filesystem::path& file) const
@@ -384,8 +384,8 @@ namespace sequoia::testing
   {
     auto action{
       [](std::string& message, const nascent_test& data, std::string_view stub, const indentation ind){
-         append_lines(message, data.compare_files(stub, ind));
-       }
+        append_lines(message, indent(data.compare_files(stub), ind));
+      }
     };
 
     return process_nascent_tests(beginNascentTests, endNascentTests, message, action);    
@@ -415,7 +415,7 @@ namespace sequoia::testing
     const auto file1{partPath().concat(st_TestNameStubs[0])};
     const auto file2{partPath().concat(st_TestNameStubs[1])};
 
-    std::cout << testing::compare_files(file1, file2, test_mode::false_positive, ind()) << "\n\n";
+    std::cout << indent(testing::compare_files(file1, file2, test_mode::false_positive), ind()) << "\n\n";
   }
 
   void test_runner::test_file_editing()
@@ -501,7 +501,7 @@ namespace sequoia::testing
 
     const auto prediction{get_aux_path("FileEditingTestMaterials").append("AfterEditing").append(fileName)};
 
-    return testing::compare_files(target, prediction, test_mode::standard, ind());
+    return indent(testing::compare_files(target, prediction, test_mode::standard), ind());
   }
 
   void test_runner::run_tests()
