@@ -36,7 +36,10 @@ namespace sequoia::testing
     {
       return string();
     }
-    
+
+    friend constexpr bool operator==(const indentation&, const indentation&) noexcept = default;
+    friend constexpr bool operator!=(const indentation&, const indentation&) noexcept = default;
+
     std::string_view data;
   };
   

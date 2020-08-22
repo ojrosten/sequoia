@@ -21,6 +21,7 @@ namespace sequoia::testing
   std::string indent(std::string_view s, indentation ind)
   {
     if(s.empty()) return {};
+    if(ind == no_indent) return std::string{s};
 
     std::string str{};
     str.reserve(s.size());
