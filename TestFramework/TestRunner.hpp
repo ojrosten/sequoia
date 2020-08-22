@@ -221,25 +221,27 @@ namespace sequoia::testing
       if constexpr(sizeof...(Tests) > 0) add_tests(f, std::forward<Tests>(tests)...);
     }
 
+    void report(std::string_view prefix, std::string_view message);
+
     [[nodiscard]]
     static std::string stringify(concurrency_mode mode);
 
     template<class Iter, class Fn>
     [[nodiscard]]
-    std::string process_nascent_tests(Iter beginNascentTests, Iter endNascentTests, std::string_view message, Fn fn);
+    static std::string process_nascent_tests(Iter beginNascentTests, Iter endNascentTests, Fn fn);
 
     template<class Iter>
     [[nodiscard]]
-    std::string create_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message, const std::filesystem::copy_options options);
+    static std::string create_files(Iter beginNascentTests, Iter endNascentTests, const std::filesystem::copy_options options);
 
     template<class Iter>
     [[nodiscard]]
-    std::string compare_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message);
+    static std::string compare_files(Iter beginNascentTests, Iter endNascentTests);
 
     template<class Fn>
       requires invocable<Fn, std::filesystem::path>
     [[nodiscard]]
-    auto test_file_editing(std::string_view fileName, Fn action) -> messages;
+    static auto test_file_editing(std::string_view fileName, Fn action) -> messages;
 
     void false_positive_check();
     

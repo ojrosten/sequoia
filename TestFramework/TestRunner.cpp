@@ -335,31 +335,30 @@ namespace sequoia::testing
   {
     namespace fs = std::filesystem;
 
-    std::cout << create_files(m_NascentTests.cbegin(), m_NascentTests.cend(), "Creating files...\n", fs::copy_options::skip_existing);
+    report("Creating files...\n", create_files(m_NascentTests.cbegin(), m_NascentTests.cend(), fs::copy_options::skip_existing));
+
     run_tests();
   }
 
   template<class Iter, class Fn>
   [[nodiscard]]
-  std::string test_runner::process_nascent_tests(Iter beginNascentTests, Iter endNascentTests, std::string_view message, Fn fn)
+  std::string test_runner::process_nascent_tests(Iter beginNascentTests, Iter endNascentTests, Fn fn)
   {
     if(std::distance(beginNascentTests, endNascentTests))
     {
-      sentinel s{*this};
-
-      std::string mess{message};
+      std::string mess{};
       while(beginNascentTests != endNascentTests)
       {
         const auto& data{*beginNascentTests};
         for(const auto& stub : st_TestNameStubs)
         {
-          s.append_indented(mess, fn(data, stub));
+          append_lines(mess, fn(data, stub));
         }
 
         ++beginNascentTests;
       }
 
-      return mess.append("\n");
+      return mess;
     }
 
     return "";
@@ -367,7 +366,7 @@ namespace sequoia::testing
 
   template<class Iter>
   [[nodiscard]]
-  std::string test_runner::create_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message, const std::filesystem::copy_options options)
+  std::string test_runner::create_files(Iter beginNascentTests, Iter endNascentTests, const std::filesystem::copy_options options)
   {
     auto action{
       [options](const nascent_test& data, std::string_view stub){
@@ -375,12 +374,12 @@ namespace sequoia::testing
       }
     };
     
-    return process_nascent_tests(beginNascentTests, endNascentTests, message, action);
+    return process_nascent_tests(beginNascentTests, endNascentTests, action);
   }
   
   template<class Iter>
   [[nodiscard]]
-  std::string test_runner::compare_files(Iter beginNascentTests, Iter endNascentTests, std::string_view message)
+  std::string test_runner::compare_files(Iter beginNascentTests, Iter endNascentTests)
   {
     auto action{
       [](const nascent_test& data, std::string_view stub){
@@ -388,7 +387,19 @@ namespace sequoia::testing
       }
     };
 
-    return process_nascent_tests(beginNascentTests, endNascentTests, message, action);    
+    return process_nascent_tests(beginNascentTests, endNascentTests, action);    
+  }
+
+  void test_runner::report(std::string_view prefix, std::string_view message)
+  {
+    if(!message.empty())
+    {
+      sentinel block_1{*this};
+      std::cout << block_1.indent(prefix) << '\n';
+
+      sentinel block_2{*this};
+      std::cout << block_2.indent(message) << "\n\n";
+    }
   }
 
   void test_runner::false_positive_check()
@@ -397,9 +408,6 @@ namespace sequoia::testing
 
     sentinel block_0{*this};
     std::cout << block_0.indent("Running false-positive tests...\n");
-
-    sentinel block_1{*this};
-    std::cout << block_1.indent("File comparison:\n");
     
     const nascent_test data{get_output_path("UnitTestCreationDiagnostics"), "Iterator", "utilities::iterator"};
 
@@ -411,9 +419,8 @@ namespace sequoia::testing
     
     const auto file1{partPath().concat(st_TestNameStubs[0])};
     const auto file2{partPath().concat(st_TestNameStubs[1])};
-    
-    sentinel block_2{*this};
-    std::cout << block_2.indent(testing::compare_files(file1, file2, test_mode::false_positive)) << "\n\n";
+
+    report("File comparison:", testing::compare_files(file1, file2, test_mode::false_positive));
   }
 
   void test_runner::test_file_editing()
@@ -461,7 +468,7 @@ namespace sequoia::testing
       }
     }
 
-    std::cout << block_1.indent("Comparisons against reference files:\n");
+    std::cout << '\n' << block_1.indent("Comparisons against reference files:\n");
 
     {
       sentinel block_2{*this};
@@ -487,9 +494,8 @@ namespace sequoia::testing
     const std::array<nascent_test, 1>
       diagnosticFiles{nascent_test{get_output_path("UnitTestCreationDiagnostics"), "Iterator", "utilities::iterator"}};
 
-    std::cout << create_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(),  block_1.indent("Files built:"), fs::copy_options::overwrite_existing);
-    std::cout << compare_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(), block_1.indent("Comparisons against reference files:"));
-    std::cout << '\n';
+    report("Files built:", create_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(), fs::copy_options::overwrite_existing));
+    report("Comparisons against reference files:", compare_files(diagnosticFiles.cbegin(), diagnosticFiles.cend()));
   }
 
   template<class Fn>
