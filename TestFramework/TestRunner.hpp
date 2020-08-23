@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////
-//                 Copyright Oliver Rosten 2018.                  //
+//                Copyright Oliver J. Rosten 2018.                //
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
 //    (See accompanying file LICENSE.md or copy at                //
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
@@ -142,6 +142,8 @@ namespace sequoia::testing
     class sentinel
     {
     public:
+      using size_type = std::string::size_type;
+      
       sentinel(test_runner& runner)
         : m_Runner{runner}
         , m_Indentation(2*(++m_Runner.m_Depth), ' ')
@@ -178,7 +180,8 @@ namespace sequoia::testing
     std::vector<test_family> m_Families{};
     selection_map m_SelectedFamilies{}, m_SelectedSources{};
     std::vector<nascent_test> m_NascentTests{};
-    std::string_view::size_type m_Depth{};
+    std::string m_CopyRight{"Oliver Rosten"};
+    sentinel::size_type m_Depth{};
     
     bool m_Verbose{}, m_Pause{}, m_WriteFiles{true};
 

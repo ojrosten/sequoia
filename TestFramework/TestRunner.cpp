@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////
-//                 Copyright Oliver Rosten 2018.                  //
+//                Copyright Oliver J. Rosten 2018.                //
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
 //    (See accompanying file LICENSE.md or copy at                //
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
@@ -179,6 +179,8 @@ namespace sequoia::testing
         
     if(!text.empty())
     {
+      // TO-DO: copyright
+      
       replace_all(text, "::my_class", m_QualifiedClassName);
       replace_all(text, "my_class", m_ClassName);
       replace_all(text, "MyClass", to_camel_case(m_ClassName));
