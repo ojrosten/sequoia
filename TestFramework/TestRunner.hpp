@@ -53,7 +53,7 @@ namespace sequoia::testing
     nascent_test(std::filesystem::path dir, std::string family, std::string qualifiedName);
 
     [[nodiscard]]
-    std::string create_file(std::string_view partName, const std::filesystem::copy_options options) const;
+    std::string create_file(std::string_view copyright, std::string_view partName, const std::filesystem::copy_options options) const;
 
     [[nodiscard]]
     std::string compare_files(std::string_view partName) const;
@@ -70,7 +70,7 @@ namespace sequoia::testing
       m_QualifiedClassName,
       m_ClassName;
 
-    void transform_file(const std::filesystem::path& file) const;
+    void transform_file(const std::filesystem::path& file, std::string_view copyright) const;
   };    
 
   /*! \brief Consumes command-line arguments and holds all test families
@@ -180,7 +180,7 @@ namespace sequoia::testing
     std::vector<test_family> m_Families{};
     selection_map m_SelectedFamilies{}, m_SelectedSources{};
     std::vector<nascent_test> m_NascentTests{};
-    std::string m_CopyRight{"Oliver Rosten"};
+    std::string m_Copyright{"Oliver J. Rosten"};
     sentinel::size_type m_Depth{};
     
     bool m_Verbose{}, m_Pause{}, m_WriteFiles{true};
@@ -239,7 +239,7 @@ namespace sequoia::testing
 
     template<class Iter>
     [[nodiscard]]
-    static std::string create_files(Iter beginNascentTests, Iter endNascentTests, const std::filesystem::copy_options options);
+    std::string create_files(Iter beginNascentTests, Iter endNascentTests, const std::filesystem::copy_options options) const;
 
     template<class Iter>
     [[nodiscard]]

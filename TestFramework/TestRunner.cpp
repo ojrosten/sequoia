@@ -129,7 +129,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string nascent_test::create_file(std::string_view partName, const std::filesystem::copy_options options) const
+  std::string nascent_test::create_file(std::string_view copyright, std::string_view partName, const std::filesystem::copy_options options) const
   {
     namespace fs = std::filesystem;
     
@@ -146,7 +146,7 @@ namespace sequoia::testing
       }
     };
 
-    testing::create_file(makePath(), outputFile, [this](const fs::path& file) { transform_file(file); });
+    testing::create_file(makePath(), outputFile, [this, copyright](const fs::path& file) { transform_file(file, copyright); });
     return outputFile;
   }
 
@@ -163,7 +163,7 @@ namespace sequoia::testing
     return testing::compare_files(file, prediction, test_mode::standard);
   }
 
-  void nascent_test::transform_file(const std::filesystem::path& file) const
+  void nascent_test::transform_file(const std::filesystem::path& file, std::string_view copyright) const
   {
     std::string text{};
     if(std::ifstream ifile{file})
@@ -179,8 +179,36 @@ namespace sequoia::testing
         
     if(!text.empty())
     {
-      // TO-DO: copyright
-      
+      constexpr auto npos{std::string::npos};
+      if(auto copyrightPos{text.find("Copyright")}; copyrightPos != npos)
+      {
+        auto left{text.rfind("//", copyrightPos)};
+        auto right{text.find("//", copyrightPos)};
+        if((left == npos) || (right == npos))
+        {
+          throw std::runtime_error("Unable to find boundaries of copyright message");
+        }
+
+        const auto now{std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())};
+        const auto year{std::to_string(1900 + std::localtime(&now)->tm_year)};
+
+        const auto newCopyright{std::string{"Copyright "}.append(copyright).append(" ").append(year).append(".")};
+
+        const auto reservedSpace{right - left - 2};
+        const auto requiredSpace{newCopyright.size()};
+        const auto remainingSpace{reservedSpace > requiredSpace ? reservedSpace - requiredSpace : std::string::size_type{}};
+        const auto rightSpace(remainingSpace / 2);
+        const auto leftSpace(remainingSpace - rightSpace);
+
+        const auto replacement{std::string(leftSpace, ' ').append(newCopyright).append(std::string(rightSpace, ' '))};
+
+        text.replace(left + 2, reservedSpace, replacement);        
+      }
+      else
+      {
+        throw std::runtime_error("Unable to locate Copyright information");
+      }
+
       replace_all(text, "::my_class", m_QualifiedClassName);
       replace_all(text, "my_class", m_ClassName);
       replace_all(text, "MyClass", to_camel_case(m_ClassName));
@@ -368,11 +396,11 @@ namespace sequoia::testing
 
   template<class Iter>
   [[nodiscard]]
-  std::string test_runner::create_files(Iter beginNascentTests, Iter endNascentTests, const std::filesystem::copy_options options)
+  std::string test_runner::create_files(Iter beginNascentTests, Iter endNascentTests, const std::filesystem::copy_options options) const
   {
     auto action{
-      [options](const nascent_test& data, std::string_view stub){
-        return std::string{"\""}.append(data.create_file(stub, options)).append("\"");
+      [options,copyright{m_Copyright}](const nascent_test& data, std::string_view stub){
+        return std::string{"\""}.append(data.create_file(copyright, stub, options)).append("\"");
       }
     };
     
