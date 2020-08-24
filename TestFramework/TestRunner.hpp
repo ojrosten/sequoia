@@ -42,7 +42,6 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string compare_files(const std::filesystem::path& file, const std::filesystem::path& prediction, const test_mode mode);
 
-
   /*! \brief Holds data for the automated creation of new tests
 
    */
@@ -64,11 +63,18 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string_view class_name() const noexcept { return m_ClassName; }
   private:
+    struct template_data { std::string parameter, name; };
+    
     std::filesystem::path m_Directory;
     std::string
       m_Family,
       m_QualifiedClassName,
-      m_ClassName;
+      m_ClassName,
+      m_Header;
+
+    std::vector<template_data> m_TemplateData;
+
+    std::vector<std::string> m_EquivalentTypes;
 
     void transform_file(const std::filesystem::path& file, std::string_view copyright) const;
   };    
@@ -79,7 +85,7 @@ namespace sequoia::testing
 
       test <name>                               : runs the specified test
       source <cpp file>                         : runs all tests in the specified cpp
-      create <directory, namespace::class_name> : creates infrastructure for a new test
+      create <directory, family, namespace::class_name> : creates infrastructure for a new test
       
       --async-depth <[0-2]> / -ad: serial/family/test/deep
 

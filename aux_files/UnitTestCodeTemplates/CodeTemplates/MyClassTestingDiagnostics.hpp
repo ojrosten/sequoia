@@ -5,11 +5,11 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "MyClassTestingUtilities.hpp"
+#include "?ClassTestingUtilities.hpp"
 
 namespace sequoia::testing
 {
-  class my_class_false_positive_test final : public false_positive_regular_test
+  class ?_class_false_positive_test final : public false_positive_regular_test
   {
   public:
     using false_positive_regular_test::false_positive_regular_test;    

@@ -11,7 +11,7 @@
 
 namespace sequoia::testing
 {
-  class my_class_test final : public regular_test
+  class ?_class_test final : public regular_test
   {
   public:
     using regular_test::regular_test;

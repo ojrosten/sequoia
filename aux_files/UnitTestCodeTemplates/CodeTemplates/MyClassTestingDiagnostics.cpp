@@ -5,17 +5,17 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "MyClassTestingDiagnostics.hpp"
+#include "?ClassTestingDiagnostics.hpp"
 
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::string_view my_class_false_positive_test::source_file() const noexcept
+  std::string_view ?_class_false_positive_test::source_file() const noexcept
   {
     return __FILE__;
   }
 
-  void my_class_false_positive_test::run_tests()
+  void ?_class_false_positive_test::run_tests()
   {
     // TO DO
   }

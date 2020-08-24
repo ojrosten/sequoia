@@ -126,6 +126,19 @@ namespace sequoia::testing
     {
       m_ClassName = m_QualifiedClassName;
     }
+
+    if(!m_TemplateData.empty())
+    {
+      std::string args{"<"};
+      std::for_each(m_TemplateData.cbegin(), m_TemplateData.cend(),
+                    [&args](const template_data& d) {
+                      args.append(d.name).append(",");
+                    });
+
+      args.back() = '>';
+
+      m_ClassName.append(args);
+    }
   }
 
   [[nodiscard]]
@@ -209,9 +222,27 @@ namespace sequoia::testing
         throw std::runtime_error("Unable to locate Copyright information");
       }
 
-      replace_all(text, "::my_class", m_QualifiedClassName);
-      replace_all(text, "my_class", m_ClassName);
-      replace_all(text, "MyClass", to_camel_case(m_ClassName));
+      if(!m_TemplateData.empty())
+      {
+        std::string spec{"<"};
+        std::for_each(m_TemplateData.cbegin(), m_TemplateData.cend(),
+                        [&spec](const template_data& d) {
+                          spec.append(d.parameter).append(" ").append(d.name).append(",");
+                        });
+
+        spec.back() = '>';
+        spec.append("\n");
+
+        replace_all(text, "<?>", spec);
+      }
+      else
+      {
+        replace_all(text, "template<?> ", "");
+      }
+
+      replace_all(text, "::?_class", m_QualifiedClassName);
+      replace_all(text, "?_class", m_ClassName);
+      replace_all(text, "?Class", to_camel_case(m_ClassName));
 
       if(std::ofstream ofile{file})
       {
