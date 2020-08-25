@@ -110,10 +110,12 @@ namespace sequoia::testing
 
   //=========================================== nascent_test ===========================================//
 
-  nascent_test::nascent_test(std::filesystem::path dir, std::string family, std::string qualifiedName)
+  nascent_test::nascent_test(std::filesystem::path dir, std::string family, std::string qualifiedName, std::string testType, std::string overriddenClassHeader)
     : m_Directory{std::move(dir)}
     , m_Family{std::move(family)}
     , m_QualifiedClassName{std::move(qualifiedName)}
+    , m_TestType{std::move(testType)}
+    , m_OverriddenClassHeader{std::move(overriddenClassHeader)}
   {
     constexpr auto npos{std::string::npos};
 
@@ -314,9 +316,17 @@ namespace sequoia::testing
 
       replace_all(text, "::?_class", m_QualifiedClassName);
       replace_all(text, "?_class", m_RawClassName);
-      replace_all(text, "?Class", to_camel_case(m_RawClassName));
       replace_all(text, "?_test", m_TestType);
       replace_all(text, "?Test", to_camel_case(m_TestType));
+
+      if(!m_OverriddenClassHeader.empty())
+      {
+        replace_all(text, "?Class.hpp", m_OverriddenClassHeader);
+      }
+      else
+      {
+        replace_all(text, "?Class", to_camel_case(m_RawClassName));
+      }
 
       if(std::ofstream ofile{file})
       {

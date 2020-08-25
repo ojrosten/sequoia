@@ -49,7 +49,7 @@ namespace sequoia::testing
   class nascent_test
   {
   public:
-    nascent_test(std::filesystem::path dir, std::string family, std::string qualifiedName);
+    nascent_test(std::filesystem::path dir, std::string family, std::string qualifiedName, std::string testType="regular_test", std::string overriddenClassHeader="");
 
     [[nodiscard]]
     std::string create_file(std::string_view copyright, std::string_view partName, const std::filesystem::copy_options options) const;
@@ -71,8 +71,8 @@ namespace sequoia::testing
       m_Family,
       m_QualifiedClassName,
       m_RawClassName,
-      m_TestType{"regular_test"},
-      m_Header;
+      m_TestType,
+      m_OverriddenClassHeader;
 
     template_data m_TemplateData;
 

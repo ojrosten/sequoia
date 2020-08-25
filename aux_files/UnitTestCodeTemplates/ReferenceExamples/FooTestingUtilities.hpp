@@ -8,8 +8,7 @@
 #pragma once
 
 #include "RegularTestCore.hpp"
-
-//#include "Foo.hpp"
+#include "Foo.hpp"
 
 namespace sequoia::testing
 {
