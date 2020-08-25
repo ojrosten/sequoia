@@ -71,6 +71,7 @@ namespace sequoia::testing
       m_Family,
       m_QualifiedClassName,
       m_RawClassName,
+      m_TestType{"regular_test"},
       m_Header;
 
     template_data m_TemplateData;

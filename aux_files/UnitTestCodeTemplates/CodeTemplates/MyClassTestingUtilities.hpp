@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "RegularTestCore.hpp"
+#include "?TestCore.hpp"
 
 //#include "?Class.hpp"
 

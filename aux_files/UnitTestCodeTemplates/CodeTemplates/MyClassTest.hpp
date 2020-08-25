@@ -11,10 +11,10 @@
 
 namespace sequoia::testing
 {
-  class ?_class_test final : public regular_test
+  class ?_class_test final : public ?_test
   {
   public:
-    using regular_test::regular_test;
+    using ?_test::?_test;
 
     [[nodiscard]]
     std::string_view source_file() const noexcept final;

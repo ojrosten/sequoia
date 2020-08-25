@@ -79,7 +79,7 @@ namespace sequoia::testing
       switch(fcomp)
       {
       case file_comparison::same:
-        info = append_lines(warning("Contents of" ), file.string(), "spuriously comparing equal to", prediction.string());
+        info = append_lines(warning("Contents of" ), file.string(), "spuriously comparing equal to", prediction.string()).append("\n");
         break;
       case file_comparison::different:
         info = "passed";
@@ -96,7 +96,7 @@ namespace sequoia::testing
         info = "passed";
         break;
       case file_comparison::different:
-        info = append_lines(warning("Contents of" ), file.string(), "no longer matches", prediction.string());
+        info = append_lines(warning("Contents of" ), file.string(), "no longer matches", prediction.string()).append("\n");
         break;
       case file_comparison::failed:
         info = warning("Unable to perform file comparison");
@@ -315,6 +315,8 @@ namespace sequoia::testing
       replace_all(text, "::?_class", m_QualifiedClassName);
       replace_all(text, "?_class", m_RawClassName);
       replace_all(text, "?Class", to_camel_case(m_RawClassName));
+      replace_all(text, "?_test", m_TestType);
+      replace_all(text, "?Test", to_camel_case(m_TestType));
 
       if(std::ofstream ofile{file})
       {
