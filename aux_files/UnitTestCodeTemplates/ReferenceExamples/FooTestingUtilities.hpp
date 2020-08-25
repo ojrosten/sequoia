@@ -30,7 +30,7 @@ namespace sequoia::testing
     using type = bar::baz::foo<T>;
     
     template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const type& actual, /*???*/ predictions)
+    static void check(test_logger<Mode>& logger, const type& actual, const T& prediction)
     {
       // TO DO
     }

@@ -28,7 +28,7 @@ namespace sequoia::testing
     using type = ::?_class;
     
     template<test_mode Mode>
-    static void check(test_logger<Mode>& logger, const type& actual, /*???*/ predictions)
+    static void check(test_logger<Mode>& logger, const type& actual, ?predictions)
     {
       // TO DO
     }

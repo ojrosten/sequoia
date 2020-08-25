@@ -110,12 +110,13 @@ namespace sequoia::testing
 
   //=========================================== nascent_test ===========================================//
 
-  nascent_test::nascent_test(std::filesystem::path dir, std::string family, std::string qualifiedName, std::string testType, std::string overriddenClassHeader)
+  nascent_test::nascent_test(std::filesystem::path dir, std::string_view family, std::string_view qualifiedName, std::initializer_list<std::string_view> equivalentTypes, std::string_view testType, std::string_view overriddenClassHeader)
     : m_Directory{std::move(dir)}
-    , m_Family{std::move(family)}
-    , m_QualifiedClassName{std::move(qualifiedName)}
-    , m_TestType{std::move(testType)}
-    , m_OverriddenClassHeader{std::move(overriddenClassHeader)}
+    , m_Family{family}
+    , m_QualifiedClassName{qualifiedName}
+    , m_TestType{testType}
+    , m_OverriddenClassHeader{overriddenClassHeader}
+    , m_EquivalentTypes(equivalentTypes.begin(), equivalentTypes.end())
   {
     constexpr auto npos{std::string::npos};
 
@@ -296,13 +297,49 @@ namespace sequoia::testing
         throw std::runtime_error("Unable to locate Copyright information");
       }
 
+      if(!m_EquivalentTypes.empty())
+      {
+        std::string args{};
+
+        const auto num{m_EquivalentTypes.size()};
+        for(std::size_t i{}; i < num; ++i)          
+        {
+          const auto& type{m_EquivalentTypes[i]};
+          if(!type.empty())
+          {
+            const bool normal{(type.back() != '*') && (type.back() != '&')};
+            if(normal) args.append("const ");
+
+            args.append(type);
+
+            if(normal) args.append("&");
+            
+            args.append(" prediction");
+
+            if(num > 1) args.append("_").append(std::to_string(i));
+            if(i < num -1) args.append(",");
+          }
+        }
+
+        replace_all(text, "?predictions", args);
+      }
+      else
+      {
+        const auto start{text.rfind("template<?>")};
+        const auto finish{text.rfind("};")};
+        if((start != npos) && (finish != npos))
+        {
+          text.erase(start, finish + 2 - start);
+        }
+      }
+
       if(!m_TemplateData.empty())
       {
         std::string spec{"<"};
-        std::for_each(m_TemplateData.cbegin(), m_TemplateData.cend(),
-                        [&spec](const template_spec& d) {
-                          if(!d.parameter.empty()) spec.append(d.parameter).append(" ").append(d.name).append(",");
-                        });
+        for(const auto& d : m_TemplateData)
+        {
+          if(!d.parameter.empty()) spec.append(d.parameter).append(" ").append(d.name).append(",");
+        }
 
         spec.back() = '>';
         spec.append("\n ");
@@ -353,7 +390,7 @@ namespace sequoia::testing
                 m_SelectedSources.emplace(args.front(), false);
               },         {"source_file_name"}, {"s"}} },
           {"create",     {[this](const param_list& args) {
-                m_NascentTests.push_back(nascent_test{args[0], args[1], args[2]});
+                m_NascentTests.push_back(nascent_test{args[0], args[1], args[2], {}});
               }, { "directory", "family", "qualified class name" }, {"c"} } },
           {"--async",    {[this](const param_list&) {
                 if(m_ConcurrencyMode == concurrency_mode::serial)
@@ -562,12 +599,12 @@ namespace sequoia::testing
     std::cout << '\n';
   }
 
-  void test_runner::test_creation(std::string_view family, std::string_view qualifiedName)
+  void test_runner::test_creation(std::string_view family, std::string_view qualifiedName, std::initializer_list<std::string_view> equivalentTypes)
   {
     namespace fs = std::filesystem;
 
     const std::array<nascent_test, 1>
-      diagnosticFiles{nascent_test{get_output_path("UnitTestCreationDiagnostics"), std::string{family}, std::string{qualifiedName}}};
+      diagnosticFiles{nascent_test{get_output_path("UnitTestCreationDiagnostics"), family, qualifiedName, equivalentTypes}};
 
     report("Files built:", create_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(), fs::copy_options::overwrite_existing));
     report("Comparisons against reference files:", compare_files(diagnosticFiles.cbegin(), diagnosticFiles.cend()));
@@ -580,7 +617,7 @@ namespace sequoia::testing
     sentinel block_0{*this};
     std::cout << block_0.indent("Running false-positive tests...\n");
     
-    const nascent_test data{get_output_path("UnitTestCreationDiagnostics"), "Iterator", "utilities::iterator"};
+    const nascent_test data{get_output_path("UnitTestCreationDiagnostics"), "Iterator", "utilities::iterator", {}};
 
     auto partPath{
       [&data](){
@@ -637,8 +674,8 @@ namespace sequoia::testing
     
     std::cout << block_0.indent("Running test creation tool diagnostics...\n");
 
-    test_creation("Iterator", "utilities::iterator");
-    test_creation("Foo", "bar::baz::foo<class T>");
+    test_creation("Iterator", "utilities::iterator", {"int*"});
+    test_creation("Foo", "bar::baz::foo<class T>", {"T"});
   }
 
   template<class Fn>

@@ -49,7 +49,7 @@ namespace sequoia::testing
   class nascent_test
   {
   public:
-    nascent_test(std::filesystem::path dir, std::string family, std::string qualifiedName, std::string testType="regular_test", std::string overriddenClassHeader="");
+    nascent_test(std::filesystem::path dir, std::string_view family, std::string_view qualifiedName, std::initializer_list<std::string_view> equivalentTypes, std::string_view testType="regular_test", std::string_view overriddenClassHeader="");
 
     [[nodiscard]]
     std::string create_file(std::string_view copyright, std::string_view partName, const std::filesystem::copy_options options) const;
@@ -264,7 +264,7 @@ namespace sequoia::testing
     [[nodiscard]]
     static auto test_file_editing(std::string_view fileName, Fn action) -> messages;
 
-    void test_creation(std::string_view family, std::string_view qualifiedName);
+    void test_creation(std::string_view family, std::string_view qualifiedName, std::initializer_list<std::string_view> equivalentTypes);
 
     void false_positive_check();
     
