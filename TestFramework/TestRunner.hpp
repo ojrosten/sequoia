@@ -61,22 +61,29 @@ namespace sequoia::testing
     //std::string include() const;
 
     [[nodiscard]]
-    std::string_view class_name() const noexcept { return m_ClassName; }
+    std::string_view class_name() const noexcept { return m_RawClassName; }
   private:
-    struct template_data { std::string parameter, name; };
-    
+    struct template_spec { std::string parameter, name; };
+    using template_data = std::vector<template_spec>;
+
     std::filesystem::path m_Directory;
     std::string
       m_Family,
       m_QualifiedClassName,
-      m_ClassName,
+      m_RawClassName,
       m_Header;
 
-    std::vector<template_data> m_TemplateData;
+    template_data m_TemplateData;
 
     std::vector<std::string> m_EquivalentTypes;
 
     void transform_file(const std::filesystem::path& file, std::string_view copyright) const;
+
+    [[nodiscard]]
+    static auto generate_template_data(std::string_view str) -> template_data;
+
+    [[nodiscard]]
+    static auto generate_template_spec(std::string_view str) -> template_spec;
   };    
 
   /*! \brief Consumes command-line arguments and holds all test families
@@ -255,6 +262,8 @@ namespace sequoia::testing
       requires invocable<Fn, std::filesystem::path>
     [[nodiscard]]
     static auto test_file_editing(std::string_view fileName, Fn action) -> messages;
+
+    void test_creation(std::string_view family, std::string_view qualifiedName);
 
     void false_positive_check();
     

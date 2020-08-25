@@ -5,19 +5,18 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "IteratorTestingUtilities.hpp"
-#include "IteratorTest.hpp"
+#include "FooTestingUtilities.hpp"
 
 namespace sequoia::testing
 {
-  [[nodiscard]]
-  std::string_view iterator_test::source_file() const noexcept
+  class foo_false_positive_test final : public false_positive_regular_test
   {
-    return __FILE__;
-  }
+  public:
+    using false_positive_regular_test::false_positive_regular_test;    
 
-  void iterator_test::run_tests()
-  {
-    // TO DO
-  }
+    [[nodiscard]]
+    std::string_view source_file() const noexcept final;
+  private:    
+    void run_tests() final;
+  };
 }

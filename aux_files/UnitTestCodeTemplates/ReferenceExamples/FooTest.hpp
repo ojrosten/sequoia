@@ -1,23 +1,24 @@
 ////////////////////////////////////////////////////////////////////
-//                 Copyright Oliver Rosten 2020.                  //
+//                Copyright Oliver J. Rosten 2020.                //
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
 //    (See accompanying file LICENSE.md or copy at                //
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "?ClassTestingUtilities.hpp"
-#include "?ClassTest.hpp"
+#pragma once
+
+#include "RegularTestCore.hpp"
 
 namespace sequoia::testing
 {
-  [[nodiscard]]
-  std::string_view ?_class_test::source_file() const noexcept
+  class foo_test final : public regular_test
   {
-    return __FILE__;
-  }
+  public:
+    using regular_test::regular_test;
 
-  void ?_class_test::run_tests()
-  {
-    // TO DO
-  }
+    [[nodiscard]]
+    std::string_view source_file() const noexcept final;
+  private:
+    void run_tests() final;
+  };
 }

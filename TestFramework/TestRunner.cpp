@@ -114,31 +114,103 @@ namespace sequoia::testing
     : m_Directory{std::move(dir)}
     , m_Family{std::move(family)}
     , m_QualifiedClassName{std::move(qualifiedName)}
-  {          
-    if(auto pos{m_QualifiedClassName.rfind("::")}; pos != std::string::npos)
+  {
+    constexpr auto npos{std::string::npos};
+
+    auto start{npos};
+    if(auto pos{m_QualifiedClassName.rfind("::")}; pos != npos)
     {
       if(pos < m_QualifiedClassName.length() - 2)
-      {            
-        m_ClassName = m_QualifiedClassName.substr(pos+2);
+      {
+        start = pos+2;
+        m_RawClassName = m_QualifiedClassName.substr(start);
       }
     }
     else
-    {
-      m_ClassName = m_QualifiedClassName;
+    {      
+      m_RawClassName = m_QualifiedClassName;
+      start = 0;
     }
 
+    m_TemplateData = generate_template_data(m_RawClassName);
     if(!m_TemplateData.empty())
     {
-      std::string args{"<"};
-      std::for_each(m_TemplateData.cbegin(), m_TemplateData.cend(),
-                    [&args](const template_data& d) {
-                      args.append(d.name).append(",");
-                    });
+      if(auto pos{m_RawClassName.find('<')}; pos != npos)
+      {
+        m_RawClassName.erase(pos);
 
-      args.back() = '>';
+        if(start != npos)
+        {
+          m_QualifiedClassName.erase(start + pos);
 
-      m_ClassName.append(args);
+          std::string args{"<"};
+          std::for_each(m_TemplateData.cbegin(), m_TemplateData.cend(),
+            [&args](const template_spec& d) { args.append(d.name).append(","); }
+          );
+
+          args.back() = '>';
+
+          m_QualifiedClassName.append(args);
+        }
+      }
     }
+  }
+
+  [[nodiscard]]
+  auto nascent_test::generate_template_data(std::string_view str) -> std::vector<template_spec>
+  {
+    std::vector<template_spec> decomposition{};
+    
+    constexpr auto npos{std::string::npos};
+    if(auto openPos{str.find('<')}; openPos != npos)
+    {
+      if(auto closePos{str.rfind('>')}; closePos != npos)
+      {
+        if((closePos < openPos) || (closePos - openPos < 2))
+          throw std::runtime_error{std::string{str}.append(": unable to parse template")};
+
+        auto start{openPos + 1};
+        auto next{npos};
+        while((next = str.find(',', start)) != npos)
+        {
+          std::string_view v{&str.data()[start], next - start};
+
+          decomposition.push_back(generate_template_spec(v));
+            
+          start = next + 1;
+        }
+
+        std::string_view v{&str.data()[start], closePos - start};
+        decomposition.push_back(generate_template_spec(v));
+      }
+      else
+      {
+        throw std::runtime_error{std::string{str}.append(": < not matched by >")};
+      }
+        
+    }
+
+    return decomposition;
+  }
+
+  [[nodiscard]]
+  auto nascent_test::generate_template_spec(std::string_view str) -> template_spec
+  {    
+    constexpr auto npos{std::string::npos};
+    const auto endOfLastToken{str.find_last_not_of(" .")};
+    if(endOfLastToken == npos)
+      throw std::runtime_error(std::string{str}.append(" Unable to locate end of final token"));
+    
+    const auto beforeLastToken{str.substr(0, endOfLastToken).rfind(' ')};
+    if(beforeLastToken == npos)
+      throw std::runtime_error(std::string{str}.append(" Unable to locate start of final token"));
+
+    const auto lastTokenSize{endOfLastToken - beforeLastToken};
+    const auto endOfLastTemplateSpec{str.substr(0, str.size() - lastTokenSize).find_last_not_of(" .")};
+    if(endOfLastTemplateSpec == npos)
+      return {"", std::string{str}};
+    
+    return {std::string{str.substr(0, endOfLastTemplateSpec + 1)}, std::string{str.substr(beforeLastToken + 1, lastTokenSize)}};
   }
 
   [[nodiscard]]
@@ -146,7 +218,7 @@ namespace sequoia::testing
   {
     namespace fs = std::filesystem;
     
-    const auto outputFile{(m_Directory / to_camel_case(m_ClassName)) += partName};
+    const auto outputFile{(m_Directory / to_camel_case(m_RawClassName)) += partName};
 
     if(((options & fs::copy_options::skip_existing) == fs::copy_options::skip_existing) && fs::exists(outputFile))
     {
@@ -168,7 +240,7 @@ namespace sequoia::testing
   {
     namespace fs = std::filesystem;
 
-    const auto className{to_camel_case(m_ClassName).append(partName)};
+    const auto className{to_camel_case(m_RawClassName).append(partName)};
 
     const auto file{get_output_path("UnitTestCreationDiagnostics").append(className)};
     const auto prediction{get_aux_path("UnitTestCodeTemplates").append("ReferenceExamples").append(className)};
@@ -226,12 +298,12 @@ namespace sequoia::testing
       {
         std::string spec{"<"};
         std::for_each(m_TemplateData.cbegin(), m_TemplateData.cend(),
-                        [&spec](const template_data& d) {
-                          spec.append(d.parameter).append(" ").append(d.name).append(",");
+                        [&spec](const template_spec& d) {
+                          if(!d.parameter.empty()) spec.append(d.parameter).append(" ").append(d.name).append(",");
                         });
 
         spec.back() = '>';
-        spec.append("\n");
+        spec.append("\n ");
 
         replace_all(text, "<?>", spec);
       }
@@ -241,8 +313,8 @@ namespace sequoia::testing
       }
 
       replace_all(text, "::?_class", m_QualifiedClassName);
-      replace_all(text, "?_class", m_ClassName);
-      replace_all(text, "?Class", to_camel_case(m_ClassName));
+      replace_all(text, "?_class", m_RawClassName);
+      replace_all(text, "?Class", to_camel_case(m_RawClassName));
 
       if(std::ofstream ofile{file})
       {
@@ -478,6 +550,17 @@ namespace sequoia::testing
     std::cout << '\n';
   }
 
+  void test_runner::test_creation(std::string_view family, std::string_view qualifiedName)
+  {
+    namespace fs = std::filesystem;
+
+    const std::array<nascent_test, 1>
+      diagnosticFiles{nascent_test{get_output_path("UnitTestCreationDiagnostics"), std::string{family}, std::string{qualifiedName}}};
+
+    report("Files built:", create_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(), fs::copy_options::overwrite_existing));
+    report("Comparisons against reference files:", compare_files(diagnosticFiles.cbegin(), diagnosticFiles.cend()));
+  }
+
   void test_runner::false_positive_check()
   {
     static_assert(st_TestNameStubs.size() > 1, "Insufficient data for false-positive test");
@@ -537,18 +620,13 @@ namespace sequoia::testing
   }
 
   void test_runner::test_creation()
-  {    
-    namespace fs = std::filesystem;
-
+  {
     sentinel block_0{*this};
     
     std::cout << block_0.indent("Running test creation tool diagnostics...\n");
 
-    const std::array<nascent_test, 1>
-      diagnosticFiles{nascent_test{get_output_path("UnitTestCreationDiagnostics"), "Iterator", "utilities::iterator"}};
-
-    report("Files built:", create_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(), fs::copy_options::overwrite_existing));
-    report("Comparisons against reference files:", compare_files(diagnosticFiles.cbegin(), diagnosticFiles.cend()));
+    test_creation("Iterator", "utilities::iterator");
+    test_creation("Foo", "bar::baz::foo<class T>");
   }
 
   template<class Fn>
