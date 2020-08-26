@@ -156,7 +156,7 @@ namespace sequoia::testing
       }
     }
 
-    m_ClassHeader = !overriddenClassHeader.empty() ? overriddenClassHeader : to_camel_case(m_RawClassName);
+    m_ClassHeader = !overriddenClassHeader.empty() ? overriddenClassHeader : to_camel_case(m_RawClassName).append(".hpp");
     if(!overriddenFamily.empty())
     {
       m_Family = overriddenFamily;
@@ -364,7 +364,8 @@ namespace sequoia::testing
       replace_all(text, "?_class", m_RawClassName);
       replace_all(text, "?_test", m_TestType);
       replace_all(text, "?Test", to_camel_case(m_TestType));
-      replace_all(text, "?Class", m_ClassHeader);
+      replace_all(text, "?Class.hpp", m_ClassHeader);
+      replace_all(text, "?Class", to_camel_case(m_RawClassName));
 
       if(std::ofstream ofile{file})
       {
