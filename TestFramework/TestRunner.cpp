@@ -110,12 +110,10 @@ namespace sequoia::testing
 
   //=========================================== nascent_test ===========================================//
 
-  nascent_test::nascent_test(std::filesystem::path dir, std::string_view family, std::string_view qualifiedName, std::initializer_list<std::string_view> equivalentTypes, std::string_view testType, std::string_view overriddenClassHeader)
+  nascent_test::nascent_test(std::filesystem::path dir, std::string_view qualifiedName, std::string_view testType, std::initializer_list<std::string_view> equivalentTypes, std::string_view overriddenFamily, std::string_view overriddenClassHeader)
     : m_Directory{std::move(dir)}
-    , m_Family{family}
     , m_QualifiedClassName{qualifiedName}
     , m_TestType{testType}
-    , m_OverriddenClassHeader{overriddenClassHeader}
     , m_EquivalentTypes(equivalentTypes.begin(), equivalentTypes.end())
   {
     constexpr auto npos{std::string::npos};
@@ -156,6 +154,17 @@ namespace sequoia::testing
           m_QualifiedClassName.append(args);
         }
       }
+    }
+
+    m_ClassHeader = !overriddenClassHeader.empty() ? overriddenClassHeader : to_camel_case(m_RawClassName);
+    if(!overriddenFamily.empty())
+    {
+      m_Family = overriddenFamily;
+    }
+    else
+    {
+      m_Family = m_RawClassName;
+      replace_all(m_Family, "_", " ");
     }
   }
 
@@ -355,15 +364,7 @@ namespace sequoia::testing
       replace_all(text, "?_class", m_RawClassName);
       replace_all(text, "?_test", m_TestType);
       replace_all(text, "?Test", to_camel_case(m_TestType));
-
-      if(!m_OverriddenClassHeader.empty())
-      {
-        replace_all(text, "?Class.hpp", m_OverriddenClassHeader);
-      }
-      else
-      {
-        replace_all(text, "?Class", to_camel_case(m_RawClassName));
-      }
+      replace_all(text, "?Class", m_ClassHeader);
 
       if(std::ofstream ofile{file})
       {
@@ -391,7 +392,7 @@ namespace sequoia::testing
               },         {"source_file_name"}, {"s"}} },
           {"create",     {[this](const param_list& args) {
                 m_NascentTests.push_back(nascent_test{args[0], args[1], args[2], {}});
-              }, { "directory", "family", "qualified class name" }, {"c"} } },
+                          }, { "directory", "qualified::class_name<class T>", "test type" }, {"c"} } },
           {"--async",    {[this](const param_list&) {
                 if(m_ConcurrencyMode == concurrency_mode::serial)
                   m_ConcurrencyMode = concurrency_mode::family;
@@ -599,12 +600,12 @@ namespace sequoia::testing
     std::cout << '\n';
   }
 
-  void test_runner::test_creation(std::string_view family, std::string_view qualifiedName, std::initializer_list<std::string_view> equivalentTypes)
+  void test_runner::test_creation(std::string_view qualifiedName, std::initializer_list<std::string_view> equivalentTypes)
   {
     namespace fs = std::filesystem;
 
     const std::array<nascent_test, 1>
-      diagnosticFiles{nascent_test{get_output_path("UnitTestCreationDiagnostics"), family, qualifiedName, equivalentTypes}};
+      diagnosticFiles{nascent_test{get_output_path("UnitTestCreationDiagnostics"), qualifiedName, "regular_test", equivalentTypes}};
 
     report("Files built:", create_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(), fs::copy_options::overwrite_existing));
     report("Comparisons against reference files:", compare_files(diagnosticFiles.cbegin(), diagnosticFiles.cend()));
@@ -617,7 +618,7 @@ namespace sequoia::testing
     sentinel block_0{*this};
     std::cout << block_0.indent("Running false-positive tests...\n");
     
-    const nascent_test data{get_output_path("UnitTestCreationDiagnostics"), "Iterator", "utilities::iterator", {}};
+    const nascent_test data{get_output_path("UnitTestCreationDiagnostics"), "utilities::iterator", "regular_test", {}};
 
     auto partPath{
       [&data](){
@@ -674,8 +675,8 @@ namespace sequoia::testing
     
     std::cout << block_0.indent("Running test creation tool diagnostics...\n");
 
-    test_creation("Iterator", "utilities::iterator", {"int*"});
-    test_creation("Foo", "bar::baz::foo<class T>", {"T"});
+    test_creation("utilities::iterator", {"int*"});
+    test_creation("bar::baz::foo<class T>", {"T"});
   }
 
   template<class Fn>
