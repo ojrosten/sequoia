@@ -14,9 +14,11 @@ int main(int argc, char** argv)
   using namespace sequoia;
   using namespace testing;
 
+  namespace fs = std::filesystem;
+
   try
-  {
-    test_runner runner{argc, argv};
+  {    
+    test_runner runner{argc, argv, "Oliver J. Rosten", fs::current_path().append("TestMain.cpp"), fs::current_path().parent_path().append("TestCommon").append("TestIncludes.hpp")};
     const auto mode{runner.concurrency()};
   
     runner.add_test_family(

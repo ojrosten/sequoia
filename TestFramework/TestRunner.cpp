@@ -380,9 +380,18 @@ namespace sequoia::testing
 
   //=========================================== test_runner ===========================================//
 
-  test_runner::test_runner(int argc, char** argv)
+  test_runner::test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path includesLocation)
+    : m_Copyright{copyright}
   {
     using namespace parsing::commandline;
+
+    namespace fs = std::filesystem;
+
+    if(!fs::exists(testMain))
+      throw std::runtime_error{testMain.string().append(" not found!\n\nEnsure the application is run from the appropriate directory")};
+
+    if(!fs::exists(includesLocation))
+      throw std::runtime_error{includesLocation.string().append(" not found!\n")};
 
     const auto operations{parse(argc, argv, {
           {"test",       {[this](const param_list& args) {

@@ -85,7 +85,7 @@ namespace sequoia::testing
 
     [[nodiscard]]
     static auto generate_template_spec(std::string_view str) -> template_spec;
-  };    
+  };
 
   /*! \brief Consumes command-line arguments and holds all test families
 
@@ -112,7 +112,7 @@ namespace sequoia::testing
   class test_runner
   {
   public:
-    test_runner(int argc, char** argv);
+    test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path includesLocation);
 
     test_runner(const test_runner&) = delete;
     test_runner(test_runner&&)      = default;
@@ -195,7 +195,7 @@ namespace sequoia::testing
     std::vector<test_family> m_Families{};
     selection_map m_SelectedFamilies{}, m_SelectedSources{};
     std::vector<nascent_test> m_NascentTests{};
-    std::string m_Copyright{"Oliver J. Rosten"};
+    std::string m_Copyright{};
     sentinel::size_type m_Depth{};
     
     bool m_Verbose{}, m_Pause{}, m_WriteFiles{true};
