@@ -28,17 +28,23 @@ namespace sequoia::testing
   inline std::filesystem::path parent_path()
   {
     return working_path().parent_path();
+  }  
+
+  [[nodiscard]]
+  inline std::filesystem::path sibling_path(std::string_view directory)
+  {
+    return parent_path().append(directory);
   }
   
   [[nodiscard]]
   inline std::filesystem::path get_output_path(std::string_view subDirectory)
   {
-    return parent_path().append("output").append(subDirectory);
+    return sibling_path("output").append(subDirectory);
   }  
 
   [[nodiscard]]
   inline std::filesystem::path get_aux_path(std::string_view subDirectory)
   {
-    return parent_path().append("aux_files").append(subDirectory);
+    return sibling_path("aux_files").append(subDirectory);
   }
 }

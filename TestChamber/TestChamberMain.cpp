@@ -17,7 +17,7 @@ int main(int argc, char** argv)
 
   try
   {
-    test_runner runner{argc, argv, "Oliver J. Rosten", working_path().append("TestChamberMain.cpp"), working_path().parent_path().append("TestCommon").append("TestIncludes.hpp")};
+    test_runner runner{argc, argv, "Oliver J. Rosten", working_path().append("TestChamberMain.cpp"), sibling_path("TestCommon").append("TestIncludes.hpp")};
   
     runner.add_test_family(
       "Diagnostics",
