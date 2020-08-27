@@ -755,8 +755,7 @@ namespace sequoia::testing
   }
 
   std::filesystem::path get_aux_path(std::string_view subDirectory)
-  {    
-    namespace fs = std::filesystem;
-    return fs::current_path().parent_path().append("aux_files").append(subDirectory);
+  {
+    return working_path().parent_path().append("aux_files").append(subDirectory);
   }
 }

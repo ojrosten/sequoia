@@ -21,6 +21,14 @@
 
 namespace sequoia::testing
 {
+  const static auto working_path_v{std::filesystem::current_path()};
+
+  [[nodiscard]]
+  inline std::filesystem::path working_path()
+  {
+    return working_path_v;
+  }
+  
   /*! \brief Allows tests to be grouped together into a family of related tests
 
       When tests are executed, it is possible to specify both the concurrency mode
