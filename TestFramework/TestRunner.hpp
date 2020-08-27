@@ -49,7 +49,7 @@ namespace sequoia::testing
   class nascent_test
   {
   public:
-    nascent_test(std::filesystem::path dir, std::string_view qualifiedName, std::string_view testType, std::initializer_list<std::string_view> equivalentTypes, std::string_view overriddenFamily="", std::string_view overriddenClassHeader="");
+    nascent_test(std::string_view testType, std::string_view qualifiedName, std::initializer_list<std::string_view> equivalentTypes, std::filesystem::path dir, std::string_view overriddenFamily="", std::string_view overriddenClassHeader="");
 
     [[nodiscard]]
     std::string create_file(std::string_view copyright, std::string_view partName, const std::filesystem::copy_options options) const;
@@ -93,7 +93,7 @@ namespace sequoia::testing
 
       test <name>                               : runs the specified test
       source <cpp file>                         : runs all tests in the specified cpp
-      create <directory, family, qualified::class_name<class T>, test type> 
+      create <test type, qualified::class_name<class T>, test host directory> 
                                                 : creates infrastructure for a new test
       
       --async-depth <[0-2]> / -ad: serial/family/test/deep

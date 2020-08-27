@@ -110,7 +110,7 @@ namespace sequoia::testing
 
   //=========================================== nascent_test ===========================================//
 
-  nascent_test::nascent_test(std::filesystem::path dir, std::string_view qualifiedName, std::string_view testType, std::initializer_list<std::string_view> equivalentTypes, std::string_view overriddenFamily, std::string_view overriddenClassHeader)
+  nascent_test::nascent_test(std::string_view testType, std::string_view qualifiedName, std::initializer_list<std::string_view> equivalentTypes, std::filesystem::path dir, std::string_view overriddenFamily, std::string_view overriddenClassHeader)
     : m_Directory{std::move(dir)}
     , m_QualifiedClassName{qualifiedName}
     , m_TestType{testType}
@@ -401,8 +401,8 @@ namespace sequoia::testing
                 m_SelectedSources.emplace(args.front(), false);
               },         {"source_file_name"}, {"s"}} },
           {"create",     {[this](const param_list& args) {
-                m_NascentTests.push_back(nascent_test{args[0], args[1], args[2], {}});
-                          }, { "directory", "qualified::class_name<class T>", "test type" }, {"c"} } },
+                m_NascentTests.push_back(nascent_test{args[0], args[1], {}, args[2]});
+                          }, { "test type", "qualified::class_name<class T>", "test host directory" }, {"c"} } },
           {"--async",    {[this](const param_list&) {
                 if(m_ConcurrencyMode == concurrency_mode::serial)
                   m_ConcurrencyMode = concurrency_mode::family;
@@ -615,7 +615,7 @@ namespace sequoia::testing
     namespace fs = std::filesystem;
 
     const std::array<nascent_test, 1>
-      diagnosticFiles{nascent_test{get_output_path("UnitTestCreationDiagnostics"), qualifiedName, "regular_test", equivalentTypes}};
+      diagnosticFiles{nascent_test{"regular_test", qualifiedName, equivalentTypes, get_output_path("UnitTestCreationDiagnostics")}};
 
     report("Files built:", create_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(), fs::copy_options::overwrite_existing));
     report("Comparisons against reference files:", compare_files(diagnosticFiles.cbegin(), diagnosticFiles.cend()));
@@ -628,7 +628,7 @@ namespace sequoia::testing
     sentinel block_0{*this};
     std::cout << block_0.indent("Running false-positive tests...\n");
     
-    const nascent_test data{get_output_path("UnitTestCreationDiagnostics"), "utilities::iterator", "regular_test", {}};
+    const nascent_test data{"regular_test", "utilities::iterator", {}, get_output_path("UnitTestCreationDiagnostics")};
 
     auto partPath{
       [&data](){
