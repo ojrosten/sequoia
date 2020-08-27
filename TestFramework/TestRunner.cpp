@@ -753,9 +753,4 @@ namespace sequoia::testing
 
     check_for_missing_tests();
   }
-
-  std::filesystem::path get_aux_path(std::string_view subDirectory)
-  {
-    return working_path().parent_path().append("aux_files").append(subDirectory);
-  }
 }

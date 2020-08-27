@@ -140,11 +140,6 @@ namespace sequoia::testing
     }
   }
 
-  std::filesystem::path get_output_path(std::string_view subDirectory)
-  {
-    return working_path().parent_path().append("output").append(subDirectory);
-  }
-
   [[nodiscard]]
   std::string summarize(const test_family::summary& summary, const log_verbosity suppression, indentation ind_0, indentation ind_1)
   {

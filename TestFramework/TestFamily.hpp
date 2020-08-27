@@ -13,22 +13,14 @@
  */
 
 #include "FreeTestCore.hpp"
+#include "FileSystem.hpp"
 
 #include <vector>
 #include <future>
 #include <set>
-#include <filesystem>
 
 namespace sequoia::testing
-{
-  const static auto working_path_v{std::filesystem::current_path()};
-
-  [[nodiscard]]
-  inline std::filesystem::path working_path()
-  {
-    return working_path_v;
-  }
-  
+{  
   /*! \brief Allows tests to be grouped together into a family of related tests
 
       When tests are executed, it is possible to specify both the concurrency mode
@@ -110,9 +102,6 @@ namespace sequoia::testing
       std::set<std::filesystem::path> m_Record{};
     };
   };  
-
-  [[nodiscard]]
-  std::filesystem::path get_output_path(std::string_view subDirectory);
 
   [[nodiscard]]
   std::string summarize(const test_family::summary& summary, const log_verbosity suppression, indentation ind_0, indentation ind_1);

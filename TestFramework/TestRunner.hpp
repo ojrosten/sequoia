@@ -273,7 +273,4 @@ namespace sequoia::testing
 
     void test_creation();
   };
-
-  [[nodiscard]]
-  std::filesystem::path get_aux_path(std::string_view subDirectory);
 }
