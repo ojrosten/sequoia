@@ -1,8 +1,14 @@
 var searchData=
 [
-  ['variadic_5ftraits_1254',['variadic_traits',['../df/d22/structsequoia_1_1variadic__traits.html',1,'sequoia']]],
-  ['variadic_5ftraits_3c_3e_1255',['variadic_traits&lt;&gt;',['../d5/dbb/structsequoia_1_1variadic__traits_3_4.html',1,'sequoia']]],
-  ['variadic_5ftraits_5fhelper_1256',['variadic_traits_helper',['../d6/de4/structsequoia_1_1impl_1_1variadic__traits__helper.html',1,'sequoia::impl']]],
-  ['variadic_5ftraits_5fhelper_3c_20h_20_3e_1257',['variadic_traits_helper&lt; H &gt;',['../db/d51/structsequoia_1_1impl_1_1variadic__traits__helper_3_01H_01_4.html',1,'sequoia::impl']]],
-  ['variant_5fvisitor_1258',['variant_visitor',['../dc/daf/structsequoia_1_1variant__visitor.html',1,'sequoia']]]
+  ['undirected_5fembedded_5finit_5fchecker_1252',['undirected_embedded_init_checker',['../dc/d6f/classsequoia_1_1testing_1_1undirected__embedded__init__checker.html',1,'sequoia::testing']]],
+  ['undirected_5ffixed_5ftopology_5fchecker_1253',['undirected_fixed_topology_checker',['../df/ddc/classsequoia_1_1testing_1_1undirected__fixed__topology__checker.html',1,'sequoia::testing']]],
+  ['undirected_5finit_5fchecker_1254',['undirected_init_checker',['../dd/d1b/classsequoia_1_1testing_1_1undirected__init__checker.html',1,'sequoia::testing']]],
+  ['unsafe_5ft_1255',['unsafe_t',['../db/d6f/structsequoia_1_1maths_1_1unsafe__t.html',1,'sequoia::maths']]],
+  ['unsortable_1256',['unsortable',['../d2/d09/structsequoia_1_1testing_1_1unsortable.html',1,'sequoia::testing']]],
+  ['unweighted_5fgraph_5fallocation_5ftest_1257',['unweighted_graph_allocation_test',['../dd/d43/classsequoia_1_1testing_1_1unweighted__graph__allocation__test.html',1,'sequoia::testing']]],
+  ['unweighted_5fgraph_5ftest_1258',['unweighted_graph_test',['../dc/d37/classsequoia_1_1testing_1_1unweighted__graph__test.html',1,'sequoia::testing']]],
+  ['updatable_1259',['updatable',['../d9/d74/classsequoia_1_1testing_1_1updatable.html',1,'sequoia::testing']]],
+  ['use_5fweak_5fequiv_1260',['use_weak_equiv',['../d6/d29/structsequoia_1_1testing_1_1impl_1_1use__weak__equiv.html',1,'sequoia::testing::impl']]],
+  ['use_5fweak_5fequiv_3c_20maths_3a_3aedge_3c_20weight_2c_20weightproxy_2c_20indextype_20_3e_20_3e_1261',['use_weak_equiv&lt; maths::edge&lt; Weight, WeightProxy, IndexType &gt; &gt;',['../df/d2b/structsequoia_1_1testing_1_1impl_1_1use__weak__equiv_3_01maths_1_1edge_3_01Weight_00_01WeightProxy_00_01IndexType_01_4_01_4.html',1,'sequoia::testing::impl']]],
+  ['utilities_5ftest_1262',['utilities_test',['../de/d71/classsequoia_1_1testing_1_1utilities__test.html',1,'sequoia::testing']]]
 ];

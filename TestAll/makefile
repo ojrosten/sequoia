@@ -1,19 +1,21 @@
-#BUILDROOT    := ../build/native
-#BUILDROOT    := ../build/gcc
-BUILDROOT    := ../build/clang
-BUILDDIR   := $(BUILDROOT)/TestAll
-LIBDIRS    := ../Core ../Maths ../Experimental ../Algorithms ../Parsing ../TestFramework ../TestCommon
-UTBUILDDIR := $(BUILDDIR)/Tests
-UTDIR      := ../Tests
-OUTPUTDIR    := ../output/TestSummaries/Tests
+#BUILD_ROOT := ../build/native
+#BUILD_ROOT := ../build/gcc
+BUILD_ROOT       := ../build/clang
+BUILD_DIR        := $(BUILD_ROOT)/TestAll
+SOURCE_BUILD_DIR := $(BUILD_DIR)/Source
+UT_BUILD_DIR     := $(BUILD_DIR)/Tests
+UT_DIR           := ../Tests
+OUTPUT_DIR       := ../output/TestSummaries/Tests
 
-UTSUBDIRS  := $(filter-out ../Tests, $(shell find $(UTDIR) -type d))
-LIBSUBDIRS := $(shell find $(LIBDIRS) -type d)
+LIB_DIRS    := ../Source/Core ../Source/Maths ../Source/Algorithms ../Source/Parsing ../Source/TestFramework ../TestCommon
 
-BUILDSUBDIRS := $(addprefix $(UTBUILDDIR)/, $(UTSUBDIRS))
-BUILDSUBDIRS += $(addprefix $(UTBUILDDIR)/, $(LIBSUBDIRS))
+UT_SUB_DIRS := $(filter-out ../Tests, $(shell find $(UT_DIR) -type d))
+LIB_SUB_DIRS := $(shell find $(LIB_DIRS) -type d)
 
-OUTPUTSUBDIRS := $(addprefix $(OUTPUTDIR)/, $(UTSUBDIRS))
+BUILD_SUB_DIRS := $(addprefix $(UT_BUILD_DIR)/, $(UT_SUB_DIRS))
+BUILD_SUB_DIRS += $(addprefix $(UT_BUILD_DIR)/, $(LIB_SUB_DIRS))
+
+OUTPUT_SUB_DIRS := $(addprefix $(OUTPUT_DIR)/, $(UT_SUB_DIRS))
 
 .PHONY: all clean subdirs
 
@@ -27,40 +29,41 @@ PREPROP :=
 CFLAGS := -Wall -Wextra -Wpedantic -std=c++2a -O0 \
 	  -ftemplate-backtrace-limit=0	       \
 	  $(PREPROP)						   \
-	  $(patsubst %,-I%, $(UTSUBDIRS))      \
-      $(patsubst %,-I%, $(LIBSUBDIRS))
+	  $(patsubst %,-I%, $(UT_SUB_DIRS))      \
+      $(patsubst %,-I%, $(LIB_SUB_DIRS))
 
 CFLAGS += -I/usr/local/opt/llvm/include -I/usr/local/opt/llvm/include/c++/v1/
 
-EXE := $(BUILDDIR)/TestAll.exe
+EXE := $(BUILD_DIR)/TestAll.exe
 
-UTSRCS := TestMain.cpp
-UTSRCS += $(shell find $(UTDIR) -name '*.cpp')
-UTOBJS := $(addprefix $(UTBUILDDIR)/, $(UTSRCS:%.cpp=%.o))
-UTDEPS := $(addprefix $(UTBUILDDIR)/, $(UTSRCS:%.cpp=%.d))
+UT_SRCS := TestMain.cpp
+UT_SRCS += $(shell find $(UT_DIR) -name '*.cpp')
+UT_OBJS := $(addprefix $(UT_BUILD_DIR)/, $(UT_SRCS:%.cpp=%.o))
+UT_DEPS := $(addprefix $(UT_BUILD_DIR)/, $(UT_SRCS:%.cpp=%.d))
 
-LIBSRCS := $(shell find $(LIBSUBDIRS) -name '*.cpp')
-LIBOBJS := $(addprefix $(UTBUILDDIR)/, $(LIBSRCS:%.cpp=%.o))
-LIBDEPS := $(addprefix $(UTBUILDDIR)/, $(LIBSRCS:%.cpp=%.d))
+LIB_SRCS := $(shell find $(LIB_SUB_DIRS) -name '*.cpp')
+LIB_OBJS := $(addprefix $(UT_BUILD_DIR)/, $(LIB_SRCS:%.cpp=%.o))
+LIB_DEPS := $(addprefix $(UT_BUILD_DIR)/, $(LIB_SRCS:%.cpp=%.d))
 
 LDFLAGS :=
 LDFLAGS += -L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib
 
-$(EXE) : $(UTOBJS) $(LIBOBJS)
+$(EXE) : $(UT_OBJS) $(LIB_OBJS)
 	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
 
-$(UTBUILDDIR)/%.o : %.cpp
+$(UT_BUILD_DIR)/%.o : %.cpp
 	$(CC) $(CFLAGS) -MMD -c $< -o $@
 
--include $(UTDEPS)
--include $(LIBDEPS)
+-include $(UT_DEPS)
+-include $(LIB_DEPS)
 
 subdirs :
-	-mkdir $(BUILDROOT)
-	-mkdir $(BUILDDIR)
-	-mkdir $(UTBUILDDIR)
-	-mkdir $(BUILDSUBDIRS)
-	-mkdir $(OUTPUTSUBDIRS)
+	-mkdir $(BUILD_ROOT)
+	-mkdir $(BUILD_DIR)
+	-mkdir $(SOURCE_BUILD_DIR)
+	-mkdir $(UT_BUILD_DIR)
+	-mkdir $(BUILD_SUB_DIRS)
+	-mkdir $(OUTPUT_SUB_DIRS)
 
 clean :
-	rm -r $(BUILDDIR)
+	rm -r $(BUILD_DIR)

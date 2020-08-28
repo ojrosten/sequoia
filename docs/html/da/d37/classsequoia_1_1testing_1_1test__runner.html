@@ -81,9 +81,9 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aa4cfb3e55bb22a32ebfd549fac4f1db2"><td class="memItemLeft" align="right" valign="top"><a id="aa4cfb3e55bb22a32ebfd549fac4f1db2"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>test_runner</b> (int argc, char **argv)</td></tr>
-<tr class="separator:aa4cfb3e55bb22a32ebfd549fac4f1db2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aecccbfe5fe628fa9aec42207682b9e9d"><td class="memItemLeft" align="right" valign="top"><a id="aecccbfe5fe628fa9aec42207682b9e9d"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>test_runner</b> (int argc, char **argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path includesLocation)</td></tr>
+<tr class="separator:aecccbfe5fe628fa9aec42207682b9e9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2a7efedf52741e01d3f79e2bfdc1e6b8"><td class="memItemLeft" align="right" valign="top"><a id="a2a7efedf52741e01d3f79e2bfdc1e6b8"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>test_runner</b> (const <a class="el" href="../../da/d37/classsequoia_1_1testing_1_1test__runner.html">test_runner</a> &amp;)=delete</td></tr>
 <tr class="separator:a2a7efedf52741e01d3f79e2bfdc1e6b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -106,21 +106,21 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>execute</b> ()</td></
 <tr class="memitem:a1d83c509556f59b4d8f6f52abfed86a0"><td class="memItemLeft" align="right" valign="top"><a id="a1d83c509556f59b4d8f6f52abfed86a0"></a>
 <a class="el" href="../../dd/d3e/FreeTestCore_8hpp.html#a5bf3cc5ec793288c6c7da7ceeb3249a7">concurrency_mode</a>&#160;</td><td class="memItemRight" valign="bottom"><b>concurrency</b> () const noexcept</td></tr>
 <tr class="separator:a1d83c509556f59b4d8f6f52abfed86a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aee0ef291ab6a70d0ed73be9d0dec9f40"><td class="memTemplParams" colspan="2"><a id="aee0ef291ab6a70d0ed73be9d0dec9f40"></a>
+<tr class="memitem:adeb2d432b780b506e63b61dd9412992f"><td class="memTemplParams" colspan="2"><a id="adeb2d432b780b506e63b61dd9412992f"></a>
 template&lt;class Fn &gt; </td></tr>
-<tr class="memitem:aee0ef291ab6a70d0ed73be9d0dec9f40"><td class="memTemplItemLeft" align="right" valign="top">requires invocable&lt; Fn, std::filesystem::path &gt; std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><b>test_file_editing</b> (std::string_view fileName, Fn action)</td></tr>
-<tr class="separator:aee0ef291ab6a70d0ed73be9d0dec9f40"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adeb2d432b780b506e63b61dd9412992f"><td class="memTemplItemLeft" align="right" valign="top">requires invocable&lt; Fn, std::filesystem::path &gt; auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>test_file_editing</b> (std::string_view fileName, Fn action) -&gt; messages</td></tr>
+<tr class="separator:adeb2d432b780b506e63b61dd9412992f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Consumes command-line arguments and holds all test families. </p>
 <p>The various arguments have the following effect:</p>
-<p>test &lt;name&gt; : runs the specified test source &lt;cpp file&gt; : runs all tests in the specified cpp create &lt;directory, namespace::class_name&gt; : creates infrastructure for a new test</p>
+<p>test &lt;name&gt; : runs the specified test source &lt;cpp file&gt; : runs all tests in the specified cpp create &lt;test type, qualified::class_name&lt;class T&gt;, test host directory&gt; : creates infrastructure for a new test</p>
 <p>&ndash;async-depth &lt;[0-2]&gt; / -ad: serial/family/test/deep</p>
 <p>&ndash;async / -a: unless overridden runs families of test concurrently &ndash;verbose / -v: provides detailed break down of test results &ndash;nofiles / -n: suppresses output of diagnostic files &ndash;pause / -p: pauses execution until 'enter' is hit &ndash;recovery / -r: generates recovery file, which may help tracking down crashes</p>
 <p>If no arguments are specified, all tests are run, in serial, with the diagnostic files generated. </p>
 </div><hr/>The documentation for this class was generated from the following files:<ul>
-<li>/Users/Claire/Dropbox/Sequoia/TestFramework/<a class="el" href="../../de/d13/TestRunner_8hpp_source.html">TestRunner.hpp</a></li>
-<li>/Users/Claire/Dropbox/Sequoia/TestFramework/<a class="el" href="../../d3/dac/TestRunner_8cpp.html">TestRunner.cpp</a></li>
+<li>/Users/Claire/Dropbox/Sequoia/Source/TestFramework/<a class="el" href="../../de/d13/TestRunner_8hpp_source.html">TestRunner.hpp</a></li>
+<li>/Users/Claire/Dropbox/Sequoia/Source/TestFramework/<a class="el" href="../../d3/dac/TestRunner_8cpp.html">TestRunner.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
