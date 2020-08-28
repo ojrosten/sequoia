@@ -7,7 +7,7 @@ UT_BUILD_DIR     := $(BUILD_DIR)/Tests
 UT_DIR           := ../Tests
 OUTPUT_DIR       := ../output/TestSummaries/Tests
 
-LIB_DIRS      := ../Source/Core ../Source/Maths ../Source/Algorithms ../Source/Parsing ../Source/TestFramework ../TestCommon
+LIB_DIRS     := ../Source/Core ../Source/Maths ../Source/Algorithms ../Source/Parsing ../Source/TestFramework ../TestCommon
 
 UT_SUB_DIRS  := $(filter-out ../Tests, $(shell find $(UT_DIR) -type d))
 LIB_SUB_DIRS := $(shell find $(LIB_DIRS) -type d)
