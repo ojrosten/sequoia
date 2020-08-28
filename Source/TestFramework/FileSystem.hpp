@@ -11,6 +11,7 @@
     \brief File paths and related utilities.
  */
 
+#include "Concepts.hpp"
 
 #include <filesystem>
 
@@ -48,9 +49,29 @@ namespace sequoia::testing
     return sibling_path("aux_files").append(subDirectory);
   }
 
+  template<class Pred>
+    requires invocable<Pred, std::filesystem::path>
+  void throw_if(const std::filesystem::path& p, std::string_view prefix, std::string_view message, Pred pred)
+  {
+    if(pred(p))
+    {
+      auto make{
+         [](std::string_view s) -> std::string {
+           return s.empty() ? "" : std::string{s}.append(" ");
+         }
+      };
+      
+      throw std::runtime_error{make(prefix).append(p).append(" ").append(message)};
+    }
+  }
+
+  void throw_unless_directory(const std::filesystem::path& p, std::string_view prefix);
+
   /*! \brief Used for specifying a directory path, together with a flag to indicate whether a
       search should be recursive
    */
+
+  void throw_unless_file(const std::filesystem::path& p, std::string_view prefix);
 
   class search_path
   {
@@ -61,11 +82,7 @@ namespace sequoia::testing
       : m_Directory{std::move(directory)}
       , m_Recursive{r}
     {
-      if(!std::filesystem::exists(m_Directory))
-        throw_error("not found");
-      
-      if(!std::filesystem::is_directory(m_Directory))
-        throw_error("does not correspond to a directory");
+      throw_unless_directory(m_Directory, "search_path:");
     }
 
     [[nodiscard]]
@@ -80,11 +97,6 @@ namespace sequoia::testing
   private:
     std::filesystem::path m_Directory{};
     recursive m_Recursive{};
-
-    void throw_error(std::string_view message) const
-    {
-      throw std::runtime_error{std::string{"search_path: "}.append(m_Directory).append(" ").append(message)};
-    }
 
     template<class DirIter>
     [[nodiscard]]
