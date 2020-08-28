@@ -110,8 +110,8 @@ namespace sequoia::testing
 
   //=========================================== nascent_test ===========================================//
 
-  nascent_test::nascent_test(std::string_view testType, std::string_view qualifiedName, std::initializer_list<std::string_view> equivalentTypes, std::filesystem::path dir, std::string_view overriddenFamily, std::string_view overriddenClassHeader)
-    : m_Directory{std::move(dir)}
+  nascent_test::nascent_test(std::string_view testType, std::string_view qualifiedName, std::initializer_list<std::string_view> equivalentTypes, std::filesystem::path overriddenHostDir, std::string_view overriddenFamily, std::string_view overriddenClassHeader)
+    : m_Directory{std::move(overriddenHostDir)}
     , m_QualifiedClassName{qualifiedName}
     , m_TestType{testType}
     , m_EquivalentTypes(equivalentTypes.begin(), equivalentTypes.end())
@@ -380,8 +380,12 @@ namespace sequoia::testing
 
   //=========================================== test_runner ===========================================//
 
-  test_runner::test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path includesLocation)
+  test_runner::test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, std::filesystem::path testRepo, std::initializer_list<search_path> searchPaths)
     : m_Copyright{copyright}
+    , m_TestMain{testMain}
+    , m_HashIncludeTarget{hashIncludeTarget}
+    , m_TestRepo{testRepo}
+    , m_SearchPaths{searchPaths}
   {
     using namespace parsing::commandline;
 
@@ -390,8 +394,8 @@ namespace sequoia::testing
     if(!fs::exists(testMain))
       throw std::runtime_error{testMain.string().append(" not found!\n\nEnsure the application is run from the appropriate directory")};
 
-    if(!fs::exists(includesLocation))
-      throw std::runtime_error{includesLocation.string().append(" not found!\n")};
+    if(!fs::exists(hashIncludeTarget))
+      throw std::runtime_error{hashIncludeTarget.string().append(" not found!\n")};
 
     const auto operations{parse(argc, argv, {
           {"test",       {[this](const param_list& args) {
@@ -401,8 +405,8 @@ namespace sequoia::testing
                 m_SelectedSources.emplace(args.front(), false);
               },         {"source_file_name"}, {"s"}} },
           {"create",     {[this](const param_list& args) {
-                m_NascentTests.push_back(nascent_test{args[0], args[1], {}, args[2]});
-                          }, { "test type", "qualified::class_name<class T>", "test host directory" }, {"c"} } },
+                m_NascentTests.push_back(nascent_test{args[0], args[1], {}});
+                          }, { "test type", "qualified::class_name<class T>" }, {"c"} } },
           {"--async",    {[this](const param_list&) {
                 if(m_ConcurrencyMode == concurrency_mode::serial)
                   m_ConcurrencyMode = concurrency_mode::family;

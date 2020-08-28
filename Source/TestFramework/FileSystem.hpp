@@ -47,4 +47,59 @@ namespace sequoia::testing
   {
     return sibling_path("aux_files").append(subDirectory);
   }
+
+  /*! \brief Used for specifying a directory path, together with a flag to indicate whether a
+      search should be recursive
+   */
+
+  class search_path
+  {
+  public:    
+    enum class recursive { yes, no };
+
+    search_path(std::filesystem::path directory, recursive r)
+      : m_Directory{std::move(directory)}
+      , m_Recursive{r}
+    {
+      if(!std::filesystem::exists(m_Directory))
+        throw_error("not found");
+      
+      if(!std::filesystem::is_directory(m_Directory))
+        throw_error("does not correspond to a directory");
+    }
+
+    [[nodiscard]]
+    std::filesystem::path find(std::string_view filename) const
+    {
+      namespace fs = std::filesystem;
+      
+      return m_Recursive == recursive::yes
+        ? find<fs::recursive_directory_iterator>(filename)
+        : find<fs::directory_iterator>(filename);
+    }
+  private:
+    std::filesystem::path m_Directory{};
+    recursive m_Recursive{};
+
+    void throw_error(std::string_view message) const
+    {
+      throw std::runtime_error{std::string{"search_path: "}.append(m_Directory).append(" ").append(message)};
+    }
+
+    template<class DirIter>
+    [[nodiscard]]
+    std::filesystem::path find(std::string_view filename) const
+    {
+      namespace fs = std::filesystem;
+      
+      for(const auto& i : DirIter{m_Directory})
+      {
+        if(auto p{i.path()}; p.filename().string() == filename)
+          return p;
+      }
+
+      return {};
+    }
+  };
+
 }

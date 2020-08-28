@@ -49,7 +49,7 @@ namespace sequoia::testing
   class nascent_test
   {
   public:
-    nascent_test(std::string_view testType, std::string_view qualifiedName, std::initializer_list<std::string_view> equivalentTypes, std::filesystem::path dir, std::string_view overriddenFamily="", std::string_view overriddenClassHeader="");
+    nascent_test(std::string_view testType, std::string_view qualifiedName, std::initializer_list<std::string_view> equivalentTypes, std::filesystem::path overriddenHostDir="", std::string_view overriddenFamily="", std::string_view overriddenClassHeader="");
 
     [[nodiscard]]
     std::string create_file(std::string_view copyright, std::string_view partName, const std::filesystem::copy_options options) const;
@@ -111,8 +111,8 @@ namespace sequoia::testing
 
   class test_runner
   {
-  public:
-    test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path includesLocation);
+  public:    
+    test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, std::filesystem::path testRepo, std::initializer_list<search_path> searchPaths);
 
     test_runner(const test_runner&) = delete;
     test_runner(test_runner&&)      = default;
@@ -196,6 +196,8 @@ namespace sequoia::testing
     selection_map m_SelectedFamilies{}, m_SelectedSources{};
     std::vector<nascent_test> m_NascentTests{};
     std::string m_Copyright{};
+    std::filesystem::path m_TestMain{}, m_HashIncludeTarget{}, m_TestRepo{};
+    std::vector<search_path> m_SearchPaths{};
     sentinel::size_type m_Depth{};
     
     bool m_Verbose{}, m_Pause{}, m_WriteFiles{true};

@@ -17,8 +17,18 @@ int main(int argc, char** argv)
   namespace fs = std::filesystem;
 
   try
-  {    
-    test_runner runner{argc, argv, "Oliver J. Rosten", working_path().append("TestMain.cpp"), sibling_path("TestCommon").append("TestIncludes.hpp")};
+  {
+    using recursive = search_path::recursive;
+    
+    test_runner runner{argc,
+                       argv,
+                       "Oliver J. Rosten",
+                       working_path().append("TestMain.cpp"),
+                       sibling_path("TestCommon").append("TestIncludes.hpp"),
+                       sibling_path("Tests"),
+                       {{sibling_path("Source"), recursive::yes}}
+    };
+
     const auto mode{runner.concurrency()};
   
     runner.add_test_family(
