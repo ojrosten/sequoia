@@ -108,11 +108,23 @@ namespace sequoia::testing
     return info;
   }
 
+  std::filesystem::path host_directory::get([[maybe_unused]] std::string_view filename) const
+  {
+    variant_visitor visitor{
+      [](const std::filesystem::path& p) { return p; },
+      [filename](const generator& searchPaths){
+        // TO DO
+        return std::filesystem::path{};
+      }
+    };
+
+    return std::visit(visitor, m_Data);
+  }
+
   //=========================================== nascent_test ===========================================//
 
-  nascent_test::nascent_test(std::string_view testType, std::string_view qualifiedName, std::initializer_list<std::string_view> equivalentTypes, std::filesystem::path overriddenHostDir, std::string_view overriddenFamily, std::string_view overriddenClassHeader)
-    : m_Directory{std::move(overriddenHostDir)}
-    , m_QualifiedClassName{qualifiedName}
+  nascent_test::nascent_test(std::string_view testType, std::string_view qualifiedName, std::initializer_list<std::string_view> equivalentTypes, const host_directory& hostDir, std::string_view overriddenFamily, std::string_view overriddenClassHeader)
+    : m_QualifiedClassName{qualifiedName}
     , m_TestType{testType}
     , m_EquivalentTypes(equivalentTypes.begin(), equivalentTypes.end())
   {
@@ -166,6 +178,8 @@ namespace sequoia::testing
       m_Family = m_RawClassName;
       replace_all(m_Family, "_", " ");
     }
+
+    m_Directory = hostDir.get(m_ClassHeader);
   }
 
   [[nodiscard]]
@@ -403,7 +417,7 @@ namespace sequoia::testing
                 m_SelectedSources.emplace(args.front(), false);
               },         {"source_file_name"}, {"s"}} },
           {"create",     {[this](const param_list& args) {
-                m_NascentTests.push_back(nascent_test{args[0], args[1], {}});
+                m_NascentTests.push_back(nascent_test{args[0], args[1], {}, {m_TestRepo, m_SearchPaths}});
                           }, { "test type", "qualified::class_name<class T>" }, {"c"} } },
           {"--async",    {[this](const param_list&) {
                 if(m_ConcurrencyMode == concurrency_mode::serial)

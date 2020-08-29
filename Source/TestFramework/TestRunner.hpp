@@ -14,6 +14,7 @@
 #include "TestFamily.hpp"
 
 #include <map>
+#include <variant>
 
 namespace sequoia::testing
 {
@@ -42,6 +43,34 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string compare_files(const std::filesystem::path& file, const std::filesystem::path& prediction, const test_mode mode);
 
+  class host_directory
+  {
+  public:
+    host_directory(std::filesystem::path dir)
+      : m_Data{std::move(dir)}
+    {
+      throw_unless_directory(std::get<std::filesystem::path>(m_Data));
+    }
+
+    host_directory(std::filesystem::path targetRepository, std::vector<search_path> siblingSearchPaths)
+      : m_Data{generator{std::move(targetRepository), std::move(siblingSearchPaths)}}
+    {
+      throw_unless_directory(std::get<generator>(m_Data).repo);
+    }
+
+    std::filesystem::path get([[maybe_unused]] std::string_view filename) const;
+  private:
+    struct generator
+    {
+      std::filesystem::path repo;
+      std::vector<search_path> searchPaths;
+    };
+
+    std::variant<std::filesystem::path, generator> m_Data;
+  };
+
+  using test_host_directory = std::variant<std::filesystem::path, std::vector<search_path>>;
+
   /*! \brief Holds data for the automated creation of new tests
 
    */
@@ -49,7 +78,7 @@ namespace sequoia::testing
   class nascent_test
   {
   public:
-    nascent_test(std::string_view testType, std::string_view qualifiedName, std::initializer_list<std::string_view> equivalentTypes, std::filesystem::path overriddenHostDir="", std::string_view overriddenFamily="", std::string_view overriddenClassHeader="");
+    nascent_test(std::string_view testType, std::string_view qualifiedName, std::initializer_list<std::string_view> equivalentTypes, const host_directory& hostDir, std::string_view overriddenFamily="", std::string_view overriddenClassHeader="");
 
     [[nodiscard]]
     std::string create_file(std::string_view copyright, std::string_view partName, const std::filesystem::copy_options options) const;
@@ -66,17 +95,18 @@ namespace sequoia::testing
     struct template_spec { std::string parameter, name; };
     using template_data = std::vector<template_spec>;
 
-    std::filesystem::path m_Directory;
     std::string
-      m_Family,
-      m_QualifiedClassName,
-      m_RawClassName,
-      m_TestType,
-      m_ClassHeader;
+    m_Family{},
+      m_QualifiedClassName{},
+      m_RawClassName{},
+      m_TestType{},
+      m_ClassHeader{};
+    
+    std::filesystem::path m_Directory{};
 
-    template_data m_TemplateData;
+    template_data m_TemplateData{};
 
-    std::vector<std::string> m_EquivalentTypes;
+    std::vector<std::string> m_EquivalentTypes{};
 
     void transform_file(const std::filesystem::path& file, std::string_view copyright) const;
 
