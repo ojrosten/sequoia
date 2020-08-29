@@ -67,49 +67,38 @@ namespace sequoia::testing
   void throw_unless_regular_file(const std::filesystem::path& p, std::string_view message="");
 
 
-  /*! \brief Used for specifying a directory path, together with a flag to indicate whether a
-      search should be recursive
+  /*! \brief Used for performing a recursive search
    */
 
-  class search_path
+  class search_tree
   {
-  public:    
-    enum class recursive { yes, no };
-
-    search_path(std::filesystem::path directory, recursive r)
-      : m_Directory{std::move(directory)}
-      , m_Recursive{r}
+  public:
+    search_tree(std::filesystem::path root)
+      : m_Root{std::move(root)}
     {
-      throw_unless_directory(m_Directory, "");
+      throw_unless_directory(m_Root, "");
+    }
+
+    [[nodiscard]]
+    const std::filesystem::path& root() const noexcept
+    {
+      return m_Root;
     }
 
     [[nodiscard]]
     std::filesystem::path find(std::string_view filename) const
     {
-      namespace fs = std::filesystem;
-      
-      return m_Recursive == recursive::yes
-        ? find<fs::recursive_directory_iterator>(filename)
-        : find<fs::directory_iterator>(filename);
-    }
-  private:
-    std::filesystem::path m_Directory{};
-    recursive m_Recursive{};
+      using dir_iter = std::filesystem::recursive_directory_iterator;
 
-    template<class DirIter>
-    [[nodiscard]]
-    std::filesystem::path find(std::string_view filename) const
-    {
-      namespace fs = std::filesystem;
-      
-      for(const auto& i : DirIter{m_Directory})
+      for(const auto& i : dir_iter{m_Root})
       {
         if(auto p{i.path()}; p.filename().string() == filename)
           return p;
       }
 
       return {};
-    }
+    }    
+  private:
+    std::filesystem::path m_Root{};
   };
-
 }

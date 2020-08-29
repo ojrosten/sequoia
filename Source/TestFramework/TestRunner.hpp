@@ -52,24 +52,22 @@ namespace sequoia::testing
       throw_unless_directory(std::get<std::filesystem::path>(m_Data));
     }
 
-    host_directory(std::filesystem::path targetRepository, std::vector<search_path> siblingSearchPaths)
-      : m_Data{generator{std::move(targetRepository), std::move(siblingSearchPaths)}}
+    host_directory(std::filesystem::path hostRepo, search_tree sourceRepo)
+      : m_Data{generator{std::move(hostRepo), std::move(sourceRepo)}}
     {
-      throw_unless_directory(std::get<generator>(m_Data).repo);
+      throw_unless_directory(std::get<generator>(m_Data).hostRepo);
     }
 
     std::filesystem::path get([[maybe_unused]] std::string_view filename) const;
   private:
     struct generator
     {
-      std::filesystem::path repo;
-      std::vector<search_path> searchPaths;
+      std::filesystem::path hostRepo;
+      search_tree sourceRepo;
     };
 
     std::variant<std::filesystem::path, generator> m_Data;
   };
-
-  using test_host_directory = std::variant<std::filesystem::path, std::vector<search_path>>;
 
   /*! \brief Holds data for the automated creation of new tests
 
@@ -142,7 +140,7 @@ namespace sequoia::testing
   class test_runner
   {
   public:    
-    test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, std::filesystem::path testRepo, std::initializer_list<search_path> searchPaths);
+    test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, std::filesystem::path testRepo, search_tree sourceRepo);
 
     test_runner(const test_runner&) = delete;
     test_runner(test_runner&&)      = default;
@@ -221,13 +219,13 @@ namespace sequoia::testing
     };
 
     using selection_map = std::map<std::string, bool, std::less<>>;
-    
+
     std::vector<test_family> m_Families{};
     selection_map m_SelectedFamilies{}, m_SelectedSources{};
     std::vector<nascent_test> m_NascentTests{};
     std::string m_Copyright{};
     std::filesystem::path m_TestMain{}, m_HashIncludeTarget{}, m_TestRepo{};
-    std::vector<search_path> m_SearchPaths{};
+    search_tree m_SearchTree;
     sentinel::size_type m_Depth{};
     
     bool m_Verbose{}, m_Pause{}, m_WriteFiles{true};

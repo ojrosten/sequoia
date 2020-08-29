@@ -18,15 +18,13 @@ int main(int argc, char** argv)
 
   try
   {
-    using recursive = search_path::recursive;
-    
     test_runner runner{argc,
                        argv,
                        "Oliver J. Rosten",
                        working_path().append("TestMain.cpp"),
                        sibling_path("TestCommon").append("TestIncludes.hpp"),
                        sibling_path("Tests"),
-                       {{sibling_path("Source"), recursive::yes}}
+                       sibling_path("Source")
     };
 
     const auto mode{runner.concurrency()};

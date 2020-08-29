@@ -110,11 +110,21 @@ namespace sequoia::testing
 
   std::filesystem::path host_directory::get([[maybe_unused]] std::string_view filename) const
   {
+    namespace fs = std::filesystem;
+    
     variant_visitor visitor{
-      [](const std::filesystem::path& p) { return p; },
-      [filename](const generator& searchPaths){
-        // TO DO
-        return std::filesystem::path{};
+      [](const fs::path& p) { return p; },
+      [filename](const generator& data){
+
+        std::filesystem::path path{};
+
+        if(auto sourcePath{data.sourceRepo.find(filename)}; !sourcePath.empty())
+        {
+          path = data.hostRepo;
+          path / fs::relative(sourcePath, data.sourceRepo.root());
+        }
+
+        return path;
       }
     };
 
@@ -394,12 +404,12 @@ namespace sequoia::testing
 
   //=========================================== test_runner ===========================================//
 
-  test_runner::test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, std::filesystem::path testRepo, std::initializer_list<search_path> searchPaths)
+  test_runner::test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, std::filesystem::path testRepo, search_tree sourceRepo)
     : m_Copyright{copyright}
     , m_TestMain{std::move(testMain)}
     , m_HashIncludeTarget{std::move(hashIncludeTarget)}
     , m_TestRepo{std::move(testRepo)}
-    , m_SearchPaths{searchPaths}
+    , m_SearchTree{std::move(sourceRepo)}
   {
     using namespace parsing::commandline;
 
@@ -417,7 +427,7 @@ namespace sequoia::testing
                 m_SelectedSources.emplace(args.front(), false);
               },         {"source_file_name"}, {"s"}} },
           {"create",     {[this](const param_list& args) {
-                m_NascentTests.push_back(nascent_test{args[0], args[1], {}, {m_TestRepo, m_SearchPaths}});
+                m_NascentTests.push_back(nascent_test{args[0], args[1], {}, {m_TestRepo, m_SearchTree}});
                           }, { "test type", "qualified::class_name<class T>" }, {"c"} } },
           {"--async",    {[this](const param_list&) {
                 if(m_ConcurrencyMode == concurrency_mode::serial)
