@@ -51,27 +51,25 @@ namespace sequoia::testing
 
   template<class Pred>
     requires invocable<Pred, std::filesystem::path>
-  void throw_if(const std::filesystem::path& p, std::string_view prefix, std::string_view message, Pred pred)
+  void throw_if(const std::filesystem::path& p, std::string_view message, Pred pred)
   {
     if(pred(p))
-    {
-      auto make{
-         [](std::string_view s) -> std::string {
-           return s.empty() ? "" : std::string{s}.append(" ");
-         }
-      };
-      
-      throw std::runtime_error{make(prefix).append(p).append(" ").append(message)};
+    {      
+      throw std::runtime_error{std::string{p}.append(" ").append(message)};
     }
   }
 
-  void throw_unless_directory(const std::filesystem::path& p, std::string_view prefix);
+
+  void throw_unless_exists(const std::filesystem::path& p, std::string_view message="");  
+
+  void throw_unless_directory(const std::filesystem::path& p, std::string_view message="");
+  
+  void throw_unless_regular_file(const std::filesystem::path& p, std::string_view message="");
+
 
   /*! \brief Used for specifying a directory path, together with a flag to indicate whether a
       search should be recursive
    */
-
-  void throw_unless_file(const std::filesystem::path& p, std::string_view prefix);
 
   class search_path
   {
@@ -82,7 +80,7 @@ namespace sequoia::testing
       : m_Directory{std::move(directory)}
       , m_Recursive{r}
     {
-      throw_unless_directory(m_Directory, "search_path:");
+      throw_unless_directory(m_Directory, "");
     }
 
     [[nodiscard]]

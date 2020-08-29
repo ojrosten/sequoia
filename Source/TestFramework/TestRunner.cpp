@@ -382,20 +382,18 @@ namespace sequoia::testing
 
   test_runner::test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, std::filesystem::path testRepo, std::initializer_list<search_path> searchPaths)
     : m_Copyright{copyright}
-    , m_TestMain{testMain}
-    , m_HashIncludeTarget{hashIncludeTarget}
-    , m_TestRepo{testRepo}
+    , m_TestMain{std::move(testMain)}
+    , m_HashIncludeTarget{std::move(hashIncludeTarget)}
+    , m_TestRepo{std::move(testRepo)}
     , m_SearchPaths{searchPaths}
   {
     using namespace parsing::commandline;
 
     namespace fs = std::filesystem;
 
-    if(!fs::exists(testMain))
-      throw std::runtime_error{testMain.string().append(" not found!\n\nEnsure the application is run from the appropriate directory")};
-
-    if(!fs::exists(hashIncludeTarget))
-      throw std::runtime_error{hashIncludeTarget.string().append(" not found!\n")};
+    throw_unless_regular_file(m_TestMain, "\nEnsure the application is run from the appropriate directory");
+    throw_unless_regular_file(m_HashIncludeTarget);
+    throw_unless_directory(m_TestRepo);
 
     const auto operations{parse(argc, argv, {
           {"test",       {[this](const param_list& args) {

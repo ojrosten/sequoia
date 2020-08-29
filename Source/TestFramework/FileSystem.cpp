@@ -11,21 +11,31 @@
 
 #include "FileSystem.hpp"
 
+#include "Format.hpp"
+
 namespace sequoia::testing
 {
-  void throw_unless_directory(const std::filesystem::path& p, std::string_view prefix)
+  void throw_unless_exists(const std::filesystem::path& p, std::string_view message)
   {
     namespace fs = std::filesystem;
 
-    throw_if(p, prefix, " does not exist", [](const fs::path& p){ return !fs::exists(p); });
-    throw_if(p, prefix, " is not a directory", [](const fs::path& p){ return !fs::is_directory(p); });
+    throw_if(p, append_lines(" does not exist", message),
+             [](const fs::path& p){ return !fs::exists(p); });
+  }
+  
+  void throw_unless_directory(const std::filesystem::path& p, std::string_view message)
+  {
+    namespace fs = std::filesystem;
+
+    throw_unless_exists(p, message);
+    throw_if(p, append_lines(" is not a directory", message), [](const fs::path& p){ return !fs::is_directory(p); });
   }
 
-  void throw_unless_regular_file(const std::filesystem::path& p, std::string_view prefix)
+  void throw_unless_regular_file(const std::filesystem::path& p, std::string_view message)
   {
     namespace fs = std::filesystem;
 
-    throw_if(p, prefix, " does not exist", [](const fs::path& p){ return !fs::exists(p); });
-    throw_if(p, prefix, " is not a regular file", [](const fs::path& p){ return !fs::is_regular_file(p); });
+    throw_unless_exists(p, message);
+    throw_if(p, append_lines(" is not a regular file", message), [](const fs::path& p){ return !fs::is_regular_file(p); });
   }
 }
