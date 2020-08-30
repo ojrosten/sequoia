@@ -38,13 +38,19 @@ namespace sequoia::testing
   }
   
   [[nodiscard]]
-  inline std::filesystem::path get_output_path(std::string_view subDirectory)
+  inline std::filesystem::path output_path(std::string_view subDirectory)
   {
     return sibling_path("output").append(subDirectory);
-  }  
+  }
 
   [[nodiscard]]
-  inline std::filesystem::path get_aux_path(std::string_view subDirectory)
+  inline std::filesystem::path self_diag_output_path(std::string_view subDirectory)
+  {
+    return output_path("SelfDiagnostics").append(subDirectory);
+  }
+
+  [[nodiscard]]
+  inline std::filesystem::path aux_path(std::string_view subDirectory)
   {
     return sibling_path("aux_files").append(subDirectory);
   }

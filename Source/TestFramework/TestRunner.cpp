@@ -263,7 +263,7 @@ namespace sequoia::testing
 
     auto makePath{
       [partName](){
-        return get_aux_path("UnitTestCodeTemplates").append("CodeTemplates").append("MyClass").concat(partName);
+        return aux_path("UnitTestCodeTemplates").append("CodeTemplates").append("MyClass").concat(partName);
       }
     };
 
@@ -278,8 +278,8 @@ namespace sequoia::testing
 
     const auto className{to_camel_case(m_RawClassName).append(partName)};
 
-    const auto file{get_output_path("SelfDiagnostics").append("UnitTestCreationDiagnostics").append(className)};
-    const auto prediction{get_aux_path("UnitTestCodeTemplates").append("ReferenceExamples").append(className)};
+    const auto file{self_diag_output_path("UnitTestCreationDiagnostics").append(className)};
+    const auto prediction{aux_path("UnitTestCodeTemplates").append("ReferenceExamples").append(className)};
 
     return testing::compare_files(file, prediction, test_mode::standard);
   }
@@ -441,7 +441,7 @@ namespace sequoia::testing
           {"--nofiles",  {[this](const param_list&) { m_WriteFiles = false; }, {}, {"-n"} } },
           {"--pause",    {[this](const param_list&) { m_Pause      = true;  }, {}, {"-p"} } },
           {"--recovery", {[]    (const param_list&) {
-                output_manager::recovery_file(get_output_path("Recovery").append("Recovery.txt")); }, {}, {"-r"}} }
+                output_manager::recovery_file(output_path("Recovery").append("Recovery.txt")); }, {}, {"-r"}} }
         })
     };
 
@@ -641,7 +641,7 @@ namespace sequoia::testing
     namespace fs = std::filesystem;
 
     const std::array<nascent_test, 1>
-      diagnosticFiles{nascent_test{"regular_test", qualifiedName, equivalentTypes, get_output_path("SelfDiagnostics").append("UnitTestCreationDiagnostics")}};
+      diagnosticFiles{nascent_test{"regular_test", qualifiedName, equivalentTypes, self_diag_output_path("UnitTestCreationDiagnostics")}};
 
     report("Files built:", create_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(), fs::copy_options::overwrite_existing));
     report("Comparisons against reference files:", compare_files(diagnosticFiles.cbegin(), diagnosticFiles.cend()));
@@ -654,11 +654,11 @@ namespace sequoia::testing
     sentinel block_0{*this};
     std::cout << block_0.indent("Running false-positive tests...\n");
     
-    const nascent_test data{"regular_test", "utilities::iterator", {}, get_output_path("SelfDiagnostics").append("UnitTestCreationDiagnostics")};
+    const nascent_test data{"regular_test", "utilities::iterator", {}, self_diag_output_path("UnitTestCreationDiagnostics")};
 
     auto partPath{
       [&data](){
-        return get_output_path("SelfDiagnostics").append("UnitTestCreationDiagnostics").append(to_camel_case(std::string{data.class_name()}));
+        return self_diag_output_path("UnitTestCreationDiagnostics").append(to_camel_case(std::string{data.class_name()}));
       }
     };
     
@@ -676,7 +676,7 @@ namespace sequoia::testing
     
     std::cout << block_0.indent("Running file editing diagnostics...\n");
     
-    for(auto& p : fs::directory_iterator(get_output_path("SelfDiagnostics").append("FileEditingOutput")))
+    for(auto& p : fs::directory_iterator(self_diag_output_path("FileEditingOutput")))
     {
       fs::remove(p.path());
     }
@@ -724,13 +724,13 @@ namespace sequoia::testing
 
     messages m{};
 
-    const auto source{get_aux_path("FileEditingTestMaterials").append("BeforeEditing").append(fileName)};
-    const auto target{get_output_path("SelfDiagnostics").append("FileEditingOutput").append(fileName)};
+    const auto source{aux_path("FileEditingTestMaterials").append("BeforeEditing").append(fileName)};
+    const auto target{self_diag_output_path("FileEditingOutput").append(fileName)};
 
     create_file(source, target, action);
     m.creation = target.string();
 
-    const auto prediction{get_aux_path("FileEditingTestMaterials").append("AfterEditing").append(fileName)};
+    const auto prediction{aux_path("FileEditingTestMaterials").append("AfterEditing").append(fileName)};
 
     m.comparison = testing::compare_files(target, prediction, test_mode::standard);
 

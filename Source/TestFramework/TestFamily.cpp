@@ -94,7 +94,7 @@ namespace sequoia::testing
       }
     };
 
-    return get_output_path("DiagnosticsOutput").append(make_name(m_Name));
+    return output_path("DiagnosticsOutput").append(make_name(m_Name));
   }     
 
   std::filesystem::path test_family::test_summary_filename(const test& t, const bool writeFiles)
@@ -107,7 +107,7 @@ namespace sequoia::testing
     if(name.empty())
       throw std::logic_error("Source files should have a non-trivial name!");
 
-    fs::path absolute{get_output_path("TestSummaries")};
+    fs::path absolute{output_path("TestSummaries")};
     for(auto i{std::next(name.begin())}; i != name.end(); ++i)
     {
       absolute /= *i;
