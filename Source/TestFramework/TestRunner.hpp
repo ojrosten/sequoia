@@ -240,6 +240,8 @@ namespace sequoia::testing
       "Test.cpp"
     };
 
+    void remove_self_diagnostic_output() const;
+
     bool mark_family(std::string_view name);
 
     [[nodiscard]]
@@ -248,13 +250,13 @@ namespace sequoia::testing
     [[nodiscard]]
     bool concurrent_execution() const noexcept { return m_ConcurrencyMode != concurrency_mode::serial; }
 
-    void check_argument_consistency();
+    void check_argument_consistency() const;
 
     void run_diagnostics();
 
     void run_tests();
 
-    void check_for_missing_tests();
+    void check_for_missing_tests() const;
 
     template<class Test, class... Tests>
     void add_tests(test_family& f, Test&& test, Tests&&... tests)

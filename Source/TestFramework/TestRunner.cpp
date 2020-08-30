@@ -456,16 +456,30 @@ namespace sequoia::testing
       while(std::cin.get() != '\n'){}
     }
 
-    check_argument_consistency();   
+    check_argument_consistency();
+    remove_self_diagnostic_output();
     run_diagnostics();
   }
 
-  void test_runner::check_argument_consistency()
+  void test_runner::check_argument_consistency() const
   {
     using parsing::commandline::error;
 
     if(concurrent_execution() && !output_manager::recovery_file().empty())
       throw std::runtime_error{error("Can't run asynchronously in recovery mode\n")};
+  }
+
+  void test_runner::remove_self_diagnostic_output() const
+  {
+    namespace fs = std::filesystem;
+
+    for(auto& p : fs::recursive_directory_iterator(self_diag_output_path("")))
+    {
+      if(!fs::is_directory(p))
+      {      
+        fs::remove(p.path());
+      }
+    }
   }
 
   [[nodiscard]]
@@ -532,7 +546,7 @@ namespace sequoia::testing
     return familySummary;
   }
 
-  void test_runner::check_for_missing_tests()
+  void test_runner::check_for_missing_tests() const
   {
     auto check{
       [](const selection_map& tests, std::string_view type) {
@@ -653,15 +667,11 @@ namespace sequoia::testing
 
     sentinel block_0{*this};
     std::cout << block_0.indent("Running false-positive tests...\n");
-    
-    const nascent_test data{"regular_test", "utilities::iterator", {}, self_diag_output_path("UnitTestCreationDiagnostics")};
 
     auto partPath{
-      [&data](){
-        return self_diag_output_path("UnitTestCreationDiagnostics").append(to_camel_case(std::string{data.class_name()}));
-      }
+      [](){ return aux_path("UnitTestCodeTemplates").append("CodeTemplates").append("MyClass"); }
     };
-    
+
     const auto file1{partPath().concat(st_TestNameStubs[0])};
     const auto file2{partPath().concat(st_TestNameStubs[1])};
 
@@ -675,11 +685,6 @@ namespace sequoia::testing
     sentinel block_0{*this};
     
     std::cout << block_0.indent("Running file editing diagnostics...\n");
-    
-    for(auto& p : fs::directory_iterator(self_diag_output_path("FileEditingOutput")))
-    {
-      fs::remove(p.path());
-    }
 
     const std::array<messages, 3> mess{
       test_file_editing("Includes.hpp",
