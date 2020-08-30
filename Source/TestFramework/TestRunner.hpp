@@ -94,13 +94,13 @@ namespace sequoia::testing
     using template_data = std::vector<template_spec>;
 
     std::string
-    m_Family{},
+      m_Family{},
       m_QualifiedClassName{},
       m_RawClassName{},
       m_TestType{},
       m_ClassHeader{};
     
-    std::filesystem::path m_Directory{};
+    std::filesystem::path m_HostDirectory{};
 
     template_data m_TemplateData{};
 
