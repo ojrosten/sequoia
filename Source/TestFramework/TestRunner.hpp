@@ -240,8 +240,6 @@ namespace sequoia::testing
       "Test.cpp"
     };
 
-    void remove_self_diagnostic_output() const;
-
     bool mark_family(std::string_view name);
 
     [[nodiscard]]
@@ -277,8 +275,25 @@ namespace sequoia::testing
       requires invocable<Filter, test_runner::messages>
     void report(std::string_view prefix, Iter begin, Iter end, Filter filter);
 
+    void false_positive_check();
+
+    void test_file_editing();
+    
+    template<class Fn>
+      requires invocable<Fn, std::filesystem::path>
+    [[nodiscard]]
+    static auto test_file_editing(std::string_view fileName, Fn action) -> messages;
+    
+    void test_creation(std::string_view qualifiedName, std::initializer_list<std::string_view> equivalentTypes);
+
+    void test_creation();
+
+    void test_full_creation();
+
     [[nodiscard]]
     static std::string stringify(concurrency_mode mode);
+    
+    static void clean_temporary_output();
 
     template<class Iter, class Fn>
     [[nodiscard]]
@@ -291,18 +306,5 @@ namespace sequoia::testing
     template<class Iter>
     [[nodiscard]]
     static std::string compare_files(Iter beginNascentTests, Iter endNascentTests);
-
-    template<class Fn>
-      requires invocable<Fn, std::filesystem::path>
-    [[nodiscard]]
-    static auto test_file_editing(std::string_view fileName, Fn action) -> messages;
-
-    void test_creation(std::string_view qualifiedName, std::initializer_list<std::string_view> equivalentTypes);
-
-    void false_positive_check();
-    
-    void test_file_editing();
-
-    void test_creation();
   };
 }

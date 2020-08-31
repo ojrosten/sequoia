@@ -457,7 +457,7 @@ namespace sequoia::testing
     }
 
     check_argument_consistency();
-    remove_self_diagnostic_output();
+    clean_temporary_output();
     run_diagnostics();
   }
 
@@ -469,17 +469,14 @@ namespace sequoia::testing
       throw std::runtime_error{error("Can't run asynchronously in recovery mode\n")};
   }
 
-  void test_runner::remove_self_diagnostic_output() const
+  void test_runner::clean_temporary_output()
   {
     namespace fs = std::filesystem;
 
-    for(auto& p : fs::recursive_directory_iterator(self_diag_output_path("")))
-    {
-      if(!fs::is_directory(p))
-      {      
-        fs::remove(p.path());
-      }
-    }
+    std::cout << "Cleaning temporary files...\n\n";
+
+    fs::remove_all(self_diag_output_path(""));
+    fs::create_directory(self_diag_output_path(""));
   }
 
   [[nodiscard]]
@@ -505,6 +502,7 @@ namespace sequoia::testing
     false_positive_check();    
     test_file_editing();
     test_creation();
+    test_full_creation();
   }
 
   bool test_runner::mark_family(std::string_view name)
@@ -650,17 +648,6 @@ namespace sequoia::testing
     std::cout << '\n';
   }
 
-  void test_runner::test_creation(std::string_view qualifiedName, std::initializer_list<std::string_view> equivalentTypes)
-  {
-    namespace fs = std::filesystem;
-
-    const std::array<nascent_test, 1>
-      diagnosticFiles{nascent_test{"regular_test", qualifiedName, equivalentTypes, self_diag_output_path("UnitTestCreationDiagnostics")}};
-
-    report("Files built:", create_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(), fs::copy_options::overwrite_existing));
-    report("Comparisons against reference files:", compare_files(diagnosticFiles.cbegin(), diagnosticFiles.cend()));
-  }
-
   void test_runner::false_positive_check()
   {
     static_assert(st_TestNameStubs.size() > 1, "Insufficient data for false-positive test");
@@ -686,6 +673,8 @@ namespace sequoia::testing
     
     std::cout << block_0.indent("Running file editing diagnostics...\n");
 
+    fs::create_directory(self_diag_output_path("FileEditingOutput"));
+
     const std::array<messages, 3> mess{
       test_file_editing("Includes.hpp",
                         [](const fs::path& sandboxFile){
@@ -710,14 +699,38 @@ namespace sequoia::testing
     report("Comparisons against reference files:", mess.cbegin(), mess.cend(), [](const messages& m) { return m.comparison;});
   }
 
+  void test_runner::test_creation(std::string_view qualifiedName, std::initializer_list<std::string_view> equivalentTypes)
+  {
+    namespace fs = std::filesystem;
+
+    const std::array<nascent_test, 1>
+      diagnosticFiles{nascent_test{"regular_test", qualifiedName, equivalentTypes, self_diag_output_path("UnitTestCreationDiagnostics")}};
+
+    report("Files built:", create_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(), fs::copy_options::overwrite_existing));
+    report("Comparisons against reference files:", compare_files(diagnosticFiles.cbegin(), diagnosticFiles.cend()));
+  }
+
   void test_runner::test_creation()
   {
     sentinel block_0{*this};
     
     std::cout << block_0.indent("Running test creation tool diagnostics...\n");
 
+    std::filesystem::create_directory(self_diag_output_path("UnitTestCreationDiagnostics"));
+
     test_creation("utilities::iterator", {"int*"});
     test_creation("bar::baz::foo<class T>", {"T"});
+  }
+
+  void test_runner::test_full_creation()
+  {
+    namespace fs = std::filesystem;
+
+    sentinel block_0{*this};
+    
+    std::cout << block_0.indent("Running full test creation diagnostics...\n");
+
+    fs::copy(aux_path("FakeProject"), self_diag_output_path("FakeProject"), std::filesystem::copy_options::recursive);
   }
 
   template<class Fn>
