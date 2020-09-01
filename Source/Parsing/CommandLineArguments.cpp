@@ -36,7 +36,7 @@ namespace sequoia::parsing::commandline
     auto infoIter{info.end()};        
     for(int i{1}; i<argc; ++i)
     {
-      std::string arg{argv[i]};
+      const std::string arg{argv[i]};
       if(!arg.empty())
       {        
         if(infoIter == info.end())
