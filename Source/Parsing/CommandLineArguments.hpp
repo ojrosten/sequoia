@@ -46,5 +46,30 @@ namespace sequoia::parsing::commandline
 
   [[nodiscard]]
   std::vector<operation>
-  parse(int argc, char** argv, const std::map<std::string, option_info>& info);  
+  parse(int argc, char** argv, const std::map<std::string, option_info>& info);
+
+  
+  /*! \brief Class, principally to facilitate testing. */
+  
+  template<std::size_t... Ns>
+  class commandline_arguments
+  {
+  public:
+    constexpr static std::size_t size() noexcept
+    {
+      return sizeof...(Ns);
+    }
+    
+    commandline_arguments(char const(&...args)[Ns])
+      : m_Args{(char*)args...}
+    {}
+
+    [[nodiscard]]
+    char** get() noexcept { return &m_Args[0]; }
+  private:
+    std::array<char*, sizeof...(Ns)> m_Args;
+  };
+
+  template<std::size_t... Ns>
+  commandline_arguments(char const(&...args)[Ns]) -> commandline_arguments<Ns...>;
 }

@@ -218,6 +218,8 @@ namespace sequoia::testing
       std::string creation, comparison;
     };
 
+    struct suppress_diagnostics{};
+
     using selection_map = std::map<std::string, bool, std::less<>>;
 
     std::vector<test_family> m_Families{};
@@ -239,6 +241,8 @@ namespace sequoia::testing
       "Test.hpp",
       "Test.cpp"
     };
+
+    test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, std::filesystem::path testRepo, search_tree sourceRepo, suppress_diagnostics);
 
     bool mark_family(std::string_view name);
 

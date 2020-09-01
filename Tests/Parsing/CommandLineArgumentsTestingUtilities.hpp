@@ -31,21 +31,4 @@ namespace sequoia::testing
   {
     void operator()(const std::vector<std::string>&) const noexcept {}
   };
-  
-  template<std::size_t... Ns>
-  class commandline_arguments
-  {
-  public:
-    commandline_arguments(char const(&...args)[Ns])
-      : m_Args{(char*)args...}
-    {}
-
-    [[nodiscard]]
-    char** get() noexcept { return &m_Args[0]; }
-  private:
-    std::array<char*, sizeof...(Ns)> m_Args;
-  };
-
-  template<std::size_t... Ns>
-  commandline_arguments(char const(&...args)[Ns]) -> commandline_arguments<Ns...>;
 }

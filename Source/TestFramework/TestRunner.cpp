@@ -404,7 +404,7 @@ namespace sequoia::testing
 
   //=========================================== test_runner ===========================================//
 
-  test_runner::test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, std::filesystem::path testRepo, search_tree sourceRepo)
+  test_runner::test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, std::filesystem::path testRepo, search_tree sourceRepo, suppress_diagnostics)
     : m_Copyright{copyright}
     , m_TestMain{std::move(testMain)}
     , m_HashIncludeTarget{std::move(hashIncludeTarget)}
@@ -457,6 +457,11 @@ namespace sequoia::testing
     }
 
     check_argument_consistency();
+  }
+
+  test_runner::test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, std::filesystem::path testRepo, search_tree sourceRepo)
+    : test_runner(argc, argv, copyright, std::move(testMain), std::move(hashIncludeTarget), std::move(testRepo), std::move(sourceRepo), suppress_diagnostics{})
+  {
     clean_temporary_output();
     run_diagnostics();
   }
@@ -731,6 +736,18 @@ namespace sequoia::testing
     std::cout << block_0.indent("Running full test creation diagnostics...\n");
 
     fs::copy(aux_path("FakeProject"), self_diag_output_path("FakeProject"), std::filesystem::copy_options::recursive);
+    
+    const auto testMain{self_diag_output_path("FakeProject").append("TestSandbox").append("TestSandbox.cpp")};
+    const auto includeTarget{self_diag_output_path("FakeProject").append("TestShared").append("SharedIncludes.hpp")};
+    const auto testRepo{self_diag_output_path("FakeProject").append("Tests")};
+    const auto sourceRepo{self_diag_output_path("FakeProject").append("Source")};
+
+    using namespace parsing::commandline;
+    commandline_arguments args{"", "create", "ordered_test", "other::functional::monad<class T>"};
+    
+    test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, testRepo, sourceRepo, suppress_diagnostics{}};
+
+    tr.execute();
   }
 
   template<class Fn>
