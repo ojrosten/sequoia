@@ -45,4 +45,7 @@ namespace sequoia::testing
   private:
     std::array<char*, sizeof...(Ns)> m_Args;
   };
+
+  template<std::size_t... Ns>
+  commandline_arguments(char const(&...args)[Ns]) -> commandline_arguments<Ns...>;
 }
