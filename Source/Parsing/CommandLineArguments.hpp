@@ -27,6 +27,7 @@ namespace sequoia::parsing::commandline
     executor fn{};
     param_list parameters;
     param_list aliases;
+    std::map<std::string, option_info> nested_options{};
   };
 
   struct operation

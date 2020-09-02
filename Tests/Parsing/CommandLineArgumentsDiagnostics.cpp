@@ -28,7 +28,7 @@ namespace sequoia::testing
     using fo = function_object;
     
     {
-      commandline_arguments<4, 5> a{"foo", "test"};
+      commandline_arguments a{"foo", "test"};
 
       check_exception_thrown<int>(LINE("Final argument missing"), [&a](){
           return parse(2, a.get(), info{{"test", {fo{}, {"case"}, {}}}});
@@ -37,7 +37,7 @@ namespace sequoia::testing
 
 
     {
-      commandline_arguments<4, 8> a{"foo", "--asyng"};
+      commandline_arguments a{"foo", "--asyng"};
       
       check_exception_thrown<int>(LINE("Unexpected argument"), [&a](){
           return parse(2, a.get(), info{{"--async", {fo{}, {}, {}}}});
@@ -45,7 +45,7 @@ namespace sequoia::testing
     }
 
     {
-      commandline_arguments<4, 8> a{"foo", "--async"};
+      commandline_arguments a{"foo", "--async"};
       
       check_exception_thrown<int>(LINE("No bound function object"), [&a](){
           return parse(2, a.get(), info{{"--async", {nullptr, {}, {}}}});
@@ -53,7 +53,7 @@ namespace sequoia::testing
     }
 
     {
-      commandline_arguments<4, 4> a{"foo", "-ac"};
+      commandline_arguments a{"foo", "-ac"};
       
       check_exception_thrown<int>(LINE("Unexpected argument"), [&a](){
           return parse(2, a.get(), info{{"--async", {fo{}, {}, {"-a"}}}});
