@@ -24,14 +24,14 @@ namespace sequoia::testing
   {
     using namespace sequoia::parsing::commandline;
 
-    using info = std::map<std::string, option_info>;
+    using info = std::vector<option_info>;
     using fo = function_object;
     
     {
       commandline_arguments a{"foo", "test"};
 
       check_exception_thrown<int>(LINE("Final argument missing"), [&a](){
-          return parse(2, a.get(), info{{"test", {fo{}, {"case"}, {}}}});
+          return parse(2, a.get(), { {"test", {}, {"case"}, fo{}} });
         });
     }
 
@@ -40,7 +40,7 @@ namespace sequoia::testing
       commandline_arguments a{"foo", "--asyng"};
       
       check_exception_thrown<int>(LINE("Unexpected argument"), [&a](){
-          return parse(2, a.get(), info{{"--async", {fo{}, {}, {}}}});
+          return parse(2, a.get(), { {"--async", {}, {}, fo{}} });
         });      
     }
 
@@ -48,7 +48,7 @@ namespace sequoia::testing
       commandline_arguments a{"foo", "--async"};
       
       check_exception_thrown<int>(LINE("No bound function object"), [&a](){
-          return parse(2, a.get(), info{{"--async", {nullptr, {}, {}}}});
+          return parse(2, a.get(), { {"--async", {}, {}, nullptr} });
         });      
     }
 
@@ -56,7 +56,7 @@ namespace sequoia::testing
       commandline_arguments a{"foo", "-ac"};
       
       check_exception_thrown<int>(LINE("Unexpected argument"), [&a](){
-          return parse(2, a.get(), info{{"--async", {fo{}, {}, {"-a"}}}});
+          return parse(2, a.get(), { {"--async", {"-a"}, {}, fo{}} });
         });
     }
   }

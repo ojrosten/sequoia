@@ -419,29 +419,30 @@ namespace sequoia::testing
     throw_unless_regular_file(m_HashIncludeTarget);
     throw_unless_directory(m_TestRepo);
 
-    const auto operations{parse(argc, argv, {
-          {"test",       {[this](const param_list& args) {
-                m_SelectedFamilies.emplace(args.front(), false);
-              },         {"test_family_name"}, {"t"}} },
-          {"source",       {[this](const param_list& args) {
-                m_SelectedSources.emplace(args.front(), false);
-              },         {"source_file_name"}, {"s"}} },
-          {"create",     {[this](const param_list& args) {
-                m_NascentTests.push_back(nascent_test{args[0], args[1], {}, {m_TestRepo, m_SearchTree}});
-                          }, { "test type", "qualified::class_name<class T>" }, {"c"} } },
-          {"--async",    {[this](const param_list&) {
-                if(m_ConcurrencyMode == concurrency_mode::serial)
-                  m_ConcurrencyMode = concurrency_mode::family;
-              }, {}, {"-a"}} },
-          {"--async-depth", {[this](const param_list& args) {
-                const int i{std::clamp(std::stoi(args.front()), 0, 2)};
-                m_ConcurrencyMode = static_cast<concurrency_mode>(i);
-              }, {"depth [0-2]"}, {"-ad"}} },
-          {"--verbose",  {[this](const param_list&) { m_Verbose    = true;  }, {}, {"-v"} } },          
-          {"--nofiles",  {[this](const param_list&) { m_WriteFiles = false; }, {}, {"-n"} } },
-          {"--pause",    {[this](const param_list&) { m_Pause      = true;  }, {}, {"-p"} } },
-          {"--recovery", {[]    (const param_list&) {
-                output_manager::recovery_file(output_path("Recovery").append("Recovery.txt")); }, {}, {"-r"}} }
+    const auto operations{parse(argc, argv,
+       { {"test", {"t"}, {"test_family_name"},
+          [this](const param_list& args) {
+            m_SelectedFamilies.emplace(args.front(), false); }},
+         {"source", {"s"}, {"source_file_name"},
+          [this](const param_list& args) {
+            m_SelectedSources.emplace(args.front(), false); }},
+         {"create", {"c"}, { "test type", "qualified::class_name<class T>" },
+          [this](const param_list& args) {
+            m_NascentTests.push_back(nascent_test{args[0], args[1], {}, {m_TestRepo, m_SearchTree}}); }},
+         {"--async", {"-a"}, {},
+          [this](const param_list&) {
+            if(m_ConcurrencyMode == concurrency_mode::serial)
+              m_ConcurrencyMode = concurrency_mode::family; }},
+         {"--async-depth", {"-ad"}, {"depth [0-2]"},
+          [this](const param_list& args) {
+            const int i{std::clamp(std::stoi(args.front()), 0, 2)};
+            m_ConcurrencyMode = static_cast<concurrency_mode>(i); }},
+         {"--verbose",  {"-v"}, {}, [this](const param_list&) { m_Verbose    = true; }},          
+         {"--nofiles",  {"-n"}, {}, [this](const param_list&) { m_WriteFiles = false; }},
+         {"--pause",    {"-p"}, {}, [this](const param_list&) { m_Pause      = true;  }},
+         {"--recovery", {"-r"}, {},
+          [] (const param_list&) {
+            output_manager::recovery_file(output_path("Recovery").append("Recovery.txt")); }}
         })
     };
 

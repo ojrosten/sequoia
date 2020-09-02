@@ -23,11 +23,13 @@ namespace sequoia::parsing::commandline
   using executor = std::function<void (const param_list&)>;
 
   struct option_info
-  {    
-    executor fn{};
-    param_list parameters;
+  {
+    std::string name;
     param_list aliases;
-    std::map<std::string, option_info> nested_options{};
+    param_list parameters;
+    executor fn{};
+
+    std::vector<option_info> nested_options{};
   };
 
   struct operation
@@ -47,7 +49,7 @@ namespace sequoia::parsing::commandline
 
   [[nodiscard]]
   std::vector<operation>
-  parse(int argc, char** argv, const std::map<std::string, option_info>& info);
+  parse(int argc, char** argv, const std::vector<option_info>& info);
 
   
   /*! \brief Class, principally to facilitate testing. */

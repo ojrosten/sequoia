@@ -25,36 +25,35 @@ namespace sequoia::testing
     using namespace sequoia::parsing::commandline;
     
     using ops = std::vector<operation>;
-    using info = std::map<std::string, option_info>;
     using fo = function_object;
     
     {
-      check_weak_equivalence(LINE(""), parse(0, nullptr, info{}), ops{});
+      check_weak_equivalence(LINE(""), parse(0, nullptr, {}), ops{});
     }
 
     {
       commandline_arguments a{"foo", "--async"};
       
-      check_weak_equivalence(LINE(""), parse(2, a.get(), info{{"--async", {fo{}, {}, {}}}}), ops{{fo{}, {}}});
+      check_weak_equivalence(LINE(""), parse(2, a.get(), { {"--async", {}, {}, fo{}} }), ops{{fo{}, {}}});
     }
 
     {
       commandline_arguments a{"foo", "-a"};
       
-      check_weak_equivalence(LINE(""), parse(2, a.get(), info{{"--async", {fo{}, {}, {"-a"}}}}), ops{{fo{}, {}}});
+      check_weak_equivalence(LINE(""), parse(2, a.get(), { {"--async", {"-a"}, {}, fo{}} }), ops{{fo{}, {}}});
     }
 
     {
       commandline_arguments a{"foo", "-a"};
       
-      check_weak_equivalence(LINE(""), parse(2, a.get(), info{{"--async", {fo{}, {}, {"-as", "-a"}}}}), ops{{fo{}, {}}});
+      check_weak_equivalence(LINE(""), parse(2, a.get(), { {"--async", {"-as", "-a"}, {}, fo{}} }), ops{{fo{}, {}}});
     }
 
     {
       commandline_arguments a{"foo", "--asyng"};
       
       check_exception_thrown<std::runtime_error>(LINE("Unexpected argument"), [&a](){
-          return parse(2, a.get(), info{{"--async", {fo{}, {}, {}}}});
+          return parse(2, a.get(), { {"--async", {}, {}, fo{}} });
         });
     }
 
@@ -62,56 +61,64 @@ namespace sequoia::testing
       commandline_arguments a{"foo", "-a"};
       
       check_exception_thrown<std::runtime_error>(LINE("Unexpected argument"), [&a](){
-          return parse(2, a.get(), info{{"--async", {fo{}, {}, {"-as"}}}});
+          return parse(2, a.get(), { {"--async", {"-as"}, {}, fo{}} });
         });
     }
 
     {
       commandline_arguments a{"foo", "-av"};
       
-      check_weak_equivalence(LINE(""), parse(2, a.get(),
-                             info{{"--async", {fo{}, {}, {"-a"}}}, {"--verbose", {fo{}, {}, {"-v"}}}}), ops{{fo{}, {}}, {fo{}, {}}});
+      check_weak_equivalence(LINE(""),
+                             parse(2, a.get(), { {"--async", {"-a"}, {}, fo{}},
+                                                 {"--verbose", {"-v"}, {}, fo{}} }),
+                             ops{{fo{}, {}}, {fo{}, {}}});
     }
 
     {
       commandline_arguments a{"foo", "-a-v"};
       
-      check_weak_equivalence(LINE(""), parse(2, a.get(),
-                             info{{"--async", {fo{}, {}, {"-a"}}}, {"--verbose", {fo{}, {}, {"-v"}}}}), ops{{fo{}, {}}, {fo{}, {}}});
+      check_weak_equivalence(LINE(""),
+                             parse(2, a.get(), { {"--async", {"-a"}, {}, fo{}},
+                                                 {"--verbose", {"-v"}, {}, fo{}} }),
+                             ops{{fo{}, {}}, {fo{}, {}}});
     }
 
     {
       commandline_arguments a{"foo", "-av", "-p"};
       
-      check_weak_equivalence(LINE(""), parse(3, a.get(),
-                             info{{"--async", {fo{}, {}, {"-a"}}}, {"--verbose", {fo{}, {}, {"-v"}}}, {"--pause", {fo{}, {}, {"-p"}}}}), ops{{fo{}, {}}, {fo{}, {}}, {fo{}, {}}});
+      check_weak_equivalence(LINE(""),
+                             parse(3, a.get(), { {"--async",   {"-a"}, {}, fo{}},
+                                                 {"--verbose", {"-v"}, {}, fo{}},
+                                                 {"--pause",   {"-p"}, {}, fo{}} }),
+                             ops{{fo{}, {}}, {fo{}, {}}, {fo{}, {}}});
     }
 
     {
       commandline_arguments a{"foo", "-ac"};
       
       check_exception_thrown<std::runtime_error>(LINE("Unexpected argument"), [&a](){
-          return parse(2, a.get(), info{{"--async", {fo{}, {}, {"-a"}}}});
+          return parse(2, a.get(), { {"--async", {"-a"}, {}, fo{}} });
         });
     }
 
     {
       commandline_arguments a{"foo", "test", "case"};
       
-      check_weak_equivalence(LINE(""), parse(3, a.get(), info{{"test", {fo{}, {"case"}, {}}}}), ops{{fo{}, {"case"}}});
+      check_weak_equivalence(LINE(""), parse(3, a.get(), { {"test", {}, {"case"}, fo{}} }), ops{{fo{}, {"case"}}});
     }
 
     {
       commandline_arguments a{"foo", "t", "case"};
       
-      check_weak_equivalence(LINE(""), parse(3, a.get(), info{{"test", {fo{}, {"case"}, {"t"}}}}), ops{{fo{}, {"case"}}});
+      check_weak_equivalence(LINE(""), parse(3, a.get(), { {"test", {"t"}, {"case"}, fo{}} }), ops{{fo{}, {"case"}}});
     }
 
     {
       commandline_arguments a{"foo", "test"};
 
-      check_exception_thrown<std::runtime_error>(LINE("Final argument missing"), [&a](){
-          return parse(2, a.get(), info{{"test", {fo{}, {"case"}, {}}}});
+      check_exception_thrown<std::runtime_error>(LINE("Final argument missing"),
+                                                 [&a](){
+                                                   return parse(2, a.get(), { {"test", {}, {"case"}, fo{}} });
         });
     }
 
@@ -123,8 +130,9 @@ namespace sequoia::testing
         "dir"
       };
       
-      check_weak_equivalence(LINE(""), parse(4, a.get(), info{{"create", {fo{}, {"class_name", "directory"}, {}}}})
-                             , ops{{fo{}, {"class", "dir"}}});
+      check_weak_equivalence(LINE(""),
+                             parse(4, a.get(), { {"create", {}, {"class_name", "directory"}, fo{}} }),
+                             ops{{fo{}, {"class", "dir"}}});
     }
 
     {
@@ -136,8 +144,9 @@ namespace sequoia::testing
         "dir"
       };
       
-      check_weak_equivalence(LINE(""), parse(5, a.get(),
-                             info{{"create", {fo{}, {"class_name", "directory"}, {}}}, {"--async", {fo{}, {}, {}}}}),
+      check_weak_equivalence(LINE(""),
+                             parse(5, a.get(), { {"create",  {}, {"class_name", "directory"}, fo{}},
+                                                 {"--async", {}, {}, fo{}} }),
                              ops{{fo{}, {}}, {fo{}, {"class", "dir"}}});
     }
   }

@@ -29,7 +29,7 @@ namespace sequoia::parsing::commandline
   }
 
   [[nodiscard]]
-  std::vector<operation> parse(int argc, char** argv, const std::map<std::string, option_info>& info)
+  std::vector<operation> parse(int argc, char** argv, const std::vector<option_info>& info)
   {
     std::vector<operation> operations;
 
@@ -46,23 +46,22 @@ namespace sequoia::parsing::commandline
               if(infoIter == info.end())
                 throw std::runtime_error{error("unrecognized option '" + arg + "'")};
 
-              if(!infoIter->second.fn)
+              if(!infoIter->fn)
                 throw std::logic_error{error("Commandline option not bound to a function object")};
 
-              operations.push_back(operation{infoIter->second.fn, {}});
-              if(infoIter->second.parameters.empty())
+              operations.push_back(operation{infoIter->fn, {}});
+              if(infoIter->parameters.empty())
                 infoIter = info.end();
 
               return infoIter;
             }
           };
           
-          infoIter = info.find(arg);
+          infoIter = std::find_if(info.begin(), info.end(), [&arg](const auto& optionInfo){ return optionInfo.name == arg; });
           if(infoIter == info.end())
           {            
             infoIter = std::find_if(info.begin(), info.end(), [&arg](const auto& e) {
-                const auto& aliases{e.second.aliases};
-                return std::find(aliases.begin(), aliases.end(), arg) != aliases.end();
+                return std::find(e.aliases.begin(), e.aliases.end(), arg) != e.aliases.end();
               });
 
             if((infoIter == info.end()) && (arg.size() > 2) && (arg[0] == '-') && (arg[1] != ' '))
@@ -75,8 +74,7 @@ namespace sequoia::parsing::commandline
                   const auto alias{std::string{'-'} + c};
 
                   infoIter = std::find_if(info.begin(), info.end(), [&alias](const auto& e) {
-                      const auto& aliases{e.second.aliases};
-                      return std::find(aliases.begin(), aliases.end(), alias) != aliases.end();
+                      return std::find(e.aliases.begin(), e.aliases.end(), alias) != e.aliases.end();
                     });
 
                   processOption(infoIter);
@@ -97,15 +95,15 @@ namespace sequoia::parsing::commandline
         {
           auto& params{operations.back().parameters};
           params.push_back(arg);
-          if(params.size() == infoIter->second.parameters.size())
+          if(params.size() == infoIter->parameters.size())
             infoIter = info.end();
         }
       }
     }
 
-    if(!operations.empty() && (infoIter != info.end()) && (operations.back().parameters.size() != infoIter->second.parameters.size()))
+    if(!operations.empty() && (infoIter != info.end()) && (operations.back().parameters.size() != infoIter->parameters.size()))
     {
-      const auto& params{infoIter->second.parameters};
+      const auto& params{infoIter->parameters};
       const auto expected{params.size()};
       std::string mess{error("expected " + std::to_string(expected) + pluralize(expected, "argument") + ", [")};
       for(auto i{params.begin()}; i != params.end(); ++i)
