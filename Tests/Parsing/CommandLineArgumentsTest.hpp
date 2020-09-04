@@ -21,6 +21,8 @@ namespace sequoia::testing
   private:
     void run_tests() final;
 
-    void test_parser();
+    void test_flat_parsing();
+
+    void test_nested_parsing();
   };
 }

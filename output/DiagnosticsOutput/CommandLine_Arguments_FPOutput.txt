@@ -1,4 +1,4 @@
-	../Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 33
+	../Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 31
 	Final argument missing
 
 	Expected Exception Type:
@@ -9,7 +9,7 @@
 
 	=======================================
 
-	../Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 42
+	../Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 40
 	Unexpected argument
 
 	Expected Exception Type:
@@ -20,7 +20,7 @@
 
 	=======================================
 
-	../Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 50
+	../Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 48
 	No bound function object
 
 	Expected Exception Type:
@@ -31,7 +31,7 @@
 
 	=======================================
 
-	../Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 58
+	../Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 56
 	Unexpected argument
 
 	Expected Exception Type:
