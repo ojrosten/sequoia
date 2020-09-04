@@ -22,20 +22,22 @@ namespace sequoia::parsing::commandline
 
   using executor = std::function<void (const param_list&)>;
 
-  struct option_info
+  struct option
   {
     std::string name;
     param_list aliases;
     param_list parameters;
     executor fn{};
 
-    std::vector<option_info> nested_options{};
+    std::vector<option> nested_options{};
   };
 
   struct operation
   {
     executor fn{};
     param_list parameters;
+
+    std::vector<operation> nested_operations{};
   };
   
   [[nodiscard]]
@@ -48,8 +50,23 @@ namespace sequoia::parsing::commandline
   std::string pluralize(const std::size_t n, std::string_view noun, std::string_view prefix=" ");
 
   [[nodiscard]]
-  std::vector<operation>
-  parse(int argc, char** argv, const std::vector<option_info>& info);
+  std::vector<operation> parse(int argc, char** argv, const std::vector<option>& options);
+
+  class argument_parser
+  {
+  public:
+    argument_parser(int argc, char** argv, const std::vector<option>& options);
+
+    std::vector<operation> acquire()
+    {
+      return std::move(m_Operations);
+    }
+  private:
+    std::vector<operation> m_Operations;
+    int m_Index{1};
+
+    void parse(int argc, char** argv, const std::vector<option>& options, std::vector<operation>& operations);
+  };
 
   
   /*! \brief Class, principally to facilitate testing. */

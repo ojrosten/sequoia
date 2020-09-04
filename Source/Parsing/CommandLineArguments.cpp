@@ -29,42 +29,54 @@ namespace sequoia::parsing::commandline
   }
 
   [[nodiscard]]
-  std::vector<operation> parse(int argc, char** argv, const std::vector<option_info>& info)
+  std::vector<operation> parse(int argc, char** argv, const std::vector<option>& options)
   {
-    std::vector<operation> operations;
+    argument_parser p{argc, argv, options};
 
-    auto infoIter{info.end()};        
-    for(int i{1}; i<argc; ++i)
+    return p.acquire();
+  }
+
+  argument_parser::argument_parser(int argc, char** argv, const std::vector<option>& options)
+  {
+    parse(argc, argv, options, m_Operations);
+  }
+
+
+
+  void argument_parser::parse(int argc, char** argv, const std::vector<option>& options, std::vector<operation>& operations)
+  {    
+    auto optionIter{options.end()};        
+    for(; m_Index<argc; ++m_Index)
     {
-      const std::string arg{argv[i]};
+      const std::string arg{argv[m_Index]};
       if(!arg.empty())
       {        
-        if(infoIter == info.end())
+        if(optionIter == options.end())
         {
           auto processOption{
-            [&operations, &info, &arg](auto infoIter){
-              if(infoIter == info.end())
+            [&operations{operations}, &options, &arg, topLevel{&operations == &m_Operations}](auto optionIter){
+              if(optionIter == options.end())
                 throw std::runtime_error{error("unrecognized option '" + arg + "'")};
 
-              if(!infoIter->fn)
+              if(topLevel && !optionIter->fn)
                 throw std::logic_error{error("Commandline option not bound to a function object")};
 
-              operations.push_back(operation{infoIter->fn, {}});
-              if(infoIter->parameters.empty())
-                infoIter = info.end();
+              operations.push_back(operation{optionIter->fn, {}});
+              if(optionIter->parameters.empty())
+                optionIter = options.end();
 
-              return infoIter;
+              return optionIter;
             }
           };
           
-          infoIter = std::find_if(info.begin(), info.end(), [&arg](const auto& optionInfo){ return optionInfo.name == arg; });
-          if(infoIter == info.end())
+          optionIter = std::find_if(options.begin(), options.end(), [&arg](const auto& opt){ return opt.name == arg; });
+          if(optionIter == options.end())
           {            
-            infoIter = std::find_if(info.begin(), info.end(), [&arg](const auto& e) {
-                return std::find(e.aliases.begin(), e.aliases.end(), arg) != e.aliases.end();
+            optionIter = std::find_if(options.begin(), options.end(), [&arg](const auto& opt) {
+                return std::find(opt.aliases.begin(), opt.aliases.end(), arg) != opt.aliases.end();
               });
 
-            if((infoIter == info.end()) && (arg.size() > 2) && (arg[0] == '-') && (arg[1] != ' '))
+            if((optionIter == options.end()) && (arg.size() > 2) && (arg[0] == '-') && (arg[1] != ' '))
             {
               for(auto j{arg.cbegin() + 1}; j != arg.cend(); ++j)
               {
@@ -73,37 +85,60 @@ namespace sequoia::parsing::commandline
                 {
                   const auto alias{std::string{'-'} + c};
 
-                  infoIter = std::find_if(info.begin(), info.end(), [&alias](const auto& e) {
-                      return std::find(e.aliases.begin(), e.aliases.end(), alias) != e.aliases.end();
+                  optionIter = std::find_if(options.begin(), options.end(), [&alias](const auto& opt) {
+                      return std::find(opt.aliases.begin(), opt.aliases.end(), alias) != opt.aliases.end();
                     });
 
-                  processOption(infoIter);
+                  processOption(optionIter);
                 }
               }
 
-              if(infoIter != info.end())
+              if(optionIter != options.end())
               {
-                infoIter = info.end();
+                optionIter = options.end();
                 continue;
               }
             }
           }
 
-          infoIter = processOption(infoIter);
+          optionIter = processOption(optionIter);
         }
         else
         {
-          auto& params{operations.back().parameters};
+          auto& currentOperation{operations.back()};
+          auto& params{currentOperation.parameters};
           params.push_back(arg);
-          if(params.size() == infoIter->parameters.size())
-            infoIter = info.end();
+          
+          if(params.size() == optionIter->parameters.size())
+          {
+            parse(argc - m_Index - 1, &argv[m_Index], optionIter->nested_options, currentOperation.nested_operations);
+
+            auto& nestedOperations{currentOperation.nested_operations};
+            auto i{nestedOperations.begin()};
+            while(i != nestedOperations.end())
+            {
+              if(!i->fn)
+              {
+                const auto& nestedParams{i->parameters};
+                std::copy(nestedParams.begin(), nestedParams.end(), std::back_inserter(params));
+
+                i = nestedOperations.erase(i);
+              }
+              else
+              {
+                ++i;
+              }
+            }
+            
+            optionIter = options.end();
+          }
         }
       }
     }
 
-    if(!operations.empty() && (infoIter != info.end()) && (operations.back().parameters.size() != infoIter->parameters.size()))
+    if(!operations.empty() && (optionIter != options.end()) && (operations.back().parameters.size() != optionIter->parameters.size()))
     {
-      const auto& params{infoIter->parameters};
+      const auto& params{optionIter->parameters};
       const auto expected{params.size()};
       std::string mess{error("expected " + std::to_string(expected) + pluralize(expected, "argument") + ", [")};
       for(auto i{params.begin()}; i != params.end(); ++i)
@@ -117,7 +152,5 @@ namespace sequoia::parsing::commandline
       
       throw std::runtime_error{mess};
     }
-
-    return operations;
   }
 }

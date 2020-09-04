@@ -23,8 +23,6 @@ namespace sequoia::testing
   void commandline_arguments_false_positive_test::test_parser()
   {
     using namespace sequoia::parsing::commandline;
-
-    using info = std::vector<option_info>;
     using fo = function_object;
     
     {
