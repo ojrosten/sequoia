@@ -147,11 +147,15 @@ namespace sequoia::parsing::commandline
       }
     }
 
-    if(!operations.empty() && (optionIter != options.end()) && (operations.back().parameters.size() != optionIter->parameters.size()))
+    if(   !operations.empty() && (optionIter != options.end())
+       && (operations.back().parameters.size() != optionIter->parameters.size()))
     {
       const auto& params{optionIter->parameters};
       const auto expected{params.size()};
-      std::string mess{error("expected " + std::to_string(expected) + pluralize(expected, "argument") + ", [")};
+      auto mess{std::string{"expected "}.append(std::to_string(expected))
+                                        .append(pluralize(expected, "argument"))
+                                        .append(", [")};
+
       for(auto i{params.begin()}; i != params.end(); ++i)
       {
         mess.append(*i);
@@ -159,9 +163,9 @@ namespace sequoia::parsing::commandline
       }
 
       const auto actual{operations.back().parameters.size()};
-      mess.append("], but found " + std::to_string(actual) + pluralize(actual, "argument"));
+      mess.append("], but found ").append(std::to_string(actual)).append(pluralize(actual, "argument"));
       
-      throw std::runtime_error{mess};
+      throw std::runtime_error{error(mess)};
     }
   }
 }
