@@ -70,6 +70,9 @@ namespace sequoia::parsing::commandline
     template<class Iter>
     Iter process_option(Iter optionsIter, Iter optionsEnd, std::string_view arg, std::vector<operation>& operations);
 
+    template<class Iter>
+    Iter process_concatenated_aliases(Iter optionsIter, Iter optionsBegin, Iter optionsEnd, std::string_view arg, std::vector<operation>& operations);
+
     static auto find_alias(const option& opt, const std::string& s);
   };
 

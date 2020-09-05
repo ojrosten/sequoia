@@ -63,6 +63,29 @@ namespace sequoia::parsing::commandline
     return std::find(opt.aliases.begin(), opt.aliases.end(), s) != opt.aliases.end();
   }
 
+  template<class Iter>
+  Iter argument_parser::process_concatenated_aliases(Iter optionsIter, Iter optionsBegin, Iter optionsEnd, std::string_view arg, std::vector<operation>& operations)
+  {
+    if((arg.size() > 2) && (arg[0] == '-') && (arg[1] != ' '))
+    {
+      for(auto j{arg.cbegin() + 1}; j != arg.cend(); ++j)
+      {
+        const auto c{*j};
+        if(c != '-')
+        {
+          const auto alias{std::string{'-'} + c};
+
+          optionsIter = std::find_if(optionsBegin, optionsEnd,
+                                    [&alias](const auto& opt) { return find_alias(opt, alias); });
+
+          process_option(optionsIter, optionsEnd, arg, operations);
+        }
+      }
+    }
+
+    return optionsIter;
+  }
+
   void argument_parser::parse(int argc, char** argv, const std::vector<option>& options, std::vector<operation>& operations)
   {    
     auto optionIter{options.end()};        
@@ -81,22 +104,10 @@ namespace sequoia::parsing::commandline
             optionIter = std::find_if(options.begin(), options.end(),
                                       [&arg](const auto& opt) { return find_alias(opt, arg); });
 
-            if((optionIter == options.end()) && (arg.size() > 2) && (arg[0] == '-') && (arg[1] != ' '))
+            if(optionIter == options.end())
             {
-              for(auto j{arg.cbegin() + 1}; j != arg.cend(); ++j)
-              {
-                const auto c{*j};
-                if(c != '-')
-                {
-                  const auto alias{std::string{'-'} + c};
-
-                  optionIter = std::find_if(options.begin(), options.end(),
-                                            [&alias](const auto& opt) { return find_alias(opt, alias); });
-
-                  process_option(optionIter, options.end(), arg, operations);
-                }
-              }
-
+              optionIter = process_concatenated_aliases(optionIter, options.begin(), options.end(), arg, operations);
+            
               if(optionIter != options.end())
               {
                 optionIter = options.end();
