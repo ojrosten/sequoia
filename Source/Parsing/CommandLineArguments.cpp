@@ -106,13 +106,8 @@ namespace sequoia::parsing::commandline
 
             if(optionIter == options.end())
             {
-              optionIter = process_concatenated_aliases(optionIter, options.begin(), options.end(), arg, operations);
-            
-              if(optionIter != options.end())
-              {
-                optionIter = options.end();
+              if(process_concatenated_aliases(optionIter, options.begin(), options.end(), arg, operations) != options.end())
                 continue;
-              }
             }
           }
 
