@@ -832,24 +832,24 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-	Fast Task duration: 0.0012391s +- 4 * 0.000117543
-	Slow Task duration: 0.00120444s +- 4 * 0.000114428 [0.972025; (2, 2)]
+	Fast Task duration: 0.00119249s +- 4 * 0.000118221
+	Slow Task duration: 0.00118408s +- 4 * 9.828e-05 [0.992943; (2, 2)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-	Fast Task duration: 0.0012373s +- 4 * 5.93331e-05
-	Slow Task duration: 0.00121933s +- 4 * 9.99462e-05 [0.985478; (2, 3)]
+	Fast Task duration: 0.00117365s +- 4 * 9.72073e-05
+	Slow Task duration: 0.00116677s +- 4 * 0.000123787 [0.99414; (2, 3)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-	Fast Task duration: 0.00127148s +- 4 * 1.53292e-05
-	Slow Task duration: 0.00478581s +- 4 * 0.000719352 [3.76397; (2, 2.5)]
+	Fast Task duration: 0.00118085s +- 4 * 9.97866e-05
+	Slow Task duration: 0.00439284s +- 4 * 0.000397252 [3.72005; (2, 2.5)]
 
 	=======================================
 
@@ -6573,8 +6573,8 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67
 	Performance Test which should pass
 
-	Fast Task duration: 0.00116153s +- 4 * 0.000108427
-	Slow Task duration: 0.00220737s +- 4 * 0.000148883 [1.90039; (1.8, 2.1)]
+	Fast Task duration: 0.00150404s +- 4 * 0.00041188
+	Slow Task duration: 0.00230405s +- 4 * 0.000263793 [1.53191; (1.8, 2.1)]
 
 
 	=======================================
@@ -6583,8 +6583,8 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68
 	Performance Test which should pass
 
-	Fast Task duration: 0.00128288s +- 4 * 0.000147651
-	Slow Task duration: 0.00452403s +- 4 * 0.00063368 [3.52647; (3.6, 4.1)]
+	Fast Task duration: 0.00143514s +- 4 * 0.000466095
+	Slow Task duration: 0.00484373s +- 4 * 0.000362 [3.37508; (3.6, 4.1)]
 
 
 	=======================================

@@ -109,27 +109,30 @@ namespace sequoia::parsing::commandline
           auto& params{currentOperation.parameters};
           params.push_back(arg);
           
-          if(params.size() == optionIter->parameters.size())
+          if((params.size() == optionIter->parameters.size()))
           {
-            if(m_Index + 1 < argc)
+            if(!optionIter->nested_options.empty())
             {
-              ++m_Index;
-              parse(argc, argv, optionIter->nested_options, currentOperation.nested_operations);
-
-              auto& nestedOperations{currentOperation.nested_operations};
-              auto i{nestedOperations.begin()};
-              while(i != nestedOperations.end())
+              if(m_Index + 1 < argc)
               {
-                if(!i->fn)
-                {
-                  const auto& nestedParams{i->parameters};
-                  std::copy(nestedParams.begin(), nestedParams.end(), std::back_inserter(params));
+                ++m_Index;
+                parse(argc, argv, optionIter->nested_options, currentOperation.nested_operations);
 
-                  i = nestedOperations.erase(i);
-                }
-                else
+                auto& nestedOperations{currentOperation.nested_operations};
+                auto i{nestedOperations.begin()};
+                while(i != nestedOperations.end())
                 {
-                  ++i;
+                  if(!i->fn)
+                  {
+                    const auto& nestedParams{i->parameters};
+                    std::copy(nestedParams.begin(), nestedParams.end(), std::back_inserter(params));
+
+                    i = nestedOperations.erase(i);
+                  }
+                  else
+                  {
+                    ++i;
+                  }
                 }
               }
             }
