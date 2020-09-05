@@ -58,6 +58,11 @@ namespace sequoia::parsing::commandline
     return optionsIter;
   }
 
+  auto argument_parser::find_alias(const option& opt, const std::string& s)
+  {
+    return std::find(opt.aliases.begin(), opt.aliases.end(), s) != opt.aliases.end();
+  }
+
   void argument_parser::parse(int argc, char** argv, const std::vector<option>& options, std::vector<operation>& operations)
   {    
     auto optionIter{options.end()};        
@@ -72,10 +77,9 @@ namespace sequoia::parsing::commandline
                                     [&arg](const auto& opt){ return opt.name == arg; });
 
           if(optionIter == options.end())
-          {            
-            optionIter = std::find_if(options.begin(), options.end(), [&arg](const auto& opt) {
-                return std::find(opt.aliases.begin(), opt.aliases.end(), arg) != opt.aliases.end();
-              });
+          {
+            optionIter = std::find_if(options.begin(), options.end(),
+                                      [&arg](const auto& opt) { return find_alias(opt, arg); });
 
             if((optionIter == options.end()) && (arg.size() > 2) && (arg[0] == '-') && (arg[1] != ' '))
             {
@@ -86,9 +90,8 @@ namespace sequoia::parsing::commandline
                 {
                   const auto alias{std::string{'-'} + c};
 
-                  optionIter = std::find_if(options.begin(), options.end(), [&alias](const auto& opt) {
-                      return std::find(opt.aliases.begin(), opt.aliases.end(), alias) != opt.aliases.end();
-                    });
+                  optionIter = std::find_if(options.begin(), options.end(),
+                                            [&alias](const auto& opt) { return find_alias(opt, alias); });
 
                   process_option(optionIter, options.end(), arg, operations);
                 }
