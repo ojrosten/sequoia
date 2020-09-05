@@ -66,6 +66,9 @@ namespace sequoia::parsing::commandline
     int m_Index{1};
 
     void parse(int argc, char** argv, const std::vector<option>& options, std::vector<operation>& operations);
+
+    template<class Iter>
+    Iter process_option(Iter optionsIter, Iter optionsEnd, std::string_view arg, std::vector<operation>& operations);
   };
 
   

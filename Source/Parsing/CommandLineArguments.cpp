@@ -41,7 +41,22 @@ namespace sequoia::parsing::commandline
     parse(argc, argv, options, m_Operations);
   }
 
+  template<class Iter>
+  Iter argument_parser::process_option(Iter optionsIter, Iter optionsEnd, std::string_view arg, std::vector<operation>& operations)
+  {
+    if(optionsIter == optionsEnd)
+      throw std::runtime_error{error(std::string{"unrecognized option '"}.append(arg).append("'"))};
 
+    const bool topLevel{&operations == &m_Operations};
+    if(topLevel && !optionsIter->fn)
+      throw std::logic_error{error("Commandline option not bound to a function object")};
+
+    operations.push_back(operation{optionsIter->fn, {}});
+    if(optionsIter->parameters.empty())
+      optionsIter = optionsEnd;
+
+    return optionsIter;
+  }
 
   void argument_parser::parse(int argc, char** argv, const std::vector<option>& options, std::vector<operation>& operations)
   {    
@@ -52,24 +67,10 @@ namespace sequoia::parsing::commandline
       if(!arg.empty())
       {        
         if(optionIter == options.end())
-        {
-          auto processOption{
-            [&operations{operations}, &options, &arg, topLevel{&operations == &m_Operations}](auto optionIter){
-              if(optionIter == options.end())
-                throw std::runtime_error{error("unrecognized option '" + arg + "'")};
+        {          
+          optionIter = std::find_if(options.begin(), options.end(),
+                                    [&arg](const auto& opt){ return opt.name == arg; });
 
-              if(topLevel && !optionIter->fn)
-                throw std::logic_error{error("Commandline option not bound to a function object")};
-
-              operations.push_back(operation{optionIter->fn, {}});
-              if(optionIter->parameters.empty())
-                optionIter = options.end();
-
-              return optionIter;
-            }
-          };
-          
-          optionIter = std::find_if(options.begin(), options.end(), [&arg](const auto& opt){ return opt.name == arg; });
           if(optionIter == options.end())
           {            
             optionIter = std::find_if(options.begin(), options.end(), [&arg](const auto& opt) {
@@ -89,7 +90,7 @@ namespace sequoia::parsing::commandline
                       return std::find(opt.aliases.begin(), opt.aliases.end(), alias) != opt.aliases.end();
                     });
 
-                  processOption(optionIter);
+                  process_option(optionIter, options.end(), arg, operations);
                 }
               }
 
@@ -101,7 +102,7 @@ namespace sequoia::parsing::commandline
             }
           }
 
-          optionIter = processOption(optionIter);
+          optionIter = process_option(optionIter, options.end(), arg, operations);
         }
         else
         {
