@@ -63,9 +63,10 @@ namespace sequoia::parsing::commandline
     }
   private:
     std::vector<operation> m_Operations;
-    int m_Index{1};
+    int m_Index{1}, m_ArgCount{};
+    char** m_Argv{};
 
-    void parse(int argc, char** argv, const std::vector<option>& options, std::vector<operation>& operations);
+    void parse(const std::vector<option>& options, std::vector<operation>& operations);
 
     template<class Iter>
     Iter process_option(Iter optionsIter, Iter optionsEnd, std::string_view arg, std::vector<operation>& operations);
@@ -73,7 +74,10 @@ namespace sequoia::parsing::commandline
     template<class Iter>
     Iter process_concatenated_aliases(Iter optionsIter, Iter optionsBegin, Iter optionsEnd, std::string_view arg, std::vector<operation>& operations);
 
-    static auto find_alias(const option& opt, const std::string& s);
+    template<class Iter>
+    Iter process_nested_options(Iter optionsIter, Iter optionsEnd, operation& currentOp);
+
+    static bool is_alias(const option& opt, const std::string& s);
   };
 
   

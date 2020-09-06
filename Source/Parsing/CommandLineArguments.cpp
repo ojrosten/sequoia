@@ -37,61 +37,18 @@ namespace sequoia::parsing::commandline
   }
 
   argument_parser::argument_parser(int argc, char** argv, const std::vector<option>& options)
+    : m_ArgCount{argc}
+    , m_Argv{argv}
   {
-    parse(argc, argv, options, m_Operations);
+    parse(options, m_Operations);
   }
 
-  template<class Iter>
-  Iter argument_parser::process_option(Iter optionsIter, Iter optionsEnd, std::string_view arg, std::vector<operation>& operations)
-  {
-    if(optionsIter == optionsEnd)
-      throw std::runtime_error{error(std::string{"unrecognized option '"}.append(arg).append("'"))};
-
-    const bool topLevel{&operations == &m_Operations};
-    if(topLevel && !optionsIter->fn)
-      throw std::logic_error{error("Commandline option not bound to a function object")};
-
-    operations.push_back(operation{optionsIter->fn, {}});
-    if(optionsIter->parameters.empty())
-      optionsIter = optionsEnd;
-
-    return optionsIter;
-  }
-
-  auto argument_parser::find_alias(const option& opt, const std::string& s)
-  {
-    return std::find(opt.aliases.begin(), opt.aliases.end(), s) != opt.aliases.end();
-  }
-
-  template<class Iter>
-  Iter argument_parser::process_concatenated_aliases(Iter optionsIter, Iter optionsBegin, Iter optionsEnd, std::string_view arg, std::vector<operation>& operations)
-  {
-    if((arg.size() > 2) && (arg[0] == '-') && (arg[1] != ' '))
-    {
-      for(auto j{arg.cbegin() + 1}; j != arg.cend(); ++j)
-      {
-        const auto c{*j};
-        if(c != '-')
-        {
-          const auto alias{std::string{'-'} + c};
-
-          optionsIter = std::find_if(optionsBegin, optionsEnd,
-                                    [&alias](const auto& opt) { return find_alias(opt, alias); });
-
-          process_option(optionsIter, optionsEnd, arg, operations);
-        }
-      }
-    }
-
-    return optionsIter;
-  }
-
-  void argument_parser::parse(int argc, char** argv, const std::vector<option>& options, std::vector<operation>& operations)
+  void argument_parser::parse(const std::vector<option>& options, std::vector<operation>& operations)
   {    
     auto optionsIter{options.end()};        
-    for(; m_Index<argc; ++m_Index)
+    for(; m_Index < m_ArgCount; ++m_Index)
     {
-      const std::string arg{argv[m_Index]};
+      const std::string arg{m_Argv[m_Index]};
       if(!arg.empty())
       {        
         if(optionsIter == options.end())
@@ -102,7 +59,7 @@ namespace sequoia::parsing::commandline
           if(optionsIter == options.end())
           {
             optionsIter = std::find_if(options.begin(), options.end(),
-                                      [&arg](const auto& opt) { return find_alias(opt, arg); });
+                                      [&arg](const auto& opt) { return is_alias(opt, arg); });
 
             if(optionsIter == options.end())
             {
@@ -121,33 +78,7 @@ namespace sequoia::parsing::commandline
           
           if((params.size() == optionsIter->parameters.size()))
           {
-            if(!optionsIter->nested_options.empty())
-            {
-              if(m_Index + 1 < argc)
-              {
-                ++m_Index;
-                parse(argc, argv, optionsIter->nested_options, currentOperation.nested_operations);
-
-                auto& nestedOperations{currentOperation.nested_operations};
-                auto i{nestedOperations.begin()};
-                while(i != nestedOperations.end())
-                {
-                  if(!i->fn)
-                  {
-                    const auto& nestedParams{i->parameters};
-                    std::copy(nestedParams.begin(), nestedParams.end(), std::back_inserter(params));
-
-                    i = nestedOperations.erase(i);
-                  }
-                  else
-                  {
-                    ++i;
-                  }
-                }
-              }
-            }
-            
-            optionsIter = options.end();            
+            optionsIter = process_nested_options(optionsIter, options.end(), currentOperation);         
           }
         }
       }
@@ -174,4 +105,84 @@ namespace sequoia::parsing::commandline
       throw std::runtime_error{error(mess)};
     }
   }
+
+  template<class Iter>
+  Iter argument_parser::process_option(Iter optionsIter, Iter optionsEnd, std::string_view arg, std::vector<operation>& operations)
+  {
+    if(optionsIter == optionsEnd)
+      throw std::runtime_error{error(std::string{"unrecognized option '"}.append(arg).append("'"))};
+
+    const bool topLevel{&operations == &m_Operations};
+    if(topLevel && !optionsIter->fn)
+      throw std::logic_error{error("Commandline option not bound to a function object")};
+
+    operations.push_back(operation{optionsIter->fn, {}});
+    if(optionsIter->parameters.empty())
+      optionsIter = optionsEnd;
+
+    return optionsIter;
+  }
+
+
+  template<class Iter>
+  Iter argument_parser::process_concatenated_aliases(Iter optionsIter, Iter optionsBegin, Iter optionsEnd, std::string_view arg, std::vector<operation>& operations)
+  {
+    if((arg.size() > 2) && (arg[0] == '-') && (arg[1] != ' '))
+    {
+      for(auto j{arg.cbegin() + 1}; j != arg.cend(); ++j)
+      {
+        const auto c{*j};
+        if(c != '-')
+        {
+          const auto alias{std::string{'-'} + c};
+
+          optionsIter = std::find_if(optionsBegin, optionsEnd,
+                                    [&alias](const auto& opt) { return is_alias(opt, alias); });
+
+          process_option(optionsIter, optionsEnd, arg, operations);
+        }
+      }
+    }
+
+    return optionsIter;
+  }
+
+  template<class Iter>
+  Iter argument_parser::process_nested_options(Iter optionsIter, Iter optionsEnd, operation& currentOp)
+  {
+    if(!optionsIter->nested_options.empty())
+    {
+      if(m_Index + 1 < m_ArgCount)
+      {
+        ++m_Index;
+        parse(optionsIter->nested_options, currentOp.nested_operations);
+
+        auto& nestedOperations{currentOp.nested_operations};
+        auto i{nestedOperations.begin()};
+        while(i != nestedOperations.end())
+        {
+          if(!i->fn)
+          {
+            auto& params{currentOp.parameters};
+            const auto& nestedParams{i->parameters};
+            std::copy(nestedParams.begin(), nestedParams.end(), std::back_inserter(params));
+
+            i = nestedOperations.erase(i);
+          }
+          else
+          {
+            ++i;
+          }
+        }
+      }
+    }
+
+    return optionsEnd;
+  }
+
+  bool argument_parser::is_alias(const option& opt, const std::string& s)
+  {
+    return std::find(opt.aliases.begin(), opt.aliases.end(), s) != opt.aliases.end();
+  }
+
 }
