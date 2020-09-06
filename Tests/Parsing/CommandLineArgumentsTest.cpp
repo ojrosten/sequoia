@@ -162,9 +162,11 @@ namespace sequoia::testing
       commandline_arguments a{"", "create", "class", "dir", "--equivalent-type", "foo"};
       
       check_weak_equivalence(LINE(""),
-                             parse(a.size(), a.get(), { {"create", {}, {"class_name", "directory"}, fo{},
-                                                  { {"--equivalent-type", {}, {"type"}} }
-                                                 } }),
+                             parse(a.size(), a.get(),
+                                   { {"create", {}, {"class_name", "directory"}, fo{},
+                                        { {"--equivalent-type", {}, {"type"}} }
+                                      }
+                                   }),
                              ops{{fo{}, {"class", "dir", "foo"}}});
     }
 
@@ -186,8 +188,22 @@ namespace sequoia::testing
                                    { {"create", {}, {"class_name", "directory"}, fo{},
                                         { {"--equivalent-type", {}, {"type"}},
                                           {"--generate",        {}, {"file"}, fo{}} }
-                                   } }),
+                                      }
+                                   }),
                              ops{{ fo{}, {"class", "dir", "foo"}, { { fo{}, {"bar"}} } }});
+    }
+
+    {
+      commandline_arguments a{"", "create", "class", "dir", "--equivalent-type", "foo", "-v"};
+      
+      check_weak_equivalence(LINE(""),
+                             parse(a.size(), a.get(),
+                                   { {"create", {}, {"class_name", "directory"}, fo{},
+                                        { {"--equivalent-type", {}, {"type"}} }
+                                      },
+                                     {"--verbose", {"-v"}, {}, fo{}}
+                                   }),
+                             ops{{fo{}, {"class", "dir", "foo"}}, {fo{}, {}}});
     }
   }
 }
