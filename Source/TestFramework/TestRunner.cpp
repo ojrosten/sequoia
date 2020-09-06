@@ -426,9 +426,9 @@ namespace sequoia::testing
          {"source", {"s"}, {"source_file_name"},
           [this](const param_list& args) {
             m_SelectedSources.emplace(args.front(), false); }},
-         {"create", {"c"}, { "test type", "qualified::class_name<class T>" },
+         {"create", {"c"}, { "test type", "qualified::class_name<class T>", "equivalent type" },
           [this](const param_list& args) {
-            m_NascentTests.push_back(nascent_test{args[0], args[1], {}, {m_TestRepo, m_SearchTree}}); }},
+            m_NascentTests.push_back(nascent_test{args[0], args[1], {args[2]}, {m_TestRepo, m_SearchTree}}); }},
          {"--async", {"-a"}, {},
           [this](const param_list&) {
             if(m_ConcurrencyMode == concurrency_mode::serial)
@@ -744,7 +744,7 @@ namespace sequoia::testing
     const auto sourceRepo{self_diag_output_path("FakeProject").append("Source")};
 
     using namespace parsing::commandline;
-    commandline_arguments args{"", "create", "ordered_test", "other::functional::monad<class T>"};
+    commandline_arguments args{"", "create", "ordered_test", "other::functional::maybe<class T>", "std::optional<T>"};
     
     test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, testRepo, sourceRepo, suppress_diagnostics{}};
 
