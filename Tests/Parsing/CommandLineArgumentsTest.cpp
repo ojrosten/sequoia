@@ -233,5 +233,19 @@ namespace sequoia::testing
                                    }),
                              ops{{fo{}, {"class", "dir", "foo"}}, {fo{}, {}}, {fo{}, {}}});
     }
+
+    {
+      commandline_arguments a{"", "create", "class", "dir", "--equivalent-type", "foo", "blah"};
+
+      check_exception_thrown<std::runtime_error>(LINE(""),
+        [&a](){
+          return parse(a.size(), a.get(),
+                       { {"create", {}, {"class_name", "directory"}, fo{},
+                          { {"--equivalent-type", {}, {"type"}} }
+                          },
+                         {"--verbose", {"-v"}, {}, fo{}}
+                       });
+        });
+    }
   }
 }
