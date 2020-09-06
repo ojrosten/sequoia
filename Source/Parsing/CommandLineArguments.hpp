@@ -66,16 +66,19 @@ namespace sequoia::parsing::commandline
     int m_Index{1}, m_ArgCount{};
     char** m_Argv{};
 
-    void parse(const std::vector<option>& options, std::vector<operation>& operations);
+    bool parse(const std::vector<option>& options, std::vector<operation>& operations);
 
     template<class Iter>
-    Iter process_option(Iter optionsIter, Iter optionsEnd, std::string_view arg, std::vector<operation>& operations);
+    std::optional<Iter> process_option(Iter optionsIter, Iter optionsEnd, std::string_view arg, std::vector<operation>& operations);
 
     template<class Iter>
-    Iter process_concatenated_aliases(Iter optionsIter, Iter optionsBegin, Iter optionsEnd, std::string_view arg, std::vector<operation>& operations);
+    bool process_concatenated_aliases(Iter optionsIter, Iter optionsBegin, Iter optionsEnd, std::string_view arg, std::vector<operation>& operations);
 
     template<class Iter>
     Iter process_nested_options(Iter optionsIter, Iter optionsEnd, operation& currentOp);
+
+    [[nodiscard]]
+    bool top_level(const std::vector<operation>& operations) const noexcept;
 
     static bool is_alias(const option& opt, const std::string& s);
   };

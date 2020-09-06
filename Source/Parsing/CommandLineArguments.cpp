@@ -43,7 +43,7 @@ namespace sequoia::parsing::commandline
     parse(options, m_Operations);
   }
 
-  void argument_parser::parse(const std::vector<option>& options, std::vector<operation>& operations)
+  bool argument_parser::parse(const std::vector<option>& options, std::vector<operation>& operations)
   {    
     auto optionsIter{options.end()};        
     for(; m_Index < m_ArgCount; ++m_Index)
@@ -61,14 +61,18 @@ namespace sequoia::parsing::commandline
             optionsIter = std::find_if(options.begin(), options.end(),
                                       [&arg](const auto& opt) { return is_alias(opt, arg); });
 
-            if(optionsIter == options.end())
-            {
-              if(process_concatenated_aliases(optionsIter, options.begin(), options.end(), arg, operations) != options.end())
-                continue;
-            }
+            if(process_concatenated_aliases(optionsIter, options.begin(), options.end(), arg, operations))
+              continue;
           }
 
-          optionsIter = process_option(optionsIter, options.end(), arg, operations);
+          if(auto maybeIter{process_option(optionsIter, options.end(), arg, operations)})
+          {
+            optionsIter = *maybeIter;
+          }
+          else
+          {
+            return false;
+          }
         }
         else
         {
@@ -78,7 +82,7 @@ namespace sequoia::parsing::commandline
           
           if((params.size() == optionsIter->parameters.size()))
           {
-            optionsIter = process_nested_options(optionsIter, options.end(), currentOperation);         
+            optionsIter = process_nested_options(optionsIter, options.end(), currentOperation);
           }
         }
       }
@@ -104,16 +108,22 @@ namespace sequoia::parsing::commandline
       
       throw std::runtime_error{error(mess)};
     }
+
+    return true;
   }
 
   template<class Iter>
-  Iter argument_parser::process_option(Iter optionsIter, Iter optionsEnd, std::string_view arg, std::vector<operation>& operations)
+  std::optional<Iter> argument_parser::process_option(Iter optionsIter, Iter optionsEnd, std::string_view arg, std::vector<operation>& operations)
   {
     if(optionsIter == optionsEnd)
-      throw std::runtime_error{error(std::string{"unrecognized option '"}.append(arg).append("'"))};
+    {
+      if(top_level(operations))
+        throw std::runtime_error{error(std::string{"unrecognized option '"}.append(arg).append("'"))};
 
-    const bool topLevel{&operations == &m_Operations};
-    if(topLevel && !optionsIter->fn)
+      return {};
+    }
+
+    if(top_level(operations) && !optionsIter->fn)
       throw std::logic_error{error("Commandline option not bound to a function object")};
 
     operations.push_back(operation{optionsIter->fn, {}});
@@ -125,8 +135,10 @@ namespace sequoia::parsing::commandline
 
 
   template<class Iter>
-  Iter argument_parser::process_concatenated_aliases(Iter optionsIter, Iter optionsBegin, Iter optionsEnd, std::string_view arg, std::vector<operation>& operations)
+  bool argument_parser::process_concatenated_aliases(Iter optionsIter, Iter optionsBegin, Iter optionsEnd, std::string_view arg, std::vector<operation>& operations)
   {
+    if(optionsIter != optionsEnd) return false;
+    
     if((arg.size() > 2) && (arg[0] == '-') && (arg[1] != ' '))
     {
       for(auto j{arg.cbegin() + 1}; j != arg.cend(); ++j)
@@ -144,7 +156,7 @@ namespace sequoia::parsing::commandline
       }
     }
 
-    return optionsIter;
+    return optionsIter != optionsEnd;
   }
 
   template<class Iter>
@@ -155,8 +167,8 @@ namespace sequoia::parsing::commandline
       if(m_Index + 1 < m_ArgCount)
       {
         ++m_Index;
-        parse(optionsIter->nested_options, currentOp.nested_operations);
-
+        bool complete{parse(optionsIter->nested_options, currentOp.nested_operations)};
+        
         auto& nestedOperations{currentOp.nested_operations};
         auto i{nestedOperations.begin()};
         while(i != nestedOperations.end())
@@ -174,10 +186,19 @@ namespace sequoia::parsing::commandline
             ++i;
           }
         }
+
+        if(!complete)
+          --m_Index;
       }
     }
 
     return optionsEnd;
+  }
+
+  [[nodiscard]]
+  bool argument_parser::top_level(const std::vector<operation>& operations) const noexcept
+  {
+    return &m_Operations == &operations;
   }
 
   bool argument_parser::is_alias(const option& opt, const std::string& s)
