@@ -205,5 +205,33 @@ namespace sequoia::testing
                                    }),
                              ops{{fo{}, {"class", "dir", "foo"}}, {fo{}, {}}});
     }
+
+    {
+      commandline_arguments a{"", "create", "class", "dir", "--equivalent-type", "foo", "-v", "-a"};
+      
+      check_weak_equivalence(LINE(""),
+                             parse(a.size(), a.get(),
+                                   { {"create", {}, {"class_name", "directory"}, fo{},
+                                        { {"--equivalent-type", {}, {"type"}} }
+                                      },
+                                     {"--verbose", {"-v"}, {}, fo{}},
+                                     {"--verbose", {"-a"}, {}, fo{}}
+                                   }),
+                             ops{{fo{}, {"class", "dir", "foo"}}, {fo{}, {}}, {fo{}, {}}});
+    }
+
+    {
+      commandline_arguments a{"", "create", "class", "dir", "--equivalent-type", "foo", "-va"};
+      
+      check_weak_equivalence(LINE(""),
+                             parse(a.size(), a.get(),
+                                   { {"create", {}, {"class_name", "directory"}, fo{},
+                                        { {"--equivalent-type", {}, {"type"}} }
+                                      },
+                                     {"--verbose", {"-v"}, {}, fo{}},
+                                     {"--verbose", {"-a"}, {}, fo{}}
+                                   }),
+                             ops{{fo{}, {"class", "dir", "foo"}}, {fo{}, {}}, {fo{}, {}}});
+    }
   }
 }
