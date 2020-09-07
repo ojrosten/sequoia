@@ -76,7 +76,7 @@ namespace sequoia::testing
   class nascent_test
   {
   public:
-    nascent_test(std::string_view testType, std::string_view qualifiedName, std::initializer_list<std::string_view> equivalentTypes, const host_directory& hostDir, std::string_view overriddenFamily="", std::string_view overriddenClassHeader="");
+    nascent_test(std::string_view testType, std::string_view qualifiedName, std::vector<std::string> equivalentTypes, const host_directory& hostDir, std::string_view overriddenFamily="", std::string_view overriddenClassHeader="");
 
     [[nodiscard]]
     std::string create_file(std::string_view copyright, std::string_view partName, const std::filesystem::copy_options options) const;
@@ -244,6 +244,8 @@ namespace sequoia::testing
 
     test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, std::filesystem::path testRepo, search_tree sourceRepo, suppress_diagnostics);
 
+    void process_args(int argc, char** argv);
+
     bool mark_family(std::string_view name);
 
     [[nodiscard]]
@@ -288,7 +290,7 @@ namespace sequoia::testing
     [[nodiscard]]
     static auto test_file_editing(std::string_view fileName, Fn action) -> messages;
     
-    void test_creation(std::string_view qualifiedName, std::initializer_list<std::string_view> equivalentTypes);
+    void test_creation(std::string_view qualifiedName, std::vector<std::string> equivalentTypes);
 
     void test_creation();
 

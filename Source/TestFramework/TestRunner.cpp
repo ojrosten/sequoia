@@ -133,10 +133,10 @@ namespace sequoia::testing
 
   //=========================================== nascent_test ===========================================//
 
-  nascent_test::nascent_test(std::string_view testType, std::string_view qualifiedName, std::initializer_list<std::string_view> equivalentTypes, const host_directory& hostDir, std::string_view overriddenFamily, std::string_view overriddenClassHeader)
+  nascent_test::nascent_test(std::string_view testType, std::string_view qualifiedName, std::vector<std::string> equivalentTypes, const host_directory& hostDir, std::string_view overriddenFamily, std::string_view overriddenClassHeader)
     : m_QualifiedClassName{qualifiedName}
     , m_TestType{testType}
-    , m_EquivalentTypes(equivalentTypes.begin(), equivalentTypes.end())
+    , m_EquivalentTypes{std::move(equivalentTypes)}
   {
     constexpr auto npos{std::string::npos};
 
@@ -411,39 +411,11 @@ namespace sequoia::testing
     , m_TestRepo{std::move(testRepo)}
     , m_SearchTree{std::move(sourceRepo)}
   {
-    using namespace parsing::commandline;
-
-    namespace fs = std::filesystem;
-
     throw_unless_regular_file(m_TestMain, "\nEnsure the application is run from the appropriate directory");
     throw_unless_regular_file(m_HashIncludeTarget);
     throw_unless_directory(m_TestRepo);
 
-    process(argc, argv,
-       { {"test", {"t"}, {"test_family_name"},
-          [this](const param_list& args) {
-            m_SelectedFamilies.emplace(args.front(), false); }},
-         {"source", {"s"}, {"source_file_name"},
-          [this](const param_list& args) {
-            m_SelectedSources.emplace(args.front(), false); }},
-         {"create", {"c"}, { "test type", "qualified::class_name<class T>", "equivalent type" },
-          [this](const param_list& args) {
-            m_NascentTests.push_back(nascent_test{args[0], args[1], {args[2]}, {m_TestRepo, m_SearchTree}}); }},
-         {"--async", {"-a"}, {},
-          [this](const param_list&) {
-            if(m_ConcurrencyMode == concurrency_mode::serial)
-              m_ConcurrencyMode = concurrency_mode::family; }},
-         {"--async-depth", {"-ad"}, {"depth [0-2]"},
-          [this](const param_list& args) {
-            const int i{std::clamp(std::stoi(args.front()), 0, 2)};
-            m_ConcurrencyMode = static_cast<concurrency_mode>(i); }},
-         {"--verbose",  {"-v"}, {}, [this](const param_list&) { m_Verbose    = true; }},          
-         {"--nofiles",  {"-n"}, {}, [this](const param_list&) { m_WriteFiles = false; }},
-         {"--pause",    {"-p"}, {}, [this](const param_list&) { m_Pause      = true;  }},
-         {"--recovery", {"-r"}, {},
-          [] (const param_list&) {
-            output_manager::recovery_file(output_path("Recovery").append("Recovery.txt")); }}
-       });
+    process_args(argc, argv);
 
     if(m_Pause)
     {
@@ -459,6 +431,69 @@ namespace sequoia::testing
   {
     clean_temporary_output();
     run_diagnostics();
+  }
+
+  void test_runner::process_args(int argc, char** argv)
+  {    
+    using namespace parsing::commandline;
+
+    std::vector<std::string> equivalentTypes{};
+    host_directory host{m_TestRepo, m_SearchTree};
+    std::string family{}, classHeader{};
+    
+    invoke_late(argc, argv,
+                { {"test", {"t"}, {"test_family_name"},
+                   [this](const param_list& args) {
+                     m_SelectedFamilies.emplace(args.front(), false); }
+                  },
+                  {"source", {"s"}, {"source_file_name"},
+                   [this](const param_list& args) {
+                     m_SelectedSources.emplace(args.front(), false); }
+                  },
+                  {"create", {"c"}, { "test type", "qualified::class_name<class T>", "equivalent type" },
+                   [this,&equivalentTypes,&host,&family,&classHeader](const param_list& args) {
+                       equivalentTypes.push_back(args[2]);
+                       std::reverse(equivalentTypes.begin(), equivalentTypes.end());
+                       m_NascentTests.push_back(nascent_test{args[0], args[1], equivalentTypes, host, family, classHeader});
+                       
+                       equivalentTypes.clear();
+                       host = host_directory{m_TestRepo, m_SearchTree};
+                       family.clear();
+                       classHeader.clear();
+                     },
+                     { {"--equivalent-type", {"-e"}, {"equivalent type"},
+                         [&equivalentTypes](const param_list& args){
+                           equivalentTypes.push_back(args[0]);
+                         }
+                       },
+                       { {"--host-directory"}, {"-h"}, {"host directory"},
+                           [&host](const param_list& args){ host = host_directory{args[0]};}
+                       },
+                       { {"--family"}, {"-f"}, {"family"},
+                           [&family](const param_list& args){ family = args[0]; }
+                       },
+                       { {"--class-header"}, {"-ch"}, {"class header"},
+                           [&classHeader](const param_list& args){ classHeader = args[0]; }
+                       }
+                     }
+                  },
+                  {"--async", {"-a"}, {},
+                   [this](const param_list&) {
+                     if(m_ConcurrencyMode == concurrency_mode::serial)
+                       m_ConcurrencyMode = concurrency_mode::family; }
+                  },
+                  {"--async-depth", {"-ad"}, {"depth [0-2]"},
+                   [this](const param_list& args) {
+                     const int i{std::clamp(std::stoi(args.front()), 0, 2)};
+                     m_ConcurrencyMode = static_cast<concurrency_mode>(i); }
+                  },
+                  {"--verbose",  {"-v"}, {}, [this](const param_list&) { m_Verbose    = true; }},          
+                  {"--nofiles",  {"-n"}, {}, [this](const param_list&) { m_WriteFiles = false; }},
+                  {"--pause",    {"-p"}, {}, [this](const param_list&) { m_Pause      = true;  }},
+                  {"--recovery", {"-r"}, {},
+                   [] (const param_list&) {
+                     output_manager::recovery_file(output_path("Recovery").append("Recovery.txt")); }}
+                });
   }
 
   void test_runner::check_argument_consistency() const
@@ -699,12 +734,12 @@ namespace sequoia::testing
     report("Comparisons against reference files:", mess.cbegin(), mess.cend(), [](const messages& m) { return m.comparison;});
   }
 
-  void test_runner::test_creation(std::string_view qualifiedName, std::initializer_list<std::string_view> equivalentTypes)
+  void test_runner::test_creation(std::string_view qualifiedName, std::vector<std::string> equivalentTypes)
   {
     namespace fs = std::filesystem;
 
     const std::array<nascent_test, 1>
-      diagnosticFiles{nascent_test{"regular_test", qualifiedName, equivalentTypes, self_diag_output_path("UnitTestCreationDiagnostics")}};
+      diagnosticFiles{nascent_test{"regular_test", qualifiedName, std::move(equivalentTypes), self_diag_output_path("UnitTestCreationDiagnostics")}};
 
     report("Files built:", create_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(), fs::copy_options::overwrite_existing));
     report("Comparisons against reference files:", compare_files(diagnosticFiles.cbegin(), diagnosticFiles.cend()));
