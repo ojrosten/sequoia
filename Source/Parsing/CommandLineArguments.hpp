@@ -52,6 +52,10 @@ namespace sequoia::parsing::commandline
   [[nodiscard]]
   std::vector<operation> parse(int argc, char** argv, const std::vector<option>& options);
 
+  void process(const std::vector<operation>& operations);
+
+  void process(int argc, char** argv, const std::vector<option>& options);
+
   class argument_parser
   {
   public:

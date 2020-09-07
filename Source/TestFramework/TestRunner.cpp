@@ -419,7 +419,7 @@ namespace sequoia::testing
     throw_unless_regular_file(m_HashIncludeTarget);
     throw_unless_directory(m_TestRepo);
 
-    const auto operations{parse(argc, argv,
+    process(argc, argv,
        { {"test", {"t"}, {"test_family_name"},
           [this](const param_list& args) {
             m_SelectedFamilies.emplace(args.front(), false); }},
@@ -443,13 +443,7 @@ namespace sequoia::testing
          {"--recovery", {"-r"}, {},
           [] (const param_list&) {
             output_manager::recovery_file(output_path("Recovery").append("Recovery.txt")); }}
-        })
-    };
-
-    for(const auto& ops : operations)
-    {
-      ops.fn(ops.parameters);
-    }
+       });
 
     if(m_Pause)
     {
