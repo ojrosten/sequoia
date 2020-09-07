@@ -116,15 +116,12 @@ namespace sequoia::testing
       [](const fs::path& p) { return p; },
       [filename](const generator& data){
 
-        std::filesystem::path path{};
-
         if(auto sourcePath{data.sourceRepo.find(filename)}; !sourcePath.empty())
         {
-          path = data.hostRepo;
-          path / fs::relative(sourcePath, data.sourceRepo.root());
+          return data.hostRepo / fs::relative(sourcePath, data.sourceRepo.root()).parent_path();
         }
 
-        return path;
+        throw std::runtime_error{std::string{"Unable to locate file "}.append(filename).append(" in the source repository\n").append(data.sourceRepo.root())};
       }
     };
 
@@ -190,6 +187,7 @@ namespace sequoia::testing
     }
 
     m_HostDirectory = hostDir.get(m_ClassHeader);
+    create_directories(m_HostDirectory);
   }
 
   [[nodiscard]]
@@ -350,7 +348,7 @@ namespace sequoia::testing
             args.append(" prediction");
 
             if(num > 1) args.append("_").append(std::to_string(i));
-            if(i < num -1) args.append(",");
+            if(i < num -1) args.append(", ");
           }
         }
 
@@ -773,7 +771,9 @@ namespace sequoia::testing
     const auto sourceRepo{self_diag_output_path("FakeProject").append("Source")};
 
     using namespace parsing::commandline;
-    commandline_arguments args{"", "create", "ordered_test", "other::functional::maybe<class T>", "std::optional<T>"};
+    commandline_arguments args{"", "create", "ordered_test", "other::functional::maybe<class T>", "std::optional<T>"/*,
+                                   "create", "regular_test", "other::couple<class S, class T>", "S", "-e", "T",
+                                   "-f", "partners", "-ch", "Couple.hpp"*/};
     
     test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, testRepo, sourceRepo, suppress_diagnostics{}};
 
