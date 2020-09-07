@@ -466,13 +466,13 @@ namespace sequoia::testing
                            equivalentTypes.push_back(args[0]);
                          }
                        },
-                       { {"--host-directory"}, {"-h"}, {"host directory"},
+                       {"--host-directory", {"-h"}, {"host directory"},
                            [&host](const param_list& args){ host = host_directory{args[0]};}
                        },
-                       { {"--family"}, {"-f"}, {"family"},
+                       {"--family", {"-f"}, {"family"},
                            [&family](const param_list& args){ family = args[0]; }
                        },
-                       { {"--class-header"}, {"-ch"}, {"class header"},
+                       {"--class-header", {"-ch"}, {"class header"},
                            [&classHeader](const param_list& args){ classHeader = args[0]; }
                        }
                      }
