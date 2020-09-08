@@ -21,7 +21,7 @@ int main(int argc, char** argv)
                        argv,
                        "Oliver J. Rosten",
                        working_path().append("TestChamberMain.cpp"),
-                       sibling_path("TestCommon").append("TestIncludes.hpp"),
+                       sibling_path("TestShared").append("SharedIncludes.hpp"),
                        sibling_path("Tests"),
                        sibling_path("Source")
     };
