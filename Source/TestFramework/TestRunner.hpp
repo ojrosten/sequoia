@@ -49,13 +49,15 @@ namespace sequoia::testing
     host_directory(std::filesystem::path dir)
       : m_Data{std::move(dir)}
     {
-      throw_unless_directory(std::get<std::filesystem::path>(m_Data));
+      namespace fs = std::filesystem;
+      fs::create_directories(std::get<fs::path>(m_Data));
     }
 
     host_directory(std::filesystem::path hostRepo, search_tree sourceRepo)
       : m_Data{generator{std::move(hostRepo), std::move(sourceRepo)}}
     {
-      throw_unless_directory(std::get<generator>(m_Data).hostRepo);
+      namespace fs = std::filesystem;
+      fs::create_directories(std::get<generator>(m_Data).hostRepo);
     }
 
     std::filesystem::path get([[maybe_unused]] std::string_view filename) const;

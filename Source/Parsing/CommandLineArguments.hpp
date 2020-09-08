@@ -90,25 +90,25 @@ namespace sequoia::parsing::commandline
   
   /*! \brief Class, principally to facilitate testing. */
   
-  template<std::size_t... Ns>
   class commandline_arguments
   {
   public:
-    constexpr static std::size_t size() noexcept
+    int size() const noexcept
     {
-      return sizeof...(Ns);
+      return static_cast<int>(m_Args.size());
     }
     
-    commandline_arguments(char const(&...args)[Ns])
-      : m_Args{(char*)args...}
-    {}
+    commandline_arguments(std::initializer_list<std::string_view> args)
+      : m_Args(args.begin(), args.end())
+    {
+      m_Ptrs.reserve(m_Args.size());
+      std::transform(m_Args.begin(), m_Args.end(), m_Ptrs.begin(), [](std::string& s){ return s.data(); });
+    }
 
     [[nodiscard]]
-    char** get() noexcept { return &m_Args[0]; }
+    char** get() noexcept { return &m_Ptrs[0]; }
   private:
-    std::array<char*, sizeof...(Ns)> m_Args;
+    std::vector<std::string> m_Args;
+    std::vector<char*> m_Ptrs;
   };
-
-  template<std::size_t... Ns>
-  commandline_arguments(char const(&...args)[Ns]) -> commandline_arguments<Ns...>;
 }
