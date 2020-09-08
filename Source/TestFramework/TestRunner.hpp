@@ -81,13 +81,13 @@ namespace sequoia::testing
     nascent_test(std::string_view testType, std::string_view qualifiedName, std::vector<std::string> equivalentTypes, const host_directory& hostDir, std::string_view overriddenFamily="", std::string_view overriddenClassHeader="");
 
     [[nodiscard]]
-    std::string create_file(std::string_view copyright, std::string_view partName, const std::filesystem::copy_options options) const;
+    std::filesystem::path create_file(std::string_view copyright, std::string_view partName, const std::filesystem::copy_options options) const;
 
     [[nodiscard]]
     std::string compare_files(std::string_view partName) const;
 
-    //[[nodiscard]]
-    //std::string include() const;
+    [[nodiscard]]
+    std::string_view family() const noexcept { return m_Family; }
 
     [[nodiscard]]
     std::string_view class_name() const noexcept { return m_RawClassName; }

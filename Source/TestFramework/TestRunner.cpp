@@ -250,7 +250,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string nascent_test::create_file(std::string_view copyright, std::string_view partName, const std::filesystem::copy_options options) const
+  std::filesystem::path nascent_test::create_file(std::string_view copyright, std::string_view partName, const std::filesystem::copy_options options) const
   {
     namespace fs = std::filesystem;
     
