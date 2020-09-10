@@ -772,6 +772,28 @@
 	=======================================
 
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 343
+	Inequivalence of directories with some common files
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<std::filesystem::path>]
+	With equivalent types:
+	[std::filesystem::path]
+
+	  Number of directory entries for /Users/Claire/Dropbox/Sequoia/aux_files/PathEquivalenceTestMaterials/BeforeEditing
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 4
+	  Predicted: 3
+
+	  First directory entry mismatch
+	  [std::filesystem::path]
+	  operator== returned false
+	  Obtained : "/Users/Claire/Dropbox/Sequoia/aux_files/PathEquivalenceTestMaterials/BeforeEditing/FakeMain.cpp"
+	  Predicted: "/Users/Claire/Dropbox/Sequoia/output/SelfDiagnostics/PathEquivalenceTestMaterials/BeforeEditing/FakeMain2.cpp"
+
+	=======================================
+
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 351
 
 	Comparison performed using:
 	[sequoia::testing::weak_equivalence_checker<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
@@ -786,7 +808,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 344
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 352
 
 	Comparison performed using:
 	[sequoia::testing::weak_equivalence_checker<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
@@ -802,7 +824,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 349
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 357
 
 	[std::vector<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >, std::allocator<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > > >]
 
@@ -820,7 +842,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 350
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 358
 
 	[std::vector<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >, std::allocator<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > > >]
 
@@ -960,24 +982,24 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-	Fast Task duration: 0.0012116s +- 4 * 0.00011873
-	Slow Task duration: 0.0012731s +- 4 * 5.03955e-05 [1.05076; (2, 2)]
+	Fast Task duration: 0.00118645s +- 4 * 9.14973e-05
+	Slow Task duration: 0.00115142s +- 4 * 9.04467e-05 [0.97047; (2, 2)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-	Fast Task duration: 0.00114891s +- 4 * 0.000131937
-	Slow Task duration: 0.00113178s +- 4 * 2.4158e-05 [0.985091; (2, 3)]
+	Fast Task duration: 0.00115924s +- 4 * 0.000132814
+	Slow Task duration: 0.00124932s +- 4 * 7.29083e-05 [1.07771; (2, 3)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-	Fast Task duration: 0.00124605s +- 4 * 8.4562e-05
-	Slow Task duration: 0.00440939s +- 4 * 0.000411326 [3.53871; (2, 2.5)]
+	Fast Task duration: 0.00114209s +- 4 * 0.000121755
+	Slow Task duration: 0.00415997s +- 4 * 0.000118424 [3.64243; (2, 2.5)]
 
 	=======================================
 
@@ -6542,7 +6564,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 374
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 382
 
 	[bool]
 
@@ -6550,7 +6572,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 376
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 384
 
 	[int]
 
@@ -6558,7 +6580,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 377
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 385
 
 	[double]
 
@@ -6566,7 +6588,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 379
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 387
 
 	[std::pair<int, double>]
 
@@ -6574,7 +6596,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 381
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 389
 
 	[std::tuple<int, double, float>]
 
@@ -6582,7 +6604,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 383
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 391
 
 	Expected Exception Type:
 	[std::runtime_error]
@@ -6591,7 +6613,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 388
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 396
 	Empty vector check which should pass
 
 	[std::vector<double, std::allocator<double> >]
@@ -6600,7 +6622,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 389
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 397
 	One element vector check which should pass
 
 	[std::vector<double, std::allocator<double> >]
@@ -6609,7 +6631,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 390
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 398
 	Multi-element vector comparison which should pass
 
 	[std::vector<double, std::allocator<double> >]
@@ -6618,14 +6640,14 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 394
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 402
 	Iterators demarcate identical elements
 
 
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 396
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 404
 	Differing strings
 
 	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -6634,7 +6656,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 409
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 417
 
 	[std::tuple<std::vector<std::pair<int, float>, std::allocator<std::pair<int, float> > >, std::set<double, std::less<double>, std::allocator<double> >, std::complex<double> >]
 
@@ -6642,7 +6664,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 414
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 422
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >]
@@ -6651,7 +6673,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 419
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 427
 
 	Comparison performed using:
 	[sequoia::testing::equivalence_checker<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
@@ -6662,7 +6684,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 421
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 429
 
 	[std::vector<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > >]
 
@@ -6670,7 +6692,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 423
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 431
 	Equivalence of a file to itself
 
 	Comparison performed using:
@@ -6682,7 +6704,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 427
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 435
 	Equivalence of a directory to itself
 
 	Comparison performed using:
@@ -6694,7 +6716,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 431
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 439
 	Equivalence of a directory, with sub-directories to itself
 
 	Comparison performed using:
@@ -6706,7 +6728,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 435
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 443
 	Equivalence of identical directories in different locations
 
 	Comparison performed using:
@@ -6718,7 +6740,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 443
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 451
 
 	Comparison performed using:
 	[sequoia::testing::weak_equivalence_checker<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
@@ -6729,7 +6751,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 446
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 454
 
 	[std::vector<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >, std::allocator<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > > >]
 
@@ -6749,8 +6771,8 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67
 	Performance Test which should pass
 
-	Fast Task duration: 0.00121295s +- 4 * 0.000173548
-	Slow Task duration: 0.00220578s +- 4 * 0.000123037 [1.81852; (1.8, 2.1)]
+	Fast Task duration: 0.00124992s +- 4 * 7.60488e-05
+	Slow Task duration: 0.0022314s +- 4 * 0.000207035 [1.78524; (1.8, 2.1)]
 
 
 	=======================================
@@ -6759,8 +6781,8 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68
 	Performance Test which should pass
 
-	Fast Task duration: 0.00114492s +- 4 * 9.24747e-05
-	Slow Task duration: 0.00422132s +- 4 * 0.000228007 [3.687; (3.6, 4.1)]
+	Fast Task duration: 0.00117149s +- 4 * 0.000153104
+	Slow Task duration: 0.0042234s +- 4 * 0.000160894 [3.60516; (3.6, 4.1)]
 
 
 	=======================================

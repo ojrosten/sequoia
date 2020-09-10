@@ -335,6 +335,14 @@ namespace sequoia::testing
     check_equivalence(LINE("Inequivalence of directories with the same files but different contents"),
                       aux_path("FileEditingTestMaterials").append("AfterEditing"),
                       aux_path("PathEquivalenceTestMaterials").append("AfterEditing"));
+
+    namespace fs = std::filesystem;
+    fs::copy(aux_path("PathEquivalenceTestMaterials"), self_diag_output_path("PathEquivalenceTestMaterials"), fs::copy_options::recursive);
+    fs::remove(self_diag_output_path("PathEquivalenceTestMaterials").append("BeforeEditing").append("FakeMain.cpp"));
+
+    check_equivalence(LINE("Inequivalence of directories with some common files"),
+                      aux_path("PathEquivalenceTestMaterials"),                      
+                      self_diag_output_path("PathEquivalenceTestMaterials"));
   }
 
   void false_positive_diagnostics::test_weak_equivalence_checks()
