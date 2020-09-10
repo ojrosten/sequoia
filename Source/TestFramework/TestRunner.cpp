@@ -635,8 +635,16 @@ namespace sequoia::testing
   std::string test_runner::create_files(Iter beginNascentTests, Iter endNascentTests, const std::filesystem::copy_options options) const
   {
     auto action{
-      [options,copyright{m_Copyright}](const nascent_test& data, std::string_view stub){
-        return std::string{"\""}.append(data.create_file(copyright, stub, options)).append("\"");
+                [options,&copyright{m_Copyright},&target{m_HashIncludeTarget}](const nascent_test& data, std::string_view stub){
+        const auto filePath{data.create_file(copyright, stub, options)};
+        
+        if(const auto filename{filePath.filename()};
+           (filename.extension() == ".hpp") && (filename.string().find("Utilities") == std::string::npos))
+        {
+          add_include(target, filename.string());
+        }
+        
+        return std::string{"\""}.append(filePath).append("\"");
       }
     };
     
@@ -747,14 +755,14 @@ namespace sequoia::testing
 
   void test_runner::test_creation()
   {
-    sentinel block_0{*this};
+    /*sentinel block_0{*this};
     
     std::cout << block_0.indent("Running test creation tool diagnostics...\n");
 
     std::filesystem::create_directory(self_diag_output_path("UnitTestCreationDiagnostics"));
 
     test_creation("utilities::iterator", {"int*"});
-    test_creation("bar::baz::foo<class T>", {"T"});
+    test_creation("bar::baz::foo<class T>", {"T"});*/
   }
 
   void test_runner::test_full_creation()
@@ -773,10 +781,11 @@ namespace sequoia::testing
     const auto sourceRepo{self_diag_output_path("FakeProject").append("Source")};
 
     using namespace parsing::commandline;
-    commandline_arguments args{"", "create", "ordered_test", "other::functional::maybe<class T>", "std::optional<T>",
-                                   "create", "regular_test", "other::couple<class S, class T>", "S", "-e", "T",
-                                   "-h", (testRepo / "Partners").string(),
-                                   "-f", "partners", "-ch", "Couple.hpp"};
+    commandline_arguments args{"", "create", "ordered_test", "other::functional::maybe<class T>", "std::optional<T>"
+                                 , "create", "ordered_test", "utilities::iterator", "int*"
+                                 , "create", "move_only_test", "bar::baz::foo<class T>", "T"
+                                 , "create", "regular_test", "other::couple<class S, class T>", "S", "-e", "T",
+                                      "-h", (testRepo / "Partners").string(), "-f", "partners", "-ch", "Couple.hpp"};
     
     test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, testRepo, sourceRepo, suppress_diagnostics{}};
 

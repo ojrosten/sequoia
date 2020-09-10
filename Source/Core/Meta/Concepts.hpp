@@ -198,6 +198,8 @@ namespace sequoia
   concept range = requires(T& t) {
     std::begin(t);
     std::end(t);
+
+    requires (!same_as<std::remove_cvref_t<decltype(*std::begin(t))>, std::remove_cvref_t<T>>);
   };
 
   template<template<class...> class T, class... Args>
