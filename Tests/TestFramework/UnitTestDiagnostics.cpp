@@ -343,6 +343,10 @@ namespace sequoia::testing
     check_equivalence(LINE("Inequivalence of directories with some common files"),
                       aux_path("PathEquivalenceTestMaterials"),                      
                       self_diag_output_path("PathEquivalenceTestMaterials"));
+
+    check_equivalence(LINE("Inequivalence of directories with some common files"),
+                      self_diag_output_path("PathEquivalenceTestMaterials"),
+                      aux_path("PathEquivalenceTestMaterials"));
   }
 
   void false_positive_diagnostics::test_weak_equivalence_checks()
