@@ -62,7 +62,7 @@ namespace sequoia::testing
       const auto pathType{fs::status(path).type()};
       const auto predictionType{fs::status(prediction).type()};
 
-      if(check_equality("Path type", logger, pathType, predictionType))
+      if(check_equality(preamble("Path type", path, prediction), logger, pathType, predictionType))
       {
         if(!path.empty())
         {
@@ -102,13 +102,13 @@ namespace sequoia::testing
 
       check_equality(std::string{"Number of directory entries for "}.append(dir), logger, paths.size(), predictedPaths.size());
 
-      const auto iters{std::mismatch(paths.begin(), paths.end(), predictedPaths.begin(), predictedPaths.end())};
-      if((iters.first == paths.end()) && (iters.second == predictedPaths.end()))
+      const auto iters{std::mismatch(paths.begin(), paths.end(), predictedPaths.begin(), predictedPaths.end(),
+          [&dir,&prediction](const fs::path& lhs, const fs::path& rhs){
+            return fs::relative(lhs, dir) == fs::relative(rhs, prediction);
+          })};
+      if((iters.first != paths.end()) && (iters.second != predictedPaths.end()))
       {
-        for(std::size_t i{}; i < paths.size(); ++i)
-        {
-          check(logger, paths[i], predictedPaths[i]);
-        }
+        check_equality("First directory entry mismatch", logger, *iters.first, *iters.second);
       }
       else if(iters.first != paths.end())
       {
@@ -120,8 +120,11 @@ namespace sequoia::testing
       }
       else
       {
-        check_equality("First directory entry mismatch", logger, *iters.first, *iters.second);
-      }
+        for(std::size_t i{}; i < paths.size(); ++i)
+        {
+          check(logger, paths[i], predictedPaths[i]);
+        }
+      } 
     }
 
     template<test_mode Mode>
@@ -136,7 +139,7 @@ namespace sequoia::testing
         buffer1 << file1.rdbuf();
         buffer2 << file2.rdbuf();
 
-        check_equality("", logger, buffer1.str(), buffer2.str());
+        check_equality(preamble("Contents of", file, prediction), logger, buffer1.str(), buffer2.str());
       }
     }
 
@@ -154,6 +157,12 @@ namespace sequoia::testing
     static std::string report_failed_read(const std::filesystem::path& file)
     {
       return report_file_issue(file, " for reading");
+    }
+
+    [[nodiscard]]
+    static std::string preamble(std::string_view prefix, const std::filesystem::path& path, const std::filesystem::path& prediction)
+    {
+      return append_lines(prefix, path.string(), "vs", prediction.string()).append("\n");
     }
   };
 
@@ -318,6 +327,14 @@ namespace sequoia::testing
     check_equivalence(LINE("Inequivalence of file contents"),
                       aux_path("FileEditingTestMaterials").append("BeforeEditing").append("FakeMain.cpp"),
                       aux_path("FileEditingTestMaterials").append("AfterEditing").append("FakeMain.cpp"));
+
+    check_equivalence(LINE("Inequivalence of differently named directories with the same contents"),
+                      aux_path("PathEquivalenceTestMaterials").append("BeforeEditing"),
+                      aux_path("PathEquivalenceTestMaterials").append("AfterEditing"));
+
+    check_equivalence(LINE("Inequivalence of directories with the same files but different contents"),
+                      aux_path("FileEditingTestMaterials").append("AfterEditing"),
+                      aux_path("PathEquivalenceTestMaterials").append("AfterEditing"));
   }
 
   void false_positive_diagnostics::test_weak_equivalence_checks()
