@@ -427,6 +427,10 @@ namespace sequoia::testing
     check_equivalence(LINE("Equivalence of a directory to itself"),
                       aux_path("UnitTestCodeTemplates").append("CodeTemplates"),
                       aux_path("UnitTestCodeTemplates").append("CodeTemplates"));
+
+    check_equivalence(LINE("Equivalence of identical directories in different locations"),
+                      aux_path("FileEditingTestMaterials").append("BeforeEditing"),
+                      aux_path("PathEquivalenceTestMaterials").append("BeforeEditing"));
   }
 
   void false_negative_diagnostics::test_weak_equivalence_checks()
