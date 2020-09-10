@@ -960,24 +960,24 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-	Fast Task duration: 0.00212094s +- 4 * 0.00226279
-	Slow Task duration: 0.00178377s +- 4 * 0.000724861 [0.841027; (2, 2)]
+	Fast Task duration: 0.0012116s +- 4 * 0.00011873
+	Slow Task duration: 0.0012731s +- 4 * 5.03955e-05 [1.05076; (2, 2)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-	Fast Task duration: 0.00123776s +- 4 * 0.000135628
-	Slow Task duration: 0.00122553s +- 4 * 0.000125451 [0.990119; (2, 3)]
+	Fast Task duration: 0.00114891s +- 4 * 0.000131937
+	Slow Task duration: 0.00113178s +- 4 * 2.4158e-05 [0.985091; (2, 3)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-	Fast Task duration: 0.00142817s +- 4 * 0.000114689
-	Slow Task duration: 0.00471983s +- 4 * 0.000567939 [3.30481; (2, 2.5)]
+	Fast Task duration: 0.00124605s +- 4 * 8.4562e-05
+	Slow Task duration: 0.00440939s +- 4 * 0.000411326 [3.53871; (2, 2.5)]
 
 	=======================================
 
@@ -6695,6 +6695,18 @@
 
 	False Positive Failure:
 	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 431
+	Equivalence of a directory, with sub-directories to itself
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<std::filesystem::path>]
+	With equivalent types:
+	[std::filesystem::path]
+
+
+	=======================================
+
+	False Positive Failure:
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 435
 	Equivalence of identical directories in different locations
 
 	Comparison performed using:
@@ -6706,7 +6718,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 439
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 443
 
 	Comparison performed using:
 	[sequoia::testing::weak_equivalence_checker<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
@@ -6717,7 +6729,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 442
+	../Tests/TestFramework/UnitTestDiagnostics.cpp, Line 446
 
 	[std::vector<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >, std::allocator<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > > >]
 
@@ -6737,8 +6749,8 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67
 	Performance Test which should pass
 
-	Fast Task duration: 0.00127247s +- 4 * 5.66973e-05
-	Slow Task duration: 0.00242141s +- 4 * 0.000210331 [1.90292; (1.8, 2.1)]
+	Fast Task duration: 0.00121295s +- 4 * 0.000173548
+	Slow Task duration: 0.00220578s +- 4 * 0.000123037 [1.81852; (1.8, 2.1)]
 
 
 	=======================================
@@ -6747,8 +6759,8 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68
 	Performance Test which should pass
 
-	Fast Task duration: 0.00117892s +- 4 * 0.000121821
-	Slow Task duration: 0.00438701s +- 4 * 0.000474703 [3.72121; (3.6, 4.1)]
+	Fast Task duration: 0.00114492s +- 4 * 9.24747e-05
+	Slow Task duration: 0.00422132s +- 4 * 0.000228007 [3.687; (3.6, 4.1)]
 
 
 	=======================================

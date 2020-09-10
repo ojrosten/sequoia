@@ -428,6 +428,10 @@ namespace sequoia::testing
                       aux_path("UnitTestCodeTemplates").append("CodeTemplates"),
                       aux_path("UnitTestCodeTemplates").append("CodeTemplates"));
 
+    check_equivalence(LINE("Equivalence of a directory, with sub-directories to itself"),
+                      aux_path("FileEditingTestMaterials"),
+                      aux_path("FileEditingTestMaterials"));
+
     check_equivalence(LINE("Equivalence of identical directories in different locations"),
                       aux_path("FileEditingTestMaterials").append("BeforeEditing"),
                       aux_path("PathEquivalenceTestMaterials").append("BeforeEditing"));
