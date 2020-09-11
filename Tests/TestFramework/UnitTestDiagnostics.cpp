@@ -164,6 +164,14 @@ namespace sequoia::testing
     check_equivalence(LINE(""), std::pair<const int&, double>{5, 7.8}, std::pair<int, const double&>{-5, 6.8});
     check_equivalence(LINE(""), std::tuple<const int&, double>{5, 7.8}, std::tuple<int, const double&>{-5, 6.8});
 
+    check_equivalence(LINE("Inequivalence of two different paths, neither of which exists"),
+                      aux_path("UnitTestCodeTemplates").append("Blah"),
+                      aux_path("UnitTestCodeTemplates").append("Blurg"));
+
+    check_equivalence(LINE("Inequivalence of two different paths, neither of which exists"),
+                      aux_path("UnitTestCodeTemplates").append("Blah"),
+                      aux_path("UnitTestCodeTemplates").append("CodeTemplates"));
+
     check_equivalence(LINE("Inequivalence of directory/file"),
                       aux_path("UnitTestCodeTemplates").append("CodeTemplates"),
                       aux_path("UnitTestCodeTemplates").append("CodeTemplates").append("MyClassTest.hpp"));
