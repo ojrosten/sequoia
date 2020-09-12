@@ -46,7 +46,8 @@ int main(int argc, char** argv)
       allocation_false_negative_diagnostics{"Allocation False Negative Diagnostics"},
       move_only_allocation_false_negative_diagnostics{"Move-Only Allocation False Negative Diagnostics"},
       scoped_allocation_false_negative_diagnostics{"Scoped Allocation False Negative Diagnostics"},      
-      move_only_scoped_allocation_false_negative_diagnostics{"Move-Only Scoped Allocation False Negative Diagnostics"}
+      move_only_scoped_allocation_false_negative_diagnostics{"Move-Only Scoped Allocation False Negative Diagnostics"},
+      test_runner_false_negative_test{"Test Runner False False Negative Diagnostics"}
     );
 
     runner.add_test_family(

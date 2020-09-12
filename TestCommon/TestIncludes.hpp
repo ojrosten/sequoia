@@ -83,3 +83,4 @@
 #include "MoveOnlyScopedAllocationTestDiagnostics.hpp"
 
 #include "TestRunner.hpp"
+#include "TestRunnerTestingDiagnostics.hpp"
