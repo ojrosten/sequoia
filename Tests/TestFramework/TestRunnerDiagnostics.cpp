@@ -28,9 +28,9 @@ namespace sequoia::testing
     /*
     namespace fs = std::filesystem;
 
-    fs::copy(aux_path("FakeProject"), self_diag_output_path("FakeProject"), std::filesystem::copy_options::recursive);
+    auto before{[mat{materials()}]() { return mat.append("Before"); }};
     
-    const auto testMain{self_diag_output_path("FakeProject").append("TestSandbox").append("TestSandbox.cpp")};
+    const auto testMain{before().append("TestSandbox").append("TestSandbox.cpp")};
     const auto includeTarget{self_diag_output_path("FakeProject").append("TestShared").append("SharedIncludes.hpp")};
     const auto testRepo{self_diag_output_path("FakeProject").append("Tests")};
     const auto materialsRepo{self_diag_output_path("FakeProject").append("TestMaterials")};
