@@ -7,7 +7,7 @@
 
 #include "RegularAllocationTestDiagnostics.hpp"
 
-#include "UnitTestDiagnosticsUtilities.hpp"
+#include "CoreDiagnosticsUtilities.hpp"
 #include "AllocationTestDiagnosticsUtilities.hpp"
 
 #include <vector>

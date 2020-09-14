@@ -36,7 +36,11 @@ namespace sequoia::testing
   class test
   {
   public:    
-    explicit test(std::string_view name) : m_Name{name} {}
+    test(std::string_view name, std::filesystem::path materials="")
+      : m_Name{name}
+      , m_Materials{std::move(materials)}
+    {}
+
     virtual ~test() = default;
     
     test(const test&)            = delete;  
@@ -57,6 +61,18 @@ namespace sequoia::testing
 
     [[nodiscard]]
     std::string_view name() const noexcept { return m_Name; }
+
+    [[nodiscard]]
+    const std::filesystem::path& materials() const noexcept
+    {
+      return m_Materials;
+    }
+
+    void materials(std::filesystem::path materials)
+    {
+      if(std::filesystem::exists(materials))
+        m_Materials = std::move(materials);
+    }
   protected:
     test(test&&) noexcept = default;
 
@@ -70,6 +86,7 @@ namespace sequoia::testing
 
   private:
     std::string m_Name;
+    std::filesystem::path m_Materials;
   };
 
   template<class T>

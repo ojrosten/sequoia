@@ -142,7 +142,7 @@ namespace sequoia::testing
   class test_runner
   {
   public:    
-    test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, std::filesystem::path testRepo, search_tree sourceRepo);
+    test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, std::filesystem::path testRepo, std::filesystem::path testMaterialsRepo, std::filesystem::path sourceRepo);
 
     test_runner(const test_runner&) = delete;
     test_runner(test_runner&&)      = default;
@@ -153,6 +153,8 @@ namespace sequoia::testing
     template<class Test, class... Tests>
     void add_test_family(std::string_view name, Test&& test, Tests&&... tests)
     {
+      set_materials(test, tests...);
+      
       if(m_SelectedSources.empty())
       {
         if(mark_family(name))
@@ -220,8 +222,6 @@ namespace sequoia::testing
       std::string creation, comparison;
     };
 
-    struct suppress_diagnostics{};
-
     using selection_map = std::map<std::string, bool, std::less<>>;
 
     std::vector<test_family> m_Families{};
@@ -229,10 +229,11 @@ namespace sequoia::testing
     std::vector<nascent_test> m_NascentTests{};
     std::string m_Copyright{};
     std::filesystem::path m_TestMain{}, m_HashIncludeTarget{}, m_TestRepo{};
-    search_tree m_SearchTree;
+    search_tree m_MaterialsSearchTree, m_SourceSearchTree;
     sentinel::size_type m_Depth{};
     
-    bool m_Verbose{}, m_Pause{}, m_WriteFiles{true};
+    bool m_Verbose{}, m_Pause{};
+    output_mode m_OutputMode{output_mode::write_files};
 
     concurrency_mode m_ConcurrencyMode{concurrency_mode::serial};
 
@@ -243,8 +244,6 @@ namespace sequoia::testing
       "Test.hpp",
       "Test.cpp"
     };
-
-    test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, std::filesystem::path testRepo, search_tree sourceRepo, suppress_diagnostics);
 
     void process_args(int argc, char** argv);
 
@@ -263,6 +262,25 @@ namespace sequoia::testing
     void run_tests();
 
     void check_for_missing_tests() const;
+
+    template<class Test, class... Tests>
+    void set_materials(Test&& test, Tests&&... tests)
+    {
+      if(test.materials().empty())
+      {
+        namespace fs = std::filesystem;
+
+        const auto folderName{fs::path{test.source_file_name()}.replace_extension()};
+        const auto rel{fs::relative(folderName, m_TestRepo)};
+        
+        test.materials(fs::path{m_MaterialsSearchTree.root()} /= rel);
+      }
+
+      if constexpr(sizeof...(Tests) > 0)
+      {
+        set_materials(tests...);
+      }              
+    }
 
     template<class Test, class... Tests>
     void add_tests(test_family& f, Test&& test, Tests&&... tests)

@@ -14,7 +14,7 @@
 
 namespace sequoia::testing
 {
-  auto test_family::execute(const bool writeFiles, const concurrency_mode mode) -> results 
+  auto test_family::execute(const output_mode outputMode, const concurrency_mode concurrenyMode) -> results 
   {
     using namespace std::chrono;
     const auto time{steady_clock::now()};
@@ -35,13 +35,22 @@ namespace sequoia::testing
         writer.to_file(std::move(filename), summary);
       }
     };
+
+    process_materials([](const fs::path&, const fs::path& output){
+                                fs::remove_all(output);
+                      });
+
+    process_materials([](const fs::path& materials, const fs::path& output){
+                        fs::create_directories(output);
+                        fs::copy(materials, output, fs::copy_options::recursive | fs::copy_options::update_existing);
+                      });
     
-    if(mode < concurrency_mode::test)
+    if(concurrenyMode < concurrency_mode::test)
     {
       for(auto& pTest : m_Tests)
       {
         const auto summary{pTest->execute()};
-        summarizer(summary, test_summary_filename(*pTest, writeFiles));
+        summarizer(summary, test_summary_filename(*pTest, outputMode));
       }
     }
     else
@@ -51,8 +60,8 @@ namespace sequoia::testing
       results.reserve(m_Tests.size());
       for(auto& pTest : m_Tests)
       {
-        results.emplace_back(std::async([&pTest, writeFiles](){
-              return std::make_pair(pTest->execute(), test_summary_filename(*pTest, writeFiles)); }));
+        results.emplace_back(std::async([&test{*pTest}, outputMode](){
+              return std::make_pair(test.execute(), test_summary_filename(test, outputMode)); }));
       }
       
       summary_writer writer{};
@@ -63,7 +72,7 @@ namespace sequoia::testing
       }
     }
 
-    if(writeFiles && diagnosticsToWrite)
+    if((outputMode == output_mode::write_files) && diagnosticsToWrite)
     {
       if(auto filename{diagnostics_filename()}; !filename.empty())
       {
@@ -82,7 +91,27 @@ namespace sequoia::testing
     }
 
     return {steady_clock::now() - time, std::move(summaries)};
-  }  
+  }
+
+  template<class Fn>
+    requires invocable<Fn, std::filesystem::path, std::filesystem::path> 
+  void test_family::process_materials(Fn fn)
+  {
+    namespace fs = std::filesystem;
+    
+    for(auto& pTest : m_Tests)
+    {
+      const auto& materials{pTest->materials()};
+      if(fs::exists(materials))
+      {
+        const auto rel{fs::relative(materials, test_materials_path())};
+        const auto output{output_path("TestsOutput") /= rel};
+
+        fn(materials, output);        
+      }
+    }
+  }
+  
 
   std::filesystem::path test_family::diagnostics_filename() const
   {
@@ -97,11 +126,11 @@ namespace sequoia::testing
     return output_path("DiagnosticsOutput").append(make_name(m_Name));
   }     
 
-  std::filesystem::path test_family::test_summary_filename(const test& t, const bool writeFiles)
+  std::filesystem::path test_family::test_summary_filename(const test& t, const output_mode outputMode)
   {
     namespace fs = std::filesystem;
     
-    if(!writeFiles) return "";
+    if(outputMode == output_mode::none) return "";
 
     const auto name{fs::path{t.source_file_name()}.replace_extension(".txt")};
     if(name.empty())

@@ -73,7 +73,7 @@
 #include "CommandLineArgumentsDiagnostics.hpp"
 #include "CommandLineArgumentsTest.hpp"
 
-#include "UnitTestDiagnostics.hpp"
+#include "CoreDiagnostics.hpp"
 #include "MoveOnlyTestDiagnostics.hpp"
 #include "PerformanceTestDiagnostics.hpp"
 #include "FuzzyTestDiagnostics.hpp"
@@ -83,4 +83,4 @@
 #include "MoveOnlyScopedAllocationTestDiagnostics.hpp"
 
 #include "TestRunner.hpp"
-#include "TestRunnerTestingDiagnostics.hpp"
+#include "TestRunnerDiagnostics.hpp"

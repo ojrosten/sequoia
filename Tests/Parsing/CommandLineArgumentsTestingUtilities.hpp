@@ -31,4 +31,26 @@ namespace sequoia::testing
   {
     void operator()(const std::vector<std::string>&) const noexcept {}
   };
+
+  class commandline_arguments
+  {
+  public:
+    int size() const noexcept
+    {
+      return static_cast<int>(m_Args.size());
+    }
+    
+    commandline_arguments(std::initializer_list<std::string_view> args)
+      : m_Args(args.begin(), args.end())
+    {
+      m_Ptrs.reserve(m_Args.size());
+      std::transform(m_Args.begin(), m_Args.end(), m_Ptrs.begin(), [](std::string& s){ return s.data(); });
+    }
+
+    [[nodiscard]]
+    char** get() noexcept { return &m_Ptrs[0]; }
+  private:
+    std::vector<std::string> m_Args;
+    std::vector<char*> m_Ptrs;
+  };
 }

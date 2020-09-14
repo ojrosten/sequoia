@@ -404,15 +404,16 @@ namespace sequoia::testing
 
   //=========================================== test_runner ===========================================//
 
-  test_runner::test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, std::filesystem::path testRepo, search_tree sourceRepo, suppress_diagnostics)
+  test_runner::test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, std::filesystem::path testRepo, std::filesystem::path testMaterialsRepo, std::filesystem::path sourceRepo)
     : m_Copyright{copyright}
     , m_TestMain{std::move(testMain)}
     , m_HashIncludeTarget{std::move(hashIncludeTarget)}
     , m_TestRepo{std::move(testRepo)}
-    , m_SearchTree{std::move(sourceRepo)}
+    , m_MaterialsSearchTree{testMaterialsRepo}
+    , m_SourceSearchTree{std::move(sourceRepo)}
   {
     throw_unless_regular_file(m_TestMain, "\nEnsure the application is run from the appropriate directory");
-    throw_unless_regular_file(m_HashIncludeTarget);
+    throw_unless_regular_file(m_HashIncludeTarget);    
     throw_unless_directory(m_TestRepo);
 
     process_args(argc, argv);
@@ -424,13 +425,8 @@ namespace sequoia::testing
     }
 
     check_argument_consistency();
-  }
-
-  test_runner::test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, std::filesystem::path testRepo, search_tree sourceRepo)
-    : test_runner(argc, argv, copyright, std::move(testMain), std::move(hashIncludeTarget), std::move(testRepo), std::move(sourceRepo), suppress_diagnostics{})
-  {
-    clean_temporary_output();
-    run_diagnostics();
+    //clean_temporary_output();
+    //run_diagnostics();
   }
 
   void test_runner::process_args(int argc, char** argv)
@@ -438,7 +434,7 @@ namespace sequoia::testing
     using namespace parsing::commandline;
 
     std::vector<std::string> equivalentTypes{};
-    host_directory host{m_TestRepo, m_SearchTree};
+    host_directory host{m_TestRepo, m_SourceSearchTree};
     std::string family{}, classHeader{};
     
     invoke_late(argc, argv,
@@ -457,7 +453,7 @@ namespace sequoia::testing
                        m_NascentTests.push_back(nascent_test{args[0], args[1], equivalentTypes, host, family, classHeader});
                        
                        equivalentTypes.clear();
-                       host = host_directory{m_TestRepo, m_SearchTree};
+                       host = host_directory{m_TestRepo, m_SourceSearchTree};
                        family.clear();
                        classHeader.clear();
                      },
@@ -488,7 +484,7 @@ namespace sequoia::testing
                      m_ConcurrencyMode = static_cast<concurrency_mode>(i); }
                   },
                   {"--verbose",  {"-v"}, {}, [this](const param_list&) { m_Verbose    = true; }},          
-                  {"--nofiles",  {"-n"}, {}, [this](const param_list&) { m_WriteFiles = false; }},
+                  {"--nofiles",  {"-n"}, {}, [this](const param_list&) { m_OutputMode = output_mode::write_files; }},
                   {"--pause",    {"-p"}, {}, [this](const param_list&) { m_Pause      = true;  }},
                   {"--recovery", {"-r"}, {},
                    [] (const param_list&) {
@@ -767,6 +763,7 @@ namespace sequoia::testing
 
   void test_runner::test_full_creation()
   {
+    /*
     namespace fs = std::filesystem;
 
     sentinel block_0{*this};
@@ -790,6 +787,7 @@ namespace sequoia::testing
     test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, testRepo, sourceRepo, suppress_diagnostics{}};
 
     tr.execute();
+    */
   }
 
   template<class Fn>
@@ -821,14 +819,14 @@ namespace sequoia::testing
 
     if(!m_Families.empty() && (m_NascentTests.empty() || !m_SelectedFamilies.empty()))
     {
-      std::cout << "Running unit tests...\n";
+      std::cout << "Running tests...\n";
       log_summary summary{};
       if(!concurrent_execution())
       {
         for(auto& family : m_Families)
         {
           std::cout << family.name() << ":\n";
-          summary += process_family(family.execute(m_WriteFiles, m_ConcurrencyMode)).log;
+          summary += process_family(family.execute(m_OutputMode, m_ConcurrencyMode)).log;
         }
       }
       else
@@ -840,8 +838,8 @@ namespace sequoia::testing
         for(auto& family : m_Families)
         {
           results.emplace_back(family.name(),
-            std::async([&family, write{m_WriteFiles}, mode{m_ConcurrencyMode}](){
-                return family.execute(write, mode); }));
+            std::async([&family, omode{m_OutputMode}, cmode{m_ConcurrencyMode}](){
+                return family.execute(omode, cmode); }));
         }
 
         for(auto& res : results)

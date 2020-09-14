@@ -23,6 +23,7 @@ int main(int argc, char** argv)
                        working_path().append("TestChamberMain.cpp"),
                        sibling_path("TestCommon").append("TestIncludes.hpp"),
                        sibling_path("Tests"),
+                       sibling_path("TestMaterials"),
                        sibling_path("Source")
     };
   

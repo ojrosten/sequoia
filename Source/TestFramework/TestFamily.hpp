@@ -20,7 +20,9 @@
 #include <set>
 
 namespace sequoia::testing
-{  
+{
+  enum class output_mode { none, write_files };
+  
   /*! \brief Allows tests to be grouped together into a family of related tests
 
       When tests are executed, it is possible to specify both the concurrency mode
@@ -66,7 +68,7 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    auto execute(const bool writeFiles, const concurrency_mode mode) -> results ;
+    auto execute(const output_mode outputMode, const concurrency_mode concurrenyMode) -> results ;
 
     [[nodiscard]]
     std::string_view name() const noexcept { return m_Name; }
@@ -81,7 +83,7 @@ namespace sequoia::testing
     std::filesystem::path diagnostics_filename() const;
 
     [[nodiscard]]
-    static std::filesystem::path test_summary_filename(const test& t, const bool writeFiles);
+    static std::filesystem::path test_summary_filename(const test& t, const output_mode outputMode);
 
     static void write_summary_to_file(const log_summary& summary, std::set<std::string>& record);
 
@@ -93,6 +95,10 @@ namespace sequoia::testing
       if constexpr (sizeof...(Tests) > 0)
         register_tests(std::forward<Tests>(tests)...);
     }
+
+    template<class Fn>
+      requires invocable<Fn, std::filesystem::path, std::filesystem::path> 
+    void process_materials(Fn fn);
 
     class summary_writer
     {
