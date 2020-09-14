@@ -13,4 +13,7 @@ output/SelfDiagnostics
 #ignore test recovery file
 output/Recovery
 
+#ignore temporary data from tests
+output/TestsTemporaryData
+
 SequoiaX/SequoiaX.xcodeproj/xcuserdata

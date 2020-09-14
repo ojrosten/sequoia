@@ -724,9 +724,9 @@
 	[std::filesystem::path]
 
 	  Contents of
-	  /Users/Claire/Dropbox/Sequoia/TestMaterials/TestFramework/CoreDiagnostics/FileEditingTestMaterials/BeforeEditing/FakeMain.cpp
+	  /Users/Claire/Dropbox/Sequoia/TestMaterials/TestFramework/CoreDiagnostics/Stuff/A/foo.txt
 	  vs
-	  /Users/Claire/Dropbox/Sequoia/TestMaterials/TestFramework/CoreDiagnostics/FileEditingTestMaterials/AfterEditing/FakeMain.cpp
+	  /Users/Claire/Dropbox/Sequoia/TestMaterials/TestFramework/CoreDiagnostics/Stuff/B/foo.txt
 
 	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	  operator== returned false
@@ -734,8 +734,8 @@
 	    Container size wrong
 	    [long]
 	    operator== returned false
-	    Obtained : 925
-	    Predicted: 1066
+	    Obtained : 13
+	    Predicted: 6
 
 	=======================================
 
@@ -750,8 +750,8 @@
 	  Final path token
 	  [std::filesystem::path]
 	  operator== returned false
-	  Obtained : "BeforeEditing"
-	  Predicted: "AfterEditing"
+	  Obtained : "A"
+	  Predicted: "C"
 
 	=======================================
 
@@ -764,9 +764,9 @@
 	[std::filesystem::path]
 
 	  Contents of
-	  /Users/Claire/Dropbox/Sequoia/TestMaterials/TestFramework/CoreDiagnostics/FileEditingTestMaterials/AfterEditing/FakeMain.cpp
+	  /Users/Claire/Dropbox/Sequoia/TestMaterials/TestFramework/CoreDiagnostics/Stuff/A/foo.txt
 	  vs
-	  /Users/Claire/Dropbox/Sequoia/TestMaterials/TestFramework/CoreDiagnostics/PathEquivalenceTestMaterials/AfterEditing/FakeMain.cpp
+	  /Users/Claire/Dropbox/Sequoia/TestMaterials/TestFramework/CoreDiagnostics/MoreStuff/A/foo.txt
 
 	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	  operator== returned false
@@ -774,40 +774,56 @@
 	    Container size wrong
 	    [long]
 	    operator== returned false
-	    Obtained : 1066
-	    Predicted: 925
-
-	  Contents of
-	  /Users/Claire/Dropbox/Sequoia/TestMaterials/TestFramework/CoreDiagnostics/FileEditingTestMaterials/AfterEditing/FakeMain2.cpp
-	  vs
-	  /Users/Claire/Dropbox/Sequoia/TestMaterials/TestFramework/CoreDiagnostics/PathEquivalenceTestMaterials/AfterEditing/FakeMain2.cpp
-
-	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-	  operator== returned false
-
-	    Container size wrong
-	    [long]
-	    operator== returned false
-	    Obtained : 926
-	    Predicted: 853
-
-	  Contents of
-	  /Users/Claire/Dropbox/Sequoia/TestMaterials/TestFramework/CoreDiagnostics/FileEditingTestMaterials/AfterEditing/Includes.hpp
-	  vs
-	  /Users/Claire/Dropbox/Sequoia/TestMaterials/TestFramework/CoreDiagnostics/PathEquivalenceTestMaterials/AfterEditing/Includes.hpp
-
-	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
-	  operator== returned false
-
-	    Container size wrong
-	    [long]
-	    operator== returned false
-	    Obtained : 453
-	    Predicted: 434
+	    Obtained : 13
+	    Predicted: 6
 
 	=======================================
 
-	../Tests/TestFramework/CoreDiagnostics.cpp, Line 214
+	../Tests/TestFramework/CoreDiagnostics.cpp, Line 197
+	Inequivalence of directories with some common files
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<std::filesystem::path>]
+	With equivalent types:
+	[std::filesystem::path]
+
+	  Number of directory entries for /Users/Claire/Dropbox/Sequoia/TestMaterials/TestFramework/CoreDiagnostics/Stuff/B
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	  First directory entry mismatch
+	  [std::filesystem::path]
+	  operator== returned false
+	  Obtained : "/Users/Claire/Dropbox/Sequoia/TestMaterials/TestFramework/CoreDiagnostics/Stuff/B/foo.txt"
+	  Predicted: "/Users/Claire/Dropbox/Sequoia/TestMaterials/TestFramework/CoreDiagnostics/MoreStuff/B/bar.txt"
+
+	=======================================
+
+	../Tests/TestFramework/CoreDiagnostics.cpp, Line 201
+	Inequivalence of directories with some common files
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<std::filesystem::path>]
+	With equivalent types:
+	[std::filesystem::path]
+
+	  Number of directory entries for /Users/Claire/Dropbox/Sequoia/TestMaterials/TestFramework/CoreDiagnostics/MoreStuff/B
+	  [unsigned long]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	  First directory entry mismatch
+	  [std::filesystem::path]
+	  operator== returned false
+	  Obtained : "/Users/Claire/Dropbox/Sequoia/TestMaterials/TestFramework/CoreDiagnostics/MoreStuff/B/bar.txt"
+	  Predicted: "/Users/Claire/Dropbox/Sequoia/TestMaterials/TestFramework/CoreDiagnostics/Stuff/B/foo.txt"
+
+	=======================================
+
+	../Tests/TestFramework/CoreDiagnostics.cpp, Line 209
 
 	Comparison performed using:
 	[sequoia::testing::weak_equivalence_checker<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
@@ -822,7 +838,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/CoreDiagnostics.cpp, Line 215
+	../Tests/TestFramework/CoreDiagnostics.cpp, Line 210
 
 	Comparison performed using:
 	[sequoia::testing::weak_equivalence_checker<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
@@ -838,7 +854,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/CoreDiagnostics.cpp, Line 220
+	../Tests/TestFramework/CoreDiagnostics.cpp, Line 215
 
 	[std::vector<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >, std::allocator<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > > >]
 
@@ -856,7 +872,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/CoreDiagnostics.cpp, Line 221
+	../Tests/TestFramework/CoreDiagnostics.cpp, Line 216
 
 	[std::vector<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >, std::allocator<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > > >]
 
@@ -996,24 +1012,24 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-	Fast Task duration: 0.00110701s +- 4 * 0.000106259
-	Slow Task duration: 0.00118748s +- 4 * 0.000117466 [1.0727; (2, 2)]
+	Fast Task duration: 0.00136965s +- 4 * 4.39187e-05
+	Slow Task duration: 0.00138545s +- 4 * 5.02226e-05 [1.01154; (2, 2)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-	Fast Task duration: 0.0012036s +- 4 * 0.000102638
-	Slow Task duration: 0.00109913s +- 4 * 7.10017e-05 [0.913207; (2, 3)]
+	Fast Task duration: 0.00123188s +- 4 * 0.000188369
+	Slow Task duration: 0.00116219s +- 4 * 0.00011165 [0.943433; (2, 3)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-	Fast Task duration: 0.00114528s +- 4 * 9.95549e-05
-	Slow Task duration: 0.00442072s +- 4 * 0.000309724 [3.85995; (2, 2.5)]
+	Fast Task duration: 0.00124343s +- 4 * 7.13545e-05
+	Slow Task duration: 0.00458347s +- 4 * 0.000483356 [3.68614; (2, 2.5)]
 
 	=======================================
 
@@ -6578,7 +6594,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/CoreDiagnostics.cpp, Line 245
+	../Tests/TestFramework/CoreDiagnostics.cpp, Line 240
 
 	[bool]
 
@@ -6586,7 +6602,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/CoreDiagnostics.cpp, Line 247
+	../Tests/TestFramework/CoreDiagnostics.cpp, Line 242
 
 	[int]
 
@@ -6594,7 +6610,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/CoreDiagnostics.cpp, Line 248
+	../Tests/TestFramework/CoreDiagnostics.cpp, Line 243
 
 	[double]
 
@@ -6602,7 +6618,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/CoreDiagnostics.cpp, Line 250
+	../Tests/TestFramework/CoreDiagnostics.cpp, Line 245
 
 	[std::pair<int, double>]
 
@@ -6610,7 +6626,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/CoreDiagnostics.cpp, Line 252
+	../Tests/TestFramework/CoreDiagnostics.cpp, Line 247
 
 	[std::tuple<int, double, float>]
 
@@ -6618,7 +6634,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/CoreDiagnostics.cpp, Line 254
+	../Tests/TestFramework/CoreDiagnostics.cpp, Line 249
 
 	Expected Exception Type:
 	[std::runtime_error]
@@ -6627,7 +6643,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/CoreDiagnostics.cpp, Line 259
+	../Tests/TestFramework/CoreDiagnostics.cpp, Line 254
 	Empty vector check which should pass
 
 	[std::vector<double, std::allocator<double> >]
@@ -6636,7 +6652,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/CoreDiagnostics.cpp, Line 260
+	../Tests/TestFramework/CoreDiagnostics.cpp, Line 255
 	One element vector check which should pass
 
 	[std::vector<double, std::allocator<double> >]
@@ -6645,7 +6661,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/CoreDiagnostics.cpp, Line 261
+	../Tests/TestFramework/CoreDiagnostics.cpp, Line 256
 	Multi-element vector comparison which should pass
 
 	[std::vector<double, std::allocator<double> >]
@@ -6654,14 +6670,14 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/CoreDiagnostics.cpp, Line 265
+	../Tests/TestFramework/CoreDiagnostics.cpp, Line 260
 	Iterators demarcate identical elements
 
 
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/CoreDiagnostics.cpp, Line 267
+	../Tests/TestFramework/CoreDiagnostics.cpp, Line 262
 	Differing strings
 
 	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
@@ -6670,7 +6686,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/CoreDiagnostics.cpp, Line 280
+	../Tests/TestFramework/CoreDiagnostics.cpp, Line 275
 
 	[std::tuple<std::vector<std::pair<int, float>, std::allocator<std::pair<int, float> > >, std::set<double, std::less<double>, std::allocator<double> >, std::complex<double> >]
 
@@ -6678,7 +6694,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/CoreDiagnostics.cpp, Line 285
+	../Tests/TestFramework/CoreDiagnostics.cpp, Line 280
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >]
@@ -6687,7 +6703,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/CoreDiagnostics.cpp, Line 290
+	../Tests/TestFramework/CoreDiagnostics.cpp, Line 285
 
 	Comparison performed using:
 	[sequoia::testing::equivalence_checker<std::basic_string<char, std::char_traits<char>, std::allocator<char> > >]
@@ -6698,7 +6714,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/CoreDiagnostics.cpp, Line 292
+	../Tests/TestFramework/CoreDiagnostics.cpp, Line 287
 
 	[std::vector<std::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::basic_string<char, std::char_traits<char>, std::allocator<char> > > >]
 
@@ -6706,7 +6722,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/CoreDiagnostics.cpp, Line 294
+	../Tests/TestFramework/CoreDiagnostics.cpp, Line 289
 	Equivalence of a file to itself
 
 	Comparison performed using:
@@ -6718,7 +6734,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/CoreDiagnostics.cpp, Line 298
+	../Tests/TestFramework/CoreDiagnostics.cpp, Line 293
 	Equivalence of a directory to itself
 
 	Comparison performed using:
@@ -6730,7 +6746,31 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/CoreDiagnostics.cpp, Line 315
+	../Tests/TestFramework/CoreDiagnostics.cpp, Line 299
+	Equivalence of a directory, with sub-directories to itself
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<std::filesystem::path>]
+	With equivalent types:
+	[std::filesystem::path]
+
+
+	=======================================
+
+	False Positive Failure:
+	../Tests/TestFramework/CoreDiagnostics.cpp, Line 303
+	Equivalence of identical directories in different locations
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<std::filesystem::path>]
+	With equivalent types:
+	[std::filesystem::path]
+
+
+	=======================================
+
+	False Positive Failure:
+	../Tests/TestFramework/CoreDiagnostics.cpp, Line 311
 
 	Comparison performed using:
 	[sequoia::testing::weak_equivalence_checker<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > >]
@@ -6741,7 +6781,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/CoreDiagnostics.cpp, Line 318
+	../Tests/TestFramework/CoreDiagnostics.cpp, Line 314
 
 	[std::vector<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> >, std::allocator<sequoia::testing::perfectly_normal_beast<int, std::allocator<int> > > >]
 
@@ -6761,8 +6801,8 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67
 	Performance Test which should pass
 
-	Fast Task duration: 0.00131855s +- 4 * 9.31751e-05
-	Slow Task duration: 0.00218802s +- 4 * 0.000160803 [1.65942; (1.8, 2.1)]
+	Fast Task duration: 0.00144291s +- 4 * 0.000435279
+	Slow Task duration: 0.0023879s +- 4 * 0.000340559 [1.65492; (1.8, 2.1)]
 
 
 	=======================================
@@ -6771,8 +6811,8 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68
 	Performance Test which should pass
 
-	Fast Task duration: 0.00125845s +- 4 * 0.000138234
-	Slow Task duration: 0.00437195s +- 4 * 0.000297513 [3.47407; (3.6, 4.1)]
+	Fast Task duration: 0.00122869s +- 4 * 9.85343e-05
+	Slow Task duration: 0.00420958s +- 4 * 0.000189124 [3.42608; (3.6, 4.1)]
 
 
 	=======================================

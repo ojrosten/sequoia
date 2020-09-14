@@ -183,29 +183,24 @@ namespace sequoia::testing
     namespace fs = std::filesystem;
 
     check_equivalence(LINE("Inequivalence of file contents"),
-                      fs::path{materials()}.append("FileEditingTestMaterials").append("BeforeEditing").append("FakeMain.cpp"),
-                      fs::path{materials()}.append("FileEditingTestMaterials").append("AfterEditing").append("FakeMain.cpp"));
+                      fs::path{materials()}.append("Stuff").append("A").append("foo.txt"),
+                      fs::path{materials()}.append("Stuff").append("B").append("foo.txt"));
 
     check_equivalence(LINE("Inequivalence of differently named directories with the same contents"),
-                      fs::path{materials()}.append("PathEquivalenceTestMaterials").append("BeforeEditing"),
-                      fs::path{materials()}.append("PathEquivalenceTestMaterials").append("AfterEditing"));
+                      fs::path{materials()}.append("Stuff").append("A"),
+                      fs::path{materials()}.append("Stuff").append("C"));
 
     check_equivalence(LINE("Inequivalence of directories with the same files but different contents"),
-                      fs::path{materials()}.append("FileEditingTestMaterials").append("AfterEditing"),
-                      fs::path{materials()}.append("PathEquivalenceTestMaterials").append("AfterEditing"));
-
-    /*
-    fs::copy(aux_path("PathEquivalenceTestMaterials"), self_diag_output_path("PathEquivalenceTestMaterials"), fs::copy_options::recursive);
-    fs::remove(self_diag_output_path("PathEquivalenceTestMaterials").append("BeforeEditing").append("FakeMain.cpp"));
+                      fs::path{materials()}.append("Stuff").append("A"),
+                      fs::path{materials()}.append("MoreStuff").append("A"));
 
     check_equivalence(LINE("Inequivalence of directories with some common files"),
-                      aux_path("PathEquivalenceTestMaterials"),                      
-                      self_diag_output_path("PathEquivalenceTestMaterials"));
+                      fs::path{materials()}.append("Stuff").append("B"),
+                      fs::path{materials()}.append("MoreStuff").append("B"));
 
     check_equivalence(LINE("Inequivalence of directories with some common files"),
-                      self_diag_output_path("PathEquivalenceTestMaterials"),
-                      aux_path("PathEquivalenceTestMaterials"));
-    */
+                      fs::path{materials()}.append("MoreStuff").append("B"),
+                      fs::path{materials()}.append("Stuff").append("B"));
   }
 
   void false_positive_diagnostics::test_weak_equivalence_checks()
@@ -298,15 +293,16 @@ namespace sequoia::testing
     check_equivalence(LINE("Equivalence of a directory to itself"),
                       aux_path("UnitTestCodeTemplates").append("CodeTemplates"),
                       aux_path("UnitTestCodeTemplates").append("CodeTemplates"));
-    /*
+
+    namespace fs = std::filesystem;
+
     check_equivalence(LINE("Equivalence of a directory, with sub-directories to itself"),
-                      aux_path("FileEditingTestMaterials"),
-                      aux_path("FileEditingTestMaterials"));
+                      fs::path{materials()}.append("Stuff"),
+                      fs::path{materials()}.append("Stuff"));
 
     check_equivalence(LINE("Equivalence of identical directories in different locations"),
-                      aux_path("FileEditingTestMaterials").append("BeforeEditing"),
-                      aux_path("PathEquivalenceTestMaterials").append("BeforeEditing"));
-    */
+                      fs::path{materials()}.append("Stuff").append("C"),
+                      fs::path{materials()}.append("Stuff").append("C"));
   }
 
   void false_negative_diagnostics::test_weak_equivalence_checks()

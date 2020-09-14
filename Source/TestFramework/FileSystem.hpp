@@ -61,6 +61,12 @@ namespace sequoia::testing
     return sibling_path("TestMaterials");
   }
 
+  [[nodiscard]]
+  inline std::filesystem::path temporary_data_path()
+  {
+    return output_path("TestsTemporaryData");
+  }
+
   template<class Pred>
     requires invocable<Pred, std::filesystem::path>
   void throw_if(const std::filesystem::path& p, std::string_view message, Pred pred)

@@ -105,7 +105,7 @@ namespace sequoia::testing
       if(fs::exists(materials))
       {
         const auto rel{fs::relative(materials, test_materials_path())};
-        const auto output{output_path("TestsOutput") /= rel};
+        const auto output{temporary_data_path() /= rel};
 
         fn(materials, output);        
       }
