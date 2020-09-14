@@ -90,7 +90,7 @@ namespace sequoia::testing
     template<class Test, class... Tests>
     void register_tests(Test&& t, Tests&&... tests)
     {
-      m_Tests.emplace_back(std::make_unique<Test>(std::forward<Test>(t)));
+      add_test(std::forward<Test>(t));
 
       if constexpr (sizeof...(Tests) > 0)
         register_tests(std::forward<Tests>(tests)...);
