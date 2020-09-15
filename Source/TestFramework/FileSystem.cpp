@@ -15,6 +15,28 @@
 
 namespace sequoia::testing
 {
+  [[nodiscard]]
+  std::string report_file_issue(const std::filesystem::path& file, std::string_view description)
+  {
+    auto mess{std::string{"Unable to open file "}.append(file)};
+    if(!description.empty()) mess.append(" ").append(description);
+    mess.append("\n");
+ 
+    return mess;
+  }
+ 
+  [[nodiscard]]
+  std::string report_failed_read(const std::filesystem::path& file)
+  {
+    return report_file_issue(file, " for reading");
+  }
+ 
+  [[nodiscard]]
+  std::string report_failed_write(const std::filesystem::path& file)
+  {
+    return report_file_issue(file, " for writing");
+  }
+
   void throw_unless_exists(const std::filesystem::path& p, std::string_view message)
   {
     namespace fs = std::filesystem;

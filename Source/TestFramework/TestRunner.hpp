@@ -21,15 +21,6 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string report_time(const test_family::summary& s);
 
-  [[nodiscard]]
-  std::string report_file_issue(const std::filesystem::path& file, std::string_view description);
-
-  [[nodiscard]]
-  std::string report_failed_read(const std::filesystem::path& file);
-
-  [[nodiscard]]
-  std::string report_failed_write(const std::filesystem::path& file);
-
   template<class Fn>
     requires invocable<Fn, std::filesystem::path>
   void create_file(const std::filesystem::path& source, const std::filesystem::path& target, Fn action)
@@ -39,9 +30,6 @@ namespace sequoia::testing
     fs::copy_file(source, target, fs::copy_options::overwrite_existing);
     action(target);
   }
-
-  [[nodiscard]]
-  std::string compare_files(const std::filesystem::path& file, const std::filesystem::path& prediction, const test_mode mode);
 
   class host_directory
   {
@@ -82,9 +70,6 @@ namespace sequoia::testing
 
     [[nodiscard]]
     std::filesystem::path create_file(std::string_view copyright, std::string_view partName, const std::filesystem::copy_options options) const;
-
-    [[nodiscard]]
-    std::string compare_files(std::string_view partName) const;
 
     [[nodiscard]]
     std::string_view family() const noexcept { return m_Family; }
@@ -260,8 +245,6 @@ namespace sequoia::testing
 
     void check_argument_consistency() const;
 
-    void run_diagnostics();
-
     void run_tests();
 
     void check_for_missing_tests() const;
@@ -285,25 +268,8 @@ namespace sequoia::testing
       requires invocable<Filter, test_runner::messages>
     void report(std::string_view prefix, Iter begin, Iter end, Filter filter);
 
-    void false_positive_check();
-
-    void test_file_editing();
-    
-    template<class Fn>
-      requires invocable<Fn, std::filesystem::path>
-    [[nodiscard]]
-    static auto test_file_editing(std::string_view fileName, Fn action) -> messages;
-    
-    void test_creation(std::string_view qualifiedName, std::vector<std::string> equivalentTypes);
-
-    void test_creation();
-
-    void test_full_creation();
-
     [[nodiscard]]
     static std::string stringify(concurrency_mode mode);
-    
-    static void clean_temporary_output();
 
     template<class Iter, class Fn>
     [[nodiscard]]
@@ -312,9 +278,5 @@ namespace sequoia::testing
     template<class Iter>
     [[nodiscard]]
     std::string create_files(Iter beginNascentTests, Iter endNascentTests, const std::filesystem::copy_options options) const;
-
-    template<class Iter>
-    [[nodiscard]]
-    static std::string compare_files(Iter beginNascentTests, Iter endNascentTests);
   };
 }

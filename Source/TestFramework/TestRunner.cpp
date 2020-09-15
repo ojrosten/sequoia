@@ -30,84 +30,6 @@ namespace sequoia::testing
     return report_time(s.log, s.execution_time);
   }
 
-  [[nodiscard]]
-  std::string report_file_issue(const std::filesystem::path& file, std::string_view description)
-  {
-    auto mess{std::string{"Unable to open file "}.append(file)};
-    if(!description.empty()) mess.append(" ").append(description);
-    mess.append("\n");
-
-    return mess;
-  }
-
-  [[nodiscard]]
-  std::string report_failed_read(const std::filesystem::path& file)
-  {
-    return report_file_issue(file, " for reading");
-  }
-
-  [[nodiscard]]
-  std::string report_failed_write(const std::filesystem::path& file)
-  {
-    return report_file_issue(file, " for writing");
-  }
-
-  [[nodiscard]]
-  std::string compare_files(const std::filesystem::path& file, const std::filesystem::path& prediction, const test_mode mode)
-  {
-    enum class file_comparison {failed, same, different};
-
-    auto fcomp{file_comparison::failed};
-    std::string info{};
-    
-    std::ifstream file1{file}, file2{prediction};
-    if(!file1) info = warning(report_failed_read(file));
-    if(!file2) info = warning(report_failed_read(prediction));
-    
-    if(file1 && file2)
-    {
-      std::stringstream buffer1{}, buffer2{};
-      buffer1 << file1.rdbuf();
-      buffer2 << file2.rdbuf();
-
-      fcomp = (buffer1.str() == buffer2.str()) ? file_comparison::same : file_comparison::different;
-    }
-
-    switch(mode)
-    {    
-    case test_mode::false_positive:
-      switch(fcomp)
-      {
-      case file_comparison::same:
-        info = append_lines(warning("Contents of" ), file.string(), "spuriously comparing equal to", prediction.string()).append("\n");
-        break;
-      case file_comparison::different:
-        info = "passed";
-        break;
-      case file_comparison::failed:
-        info = warning("Unable to perform false-positive test");
-        break;
-      }
-      break;
-    default:
-      switch(fcomp)
-      {
-      case file_comparison::same:
-        info = "passed";
-        break;
-      case file_comparison::different:
-        info = append_lines(warning("Contents of" ), file.string(), "no longer matches", prediction.string()).append("\n");
-        break;
-      case file_comparison::failed:
-        info = warning("Unable to perform file comparison");
-        break;
-      }
-      break;
-    }
-
-    return info;
-  }
-
   std::filesystem::path host_directory::get([[maybe_unused]] std::string_view filename) const
   {
     namespace fs = std::filesystem;
@@ -271,19 +193,6 @@ namespace sequoia::testing
     return outputFile;
   }
 
-  [[nodiscard]]
-  std::string nascent_test::compare_files(std::string_view partName) const
-  {
-    namespace fs = std::filesystem;
-
-    const auto className{to_camel_case(m_RawClassName).append(partName)};
-
-    const auto file{self_diag_output_path("UnitTestCreationDiagnostics").append(className)};
-    const auto prediction{aux_path("UnitTestCodeTemplates").append("ReferenceExamples").append(className)};
-
-    return testing::compare_files(file, prediction, test_mode::standard);
-  }
-
   void nascent_test::transform_file(const std::filesystem::path& file, std::string_view copyright) const
   {
     std::string text{};
@@ -426,8 +335,6 @@ namespace sequoia::testing
     }
 
     check_argument_consistency();
-    //clean_temporary_output();
-    //run_diagnostics();
   }
 
   void test_runner::process_args(int argc, char** argv)
@@ -501,16 +408,6 @@ namespace sequoia::testing
       throw std::runtime_error{error("Can't run asynchronously in recovery mode\n")};
   }
 
-  void test_runner::clean_temporary_output()
-  {
-    namespace fs = std::filesystem;
-
-    std::cout << "Cleaning temporary files...\n\n";
-
-    fs::remove_all(self_diag_output_path(""));
-    fs::create_directory(self_diag_output_path(""));
-  }
-
   [[nodiscard]]
   std::string test_runner::stringify(concurrency_mode mode)
   {
@@ -525,16 +422,6 @@ namespace sequoia::testing
     case concurrency_mode::deep:
       return "Deep";
     }
-  }
-
-  void test_runner::run_diagnostics()
-  {    
-    std::cout << "Running self-diagnostics...\n";
-
-    false_positive_check();    
-    test_file_editing();
-    test_creation();
-    test_full_creation();
   }
 
   bool test_runner::mark_family(std::string_view name)
@@ -647,19 +534,6 @@ namespace sequoia::testing
     
     return process_nascent_tests(beginNascentTests, endNascentTests, action);
   }
-  
-  template<class Iter>
-  [[nodiscard]]
-  std::string test_runner::compare_files(Iter beginNascentTests, Iter endNascentTests)
-  {
-    auto action{
-      [](const nascent_test& data, std::string_view stub){
-        return data.compare_files(stub);
-      }
-    };
-
-    return process_nascent_tests(beginNascentTests, endNascentTests, action);    
-  }
 
   void test_runner::report(std::string_view prefix, std::string_view message)
   {
@@ -688,131 +562,6 @@ namespace sequoia::testing
     std::cout << '\n';
   }
 
-  void test_runner::false_positive_check()
-  {
-    static_assert(st_TestNameStubs.size() > 1, "Insufficient data for false-positive test");
-
-    sentinel block_0{*this};
-    std::cout << block_0.indent("Running false-positive tests...\n");
-
-    auto partPath{
-      [](){ return aux_path("UnitTestCodeTemplates").append("CodeTemplates").append("MyClass"); }
-    };
-
-    const auto file1{partPath().concat(st_TestNameStubs[0])};
-    const auto file2{partPath().concat(st_TestNameStubs[1])};
-
-    report("File comparison:", testing::compare_files(file1, file2, test_mode::false_positive));
-  }
-
-  void test_runner::test_file_editing()
-  {
-    namespace fs = std::filesystem;
-
-    sentinel block_0{*this};
-    
-    std::cout << block_0.indent("Running file editing diagnostics...\n");
-
-    fs::create_directory(self_diag_output_path("FileEditingOutput"));
-
-    const std::array<messages, 3> mess{
-      test_file_editing("Includes.hpp",
-                        [](const fs::path& sandboxFile){
-                          add_include(sandboxFile, "Bar.hpp");
-                        }
-      ),
-      test_file_editing("FakeMain.cpp",
-                        [](const fs::path& sandboxFile){
-                          add_to_family(sandboxFile, "New Family",
-                                        {{"fake_false_positive_test{\"False Positive Test\"}"}, {"fake_test{\"Unit Test\"}"}});
-                        }
-      ),
-      test_file_editing("FakeMain2.cpp",
-                        [](const fs::path& sandboxFile){
-                          add_to_family(sandboxFile, "CommandLine Arguments",
-                                        {{"commandline_arguments_false_positive_test{\"False Positive Test\"}"}});
-                        }
-      )
-    };
-
-    report("Files built:", mess.cbegin(), mess.cend(), [](const messages& m) { return m.creation;});
-    report("Comparisons against reference files:", mess.cbegin(), mess.cend(), [](const messages& m) { return m.comparison;});
-  }
-
-  void test_runner::test_creation(std::string_view qualifiedName, std::vector<std::string> equivalentTypes)
-  {
-    namespace fs = std::filesystem;
-
-    const std::array<nascent_test, 1>
-      diagnosticFiles{nascent_test{"regular_test", qualifiedName, std::move(equivalentTypes), self_diag_output_path("UnitTestCreationDiagnostics")}};
-
-    report("Files built:", create_files(diagnosticFiles.cbegin(), diagnosticFiles.cend(), fs::copy_options::overwrite_existing));
-    report("Comparisons against reference files:", compare_files(diagnosticFiles.cbegin(), diagnosticFiles.cend()));
-  }
-
-  void test_runner::test_creation()
-  {
-    /*sentinel block_0{*this};
-    
-    std::cout << block_0.indent("Running test creation tool diagnostics...\n");
-
-    std::filesystem::create_directory(self_diag_output_path("UnitTestCreationDiagnostics"));
-
-    test_creation("utilities::iterator", {"int*"});
-    test_creation("bar::baz::foo<class T>", {"T"});*/
-  }
-
-  void test_runner::test_full_creation()
-  {
-    /*
-    namespace fs = std::filesystem;
-
-    sentinel block_0{*this};
-    
-    std::cout << block_0.indent("Running full test creation diagnostics...\n");
-
-    fs::copy(aux_path("FakeProject"), self_diag_output_path("FakeProject"), std::filesystem::copy_options::recursive);
-    
-    const auto testMain{self_diag_output_path("FakeProject").append("TestSandbox").append("TestSandbox.cpp")};
-    const auto includeTarget{self_diag_output_path("FakeProject").append("TestShared").append("SharedIncludes.hpp")};
-    const auto testRepo{self_diag_output_path("FakeProject").append("Tests")};
-    const auto sourceRepo{self_diag_output_path("FakeProject").append("Source")};
-
-    using namespace parsing::commandline;
-    commandline_arguments args{"", "create", "ordered_test", "other::functional::maybe<class T>", "std::optional<T>"
-                                 , "create", "ordered_test", "utilities::iterator", "int*"
-                                 , "create", "move_only_test", "bar::baz::foo<class T>", "T"
-                                 , "create", "regular_test", "other::couple<class S, class T>", "S", "-e", "T",
-                                      "-h", (testRepo / "Partners").string(), "-f", "partners", "-ch", "Couple.hpp"};
-    
-    test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, testRepo, sourceRepo, suppress_diagnostics{}};
-
-    tr.execute();
-    */
-  }
-
-  template<class Fn>
-    requires invocable<Fn, std::filesystem::path>
-  [[nodiscard]]
-  auto test_runner::test_file_editing(std::string_view fileName, Fn action) -> messages
-  {
-    namespace fs = std::filesystem;
-
-    messages m{};
-
-    const auto source{aux_path("FileEditingTestMaterials").append("BeforeEditing").append(fileName)};
-    const auto target{self_diag_output_path("FileEditingOutput").append(fileName)};
-
-    create_file(source, target, action);
-    m.creation = target.string();
-
-    const auto prediction{aux_path("FileEditingTestMaterials").append("AfterEditing").append(fileName)};
-
-    m.comparison = testing::compare_files(target, prediction, test_mode::standard);
-
-    return m;
-  }
-
   void test_runner::run_tests()
   {
     using namespace std::chrono;
@@ -820,7 +569,7 @@ namespace sequoia::testing
 
     if(!m_Families.empty() && (m_NascentTests.empty() || !m_SelectedFamilies.empty()))
     {
-      std::cout << "Running tests...\n";
+      std::cout << "\n\nRunning tests...\n";
       log_summary summary{};
       if(!concurrent_execution())
       {

@@ -44,12 +44,6 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  inline std::filesystem::path self_diag_output_path(std::string_view subDirectory)
-  {
-    return output_path("SelfDiagnostics").append(subDirectory);
-  }
-
-  [[nodiscard]]
   inline std::filesystem::path aux_path(std::string_view subDirectory)
   {
     return sibling_path("aux_files").append(subDirectory);
@@ -77,6 +71,14 @@ namespace sequoia::testing
     }
   }
 
+  [[nodiscard]]
+  std::string report_file_issue(const std::filesystem::path& file, std::string_view description);
+ 
+  [[nodiscard]]
+  std::string report_failed_read(const std::filesystem::path& file);
+ 
+  [[nodiscard]]
+  std::string report_failed_write(const std::filesystem::path& file);
 
   void throw_unless_exists(const std::filesystem::path& p, std::string_view message="");  
 
