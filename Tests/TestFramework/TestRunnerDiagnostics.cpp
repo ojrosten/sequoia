@@ -25,16 +25,20 @@ namespace sequoia::testing
 
   void test_runner_false_negative_test::test_creation()
   {
-    /*
     namespace fs = std::filesystem;
 
-    auto before{[mat{materials()}]() { return mat.append("Before"); }};
+    auto fake{
+      [&mat{materials()}]() {
+        return mat / "Before" / "FakeProject";
+      }
+    };
     
-    const auto testMain{before().append("TestSandbox").append("TestSandbox.cpp")};
-    const auto includeTarget{self_diag_output_path("FakeProject").append("TestShared").append("SharedIncludes.hpp")};
-    const auto testRepo{self_diag_output_path("FakeProject").append("Tests")};
-    const auto materialsRepo{self_diag_output_path("FakeProject").append("TestMaterials")};
-    const auto sourceRepo{self_diag_output_path("FakeProject").append("Source")};
+    const auto testMain{fake().append("TestSandbox").append("TestSandbox.cpp")};
+    const auto includeTarget{fake().append("TestShared").append("SharedIncludes.hpp")};
+    const auto testRepo{fake().append("Tests")};
+    const auto materialsRepo{fake().append("TestMaterials")};
+    const auto sourceRepo{fake().append("Source")};
+    const auto outputDir{fake().append("output")};
 
     using namespace parsing::commandline;
     commandline_arguments args{"", "create", "ordered_test", "other::functional::maybe<class T>", "std::optional<T>"
@@ -43,9 +47,8 @@ namespace sequoia::testing
                                  , "create", "regular_test", "other::couple<class S, class T>", "S", "-e", "T",
                                       "-h", (testRepo / "Partners").string(), "-f", "partners", "-ch", "Couple.hpp"};
     
-    test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, testRepo, materialsRepo, sourceRepo};
+    test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, sourceRepo, testRepo, materialsRepo, outputDir};
 
     tr.execute();
-    */
   }
 }
