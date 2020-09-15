@@ -142,7 +142,7 @@ namespace sequoia::testing
   class test_runner
   {
   public:    
-    test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, std::filesystem::path testRepo, std::filesystem::path testMaterialsRepo, std::filesystem::path sourceRepo);
+    test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, std::filesystem::path sourceRepo, std::filesystem::path testRepo, std::filesystem::path testMaterialsRepo, std::filesystem::path outputDir);
 
     test_runner(const test_runner&) = delete;
     test_runner(test_runner&&)      = default;
@@ -153,18 +153,16 @@ namespace sequoia::testing
     template<class Test, class... Tests>
     void add_test_family(std::string_view name, Test&& test, Tests&&... tests)
     {
-      set_materials(test, tests...);
-      
       if(m_SelectedSources.empty())
       {
         if(mark_family(name))
         {
-          m_Families.emplace_back(name, std::forward<Test>(test), std::forward<Tests>(tests)...);
+          m_Families.emplace_back(name, m_TestRepo, m_TestMaterialsRepo, m_OutputDir, std::forward<Test>(test), std::forward<Tests>(tests)...);
         }
       }
       else
       {
-        test_family f{name};
+        test_family f{name, m_TestRepo, m_TestMaterialsRepo, m_OutputDir};
         add_tests(f, std::forward<Test>(test), std::forward<Tests>(tests)...);
         if(!f.empty())
         {
@@ -175,7 +173,7 @@ namespace sequoia::testing
         {
           if(mark_family(name))
           {
-            m_Families.emplace_back(name, std::forward<Test>(test), std::forward<Tests>(tests)...);
+            m_Families.emplace_back(name, m_TestRepo, m_TestMaterialsRepo, m_OutputDir, std::forward<Test>(test), std::forward<Tests>(tests)...);
           }
         }
       }
@@ -228,8 +226,13 @@ namespace sequoia::testing
     selection_map m_SelectedFamilies{}, m_SelectedSources{};
     std::vector<nascent_test> m_NascentTests{};
     std::string m_Copyright{};
-    std::filesystem::path m_TestMain{}, m_HashIncludeTarget{}, m_TestRepo{};
-    search_tree m_MaterialsSearchTree, m_SourceSearchTree;
+    search_tree m_SourceSearchTree;
+    std::filesystem::path
+      m_TestMain{},
+      m_HashIncludeTarget{},
+      m_TestRepo{},
+      m_TestMaterialsRepo{},
+      m_OutputDir{};
     sentinel::size_type m_Depth{};
     
     bool m_Verbose{}, m_Pause{};
@@ -262,25 +265,6 @@ namespace sequoia::testing
     void run_tests();
 
     void check_for_missing_tests() const;
-
-    template<class Test, class... Tests>
-    void set_materials(Test&& test, Tests&&... tests)
-    {
-      if(test.materials().empty())
-      {
-        namespace fs = std::filesystem;
-
-        const auto folderName{fs::path{test.source_file_name()}.replace_extension()};
-        const auto rel{fs::relative(folderName, m_TestRepo)};
-        
-        test.materials(fs::path{m_MaterialsSearchTree.root()} /= rel);
-      }
-
-      if constexpr(sizeof...(Tests) > 0)
-      {
-        set_materials(tests...);
-      }              
-    }
 
     template<class Test, class... Tests>
     void add_tests(test_family& f, Test&& test, Tests&&... tests)

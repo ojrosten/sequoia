@@ -22,9 +22,10 @@ int main(int argc, char** argv)
                        "Oliver J. Rosten",
                        working_path().append("TestChamberMain.cpp"),
                        sibling_path("TestCommon").append("TestIncludes.hpp"),
+                       sibling_path("Source"),
                        sibling_path("Tests"),
                        sibling_path("TestMaterials"),
-                       sibling_path("Source")
+                       sibling_path("output")
     };
   
     runner.add_test_family(

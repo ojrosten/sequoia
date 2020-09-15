@@ -70,8 +70,7 @@ namespace sequoia::testing
 
     void materials(std::filesystem::path materials)
     {
-      if(std::filesystem::exists(materials))
-        m_Materials = std::move(materials);
+      m_Materials = std::move(materials);
     }
   protected:
     test(test&&) noexcept = default;

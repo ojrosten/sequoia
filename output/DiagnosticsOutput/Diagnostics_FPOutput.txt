@@ -724,9 +724,9 @@
 	[std::filesystem::path]
 
 	  Contents of
-	  /Users/Claire/Dropbox/Sequoia/TestMaterials/TestFramework/CoreDiagnostics/Stuff/A/foo.txt
+	  /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/A/foo.txt
 	  vs
-	  /Users/Claire/Dropbox/Sequoia/TestMaterials/TestFramework/CoreDiagnostics/Stuff/B/foo.txt
+	  /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/B/foo.txt
 
 	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	  operator== returned false
@@ -764,9 +764,9 @@
 	[std::filesystem::path]
 
 	  Contents of
-	  /Users/Claire/Dropbox/Sequoia/TestMaterials/TestFramework/CoreDiagnostics/Stuff/A/foo.txt
+	  /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/A/foo.txt
 	  vs
-	  /Users/Claire/Dropbox/Sequoia/TestMaterials/TestFramework/CoreDiagnostics/MoreStuff/A/foo.txt
+	  /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/CoreDiagnostics/MoreStuff/A/foo.txt
 
 	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	  operator== returned false
@@ -787,7 +787,7 @@
 	With equivalent types:
 	[std::filesystem::path]
 
-	  Number of directory entries for /Users/Claire/Dropbox/Sequoia/TestMaterials/TestFramework/CoreDiagnostics/Stuff/B
+	  Number of directory entries for /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/B
 	  [unsigned long]
 	  operator== returned false
 	  Obtained : 1
@@ -796,8 +796,8 @@
 	  First directory entry mismatch
 	  [std::filesystem::path]
 	  operator== returned false
-	  Obtained : "/Users/Claire/Dropbox/Sequoia/TestMaterials/TestFramework/CoreDiagnostics/Stuff/B/foo.txt"
-	  Predicted: "/Users/Claire/Dropbox/Sequoia/TestMaterials/TestFramework/CoreDiagnostics/MoreStuff/B/bar.txt"
+	  Obtained : "/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/B/foo.txt"
+	  Predicted: "/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/CoreDiagnostics/MoreStuff/B/bar.txt"
 
 	=======================================
 
@@ -809,7 +809,7 @@
 	With equivalent types:
 	[std::filesystem::path]
 
-	  Number of directory entries for /Users/Claire/Dropbox/Sequoia/TestMaterials/TestFramework/CoreDiagnostics/MoreStuff/B
+	  Number of directory entries for /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/CoreDiagnostics/MoreStuff/B
 	  [unsigned long]
 	  operator== returned false
 	  Obtained : 2
@@ -818,8 +818,8 @@
 	  First directory entry mismatch
 	  [std::filesystem::path]
 	  operator== returned false
-	  Obtained : "/Users/Claire/Dropbox/Sequoia/TestMaterials/TestFramework/CoreDiagnostics/MoreStuff/B/bar.txt"
-	  Predicted: "/Users/Claire/Dropbox/Sequoia/TestMaterials/TestFramework/CoreDiagnostics/Stuff/B/foo.txt"
+	  Obtained : "/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/CoreDiagnostics/MoreStuff/B/bar.txt"
+	  Predicted: "/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/B/foo.txt"
 
 	=======================================
 
@@ -1012,24 +1012,24 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-	Fast Task duration: 0.00135193s +- 4 * 6.57005e-05
-	Slow Task duration: 0.00132674s +- 4 * 0.000118097 [0.981367; (2, 2)]
+	Fast Task duration: 0.00130333s +- 4 * 0.000119343
+	Slow Task duration: 0.00134247s +- 4 * 7.87508e-05 [1.03003; (2, 2)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-	Fast Task duration: 0.0012716s +- 4 * 7.04646e-05
-	Slow Task duration: 0.00130835s +- 4 * 5.90944e-05 [1.0289; (2, 3)]
+	Fast Task duration: 0.00129366s +- 4 * 0.000145925
+	Slow Task duration: 0.00131212s +- 4 * 0.00010012 [1.01426; (2, 3)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-	Fast Task duration: 0.00115743s +- 4 * 0.000135517
-	Slow Task duration: 0.0041454s +- 4 * 0.000116065 [3.58154; (2, 2.5)]
+	Fast Task duration: 0.00123653s +- 4 * 8.27924e-05
+	Slow Task duration: 0.00467469s +- 4 * 0.000356101 [3.78049; (2, 2.5)]
 
 	=======================================
 
@@ -6801,8 +6801,8 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67
 	Performance Test which should pass
 
-	Fast Task duration: 0.0013331s +- 4 * 0.000148499
-	Slow Task duration: 0.00223974s +- 4 * 0.000202284 [1.68009; (1.8, 2.1)]
+	Fast Task duration: 0.00151646s +- 4 * 0.000390809
+	Slow Task duration: 0.00230533s +- 4 * 0.000265456 [1.52021; (1.8, 2.1)]
 
 
 	=======================================
@@ -6811,8 +6811,8 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68
 	Performance Test which should pass
 
-	Fast Task duration: 0.00124665s +- 4 * 8.0397e-05
-	Slow Task duration: 0.00430791s +- 4 * 0.000175218 [3.4556; (3.6, 4.1)]
+	Fast Task duration: 0.00111536s +- 4 * 8.38207e-05
+	Slow Task duration: 0.00410837s +- 4 * 5.08845e-05 [3.68344; (3.6, 4.1)]
 
 
 	=======================================

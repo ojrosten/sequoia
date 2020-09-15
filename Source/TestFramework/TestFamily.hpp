@@ -52,7 +52,15 @@ namespace sequoia::testing
     };
     
     template<concrete_test... Tests>
-    explicit test_family(std::string_view name, Tests&&... tests) : m_Name{name}
+    test_family(std::string_view name,
+                const std::filesystem::path& testRepo,
+                const std::filesystem::path& testMaterialsRepo,
+                const std::filesystem::path& outputDir,
+                Tests&&... tests)
+      : m_Name{name}
+      , m_TestRepo{testRepo}
+      , m_TestMaterialsRepo{testMaterialsRepo}
+      , m_OutputDir{outputDir}
     {
       if constexpr(sizeof...(Tests) > 0)
       {
@@ -65,6 +73,7 @@ namespace sequoia::testing
     void add_test(concrete_test&& test)
     {
       m_Tests.emplace_back(std::make_unique<concrete_test>(std::forward<concrete_test>(test)));
+      set_materials(*m_Tests.back());      
     }
 
     [[nodiscard]]
@@ -78,6 +87,8 @@ namespace sequoia::testing
   private:
     std::vector<std::unique_ptr<test>> m_Tests{};
     std::string m_Name{};
+    std::filesystem::path m_TestRepo{}, m_TestMaterialsRepo{}, m_OutputDir{};
+    std::set<std::filesystem::path> m_MaterialsPaths{};
 
     [[nodiscard]]
     std::filesystem::path diagnostics_filename() const;
@@ -96,9 +107,7 @@ namespace sequoia::testing
         register_tests(std::forward<Tests>(tests)...);
     }
 
-    template<class Fn>
-      requires invocable<Fn, std::filesystem::path, std::filesystem::path> 
-    void process_materials(Fn fn);
+    void set_materials(test& t);
 
     class summary_writer
     {

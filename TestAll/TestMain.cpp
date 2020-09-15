@@ -23,9 +23,10 @@ int main(int argc, char** argv)
                        "Oliver J. Rosten",
                        working_path().append("TestMain.cpp"),
                        sibling_path("TestCommon").append("TestIncludes.hpp"),
+                       sibling_path("Source"),
                        sibling_path("Tests"),
                        sibling_path("TestMaterials"),
-                       sibling_path("Source")
+                       sibling_path("output")
     };
 
     const auto mode{runner.concurrency()};

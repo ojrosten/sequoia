@@ -14,6 +14,29 @@
 
 namespace sequoia::testing
 {
+  void test_family::set_materials(test& t)
+  {    
+    namespace fs = std::filesystem;
+    const auto folderName{t.materials().empty() ?
+        fs::path{t.source_file_name()}.replace_extension() : t.materials()};
+    const auto rel{fs::relative(folderName, m_TestRepo)};
+    const auto materials{m_TestMaterialsRepo / rel};
+
+    if(fs::exists(materials))
+    {     
+      const auto output{m_OutputDir / "TestsTemporaryData" / rel};
+      t.materials(output);
+      
+      if(m_MaterialsPaths.find(materials) == m_MaterialsPaths.end())
+      {
+        fs::create_directories(output);
+        fs::copy(materials, output, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+
+        m_MaterialsPaths.insert(materials);
+      }
+    }
+  }
+
   auto test_family::execute(const output_mode outputMode, const concurrency_mode concurrenyMode) -> results 
   {
     using namespace std::chrono;
@@ -35,15 +58,6 @@ namespace sequoia::testing
         writer.to_file(std::move(filename), summary);
       }
     };
-
-    process_materials([](const fs::path&, const fs::path& output){
-                                fs::remove_all(output);
-                      });
-
-    process_materials([](const fs::path& materials, const fs::path& output){
-                        fs::create_directories(output);
-                        fs::copy(materials, output, fs::copy_options::recursive | fs::copy_options::update_existing);
-                      });
     
     if(concurrenyMode < concurrency_mode::test)
     {
@@ -91,27 +105,7 @@ namespace sequoia::testing
     }
 
     return {steady_clock::now() - time, std::move(summaries)};
-  }
-
-  template<class Fn>
-    requires invocable<Fn, std::filesystem::path, std::filesystem::path> 
-  void test_family::process_materials(Fn fn)
-  {
-    namespace fs = std::filesystem;
-    
-    for(auto& pTest : m_Tests)
-    {
-      const auto& materials{pTest->materials()};
-      if(fs::exists(materials))
-      {
-        const auto rel{fs::relative(materials, test_materials_path())};
-        const auto output{temporary_data_path() /= rel};
-
-        fn(materials, output);        
-      }
-    }
-  }
-  
+  }  
 
   std::filesystem::path test_family::diagnostics_filename() const
   {
