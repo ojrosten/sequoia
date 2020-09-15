@@ -206,7 +206,7 @@ namespace sequoia::testing
     {
       throw std::runtime_error{report_failed_read(file)};
     }
-        
+
     if(!text.empty())
     {
       constexpr auto npos{std::string::npos};
@@ -539,27 +539,9 @@ namespace sequoia::testing
   {
     if(!message.empty())
     {
-      sentinel block_1{*this};
-      std::cout << block_1.indent(prefix) << '\n';
-
-      sentinel block_2{*this};
-      std::cout << block_2.indent(message) << "\n\n";
+      std::cout << prefix << '\n';
+      std::cout << "  " << message << "\n\n";      
     }
-  }
-
-  template<class Iter, class Filter>
-    requires invocable<Filter, test_runner::messages>
-  void test_runner::report(std::string_view prefix, Iter begin, Iter end, Filter filter)
-  {
-    sentinel block_1{*this};
-    std::cout << block_1.indent(prefix) << '\n';
-
-    sentinel block_2{*this};
-    std::for_each(begin, end, [&block_2, filter](const messages& mess){
-                                std::cout << block_2.indent(filter(mess)) << '\n';
-                              });
-
-    std::cout << '\n';
   }
 
   void test_runner::run_tests()
@@ -569,7 +551,7 @@ namespace sequoia::testing
 
     if(!m_Families.empty() && (m_NascentTests.empty() || !m_SelectedFamilies.empty()))
     {
-      std::cout << "\n\nRunning tests...\n";
+      std::cout << "\nRunning tests...\n\n";
       log_summary summary{};
       if(!concurrent_execution())
       {

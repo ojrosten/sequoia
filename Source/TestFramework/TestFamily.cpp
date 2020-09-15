@@ -29,6 +29,7 @@ namespace sequoia::testing
       
       if(m_MaterialsPaths.find(materials) == m_MaterialsPaths.end())
       {
+        fs::remove_all(output);
         fs::create_directories(output);
         fs::copy(materials, output, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
 

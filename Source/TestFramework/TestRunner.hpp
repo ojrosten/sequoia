@@ -169,41 +169,6 @@ namespace sequoia::testing
     [[nodiscard]]
     concurrency_mode concurrency() const noexcept { return m_ConcurrencyMode; }
   private:
-    class sentinel
-    {
-    public:
-      using size_type = std::string::size_type;
-      
-      sentinel(test_runner& runner)
-        : m_Runner{runner}
-        , m_Indentation(2*(++m_Runner.m_Depth), ' ')
-      {
-      }
-      
-      [[nodiscard]]
-      std::string indent(std::string_view s) const
-      {
-        return testing::indent(s, indentation{m_Indentation});
-      }
-
-      std::string& append_indented(std::string& s1, std::string_view s2)
-      {
-        return testing::append_indented(s1, s2, indentation{m_Indentation});
-      }
-
-      ~sentinel()
-      {
-        --m_Runner.m_Depth;
-      }
-    private:
-      test_runner& m_Runner;
-      std::string m_Indentation;
-    };
-
-    struct messages
-    {
-      std::string creation, comparison;
-    };
 
     using selection_map = std::map<std::string, bool, std::less<>>;
 
@@ -218,7 +183,6 @@ namespace sequoia::testing
       m_TestRepo{},
       m_TestMaterialsRepo{},
       m_OutputDir{};
-    sentinel::size_type m_Depth{};
     
     bool m_Verbose{}, m_Pause{};
     output_mode m_OutputMode{output_mode::write_files};
@@ -263,10 +227,6 @@ namespace sequoia::testing
     }
 
     void report(std::string_view prefix, std::string_view message);
-
-    template<class Iter, class Filter>
-      requires invocable<Filter, test_runner::messages>
-    void report(std::string_view prefix, Iter begin, Iter end, Filter filter);
 
     [[nodiscard]]
     static std::string stringify(concurrency_mode mode);
