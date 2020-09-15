@@ -307,14 +307,14 @@ namespace sequoia::testing
 
   //=========================================== test_runner ===========================================//
 
-  test_runner::test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, std::filesystem::path sourceRepo, std::filesystem::path testRepo, std::filesystem::path testMaterialsRepo, std::filesystem::path outputDir, std::ostream& stream)
+  test_runner::test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, repositories repos, std::ostream& stream)
     : m_Copyright{copyright}          
-    , m_SourceSearchTree{std::move(sourceRepo)}
+    , m_SourceSearchTree{std::move(repos.source)}
     , m_TestMain{std::move(testMain)}
     , m_HashIncludeTarget{std::move(hashIncludeTarget)}
-    , m_TestRepo{std::move(testRepo)}
-    , m_TestMaterialsRepo{std::move(testMaterialsRepo)}
-    , m_OutputDir{std::move(outputDir)}
+    , m_TestRepo{std::move(repos.tests)}
+    , m_TestMaterialsRepo{std::move(repos.test_materials)}
+    , m_OutputDir{std::move(repos.output)}
     , m_Stream{stream}
   {
     throw_unless_regular_file(m_TestMain, "\nEnsure the application is run from the appropriate directory");

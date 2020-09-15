@@ -14,19 +14,13 @@ int main(int argc, char** argv)
   using namespace sequoia;
   using namespace testing;
 
-  namespace fs = std::filesystem;
-
   try
   {
     test_runner runner{argc,
                        argv,
                        "Oliver J. Rosten",
                        working_path().append("TestMain.cpp"),
-                       sibling_path("TestCommon").append("TestIncludes.hpp"),
-                       sibling_path("Source"),
-                       sibling_path("Tests"),
-                       sibling_path("TestMaterials"),
-                       sibling_path("output")
+                       sibling_path("TestCommon").append("TestIncludes.hpp")
     };
 
     const auto mode{runner.concurrency()};

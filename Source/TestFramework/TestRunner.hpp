@@ -103,6 +103,15 @@ namespace sequoia::testing
     static auto generate_template_spec(std::string_view str) -> template_spec;
   };
 
+  struct repositories
+  {
+    std::filesystem::path
+      source{sibling_path("Source")},
+      tests{sibling_path("Tests")},
+      test_materials{sibling_path("TestMaterials")},
+      output{sibling_path("output")};
+  };
+
   /*! \brief Consumes command-line arguments and holds all test families
 
       The various arguments have the following effect:
@@ -127,7 +136,7 @@ namespace sequoia::testing
   class test_runner
   {
   public:    
-    test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, std::filesystem::path sourceRepo, std::filesystem::path testRepo, std::filesystem::path testMaterialsRepo, std::filesystem::path outputDir, std::ostream& stream=std::cout);
+    test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, repositories repos=repositories{}, std::ostream& stream=std::cout);
 
     test_runner(const test_runner&) = delete;
     test_runner(test_runner&&)      = default;
