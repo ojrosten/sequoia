@@ -41,13 +41,15 @@ namespace sequoia::testing
     const auto outputDir{fake().append("output")};
 
     using namespace parsing::commandline;
+
+    std::stringstream outputStream{};
     commandline_arguments args{"", "create", "ordered_test", "other::functional::maybe<class T>", "std::optional<T>"
                                  , "create", "ordered_test", "utilities::iterator", "int*"
                                  , "create", "move_only_test", "bar::baz::foo<class T>", "T"
                                  , "create", "regular_test", "other::couple<class S, class T>", "S", "-e", "T",
                                       "-h", (testRepo / "Partners").string(), "-f", "partners", "-ch", "Couple.hpp"};
     
-    test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, sourceRepo, testRepo, materialsRepo, outputDir};
+    test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, sourceRepo, testRepo, materialsRepo, outputDir, outputStream};
 
     tr.execute();
   }

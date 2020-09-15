@@ -14,12 +14,6 @@
 #include "Summary.hpp"
 #include "FileEditors.hpp"
 
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <cctype>
-#include <optional>
-
 namespace sequoia::testing
 {
   using parsing::commandline::warning;
@@ -313,7 +307,7 @@ namespace sequoia::testing
 
   //=========================================== test_runner ===========================================//
 
-  test_runner::test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, std::filesystem::path sourceRepo, std::filesystem::path testRepo, std::filesystem::path testMaterialsRepo, std::filesystem::path outputDir)
+  test_runner::test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, std::filesystem::path sourceRepo, std::filesystem::path testRepo, std::filesystem::path testMaterialsRepo, std::filesystem::path outputDir, std::ostream& stream)
     : m_Copyright{copyright}          
     , m_SourceSearchTree{std::move(sourceRepo)}
     , m_TestMain{std::move(testMain)}
@@ -321,20 +315,13 @@ namespace sequoia::testing
     , m_TestRepo{std::move(testRepo)}
     , m_TestMaterialsRepo{std::move(testMaterialsRepo)}
     , m_OutputDir{std::move(outputDir)}
+    , m_Stream{stream}
   {
     throw_unless_regular_file(m_TestMain, "\nEnsure the application is run from the appropriate directory");
     throw_unless_regular_file(m_HashIncludeTarget);    
     throw_unless_directory(m_TestRepo);
 
     process_args(argc, argv);
-
-    if(m_Pause)
-    {
-      std::cout << "Please hit enter to continue...\n";
-      while(std::cin.get() != '\n'){}
-    }
-
-    check_argument_consistency();
   }
 
   void test_runner::process_args(int argc, char** argv)
@@ -393,11 +380,13 @@ namespace sequoia::testing
                   },
                   {"--verbose",  {"-v"}, {}, [this](const param_list&) { m_Verbose    = true; }},          
                   {"--nofiles",  {"-n"}, {}, [this](const param_list&) { m_OutputMode = output_mode::write_files; }},
-                  {"--pause",    {"-p"}, {}, [this](const param_list&) { m_Pause      = true;  }},
                   {"--recovery", {"-r"}, {},
                    [] (const param_list&) {
                      output_manager::recovery_file(output_path("Recovery").append("Recovery.txt")); }}
                 });
+
+    
+    check_argument_consistency();
   }
 
   void test_runner::check_argument_consistency() const
@@ -458,20 +447,20 @@ namespace sequoia::testing
       output += summarize(familySummary, log_verbosity::failure_messages, tab, no_indent);
     }
 
-    std::cout << output;
+    m_Stream << output;
 
     return familySummary;
   }
 
-  void test_runner::check_for_missing_tests() const
+  void test_runner::check_for_missing_tests()
   {
     auto check{
-      [](const selection_map& tests, std::string_view type) {
+      [&stream{m_Stream}](const selection_map& tests, std::string_view type) {
         for(const auto& test : tests)
         {
           if(!test.second)
           {
-            std::cout << warning(std::string{"Test "}.append(type).append(" '").append(test.first).append("' not found\n"));
+            stream << warning(std::string{"Test "}.append(type).append(" '").append(test.first).append("' not found\n"));
           }
         }
       }
@@ -539,8 +528,8 @@ namespace sequoia::testing
   {
     if(!message.empty())
     {
-      std::cout << prefix << '\n';
-      std::cout << "  " << message << "\n\n";      
+      m_Stream << prefix << '\n';
+      m_Stream << "  " << message << "\n\n";      
     }
   }
 
@@ -551,19 +540,19 @@ namespace sequoia::testing
 
     if(!m_Families.empty() && (m_NascentTests.empty() || !m_SelectedFamilies.empty()))
     {
-      std::cout << "\nRunning tests...\n\n";
+      m_Stream << "\nRunning tests...\n\n";
       log_summary summary{};
       if(!concurrent_execution())
       {
         for(auto& family : m_Families)
         {
-          std::cout << family.name() << ":\n";
+          m_Stream << family.name() << ":\n";
           summary += process_family(family.execute(m_OutputMode, m_ConcurrencyMode)).log;
         }
       }
       else
       {
-        std::cout << "\n\t--Using asynchronous execution, level: " << stringify(m_ConcurrencyMode) << "\n\n";
+        m_Stream << "\n\t--Using asynchronous execution, level: " << stringify(m_ConcurrencyMode) << "\n\n";
         std::vector<std::pair<std::string, std::future<test_family::results>>> results{};
         results.reserve(m_Families.size());
 
@@ -576,12 +565,12 @@ namespace sequoia::testing
 
         for(auto& res : results)
         {
-          std::cout << res.first << ":\n";
+          m_Stream << res.first << ":\n";
           summary += process_family(res.second.get()).log;
         }
       }
-      std::cout <<  "\n-----------Grand Totals-----------\n";
-      std::cout << summarize(summary, steady_clock::now() - time, log_verbosity::absent_checks, indentation{"\t"},  no_indent);
+      m_Stream <<  "\n-----------Grand Totals-----------\n";
+      m_Stream << summarize(summary, steady_clock::now() - time, log_verbosity::absent_checks, indentation{"\t"},  no_indent);
     }
 
     check_for_missing_tests();

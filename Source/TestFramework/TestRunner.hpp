@@ -15,6 +15,7 @@
 
 #include <map>
 #include <variant>
+#include <iostream>
 
 namespace sequoia::testing
 {
@@ -116,7 +117,6 @@ namespace sequoia::testing
       --async    / -a: unless overridden runs families of test concurrently
       --verbose  / -v: provides detailed break down of test results 
       --nofiles  / -n: suppresses output of diagnostic files
-      --pause    / -p: pauses execution until 'enter' is hit
       --recovery / -r: generates recovery file, which may help tracking down crashes
 
       If no arguments are specified, all tests are run, in serial, with the diagnostic
@@ -127,7 +127,7 @@ namespace sequoia::testing
   class test_runner
   {
   public:    
-    test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, std::filesystem::path sourceRepo, std::filesystem::path testRepo, std::filesystem::path testMaterialsRepo, std::filesystem::path outputDir);
+    test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, std::filesystem::path sourceRepo, std::filesystem::path testRepo, std::filesystem::path testMaterialsRepo, std::filesystem::path outputDir, std::ostream& stream=std::cout);
 
     test_runner(const test_runner&) = delete;
     test_runner(test_runner&&)      = default;
@@ -184,7 +184,9 @@ namespace sequoia::testing
       m_TestMaterialsRepo{},
       m_OutputDir{};
     
-    bool m_Verbose{}, m_Pause{};
+    std::ostream& m_Stream;
+    
+    bool m_Verbose{};
     output_mode m_OutputMode{output_mode::write_files};
 
     concurrency_mode m_ConcurrencyMode{concurrency_mode::serial};
@@ -211,7 +213,7 @@ namespace sequoia::testing
 
     void run_tests();
 
-    void check_for_missing_tests() const;
+    void check_for_missing_tests();
 
     template<class Test, class... Tests>
     void add_tests(test_family& f, Test&& test, Tests&&... tests)
