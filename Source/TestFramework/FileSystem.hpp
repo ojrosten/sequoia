@@ -43,6 +43,27 @@ namespace sequoia::testing
     return sibling_path("aux_files").append(subDirectory);
   }
 
+  inline std::filesystem::path recovery_path(std::filesystem::path outputDir)
+  {
+    return outputDir /= "Recovery";
+  }
+
+  inline std::filesystem::path tests_temporary_data_path(std::filesystem::path outputDir)
+  {
+    return outputDir /= "TestsTemporaryData";
+  }
+
+  inline std::filesystem::path diagnostics_output_path(std::filesystem::path outputDir)
+  {
+    return outputDir /= "DiagnosticsOutput";
+  }
+
+  inline std::filesystem::path test_summaries_path(std::filesystem::path outputDir)
+  {
+    return outputDir /= "TestSummaries";
+  }
+  
+
   template<class Pred>
     requires invocable<Pred, std::filesystem::path>
   void throw_if(const std::filesystem::path& p, std::string_view message, Pred pred)

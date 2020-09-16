@@ -381,7 +381,7 @@ namespace sequoia::testing
                   {"--verbose",  {"-v"}, {}, [this](const param_list&) { m_Verbose    = true; }},          
                   {"--nofiles",  {"-n"}, {}, [this](const param_list&) { m_OutputMode = output_mode::write_files; }},
                   {"--recovery", {"-r"}, {},
-                   [recoveryDir{m_OutputDir / "Recovery"}] (const param_list&) {
+                   [recoveryDir{recovery_path(m_OutputDir)}] (const param_list&) {
                      std::filesystem::create_directory(recoveryDir);
                      output_manager::recovery_file(recoveryDir / "Recovery.txt"); }}
                 });

@@ -24,7 +24,7 @@ namespace sequoia::testing
 
     if(fs::exists(materials))
     {     
-      const auto output{m_OutputDir / "TestsTemporaryData" / rel};
+      const auto output{tests_temporary_data_path(m_OutputDir) /= rel};
       t.materials(output);
       
       if(m_MaterialsPaths.find(materials) == m_MaterialsPaths.end())
@@ -118,7 +118,7 @@ namespace sequoia::testing
       }
     };
 
-    return m_OutputDir / "DiagnosticsOutput" / make_name(m_Name);
+    return diagnostics_output_path(m_OutputDir) /= make_name(m_Name);
   }     
 
   std::filesystem::path test_family::test_summary_filename(const test& t, const output_mode outputMode, const std::filesystem::path& outputDir)
@@ -131,7 +131,7 @@ namespace sequoia::testing
     if(name.empty())
       throw std::logic_error("Source files should have a non-trivial name!");
 
-    fs::path absolute{outputDir / "TestSummaries"};
+    fs::path absolute{test_summaries_path(outputDir)};
     for(auto i{std::next(name.begin())}; i != name.end(); ++i)
     {
       absolute /= *i;
