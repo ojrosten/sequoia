@@ -65,7 +65,7 @@ namespace sequoia::testing
       for(auto& pTest : m_Tests)
       {
         const auto summary{pTest->execute()};
-        summarizer(summary, test_summary_filename(*pTest, outputMode));
+        summarizer(summary, test_summary_filename(*pTest, outputMode, m_OutputDir));
       }
     }
     else
@@ -75,8 +75,8 @@ namespace sequoia::testing
       results.reserve(m_Tests.size());
       for(auto& pTest : m_Tests)
       {
-        results.emplace_back(std::async([&test{*pTest}, outputMode](){
-              return std::make_pair(test.execute(), test_summary_filename(test, outputMode)); }));
+        results.emplace_back(std::async([&test{*pTest}, outputMode, outputDir{m_OutputDir}](){
+                               return std::make_pair(test.execute(), test_summary_filename(test, outputMode, outputDir)); }));
       }
       
       summary_writer writer{};
@@ -118,10 +118,10 @@ namespace sequoia::testing
       }
     };
 
-    return output_path("DiagnosticsOutput").append(make_name(m_Name));
+    return m_OutputDir / "DiagnosticsOutput" / make_name(m_Name);
   }     
 
-  std::filesystem::path test_family::test_summary_filename(const test& t, const output_mode outputMode)
+  std::filesystem::path test_family::test_summary_filename(const test& t, const output_mode outputMode, const std::filesystem::path& outputDir)
   {
     namespace fs = std::filesystem;
     
@@ -131,7 +131,7 @@ namespace sequoia::testing
     if(name.empty())
       throw std::logic_error("Source files should have a non-trivial name!");
 
-    fs::path absolute{output_path("TestSummaries")};
+    fs::path absolute{outputDir / "TestSummaries"};
     for(auto i{std::next(name.begin())}; i != name.end(); ++i)
     {
       absolute /= *i;

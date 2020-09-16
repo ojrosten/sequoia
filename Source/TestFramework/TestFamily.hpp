@@ -94,7 +94,7 @@ namespace sequoia::testing
     std::filesystem::path diagnostics_filename() const;
 
     [[nodiscard]]
-    static std::filesystem::path test_summary_filename(const test& t, const output_mode outputMode);
+    static std::filesystem::path test_summary_filename(const test& t, const output_mode outputMode, const std::filesystem::path& outputDir);
 
     static void write_summary_to_file(const log_summary& summary, std::set<std::string>& record);
 

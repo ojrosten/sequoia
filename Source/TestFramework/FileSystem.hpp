@@ -36,12 +36,6 @@ namespace sequoia::testing
   {
     return parent_path().append(directory);
   }
-  
-  [[nodiscard]]
-  inline std::filesystem::path output_path(std::string_view subDirectory)
-  {
-    return sibling_path("output").append(subDirectory);
-  }
 
   [[nodiscard]]
   inline std::filesystem::path aux_path(std::string_view subDirectory)
