@@ -53,5 +53,7 @@ namespace sequoia::testing
     test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, repos, outputStream};
 
     tr.execute();
+
+    check_equivalence(LINE(""), fake(), materials() / "After" / "FakeProject");
   }
 }
