@@ -495,6 +495,8 @@ namespace sequoia::testing
           append_lines(mess, fn(data, stub));
         }
 
+        //add_to_family(m_TestMain, data.family(), TESTS...);
+
         ++beginNascentTests;
       }
 
@@ -509,7 +511,7 @@ namespace sequoia::testing
   std::string test_runner::create_files(Iter beginNascentTests, Iter endNascentTests, const std::filesystem::copy_options options) const
   {
     auto action{
-                [options,&copyright{m_Copyright},&target{m_HashIncludeTarget}](const nascent_test& data, std::string_view stub){
+      [options,&copyright{m_Copyright},&target{m_HashIncludeTarget}](const nascent_test& data, std::string_view stub){
         const auto filePath{data.create_file(copyright, stub, options)};
         
         if(const auto filename{filePath.filename()};

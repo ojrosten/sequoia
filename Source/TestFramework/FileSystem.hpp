@@ -46,7 +46,7 @@ namespace sequoia::testing
   [[nodiscard]]
   inline std::filesystem::path code_templates_path()
   {
-    return aux_path().append("UnitTestCodeTemplates").append("CodeTemplates");
+    return aux_path().append("TestTemplates");
   }
   
 
