@@ -161,26 +161,27 @@ namespace sequoia::testing
         return "Ah, chars. So easy to get wrong.";
                                                                                                                                  }});
 
+    
+    namespace fs = std::filesystem;
+
     check_equivalence(LINE(""), std::pair<const int&, double>{5, 7.8}, std::pair<int, const double&>{-5, 6.8});
     check_equivalence(LINE(""), std::tuple<const int&, double>{5, 7.8}, std::tuple<int, const double&>{-5, 6.8});
 
     check_equivalence(LINE("Inequivalence of two different paths, neither of which exists"),
-                      aux_path("UnitTestCodeTemplates").append("Blah"),
-                      aux_path("UnitTestCodeTemplates").append("Blurg"));
+                      fs::path{materials()}.append("Stuff").append("Blah"),
+                      fs::path{materials()}.append("Stuff").append("Blurg"));
 
     check_equivalence(LINE("Inequivalence of two different paths, one of which exists"),
-                      aux_path("UnitTestCodeTemplates").append("Blah"),
-                      aux_path("UnitTestCodeTemplates").append("CodeTemplates"));
+                      fs::path{materials()}.append("Stuff").append("Blah"),
+                      fs::path{materials()}.append("Stuff").append("A"));
 
     check_equivalence(LINE("Inequivalence of directory/file"),
-                      aux_path("UnitTestCodeTemplates").append("CodeTemplates"),
-                      aux_path("UnitTestCodeTemplates").append("CodeTemplates").append("MyClassTest.hpp"));
+                      fs::path{materials()}.append("Stuff").append("A"),
+                      fs::path{materials()}.append("Stuff").append("A").append("foo.txt"));
 
     check_equivalence(LINE("Inequivalence of differently named files"),
-                      aux_path("UnitTestCodeTemplates").append("CodeTemplates").append("MyClassTest.cpp"),
-                      aux_path("UnitTestCodeTemplates").append("CodeTemplates").append("MyClassTest.hpp"));
-
-    namespace fs = std::filesystem;
+                      fs::path{materials()}.append("Stuff").append("B").append("foo.txt"),
+                      fs::path{materials()}.append("Stuff").append("B").append("bar.txt"));
 
     check_equivalence(LINE("Inequivalence of file contents"),
                       fs::path{materials()}.append("Stuff").append("A").append("foo.txt"),
@@ -285,16 +286,16 @@ namespace sequoia::testing
     check_equivalence(LINE(""), std::string{"foo"}, "foo");
 
     check_equivalence(LINE(""), std::vector<std::string>{{"a"}, {"b"}}, std::initializer_list<std::string_view>{"a", "b"});
+    
+    namespace fs = std::filesystem;
 
     check_equivalence(LINE("Equivalence of a file to itself"),
-                      aux_path("UnitTestCodeTemplates").append("CodeTemplates").append("MyClassTest.hpp"),
-                      aux_path("UnitTestCodeTemplates").append("CodeTemplates").append("MyClassTest.hpp"));
+                      fs::path{materials()}.append("Stuff").append("A").append("foo.txt"),
+                      fs::path{materials()}.append("Stuff").append("A").append("foo.txt"));
 
     check_equivalence(LINE("Equivalence of a directory to itself"),
-                      aux_path("UnitTestCodeTemplates").append("CodeTemplates"),
-                      aux_path("UnitTestCodeTemplates").append("CodeTemplates"));
-
-    namespace fs = std::filesystem;
+                      fs::path{materials()}.append("Stuff").append("A"),
+                      fs::path{materials()}.append("Stuff").append("A"));
 
     check_equivalence(LINE("Equivalence of a directory, with sub-directories to itself"),
                       fs::path{materials()}.append("Stuff"),

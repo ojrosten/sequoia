@@ -179,7 +179,7 @@ namespace sequoia::testing
 
     auto makePath{
       [partName](){
-        return aux_path("UnitTestCodeTemplates").append("CodeTemplates").append("MyClass").concat(partName);
+        return code_templates_path().append("MyClass").concat(partName);
       }
     };
 
