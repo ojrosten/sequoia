@@ -66,6 +66,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">FileSystem.hpp File Reference</div>  </div>
@@ -74,10 +75,17 @@ $(function() {
 
 <p>File paths and related utilities.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &lt;filesystem&gt;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="../../d3/d84/Concepts_8hpp_source.html">Concepts.hpp</a>&quot;</code><br />
+<code>#include &lt;filesystem&gt;</code><br />
 </div>
 <p><a href="../../d2/dbb/FileSystem_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/dc7/classsequoia_1_1testing_1_1search__tree.html">sequoia::testing::search_tree</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used for performing a recursive search.  <a href="../../dc/dc7/classsequoia_1_1testing_1_1search__tree.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a95662be6c3f4dbbbe8315c9e0b618721"><td class="memItemLeft" align="right" valign="top"><a id="a95662be6c3f4dbbbe8315c9e0b618721"></a>
@@ -89,12 +97,46 @@ std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>sequ
 <tr class="memitem:a340c9ba16f9a5f011f29857fc1664a9b"><td class="memItemLeft" align="right" valign="top"><a id="a340c9ba16f9a5f011f29857fc1664a9b"></a>
 std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::sibling_path</b> (std::string_view directory)</td></tr>
 <tr class="separator:a340c9ba16f9a5f011f29857fc1664a9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b5ee0ce8c28baa4547bab56f5c5b29f"><td class="memItemLeft" align="right" valign="top"><a id="a2b5ee0ce8c28baa4547bab56f5c5b29f"></a>
-std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::get_output_path</b> (std::string_view subDirectory)</td></tr>
-<tr class="separator:a2b5ee0ce8c28baa4547bab56f5c5b29f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7ab9f9c571506a171eccdb691030de62"><td class="memItemLeft" align="right" valign="top"><a id="a7ab9f9c571506a171eccdb691030de62"></a>
-std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::get_aux_path</b> (std::string_view subDirectory)</td></tr>
-<tr class="separator:a7ab9f9c571506a171eccdb691030de62"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5b7f15a6294c7f737f1cb5b9e3ae168"><td class="memItemLeft" align="right" valign="top"><a id="aa5b7f15a6294c7f737f1cb5b9e3ae168"></a>
+std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::aux_path</b> ()</td></tr>
+<tr class="separator:aa5b7f15a6294c7f737f1cb5b9e3ae168"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a19664b65dc79bbb5829f48fcc2bde2f0"><td class="memItemLeft" align="right" valign="top"><a id="a19664b65dc79bbb5829f48fcc2bde2f0"></a>
+std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::code_templates_path</b> ()</td></tr>
+<tr class="separator:a19664b65dc79bbb5829f48fcc2bde2f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad00c7f4967fcdfb9c1fc74d303b85db0"><td class="memItemLeft" align="right" valign="top"><a id="ad00c7f4967fcdfb9c1fc74d303b85db0"></a>
+std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::recovery_path</b> (std::filesystem::path outputDir)</td></tr>
+<tr class="separator:ad00c7f4967fcdfb9c1fc74d303b85db0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a336a82a1efaef4c261c7d5ab167b82a2"><td class="memItemLeft" align="right" valign="top"><a id="a336a82a1efaef4c261c7d5ab167b82a2"></a>
+std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::tests_temporary_data_path</b> (std::filesystem::path outputDir)</td></tr>
+<tr class="separator:a336a82a1efaef4c261c7d5ab167b82a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a991224e7094f370426e16d0e20a263f0"><td class="memItemLeft" align="right" valign="top"><a id="a991224e7094f370426e16d0e20a263f0"></a>
+std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::diagnostics_output_path</b> (std::filesystem::path outputDir)</td></tr>
+<tr class="separator:a991224e7094f370426e16d0e20a263f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6ea78a5f910b97ea6f30d77a7d3be7b1"><td class="memItemLeft" align="right" valign="top"><a id="a6ea78a5f910b97ea6f30d77a7d3be7b1"></a>
+std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::test_summaries_path</b> (std::filesystem::path outputDir)</td></tr>
+<tr class="separator:a6ea78a5f910b97ea6f30d77a7d3be7b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a394c2455c82ed8057fcc50135b1bc782"><td class="memTemplParams" colspan="2"><a id="a394c2455c82ed8057fcc50135b1bc782"></a>
+template&lt;class Pred &gt; </td></tr>
+<tr class="memitem:a394c2455c82ed8057fcc50135b1bc782"><td class="memTemplItemLeft" align="right" valign="top">requires invocable&lt; Pred, std::filesystem::path &gt; void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::throw_if</b> (const std::filesystem::path &amp;p, std::string_view message, Pred pred)</td></tr>
+<tr class="separator:a394c2455c82ed8057fcc50135b1bc782"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a0091789be565cfbb171973efd65b9f"><td class="memItemLeft" align="right" valign="top"><a id="a4a0091789be565cfbb171973efd65b9f"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::report_file_issue</b> (const std::filesystem::path &amp;file, std::string_view description)</td></tr>
+<tr class="separator:a4a0091789be565cfbb171973efd65b9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac11d1a02f39d8721624bcf63423ae96"><td class="memItemLeft" align="right" valign="top"><a id="aac11d1a02f39d8721624bcf63423ae96"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::report_failed_read</b> (const std::filesystem::path &amp;file)</td></tr>
+<tr class="separator:aac11d1a02f39d8721624bcf63423ae96"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8358861ad3b25372900e286f79a52273"><td class="memItemLeft" align="right" valign="top"><a id="a8358861ad3b25372900e286f79a52273"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::report_failed_write</b> (const std::filesystem::path &amp;file)</td></tr>
+<tr class="separator:a8358861ad3b25372900e286f79a52273"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d71fd03d668676c5d637fd6fef001c0"><td class="memItemLeft" align="right" valign="top"><a id="a3d71fd03d668676c5d637fd6fef001c0"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::throw_unless_exists</b> (const std::filesystem::path &amp;p, std::string_view message)</td></tr>
+<tr class="separator:a3d71fd03d668676c5d637fd6fef001c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed9e05d84669faa98038725b7f7b72fe"><td class="memItemLeft" align="right" valign="top"><a id="aed9e05d84669faa98038725b7f7b72fe"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::throw_unless_directory</b> (const std::filesystem::path &amp;p, std::string_view message)</td></tr>
+<tr class="separator:aed9e05d84669faa98038725b7f7b72fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad1fa400bd194fe4f5f92690efc6b7d42"><td class="memItemLeft" align="right" valign="top"><a id="ad1fa400bd194fe4f5f92690efc6b7d42"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::throw_unless_regular_file</b> (const std::filesystem::path &amp;p, std::string_view message)</td></tr>
+<tr class="separator:ad1fa400bd194fe4f5f92690efc6b7d42"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>File paths and related utilities. </p>

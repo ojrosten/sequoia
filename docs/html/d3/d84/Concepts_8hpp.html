@@ -542,6 +542,8 @@ template&lt;class T &gt; </div>
 <b>Initial value:</b><div class="fragment"><div class="line">= requires(T&amp; t) {</div>
 <div class="line">    std::begin(t);</div>
 <div class="line">    std::end(t);</div>
+<div class="line"> </div>
+<div class="line">    requires (!same_as&lt;std::remove_cvref_t&lt;decltype(*std::begin(t))&gt;, std::remove_cvref_t&lt;T&gt;&gt;);</div>
 <div class="line">  }</div>
 </div><!-- fragment -->
 </div>

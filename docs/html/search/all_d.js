@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['operation_458',['operation',['../d0/d7a/structsequoia_1_1parsing_1_1commandline_1_1operation.html',1,'sequoia::parsing::commandline']]],
-  ['option_5finfo_459',['option_info',['../d5/d7e/structsequoia_1_1parsing_1_1commandline_1_1option__info.html',1,'sequoia::parsing::commandline']]],
-  ['output_5fmanager_460',['output_manager',['../d8/dbc/classsequoia_1_1testing_1_1output__manager.html',1,'sequoia::testing']]]
+  ['operation_470',['operation',['../d0/d7a/structsequoia_1_1parsing_1_1commandline_1_1operation.html',1,'sequoia::parsing::commandline']]],
+  ['option_471',['option',['../db/da8/structsequoia_1_1parsing_1_1commandline_1_1option.html',1,'sequoia::parsing::commandline']]],
+  ['output_5fmanager_472',['output_manager',['../d8/dbc/classsequoia_1_1testing_1_1output__manager.html',1,'sequoia::testing']]]
 ];

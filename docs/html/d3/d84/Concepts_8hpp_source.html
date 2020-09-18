@@ -263,14 +263,16 @@ $(function() {
 <div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;  concept range = requires(T&amp; t) {</div>
 <div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;    std::begin(t);</div>
 <div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;    std::end(t);</div>
-<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;  };</div>
-<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160; </div>
-<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">template</span>&lt;<span class="keyword">class</span>...&gt; <span class="keyword">class </span>T, <span class="keyword">class</span>... Args&gt;</div>
-<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;  concept class_template_is_default_instantiable</div>
-<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;   =    default_initializable&lt;T&lt;Args...&gt;&gt;</div>
-<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;     &amp;&amp; requires() { T&lt;Args...&gt;{}; };</div>
-<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;             </div>
-<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;}</div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160; </div>
+<div class="line"><a name="l00202"></a><span class="lineno">  202</span>&#160;    requires (!same_as&lt;std::remove_cvref_t&lt;decltype(*std::begin(t))&gt;, std::remove_cvref_t&lt;T&gt;&gt;);</div>
+<div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;  };</div>
+<div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160; </div>
+<div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">template</span>&lt;<span class="keyword">class</span>...&gt; <span class="keyword">class </span>T, <span class="keyword">class</span>... Args&gt;</div>
+<div class="line"><a name="l00206"></a><span class="lineno">  206</span>&#160;  concept class_template_is_default_instantiable</div>
+<div class="line"><a name="l00207"></a><span class="lineno">  207</span>&#160;   =    default_initializable&lt;T&lt;Args...&gt;&gt;</div>
+<div class="line"><a name="l00208"></a><span class="lineno">  208</span>&#160;     &amp;&amp; requires() { T&lt;Args...&gt;{}; };</div>
+<div class="line"><a name="l00209"></a><span class="lineno">  209</span>&#160;             </div>
+<div class="line"><a name="l00210"></a><span class="lineno">  210</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

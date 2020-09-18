@@ -86,137 +86,153 @@ $(function() {
 <div class="line"><a name="l00036"></a><span class="lineno"><a class="line" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">   36</a></span>&#160;  <span class="keyword">class </span><a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a></div>
 <div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;  {</div>
 <div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;  <span class="keyword">public</span>:    </div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>(std::string_view name) : m_Name{name} {}</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;    </div>
-<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>(<span class="keyword">const</span> <a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>&amp;)            = <span class="keyword">delete</span>;  </div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;    <a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>&amp; operator=(<span class="keyword">const</span> <a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>&amp;) = <span class="keyword">delete</span>;</div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>&amp; operator=(<a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>&amp;&amp;)      = <span class="keyword">delete</span>;</div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
-<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    [[nodiscard]]</div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <a class="code" href="../../d2/daa/classsequoia_1_1testing_1_1log__summary.html">log_summary</a> execute()</div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    {</div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;      <span class="keywordflow">return</span> <a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html#a3cd13c830731a9b239d3f33f3eff328f">do_execute</a>();</div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    }</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    [[nodiscard]]</div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;    std::string_view source_file_name() <span class="keyword">const</span> noexcept</div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    {</div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;      <span class="keywordflow">return</span> <a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html#af45829b6c878446b52dab1107616995f">source_file</a>();</div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    }</div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160; </div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    [[nodiscard]]</div>
-<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;    std::string_view name() <span class="keyword">const</span> noexcept { <span class="keywordflow">return</span> m_Name; }</div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;  <span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;    <a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>(<a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>&amp;&amp;) noexcept = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    [[nodiscard]]</div>
-<div class="line"><a name="l00065"></a><span class="lineno"><a class="line" href="../../da/d6f/classsequoia_1_1testing_1_1test.html#a3cd13c830731a9b239d3f33f3eff328f">   65</a></span>&#160;    <span class="keyword">virtual</span> <a class="code" href="../../d2/daa/classsequoia_1_1testing_1_1log__summary.html">log_summary</a> <a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html#a3cd13c830731a9b239d3f33f3eff328f">do_execute</a>() = 0;</div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    </div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    [[nodiscard]]</div>
-<div class="line"><a name="l00069"></a><span class="lineno"><a class="line" href="../../da/d6f/classsequoia_1_1testing_1_1test.html#af45829b6c878446b52dab1107616995f">   69</a></span>&#160;    <span class="keyword">virtual</span> std::string_view <a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html#af45829b6c878446b52dab1107616995f">source_file</a>() const noexcept = 0;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;    <a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>(std::string_view name, std::filesystem::path materials=<span class="stringliteral">&quot;&quot;</span>)</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;      : m_Name{name}</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;      , m_Materials{std::move(materials)}</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    {}</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;    <span class="keyword">virtual</span> ~<a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;    </div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>(<span class="keyword">const</span> <a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>&amp;)            = <span class="keyword">delete</span>;  </div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>&amp; operator=(<span class="keyword">const</span> <a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>&amp; operator=(<a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>&amp;&amp;)      = <span class="keyword">delete</span>;</div>
+<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160; </div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;    [[nodiscard]]</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <a class="code" href="../../d2/daa/classsequoia_1_1testing_1_1log__summary.html">log_summary</a> execute()</div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;    {</div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;      <span class="keywordflow">return</span> <a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html#a3cd13c830731a9b239d3f33f3eff328f">do_execute</a>();</div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;    }</div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160; </div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;    [[nodiscard]]</div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;    std::string_view source_file_name() <span class="keyword">const</span> noexcept</div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;    {</div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;      <span class="keywordflow">return</span> <a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html#af45829b6c878446b52dab1107616995f">source_file</a>();</div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;    }</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;    [[nodiscard]]</div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;    std::string_view name() <span class="keyword">const</span> noexcept { <span class="keywordflow">return</span> m_Name; }</div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    [[nodiscard]]</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="keyword">const</span> std::filesystem::path&amp; materials() <span class="keyword">const</span> noexcept</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    {</div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;      <span class="keywordflow">return</span> m_Materials;</div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;    }</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;  private:</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    std::<span class="keywordtype">string</span> m_Name;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;  };</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;  template&lt;class T&gt;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;  concept concrete_test = derived_from&lt;T, <a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>&gt; &amp;&amp; !std::is_abstract_v&lt;T&gt;;</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;    <span class="keywordtype">void</span> materials(std::filesystem::path materials)</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;    {</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;      m_Materials = std::move(materials);</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    }</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;  <span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>(<a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>&amp;&amp;) noexcept = <span class="keywordflow">default</span>;</div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160; </div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;  template&lt;class Checker&gt;</div>
-<div class="line"><a name="l00101"></a><span class="lineno"><a class="line" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">  101</a></span>&#160;  class <a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a> : public <a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>, protected Checker</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;  {</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;  <span class="keyword">public</span>:    </div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;    <span class="keyword">using</span> test::test;</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160; </div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    ~<a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a>() <span class="keyword">override</span> = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;    </div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    <a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a>(<span class="keyword">const</span> <a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a>&amp;)            = <span class="keyword">delete</span>;</div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a>&amp; operator=(<span class="keyword">const</span> <a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a>&amp;) = <span class="keyword">delete</span>;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;    <a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a>&amp; operator=(<a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a>&amp;&amp;)      = <span class="keyword">delete</span>;</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    </div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;  <span class="keyword">protected</span>:</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    <span class="keyword">using</span> time_point = std::chrono::time_point&lt;std::chrono::steady_clock&gt;;</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    </div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a>(<a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a>&amp;&amp;) noexcept = <span class="keywordflow">default</span>;</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
-<div class="line"><a name="l00117"></a><span class="lineno"><a class="line" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html#aaf583bceb567b81421e42672baf7bb2c">  117</a></span>&#160;    <a class="code" href="../../d2/daa/classsequoia_1_1testing_1_1log__summary.html">log_summary</a> <a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html#aaf583bceb567b81421e42672baf7bb2c">do_execute</a>() final</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;    {</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;      <span class="keyword">using namespace </span>std::chrono;</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;      <span class="keyword">const</span> <span class="keyword">auto</span> time{steady_clock::now()};</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;      <span class="keywordflow">try</span></div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;      {</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        run_tests();</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;      }</div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;      <span class="keywordflow">catch</span>(<span class="keyword">const</span> std::exception&amp; e)</div>
-<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;      {</div>
-<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;        <span class="keyword">auto</span> sentry{make_sentinel()};</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;        sentry.log_critical_failure(exception_message(<span class="stringliteral">&quot;Unexpected&quot;</span>, e.what()));</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;      }</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;      <span class="keywordflow">catch</span>(...)</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;      {</div>
-<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;        <span class="keyword">auto</span> sentry{make_sentinel()};</div>
-<div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;        sentry.log_critical_failure(exception_message(<span class="stringliteral">&quot;Unknown&quot;</span>, <span class="stringliteral">&quot;&quot;</span>));</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;      }</div>
-<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160; </div>
-<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;      <span class="keywordflow">return</span> summarize(time);</div>
-<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;    }</div>
-<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160; </div>
-<div class="line"><a name="l00140"></a><span class="lineno"><a class="line" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html#a28b585b0b756a09e3d4a1e45cf6c8e3f">  140</a></span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html#a28b585b0b756a09e3d4a1e45cf6c8e3f">run_tests</a>() = 0;</div>
-<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160; </div>
-<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;    [[nodiscard]]</div>
-<div class="line"><a name="l00144"></a><span class="lineno"><a class="line" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html#a11b031e47122d2367a5caa9b121c3691">  144</a></span>&#160;    <span class="keyword">virtual</span> <a class="code" href="../../d2/daa/classsequoia_1_1testing_1_1log__summary.html">log_summary</a> <a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html#a11b031e47122d2367a5caa9b121c3691">summarize</a>(<span class="keyword">const</span> time_point start)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;      <span class="keyword">using namespace </span>std::chrono;</div>
-<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;      <span class="keywordflow">return</span> Checker::summary(name(), steady_clock::now() - start);</div>
-<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;    }</div>
-<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160; </div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;    [[nodiscard]]</div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;    std::string exception_message(std::string_view tag, std::string_view exceptionMessage)<span class="keyword"> const</span></div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;      <span class="keywordflow">return</span> testing::exception_message(tag, Checker::top_level_message(), exceptionMessage, Checker::exceptions_detected_by_sentinel());</div>
-<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160;    }</div>
-<div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;  <span class="keyword">private</span>:</div>
-<div class="line"><a name="l00156"></a><span class="lineno">  156</span>&#160;    [[nodiscard]]</div>
-<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160;    sentinel&lt;Checker::mode&gt; make_sentinel()</div>
-<div class="line"><a name="l00158"></a><span class="lineno">  158</span>&#160;    {</div>
-<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;      <span class="keywordflow">if</span> constexpr(Checker::mode == test_mode::false_positive)</div>
-<div class="line"><a name="l00160"></a><span class="lineno">  160</span>&#160;      {</div>
-<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;        <span class="keywordflow">return</span> Checker::make_sentinel(end_block(Checker::top_level_message(), 2, footer()));</div>
-<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;      }</div>
-<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;      <span class="keywordflow">else</span></div>
-<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;      {</div>
-<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160;        <span class="keywordflow">return</span> Checker::make_sentinel(Checker::top_level_message());</div>
-<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;      }</div>
-<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    }</div>
-<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;  };</div>
-<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;  </div>
-<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;  <span class="keyword">template</span>&lt;test_mode Mode&gt;</div>
-<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;  <span class="keyword">using</span> basic_free_test = basic_test&lt;checker&lt;Mode&gt;&gt;;</div>
-<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160; </div>
-<div class="line"><a name="l00174"></a><span class="lineno"><a class="line" href="../../dd/d3e/FreeTestCore_8hpp.html#a58ef890d97adcfe24617ac1e9b266133">  174</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">free_test</a>                = <a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_free_test&lt;test_mode::standard&gt;</a>;</div>
-<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;  <span class="keyword">using</span> <a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">free_false_negative_test</a> = <a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_free_test&lt;test_mode::false_negative&gt;</a>;</div>
-<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;  <span class="keyword">using</span> <a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">free_false_positive_test</a> = <a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_free_test&lt;test_mode::false_positive&gt;</a>;</div>
-<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160; </div>
-<div class="line"><a name="l00179"></a><span class="lineno"><a class="line" href="../../dd/d3e/FreeTestCore_8hpp.html#a5bf3cc5ec793288c6c7da7ceeb3249a7">  179</a></span>&#160;  <span class="keyword">enum class</span> <a class="code" href="../../dd/d3e/FreeTestCore_8hpp.html#a5bf3cc5ec793288c6c7da7ceeb3249a7">concurrency_mode</a>{</div>
-<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;    serial=-1, </div>
-<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;    family,    </div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;    <a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>,      </div>
-<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;    deep       </div>
-<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;  }; </div>
-<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;}</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    [[nodiscard]]</div>
+<div class="line"><a name="l00080"></a><span class="lineno"><a class="line" href="../../da/d6f/classsequoia_1_1testing_1_1test.html#a3cd13c830731a9b239d3f33f3eff328f">   80</a></span>&#160;    <span class="keyword">virtual</span> <a class="code" href="../../d2/daa/classsequoia_1_1testing_1_1log__summary.html">log_summary</a> <a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html#a3cd13c830731a9b239d3f33f3eff328f">do_execute</a>() = 0;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    </div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    [[nodiscard]]</div>
+<div class="line"><a name="l00084"></a><span class="lineno"><a class="line" href="../../da/d6f/classsequoia_1_1testing_1_1test.html#af45829b6c878446b52dab1107616995f">   84</a></span>&#160;    <span class="keyword">virtual</span> std::string_view <a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html#af45829b6c878446b52dab1107616995f">source_file</a>() const noexcept = 0;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;  private:</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    std::<span class="keywordtype">string</span> m_Name;</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;    std::filesystem::path m_Materials;</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;  };</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;  template&lt;class T&gt;</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;  concept concrete_test = derived_from&lt;T, <a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>&gt; &amp;&amp; !std::is_abstract_v&lt;T&gt;;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160; </div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;  template&lt;class Checker&gt;</div>
+<div class="line"><a name="l00117"></a><span class="lineno"><a class="line" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">  117</a></span>&#160;  class <a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a> : public <a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>, protected Checker</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;  {</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;  <span class="keyword">public</span>:    </div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;    <span class="keyword">using</span> test::test;</div>
+<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160; </div>
+<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    ~<a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a>() <span class="keyword">override</span> = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;    </div>
+<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    <a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a>(<span class="keyword">const</span> <a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a>&amp;)            = <span class="keyword">delete</span>;</div>
+<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    <a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a>&amp; operator=(<span class="keyword">const</span> <a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a>&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    <a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a>&amp; operator=(<a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a>&amp;&amp;)      = <span class="keyword">delete</span>;</div>
+<div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    </div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;  <span class="keyword">protected</span>:</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    <span class="keyword">using</span> time_point = std::chrono::time_point&lt;std::chrono::steady_clock&gt;;</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    </div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    <a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a>(<a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_test</a>&amp;&amp;) noexcept = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160; </div>
+<div class="line"><a name="l00133"></a><span class="lineno"><a class="line" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html#aaf583bceb567b81421e42672baf7bb2c">  133</a></span>&#160;    <a class="code" href="../../d2/daa/classsequoia_1_1testing_1_1log__summary.html">log_summary</a> <a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html#aaf583bceb567b81421e42672baf7bb2c">do_execute</a>() final</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;    {</div>
+<div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;      <span class="keyword">using namespace </span>std::chrono;</div>
+<div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;      <span class="keyword">const</span> <span class="keyword">auto</span> time{steady_clock::now()};</div>
+<div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;      <span class="keywordflow">try</span></div>
+<div class="line"><a name="l00138"></a><span class="lineno">  138</span>&#160;      {</div>
+<div class="line"><a name="l00139"></a><span class="lineno">  139</span>&#160;        run_tests();</div>
+<div class="line"><a name="l00140"></a><span class="lineno">  140</span>&#160;      }</div>
+<div class="line"><a name="l00141"></a><span class="lineno">  141</span>&#160;      <span class="keywordflow">catch</span>(<span class="keyword">const</span> std::exception&amp; e)</div>
+<div class="line"><a name="l00142"></a><span class="lineno">  142</span>&#160;      {</div>
+<div class="line"><a name="l00143"></a><span class="lineno">  143</span>&#160;        <span class="keyword">auto</span> sentry{make_sentinel()};</div>
+<div class="line"><a name="l00144"></a><span class="lineno">  144</span>&#160;        sentry.log_critical_failure(exception_message(<span class="stringliteral">&quot;Unexpected&quot;</span>, e.what()));</div>
+<div class="line"><a name="l00145"></a><span class="lineno">  145</span>&#160;      }</div>
+<div class="line"><a name="l00146"></a><span class="lineno">  146</span>&#160;      <span class="keywordflow">catch</span>(...)</div>
+<div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;      {</div>
+<div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;        <span class="keyword">auto</span> sentry{make_sentinel()};</div>
+<div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160;        sentry.log_critical_failure(exception_message(<span class="stringliteral">&quot;Unknown&quot;</span>, <span class="stringliteral">&quot;&quot;</span>));</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;      }</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160; </div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;      <span class="keywordflow">return</span> summarize(time);</div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;    }</div>
+<div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160; </div>
+<div class="line"><a name="l00156"></a><span class="lineno"><a class="line" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html#a28b585b0b756a09e3d4a1e45cf6c8e3f">  156</a></span>&#160;    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html#a28b585b0b756a09e3d4a1e45cf6c8e3f">run_tests</a>() = 0;</div>
+<div class="line"><a name="l00157"></a><span class="lineno">  157</span>&#160; </div>
+<div class="line"><a name="l00159"></a><span class="lineno">  159</span>&#160;    [[nodiscard]]</div>
+<div class="line"><a name="l00160"></a><span class="lineno"><a class="line" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html#a11b031e47122d2367a5caa9b121c3691">  160</a></span>&#160;    <span class="keyword">virtual</span> <a class="code" href="../../d2/daa/classsequoia_1_1testing_1_1log__summary.html">log_summary</a> <a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html#a11b031e47122d2367a5caa9b121c3691">summarize</a>(<span class="keyword">const</span> time_point start)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00161"></a><span class="lineno">  161</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00162"></a><span class="lineno">  162</span>&#160;      <span class="keyword">using namespace </span>std::chrono;</div>
+<div class="line"><a name="l00163"></a><span class="lineno">  163</span>&#160;      <span class="keywordflow">return</span> Checker::summary(name(), steady_clock::now() - start);</div>
+<div class="line"><a name="l00164"></a><span class="lineno">  164</span>&#160;    }</div>
+<div class="line"><a name="l00165"></a><span class="lineno">  165</span>&#160; </div>
+<div class="line"><a name="l00166"></a><span class="lineno">  166</span>&#160;    [[nodiscard]]</div>
+<div class="line"><a name="l00167"></a><span class="lineno">  167</span>&#160;    std::string exception_message(std::string_view tag, std::string_view exceptionMessage)<span class="keyword"> const</span></div>
+<div class="line"><a name="l00168"></a><span class="lineno">  168</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00169"></a><span class="lineno">  169</span>&#160;      <span class="keywordflow">return</span> testing::exception_message(tag, Checker::top_level_message(), exceptionMessage, Checker::exceptions_detected_by_sentinel());</div>
+<div class="line"><a name="l00170"></a><span class="lineno">  170</span>&#160;    }</div>
+<div class="line"><a name="l00171"></a><span class="lineno">  171</span>&#160;  <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00172"></a><span class="lineno">  172</span>&#160;    [[nodiscard]]</div>
+<div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;    sentinel&lt;Checker::mode&gt; make_sentinel()</div>
+<div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;    {</div>
+<div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160;      <span class="keywordflow">if</span> constexpr(Checker::mode == test_mode::false_positive)</div>
+<div class="line"><a name="l00176"></a><span class="lineno">  176</span>&#160;      {</div>
+<div class="line"><a name="l00177"></a><span class="lineno">  177</span>&#160;        <span class="keywordflow">return</span> Checker::make_sentinel(end_block(Checker::top_level_message(), 2, footer()));</div>
+<div class="line"><a name="l00178"></a><span class="lineno">  178</span>&#160;      }</div>
+<div class="line"><a name="l00179"></a><span class="lineno">  179</span>&#160;      <span class="keywordflow">else</span></div>
+<div class="line"><a name="l00180"></a><span class="lineno">  180</span>&#160;      {</div>
+<div class="line"><a name="l00181"></a><span class="lineno">  181</span>&#160;        <span class="keywordflow">return</span> Checker::make_sentinel(Checker::top_level_message());</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;      }</div>
+<div class="line"><a name="l00183"></a><span class="lineno">  183</span>&#160;    }</div>
+<div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;  };</div>
+<div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;  </div>
+<div class="line"><a name="l00186"></a><span class="lineno">  186</span>&#160;  <span class="keyword">template</span>&lt;test_mode Mode&gt;</div>
+<div class="line"><a name="l00187"></a><span class="lineno">  187</span>&#160;  <span class="keyword">using</span> basic_free_test = basic_test&lt;checker&lt;Mode&gt;&gt;;</div>
+<div class="line"><a name="l00188"></a><span class="lineno">  188</span>&#160; </div>
+<div class="line"><a name="l00190"></a><span class="lineno"><a class="line" href="../../dd/d3e/FreeTestCore_8hpp.html#a58ef890d97adcfe24617ac1e9b266133">  190</a></span>&#160;  <span class="keyword">using</span> <a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">free_test</a>                = <a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_free_test&lt;test_mode::standard&gt;</a>;</div>
+<div class="line"><a name="l00191"></a><span class="lineno">  191</span>&#160;  <span class="keyword">using</span> <a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">free_false_negative_test</a> = <a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_free_test&lt;test_mode::false_negative&gt;</a>;</div>
+<div class="line"><a name="l00192"></a><span class="lineno">  192</span>&#160;  <span class="keyword">using</span> <a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">free_false_positive_test</a> = <a class="code" href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">basic_free_test&lt;test_mode::false_positive&gt;</a>;</div>
+<div class="line"><a name="l00193"></a><span class="lineno">  193</span>&#160; </div>
+<div class="line"><a name="l00195"></a><span class="lineno"><a class="line" href="../../dd/d3e/FreeTestCore_8hpp.html#a5bf3cc5ec793288c6c7da7ceeb3249a7">  195</a></span>&#160;  <span class="keyword">enum class</span> <a class="code" href="../../dd/d3e/FreeTestCore_8hpp.html#a5bf3cc5ec793288c6c7da7ceeb3249a7">concurrency_mode</a>{</div>
+<div class="line"><a name="l00196"></a><span class="lineno">  196</span>&#160;    serial=-1, </div>
+<div class="line"><a name="l00197"></a><span class="lineno">  197</span>&#160;    family,    </div>
+<div class="line"><a name="l00198"></a><span class="lineno">  198</span>&#160;    <a class="code" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a>,      </div>
+<div class="line"><a name="l00199"></a><span class="lineno">  199</span>&#160;    deep       </div>
+<div class="line"><a name="l00200"></a><span class="lineno">  200</span>&#160;  }; </div>
+<div class="line"><a name="l00201"></a><span class="lineno">  201</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aclasssequoia_1_1testing_1_1basic__test_html_a28b585b0b756a09e3d4a1e45cf6c8e3f"><div class="ttname"><a href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html#a28b585b0b756a09e3d4a1e45cf6c8e3f">sequoia::testing::basic_test::run_tests</a></div><div class="ttdeci">virtual void run_tests()=0</div><div class="ttdoc">The override in a derived test should call the checks performed by the test.</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1test_html_a3cd13c830731a9b239d3f33f3eff328f"><div class="ttname"><a href="../../da/d6f/classsequoia_1_1testing_1_1test.html#a3cd13c830731a9b239d3f33f3eff328f">sequoia::testing::test::do_execute</a></div><div class="ttdeci">virtual log_summary do_execute()=0</div><div class="ttdoc">Pure virtual method, the overrides of which determine the fine details of test execution.</div></div>
 <div class="ttc" id="aConcepts_8hpp_html"><div class="ttname"><a href="../../d3/d84/Concepts_8hpp.html">Concepts.hpp</a></div><div class="ttdoc">Concepts mostly, but not exclusively, replicating things which will appear in std at some point.</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1log__summary_html"><div class="ttname"><a href="../../d2/daa/classsequoia_1_1testing_1_1log__summary.html">sequoia::testing::log_summary</a></div><div class="ttdoc">Summaries data generated by the logger, for the purposes of reporting.</div><div class="ttdef"><b>Definition:</b> TestLogger.hpp:430</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1basic__test_html"><div class="ttname"><a href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">sequoia::testing::basic_test</a></div><div class="ttdoc">class template from which all concrete tests should derive.</div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:102</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1basic__test_html"><div class="ttname"><a href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html">sequoia::testing::basic_test</a></div><div class="ttdoc">class template from which all concrete tests should derive.</div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:118</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1test_html"><div class="ttname"><a href="../../da/d6f/classsequoia_1_1testing_1_1test.html">sequoia::testing::test</a></div><div class="ttdoc">Abstract base class used for type-erasure of the template class basic_test.</div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:37</div></div>
 <div class="ttc" id="aConcreteEqualityCheckers_8hpp_html"><div class="ttname"><a href="../../da/d95/ConcreteEqualityCheckers_8hpp.html">ConcreteEqualityCheckers.hpp</a></div><div class="ttdoc">Useful specializations for the class template detailed_equality_checker.</div></div>
-<div class="ttc" id="aFreeTestCore_8hpp_html_a5bf3cc5ec793288c6c7da7ceeb3249a7"><div class="ttname"><a href="../../dd/d3e/FreeTestCore_8hpp.html#a5bf3cc5ec793288c6c7da7ceeb3249a7">sequoia::testing::concurrency_mode</a></div><div class="ttdeci">concurrency_mode</div><div class="ttdoc">Specifies the granularity at which concurrent execution is applied.</div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:179</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1basic__test_html_a11b031e47122d2367a5caa9b121c3691"><div class="ttname"><a href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html#a11b031e47122d2367a5caa9b121c3691">sequoia::testing::basic_test::summarize</a></div><div class="ttdeci">virtual log_summary summarize(const time_point start) const</div><div class="ttdoc">Any override of this is likely to call this first and potentially append to the log_summary.</div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:144</div></div>
+<div class="ttc" id="aFreeTestCore_8hpp_html_a5bf3cc5ec793288c6c7da7ceeb3249a7"><div class="ttname"><a href="../../dd/d3e/FreeTestCore_8hpp.html#a5bf3cc5ec793288c6c7da7ceeb3249a7">sequoia::testing::concurrency_mode</a></div><div class="ttdeci">concurrency_mode</div><div class="ttdoc">Specifies the granularity at which concurrent execution is applied.</div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:195</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1basic__test_html_a11b031e47122d2367a5caa9b121c3691"><div class="ttname"><a href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html#a11b031e47122d2367a5caa9b121c3691">sequoia::testing::basic_test::summarize</a></div><div class="ttdeci">virtual log_summary summarize(const time_point start) const</div><div class="ttdoc">Any override of this is likely to call this first and potentially append to the log_summary.</div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:160</div></div>
 <div class="ttc" id="aclasssequoia_1_1testing_1_1test_html_af45829b6c878446b52dab1107616995f"><div class="ttname"><a href="../../da/d6f/classsequoia_1_1testing_1_1test.html#af45829b6c878446b52dab1107616995f">sequoia::testing::test::source_file</a></div><div class="ttdeci">virtual std::string_view source_file() const noexcept=0</div><div class="ttdoc">Pure virtual method which should be overridden in a concrete test's cpp file in order to provide the ...</div></div>
-<div class="ttc" id="aclasssequoia_1_1testing_1_1basic__test_html_aaf583bceb567b81421e42672baf7bb2c"><div class="ttname"><a href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html#aaf583bceb567b81421e42672baf7bb2c">sequoia::testing::basic_test::do_execute</a></div><div class="ttdeci">log_summary do_execute() final</div><div class="ttdoc">Pure virtual method, the overrides of which determine the fine details of test execution.</div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:117</div></div>
+<div class="ttc" id="aclasssequoia_1_1testing_1_1basic__test_html_aaf583bceb567b81421e42672baf7bb2c"><div class="ttname"><a href="../../d0/d16/classsequoia_1_1testing_1_1basic__test.html#aaf583bceb567b81421e42672baf7bb2c">sequoia::testing::basic_test::do_execute</a></div><div class="ttdeci">log_summary do_execute() final</div><div class="ttdoc">Pure virtual method, the overrides of which determine the fine details of test execution.</div><div class="ttdef"><b>Definition:</b> FreeTestCore.hpp:133</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">
