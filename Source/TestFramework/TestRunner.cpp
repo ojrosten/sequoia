@@ -379,7 +379,7 @@ namespace sequoia::testing
                      m_ConcurrencyMode = static_cast<concurrency_mode>(i); }
                   },
                   {"--verbose",  {"-v"}, {}, [this](const param_list&) { m_Verbose    = true; }},          
-                  {"--nofiles",  {"-n"}, {}, [this](const param_list&) { m_OutputMode = output_mode::write_files; }},
+                  {"--nofiles",  {"-n"}, {}, [this](const param_list&) { m_OutputMode = output_mode::none; }},
                   {"--recovery", {"-r"}, {},
                    [recoveryDir{recovery_path(m_OutputDir)}] (const param_list&) {
                      std::filesystem::create_directory(recoveryDir);
