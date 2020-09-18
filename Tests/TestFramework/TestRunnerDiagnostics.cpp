@@ -27,20 +27,20 @@ namespace sequoia::testing
   {
     namespace fs = std::filesystem;
 
-    auto fake{
+    auto working{
       [&mat{materials()}]() {
-        return mat / "Before" / "FakeProject";
+        return mat / "WorkingCopy" / "FakeProject";
       }
     };
     
-    const auto testMain{fake().append("TestSandbox").append("TestSandbox.cpp")};
-    const auto includeTarget{fake().append("TestShared").append("SharedIncludes.hpp")};
+    const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
+    const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
 
     const repositories repos{
-       fake().append("Source"),
-       fake().append("Tests"),
-       fake().append("TestMaterials"),
-       fake().append("output")
+       working().append("Source"),
+       working().append("Tests"),
+       working().append("TestMaterials"),
+       working().append("output")
     };
 
     std::stringstream outputStream{};
@@ -54,6 +54,6 @@ namespace sequoia::testing
 
     tr.execute();
 
-    check_equivalence(LINE(""), fake(), materials() / "After" / "FakeProject");
+    check_equivalence(LINE(""), working(), materials() / "Prediction" / "FakeProject");
   }
 }
