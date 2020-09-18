@@ -165,16 +165,25 @@ namespace sequoia::testing
 
   private:
     template<test_mode Mode>
-    static void check_directory(test_logger<Mode>& logger,const std::filesystem::path& dir, const std::filesystem::path& prediction)
+    static void check_directory(test_logger<Mode>& logger, const std::filesystem::path& dir, const std::filesystem::path& prediction)
     {
       namespace fs = std::filesystem;
 
-      std::vector<fs::path> paths, predictedPaths;
-      for(auto& p : fs::directory_iterator(dir))        paths.push_back(p);
-      for(auto& p : fs::directory_iterator(prediction)) predictedPaths.push_back(p);
+      auto generator{
+        [](const fs::path& dir){
+          std::vector<fs::path> paths{};
+          for(auto& p : fs::directory_iterator(dir))
+          {
+            if(p.path().filename() != ".DS_Store") paths.push_back(p);
+          }
 
-      std::sort(paths.begin(), paths.end());
-      std::sort(predictedPaths.begin(), predictedPaths.end());
+          std::sort(paths.begin(), paths.end());
+
+          return paths;
+        }
+      };
+
+      const std::vector<fs::path> paths{generator(dir)}, predictedPaths{generator(prediction)};
 
       check_equality(std::string{"Number of directory entries for "}.append(dir), logger, paths.size(), predictedPaths.size());
 

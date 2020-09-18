@@ -244,7 +244,7 @@ namespace sequoia::testing
 
     template<class Iter, class Fn>
     [[nodiscard]]
-    static std::string process_nascent_tests(Iter beginNascentTests, Iter endNascentTests, Fn fn);
+    std::string process_nascent_tests(Iter beginNascentTests, Iter endNascentTests, Fn fn) const;
 
     template<class Iter>
     [[nodiscard]]

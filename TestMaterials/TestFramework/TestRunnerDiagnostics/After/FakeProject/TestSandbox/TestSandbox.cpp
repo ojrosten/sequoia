@@ -26,6 +26,34 @@ int main(int argc, char** argv)
                        sibling_path("Source")
     };
       
+
+    runner.add_test_family(
+      "maybe",
+      maybe_false_positive_test(False Positive Test),
+      maybe_test(Unit Test)
+    );
+
+
+    runner.add_test_family(
+      "iterator",
+      iterator_false_positive_test(False Positive Test),
+      iterator_test(Unit Test)
+    );
+
+
+    runner.add_test_family(
+      "foo",
+      foo_false_positive_test(False Positive Test),
+      foo_test(Unit Test)
+    );
+
+
+    runner.add_test_family(
+      "partners",
+      couple_false_positive_test(False Positive Test),
+      couple_test(Unit Test)
+    );
+
     runner.execute();
   }
   catch(const std::exception& e)

@@ -482,7 +482,7 @@ namespace sequoia::testing
 
   template<class Iter, class Fn>
   [[nodiscard]]
-  std::string test_runner::process_nascent_tests(Iter beginNascentTests, Iter endNascentTests, Fn fn)
+  std::string test_runner::process_nascent_tests(Iter beginNascentTests, Iter endNascentTests, Fn fn) const
   {
     if(std::distance(beginNascentTests, endNascentTests))
     {
@@ -495,7 +495,10 @@ namespace sequoia::testing
           append_lines(mess, fn(data, stub));
         }
 
-        //add_to_family(m_TestMain, data.family(), TESTS...);
+        add_to_family(m_TestMain, data.family(),
+                      { {std::string{data.class_name()}.append("_false_positive_test(False Positive Test)")},
+                        {std::string{data.class_name()}.append("_test(Unit Test)")}
+                      });
 
         ++beginNascentTests;
       }
