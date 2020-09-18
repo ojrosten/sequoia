@@ -36,15 +36,10 @@ int main(int argc, char** argv)
 
     runner.add_test_family(
       "iterator",
+      "foo_false_positive_test(False Positive Test),
+      "foo_test(Unit Test),
       iterator_false_positive_test(False Positive Test),
       iterator_test(Unit Test)
-    );
-
-
-    runner.add_test_family(
-      "foo",
-      foo_false_positive_test(False Positive Test),
-      foo_test(Unit Test)
     );
 
 
