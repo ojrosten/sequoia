@@ -84,7 +84,37 @@ namespace sequoia::testing::impl
     template<test_mode Mode, strongly_movable T>
     static bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y)
     {
-      return check("Precondition - for checking semantics, x and y are assumed to be different", logger, x != y);
+      if(check("Precondition - for checking semantics, x and y are assumed to be different", logger, x != y))
+      {
+        if constexpr (relational<T>)
+        {
+          auto comp{
+            [&logger](const T& x, const T& y){
+              const std::array<bool, 3> passed{
+                check("operator> and operator< are inconsistent", logger, y > x),
+                check("operator< and operator<= are inconsistent", logger, x <= y),
+                check("operator< and operator>= are inconsistent", logger, y >= x)
+              };
+
+              if constexpr (three_way_comparable<T>)
+              {
+               if(!check("operator< and operator<=> are inconsistent", logger, (y <=> x) < 0))
+               {
+                 return false;
+               }
+              }
+
+              return std::find(passed.begin(), passed.end(), false) == passed.end();
+            }
+          };
+
+          return x < y ? comp(x,y) : comp(y,x);
+        }
+
+        return true;
+      }
+
+      return false;
     }
   };
   

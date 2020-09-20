@@ -18,7 +18,6 @@ namespace sequoia::testing::impl
   template<test_mode Mode, class Actions, moveonly T, invocable<T&> Mutator, class... Args>
   void check_semantics(test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, const Args&... args)
   {
-    // Preconditions
     if(!check_preconditions(logger, actions, x, y, args...))
       return;
 
