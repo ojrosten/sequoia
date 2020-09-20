@@ -13,10 +13,10 @@
     The general pattern in this file is of paired function templates of the form
 
     <pre>
-    template<test_mode Mode, class Actions, strongly_movable T, class... Args>
+    template<test_mode Mode, class Actions, movable_comparable T, class... Args>
     ret_type do_check_foo(std::string_view, test_logger<Mode>& logger, const Actions&, const T&, const T&, const Args&...);
 
-    template<test_mode Mode, class Actions, strongly_movable T>
+    template<test_mode Mode, class Actions, movable_comparable T>
     ret_type check_foo(std::string_view description, test_logger<Mode>& logger, const sentinel<Mode>& sentry, const Actions& actions, const T& x , const T&y)
     {
       return do_check_foo(description, logger, actions, x, y);
@@ -81,12 +81,12 @@ namespace sequoia::testing::impl
 
   struct pre_condition_actions
   {
-    template<test_mode Mode, strongly_movable T>
+    template<test_mode Mode, movable_comparable T>
     static bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y)
     {
       if(check("Precondition - for checking semantics, x and y are assumed to be different", logger, x != y))
       {
-        if constexpr (relational<T>)
+        if constexpr (orderable<T>)
         {
           auto comp{
             [&logger](const T& x, const T& y){
@@ -98,7 +98,7 @@ namespace sequoia::testing::impl
 
               if constexpr (three_way_comparable<T>)
               {
-               if(!check("operator< and operator<=> are inconsistent", logger, (y <=> x) < 0))
+               if(!check("operator< and operator<=> are inconsistent", logger, (x <=> y) < 0))
                {
                  return false;
                }
@@ -128,7 +128,7 @@ namespace sequoia::testing::impl
     constexpr static bool has_post_swap_action{};    
   };
 
-  template<test_mode Mode, class Actions, strongly_movable T, class Fn, class... Args>
+  template<test_mode Mode, class Actions, movable_comparable T, class Fn, class... Args>
     requires invocable_r<Fn, bool, T>
   bool check_comparison(test_logger<Mode>& logger, std::string_view op, const Actions& actions, const T& x, const T& y, Fn fn, const Args&... args)
   {
@@ -146,7 +146,7 @@ namespace sequoia::testing::impl
 
   //================================ preconditions ================================//
  
-  template<test_mode Mode, class Actions, strongly_movable T, class... Args>
+  template<test_mode Mode, class Actions, movable_comparable T, class... Args>
   bool do_check_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
   {
     if(!check_comparison(logger, "==", actions, x, y, [](const T& x) { return x == x; }, args...))
@@ -155,7 +155,7 @@ namespace sequoia::testing::impl
     if(!check_comparison(logger, "!=", actions, x, y, [](const T& x) { return !(x != x); }, args...))
       return false;
 
-    if constexpr (relational<T>)
+    if constexpr (orderable<T>)
     {
       if(!check_comparison(logger, "<", actions, x, y, [](const T& x) { return !(x < x); }, args...))
         return false;
@@ -179,7 +179,7 @@ namespace sequoia::testing::impl
     return actions.check_preconditions(logger, x, y);
   }
 
-  template<test_mode Mode, class Actions, strongly_movable T>
+  template<test_mode Mode, class Actions, movable_comparable T>
   bool check_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y)
   {
     return do_check_preconditions(logger, actions, x, y);
@@ -187,7 +187,7 @@ namespace sequoia::testing::impl
 
   //================================ move assign ================================//
 
-  template<test_mode Mode, class Actions, strongly_movable T, invocable<T&> Mutator, class... Args>
+  template<test_mode Mode, class Actions, movable_comparable T, invocable<T&> Mutator, class... Args>
   void do_check_move_assign(test_logger<Mode>& logger, const Actions& actions, T& z, T&& y, const T& yClone, Mutator&& yMutator, const Args&... args)
   {
     z = std::move(y);
@@ -200,7 +200,7 @@ namespace sequoia::testing::impl
     }
   }
   
-  template<test_mode Mode, class Actions, strongly_movable T, invocable<T&> Mutator>
+  template<test_mode Mode, class Actions, movable_comparable T, invocable<T&> Mutator>
   void check_move_assign(test_logger<Mode>& logger, const Actions& actions, T& z, T&& y, const T& yClone, Mutator m)
   {
     do_check_move_assign(logger, actions, z, std::forward<T>(y), yClone, std::move(m));
@@ -208,7 +208,7 @@ namespace sequoia::testing::impl
 
   //================================ swap ================================//
 
-  template<test_mode Mode, class Actions, strongly_movable T, class... Args>
+  template<test_mode Mode, class Actions, movable_comparable T, class... Args>
   bool do_check_swap(test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, const Args&... args)
   {
     using std::swap;
@@ -233,7 +233,7 @@ namespace sequoia::testing::impl
     return swapx && swapy;
   }
 
-  template<test_mode Mode, class Actions, strongly_movable T>
+  template<test_mode Mode, class Actions, movable_comparable T>
   bool check_swap(test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone)
   {
     return do_check_swap(logger, actions, std::move(x), std::move(y), xClone, yClone);
@@ -241,7 +241,7 @@ namespace sequoia::testing::impl
 
   //================================  move construction ================================ //
 
-  template<test_mode Mode, class Actions, strongly_movable T, class... Args>
+  template<test_mode Mode, class Actions, movable_comparable T, class... Args>
   std::optional<T> do_check_move_construction(test_logger<Mode>& logger, const Actions& actions, T&& z, const T& y, const Args&... args)
   {
     T w{std::move(z)};
@@ -256,7 +256,7 @@ namespace sequoia::testing::impl
     return w;
   }
 
-  template<test_mode Mode, class Actions, strongly_movable T>
+  template<test_mode Mode, class Actions, movable_comparable T>
   std::optional<T> check_move_construction(test_logger<Mode>& logger, const Actions& actions, T&& z, const T& y)
   {
     return do_check_move_construction(logger, actions, std::forward<T>(z), y);
