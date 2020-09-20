@@ -488,28 +488,17 @@ namespace sequoia::testing::impl
   /*! \brief actions common to both move-only and regular types. */
   struct allocation_actions : pre_condition_actions
   {
-    constexpr static bool has_post_equality_action{true};
-    constexpr static bool has_post_nequality_action{true};
+    constexpr static bool has_post_comparison_action{true};
     constexpr static bool has_post_move_action{true};
     constexpr static bool has_post_move_assign_action{true};
     constexpr static bool has_post_swap_action{true};
 
     template<test_mode Mode, strongly_movable T, alloc_getter<T>... Getters, class... Predictions>
-    static bool post_equality_action(test_logger<Mode>& logger, const T& x, const T& y, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
+    static bool post_comparison_action(test_logger<Mode>& logger, std::string_view op, const T& x, const T& y, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
     {
       sentinel<Mode> s{logger, ""};
       
-      check_no_allocation("Unexpected allocation detected for operator==", logger, x, y, checkers...);
-
-      return !s.failure_detected();
-    }
-
-    template<test_mode Mode, strongly_movable T, alloc_getter<T>... Getters, class... Predictions>
-    static bool post_nequality_action(test_logger<Mode>& logger, const T& x, const T& y, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
-    {
-      sentinel<Mode> s{logger, ""};
-
-      check_no_allocation("Unexpected allocation detected for operator!=", logger, x, y, checkers...);
+      check_no_allocation(std::string{"Unexpected allocation detected for operator"}.append(op), logger, x, y, checkers...);
 
       return !s.failure_detected();
     }

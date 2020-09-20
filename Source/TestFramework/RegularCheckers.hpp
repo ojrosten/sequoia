@@ -11,7 +11,7 @@
     \brief Functions for checking regular semantics.
 
     Types exhibiting regular semantics are pleasant to reason about. Within this
-    library, a type is regular if it possesses the following:
+    library, a type is regular if it exhibits the following:
     
     copy constructor
     move constructor

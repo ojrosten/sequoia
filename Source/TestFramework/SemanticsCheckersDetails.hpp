@@ -12,6 +12,7 @@
 
     The general pattern in this file is of paired function templates of the form
 
+    <pre>
     template<test_mode Mode, class Actions, strongly_movable T, class... Args>
     ret_type do_check_foo(std::string_view, test_logger<Mode>& logger, const Actions&, const T&, const T&, const Args&...);
 
@@ -20,6 +21,7 @@
     {
       return do_check_foo(description, logger, actions, x, y);
     }
+    </pre>
 
     The idea is that the implementation of check_foo in this file is appropriate for types without allocators.
     As such, check_foo delegates to the instantiation of do_check_foo for which sizeof...(Args) is zero. However,
@@ -31,16 +33,17 @@
     It is a precondition that these instances are not equal to one another. This is always checked. However, if
     the type allocates, clients may prefer to utilize the allocation-checking extension supplied with sequoia. In
     this case, there is a constexpr flag which indicates that, after checking the precondition, it is further checked
-    that operator== hasn't unwittingly allocated - as can happen if it accidentally captures by value rather than
-    reference.
+    that <pre>operator==</pre> hasn't unwittingly allocated - as can happen if it accidentally captures by value rather than reference.
 
     Thus, the general structure is
 
+    <pre>
     some_common_check(...);
     if constexpr (Actions::some_flag)
     {
       do_some_extra_check(...);
     }
+    </pre>
 
     where the extra check is fed, amongst other things, the parameter pack args...
 
@@ -87,35 +90,53 @@ namespace sequoia::testing::impl
   
   struct default_actions : pre_condition_actions
   {
-    constexpr static bool has_post_equality_action{};
-    constexpr static bool has_post_nequality_action{};
+    constexpr static bool has_post_comparison_action{};
     constexpr static bool has_post_copy_action{};
     constexpr static bool has_post_copy_assign_action{};
     constexpr static bool has_post_move_action{};
     constexpr static bool has_post_move_assign_action{};
-    constexpr static bool has_post_swap_action{};
+    constexpr static bool has_post_swap_action{};    
   };
+
+  template<test_mode Mode, class Actions, strongly_movable T, class Fn, class... Args>
+    requires invocable_r<Fn, bool, T>
+  bool check_comparison(test_logger<Mode>& logger, std::string_view op, const Actions& actions, const T& x, const T& y, Fn fn, const Args&... args)
+  {
+    if(!check(std::string{"operator"}.append(op).append(" is inconsistent"), logger, fn(x)))
+      return false;
+
+    if constexpr (Actions::has_post_comparison_action)
+    {
+      if(!actions.post_comparison_action(logger, op, x, y, args...))
+        return false;
+    }
+
+    return true;
+  }
 
   //================================ preconditions ================================//
  
   template<test_mode Mode, class Actions, strongly_movable T, class... Args>
   bool do_check_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
   {
-    if(!check("Equality operator is inconsistent", logger, x == x))
+    if(!check_comparison(logger, "==", actions, x, y, [](const T& x) { return x == x; }, args...))
       return false;
 
-    if constexpr (Actions::has_post_equality_action)
+    if(!check_comparison(logger, "!=", actions, x, y, [](const T& x) { return !(x != x); }, args...))
+      return false;
+
+    if constexpr (relational<T>)
     {
-      if(!actions.post_equality_action(logger, x, y, args...))
+      if(!check_comparison(logger, "<", actions, x, y, [](const T& x) { return !(x < x); }, args...))
         return false;
-    }
-    
-    if(!check("Inequality operator is inconsistent", logger, !(x != x)))
-      return false;
 
-    if constexpr (Actions::has_post_nequality_action)
-    {
-      if(!actions.post_nequality_action(logger, x, y, args...))
+      if(!check_comparison(logger, "<=", actions, x, y, [](const T& x) { return x <= x; }, args...))
+        return false;
+
+      if(!check_comparison(logger, ">", actions, x, y, [](const T& x) { return !(x > x); }, args...))
+        return false;
+
+      if(!check_comparison(logger, ">=", actions, x, y, [](const T& x) { return x >= x; }, args...))
         return false;
     }
 

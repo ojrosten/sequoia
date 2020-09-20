@@ -1,5 +1,5 @@
 Move-Only False Positive Diagnostics
-[0ms]
+[2ms]
 False Positive Checks:                     8;  Failures:  0
 Move-Only False Negative Diagnostics
 [0ms]

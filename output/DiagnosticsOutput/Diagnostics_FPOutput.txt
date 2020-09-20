@@ -381,7 +381,7 @@
 	--Regular Semantics--
 	[sequoia::testing::broken_equality<int, std::allocator<int> >]
 
-	  Equality operator is inconsistent
+	  operator== is inconsistent
 	  [bool]
 	  operator== returned false
 	  Obtained : false
@@ -395,7 +395,7 @@
 	--Regular Semantics--
 	[sequoia::testing::broken_inequality<int, std::allocator<int> >]
 
-	  Inequality operator is inconsistent
+	  operator!= is inconsistent
 	  [bool]
 	  operator== returned false
 	  Obtained : false
@@ -901,7 +901,7 @@
 	--Move-only Semantics--
 	[sequoia::testing::move_only_broken_equality<int, std::allocator<int> >]
 
-	  Equality operator is inconsistent
+	  operator== is inconsistent
 	  [bool]
 	  operator== returned false
 	  Obtained : false
@@ -915,7 +915,7 @@
 	--Move-only Semantics--
 	[sequoia::testing::move_only_broken_inequality<int, std::allocator<int> >]
 
-	  Equality operator is inconsistent
+	  operator== is inconsistent
 	  [bool]
 	  operator== returned false
 	  Obtained : false
@@ -1016,24 +1016,24 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-	Fast Task duration: 0.00122811s +- 4 * 8.49195e-05
-	Slow Task duration: 0.00129338s +- 4 * 1.54207e-05 [1.05315; (2, 2)]
+	Fast Task duration: 0.00150725s +- 4 * 0.00054744
+	Slow Task duration: 0.00152033s +- 4 * 0.000379382 [1.00868; (2, 2)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-	Fast Task duration: 0.00120309s +- 4 * 0.000123317
-	Slow Task duration: 0.00118508s +- 4 * 0.000116419 [0.98503; (2, 3)]
+	Fast Task duration: 0.00187532s +- 4 * 0.000839361
+	Slow Task duration: 0.00383546s +- 4 * 0.00549077 [2.04523; (2, 3)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-	Fast Task duration: 0.00107291s +- 4 * 2.15811e-05
-	Slow Task duration: 0.00420448s +- 4 * 0.000160965 [3.91876; (2, 2.5)]
+	Fast Task duration: 0.00314063s +- 4 * 0.00203396
+	Slow Task duration: 0.00776001s +- 4 * 0.00382053 [2.47084; (2, 2.5)]
 
 	=======================================
 
@@ -1119,7 +1119,7 @@
 	--Regular Semantics--
 	[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
 
-	  Equality operator is inconsistent
+	  operator== is inconsistent
 	  [bool]
 	  operator== returned false
 	  Obtained : false
@@ -1133,7 +1133,7 @@
 	--Regular Semantics--
 	[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator<int, false, false, false> >]
 
-	  Inequality operator is inconsistent
+	  operator!= is inconsistent
 	  [bool]
 	  operator== returned false
 	  Obtained : false
@@ -1509,7 +1509,7 @@
 	--Regular Semantics--
 	[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
 
-	  Equality operator is inconsistent
+	  operator== is inconsistent
 	  [bool]
 	  operator== returned false
 	  Obtained : false
@@ -1523,7 +1523,7 @@
 	--Regular Semantics--
 	[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator<int, false, false, true> >]
 
-	  Inequality operator is inconsistent
+	  operator!= is inconsistent
 	  [bool]
 	  operator== returned false
 	  Obtained : false
@@ -1917,7 +1917,7 @@
 	--Regular Semantics--
 	[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
 
-	  Equality operator is inconsistent
+	  operator== is inconsistent
 	  [bool]
 	  operator== returned false
 	  Obtained : false
@@ -1931,7 +1931,7 @@
 	--Regular Semantics--
 	[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator<int, false, true, false> >]
 
-	  Inequality operator is inconsistent
+	  operator!= is inconsistent
 	  [bool]
 	  operator== returned false
 	  Obtained : false
@@ -2295,7 +2295,7 @@
 	--Regular Semantics--
 	[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
 
-	  Equality operator is inconsistent
+	  operator== is inconsistent
 	  [bool]
 	  operator== returned false
 	  Obtained : false
@@ -2309,7 +2309,7 @@
 	--Regular Semantics--
 	[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator<int, false, true, true> >]
 
-	  Inequality operator is inconsistent
+	  operator!= is inconsistent
 	  [bool]
 	  operator== returned false
 	  Obtained : false
@@ -2691,7 +2691,7 @@
 	--Regular Semantics--
 	[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
 
-	  Equality operator is inconsistent
+	  operator== is inconsistent
 	  [bool]
 	  operator== returned false
 	  Obtained : false
@@ -2705,7 +2705,7 @@
 	--Regular Semantics--
 	[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
 
-	  Inequality operator is inconsistent
+	  operator!= is inconsistent
 	  [bool]
 	  operator== returned false
 	  Obtained : false
@@ -3075,7 +3075,7 @@
 	--Regular Semantics--
 	[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
 
-	  Equality operator is inconsistent
+	  operator== is inconsistent
 	  [bool]
 	  operator== returned false
 	  Obtained : false
@@ -3089,7 +3089,7 @@
 	--Regular Semantics--
 	[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
 
-	  Inequality operator is inconsistent
+	  operator!= is inconsistent
 	  [bool]
 	  operator== returned false
 	  Obtained : false
@@ -3477,7 +3477,7 @@
 	--Regular Semantics--
 	[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
 
-	  Equality operator is inconsistent
+	  operator== is inconsistent
 	  [bool]
 	  operator== returned false
 	  Obtained : false
@@ -3491,7 +3491,7 @@
 	--Regular Semantics--
 	[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
 
-	  Inequality operator is inconsistent
+	  operator!= is inconsistent
 	  [bool]
 	  operator== returned false
 	  Obtained : false
@@ -3861,7 +3861,7 @@
 	--Regular Semantics--
 	[sequoia::testing::broken_equality<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
 
-	  Equality operator is inconsistent
+	  operator== is inconsistent
 	  [bool]
 	  operator== returned false
 	  Obtained : false
@@ -3875,7 +3875,7 @@
 	--Regular Semantics--
 	[sequoia::testing::broken_inequality<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
 
-	  Inequality operator is inconsistent
+	  operator!= is inconsistent
 	  [bool]
 	  operator== returned false
 	  Obtained : false
@@ -6805,8 +6805,8 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67
 	Performance Test which should pass
 
-	Fast Task duration: 0.00115712s +- 4 * 0.000122621
-	Slow Task duration: 0.0023181s +- 4 * 0.000245033 [2.00333; (1.8, 2.1)]
+	Fast Task duration: 0.00150831s +- 4 * 0.000263211
+	Slow Task duration: 0.00371773s +- 4 * 0.00169016 [2.46483; (1.8, 2.1)]
 
 
 	=======================================
@@ -6815,8 +6815,8 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68
 	Performance Test which should pass
 
-	Fast Task duration: 0.00122193s +- 4 * 0.000125719
-	Slow Task duration: 0.00416204s +- 4 * 0.000183769 [3.40613; (3.6, 4.1)]
+	Fast Task duration: 0.00144049s +- 4 * 0.000232241
+	Slow Task duration: 0.0079644s +- 4 * 0.00624024 [5.52894; (3.6, 4.1)]
 
 
 	=======================================

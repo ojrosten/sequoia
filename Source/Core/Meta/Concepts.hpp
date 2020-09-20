@@ -170,7 +170,23 @@ namespace sequoia
   template<class T>
   concept orderable = requires(const std::remove_reference_t<T>& t,
              const std::remove_reference_t<T>& u) {
-    { t < u } -> boolean;
+    { t < u  } -> boolean;
+  };
+
+  template<class T>
+  concept relational = pseudoregular<T> && requires(const std::remove_reference_t<T>& t,
+             const std::remove_reference_t<T>& u) {
+    { t < u  } -> boolean;
+    { t <= u } -> boolean;
+    { t > u  } -> boolean;
+    { t >= u } -> boolean;
+  };
+
+  template<class T>
+  concept three_way_comparable = requires(const std::remove_reference_t<T>& t,
+                                          const std::remove_reference_t<T>& u)
+  {
+    t <=> u;
   };
 
   template <class A>
