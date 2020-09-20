@@ -140,6 +140,12 @@ namespace sequoia::testing::impl
         return false;
     }
 
+    if constexpr (three_way_comparable<T>)
+    {
+      if(!check_comparison(logger, "<=>", actions, x, y, [](const T& x) { return (x <=> x) == 0; }, args...))
+        return false;
+    }
+
     return actions.check_preconditions(logger, x, y);
   }
 
