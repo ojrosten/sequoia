@@ -150,7 +150,7 @@ $(function() {
 <div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;    <span class="keywordflow">return</span> assign_prop_prediction{<span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(n)};</div>
 <div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;  }</div>
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160; </div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;  <span class="keyword">template</span>&lt;strongly_movable T, alloc_getter&lt;T&gt; Getter&gt;</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;  <span class="keyword">template</span>&lt;movable_comparable T, alloc_getter&lt;T&gt; Getter&gt;</div>
 <div class="line"><a name="l00129"></a><span class="lineno"><a class="line" href="../../db/df4/classsequoia_1_1testing_1_1allocation__info__base.html">  129</a></span>&#160;  <span class="keyword">class </span><a class="code" href="../../db/df4/classsequoia_1_1testing_1_1allocation__info__base.html">allocation_info_base</a></div>
 <div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;  {</div>
 <div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;  <span class="keyword">public</span>:</div>
@@ -198,7 +198,7 @@ $(function() {
 <div class="line"><a name="l00173"></a><span class="lineno">  173</span>&#160;    Getter m_AllocatorGetter;</div>
 <div class="line"><a name="l00174"></a><span class="lineno">  174</span>&#160;  };</div>
 <div class="line"><a name="l00175"></a><span class="lineno">  175</span>&#160; </div>
-<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;  <span class="keyword">template</span>&lt;strongly_movable T, alloc_getter&lt;T&gt; Getter, <span class="keyword">class</span> Predictions&gt;</div>
+<div class="line"><a name="l00182"></a><span class="lineno">  182</span>&#160;  <span class="keyword">template</span>&lt;movable_comparable T, alloc_getter&lt;T&gt; Getter, <span class="keyword">class</span> Predictions&gt;</div>
 <div class="line"><a name="l00183"></a><span class="lineno"><a class="line" href="../../dd/d5b/classsequoia_1_1testing_1_1basic__allocation__info.html">  183</a></span>&#160;  <span class="keyword">class </span><a class="code" href="../../dd/d5b/classsequoia_1_1testing_1_1basic__allocation__info.html">basic_allocation_info</a> : <span class="keyword">public</span> <a class="code" href="../../db/df4/classsequoia_1_1testing_1_1allocation__info__base.html">allocation_info_base</a>&lt;T, Getter&gt;</div>
 <div class="line"><a name="l00184"></a><span class="lineno">  184</span>&#160;  {</div>
 <div class="line"><a name="l00185"></a><span class="lineno">  185</span>&#160;  <span class="keyword">private</span>:</div>
@@ -222,7 +222,7 @@ $(function() {
 <div class="line"><a name="l00203"></a><span class="lineno">  203</span>&#160;    Predictions m_Predictions;</div>
 <div class="line"><a name="l00204"></a><span class="lineno">  204</span>&#160;  };</div>
 <div class="line"><a name="l00205"></a><span class="lineno">  205</span>&#160; </div>
-<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;  <span class="keyword">template</span>&lt;strongly_movable T, alloc_getter&lt;T&gt; Getter, <span class="keyword">class</span> Predictions&gt;</div>
+<div class="line"><a name="l00211"></a><span class="lineno">  211</span>&#160;  <span class="keyword">template</span>&lt;movable_comparable T, alloc_getter&lt;T&gt; Getter, <span class="keyword">class</span> Predictions&gt;</div>
 <div class="line"><a name="l00212"></a><span class="lineno">  212</span>&#160;    requires scoped_alloc&lt;std::invoke_result_t&lt;Getter, T&gt;&gt;</div>
 <div class="line"><a name="l00213"></a><span class="lineno"><a class="line" href="../../d3/db9/classsequoia_1_1testing_1_1basic__allocation__info_3_01T_00_01Getter_00_01Predictions_01_4.html">  213</a></span>&#160;  <span class="keyword">class </span><a class="code" href="../../dd/d5b/classsequoia_1_1testing_1_1basic__allocation__info.html">basic_allocation_info</a>&lt;T, Getter, Predictions&gt;</div>
 <div class="line"><a name="l00214"></a><span class="lineno">  214</span>&#160;    : <span class="keyword">public</span> <a class="code" href="../../db/df4/classsequoia_1_1testing_1_1allocation__info__base.html">allocation_info_base</a>&lt;T, Getter&gt;</div>

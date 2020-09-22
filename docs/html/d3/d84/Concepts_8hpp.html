@@ -164,13 +164,16 @@ template&lt;class T &gt; </td></tr>
 template&lt;class T &gt; </td></tr>
 <tr class="memitem:a0547a7f828b6468aca6f23352fec88d6"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::moveonly</b> = movable&lt;T&gt; &amp;&amp; !copyable&lt;T&gt; &amp;&amp; equality_comparable&lt;T&gt;</td></tr>
 <tr class="separator:a0547a7f828b6468aca6f23352fec88d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8e2a818af3c26cced0760e4bf6b519a3"><td class="memTemplParams" colspan="2"><a id="a8e2a818af3c26cced0760e4bf6b519a3"></a>
+<tr class="memitem:aa18cfc2b5401eba3f3d88a86d42b780a"><td class="memTemplParams" colspan="2"><a id="aa18cfc2b5401eba3f3d88a86d42b780a"></a>
 template&lt;class T &gt; </td></tr>
-<tr class="memitem:a8e2a818af3c26cced0760e4bf6b519a3"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::strongly_movable</b> = movable&lt;T&gt; &amp;&amp; equality_comparable&lt;T&gt;</td></tr>
-<tr class="separator:a8e2a818af3c26cced0760e4bf6b519a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa18cfc2b5401eba3f3d88a86d42b780a"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::movable_comparable</b> = movable&lt;T&gt; &amp;&amp; equality_comparable&lt;T&gt;</td></tr>
+<tr class="separator:aa18cfc2b5401eba3f3d88a86d42b780a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa357cbe1c1963af53fa63609ef6966cb"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
 <tr class="memitem:aa357cbe1c1963af53fa63609ef6966cb"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::orderable</b></td></tr>
 <tr class="separator:aa357cbe1c1963af53fa63609ef6966cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25e4c7caffa3402740d4838d87ef9528"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:a25e4c7caffa3402740d4838d87ef9528"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::three_way_comparable</b></td></tr>
+<tr class="separator:a25e4c7caffa3402740d4838d87ef9528"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6565d46b3cd3a40598191fa9a618e132"><td class="memTemplParams" colspan="2">template&lt;class A &gt; </td></tr>
 <tr class="memitem:a6565d46b3cd3a40598191fa9a618e132"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::alloc</b></td></tr>
 <tr class="separator:a6565d46b3cd3a40598191fa9a618e132"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -520,8 +523,14 @@ template&lt;class T &gt; </div>
       </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= requires(<span class="keyword">const</span> std::remove_reference_t&lt;T&gt;&amp; t,</div>
-<div class="line">             <span class="keyword">const</span> std::remove_reference_t&lt;T&gt;&amp; u) {</div>
-<div class="line">    { t &lt; u } -&gt; boolean;</div>
+<div class="line">                               <span class="keyword">const</span> std::remove_reference_t&lt;T&gt;&amp; u)</div>
+<div class="line">  {</div>
+<div class="line">    { t == u } -&gt; boolean;</div>
+<div class="line">    { t != u } -&gt; boolean; </div>
+<div class="line">    { t &lt; u  } -&gt; boolean;</div>
+<div class="line">    { t &lt;= u } -&gt; boolean;</div>
+<div class="line">    { t &gt; u  } -&gt; boolean;</div>
+<div class="line">    { t &gt;= u } -&gt; boolean;</div>
 <div class="line">  }</div>
 </div><!-- fragment -->
 </div>
@@ -604,6 +613,27 @@ template&lt;class T &gt; </div>
 <div class="line">    requires(T&amp; a, T&amp; b) {</div>
 <div class="line">      std::swap(a, b);</div>
 <div class="line">    }</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a25e4c7caffa3402740d4838d87ef9528"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a25e4c7caffa3402740d4838d87ef9528">&#9670;&nbsp;</a></span>three_way_comparable</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">concept sequoia::three_way_comparable</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= requires(<span class="keyword">const</span> std::remove_reference_t&lt;T&gt;&amp; t,</div>
+<div class="line">                                          <span class="keyword">const</span> std::remove_reference_t&lt;T&gt;&amp; u)</div>
+<div class="line">  {</div>
+<div class="line">    t &lt;=&gt; u;</div>
+<div class="line">  }</div>
 </div><!-- fragment -->
 </div>
 </div>

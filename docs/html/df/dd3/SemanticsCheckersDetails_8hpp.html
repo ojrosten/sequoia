@@ -76,7 +76,9 @@ $(function() {
 <p>Implementation details for semantics checks that cleanly supports types which do/do not have allocators.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="../../d5/d05/TestLogger_8hpp_source.html">TestLogger.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../da/d27/Advice_8hpp_source.html">Advice.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d3/d84/Concepts_8hpp_source.html">Concepts.hpp</a>&quot;</code><br />
+<code>#include &lt;compare&gt;</code><br />
 <code>#include &lt;optional&gt;</code><br />
 </div>
 <p><a href="../../df/dd3/SemanticsCheckersDetails_8hpp_source.html">Go to the source code of this file.</a></p>
@@ -93,52 +95,68 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/dfc/structsequoia_1_1testing_1_1impl_1_1default__actions.html">sequoia::testing::impl::default_actions</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/da0/structsequoia_1_1testing_1_1impl_1_1orderable__actions.html">sequoia::testing::impl::orderable_actions</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:ae139721a3b4e236e693398dc34363291"><td class="memTemplParams" colspan="2"><a id="ae139721a3b4e236e693398dc34363291"></a>
+template&lt;test_mode Mode, class Actions , movable_comparable T, invocable_r&lt; bool, T &gt; Fn, class... Args&gt; </td></tr>
+<tr class="memitem:ae139721a3b4e236e693398dc34363291"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_comparison</b> (test_logger&lt; Mode &gt; &amp;logger, std::string_view op, const Actions &amp;actions, const T &amp;x, const T &amp;y, Fn fn, const Args &amp;... args)</td></tr>
+<tr class="separator:ae139721a3b4e236e693398dc34363291"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a54dcab66cbf4697bb1e7730e9ba264c4"><td class="memTemplParams" colspan="2"><a id="a54dcab66cbf4697bb1e7730e9ba264c4"></a>
-template&lt;test_mode Mode, class Actions , strongly_movable T, class... Args&gt; </td></tr>
+template&lt;test_mode Mode, class Actions , movable_comparable T, class... Args&gt; </td></tr>
 <tr class="memitem:a54dcab66cbf4697bb1e7730e9ba264c4"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::do_check_preconditions</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, const T &amp;x, const T &amp;y, const Args &amp;... args)</td></tr>
 <tr class="separator:a54dcab66cbf4697bb1e7730e9ba264c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a383559444617c7d490c41aa47c335dec"><td class="memTemplParams" colspan="2"><a id="a383559444617c7d490c41aa47c335dec"></a>
-template&lt;test_mode Mode, class Actions , strongly_movable T&gt; </td></tr>
+template&lt;test_mode Mode, class Actions , movable_comparable T&gt; </td></tr>
 <tr class="memitem:a383559444617c7d490c41aa47c335dec"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_preconditions</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, const T &amp;x, const T &amp;y)</td></tr>
 <tr class="separator:a383559444617c7d490c41aa47c335dec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af4eea809c6dc3698cddf9b6f81628edc"><td class="memTemplParams" colspan="2"><a id="af4eea809c6dc3698cddf9b6f81628edc"></a>
-template&lt;test_mode Mode, class Actions , strongly_movable T, invocable&lt; T &amp; &gt; Mutator, class... Args&gt; </td></tr>
+template&lt;test_mode Mode, class Actions , movable_comparable T, invocable&lt; T &amp; &gt; Mutator, class... Args&gt; </td></tr>
 <tr class="memitem:af4eea809c6dc3698cddf9b6f81628edc"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::do_check_move_assign</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;z, T &amp;&amp;y, const T &amp;yClone, Mutator &amp;&amp;yMutator, const Args &amp;... args)</td></tr>
 <tr class="separator:af4eea809c6dc3698cddf9b6f81628edc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c847adee18aa1d62200928672437ec7"><td class="memTemplParams" colspan="2"><a id="a4c847adee18aa1d62200928672437ec7"></a>
-template&lt;test_mode Mode, class Actions , strongly_movable T, invocable&lt; T &amp; &gt; Mutator&gt; </td></tr>
+template&lt;test_mode Mode, class Actions , movable_comparable T, invocable&lt; T &amp; &gt; Mutator&gt; </td></tr>
 <tr class="memitem:a4c847adee18aa1d62200928672437ec7"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_move_assign</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;z, T &amp;&amp;y, const T &amp;yClone, Mutator m)</td></tr>
 <tr class="separator:a4c847adee18aa1d62200928672437ec7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5e1182ff228e201afb43b89729b10159"><td class="memTemplParams" colspan="2"><a id="a5e1182ff228e201afb43b89729b10159"></a>
-template&lt;test_mode Mode, class Actions , strongly_movable T, class... Args&gt; </td></tr>
+template&lt;test_mode Mode, class Actions , movable_comparable T, class... Args&gt; </td></tr>
 <tr class="memitem:a5e1182ff228e201afb43b89729b10159"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::do_check_swap</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone, const Args &amp;... args)</td></tr>
 <tr class="separator:a5e1182ff228e201afb43b89729b10159"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9fcedc4faa4f98451a4e1ccb2156fdb4"><td class="memTemplParams" colspan="2"><a id="a9fcedc4faa4f98451a4e1ccb2156fdb4"></a>
-template&lt;test_mode Mode, class Actions , strongly_movable T&gt; </td></tr>
+template&lt;test_mode Mode, class Actions , movable_comparable T&gt; </td></tr>
 <tr class="memitem:a9fcedc4faa4f98451a4e1ccb2156fdb4"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_swap</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone)</td></tr>
 <tr class="separator:a9fcedc4faa4f98451a4e1ccb2156fdb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab23952ff5cc0b31da036f2f7ec65b078"><td class="memTemplParams" colspan="2"><a id="ab23952ff5cc0b31da036f2f7ec65b078"></a>
-template&lt;test_mode Mode, class Actions , strongly_movable T, class... Args&gt; </td></tr>
+template&lt;test_mode Mode, class Actions , movable_comparable T, class... Args&gt; </td></tr>
 <tr class="memitem:ab23952ff5cc0b31da036f2f7ec65b078"><td class="memTemplItemLeft" align="right" valign="top">std::optional&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::do_check_move_construction</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;&amp;z, const T &amp;y, const Args &amp;... args)</td></tr>
 <tr class="separator:ab23952ff5cc0b31da036f2f7ec65b078"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aee94956438911210680607e578cc4919"><td class="memTemplParams" colspan="2"><a id="aee94956438911210680607e578cc4919"></a>
-template&lt;test_mode Mode, class Actions , strongly_movable T&gt; </td></tr>
+template&lt;test_mode Mode, class Actions , movable_comparable T&gt; </td></tr>
 <tr class="memitem:aee94956438911210680607e578cc4919"><td class="memTemplItemLeft" align="right" valign="top">std::optional&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_move_construction</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;&amp;z, const T &amp;y)</td></tr>
 <tr class="separator:aee94956438911210680607e578cc4919"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implementation details for semantics checks that cleanly supports types which do/do not have allocators. </p>
 <p>The general pattern in this file is of paired function templates of the form</p>
-<p>template&lt;test_mode Mode, class Actions, strongly_movable T, class... Args&gt; ret_type do_check_foo(std::string_view, test_logger&lt;Mode&gt;&amp; logger, const Actions&amp;, const T&amp;, const T&amp;, const Args&amp;...);</p>
-<p>template&lt;test_mode Mode, class Actions, strongly_movable T&gt; ret_type check_foo(std::string_view description, test_logger&lt;Mode&gt;&amp; logger, const sentinel&lt;Mode&gt;&amp; sentry, const Actions&amp; actions, const T&amp; x , const T&amp;y) { return do_check_foo(description, logger, actions, x, y); }</p>
-<p>The idea is that the implementation of check_foo in this file is appropriate for types without allocators. As such, check_foo delegates to the instantiation of do_check_foo for which sizeof...(Args) is zero. However, do_check_foo is designed such that it can also deal with types which may allocate. As such, do_check_foo takes a template argument 'Actions'. Appropriate realizations of this type possess a bunch of constexpr static bools which indicate whether or not additional actions should be carried out.</p>
-<p>For example, when checking the semantics of a regular type, two const references to the type must be supplied. It is a precondition that these instances are not equal to one another. This is always checked. However, if the type allocates, clients may prefer to utilize the allocation-checking extension supplied with sequoia. In this case, there is a constexpr flag which indicates that, after checking the precondition, it is further checked that operator== hasn't unwittingly allocated - as can happen if it accidentally captures by value rather than reference.</p>
+<pre>
+template&lt;test_mode Mode, class Actions, movable_comparable T, class... Args&gt;
+ret_type do_check_foo(std::string_view, test_logger&lt;Mode&gt;&amp; logger, const Actions&amp;, const T&amp;, const T&amp;, const Args&amp;...);</pre><pre>template&lt;test_mode Mode, class Actions, movable_comparable T&gt;
+ret_type check_foo(std::string_view description, test_logger&lt;Mode&gt;&amp; logger, const sentinel&lt;Mode&gt;&amp; sentry, const Actions&amp; actions, const T&amp; x , const T&amp;y)
+{
+  return do_check_foo(description, logger, actions, x, y);
+}
+</pre><p>The idea is that the implementation of check_foo in this file is appropriate for types without allocators. As such, check_foo delegates to the instantiation of do_check_foo for which sizeof...(Args) is zero. However, do_check_foo is designed such that it can also deal with types which may allocate. As such, do_check_foo takes a template argument 'Actions'. Appropriate realizations of this type possess a bunch of constexpr static bools which indicate whether or not additional actions should be carried out.</p>
+<p>For example, when checking the semantics of a regular type, two const references to the type must be supplied. It is a precondition that these instances are not equal to one another. This is always checked. However, if the type allocates, clients may prefer to utilize the allocation-checking extension supplied with sequoia. In this case, there is a constexpr flag which indicates that, after checking the precondition, it is further checked that </p><pre>operator==</pre><p> hasn't unwittingly allocated - as can happen if it accidentally captures by value rather than reference.</p>
 <p>Thus, the general structure is</p>
-<p>some_common_check(...); if constexpr (Actions::some_flag) { do_some_extra_check(...); }</p>
-<p>where the extra check is fed, amongst other things, the parameter pack args...</p>
+<pre>
+some_common_check(...);
+if constexpr (Actions::some_flag)
+{
+  do_some_extra_check(...);
+}
+</pre><p>where the extra check is fed, amongst other things, the parameter pack args...</p>
 <p>Therefore when checking the semantics of an allocating type, the skeleton of the function is the same as for non-allocating types. However, in the former case extra checks are folded in. This pattern ensures consistency: if the scheme is tweaked for non-allocating types, allocating types will automatically benefit. But there is enough flexbility to allow for all the extra allocation checks that allocating types require.</p>
 <p>As such, the various check_foo functions in this header have overloads in <a class="el" href="../../d5/d00/AllocationCheckersDetails_8hpp.html" title="Implementation details for allocation checks.">AllocationCheckersDetails.hpp</a> which supply the extra argument(s) for the additional actions that comprise allocation checking.</p>
 <p>Note that check_foo / do_check_foo pairs in this file are common to both regular and move-only types. However, regular types additionally have copy semantics; the extra pieces necessary for this may be found in <a class="el" href="../../d6/d98/RegularCheckersDetails_8hpp.html" title="Implementation details for checking regular semantics.">RegularCheckersDetails.hpp</a> and RegularAllocationCheckerDetails.hpp </p>

@@ -106,39 +106,39 @@ Classes</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:a98bd3eea554fc94cf92fb030611772c4"><td class="memTemplParams" colspan="2"><a id="a98bd3eea554fc94cf92fb030611772c4"></a>
-template&lt;strongly_movable T, alloc_getter&lt; T &gt; Getter, class Predictions &gt; </td></tr>
+template&lt;movable_comparable T, alloc_getter&lt; T &gt; Getter, class Predictions &gt; </td></tr>
 <tr class="memitem:a98bd3eea554fc94cf92fb030611772c4"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::dual_allocation_checker</b> (basic_allocation_info&lt; T, Getter, Predictions &gt;, const T &amp;, const T &amp;) -&gt; dual_allocation_checker&lt; T, Getter, Predictions &gt;</td></tr>
 <tr class="separator:a98bd3eea554fc94cf92fb030611772c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adb6dfe820634fa211dfa55ac6d157e8e"><td class="memTemplParams" colspan="2"><a id="adb6dfe820634fa211dfa55ac6d157e8e"></a>
-template&lt;strongly_movable T, alloc_getter&lt; T &gt; Getter, class Predictions &gt; </td></tr>
+template&lt;movable_comparable T, alloc_getter&lt; T &gt; Getter, class Predictions &gt; </td></tr>
 <tr class="memitem:adb6dfe820634fa211dfa55ac6d157e8e"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::allocation_checker</b> (basic_allocation_info&lt; T, Getter, Predictions &gt;, const T &amp;) -&gt; allocation_checker&lt; T, Getter, Predictions &gt;</td></tr>
 <tr class="separator:adb6dfe820634fa211dfa55ac6d157e8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6d9a2daf56dfc9f98c56ebc02c4761e0"><td class="memTemplParams" colspan="2"><a id="a6d9a2daf56dfc9f98c56ebc02c4761e0"></a>
-template&lt;strongly_movable T, alloc_getter&lt; T &gt; Getter, class Predictions &gt; </td></tr>
+template&lt;movable_comparable T, alloc_getter&lt; T &gt; Getter, class Predictions &gt; </td></tr>
 <tr class="memitem:a6d9a2daf56dfc9f98c56ebc02c4761e0"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::allocation_checker</b> (basic_allocation_info&lt; T, Getter, Predictions &gt;, int) -&gt; allocation_checker&lt; T, Getter, Predictions &gt;</td></tr>
 <tr class="separator:a6d9a2daf56dfc9f98c56ebc02c4761e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8c5c17c44bb244d076b333410ea72d2b"><td class="memTemplParams" colspan="2"><a id="a8c5c17c44bb244d076b333410ea72d2b"></a>
-template&lt;template&lt; class, class, class &gt; class Checker, strongly_movable T, class Predictions , alloc_getter&lt; T &gt; Getter, class... Args, std::size_t... I&gt; </td></tr>
+template&lt;template&lt; class, class, class &gt; class Checker, movable_comparable T, class Predictions , alloc_getter&lt; T &gt; Getter, class... Args, std::size_t... I&gt; </td></tr>
 <tr class="memitem:a8c5c17c44bb244d076b333410ea72d2b"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::make_scoped_allocation_checkers</b> (const basic_allocation_info&lt; T, Getter, Predictions &gt; &amp;info, std::index_sequence&lt; I... &gt;, Args &amp;&amp;... args)</td></tr>
 <tr class="separator:a8c5c17c44bb244d076b333410ea72d2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4fd5d507212a6ecd432c7d51ba9345fa"><td class="memTemplParams" colspan="2"><a id="a4fd5d507212a6ecd432c7d51ba9345fa"></a>
-template&lt;template&lt; class, class, class &gt; class Checker, strongly_movable T, class Predictions , alloc_getter&lt; T &gt; Getter, class... Args&gt; </td></tr>
+template&lt;template&lt; class, class, class &gt; class Checker, movable_comparable T, class Predictions , alloc_getter&lt; T &gt; Getter, class... Args&gt; </td></tr>
 <tr class="memitem:a4fd5d507212a6ecd432c7d51ba9345fa"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::make_scoped_allocation_checkers</b> (const basic_allocation_info&lt; T, Getter, Predictions &gt; &amp;info, Args &amp;&amp;... args)</td></tr>
 <tr class="separator:a4fd5d507212a6ecd432c7d51ba9345fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7bb4370d786d443050d59195b0c263b6"><td class="memTemplParams" colspan="2"><a id="a7bb4370d786d443050d59195b0c263b6"></a>
-template&lt;strongly_movable T, alloc_getter&lt; T &gt; Getter, class Predictions , class... Args&gt; </td></tr>
+template&lt;movable_comparable T, alloc_getter&lt; T &gt; Getter, class Predictions , class... Args&gt; </td></tr>
 <tr class="memitem:a7bb4370d786d443050d59195b0c263b6"><td class="memTemplItemLeft" align="right" valign="top">std::tuple&lt; dual_allocation_checker&lt; T, Getter, Predictions &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::make_dual_allocation_checkers</b> (const basic_allocation_info&lt; T, Getter, Predictions &gt; &amp;info, Args &amp;&amp;... args)</td></tr>
 <tr class="separator:a7bb4370d786d443050d59195b0c263b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab02ca78d4b0f541c6e9f0b5e131c209b"><td class="memTemplParams" colspan="2"><a id="ab02ca78d4b0f541c6e9f0b5e131c209b"></a>
-template&lt;strongly_movable T, alloc_getter&lt; T &gt; Getter, class Predictions , class... Args&gt; </td></tr>
+template&lt;movable_comparable T, alloc_getter&lt; T &gt; Getter, class Predictions , class... Args&gt; </td></tr>
 <tr class="memitem:ab02ca78d4b0f541c6e9f0b5e131c209b"><td class="memTemplItemLeft" align="right" valign="top">requires scoped_alloc&lt; std::invoke_result_t&lt; Getter, T &gt; &gt; auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::make_dual_allocation_checkers</b> (const basic_allocation_info&lt; T, Getter, Predictions &gt; &amp;info, Args &amp;&amp;... args)</td></tr>
 <tr class="separator:ab02ca78d4b0f541c6e9f0b5e131c209b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5442124bd9c477140be9f2b62439fdc4"><td class="memTemplParams" colspan="2"><a id="a5442124bd9c477140be9f2b62439fdc4"></a>
-template&lt;strongly_movable T, alloc_getter&lt; T &gt; Getter, class Predictions , class... Args&gt; </td></tr>
+template&lt;movable_comparable T, alloc_getter&lt; T &gt; Getter, class Predictions , class... Args&gt; </td></tr>
 <tr class="memitem:a5442124bd9c477140be9f2b62439fdc4"><td class="memTemplItemLeft" align="right" valign="top">std::tuple&lt; allocation_checker&lt; T, Getter, Predictions &gt; &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::make_allocation_checkers</b> (const basic_allocation_info&lt; T, Getter, Predictions &gt; &amp;info, Args &amp;&amp;... args)</td></tr>
 <tr class="separator:a5442124bd9c477140be9f2b62439fdc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af0733d1492fc0f59e1ea3097ae6be38d"><td class="memTemplParams" colspan="2"><a id="af0733d1492fc0f59e1ea3097ae6be38d"></a>
-template&lt;strongly_movable T, alloc_getter&lt; T &gt; Getter, class Predictions , class... Args&gt; </td></tr>
+template&lt;movable_comparable T, alloc_getter&lt; T &gt; Getter, class Predictions , class... Args&gt; </td></tr>
 <tr class="memitem:af0733d1492fc0f59e1ea3097ae6be38d"><td class="memTemplItemLeft" align="right" valign="top">requires scoped_alloc&lt; std::invoke_result_t&lt; Getter, T &gt; &gt; auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::make_allocation_checkers</b> (const basic_allocation_info&lt; T, Getter, Predictions &gt; &amp;info, Args &amp;&amp;... args)</td></tr>
 <tr class="separator:af0733d1492fc0f59e1ea3097ae6be38d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab0f2436b59a48c1f75af3ff3f39b9ea2"><td class="memTemplParams" colspan="2"><a id="ab0f2436b59a48c1f75af3ff3f39b9ea2"></a>
@@ -146,109 +146,109 @@ template&lt;test_mode Mode, class CheckFn , class Checker , class... Checkers&gt
 <tr class="memitem:ab0f2436b59a48c1f75af3ff3f39b9ea2"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_allocation</b> (test_logger&lt; Mode &gt; &amp;logger, CheckFn check, const Checker &amp;checker, const Checkers &amp;... moreCheckers)</td></tr>
 <tr class="separator:ab0f2436b59a48c1f75af3ff3f39b9ea2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a90ec47ca39ffec659f2d37dd5049563a"><td class="memTemplParams" colspan="2"><a id="a90ec47ca39ffec659f2d37dd5049563a"></a>
-template&lt;test_mode Mode, strongly_movable T, alloc_getter&lt; T &gt; Getter, class Prediction , alloc_getter&lt; T &gt;... Getters, class... Predictions&gt; </td></tr>
+template&lt;test_mode Mode, movable_comparable T, alloc_getter&lt; T &gt; Getter, class Prediction , alloc_getter&lt; T &gt;... Getters, class... Predictions&gt; </td></tr>
 <tr class="memitem:a90ec47ca39ffec659f2d37dd5049563a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_no_allocation</b> (std::string_view detail, test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y, const dual_allocation_checker&lt; T, Getter, Prediction &gt; &amp;checker, const dual_allocation_checker&lt; T, Getters, Predictions &gt; &amp;... moreCheckers)</td></tr>
 <tr class="separator:a90ec47ca39ffec659f2d37dd5049563a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2f49510e067daa5b460127f161a2214b"><td class="memTemplParams" colspan="2"><a id="a2f49510e067daa5b460127f161a2214b"></a>
-template&lt;test_mode Mode, strongly_movable T, alloc_getter&lt; T &gt; Getter, class Prediction , alloc_getter&lt; T &gt;... Getters, class... Predictions&gt; </td></tr>
+template&lt;test_mode Mode, movable_comparable T, alloc_getter&lt; T &gt; Getter, class Prediction , alloc_getter&lt; T &gt;... Getters, class... Predictions&gt; </td></tr>
 <tr class="memitem:a2f49510e067daa5b460127f161a2214b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_copy_assign_allocation</b> (test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y, const dual_allocation_checker&lt; T, Getter, Prediction &gt; &amp;checker, const dual_allocation_checker&lt; T, Getters, Predictions &gt; &amp;... moreCheckers)</td></tr>
 <tr class="separator:a2f49510e067daa5b460127f161a2214b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a66b14f57ebc873fa5dfe00b0ab020be1"><td class="memTemplParams" colspan="2"><a id="a66b14f57ebc873fa5dfe00b0ab020be1"></a>
-template&lt;test_mode Mode, strongly_movable T, alloc_getter&lt; T &gt; Getter, class Prediction , alloc_getter&lt; T &gt;... Getters, class... Predictions&gt; </td></tr>
+template&lt;test_mode Mode, movable_comparable T, alloc_getter&lt; T &gt; Getter, class Prediction , alloc_getter&lt; T &gt;... Getters, class... Predictions&gt; </td></tr>
 <tr class="memitem:a66b14f57ebc873fa5dfe00b0ab020be1"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_move_assign_allocation</b> (test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const dual_allocation_checker&lt; T, Getter, Prediction &gt; &amp;checker, const dual_allocation_checker&lt; T, Getters, Predictions &gt; &amp;... moreCheckers)</td></tr>
 <tr class="separator:a66b14f57ebc873fa5dfe00b0ab020be1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a13ee186e9195a641ebc06ffc497a0556"><td class="memTemplParams" colspan="2"><a id="a13ee186e9195a641ebc06ffc497a0556"></a>
-template&lt;test_mode Mode, strongly_movable T, alloc_getter&lt; T &gt; Getter, class Prediction , alloc_getter&lt; T &gt;... Getters, class... Predictions&gt; </td></tr>
+template&lt;test_mode Mode, movable_comparable T, alloc_getter&lt; T &gt; Getter, class Prediction , alloc_getter&lt; T &gt;... Getters, class... Predictions&gt; </td></tr>
 <tr class="memitem:a13ee186e9195a641ebc06ffc497a0556"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_mutation_after_swap</b> (test_logger&lt; Mode &gt; &amp;logger, const T &amp;x, const T &amp;y, const dual_allocation_checker&lt; T, Getter, Prediction &gt; &amp;checker, const dual_allocation_checker&lt; T, Getters, Predictions &gt; &amp;... moreCheckers)</td></tr>
 <tr class="separator:a13ee186e9195a641ebc06ffc497a0556"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8031797c3ff69c794dce33fde48df770"><td class="memTemplParams" colspan="2"><a id="a8031797c3ff69c794dce33fde48df770"></a>
-template&lt;test_mode Mode, strongly_movable T, invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters, class... Predictions&gt; </td></tr>
+template&lt;test_mode Mode, movable_comparable T, invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters, class... Predictions&gt; </td></tr>
 <tr class="memitem:a8031797c3ff69c794dce33fde48df770"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_mutation_after_swap</b> (test_logger&lt; Mode &gt; &amp;logger, T &amp;lhs, const T &amp;rhs, const T &amp;y, Mutator yMutator, dual_allocation_checker&lt; T, Getters, Predictions &gt;... checkers)</td></tr>
 <tr class="separator:a8031797c3ff69c794dce33fde48df770"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac92599df1097b25f5f80de119f6e3748"><td class="memTemplParams" colspan="2"><a id="ac92599df1097b25f5f80de119f6e3748"></a>
-template&lt;test_mode Mode, strongly_movable T, alloc_getter&lt; T &gt; Getter, class Prediction , alloc_getter&lt; T &gt;... Getters, class... Predictions&gt; </td></tr>
+template&lt;test_mode Mode, movable_comparable T, alloc_getter&lt; T &gt; Getter, class Prediction , alloc_getter&lt; T &gt;... Getters, class... Predictions&gt; </td></tr>
 <tr class="memitem:ac92599df1097b25f5f80de119f6e3748"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_copy_x_allocation</b> (test_logger&lt; Mode &gt; &amp;logger, const T &amp;container, const allocation_checker&lt; T, Getter, Prediction &gt; &amp;checker, const allocation_checker&lt; T, Getters, Predictions &gt; &amp;... moreCheckers)</td></tr>
 <tr class="separator:ac92599df1097b25f5f80de119f6e3748"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a42d693101373f03391ff11c4f403cda8"><td class="memTemplParams" colspan="2"><a id="a42d693101373f03391ff11c4f403cda8"></a>
-template&lt;test_mode Mode, strongly_movable T, alloc_getter&lt; T &gt; Getter, class Prediction , alloc_getter&lt; T &gt;... Getters, class... Predictions&gt; </td></tr>
+template&lt;test_mode Mode, movable_comparable T, alloc_getter&lt; T &gt; Getter, class Prediction , alloc_getter&lt; T &gt;... Getters, class... Predictions&gt; </td></tr>
 <tr class="memitem:a42d693101373f03391ff11c4f403cda8"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_copy_y_allocation</b> (test_logger&lt; Mode &gt; &amp;logger, const T &amp;container, const allocation_checker&lt; T, Getter, Prediction &gt; &amp;checker, const allocation_checker&lt; T, Getters, Predictions &gt; &amp;... moreCheckers)</td></tr>
 <tr class="separator:a42d693101373f03391ff11c4f403cda8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0b5e85780b12469dcf164a8e1a00f142"><td class="memTemplParams" colspan="2"><a id="a0b5e85780b12469dcf164a8e1a00f142"></a>
-template&lt;test_mode Mode, strongly_movable T, alloc_getter&lt; T &gt; Getter, class Prediction , alloc_getter&lt; T &gt;... Getters, class... Predictions&gt; </td></tr>
+template&lt;test_mode Mode, movable_comparable T, alloc_getter&lt; T &gt; Getter, class Prediction , alloc_getter&lt; T &gt;... Getters, class... Predictions&gt; </td></tr>
 <tr class="memitem:a0b5e85780b12469dcf164a8e1a00f142"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_move_y_allocation</b> (test_logger&lt; Mode &gt; &amp;logger, const T &amp;container, const allocation_checker&lt; T, Getter, Prediction &gt; &amp;checker, const allocation_checker&lt; T, Getters, Predictions &gt; &amp;... moreCheckers)</td></tr>
 <tr class="separator:a0b5e85780b12469dcf164a8e1a00f142"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab091dc65276585450fb637f9c47edcd9"><td class="memTemplParams" colspan="2"><a id="ab091dc65276585450fb637f9c47edcd9"></a>
-template&lt;test_mode Mode, strongly_movable T, alloc_getter&lt; T &gt; Getter, class Prediction , alloc_getter&lt; T &gt;... Getters, class... Predictions&gt; </td></tr>
+template&lt;test_mode Mode, movable_comparable T, alloc_getter&lt; T &gt; Getter, class Prediction , alloc_getter&lt; T &gt;... Getters, class... Predictions&gt; </td></tr>
 <tr class="memitem:ab091dc65276585450fb637f9c47edcd9"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_mutation_allocation</b> (std::string_view priorOp, test_logger&lt; Mode &gt; &amp;logger, const T &amp;y, const allocation_checker&lt; T, Getter, Prediction &gt; &amp;checker, const allocation_checker&lt; T, Getters, Predictions &gt; &amp;... moreCheckers)</td></tr>
 <tr class="separator:ab091dc65276585450fb637f9c47edcd9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a524d1bc0540e904075068ec241d66949"><td class="memTemplParams" colspan="2"><a id="a524d1bc0540e904075068ec241d66949"></a>
-template&lt;test_mode Mode, strongly_movable T, alloc_getter&lt; T &gt; Getter, class Prediction , alloc_getter&lt; T &gt;... Getters, class... Predictions&gt; </td></tr>
+template&lt;test_mode Mode, movable_comparable T, alloc_getter&lt; T &gt; Getter, class Prediction , alloc_getter&lt; T &gt;... Getters, class... Predictions&gt; </td></tr>
 <tr class="memitem:a524d1bc0540e904075068ec241d66949"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_para_copy_y_allocation</b> (test_logger&lt; Mode &gt; &amp;logger, const T &amp;container, const allocation_checker&lt; T, Getter, Prediction &gt; &amp;checker, const allocation_checker&lt; T, Getters, Predictions &gt; &amp;... moreCheckers)</td></tr>
 <tr class="separator:a524d1bc0540e904075068ec241d66949"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0eb27251a728a7ebab1a4b158d49cacc"><td class="memTemplParams" colspan="2"><a id="a0eb27251a728a7ebab1a4b158d49cacc"></a>
-template&lt;test_mode Mode, strongly_movable T, alloc_getter&lt; T &gt;... Getters, class... Predictions&gt; </td></tr>
+template&lt;test_mode Mode, movable_comparable T, alloc_getter&lt; T &gt;... Getters, class... Predictions&gt; </td></tr>
 <tr class="memitem:a0eb27251a728a7ebab1a4b158d49cacc"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_para_copy_y_allocation</b> (test_logger&lt; Mode &gt; &amp;logger, const T &amp;container, std::tuple&lt; allocation_checker&lt; T, Getters, Predictions &gt;... &gt; checkers)</td></tr>
 <tr class="separator:a0eb27251a728a7ebab1a4b158d49cacc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2951cf04cb9228d7abce95cea1a7ab87"><td class="memTemplParams" colspan="2"><a id="a2951cf04cb9228d7abce95cea1a7ab87"></a>
-template&lt;test_mode Mode, strongly_movable T, class Prediction , alloc_getter&lt; T &gt; Getter, alloc_getter&lt; T &gt;... Getters, class... Predictions&gt; </td></tr>
+template&lt;test_mode Mode, movable_comparable T, class Prediction , alloc_getter&lt; T &gt; Getter, alloc_getter&lt; T &gt;... Getters, class... Predictions&gt; </td></tr>
 <tr class="memitem:a2951cf04cb9228d7abce95cea1a7ab87"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_para_move_y_allocation</b> (test_logger&lt; Mode &gt; &amp;logger, const T &amp;container, const allocation_checker&lt; T, Getter, Prediction &gt; &amp;checker, const allocation_checker&lt; T, Getters, Predictions &gt; &amp;... moreCheckers)</td></tr>
 <tr class="separator:a2951cf04cb9228d7abce95cea1a7ab87"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae7722005727eb4c3139881ff6bea0e10"><td class="memTemplParams" colspan="2"><a id="ae7722005727eb4c3139881ff6bea0e10"></a>
-template&lt;test_mode Mode, strongly_movable T, alloc_getter&lt; T &gt;... Getters, class... Predictions&gt; </td></tr>
+template&lt;test_mode Mode, movable_comparable T, alloc_getter&lt; T &gt;... Getters, class... Predictions&gt; </td></tr>
 <tr class="memitem:ae7722005727eb4c3139881ff6bea0e10"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_para_move_y_allocation</b> (test_logger&lt; Mode &gt; &amp;logger, const T &amp;container, std::tuple&lt; allocation_checker&lt; T, Getters, Predictions &gt;... &gt; checkers)</td></tr>
 <tr class="separator:ae7722005727eb4c3139881ff6bea0e10"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">OverloadSet</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p>Functions for performing allocation checks which are common to types with both regular and move-only semantics. These functions provide an extra level of indirection in order that the current number of allocations may be acquired before proceeding </p>
 </div></td></tr>
 <tr class="memitem:a5a5898a0f126f0b533e9886337e589e6"><td class="memTemplParams" colspan="2"><a id="a5a5898a0f126f0b533e9886337e589e6"></a>
-template&lt;test_mode Mode, class Actions , strongly_movable T, alloc_getter&lt; T &gt;... Getters, class... Predictions&gt; </td></tr>
+template&lt;test_mode Mode, class Actions , movable_comparable T, alloc_getter&lt; T &gt;... Getters, class... Predictions&gt; </td></tr>
 <tr class="memitem:a5a5898a0f126f0b533e9886337e589e6"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_preconditions</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, const T &amp;x, const T &amp;y, const dual_allocation_checker&lt; T, Getters, Predictions &gt; &amp;... checkers)</td></tr>
 <tr class="separator:a5a5898a0f126f0b533e9886337e589e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aff07ede11272788079239e949a8859f8"><td class="memTemplParams" colspan="2"><a id="aff07ede11272788079239e949a8859f8"></a>
-template&lt;test_mode Mode, class Actions , strongly_movable T, alloc_getter&lt; T &gt;... Getters, class... Predictions&gt; </td></tr>
+template&lt;test_mode Mode, class Actions , movable_comparable T, alloc_getter&lt; T &gt;... Getters, class... Predictions&gt; </td></tr>
 <tr class="memitem:aff07ede11272788079239e949a8859f8"><td class="memTemplItemLeft" align="right" valign="top">std::optional&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_move_construction</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;&amp;z, const T &amp;y, const dual_allocation_checker&lt; T, Getters, Predictions &gt; &amp;... checkers)</td></tr>
 <tr class="separator:aff07ede11272788079239e949a8859f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a84b9a8efa3b00de4749479203b79b677"><td class="memTemplParams" colspan="2"><a id="a84b9a8efa3b00de4749479203b79b677"></a>
-template&lt;test_mode Mode, class Actions , strongly_movable T, invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters, class... Predictions&gt; </td></tr>
+template&lt;test_mode Mode, class Actions , movable_comparable T, invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters, class... Predictions&gt; </td></tr>
 <tr class="memitem:a84b9a8efa3b00de4749479203b79b677"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_move_assign</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;u, T &amp;&amp;v, const T &amp;y, Mutator yMutator, const dual_allocation_checker&lt; T, Getters, Predictions &gt; &amp;... checkers)</td></tr>
 <tr class="separator:a84b9a8efa3b00de4749479203b79b677"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae959d65d6f2b7a7346f54de880b994c8"><td class="memTemplParams" colspan="2"><a id="ae959d65d6f2b7a7346f54de880b994c8"></a>
-template&lt;test_mode Mode, strongly_movable T, invocable&lt; T &amp; &gt; Mutator, class... Checkers&gt; </td></tr>
+template&lt;test_mode Mode, movable_comparable T, invocable&lt; T &amp; &gt; Mutator, class... Checkers&gt; </td></tr>
 <tr class="memitem:ae959d65d6f2b7a7346f54de880b994c8"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_mutation_after_move</b> (std::string_view moveType, test_logger&lt; Mode &gt; &amp;logger, T &amp;u, const T &amp;y, Mutator yMutator, Checkers... checkers)</td></tr>
 <tr class="separator:ae959d65d6f2b7a7346f54de880b994c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a72e99c8d61c520aefde13b41f244e69f"><td class="memTemplParams" colspan="2"><a id="a72e99c8d61c520aefde13b41f244e69f"></a>
-template&lt;test_mode Mode, strongly_movable T, invocable&lt; T &amp; &gt; Mutator, class... Checkers, std::size_t... I&gt; </td></tr>
+template&lt;test_mode Mode, movable_comparable T, invocable&lt; T &amp; &gt; Mutator, class... Checkers, std::size_t... I&gt; </td></tr>
 <tr class="memitem:a72e99c8d61c520aefde13b41f244e69f"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_mutation_after_move</b> (std::string_view moveType, test_logger&lt; Mode &gt; &amp;logger, T &amp;u, const T &amp;y, Mutator yMutator, std::tuple&lt; Checkers... &gt; checkers, std::index_sequence&lt; I... &gt;)</td></tr>
 <tr class="separator:a72e99c8d61c520aefde13b41f244e69f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3d094b67909669c6b7564e5a61349865"><td class="memTemplParams" colspan="2"><a id="a3d094b67909669c6b7564e5a61349865"></a>
-template&lt;test_mode Mode, strongly_movable T, invocable&lt; T &amp; &gt; Mutator, class... Checkers&gt; </td></tr>
+template&lt;test_mode Mode, movable_comparable T, invocable&lt; T &amp; &gt; Mutator, class... Checkers&gt; </td></tr>
 <tr class="memitem:a3d094b67909669c6b7564e5a61349865"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_mutation_after_move</b> (std::string_view moveType, test_logger&lt; Mode &gt; &amp;logger, T &amp;u, const T &amp;y, Mutator yMutator, std::tuple&lt; Checkers... &gt; checkers)</td></tr>
 <tr class="separator:a3d094b67909669c6b7564e5a61349865"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr><td colspan="2"><div class="groupHeader">OverloadSet</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p>Functions for performing allocation checks which are common to types with both regular and move-only semantics. These functions provide an extra level of indirection in order that the current number of allocations may be acquired before proceeding </p>
 </div></td></tr>
 <tr class="memitem:a5a5898a0f126f0b533e9886337e589e6"><td class="memTemplParams" colspan="2"><a id="a5a5898a0f126f0b533e9886337e589e6"></a>
-template&lt;test_mode Mode, class Actions , strongly_movable T, alloc_getter&lt; T &gt;... Getters, class... Predictions&gt; </td></tr>
+template&lt;test_mode Mode, class Actions , movable_comparable T, alloc_getter&lt; T &gt;... Getters, class... Predictions&gt; </td></tr>
 <tr class="memitem:a5a5898a0f126f0b533e9886337e589e6"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_preconditions</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, const T &amp;x, const T &amp;y, const dual_allocation_checker&lt; T, Getters, Predictions &gt; &amp;... checkers)</td></tr>
 <tr class="separator:a5a5898a0f126f0b533e9886337e589e6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aff07ede11272788079239e949a8859f8"><td class="memTemplParams" colspan="2"><a id="aff07ede11272788079239e949a8859f8"></a>
-template&lt;test_mode Mode, class Actions , strongly_movable T, alloc_getter&lt; T &gt;... Getters, class... Predictions&gt; </td></tr>
+template&lt;test_mode Mode, class Actions , movable_comparable T, alloc_getter&lt; T &gt;... Getters, class... Predictions&gt; </td></tr>
 <tr class="memitem:aff07ede11272788079239e949a8859f8"><td class="memTemplItemLeft" align="right" valign="top">std::optional&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_move_construction</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;&amp;z, const T &amp;y, const dual_allocation_checker&lt; T, Getters, Predictions &gt; &amp;... checkers)</td></tr>
 <tr class="separator:aff07ede11272788079239e949a8859f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a84b9a8efa3b00de4749479203b79b677"><td class="memTemplParams" colspan="2"><a id="a84b9a8efa3b00de4749479203b79b677"></a>
-template&lt;test_mode Mode, class Actions , strongly_movable T, invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters, class... Predictions&gt; </td></tr>
+template&lt;test_mode Mode, class Actions , movable_comparable T, invocable&lt; T &amp; &gt; Mutator, alloc_getter&lt; T &gt;... Getters, class... Predictions&gt; </td></tr>
 <tr class="memitem:a84b9a8efa3b00de4749479203b79b677"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_move_assign</b> (test_logger&lt; Mode &gt; &amp;logger, const Actions &amp;actions, T &amp;u, T &amp;&amp;v, const T &amp;y, Mutator yMutator, const dual_allocation_checker&lt; T, Getters, Predictions &gt; &amp;... checkers)</td></tr>
 <tr class="separator:a84b9a8efa3b00de4749479203b79b677"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae959d65d6f2b7a7346f54de880b994c8"><td class="memTemplParams" colspan="2"><a id="ae959d65d6f2b7a7346f54de880b994c8"></a>
-template&lt;test_mode Mode, strongly_movable T, invocable&lt; T &amp; &gt; Mutator, class... Checkers&gt; </td></tr>
+template&lt;test_mode Mode, movable_comparable T, invocable&lt; T &amp; &gt; Mutator, class... Checkers&gt; </td></tr>
 <tr class="memitem:ae959d65d6f2b7a7346f54de880b994c8"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_mutation_after_move</b> (std::string_view moveType, test_logger&lt; Mode &gt; &amp;logger, T &amp;u, const T &amp;y, Mutator yMutator, Checkers... checkers)</td></tr>
 <tr class="separator:ae959d65d6f2b7a7346f54de880b994c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a72e99c8d61c520aefde13b41f244e69f"><td class="memTemplParams" colspan="2"><a id="a72e99c8d61c520aefde13b41f244e69f"></a>
-template&lt;test_mode Mode, strongly_movable T, invocable&lt; T &amp; &gt; Mutator, class... Checkers, std::size_t... I&gt; </td></tr>
+template&lt;test_mode Mode, movable_comparable T, invocable&lt; T &amp; &gt; Mutator, class... Checkers, std::size_t... I&gt; </td></tr>
 <tr class="memitem:a72e99c8d61c520aefde13b41f244e69f"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_mutation_after_move</b> (std::string_view moveType, test_logger&lt; Mode &gt; &amp;logger, T &amp;u, const T &amp;y, Mutator yMutator, std::tuple&lt; Checkers... &gt; checkers, std::index_sequence&lt; I... &gt;)</td></tr>
 <tr class="separator:a72e99c8d61c520aefde13b41f244e69f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3d094b67909669c6b7564e5a61349865"><td class="memTemplParams" colspan="2"><a id="a3d094b67909669c6b7564e5a61349865"></a>
-template&lt;test_mode Mode, strongly_movable T, invocable&lt; T &amp; &gt; Mutator, class... Checkers&gt; </td></tr>
+template&lt;test_mode Mode, movable_comparable T, invocable&lt; T &amp; &gt; Mutator, class... Checkers&gt; </td></tr>
 <tr class="memitem:a3d094b67909669c6b7564e5a61349865"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::check_mutation_after_move</b> (std::string_view moveType, test_logger&lt; Mode &gt; &amp;logger, T &amp;u, const T &amp;y, Mutator yMutator, std::tuple&lt; Checkers... &gt; checkers)</td></tr>
 <tr class="separator:a3d094b67909669c6b7564e5a61349865"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>

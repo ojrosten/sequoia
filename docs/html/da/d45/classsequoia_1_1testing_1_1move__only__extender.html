@@ -96,8 +96,14 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ac13c2a182d1a134de53f5e02917cf2b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a531b2a2cb896a881c7141aacc7bfc20a"><td class="memTemplParams" colspan="2"><a id="a531b2a2cb896a881c7141aacc7bfc20a"></a>
 template&lt;moveonly T&gt; </td></tr>
-<tr class="memitem:a531b2a2cb896a881c7141aacc7bfc20a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>check_semantics</b> (std::string_view description, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone)</td></tr>
+<tr class="memitem:a531b2a2cb896a881c7141aacc7bfc20a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../da/d45/classsequoia_1_1testing_1_1move__only__extender.html#a531b2a2cb896a881c7141aacc7bfc20a">check_semantics</a> (std::string_view description, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone)</td></tr>
+<tr class="memdesc:a531b2a2cb896a881c7141aacc7bfc20a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Preconditions: x!=y; x==xClone, y==yClone. <br /></td></tr>
 <tr class="separator:a531b2a2cb896a881c7141aacc7bfc20a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0e7b9c0d3cfaaa627da8ab34911f300e"><td class="memTemplParams" colspan="2"><a id="a0e7b9c0d3cfaaa627da8ab34911f300e"></a>
+template&lt;moveonly T&gt; </td></tr>
+<tr class="memitem:a0e7b9c0d3cfaaa627da8ab34911f300e"><td class="memTemplItemLeft" align="right" valign="top">requires orderable&lt; T &gt; void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../da/d45/classsequoia_1_1testing_1_1move__only__extender.html#a0e7b9c0d3cfaaa627da8ab34911f300e">check_semantics</a> (std::string_view description, T &amp;&amp;x, T &amp;&amp;y, const T &amp;xClone, const T &amp;yClone, std::weak_ordering order)</td></tr>
+<tr class="memdesc:a0e7b9c0d3cfaaa627da8ab34911f300e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Preconditions: x!=y, with values consistent with order; x==xClone, y==yClone. <br /></td></tr>
+<tr class="separator:a0e7b9c0d3cfaaa627da8ab34911f300e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
