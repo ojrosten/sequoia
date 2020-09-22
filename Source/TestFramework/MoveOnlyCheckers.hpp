@@ -53,4 +53,19 @@ namespace sequoia::testing
 
     impl::check_semantics(logger, impl::default_actions{}, std::forward<T>(x), std::forward<T>(y), xClone, yClone, impl::null_mutator{});
   }
+
+  /*! Preconditions:
+    
+      x == xClone
+      y == yClone
+      x != y
+   */
+  template<test_mode Mode, moveonly T>
+    requires orderable<T>
+  void check_semantics(std::string_view description, test_logger<Mode>& logger, T&& x, T&& y, const T& xClone, const T& yClone, std::weak_ordering order)
+  {
+    sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
+
+    impl::check_semantics(logger, impl::orderable_actions{order}, std::forward<T>(x), std::forward<T>(y), xClone, yClone, impl::null_mutator{});
+  }
 }

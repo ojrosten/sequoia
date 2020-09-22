@@ -43,6 +43,13 @@ namespace sequoia::testing
     {
       testing::check_semantics(append_lines(description, emphasise("Move-only Semantics")), m_Logger, std::move(x), std::move(y), xClone, yClone, std::move(yMutator), info...);
     }
+
+    template<moveonly T, invocable<T&> Mutator, alloc_getter<T>... Getters>
+      requires orderable<T>
+    void check_semantics(std::string_view description, T&& x, T&& y, const T& xClone, const T& yClone, std::weak_ordering order, Mutator yMutator, move_only_allocation_info<T, Getters>... info)
+    {
+      testing::check_semantics(append_lines(description, emphasise("Move-only Semantics")), m_Logger, std::move(x), std::move(y), xClone, yClone, order, std::move(yMutator), info...);
+    }
   protected:
     ~move_only_allocation_extender() = default;
 
