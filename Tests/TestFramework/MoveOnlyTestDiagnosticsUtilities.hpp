@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "RegularTestCore.hpp"
+#include "MoveOnlyTestCore.hpp"
 
 #include <vector>
 
@@ -48,16 +48,10 @@ namespace sequoia::testing
     std::vector<T, Allocator> x{};
 
     [[nodiscard]]
-    friend bool operator==(const move_only_beast& lhs, const move_only_beast& rhs) noexcept
-    {
-      return lhs.x == rhs.x;
-    }
+    friend bool operator==(const move_only_beast&, const move_only_beast&) noexcept = default;
 
     [[nodiscard]]
-    friend bool operator!=(const move_only_beast& lhs, const move_only_beast& rhs) noexcept
-    {
-      return !(lhs == rhs);
-    }
+    friend bool operator!=(const move_only_beast&, const move_only_beast&) noexcept = default;
 
     template<class Stream>
     friend Stream& operator<<(Stream& s, const move_only_beast& b)

@@ -111,7 +111,7 @@ namespace sequoia::testing::impl
     template<test_mode Mode, movable_comparable T>
       requires orderable<T>
     [[nodiscard]]
-    bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y)
+    bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y) const
     {
       if(default_actions::check_preconditions(logger, x, y))
       {
@@ -131,7 +131,7 @@ namespace sequoia::testing::impl
 
             return check(mess(), logger, cond,
                          tutor{[](const T& x, const T& y) {
-                                 prediction_message(to_string(x), to_string(y)); } });
+                                 return prediction_message(to_string(x), to_string(y)); } });
           }
         }
       }
@@ -150,7 +150,7 @@ namespace sequoia::testing::impl
     
     template<test_mode Mode, movable_comparable T>
     [[nodiscard]]
-    bool check_consistency(test_logger<Mode>& logger, const T& x, const T& y)
+    bool check_consistency(test_logger<Mode>& logger, const T& x, const T& y) const
     {
       auto comp{
         [&logger](const T& x, const T& y){

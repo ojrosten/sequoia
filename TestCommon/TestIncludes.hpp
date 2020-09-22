@@ -81,6 +81,7 @@
 #include "MoveOnlyAllocationTestDiagnostics.hpp"
 #include "ScopedAllocationTestDiagnostics.hpp"
 #include "MoveOnlyScopedAllocationTestDiagnostics.hpp"
+#include "OrderableMoveOnlyTestDiagnostics.hpp"
 
 #include "TestRunner.hpp"
 #include "TestRunnerDiagnostics.hpp"

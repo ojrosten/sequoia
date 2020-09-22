@@ -1016,24 +1016,24 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-	Fast Task duration: 0.00150725s +- 4 * 0.00054744
-	Slow Task duration: 0.00152033s +- 4 * 0.000379382 [1.00868; (2, 2)]
+	Fast Task duration: 0.00135494s +- 4 * 0.000106436
+	Slow Task duration: 0.00139507s +- 4 * 1.39264e-05 [1.02962; (2, 2)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-	Fast Task duration: 0.00187532s +- 4 * 0.000839361
-	Slow Task duration: 0.00383546s +- 4 * 0.00549077 [2.04523; (2, 3)]
+	Fast Task duration: 0.00136971s +- 4 * 3.88793e-05
+	Slow Task duration: 0.00136706s +- 4 * 3.47753e-05 [0.998066; (2, 3)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-	Fast Task duration: 0.00314063s +- 4 * 0.00203396
-	Slow Task duration: 0.00776001s +- 4 * 0.00382053 [2.47084; (2, 2.5)]
+	Fast Task duration: 0.00116366s +- 4 * 0.000102917
+	Slow Task duration: 0.00455401s +- 4 * 0.000376922 [3.91352; (2, 2.5)]
 
 	=======================================
 
@@ -6598,6 +6598,15 @@
 	=======================================
 
 	False Positive Failure:
+	../Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 41
+
+	--Move-only Semantics--
+	[sequoia::testing::orderable_move_only_beast<int, std::allocator<int> >]
+
+
+	=======================================
+
+	False Positive Failure:
 	../Tests/TestFramework/CoreDiagnostics.cpp, Line 241
 
 	[bool]
@@ -6805,8 +6814,8 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67
 	Performance Test which should pass
 
-	Fast Task duration: 0.00150831s +- 4 * 0.000263211
-	Slow Task duration: 0.00371773s +- 4 * 0.00169016 [2.46483; (1.8, 2.1)]
+	Fast Task duration: 0.00112201s +- 4 * 4.32646e-05
+	Slow Task duration: 0.00232948s +- 4 * 0.000268734 [2.07618; (1.8, 2.1)]
 
 
 	=======================================
@@ -6815,8 +6824,8 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68
 	Performance Test which should pass
 
-	Fast Task duration: 0.00144049s +- 4 * 0.000232241
-	Slow Task duration: 0.0079644s +- 4 * 0.00624024 [5.52894; (3.6, 4.1)]
+	Fast Task duration: 0.00119996s +- 4 * 0.00015717
+	Slow Task duration: 0.00437335s +- 4 * 0.000401929 [3.64456; (3.6, 4.1)]
 
 
 	=======================================
@@ -7718,6 +7727,15 @@
 	[sequoia::testing::equivalence_checker<std::filesystem::path>]
 	With equivalent types:
 	[std::filesystem::path]
+
+
+	=======================================
+
+	False Positive Failure:
+	../Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 41
+
+	--Move-only Semantics--
+	[sequoia::testing::orderable_move_only_beast<int, std::allocator<int> >]
 
 
 	=======================================
