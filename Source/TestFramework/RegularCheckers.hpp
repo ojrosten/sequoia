@@ -23,11 +23,11 @@
 
     Note that a default constructor is not a strict requirement. To distinguish this
     Concept from std::regular, the Concept pseudoregular is used. Types additionally
-    possessing the remaining comparison operators will be referred to as having
-    ordered semantics.
+    possessing the remaining comparison operators will be referred to as being
+    orderable.
 
-    This file adds two functions to the check_semantics overload set; both functions are
-    appropriate for testing the behaviour of types with regular semantics. Inside the
+    This file adds functions to the check_semantics overload set: they are
+    appropriate for testing the behaviour of types with regular/orderable semantics. Inside the
     functions, consistency of the operators listed above will be checked. One of the overloads
     also accepts a mutator. This will modify a copy of y, checking both that the copy is
     indeed changed and also that y is left alone. The reason for this is to check that classes
@@ -45,18 +45,36 @@
 namespace sequoia::testing
 {
   /// Precondition: x!=y
+  template<test_mode Mode, pseudoregular T>
+  void check_semantics(std::string_view description, test_logger<Mode>& logger, const T& x, const T& y)
+  {
+    sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};    
+    impl::check_semantics(logger, impl::default_actions{}, x, y, impl::null_mutator{});
+  }
+
+  /// Precondition: x!=y with values consistent with order
+  template<test_mode Mode, pseudoregular T>
+    requires orderable<T>
+  void check_semantics(std::string_view description, test_logger<Mode>& logger, const T& x, const T& y, std::weak_ordering order)
+  {
+    sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};    
+    impl::check_semantics(logger, impl::orderable_actions{order}, x, y, impl::null_mutator{});
+  }
+  
+  /// Precondition: x!=y
   template<test_mode Mode, pseudoregular T, invocable<T&> Mutator>
   void check_semantics(std::string_view description, test_logger<Mode>& logger, const T& x, const T& y, Mutator yMutator)
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
     impl::check_semantics(logger, impl::default_actions{}, x, y, yMutator);
   }
-
-  /// Precondition: x!=y
-  template<test_mode Mode, pseudoregular T>
-  void check_semantics(std::string_view description, test_logger<Mode>& logger, const T& x, const T& y)
+  
+  /// Precondition: x!=y, with values consistent with order
+  template<test_mode Mode, pseudoregular T, invocable<T&> Mutator>
+    requires orderable<T>
+  void check_semantics(std::string_view description, test_logger<Mode>& logger, const T& x, const T& y, std::weak_ordering order, Mutator yMutator)
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
-    impl::check_semantics(logger, impl::default_actions{}, x, y, impl::null_mutator{});
+    impl::check_semantics(logger, impl::orderable_actions{order}, x, y, order, yMutator);
   }
 }

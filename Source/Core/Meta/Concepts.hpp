@@ -168,8 +168,11 @@ namespace sequoia
   concept movable_comparable = movable<T> && equality_comparable<T>;
 
   template<class T>
-  concept orderable = pseudoregular<T> && requires(const std::remove_reference_t<T>& t,
-             const std::remove_reference_t<T>& u) {
+  concept orderable = requires(const std::remove_reference_t<T>& t,
+                               const std::remove_reference_t<T>& u)
+  {
+    { t == u } -> boolean;
+    { t != u } -> boolean; 
     { t < u  } -> boolean;
     { t <= u } -> boolean;
     { t > u  } -> boolean;

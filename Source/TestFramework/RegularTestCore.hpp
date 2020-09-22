@@ -16,7 +16,7 @@
 
 namespace sequoia::testing
 {
-  /*! \brief Extender for testing classes exhibiting regular semantics.
+  /*! \brief Extender for testing classes exhibiting regular/orderable semantics.
 
        This class is designed to be plugged into the 
        \ref checker_primary "checker" class template, in order to extend
@@ -36,16 +36,34 @@ namespace sequoia::testing
     regular_extender& operator=(const regular_extender&) = delete;
     regular_extender& operator=(regular_extender&&)      = delete;
 
+    /// Precondition: x!=y
     template<pseudoregular T>
     void check_semantics(std::string_view description, const T& x, const T& y)
     {
       testing::check_semantics(append_lines(description, emphasise("Regular Semantics")), m_Logger, x, y);
     }
 
+    /// Precondition: x!=y, with values consistent with order
+    template<pseudoregular T>
+      requires orderable<T>
+    void check_semantics(std::string_view description, const T& x, const T& y, std::weak_ordering order)
+    {
+      testing::check_semantics(append_lines(description, emphasise("Regular Semantics")), m_Logger, x, y, order);
+    }
+
+    /// Precondition: x!=y
     template<pseudoregular T, invocable<T&> Mutator>
     void check_semantics(std::string_view description, const T& x, const T& y, Mutator m)
     {
       testing::check_semantics(append_lines(description, emphasise("Regular Semantics")), m_Logger, x, y, std::move(m));
+    }
+
+    /// Precondition: x!=y, with values consistent with order
+    template<pseudoregular T, invocable<T&> Mutator>
+      requires orderable<T>
+    void check_semantics(std::string_view description, const T& x, const T& y, std::weak_ordering order, Mutator m)
+    {
+      testing::check_semantics(append_lines(description, emphasise("Regular Semantics")), m_Logger, x, y, order, std::move(m));
     }
   protected:
     regular_extender(regular_extender&&) noexcept = default;

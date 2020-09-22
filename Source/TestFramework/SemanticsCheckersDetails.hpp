@@ -61,8 +61,11 @@
 */
 
 #include "TestLogger.hpp"
+#include "Advice.hpp"
+
 #include "Concepts.hpp"
 
+#include <compare>
 #include <optional>
 
 namespace sequoia::testing::impl
@@ -82,39 +85,10 @@ namespace sequoia::testing::impl
   struct pre_condition_actions
   {
     template<test_mode Mode, movable_comparable T>
+    [[nodiscard]]
     static bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y)
     {
-      if(check("Precondition - for checking semantics, x and y are assumed to be different", logger, x != y))
-      {
-        if constexpr (orderable<T>)
-        {
-          auto comp{
-            [&logger](const T& x, const T& y){
-              const std::array<bool, 3> passed{
-                check("operator> and operator< are inconsistent", logger, y > x),
-                check("operator< and operator<= are inconsistent", logger, x <= y),
-                check("operator< and operator>= are inconsistent", logger, y >= x)
-              };
-
-              if constexpr (three_way_comparable<T>)
-              {
-               if(!check("operator< and operator<=> are inconsistent", logger, (x <=> y) < 0))
-               {
-                 return false;
-               }
-              }
-
-              return std::find(passed.begin(), passed.end(), false) == passed.end();
-            }
-          };
-
-          return x < y ? comp(x,y) : comp(y,x);
-        }
-
-        return true;
-      }
-
-      return false;
+      return check("Precondition - for checking semantics, x and y are assumed to be different", logger, x != y);      
     }
   };
   
@@ -128,8 +102,81 @@ namespace sequoia::testing::impl
     constexpr static bool has_post_swap_action{};    
   };
 
-  template<test_mode Mode, class Actions, movable_comparable T, class Fn, class... Args>
-    requires invocable_r<Fn, bool, T>
+  struct orderable_actions : default_actions
+  {
+    explicit orderable_actions(std::weak_ordering order)
+      : m_Order{order}
+    {}
+
+    template<test_mode Mode, movable_comparable T>
+      requires orderable<T>
+    [[nodiscard]]
+    bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y)
+    {
+      if(default_actions::check_preconditions(logger, x, y))
+      {
+        if(check("Precondition - for checking semantics, order must be weak_ordering::less or weak_ordering::greater",
+                 logger, order() != 0))
+        {
+          if(check_consistency(logger, x, y))
+          {
+
+            const bool cond{order() < 0 ? x < y : y > x};
+            auto mess{
+              [ord{order()}](){
+                 std::string mess{"Precondition - for ordered semantics, it is assumed that "};
+                 return ord == 0 ? mess.append("x < y") : mess.append("y > x");
+               }
+            };
+
+            return check(mess(), logger, cond,
+                         tutor{[](const T& x, const T& y) {
+                                 prediction_message(to_string(x), to_string(y)); } });
+          }
+        }
+      }
+
+      return false;
+    }
+    
+    [[nodiscard]]
+    std::weak_ordering order() const noexcept
+    {
+      return m_Order;
+    }
+
+  private:
+    std::weak_ordering m_Order;
+    
+    template<test_mode Mode, movable_comparable T>
+    [[nodiscard]]
+    bool check_consistency(test_logger<Mode>& logger, const T& x, const T& y)
+    {
+      auto comp{
+        [&logger](const T& x, const T& y){
+          const std::array<bool, 3> passed{
+                check("operator> and operator< are inconsistent", logger, y > x),
+                check("operator< and operator<= are inconsistent", logger, x <= y),
+                check("operator< and operator>= are inconsistent", logger, y >= x)
+          };
+
+          if constexpr (three_way_comparable<T>)
+          {
+            if(!check("operator< and operator<=> are inconsistent", logger, (x <=> y) < 0))
+            {
+              return false;
+            }
+          }
+
+          return std::find(passed.begin(), passed.end(), false) == passed.end();
+        }
+      };
+
+      return x < y ? comp(x,y) : comp(y,x);
+    }
+  };
+
+  template<test_mode Mode, class Actions, movable_comparable T, invocable_r<bool, T> Fn, class... Args>
   bool check_comparison(test_logger<Mode>& logger, std::string_view op, const Actions& actions, const T& x, const T& y, Fn fn, const Args&... args)
   {
     if(!check(std::string{"operator"}.append(op).append(" is inconsistent"), logger, fn(x)))
