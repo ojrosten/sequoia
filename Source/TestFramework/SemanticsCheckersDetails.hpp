@@ -121,7 +121,7 @@ namespace sequoia::testing::impl
           if(check_consistency(logger, x, y))
           {
 
-            const bool cond{order() < 0 ? x < y : y > x};
+            const bool cond{order() < 0 ? x < y : x > y};
             auto mess{
               [ord{order()}](){
                  std::string mess{"Precondition - for ordered semantics, it is assumed that "};
