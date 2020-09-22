@@ -77,10 +77,15 @@ namespace sequoia::testing
       return lhs.x >= rhs.x;
     }
 
-    // TO DO: use when libc++ rolls out <=> to std
-    //friend bool operator<=>(const orderable_move_only_beast&, const orderable_move_only_beast&) noexcept = default;
+    // TO DO: default this and remove most of the above when libc++ rolls out <=> to std
+    friend std::weak_ordering operator<=>(const orderable_move_only_beast& lhs, const orderable_move_only_beast& rhs) noexcept
+    {
+      if(lhs < rhs) return std::weak_ordering::less;
 
-    
+      if(rhs > lhs) return std::weak_ordering::greater;
+
+      return std::weak_ordering::equivalent;
+    }
 
     template<class Stream>
     friend Stream& operator<<(Stream& s, const orderable_move_only_beast& b)
