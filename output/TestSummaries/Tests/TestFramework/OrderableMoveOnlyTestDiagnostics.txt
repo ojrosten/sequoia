@@ -1,6 +1,6 @@
 Orderable Move-Only False Positive Diagnostics
 [1ms]
-False Positive Checks:                     3;  Failures:  0
+False Positive Checks:                     7;  Failures:  0
 Orderable Move-Only False Negative Diagnostics
 [0ms]
 False Negative Checks:                     2;  Failures:  0

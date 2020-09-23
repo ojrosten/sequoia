@@ -94,4 +94,334 @@ namespace sequoia::testing
       return s;
     }
   };
+
+  template<class T=int, class Allocator=std::allocator<int>>
+  struct move_only_broken_less
+  {
+    using allocator_type = Allocator;
+
+    move_only_broken_less(std::initializer_list<T> list) : x{list} {}
+
+    move_only_broken_less(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {}
+
+    move_only_broken_less(const allocator_type& a) : x(a) {}
+
+    move_only_broken_less(const move_only_broken_less&) = delete;
+
+    move_only_broken_less(move_only_broken_less&&) noexcept = default;
+
+    move_only_broken_less(move_only_broken_less&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+
+    move_only_broken_less& operator=(const move_only_broken_less&) = delete;
+
+    move_only_broken_less& operator=(move_only_broken_less&&) = default;
+
+    void swap(move_only_broken_less& other) noexcept(noexcept(std::swap(this->x, other.x)))
+    {
+      std::swap(x, other.x);
+    }
+
+    friend void swap(move_only_broken_less& lhs, move_only_broken_less& rhs)
+      noexcept(noexcept(lhs.swap(rhs)))
+    {
+      lhs.swap(rhs);
+    }
+      
+    std::vector<T, Allocator> x{};
+
+    [[nodiscard]]
+    friend bool operator==(const move_only_broken_less&, const move_only_broken_less&) noexcept = default;
+
+    [[nodiscard]]
+    friend bool operator!=(const move_only_broken_less&, const move_only_broken_less&) noexcept = default;
+
+    [[nodiscard]]
+    friend bool operator<(const move_only_broken_less& lhs, const move_only_broken_less& rhs) noexcept
+    {
+      return lhs.x > rhs.x;
+    }
+
+    [[nodiscard]]
+    friend bool operator<=(const move_only_broken_less& lhs, const move_only_broken_less& rhs) noexcept
+    {
+      return lhs.x <= rhs.x;
+    }
+
+    [[nodiscard]]
+    friend bool operator>(const move_only_broken_less& lhs, const move_only_broken_less& rhs) noexcept
+    {
+      return lhs.x > rhs.x;
+    }
+
+    [[nodiscard]]
+    friend bool operator>=(const move_only_broken_less& lhs, const move_only_broken_less& rhs) noexcept
+    {
+      return lhs.x >= rhs.x;
+    }
+
+    // TO DO: default this and remove most of the above when libc++ rolls out <=> to std
+    friend std::weak_ordering operator<=>(const move_only_broken_less& lhs, const move_only_broken_less& rhs) noexcept
+    {
+      if(lhs < rhs) return std::weak_ordering::less;
+
+      if(rhs > lhs) return std::weak_ordering::greater;
+
+      return std::weak_ordering::equivalent;
+    }
+
+    template<class Stream>
+    friend Stream& operator<<(Stream& s, const move_only_broken_less& b)
+    {
+      for(auto i : b.x) s << i << ' ';
+      return s;
+    }
+  };
+
+  template<class T=int, class Allocator=std::allocator<int>>
+  struct move_only_broken_lesseq
+  {
+    using allocator_type = Allocator;
+
+    move_only_broken_lesseq(std::initializer_list<T> list) : x{list} {}
+
+    move_only_broken_lesseq(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {}
+
+    move_only_broken_lesseq(const allocator_type& a) : x(a) {}
+
+    move_only_broken_lesseq(const move_only_broken_lesseq&) = delete;
+
+    move_only_broken_lesseq(move_only_broken_lesseq&&) noexcept = default;
+
+    move_only_broken_lesseq(move_only_broken_lesseq&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+
+    move_only_broken_lesseq& operator=(const move_only_broken_lesseq&) = delete;
+
+    move_only_broken_lesseq& operator=(move_only_broken_lesseq&&) = default;
+
+    void swap(move_only_broken_lesseq& other) noexcept(noexcept(std::swap(this->x, other.x)))
+    {
+      std::swap(x, other.x);
+    }
+
+    friend void swap(move_only_broken_lesseq& lhs, move_only_broken_lesseq& rhs)
+      noexcept(noexcept(lhs.swap(rhs)))
+    {
+      lhs.swap(rhs);
+    }
+      
+    std::vector<T, Allocator> x{};
+
+    [[nodiscard]]
+    friend bool operator==(const move_only_broken_lesseq&, const move_only_broken_lesseq&) noexcept = default;
+
+    [[nodiscard]]
+    friend bool operator!=(const move_only_broken_lesseq&, const move_only_broken_lesseq&) noexcept = default;
+
+    [[nodiscard]]
+    friend bool operator<(const move_only_broken_lesseq& lhs, const move_only_broken_lesseq& rhs) noexcept
+    {
+      return lhs.x < rhs.x;
+    }
+
+    [[nodiscard]]
+    friend bool operator<=(const move_only_broken_lesseq& lhs, const move_only_broken_lesseq& rhs) noexcept
+    {
+      return lhs.x >= rhs.x;
+    }
+
+    [[nodiscard]]
+    friend bool operator>(const move_only_broken_lesseq& lhs, const move_only_broken_lesseq& rhs) noexcept
+    {
+      return lhs.x > rhs.x;
+    }
+
+    [[nodiscard]]
+    friend bool operator>=(const move_only_broken_lesseq& lhs, const move_only_broken_lesseq& rhs) noexcept
+    {
+      return lhs.x >= rhs.x;
+    }
+
+    // TO DO: default this and remove most of the above when libc++ rolls out <=> to std
+    friend std::weak_ordering operator<=>(const move_only_broken_lesseq& lhs, const move_only_broken_lesseq& rhs) noexcept
+    {
+      if(lhs < rhs) return std::weak_ordering::less;
+
+      if(rhs > lhs) return std::weak_ordering::greater;
+
+      return std::weak_ordering::equivalent;
+    }
+
+    template<class Stream>
+    friend Stream& operator<<(Stream& s, const move_only_broken_lesseq& b)
+    {
+      for(auto i : b.x) s << i << ' ';
+      return s;
+    }
+  };
+
+  template<class T=int, class Allocator=std::allocator<int>>
+  struct move_only_broken_greater
+  {
+    using allocator_type = Allocator;
+
+    move_only_broken_greater(std::initializer_list<T> list) : x{list} {}
+
+    move_only_broken_greater(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {}
+
+    move_only_broken_greater(const allocator_type& a) : x(a) {}
+
+    move_only_broken_greater(const move_only_broken_greater&) = delete;
+
+    move_only_broken_greater(move_only_broken_greater&&) noexcept = default;
+
+    move_only_broken_greater(move_only_broken_greater&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+
+    move_only_broken_greater& operator=(const move_only_broken_greater&) = delete;
+
+    move_only_broken_greater& operator=(move_only_broken_greater&&) = default;
+
+    void swap(move_only_broken_greater& other) noexcept(noexcept(std::swap(this->x, other.x)))
+    {
+      std::swap(x, other.x);
+    }
+
+    friend void swap(move_only_broken_greater& lhs, move_only_broken_greater& rhs)
+      noexcept(noexcept(lhs.swap(rhs)))
+    {
+      lhs.swap(rhs);
+    }
+      
+    std::vector<T, Allocator> x{};
+
+    [[nodiscard]]
+    friend bool operator==(const move_only_broken_greater&, const move_only_broken_greater&) noexcept = default;
+
+    [[nodiscard]]
+    friend bool operator!=(const move_only_broken_greater&, const move_only_broken_greater&) noexcept = default;
+
+    [[nodiscard]]
+    friend bool operator<(const move_only_broken_greater& lhs, const move_only_broken_greater& rhs) noexcept
+    {
+      return lhs.x < rhs.x;
+    }
+
+    [[nodiscard]]
+    friend bool operator<=(const move_only_broken_greater& lhs, const move_only_broken_greater& rhs) noexcept
+    {
+      return lhs.x <= rhs.x;
+    }
+
+    [[nodiscard]]
+    friend bool operator>(const move_only_broken_greater& lhs, const move_only_broken_greater& rhs) noexcept
+    {
+      return lhs.x < rhs.x;
+    }
+
+    [[nodiscard]]
+    friend bool operator>=(const move_only_broken_greater& lhs, const move_only_broken_greater& rhs) noexcept
+    {
+      return lhs.x >= rhs.x;
+    }
+
+    // TO DO: default this and remove most of the above when libc++ rolls out <=> to std
+    friend std::weak_ordering operator<=>(const move_only_broken_greater& lhs, const move_only_broken_greater& rhs) noexcept
+    {
+      if(lhs < rhs) return std::weak_ordering::less;
+
+      if(rhs > lhs) return std::weak_ordering::greater;
+
+      return std::weak_ordering::equivalent;
+    }
+
+    template<class Stream>
+    friend Stream& operator<<(Stream& s, const move_only_broken_greater& b)
+    {
+      for(auto i : b.x) s << i << ' ';
+      return s;
+    }
+  };
+
+  template<class T=int, class Allocator=std::allocator<int>>
+  struct move_only_broken_greatereq
+  {
+    using allocator_type = Allocator;
+
+    move_only_broken_greatereq(std::initializer_list<T> list) : x{list} {}
+
+    move_only_broken_greatereq(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {}
+
+    move_only_broken_greatereq(const allocator_type& a) : x(a) {}
+
+    move_only_broken_greatereq(const move_only_broken_greatereq&) = delete;
+
+    move_only_broken_greatereq(move_only_broken_greatereq&&) noexcept = default;
+
+    move_only_broken_greatereq(move_only_broken_greatereq&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+
+    move_only_broken_greatereq& operator=(const move_only_broken_greatereq&) = delete;
+
+    move_only_broken_greatereq& operator=(move_only_broken_greatereq&&) = default;
+
+    void swap(move_only_broken_greatereq& other) noexcept(noexcept(std::swap(this->x, other.x)))
+    {
+      std::swap(x, other.x);
+    }
+
+    friend void swap(move_only_broken_greatereq& lhs, move_only_broken_greatereq& rhs)
+      noexcept(noexcept(lhs.swap(rhs)))
+    {
+      lhs.swap(rhs);
+    }
+      
+    std::vector<T, Allocator> x{};
+
+    [[nodiscard]]
+    friend bool operator==(const move_only_broken_greatereq&, const move_only_broken_greatereq&) noexcept = default;
+
+    [[nodiscard]]
+    friend bool operator!=(const move_only_broken_greatereq&, const move_only_broken_greatereq&) noexcept = default;
+
+    [[nodiscard]]
+    friend bool operator<(const move_only_broken_greatereq& lhs, const move_only_broken_greatereq& rhs) noexcept
+    {
+      return lhs.x < rhs.x;
+    }
+
+    [[nodiscard]]
+    friend bool operator<=(const move_only_broken_greatereq& lhs, const move_only_broken_greatereq& rhs) noexcept
+    {
+      return lhs.x >= rhs.x;
+    }
+
+    [[nodiscard]]
+    friend bool operator>(const move_only_broken_greatereq& lhs, const move_only_broken_greatereq& rhs) noexcept
+    {
+      return lhs.x > rhs.x;
+    }
+
+    [[nodiscard]]
+    friend bool operator>=(const move_only_broken_greatereq& lhs, const move_only_broken_greatereq& rhs) noexcept
+    {
+      return lhs.x >= rhs.x;
+    }
+
+    // TO DO: default this and remove most of the above when libc++ rolls out <=> to std
+    friend std::weak_ordering operator<=>(const move_only_broken_greatereq& lhs, const move_only_broken_greatereq& rhs) noexcept
+    {
+      if(lhs < rhs) return std::weak_ordering::less;
+
+      if(rhs > lhs) return std::weak_ordering::greater;
+
+      return std::weak_ordering::equivalent;
+    }
+
+    template<class Stream>
+    friend Stream& operator<<(Stream& s, const move_only_broken_greatereq& b)
+    {
+      for(auto i : b.x) s << i << ' ';
+      return s;
+    }
+  };
+
+  
 }

@@ -23,11 +23,37 @@ namespace sequoia::testing
 
   void orderable_move_only_false_positive_diagnostics::test_regular_semantics()
   {
-    using beast = orderable_move_only_beast<int>;
+    {
+      using beast = orderable_move_only_beast<int>;
 
-    check_semantics(LINE("Broken check invariant"), beast{1}, beast{2}, beast{1}, beast{2}, std::weak_ordering::equivalent);    
-    check_semantics(LINE("Broken check invariant"), beast{2}, beast{1}, beast{2}, beast{1}, std::weak_ordering::less);
-    check_semantics(LINE("Broken check invariant"), beast{1}, beast{2}, beast{1}, beast{2}, std::weak_ordering::greater);
+      check_semantics(LINE("Broken check invariant"), beast{1}, beast{2}, beast{1}, beast{2}, std::weak_ordering::equivalent);
+      check_semantics(LINE("Broken check invariant"), beast{2}, beast{1}, beast{2}, beast{1}, std::weak_ordering::less);
+      check_semantics(LINE("Broken check invariant"), beast{1}, beast{2}, beast{1}, beast{2}, std::weak_ordering::greater);
+    }
+
+    {
+      using beast = move_only_broken_less<int>;
+
+      check_semantics(LINE(""), beast{1}, beast{2}, beast{1}, beast{2}, std::weak_ordering::less);
+    }
+
+    {
+      using beast = move_only_broken_lesseq<int>;
+
+      check_semantics(LINE(""), beast{1}, beast{2}, beast{1}, beast{2}, std::weak_ordering::less);
+    }
+
+    {
+      using beast = move_only_broken_greater<int>;
+
+      check_semantics(LINE(""), beast{1}, beast{2}, beast{1}, beast{2}, std::weak_ordering::less);
+    }
+
+    {
+      using beast = move_only_broken_greatereq<int>;
+
+      check_semantics(LINE(""), beast{1}, beast{2}, beast{1}, beast{2}, std::weak_ordering::less);
+    }
   }
 
   [[nodiscard]]
