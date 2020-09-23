@@ -54,6 +54,18 @@ namespace sequoia::testing
 
       check_semantics(LINE(""), beast{1}, beast{2}, beast{1}, beast{2}, std::weak_ordering::less);
     }
+
+    {
+      using beast = move_only_inverted_comparisons<int>;
+
+      check_semantics(LINE(""), beast{1}, beast{2}, beast{1}, beast{2}, std::weak_ordering::less);
+    }
+
+    {
+      using beast = broken_spaceship<int>;
+
+      check_semantics(LINE(""), beast{1}, beast{2}, beast{1}, beast{2}, std::weak_ordering::less);
+    }
   }
 
   [[nodiscard]]

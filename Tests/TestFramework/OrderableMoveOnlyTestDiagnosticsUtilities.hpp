@@ -423,5 +423,167 @@ namespace sequoia::testing
     }
   };
 
-  
+  template<class T=int, class Allocator=std::allocator<int>>
+  struct move_only_inverted_comparisons
+  {
+    using allocator_type = Allocator;
+
+    move_only_inverted_comparisons(std::initializer_list<T> list) : x{list} {}
+
+    move_only_inverted_comparisons(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {}
+
+    move_only_inverted_comparisons(const allocator_type& a) : x(a) {}
+
+    move_only_inverted_comparisons(const move_only_inverted_comparisons&) = delete;
+
+    move_only_inverted_comparisons(move_only_inverted_comparisons&&) noexcept = default;
+
+    move_only_inverted_comparisons(move_only_inverted_comparisons&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+
+    move_only_inverted_comparisons& operator=(const move_only_inverted_comparisons&) = delete;
+
+    move_only_inverted_comparisons& operator=(move_only_inverted_comparisons&&) = default;
+
+    void swap(move_only_inverted_comparisons& other) noexcept(noexcept(std::swap(this->x, other.x)))
+    {
+      std::swap(x, other.x);
+    }
+
+    friend void swap(move_only_inverted_comparisons& lhs, move_only_inverted_comparisons& rhs)
+      noexcept(noexcept(lhs.swap(rhs)))
+    {
+      lhs.swap(rhs);
+    }
+      
+    std::vector<T, Allocator> x{};
+
+    [[nodiscard]]
+    friend bool operator==(const move_only_inverted_comparisons&, const move_only_inverted_comparisons&) noexcept = default;
+
+    [[nodiscard]]
+    friend bool operator!=(const move_only_inverted_comparisons&, const move_only_inverted_comparisons&) noexcept = default;
+
+    [[nodiscard]]
+    friend bool operator<(const move_only_inverted_comparisons& lhs, const move_only_inverted_comparisons& rhs) noexcept
+    {
+      return lhs.x > rhs.x;
+    }
+
+    [[nodiscard]]
+    friend bool operator<=(const move_only_inverted_comparisons& lhs, const move_only_inverted_comparisons& rhs) noexcept
+    {
+      return lhs.x >= rhs.x;
+    }
+
+    [[nodiscard]]
+    friend bool operator>(const move_only_inverted_comparisons& lhs, const move_only_inverted_comparisons& rhs) noexcept
+    {
+      return lhs.x < rhs.x;
+    }
+
+    [[nodiscard]]
+    friend bool operator>=(const move_only_inverted_comparisons& lhs, const move_only_inverted_comparisons& rhs) noexcept
+    {
+      return lhs.x <= rhs.x;
+    }
+
+    // TO DO: default this and remove most of the above when libc++ rolls out <=> to std
+    friend std::weak_ordering operator<=>(const move_only_inverted_comparisons& lhs, const move_only_inverted_comparisons& rhs) noexcept
+    {
+      if(lhs < rhs) return std::weak_ordering::less;
+
+      if(rhs > lhs) return std::weak_ordering::greater;
+
+      return std::weak_ordering::equivalent;
+    }
+
+    template<class Stream>
+    friend Stream& operator<<(Stream& s, const move_only_inverted_comparisons& b)
+    {
+      for(auto i : b.x) s << i << ' ';
+      return s;
+    }
+  };
+
+  template<class T=int, class Allocator=std::allocator<int>>
+  struct broken_spaceship
+  {
+    using allocator_type = Allocator;
+
+    broken_spaceship(std::initializer_list<T> list) : x{list} {}
+
+    broken_spaceship(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {}
+
+    broken_spaceship(const allocator_type& a) : x(a) {}
+
+    broken_spaceship(const broken_spaceship&) = delete;
+
+    broken_spaceship(broken_spaceship&&) noexcept = default;
+
+    broken_spaceship(broken_spaceship&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+
+    broken_spaceship& operator=(const broken_spaceship&) = delete;
+
+    broken_spaceship& operator=(broken_spaceship&&) = default;
+
+    void swap(broken_spaceship& other) noexcept(noexcept(std::swap(this->x, other.x)))
+    {
+      std::swap(x, other.x);
+    }
+
+    friend void swap(broken_spaceship& lhs, broken_spaceship& rhs)
+      noexcept(noexcept(lhs.swap(rhs)))
+    {
+      lhs.swap(rhs);
+    }
+      
+    std::vector<T, Allocator> x{};
+
+    [[nodiscard]]
+    friend bool operator==(const broken_spaceship&, const broken_spaceship&) noexcept = default;
+
+    [[nodiscard]]
+    friend bool operator!=(const broken_spaceship&, const broken_spaceship&) noexcept = default;
+
+    [[nodiscard]]
+    friend bool operator<(const broken_spaceship& lhs, const broken_spaceship& rhs) noexcept
+    {
+      return lhs.x < rhs.x;
+    }
+
+    [[nodiscard]]
+    friend bool operator<=(const broken_spaceship& lhs, const broken_spaceship& rhs) noexcept
+    {
+      return lhs.x <= rhs.x;
+    }
+
+    [[nodiscard]]
+    friend bool operator>(const broken_spaceship& lhs, const broken_spaceship& rhs) noexcept
+    {
+      return lhs.x > rhs.x;
+    }
+
+    [[nodiscard]]
+    friend bool operator>=(const broken_spaceship& lhs, const broken_spaceship& rhs) noexcept
+    {
+      return lhs.x >= rhs.x;
+    }
+
+    // TO DO: default this and remove most of the above when libc++ rolls out <=> to std
+    friend std::weak_ordering operator<=>(const broken_spaceship& lhs, const broken_spaceship& rhs) noexcept
+    {
+      if(lhs < rhs) return std::weak_ordering::greater;
+
+      if(rhs > lhs) return std::weak_ordering::less;
+
+      return std::weak_ordering::equivalent;
+    }
+
+    template<class Stream>
+    friend Stream& operator<<(Stream& s, const broken_spaceship& b)
+    {
+      for(auto i : b.x) s << i << ' ';
+      return s;
+    }
+  };
 }
