@@ -486,12 +486,19 @@ namespace sequoia::testing::impl
 
   
   /*! \brief actions common to both move-only and regular types. */
-  struct allocation_actions : pre_condition_actions
+  struct allocation_actions
   {
     constexpr static bool has_post_comparison_action{true};
     constexpr static bool has_post_move_action{true};
     constexpr static bool has_post_move_assign_action{true};
     constexpr static bool has_post_swap_action{true};
+
+    template<test_mode Mode, movable_comparable T>
+    [[nodiscard]]
+    static bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y)
+    {
+      return impl::check_preconditions(logger, x, y);
+    }
 
     template<test_mode Mode, movable_comparable T, alloc_getter<T>... Getters, class... Predictions>
     static bool post_comparison_action(test_logger<Mode>& logger, std::string_view op, const T& x, const T& y, const dual_allocation_checker<T, Getters, Predictions>&... checkers)

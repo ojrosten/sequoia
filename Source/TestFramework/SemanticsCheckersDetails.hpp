@@ -82,28 +82,97 @@ namespace sequoia::testing::impl
     template<class T> constexpr void operator()(const T&) noexcept {}
   };
 
-  struct pre_condition_actions
+  template<test_mode Mode, movable_comparable T>
+  [[nodiscard]]
+  bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y)
   {
-    template<test_mode Mode, movable_comparable T>
-    [[nodiscard]]
-    static bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y)
+    return check("Precondition - for checking semantics, x and y are assumed to be different", logger, x != y);      
+  }
+
+  template<test_mode Mode, movable_comparable T>
+    requires orderable<T>
+  [[nodiscard]]
+  bool check_consistency(test_logger<Mode>& logger, const T& x, const T& y)
+  {
+    auto comp{
+      [&logger](const T& x, const T& y){
+        const std::array<bool, 3> passed{
+          check("operator> and operator< are inconsistent", logger, y > x),
+          check("operator< and operator<= are inconsistent", logger, x <= y),
+          check("operator< and operator>= are inconsistent", logger, y >= x)
+        };
+
+        if constexpr (three_way_comparable<T>)
+        {
+          if(!check("operator< and operator<=> are inconsistent", logger, (x <=> y) < 0))
+          {
+            return false;
+          }
+        }
+
+        return std::find(passed.begin(), passed.end(), false) == passed.end();
+      }
+    };
+
+    return x < y ? comp(x,y) : comp(y,x);
+  }
+
+  template<test_mode Mode, movable_comparable T>
+    requires orderable<T>
+  [[nodiscard]]
+  bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y, std::weak_ordering order)
+  {
+    if(check_preconditions(logger, x, y))
     {
-      return check("Precondition - for checking semantics, x and y are assumed to be different", logger, x != y);      
+      if(check("Precondition - for checking semantics, order must be weak_ordering::less or weak_ordering::greater",
+               logger, order != 0))
+      {
+        if(check_consistency(logger, x, y))
+        {
+          const bool cond{order < 0 ? x < y : x > y};
+          auto mess{
+                    [order](){
+                      std::string mess{"Precondition - for ordered semantics, it is assumed that "};
+                      return order == 0 ? mess.append("x < y") : mess.append("y > x");
+                    }
+          };
+
+          return check(mess(), logger, cond,
+                       tutor{[](const T& x, const T& y) {
+                               return prediction_message(to_string(x), to_string(y)); } });
+        }
+      }
     }
-  };
-  
-  struct default_actions : pre_condition_actions
+
+    return false;
+  }
+
+  struct default_actions
   {
     constexpr static bool has_post_comparison_action{};
     constexpr static bool has_post_copy_action{};
     constexpr static bool has_post_copy_assign_action{};
     constexpr static bool has_post_move_action{};
     constexpr static bool has_post_move_assign_action{};
-    constexpr static bool has_post_swap_action{};    
+    constexpr static bool has_post_swap_action{};
+
+    template<test_mode Mode, movable_comparable T>
+    [[nodiscard]]
+    static bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y)
+    {
+      return impl::check_preconditions(logger, x, y);
+    }
   };
 
-  struct orderable_actions : default_actions
-  {
+  struct orderable_actions
+  {    
+    constexpr static bool has_post_comparison_action{};
+    constexpr static bool has_post_copy_action{};
+    constexpr static bool has_post_copy_assign_action{};
+    constexpr static bool has_post_move_action{};
+    constexpr static bool has_post_move_assign_action{};
+    constexpr static bool has_post_swap_action{};
+    
     explicit orderable_actions(std::weak_ordering order)
       : m_Order{order}
     {}
@@ -113,67 +182,10 @@ namespace sequoia::testing::impl
     [[nodiscard]]
     bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y) const
     {
-      if(default_actions::check_preconditions(logger, x, y))
-      {
-        if(check("Precondition - for checking semantics, order must be weak_ordering::less or weak_ordering::greater",
-                 logger, order() != 0))
-        {
-          if(check_consistency(logger, x, y))
-          {
-
-            const bool cond{order() < 0 ? x < y : x > y};
-            auto mess{
-              [ord{order()}](){
-                 std::string mess{"Precondition - for ordered semantics, it is assumed that "};
-                 return ord == 0 ? mess.append("x < y") : mess.append("y > x");
-               }
-            };
-
-            return check(mess(), logger, cond,
-                         tutor{[](const T& x, const T& y) {
-                                 return prediction_message(to_string(x), to_string(y)); } });
-          }
-        }
-      }
-
-      return false;
+      return impl::check_preconditions(logger, x, y, m_Order);
     }
-    
-    [[nodiscard]]
-    std::weak_ordering order() const noexcept
-    {
-      return m_Order;
-    }
-
   private:
     std::weak_ordering m_Order;
-    
-    template<test_mode Mode, movable_comparable T>
-    [[nodiscard]]
-    bool check_consistency(test_logger<Mode>& logger, const T& x, const T& y) const
-    {
-      auto comp{
-        [&logger](const T& x, const T& y){
-          const std::array<bool, 3> passed{
-                check("operator> and operator< are inconsistent", logger, y > x),
-                check("operator< and operator<= are inconsistent", logger, x <= y),
-                check("operator< and operator>= are inconsistent", logger, y >= x)
-          };
-
-          if constexpr (three_way_comparable<T>)
-          {
-            if(!check("operator< and operator<=> are inconsistent", logger, (x <=> y) < 0))
-            {
-              return false;
-            }
-          }
-
-          return std::find(passed.begin(), passed.end(), false) == passed.end();
-        }
-      };
-
-      return x < y ? comp(x,y) : comp(y,x);
-    }
   };
 
   template<test_mode Mode, class Actions, movable_comparable T, invocable_r<bool, T> Fn, class... Args>
