@@ -493,11 +493,11 @@ namespace sequoia::testing::impl
     constexpr static bool has_post_move_assign_action{true};
     constexpr static bool has_post_swap_action{true};
 
-    template<test_mode Mode, movable_comparable T>
+    template<test_mode Mode, equality_comparable T, class... Args>
     [[nodiscard]]
-    static bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y)
+    bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y, const Args&... args) const
     {
-      return impl::check_preconditions(logger, x, y);
+      return check_regular_preconditions(logger, *this, x, y, args...);
     }
 
     template<test_mode Mode, movable_comparable T, alloc_getter<T>... Getters, class... Predictions>

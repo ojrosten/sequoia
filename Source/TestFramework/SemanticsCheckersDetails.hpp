@@ -97,59 +97,80 @@ namespace sequoia::testing::impl
     return true;
   }
 
-  template<test_mode Mode, movable_comparable T>
-    requires orderable<T>
+  template<test_mode Mode, class Actions, orderable T, class... Args>
   [[nodiscard]]
-  bool check_ordering_consistency(test_logger<Mode>& logger, const T& x, const T& y)
+  bool check_ordering_consistency(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
   {
+    if(!check_operator_consistency(logger, "<", actions, x, y, [](const T& x) { return !(x < x); }, args...))
+        return false;
+
+    if(!check_operator_consistency(logger, "<=", actions, x, y, [](const T& x) { return x <= x; }, args...))
+      return false;
+
+    if(!check_operator_consistency(logger, ">", actions, x, y, [](const T& x) { return !(x > x); }, args...))
+      return false;
+
+    if(!check_operator_consistency(logger, ">=", actions, x, y, [](const T& x) { return x >= x; }, args...))
+      return false;
+
+    if constexpr (three_way_comparable<T>)
+    {
+      if(!check_operator_consistency(logger, "<=>", actions, x, y, [](const T& x) { return (x <=> x) == 0; }, args...))
+        return false;
+    }
+    
     auto comp{
       [&logger](const T& x, const T& y){
-        const std::array<bool, 3> passed{
-          check("operator> and operator< are inconsistent", logger, y > x),
-          check("operator< and operator<= are inconsistent", logger, x <= y),
-          check("operator< and operator>= are inconsistent", logger, y >= x)
-        };
+        sentinel sentry{logger, ""};
+
+        check("operator> and operator< are inconsistent", logger, y > x);
+        check("operator< and operator<= are inconsistent", logger, x <= y);
+        check("operator< and operator>= are inconsistent", logger, y >= x);
 
         if constexpr (three_way_comparable<T>)
         {
-          if(!check("operator< and operator<=> are inconsistent", logger, (x <=> y) < 0))
-          {
-            return false;
-          }
+          check("operator< and operator<=> are inconsistent", logger, (x <=> y) < 0);
         }
 
-        return std::find(passed.begin(), passed.end(), false) == passed.end();
+        return !sentry.failure_detected();
       }
     };
 
     return x < y ? comp(x,y) : comp(y,x);
   }
 
-  template<test_mode Mode, movable_comparable T>
+  template<test_mode Mode, class Actions, equality_comparable T, class... Args>
   [[nodiscard]]
-  bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y)
+  bool check_regular_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
   {
+    if(!check_operator_consistency(logger, "==", actions, x, y, [](const T& x) { return x == x; }, args...))
+      return false;
+
+    if(!check_operator_consistency(logger, "!=", actions, x, y, [](const T& x) { return !(x != x); }, args...))
+      return false;
+
     return check("Precondition - for checking semantics, x and y are assumed to be different", logger, x != y);      
   }
 
-  template<test_mode Mode, movable_comparable T>
+  template<test_mode Mode, class Actions, equality_comparable T, class... Args>
     requires orderable<T>
   [[nodiscard]]
-  bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y, std::weak_ordering order)
+  bool check_orderable_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
   {
-    if(check_preconditions(logger, x, y))
+    if(check_regular_preconditions(logger, actions, x, y, args...))
     {
+      const auto order{actions.order()};
       if(check("Precondition - for checking semantics, order must be weak_ordering::less or weak_ordering::greater",
                logger, order != 0))
       {
-        if(check_ordering_consistency(logger, x, y))
+        if(check_ordering_consistency(logger, actions, x, y, args...))
         {
           const bool cond{order < 0 ? x < y : x > y};
           auto mess{
-                    [order](){
-                      std::string mess{"Precondition - for ordered semantics, it is assumed that "};
-                      return order == 0 ? mess.append("x < y") : mess.append("y > x");
-                    }
+            [order](){
+              std::string mess{"Precondition - for ordered semantics, it is assumed that "};
+              return order == 0 ? mess.append("x < y") : mess.append("y > x");
+            }
           };
 
           return check(mess(), logger, cond,
@@ -173,9 +194,9 @@ namespace sequoia::testing::impl
 
     template<test_mode Mode, movable_comparable T>
     [[nodiscard]]
-    static bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y)
+    bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y) const
     {
-      return impl::check_preconditions(logger, x, y);
+      return check_regular_preconditions(logger, *this, x, y);
     }
   };
 
@@ -197,7 +218,13 @@ namespace sequoia::testing::impl
     [[nodiscard]]
     bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y) const
     {
-      return impl::check_preconditions(logger, x, y, m_Order);
+      return check_orderable_preconditions(logger, *this, x, y);
+    }
+
+    [[nodiscard]]
+    std::weak_ordering order() const noexcept
+    {
+      return m_Order;
     }
   private:
     std::weak_ordering m_Order;
@@ -209,34 +236,7 @@ namespace sequoia::testing::impl
   template<test_mode Mode, class Actions, movable_comparable T, class... Args>
   bool do_check_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
   {
-    if(!check_operator_consistency(logger, "==", actions, x, y, [](const T& x) { return x == x; }, args...))
-      return false;
-
-    if(!check_operator_consistency(logger, "!=", actions, x, y, [](const T& x) { return !(x != x); }, args...))
-      return false;
-
-    if constexpr (orderable<T>)
-    {
-      if(!check_operator_consistency(logger, "<", actions, x, y, [](const T& x) { return !(x < x); }, args...))
-        return false;
-
-      if(!check_operator_consistency(logger, "<=", actions, x, y, [](const T& x) { return x <= x; }, args...))
-        return false;
-
-      if(!check_operator_consistency(logger, ">", actions, x, y, [](const T& x) { return !(x > x); }, args...))
-        return false;
-
-      if(!check_operator_consistency(logger, ">=", actions, x, y, [](const T& x) { return x >= x; }, args...))
-        return false;
-    }
-
-    if constexpr (three_way_comparable<T>)
-    {
-      if(!check_operator_consistency(logger, "<=>", actions, x, y, [](const T& x) { return (x <=> x) == 0; }, args...))
-        return false;
-    }
-
-    return actions.check_preconditions(logger, x, y);
+    return actions.check_preconditions(logger, x, y, args...);
   }
 
   template<test_mode Mode, class Actions, movable_comparable T>
