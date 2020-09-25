@@ -497,7 +497,7 @@ namespace sequoia::testing::impl
     [[nodiscard]]
     bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y, const dual_allocation_checker<T, Getters, Predictions>&... checkers) const
     {
-      return check_regular_preconditions(logger, *this, x, y, dual_allocation_checker<T, Getters, Predictions>{checkers.info(), x, y}...);
+      return check_equality_preconditions(logger, *this, x, y, dual_allocation_checker<T, Getters, Predictions>{checkers.info(), x, y}...);
     }
 
     template<test_mode Mode, movable_comparable T, alloc_getter<T>... Getters, class... Predictions>

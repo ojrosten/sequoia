@@ -141,7 +141,7 @@ namespace sequoia::testing::impl
 
   template<test_mode Mode, class Actions, equality_comparable T, class... Args>
   [[nodiscard]]
-  bool check_regular_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
+  bool check_equality_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
   {
     if(!check_operator_consistency(logger, "==", actions, x, y, [](const T& x) { return x == x; }, args...))
       return false;
@@ -157,7 +157,7 @@ namespace sequoia::testing::impl
   [[nodiscard]]
   bool check_orderable_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
   {
-    if(check_regular_preconditions(logger, actions, x, y, args...))
+    if(check_equality_preconditions(logger, actions, x, y, args...))
     {
       const auto order{actions.order()};
       if(check("Precondition - for checking semantics, order must be weak_ordering::less or weak_ordering::greater",
@@ -196,7 +196,7 @@ namespace sequoia::testing::impl
     [[nodiscard]]
     bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y) const
     {
-      return check_regular_preconditions(logger, *this, x, y);
+      return check_equality_preconditions(logger, *this, x, y);
     }
   };
 
