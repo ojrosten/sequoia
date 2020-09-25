@@ -18,12 +18,8 @@ namespace sequoia::testing::impl
   template<test_mode Mode, class Actions, moveonly T, invocable<T&> Mutator, class... Args>
   void check_semantics(test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, const Args&... args)
   {
-    if(!actions.check_preconditions(logger, x, y, args...))
+    if(!actions.check_preconditions(logger, x, y, xClone, yClone, args...))
       return;
-
-    if(!check("Precondition - for checking move-only semantics, x and xClone are assumed to be equal", logger, x == xClone)) return;
-
-    if(!check("Precondition - for checking move-only semantics, y and yClone are assumed to be equal", logger, y == yClone)) return;
 
     auto opt{check_move_construction(logger, actions, std::move(x), xClone, args...)};
     if(!opt) return;

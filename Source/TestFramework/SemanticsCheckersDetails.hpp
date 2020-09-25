@@ -153,6 +153,23 @@ namespace sequoia::testing::impl
   }
 
   template<test_mode Mode, class Actions, equality_comparable T, class... Args>
+  [[nodiscard]]
+  bool check_equality_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const T& xClone, const T& yClone, const Args&... args)
+  {
+    if(!check_equality_preconditions(logger, actions, x, y, args...))
+      return false;
+
+    auto mess{
+        [](std::string_view var){
+          return std::string{"Precondition - for checking move-only semantics, "}
+            .append(var).append(" and ").append(var).append("Clone are assumed to be equal");
+        }
+      };
+
+      return check(mess("x"), logger, x == xClone) && check(mess("y"), logger, y == yClone);
+  }
+
+  template<test_mode Mode, class Actions, equality_comparable T, class... Args>
     requires orderable<T>
   [[nodiscard]]
   bool check_orderable_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
@@ -192,11 +209,18 @@ namespace sequoia::testing::impl
     constexpr static bool has_post_move_assign_action{};
     constexpr static bool has_post_swap_action{};
 
-    template<test_mode Mode, movable_comparable T>
+    template<test_mode Mode, pseudoregular T>
     [[nodiscard]]
     bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y) const
     {
       return check_equality_preconditions(logger, *this, x, y);
+    }
+
+    template<test_mode Mode, moveonly T>
+    [[nodiscard]]
+    bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y, const T& xClone, const T& yClone) const
+    {
+      return check_equality_preconditions(logger, *this, x, y, xClone, yClone);
     }
   };
 
@@ -213,12 +237,20 @@ namespace sequoia::testing::impl
       : m_Order{order}
     {}
 
-    template<test_mode Mode, movable_comparable T>
+    template<test_mode Mode, pseudoregular T>
       requires orderable<T>
     [[nodiscard]]
     bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y) const
     {
       return check_orderable_preconditions(logger, *this, x, y);
+    }
+
+    template<test_mode Mode, moveonly T>
+      requires orderable<T>
+    [[nodiscard]]
+    bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y, const T& xClone, const T& yClone) const
+    {
+      return check_orderable_preconditions(logger, *this, x, y, xClone, yClone);
     }
 
     [[nodiscard]]

@@ -493,11 +493,18 @@ namespace sequoia::testing::impl
     constexpr static bool has_post_move_assign_action{true};
     constexpr static bool has_post_swap_action{true};
 
-    template<test_mode Mode, equality_comparable T, alloc_getter<T>... Getters, class... Predictions>
+    template<test_mode Mode, pseudoregular T, alloc_getter<T>... Getters, class... Predictions>
     [[nodiscard]]
     bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y, const dual_allocation_checker<T, Getters, Predictions>&... checkers) const
     {
       return check_equality_preconditions(logger, *this, x, y, dual_allocation_checker<T, Getters, Predictions>{checkers.info(), x, y}...);
+    }
+
+    template<test_mode Mode, moveonly T, alloc_getter<T>... Getters, class... Predictions>
+    [[nodiscard]]
+    bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y, const T& xClone, const T& yClone, const dual_allocation_checker<T, Getters, Predictions>&... checkers) const
+    {
+      return check_equality_preconditions(logger, *this, x, y, xClone, yClone, dual_allocation_checker<T, Getters, Predictions>{checkers.info(), x, y}...);
     }
 
     template<test_mode Mode, movable_comparable T, alloc_getter<T>... Getters, class... Predictions>
