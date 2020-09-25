@@ -81,6 +81,21 @@ namespace sequoia::testing::impl
   {
     template<class T> constexpr void operator()(const T&) noexcept {}
   };
+  
+  template<test_mode Mode, class Actions, movable_comparable T, invocable_r<bool, T> Fn, class... Args>
+  bool check_operator_consistency(test_logger<Mode>& logger, std::string_view op, const Actions& actions, const T& x, const T& y, Fn fn, const Args&... args)
+  {
+    if(!check(std::string{"operator"}.append(op).append(" is inconsistent"), logger, fn(x)))
+      return false;
+
+    if constexpr (Actions::has_post_comparison_action)
+    {
+      if(!actions.post_comparison_action(logger, op, x, y, args...))
+        return false;
+    }
+
+    return true;
+  }
 
   template<test_mode Mode, movable_comparable T>
     requires orderable<T>
@@ -188,50 +203,36 @@ namespace sequoia::testing::impl
     std::weak_ordering m_Order;
   };
 
-  template<test_mode Mode, class Actions, movable_comparable T, invocable_r<bool, T> Fn, class... Args>
-  bool check_comparison(test_logger<Mode>& logger, std::string_view op, const Actions& actions, const T& x, const T& y, Fn fn, const Args&... args)
-  {
-    if(!check(std::string{"operator"}.append(op).append(" is inconsistent"), logger, fn(x)))
-      return false;
-
-    if constexpr (Actions::has_post_comparison_action)
-    {
-      if(!actions.post_comparison_action(logger, op, x, y, args...))
-        return false;
-    }
-
-    return true;
-  }
 
   //================================ preconditions ================================//
  
   template<test_mode Mode, class Actions, movable_comparable T, class... Args>
   bool do_check_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
   {
-    if(!check_comparison(logger, "==", actions, x, y, [](const T& x) { return x == x; }, args...))
+    if(!check_operator_consistency(logger, "==", actions, x, y, [](const T& x) { return x == x; }, args...))
       return false;
 
-    if(!check_comparison(logger, "!=", actions, x, y, [](const T& x) { return !(x != x); }, args...))
+    if(!check_operator_consistency(logger, "!=", actions, x, y, [](const T& x) { return !(x != x); }, args...))
       return false;
 
     if constexpr (orderable<T>)
     {
-      if(!check_comparison(logger, "<", actions, x, y, [](const T& x) { return !(x < x); }, args...))
+      if(!check_operator_consistency(logger, "<", actions, x, y, [](const T& x) { return !(x < x); }, args...))
         return false;
 
-      if(!check_comparison(logger, "<=", actions, x, y, [](const T& x) { return x <= x; }, args...))
+      if(!check_operator_consistency(logger, "<=", actions, x, y, [](const T& x) { return x <= x; }, args...))
         return false;
 
-      if(!check_comparison(logger, ">", actions, x, y, [](const T& x) { return !(x > x); }, args...))
+      if(!check_operator_consistency(logger, ">", actions, x, y, [](const T& x) { return !(x > x); }, args...))
         return false;
 
-      if(!check_comparison(logger, ">=", actions, x, y, [](const T& x) { return x >= x; }, args...))
+      if(!check_operator_consistency(logger, ">=", actions, x, y, [](const T& x) { return x >= x; }, args...))
         return false;
     }
 
     if constexpr (three_way_comparable<T>)
     {
-      if(!check_comparison(logger, "<=>", actions, x, y, [](const T& x) { return (x <=> x) == 0; }, args...))
+      if(!check_operator_consistency(logger, "<=>", actions, x, y, [](const T& x) { return (x <=> x) == 0; }, args...))
         return false;
     }
 
