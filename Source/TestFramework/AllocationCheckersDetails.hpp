@@ -493,11 +493,11 @@ namespace sequoia::testing::impl
     constexpr static bool has_post_move_assign_action{true};
     constexpr static bool has_post_swap_action{true};
 
-    template<test_mode Mode, equality_comparable T, class... Args>
+    template<test_mode Mode, equality_comparable T, alloc_getter<T>... Getters, class... Predictions>
     [[nodiscard]]
-    bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y, const Args&... args) const
+    bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y, const dual_allocation_checker<T, Getters, Predictions>&... checkers) const
     {
-      return check_regular_preconditions(logger, *this, x, y, args...);
+      return check_regular_preconditions(logger, *this, x, y, dual_allocation_checker<T, Getters, Predictions>{checkers.info(), x, y}...);
     }
 
     template<test_mode Mode, movable_comparable T, alloc_getter<T>... Getters, class... Predictions>
@@ -540,12 +540,6 @@ namespace sequoia::testing::impl
       move-only semantics. These functions provide an extra level of indirection in order that
       the current number of allocations may be acquired before proceeding
    */
- 
-  template<test_mode Mode, class Actions, movable_comparable T, alloc_getter<T>... Getters, class... Predictions>
-  bool check_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
-  {
-    return do_check_preconditions(logger, actions, x, y, dual_allocation_checker<T, Getters, Predictions>{checkers.info(), x, y}...);
-  }
 
   template<test_mode Mode, class Actions, movable_comparable T, alloc_getter<T>... Getters, class... Predictions>
   std::optional<T> check_move_construction(test_logger<Mode>& logger, const Actions& actions, T&& z, const T& y, const dual_allocation_checker<T, Getters, Predictions>&... checkers)

@@ -230,21 +230,6 @@ namespace sequoia::testing::impl
     std::weak_ordering m_Order;
   };
 
-
-  //================================ preconditions ================================//
- 
-  template<test_mode Mode, class Actions, movable_comparable T, class... Args>
-  bool do_check_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
-  {
-    return actions.check_preconditions(logger, x, y, args...);
-  }
-
-  template<test_mode Mode, class Actions, movable_comparable T>
-  bool check_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y)
-  {
-    return do_check_preconditions(logger, actions, x, y);
-  }
-
   //================================ move assign ================================//
 
   template<test_mode Mode, class Actions, movable_comparable T, invocable<T&> Mutator, class... Args>

@@ -18,7 +18,7 @@ namespace sequoia::testing::impl
   template<test_mode Mode, class Actions, moveonly T, invocable<T&> Mutator, class... Args>
   void check_semantics(test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, const Args&... args)
   {
-    if(!check_preconditions(logger, actions, x, y, args...))
+    if(!actions.check_preconditions(logger, x, y, args...))
       return;
 
     if(!check("Precondition - for checking move-only semantics, x and xClone are assumed to be equal", logger, x == xClone)) return;

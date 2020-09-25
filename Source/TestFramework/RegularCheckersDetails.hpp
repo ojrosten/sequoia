@@ -51,9 +51,8 @@ namespace sequoia::testing::impl
   bool check_semantics(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, Mutator yMutator, const Args&... args)
   {
     sentinel<Mode> sentry{logger, ""};
-    
-    // Preconditions
-    if(!check_preconditions(logger, actions, x, y, args...))
+
+    if(!actions.check_preconditions(logger, x, y, args...))
       return false;
         
     T z{x};
