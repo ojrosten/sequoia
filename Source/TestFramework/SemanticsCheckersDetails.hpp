@@ -83,16 +83,9 @@ namespace sequoia::testing::impl
   };
 
   template<test_mode Mode, movable_comparable T>
-  [[nodiscard]]
-  bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y)
-  {
-    return check("Precondition - for checking semantics, x and y are assumed to be different", logger, x != y);      
-  }
-
-  template<test_mode Mode, movable_comparable T>
     requires orderable<T>
   [[nodiscard]]
-  bool check_consistency(test_logger<Mode>& logger, const T& x, const T& y)
+  bool check_ordering_consistency(test_logger<Mode>& logger, const T& x, const T& y)
   {
     auto comp{
       [&logger](const T& x, const T& y){
@@ -118,6 +111,13 @@ namespace sequoia::testing::impl
   }
 
   template<test_mode Mode, movable_comparable T>
+  [[nodiscard]]
+  bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y)
+  {
+    return check("Precondition - for checking semantics, x and y are assumed to be different", logger, x != y);      
+  }
+
+  template<test_mode Mode, movable_comparable T>
     requires orderable<T>
   [[nodiscard]]
   bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y, std::weak_ordering order)
@@ -127,7 +127,7 @@ namespace sequoia::testing::impl
       if(check("Precondition - for checking semantics, order must be weak_ordering::less or weak_ordering::greater",
                logger, order != 0))
       {
-        if(check_consistency(logger, x, y))
+        if(check_ordering_consistency(logger, x, y))
         {
           const bool cond{order < 0 ? x < y : x > y};
           auto mess{
