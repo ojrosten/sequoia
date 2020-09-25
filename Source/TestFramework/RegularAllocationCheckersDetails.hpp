@@ -27,6 +27,14 @@ namespace sequoia::testing::impl
     constexpr static bool has_post_copy_action{true};
     constexpr static bool has_post_copy_assign_action{true};
 
+    
+    template<test_mode Mode, pseudoregular T, alloc_getter<T>... Getters, class... Predictions>
+    [[nodiscard]]
+    bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y, const dual_allocation_checker<T, Getters, Predictions>&... checkers) const
+    {
+      return check_equality_preconditions(logger, *this, x, y, dual_allocation_checker<T, Getters, Predictions>{checkers.info(), x, y}...);
+    }
+
     template<test_mode Mode, pseudoregular T, alloc_getter<T>... Getters, class... Predictions>
     static void post_copy_action(test_logger<Mode>& logger, const T& xCopy, const T& yCopy, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
     {

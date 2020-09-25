@@ -24,7 +24,14 @@ namespace sequoia::testing
 namespace sequoia::testing::impl
 {
   struct move_only_allocation_actions : allocation_actions
-  {};
+  {
+    template<test_mode Mode, moveonly T, alloc_getter<T>... Getters, class... Predictions>
+    [[nodiscard]]
+    bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y, const T& xClone, const T& yClone, const dual_allocation_checker<T, Getters, Predictions>&... checkers) const
+    {
+      return check_equality_preconditions(logger, *this, x, y, xClone, yClone, dual_allocation_checker<T, Getters, Predictions>{checkers.info(), x, y}...);
+    }
+  };
 
   template<test_mode Mode, class Actions, moveonly T, alloc_getter<T>... Getters, class... Predictions>
   bool check_swap(test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
