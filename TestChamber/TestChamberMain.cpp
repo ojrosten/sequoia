@@ -34,6 +34,7 @@ int main(int argc, char** argv)
       scoped_allocation_false_positive_diagnostics{"Scoped Allocation False Positive Diagnostics"},
       move_only_scoped_allocation_false_positive_diagnostics{"Move-Only Scoped Allocation False Positive Diagnostics"},
       orderable_move_only_false_positive_diagnostics{"Orderable Move-Only False Positive Diagnostics"},
+      orderable_false_positive_regular_diagnostics{"Orderable Regular False Positive Diagnostics"},
       false_negative_diagnostics{"False Negative Diagnostics"},
       move_only_false_negative_diagnostics{"Move-Only False Negative Diagnostics"},
       performance_false_negative_diagnostics{"Performance False Negative Diagnostics"},
@@ -43,7 +44,8 @@ int main(int argc, char** argv)
       scoped_allocation_false_negative_diagnostics{"Scoped Allocation False Negative Diagnostics"},
       move_only_scoped_allocation_false_negative_diagnostics{"Move-Only Scoped Allocation False Negative Diagnostics"},      
       test_runner_false_negative_test{"Test Runner False False Negative Diagnostics"},
-      orderable_move_only_false_negative_diagnostics{"Orderable Move-Only False Negative Diagnostics"}
+      orderable_move_only_false_negative_diagnostics{"Orderable Move-Only False Negative Diagnostics"},
+      orderable_false_negative_regular_diagnostics{"Orderable Regular False Negative Diagnostics"}
     );
 
     runner.add_test_family(
