@@ -125,6 +125,12 @@ namespace sequoia::testing
   };
 
   template<class T>
+  concept serializable = requires(serializer<T>& s, T& t)
+  {
+    s.make(t);
+  };
+
+  template<serializable T>
   [[nodiscard]]
   std::string to_string(const T& value)
   {

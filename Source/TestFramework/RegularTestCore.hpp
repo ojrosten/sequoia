@@ -38,6 +38,7 @@ namespace sequoia::testing
 
     /// Precondition: x!=y
     template<pseudoregular T>
+      requires (!orderable<T>)
     void check_semantics(std::string_view description, const T& x, const T& y)
     {
       testing::check_semantics(append_lines(description, emphasise("Regular Semantics")), m_Logger, x, y);

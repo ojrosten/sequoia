@@ -224,6 +224,7 @@ namespace sequoia::testing
     
     CustomIter i{begin, args...};
 
+    static_assert(orderable<CustomIter>);
 
     const auto scale{
       [](CustomIter iter) -> value_type {
@@ -244,7 +245,7 @@ namespace sequoia::testing
     check_equality(LINE(append_lines(message, "Operator ->")), i.operator->(), pBegin);
 
     CustomIter j{end, args...};      
-    check_semantics(LINE(append_lines(message, "Regular semantics; one iterator at end")), i, j);
+    check_semantics(LINE(append_lines(message, "Regular semantics; one iterator at end")), i, j, std::weak_ordering::less);
       
     check(LINE(message), i < j);
     check(LINE(message), j > i);
@@ -266,7 +267,7 @@ namespace sequoia::testing
     j = i - 1;
     check_equality(LINE(message), *i, begin[1] * scale);
     check_equality(LINE(message), *j, begin[0] * scale);
-    check_semantics(LINE(append_lines(message, "Regular semantics")), i, j);
+    check_semantics(LINE(append_lines(message, "Regular semantics")), i, j, std::weak_ordering::greater);
 
     i = j + 2;
     check_equality(LINE(message), *i, begin[2] * scale);

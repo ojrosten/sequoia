@@ -24,10 +24,10 @@ namespace sequoia::testing
     return __FILE__;
   }
 
-  struct serializable
+  struct serializable_thing
   {
     template<class Stream>
-    friend Stream& operator<<(Stream& s, const serializable&)
+    friend Stream& operator<<(Stream& s, const serializable_thing&)
     {
       return s;
     }
@@ -85,7 +85,7 @@ namespace sequoia::testing
     
     check(LINE(""), []() {
         static_assert(serializable_to<int, std::stringstream>);
-        static_assert(serializable_to<serializable, std::stringstream>);
+        static_assert(serializable_to<serializable_thing, std::stringstream>);
         static_assert(!serializable_to<non_serializable, std::stringstream>);
         return true;
       }()

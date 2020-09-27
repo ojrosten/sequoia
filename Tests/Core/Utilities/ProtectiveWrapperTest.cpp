@@ -46,7 +46,7 @@ namespace sequoia::testing
     wrapper w{};
     constexpr wrapper v{1};
 
-    check_semantics(LINE("Regular semantics"), w, v);
+    check_semantics("", w, v, std::weak_ordering::less);
 
     w.set(2);
 

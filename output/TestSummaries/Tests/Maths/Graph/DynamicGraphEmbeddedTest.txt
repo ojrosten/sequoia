@@ -1,3 +1,3 @@
 Edge Insertions
-[133ms]
+[245ms]
 Standard Top Level Checks:               374;  Failures:  0  [Deep checks: 23710]

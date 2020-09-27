@@ -62,6 +62,7 @@
 
 #include "TestLogger.hpp"
 #include "Advice.hpp"
+#include "FreeCheckers.hpp"
 
 #include "Concepts.hpp"
 
@@ -189,9 +190,16 @@ namespace sequoia::testing::impl
             }
           };
 
-          return check(mess(), logger, cond,
+          if constexpr(serializable<T>)
+          {
+            return check(mess(), logger, cond,
                        tutor{[](const T& x, const T& y) {
                                return prediction_message(to_string(x), to_string(y)); } });
+          }
+          else
+          {
+            return check(mess(), logger, cond);
+          }
         }
       }
     }
