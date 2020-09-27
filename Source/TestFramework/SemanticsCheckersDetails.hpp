@@ -169,8 +169,7 @@ namespace sequoia::testing::impl
       return check(mess("x"), logger, x == xClone) && check(mess("y"), logger, y == yClone);
   }
 
-  template<test_mode Mode, class Actions, equality_comparable T, class... Args>
-    requires orderable<T>
+  template<test_mode Mode, class Actions, orderable T, class... Args>
   [[nodiscard]]
   bool check_orderable_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
   {
@@ -200,57 +199,50 @@ namespace sequoia::testing::impl
     return false;
   }
 
-  struct default_actions
-  {
-    constexpr static bool has_post_comparison_action{};
-    constexpr static bool has_post_copy_action{};
-    constexpr static bool has_post_copy_assign_action{};
-    constexpr static bool has_post_move_action{};
-    constexpr static bool has_post_move_assign_action{};
-    constexpr static bool has_post_swap_action{};
+  template<class T>
+  struct precondition_actions;
 
-    template<test_mode Mode, pseudoregular T>
+  template<equality_comparable T>
+  struct precondition_actions<T>
+  {
+    template<test_mode Mode, class Actions, class... Args>
+      requires pseudoregular<T>
     [[nodiscard]]
-    bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y) const
+    static bool check_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
     {
-      return check_equality_preconditions(logger, *this, x, y);
+      return check_equality_preconditions(logger, actions, x, y, args...);
     }
 
-    template<test_mode Mode, moveonly T>
+    template<test_mode Mode, class Actions, class... Args>
+      requires moveonly<T>
     [[nodiscard]]
-    bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y, const T& xClone, const T& yClone) const
+    static bool check_preconditions(test_logger<Mode>& logger,  const Actions& actions, const T& x, const T& y, const T& xClone, const T& yClone, const Args&... args)
     {
-      return check_equality_preconditions(logger, *this, x, y, xClone, yClone);
+      return check_equality_preconditions(logger, actions, x, y, xClone, yClone, args...);
     }
   };
 
-  struct orderable_actions
-  {    
-    constexpr static bool has_post_comparison_action{};
-    constexpr static bool has_post_copy_action{};
-    constexpr static bool has_post_copy_assign_action{};
-    constexpr static bool has_post_move_action{};
-    constexpr static bool has_post_move_assign_action{};
-    constexpr static bool has_post_swap_action{};
-    
-    explicit orderable_actions(std::weak_ordering order)
+  template<orderable T>
+  struct precondition_actions<T>
+  {
+    constexpr explicit precondition_actions<T>(std::weak_ordering order)
       : m_Order{order}
     {}
 
-    template<test_mode Mode, pseudoregular T>
-      requires orderable<T>
+    template<test_mode Mode, class Actions, class... Args>
+      requires pseudoregular<T>
     [[nodiscard]]
-    bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y) const
+    static bool check_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const Args&... args)
     {
-      return check_orderable_preconditions(logger, *this, x, y);
+      return check_orderable_preconditions(logger, actions, x, y, args...);
     }
 
-    template<test_mode Mode, moveonly T>
-      requires orderable<T>
+    template<test_mode Mode, class Actions, class... Args>
+      requires moveonly<T>
     [[nodiscard]]
-    bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y, const T& xClone, const T& yClone) const
+    static bool check_preconditions(test_logger<Mode>& logger, const Actions& actions, const T& x, const T& y, const T& xClone, const T& yClone, const Args&... args)
     {
-      return check_orderable_preconditions(logger, *this, x, y, xClone, yClone);
+      return check_orderable_preconditions(logger, actions, x, y, xClone, yClone, args...);
     }
 
     [[nodiscard]]
@@ -261,7 +253,47 @@ namespace sequoia::testing::impl
   private:
     std::weak_ordering m_Order;
   };
+  
+  template<pseudoregular T>
+  struct regular_actions : precondition_actions<T>
+  {
+    using precondition_actions<T>::precondition_actions;
+    
+    constexpr static bool has_post_comparison_action{};
+    constexpr static bool has_post_copy_action{};
+    constexpr static bool has_post_copy_assign_action{};
+    constexpr static bool has_post_move_action{};
+    constexpr static bool has_post_move_assign_action{};
+    constexpr static bool has_post_swap_action{};
 
+    template<test_mode Mode, class... Args>
+      requires pseudoregular<T>
+    [[nodiscard]]
+    bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y, const Args&... args) const
+    {
+      return precondition_actions<T>::check_preconditions(logger, *this, x, y, args...);
+    }
+  };
+
+  template<moveonly T>
+  struct moveonly_actions : precondition_actions<T>
+  {
+    using precondition_actions<T>::precondition_actions;
+    
+    constexpr static bool has_post_comparison_action{};
+    constexpr static bool has_post_move_action{};
+    constexpr static bool has_post_move_assign_action{};
+    constexpr static bool has_post_swap_action{};
+
+    template<test_mode Mode, class... Args>
+    [[nodiscard]]
+    bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y, const T& xClone, const T& yClone, const Args&... args) const
+    {
+      return precondition_actions<T>::check_preconditions(logger, *this, x, y, xClone, yClone, args...);
+    }
+  };
+
+  
   //================================ move assign ================================//
 
   template<test_mode Mode, class Actions, movable_comparable T, invocable<T&> Mutator, class... Args>

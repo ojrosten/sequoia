@@ -115,7 +115,7 @@ namespace sequoia::testing
   {
     sentinel<Mode> sentry{logger, add_type_info<T>(description).append("\n")};
       
-    if(impl::check_semantics(logger, impl::regular_allocation_actions{}, x, y, yMutator, std::tuple_cat(impl::make_dual_allocation_checkers(info, x, y)...)))
+    if(impl::check_semantics(logger, impl::regular_allocation_actions<T>{}, x, y, yMutator, std::tuple_cat(impl::make_dual_allocation_checkers(info, x, y)...)))
     {
       impl::check_para_constructor_allocations(logger, y, yMutator, info...);
     }

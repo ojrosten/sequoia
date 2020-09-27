@@ -486,14 +486,17 @@ namespace sequoia::testing::impl
 
   
   /*! \brief actions common to both move-only and regular types. */
-  struct allocation_actions
+  template<movable_comparable T>
+  struct allocation_actions : precondition_actions<T>
   {
     constexpr static bool has_post_comparison_action{true};
     constexpr static bool has_post_move_action{true};
     constexpr static bool has_post_move_assign_action{true};
     constexpr static bool has_post_swap_action{true};
 
-    template<test_mode Mode, movable_comparable T, alloc_getter<T>... Getters, class... Predictions>
+    using precondition_actions<T>::precondition_actions;
+
+    template<test_mode Mode, alloc_getter<T>... Getters, class... Predictions>
     static bool post_comparison_action(test_logger<Mode>& logger, std::string_view op, const T& x, const T& y, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
     {
       sentinel<Mode> s{logger, ""};
@@ -503,20 +506,20 @@ namespace sequoia::testing::impl
       return !s.failure_detected();
     }
 
-    template<test_mode Mode, movable_comparable T, alloc_getter<T>... Getters, class... Predictions>
+    template<test_mode Mode, alloc_getter<T>... Getters, class... Predictions>
     static void post_move_action(test_logger<Mode>& logger, const T& y, const allocation_checker<T, Getters, Predictions>&... checkers)
     {
       check_move_y_allocation(logger, y, checkers...);
     }
 
-    template<test_mode Mode, movable_comparable T, invocable<T&> Mutator, alloc_getter<T>... Getters, class... Predictions>
+    template<test_mode Mode, invocable<T&> Mutator, alloc_getter<T>... Getters, class... Predictions>
     static void post_move_assign_action(test_logger<Mode>& logger, T& y, const T& yClone, Mutator yMutator, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
     {
       check_move_assign_allocation(logger, y, checkers...);
       check_mutation_after_move("assignment", logger, y, yClone, std::move(yMutator), allocation_checker{checkers.info(), y}...);
     }
 
-    template<test_mode Mode, movable_comparable T, alloc_getter<T>... Getters, class... Predictions>
+    template<test_mode Mode, alloc_getter<T>... Getters, class... Predictions>
     static void post_swap_action(test_logger<Mode>& logger, const T& x, const T& y, const T&, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
     {
       if constexpr(((   std::allocator_traits<typename dual_allocation_checker<T, Getters, Predictions>::allocator_type>::propagate_on_container_move_assignment::value

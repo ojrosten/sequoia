@@ -22,20 +22,22 @@ namespace sequoia::testing
 namespace sequoia::testing::impl
 {
   /*! \brief Extends allocation_actions for types with copy semantics. */
-  struct regular_allocation_actions : allocation_actions
+  template<pseudoregular T>
+  struct regular_allocation_actions : allocation_actions<T>
   {
     constexpr static bool has_post_copy_action{true};
     constexpr static bool has_post_copy_assign_action{true};
 
+    using allocation_actions<T>::allocation_actions;
     
-    template<test_mode Mode, pseudoregular T, alloc_getter<T>... Getters, class... Predictions>
+    template<test_mode Mode, alloc_getter<T>... Getters, class... Predictions>
     [[nodiscard]]
     bool check_preconditions(test_logger<Mode>& logger, const T& x, const T& y, const dual_allocation_checker<T, Getters, Predictions>&... checkers) const
     {
-      return check_equality_preconditions(logger, *this, x, y, dual_allocation_checker<T, Getters, Predictions>{checkers.info(), x, y}...);
+      return  allocation_actions<T>::check_preconditions(logger, *this, x, y, dual_allocation_checker<T, Getters, Predictions>{checkers.info(), x, y}...);
     }
 
-    template<test_mode Mode, pseudoregular T, alloc_getter<T>... Getters, class... Predictions>
+    template<test_mode Mode, alloc_getter<T>... Getters, class... Predictions>
     static void post_copy_action(test_logger<Mode>& logger, const T& xCopy, const T& yCopy, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
     {
       
@@ -44,16 +46,16 @@ namespace sequoia::testing::impl
       check_copy_y_allocation(logger, yCopy, allocation_checker{checkers.info(), checkers.second_count()}...);
     }
 
-    template<test_mode Mode, pseudoregular T, alloc_getter<T>... Getters, class... Predictions>
+    template<test_mode Mode, alloc_getter<T>... Getters, class... Predictions>
     static void post_copy_assign_action(test_logger<Mode>& logger, const T& lhs, const T& rhs, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
     {
       check_copy_assign_allocation(logger, lhs, rhs, checkers...);
     }
 
-    template<test_mode Mode, pseudoregular T, invocable<T&> Mutator, alloc_getter<T>... Getters, class... Predictions>
+    template<test_mode Mode, invocable<T&> Mutator, alloc_getter<T>... Getters, class... Predictions>
     static void post_swap_action(test_logger<Mode>& logger, T& x, const T& y, const T& yClone, Mutator yMutator, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
     {
-      allocation_actions::post_swap_action(logger, x, y, yClone, checkers...);      
+      allocation_actions<T>::post_swap_action(logger, x, y, yClone, checkers...);      
       check_mutation_after_swap(logger, x, y, yClone, std::move(yMutator), checkers...);
     }
   };
