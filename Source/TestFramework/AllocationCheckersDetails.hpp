@@ -86,7 +86,7 @@ namespace sequoia::testing::impl
 
     template<test_mode Mode>
     void check_no_allocation(std::string_view detail, test_logger<Mode>& logger, const T& x, const T& y) const
-    {
+    {      
       check_allocation(append_lines(detail, "Unexpected allocation detected (x)"), logger, x, info(), first_count(), 0);
       check_allocation(append_lines(detail, "Unexpected allocation detected (y)"), logger, y, info(), second_count(), 0);
     }
@@ -484,6 +484,18 @@ namespace sequoia::testing::impl
     std::apply(fn, checkers);
   }
 
+  template<test_mode Mode, movable_comparable T, alloc_getter<T> Getter, class Prediction, alloc_getter<T>... Getters, class... Predictions>
+  void check_serialization_allocation(test_logger<Mode>& logger, const T& container, const allocation_checker<T, Getter, Prediction>& checker, const allocation_checker<T, Getters, Predictions>&... moreCheckers)
+  {
+    auto checkFn{
+      [&logger, &container](const auto& checker){
+        checker.check("Unexpected allocation detected for serialization (y)", logger, container, 0);
+      }
+    };
+
+    check_allocation(logger, checkFn, checker, moreCheckers...);
+  }
+
   
   /*! \brief actions common to both move-only and regular types. */
   template<movable_comparable T>
@@ -493,16 +505,17 @@ namespace sequoia::testing::impl
     constexpr static bool has_post_move_action{true};
     constexpr static bool has_post_move_assign_action{true};
     constexpr static bool has_post_swap_action{true};
+    constexpr static bool has_post_serialization_action{true};
 
     using precondition_actions<T>::precondition_actions;
 
     template<test_mode Mode, alloc_getter<T>... Getters, class... Predictions>
     static bool post_comparison_action(test_logger<Mode>& logger, std::string_view op, const T& x, const T& y, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
-    {
+    {      
       sentinel<Mode> s{logger, ""};
-      
-      check_no_allocation(std::string{"Unexpected allocation detected for operator"}.append(op), logger, x, y, checkers...);
 
+      check_no_allocation(std::string{"Unexpected allocation detected for operator"}.append(op), logger, x, y, checkers...);
+      
       return !s.failure_detected();
     }
 
@@ -527,6 +540,12 @@ namespace sequoia::testing::impl
       {
         check_no_allocation("Unexpected allocation detected for swap", logger, y, x, checkers...);
       }
+    }
+
+    template<test_mode Mode, alloc_getter<T>... Getters, class... Predictions>
+    static void post_serialization_action(test_logger<Mode>& logger, const T& y, const allocation_checker<T, Getters, Predictions>&... checkers)
+    {
+      check_serialization_allocation(logger, y, checkers...);
     }
   };
 
@@ -571,5 +590,11 @@ namespace sequoia::testing::impl
   void check_mutation_after_move(std::string_view moveType, test_logger<Mode>& logger, T& u, const T& y, Mutator yMutator, std::tuple<Checkers...> checkers)
   {
     check_mutation_after_move(moveType, logger, u, y, std::move(yMutator), std::move(checkers), std::make_index_sequence<sizeof...(Checkers)>{});
+  }
+
+  template<test_mode Mode, class Actions, movable_comparable T, alloc_getter<T>... Getters, class... Predictions>
+  bool check_serialization(test_logger<Mode>& logger, const Actions& actions, T&& u, const T& y, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
+  {
+    return do_check_serialization(logger, actions, std::forward<T>(u), y, allocation_checker{checkers.info(), y}...);
   }
 }

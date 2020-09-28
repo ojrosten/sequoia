@@ -16,13 +16,15 @@
 namespace sequoia::testing::impl
 {
   template<test_mode Mode, class Actions, moveonly T, invocable<T&> Mutator, class... Args>
-  void check_semantics(test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, const Args&... args)
+  bool check_semantics(test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, Mutator m, const Args&... args)
   {
+    sentinel<Mode> sentry{logger, ""};
+    
     if(!actions.check_preconditions(logger, x, y, xClone, yClone, args...))
-      return;
+      return false;
 
     auto opt{check_move_construction(logger, actions, std::move(x), xClone, args...)};
-    if(!opt) return;
+    if(!opt) return false;
       
     if constexpr (do_swap<Args...>::value)
     {
@@ -35,5 +37,9 @@ namespace sequoia::testing::impl
     {      
       check_move_assign(logger, actions, *opt, std::move(y), yClone, std::move(m), args...);
     }
+
+    check_serialization(logger, actions, std::move(x), yClone);
+
+    return !sentry.failure_detected();
   }
 }

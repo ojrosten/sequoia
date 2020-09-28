@@ -205,6 +205,11 @@ namespace sequoia
    stream << t;
   };
 
+  template<class T, class Stream>
+  concept deserializable_from = requires(std::remove_reference_t<Stream>& stream, std::remove_reference_t<T>& t) {
+    stream >> t;
+  };
+
   template<class T>
   concept range = requires(T& t) {
     std::begin(t);

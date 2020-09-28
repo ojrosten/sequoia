@@ -273,6 +273,7 @@ namespace sequoia::testing::impl
     constexpr static bool has_post_move_action{};
     constexpr static bool has_post_move_assign_action{};
     constexpr static bool has_post_swap_action{};
+    constexpr static bool has_post_serialization_action{};
 
     template<test_mode Mode, class... Args>
       requires pseudoregular<T>
@@ -377,5 +378,34 @@ namespace sequoia::testing::impl
   std::optional<T> check_move_construction(test_logger<Mode>& logger, const Actions& actions, T&& z, const T& y)
   {
     return do_check_move_construction(logger, actions, std::forward<T>(z), y);
+  }
+
+  //================================  serialization  ================================ //
+
+  template<test_mode Mode, class Actions, movable_comparable T, class... Args>
+  bool do_check_serialization(test_logger<Mode>& logger, const Actions& actions, T&& u, const T& y, const Args&... args)
+  {
+    if constexpr(serializable_to<T, std::stringstream> && deserializable_from<T, std::stringstream>)
+    {
+      std::stringstream s{};
+      s << y;
+
+      if constexpr(Actions::has_post_serialization_action)
+      {
+        actions.post_serialization_action(logger, y, args...);
+      }
+      
+      s >> u;
+
+      return check_equality("Inconsistent (de)serialization", u, y);
+    }
+
+    return true;
+  }
+
+  template<test_mode Mode, class Actions, movable_comparable T>
+  bool check_serialization(test_logger<Mode>& logger, const Actions& actions, T&& u, const T& y)
+  {
+    return do_check_serialization(logger, actions, std::forward<T>(u), y);
   }
 }

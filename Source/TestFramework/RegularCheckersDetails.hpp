@@ -90,7 +90,7 @@ namespace sequoia::testing::impl
       }
     }
 
-    if constexpr(!std::is_same_v<std::decay_t<Mutator>, null_mutator>)
+    if constexpr(!std::is_same_v<std::remove_cvref_t<Mutator>, null_mutator>)
     {
       if(consistentCopy && consistentCopyAssign)
       {
@@ -115,6 +115,8 @@ namespace sequoia::testing::impl
         }
       }
     }
+
+    check_serialization(logger, actions, T{x}, y);
 
     return !sentry.failure_detected();
   }
