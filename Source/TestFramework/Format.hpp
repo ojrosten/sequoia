@@ -11,6 +11,7 @@
     \brief A collection of functions for formatting test output. 
  */
 
+#include "CoreInfrastructure.hpp"
 #include <string>
 
 #ifndef _MSC_VER_
@@ -133,6 +134,24 @@ namespace sequoia::testing
 
   [[nodiscard]]
   std::string prediction_message(std::string_view obtained, std::string_view predicted);
+
+  [[nodiscard]]
+  std::string failure_message(bool, bool);
+
+  template<class T>
+  [[nodiscard]]
+  std::string failure_message([[maybe_unused]] const T& obtained, [[maybe_unused]] const T& prediction)
+  {
+    auto message{operator_message("==", "false")};
+
+    constexpr bool delegate{has_detailed_equality_checker_v<T> || range<T>};
+    if constexpr(!delegate)
+    {          
+      append_lines(message, prediction_message(to_string(obtained), to_string(prediction)));
+    }
+
+    return message;
+  }
 
   [[nodiscard]]
   std::string footer();

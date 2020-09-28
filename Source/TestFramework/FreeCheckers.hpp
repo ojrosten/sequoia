@@ -75,68 +75,13 @@
     types representing these structures.
 */
 
+#include "CoreInfrastructure.hpp"
 #include "Advice.hpp"
 #include "TestLogger.hpp"
 #include "Utilities.hpp"
 
 namespace sequoia::testing
 {
-  /*! \brief class template, specializations of which implement detailed comparison of two instantiations of T; 
-      \anchor detailed_equality_checker_primary
-   */
-  template<class T> struct detailed_equality_checker;
-
-  /*! \brief class template, specializations of which implement comparision of two equivalent types
-      \anchor equivalence_checker_primary
-   */
-  template<class T, class... Us> struct equivalence_checker;
-
-
-  /*! \brief class template, specializations of which implement comparision of two weakly equivalent types;
-      \anchor weak_equivalence_checker_primary
-   */
-  template<class T, class... Us> struct weak_equivalence_checker;
-
-  struct equality_tag{};
-  struct equivalence_tag{};
-  struct weak_equivalence_tag{};
-  
-  template<class T> constexpr bool has_equivalence_checker_v{class_template_is_default_instantiable<equivalence_checker, T>};
-  template<class T> constexpr bool has_weak_equivalence_checker_v{class_template_is_default_instantiable<weak_equivalence_checker, T>};
-  template<class T> constexpr bool has_detailed_equality_checker_v{class_template_is_default_instantiable<detailed_equality_checker, T>};
-
-  /*! \brief Specialize this struct template to provide custom serialization of a given class.
-      \anchor serializer_primary
-   */
-
-  template<class T>
-  struct serializer;
-  
-  template<serializable_to<std::stringstream> T>
-  struct serializer<T>
-  {
-    [[nodiscard]]
-    static std::string make(const T& val)
-    {        
-      std::ostringstream os{};
-      os << std::boolalpha << val;
-      return os.str();
-    }
-  };
-
-  template<class T>
-  concept serializable = requires(serializer<T>& s, T& t)
-  {
-    s.make(t);
-  };
-
-  template<serializable T>
-  [[nodiscard]]
-  std::string to_string(const T& value)
-  {
-    return serializer<T>::make(value);    
-  }
-
   template<class Checker, test_mode Mode, class... Args>
   concept checker_for = requires(test_logger<Mode>& logger, Args&&... args) {
     Checker::check(logger, std::forward<Args>(args)...);
@@ -171,7 +116,6 @@ namespace sequoia::testing
       return make_type_info<std::remove_cvref_t<decltype(std::get<I>(std::declval<std::tuple<Ts...>>()))>...>();
     }
   };
-  
 
   /*! \brief generic function that generates a check from any class providing a static check method.
 
@@ -255,12 +199,7 @@ namespace sequoia::testing
       sentry.log_check();
       if(!(prediction == obtained))
       {
-        auto message{operator_message("==", "false")};
-
-        if constexpr(!delegate)
-        {          
-          append_lines(message, prediction_message(to_string(obtained), to_string(prediction)));
-        }
+        auto message{failure_message(obtained, prediction)};
 
         append_advice(message, {advisor, obtained, prediction});
 

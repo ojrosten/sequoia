@@ -131,6 +131,12 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
+  std::string failure_message(bool, bool)
+  {
+    return "check failed";
+  }
+
+  [[nodiscard]]
   std::string to_camel_case(std::string text)
   {
     if(!text.empty())

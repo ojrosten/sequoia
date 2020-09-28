@@ -1,18 +1,14 @@
 	../Tests/TestFramework/CoreDiagnostics.cpp, Line 67
 
 	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
+	check failed
 
 	=======================================
 
 	../Tests/TestFramework/CoreDiagnostics.cpp, Line 68
 
 	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
+	check failed
 	Advice: I pity the fool who confuses the bool.
 
 	=======================================
@@ -21,9 +17,7 @@
 	Advisor ignored
 
 	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
+	check failed
 
 	=======================================
 
@@ -383,9 +377,7 @@
 
 	  Precondition - for checking semantics, x and y are assumed to be different
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -397,9 +389,7 @@
 
 	  operator== is inconsistent
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -411,9 +401,7 @@
 
 	  operator!= is inconsistent
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -501,9 +489,7 @@
 
 	  Either mutation is not doing anything following copy construction or value semantics are broken, with mutation of an object also changing the object from which it was copied
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -515,9 +501,7 @@
 
 	  Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -931,9 +915,7 @@
 
 	  operator== is inconsistent
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -945,9 +927,7 @@
 
 	  operator== is inconsistent
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -1007,9 +987,7 @@
 
 	  Precondition - for checking semantics, x and y are assumed to be different
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -1021,9 +999,7 @@
 
 	  Precondition - for checking move-only semantics, x and xClone are assumed to be equal
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -1035,33 +1011,31 @@
 
 	  Precondition - for checking move-only semantics, y and yClone are assumed to be equal
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-	Fast Task duration: 0.00123651s +- 4 * 7.441e-05
-	Slow Task duration: 0.00119659s +- 4 * 4.91001e-05 [0.967719; (2, 2)]
+	Fast Task duration: 0.00115425s +- 4 * 9.38193e-05
+	Slow Task duration: 0.00116055s +- 4 * 0.000130461 [1.00546; (2, 2)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-	Fast Task duration: 0.0013064s +- 4 * 0.000359416
-	Slow Task duration: 0.0011909s +- 4 * 0.000128289 [0.911591; (2, 3)]
+	Fast Task duration: 0.00123002s +- 4 * 0.000155113
+	Slow Task duration: 0.00124804s +- 4 * 9.0902e-05 [1.01466; (2, 3)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-	Fast Task duration: 0.00116352s +- 4 * 0.000147384
-	Slow Task duration: 0.00457566s +- 4 * 0.000464284 [3.9326; (2, 2.5)]
+	Fast Task duration: 0.00118393s +- 4 * 0.000124034
+	Slow Task duration: 0.00437311s +- 4 * 0.000226151 [3.69374; (2, 2.5)]
 
 	=======================================
 
@@ -1149,9 +1123,7 @@
 
 	  operator== is inconsistent
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -1163,9 +1135,7 @@
 
 	  operator!= is inconsistent
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -1297,15 +1267,11 @@
 
 	  Mutation is not doing anything following move assignment
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	  Either mutation is not doing anything following copy construction or value semantics are broken, with mutation of an object also changing the object from which it was copied
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -1317,9 +1283,7 @@
 
 	  Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -1401,9 +1365,7 @@
 
 	  Precondition - for checking semantics, x and y are assumed to be different
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -1553,9 +1515,7 @@
 
 	  operator== is inconsistent
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -1567,9 +1527,7 @@
 
 	  operator!= is inconsistent
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -1701,21 +1659,15 @@
 
 	  Mutation is not doing anything following move assignment
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	  Mutation is not doing anything following copy then swap
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	  Either mutation is not doing anything following copy construction or value semantics are broken, with mutation of an object also changing the object from which it was copied
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -1727,9 +1679,7 @@
 
 	  Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -1811,9 +1761,7 @@
 
 	  Precondition - for checking semantics, x and y are assumed to be different
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -1975,9 +1923,7 @@
 
 	  operator== is inconsistent
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -1989,9 +1935,7 @@
 
 	  operator!= is inconsistent
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -2123,15 +2067,11 @@
 
 	  Mutation is not doing anything following move assignment
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	  Either mutation is not doing anything following copy construction or value semantics are broken, with mutation of an object also changing the object from which it was copied
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -2143,9 +2083,7 @@
 
 	  Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -2227,9 +2165,7 @@
 
 	  Precondition - for checking semantics, x and y are assumed to be different
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -2367,9 +2303,7 @@
 
 	  operator== is inconsistent
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -2381,9 +2315,7 @@
 
 	  operator!= is inconsistent
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -2515,21 +2447,15 @@
 
 	  Mutation is not doing anything following move assignment
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	  Mutation is not doing anything following copy then swap
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	  Either mutation is not doing anything following copy construction or value semantics are broken, with mutation of an object also changing the object from which it was copied
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -2541,9 +2467,7 @@
 
 	  Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -2625,9 +2549,7 @@
 
 	  Precondition - for checking semantics, x and y are assumed to be different
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -2777,9 +2699,7 @@
 
 	  operator== is inconsistent
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -2791,9 +2711,7 @@
 
 	  operator!= is inconsistent
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -2919,15 +2837,11 @@
 
 	  Mutation is not doing anything following move assignment
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	  Either mutation is not doing anything following copy construction or value semantics are broken, with mutation of an object also changing the object from which it was copied
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -2939,9 +2853,7 @@
 
 	  Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -3023,9 +2935,7 @@
 
 	  Precondition - for checking semantics, x and y are assumed to be different
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -3175,9 +3085,7 @@
 
 	  operator== is inconsistent
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -3189,9 +3097,7 @@
 
 	  operator!= is inconsistent
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -3317,21 +3223,15 @@
 
 	  Mutation is not doing anything following move assignment
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	  Mutation is not doing anything following copy then swap
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	  Either mutation is not doing anything following copy construction or value semantics are broken, with mutation of an object also changing the object from which it was copied
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -3343,9 +3243,7 @@
 
 	  Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -3427,9 +3325,7 @@
 
 	  Precondition - for checking semantics, x and y are assumed to be different
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -3591,9 +3487,7 @@
 
 	  operator== is inconsistent
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -3605,9 +3499,7 @@
 
 	  operator!= is inconsistent
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -3733,15 +3625,11 @@
 
 	  Mutation is not doing anything following move assignment
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	  Either mutation is not doing anything following copy construction or value semantics are broken, with mutation of an object also changing the object from which it was copied
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -3753,9 +3641,7 @@
 
 	  Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -3837,9 +3723,7 @@
 
 	  Precondition - for checking semantics, x and y are assumed to be different
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -3989,9 +3873,7 @@
 
 	  operator== is inconsistent
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -4003,9 +3885,7 @@
 
 	  operator!= is inconsistent
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -4131,21 +4011,15 @@
 
 	  Mutation is not doing anything following move assignment
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	  Mutation is not doing anything following copy then swap
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	  Either mutation is not doing anything following copy construction or value semantics are broken, with mutation of an object also changing the object from which it was copied
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -4157,9 +4031,7 @@
 
 	  Either mutation is not doing anything following copy assignment or value semantics are broken, with mutation of an object also changing the object from which it was assigned
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -4241,9 +4113,7 @@
 
 	  Precondition - for checking semantics, x and y are assumed to be different
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -4503,9 +4373,7 @@
 
 	  Precondition - for checking move-only semantics, x and xClone are assumed to be equal
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -4517,9 +4385,7 @@
 
 	  Precondition - for checking move-only semantics, y and yClone are assumed to be equal
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -4531,9 +4397,7 @@
 
 	  Precondition - for checking semantics, x and y are assumed to be different
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -4663,9 +4527,7 @@
 
 	  Precondition - for checking move-only semantics, x and xClone are assumed to be equal
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -4677,9 +4539,7 @@
 
 	  Precondition - for checking move-only semantics, y and yClone are assumed to be equal
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -4691,9 +4551,7 @@
 
 	  Precondition - for checking semantics, x and y are assumed to be different
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -4789,9 +4647,7 @@
 
 	  Precondition - for checking move-only semantics, x and xClone are assumed to be equal
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -4803,9 +4659,7 @@
 
 	  Precondition - for checking move-only semantics, y and yClone are assumed to be equal
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -4817,9 +4671,7 @@
 
 	  Precondition - for checking semantics, x and y are assumed to be different
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -4935,9 +4787,7 @@
 
 	  Precondition - for checking move-only semantics, x and xClone are assumed to be equal
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -4949,9 +4799,7 @@
 
 	  Precondition - for checking move-only semantics, y and yClone are assumed to be equal
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -4963,9 +4811,7 @@
 
 	  Precondition - for checking semantics, x and y are assumed to be different
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -6745,9 +6591,7 @@
 
 	  Precondition - for checking semantics, order must be weak_ordering::less or weak_ordering::greater
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -6759,9 +6603,7 @@
 
 	  Precondition - for ordered semantics, it is assumed that y > x
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -6773,9 +6615,7 @@
 
 	  Precondition - for ordered semantics, it is assumed that y > x
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -6786,21 +6626,15 @@
 
 	  operator> and operator< are inconsistent
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	  operator< and operator<= are inconsistent
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	  operator< and operator>= are inconsistent
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -6811,9 +6645,7 @@
 
 	  operator< and operator<= are inconsistent
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -6824,9 +6656,7 @@
 
 	  operator> and operator< are inconsistent
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -6837,9 +6667,7 @@
 
 	  operator< and operator<= are inconsistent
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -6850,9 +6678,7 @@
 
 	  Precondition - for ordered semantics, it is assumed that y > x
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -6863,9 +6689,7 @@
 
 	  operator< and operator<=> are inconsistent
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -6877,9 +6701,7 @@
 
 	  Precondition - for checking semantics, order must be weak_ordering::less or weak_ordering::greater
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -6891,9 +6713,7 @@
 
 	  Precondition - for ordered semantics, it is assumed that y > x
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -6904,21 +6724,15 @@
 
 	  operator> and operator< are inconsistent
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	  operator< and operator<= are inconsistent
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	  operator< and operator>= are inconsistent
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -6929,9 +6743,7 @@
 
 	  operator< and operator<= are inconsistent
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -6942,9 +6754,7 @@
 
 	  operator> and operator< are inconsistent
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -6955,9 +6765,7 @@
 
 	  operator< and operator<= are inconsistent
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -6968,9 +6776,7 @@
 
 	  Precondition - for ordered semantics, it is assumed that y > x
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -6981,9 +6787,7 @@
 
 	  operator< and operator<=> are inconsistent
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -7195,8 +6999,8 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67
 	Performance Test which should pass
 
-	Fast Task duration: 0.00141856s +- 4 * 0.000373452
-	Slow Task duration: 0.00225923s +- 4 * 0.00030483 [1.59262; (1.8, 2.1)]
+	Fast Task duration: 0.00110316s +- 4 * 4.82966e-05
+	Slow Task duration: 0.00213615s +- 4 * 8.06811e-05 [1.93639; (1.8, 2.1)]
 
 
 	=======================================
@@ -7205,8 +7009,8 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68
 	Performance Test which should pass
 
-	Fast Task duration: 0.0013085s +- 4 * 4.27215e-05
-	Slow Task duration: 0.00494353s +- 4 * 0.000668624 [3.77802; (3.6, 4.1)]
+	Fast Task duration: 0.00109257s +- 4 * 7.82388e-05
+	Slow Task duration: 0.00410029s +- 4 * 3.71553e-05 [3.75289; (3.6, 4.1)]
 
 
 	=======================================
