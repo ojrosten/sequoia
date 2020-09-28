@@ -134,7 +134,8 @@ namespace sequoia::testing
   }
 
   void false_positive_diagnostics::test_regular_semantics()
-  {
+  {    
+    check_semantics(LINE("Broken check invariant"), perfectly_normal_beast{1}, perfectly_normal_beast{1});
     check_semantics(LINE("Broken equality"), broken_equality{1}, broken_equality{2});
     check_semantics(LINE("Broken inequality"), broken_inequality{1}, broken_inequality{2});
     check_semantics(LINE("Broken copy"), broken_copy{1}, broken_copy{2});
@@ -145,7 +146,6 @@ namespace sequoia::testing
     check_semantics(LINE("Broken copy value semantics"), broken_copy_value_semantics{1}, broken_copy_value_semantics{2}, [](auto& b){ *b.x.front() = 3; });
     check_semantics(LINE("Broken copy assignment value semantics"),
                             broken_copy_assignment_value_semantics{1}, broken_copy_assignment_value_semantics{2}, [](auto& b){ *b.x.front() = 3; });
-    check_semantics(LINE("Broken check invariant"), perfectly_normal_beast{1}, perfectly_normal_beast{1});
     check_semantics(LINE("Broken serialization"), broken_serialization{1}, broken_serialization{2});
     check_semantics(LINE("Broken deserialization"), broken_deserialization{1}, broken_deserialization{2});
   }

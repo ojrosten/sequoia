@@ -33,8 +33,7 @@ namespace sequoia::testing
 
   template<bool PropagateCopy, bool PropagateMove, bool PropagateSwap>
   void allocation_false_positive_diagnostics::test_regular_semantics()
-  {
-    {      
+  {     
       auto mutator{
         [](auto& b) {
           b.x.push_back(1);
@@ -83,8 +82,7 @@ namespace sequoia::testing
         };        
         
         check_semantics(LINE("Inefficient inequality"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_awp,1_anp}}});
-      }
-      
+      }      
 
       {
         using beast = broken_copy<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
@@ -333,7 +331,17 @@ namespace sequoia::testing
 
         check_semantics(LINE("Incorrect copy assign y to x allocs"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, m, allocation_info{allocGetter, predictions()});          
       }
-    }    
+
+      
+
+      {
+        using beast = inefficient_serialization<int, shared_counting_allocator<int, PropagateCopy, PropagateMove, PropagateSwap>>;
+        using allocator = typename beast::allocator_type;
+
+        auto allocGetter{ [](const beast& b){ return b.x.get_allocator(); } };
+        
+        check_semantics(LINE("Inefficient equality"), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,1_mu}, {1_awp,1_anp}}});
+      }
   }
 
   [[nodiscard]]

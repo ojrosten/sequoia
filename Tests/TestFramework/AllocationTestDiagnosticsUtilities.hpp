@@ -326,4 +326,68 @@ namespace sequoia::testing
       return s;
     }
   };
+
+  template<class T=int, class Allocator=std::allocator<int>>
+  struct inefficient_serialization
+  {
+    using allocator_type = Allocator;
+
+    inefficient_serialization(std::initializer_list<T> list) : x{list} {}
+
+    inefficient_serialization(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {}
+
+    inefficient_serialization(const allocator_type& a) : x(a) {}
+
+    inefficient_serialization(const inefficient_serialization&) = default;
+
+    inefficient_serialization(const inefficient_serialization& other, const allocator_type& alloc) : x(other.x, alloc) {}
+
+    inefficient_serialization(inefficient_serialization&&) noexcept = default;
+
+    inefficient_serialization(inefficient_serialization&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+
+    inefficient_serialization& operator=(const inefficient_serialization&) = default;
+
+    inefficient_serialization& operator=(inefficient_serialization&&) = default;
+
+    void swap(inefficient_serialization& other) noexcept(noexcept(std::swap(this->x, other.x)))
+    {
+      std::swap(x, other.x);
+    }
+
+    friend void swap(inefficient_serialization& lhs, inefficient_serialization& rhs)
+      noexcept(noexcept(lhs.swap(rhs)))
+    {
+      lhs.swap(rhs);
+    }
+      
+    std::vector<T, Allocator> x{};
+
+    [[nodiscard]]
+    friend bool operator==(const inefficient_serialization&, const inefficient_serialization&) noexcept = default;
+
+    [[nodiscard]]
+    friend bool operator!=(const inefficient_serialization&, const inefficient_serialization&) noexcept = default;
+
+    template<class Stream>
+    friend Stream& operator<<(Stream& s, const inefficient_serialization b)
+    {
+      for(auto i : b.x) s << i << ' ';
+      return s;
+    }
+
+    template<class Stream>
+    friend Stream& operator>>(Stream& s, inefficient_serialization& b)
+    {
+      b.x.clear();
+
+      int i{};
+      while(s >> i)
+      {
+        b.x.push_back(i);
+      }
+
+      return s;
+    }
+  };
 }
