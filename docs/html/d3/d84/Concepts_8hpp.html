@@ -186,6 +186,9 @@ template&lt;class T &gt; </td></tr>
 <tr class="memitem:afbcbd3f421025f2ee2ab1d85a685df8b"><td class="memTemplParams" colspan="2">template&lt;class T , class Stream &gt; </td></tr>
 <tr class="memitem:afbcbd3f421025f2ee2ab1d85a685df8b"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::serializable_to</b></td></tr>
 <tr class="separator:afbcbd3f421025f2ee2ab1d85a685df8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c290b01c60ee0847bf9f715cb50e54c"><td class="memTemplParams" colspan="2">template&lt;class T , class Stream &gt; </td></tr>
+<tr class="memitem:a1c290b01c60ee0847bf9f715cb50e54c"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::deserializable_from</b></td></tr>
+<tr class="separator:a1c290b01c60ee0847bf9f715cb50e54c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afed102388d10fa0ace8417b7e373415e"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
 <tr class="memitem:afed102388d10fa0ace8417b7e373415e"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::range</b></td></tr>
 <tr class="separator:afed102388d10fa0ace8417b7e373415e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -411,6 +414,25 @@ template&lt;class Derived , class Base &gt; </div>
 </div><!-- fragment -->
 </div>
 </div>
+<a id="a1c290b01c60ee0847bf9f715cb50e54c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1c290b01c60ee0847bf9f715cb50e54c">&#9670;&nbsp;</a></span>deserializable_from</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T , class Stream &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">concept sequoia::deserializable_from</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= requires(std::remove_reference_t&lt;Stream&gt;&amp; stream, std::remove_reference_t&lt;T&gt;&amp; t) {</div>
+<div class="line">    stream &gt;&gt; t;</div>
+<div class="line">  }</div>
+</div><!-- fragment -->
+</div>
+</div>
 <a id="a7265b31d54d781329024052e02b10260"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7265b31d54d781329024052e02b10260">&#9670;&nbsp;</a></span>has_allocator_type</h2>
 
@@ -522,11 +544,9 @@ template&lt;class T &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= requires(<span class="keyword">const</span> std::remove_reference_t&lt;T&gt;&amp; t,</div>
-<div class="line">                               <span class="keyword">const</span> std::remove_reference_t&lt;T&gt;&amp; u)</div>
+<b>Initial value:</b><div class="fragment"><div class="line">= equality_comparable&lt;T&gt; &amp;&amp;</div>
+<div class="line">    requires(<span class="keyword">const</span> std::remove_reference_t&lt;T&gt;&amp; t,<span class="keyword">const</span> std::remove_reference_t&lt;T&gt;&amp; u)</div>
 <div class="line">  {</div>
-<div class="line">    { t == u } -&gt; boolean;</div>
-<div class="line">    { t != u } -&gt; boolean; </div>
 <div class="line">    { t &lt; u  } -&gt; boolean;</div>
 <div class="line">    { t &lt;= u } -&gt; boolean;</div>
 <div class="line">    { t &gt; u  } -&gt; boolean;</div>

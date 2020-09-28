@@ -395,7 +395,71 @@ $(function() {
 <div class="line"><a name="l00326"></a><span class="lineno">  326</span>&#160;      <span class="keywordflow">return</span> s;</div>
 <div class="line"><a name="l00327"></a><span class="lineno">  327</span>&#160;    }</div>
 <div class="line"><a name="l00328"></a><span class="lineno">  328</span>&#160;  };</div>
-<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160;}</div>
+<div class="line"><a name="l00329"></a><span class="lineno">  329</span>&#160; </div>
+<div class="line"><a name="l00330"></a><span class="lineno">  330</span>&#160;  <span class="keyword">template</span>&lt;<span class="keyword">class</span> T=<span class="keywordtype">int</span>, <span class="keyword">class</span> Allocator=std::allocator&lt;<span class="keywordtype">int</span>&gt;&gt;</div>
+<div class="line"><a name="l00331"></a><span class="lineno"><a class="line" href="../../d8/de0/structsequoia_1_1testing_1_1inefficient__serialization.html">  331</a></span>&#160;  <span class="keyword">struct </span><a class="code" href="../../d8/de0/structsequoia_1_1testing_1_1inefficient__serialization.html">inefficient_serialization</a></div>
+<div class="line"><a name="l00332"></a><span class="lineno">  332</span>&#160;  {</div>
+<div class="line"><a name="l00333"></a><span class="lineno">  333</span>&#160;    <span class="keyword">using</span> allocator_type = Allocator;</div>
+<div class="line"><a name="l00334"></a><span class="lineno">  334</span>&#160; </div>
+<div class="line"><a name="l00335"></a><span class="lineno">  335</span>&#160;    <a class="code" href="../../d8/de0/structsequoia_1_1testing_1_1inefficient__serialization.html">inefficient_serialization</a>(std::initializer_list&lt;T&gt; list) : x{list} {}</div>
+<div class="line"><a name="l00336"></a><span class="lineno">  336</span>&#160; </div>
+<div class="line"><a name="l00337"></a><span class="lineno">  337</span>&#160;    <a class="code" href="../../d8/de0/structsequoia_1_1testing_1_1inefficient__serialization.html">inefficient_serialization</a>(std::initializer_list&lt;T&gt; list, <span class="keyword">const</span> allocator_type&amp; a) : x{list, a} {}</div>
+<div class="line"><a name="l00338"></a><span class="lineno">  338</span>&#160; </div>
+<div class="line"><a name="l00339"></a><span class="lineno">  339</span>&#160;    <a class="code" href="../../d8/de0/structsequoia_1_1testing_1_1inefficient__serialization.html">inefficient_serialization</a>(<span class="keyword">const</span> allocator_type&amp; a) : x(a) {}</div>
+<div class="line"><a name="l00340"></a><span class="lineno">  340</span>&#160; </div>
+<div class="line"><a name="l00341"></a><span class="lineno">  341</span>&#160;    <a class="code" href="../../d8/de0/structsequoia_1_1testing_1_1inefficient__serialization.html">inefficient_serialization</a>(<span class="keyword">const</span> <a class="code" href="../../d8/de0/structsequoia_1_1testing_1_1inefficient__serialization.html">inefficient_serialization</a>&amp;) = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00342"></a><span class="lineno">  342</span>&#160; </div>
+<div class="line"><a name="l00343"></a><span class="lineno">  343</span>&#160;    <a class="code" href="../../d8/de0/structsequoia_1_1testing_1_1inefficient__serialization.html">inefficient_serialization</a>(<span class="keyword">const</span> <a class="code" href="../../d8/de0/structsequoia_1_1testing_1_1inefficient__serialization.html">inefficient_serialization</a>&amp; other, <span class="keyword">const</span> allocator_type&amp; alloc) : x(other.x, alloc) {}</div>
+<div class="line"><a name="l00344"></a><span class="lineno">  344</span>&#160; </div>
+<div class="line"><a name="l00345"></a><span class="lineno">  345</span>&#160;    <a class="code" href="../../d8/de0/structsequoia_1_1testing_1_1inefficient__serialization.html">inefficient_serialization</a>(<a class="code" href="../../d8/de0/structsequoia_1_1testing_1_1inefficient__serialization.html">inefficient_serialization</a>&amp;&amp;) noexcept = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00346"></a><span class="lineno">  346</span>&#160; </div>
+<div class="line"><a name="l00347"></a><span class="lineno">  347</span>&#160;    <a class="code" href="../../d8/de0/structsequoia_1_1testing_1_1inefficient__serialization.html">inefficient_serialization</a>(<a class="code" href="../../d8/de0/structsequoia_1_1testing_1_1inefficient__serialization.html">inefficient_serialization</a>&amp;&amp; other, <span class="keyword">const</span> allocator_type&amp; alloc) : x(std::move(other.x), alloc) {}</div>
+<div class="line"><a name="l00348"></a><span class="lineno">  348</span>&#160; </div>
+<div class="line"><a name="l00349"></a><span class="lineno">  349</span>&#160;    <a class="code" href="../../d8/de0/structsequoia_1_1testing_1_1inefficient__serialization.html">inefficient_serialization</a>&amp; operator=(<span class="keyword">const</span> <a class="code" href="../../d8/de0/structsequoia_1_1testing_1_1inefficient__serialization.html">inefficient_serialization</a>&amp;) = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00350"></a><span class="lineno">  350</span>&#160; </div>
+<div class="line"><a name="l00351"></a><span class="lineno">  351</span>&#160;    <a class="code" href="../../d8/de0/structsequoia_1_1testing_1_1inefficient__serialization.html">inefficient_serialization</a>&amp; operator=(<a class="code" href="../../d8/de0/structsequoia_1_1testing_1_1inefficient__serialization.html">inefficient_serialization</a>&amp;&amp;) = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00352"></a><span class="lineno">  352</span>&#160; </div>
+<div class="line"><a name="l00353"></a><span class="lineno">  353</span>&#160;    <span class="keywordtype">void</span> swap(<a class="code" href="../../d8/de0/structsequoia_1_1testing_1_1inefficient__serialization.html">inefficient_serialization</a>&amp; other) noexcept(noexcept(std::swap(this-&gt;x, other.x)))</div>
+<div class="line"><a name="l00354"></a><span class="lineno">  354</span>&#160;    {</div>
+<div class="line"><a name="l00355"></a><span class="lineno">  355</span>&#160;      std::swap(x, other.x);</div>
+<div class="line"><a name="l00356"></a><span class="lineno">  356</span>&#160;    }</div>
+<div class="line"><a name="l00357"></a><span class="lineno">  357</span>&#160; </div>
+<div class="line"><a name="l00358"></a><span class="lineno">  358</span>&#160;    <span class="keyword">friend</span> <span class="keywordtype">void</span> swap(<a class="code" href="../../d8/de0/structsequoia_1_1testing_1_1inefficient__serialization.html">inefficient_serialization</a>&amp; lhs, <a class="code" href="../../d8/de0/structsequoia_1_1testing_1_1inefficient__serialization.html">inefficient_serialization</a>&amp; rhs)</div>
+<div class="line"><a name="l00359"></a><span class="lineno">  359</span>&#160;      noexcept(noexcept(lhs.swap(rhs)))</div>
+<div class="line"><a name="l00360"></a><span class="lineno">  360</span>&#160;    {</div>
+<div class="line"><a name="l00361"></a><span class="lineno">  361</span>&#160;      lhs.swap(rhs);</div>
+<div class="line"><a name="l00362"></a><span class="lineno">  362</span>&#160;    }</div>
+<div class="line"><a name="l00363"></a><span class="lineno">  363</span>&#160;      </div>
+<div class="line"><a name="l00364"></a><span class="lineno">  364</span>&#160;    std::vector&lt;T, Allocator&gt; x{};</div>
+<div class="line"><a name="l00365"></a><span class="lineno">  365</span>&#160; </div>
+<div class="line"><a name="l00366"></a><span class="lineno">  366</span>&#160;    [[nodiscard]]</div>
+<div class="line"><a name="l00367"></a><span class="lineno">  367</span>&#160;    <span class="keyword">friend</span> <span class="keywordtype">bool</span> operator==(<span class="keyword">const</span> <a class="code" href="../../d8/de0/structsequoia_1_1testing_1_1inefficient__serialization.html">inefficient_serialization</a>&amp;, <span class="keyword">const</span> <a class="code" href="../../d8/de0/structsequoia_1_1testing_1_1inefficient__serialization.html">inefficient_serialization</a>&amp;) noexcept = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00368"></a><span class="lineno">  368</span>&#160; </div>
+<div class="line"><a name="l00369"></a><span class="lineno">  369</span>&#160;    [[nodiscard]]</div>
+<div class="line"><a name="l00370"></a><span class="lineno">  370</span>&#160;    <span class="keyword">friend</span> <span class="keywordtype">bool</span> operator!=(<span class="keyword">const</span> <a class="code" href="../../d8/de0/structsequoia_1_1testing_1_1inefficient__serialization.html">inefficient_serialization</a>&amp;, <span class="keyword">const</span> <a class="code" href="../../d8/de0/structsequoia_1_1testing_1_1inefficient__serialization.html">inefficient_serialization</a>&amp;) noexcept = <span class="keywordflow">default</span>;</div>
+<div class="line"><a name="l00371"></a><span class="lineno">  371</span>&#160; </div>
+<div class="line"><a name="l00372"></a><span class="lineno">  372</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Stream&gt;</div>
+<div class="line"><a name="l00373"></a><span class="lineno">  373</span>&#160;    <span class="keyword">friend</span> Stream&amp; operator&lt;&lt;(Stream&amp; s, <span class="keyword">const</span> <a class="code" href="../../d8/de0/structsequoia_1_1testing_1_1inefficient__serialization.html">inefficient_serialization</a> b)</div>
+<div class="line"><a name="l00374"></a><span class="lineno">  374</span>&#160;    {</div>
+<div class="line"><a name="l00375"></a><span class="lineno">  375</span>&#160;      <span class="keywordflow">for</span>(<span class="keyword">auto</span> i : b.x) s &lt;&lt; i &lt;&lt; <span class="charliteral">&#39; &#39;</span>;</div>
+<div class="line"><a name="l00376"></a><span class="lineno">  376</span>&#160;      <span class="keywordflow">return</span> s;</div>
+<div class="line"><a name="l00377"></a><span class="lineno">  377</span>&#160;    }</div>
+<div class="line"><a name="l00378"></a><span class="lineno">  378</span>&#160; </div>
+<div class="line"><a name="l00379"></a><span class="lineno">  379</span>&#160;    <span class="keyword">template</span>&lt;<span class="keyword">class</span> Stream&gt;</div>
+<div class="line"><a name="l00380"></a><span class="lineno">  380</span>&#160;    <span class="keyword">friend</span> Stream&amp; operator&gt;&gt;(Stream&amp; s, <a class="code" href="../../d8/de0/structsequoia_1_1testing_1_1inefficient__serialization.html">inefficient_serialization</a>&amp; b)</div>
+<div class="line"><a name="l00381"></a><span class="lineno">  381</span>&#160;    {</div>
+<div class="line"><a name="l00382"></a><span class="lineno">  382</span>&#160;      b.x.clear();</div>
+<div class="line"><a name="l00383"></a><span class="lineno">  383</span>&#160; </div>
+<div class="line"><a name="l00384"></a><span class="lineno">  384</span>&#160;      <span class="keywordtype">int</span> i{};</div>
+<div class="line"><a name="l00385"></a><span class="lineno">  385</span>&#160;      <span class="keywordflow">while</span>(s &gt;&gt; i)</div>
+<div class="line"><a name="l00386"></a><span class="lineno">  386</span>&#160;      {</div>
+<div class="line"><a name="l00387"></a><span class="lineno">  387</span>&#160;        b.x.push_back(i);</div>
+<div class="line"><a name="l00388"></a><span class="lineno">  388</span>&#160;      }</div>
+<div class="line"><a name="l00389"></a><span class="lineno">  389</span>&#160; </div>
+<div class="line"><a name="l00390"></a><span class="lineno">  390</span>&#160;      <span class="keywordflow">return</span> s;</div>
+<div class="line"><a name="l00391"></a><span class="lineno">  391</span>&#160;    }</div>
+<div class="line"><a name="l00392"></a><span class="lineno">  392</span>&#160;  };</div>
+<div class="line"><a name="l00393"></a><span class="lineno">  393</span>&#160;}</div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="astructsequoia_1_1testing_1_1inefficient__para__move_html"><div class="ttname"><a href="../../df/d8b/structsequoia_1_1testing_1_1inefficient__para__move.html">sequoia::testing::inefficient_para_move</a></div><div class="ttdef"><b>Definition:</b> AllocationTestDiagnosticsUtilities.hpp:279</div></div>
 <div class="ttc" id="aAssignmentUtilities_8hpp_html"><div class="ttname"><a href="../../d0/dbb/AssignmentUtilities_8hpp.html">AssignmentUtilities.hpp</a></div><div class="ttdoc">Helper for dealing with allocator propagation during copy assignment.</div></div>
@@ -403,6 +467,7 @@ $(function() {
 <div class="ttc" id="astructsequoia_1_1testing_1_1inefficient__copy_html"><div class="ttname"><a href="../../df/d20/structsequoia_1_1testing_1_1inefficient__copy.html">sequoia::testing::inefficient_copy</a></div><div class="ttdef"><b>Definition:</b> AllocationTestDiagnosticsUtilities.hpp:114</div></div>
 <div class="ttc" id="astructsequoia_1_1testing_1_1inefficient__move_html"><div class="ttname"><a href="../../d0/d6c/structsequoia_1_1testing_1_1inefficient__move.html">sequoia::testing::inefficient_move</a></div><div class="ttdef"><b>Definition:</b> AllocationTestDiagnosticsUtilities.hpp:226</div></div>
 <div class="ttc" id="astructsequoia_1_1testing_1_1inefficient__inequality_html"><div class="ttname"><a href="../../d2/dee/structsequoia_1_1testing_1_1inefficient__inequality.html">sequoia::testing::inefficient_inequality</a></div><div class="ttdef"><b>Definition:</b> AllocationTestDiagnosticsUtilities.hpp:66</div></div>
+<div class="ttc" id="astructsequoia_1_1testing_1_1inefficient__serialization_html"><div class="ttname"><a href="../../d8/de0/structsequoia_1_1testing_1_1inefficient__serialization.html">sequoia::testing::inefficient_serialization</a></div><div class="ttdef"><b>Definition:</b> AllocationTestDiagnosticsUtilities.hpp:332</div></div>
 <div class="ttc" id="astructsequoia_1_1testing_1_1inefficient__para__copy_html"><div class="ttname"><a href="../../d1/d8d/structsequoia_1_1testing_1_1inefficient__para__copy.html">sequoia::testing::inefficient_para_copy</a></div><div class="ttdef"><b>Definition:</b> AllocationTestDiagnosticsUtilities.hpp:171</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
