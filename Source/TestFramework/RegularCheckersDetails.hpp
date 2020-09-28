@@ -116,7 +116,7 @@ namespace sequoia::testing::impl
       }
     }
 
-    check_serialization(logger, actions, T{x}, y);
+    check_serialization(logger, actions, T{x}, y, args...);
 
     return !sentry.failure_detected();
   }

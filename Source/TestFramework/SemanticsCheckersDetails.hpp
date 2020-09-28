@@ -397,7 +397,7 @@ namespace sequoia::testing::impl
       
       s >> u;
 
-      return check_equality("Inconsistent (de)serialization", u, y);
+      return check_equality("Inconsistent (de)serialization", logger, u, y);
     }
 
     return true;

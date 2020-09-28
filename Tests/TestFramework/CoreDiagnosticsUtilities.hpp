@@ -635,21 +635,29 @@ namespace sequoia::testing
     std::vector<T, Allocator> x{};
 
     [[nodiscard]]
-    friend bool operator==(const perfectly_normal_beast& lhs, const perfectly_normal_beast& rhs) noexcept
-    {
-      return lhs.x == rhs.x;
-    }
+    friend bool operator==(const perfectly_normal_beast&, const perfectly_normal_beast&) noexcept = default;
 
     [[nodiscard]]
-    friend bool operator!=(const perfectly_normal_beast& lhs, const perfectly_normal_beast& rhs) noexcept
-    {
-      return !(lhs == rhs);
-    }
+    friend bool operator!=(const perfectly_normal_beast&, const perfectly_normal_beast&) noexcept = default;
 
     template<class Stream>
     friend Stream& operator<<(Stream& s, const perfectly_normal_beast& b)
     {
       for(auto i : b.x) s << i << ' ';
+      return s;
+    }
+
+    template<class Stream>
+    friend Stream& operator>>(Stream& s, perfectly_normal_beast& b)
+    {
+      b.x.clear();
+
+      int i{};
+      while(s >> i)
+      {
+        b.x.push_back(i);
+      }
+
       return s;
     }
   };
