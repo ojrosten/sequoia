@@ -2,9 +2,7 @@
 	Empty stack
 
 	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
+	check failed
 
 	=======================================
 
@@ -21,9 +19,7 @@
 	Empty stack
 
 	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
+	check failed
 
 	=======================================
 
@@ -31,9 +27,7 @@
 	Non-empty stack
 
 	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
+	check failed
 
 	=======================================
 
@@ -45,9 +39,7 @@
 
 	  Inconsistent emptiness
 	  [bool]
-	  operator== returned false
-	  Obtained : true
-	  Predicted: false
+	  check failed
 
 	  Inconsistent size
 	  [unsigned long]
@@ -57,9 +49,7 @@
 
 	  Hidden state
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -77,9 +67,7 @@
 
 	  Hidden state
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -91,9 +79,7 @@
 
 	  Inconsistent emptiness
 	  [bool]
-	  operator== returned false
-	  Obtained : true
-	  Predicted: false
+	  check failed
 
 	  Inconsistent size
 	  [unsigned long]
@@ -103,9 +89,7 @@
 
 	  Hidden state
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 

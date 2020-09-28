@@ -64,9 +64,7 @@
 	Empty sequence should not report as non-empty
 
 	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
+	check failed
 
 	=======================================
 
@@ -74,9 +72,7 @@
 	Non-empty sequence should not report as empty
 
 	[bool]
-	operator== returned false
-	Obtained : false
-	Predicted: true
+	check failed
 
 	=======================================
 

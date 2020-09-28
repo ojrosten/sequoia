@@ -6,9 +6,7 @@
 
 	  Inconsistent emptiness
 	  [bool]
-	  operator== returned false
-	  Obtained : true
-	  Predicted: false
+	  check failed
 
 	  Inconsistent size
 	  [unsigned long]
@@ -18,15 +16,11 @@
 
 	  Inconsistent Hidden state
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	  Inconsistent Hidden state, symmetry of ==
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -44,15 +38,11 @@
 
 	  Inconsistent Hidden state
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	  Inconsistent Hidden state, symmetry of ==
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -64,9 +54,7 @@
 
 	  Inconsistent emptiness
 	  [bool]
-	  operator== returned false
-	  Obtained : true
-	  Predicted: false
+	  check failed
 
 	  Inconsistent size
 	  [unsigned long]
@@ -76,15 +64,11 @@
 
 	  Inconsistent Hidden state
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	  Inconsistent Hidden state, symmetry of ==
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 
@@ -108,15 +92,11 @@
 
 	  Inconsistent Hidden state
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	  Inconsistent Hidden state, symmetry of ==
 	  [bool]
-	  operator== returned false
-	  Obtained : false
-	  Predicted: true
+	  check failed
 
 	=======================================
 

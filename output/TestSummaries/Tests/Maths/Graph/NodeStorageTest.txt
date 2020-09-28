@@ -1,3 +1,3 @@
 Dynamic and Static
-[6ms]
+[15ms]
 Standard Top Level Checks:                42;  Failures:  0  [Deep checks: 417]
