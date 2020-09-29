@@ -140,13 +140,11 @@ namespace sequoia::testing
       }
       catch(const std::exception& e)
       {
-        auto sentry{make_sentinel()};
-        sentry.log_critical_failure(exception_message("Unexpected", e.what()));
+        log_critical_failure("Unexpected", e.what());
       }
       catch(...)
       {
-        auto sentry{make_sentinel()};
-        sentry.log_critical_failure(exception_message("Unknown", ""));
+        log_critical_failure("Unknown", "");        
       }
 
       return summarize(time);
@@ -163,23 +161,15 @@ namespace sequoia::testing
       return Checker::summary(name(), steady_clock::now() - start);
     }
 
-    [[nodiscard]]
-    std::string exception_message(std::string_view tag, std::string_view exceptionMessage) const
-    {
-      return testing::exception_message(tag, Checker::top_level_message(), exceptionMessage, Checker::exceptions_detected_by_sentinel());
-    }
   private:
-    [[nodiscard]]
-    sentinel<Checker::mode> make_sentinel()
+    void log_critical_failure(std::string_view tag, std::string_view what)
     {
-      if constexpr(Checker::mode == test_mode::false_positive)
-      {
-        return Checker::make_sentinel(end_block(Checker::top_level_message(), 2, footer()));
-      }
-      else
-      {
-        return Checker::make_sentinel(Checker::top_level_message());
-      }
+      const auto message{
+        exception_message(tag, Checker::top_level_message(), what, Checker::exceptions_detected_by_sentinel())
+      };
+      
+      auto sentry{Checker::make_sentinel("")};
+      sentry.log_critical_failure(message);
     }
   };
   

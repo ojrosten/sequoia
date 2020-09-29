@@ -116,36 +116,44 @@ namespace sequoia::testing
       logger.decrement_depth();
 
       if(!logger.depth())
-      {        
-        const bool failure{
-               ((Mode == test_mode::false_positive) && !failure_detected())
-            || ((Mode != test_mode::false_positive) &&  failure_detected())
-        };
+      {
+        if(critical_failure_detected())
+        {
+          logger.end_message(test_logger<Mode>::critical::yes);
+        }        
+        else
+        {
+          if(failure_detected()) logger.end_message(test_logger<Mode>::critical::no);
 
-        if(failure_detected()) logger.end_message();
+          auto messageMaker{
+            [&logger](){
+              auto mess{indent("False Positive Failure:", logger.top_level_message(), tab)};
+              end_block(mess, 3, indent(footer(), tab));
 
-        auto messageMaker{
-          [&logger](){
-            auto mess{indent("False Positive Failure:", logger.top_level_message(), tab)};
-            end_block(mess, 3, indent(footer(), tab));
+              return mess;
+            }
+          };
 
-            return mess;
+          const bool modeSpecificFailure{
+                 ((Mode == test_mode::false_positive) && !failure_detected())
+              || ((Mode != test_mode::false_positive) &&  failure_detected())
+          };
+
+          if(modeSpecificFailure)
+          {
+            logger.log_top_level_failure((Mode == test_mode::false_positive) ? messageMaker() : "");
           }
-        };
+          else if constexpr(Mode == test_mode::false_negative)
+          {
+            if(!critical_failure_detected())
+              logger.append_to_diagnostics_output(messageMaker());
+          }
 
-        if(failure)
-        {
-          logger.log_top_level_failure((Mode == test_mode::false_positive) ? messageMaker() : "");
-        }
-        else if constexpr(Mode == test_mode::false_negative)
-        {
-          logger.append_to_diagnostics_output(messageMaker());
-        }
-
-        if(auto file{output_manager::recovery_file()}; !file.empty())
-        {
-          if(std::ofstream of{file, std::ios_base::app})
-            of << "Check ended\n";
+          if(auto file{output_manager::recovery_file()}; !file.empty())
+          {
+            if(std::ofstream of{file, std::ios_base::app})
+              of << "Check ended\n";
+          }
         }
         
         logger.exceptions_detected_by_sentinel(std::uncaught_exceptions());
@@ -186,9 +194,15 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
+    bool critical_failure_detected() const noexcept
+    {
+      return (m_Logger.get().critical_failures() != m_PriorCriticalFailures);
+    }
+
+    [[nodiscard]]
     bool failure_detected() const noexcept
     {
-      return (m_Logger.get().failures() != m_PriorFailures) || (m_Logger.get().critical_failures() != m_PriorCriticalFailures);
+      return m_Logger.get().failures() != m_PriorFailures;
     }
 
     [[nodiscard]]
@@ -257,11 +271,6 @@ namespace sequoia::testing
       return m_TopLevelMessage;
     }
   private:
-    std::string
-      m_TopLevelMessage,
-      m_FailureMessages,
-      m_DiagnosticsOutput;
-
     struct level_message
     {
       level_message(std::string_view m)
@@ -271,6 +280,13 @@ namespace sequoia::testing
       std::string message;
       bool used{};
     };
+
+    enum class critical{ yes, no};
+    
+    std::string
+      m_TopLevelMessage,
+      m_FailureMessages,
+      m_DiagnosticsOutput;
 
     std::vector<level_message> m_LevelMessages;
 
@@ -304,10 +320,8 @@ namespace sequoia::testing
       ++m_PerformanceChecks;
     }
 
-    void log_failure(std::string_view message)
+    void failure_message(std::string_view message, const critical isCritical)
     {
-      ++m_Failures;
-
       std::string msg{};
       auto build{
         [&msg](auto&& text, indentation ind){
@@ -339,7 +353,13 @@ namespace sequoia::testing
 
       build(message, indentation{ind});
       
-      update_output(msg, 2, "");
+      update_output(msg, 2, "", isCritical);
+    }
+
+    void log_failure(std::string_view message)
+    {
+      ++m_Failures;
+      failure_message(message, critical::no);
     }
 
     void log_performance_failure(std::string_view message)
@@ -351,7 +371,8 @@ namespace sequoia::testing
     void log_critical_failure(std::string_view message)
     {
       ++m_CriticalFailures;
-      m_FailureMessages.append(message).append("\n");
+      failure_message(message, critical::yes);
+
       if(auto file{output_manager::recovery_file()}; !file.empty())
       {
         if(std::ofstream of{file, std::ios_base::app})
@@ -388,12 +409,13 @@ namespace sequoia::testing
       m_LevelMessages.pop_back();
     }
     
-    void end_message()
+    void end_message(const critical isCritical)
     {
-      update_output("", 2, footer());
+      update_output("", 2, footer(), isCritical);
     }
 
-    void update_output(std::string_view message, std::size_t newLines, std::string_view foot)
+    void update_output(std::string_view message, std::size_t newLines, std::string_view foot,
+                       const critical isCritical)
     {
       auto append{
         [message, newLines, foot](std::string& output) {
@@ -402,7 +424,7 @@ namespace sequoia::testing
         }
       };
 
-      if constexpr (Mode != test_mode::false_positive)
+      if((Mode != test_mode::false_positive) || (isCritical == critical::yes))
       {
         append(m_FailureMessages);
       }
