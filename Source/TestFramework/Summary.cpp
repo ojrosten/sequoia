@@ -129,7 +129,9 @@ namespace sequoia::testing
 
     if(log.critical_failures())
     {
-      (summary += "Critical Failures:  ") += std::to_string(log.critical_failures()) += "\n";
+      summary.append("\n******  Critical Failures:  ")
+        .append(std::to_string(log.critical_failures()))
+        .append("  ******\n\n");
     }
 
     if((verbosity & log_verbosity::failure_messages) == log_verbosity::failure_messages)
