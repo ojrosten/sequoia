@@ -131,6 +131,27 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
+  std::string prediction_message(char obtained, char predicted)
+  {
+    auto transformer{
+      [](char c) -> std::string {
+        if(c == '\a') return "'\\a'";
+        if(c == '\b') return "'\\b'";
+        if(c == '\f') return "'\\f'";
+        if(c == '\n') return "'\\n'";
+        if(c == '\r') return "'\\r'";
+        if(c == '\t') return "'\\t'";
+        if(c == '\v') return "'\\v'";
+        if(c == ' ')  return "' '";
+
+        return std::string(1, c);
+      }
+    };
+
+    return prediction_message(transformer(obtained), transformer(predicted));
+  }
+
+  [[nodiscard]]
   std::string failure_message(bool, bool)
   {
     return "check failed";
@@ -182,4 +203,25 @@ namespace sequoia::testing
     return append_lines(std::string{file}.append(", Line ").append(std::to_string(line)), message).append("\n");
   }
 
+  std::string& tidy_name(std::string& name)
+  {
+    auto pos{name.find("::__")};
+    while(pos != std::string::npos)
+    {
+      const auto pos2{name.find("::", pos+4)};
+      if(pos2 == std::string::npos) break;
+
+      name.erase(pos, pos2 - pos);
+      pos = name.find("::__", pos);
+    }
+
+    pos = name.find(">>");
+    while(pos != std::string::npos)
+    {
+      name.insert(++pos, " ");
+      pos = name.find(">>", pos + 1);
+    }
+
+    return name;
+  }
 }

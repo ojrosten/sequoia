@@ -133,7 +133,18 @@ namespace sequoia::testing
   std::string operator_message(std::string_view op, std::string_view retVal);
 
   [[nodiscard]]
+  std::string prediction_message(char obtained, char predicted);
+  
+  [[nodiscard]]
   std::string prediction_message(std::string_view obtained, std::string_view predicted);
+
+  template<serializable T>
+    requires (!same_as<T, std::string>)
+  [[nodiscard]]
+  std::string prediction_message(const T& obtained, const T& prediction)
+  {
+    return prediction_message(to_string(obtained), to_string(prediction));
+  }
 
   [[nodiscard]]
   std::string failure_message(bool, bool);
@@ -147,7 +158,7 @@ namespace sequoia::testing
     constexpr bool delegate{has_detailed_equality_checker_v<T> || range<T>};
     if constexpr(!delegate)
     {          
-      append_lines(message, prediction_message(to_string(obtained), to_string(prediction)));
+      append_lines(message, prediction_message(obtained, prediction));
     }
 
     return message;
@@ -166,7 +177,7 @@ namespace sequoia::testing
 
   #define LINE(message) report_line(__FILE__, __LINE__, message)
 
-  void tidy_name(std::string& name);
+  std::string& tidy_name(std::string& name);
 
   template<class T>
   [[nodiscard]]

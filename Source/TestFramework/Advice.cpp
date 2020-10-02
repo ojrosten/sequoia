@@ -13,17 +13,17 @@
 
 namespace sequoia::testing
 {
-  void advice_data::append_and_tidy(std::string& message) const
+  std::string& advice_data::append_and_tidy(std::string& message) const
   {
     if(!m_Advice.empty())
     {
-      append_lines(message, "Advice: ").append(m_Advice);
+      append_lines(message, m_Prefix).append(m_Advice);
     }
 
-    tidy(message);
+    return tidy(message);
   }
 
-  void advice_data::tidy(std::string& message) const
+  std::string& advice_data::tidy(std::string& message) const
   {
     if(!m_AdviceTypeName.empty())
     {
@@ -42,30 +42,12 @@ namespace sequoia::testing
         pos = message.find(m_AdviceTypeName);
       }
     }
+
+    return message;
   }
 
-  void append_advice(std::string& message, const advice_data& adviceData)
+  std::string& append_advice(std::string& message, const advice_data& adviceData)
   {
-    adviceData.append_and_tidy(message);
-  }
-
-  void tidy_name(std::string& name)
-  {
-    auto pos{name.find("::__")};
-    while(pos != std::string::npos)
-    {
-      const auto pos2{name.find("::", pos+4)};
-      if(pos2 == std::string::npos) break;
-
-      name.erase(pos, pos2 - pos);
-      pos = name.find("::__", pos);
-    }
-
-    pos = name.find(">>");
-    while(pos != std::string::npos)
-    {
-      name.insert(++pos, " ");
-      pos = name.find(">>", pos + 1);
-    }
+    return adviceData.append_and_tidy(message);
   }
 }

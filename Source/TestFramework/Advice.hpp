@@ -45,8 +45,9 @@ namespace sequoia::testing
   public:
     using sequoia_advisor_type = Advisor;
     
-    tutor(Advisor a)
+    tutor(Advisor a, std::string prefix="Advice: ")
       : m_Advisor{std::move(a)}
+      , m_Prefix{std::move(prefix)}
     {}
 
     template<class T>
@@ -56,8 +57,15 @@ namespace sequoia::testing
     {
       return m_Advisor(value, prediction);
     }
+
+    [[nodiscard]]
+    std::string_view prefix() const noexcept
+    {
+      return m_Prefix;
+    }
   private:
     Advisor m_Advisor;
+    std::string m_Prefix;
   };
 
   template<>
@@ -95,18 +103,18 @@ namespace sequoia::testing
       if constexpr(std::is_invocable_r_v<std::string, tutor<Advisor>, T, T>)
       {
         m_Advice = advisor(value, prediction);
+        m_Prefix = advisor.prefix();
       }
-
       
       m_AdviceTypeName = type_demangler<Advisor>::make();
     }
 
-    void append_and_tidy(std::string& message) const;    
+    std::string& append_and_tidy(std::string& message) const;    
   private:
-    std::string m_Advice{}, m_AdviceTypeName{};
+    std::string m_Advice{}, m_AdviceTypeName{}, m_Prefix{};
     
-    void tidy(std::string& message) const;
+    std::string& tidy(std::string& message) const;
   };
 
-  void append_advice(std::string& message, const advice_data& adviceData);
+  std::string& append_advice(std::string& message, const advice_data& adviceData);
 }

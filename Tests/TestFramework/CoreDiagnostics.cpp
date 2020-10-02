@@ -15,7 +15,113 @@
 #include <filesystem>
 
 namespace sequoia::testing
-{  
+{
+
+  
+  template<class Char, class Traits>
+  struct detailed_equality_checker<std::basic_string_view<Char, Traits>>
+  {
+    using string_view_type = std::basic_string_view<Char, Traits>;
+    using size_type = typename string_view_type::size_type;
+
+    template<class Advisor>
+    static auto make_advisor(string_view_type obtained, string_view_type prediction, size_type pos, const tutor<Advisor>& advisor)
+    {
+      
+      constexpr auto npos{string_view_type::npos};
+      constexpr size_type offset{30}, count{60};
+
+      const auto sz{std::min(obtained.size(), prediction.size())};
+
+      if(pos == npos) pos = sz;
+
+      const auto lpos{pos < offset ? 0 :
+                         pos < sz  ? pos - offset : sz - std::min(sz, offset)};
+
+      auto make{
+        [lpos](string_view_type sv){
+          std::string mess{lpos > 0 ? "..." : ""};
+          mess.append(sv.substr(lpos, count));
+
+          if(lpos + count < sv.size())
+            mess.append("...");
+
+          return mess;
+        }
+      };
+      
+      const auto message{prediction_message(make(obtained), make(prediction))};
+        
+      if constexpr(invocable<tutor<Advisor>, Char, Char>)
+      {
+
+        return tutor{
+          [message, advisor] (Char a, Char b) {
+
+            auto m{message};
+            return append_advice(m, {advisor, a, b});            
+          },
+          "\n"
+        };
+      }
+      else
+      {
+        return tutor{
+          [message](Char, Char) { return message; },
+          "\n"
+        };
+      }
+    }
+    
+    template<test_mode Mode, class Advisor>
+    static void check(test_logger<Mode>& logger, string_view_type obtained, string_view_type prediction, const tutor<Advisor>& advisor)
+    {
+      auto iters{std::mismatch(obtained.begin(), obtained.end(), prediction.begin(), prediction.end())};
+      if((iters.first != obtained.end()) || (iters.second != prediction.end()))
+      {
+        if(iters.first != obtained.end())
+        {
+          const auto dist{std::distance(obtained.begin(), iters.first)};          
+          auto adv{make_advisor(obtained, prediction, dist, advisor)};
+
+          if(iters.second != prediction.end())
+          {
+            const auto mess{
+              std::string{"First difference detected at character "}
+                .append(std::to_string(dist))
+                .append(":")
+             };
+          
+            check_equality(mess, logger, *(iters.first), *(iters.second), adv);
+          }
+          else
+          {
+            check_equality("Obtained string is too long", logger, obtained.size(), prediction.size(), adv);
+          }
+        }
+        else if(iters.second != prediction.end())
+        {
+          auto adv{make_advisor(obtained, prediction, string_view_type::npos, advisor)};
+          check_equality("Obtained string is too short", logger, obtained.size(), prediction.size(), adv);
+        }
+      }
+    }
+  };
+
+  template<class Char, class Traits, alloc Allocator>
+  struct detailed_equality_checker<std::basic_string<Char, Traits, Allocator>>
+  {
+    using string_type = std::basic_string<Char, Traits, Allocator>;
+    
+    template<test_mode Mode, class Advisor>
+    static void check(test_logger<Mode>& logger, const string_type& obtained, const string_type& prediction, tutor<Advisor> advisor)
+    {
+      using checker = detailed_equality_checker<std::basic_string_view<Char, Traits>>;
+      
+      checker::check(logger, std::string_view{obtained}, std::string_view{prediction}, std::move(advisor));
+    }
+  };
+  
   template<class T>
   struct weak_equivalence_checker<perfectly_normal_beast<T>>
   {
@@ -56,6 +162,7 @@ namespace sequoia::testing
   {
     basic_tests();
     test_container_checks();
+    test_strings();
     test_mixed();
     test_regular_semantics();
     test_equivalence_checks();
@@ -105,10 +212,33 @@ namespace sequoia::testing
 
     check_range(LINE("Iterators demarcate differing numbers of elements"), refs.cbegin(), refs.cend(), ans.cbegin(), ans.cend());
     check_range(LINE("Iterators demarcate differing elements"), refs.cbegin(), refs.cend(), ans.cbegin(), ans.cbegin() + 4);
+  }
 
+  void false_positive_diagnostics::test_strings()
+  {
     using namespace std::string_literals;
     check_equality(LINE("Strings of differing length"), "what?!"s, "Hello, World!"s);
     check_equality(LINE("Differing strings of same length"), "Hello, world?"s, "Hello, World!"s);
+
+    const std::string longMessage{"This is a message which is sufficiently long for only a segment to be included when a string diff is performed"};
+
+    check_equality(LINE("Empty string compared with long string"), ""s, longMessage);
+    check_equality(LINE("Long string with empty string"), longMessage, ""s);
+
+    check_equality(LINE("Short string compared with long string"), "This is a mess"s, longMessage);
+    check_equality(LINE("Long string with short string"), longMessage, "This is a mess"s);
+
+    std::string corruptedMessage{longMessage};
+    corruptedMessage[75] = 'x';
+
+    check_equality(LINE("Long strings compared with difference near middle"), corruptedMessage, longMessage);
+    check_equality(LINE("Long strings compared with difference near middle"), longMessage, corruptedMessage);
+
+    corruptedMessage[75] = 'd';
+    corruptedMessage[100] = 'x';
+
+    check_equality(LINE("Long strings compared with difference near end"), corruptedMessage, longMessage);
+    check_equality(LINE("Long strings compared with difference near end"), longMessage, corruptedMessage);
   }
 
   void false_positive_diagnostics::test_mixed()
@@ -232,6 +362,7 @@ namespace sequoia::testing
   {
     basic_tests();
     test_container_checks();
+    test_strings();
     test_mixed();
     test_regular_semantics();
     test_equivalence_checks();
@@ -261,7 +392,11 @@ namespace sequoia::testing
     std::vector<float> refs{-4.3, 2.8, 6.2, 7.3}, ans{1.1, -4.3, 2.8, 6.2, 8.4, 7.3};
       
     check_range(LINE("Iterators demarcate identical elements"), refs.cbegin(), refs.cbegin()+3, ans.cbegin()+1, ans.cbegin()+4);
+  }
 
+  
+  void false_negative_diagnostics::test_strings()
+  {
     check_equality(LINE("Differing strings"), std::string{"Hello, World!"}, std::string{"Hello, World!"});
   }
 

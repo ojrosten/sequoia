@@ -23,6 +23,7 @@ namespace sequoia:: testing
 
     void basic_tests();
     void test_container_checks();
+    void test_strings();
     void test_mixed();
     void test_regular_semantics();
     void test_equivalence_checks();
@@ -41,6 +42,7 @@ namespace sequoia:: testing
 
     void basic_tests();
     void test_container_checks();
+    void test_strings();
     void test_mixed();
     void test_regular_semantics();
     void test_equivalence_checks();
