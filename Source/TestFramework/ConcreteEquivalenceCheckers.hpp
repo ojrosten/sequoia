@@ -52,8 +52,9 @@ namespace sequoia::testing
         }
       };
 
-      const bool detail{(obtained.size() != 1) || (prediction.size() != 1) };
-      const auto message{detail ? prediction_message(make(obtained), make(prediction)) : ""};
+      const bool truncation{(lpos > 0) || (lpos + count < obtained.size()) || (lpos + count < prediction.size())};
+      const auto message{append_lines(truncation ? "Surrounding substring(s):" : "Full strings:",
+                                      prediction_message(make(obtained), make(prediction)))};
         
       if constexpr(invocable<tutor<Advisor>, Char, Char>)
       {

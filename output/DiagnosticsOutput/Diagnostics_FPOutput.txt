@@ -307,6 +307,7 @@
 	  Obtained : w
 	  Predicted: H
 
+	  Full strings:
 	  Obtained : what?!
 	  Predicted: Hello, World!
 
@@ -324,6 +325,7 @@
 	  Obtained : w
 	  Predicted: W
 
+	  Full strings:
 	  Obtained : Hello, world?
 	  Predicted: Hello, World!
 
@@ -341,6 +343,7 @@
 	  Obtained : 0
 	  Predicted: 110
 
+	  Surrounding substring(s):
 	  Obtained : 
 	  Predicted: This is a message which is sufficiently long for only a segm...
 
@@ -358,6 +361,7 @@
 	  Obtained : 110
 	  Predicted: 0
 
+	  Surrounding substring(s):
 	  Obtained : This is a message which is sufficiently long for only a segm...
 	  Predicted: 
 
@@ -375,6 +379,7 @@
 	  Obtained : 14
 	  Predicted: 110
 
+	  Surrounding substring(s):
 	  Obtained : This is a mess
 	  Predicted: This is a message which is sufficiently long for only a segm...
 
@@ -392,6 +397,7 @@
 	  Obtained : 110
 	  Predicted: 14
 
+	  Surrounding substring(s):
 	  Obtained : This is a message which is sufficiently long for only a segm...
 	  Predicted: This is a mess
 
@@ -409,6 +415,7 @@
 	  Obtained : x
 	  Predicted: d
 
+	  Surrounding substring(s):
 	  Obtained : ...for only a segment to be incluxed when a string diff is perf...
 	  Predicted: ...for only a segment to be included when a string diff is perf...
 
@@ -426,6 +433,7 @@
 	  Obtained : d
 	  Predicted: x
 
+	  Surrounding substring(s):
 	  Obtained : ...for only a segment to be included when a string diff is perf...
 	  Predicted: ...for only a segment to be incluxed when a string diff is perf...
 
@@ -443,6 +451,7 @@
 	  Obtained : x
 	  Predicted: ' '
 
+	  Surrounding substring(s):
 	  Obtained : ...included when a string diff isxperformed
 	  Predicted: ...included when a string diff is performed
 
@@ -460,6 +469,7 @@
 	  Obtained : ' '
 	  Predicted: x
 
+	  Surrounding substring(s):
 	  Obtained : ...included when a string diff is performed
 	  Predicted: ...included when a string diff isxperformed
 
@@ -682,6 +692,7 @@
 	  Obtained : 3
 	  Predicted: 2
 
+	  Full strings:
 	  Obtained : foo
 	  Predicted: fo
 
@@ -700,6 +711,7 @@
 	  Obtained : o
 	  Predicted: b
 
+	  Full strings:
 	  Obtained : foo
 	  Predicted: fob
 	  Advice: Sort your chars out!
@@ -722,6 +734,10 @@
 	    Obtained : b
 	    Predicted: c
 
+	    Full strings:
+	    Obtained : b
+	    Predicted: c
+
 	=======================================
 
 	../Tests/TestFramework/CoreDiagnostics.cpp, Line 186
@@ -740,6 +756,9 @@
 	    Obtained : b
 	    Predicted: c
 
+	    Full strings:
+	    Obtained : b
+	    Predicted: c
 	    Advice: Ah, chars. So easy to get wrong.
 
 	=======================================
@@ -884,6 +903,7 @@
 	    Obtained : ,
 	    Predicted: '\n'
 
+	    Full strings:
 	    Obtained : hello, world
 
 	    Predicted: hello
@@ -928,6 +948,7 @@
 	    Obtained : ,
 	    Predicted: '\n'
 
+	    Full strings:
 	    Obtained : hello, world
 
 	    Predicted: hello
@@ -1157,24 +1178,24 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-	Fast Task duration: 0.0014018s +- 4 * 1.82865e-05
-	Slow Task duration: 0.00136984s +- 4 * 6.78386e-05 [0.9772; (2, 2)]
+	Fast Task duration: 0.00120878s +- 4 * 0.000107633
+	Slow Task duration: 0.00148344s +- 4 * 0.000614994 [1.22722; (2, 2)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-	Fast Task duration: 0.00131626s +- 4 * 0.000102634
-	Slow Task duration: 0.00133893s +- 4 * 4.35063e-05 [1.01723; (2, 3)]
+	Fast Task duration: 0.00109282s +- 4 * 6.50178e-05
+	Slow Task duration: 0.00112252s +- 4 * 0.000114446 [1.02718; (2, 3)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-	Fast Task duration: 0.00126244s +- 4 * 7.68668e-05
-	Slow Task duration: 0.00473474s +- 4 * 0.000475416 [3.75046; (2, 2.5)]
+	Fast Task duration: 0.0011717s +- 4 * 0.000108818
+	Slow Task duration: 0.00434293s +- 4 * 0.000265047 [3.70652; (2, 2.5)]
 
 	=======================================
 
@@ -7138,8 +7159,8 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67
 	Performance Test which should pass
 
-	Fast Task duration: 0.0012696s +- 4 * 6.89717e-05
-	Slow Task duration: 0.00222363s +- 4 * 0.000121053 [1.75144; (1.8, 2.1)]
+	Fast Task duration: 0.00122518s +- 4 * 0.000143361
+	Slow Task duration: 0.0025597s +- 4 * 0.000307532 [2.08924; (1.8, 2.1)]
 
 
 	=======================================
@@ -7148,8 +7169,8 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68
 	Performance Test which should pass
 
-	Fast Task duration: 0.00120129s +- 4 * 0.000146079
-	Slow Task duration: 0.00423205s +- 4 * 0.000193612 [3.52293; (3.6, 4.1)]
+	Fast Task duration: 0.00126025s +- 4 * 0.0001629
+	Slow Task duration: 0.00441156s +- 4 * 0.000358456 [3.50054; (3.6, 4.1)]
 
 
 	=======================================
