@@ -11,10 +11,10 @@
 
 namespace sequoia::testing
 {
-  class iterator_test final : public ordered_test
+  class iterator_test final : public regular_test
   {
   public:
-    using ordered_test::ordered_test;
+    using regular_test::regular_test;
 
     [[nodiscard]]
     std::string_view source_file() const noexcept final;
