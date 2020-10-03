@@ -4,18 +4,14 @@ BUILD_ROOT       := ../build/clang
 BUILD_DIR        := $(BUILD_ROOT)/TestAll
 SOURCE_BUILD_DIR := $(BUILD_DIR)/Source
 UT_BUILD_DIR     := $(BUILD_DIR)/Tests
+SOURCE_DIR       := ../Source
 UT_DIR           := ../Tests
-OUTPUT_DIR       := ../output/TestSummaries/Tests
-
-LIB_DIRS    := ../Source/Core ../Source/Maths ../Source/Algorithms ../Source/Parsing ../Source/TestFramework ../TestCommon
 
 UT_SUB_DIRS := $(filter-out ../Tests, $(shell find $(UT_DIR) -type d))
-LIB_SUB_DIRS := $(shell find $(LIB_DIRS) -type d)
+SOURCE_SUB_DIRS := $(filter-out ../Source, $(shell find $(SOURCE_DIR) -type d))
 
 BUILD_SUB_DIRS := $(addprefix $(UT_BUILD_DIR)/, $(UT_SUB_DIRS))
-BUILD_SUB_DIRS += $(addprefix $(UT_BUILD_DIR)/, $(LIB_SUB_DIRS))
-
-OUTPUT_SUB_DIRS := $(addprefix $(OUTPUT_DIR)/, $(UT_SUB_DIRS))
+BUILD_SUB_DIRS += $(addprefix $(SOURCE_BUILD_DIR)/, $(SOURCE_SUB_DIRS))
 
 .PHONY: all clean subdirs
 
@@ -30,18 +26,20 @@ CFLAGS := -Wall -Wextra -Wpedantic -std=c++2a -O0 \
 	  -ftemplate-backtrace-limit=0	       \
 	  $(PREPROP)						   \
 	  $(patsubst %,-I%, $(UT_SUB_DIRS))      \
-      $(patsubst %,-I%, $(LIB_SUB_DIRS))
+      $(patsubst %,-I%, $(SOURCE_SUB_DIRS))
 
+CFLAGS += -I../TestCommon
 CFLAGS += -I/usr/local/opt/llvm/include -I/usr/local/opt/llvm/include/c++/v1/
 
 EXE := $(BUILD_DIR)/TestAll.exe
 
 UT_SRCS := TestMain.cpp
 UT_SRCS += $(shell find $(UT_DIR) -name '*.cpp')
+
 UT_OBJS := $(addprefix $(UT_BUILD_DIR)/, $(UT_SRCS:%.cpp=%.o))
 UT_DEPS := $(addprefix $(UT_BUILD_DIR)/, $(UT_SRCS:%.cpp=%.d))
 
-LIB_SRCS := $(shell find $(LIB_SUB_DIRS) -name '*.cpp')
+LIB_SRCS := $(shell find $(SOURCE_SUB_DIRS) -name '*.cpp')
 LIB_OBJS := $(addprefix $(UT_BUILD_DIR)/, $(LIB_SRCS:%.cpp=%.o))
 LIB_DEPS := $(addprefix $(UT_BUILD_DIR)/, $(LIB_SRCS:%.cpp=%.d))
 
@@ -63,7 +61,6 @@ subdirs :
 	-mkdir $(SOURCE_BUILD_DIR)
 	-mkdir $(UT_BUILD_DIR)
 	-mkdir $(BUILD_SUB_DIRS)
-	-mkdir $(OUTPUT_SUB_DIRS)
 
 clean :
 	rm -r $(BUILD_DIR)
