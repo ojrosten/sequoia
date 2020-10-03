@@ -676,17 +676,14 @@
 	With equivalent types:
 	[char [3]]
 
-	  [std::basic_string_view<char, std::char_traits<char> >]
+	  Obtained string is too long
+	  [unsigned long]
 	  operator== returned false
+	  Obtained : 3
+	  Predicted: 2
 
-	    Obtained string is too long
-	    [unsigned long]
-	    operator== returned false
-	    Obtained : 3
-	    Predicted: 2
-
-	    Obtained : foo
-	    Predicted: fo
+	  Obtained : foo
+	  Predicted: fo
 
 	=======================================
 
@@ -697,18 +694,15 @@
 	With equivalent types:
 	[char [4]]
 
-	  [std::basic_string_view<char, std::char_traits<char> >]
+	  First difference detected at character 2:
+	  [char]
 	  operator== returned false
+	  Obtained : o
+	  Predicted: b
 
-	    First difference detected at character 2:
-	    [char]
-	    operator== returned false
-	    Obtained : o
-	    Predicted: b
-
-	    Obtained : foo
-	    Predicted: fob
-	    Advice: Sort your chars out!
+	  Obtained : foo
+	  Predicted: fob
+	  Advice: Sort your chars out!
 
 	=======================================
 
@@ -722,17 +716,14 @@
 	  With equivalent types:
 	  [std::basic_string_view<char, std::char_traits<char> >]
 
-	    [std::basic_string_view<char, std::char_traits<char> >]
+	    First difference detected at character 0:
+	    [char]
 	    operator== returned false
+	    Obtained : b
+	    Predicted: c
 
-	      First difference detected at character 0:
-	      [char]
-	      operator== returned false
-	      Obtained : b
-	      Predicted: c
-
-	      Obtained : b
-	      Predicted: c
+	    Obtained : b
+	    Predicted: c
 
 	=======================================
 
@@ -746,18 +737,15 @@
 	  With equivalent types:
 	  [std::basic_string_view<char, std::char_traits<char> >]
 
-	    [std::basic_string_view<char, std::char_traits<char> >]
+	    First difference detected at character 0:
+	    [char]
 	    operator== returned false
+	    Obtained : b
+	    Predicted: c
 
-	      First difference detected at character 0:
-	      [char]
-	      operator== returned false
-	      Obtained : b
-	      Predicted: c
-
-	      Obtained : b
-	      Predicted: c
-	      Advice: Ah, chars. So easy to get wrong.
+	    Obtained : b
+	    Predicted: c
+	    Advice: Ah, chars. So easy to get wrong.
 
 	=======================================
 
@@ -1174,24 +1162,24 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-	Fast Task duration: 0.00121321s +- 4 * 0.000121447
-	Slow Task duration: 0.00113941s +- 4 * 0.000110351 [0.939174; (2, 2)]
+	Fast Task duration: 0.00132776s +- 4 * 0.000139139
+	Slow Task duration: 0.00136287s +- 4 * 8.17077e-05 [1.02644; (2, 2)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-	Fast Task duration: 0.00112856s +- 4 * 0.000101656
-	Slow Task duration: 0.00125025s +- 4 * 9.77153e-05 [1.10783; (2, 3)]
+	Fast Task duration: 0.00133269s +- 4 * 3.68514e-05
+	Slow Task duration: 0.00129651s +- 4 * 0.000141776 [0.972852; (2, 3)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-	Fast Task duration: 0.00122596s +- 4 * 0.000114117
-	Slow Task duration: 0.00445567s +- 4 * 0.000147405 [3.63444; (2, 2.5)]
+	Fast Task duration: 0.00138207s +- 4 * 8.96371e-05
+	Slow Task duration: 0.00480041s +- 4 * 0.000401947 [3.47334; (2, 2.5)]
 
 	=======================================
 
@@ -7155,8 +7143,8 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67
 	Performance Test which should pass
 
-	Fast Task duration: 0.00121349s +- 4 * 0.000102234
-	Slow Task duration: 0.00227992s +- 4 * 0.000256669 [1.87881; (1.8, 2.1)]
+	Fast Task duration: 0.00124754s +- 4 * 0.000113602
+	Slow Task duration: 0.00227005s +- 4 * 0.000205877 [1.81961; (1.8, 2.1)]
 
 
 	=======================================
@@ -7165,8 +7153,8 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68
 	Performance Test which should pass
 
-	Fast Task duration: 0.00113988s +- 4 * 0.000100964
-	Slow Task duration: 0.00447686s +- 4 * 0.000281623 [3.92748; (3.6, 4.1)]
+	Fast Task duration: 0.00121333s +- 4 * 0.000132281
+	Slow Task duration: 0.00416866s +- 4 * 0.000186189 [3.4357; (3.6, 4.1)]
 
 
 	=======================================

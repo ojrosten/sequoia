@@ -19,6 +19,98 @@
 
 namespace sequoia::testing
 {
+  template<class Char, class Traits>
+  struct detailed_equality_checker<std::basic_string_view<Char, Traits>>
+  {
+    using string_view_type = std::basic_string_view<Char, Traits>;
+  private:
+    using size_type = typename string_view_type::size_type;
+
+    template<class Advisor>
+    static auto make_advisor(string_view_type obtained, string_view_type prediction, size_type pos, const tutor<Advisor>& advisor)
+    {
+      
+      constexpr auto npos{string_view_type::npos};
+      constexpr size_type offset{30}, count{60};
+
+      const auto sz{std::min(obtained.size(), prediction.size())};
+
+      if(pos == npos) pos = sz;
+
+      const auto lpos{pos < offset ? 0 :
+                         pos < sz  ? pos - offset : sz - std::min(sz, offset)};
+
+      auto make{
+        [lpos](string_view_type sv){
+          std::string mess{lpos > 0 ? "..." : ""};
+          mess.append(sv.substr(lpos, count));
+
+          if(lpos + count < sv.size())
+            mess.append("...");
+
+          return mess;
+        }
+      };
+      
+      const auto message{prediction_message(make(obtained), make(prediction))};
+        
+      if constexpr(invocable<tutor<Advisor>, Char, Char>)
+      {
+
+        return tutor{
+          [message, advisor] (Char a, Char b) {
+
+            auto m{message};
+            return append_advice(m, {advisor, a, b});            
+          },
+          "\n"
+        };
+      }
+      else
+      {
+        return tutor{
+          [message](Char, Char) { return message; },
+          "\n"
+        };
+      }
+    }
+  public:
+    template<test_mode Mode, class Advisor>
+    static void check(test_logger<Mode>& logger, string_view_type obtained, string_view_type prediction, const tutor<Advisor>& advisor)
+    {
+      auto iters{std::mismatch(obtained.begin(), obtained.end(), prediction.begin(), prediction.end())};
+      if((iters.first != obtained.end()) || (iters.second != prediction.end()))
+      {
+        if(iters.first != obtained.end())
+        {
+          const auto dist{std::distance(obtained.begin(), iters.first)};          
+          auto adv{make_advisor(obtained, prediction, dist, advisor)};
+
+          if(iters.second != prediction.end())
+          {
+            const auto mess{
+              std::string{"First difference detected at character "}
+                .append(std::to_string(dist))
+                .append(":")
+             };
+          
+            check_equality(mess, logger, *(iters.first), *(iters.second), adv);
+          }
+          else
+          {
+            check_equality("Obtained string is too long", logger, obtained.size(), prediction.size(), adv);
+          }
+        }
+        else if(iters.second != prediction.end())
+        {
+          auto adv{make_advisor(obtained, prediction, string_view_type::npos, advisor)};
+          check_equality("Obtained string is too short", logger, obtained.size(), prediction.size(), adv);
+        }
+      }
+    }
+  };
+
+  
   /*! \brief Checks equivalence of std::basic_string to char[] and string_view */
   template<class Char, class Traits, alloc Allocator>
   struct equivalence_checker<std::basic_string<Char, Traits, Allocator>>
@@ -26,15 +118,19 @@ namespace sequoia::testing
     using string_type = std::basic_string<Char, Traits, Allocator>;
     
     template<test_mode Mode, std::size_t N, class Advisor>
-    static void check(test_logger<Mode>& logger, const string_type& s, char const (&prediction)[N], tutor<Advisor> advisor)
+    static void check(test_logger<Mode>& logger, const string_type& obtained, char const (&prediction)[N], tutor<Advisor> advisor)
     {
-      check_equality("", logger, std::string_view{s}, std::string_view{prediction}, std::move(advisor));
+       using checker = detailed_equality_checker<std::basic_string_view<Char, Traits>>;
+      
+       checker::check(logger, std::string_view{obtained}, std::string_view{prediction}, std::move(advisor));
     }
 
     template<test_mode Mode, class Advisor>
-    static void check(test_logger<Mode>& logger, const string_type& s, std::basic_string_view<Char, Traits> prediction, tutor<Advisor> advisor)
+    static void check(test_logger<Mode>& logger, const string_type& obtained, std::basic_string_view<Char, Traits> prediction, tutor<Advisor> advisor)
     {
-      check_equality("", logger, std::string_view{s}, prediction, std::move(advisor));
+       using checker = detailed_equality_checker<std::basic_string_view<Char, Traits>>;
+      
+      checker::check(logger, std::string_view{obtained}, std::string_view{prediction}, std::move(advisor));
     }
   };
 
