@@ -1,6 +1,6 @@
 False Positive Diagnostics
-[12ms]
+[9ms]
 False Positive Checks:                    66;  Failures:  0
 False Negative Diagnostics
-[8ms]
+[7ms]
 False Negative Checks:                    21;  Failures:  0

@@ -51,8 +51,9 @@ namespace sequoia::testing
           return mess;
         }
       };
-      
-      const auto message{prediction_message(make(obtained), make(prediction))};
+
+      const bool detail{(obtained.size() != 1) || (prediction.size() != 1) };
+      const auto message{detail ? prediction_message(make(obtained), make(prediction)) : ""};
         
       if constexpr(invocable<tutor<Advisor>, Char, Char>)
       {

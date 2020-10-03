@@ -722,9 +722,6 @@
 	    Obtained : b
 	    Predicted: c
 
-	    Obtained : b
-	    Predicted: c
-
 	=======================================
 
 	../Tests/TestFramework/CoreDiagnostics.cpp, Line 186
@@ -743,8 +740,6 @@
 	    Obtained : b
 	    Predicted: c
 
-	    Obtained : b
-	    Predicted: c
 	    Advice: Ah, chars. So easy to get wrong.
 
 	=======================================
@@ -1162,24 +1157,24 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-	Fast Task duration: 0.00132776s +- 4 * 0.000139139
-	Slow Task duration: 0.00136287s +- 4 * 8.17077e-05 [1.02644; (2, 2)]
+	Fast Task duration: 0.0014018s +- 4 * 1.82865e-05
+	Slow Task duration: 0.00136984s +- 4 * 6.78386e-05 [0.9772; (2, 2)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-	Fast Task duration: 0.00133269s +- 4 * 3.68514e-05
-	Slow Task duration: 0.00129651s +- 4 * 0.000141776 [0.972852; (2, 3)]
+	Fast Task duration: 0.00131626s +- 4 * 0.000102634
+	Slow Task duration: 0.00133893s +- 4 * 4.35063e-05 [1.01723; (2, 3)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-	Fast Task duration: 0.00138207s +- 4 * 8.96371e-05
-	Slow Task duration: 0.00480041s +- 4 * 0.000401947 [3.47334; (2, 2.5)]
+	Fast Task duration: 0.00126244s +- 4 * 7.68668e-05
+	Slow Task duration: 0.00473474s +- 4 * 0.000475416 [3.75046; (2, 2.5)]
 
 	=======================================
 
@@ -7143,8 +7138,8 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67
 	Performance Test which should pass
 
-	Fast Task duration: 0.00124754s +- 4 * 0.000113602
-	Slow Task duration: 0.00227005s +- 4 * 0.000205877 [1.81961; (1.8, 2.1)]
+	Fast Task duration: 0.0012696s +- 4 * 6.89717e-05
+	Slow Task duration: 0.00222363s +- 4 * 0.000121053 [1.75144; (1.8, 2.1)]
 
 
 	=======================================
@@ -7153,8 +7148,8 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68
 	Performance Test which should pass
 
-	Fast Task duration: 0.00121333s +- 4 * 0.000132281
-	Slow Task duration: 0.00416866s +- 4 * 0.000186189 [3.4357; (3.6, 4.1)]
+	Fast Task duration: 0.00120129s +- 4 * 0.000146079
+	Slow Task duration: 0.00423205s +- 4 * 0.000193612 [3.52293; (3.6, 4.1)]
 
 
 	=======================================
