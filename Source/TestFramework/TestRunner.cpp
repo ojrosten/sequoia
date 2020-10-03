@@ -322,6 +322,12 @@ namespace sequoia::testing
     throw_unless_directory(m_TestRepo);
 
     process_args(argc, argv);
+
+    
+    namespace fs = std::filesystem;
+    fs::create_directory(m_OutputDir);
+    fs::create_directory(diagnostics_output_path(m_OutputDir));
+    fs::create_directory(test_summaries_path(m_OutputDir));
   }
 
   void test_runner::process_args(int argc, char** argv)

@@ -262,6 +262,12 @@ namespace sequoia::testing
     }
 
   private:
+    constexpr static std::array<std::string_view, 2>
+      st_ExcludedFiles{
+        ".DS_Store",
+        ".keep"
+    };
+    
     template<test_mode Mode>
     static void check_directory(test_logger<Mode>& logger, const std::filesystem::path& dir, const std::filesystem::path& prediction)
     {
@@ -270,9 +276,10 @@ namespace sequoia::testing
       auto generator{
         [](const fs::path& dir){
           std::vector<fs::path> paths{};
-          for(auto& p : fs::directory_iterator(dir))
+          for(const auto& p : fs::directory_iterator(dir))
           {
-            if(p.path().filename() != ".DS_Store") paths.push_back(p);
+            if(std::find(st_ExcludedFiles.begin(), st_ExcludedFiles.end(), p.path().filename()) == st_ExcludedFiles.end())
+               paths.push_back(p);
           }
 
           std::sort(paths.begin(), paths.end());

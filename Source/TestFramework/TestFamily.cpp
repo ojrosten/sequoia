@@ -90,7 +90,7 @@ namespace sequoia::testing
     if((outputMode == output_mode::write_files) && diagnosticsToWrite)
     {
       if(auto filename{diagnostics_filename()}; !filename.empty())
-      {
+      {        
         if(std::ofstream file{filename})
         {           
           for(const auto& s : summaries)
@@ -153,6 +153,8 @@ namespace sequoia::testing
     {
       m_Record.insert(filename);
     }
+
+    std::filesystem::create_directories(filename.parent_path());
 
     if(std::ofstream file{filename, mode})
     {
