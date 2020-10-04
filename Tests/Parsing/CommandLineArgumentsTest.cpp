@@ -235,6 +235,23 @@ namespace sequoia::testing
     }
 
     {
+      commandline_arguments a{"", "create", "regular_test", "maybe<class T>", "std::optional<T>"};
+
+      check_weak_equivalence(LINE("Nested modes"),
+                             parse(a.size(), a.get(),
+                                   { {"create", {"c"}, {}, fo{},
+                                        { { "regular_test",
+                                            {"regular"},
+                                            {"qualified::class_name<class T>", "equivalent type"},
+                                            fo{}
+                                          }
+                                        }
+                                      }
+                                   }),
+                             ops{{fo{}, {}, {{fo{}, {"maybe<class T>", "std::optional<T>"}}} }});
+    }
+
+    {
       commandline_arguments a{"", "create", "class", "dir", "--equivalent-type", "foo", "blah"};
 
       check_exception_thrown<std::runtime_error>(LINE(""),
