@@ -49,10 +49,10 @@ namespace sequoia::testing
 
   //=========================================== nascent_test ===========================================//
 
-  nascent_test::nascent_test(std::string_view testType, std::string_view qualifiedName, std::vector<std::string> equivalentTypes, const host_directory& hostDir, std::string_view overriddenFamily, std::string_view overriddenClassHeader)
+  nascent_test::nascent_test(std::string_view testType, std::string_view qualifiedName, creation_data data)
     : m_QualifiedClassName{qualifiedName}
     , m_TestType{testType}
-    , m_EquivalentTypes{std::move(equivalentTypes)}
+    , m_EquivalentTypes{std::move(data.equivalentTypes)}
   {
     constexpr auto npos{std::string::npos};
 
@@ -94,10 +94,10 @@ namespace sequoia::testing
       }
     }
 
-    m_ClassHeader = !overriddenClassHeader.empty() ? overriddenClassHeader : to_camel_case(m_RawClassName).append(".hpp");
-    if(!overriddenFamily.empty())
+    m_ClassHeader = !data.classHeader.empty() ? std::move(data.classHeader) : to_camel_case(m_RawClassName).append(".hpp");
+    if(!data.family.empty())
     {
-      m_Family = overriddenFamily;
+      m_Family = std::move(data.family);
     }
     else
     {
@@ -105,7 +105,7 @@ namespace sequoia::testing
       replace_all(m_Family, "_", " ");
     }
 
-    m_HostDirectory = hostDir.get(m_ClassHeader);
+    m_HostDirectory = data.host.get(m_ClassHeader);
   }
 
   [[nodiscard]]
@@ -342,7 +342,7 @@ namespace sequoia::testing
         
         data.equivalentTypes.push_back(args[2]);
         std::reverse(data.equivalentTypes.begin(), data.equivalentTypes.end());
-        m_NascentTests.push_back(nascent_test{args[0], args[1], data.equivalentTypes, data.host, data.family, data.classHeader});
+        m_NascentTests.push_back(nascent_test{args[0], args[1], data});
       }
     };
     

@@ -98,7 +98,7 @@ namespace sequoia::testing
   class nascent_test
   {
   public:
-    nascent_test(std::string_view testType, std::string_view qualifiedName, std::vector<std::string> equivalentTypes, const host_directory& hostDir, std::string_view overriddenFamily="", std::string_view overriddenClassHeader="");
+    nascent_test(std::string_view testType, std::string_view qualifiedName, creation_data data);
 
     [[nodiscard]]
     std::filesystem::path create_file(std::string_view copyright, std::string_view partName, const std::filesystem::copy_options options) const;
