@@ -100,21 +100,20 @@ namespace sequoia::testing
   }
   
   [[nodiscard]]
-  std::string exception_message(std::string_view tag, std::string_view currentMessage, std::string_view exceptionMessage, const bool exceptionsDetected)  
+  std::string exception_message(std::string_view tag, std::string_view filename, std::string_view currentMessage, std::string_view exceptionMessage, const bool exceptionsDetected)  
   {
     auto mess{append_lines(std::string{"Error -- "}.append(tag).append(" Exception:"), exceptionMessage).append("\n")};
-        
-    if(exceptionsDetected)
-    {
-      append_lines(mess, "Exception thrown during last check");
+
+    if(!currentMessage.empty())
+    {      
+      std::string_view suffix{exceptionsDetected ? "during last check" : "after check completed"};
+      append_lines(mess, std::string{"Exception thrown "}.append(suffix), "Last Recorded Message:\n", currentMessage);
     }
     else
     {
-      append_lines(mess, "Exception thrown after check completed");
+      append_lines(mess, "Exception thrown before any checks performed in file", filename);
     }
 
-    append_lines(mess, "Last Recorded Message:\n", currentMessage);
- 
     return mess;
   }
 

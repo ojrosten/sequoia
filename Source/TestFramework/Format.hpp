@@ -127,7 +127,7 @@ namespace sequoia::testing
   std::string end_block(std::string_view s, const std::size_t newlines, std::string_view footer="");
 
   [[nodiscard]]
-  std::string exception_message(std::string_view tag, std::string_view currentMessage, std::string_view exceptionMessage, const bool exceptionsDetected);
+  std::string exception_message(std::string_view tag, std::string_view filename, std::string_view currentMessage, std::string_view exceptionMessage, const bool exceptionsDetected);
 
   [[nodiscard]]
   std::string operator_message(std::string_view op, std::string_view retVal);

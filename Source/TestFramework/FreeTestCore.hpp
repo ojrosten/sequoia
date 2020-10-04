@@ -165,7 +165,7 @@ namespace sequoia::testing
     void log_critical_failure(std::string_view tag, std::string_view what)
     {
       const auto message{
-        exception_message(tag, Checker::top_level_message(), what, Checker::exceptions_detected_by_sentinel())
+        exception_message(tag, source_file_name(), Checker::top_level_message(), what, Checker::exceptions_detected_by_sentinel())
       };
       
       auto sentry{Checker::make_sentinel("")};
