@@ -60,10 +60,41 @@ namespace sequoia::testing
     std::variant<std::filesystem::path, generator> m_Data;
   };
 
-  /*! \brief Holds data for the automated creation of new tests
+  /*! \brief data supplied from the commandline for creating new tests */
 
-   */
+  struct creation_data
+  {
+    explicit creation_data(host_directory hostDir)
+      : host{std::move(hostDir)}
+      , defaultHost{host}
+    {}
+      
+    creation_data(std::filesystem::path testRepo, search_tree sourceTree)
+      : host{std::move(testRepo), std::move(sourceTree)}
+      , defaultHost{host}
+    {}
 
+    class sentinel
+    {
+    public:
+      sentinel(creation_data& creationData)
+        : m_CreationData{creationData}
+      {}
+
+      ~sentinel()
+      {
+        m_CreationData = creation_data{m_CreationData.defaultHost};
+      }
+    private:
+      creation_data& m_CreationData;
+    };
+      
+    std::vector<std::string> equivalentTypes{};
+    host_directory host, defaultHost;
+    std::string family{}, classHeader{};
+  };
+
+  /*! \brief Holds data for the automated creation of new tests */
   class nascent_test
   {
   public:
@@ -178,7 +209,6 @@ namespace sequoia::testing
     [[nodiscard]]
     concurrency_mode concurrency() const noexcept { return m_ConcurrencyMode; }
   private:
-
     using selection_map = std::map<std::string, bool, std::less<>>;
 
     std::vector<test_family> m_Families{};

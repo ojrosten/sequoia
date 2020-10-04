@@ -334,9 +334,17 @@ namespace sequoia::testing
   {    
     using namespace parsing::commandline;
 
-    std::vector<std::string> equivalentTypes{};
-    host_directory host{m_TestRepo, m_SourceSearchTree};
-    std::string family{}, classHeader{};
+    creation_data data{m_TestRepo, m_SourceSearchTree};
+
+    auto addTests{
+      [this,&data](const param_list& args) {
+        creation_data::sentinel sentry{data};
+        
+        data.equivalentTypes.push_back(args[2]);
+        std::reverse(data.equivalentTypes.begin(), data.equivalentTypes.end());
+        m_NascentTests.push_back(nascent_test{args[0], args[1], data.equivalentTypes, data.host, data.family, data.classHeader});
+      }
+    };
     
     invoke_late(argc, argv,
                 { {"test", {"t"}, {"test_family_name"},
@@ -348,29 +356,20 @@ namespace sequoia::testing
                      m_SelectedSources.emplace(args.front(), false); }
                   },
                   {"create", {"c"}, { "test type", "qualified::class_name<class T>", "equivalent type" },
-                   [this,&equivalentTypes,&host,&family,&classHeader](const param_list& args) {
-                       equivalentTypes.push_back(args[2]);
-                       std::reverse(equivalentTypes.begin(), equivalentTypes.end());
-                       m_NascentTests.push_back(nascent_test{args[0], args[1], equivalentTypes, host, family, classHeader});
-                       
-                       equivalentTypes.clear();
-                       host = host_directory{m_TestRepo, m_SourceSearchTree};
-                       family.clear();
-                       classHeader.clear();
-                     },
+                     addTests,
                      { {"--equivalent-type", {"-e"}, {"equivalent type"},
-                         [&equivalentTypes](const param_list& args){
+                           [&equivalentTypes{data.equivalentTypes}](const param_list& args){
                            equivalentTypes.push_back(args[0]);
                          }
                        },
                        {"--host-directory", {"-h"}, {"host directory"},
-                           [&host](const param_list& args){ host = host_directory{args[0]};}
+                           [&host{data.host}](const param_list& args){ host = host_directory{args[0]};}
                        },
                        {"--family", {"-f"}, {"family"},
-                           [&family](const param_list& args){ family = args[0]; }
+                           [&family{data.family}](const param_list& args){ family = args[0]; }
                        },
                        {"--class-header", {"-ch"}, {"class header"},
-                           [&classHeader](const param_list& args){ classHeader = args[0]; }
+                           [&classHeader{data.classHeader}](const param_list& args){ classHeader = args[0]; }
                        }
                      }
                   },
