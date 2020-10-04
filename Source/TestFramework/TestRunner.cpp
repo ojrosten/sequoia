@@ -16,7 +16,27 @@
 
 namespace sequoia::testing
 {
-  using parsing::commandline::warning;
+  using namespace parsing::commandline;
+ 
+  class creation_data_setter
+  {
+  public:
+    creation_data_setter(creation_data& data, std::string testType)
+      : m_Data{data}
+      , m_TestType{std::move(testType)}
+    {}
+
+    void operator()(const param_list& args)
+    {
+      m_Data.testType = m_TestType;
+      m_Data.qualifiedName = args[0];
+      m_Data.equivalentTypes.push_back(args[1]);
+      std::reverse(m_Data.equivalentTypes.begin(), m_Data.equivalentTypes.end());
+    }    
+  private:
+    creation_data& m_Data;
+    std::string m_TestType;
+  };
 
   [[nodiscard]]
   std::string report_time(const test_family::summary& s)
@@ -49,9 +69,9 @@ namespace sequoia::testing
 
   //=========================================== nascent_test ===========================================//
 
-  nascent_test::nascent_test(std::string_view testType, std::string_view qualifiedName, creation_data data)
-    : m_QualifiedClassName{qualifiedName}
-    , m_TestType{testType}
+  nascent_test::nascent_test(creation_data data)
+    : m_QualifiedClassName{std::move(data.qualifiedName)}
+    , m_TestType{std::move(data.testType)}
     , m_EquivalentTypes{std::move(data.equivalentTypes)}
   {
     constexpr auto npos{std::string::npos};
@@ -331,19 +351,31 @@ namespace sequoia::testing
   }
 
   void test_runner::process_args(int argc, char** argv)
-  {    
-    using namespace parsing::commandline;
-
+  {
     creation_data data{m_TestRepo, m_SourceSearchTree};
 
-    auto addTests{
-      [this,&data](const param_list& args) {
+    auto addTest{
+      [this,&data] (const param_list&) {
         creation_data::sentinel sentry{data};
-        
-        data.equivalentTypes.push_back(args[2]);
-        std::reverse(data.equivalentTypes.begin(), data.equivalentTypes.end());
-        m_NascentTests.push_back(nascent_test{args[0], args[1], data});
+        m_NascentTests.push_back(nascent_test{data});
       }
+    };
+
+    const std::vector<option> createOptions{
+      {"--equivalent-type", {"-e"}, {"equivalent type"},
+        [&equivalentTypes{data.equivalentTypes}](const param_list& args){
+           equivalentTypes.push_back(args[0]);
+        }
+      },
+      {"--host-directory", {"-h"}, {"host directory"},
+        [&host{data.host}](const param_list& args){ host = host_directory{args[0]};}
+      },
+      {"--family", {"-f"}, {"family"},
+        [&family{data.family}](const param_list& args){ family = args[0]; }
+      },
+      {"--class-header", {"-ch"}, {"class header"},
+        [&classHeader{data.classHeader}](const param_list& args){ classHeader = args[0]; }
+      }                                         
     };
     
     invoke_late(argc, argv,
@@ -355,23 +387,14 @@ namespace sequoia::testing
                    [this](const param_list& args) {
                      m_SelectedSources.emplace(args.front(), false); }
                   },
-                  {"create", {"c"}, { "test type", "qualified::class_name<class T>", "equivalent type" },
-                     addTests,
-                     { {"--equivalent-type", {"-e"}, {"equivalent type"},
-                           [&equivalentTypes{data.equivalentTypes}](const param_list& args){
-                           equivalentTypes.push_back(args[0]);
-                         }
-                       },
-                       {"--host-directory", {"-h"}, {"host directory"},
-                           [&host{data.host}](const param_list& args){ host = host_directory{args[0]};}
-                       },
-                       {"--family", {"-f"}, {"family"},
-                           [&family{data.family}](const param_list& args){ family = args[0]; }
-                       },
-                       {"--class-header", {"-ch"}, {"class header"},
-                           [&classHeader{data.classHeader}](const param_list& args){ classHeader = args[0]; }
-                       }
+                  {"create", {"c"}, {}, addTest,
+                   { {"regular_test", {"regular"}, {"qualified::class_name<class T>", "equivalent type"},
+                      creation_data_setter{data, "regular_test"}, createOptions
+                     },
+                     {"move_only_test", {"move_only"}, {"qualified::class_name<class T>", "equivalent type"},
+                      creation_data_setter{data, "move_only_test"}, createOptions
                      }
+                   }
                   },
                   {"--async", {"-a"}, {},
                    [this](const param_list&) {

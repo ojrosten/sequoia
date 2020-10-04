@@ -93,11 +93,20 @@ namespace sequoia::parsing::commandline
         {
           auto& currentOperation{operations.back()};
           auto& params{currentOperation.parameters};
-          params.push_back(arg);
-          
-          if((params.size() == optionsIter->parameters.size()))
+
+          if(params.size() == optionsIter->parameters.size())
           {
+            --m_Index;
             optionsIter = process_nested_options(optionsIter, options.end(), currentOperation);
+          }
+          else
+          {
+            params.push_back(arg);
+
+            if(params.size() == optionsIter->parameters.size())
+            {
+              optionsIter = process_nested_options(optionsIter, options.end(), currentOperation);
+            }
           }
         }
       }
@@ -142,7 +151,7 @@ namespace sequoia::parsing::commandline
       throw std::logic_error{error("Commandline option not bound to a function object")};
 
     operations.push_back(operation{optionsIter->fn, {}});
-    if(optionsIter->parameters.empty())
+    if(optionsIter->parameters.empty() && optionsIter->nested_options.empty())
       optionsIter = optionsEnd;
 
     return optionsIter;

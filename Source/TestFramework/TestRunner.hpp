@@ -91,14 +91,14 @@ namespace sequoia::testing
       
     std::vector<std::string> equivalentTypes{};
     host_directory host, defaultHost;
-    std::string family{}, classHeader{};
+    std::string testType{}, qualifiedName{}, family{}, classHeader{};
   };
 
   /*! \brief Holds data for the automated creation of new tests */
   class nascent_test
   {
   public:
-    nascent_test(std::string_view testType, std::string_view qualifiedName, creation_data data);
+    explicit nascent_test(creation_data data);
 
     [[nodiscard]]
     std::filesystem::path create_file(std::string_view copyright, std::string_view partName, const std::filesystem::copy_options options) const;
