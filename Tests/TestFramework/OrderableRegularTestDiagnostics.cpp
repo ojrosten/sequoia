@@ -11,17 +11,17 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::string_view orderable_false_positive_regular_diagnostics::source_file() const noexcept
+  std::string_view orderable_regular_false_positive_diagnostics::source_file() const noexcept
   {
     return __FILE__;
   }
 
-  void orderable_false_positive_regular_diagnostics::run_tests()
+  void orderable_regular_false_positive_diagnostics::run_tests()
   {
     test_regular_semantics();
   }
 
-  void orderable_false_positive_regular_diagnostics::test_regular_semantics()
+  void orderable_regular_false_positive_diagnostics::test_regular_semantics()
   {
     {
       using beast = orderable_regular_beast<int>;
@@ -68,17 +68,17 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string_view orderable_false_negative_regular_diagnostics::source_file() const noexcept
+  std::string_view orderable_regular_false_negative_diagnostics::source_file() const noexcept
   {
     return __FILE__;
   }
 
-  void orderable_false_negative_regular_diagnostics::run_tests()
+  void orderable_regular_false_negative_diagnostics::run_tests()
   {
     test_regular_semantics();
   }
 
-  void orderable_false_negative_regular_diagnostics::test_regular_semantics()
+  void orderable_regular_false_negative_diagnostics::test_regular_semantics()
   {
     using beast = orderable_regular_beast<int>;
 

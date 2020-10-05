@@ -307,9 +307,10 @@ namespace sequoia::testing
         replace_all(text, "template<?> ", "");
       }
 
+      const auto testTypeRelacement{m_TestType + "_"};
       replace_all(text, "::?_class", m_QualifiedClassName);
       replace_all(text, "?_class", m_RawClassName);
-      replace_all(text, "?_test", m_TestType);
+      replace_all(text, "?_", testTypeRelacement);
       replace_all(text, "?Test", to_camel_case(m_TestType));
       replace_all(text, "?Class.hpp", m_ClassHeader);
       replace_all(text, "?Class", to_camel_case(m_RawClassName));
@@ -389,10 +390,10 @@ namespace sequoia::testing
                   },
                   {"create", {"c"}, {}, addTest,
                    { {"regular_test", {"regular"}, {"qualified::class_name<class T>", "equivalent type"},
-                      creation_data_setter{data, "regular_test"}, createOptions
+                      creation_data_setter{data, "regular"}, createOptions
                      },
                      {"move_only_test", {"move_only"}, {"qualified::class_name<class T>", "equivalent type"},
-                      creation_data_setter{data, "move_only_test"}, createOptions
+                      creation_data_setter{data, "move_only"}, createOptions
                      }
                    }
                   },

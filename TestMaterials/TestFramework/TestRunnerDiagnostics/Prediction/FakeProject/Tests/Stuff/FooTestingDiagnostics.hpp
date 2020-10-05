@@ -9,10 +9,10 @@
 
 namespace sequoia::testing
 {
-  class foo_false_positive_test final : public false_positive_move_only_test
+  class foo_false_positive_test final : public move_only_false_positive_test
   {
   public:
-    using false_positive_move_only_test::false_positive_move_only_test;    
+    using move_only_false_positive_test::move_only_false_positive_test;    
 
     [[nodiscard]]
     std::string_view source_file() const noexcept final;

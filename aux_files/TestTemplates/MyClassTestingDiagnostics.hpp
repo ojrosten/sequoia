@@ -9,10 +9,10 @@
 
 namespace sequoia::testing
 {
-  class ?_class_false_positive_test final : public false_positive_?_test
+  class ?_class_false_positive_test final : public ?_false_positive_test
   {
   public:
-    using false_positive_?_test::false_positive_?_test;    
+    using ?_false_positive_test::?_false_positive_test;    
 
     [[nodiscard]]
     std::string_view source_file() const noexcept final;

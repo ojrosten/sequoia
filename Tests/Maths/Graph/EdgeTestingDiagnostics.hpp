@@ -4,10 +4,10 @@
 
 namespace sequoia::testing
 {
-  class test_edge_false_positives final : public false_positive_regular_test
+  class test_edge_false_positives final : public regular_false_positive_test
   {
   public:
-    using false_positive_regular_test::false_positive_regular_test;    
+    using regular_false_positive_test::regular_false_positive_test;    
 
     [[nodiscard]]
     std::string_view source_file() const noexcept final;

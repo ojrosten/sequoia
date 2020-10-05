@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "RegularTestCore.hpp"
+#include "RegularCore.hpp"
 #include "Couple.hpp"
 
 namespace sequoia::testing

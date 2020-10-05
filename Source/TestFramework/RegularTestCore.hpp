@@ -81,6 +81,6 @@ namespace sequoia::testing
 
   /*! \anchor regular_test_alias */
   using regular_test                = canonical_regular_test<test_mode::standard>;
-  using false_negative_regular_test = canonical_regular_test<test_mode::false_negative>;
-  using false_positive_regular_test = canonical_regular_test<test_mode::false_positive>;  
+  using regular_false_negative_test = canonical_regular_test<test_mode::false_negative>;
+  using regular_false_positive_test = canonical_regular_test<test_mode::false_positive>;  
 }

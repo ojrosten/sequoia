@@ -11,10 +11,10 @@
 
 namespace sequoia:: testing
 {
-  class false_positive_diagnostics final : public false_positive_regular_test
+  class false_positive_diagnostics final : public regular_false_positive_test
   {
   public:
-    using false_positive_regular_test::false_positive_regular_test;
+    using regular_false_positive_test::regular_false_positive_test;
 
     [[nodiscard]]
     std::string_view source_file() const noexcept final;
@@ -30,10 +30,10 @@ namespace sequoia:: testing
     void test_weak_equivalence_checks();
   };
 
-  class false_negative_diagnostics final : public false_negative_regular_test
+  class false_negative_diagnostics final : public regular_false_negative_test
   {
   public:
-    using false_negative_regular_test::false_negative_regular_test;
+    using regular_false_negative_test::regular_false_negative_test;
 
     [[nodiscard]]
     std::string_view source_file() const noexcept final;
