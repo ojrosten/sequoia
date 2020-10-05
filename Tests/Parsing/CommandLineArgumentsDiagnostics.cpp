@@ -57,5 +57,15 @@ namespace sequoia::testing
           return parse(a.size(), a.get(), { {"--async", {"-a"}, {}, fo{}} });
         });
     }
+
+    {
+      check_weak_equivalence(LINE("Mismatched zeroth argument"), parse(0, nullptr, {}), outcome{"foo", {}});
+    }
+
+    {
+      commandline_arguments a{"foo", "--async"};
+      
+      check_weak_equivalence(LINE("Function object not generated"), parse(a.size(), a.get(), { {"--async", {}, {}, fo{}} }), outcome{"foo", {{nullptr, {}}}});
+    }
   }
 }

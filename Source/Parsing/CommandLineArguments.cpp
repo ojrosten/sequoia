@@ -29,7 +29,7 @@ namespace sequoia::parsing::commandline
   }
 
   [[nodiscard]]
-  std::vector<operation> parse(int argc, char** argv, const std::vector<option>& options)
+  outcome parse(int argc, char** argv, const std::vector<option>& options)
   {
     argument_parser p{argc, argv, options};
 
@@ -48,13 +48,14 @@ namespace sequoia::parsing::commandline
 
   void invoke_late(int argc, char** argv, const std::vector<option>& options)
   {
-    invoke_late(parse(argc, argv, options));
+    invoke_late(parse(argc, argv, options).operations);
   }
 
   argument_parser::argument_parser(int argc, char** argv, const std::vector<option>& options)
     : m_ArgCount{argc}
     , m_Argv{argv}
-  {
+    , m_ZerothArg{m_ArgCount ? m_Argv[0] : ""}
+  {      
     parse(options, m_Operations);
   }
 

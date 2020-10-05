@@ -34,10 +34,16 @@ namespace sequoia::parsing::commandline
 
   struct operation
   {
-    executor fn{};
+    executor fn;
     param_list parameters;
 
     std::vector<operation> nested_operations{};
+  };
+
+  struct outcome
+  {
+    std::string zeroth_arg;
+    std::vector<operation> operations;    
   };
   
   [[nodiscard]]
@@ -47,10 +53,10 @@ namespace sequoia::parsing::commandline
   std::string warning(std::string_view message, std::string_view prefix="\n  ");
 
   [[nodiscard]]
-  std::string pluralize(const std::size_t n, std::string_view noun, std::string_view prefix=" ");
+  std::string pluralize(std::size_t n, std::string_view noun, std::string_view prefix=" ");
 
   [[nodiscard]]
-  std::vector<operation> parse(int argc, char** argv, const std::vector<option>& options);
+  outcome parse(int argc, char** argv, const std::vector<option>& options);
 
   void invoke_late(const std::vector<operation>& operations);
 
@@ -61,14 +67,15 @@ namespace sequoia::parsing::commandline
   public:
     argument_parser(int argc, char** argv, const std::vector<option>& options);
 
-    std::vector<operation> acquire()
+    outcome acquire()
     {
-      return std::move(m_Operations);
+      return {m_ZerothArg, std::move(m_Operations)};
     }
   private:
-    std::vector<operation> m_Operations;
+    std::vector<operation> m_Operations{};
     int m_Index{1}, m_ArgCount{};
     char** m_Argv{};
+    std::string m_ZerothArg{};
 
     bool parse(const std::vector<option>& options, std::vector<operation>& operations);
 

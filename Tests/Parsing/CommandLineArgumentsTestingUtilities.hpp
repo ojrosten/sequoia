@@ -20,10 +20,23 @@ namespace sequoia::testing
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const type& operation, const type& prediction)
     {
-      const bool consistent{((operation.fn != nullptr) && (prediction.fn != nullptr))
-          || ((operation.fn == nullptr) && (prediction.fn == nullptr))};
+      const bool consistent{   ((operation.fn != nullptr) && (prediction.fn != nullptr))
+                            || ((operation.fn == nullptr) && (prediction.fn == nullptr))};
       testing::check("Existence of function objects differs", logger, consistent);
       check_equality("Operation Parameters differ", logger, operation.parameters, prediction.parameters);
+    }
+  };
+
+  template<>
+  struct weak_equivalence_checker<parsing::commandline::outcome>
+  {
+    using type = sequoia::parsing::commandline::outcome;
+
+    template<test_mode Mode>
+    static void check(test_logger<Mode>& logger, const type& obtained, const type& prediction)
+    {
+      check_equality("Zeroth Argument", logger, obtained.zeroth_arg, prediction.zeroth_arg);
+      check_weak_equivalence("Operations", logger, obtained.operations, prediction.operations);
     }
   };
 

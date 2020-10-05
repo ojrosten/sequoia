@@ -24,30 +24,28 @@ namespace sequoia::testing
   void commandline_arguments_test::test_flat_parsing()
   {
     using namespace sequoia::parsing::commandline;
-    
-    using ops = std::vector<operation>;
     using fo = function_object;
     
     {
-      check_weak_equivalence(LINE(""), parse(0, nullptr, {}), ops{});
+      check_weak_equivalence(LINE(""), parse(0, nullptr, {}), outcome{});
     }
 
     {
       commandline_arguments a{"foo", "--async"};
       
-      check_weak_equivalence(LINE(""), parse(a.size(), a.get(), { {"--async", {}, {}, fo{}} }), ops{{fo{}, {}}});
+      check_weak_equivalence(LINE(""), parse(a.size(), a.get(), { {"--async", {}, {}, fo{}} }), outcome{"foo", {{fo{}, {}}}});
+    }
+
+    {
+      commandline_arguments a{"bar", "-a"};
+      
+      check_weak_equivalence(LINE(""), parse(a.size(), a.get(), { {"--async", {"-a"}, {}, fo{}} }), outcome{"bar", {{fo{}, {}}}});
     }
 
     {
       commandline_arguments a{"foo", "-a"};
       
-      check_weak_equivalence(LINE(""), parse(a.size(), a.get(), { {"--async", {"-a"}, {}, fo{}} }), ops{{fo{}, {}}});
-    }
-
-    {
-      commandline_arguments a{"foo", "-a"};
-      
-      check_weak_equivalence(LINE(""), parse(a.size(), a.get(), { {"--async", {"-as", "-a"}, {}, fo{}} }), ops{{fo{}, {}}});
+      check_weak_equivalence(LINE(""), parse(a.size(), a.get(), { {"--async", {"-as", "-a"}, {}, fo{}} }), outcome{"foo", {{fo{}, {}}}});
     }
 
     {
@@ -72,7 +70,7 @@ namespace sequoia::testing
       check_weak_equivalence(LINE(""),
                              parse(a.size(), a.get(), { {"--async", {"-a"}, {}, fo{}},
                                                       {"--verbose", {"-v"}, {}, fo{}} }),
-                             ops{{fo{}, {}}, {fo{}, {}}});
+                             outcome{"foo", {{fo{}, {}}, {fo{}, {}}}});
     }
 
     {
@@ -81,7 +79,7 @@ namespace sequoia::testing
       check_weak_equivalence(LINE(""),
                              parse(a.size(), a.get(), { {"--async", {"-a"}, {}, fo{}},
                                                       {"--verbose", {"-v"}, {}, fo{}} }),
-                             ops{{fo{}, {}}, {fo{}, {}}});
+                             outcome{"foo", {{fo{}, {}}, {fo{}, {}}}});
     }
 
     {
@@ -91,7 +89,7 @@ namespace sequoia::testing
                              parse(a.size(), a.get(), { {"--async",   {"-a"}, {}, fo{}},
                                                       {"--verbose", {"-v"}, {}, fo{}},
                                                       {"--pause",   {"-p"}, {}, fo{}} }),
-                             ops{{fo{}, {}}, {fo{}, {}}, {fo{}, {}}});
+                             outcome{"foo", {{fo{}, {}}, {fo{}, {}}, {fo{}, {}}}});
     }
 
     {
@@ -105,13 +103,13 @@ namespace sequoia::testing
     {
       commandline_arguments a{"foo", "test", "case"};
       
-      check_weak_equivalence(LINE(""), parse(a.size(), a.get(), { {"test", {}, {"case"}, fo{}} }), ops{{fo{}, {"case"}}});
+      check_weak_equivalence(LINE(""), parse(a.size(), a.get(), { {"test", {}, {"case"}, fo{}} }), outcome{"foo", {{fo{}, {"case"}}}});
     }
 
     {
       commandline_arguments a{"foo", "t", "case"};
       
-      check_weak_equivalence(LINE(""), parse(a.size(), a.get(), { {"test", {"t"}, {"case"}, fo{}} }), ops{{fo{}, {"case"}}});
+      check_weak_equivalence(LINE(""), parse(a.size(), a.get(), { {"test", {"t"}, {"case"}, fo{}} }), outcome{"foo", {{fo{}, {"case"}}}});
     }
 
     {
@@ -128,7 +126,7 @@ namespace sequoia::testing
       
       check_weak_equivalence(LINE(""),
                              parse(a.size(), a.get(), { {"create", {}, {"class_name", "directory"}, fo{}} }),
-                             ops{{fo{}, {"class", "dir"}}});
+                             outcome{"foo", {{fo{}, {"class", "dir"}}}});
     }
 
     {
@@ -137,15 +135,13 @@ namespace sequoia::testing
       check_weak_equivalence(LINE(""),
                              parse(a.size(), a.get(), { {"create",  {}, {"class_name", "directory"}, fo{}},
                                                         {"--async", {}, {}, fo{}} }),
-                             ops{{fo{}, {}}, {fo{}, {"class", "dir"}}});
+                             outcome{"foo", {{fo{}, {}}, {fo{}, {"class", "dir"}}}});
     }
   }
 
   void commandline_arguments_test::test_nested_parsing()
   {
     using namespace sequoia::parsing::commandline;
-    
-    using ops = std::vector<operation>;
     using fo = function_object;
     
     {
@@ -155,11 +151,11 @@ namespace sequoia::testing
                              parse(a.size(), a.get(), { {"create", {}, {"class_name", "directory"}, fo{},
                                                   { {"--equivalent-type", {}, {"type"}} }
                                                  } }),
-                             ops{{fo{}, {"class", "dir"}}});
+                             outcome{"", {{fo{}, {"class", "dir"}}}});
     }
 
     {
-      commandline_arguments a{"", "create", "class", "dir", "--equivalent-type", "foo"};
+      commandline_arguments a{"bar", "create", "class", "dir", "--equivalent-type", "foo"};
       
       check_weak_equivalence(LINE(""),
                              parse(a.size(), a.get(),
@@ -167,7 +163,7 @@ namespace sequoia::testing
                                         { {"--equivalent-type", {}, {"type"}} }
                                       }
                                    }),
-                             ops{{fo{}, {"class", "dir", "foo"}}});
+                             outcome{"bar", {{fo{}, {"class", "dir", "foo"}}}});
     }
 
     {
@@ -177,7 +173,7 @@ namespace sequoia::testing
                              parse(a.size(), a.get(), { {"create", {}, {"class_name", "directory"}, fo{},
                                                          { {"--equivalent-type", {}, {"type"}, fo{}} }
                                                  } }),
-                             ops{{ fo{}, {"class", "dir"}, { { fo{}, {"foo"}} } }});
+                             outcome{"", {{ fo{}, {"class", "dir"}, { { fo{}, {"foo"}} } }}});
     }
 
     {
@@ -190,7 +186,7 @@ namespace sequoia::testing
                                           {"--generate",        {}, {"file"}, fo{}} }
                                       }
                                    }),
-                             ops{{ fo{}, {"class", "dir", "foo"}, { { fo{}, {"bar"}} } }});
+                             outcome{"", {{ fo{}, {"class", "dir", "foo"}, { { fo{}, {"bar"}} } }}});
     }
 
     {
@@ -203,7 +199,7 @@ namespace sequoia::testing
                                       },
                                      {"--verbose", {"-v"}, {}, fo{}}
                                    }),
-                             ops{{fo{}, {"class", "dir", "foo"}}, {fo{}, {}}});
+                             outcome{"", {{fo{}, {"class", "dir", "foo"}}, {fo{}, {}}}});
     }
 
     {
@@ -215,9 +211,9 @@ namespace sequoia::testing
                                         { {"--equivalent-type", {}, {"type"}} }
                                       },
                                      {"--verbose", {"-v"}, {}, fo{}},
-                                     {"--verbose", {"-a"}, {}, fo{}}
+                                     {"--async", {"-a"}, {}, fo{}}
                                    }),
-                             ops{{fo{}, {"class", "dir", "foo"}}, {fo{}, {}}, {fo{}, {}}});
+                             outcome{"", {{fo{}, {"class", "dir", "foo"}}, {fo{}, {}}, {fo{}, {}}}});
     }
 
     {
@@ -229,9 +225,9 @@ namespace sequoia::testing
                                         { {"--equivalent-type", {}, {"type"}} }
                                       },
                                      {"--verbose", {"-v"}, {}, fo{}},
-                                     {"--verbose", {"-a"}, {}, fo{}}
+                                     {"--async", {"-a"}, {}, fo{}}
                                    }),
-                             ops{{fo{}, {"class", "dir", "foo"}}, {fo{}, {}}, {fo{}, {}}});
+                             outcome{"", {{fo{}, {"class", "dir", "foo"}}, {fo{}, {}}, {fo{}, {}}}});
     }
 
     {
@@ -248,7 +244,7 @@ namespace sequoia::testing
                                         }
                                       }
                                    }),
-                             ops{{fo{}, {}, {{fo{}, {"maybe<class T>", "std::optional<T>"}}} }});
+                             outcome{"", {{fo{}, {}, {{fo{}, {"maybe<class T>", "std::optional<T>"}}} }}});
     }
 
     {
