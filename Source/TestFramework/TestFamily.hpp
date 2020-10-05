@@ -14,6 +14,7 @@
 
 #include "FreeTestCore.hpp"
 #include "FileSystem.hpp"
+#include "Summary.hpp"
 
 #include <vector>
 #include <future>
@@ -94,7 +95,7 @@ namespace sequoia::testing
     std::filesystem::path diagnostics_filename() const;
 
     [[nodiscard]]
-    static std::filesystem::path test_summary_filename(const test& t, const output_mode outputMode, const std::filesystem::path& outputDir);
+    static std::filesystem::path test_summary_filename(const test& t, output_mode outputMode, const std::filesystem::path& outputDir);
 
     static void write_summary_to_file(const log_summary& summary, std::set<std::string>& record);
 
@@ -119,5 +120,5 @@ namespace sequoia::testing
   };  
 
   [[nodiscard]]
-  std::string summarize(const test_family::summary& summary, const log_verbosity suppression, indentation ind_0, indentation ind_1);
+  std::string summarize(const test_family::summary& summary, summary_detail suppression, indentation ind_0, indentation ind_1);
 }

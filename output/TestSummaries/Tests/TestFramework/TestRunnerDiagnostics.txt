@@ -1,3 +1,2 @@
 Test Runner False False Negative Diagnostics
-[81ms]
 False Negative Checks:                     1;  Failures:  0

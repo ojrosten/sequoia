@@ -158,7 +158,7 @@ namespace sequoia::testing
 
     if(std::ofstream file{filename, mode})
     {
-      file << summarize(summary, log_verbosity::failure_messages, no_indent, no_indent);
+      file << summarize(summary, summary_detail::failure_messages, no_indent, no_indent);
     }
     else
     {
@@ -167,7 +167,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string summarize(const test_family::summary& summary, const log_verbosity suppression, indentation ind_0, indentation ind_1)
+  std::string summarize(const test_family::summary& summary, const summary_detail suppression, indentation ind_0, indentation ind_1)
   {
     return summarize(summary.log, summary.execution_time, suppression, ind_0, ind_1);
   }

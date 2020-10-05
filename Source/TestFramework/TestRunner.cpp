@@ -462,9 +462,10 @@ namespace sequoia::testing
   {
     test_family::summary familySummary{results.execution_time};
     std::string output{};
+    const auto detail{summary_detail::failure_messages | summary_detail::timings};
     for(const auto& s : results.logs)
     {
-      if(m_Verbose) output += summarize(s, log_verbosity::failure_messages, tab, tab);
+      if(m_Verbose) output += summarize(s, detail, tab, tab);
       familySummary.log += s;
     }
           
@@ -474,7 +475,7 @@ namespace sequoia::testing
     }
     else
     {
-      output += summarize(familySummary, log_verbosity::failure_messages, tab, no_indent);
+      output += summarize(familySummary, detail, tab, no_indent);
     }
 
     m_Stream << output;
@@ -605,7 +606,7 @@ namespace sequoia::testing
         }
       }
       m_Stream <<  "\n-----------Grand Totals-----------\n";
-      m_Stream << summarize(summary, steady_clock::now() - time, log_verbosity::absent_checks, indentation{"\t"},  no_indent);
+      m_Stream << summarize(summary, steady_clock::now() - time, summary_detail::absent_checks | summary_detail::timings, indentation{"\t"},  no_indent);
     }
 
     check_for_missing_tests();

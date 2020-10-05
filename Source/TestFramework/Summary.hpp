@@ -5,6 +5,8 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
+#pragma once
+
 /*! \file
     \brief Utilities for summarizing results of tests.
 */
@@ -15,6 +17,21 @@
 
 namespace sequoia::testing
 {
+  /*! bit mask for the level of detail */
+  enum class summary_detail { absent_checks=1, failure_messages=2, timings=4};
+
+  [[nodiscard]]
+  constexpr summary_detail operator&(summary_detail lhs, summary_detail rhs) noexcept
+  {
+    return static_cast<summary_detail>(static_cast<int>(lhs) & static_cast<int>(rhs));
+  }
+
+  [[nodiscard]]
+  constexpr summary_detail operator|(summary_detail lhs, summary_detail rhs) noexcept
+  {
+    return static_cast<summary_detail>(static_cast<int>(lhs) | static_cast<int>(rhs));
+  }
+  
   template<class Iter> void pad_right(Iter begin, Iter end, std::string_view suffix)
   {
     auto maxIter{
@@ -56,11 +73,11 @@ namespace sequoia::testing
   std::string stringify(const log_summary::duration& d);
 
   [[nodiscard]]
-  std::string report_time(const log_summary& log, const opt_duration duration);
+  std::string report_time(const log_summary& log, opt_duration duration);
 
   [[nodiscard]]
-  std::string summarize(const log_summary& log, const opt_duration duration, const log_verbosity verbosity, indentation ind_0, indentation ind_1);
+  std::string summarize(const log_summary& log, opt_duration duration, const summary_detail verbosity, indentation ind_0, indentation ind_1);
 
   [[nodiscard]]
-  std::string summarize(const log_summary& log, const log_verbosity verbosity, indentation ind_0, indentation ind_1);
+  std::string summarize(const log_summary& log, summary_detail verbosity, indentation ind_0, indentation ind_1);
 }

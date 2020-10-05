@@ -1,6 +1,4 @@
 Orderable Regular False Positive Diagnostics
-[1ms]
 False Positive Checks:                     8;  Failures:  0
 Orderable Regular False Negative Diagnostics
-[0ms]
 False Negative Checks:                     2;  Failures:  0

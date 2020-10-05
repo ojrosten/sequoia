@@ -35,7 +35,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string summarize(const log_summary& log, const opt_duration duration, const log_verbosity verbosity, indentation ind_0, indentation ind_1)
+  std::string summarize(const log_summary& log, const opt_duration duration, const summary_detail verbosity, indentation ind_0, indentation ind_1)
   {
     constexpr std::size_t entries{6};
     
@@ -93,17 +93,19 @@ namespace sequoia::testing
 
     if(log.standard_top_level_checks())
       summaries.front().append("  [Deep checks: " + std::to_string(log.standard_deep_checks()) + "]");
-
-    auto dur{
-      [&log, &duration](){
-        return report_time(log, duration);
-      }
-    };
     
     std::string summary{testing::indent(log.name(), ind_0)};
-    append_indented(summary, dur(), ind_0);
 
-    if((verbosity & log_verbosity::absent_checks) == log_verbosity::absent_checks)
+    if((verbosity & summary_detail::timings) == summary_detail::timings)
+    {
+      append_indented(summary, report_time(log, duration), ind_0);
+    }
+    else
+    {
+      summary.append("\n");
+    }
+
+    if((verbosity & summary_detail::absent_checks) == summary_detail::absent_checks)
     {
       std::for_each(std::cbegin(summaries), std::cend(summaries), [&summary](const std::string& s){
           (summary += s) += "\n";
@@ -134,7 +136,7 @@ namespace sequoia::testing
         .append("  ******\n\n");
     }
 
-    if((verbosity & log_verbosity::failure_messages) == log_verbosity::failure_messages)
+    if((verbosity & summary_detail::failure_messages) == summary_detail::failure_messages)
     {
       append_lines(summary, log.failure_messages());
     }
@@ -143,7 +145,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string summarize(const log_summary& log, const log_verbosity verbosity, indentation ind_0, indentation ind_1)
+  std::string summarize(const log_summary& log, const summary_detail verbosity, indentation ind_0, indentation ind_1)
   {
     return summarize(log, std::nullopt, verbosity, ind_0, ind_1);
   }
