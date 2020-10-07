@@ -487,7 +487,7 @@ namespace sequoia::testing
   void test_runner::check_for_missing_tests()
   {
     auto check{
-      [&stream{m_Stream}](const selection_map& tests, std::string_view type) {
+      [&stream{m_Stream}](const auto& tests, std::string_view type) {
         for(const auto& test : tests)
         {
           if(!test.second)

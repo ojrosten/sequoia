@@ -216,10 +216,12 @@ namespace sequoia::testing
     [[nodiscard]]
     concurrency_mode concurrency() const noexcept { return m_ConcurrencyMode; }
   private:
-    using selection_map = std::map<std::string, bool, std::less<>>;
+    using family_map = std::map<std::string, bool, std::less<>>;
+    using source_map = std::map<std::filesystem::path, bool>;
 
     std::vector<test_family> m_Families{};
-    selection_map m_SelectedFamilies{}, m_SelectedSources{};
+    family_map m_SelectedFamilies{};
+    source_map m_SelectedSources{};
     std::vector<nascent_test> m_NascentTests{};
     std::string m_Copyright{};
     search_tree m_SourceSearchTree;
@@ -265,7 +267,7 @@ namespace sequoia::testing
     template<class Test, class... Tests>
     void add_tests(test_family& f, Test&& test, Tests&&... tests)
     {
-      auto i{m_SelectedSources.find(test.source_file_name())};
+      auto i{m_SelectedSources.find(test.source_filename())};
       if(i != m_SelectedSources.end())
       {
         f.add_test(std::forward<Test>(test));

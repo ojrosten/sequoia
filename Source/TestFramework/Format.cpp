@@ -100,7 +100,7 @@ namespace sequoia::testing
   }
   
   [[nodiscard]]
-  std::string exception_message(std::string_view tag, std::string_view filename, std::string_view currentMessage, std::string_view exceptionMessage, const bool exceptionsDetected)  
+  std::string exception_message(std::string_view tag, const std::filesystem::path& filename, std::string_view currentMessage, std::string_view exceptionMessage, const bool exceptionsDetected)  
   {
     auto mess{append_lines(std::string{"Error -- "}.append(tag).append(" Exception:"), exceptionMessage).append("\n")};
 
@@ -111,7 +111,7 @@ namespace sequoia::testing
     }
     else
     {
-      append_lines(mess, "Exception thrown before any checks performed in file", filename);
+      append_lines(mess, "Exception thrown before any checks performed in file", filename.string());
     }
 
     return mess;

@@ -18,7 +18,7 @@ namespace sequoia::testing
   {
     namespace fs = std::filesystem;
     const auto folderName{t.materials().empty() ?
-        fs::path{t.source_file_name()}.replace_extension() : t.materials()};
+        fs::path{t.source_filename()}.replace_extension() : t.materials()};
 
     fs::path materials{}, rel{};
     if(folderName.has_relative_path() && !m_TestRepo.empty())
@@ -142,7 +142,7 @@ namespace sequoia::testing
     
     if(outputMode == output_mode::none) return "";
 
-    const auto name{fs::path{t.source_file_name()}.replace_extension(".txt")};
+    const auto name{t.source_filename().replace_extension(".txt")};
     if(name.empty())
       throw std::logic_error("Source files should have a non-trivial name!");
 
