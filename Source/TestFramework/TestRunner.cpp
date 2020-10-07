@@ -186,7 +186,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::filesystem::path nascent_test::create_file(std::string_view copyright, std::string_view partName, const std::filesystem::copy_options options) const
+  std::filesystem::path nascent_test::create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view partName, const std::filesystem::copy_options options) const
   {
     namespace fs = std::filesystem;
     
@@ -198,8 +198,8 @@ namespace sequoia::testing
     }
 
     auto makePath{
-      [partName](){
-        return code_templates_path().append("MyClass").concat(partName);
+      [dir{codeTemplatesDir},partName](){
+        return (dir/"MyClass").concat(partName);
       }
     };
 
@@ -331,6 +331,7 @@ namespace sequoia::testing
   test_runner::test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, repositories repos, std::ostream& stream)
     : m_Copyright{copyright}          
     , m_SourceSearchTree{std::move(repos.source)}
+    , m_ProjectRoot{project_root(argc, argv)}
     , m_TestMain{std::move(testMain)}
     , m_HashIncludeTarget{std::move(hashIncludeTarget)}
     , m_TestRepo{std::move(repos.tests)}
@@ -338,12 +339,11 @@ namespace sequoia::testing
     , m_OutputDir{std::move(repos.output)}
     , m_Stream{stream}
   {
-    throw_unless_regular_file(m_TestMain, "\nEnsure the application is run from the appropriate directory");
+    throw_unless_regular_file(m_TestMain, "\nTry ensuring that the application is run from the appropriate directory");
     throw_unless_regular_file(m_HashIncludeTarget);    
     throw_unless_directory(m_TestRepo);
 
     process_args(argc, argv);
-
     
     namespace fs = std::filesystem;
     fs::create_directory(m_OutputDir);
@@ -379,7 +379,7 @@ namespace sequoia::testing
       }                                         
     };
     
-    invoke_late(argc, argv,
+    parse_invoke_depth_first(argc, argv,
                 { {"test", {"t"}, {"test_family_name"},
                    [this](const param_list& args) {
                      m_SelectedFamilies.emplace(args.front(), false); }
@@ -413,7 +413,8 @@ namespace sequoia::testing
                    [recoveryDir{recovery_path(m_OutputDir)}] (const param_list&) {
                      std::filesystem::create_directory(recoveryDir);
                      output_manager::recovery_file(recoveryDir / "Recovery.txt"); }}
-                });
+                },
+                [](std::string_view){});
 
     
     check_argument_consistency();
@@ -544,8 +545,8 @@ namespace sequoia::testing
   std::string test_runner::create_files(Iter beginNascentTests, Iter endNascentTests, const std::filesystem::copy_options options) const
   {
     auto action{
-      [options,&copyright{m_Copyright},&target{m_HashIncludeTarget}](const nascent_test& data, std::string_view stub){
-        const auto filePath{data.create_file(copyright, stub, options)};
+      [options,&root{m_ProjectRoot},&copyright{m_Copyright},&target{m_HashIncludeTarget}](const nascent_test& data, std::string_view stub){
+        const auto filePath{data.create_file(copyright, code_templates_path(root), stub, options)};
         
         if(const auto filename{filePath.filename()};
            (filename.extension() == ".hpp") && (filename.string().find("Utilities") == std::string::npos))

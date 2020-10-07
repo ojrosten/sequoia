@@ -36,12 +36,7 @@ namespace sequoia::testing
     const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
     const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
 
-    const repositories repos{
-       working().append("Source"),
-       working().append("Tests"),
-       working().append("TestMaterials"),
-       working().append("output")
-    };
+    const repositories repos{working()};
 
     std::stringstream outputStream{};
     commandline_arguments args{"", "create", "regular_test", "other::functional::maybe<class T>", "std::optional<T>"

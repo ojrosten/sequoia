@@ -15,12 +15,27 @@
 namespace sequoia::testing
 {
   void test_family::set_materials(test& t)
-  {    
+  {
     namespace fs = std::filesystem;
     const auto folderName{t.materials().empty() ?
         fs::path{t.source_file_name()}.replace_extension() : t.materials()};
-    const auto rel{fs::relative(folderName, m_TestRepo)};
-    const auto materials{m_TestMaterialsRepo / rel};
+
+    fs::path materials{}, rel{};
+    if(folderName.has_relative_path() && !m_TestRepo.empty())
+    {
+      materials = m_TestMaterialsRepo;
+      
+      auto last{*(--m_TestRepo.end())};
+      auto i{folderName.begin()};
+      while((i != folderName.end()) && ((*i == "..") || (*i == last))) ++i;
+
+      for(; i != folderName.end(); ++i)
+      {
+        rel /= *i;
+      }
+
+      materials /= rel;
+    }
 
     if(fs::exists(materials))
     {     

@@ -16,11 +16,13 @@ int main(int argc, char** argv)
 
   try
   {
+    const auto root{project_root(argc, argv)};
     test_runner runner{argc,
                        argv,
                        "Oliver J. Rosten",
-                       working_path().append("TestMain.cpp"),
-                       sibling_path("TestCommon").append("TestIncludes.hpp")
+                       root/"TestAll"/"TestChamberMain.cpp",
+                       root/"TestAll"/"TestIncludes.hpp",
+                       repositories(root)
     };
 
     const auto mode{runner.concurrency()};

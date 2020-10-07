@@ -15,12 +15,14 @@ int main(int argc, char** argv)
   using namespace testing;
 
   try
-  {    
+  {
+    const auto root{project_root(argc, argv)};
     test_runner runner{argc,
                        argv,
                        "Oliver J. Rosten",
-                       working_path().append("TestChamberMain.cpp"),
-                       sibling_path("TestCommon").append("TestIncludes.hpp")
+                       root/"TestChamber"/"TestChamberMain.cpp",
+                       root/"TestCommon" /"TestIncludes.hpp",
+                       repositories(root)
     };
   
     runner.add_test_family(

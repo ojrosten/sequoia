@@ -16,6 +16,8 @@
 #include <string>
 #include <functional>
 
+#include "Concepts.hpp"
+
 namespace sequoia::parsing::commandline
 {
   using param_list = std::vector<std::string>;
@@ -58,9 +60,22 @@ namespace sequoia::parsing::commandline
   [[nodiscard]]
   outcome parse(int argc, char** argv, const std::vector<option>& options);
 
-  void invoke_late(const std::vector<operation>& operations);
+  void invoke_depth_first(const std::vector<operation>& operations);
 
-  void invoke_late(int argc, char** argv, const std::vector<option>& options);
+  template<invocable<std::string> Fn>
+  void parse_invoke_depth_first(int argc, char** argv, const std::vector<option>& options, Fn zerothArgProcessor)
+  {
+    auto[zerothArg, ops]{parse(argc, argv, options)};
+
+    zerothArgProcessor(zerothArg);
+    
+    for(auto& op : ops)
+    {
+      invoke_depth_first(op.nested_operations);
+      
+      if(op.fn) op.fn(op.parameters);
+    }
+  }
 
   class argument_parser
   {

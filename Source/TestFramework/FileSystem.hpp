@@ -26,27 +26,12 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  inline std::filesystem::path parent_path()
-  {
-    return working_path().parent_path();
-  }  
+  std::filesystem::path project_root(int argc, char** argv, const std::filesystem::path& fallback=working_path().parent_path());
 
   [[nodiscard]]
-  inline std::filesystem::path sibling_path(std::string_view directory)
+  inline std::filesystem::path code_templates_path(std::filesystem::path projectRoot)
   {
-    return parent_path().append(directory);
-  }
-
-  [[nodiscard]]
-  inline std::filesystem::path aux_path()
-  {
-    return sibling_path("aux_files");
-  }
-
-  [[nodiscard]]
-  inline std::filesystem::path code_templates_path()
-  {
-    return aux_path().append("TestTemplates");
+    return projectRoot/"aux_files"/"TestTemplates";
   }
   
 

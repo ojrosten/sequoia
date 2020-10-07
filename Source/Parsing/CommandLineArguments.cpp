@@ -36,21 +36,16 @@ namespace sequoia::parsing::commandline
     return p.acquire();
   }
 
-  void invoke_late(const std::vector<operation>& operations)
+  void invoke_depth_first(const std::vector<operation>& operations)
   {
     for(auto& op : operations)
     {
-      invoke_late(op.nested_operations);
+      invoke_depth_first(op.nested_operations);
       
       if(op.fn) op.fn(op.parameters);
     }
   }
-
-  void invoke_late(int argc, char** argv, const std::vector<option>& options)
-  {
-    invoke_late(parse(argc, argv, options).operations);
-  }
-
+  
   argument_parser::argument_parser(int argc, char** argv, const std::vector<option>& options)
     : m_ArgCount{argc}
     , m_Argv{argv}

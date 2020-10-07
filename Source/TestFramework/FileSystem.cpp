@@ -16,6 +16,40 @@
 namespace sequoia::testing
 {
   [[nodiscard]]
+  std::filesystem::path project_root(int argc, char** argv, const std::filesystem::path& fallback)
+  {    
+    namespace fs = std::filesystem;
+
+    static fs::path p{};
+    
+    if(p.empty())
+    {
+      if(argc)
+      {
+        std::string_view zeroth{argv[0]};
+        p = fs::canonical(fs::path(zeroth)).parent_path();
+        if(!p.empty())
+        {
+          auto back{[](const fs::path& p){ return *(--p.end()); }};
+
+          while((std::distance(p.begin(), p.end()) > 1))
+          {
+            const auto last{back(p)};
+            p = p.parent_path();
+            if(last == "build") break;
+          }
+
+          return p;
+        }
+      }
+
+      p = fallback;
+    }
+
+    return p;
+  }
+
+  [[nodiscard]]
   std::string report_file_issue(const std::filesystem::path& file, std::string_view description)
   {
     auto mess{std::string{"Unable to open file "}.append(file)};

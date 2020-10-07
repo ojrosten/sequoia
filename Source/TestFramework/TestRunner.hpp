@@ -101,7 +101,7 @@ namespace sequoia::testing
     explicit nascent_test(creation_data data);
 
     [[nodiscard]]
-    std::filesystem::path create_file(std::string_view copyright, std::string_view partName, const std::filesystem::copy_options options) const;
+    std::filesystem::path create_file(std::string_view copyright, const std::filesystem::path& codeTemplatesDir, std::string_view partName, std::filesystem::copy_options options) const;
 
     [[nodiscard]]
     std::string_view family() const noexcept { return m_Family; }
@@ -136,11 +136,18 @@ namespace sequoia::testing
 
   struct repositories
   {
+    explicit repositories(const std::filesystem::path& projectRoot)
+      : source{projectRoot/"Source"}
+      , tests{projectRoot/"Tests"}
+      , test_materials{projectRoot/"TestMaterials"}
+      , output{projectRoot/"output"}
+    {}
+    
     std::filesystem::path
-      source{sibling_path("Source")},
-      tests{sibling_path("Tests")},
-      test_materials{sibling_path("TestMaterials")},
-      output{sibling_path("output")};
+      source{},
+      tests{},
+      test_materials{},
+      output{};
   };
 
   /*! \brief Consumes command-line arguments and holds all test families
@@ -167,7 +174,7 @@ namespace sequoia::testing
   class test_runner
   {
   public:    
-    test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, repositories repos=repositories{}, std::ostream& stream=std::cout);
+    test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, repositories repos, std::ostream& stream=std::cout);
 
     test_runner(const test_runner&) = delete;
     test_runner(test_runner&&)      = default;
@@ -217,6 +224,7 @@ namespace sequoia::testing
     std::string m_Copyright{};
     search_tree m_SourceSearchTree;
     std::filesystem::path
+      m_ProjectRoot{},
       m_TestMain{},
       m_HashIncludeTarget{},
       m_TestRepo{},
