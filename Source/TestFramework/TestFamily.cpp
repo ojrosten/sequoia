@@ -21,20 +21,28 @@ namespace sequoia::testing
         fs::path{t.source_filename()}.replace_extension() : t.materials()};
 
     fs::path materials{}, rel{};
-    if(folderName.has_relative_path() && !m_TestRepo.empty())
+
+    if(folderName.has_relative_path())
     {
-      materials = m_TestMaterialsRepo;
-      
-      auto last{*(--m_TestRepo.end())};
-      auto i{folderName.begin()};
-      while((i != folderName.end()) && ((*i == "..") || (*i == last))) ++i;
-
-      for(; i != folderName.end(); ++i)
+      if(!m_TestRepo.empty())
       {
-        rel /= *i;
-      }
+        materials = m_TestMaterialsRepo;
+      
+        auto last{*(--m_TestRepo.end())};
+        auto i{folderName.begin()};
+        while((i != folderName.end()) && ((*i == "..") || (*i == last))) ++i;
 
-      materials /= rel;
+        for(; i != folderName.end(); ++i)
+        {
+          rel /= *i;
+        }
+
+        materials /= rel;
+      } 
+    }    
+    else
+    {
+      rel = fs::relative(t.materials(), m_TestMaterialsRepo);
     }
 
     if(fs::exists(materials))

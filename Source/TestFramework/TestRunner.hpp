@@ -264,10 +264,13 @@ namespace sequoia::testing
 
     void check_for_missing_tests();
 
+    [[nodiscard]]
+    auto find_filename(const std::filesystem::path& filename) -> source_map::iterator;
+
     template<class Test, class... Tests>
     void add_tests(test_family& f, Test&& test, Tests&&... tests)
     {
-      auto i{m_SelectedSources.find(test.source_filename())};
+      auto i{find_filename(test.source_filename())};
       if(i != m_SelectedSources.end())
       {
         f.add_test(std::forward<Test>(test));

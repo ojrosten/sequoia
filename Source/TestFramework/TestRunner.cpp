@@ -501,6 +501,45 @@ namespace sequoia::testing
     check(m_SelectedFamilies, "Family");
     check(m_SelectedSources, "File");
   }
+
+  [[nodiscard]]
+  auto test_runner::find_filename(const std::filesystem::path& filename) -> source_map::iterator
+  {
+    auto found{m_SelectedSources.find(filename)};
+    if(found != m_SelectedSources.end())
+      return found;
+    
+    if(!m_TestRepo.empty())
+    {
+      namespace fs = std::filesystem;
+
+
+      auto rebase{
+        [last{*(--m_TestRepo.end())}](const std::filesystem::path& p){
+          auto i{p.begin()};
+
+          while((i != p.end()) && ((*i == "..") || (*i == last))) ++i;
+
+          fs::path rebased{};
+          for(; i!= p.end(); ++i)
+          {
+            rebased /= *i;
+          }
+
+          return rebased;
+        }
+      };
+
+      return std::find_if(m_SelectedSources.begin(), m_SelectedSources.end(),
+                   [&filename, rebase](const auto& element){
+                     const auto& source{element.first};
+
+                     return rebase(source) == rebase(filename);
+                   });
+    }
+    
+    return m_SelectedSources.end();
+  }
                        
   void test_runner::execute()
   {
