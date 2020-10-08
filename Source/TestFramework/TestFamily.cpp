@@ -27,15 +27,7 @@ namespace sequoia::testing
       if(!m_TestRepo.empty())
       {
         materials = m_TestMaterialsRepo;
-      
-        auto last{*(--m_TestRepo.end())};
-        auto i{folderName.begin()};
-        while((i != folderName.end()) && ((*i == "..") || (*i == last))) ++i;
-
-        for(; i != folderName.end(); ++i)
-        {
-          rel /= *i;
-        }
+        rel = rebase_from(folderName, m_TestRepo);
 
         materials /= rel;
       } 

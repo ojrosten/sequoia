@@ -511,30 +511,11 @@ namespace sequoia::testing
     
     if(!m_TestRepo.empty())
     {
-      namespace fs = std::filesystem;
-
-
-      auto rebase{
-        [last{*(--m_TestRepo.end())}](const std::filesystem::path& p){
-          auto i{p.begin()};
-
-          while((i != p.end()) && ((*i == "..") || (*i == last))) ++i;
-
-          fs::path rebased{};
-          for(; i!= p.end(); ++i)
-          {
-            rebased /= *i;
-          }
-
-          return rebased;
-        }
-      };
-
       return std::find_if(m_SelectedSources.begin(), m_SelectedSources.end(),
-                   [&filename, rebase](const auto& element){
+                          [&filename, repo{m_TestRepo}](const auto& element){
                      const auto& source{element.first};
 
-                     return rebase(source) == rebase(filename);
+                     return rebase_from(source, repo) == rebase_from(filename, repo);
                    });
     }
     

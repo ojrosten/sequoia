@@ -116,4 +116,7 @@ namespace sequoia::testing
   private:
     std::filesystem::path m_Root{};
   };
+
+  [[nodiscard]]
+  std::filesystem::path rebase_from(const std::filesystem::path& filename, const std::filesystem::path& dir);
 }

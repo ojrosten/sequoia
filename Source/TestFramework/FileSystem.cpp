@@ -94,4 +94,30 @@ namespace sequoia::testing
     throw_unless_exists(p, message);
     throw_if(p, append_lines(" is not a regular file", message), [](const fs::path& p){ return !fs::is_regular_file(p); });
   }
+
+  [[nodiscard]]
+  std::filesystem::path rebase_from(const std::filesystem::path& p, const std::filesystem::path& dir)
+  {
+    namespace fs = std::filesystem;
+
+    if(!fs::is_directory(dir))
+      return p;
+
+    if(!p.has_relative_path() && !dir.has_relative_path())
+      return fs::relative(p, dir);
+
+    auto last{*(--dir.end())};
+
+    auto i{p.begin()};
+
+    while((i != p.end()) && ((*i == "..") || (*i == last))) ++i;
+
+    fs::path rebased{};
+    for(; i!= p.end(); ++i)
+    {
+      rebased /= *i;
+    }
+
+    return rebased;
+  }
 }
