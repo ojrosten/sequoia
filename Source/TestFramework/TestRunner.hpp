@@ -77,14 +77,9 @@ namespace sequoia::testing
     class sentinel
     {
     public:
-      sentinel(creation_data& creationData)
-        : m_CreationData{creationData}
-      {}
+      sentinel(creation_data& creationData);
 
-      ~sentinel()
-      {
-        m_CreationData = creation_data{m_CreationData.defaultHost};
-      }
+      ~sentinel();      
     private:
       creation_data& m_CreationData;
     };
@@ -152,22 +147,8 @@ namespace sequoia::testing
 
   /*! \brief Consumes command-line arguments and holds all test families
 
-      The various arguments have the following effect:
-
-      test <name>                               : runs the specified test
-      source <cpp file>                         : runs all tests in the specified cpp
-      create <test type, qualified::class_name<class T>, test host directory> 
-                                                : creates infrastructure for a new test
-      
-      --async-depth <[0-2]> / -ad: serial/family/test/deep
-
-      --async    / -a: unless overridden runs families of test concurrently
-      --verbose  / -v: provides detailed break down of test results 
-      --nofiles  / -n: suppresses output of diagnostic files
-      --recovery / -r: generates recovery file, which may help tracking down crashes
-
       If no arguments are specified, all tests are run, in serial, with the diagnostic
-      files generated.
+      files generated; run with --help for information on the various options
 
    */
 
@@ -235,9 +216,8 @@ namespace sequoia::testing
     
     std::ostream& m_Stream;
     
-    bool m_Verbose{};
+    bool m_Verbose{}, m_HelpMode{};
     output_mode m_OutputMode{output_mode::write_files};
-
     concurrency_mode m_ConcurrencyMode{concurrency_mode::serial};
 
     constexpr static std::array<std::string_view, 5> st_TestNameStubs {

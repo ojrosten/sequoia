@@ -45,7 +45,8 @@ namespace sequoia::parsing::commandline
   struct outcome
   {
     std::string zeroth_arg;
-    std::vector<operation> operations;    
+    std::vector<operation> operations;
+    std::string help{};
   };
   
   [[nodiscard]]
@@ -63,18 +64,24 @@ namespace sequoia::parsing::commandline
   void invoke_depth_first(const std::vector<operation>& operations);
 
   template<invocable<std::string> Fn>
-  void parse_invoke_depth_first(int argc, char** argv, const std::vector<option>& options, Fn zerothArgProcessor)
+  [[nodiscard]]
+  std::string parse_invoke_depth_first(int argc, char** argv, const std::vector<option>& options, Fn zerothArgProcessor)
   {
-    auto[zerothArg, ops]{parse(argc, argv, options)};
+    auto[zerothArg, ops, help]{parse(argc, argv, options)};
 
-    zerothArgProcessor(zerothArg);
-    
-    for(auto& op : ops)
+    if(help.empty())
     {
-      invoke_depth_first(op.nested_operations);
-      
-      if(op.fn) op.fn(op.parameters);
+      zerothArgProcessor(zerothArg);
+    
+      for(auto& op : ops)
+      {
+        invoke_depth_first(op.nested_operations);
+
+        if(op.fn) op.fn(op.parameters);
+      }
     }
+
+    return help;
   }
 
   class argument_parser
@@ -84,13 +91,13 @@ namespace sequoia::parsing::commandline
 
     outcome acquire()
     {
-      return {m_ZerothArg, std::move(m_Operations)};
+      return {std::move(m_ZerothArg), std::move(m_Operations), std::move(m_Help)};
     }
   private:
     std::vector<operation> m_Operations{};
     int m_Index{1}, m_ArgCount{};
     char** m_Argv{};
-    std::string m_ZerothArg{};
+    std::string m_ZerothArg{}, m_Help{};
 
     bool parse(const std::vector<option>& options, std::vector<operation>& operations);
 
@@ -105,6 +112,9 @@ namespace sequoia::parsing::commandline
 
     [[nodiscard]]
     bool top_level(const std::vector<operation>& operations) const noexcept;
+
+    [[nodiscard]]
+    static std::string generate_help(const std::vector<option>& options);
 
     static bool is_alias(const option& opt, const std::string& s);
   };

@@ -6,6 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "CommandLineArguments.hpp"
+#include "Format.hpp"
 
 namespace sequoia::parsing::commandline
 {
@@ -72,8 +73,16 @@ namespace sequoia::parsing::commandline
             optionsIter = std::find_if(options.begin(), options.end(),
                                       [&arg](const auto& opt) { return is_alias(opt, arg); });
 
+            if(arg == "--help")
+            {              
+              m_Help = generate_help(options);
+              return true;
+            }
+
+            
             if(process_concatenated_aliases(optionsIter, options.begin(), options.end(), arg, operations))
               continue;
+
           }
 
           if(auto maybeIter{process_option(optionsIter, options.end(), arg, operations)})
@@ -121,6 +130,35 @@ namespace sequoia::parsing::commandline
     }
 
     return true;
+  }
+
+  [[nodiscard]]
+  std::string argument_parser::generate_help(const std::vector<option>& options)
+  {
+    std::string help;
+    for(const auto& opt : options)
+    {
+      help += opt.name;
+      if(!opt.aliases.empty())
+      {
+        help += " [ ";
+        for(const auto& a : opt.aliases)
+        {
+          help.append(a).append(" ");
+        }
+        help += "]";
+      }
+
+      for(const auto& p : opt.parameters)
+      {
+        help.append(" ").append(p);
+      }
+
+      help += "\n";
+      help += testing::indent(generate_help(opt.nested_options), testing::indentation{"  "});
+    }
+
+    return help;
   }
 
   template<class Iter>

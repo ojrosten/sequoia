@@ -17,7 +17,22 @@
 namespace sequoia::testing
 {
   using namespace parsing::commandline;
- 
+
+  creation_data::sentinel::sentinel(creation_data& creationData)
+    : m_CreationData{creationData}
+  {
+    if(m_CreationData.testType.empty() || m_CreationData.qualifiedName.empty())
+    {
+      using namespace parsing::commandline;
+      throw std::runtime_error{error("Insufficient information provided to create a new test")};
+    }
+  }
+
+  creation_data::sentinel::~sentinel()
+  {
+    m_CreationData = creation_data{m_CreationData.defaultHost};
+  }
+  
   class creation_data_setter
   {
   public:
@@ -379,7 +394,8 @@ namespace sequoia::testing
       }                                         
     };
     
-    parse_invoke_depth_first(argc, argv,
+    const auto help{
+      parse_invoke_depth_first(argc, argv,
                 { {"test", {"t"}, {"test_family_name"},
                    [this](const param_list& args) {
                      m_SelectedFamilies.emplace(args.front(), false); }
@@ -414,10 +430,18 @@ namespace sequoia::testing
                      std::filesystem::create_directory(recoveryDir);
                      output_manager::recovery_file(recoveryDir / "Recovery.txt"); }}
                 },
-                [](std::string_view){});
+                [](std::string_view){})
+        };
 
-    
-    check_argument_consistency();
+    if(!help.empty())
+    {
+      m_HelpMode = true;    
+      m_Stream << help;
+    }
+    else
+    {    
+      check_argument_consistency();
+    }
   }
 
   void test_runner::check_argument_consistency() const
@@ -526,9 +550,12 @@ namespace sequoia::testing
   {
     namespace fs = std::filesystem;
 
-    report("Creating files...\n", create_files(m_NascentTests.cbegin(), m_NascentTests.cend(), fs::copy_options::skip_existing));
+    if(!m_HelpMode)
+    {
+      report("Creating files...\n", create_files(m_NascentTests.cbegin(), m_NascentTests.cend(), fs::copy_options::skip_existing));
 
-    run_tests();
+      run_tests();
+    }
   }
 
   template<class Iter, class Fn>
