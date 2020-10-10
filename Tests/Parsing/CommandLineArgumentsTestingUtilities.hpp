@@ -37,6 +37,7 @@ namespace sequoia::testing
     {
       check_equality("Zeroth Argument", logger, obtained.zeroth_arg, prediction.zeroth_arg);
       check_weak_equivalence("Operations", logger, obtained.operations, prediction.operations);
+      check_equality("Help", logger, obtained.help, prediction.help);
     }
   };
 

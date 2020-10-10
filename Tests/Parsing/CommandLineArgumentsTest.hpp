@@ -23,6 +23,8 @@ namespace sequoia::testing
 
     void test_flat_parsing();
 
+    void test_flat_parsing_help();
+
     void test_nested_parsing();
   };
 }

@@ -89,3 +89,28 @@
 
 	=======================================
 
+	../Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 74
+	Help not generated
+
+	Comparison performed using:
+	[sequoia::testing::weak_equivalence_checker<sequoia::parsing::commandline::outcome>]
+	With equivalent types:
+	[sequoia::parsing::commandline::outcome]
+
+	  Help
+	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+	  operator== returned false
+
+	    Obtained string is too long
+	    [unsigned long]
+	    operator== returned false
+	    Obtained : 8
+	    Predicted: 0
+
+	    Full strings:
+	    Obtained : --async
+
+	    Predicted: 
+
+	=======================================
+

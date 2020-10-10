@@ -67,5 +67,11 @@ namespace sequoia::testing
       
       check_weak_equivalence(LINE("Function object not generated"), parse(a.size(), a.get(), { {"--async", {}, {}, fo{}} }), outcome{"foo", {{nullptr, {}}}});
     }
+
+    {
+      commandline_arguments a{"foo", "--help"};
+      
+      check_weak_equivalence(LINE("Help not generated"), parse(a.size(), a.get(), { {"--async", {}, {}, fo{}} }), outcome{"foo", {}, ""});
+    }
   }
 }

@@ -18,6 +18,7 @@ namespace sequoia::testing
   void commandline_arguments_test::run_tests()
   {
     test_flat_parsing();
+    test_flat_parsing_help();
     test_nested_parsing();
   }
 
@@ -136,6 +137,19 @@ namespace sequoia::testing
                              parse(a.size(), a.get(), { {"create",  {}, {"class_name", "directory"}, fo{}},
                                                         {"--async", {}, {}, fo{}} }),
                              outcome{"foo", {{fo{}, {}}, {fo{}, {"class", "dir"}}}});
+    }
+  }
+
+  void commandline_arguments_test::test_flat_parsing_help()
+  {
+    using namespace sequoia::parsing::commandline;
+    using fo = function_object;
+
+    {
+      commandline_arguments a{"foo", "--help"};
+      
+      check_weak_equivalence(LINE(""), parse(a.size(), a.get(), { {"--async", {}, {}, fo{}} }),
+                             outcome{"foo", {}, "--async\n"});
     }
   }
 
