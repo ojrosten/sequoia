@@ -41,6 +41,19 @@ namespace sequoia::testing
     }
   };
 
+  template<>
+  struct weak_equivalence_checker<parsing::commandline::argument_parser>
+  {
+    using type = parsing::commandline::argument_parser;
+    using prediction_type = sequoia::parsing::commandline::outcome;
+
+    template<test_mode Mode>
+    static void check(test_logger<Mode>& logger, const type& obtained, const prediction_type& prediction)
+    {
+      check_weak_equivalence("", logger, obtained.get(), prediction);
+    }
+  };
+
   struct function_object
   {
     void operator()(const std::vector<std::string>&) const noexcept {}

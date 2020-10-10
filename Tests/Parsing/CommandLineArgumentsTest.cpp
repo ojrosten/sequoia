@@ -139,6 +139,15 @@ namespace sequoia::testing
                                                         {"--async", {}, {}, fo{}} }),
                              outcome{"foo", {{fo{}, {}}, {fo{}, {"class", "dir"}}}});
     }
+
+    {
+      commandline_arguments a{"foo", "--async", "create", "class", "dir"};
+      
+      check_weak_equivalence(LINE(""),
+                             argument_parser(a.size(), a.get(), { {"create",  {}, {"class_name", "directory"}, fo{}},
+                                                        {"--async", {}, {}, fo{}} }),
+                             outcome{"foo", {{fo{}, {}}, {fo{}, {"class", "dir"}}}});
+    }
   }
 
   void commandline_arguments_test::test_flat_parsing_help()
@@ -156,14 +165,16 @@ namespace sequoia::testing
     {
       commandline_arguments a{"foo", "--help"};
       
-      check_weak_equivalence(LINE("Single option alias help"), parse(a.size(), a.get(), { {"--async", {"-a"}, {}, fo{}} }),
+      check_weak_equivalence(LINE("Single option alias help"),
+                             parse(a.size(), a.get(), { {"--async", {"-a"}, {}, fo{}} }),
                              outcome{"foo", {}, "--async | -a |\n"});
     }
 
     {
       commandline_arguments a{"foo", "--help"};
       
-      check_weak_equivalence(LINE("Single option multi-alias help"), parse(a.size(), a.get(), { {"--async", {"-a","-as"}, {}, fo{}} }),
+      check_weak_equivalence(LINE("Single option multi-alias help"),
+                             parse(a.size(), a.get(), { {"--async", {"-a","-as"}, {}, fo{}} }),
                              outcome{"foo", {}, "--async | -a -as |\n"});
     }
 
@@ -172,6 +183,15 @@ namespace sequoia::testing
       
       check_weak_equivalence(LINE("Multi-option help"),
                              parse(a.size(), a.get(), { {"create",  {"-c"}, {"class_name", "directory"}, fo{}},
+                                                        {"--async", {}, {}, fo{}} }),
+                             outcome{"foo", {}, "create | -c | class_name directory\n--async\n"});
+    }
+
+    {
+      commandline_arguments a{"foo", "--help"};
+      
+      check_weak_equivalence(LINE("Multi-option help"),
+                             argument_parser(a.size(), a.get(), { {"create",  {"-c"}, {"class_name", "directory"}, fo{}},
                                                         {"--async", {}, {}, fo{}} }),
                              outcome{"foo", {}, "create | -c | class_name directory\n--async\n"});
     }
@@ -286,6 +306,23 @@ namespace sequoia::testing
     }
 
     {
+      commandline_arguments a{"", "create", "regular_test", "maybe<class T>", "std::optional<T>"};
+
+      check_weak_equivalence(LINE("Nested modes"),
+                             argument_parser(a.size(), a.get(),
+                                   { {"create", {"c"}, {}, fo{},
+                                        { { "regular_test",
+                                            {"regular"},
+                                            {"qualified::class_name<class T>", "equivalent type"},
+                                            fo{}
+                                          }
+                                        }
+                                      }
+                                   }),
+                             outcome{"", {{fo{}, {}, {{fo{}, {"maybe<class T>", "std::optional<T>"}}} }}});
+    }
+
+    {
       commandline_arguments a{"", "create", "class", "dir", "--equivalent-type", "foo", "blah"};
 
       check_exception_thrown<std::runtime_error>(LINE(""),
@@ -321,6 +358,24 @@ namespace sequoia::testing
                                    }),
                              outcome{"", {}, "create | c |\n  regular_test | regular | "
                                                "qualified::class_name<class T> equivalent_type\n"});
+    }
+
+    {
+      commandline_arguments a{"", "create", "--help"};
+
+      check_weak_equivalence(LINE("Help for nested option"),
+                             parse(a.size(), a.get(),
+                                   { {"create", {"c"}, {}, fo{},
+                                        { { "regular_test",
+                                            {"regular"},
+                                            {"qualified::class_name<class T>", "equivalent_type"},
+                                            fo{}
+                                          }
+                                        }
+                                      }
+                                   }),
+                             outcome{"", {{fo{}, {}}}, "regular_test | regular | "
+                                             "qualified::class_name<class T> equivalent_type\n"});
     }
   }
 }

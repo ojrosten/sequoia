@@ -89,9 +89,9 @@ namespace sequoia::parsing::commandline
   public:
     argument_parser(int argc, char** argv, const std::vector<option>& options);
 
-    outcome acquire()
+    outcome get() const
     {
-      return {std::move(m_ZerothArg), std::move(m_Operations), std::move(m_Help)};
+      return {m_ZerothArg, m_Operations, m_Help};
     }
   private:
     std::vector<operation> m_Operations{};

@@ -34,7 +34,7 @@ namespace sequoia::parsing::commandline
   {
     argument_parser p{argc, argv, options};
 
-    return p.acquire();
+    return p.get();
   }
 
   void invoke_depth_first(const std::vector<operation>& operations)
