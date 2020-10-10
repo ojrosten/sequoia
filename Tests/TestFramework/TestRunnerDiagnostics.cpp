@@ -7,76 +7,26 @@
 
 #include "TestRunnerDiagnostics.hpp"
 #include "TestRunnerDiagnosticsUtilities.hpp"
-#include "CommandLineArgumentsTestingUtilities.hpp"
 
 namespace sequoia::testing
 {
   [[nodiscard]]
-  std::string_view test_runner_false_negative_test::source_file() const noexcept
+  std::string_view test_runner_false_positive_test::source_file() const noexcept
   {
     return __FILE__;
   }
 
-  void test_runner_false_negative_test::run_tests()
+  void test_runner_false_positive_test::run_tests()
   {
     test_template_data_generation();
-    test_creation();
   }
 
-  void test_runner_false_negative_test::test_template_data_generation()
+  void test_runner_false_positive_test::test_template_data_generation()
   {
-    check(LINE(""), generate_template_data("").empty());
-    check_exception_thrown<std::runtime_error>(LINE("Unmatched <"),
-                                               [](){ return generate_template_data("<"); });
-    check_exception_thrown<std::runtime_error>(LINE("Backwards delimiters"),
-                                               [](){ return generate_template_data("><"); });
-    check_exception_thrown<std::runtime_error>(LINE("Missing symbol"),
-                                               [](){ return generate_template_data("<class>"); });
-    check_exception_thrown<std::runtime_error>(LINE("Missing symbol"),
-                                               [](){ return generate_template_data("< class>"); });
+    check_equality(LINE("Wrong species"),
+                   generate_template_data("<class T>"), template_data{{"typename", "T"}});
 
-    check_equality(LINE("Specialization"), generate_template_data("<>"), template_data{{}});
-    check_equality(LINE("Class template parameter"),
-                   generate_template_data("<class T>"), template_data{{"class", "T"}});
-    check_equality(LINE("Class template parameter"),
-                   generate_template_data("<class T >"), template_data{{"class", "T"}});
-    check_equality(LINE("Class template parameter"),
-                   generate_template_data("< class T>"), template_data{{"class", "T"}});
-
-    check_equality(LINE("Two template parameters"),
-                   generate_template_data("<class T, typename S>"),
-                   template_data{{"class", "T"}, {"typename", "S"}});
-    check_equality(LINE("Two template parameters"),
-                   generate_template_data("< class  T,  typename S >"),
-                   template_data{{"class", "T"}, {"typename", "S"}});
-  }
-
-  void test_runner_false_negative_test::test_creation()
-  {
-    namespace fs = std::filesystem;
-
-    auto working{
-      [&mat{materials()}]() {
-        return mat / "WorkingCopy" / "FakeProject";
-      }
-    };
-    
-    const auto testMain{working().append("TestSandbox").append("TestSandbox.cpp")};
-    const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
-
-    const repositories repos{working()};
-
-    std::stringstream outputStream{};
-    commandline_arguments args{"", "create", "regular_test", "other::functional::maybe<class T>", "std::optional<T>"
-                                 , "create", "regular_test", "utilities::iterator", "int*"
-                                 , "create", "move_only_test", "bar::baz::foo<class T>", "T", "--family", "iterator"
-                                 , "create", "regular_test", "other::couple<class S, class T>", "S", "-e", "T",
-                                      "-h", (repos.tests / "Partners").string(), "-f", "partners", "-ch", "Couple.hpp"};
-    
-    test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, repos, outputStream};
-
-    tr.execute();
-
-    check_equivalence(LINE(""), working(), materials() / "Prediction" / "FakeProject");
+    check_equality(LINE("Wrong symbol"),
+                   generate_template_data("<class S>"), template_data{{"class", "T"}});
   }
 }

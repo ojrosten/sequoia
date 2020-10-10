@@ -84,5 +84,6 @@
 #include "OrderableMoveOnlyTestDiagnostics.hpp"
 #include "OrderableRegularTestDiagnostics.hpp"
 
-#include "TestRunner.hpp"
 #include "TestRunnerDiagnostics.hpp"
+#include "TestRunnerTest.hpp"
+#include "TestRunner.hpp"

@@ -1178,24 +1178,24 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-	Fast Task duration: 0.00115115s +- 4 * 0.000133641
-	Slow Task duration: 0.00115691s +- 4 * 0.000114072 [1.005; (2, 2)]
+	Fast Task duration: 0.00119786s +- 4 * 0.00012826
+	Slow Task duration: 0.00120623s +- 4 * 0.000129135 [1.00698; (2, 2)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-	Fast Task duration: 0.00106046s +- 4 * 2.25384e-05
-	Slow Task duration: 0.00122172s +- 4 * 9.7863e-05 [1.15207; (2, 3)]
+	Fast Task duration: 0.00139066s +- 4 * 0.000328066
+	Slow Task duration: 0.00144307s +- 4 * 0.000550045 [1.03769; (2, 3)]
 
 	=======================================
 
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-	Fast Task duration: 0.00112375s +- 4 * 9.99168e-05
-	Slow Task duration: 0.00440006s +- 4 * 0.00054144 [3.91552; (2, 2.5)]
+	Fast Task duration: 0.00131929s +- 4 * 0.000350551
+	Slow Task duration: 0.00419444s +- 4 * 0.000193121 [3.17932; (2, 2.5)]
 
 	=======================================
 
@@ -7159,8 +7159,8 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67
 	Performance Test which should pass
 
-	Fast Task duration: 0.00119047s +- 4 * 6.73062e-05
-	Slow Task duration: 0.00215971s +- 4 * 0.000135851 [1.81416; (1.8, 2.1)]
+	Fast Task duration: 0.00189881s +- 4 * 0.00043305
+	Slow Task duration: 0.00270318s +- 4 * 0.000350137 [1.42362; (1.8, 2.1)]
 
 
 	=======================================
@@ -7169,8 +7169,8 @@
 	../Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68
 	Performance Test which should pass
 
-	Fast Task duration: 0.00117512s +- 4 * 0.000133842
-	Slow Task duration: 0.00427919s +- 4 * 0.000199788 [3.6415; (3.6, 4.1)]
+	Fast Task duration: 0.00180325s +- 4 * 0.00053839
+	Slow Task duration: 0.00506142s +- 4 * 0.000734554 [2.80683; (3.6, 4.1)]
 
 
 	=======================================
@@ -8061,119 +8061,6 @@
 
 	--Move-only Semantics--
 	[sequoia::testing::move_only_scoped_beast<sequoia::testing::shared_counting_allocator<char, true, true, true> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	../Tests/TestFramework/TestRunnerDiagnostics.cpp, Line 28
-
-	[bool]
-
-
-	=======================================
-
-	False Positive Failure:
-	../Tests/TestFramework/TestRunnerDiagnostics.cpp, Line 29
-	Unmatched <
-
-	Expected Exception Type:
-	[std::runtime_error]
-
-
-	=======================================
-
-	False Positive Failure:
-	../Tests/TestFramework/TestRunnerDiagnostics.cpp, Line 31
-	Backwards delimiters
-
-	Expected Exception Type:
-	[std::runtime_error]
-
-
-	=======================================
-
-	False Positive Failure:
-	../Tests/TestFramework/TestRunnerDiagnostics.cpp, Line 33
-	Missing symbol
-
-	Expected Exception Type:
-	[std::runtime_error]
-
-
-	=======================================
-
-	False Positive Failure:
-	../Tests/TestFramework/TestRunnerDiagnostics.cpp, Line 35
-	Missing symbol
-
-	Expected Exception Type:
-	[std::runtime_error]
-
-
-	=======================================
-
-	False Positive Failure:
-	../Tests/TestFramework/TestRunnerDiagnostics.cpp, Line 38
-	Specialization
-
-	[std::vector<sequoia::testing::template_spec, std::allocator<sequoia::testing::template_spec> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	../Tests/TestFramework/TestRunnerDiagnostics.cpp, Line 39
-	Class template parameter
-
-	[std::vector<sequoia::testing::template_spec, std::allocator<sequoia::testing::template_spec> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	../Tests/TestFramework/TestRunnerDiagnostics.cpp, Line 41
-	Class template parameter
-
-	[std::vector<sequoia::testing::template_spec, std::allocator<sequoia::testing::template_spec> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	../Tests/TestFramework/TestRunnerDiagnostics.cpp, Line 43
-	Class template parameter
-
-	[std::vector<sequoia::testing::template_spec, std::allocator<sequoia::testing::template_spec> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	../Tests/TestFramework/TestRunnerDiagnostics.cpp, Line 46
-	Two template parameters
-
-	[std::vector<sequoia::testing::template_spec, std::allocator<sequoia::testing::template_spec> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	../Tests/TestFramework/TestRunnerDiagnostics.cpp, Line 49
-	Two template parameters
-
-	[std::vector<sequoia::testing::template_spec, std::allocator<sequoia::testing::template_spec> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	../Tests/TestFramework/TestRunnerDiagnostics.cpp, Line 80
-
-	Comparison performed using:
-	[sequoia::testing::equivalence_checker<std::filesystem::path>]
-	With equivalent types:
-	[std::filesystem::path]
 
 
 	=======================================

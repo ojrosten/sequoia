@@ -9,10 +9,10 @@
 
 namespace sequoia::testing
 {
-  class test_runner_false_positive_test final : public free_false_positive_test
+  class test_runner_test final : public free_test
   {
   public:
-    using free_false_positive_test::free_false_positive_test;    
+    using free_test::free_test;    
 
     [[nodiscard]]
     std::string_view source_file() const noexcept final;
@@ -20,5 +20,7 @@ namespace sequoia::testing
     void run_tests() final;
 
     void test_template_data_generation();
+
+    void test_creation();
   };
 }

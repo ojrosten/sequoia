@@ -47,15 +47,20 @@ int main(int argc, char** argv)
       move_only_allocation_false_negative_diagnostics{"Move-Only Allocation False Negative Diagnostics"},
       scoped_allocation_false_negative_diagnostics{"Scoped Allocation False Negative Diagnostics"},
       move_only_scoped_allocation_false_negative_diagnostics{"Move-Only Scoped Allocation False Negative Diagnostics"},      
-      test_runner_false_negative_test{"Test Runner False False Negative Diagnostics"},
       orderable_move_only_false_negative_diagnostics{"Orderable Move-Only False Negative Diagnostics"},
       orderable_regular_false_negative_diagnostics{"Orderable Regular False Negative Diagnostics"}
     );
 
     runner.add_test_family(
-      "CommandLine Arguments",
-      commandline_arguments_test{"Unit Test"},
-      commandline_arguments_false_positive_test{"False Positive Test"}
+      "CommandLine Arguments",      
+      commandline_arguments_false_positive_test{"False Positive Test"},
+      commandline_arguments_test{"Unit Test"}
+    );
+
+    runner.add_test_family(
+      "Test Runner",      
+      test_runner_false_positive_test{"False Positive Diagnostics"},
+      test_runner_test{"Unit Test"}
     );
 
     runner.add_test_family(
