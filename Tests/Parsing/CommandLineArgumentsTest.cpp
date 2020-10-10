@@ -151,6 +151,15 @@ namespace sequoia::testing
       check_weak_equivalence(LINE(""), parse(a.size(), a.get(), { {"--async", {}, {}, fo{}} }),
                              outcome{"foo", {}, "--async\n"});
     }
+
+    {
+      commandline_arguments a{"foo", "--help"};
+      
+      check_weak_equivalence(LINE(""),
+                             parse(a.size(), a.get(), { {"create",  {"-c"}, {"class_name", "directory"}, fo{}},
+                                                        {"--async", {}, {}, fo{}} }),
+                             outcome{"foo", {}, "create | -c | class_name directory\n--async\n"});
+    }
   }
 
   void commandline_arguments_test::test_nested_parsing()
