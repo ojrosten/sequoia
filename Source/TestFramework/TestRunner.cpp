@@ -378,18 +378,18 @@ namespace sequoia::testing
     };
 
     const std::vector<option> createOptions{
-      {"--equivalent-type", {"-e"}, {"equivalent type"},
+      {"--equivalent-type", {"-e"}, {"equivalent_type"},
         [&equivalentTypes{data.equivalentTypes}](const param_list& args){
            equivalentTypes.push_back(args[0]);
         }
       },
-      {"--host-directory", {"-h"}, {"host directory"},
+      {"--host-directory", {"-h"}, {"host_directory"},
         [&host{data.host}](const param_list& args){ host = host_directory{args[0]};}
       },
       {"--family", {"-f"}, {"family"},
         [&family{data.family}](const param_list& args){ family = args[0]; }
       },
-      {"--class-header", {"-ch"}, {"class header"},
+      {"--class-header", {"-ch"}, {"class_header"},
         [&classHeader{data.classHeader}](const param_list& args){ classHeader = args[0]; }
       }                                         
     };
@@ -405,10 +405,10 @@ namespace sequoia::testing
                      m_SelectedSources.emplace(args.front(), false); }
                   },
                   {"create", {"c"}, {}, addTest,
-                   { {"regular_test", {"regular"}, {"qualified::class_name<class T>", "equivalent type"},
+                   { {"regular_test", {"regular"}, {"qualified::class_name<class T>", "equivalent_type"},
                       creation_data_setter{data, "regular"}, createOptions
                      },
-                     {"move_only_test", {"move_only"}, {"qualified::class_name<class T>", "equivalent type"},
+                     {"move_only_test", {"move_only"}, {"qualified::class_name<class T>", "equivalent_type"},
                       creation_data_setter{data, "move_only"}, createOptions
                      }
                    }

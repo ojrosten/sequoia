@@ -141,12 +141,12 @@ namespace sequoia::parsing::commandline
       help += opt.name;
       if(!opt.aliases.empty())
       {
-        help += " [ ";
+        help += " | ";
         for(const auto& a : opt.aliases)
         {
           help.append(a).append(" ");
         }
-        help += "]";
+        help += "|";
       }
 
       for(const auto& p : opt.parameters)
