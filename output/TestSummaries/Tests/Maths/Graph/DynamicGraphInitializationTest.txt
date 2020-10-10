@@ -1,3 +1,2 @@
 Dynamic Graph Init
-[2648ms]
 Standard Top Level Checks:              6246;  Failures:  0  [Deep checks: 133474]

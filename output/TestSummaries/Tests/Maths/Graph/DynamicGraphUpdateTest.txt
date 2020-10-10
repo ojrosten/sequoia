@@ -1,3 +1,2 @@
 Updates
-[730ms]
 Standard Top Level Checks:               696;  Failures:  0  [Deep checks: 45968]

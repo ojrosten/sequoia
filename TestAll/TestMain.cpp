@@ -20,8 +20,8 @@ int main(int argc, char** argv)
     test_runner runner{argc,
                        argv,
                        "Oliver J. Rosten",
-                       root/"TestAll"/"TestChamberMain.cpp",
-                       root/"TestAll"/"TestIncludes.hpp",
+                       root/"TestAll"/"TestMain.cpp",
+                       root/"TestCommon"/"TestIncludes.hpp",
                        repositories(root)
     };
 

@@ -1,3 +1,2 @@
 Unweighted Graph Allocation Tests
-[43ms]
 Standard Top Level Checks:                83;  Failures:  0  [Deep checks: 2258]

@@ -1,3 +1,2 @@
 Graph false positive diagnostics
-[4ms]
 False Positive Checks:                    20;  Failures:  0

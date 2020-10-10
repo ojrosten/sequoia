@@ -1,3 +1,2 @@
 Unweighted Graph Tests
-[143ms]
 Standard Top Level Checks:               610;  Failures:  0  [Deep checks: 16330]

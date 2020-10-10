@@ -1,4 +1,3 @@
 Performance Test
-[2238ms]
 Standard Top Level Checks:                90;  Failures:  0  [Deep checks: 90]
 Standard Performance Checks:              10;  Failures:  0

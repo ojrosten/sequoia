@@ -1,3 +1,2 @@
 False positive diagnostics
-[7ms]
 False Positive Checks:                    90;  Failures:  0

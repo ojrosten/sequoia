@@ -1,3 +1,2 @@
 Unit Test
-[13ms]
 Standard Top Level Checks:               112;  Failures:  0  [Deep checks: 918]
