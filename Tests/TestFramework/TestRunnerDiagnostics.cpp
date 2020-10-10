@@ -6,9 +6,8 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "TestRunnerDiagnostics.hpp"
+#include "TestRunnerDiagnosticsUtilities.hpp"
 #include "CommandLineArgumentsTestingUtilities.hpp"
-
-#include "TestRunner.hpp"
 
 namespace sequoia::testing
 {
@@ -29,6 +28,20 @@ namespace sequoia::testing
     check(LINE(""), generate_template_data("").empty());
     check_exception_thrown<std::runtime_error>(LINE("Unmatched <"),
                                                [](){ return generate_template_data("<"); });
+    check_exception_thrown<std::runtime_error>(LINE("Backwards delimiters"),
+                                               [](){ return generate_template_data("><"); });
+    check_exception_thrown<std::runtime_error>(LINE("Missing symbol"),
+                                               [](){ return generate_template_data("<class>"); });
+    check_exception_thrown<std::runtime_error>(LINE("Missing symbol"),
+                                               [](){ return generate_template_data("< class>"); });
+
+    check_equality(LINE("Specialization"), generate_template_data("<>"), template_data{template_spec{}});
+    check_equality(LINE("Class template parameter"),
+                   generate_template_data("<class T>"), template_data{template_spec{"class", "T"}});
+    check_equality(LINE("Class template parameter"),
+                   generate_template_data("<class T >"), template_data{template_spec{"class", "T"}});
+    check_equality(LINE("Class template parameter"),
+                   generate_template_data("< class T>"), template_data{template_spec{"class", "T"}});
   }
 
   void test_runner_false_negative_test::test_creation()

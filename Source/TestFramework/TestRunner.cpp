@@ -92,7 +92,7 @@ namespace sequoia::testing
     {
       if(auto closePos{str.rfind('>')}; closePos != npos)
       {
-        if((closePos < openPos) || (closePos - openPos < 2))
+        if(closePos < openPos)
           throw std::runtime_error{std::string{str}.append(": unable to parse template")};
 
         auto start{openPos + 1};
@@ -124,19 +124,27 @@ namespace sequoia::testing
   {    
     constexpr auto npos{std::string::npos};
     const auto endOfLastToken{str.find_last_not_of(" .")};
-    if(endOfLastToken == npos)
-      throw std::runtime_error(std::string{str}.append(" Unable to locate end of final token"));
+    if(endOfLastToken == npos) return {};
+
+    auto mess{
+      [str](std::string_view details){
+        return std::string{"<"}.append(str).append(">: ").append(details);
+      }
+    };
     
     const auto beforeLastToken{str.substr(0, endOfLastToken).rfind(' ')};
     if(beforeLastToken == npos)
-      throw std::runtime_error(std::string{str}.append(" Unable to locate start of final token"));
+      throw std::runtime_error{mess(" Unable to locate species/symbol pair")};
 
     const auto lastTokenSize{endOfLastToken - beforeLastToken};
-    const auto endOfLastTemplateSpec{str.substr(0, str.size() - lastTokenSize).find_last_not_of(" .")};
+    const auto endOfLastTemplateSpec{str.substr(0, endOfLastToken + 1 - lastTokenSize).find_last_not_of(" .")};
     if(endOfLastTemplateSpec == npos)
-      return {"", std::string{str}};
+      throw std::runtime_error{mess(" Unable to locate species/symbol pair")};
+
+    const auto first{str.substr(0, endOfLastTemplateSpec).rfind(' ')};
+    std::string::size_type pos{first == npos ? 0 : first + 1};
     
-    return {std::string{str.substr(0, endOfLastTemplateSpec + 1)}, std::string{str.substr(beforeLastToken + 1, lastTokenSize)}};
+    return {std::string{str.substr(pos, endOfLastTemplateSpec + 1 - pos)}, std::string{str.substr(beforeLastToken + 1, lastTokenSize)}};
   }
 
   //=========================================== nascent_test ===========================================//
@@ -176,9 +184,10 @@ namespace sequoia::testing
 
           std::string args{"<"};
           std::for_each(m_TemplateData.cbegin(), m_TemplateData.cend(),
-            [&args](const template_spec& d) { args.append(d.symbol).append(","); }
+            [&args](const template_spec& d) { args.append(d.symbol).append(", "); }
           );
 
+          args.erase(args.size() - 1);
           args.back() = '>';
 
           m_QualifiedClassName.append(args);
@@ -309,9 +318,10 @@ namespace sequoia::testing
         std::string spec{"<"};
         for(const auto& d : m_TemplateData)
         {
-          if(!d.species.empty()) spec.append(d.species).append(" ").append(d.symbol).append(",");
+          spec.append(d.species).append(" ").append(d.symbol).append(", ");
         }
 
+        spec.erase(spec.size() - 1);
         spec.back() = '>';
         spec.append("\n ");
 

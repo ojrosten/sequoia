@@ -1,2 +1,2 @@
 Test Runner False False Negative Diagnostics
-False Negative Checks:                     3;  Failures:  0
+False Negative Checks:                    10;  Failures:  0

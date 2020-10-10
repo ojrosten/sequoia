@@ -90,7 +90,18 @@ namespace sequoia::testing
   };
 
   
-  struct template_spec { std::string species, symbol; };
+  struct template_spec
+  {
+    [[nodiscard]]
+    friend bool operator==(const template_spec&, const template_spec&) = default;
+
+    [[nodiscard]]
+    friend bool operator!=(const template_spec&, const template_spec&) = default;
+    
+    std::string species, symbol;
+  };
+
+
   using template_data = std::vector<template_spec>;
   
   [[nodiscard]]
