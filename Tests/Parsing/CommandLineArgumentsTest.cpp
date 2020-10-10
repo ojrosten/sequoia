@@ -20,6 +20,7 @@ namespace sequoia::testing
     test_flat_parsing();
     test_flat_parsing_help();
     test_nested_parsing();
+    test_nested_parsing_help();
   }
 
   void commandline_arguments_test::test_flat_parsing()
@@ -148,14 +149,28 @@ namespace sequoia::testing
     {
       commandline_arguments a{"foo", "--help"};
       
-      check_weak_equivalence(LINE(""), parse(a.size(), a.get(), { {"--async", {}, {}, fo{}} }),
+      check_weak_equivalence(LINE("Single option help"), parse(a.size(), a.get(), { {"--async", {}, {}, fo{}} }),
                              outcome{"foo", {}, "--async\n"});
     }
 
     {
       commandline_arguments a{"foo", "--help"};
       
-      check_weak_equivalence(LINE(""),
+      check_weak_equivalence(LINE("Single option alias help"), parse(a.size(), a.get(), { {"--async", {"-a"}, {}, fo{}} }),
+                             outcome{"foo", {}, "--async | -a |\n"});
+    }
+
+    {
+      commandline_arguments a{"foo", "--help"};
+      
+      check_weak_equivalence(LINE("Single option multi-alias help"), parse(a.size(), a.get(), { {"--async", {"-a","-as"}, {}, fo{}} }),
+                             outcome{"foo", {}, "--async | -a -as |\n"});
+    }
+
+    {
+      commandline_arguments a{"foo", "--help"};
+      
+      check_weak_equivalence(LINE("Multi-option help"),
                              parse(a.size(), a.get(), { {"create",  {"-c"}, {"class_name", "directory"}, fo{}},
                                                         {"--async", {}, {}, fo{}} }),
                              outcome{"foo", {}, "create | -c | class_name directory\n--async\n"});
@@ -282,6 +297,30 @@ namespace sequoia::testing
                          {"--verbose", {"-v"}, {}, fo{}}
                        });
         });
+    }
+  }
+
+  void commandline_arguments_test::test_nested_parsing_help()
+  {
+    using namespace sequoia::parsing::commandline;
+    using fo = function_object;
+
+    {
+      commandline_arguments a{"", "--help"};
+
+      check_weak_equivalence(LINE("Nested help"),
+                             parse(a.size(), a.get(),
+                                   { {"create", {"c"}, {}, fo{},
+                                        { { "regular_test",
+                                            {"regular"},
+                                            {"qualified::class_name<class T>", "equivalent_type"},
+                                            fo{}
+                                          }
+                                        }
+                                      }
+                                   }),
+                             outcome{"", {}, "create | c |\n  regular_test | regular | "
+                                               "qualified::class_name<class T> equivalent_type\n"});
     }
   }
 }
