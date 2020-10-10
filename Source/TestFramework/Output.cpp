@@ -6,10 +6,10 @@
 ////////////////////////////////////////////////////////////////////
 
 /*! \file
-    \brief Definitions for Format.hpp.
+    \brief Definitions for Output.hpp.
  */
 
-#include "Format.hpp"
+#include "Output.hpp"
 
 namespace sequoia::testing
 {

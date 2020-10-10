@@ -20,7 +20,7 @@
  */
 
 #include "TypeTraits.hpp"
-#include "Format.hpp"
+#include "Output.hpp"
 
 #include <sstream>
 #include <fstream>

@@ -10,7 +10,7 @@
  */
 
 #include "FileEditors.hpp"
-#include "Format.hpp"
+#include "Output.hpp"
 
 #include <fstream>
 

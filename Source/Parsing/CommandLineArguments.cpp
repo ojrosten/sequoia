@@ -6,7 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "CommandLineArguments.hpp"
-#include "Format.hpp"
+#include "Indent.hpp"
 
 namespace sequoia::parsing::commandline
 {
@@ -155,7 +155,7 @@ namespace sequoia::parsing::commandline
       }
 
       help += "\n";
-      help += testing::indent(generate_help(opt.nested_options), testing::indentation{"  "});
+      help += indent(generate_help(opt.nested_options), indentation{"  "});
     }
 
     return help;
