@@ -119,7 +119,7 @@ namespace sequoia::testing
 
           std::string args{"<"};
           std::for_each(m_TemplateData.cbegin(), m_TemplateData.cend(),
-            [&args](const template_spec& d) { args.append(d.name).append(","); }
+            [&args](const template_spec& d) { args.append(d.symbol).append(","); }
           );
 
           args.back() = '>';
@@ -184,7 +184,7 @@ namespace sequoia::testing
   auto nascent_test::generate_template_spec(std::string_view str) -> template_spec
   {    
     constexpr auto npos{std::string::npos};
-    const auto endOfLastToken{str.find_last_not_of(" .")};
+    const auto endOfLastToken{str.find_last_not_of(" ")};
     if(endOfLastToken == npos)
       throw std::runtime_error(std::string{str}.append(" Unable to locate end of final token"));
     
@@ -193,7 +193,7 @@ namespace sequoia::testing
       throw std::runtime_error(std::string{str}.append(" Unable to locate start of final token"));
 
     const auto lastTokenSize{endOfLastToken - beforeLastToken};
-    const auto endOfLastTemplateSpec{str.substr(0, str.size() - lastTokenSize).find_last_not_of(" .")};
+    const auto endOfLastTemplateSpec{str.substr(0, str.size() - lastTokenSize).find_last_not_of(" ")};
     if(endOfLastTemplateSpec == npos)
       return {"", std::string{str}};
     
@@ -309,7 +309,7 @@ namespace sequoia::testing
         std::string spec{"<"};
         for(const auto& d : m_TemplateData)
         {
-          if(!d.parameter.empty()) spec.append(d.parameter).append(" ").append(d.name).append(",");
+          if(!d.species.empty()) spec.append(d.species).append(" ").append(d.symbol).append(",");
         }
 
         spec.back() = '>';

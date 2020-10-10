@@ -104,7 +104,7 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string_view class_name() const noexcept { return m_RawClassName; }
   private:
-    struct template_spec { std::string parameter, name; };
+    struct template_spec { std::string species, symbol; };
     using template_data = std::vector<template_spec>;
 
     std::string
