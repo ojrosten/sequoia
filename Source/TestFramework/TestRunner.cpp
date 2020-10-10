@@ -144,7 +144,7 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  auto nascent_test::generate_template_data(std::string_view str) -> std::vector<template_spec>
+  auto nascent_test::generate_template_data(std::string_view str) -> template_data
   {
     std::vector<template_spec> decomposition{};
     
