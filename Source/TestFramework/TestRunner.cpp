@@ -184,7 +184,7 @@ namespace sequoia::testing
   auto nascent_test::generate_template_spec(std::string_view str) -> template_spec
   {    
     constexpr auto npos{std::string::npos};
-    const auto endOfLastToken{str.find_last_not_of(" ")};
+    const auto endOfLastToken{str.find_last_not_of(" .")};
     if(endOfLastToken == npos)
       throw std::runtime_error(std::string{str}.append(" Unable to locate end of final token"));
     
@@ -193,7 +193,7 @@ namespace sequoia::testing
       throw std::runtime_error(std::string{str}.append(" Unable to locate start of final token"));
 
     const auto lastTokenSize{endOfLastToken - beforeLastToken};
-    const auto endOfLastTemplateSpec{str.substr(0, str.size() - lastTokenSize).find_last_not_of(" ")};
+    const auto endOfLastTemplateSpec{str.substr(0, str.size() - lastTokenSize).find_last_not_of(" .")};
     if(endOfLastTemplateSpec == npos)
       return {"", std::string{str}};
     
