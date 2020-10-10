@@ -91,18 +91,12 @@ Functions</h2></td></tr>
 <tr class="memitem:a95662be6c3f4dbbbe8315c9e0b618721"><td class="memItemLeft" align="right" valign="top"><a id="a95662be6c3f4dbbbe8315c9e0b618721"></a>
 std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::working_path</b> ()</td></tr>
 <tr class="separator:a95662be6c3f4dbbbe8315c9e0b618721"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6373ddb0c8ece5b5c6ed42c3b41800f6"><td class="memItemLeft" align="right" valign="top"><a id="a6373ddb0c8ece5b5c6ed42c3b41800f6"></a>
-std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::parent_path</b> ()</td></tr>
-<tr class="separator:a6373ddb0c8ece5b5c6ed42c3b41800f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a340c9ba16f9a5f011f29857fc1664a9b"><td class="memItemLeft" align="right" valign="top"><a id="a340c9ba16f9a5f011f29857fc1664a9b"></a>
-std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::sibling_path</b> (std::string_view directory)</td></tr>
-<tr class="separator:a340c9ba16f9a5f011f29857fc1664a9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa5b7f15a6294c7f737f1cb5b9e3ae168"><td class="memItemLeft" align="right" valign="top"><a id="aa5b7f15a6294c7f737f1cb5b9e3ae168"></a>
-std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::aux_path</b> ()</td></tr>
-<tr class="separator:aa5b7f15a6294c7f737f1cb5b9e3ae168"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a19664b65dc79bbb5829f48fcc2bde2f0"><td class="memItemLeft" align="right" valign="top"><a id="a19664b65dc79bbb5829f48fcc2bde2f0"></a>
-std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::code_templates_path</b> ()</td></tr>
-<tr class="separator:a19664b65dc79bbb5829f48fcc2bde2f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac99db9dbf49b2a562e0d9fd7338523cb"><td class="memItemLeft" align="right" valign="top"><a id="ac99db9dbf49b2a562e0d9fd7338523cb"></a>
+std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::project_root</b> (int argc, char **argv, const std::filesystem::path &amp;fallback)</td></tr>
+<tr class="separator:ac99db9dbf49b2a562e0d9fd7338523cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeae3f89093cf40410434a3eb09cac54e"><td class="memItemLeft" align="right" valign="top"><a id="aeae3f89093cf40410434a3eb09cac54e"></a>
+std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::code_templates_path</b> (std::filesystem::path projectRoot)</td></tr>
+<tr class="separator:aeae3f89093cf40410434a3eb09cac54e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad00c7f4967fcdfb9c1fc74d303b85db0"><td class="memItemLeft" align="right" valign="top"><a id="ad00c7f4967fcdfb9c1fc74d303b85db0"></a>
 std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::recovery_path</b> (std::filesystem::path outputDir)</td></tr>
 <tr class="separator:ad00c7f4967fcdfb9c1fc74d303b85db0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -137,6 +131,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::thr
 <tr class="memitem:ad1fa400bd194fe4f5f92690efc6b7d42"><td class="memItemLeft" align="right" valign="top"><a id="ad1fa400bd194fe4f5f92690efc6b7d42"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::throw_unless_regular_file</b> (const std::filesystem::path &amp;p, std::string_view message)</td></tr>
 <tr class="separator:ad1fa400bd194fe4f5f92690efc6b7d42"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a8d384fd25f0160e464b5105faac5e9"><td class="memItemLeft" align="right" valign="top"><a id="a9a8d384fd25f0160e464b5105faac5e9"></a>
+std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::rebase_from</b> (const std::filesystem::path &amp;p, const std::filesystem::path &amp;dir)</td></tr>
+<tr class="separator:a9a8d384fd25f0160e464b5105faac5e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>File paths and related utilities. </p>

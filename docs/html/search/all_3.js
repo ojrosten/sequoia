@@ -30,8 +30,10 @@ var searchData=
   ['coreinfrastructure_2ehpp_99',['CoreInfrastructure.hpp',['../d0/dae/CoreInfrastructure_8hpp.html',1,'']]],
   ['couple_5ffalse_5fpositive_5ftest_100',['couple_false_positive_test',['../d3/d66/classsequoia_1_1testing_1_1couple__false__positive__test.html',1,'sequoia::testing']]],
   ['couple_5ftest_101',['couple_test',['../d5/d9a/classsequoia_1_1testing_1_1couple__test.html',1,'sequoia::testing']]],
-  ['custom_5fallocator_5fbucketed_5fedge_5fstorage_5ftraits_102',['custom_allocator_bucketed_edge_storage_traits',['../dc/dc1/structsequoia_1_1testing_1_1custom__allocator__bucketed__edge__storage__traits.html',1,'sequoia::testing']]],
-  ['custom_5fallocator_5fcontiguous_5fedge_5fstorage_5ftraits_103',['custom_allocator_contiguous_edge_storage_traits',['../da/dc0/structsequoia_1_1testing_1_1custom__allocator__contiguous__edge__storage__traits.html',1,'sequoia::testing']]],
-  ['custom_5fbucketed_5fstorage_5ftraits_104',['custom_bucketed_storage_traits',['../d2/d4e/structsequoia_1_1testing_1_1custom__bucketed__storage__traits.html',1,'sequoia::testing']]],
-  ['custom_5fpartitioned_5fsequence_5ftraits_105',['custom_partitioned_sequence_traits',['../dd/d86/structsequoia_1_1testing_1_1custom__partitioned__sequence__traits.html',1,'sequoia::testing']]]
+  ['creation_5fdata_102',['creation_data',['../da/d74/structsequoia_1_1testing_1_1creation__data.html',1,'sequoia::testing']]],
+  ['creation_5fdata_5fsetter_103',['creation_data_setter',['../d0/d16/classsequoia_1_1testing_1_1creation__data__setter.html',1,'sequoia::testing']]],
+  ['custom_5fallocator_5fbucketed_5fedge_5fstorage_5ftraits_104',['custom_allocator_bucketed_edge_storage_traits',['../dc/dc1/structsequoia_1_1testing_1_1custom__allocator__bucketed__edge__storage__traits.html',1,'sequoia::testing']]],
+  ['custom_5fallocator_5fcontiguous_5fedge_5fstorage_5ftraits_105',['custom_allocator_contiguous_edge_storage_traits',['../da/dc0/structsequoia_1_1testing_1_1custom__allocator__contiguous__edge__storage__traits.html',1,'sequoia::testing']]],
+  ['custom_5fbucketed_5fstorage_5ftraits_106',['custom_bucketed_storage_traits',['../d2/d4e/structsequoia_1_1testing_1_1custom__bucketed__storage__traits.html',1,'sequoia::testing']]],
+  ['custom_5fpartitioned_5fsequence_5ftraits_107',['custom_partitioned_sequence_traits',['../dd/d86/structsequoia_1_1testing_1_1custom__partitioned__sequence__traits.html',1,'sequoia::testing']]]
 ];

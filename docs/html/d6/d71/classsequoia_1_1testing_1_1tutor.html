@@ -87,13 +87,16 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia_advisor_type
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ad930a5c874529bf89a9c5d9c1ed86d5a"><td class="memItemLeft" align="right" valign="top"><a id="ad930a5c874529bf89a9c5d9c1ed86d5a"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>tutor</b> (Advisor a)</td></tr>
-<tr class="separator:ad930a5c874529bf89a9c5d9c1ed86d5a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b40760c0ffd5391835e4a68febcc3db"><td class="memItemLeft" align="right" valign="top"><a id="a8b40760c0ffd5391835e4a68febcc3db"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>tutor</b> (Advisor a, std::string prefix=&quot;Advice: &quot;)</td></tr>
+<tr class="separator:a8b40760c0ffd5391835e4a68febcc3db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a86ded5ff02cf89df52a1573a08deedce"><td class="memTemplParams" colspan="2"><a id="a86ded5ff02cf89df52a1573a08deedce"></a>
 template&lt;class T &gt; </td></tr>
 <tr class="memitem:a86ded5ff02cf89df52a1573a08deedce"><td class="memTemplItemLeft" align="right" valign="top">requires invocable&lt; Advisor, T, T &gt; std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator()</b> (const T &amp;value, const T &amp;prediction) const</td></tr>
 <tr class="separator:a86ded5ff02cf89df52a1573a08deedce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a055d3088ef696b1f3a058150ca4a358c"><td class="memItemLeft" align="right" valign="top"><a id="a055d3088ef696b1f3a058150ca4a358c"></a>
+std::string_view&#160;</td><td class="memItemRight" valign="bottom"><b>prefix</b> () const noexcept</td></tr>
+<tr class="separator:a055d3088ef696b1f3a058150ca4a358c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><h3>template&lt;class Advisor&gt;<br />

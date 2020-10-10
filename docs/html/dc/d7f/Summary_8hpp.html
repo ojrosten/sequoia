@@ -67,6 +67,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#typedef-members">Typedefs</a> &#124;
+<a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">Summary.hpp File Reference</div>  </div>
@@ -86,8 +87,22 @@ Typedefs</h2></td></tr>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::opt_duration</b> = std::optional&lt; log_summary::duration &gt;</td></tr>
 <tr class="separator:a152523c120e07c49e5d80d5b1a18e004"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:a005de6e9a187f3f10cc50eee1886b041"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d7f/Summary_8hpp.html#a005de6e9a187f3f10cc50eee1886b041">sequoia::testing::summary_detail</a> { <b>absent_checks</b> =1, 
+<b>failure_messages</b> =2, 
+<b>timings</b> =4
+ }</td></tr>
+<tr class="separator:a005de6e9a187f3f10cc50eee1886b041"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:adf46886aa5b58bac47919b498cb95c94"><td class="memItemLeft" align="right" valign="top"><a id="adf46886aa5b58bac47919b498cb95c94"></a>
+constexpr summary_detail&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::operator&amp;</b> (summary_detail lhs, summary_detail rhs) noexcept</td></tr>
+<tr class="separator:adf46886aa5b58bac47919b498cb95c94"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a139d7918365b755dfec8e3200659cd8c"><td class="memItemLeft" align="right" valign="top"><a id="a139d7918365b755dfec8e3200659cd8c"></a>
+constexpr summary_detail&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::operator|</b> (summary_detail lhs, summary_detail rhs) noexcept</td></tr>
+<tr class="separator:a139d7918365b755dfec8e3200659cd8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae1c98fa00c591644b2ee50415dfde9dc"><td class="memTemplParams" colspan="2"><a id="ae1c98fa00c591644b2ee50415dfde9dc"></a>
 template&lt;class Iter &gt; </td></tr>
 <tr class="memitem:ae1c98fa00c591644b2ee50415dfde9dc"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::pad_right</b> (Iter begin, Iter end, std::string_view suffix)</td></tr>
@@ -102,16 +117,40 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testi
 <tr class="memitem:ada56828e7e618c3658dbc90410bd5821"><td class="memItemLeft" align="right" valign="top"><a id="ada56828e7e618c3658dbc90410bd5821"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::report_time</b> (const log_summary &amp;log, const opt_duration duration)</td></tr>
 <tr class="separator:ada56828e7e618c3658dbc90410bd5821"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac4683d3d4256ef456ed1e8612c516d08"><td class="memItemLeft" align="right" valign="top"><a id="ac4683d3d4256ef456ed1e8612c516d08"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::summarize</b> (const log_summary &amp;log, const opt_duration duration, const log_verbosity verbosity, indentation ind_0, indentation ind_1)</td></tr>
-<tr class="separator:ac4683d3d4256ef456ed1e8612c516d08"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a83570131b03dceac222c30870b301e60"><td class="memItemLeft" align="right" valign="top"><a id="a83570131b03dceac222c30870b301e60"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::summarize</b> (const log_summary &amp;log, const log_verbosity verbosity, indentation ind_0, indentation ind_1)</td></tr>
-<tr class="separator:a83570131b03dceac222c30870b301e60"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade4926511d8254b97e6a5f428ffa8e3e"><td class="memItemLeft" align="right" valign="top"><a id="ade4926511d8254b97e6a5f428ffa8e3e"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::summarize</b> (const log_summary &amp;log, const opt_duration duration, const summary_detail verbosity, indentation ind_0, indentation ind_1)</td></tr>
+<tr class="separator:ade4926511d8254b97e6a5f428ffa8e3e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5cd55dc870535435c24d35f5384b84b"><td class="memItemLeft" align="right" valign="top"><a id="ac5cd55dc870535435c24d35f5384b84b"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::summarize</b> (const log_summary &amp;log, const summary_detail verbosity, indentation ind_0, indentation ind_1)</td></tr>
+<tr class="separator:ac5cd55dc870535435c24d35f5384b84b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Utilities for summarizing results of tests. </p>
-</div></div><!-- contents -->
+</div><h2 class="groupheader">Enumeration Type Documentation</h2>
+<a id="a005de6e9a187f3f10cc50eee1886b041"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a005de6e9a187f3f10cc50eee1886b041">&#9670;&nbsp;</a></span>summary_detail</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="../../dc/d7f/Summary_8hpp.html#a005de6e9a187f3f10cc50eee1886b041">sequoia::testing::summary_detail</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>bit mask for the level of detail </p>
+
+</div>
+</div>
+</div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">
