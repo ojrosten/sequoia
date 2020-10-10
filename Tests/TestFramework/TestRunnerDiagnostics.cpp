@@ -35,13 +35,20 @@ namespace sequoia::testing
     check_exception_thrown<std::runtime_error>(LINE("Missing symbol"),
                                                [](){ return generate_template_data("< class>"); });
 
-    check_equality(LINE("Specialization"), generate_template_data("<>"), template_data{template_spec{}});
+    check_equality(LINE("Specialization"), generate_template_data("<>"), template_data{{}});
     check_equality(LINE("Class template parameter"),
-                   generate_template_data("<class T>"), template_data{template_spec{"class", "T"}});
+                   generate_template_data("<class T>"), template_data{{"class", "T"}});
     check_equality(LINE("Class template parameter"),
-                   generate_template_data("<class T >"), template_data{template_spec{"class", "T"}});
+                   generate_template_data("<class T >"), template_data{{"class", "T"}});
     check_equality(LINE("Class template parameter"),
-                   generate_template_data("< class T>"), template_data{template_spec{"class", "T"}});
+                   generate_template_data("< class T>"), template_data{{"class", "T"}});
+
+    check_equality(LINE("Two template parameters"),
+                   generate_template_data("<class T, typename S>"),
+                   template_data{{"class", "T"}, {"typename", "S"}});
+    check_equality(LINE("Two template parameters"),
+                   generate_template_data("< class  T,  typename S >"),
+                   template_data{{"class", "T"}, {"typename", "S"}});
   }
 
   void test_runner_false_negative_test::test_creation()
