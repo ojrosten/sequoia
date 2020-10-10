@@ -82,6 +82,63 @@ namespace sequoia::testing
     return std::visit(visitor, m_Data);
   }
 
+  [[nodiscard]]
+  template_data generate_template_data(std::string_view str)
+  {
+    std::vector<template_spec> decomposition{};
+    
+    constexpr auto npos{std::string::npos};
+    if(auto openPos{str.find('<')}; openPos != npos)
+    {
+      if(auto closePos{str.rfind('>')}; closePos != npos)
+      {
+        if((closePos < openPos) || (closePos - openPos < 2))
+          throw std::runtime_error{std::string{str}.append(": unable to parse template")};
+
+        auto start{openPos + 1};
+        auto next{npos};
+        while((next = str.find(',', start)) != npos)
+        {
+          std::string_view v{&str.data()[start], next - start};
+
+          decomposition.push_back(generate_template_spec(v));
+            
+          start = next + 1;
+        }
+
+        std::string_view v{&str.data()[start], closePos - start};
+        decomposition.push_back(generate_template_spec(v));
+      }
+      else
+      {
+        throw std::runtime_error{std::string{str}.append(": < not matched by >")};
+      }
+        
+    }
+
+    return decomposition;
+  }
+
+  [[nodiscard]]
+  template_spec generate_template_spec(std::string_view str)
+  {    
+    constexpr auto npos{std::string::npos};
+    const auto endOfLastToken{str.find_last_not_of(" .")};
+    if(endOfLastToken == npos)
+      throw std::runtime_error(std::string{str}.append(" Unable to locate end of final token"));
+    
+    const auto beforeLastToken{str.substr(0, endOfLastToken).rfind(' ')};
+    if(beforeLastToken == npos)
+      throw std::runtime_error(std::string{str}.append(" Unable to locate start of final token"));
+
+    const auto lastTokenSize{endOfLastToken - beforeLastToken};
+    const auto endOfLastTemplateSpec{str.substr(0, str.size() - lastTokenSize).find_last_not_of(" .")};
+    if(endOfLastTemplateSpec == npos)
+      return {"", std::string{str}};
+    
+    return {std::string{str.substr(0, endOfLastTemplateSpec + 1)}, std::string{str.substr(beforeLastToken + 1, lastTokenSize)}};
+  }
+
   //=========================================== nascent_test ===========================================//
 
   nascent_test::nascent_test(creation_data data)
@@ -141,63 +198,6 @@ namespace sequoia::testing
     }
 
     m_HostDirectory = data.host.get(m_ClassHeader);
-  }
-
-  [[nodiscard]]
-  auto nascent_test::generate_template_data(std::string_view str) -> template_data
-  {
-    std::vector<template_spec> decomposition{};
-    
-    constexpr auto npos{std::string::npos};
-    if(auto openPos{str.find('<')}; openPos != npos)
-    {
-      if(auto closePos{str.rfind('>')}; closePos != npos)
-      {
-        if((closePos < openPos) || (closePos - openPos < 2))
-          throw std::runtime_error{std::string{str}.append(": unable to parse template")};
-
-        auto start{openPos + 1};
-        auto next{npos};
-        while((next = str.find(',', start)) != npos)
-        {
-          std::string_view v{&str.data()[start], next - start};
-
-          decomposition.push_back(generate_template_spec(v));
-            
-          start = next + 1;
-        }
-
-        std::string_view v{&str.data()[start], closePos - start};
-        decomposition.push_back(generate_template_spec(v));
-      }
-      else
-      {
-        throw std::runtime_error{std::string{str}.append(": < not matched by >")};
-      }
-        
-    }
-
-    return decomposition;
-  }
-
-  [[nodiscard]]
-  auto nascent_test::generate_template_spec(std::string_view str) -> template_spec
-  {    
-    constexpr auto npos{std::string::npos};
-    const auto endOfLastToken{str.find_last_not_of(" .")};
-    if(endOfLastToken == npos)
-      throw std::runtime_error(std::string{str}.append(" Unable to locate end of final token"));
-    
-    const auto beforeLastToken{str.substr(0, endOfLastToken).rfind(' ')};
-    if(beforeLastToken == npos)
-      throw std::runtime_error(std::string{str}.append(" Unable to locate start of final token"));
-
-    const auto lastTokenSize{endOfLastToken - beforeLastToken};
-    const auto endOfLastTemplateSpec{str.substr(0, str.size() - lastTokenSize).find_last_not_of(" .")};
-    if(endOfLastTemplateSpec == npos)
-      return {"", std::string{str}};
-    
-    return {std::string{str.substr(0, endOfLastTemplateSpec + 1)}, std::string{str.substr(beforeLastToken + 1, lastTokenSize)}};
   }
 
   [[nodiscard]]

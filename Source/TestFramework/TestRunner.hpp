@@ -89,6 +89,16 @@ namespace sequoia::testing
     std::string testType{}, qualifiedName{}, family{}, classHeader{};
   };
 
+  
+  struct template_spec { std::string species, symbol; };
+  using template_data = std::vector<template_spec>;
+  
+  [[nodiscard]]
+  template_data generate_template_data(std::string_view str);
+
+  [[nodiscard]]
+  template_spec generate_template_spec(std::string_view str);
+
   /*! \brief Holds data for the automated creation of new tests */
   class nascent_test
   {
@@ -104,8 +114,6 @@ namespace sequoia::testing
     [[nodiscard]]
     std::string_view class_name() const noexcept { return m_RawClassName; }
   private:
-    struct template_spec { std::string species, symbol; };
-    using template_data = std::vector<template_spec>;
 
     std::string
       m_Family{},
@@ -121,12 +129,6 @@ namespace sequoia::testing
     std::vector<std::string> m_EquivalentTypes{};
 
     void transform_file(const std::filesystem::path& file, std::string_view copyright) const;
-
-    [[nodiscard]]
-    static auto generate_template_data(std::string_view str) -> template_data;
-
-    [[nodiscard]]
-    static auto generate_template_spec(std::string_view str) -> template_spec;
   };
 
   struct repositories

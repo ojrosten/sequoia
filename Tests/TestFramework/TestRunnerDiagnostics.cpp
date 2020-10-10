@@ -20,7 +20,15 @@ namespace sequoia::testing
 
   void test_runner_false_negative_test::run_tests()
   {
+    test_template_data_generation();
     test_creation();
+  }
+
+  void test_runner_false_negative_test::test_template_data_generation()
+  {
+    check(LINE(""), generate_template_data("").empty());
+    check_exception_thrown<std::runtime_error>(LINE("Unmatched <"),
+                                               [](){ return generate_template_data("<"); });
   }
 
   void test_runner_false_negative_test::test_creation()
