@@ -90,26 +90,29 @@ namespace sequoia::testing
           
         check_equality(mess, logger, *(iters.first), *(iters.second), adv);
       }
-      else if(iters.second != prediction.end())
+      else if((iters.first != obtained.end()) || (iters.second != prediction.end()))
       {
-        const auto dist{std::distance(prediction.begin(), iters.second)};
-        const auto info{std::string{"First missing character: "}.append(display_character(*iters.second))};
-        auto adv{make_advisor(info, obtained, prediction, dist, advisor)};
+        auto check{
+          [&logger, obtained, prediction, &advisor](auto begin, auto iter, std::string_view state, std::string_view adjective){
+            const auto dist{std::distance(begin, iter)};
+            const auto info{std::string{"First "}.append(state).append(" character: ").append(display_character(*iter))};
+            auto adv{make_advisor(info, obtained, prediction, dist, advisor)};
 
-        const auto mess{append_lines("Lengths differ", "Obtained string is too short")};
+            const auto mess{append_lines("Lengths differ", std::string{"Obtained string is too "}.append(adjective))};
 
-        check_equality(mess, logger, obtained.size(), prediction.size(), adv);
+            check_equality(mess, logger, obtained.size(), prediction.size(), adv);
+          }
+        };
+        
+        if(iters.second != prediction.end())
+        {
+          check(prediction.begin(), iters.second, "missing", "short");
+        }
+        else if(iters.first != obtained.end())
+        {
+          check(obtained.begin(), iters.first, "excess", "long");
+        }
       }
-      else if(iters.first != obtained.end())
-      {
-        const auto dist{std::distance(obtained.begin(), iters.first)};          
-        const auto info{std::string{"First excess character: "}.append(display_character(*iters.first))};
-        auto adv{make_advisor(info, obtained, prediction, dist, advisor)};
-
-        const auto mess{append_lines("Lengths differ", "Obtained string is too long")};
-
-        check_equality(mess, logger, obtained.size(), prediction.size(), adv);
-      }         
     }
   };
 
