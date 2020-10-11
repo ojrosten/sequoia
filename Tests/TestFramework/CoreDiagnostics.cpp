@@ -121,7 +121,10 @@ namespace sequoia::testing
     check_equality(LINE("Short string compared with long string"), "This is a mess"s, longMessage);
     check_equality(LINE("Long string with short string"), longMessage, "This is a mess"s);
 
-    check_equality(LINE(""), "Hello\nWorld"s, "Hello, World"s);
+    check_equality(LINE("Strings differing by a newline"), "Hello\nWorld"s, "Hello, World"s);
+    check_equality(LINE("Strings differing by a newline"), "Hello, World"s, "Hello\nWorld"s);
+    check_equality(LINE("Strings differing by a newline at the start"), "\nHello, World"s, "Hello, World"s);
+    check_equality(LINE("Strings differing by a newline at the start"), "Hello, World"s, "\nHello, World"s);
 
     std::string corruptedMessage{longMessage};
     corruptedMessage[75] = 'x';

@@ -30,19 +30,15 @@ namespace sequoia::testing
     static auto make_advisor(std::string_view info, string_view_type obtained, string_view_type prediction, size_type pos, const tutor<Advisor>& advisor)
     {
       constexpr size_type count{60}, npos{string_view_type::npos};
-      size_type offset{30};
-
       const auto sz{std::min(obtained.size(), prediction.size())};
 
       auto newlineLoc{ [pos](string_view_type sv){ return sv.rfind('\n', pos); } };
 
-      auto loc{newlineLoc(obtained.size() > prediction.size() ? obtained : prediction)};
-      if((loc == npos) && (pos < obtained.size()))
-      {
-        loc = newlineLoc(obtained);
-      }
-      
-      if(loc < npos) offset = std::min(offset, pos - loc);
+      auto loc{pos < prediction.size() ? newlineLoc(prediction) : npos};
+      if((loc == npos) && (pos < obtained.size())) loc = newlineLoc(obtained);
+
+      constexpr size_type defaultOffset{30};
+      const size_type offset{loc < npos ? std::min(defaultOffset, pos - loc) : defaultOffset};
 
       const auto lpos{pos < offset ? 0 :
                          pos < sz  ? pos - offset : sz - std::min(sz, offset)};
