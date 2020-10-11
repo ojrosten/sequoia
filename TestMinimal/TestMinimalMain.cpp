@@ -26,7 +26,7 @@ int main(int argc, char** argv)
     };
   
     runner.add_test_family(
-      "Diagnostics",
+      "Core Diagnostics",
       false_positive_diagnostics{"False Positive Diagnostics"},
       false_negative_diagnostics{"False Negative Diagnostics"}
     );

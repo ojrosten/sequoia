@@ -24,29 +24,49 @@ int main(int argc, char** argv)
                        root/"TestCommon" /"TestIncludes.hpp",
                        repositories(root)
     };
-  
+
     runner.add_test_family(
-      "Diagnostics",
+      "Core Diagnostics",
       false_positive_diagnostics{"False Positive Diagnostics"},
+      false_negative_diagnostics{"False Negative Diagnostics"}
+    );
+    
+    runner.add_test_family(
+      "Extended Diagnostics",
       move_only_false_positive_diagnostics{"Move-Only False Positive Diagnostics"},
-      performance_false_positive_diagnostics{"Performance False Positive Diagnostics"},
-      fuzzy_false_positive_diagnostics{"Fuzzy False Positive Diagnostics"},
-      allocation_false_positive_diagnostics{"Alloction False Positive Diagnostics"},
-      move_only_allocation_false_positive_diagnostics{"Move-Only Alloction False Positive Diagnostics"},
-      scoped_allocation_false_positive_diagnostics{"Scoped Allocation False Positive Diagnostics"},
-      move_only_scoped_allocation_false_positive_diagnostics{"Move-Only Scoped Allocation False Positive Diagnostics"},
       orderable_move_only_false_positive_diagnostics{"Orderable Move-Only False Positive Diagnostics"},
       orderable_regular_false_positive_diagnostics{"Orderable Regular False Positive Diagnostics"},
-      false_negative_diagnostics{"False Negative Diagnostics"},
       move_only_false_negative_diagnostics{"Move-Only False Negative Diagnostics"},
-      performance_false_negative_diagnostics{"Performance False Negative Diagnostics"},
-      fuzzy_false_negative_diagnostics{"Fuzzy False Negative Diagnostics"},
-      allocation_false_negative_diagnostics{"Allocation False Negative Diagnostics"},
-      move_only_allocation_false_negative_diagnostics{"Move-Only Allocation False Negative Diagnostics"},
-      scoped_allocation_false_negative_diagnostics{"Scoped Allocation False Negative Diagnostics"},
-      move_only_scoped_allocation_false_negative_diagnostics{"Move-Only Scoped Allocation False Negative Diagnostics"},           
       orderable_move_only_false_negative_diagnostics{"Orderable Move-Only False Negative Diagnostics"},
       orderable_regular_false_negative_diagnostics{"Orderable Regular False Negative Diagnostics"}
+    );
+
+    runner.add_test_family(
+      "Allocation Diagnostics",            
+      allocation_false_positive_diagnostics{"Alloction False Positive Diagnostics"},      
+      move_only_allocation_false_positive_diagnostics{"Move-Only Alloction False Positive Diagnostics"},    
+      allocation_false_negative_diagnostics{"Allocation False Negative Diagnostics"},
+      move_only_allocation_false_negative_diagnostics{"Move-Only Allocation False Negative Diagnostics"}
+    );
+
+    runner.add_test_family(
+      "Scoped Allocation Diagnostics",   
+      scoped_allocation_false_positive_diagnostics{"Scoped Allocation False Positive Diagnostics"},
+      move_only_scoped_allocation_false_positive_diagnostics{"Move-Only Scoped Allocation False Positive Diagnostics"},    
+      scoped_allocation_false_negative_diagnostics{"Scoped Allocation False Negative Diagnostics"},
+      move_only_scoped_allocation_false_negative_diagnostics{"Move-Only Scoped Allocation False Negative Diagnostics"}
+    );
+
+    runner.add_test_family(
+      "Performance Diagnostics",      
+      performance_false_positive_diagnostics{"Performance False Positive Diagnostics"},      
+      performance_false_negative_diagnostics{"Performance False Negative Diagnostics"}
+    );
+
+    runner.add_test_family(
+      "Fuzzy Diagnostics",            
+      fuzzy_false_positive_diagnostics{"Fuzzy False Positive Diagnostics"},     
+      fuzzy_false_negative_diagnostics{"Fuzzy False Negative Diagnostics"}
     );
 
     runner.add_test_family(
