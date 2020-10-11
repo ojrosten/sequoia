@@ -13,54 +13,10 @@
 
 namespace sequoia::testing
 {
+  [[nodiscard]]
   std::string footer()
   {
     return "=======================================\n\n";
-  }
-  
-  std::string indent(std::string_view s, indentation ind)
-  {
-    if(s.empty()) return {};
-    if(ind == no_indent) return std::string{s};
-
-    std::string str{};
-    str.reserve(s.size());
-    
-    std::string::size_type current{};
-    
-    while(current < s.size())
-    {      
-      constexpr auto npos{std::string::npos};
-      const auto dist{s.substr(current).find('\n')};
-
-      const auto count{dist == npos ? npos : dist + 1};
-      auto line{s.substr(current, count == npos ? npos : count)};
-      if(line.find_first_not_of('\n') != npos)
-        str.append(ind);
-      
-      str.append(line);
-
-      current = (count == npos) ? npos : current + count;
-    }    
-    
-    return str;
-  }
-
-  std::string& append_indented(std::string& s1, std::string_view s2, indentation ind)
-  {
-    if(!s2.empty())
-    {
-      if(s1.empty())
-      {
-        s1 = s2;
-      }
-      else
-      {
-        s1.append("\n").append(indent(s2, ind));
-      }
-    }
-
-    return s1;
   }
 
   void end_block(std::string& s, const std::size_t newlines, std::string_view footer)
@@ -130,24 +86,24 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
+  std::string display_character(char c)
+  {
+    if(c == '\a') return "'\\a'";
+    if(c == '\b') return "'\\b'";
+    if(c == '\f') return "'\\f'";
+    if(c == '\n') return "'\\n'";
+    if(c == '\r') return "'\\r'";
+    if(c == '\t') return "'\\t'";
+    if(c == '\v') return "'\\v'";
+    if(c == ' ')  return "' '";
+
+    return std::string(1, c);
+  }
+
+  [[nodiscard]]
   std::string prediction_message(char obtained, char predicted)
   {
-    auto transformer{
-      [](char c) -> std::string {
-        if(c == '\a') return "'\\a'";
-        if(c == '\b') return "'\\b'";
-        if(c == '\f') return "'\\f'";
-        if(c == '\n') return "'\\n'";
-        if(c == '\r') return "'\\r'";
-        if(c == '\t') return "'\\t'";
-        if(c == '\v') return "'\\v'";
-        if(c == ' ')  return "' '";
-
-        return std::string(1, c);
-      }
-    };
-
-    return prediction_message(transformer(obtained), transformer(predicted));
+    return prediction_message(display_character(obtained), display_character(predicted));
   }
 
   [[nodiscard]]

@@ -27,7 +27,7 @@ namespace sequoia::testing
     using size_type = typename string_view_type::size_type;
 
     template<class Advisor>
-    static auto make_advisor(string_view_type obtained, string_view_type prediction, size_type pos, const tutor<Advisor>& advisor)
+    static auto make_advisor(std::string_view info, string_view_type obtained, string_view_type prediction, size_type pos, const tutor<Advisor>& advisor)
     {
       constexpr size_type offset{30}, count{60};
 
@@ -49,7 +49,7 @@ namespace sequoia::testing
       };
 
       const bool truncation{(lpos > 0) || (lpos + count < obtained.size()) || (lpos + count < prediction.size())};
-      const auto message{append_lines(truncation ? "Surrounding substring(s):" : "Full strings:",
+      const auto message{append_lines(info, truncation ? "Surrounding substring(s):" : "Full strings:",
                                       prediction_message(make(obtained), make(prediction)))};
         
       if constexpr(invocable<tutor<Advisor>, Char, Char>)
@@ -81,29 +81,34 @@ namespace sequoia::testing
       if((iters.first != obtained.end()) && (iters.second != prediction.end()))
       {
         const auto dist{std::distance(obtained.begin(), iters.first)};          
-        auto adv{make_advisor(obtained, prediction, dist, advisor)};
+        auto adv{make_advisor("", obtained, prediction, dist, advisor)};
 
         const auto mess{
           std::string{"First difference detected at character "}
-          .append(std::to_string(dist))
-             .append(":")
-             };
+            .append(std::to_string(dist)).append(":")
+        };
           
         check_equality(mess, logger, *(iters.first), *(iters.second), adv);
       }
       else if(iters.second != prediction.end())
       {
         const auto dist{std::distance(prediction.begin(), iters.second)};
-        auto adv{make_advisor(obtained, prediction, dist, advisor)};
+        const auto info{std::string{"First missing character: "}.append(display_character(*iters.second))};
+        auto adv{make_advisor(info, obtained, prediction, dist, advisor)};
 
-        check_equality("Obtained string is too short", logger, obtained.size(), prediction.size(), adv);
+        const auto mess{append_lines("Lengths differ", "Obtained string is too short")};
+
+        check_equality(mess, logger, obtained.size(), prediction.size(), adv);
       }
       else if(iters.first != obtained.end())
       {
         const auto dist{std::distance(obtained.begin(), iters.first)};          
-        auto adv{make_advisor(obtained, prediction, dist, advisor)};
+        const auto info{std::string{"First excess character: "}.append(display_character(*iters.first))};
+        auto adv{make_advisor(info, obtained, prediction, dist, advisor)};
 
-        check_equality("Obtained string is too long", logger, obtained.size(), prediction.size(), adv);
+        const auto mess{append_lines("Lengths differ", "Obtained string is too long")};
+
+        check_equality(mess, logger, obtained.size(), prediction.size(), adv);
       }         
     }
   };

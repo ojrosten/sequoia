@@ -337,12 +337,14 @@
 	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	operator== returned false
 
+	  Lengths differ
 	  Obtained string is too short
 	  [unsigned long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 110
 
+	  First missing character: T
 	  Surrounding substring(s):
 	  Obtained : 
 	  Predicted: This is a message which is sufficiently long for only a segm...
@@ -355,12 +357,14 @@
 	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	operator== returned false
 
+	  Lengths differ
 	  Obtained string is too long
 	  [unsigned long]
 	  operator== returned false
 	  Obtained : 110
 	  Predicted: 0
 
+	  First excess character: T
 	  Surrounding substring(s):
 	  Obtained : This is a message which is sufficiently long for only a segm...
 	  Predicted: 
@@ -373,12 +377,14 @@
 	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	operator== returned false
 
+	  Lengths differ
 	  Obtained string is too short
 	  [unsigned long]
 	  operator== returned false
 	  Obtained : 14
 	  Predicted: 110
 
+	  First missing character: a
 	  Surrounding substring(s):
 	  Obtained : This is a mess
 	  Predicted: This is a message which is sufficiently long for only a segm...
@@ -391,12 +397,14 @@
 	[std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
 	operator== returned false
 
+	  Lengths differ
 	  Obtained string is too long
 	  [unsigned long]
 	  operator== returned false
 	  Obtained : 110
 	  Predicted: 14
 
+	  First excess character: a
 	  Surrounding substring(s):
 	  Obtained : This is a message which is sufficiently long for only a segm...
 	  Predicted: This is a mess
@@ -686,12 +694,14 @@
 	With equivalent types:
 	[char [3]]
 
+	  Lengths differ
 	  Obtained string is too long
 	  [unsigned long]
 	  operator== returned false
 	  Obtained : 3
 	  Predicted: 2
 
+	  First excess character: o
 	  Full strings:
 	  Obtained : foo
 	  Predicted: fo

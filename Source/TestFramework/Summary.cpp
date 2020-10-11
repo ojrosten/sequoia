@@ -94,7 +94,7 @@ namespace sequoia::testing
     if(log.standard_top_level_checks())
       summaries.front().append("  [Deep checks: " + std::to_string(log.standard_deep_checks()) + "]");
     
-    std::string summary{testing::indent(log.name(), ind_0)};
+    std::string summary{sequoia::indent(log.name(), ind_0)};
 
     if((verbosity & summary_detail::timings) == summary_detail::timings)
     {
