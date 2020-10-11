@@ -81,34 +81,32 @@ namespace sequoia::testing
     static void check(test_logger<Mode>& logger, string_view_type obtained, string_view_type prediction, const tutor<Advisor>& advisor)
     {
       auto iters{std::mismatch(obtained.begin(), obtained.end(), prediction.begin(), prediction.end())};
-      if((iters.first != obtained.end()) || (iters.second != prediction.end()))
-      {
-        if(iters.first != obtained.end())
-        {
-          const auto dist{std::distance(obtained.begin(), iters.first)};          
-          auto adv{make_advisor(obtained, prediction, dist, advisor)};
 
-          if(iters.second != prediction.end())
-          {
-            const auto mess{
-              std::string{"First difference detected at character "}
-                .append(std::to_string(dist))
-                .append(":")
+      if((iters.first != obtained.end()) && (iters.second != prediction.end()))
+      {
+        const auto dist{std::distance(obtained.begin(), iters.first)};          
+        auto adv{make_advisor(obtained, prediction, dist, advisor)};
+
+        const auto mess{
+          std::string{"First difference detected at character "}
+          .append(std::to_string(dist))
+             .append(":")
              };
           
-            check_equality(mess, logger, *(iters.first), *(iters.second), adv);
-          }
-          else
-          {
-            check_equality("Obtained string is too long", logger, obtained.size(), prediction.size(), adv);
-          }
-        }
-        else if(iters.second != prediction.end())
-        {
-          auto adv{make_advisor(obtained, prediction, string_view_type::npos, advisor)};
-          check_equality("Obtained string is too short", logger, obtained.size(), prediction.size(), adv);
-        }
+        check_equality(mess, logger, *(iters.first), *(iters.second), adv);
       }
+      else if(iters.second != prediction.end())
+      {
+        auto adv{make_advisor(obtained, prediction, string_view_type::npos, advisor)};
+        check_equality("Obtained string is too short", logger, obtained.size(), prediction.size(), adv);
+      }
+      else if(iters.first != obtained.end())
+      {
+        const auto dist{std::distance(obtained.begin(), iters.first)};          
+        auto adv{make_advisor(obtained, prediction, dist, advisor)};
+
+        check_equality("Obtained string is too long", logger, obtained.size(), prediction.size(), adv);
+      }         
     }
   };
 
