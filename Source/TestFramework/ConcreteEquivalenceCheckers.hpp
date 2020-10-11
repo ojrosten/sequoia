@@ -29,13 +29,9 @@ namespace sequoia::testing
     template<class Advisor>
     static auto make_advisor(string_view_type obtained, string_view_type prediction, size_type pos, const tutor<Advisor>& advisor)
     {
-      
-      constexpr auto npos{string_view_type::npos};
       constexpr size_type offset{30}, count{60};
 
       const auto sz{std::min(obtained.size(), prediction.size())};
-
-      if(pos == npos) pos = sz;
 
       const auto lpos{pos < offset ? 0 :
                          pos < sz  ? pos - offset : sz - std::min(sz, offset)};
@@ -97,7 +93,9 @@ namespace sequoia::testing
       }
       else if(iters.second != prediction.end())
       {
-        auto adv{make_advisor(obtained, prediction, string_view_type::npos, advisor)};
+        const auto dist{std::distance(prediction.begin(), iters.second)};
+        auto adv{make_advisor(obtained, prediction, dist, advisor)};
+
         check_equality("Obtained string is too short", logger, obtained.size(), prediction.size(), adv);
       }
       else if(iters.first != obtained.end())
