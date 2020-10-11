@@ -121,6 +121,8 @@ namespace sequoia::testing
     check_equality(LINE("Short string compared with long string"), "This is a mess"s, longMessage);
     check_equality(LINE("Long string with short string"), longMessage, "This is a mess"s);
 
+    check_equality(LINE(""), "Hello\nWorld"s, "Hello, World"s);
+
     std::string corruptedMessage{longMessage};
     corruptedMessage[75] = 'x';
 
