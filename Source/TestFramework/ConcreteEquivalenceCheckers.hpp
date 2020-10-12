@@ -44,7 +44,7 @@ namespace sequoia::testing
       struct message{ std::string mess; bool trunc{}; };
       
       auto make{
-        [lpos](string_view_type sv) -> message {          
+        [lpos](string_view_type sv) -> message {
           std::string mess{lpos > 0 ? "..." : ""};
 
           const auto pos{lpos < sv.size() && sv[lpos] == '\n' ? lpos + 1 : lpos};
