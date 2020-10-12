@@ -29,38 +29,45 @@ namespace sequoia::testing
     template<class Advisor>
     static auto make_advisor(std::string_view info, string_view_type obtained, string_view_type prediction, size_type pos, const tutor<Advisor>& advisor)
     {
-      constexpr size_type defaultOffset{30}, count{60}, npos{string_view_type::npos};
+      constexpr size_type defaultOffset{30}, defaultCount{60}, npos{string_view_type::npos};
       const auto sz{std::min(obtained.size(), prediction.size())};
 
-      auto newlineLoc{ [pos](string_view_type sv){ return sv.rfind('\n', pos); } };
+      auto newlineBackwards{ [pos](string_view_type sv){ return pos < sv.size() ? sv.rfind('\n', pos) : npos; } };
 
-      auto loc{pos < prediction.size() ? newlineLoc(prediction) : npos};
-      if((loc == npos) && (pos < obtained.size())) loc = newlineLoc(obtained);
+      const auto loc{std::min(newlineBackwards(prediction), newlineBackwards(obtained))};
 
       const size_type offset{loc < npos ? std::min(defaultOffset, pos - loc) : defaultOffset};
 
       const auto lpos{pos < offset ? 0 :
                          pos < sz  ? pos - offset : sz - std::min(sz, offset)};
 
+      struct message{ std::string mess; bool trunc{}; };
+      
       auto make{
-        [lpos](string_view_type sv){
+        [lpos](string_view_type sv) -> message {          
           std::string mess{lpos > 0 ? "..." : ""};
 
           const auto pos{lpos < sv.size() && sv[lpos] == '\n' ? lpos + 1 : lpos};
           if(pos == lpos + 1) mess.append("\\n");
 
+          const auto rpos{sv.find('\n', pos+1)};
+          auto count{rpos == npos ? defaultCount : rpos - pos};
+
           mess.append(sv.substr(pos, count));
 
-          if(lpos + count < sv.size())
-            mess.append("...");
+          const bool trunc{lpos + count < sv.size()};
+          if(trunc) mess.append("...");
 
-          return mess;
+          return {mess, trunc};
         }
       };
 
-      const bool truncation{(lpos > 0) || (lpos + count < obtained.size()) || (lpos + count < prediction.size())};
-      const auto message{append_lines(info, truncation ? "Surrounding substring(s):" : "Full strings:",
-                                      prediction_message(make(obtained), make(prediction)))};
+      const auto[obMess,obTrunc]{make(obtained)};
+      const auto[prMess,prTrunc]{make(prediction)};
+
+      const bool trunc{lpos > 0 || obTrunc || prTrunc};
+      const auto message{append_lines(info,  trunc ? "Surrounding substring(s):" : "Full strings:",
+                                      prediction_message(obMess, prMess))};
         
       if constexpr(invocable<tutor<Advisor>, Char, Char>)
       {
