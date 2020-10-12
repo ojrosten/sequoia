@@ -141,9 +141,15 @@ namespace sequoia::testing
     if(endOfLastTemplateSpec == npos)
       throw std::runtime_error{mess(" Unable to locate species/symbol pair")};
 
-    auto first{str.substr(0, endOfLastTemplateSpec).rfind(' ')};
-    if((first != npos) && (str[first + 1] == '.'))
-       first = str.substr(0, first).rfind(' ');
+    const auto first{
+      [str, end{endOfLastTemplateSpec}](){
+        auto pos{str.substr(0, end).rfind(' ')};
+        if((pos != npos) && (str.size() > pos + 1) && (str[pos + 1] == '.'))
+          pos = str.substr(0, pos).rfind(' ');
+
+        return pos;
+      }()
+    };
 
     std::string::size_type pos{first == npos ? 0 : first + 1};
     
