@@ -137,11 +137,14 @@ namespace sequoia::testing
       throw std::runtime_error{mess(" Unable to locate species/symbol pair")};
 
     const auto lastTokenSize{endOfLastToken - beforeLastToken};
-    const auto endOfLastTemplateSpec{str.substr(0, endOfLastToken + 1 - lastTokenSize).find_last_not_of(" .")};
+    const auto endOfLastTemplateSpec{str.substr(0, endOfLastToken + 1 - lastTokenSize).find_last_not_of(" ")};
     if(endOfLastTemplateSpec == npos)
       throw std::runtime_error{mess(" Unable to locate species/symbol pair")};
 
-    const auto first{str.substr(0, endOfLastTemplateSpec).rfind(' ')};
+    auto first{str.substr(0, endOfLastTemplateSpec).rfind(' ')};
+    if((first != npos) && (str[first + 1] == '.'))
+       first = str.substr(0, first).rfind(' ');
+
     std::string::size_type pos{first == npos ? 0 : first + 1};
     
     return {std::string{str.substr(pos, endOfLastTemplateSpec + 1 - pos)}, std::string{str.substr(beforeLastToken + 1, lastTokenSize)}};

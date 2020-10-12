@@ -49,6 +49,12 @@ namespace sequoia::testing
     check_equality(LINE("Two template parameters"),
                    generate_template_data("< class  T,  typename S >"),
                    template_data{{"class", "T"}, {"typename", "S"}});
+
+    check_equality(LINE("Variadic template"),
+                   generate_template_data("<class... T>"), template_data{{"class...", "T"}});
+
+    check_equality(LINE("Variadic template"),
+                   generate_template_data("<class ... T>"), template_data{{"class ...", "T"}});
   }
 
   void test_runner_test::test_creation()
