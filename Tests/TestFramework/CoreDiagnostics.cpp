@@ -110,6 +110,8 @@ namespace sequoia::testing
   void false_positive_diagnostics::test_strings()
   {
     using namespace std::string_literals;
+    check_equality(LINE("Empty and non-empty strings"), ""s, "Hello, World!"s);
+    check_equality(LINE("Empty and non-empty strings"), "Hello, World!"s, ""s);
     check_equality(LINE("Strings of differing length"), "what?!"s, "Hello, World!"s);
     check_equality(LINE("Differing strings of same length"), "Hello, world?"s, "Hello, World!"s);
 

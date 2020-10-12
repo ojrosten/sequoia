@@ -15,7 +15,7 @@
     An alias template, basic_free_test, is provided from which all tests of free functions should derive.
 */
 
-#include "ConcreteEqualityCheckers.hpp"
+#include "ConcreteTypeCheckers.hpp"
 
 #include "Concepts.hpp"
 
