@@ -70,7 +70,7 @@ namespace sequoia::testing
           if(pos == lpos + 1) mess.append("\\n");
 
           const auto rpos{sv.find('\n', pos+1)};
-          auto count{rpos == npos ? defaultCount : rpos - pos};
+          const auto count{rpos == npos ? defaultCount : rpos - pos};
 
           mess.append(sv.substr(pos, count));
 
