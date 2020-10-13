@@ -16,12 +16,12 @@
 */
 
 #include "ConcreteTypeCheckers.hpp"
+#include "FileSystem.hpp"
 
 #include "Concepts.hpp"
 
 namespace sequoia::testing
-{
-
+{  
   /*! \brief Abstract base class used for type-erasure of the template class basic_test.
 
       This class allows for convenient, homogeneous treatment of all concrete tests.
@@ -36,9 +36,8 @@ namespace sequoia::testing
   class test
   {
   public:    
-    test(std::string_view name, std::filesystem::path materials="")
+    explicit test(std::string_view name)
       : m_Name{name}
-      , m_Materials{std::move(materials)}
     {}
 
     virtual ~test() = default;
@@ -63,14 +62,25 @@ namespace sequoia::testing
     std::string_view name() const noexcept { return m_Name; }
 
     [[nodiscard]]
-    const std::filesystem::path& materials() const noexcept
+    const std::filesystem::path& working_materials() const noexcept
     {
-      return m_Materials;
+      throw_unless_exists(m_WorkingMaterials);
+
+      return m_WorkingMaterials;
     }
 
-    void materials(std::filesystem::path materials)
+    [[nodiscard]]
+    const std::filesystem::path& predictive_materials() const noexcept
     {
-      m_Materials = std::move(materials);
+      throw_unless_exists(m_PredictiveMaterials);
+      
+      return m_PredictiveMaterials;
+    }
+
+    void materials(std::filesystem::path workingMaterials, std::filesystem::path predictiveMaterials)
+    {
+      m_WorkingMaterials    = std::move(workingMaterials);
+      m_PredictiveMaterials = std::move(predictiveMaterials);
     }
   protected:
     test(test&&) noexcept = default;
@@ -84,8 +94,8 @@ namespace sequoia::testing
     virtual std::string_view source_file() const noexcept = 0;
 
   private:
-    std::string m_Name;
-    std::filesystem::path m_Materials;
+    std::string m_Name{};
+    std::filesystem::path m_WorkingMaterials{}, m_PredictiveMaterials{};   
   };
 
   template<class T>

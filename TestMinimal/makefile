@@ -36,6 +36,8 @@ EXE    := $(BUILD_DIR)/TestMinimal.exe
 
 UT_SRCS := TestMinimalMain.cpp
 UT_SRCS += ../Tests/TestFramework/CoreDiagnostics.cpp
+UT_SRCS += ../Tests/TestFramework/TestRunnerTest.cpp
+UT_SRCS += ../Tests/TestFramework/TestRunnerDiagnostics.cpp
 
 UT_OBJS := $(addprefix $(UT_BUILD_DIR)/, $(UT_SRCS:%.cpp=%.o))
 UT_DEPS := $(addprefix $(UT_BUILD_DIR)/, $(UT_SRCS:%.cpp=%.d))

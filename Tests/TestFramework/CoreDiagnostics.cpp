@@ -202,47 +202,47 @@ namespace sequoia::testing
 
     namespace fs = std::filesystem;
 
-    if(!fs::exists(materials()))
-      throw std::runtime_error{std::string{"Test materials \""}.append(materials()).append("\" not found")};    
+    if(!fs::exists(working_materials()))
+      throw std::runtime_error{std::string{"Test materials \""}.append(working_materials()).append("\" not found")};    
 
     check_equivalence(LINE(""), std::pair<const int&, double>{5, 7.8}, std::pair<int, const double&>{-5, 6.8});
     check_equivalence(LINE(""), std::tuple<const int&, double>{5, 7.8}, std::tuple<int, const double&>{-5, 6.8});
 
     check_equivalence(LINE("Inequivalence of two different paths, neither of which exists"),
-                      fs::path{materials()}.append("Stuff").append("Blah"),
-                      fs::path{materials()}.append("Stuff").append("Blurg"));
+                      fs::path{working_materials()}.append("Stuff").append("Blah"),
+                      fs::path{working_materials()}.append("Stuff").append("Blurg"));
 
     check_equivalence(LINE("Inequivalence of two different paths, one of which exists"),
-                      fs::path{materials()}.append("Stuff").append("Blah"),
-                      fs::path{materials()}.append("Stuff").append("A"));
+                      fs::path{working_materials()}.append("Stuff").append("Blah"),
+                      fs::path{working_materials()}.append("Stuff").append("A"));
 
     check_equivalence(LINE("Inequivalence of directory/file"),
-                      fs::path{materials()}.append("Stuff").append("A"),
-                      fs::path{materials()}.append("Stuff").append("A").append("foo.txt"));
+                      fs::path{working_materials()}.append("Stuff").append("A"),
+                      fs::path{working_materials()}.append("Stuff").append("A").append("foo.txt"));
 
     check_equivalence(LINE("Inequivalence of differently named files"),
-                      fs::path{materials()}.append("Stuff").append("B").append("foo.txt"),
-                      fs::path{materials()}.append("Stuff").append("B").append("bar.txt"));
+                      fs::path{working_materials()}.append("Stuff").append("B").append("foo.txt"),
+                      fs::path{working_materials()}.append("Stuff").append("B").append("bar.txt"));
 
     check_equivalence(LINE("Inequivalence of file contents"),
-                      fs::path{materials()}.append("Stuff").append("A").append("foo.txt"),
-                      fs::path{materials()}.append("Stuff").append("B").append("foo.txt"));
+                      fs::path{working_materials()}.append("Stuff").append("A").append("foo.txt"),
+                      fs::path{working_materials()}.append("Stuff").append("B").append("foo.txt"));
 
     check_equivalence(LINE("Inequivalence of differently named directories with the same contents"),
-                      fs::path{materials()}.append("Stuff").append("A"),
-                      fs::path{materials()}.append("Stuff").append("C"));
+                      fs::path{working_materials()}.append("Stuff").append("A"),
+                      fs::path{working_materials()}.append("Stuff").append("C"));
 
     check_equivalence(LINE("Inequivalence of directories with the same files but different contents"),
-                      fs::path{materials()}.append("Stuff").append("A"),
-                      fs::path{materials()}.append("MoreStuff").append("A"));
+                      fs::path{working_materials()}.append("Stuff").append("A"),
+                      fs::path{working_materials()}.append("MoreStuff").append("A"));
 
     check_equivalence(LINE("Inequivalence of directories with some common files"),
-                      fs::path{materials()}.append("Stuff").append("B"),
-                      fs::path{materials()}.append("MoreStuff").append("B"));
+                      fs::path{working_materials()}.append("Stuff").append("B"),
+                      fs::path{working_materials()}.append("MoreStuff").append("B"));
 
     check_equivalence(LINE("Inequivalence of directories with some common files"),
-                      fs::path{materials()}.append("MoreStuff").append("B"),
-                      fs::path{materials()}.append("Stuff").append("B"));
+                      fs::path{working_materials()}.append("MoreStuff").append("B"),
+                      fs::path{working_materials()}.append("Stuff").append("B"));
   }
 
   void false_positive_diagnostics::test_weak_equivalence_checks()
@@ -336,20 +336,20 @@ namespace sequoia::testing
     namespace fs = std::filesystem;
 
     check_equivalence(LINE("Equivalence of a file to itself"),
-                      fs::path{materials()}.append("Stuff").append("A").append("foo.txt"),
-                      fs::path{materials()}.append("Stuff").append("A").append("foo.txt"));
+                      fs::path{working_materials()}.append("Stuff").append("A").append("foo.txt"),
+                      fs::path{working_materials()}.append("Stuff").append("A").append("foo.txt"));
 
     check_equivalence(LINE("Equivalence of a directory to itself"),
-                      fs::path{materials()}.append("Stuff").append("A"),
-                      fs::path{materials()}.append("Stuff").append("A"));
+                      fs::path{working_materials()}.append("Stuff").append("A"),
+                      fs::path{working_materials()}.append("Stuff").append("A"));
 
     check_equivalence(LINE("Equivalence of a directory, with sub-directories to itself"),
-                      fs::path{materials()}.append("Stuff"),
-                      fs::path{materials()}.append("Stuff"));
+                      fs::path{working_materials()}.append("Stuff"),
+                      fs::path{working_materials()}.append("Stuff"));
 
     check_equivalence(LINE("Equivalence of identical directories in different locations"),
-                      fs::path{materials()}.append("Stuff").append("C"),
-                      fs::path{materials()}.append("Stuff").append("C"));
+                      fs::path{working_materials()}.append("Stuff").append("C"),
+                      fs::path{working_materials()}.append("Stuff").append("C"));
   }
 
   void false_negative_diagnostics::test_weak_equivalence_checks()

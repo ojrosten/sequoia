@@ -17,11 +17,10 @@ namespace sequoia::testing
   void test_family::set_materials(test& t)
   {
     namespace fs = std::filesystem;
-    const auto folderName{t.materials().empty() ?
-        fs::path{t.source_filename()}.replace_extension() : t.materials()};
 
     fs::path materials{}, rel{};
 
+    const auto folderName{fs::path{t.source_filename()}.replace_extension()};
     if(folderName.has_relative_path())
     {
       if(!m_TestRepo.empty())
@@ -34,21 +33,36 @@ namespace sequoia::testing
     }    
     else
     {
-      rel = fs::relative(t.materials(), m_TestMaterialsRepo);
+      rel = fs::relative(folderName, m_TestMaterialsRepo);
     }
 
     if(fs::exists(materials))
     {     
       const auto output{tests_temporary_data_path(m_OutputDir) /= rel};
-      t.materials(output);
+
+      const auto[original, workingCopy, prediction]{
+         [&output,&materials] () -> std::tuple<fs::path, fs::path, fs::path>{
+          const auto prediction{materials / "Prediction"};
+          const auto original{materials / "WorkingCopy"};
+
+          if(fs::exists(original) && fs::exists(prediction))
+          {
+            return {original, output / "WorkingCopy", prediction};
+          }
+
+          return {materials, output, ""};
+        }()
+      };
+
+      t.materials(workingCopy, prediction);
       
-      if(m_MaterialsPaths.find(materials) == m_MaterialsPaths.end())
+      if(m_MaterialsPaths.find(workingCopy) == m_MaterialsPaths.end())
       {
         fs::remove_all(output);
         fs::create_directories(output);
-        fs::copy(materials, output, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+        fs::copy(original, workingCopy, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
 
-        m_MaterialsPaths.insert(materials);
+        m_MaterialsPaths.insert(workingCopy);
       }
     }
   }

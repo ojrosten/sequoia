@@ -62,8 +62,8 @@ namespace sequoia::testing
     namespace fs = std::filesystem;
 
     auto working{
-      [&mat{materials()}]() {
-        return mat / "WorkingCopy" / "FakeProject";
+      [&mat{working_materials()}]() {
+        return mat / "FakeProject";
       }
     };
     
@@ -83,6 +83,6 @@ namespace sequoia::testing
 
     tr.execute();
 
-    check_equivalence(LINE(""), working(), materials() / "Prediction" / "FakeProject");
+    check_equivalence(LINE(""), working(), predictive_materials() / "FakeProject");
   }
 }

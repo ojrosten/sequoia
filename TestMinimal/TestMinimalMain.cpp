@@ -31,6 +31,12 @@ int main(int argc, char** argv)
       false_negative_diagnostics{"False Negative Diagnostics"}
     );
 
+    runner.add_test_family(
+      "Test Runner",      
+      test_runner_false_positive_test{"False Positive Diagnostics"},
+      test_runner_test{"Unit Test"}
+    );
+
     /*runner.add_test_family(
       "CommandLine Arguments",      
       commandline_arguments_false_positive_test{"False Positive Test"},
