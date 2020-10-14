@@ -86,9 +86,11 @@ namespace sequoia::testing
         : summary{test_summary_filename(t, outputMode, outputDir)}
         , workingMaterials{t.working_materials()}
         , predictions{t.predictive_materials()}
+        , mode{outputMode}
       {}
-      
-      fs::path summary, workingMaterials, predictions;
+
+      fs::path summary, workingMaterials, predictions;      
+      output_mode mode;
     };
 
     auto compare{
@@ -100,14 +102,14 @@ namespace sequoia::testing
     std::set<paths, decltype(compare)> updateables{};
     
     auto process{
-      [&summaries, &diagnosticsToWrite, &writer, &update{m_CorrectionMode}, &updateables](log_summary summary, const paths& files){
+      [&summaries, &diagnosticsToWrite, &writer, &updateables](log_summary summary, const paths& files){
         summaries.push_back(std::move(summary));
 
         if(!summary.diagnostics_output().empty()) diagnosticsToWrite = true;
 
         writer.to_file(files.summary, summaries.back());
 
-        if(update == correction_mode::materials)
+        if((files.mode & output_mode::update_materials) == output_mode::update_materials)
         {
           if(fs::exists(files.workingMaterials) && fs::exists(files.predictions))
           {
@@ -186,7 +188,7 @@ namespace sequoia::testing
   {
     namespace fs = std::filesystem;
     
-    if(outputMode == output_mode::none) return "";
+    if((outputMode & output_mode::write_files) != output_mode::write_files) return "";
 
     const auto name{t.source_filename().replace_extension(".txt")};
     if(name.empty())

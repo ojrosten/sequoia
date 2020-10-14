@@ -443,8 +443,8 @@ namespace sequoia::testing
                      m_ConcurrencyMode = static_cast<concurrency_mode>(i); }
                   },
                   {"--verbose",  {"-v"}, {}, [this](const param_list&) { m_Verbose    = true; }},          
-                  {"--nofiles",  {"-n"}, {}, [this](const param_list&) { m_OutputMode = output_mode::none; }},
-                  {"--correct-materials", {"-cm"}, {}, [this](const param_list&) { m_CorrectionMode = correction_mode::materials; }},
+                  {"--nofiles",  {"-n"}, {}, [this](const param_list&) { m_OutputMode &= ~output_mode::write_files; }},
+                  {"--correct-materials", {"-cm"}, {}, [this](const param_list&) { m_OutputMode |= output_mode::update_materials; }},
                   {"--recovery", {"-r"}, {},
                    [recoveryDir{recovery_path(m_OutputDir)}] (const param_list&) {
                      std::filesystem::create_directory(recoveryDir);

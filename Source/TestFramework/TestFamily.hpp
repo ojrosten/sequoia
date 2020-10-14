@@ -22,10 +22,44 @@
 
 namespace sequoia::testing
 {
-  enum class output_mode { none, write_files };
+  enum class output_mode { none=0, write_files=1, update_materials=2 };
 
-  enum class correction_mode { none, materials };
+  [[nodiscard]]
+  constexpr output_mode operator|(output_mode lhs, output_mode rhs) noexcept
+  {
+    return static_cast<output_mode>(static_cast<int>(lhs) | static_cast<int>(rhs));
+  }
+
+  constexpr output_mode& operator|=(output_mode& lhs, output_mode rhs) noexcept
+  {
+    lhs = lhs | rhs;
+    return lhs;
+  }
+
+  [[nodiscard]]
+  constexpr output_mode operator&(output_mode lhs, output_mode rhs) noexcept
+  {
+    return static_cast<output_mode>(static_cast<int>(lhs) & static_cast<int>(rhs));
+  }
   
+  constexpr output_mode& operator&=(output_mode& lhs, output_mode rhs) noexcept
+  {
+    lhs = lhs & rhs;
+    return lhs;
+  }
+
+  [[nodiscard]]
+  constexpr output_mode operator~(output_mode om)
+  {
+    return static_cast<output_mode>(~static_cast<int>(om));
+  }
+
+  [[nodiscard]]
+  constexpr output_mode operator^(output_mode lhs, output_mode rhs) noexcept
+  {
+    return static_cast<output_mode>(static_cast<int>(lhs) ^ static_cast<int>(rhs));
+  }
+
   /*! \brief Allows tests to be grouped together into a family of related tests
 
       When tests are executed, it is possible to specify both the concurrency mode
@@ -58,14 +92,12 @@ namespace sequoia::testing
     test_family(std::string_view name,
                 std::filesystem::path testRepo,
                 std::filesystem::path testMaterialsRepo,
-                std::filesystem::path outputDir,                
-                correction_mode cm,
+                std::filesystem::path outputDir,
                 Tests&&... tests)
       : m_Name{name}
       , m_TestRepo{std::move(testRepo)}
       , m_TestMaterialsRepo{std::move(testMaterialsRepo)}
       , m_OutputDir{std::move(outputDir)}
-      , m_CorrectionMode{cm}
     {
       if constexpr(sizeof...(Tests) > 0)
       {
@@ -94,7 +126,6 @@ namespace sequoia::testing
     std::string m_Name{};
     std::filesystem::path m_TestRepo{}, m_TestMaterialsRepo{}, m_OutputDir{};
     std::set<std::filesystem::path> m_MaterialsPaths{};
-    correction_mode m_CorrectionMode{correction_mode::none};
 
     [[nodiscard]]
     std::filesystem::path diagnostics_filename() const;
