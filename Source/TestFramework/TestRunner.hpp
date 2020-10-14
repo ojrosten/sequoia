@@ -179,15 +179,8 @@ namespace sequoia::testing
     template<class Test, class... Tests>
     void add_test_family(std::string_view name, Test&& test, Tests&&... tests)
     {
-      if(m_SelectedSources.empty())
-      {
-        if(mark_family(name))
-        {
-          m_Families.emplace_back(name, m_TestRepo, m_TestMaterialsRepo, m_OutputDir, m_CorrectionMode,
-                                  std::forward<Test>(test), std::forward<Tests>(tests)...);
-        }
-      }
-      else
+      bool done{};
+      if(!m_SelectedSources.empty())
       {
         test_family f{name, m_TestRepo, m_TestMaterialsRepo, m_OutputDir, m_CorrectionMode};
         add_tests(f, std::forward<Test>(test), std::forward<Tests>(tests)...);
@@ -195,8 +188,13 @@ namespace sequoia::testing
         {
           m_Families.push_back(std::move(f));
           mark_family(name);
+          done = true;
         }
-        else if(!m_SelectedFamilies.empty())
+      }
+
+      if(!done)
+      {
+        if(m_SelectedSources.empty() || !m_SelectedFamilies.empty())
         {
           if(mark_family(name))
           {
