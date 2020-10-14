@@ -16,8 +16,6 @@
 */
 
 #include "ConcreteTypeCheckers.hpp"
-#include "FileSystem.hpp"
-
 #include "Concepts.hpp"
 
 namespace sequoia::testing
@@ -64,16 +62,12 @@ namespace sequoia::testing
     [[nodiscard]]
     const std::filesystem::path& working_materials() const noexcept
     {
-      throw_unless_exists(m_WorkingMaterials);
-
       return m_WorkingMaterials;
     }
 
     [[nodiscard]]
     const std::filesystem::path& predictive_materials() const noexcept
     {
-      throw_unless_exists(m_PredictiveMaterials);
-      
       return m_PredictiveMaterials;
     }
 

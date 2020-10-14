@@ -444,6 +444,7 @@ namespace sequoia::testing
                   },
                   {"--verbose",  {"-v"}, {}, [this](const param_list&) { m_Verbose    = true; }},          
                   {"--nofiles",  {"-n"}, {}, [this](const param_list&) { m_OutputMode = output_mode::none; }},
+                  {"--correct-materials", {"-cm"}, {}, [this](const param_list&) { m_CorrectionMode = correction_mode::materials; }},
                   {"--recovery", {"-r"}, {},
                    [recoveryDir{recovery_path(m_OutputDir)}] (const param_list&) {
                      std::filesystem::create_directory(recoveryDir);

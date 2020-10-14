@@ -70,22 +70,50 @@ namespace sequoia::testing
   auto test_family::execute(const output_mode outputMode, const concurrency_mode concurrenyMode) -> results 
   {
     using namespace std::chrono;
+    namespace fs = std::filesystem;
+
     const auto time{steady_clock::now()};
     
     std::vector<log_summary> summaries{};
     summaries.reserve(m_Tests.size());
-    bool diagnosticsToWrite{};    
+    bool diagnosticsToWrite{};
     summary_writer writer{};
 
-    namespace fs = std::filesystem;
     
-    auto summarizer{
-      [&summaries, &diagnosticsToWrite, &writer](const log_summary& summary, const fs::path& filename){
+    struct paths
+    {
+      explicit paths(const test& t, output_mode outputMode, const std::filesystem::path& outputDir)
+        : summary{test_summary_filename(t, outputMode, outputDir)}
+        , workingMaterials{t.working_materials()}
+        , predictions{t.predictive_materials()}
+      {}
+      
+      fs::path summary, workingMaterials, predictions;
+    };
+
+    auto compare{
+      [](const paths& lhs, const paths& rhs){
+        return lhs.workingMaterials < rhs.workingMaterials;
+      }
+    };
+
+    std::set<paths, decltype(compare)> updateables{};
+    
+    auto process{
+      [&summaries, &diagnosticsToWrite, &writer, &update{m_CorrectionMode}, &updateables](log_summary summary, const paths& files){
         summaries.push_back(std::move(summary));
 
         if(!summary.diagnostics_output().empty()) diagnosticsToWrite = true;
 
-        writer.to_file(std::move(filename), summary);
+        writer.to_file(files.summary, summaries.back());
+
+        if(update == correction_mode::materials)
+        {
+          if(fs::exists(files.workingMaterials) && fs::exists(files.predictions))
+          {
+            updateables.insert(files);
+          }
+        }
       }
     };
     
@@ -94,25 +122,24 @@ namespace sequoia::testing
       for(auto& pTest : m_Tests)
       {
         const auto summary{pTest->execute()};
-        summarizer(summary, test_summary_filename(*pTest, outputMode, m_OutputDir));
+        process(summary, paths{*pTest, outputMode, m_OutputDir});
       }
     }
     else
     {
-      using data = std::pair<log_summary, std::filesystem::path>;
+      using data = std::pair<log_summary, paths>;
       std::vector<std::future<data>> results{};
       results.reserve(m_Tests.size());
       for(auto& pTest : m_Tests)
       {
         results.emplace_back(std::async([&test{*pTest}, outputMode, outputDir{m_OutputDir}](){
-                               return std::make_pair(test.execute(), test_summary_filename(test, outputMode, outputDir)); }));
+          return std::make_pair(test.execute(), paths{test, outputMode, outputDir}); }));
       }
-      
-      summary_writer writer{};
+
       for(auto& res : results)
       {
-        const auto [summary, filename]{res.get()};
-        summarizer(summary, filename);
+        const auto [summary, paths]{res.get()};
+        process(summary, paths);
       }
     }
 
@@ -132,6 +159,11 @@ namespace sequoia::testing
           throw std::runtime_error{std::string{"Unable to open diagnostics output file "}.append(filename).append(" for writing\n")};
         }
       }
+    }
+
+    for(const auto& update : updateables)
+    {
+      fs::copy(update.workingMaterials, update.predictions, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
     }
 
     return {steady_clock::now() - time, std::move(summaries)};

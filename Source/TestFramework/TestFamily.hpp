@@ -23,6 +23,8 @@
 namespace sequoia::testing
 {
   enum class output_mode { none, write_files };
+
+  enum class correction_mode { none, materials };
   
   /*! \brief Allows tests to be grouped together into a family of related tests
 
@@ -54,14 +56,16 @@ namespace sequoia::testing
     
     template<concrete_test... Tests>
     test_family(std::string_view name,
-                const std::filesystem::path& testRepo,
-                const std::filesystem::path& testMaterialsRepo,
-                const std::filesystem::path& outputDir,
+                std::filesystem::path testRepo,
+                std::filesystem::path testMaterialsRepo,
+                std::filesystem::path outputDir,                
+                correction_mode cm,
                 Tests&&... tests)
       : m_Name{name}
-      , m_TestRepo{testRepo}
-      , m_TestMaterialsRepo{testMaterialsRepo}
-      , m_OutputDir{outputDir}
+      , m_TestRepo{std::move(testRepo)}
+      , m_TestMaterialsRepo{std::move(testMaterialsRepo)}
+      , m_OutputDir{std::move(outputDir)}
+      , m_CorrectionMode{cm}
     {
       if constexpr(sizeof...(Tests) > 0)
       {
@@ -90,6 +94,7 @@ namespace sequoia::testing
     std::string m_Name{};
     std::filesystem::path m_TestRepo{}, m_TestMaterialsRepo{}, m_OutputDir{};
     std::set<std::filesystem::path> m_MaterialsPaths{};
+    correction_mode m_CorrectionMode{correction_mode::none};
 
     [[nodiscard]]
     std::filesystem::path diagnostics_filename() const;

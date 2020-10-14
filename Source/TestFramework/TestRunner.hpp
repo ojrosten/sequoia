@@ -183,12 +183,13 @@ namespace sequoia::testing
       {
         if(mark_family(name))
         {
-          m_Families.emplace_back(name, m_TestRepo, m_TestMaterialsRepo, m_OutputDir, std::forward<Test>(test), std::forward<Tests>(tests)...);
+          m_Families.emplace_back(name, m_TestRepo, m_TestMaterialsRepo, m_OutputDir, m_CorrectionMode,
+                                  std::forward<Test>(test), std::forward<Tests>(tests)...);
         }
       }
       else
       {
-        test_family f{name, m_TestRepo, m_TestMaterialsRepo, m_OutputDir};
+        test_family f{name, m_TestRepo, m_TestMaterialsRepo, m_OutputDir, m_CorrectionMode};
         add_tests(f, std::forward<Test>(test), std::forward<Tests>(tests)...);
         if(!f.empty())
         {
@@ -199,7 +200,8 @@ namespace sequoia::testing
         {
           if(mark_family(name))
           {
-            m_Families.emplace_back(name, m_TestRepo, m_TestMaterialsRepo, m_OutputDir, std::forward<Test>(test), std::forward<Tests>(tests)...);
+            m_Families.emplace_back(name, m_TestRepo, m_TestMaterialsRepo, m_OutputDir, m_CorrectionMode,
+                                    std::forward<Test>(test), std::forward<Tests>(tests)...);
           }
         }
       }
@@ -231,6 +233,7 @@ namespace sequoia::testing
     
     bool m_Verbose{}, m_HelpMode{};
     output_mode m_OutputMode{output_mode::write_files};
+    correction_mode m_CorrectionMode{correction_mode::none};
     concurrency_mode m_ConcurrencyMode{concurrency_mode::serial};
 
     constexpr static std::array<std::string_view, 5> st_TestNameStubs {
