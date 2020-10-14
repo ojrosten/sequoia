@@ -167,48 +167,6 @@ namespace sequoia::testing
 
   class test_runner
   {
-  public:    
-    test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, repositories repos, std::ostream& stream=std::cout);
-
-    test_runner(const test_runner&) = delete;
-    test_runner(test_runner&&)      = default;
-
-    test_runner& operator=(const test_runner&) = delete;
-    test_runner& operator=(test_runner&&)      = delete;
-
-    template<class Test, class... Tests>
-    void add_test_family(std::string_view name, Test&& test, Tests&&... tests)
-    {
-      bool done{};
-      if(!m_SelectedSources.empty())
-      {
-        test_family f{name, m_TestRepo, m_TestMaterialsRepo, m_OutputDir, m_CorrectionMode};
-        add_tests(f, std::forward<Test>(test), std::forward<Tests>(tests)...);
-        if(!f.empty())
-        {
-          m_Families.push_back(std::move(f));
-          mark_family(name);
-          done = true;
-        }
-      }
-
-      if(!done)
-      {
-        if(m_SelectedSources.empty() || !m_SelectedFamilies.empty())
-        {
-          if(mark_family(name))
-          {
-            m_Families.emplace_back(name, m_TestRepo, m_TestMaterialsRepo, m_OutputDir, m_CorrectionMode,
-                                    std::forward<Test>(test), std::forward<Tests>(tests)...);
-          }
-        }
-      }
-    } 
-
-    void execute();
-
-    [[nodiscard]]
-    concurrency_mode concurrency() const noexcept { return m_ConcurrencyMode; }
   private:
     using family_map = std::map<std::string, bool, std::less<>>;
     using source_map = std::map<std::filesystem::path, bool>;
@@ -233,6 +191,54 @@ namespace sequoia::testing
     output_mode m_OutputMode{output_mode::write_files};
     correction_mode m_CorrectionMode{correction_mode::none};
     concurrency_mode m_ConcurrencyMode{concurrency_mode::serial};
+    
+    bool mark_family(std::string_view name);
+    
+  public:    
+    test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, repositories repos, std::ostream& stream=std::cout);
+
+    test_runner(const test_runner&) = delete;
+    test_runner(test_runner&&)      = default;
+
+    test_runner& operator=(const test_runner&) = delete;
+    test_runner& operator=(test_runner&&)      = delete;
+
+    template<class Test, class... Tests>
+    void add_test_family(std::string_view name, Test&& test, Tests&&... tests)
+    {
+      const bool done{
+        [this, name](Test&& test, Tests&&... tests){
+          if(!m_SelectedSources.empty())
+          {
+            test_family f{name, m_TestRepo, m_TestMaterialsRepo, m_OutputDir, m_CorrectionMode};
+            add_tests(f, std::forward<Test>(test), std::forward<Tests>(tests)...);
+            if(!f.empty())
+            {
+              m_Families.push_back(std::move(f));
+              mark_family(name);
+              return true;
+            }
+          }
+
+          return false;
+        }(std::forward<Test>(test), std::forward<Tests>(tests)...)
+      };
+      
+      if(!done && (m_SelectedSources.empty() || !m_SelectedFamilies.empty()))
+      {
+        if(mark_family(name))
+        {
+          m_Families.emplace_back(name, m_TestRepo, m_TestMaterialsRepo, m_OutputDir, m_CorrectionMode,
+                                  std::forward<Test>(test), std::forward<Tests>(tests)...);
+        }
+      }
+    } 
+
+    void execute();
+
+    [[nodiscard]]
+    concurrency_mode concurrency() const noexcept { return m_ConcurrencyMode; }
+  private:
 
     constexpr static std::array<std::string_view, 5> st_TestNameStubs {
       "TestingUtilities.hpp",
@@ -243,8 +249,6 @@ namespace sequoia::testing
     };
 
     void process_args(int argc, char** argv);
-
-    bool mark_family(std::string_view name);
 
     [[nodiscard]]
     test_family::summary process_family(const test_family::results& results);
