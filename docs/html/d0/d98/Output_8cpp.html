@@ -81,12 +81,6 @@ Functions</h2></td></tr>
 <tr class="memitem:a73b8258cdecae3b81411862e60acf2d8"><td class="memItemLeft" align="right" valign="top"><a id="a73b8258cdecae3b81411862e60acf2d8"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::footer</b> ()</td></tr>
 <tr class="separator:a73b8258cdecae3b81411862e60acf2d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0f997245cc419a2fef43eba2de07fc53"><td class="memItemLeft" align="right" valign="top"><a id="a0f997245cc419a2fef43eba2de07fc53"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d98/Output_8cpp.html#a0f997245cc419a2fef43eba2de07fc53">sequoia::testing::indent</a> (std::string_view s, indentation ind)</td></tr>
-<tr class="memdesc:a0f997245cc419a2fef43eba2de07fc53"><td class="mdescLeft">&#160;</td><td class="mdescRight">For a non-empty string_view prepends with an indentation; otherwise returns an empty string. <br /></td></tr>
-<tr class="separator:a0f997245cc419a2fef43eba2de07fc53"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a034a0ebe065edb368ec295a017a3327c"><td class="memItemLeft" align="right" valign="top">std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d98/Output_8cpp.html#a034a0ebe065edb368ec295a017a3327c">sequoia::testing::append_indented</a> (std::string &amp;s1, std::string_view s2, indentation ind)</td></tr>
-<tr class="separator:a034a0ebe065edb368ec295a017a3327c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8e679ee3e2e4e8e527ad993c0aa90967"><td class="memItemLeft" align="right" valign="top"><a id="a8e679ee3e2e4e8e527ad993c0aa90967"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::end_block</b> (std::string &amp;s, const std::size_t newlines, std::string_view footer)</td></tr>
 <tr class="separator:a8e679ee3e2e4e8e527ad993c0aa90967"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -105,6 +99,9 @@ std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testi
 <tr class="memitem:a4920803b93e71aca04aadb6af056dd69"><td class="memItemLeft" align="right" valign="top"><a id="a4920803b93e71aca04aadb6af056dd69"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::prediction_message</b> (std::string_view obtained, std::string_view predicted)</td></tr>
 <tr class="separator:a4920803b93e71aca04aadb6af056dd69"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a691539d446a16c7224c28740cd8d3ccc"><td class="memItemLeft" align="right" valign="top"><a id="a691539d446a16c7224c28740cd8d3ccc"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::display_character</b> (char c)</td></tr>
+<tr class="separator:a691539d446a16c7224c28740cd8d3ccc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5149b89bb94e7fedf16ebf4cb1151dc0"><td class="memItemLeft" align="right" valign="top"><a id="a5149b89bb94e7fedf16ebf4cb1151dc0"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::prediction_message</b> (char obtained, char predicted)</td></tr>
 <tr class="separator:a5149b89bb94e7fedf16ebf4cb1151dc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -126,53 +123,7 @@ std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia:
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Definitions for <a class="el" href="../../d8/dbf/Output_8hpp.html" title="A collection of functions for formatting test output.">Output.hpp</a>. </p>
-</div><h2 class="groupheader">Function Documentation</h2>
-<a id="a034a0ebe065edb368ec295a017a3327c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a034a0ebe065edb368ec295a017a3327c">&#9670;&nbsp;</a></span>append_indented()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string &amp; sequoia::testing::append_indented </td>
-          <td>(</td>
-          <td class="paramtype">std::string &amp;&#160;</td>
-          <td class="paramname"><em>s1</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string_view&#160;</td>
-          <td class="paramname"><em>s2</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="../../d4/dff/structsequoia_1_1testing_1_1indentation.html">indentation</a>&#160;</td>
-          <td class="paramname"><em>ind</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">s1</td><td>The target for appending </td></tr>
-    <tr><td class="paramname">s2</td><td>The text to append </td></tr>
-    <tr><td class="paramname">indentation</td><td>The absolute (not relative) indentation of s2</td></tr>
-  </table>
-  </dd>
-</dl>
-<p>If s1 and s2 are both non-empty, a new line is appended to s1, followed by the indentation and then s2.</p>
-<p>If s1 is empty, then s1 is set equal to s2, with no indentation.</p>
-<p>If s2 is empty, no action is taken. </p>
-
-</div>
-</div>
-</div><!-- contents -->
+</div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

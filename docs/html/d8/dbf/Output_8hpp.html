@@ -68,8 +68,7 @@ $(function() {
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#define-members">Macros</a> &#124;
-<a href="#func-members">Functions</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">Output.hpp File Reference</div>  </div>
 </div><!--header-->
@@ -78,7 +77,7 @@ $(function() {
 <p>A collection of functions for formatting test output.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="../../d0/dae/CoreInfrastructure_8hpp_source.html">CoreInfrastructure.hpp</a>&quot;</code><br />
-<code>#include &lt;string&gt;</code><br />
+<code>#include &quot;<a class="el" href="../../d7/d62/Indent_8hpp_source.html">Indent.hpp</a>&quot;</code><br />
 <code>#include &lt;filesystem&gt;</code><br />
 <code>#include &lt;cxxabi.h&gt;</code><br />
 </div>
@@ -86,9 +85,6 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/dff/structsequoia_1_1testing_1_1indentation.html">sequoia::testing::indentation</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type-safe mechanism for indentations.  <a href="../../d4/dff/structsequoia_1_1testing_1_1indentation.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d78/structsequoia_1_1testing_1_1type__demangler.html">sequoia::testing::type_demangler&lt; T &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specialize this struct template to customize the way in which type info is generated for a given class. This is particularly useful for class templates where standard de-mangling may be hard to read!  <a href="../../d3/d78/structsequoia_1_1testing_1_1type__demangler.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -104,39 +100,12 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a0f997245cc419a2fef43eba2de07fc53"><td class="memItemLeft" align="right" valign="top"><a id="a0f997245cc419a2fef43eba2de07fc53"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d98/Output_8cpp.html#a0f997245cc419a2fef43eba2de07fc53">sequoia::testing::indent</a> (std::string_view s, indentation ind)</td></tr>
-<tr class="memdesc:a0f997245cc419a2fef43eba2de07fc53"><td class="mdescLeft">&#160;</td><td class="mdescRight">For a non-empty string_view prepends with an indentation; otherwise returns an empty string. <br /></td></tr>
-<tr class="separator:a0f997245cc419a2fef43eba2de07fc53"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a034a0ebe065edb368ec295a017a3327c"><td class="memItemLeft" align="right" valign="top">std::string &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d98/Output_8cpp.html#a034a0ebe065edb368ec295a017a3327c">sequoia::testing::append_indented</a> (std::string &amp;s1, std::string_view s2, indentation ind)</td></tr>
-<tr class="separator:a034a0ebe065edb368ec295a017a3327c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a18842402eb567384899f82e1e29854d5"><td class="memTemplParams" colspan="2"><a id="a18842402eb567384899f82e1e29854d5"></a>
-template&lt;class... Ts, std::size_t... I&gt; </td></tr>
-<tr class="memitem:a18842402eb567384899f82e1e29854d5"><td class="memTemplItemLeft" align="right" valign="top">std::string &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::append_indented</b> (std::string &amp;s, std::tuple&lt; Ts... &gt; strs, std::index_sequence&lt; I... &gt;)</td></tr>
-<tr class="separator:a18842402eb567384899f82e1e29854d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aede27e49d08e7de619b61d7767b308f9"><td class="memTemplParams" colspan="2"><a id="aede27e49d08e7de619b61d7767b308f9"></a>
-template&lt;class... Ts&gt; </td></tr>
-<tr class="memitem:aede27e49d08e7de619b61d7767b308f9"><td class="memTemplItemLeft" align="right" valign="top">std::string &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::append_indented</b> (std::string &amp;s, const std::tuple&lt; Ts... &gt; &amp;strs)</td></tr>
-<tr class="separator:aede27e49d08e7de619b61d7767b308f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6340cfa1e79155aed4f1f3feae42c985"><td class="memTemplParams" colspan="2"><a id="a6340cfa1e79155aed4f1f3feae42c985"></a>
-template&lt;class... Ts&gt; </td></tr>
-<tr class="memitem:a6340cfa1e79155aed4f1f3feae42c985"><td class="memTemplItemLeft" align="right" valign="top">std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::impl::indent</b> (std::string_view sv, const std::tuple&lt; Ts... &gt; &amp;strs)</td></tr>
-<tr class="separator:a6340cfa1e79155aed4f1f3feae42c985"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3224c6afe464f4e162017a14ebe4bde9"><td class="memTemplParams" colspan="2"><a id="a3224c6afe464f4e162017a14ebe4bde9"></a>
-template&lt;class... Ts&gt; </td></tr>
-<tr class="memitem:a3224c6afe464f4e162017a14ebe4bde9"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::requires</b> (sizeof...(Ts) &gt; 2) std</td></tr>
-<tr class="separator:a3224c6afe464f4e162017a14ebe4bde9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7705148a146e73dcef25be51a711577d"><td class="memTemplParams" colspan="2"><a id="a7705148a146e73dcef25be51a711577d"></a>
-template&lt;class... Ts&gt; </td></tr>
-<tr class="memitem:a7705148a146e73dcef25be51a711577d"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::requires</b> (sizeof...(Ts) &gt; 1) std</td></tr>
-<tr class="separator:a7705148a146e73dcef25be51a711577d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8746c8a35cb7e5650d1699f768c89d74"><td class="memTemplParams" colspan="2"><a id="a8746c8a35cb7e5650d1699f768c89d74"></a>
-template&lt;class... Ts&gt; </td></tr>
-<tr class="memitem:a8746c8a35cb7e5650d1699f768c89d74"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::requires</b> (sizeof...(Ts) &gt; 0) std</td></tr>
-<tr class="separator:a8746c8a35cb7e5650d1699f768c89d74"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a84ea32e3f568887f6b696ea588e375e5"><td class="memItemLeft" align="right" valign="top"><a id="a84ea32e3f568887f6b696ea588e375e5"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::emphasise</b> (std::string_view s)</td></tr>
 <tr class="separator:a84ea32e3f568887f6b696ea588e375e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a691539d446a16c7224c28740cd8d3ccc"><td class="memItemLeft" align="right" valign="top"><a id="a691539d446a16c7224c28740cd8d3ccc"></a>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::display_character</b> (char c)</td></tr>
+<tr class="separator:a691539d446a16c7224c28740cd8d3ccc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8e679ee3e2e4e8e527ad993c0aa90967"><td class="memItemLeft" align="right" valign="top"><a id="a8e679ee3e2e4e8e527ad993c0aa90967"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::end_block</b> (std::string &amp;s, const std::size_t newlines, std::string_view footer)</td></tr>
 <tr class="separator:a8e679ee3e2e4e8e527ad993c0aa90967"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -193,65 +162,10 @@ template&lt;class T , class... U&gt; </td></tr>
 template&lt;class T , class... U&gt; </td></tr>
 <tr class="memitem:ac29afb99ecbcb2ae4a06f04e46602fd4"><td class="memTemplItemLeft" align="right" valign="top">std::string&#160;</td><td class="memTemplItemRight" valign="bottom"><b>sequoia::testing::add_type_info</b> (std::string_view description)</td></tr>
 <tr class="separator:ac29afb99ecbcb2ae4a06f04e46602fd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:a1c42c18b9edbd2ca4d9c734e2abef724"><td class="memItemLeft" align="right" valign="top"><a id="a1c42c18b9edbd2ca4d9c734e2abef724"></a>
-constexpr indentation&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::tab</b> {&quot;\t&quot;}</td></tr>
-<tr class="separator:a1c42c18b9edbd2ca4d9c734e2abef724"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2e5f88edc07bfe8614db9fbdce9e9553"><td class="memItemLeft" align="right" valign="top"><a id="a2e5f88edc07bfe8614db9fbdce9e9553"></a>
-constexpr indentation&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::no_indent</b> {&quot;&quot;}</td></tr>
-<tr class="separator:a2e5f88edc07bfe8614db9fbdce9e9553"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A collection of functions for formatting test output. </p>
-</div><h2 class="groupheader">Function Documentation</h2>
-<a id="a034a0ebe065edb368ec295a017a3327c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a034a0ebe065edb368ec295a017a3327c">&#9670;&nbsp;</a></span>append_indented()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::string &amp; sequoia::testing::append_indented </td>
-          <td>(</td>
-          <td class="paramtype">std::string &amp;&#160;</td>
-          <td class="paramname"><em>s1</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::string_view&#160;</td>
-          <td class="paramname"><em>s2</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="../../d4/dff/structsequoia_1_1testing_1_1indentation.html">indentation</a>&#160;</td>
-          <td class="paramname"><em>ind</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">s1</td><td>The target for appending </td></tr>
-    <tr><td class="paramname">s2</td><td>The text to append </td></tr>
-    <tr><td class="paramname">indentation</td><td>The absolute (not relative) indentation of s2</td></tr>
-  </table>
-  </dd>
-</dl>
-<p>If s1 and s2 are both non-empty, a new line is appended to s1, followed by the indentation and then s2.</p>
-<p>If s1 is empty, then s1 is set equal to s2, with no indentation.</p>
-<p>If s2 is empty, no action is taken. </p>
-
-</div>
-</div>
-</div><!-- contents -->
+</div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

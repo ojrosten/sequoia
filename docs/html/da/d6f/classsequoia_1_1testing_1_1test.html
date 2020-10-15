@@ -148,9 +148,9 @@ Inheritance diagram for sequoia::testing::test:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:acbcde96f59fa0f4bbde619807694e2bc"><td class="memItemLeft" align="right" valign="top"><a id="acbcde96f59fa0f4bbde619807694e2bc"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>test</b> (std::string_view name, std::filesystem::path materials=&quot;&quot;)</td></tr>
-<tr class="separator:acbcde96f59fa0f4bbde619807694e2bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a581a494bc8272be60a42851b5b0f26d9"><td class="memItemLeft" align="right" valign="top"><a id="a581a494bc8272be60a42851b5b0f26d9"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>test</b> (std::string_view name)</td></tr>
+<tr class="separator:a581a494bc8272be60a42851b5b0f26d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afe4884a5e8cb36b64d01780010020f2f"><td class="memItemLeft" align="right" valign="top"><a id="afe4884a5e8cb36b64d01780010020f2f"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>test</b> (const <a class="el" href="../../da/d6f/classsequoia_1_1testing_1_1test.html">test</a> &amp;)=delete</td></tr>
 <tr class="separator:afe4884a5e8cb36b64d01780010020f2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -169,12 +169,15 @@ std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><b>sour
 <tr class="memitem:a431a64e494ddbbb90e326e9e9c212be8"><td class="memItemLeft" align="right" valign="top"><a id="a431a64e494ddbbb90e326e9e9c212be8"></a>
 std::string_view&#160;</td><td class="memItemRight" valign="bottom"><b>name</b> () const noexcept</td></tr>
 <tr class="separator:a431a64e494ddbbb90e326e9e9c212be8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab6d43b515e3c8b89ace6ce2b419215e7"><td class="memItemLeft" align="right" valign="top"><a id="ab6d43b515e3c8b89ace6ce2b419215e7"></a>
-const std::filesystem::path &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>materials</b> () const noexcept</td></tr>
-<tr class="separator:ab6d43b515e3c8b89ace6ce2b419215e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7ede0d922084dcd8ee10bb525b5cebb2"><td class="memItemLeft" align="right" valign="top"><a id="a7ede0d922084dcd8ee10bb525b5cebb2"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>materials</b> (std::filesystem::path materials)</td></tr>
-<tr class="separator:a7ede0d922084dcd8ee10bb525b5cebb2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7638125e51f87788fd146257c1652226"><td class="memItemLeft" align="right" valign="top"><a id="a7638125e51f87788fd146257c1652226"></a>
+const std::filesystem::path &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>working_materials</b> () const noexcept</td></tr>
+<tr class="separator:a7638125e51f87788fd146257c1652226"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c426b4cbb5517c42a6726c4452c9dc8"><td class="memItemLeft" align="right" valign="top"><a id="a3c426b4cbb5517c42a6726c4452c9dc8"></a>
+const std::filesystem::path &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>predictive_materials</b> () const noexcept</td></tr>
+<tr class="separator:a3c426b4cbb5517c42a6726c4452c9dc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace8956d97bbedbfe302b48bb904bb4c4"><td class="memItemLeft" align="right" valign="top"><a id="ace8956d97bbedbfe302b48bb904bb4c4"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>materials</b> (std::filesystem::path workingMaterials, std::filesystem::path predictiveMaterials)</td></tr>
+<tr class="separator:ace8956d97bbedbfe302b48bb904bb4c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>

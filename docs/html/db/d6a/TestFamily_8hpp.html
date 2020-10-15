@@ -97,13 +97,32 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:a5a6be1d7f84597f4ac1bae1fe3fc2594"><td class="memItemLeft" align="right" valign="top"><a id="a5a6be1d7f84597f4ac1bae1fe3fc2594"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>output_mode</b> { <b>none</b>, 
-<b>write_files</b>
+<tr class="memitem:a5a6be1d7f84597f4ac1bae1fe3fc2594"><td class="memItemLeft" align="right" valign="top"><a id="a5a6be1d7f84597f4ac1bae1fe3fc2594"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>output_mode</b> { <b>none</b> =0, 
+<b>write_files</b> =1, 
+<b>update_materials</b> =2
  }</td></tr>
 <tr class="separator:a5a6be1d7f84597f4ac1bae1fe3fc2594"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a33567d9a7450b054ba05dd0222298abc"><td class="memItemLeft" align="right" valign="top"><a id="a33567d9a7450b054ba05dd0222298abc"></a>
+constexpr output_mode&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::operator|</b> (output_mode lhs, output_mode rhs) noexcept</td></tr>
+<tr class="separator:a33567d9a7450b054ba05dd0222298abc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a661effc32b87781d265301a306cd691d"><td class="memItemLeft" align="right" valign="top"><a id="a661effc32b87781d265301a306cd691d"></a>
+constexpr output_mode &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::operator|=</b> (output_mode &amp;lhs, output_mode rhs) noexcept</td></tr>
+<tr class="separator:a661effc32b87781d265301a306cd691d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5c8848d8aa534ad76761d55702ef30c"><td class="memItemLeft" align="right" valign="top"><a id="ac5c8848d8aa534ad76761d55702ef30c"></a>
+constexpr output_mode&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::operator&amp;</b> (output_mode lhs, output_mode rhs) noexcept</td></tr>
+<tr class="separator:ac5c8848d8aa534ad76761d55702ef30c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1a946fd550a5b12b7c2471cdea46ace3"><td class="memItemLeft" align="right" valign="top"><a id="a1a946fd550a5b12b7c2471cdea46ace3"></a>
+constexpr output_mode &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::operator&amp;=</b> (output_mode &amp;lhs, output_mode rhs) noexcept</td></tr>
+<tr class="separator:a1a946fd550a5b12b7c2471cdea46ace3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace8eb5b99a696898c224390c49e0aa03"><td class="memItemLeft" align="right" valign="top"><a id="ace8eb5b99a696898c224390c49e0aa03"></a>
+constexpr output_mode&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::operator~</b> (output_mode om)</td></tr>
+<tr class="separator:ace8eb5b99a696898c224390c49e0aa03"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf4ca6e3bbb2d7d4663b54b4a76ce82c"><td class="memItemLeft" align="right" valign="top"><a id="adf4ca6e3bbb2d7d4663b54b4a76ce82c"></a>
+constexpr output_mode&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::operator^</b> (output_mode lhs, output_mode rhs) noexcept</td></tr>
+<tr class="separator:adf4ca6e3bbb2d7d4663b54b4a76ce82c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9402fa844180159e2988289f3d9b7acd"><td class="memItemLeft" align="right" valign="top"><a id="a9402fa844180159e2988289f3d9b7acd"></a>
 std::string&#160;</td><td class="memItemRight" valign="bottom"><b>sequoia::testing::summarize</b> (const test_family::summary &amp;summary, const summary_detail suppression, indentation ind_0, indentation ind_1)</td></tr>
 <tr class="separator:a9402fa844180159e2988289f3d9b7acd"><td class="memSeparator" colspan="2">&#160;</td></tr>
