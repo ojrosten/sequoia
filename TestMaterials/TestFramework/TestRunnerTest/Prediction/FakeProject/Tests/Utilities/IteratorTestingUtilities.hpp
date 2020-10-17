@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "RegularCore.hpp"
+#include "RegularTestCore.hpp"
 #include "Iterator.hpp"
 
 namespace sequoia::testing

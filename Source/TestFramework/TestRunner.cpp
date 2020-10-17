@@ -345,7 +345,7 @@ namespace sequoia::testing
       replace_all(text, "::?_class", m_QualifiedClassName);
       replace_all(text, "?_class", m_RawClassName);
       replace_all(text, "?_", testTypeRelacement);
-      replace_all(text, "?Test", to_camel_case(m_TestType));
+      replace_all(text, "?Test", to_camel_case(m_TestType).append("Test"));
       replace_all(text, "?Class.hpp", m_ClassHeader);
       replace_all(text, "?Class", to_camel_case(m_RawClassName));
 
@@ -594,8 +594,8 @@ namespace sequoia::testing
         }
 
         add_to_family(m_TestMain, data.family(),
-                      { {std::string{data.class_name()}.append("_false_positive_test(False Positive Test)")},
-                        {std::string{data.class_name()}.append("_test(Unit Test)")}
+                      { {std::string{data.class_name()}.append("_false_positive_test(\"False Positive Test\")")},
+                        {std::string{data.class_name()}.append("_test(\"Unit Test\")")}
                       });
 
         ++beginNascentTests;
@@ -633,7 +633,7 @@ namespace sequoia::testing
     if(!message.empty())
     {
       m_Stream << prefix << '\n';
-      m_Stream << "  " << message << "\n\n";      
+      m_Stream << message << "\n\n";      
     }
   }
 

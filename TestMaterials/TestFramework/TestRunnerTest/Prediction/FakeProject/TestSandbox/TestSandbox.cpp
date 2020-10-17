@@ -29,24 +29,24 @@ int main(int argc, char** argv)
 
     runner.add_test_family(
       "maybe",
-      maybe_false_positive_test(False Positive Test),
-      maybe_test(Unit Test)
+      maybe_false_positive_test("False Positive Test"),
+      maybe_test("Unit Test")
     );
 
 
     runner.add_test_family(
       "iterator",
-      "foo_false_positive_test(False Positive Test),
-      "foo_test(Unit Test),
-      iterator_false_positive_test(False Positive Test),
-      iterator_test(Unit Test)
+      "foo_false_positive_test("False Positive Test"),
+      "foo_test("Unit Test"),
+      iterator_false_positive_test("False Positive Test"),
+      iterator_test("Unit Test")
     );
 
 
     runner.add_test_family(
       "partners",
-      couple_false_positive_test(False Positive Test),
-      couple_test(Unit Test)
+      couple_false_positive_test("False Positive Test"),
+      couple_test("Unit Test")
     );
 
     runner.execute();
