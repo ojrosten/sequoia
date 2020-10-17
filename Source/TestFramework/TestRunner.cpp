@@ -166,7 +166,9 @@ namespace sequoia::testing
     constexpr auto npos{std::string::npos};
 
     auto start{npos};
-    if(auto pos{m_QualifiedClassName.rfind("::")}; pos != npos)
+    auto templatePos{m_QualifiedClassName.find('<')};
+    
+    if(auto pos{m_QualifiedClassName.rfind("::", templatePos)}; pos != npos)
     {
       if(pos < m_QualifiedClassName.length() - 2)
       {
