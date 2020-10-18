@@ -206,14 +206,16 @@ namespace sequoia::testing
       }
     }
 
-    m_ClassHeader = !data.classHeader.empty() ? std::move(data.classHeader) : to_camel_case(m_RawClassName).append(".hpp");
+    const auto camelName{to_camel_case(m_RawClassName)};
+
+    m_ClassHeader = !data.classHeader.empty() ? std::move(data.classHeader) : camelName + ".hpp";
     if(!data.family.empty())
     {
       m_Family = std::move(data.family);
     }
     else
     {
-      m_Family = m_RawClassName;
+      m_Family = camelName;
       replace_all(m_Family, "_", " ");
     }
 
