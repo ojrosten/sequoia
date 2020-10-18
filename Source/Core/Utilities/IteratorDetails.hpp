@@ -30,7 +30,7 @@ namespace sequoia::utilities
     };
                                          
     template<dereference_policy DerefPolicy1, dereference_policy DerefPolicy2>
-    constexpr bool are_compatible_v{
+    inline constexpr bool are_compatible_v{
          (   (has_proxy_type<DerefPolicy1> && has_proxy_type<DerefPolicy2>)
           || (!has_proxy_type<DerefPolicy1> && !has_proxy_type<DerefPolicy2>))
     };       
@@ -54,7 +54,7 @@ namespace sequoia::utilities
     using type_generator_t = typename type_generator<DereferencePolicy>::type;
 
     template<class DereferencePolicy>
-    constexpr bool provides_mutable_reference_v{
+    inline constexpr bool provides_mutable_reference_v{
            !has_proxy_type<DereferencePolicy>
         &&  std::is_reference_v<typename DereferencePolicy::reference>
         && !is_const_reference_v<typename DereferencePolicy::reference>

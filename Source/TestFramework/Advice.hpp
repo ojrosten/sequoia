@@ -92,7 +92,7 @@ namespace sequoia::testing
 
 
   template<class... U>
-  constexpr bool ends_with_tutor_v{ends_with_tutor<U...>::value};
+  inline constexpr bool ends_with_tutor_v{ends_with_tutor<U...>::value};
 
   class advice_data
   {

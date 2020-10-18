@@ -35,5 +35,6 @@ namespace sequoia::maths::impl
   struct noexcept_spec<C> : std::true_type
   {};
 
-  template<class C> constexpr bool noexcept_spec_v{noexcept_spec<C>::value};
+  template<class C>
+  inline constexpr bool noexcept_spec_v{noexcept_spec<C>::value};
 }

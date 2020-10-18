@@ -35,9 +35,14 @@ namespace sequoia::testing
    */
   template<class T, class... Us> struct weak_equivalence_checker;
 
-  template<class T> constexpr bool has_equivalence_checker_v{class_template_is_default_instantiable<equivalence_checker, T>};
-  template<class T> constexpr bool has_weak_equivalence_checker_v{class_template_is_default_instantiable<weak_equivalence_checker, T>};
-  template<class T> constexpr bool has_detailed_equality_checker_v{class_template_is_default_instantiable<detailed_equality_checker, T>};
+  template<class T>
+  inline constexpr bool has_equivalence_checker_v{class_template_is_default_instantiable<equivalence_checker, T>};
+
+  template<class T>
+  inline constexpr bool has_weak_equivalence_checker_v{class_template_is_default_instantiable<weak_equivalence_checker, T>};
+
+  template<class T>
+  inline constexpr bool has_detailed_equality_checker_v{class_template_is_default_instantiable<detailed_equality_checker, T>};
   
   struct equality_tag{};
   struct equivalence_tag{};

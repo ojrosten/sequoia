@@ -130,13 +130,13 @@ namespace sequoia::data_structures::partition_impl
   using indirect_copy_type = copy_constant<false>;
 
   template<alloc PartitionAllocator, alloc Allocator>
-  constexpr bool is_always_equal_v{
+  inline constexpr bool is_always_equal_v{
        std::allocator_traits<PartitionAllocator>::is_always_equal::value
     && std::allocator_traits<Allocator>::is_always_equal::value
   };
 
   template<alloc PartitionAllocator, alloc Allocator>
-  constexpr bool propagates_on_copy_assignment_v{
+  inline constexpr bool propagates_on_copy_assignment_v{
        (    std::allocator_traits<PartitionAllocator>::propagate_on_container_copy_assignment::value
          || std::allocator_traits<PartitionAllocator>::is_always_equal::value)
     && (    std::allocator_traits<Allocator>::propagate_on_container_copy_assignment::value
@@ -144,7 +144,7 @@ namespace sequoia::data_structures::partition_impl
   };
 
   template<alloc PartitionAllocator, alloc Allocator>
-  constexpr bool propagates_on_move_assignment_v{
+  inline constexpr bool propagates_on_move_assignment_v{
        (    std::allocator_traits<PartitionAllocator>::propagate_on_container_move_assignment::value
          || std::allocator_traits<PartitionAllocator>::is_always_equal::value)
     && (    std::allocator_traits<Allocator>::propagate_on_container_move_assignment::value
@@ -152,7 +152,7 @@ namespace sequoia::data_structures::partition_impl
   };
 
   template<handler Handler, class T>
-  constexpr static bool direct_copy_v{std::is_same_v<Handler, ownership::independent<T>>};
+  inline constexpr bool direct_copy_v{std::is_same_v<Handler, ownership::independent<T>>};
   
   template<class T> class data_duplicator;
     

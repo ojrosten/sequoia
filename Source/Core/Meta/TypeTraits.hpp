@@ -59,7 +59,7 @@ namespace sequoia
   {};
 
   template<class T, class... Args>
-  constexpr bool is_base_of_head_v{is_base_of_head<T, Args...>::value};
+  inline constexpr bool is_base_of_head_v{is_base_of_head<T, Args...>::value};
 
   template<class T, class... Args>
   using is_base_of_head_t = typename is_base_of_head<T, Args...>::type;
@@ -76,7 +76,7 @@ namespace sequoia
   {};
 
   template<class T, class... Args>
-  constexpr bool resolve_to_copy_v{resolve_to_copy<T, Args...>::value};
+  inline constexpr bool resolve_to_copy_v{resolve_to_copy<T, Args...>::value};
 
   template<class T, class... Args>
   using resolve_to_copy_t = typename resolve_to_copy<T, Args...>::type;
@@ -92,9 +92,11 @@ namespace sequoia
   template<class T>
   struct is_const_pointer<const T* const> : std::true_type {};
 
-  template<class T> constexpr bool is_const_pointer_v{is_const_pointer<T>::value};
+  template<class T>
+  inline constexpr bool is_const_pointer_v{is_const_pointer<T>::value};
 
-  template<class T> using is_const_pointer_t = typename is_const_pointer<T>::type;
+  template<class T>
+  using is_const_pointer_t = typename is_const_pointer<T>::type;
 
   // is_const_reference
   
@@ -103,14 +105,17 @@ namespace sequoia
     : std::bool_constant<std::is_reference_v<T> && std::is_const_v<std::remove_reference_t<T>>>
   {};
 
-  template<class T> constexpr bool is_const_reference_v{is_const_reference<T>::value};
+  template<class T>
+  inline constexpr bool is_const_reference_v{is_const_reference<T>::value};
 
-  template<class T> using is_const_reference_t = typename is_const_reference<T>::type;
+  template<class T>
+  using is_const_reference_t = typename is_const_reference<T>::type;
   
   template<class T>
   std::add_lvalue_reference_t<T> makelval() noexcept;
 
   // dependent_false
   
-  template<class T> struct dependent_false : std::false_type {};
+  template<class T>
+  struct dependent_false : std::false_type {};
 }
