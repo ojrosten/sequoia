@@ -20,11 +20,12 @@ int main(int argc, char** argv)
     test_runner runner{argc,
                        argv,
                        "Oliver J. Rosten",
-                       root/"TestChamber"/"TestChamberMain.cpp",
+                       root/"TestMinimal"/"TestMinimalMain.cpp",
                        root/"TestCommon" /"TestIncludes.hpp",
                        repositories(root)
     };
   
+    /*
     runner.add_test_family(
       "Core Diagnostics",
       false_positive_diagnostics{"False Positive Diagnostics"},
@@ -37,17 +38,12 @@ int main(int argc, char** argv)
       test_runner_test{"Unit Test"}
     );
 
-    /*runner.add_test_family(
+    runner.add_test_family(
       "CommandLine Arguments",      
       commandline_arguments_false_positive_test{"False Positive Test"},
       commandline_arguments_test{"Unit Test"}
-    );
-
-    runner.add_test_family(
-      "Test Runner",      
-      test_runner_false_positive_test{"False Positive Diagnostics"},
-      test_runner_test{"Unit Test"}
-      );*/
+      );
+    */
       
     runner.execute();
   }
