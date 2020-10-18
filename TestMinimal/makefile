@@ -35,7 +35,7 @@ CFLAGS += -I/usr/local/opt/llvm/include -I/usr/local/opt/llvm/include/c++/v1/
 EXE    := $(BUILD_DIR)/TestMinimal.exe
 
 UT_SRCS := TestMinimalMain.cpp
-UT_SRCS += $(shell find $(UT_DIR)/TestFramework/Tests/Experimental -name '*.cpp')
+UT_SRCS += $(shell find $(UT_DIR)/Experimental -name '*.cpp')
 
 UT_OBJS := $(addprefix $(UT_BUILD_DIR)/, $(UT_SRCS:%.cpp=%.o))
 UT_DEPS := $(addprefix $(UT_BUILD_DIR)/, $(UT_SRCS:%.cpp=%.d))
