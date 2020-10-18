@@ -105,7 +105,7 @@ namespace sequoia::testing
       [&summaries, &diagnosticsToWrite, &writer, &updateables](log_summary summary, const paths& files){
         summaries.push_back(std::move(summary));
 
-        if(!summary.diagnostics_output().empty()) diagnosticsToWrite = true;
+        if(!summaries.back().diagnostics_output().empty()) diagnosticsToWrite = true;
 
         writer.to_file(files.summary, summaries.back());
 
@@ -145,7 +145,8 @@ namespace sequoia::testing
       }
     }
 
-    if((outputMode == output_mode::write_files) && diagnosticsToWrite)
+    if(   ((outputMode & output_mode::write_files) == output_mode::write_files)
+       && diagnosticsToWrite)
     {
       if(auto filename{diagnostics_filename()}; !filename.empty())
       {        
