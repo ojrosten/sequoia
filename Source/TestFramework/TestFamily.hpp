@@ -153,6 +153,14 @@ namespace sequoia::testing
     private:
       std::set<std::filesystem::path> m_Record{};
     };
+
+    struct paths
+    {
+      explicit paths(const test& t, output_mode outputMode, const std::filesystem::path& outputDir);
+
+      std::filesystem::path summary, workingMaterials, predictions;      
+      output_mode mode;
+    };
   };  
 
   [[nodiscard]]

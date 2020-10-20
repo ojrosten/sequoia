@@ -73,26 +73,12 @@ namespace sequoia::testing
     namespace fs = std::filesystem;
 
     const auto time{steady_clock::now()};
-    
+
     std::vector<log_summary> summaries{};
     summaries.reserve(m_Tests.size());
-    bool diagnosticsToWrite{};
+    bool hasDiagnostics{};
     summary_writer writer{};
-
     
-    struct paths
-    {
-      explicit paths(const test& t, output_mode outputMode, const std::filesystem::path& outputDir)
-        : summary{test_summary_filename(t, outputMode, outputDir)}
-        , workingMaterials{t.working_materials()}
-        , predictions{t.predictive_materials()}
-        , mode{outputMode}
-      {}
-
-      fs::path summary, workingMaterials, predictions;      
-      output_mode mode;
-    };
-
     auto compare{
       [](const paths& lhs, const paths& rhs){
         return lhs.workingMaterials < rhs.workingMaterials;
@@ -102,10 +88,10 @@ namespace sequoia::testing
     std::set<paths, decltype(compare)> updateables{};
     
     auto process{
-      [&summaries, &diagnosticsToWrite, &writer, &updateables](log_summary summary, const paths& files){
+      [&summaries, &hasDiagnostics, &writer, &updateables](log_summary summary, const paths& files){
         summaries.push_back(std::move(summary));
 
-        if(!summaries.back().diagnostics_output().empty()) diagnosticsToWrite = true;
+        if(!summaries.back().diagnostics_output().empty()) hasDiagnostics = true;
 
         writer.to_file(files.summary, summaries.back());
 
@@ -145,21 +131,23 @@ namespace sequoia::testing
       }
     }
 
-    if(   ((outputMode & output_mode::write_files) == output_mode::write_files)
-       && diagnosticsToWrite)
+    if((outputMode & output_mode::write_files) == output_mode::write_files)
     {
       if(auto filename{diagnostics_filename()}; !filename.empty())
-      {        
-        if(std::ofstream file{filename})
-        {           
-          for(const auto& s : summaries)
-          {           
-            file << s.diagnostics_output().data();
-          }
-        }
-        else
+      {
+        if(hasDiagnostics || fs::exists(filename))
         {
-          throw std::runtime_error{std::string{"Unable to open diagnostics output file "}.append(filename).append(" for writing\n")};
+          if(std::ofstream file{filename})
+          {           
+            for(const auto& s : summaries)
+            {           
+              file << s.diagnostics_output().data();
+            }
+          }
+          else
+          {
+            throw std::runtime_error{std::string{"Unable to open diagnostics output file "}.append(filename).append(" for writing\n")};
+          }
         }
       }
     }
@@ -229,6 +217,13 @@ namespace sequoia::testing
       throw std::runtime_error{std::string{"Unable to open summaries file "}.append(filename).append(" for writing\n")};
     }
   }
+
+  test_family::paths::paths(const test& t, output_mode outputMode, const std::filesystem::path& outputDir)
+    : summary{test_summary_filename(t, outputMode, outputDir)}
+    , workingMaterials{t.working_materials()}
+    , predictions{t.predictive_materials()}
+    , mode{outputMode}
+  {}
 
   [[nodiscard]]
   std::string summarize(const test_family::summary& summary, const summary_detail suppression, indentation ind_0, indentation ind_1)
