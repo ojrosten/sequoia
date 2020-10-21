@@ -22,9 +22,7 @@ namespace sequoia::testing
     void run_tests() final;
 
     void test_waiting_task(const std::chrono::milliseconds millisecs);
-    void test_waiting_task_return(const std::chrono::milliseconds millisecs);    
-    void check_return_values(std::string_view message, performance_results<std::vector<int>>&& futures);        
-
+    void test_waiting_task_return(const std::chrono::milliseconds millisecs);
 
     template<class ThreadModel, class... Args>
     void waiting_task(const std::size_t nTasks, const std::chrono::milliseconds millisecs, Args&&... args);

@@ -28,7 +28,7 @@ namespace sequoia::testing
       graph_test_helper<null_weight, int> helper{concurrent_execution()};
       helper.run_tests<test_weighted_BFS_tasks>(*this);
     }
-      
+
     {
       graph_test_helper<null_weight, int> helper{concurrent_execution()};
       helper.run_tests<test_priority_traversal>(*this);
@@ -844,28 +844,8 @@ namespace sequoia::testing
         }
       };
 
-      auto expected = node_task_answers(upper);
-
-      auto futures = check_relative_performance(LINE("Null versus async check"), asyncFn, serialFn, 2.0, 4.5);
-      auto futures2 = check_relative_performance(LINE("Null versus pool check"), poolFn, serialFn, 2.0, 4.5);
-
-      for(auto&& fut : futures.fast_futures)
-      {
-        auto results = fut.get();
-        check_equality(LINE("Async node performance task results wrong"), results, expected);
-      }
-
-      for(auto&& fut : futures.slow_futures)
-      {
-        auto results = fut.get();
-        check_equality(LINE("Null node performance task results wrong"), results, expected);
-      }
-
-      for(auto&& fut : futures2.fast_futures)
-      {
-        auto results = fut.get();
-        check_equality(LINE("Pool node performance task results wrong"), results, expected);
-      }
+      check_relative_performance(LINE("Null versus async check"), asyncFn, serialFn, 2.0, 4.5);
+      check_relative_performance(LINE("Null versus pool check"), poolFn, serialFn, 2.0, 4.5);
     }
   }
 

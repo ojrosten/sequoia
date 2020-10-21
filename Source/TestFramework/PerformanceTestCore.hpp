@@ -20,12 +20,6 @@
 
 namespace sequoia::testing
 {
-  template<class R> struct performance_results
-  {
-    std::vector<std::future<R>> fast_futures, slow_futures;
-    bool passed{};
-  };
-
   /*! \brief Function for comparing the performance of a fast task to a slow task.
 
        \param minSpeedUp  the minimum predicted speed up of fast over slow; must be > 1
@@ -69,63 +63,65 @@ namespace sequoia::testing
        
    */
   template<test_mode Mode, class F, class S>
-  [[nodiscard]]
-  auto check_relative_performance(std::string_view description, test_logger<Mode>& logger, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials, const double num_sds, const std::size_t maxAttempts) -> performance_results<std::invoke_result_t<F>>
-  {      
-    using R = std::invoke_result_t<F>;
-    static_assert(std::is_same_v<R, std::invoke_result_t<S>>, "Fast/Slow invokables must have same return value");
-
+  bool check_relative_performance(std::string_view description, test_logger<Mode>& logger, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials, const double num_sds, const std::size_t maxAttempts)
+  {
     if((minSpeedUp <= 1) || (maxSpeedUp <= 1))
-      throw std::logic_error("Relative performance test requires speed-up factors > 1");
+      throw std::logic_error{"Relative performance test requires speed-up factors > 1"};
 
     if(minSpeedUp > maxSpeedUp)
-      throw std::logic_error("maxSpeedUp must be >= minSpeedUp");
+      throw std::logic_error{"maxSpeedUp must be >= minSpeedUp"};
 
     if(num_sds <=1)
-      throw std::logic_error("Number of standard deviations is required to be > 1");
-          
-    performance_results<R> results;      
-      
+      throw std::logic_error{"Number of standard deviations is required to be > 1"};
+
+    if(!maxAttempts)
+      throw std::logic_error{"Number of attempts is required to be > 0"};
+
+    if(trials < 5)
+      throw std::logic_error{"Number of trials is required to be > 4"};
+
     using namespace std::chrono;
     using namespace maths;
 
     std::string summary{};  
-
     std::size_t remainingAttempts{maxAttempts};
+    bool passed{};
+
+    auto timer{
+       [](auto task, std::vector<double>& timings){
+         const auto start{steady_clock::now()};
+         task();
+         const auto end{steady_clock::now()};
+
+         const duration<double> duration = end - start;
+         timings.push_back(duration.count());
+       }
+    };
 
     while(remainingAttempts > 0)
     {
+      const auto adjustedTrials{trials*(maxAttempts - remainingAttempts + 1)};
+
       std::vector<double> fastData, slowData;
-      fastData.reserve(trials);
-      slowData.reserve(trials);
+      fastData.reserve(adjustedTrials);
+      slowData.reserve(adjustedTrials);
         
       std::random_device generator;
-      const auto adjustedTrials{trials*(maxAttempts - remainingAttempts + 1)};
       for(std::size_t i{}; i < adjustedTrials; ++i)
       {
-        std::packaged_task<R()> fastTask{fast}, slowTask{slow};
-
-        results.fast_futures.emplace_back(std::move(fastTask.get_future()));
-        results.slow_futures.emplace_back(std::move(slowTask.get_future()));
-
-        steady_clock::time_point start, end;
-
         std::uniform_real_distribution<double> distribution{0.0, 1.0};
         const bool fastFirst{(distribution(generator) < 0.5)};
 
-        start = steady_clock::now();
-        fastFirst ? fastTask() : slowTask();
-        end = steady_clock::now();
-
-        duration<double> duration = end - start;
-        fastFirst ? fastData.push_back(duration.count()) : slowData.push_back(duration.count());
-
-        start = steady_clock::now();
-        fastFirst ? slowTask() : fastTask();
-        end = steady_clock::now();
-
-        duration = end - start;
-        fastFirst ? slowData.push_back(duration.count()) : fastData.push_back(duration.count());
+        if(fastFirst)
+        {
+          timer(fast, fastData);
+          timer(slow, slowData);
+        }
+        else
+        {
+          timer(slow, slowData);
+          timer(fast, fastData);
+        }
       }
 
       auto compute_stats{
@@ -134,23 +130,29 @@ namespace sequoia::testing
           return std::make_pair(data.first.value(), data.second.value());
         }
       };
-      
-      const auto [sig_f, m_f]{compute_stats(fastData.cbegin(), fastData.cend())};
-      const auto [sig_s, m_s]{compute_stats(slowData.cbegin(), slowData.cend())};
 
-      using namespace maths::bias;
+      std::sort(fastData.begin(), fastData.end());
+      std::sort(slowData.begin(), slowData.end());
+      
+      const auto [sig_f, m_f]{compute_stats(fastData.cbegin()+1, fastData.cend()-1)};
+      const auto [sig_s, m_s]{compute_stats(slowData.cbegin()+1, slowData.cend()-1)};
+
       if(m_f + sig_f < m_s - sig_s)
       {
         if(sig_f >= sig_s)
         {
-          results.passed = (minSpeedUp * m_f <= (m_s + num_sds * sig_s))
-                        && (maxSpeedUp * m_f >= (m_s - num_sds * sig_s));
+          passed =    (minSpeedUp * m_f <= (m_s + num_sds * sig_s))
+                   && (maxSpeedUp * m_f >= (m_s - num_sds * sig_s));
         }
         else
         {
-          results.passed = (m_s / maxSpeedUp <= (m_f + num_sds * sig_f))
-                        && (m_s / minSpeedUp >= (m_f - num_sds * sig_f));
+          passed =    (m_s / maxSpeedUp <= (m_f + num_sds * sig_f))
+                   && (m_s / minSpeedUp >= (m_f - num_sds * sig_f));
         }
+      }
+      else
+      {
+        passed = false;
       }
 
       auto stats{
@@ -174,25 +176,23 @@ namespace sequoia::testing
         
       summary = append_lines(stats("Fast", m_f, sig_f), stats("Slow", m_s, sig_s)).append(summarizer());
           
-      if((test_logger<Mode>::mode == test_mode::false_positive) ? !results.passed : results.passed)
+      if((test_logger<Mode>::mode == test_mode::false_positive) ? !passed : passed)
       {
         break;
       }
         
       --remainingAttempts;
-      if(remainingAttempts)
-        results = performance_results<R>{};      
     }
 
     sentinel<Mode> sentry{logger, append_lines(description, summary)};
     sentry.log_performance_check();
 
-    if(!results.passed)
+    if(!passed)
     {        
       sentry.log_performance_failure("");
     }
 
-    return results;
+    return passed;
   }
 
   /*! \brief class template for plugging into the checker class template
@@ -213,10 +213,9 @@ namespace sequoia::testing
     performance_extender& operator=(performance_extender&&)      = delete;
  
     template<class F, class S>
-    auto check_relative_performance(std::string_view description, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials=5, const double num_sds=4)
-      -> performance_results<std::invoke_result_t<F>>
+    bool check_relative_performance(std::string_view description, F fast, S slow, const double minSpeedUp, const double maxSpeedUp, const std::size_t trials=5, const double num_sds=4)
     {
-      return testing::check_relative_performance(description, m_Logger, fast, slow, minSpeedUp, maxSpeedUp, trials, num_sds, 2);
+      return testing::check_relative_performance(description, m_Logger, fast, slow, minSpeedUp, maxSpeedUp, trials, num_sds, 3);
     }
   protected:
     ~performance_extender() = default;

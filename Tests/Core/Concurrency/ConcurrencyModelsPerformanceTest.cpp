@@ -80,29 +80,6 @@ namespace sequoia::testing
       check_relative_performance(LINE("Four Waiting tasks; pool_4M/null"), threadPoolMonoFn, nullThreadFn, 3.9, 4.1);
     }
   }
-  
-  void threading_models_performance_test::check_return_values(std::string_view message, performance_results<std::vector<int>>&& futures)
-  {
-    for(auto& f : futures.fast_futures)
-    {
-      auto results{f.get()};
-      if(check_equality(LINE(message), results.size(), 2ul))
-      {
-        check_equality(LINE(message), results[0], 0);
-        check_equality(LINE(message), results[1], 1);
-      }
-    }
-
-    for(auto& f : futures.slow_futures)
-    {
-      auto results{f.get()};
-      if(check_equality(LINE(message), results.size(), 2ul))
-      {
-        check_equality(LINE(message), results[0], 0);
-        check_equality(LINE(message), results[1], 1);
-      }
-    }
-  }
 
   void threading_models_performance_test::test_waiting_task_return(const std::chrono::milliseconds millisecs)
   {
@@ -123,15 +100,9 @@ namespace sequoia::testing
 
       auto asyncFn{[this, millisecs]() { return waiting_task_return<asynchronous<int>>(2u, millisecs); }};
 
-      auto futures{check_relative_performance(LINE("Two Waiting tasks; pool_2/null"), threadPoolFn, nullThreadFn, 1.9, 2.1)};
-      check_return_values(LINE("pool_2"), std::move(futures));
-
-          
-      futures = check_relative_performance(LINE("Two Waiting tasks; pool_2M/null"), threadPoolMonoFn, nullThreadFn, 1.9, 2.1);
-      check_return_values(LINE("pool_2M"), std::move(futures));
-
-      futures = check_relative_performance(LINE("Two Waiting tasks; async/null"), asyncFn, nullThreadFn, 1.9, 2.1);
-      check_return_values(LINE("async"), std::move(futures));
+      check_relative_performance(LINE("Two Waiting tasks; pool_2/null"), threadPoolFn, nullThreadFn, 1.9, 2.1);
+      check_relative_performance(LINE("Two Waiting tasks; pool_2M/null"), threadPoolMonoFn, nullThreadFn, 1.9, 2.1);
+      check_relative_performance(LINE("Two Waiting tasks; async/null"), asyncFn, nullThreadFn, 1.9, 2.1);
     }
   }
 
