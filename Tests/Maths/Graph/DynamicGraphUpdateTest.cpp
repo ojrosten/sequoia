@@ -195,7 +195,7 @@ namespace sequoia::testing
   {
     graph_updater<graph_t> updater(graph);
     auto firstNodeFn = [&updater](const std::size_t index){ updater.firstNodeTraversal(index); };
-    maths::depth_first_search(graph, false, 0, firstNodeFn);
+    maths::pseudo_depth_first_search(graph, false, 0, firstNodeFn);
 
     // node_weight *=  (2 + traversal index)
     //
@@ -211,7 +211,7 @@ namespace sequoia::testing
     check_range(LINE(""), graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend());
 
     auto secondNodeFn = [&updater](const std::size_t index){ updater.secondNodeTraversal(index); };
-    maths::depth_first_search(graph, false, 0, maths::null_functor(), secondNodeFn);
+    maths::pseudo_depth_first_search(graph, false, 0, maths::null_functor(), secondNodeFn);
 
     // node_weight / = (2 + traversal index)
     //
@@ -227,7 +227,7 @@ namespace sequoia::testing
     check_range(LINE(""), graph.cbegin_node_weights(), graph.cend_node_weights(), expectedNodeWeights.cbegin(), expectedNodeWeights.cend());
 
     auto firstEdgeFn = [&updater](auto citer) { updater.firstEdgeTraversal(citer); };
-    maths::depth_first_search(graph, false, 0, maths::null_functor(), maths::null_functor(), firstEdgeFn);
+    maths::pseudo_depth_first_search(graph, false, 0, maths::null_functor(), maths::null_functor(), firstEdgeFn);
 
     // edge_weight += 10 + traversal index
     //
@@ -299,11 +299,11 @@ namespace sequoia::testing
     auto secondEdgeFn = [&updater](auto citer) { updater.secondEdgeTraversal(citer); };
     if constexpr(undirected)
     {
-      maths::depth_first_search(graph, false, 0, maths::null_functor(), maths::null_functor(), maths::null_functor(), secondEdgeFn);
+      maths::pseudo_depth_first_search(graph, false, 0, maths::null_functor(), maths::null_functor(), maths::null_functor(), secondEdgeFn);
     }
     else
     {
-      maths::depth_first_search(graph, false, 0, maths::null_functor(), maths::null_functor(), secondEdgeFn);
+      maths::pseudo_depth_first_search(graph, false, 0, maths::null_functor(), maths::null_functor(), secondEdgeFn);
     }
 
     // edge_weight -= (10 + traversal index)

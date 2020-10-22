@@ -18,7 +18,7 @@ namespace sequoia::testing
     return __FILE__;
   }
 
-  constexpr auto test_static_graph_traversals::topological_sort()
+  constexpr auto test_static_graph_traversals::arrage()
   {
     using namespace maths;
 
@@ -34,7 +34,7 @@ namespace sequoia::testing
     };
     
     constexpr g_type g{{edge_t{1}}, {}};
-    depth_first_search(g, true, 0, null_functor{}, lateNodeFn);
+    pseudo_depth_first_search(g, true, 0, null_functor{}, lateNodeFn);
 
     return ordering;
   }
@@ -111,7 +111,7 @@ namespace sequoia::testing
   void test_static_graph_traversals::run_tests()
   {
     {
-      constexpr auto ordering{topological_sort()};
+      constexpr auto ordering{arrage()};
       check_equality(LINE(""), ordering[0], 0ul);
       check_equality(LINE(""), ordering[1], 1ul);
     }

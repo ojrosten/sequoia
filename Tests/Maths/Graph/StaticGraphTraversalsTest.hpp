@@ -21,7 +21,7 @@ namespace sequoia::testing
   private:
     void run_tests() final;
 
-    constexpr static auto topological_sort();
+    constexpr static auto arrage();
 
     constexpr static auto bfs();
 

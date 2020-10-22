@@ -87,7 +87,7 @@ namespace sequoia::maths
     class ESTF = null_functor
   >
     requires (G::directedness != directed_flavour::directed)
-  constexpr auto depth_first_search(const G& graph, const bool findDisconnectedPieces = true,
+  constexpr auto pseudo_depth_first_search(const G& graph, const bool findDisconnectedPieces = true,
                  const std::size_t start = 0,
                  NFBE&& nodeFunctorBeforeEdges     = null_functor{},
                  NFAE&& nodeFunctorAfterEdges      = null_functor{},
@@ -117,7 +117,7 @@ namespace sequoia::maths
     class EFTF = null_functor
   >
     requires (G::directedness == directed_flavour::directed)
-  constexpr auto depth_first_search(const G& graph, const bool findDisconnectedPieces = true,
+  constexpr auto pseudo_depth_first_search(const G& graph, const bool findDisconnectedPieces = true,
                  const std::size_t start = 0,
                  NFBE&& nodeFunctorBeforeEdges     = null_functor{},
                  NFAE&& nodeFunctorAfterEdges      = null_functor{},

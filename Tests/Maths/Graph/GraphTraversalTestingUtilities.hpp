@@ -38,7 +38,7 @@ namespace sequoia::testing
     template<class G, class... Fn>
     static void traverse(const G& g, const bool findDisconnected, const std::size_t start, Fn&&... fn)
     {
-      maths::depth_first_search(g, findDisconnected, start, std::forward<Fn>(fn)...);
+      maths::pseudo_depth_first_search(g, findDisconnected, start, std::forward<Fn>(fn)...);
     }
 
     constexpr static bool uses_forward_iterator() noexcept { return false; }
