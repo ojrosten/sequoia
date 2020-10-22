@@ -20,7 +20,7 @@
 #include "ArrayUtilities.hpp"
 #include "AssignmentUtilities.hpp"
 #include "Iterator.hpp"
-#include "ProtectiveWrapper.hpp"
+#include "UniformWrapper.hpp"
 #include "Algorithms.hpp"
 #include "DataPoolTraits.hpp"
 
@@ -293,7 +293,7 @@ namespace sequoia::maths::graph_impl
     static constexpr auto direct_copy() noexcept
     {
       constexpr bool protective{
-        std::is_same_v<weight_proxy_type, utilities::protective_wrapper<weight_type>>
+        std::is_same_v<weight_proxy_type, utilities::uniform_wrapper<weight_type>>
       };
       return copy_constant<protective>{};
     }

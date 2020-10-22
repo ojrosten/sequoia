@@ -22,13 +22,13 @@ namespace sequoia::testing
     void run_tests() final;
 
     void sort_basic_type();
-    void sort_protective_wrapper();
+    void sort_uniform_wrapper();
     void sort_partial_edge();
 
     void cluster_basic_type();
 
     void lower_bound_basic_type();
-    void lower_bound_protective_wrapper();
+    void lower_bound_uniform_wrapper();
     void lower_bound_partial_edge();
 
     void upper_bound_basic_type();

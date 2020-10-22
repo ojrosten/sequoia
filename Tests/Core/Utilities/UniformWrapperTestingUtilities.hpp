@@ -9,14 +9,14 @@
 
 #include "RegularTestCore.hpp"
 
-#include "ProtectiveWrapper.hpp"
+#include "UniformWrapper.hpp"
 
 namespace sequoia::testing
 {
   template<class T>
-  struct detailed_equality_checker<utilities::protective_wrapper<T>>
+  struct detailed_equality_checker<utilities::uniform_wrapper<T>>
   {
-    using type = utilities::protective_wrapper<T>;
+    using type = utilities::uniform_wrapper<T>;
     
     template<test_mode Mode>
     static void check(test_logger<Mode>& logger, const type& wrapper, const type& prediction)

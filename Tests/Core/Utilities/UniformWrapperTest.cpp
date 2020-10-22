@@ -5,17 +5,17 @@
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#include "ProtectiveWrapperTest.hpp"
-#include "ProtectiveWrapperTestingUtilities.hpp"
+#include "UniformWrapperTest.hpp"
+#include "UniformWrapperTestingUtilities.hpp"
 
 #include <vector>
 
 namespace sequoia::testing
 {
   // a+1, b*2
-  constexpr utilities::protective_wrapper<data> make(int a, double b)
+  constexpr utilities::uniform_wrapper<data> make(int a, double b)
   {
-    utilities::protective_wrapper<data> d{a, b};
+    utilities::uniform_wrapper<data> d{a, b};
     d.set(a, b);
     d.mutate([](auto& e) { e.a+=1; e.b*=2; });
 
@@ -23,23 +23,23 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string_view protective_wrapper_test::source_file() const noexcept
+  std::string_view uniform_wrapper_test::source_file() const noexcept
   {
     return __FILE__;
   }
 
-  void protective_wrapper_test::run_tests()
+  void uniform_wrapper_test::run_tests()
   {
     test_basic_type();
     test_container_type();
     test_aggregate_type();   
   }
 
-  void protective_wrapper_test::test_basic_type()
+  void uniform_wrapper_test::test_basic_type()
   {
     using namespace utilities;
 
-    using wrapper = protective_wrapper<int>;
+    using wrapper = uniform_wrapper<int>;
 
     static_assert(sizeof(wrapper) == sizeof(int));
 
@@ -57,11 +57,11 @@ namespace sequoia::testing
     check_equality(LINE(""), w, wrapper{4});
   }
   
-  void protective_wrapper_test::test_container_type()
+  void uniform_wrapper_test::test_container_type()
   {
     using namespace utilities;
 
-    using wrapper = protective_wrapper<std::vector<int>>;
+    using wrapper = uniform_wrapper<std::vector<int>>;
 
     static_assert(sizeof(wrapper) == sizeof(std::vector<int>));
 
@@ -82,11 +82,11 @@ namespace sequoia::testing
     check_semantics(LINE("Regular semantics"), w, v);
   }
   
-  void protective_wrapper_test::test_aggregate_type()
+  void uniform_wrapper_test::test_aggregate_type()
   {
     using namespace utilities;
 
-    using wrapper = protective_wrapper<data>;
+    using wrapper = uniform_wrapper<data>;
 
     static_assert(sizeof(wrapper) == sizeof(data));
 

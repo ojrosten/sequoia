@@ -9,7 +9,7 @@
 #include "AlgorithmsTest.hpp"
 
 #include "Algorithms.hpp"
-#include "ProtectiveWrapper.hpp"
+#include "UniformWrapper.hpp"
 #include "Edge.hpp"
 #include "Handlers.hpp"
 
@@ -50,13 +50,13 @@ namespace sequoia
     void algorithms_test::run_tests()
     {
       sort_basic_type();
-      sort_protective_wrapper();
+      sort_uniform_wrapper();
       sort_partial_edge();
 
       cluster_basic_type();
 
       lower_bound_basic_type();
-      lower_bound_protective_wrapper();
+      lower_bound_uniform_wrapper();
       lower_bound_partial_edge();
 
       upper_bound_basic_type();
@@ -115,9 +115,9 @@ namespace sequoia
       }
     }
 
-    void algorithms_test::sort_protective_wrapper()
+    void algorithms_test::sort_uniform_wrapper()
     {
-      using wrapper = utilities::protective_wrapper<int>;
+      using wrapper = utilities::uniform_wrapper<int>;
       constexpr std::array<wrapper, 4> a{wrapper{3}, wrapper{2}, wrapper{4}, wrapper{1}};
       constexpr auto b = sort(a);
       for(int i{}; i<4; ++i)
@@ -262,9 +262,9 @@ namespace sequoia
       }
     }
 
-    void algorithms_test::lower_bound_protective_wrapper()
+    void algorithms_test::lower_bound_uniform_wrapper()
     {
-      using wrapper = utilities::protective_wrapper<int>;
+      using wrapper = utilities::uniform_wrapper<int>;
       constexpr std::array<wrapper, 3> a{wrapper{-1}, wrapper{-1}, wrapper{1}};
       constexpr auto w{*lower_bound(a.begin(), a.end(), wrapper{})};
       check_equality(LINE(""), w.get(), 1);

@@ -6,7 +6,7 @@
 ////////////////////////////////////////////////////////////////////
 
 #include "NodeStorageTest.hpp"
-#include "ProtectiveWrapper.hpp"
+#include "UniformWrapper.hpp"
 #include "DataPool.hpp"
 #include "GraphDetails.hpp"
 

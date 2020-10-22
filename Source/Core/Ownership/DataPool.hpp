@@ -14,7 +14,7 @@
 
 #include "Handlers.hpp"
 
-#include "Utilities/ProtectiveWrapper.hpp"
+#include "Utilities/UniformWrapper.hpp"
 #include "Utilities/Iterator.hpp"
 
 #include <vector>
@@ -26,7 +26,7 @@ namespace sequoia::ownership
   template<class T> class spawner
   {
   public:
-    using proxy = utilities::protective_wrapper<T>;
+    using proxy = utilities::uniform_wrapper<T>;
     using value_type = T;
 
     template<class... Args>

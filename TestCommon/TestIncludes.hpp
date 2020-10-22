@@ -18,8 +18,8 @@
 #include "UtilitiesTest.hpp"
 
 #include "ArrayUtilitiesTest.hpp"
-#include "ProtectiveWrapperTestingDiagnostics.hpp"
-#include "ProtectiveWrapperTest.hpp"
+#include "UniformWrapperTestingDiagnostics.hpp"
+#include "UniformWrapperTest.hpp"
 #include "IteratorTest.hpp"
 
 #include "DataPoolTest.hpp"

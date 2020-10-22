@@ -1,20 +1,18 @@
 ////////////////////////////////////////////////////////////////////
-//                Copyright Oliver J. Rosten 2018.                //
+//                Copyright Oliver J. Rosten 2019.                //
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0. //
 //    (See accompanying file LICENSE.md or copy at                //
 //          https://www.gnu.org/licenses/gpl-3.0.en.html)         //
 ////////////////////////////////////////////////////////////////////
 
-#pragma once
-
-#include "RegularTestCore.hpp"
+#include "UniformWrapperTestingUtilities.hpp"
 
 namespace sequoia::testing
 {
-  class protective_wrapper_test final : public regular_test
+  class uniform_wrapper_false_positive_test final : public regular_false_positive_test
   {
   public:
-    using regular_test::regular_test;
+    using regular_false_positive_test::regular_false_positive_test;    
 
     [[nodiscard]]
     std::string_view source_file() const noexcept final;
@@ -27,4 +25,5 @@ namespace sequoia::testing
 
     void test_aggregate_type();
   };
+
 }

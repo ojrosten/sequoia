@@ -88,7 +88,7 @@ namespace sequoia
       template<empty EdgeWeight, creator EdgeWeightCreator>
       struct edge_weight_wrapper<EdgeWeight, EdgeWeightCreator>
       {
-        using proxy = typename utilities::protective_wrapper<EdgeWeight>;
+        using proxy = typename utilities::uniform_wrapper<EdgeWeight>;
       };
       
       // Edge (Weight) Sharing      
@@ -145,7 +145,7 @@ namespace sequoia
       struct edge_init_type_generator
       {
         using weight_type = typename Edge::weight_type;        
-        using edge_init_type = embedded_edge<weight_type, sharing_v_to_type<false>::template policy, utilities::protective_wrapper<weight_type>, typename Edge::index_type>;
+        using edge_init_type = embedded_edge<weight_type, sharing_v_to_type<false>::template policy, utilities::uniform_wrapper<weight_type>, typename Edge::index_type>;
 
         constexpr static bool complementary_data_v{true};        
       };
@@ -153,7 +153,7 @@ namespace sequoia
       template<class Edge> struct edge_init_type_generator<Edge, graph_flavour::undirected, edge_flavour::partial>
       {
         using weight_type = typename Edge::weight_type;       
-        using edge_init_type = partial_edge<weight_type, sharing_v_to_type<false>::template policy, utilities::protective_wrapper<weight_type>, typename Edge::index_type>;
+        using edge_init_type = partial_edge<weight_type, sharing_v_to_type<false>::template policy, utilities::uniform_wrapper<weight_type>, typename Edge::index_type>;
 
         constexpr static bool complementary_data_v{false};
       };
@@ -161,7 +161,7 @@ namespace sequoia
       template<class Edge> struct edge_init_type_generator<Edge, graph_flavour::undirected_embedded, edge_flavour::partial>
       {
         using weight_type = typename Edge::weight_type;       
-        using edge_init_type = embedded_partial_edge<weight_type, sharing_v_to_type<false>::template policy, utilities::protective_wrapper<weight_type>, typename Edge::index_type>;
+        using edge_init_type = embedded_partial_edge<weight_type, sharing_v_to_type<false>::template policy, utilities::uniform_wrapper<weight_type>, typename Edge::index_type>;
 
         constexpr static bool complementary_data_v{true};
       };
@@ -169,7 +169,7 @@ namespace sequoia
       template<class Edge> struct edge_init_type_generator<Edge, graph_flavour::directed, edge_flavour::partial>
       {
         using weight_type = typename Edge::weight_type;       
-        using edge_init_type = partial_edge<weight_type, sharing_v_to_type<false>::template policy, utilities::protective_wrapper<weight_type>, typename Edge::index_type>;
+        using edge_init_type = partial_edge<weight_type, sharing_v_to_type<false>::template policy, utilities::uniform_wrapper<weight_type>, typename Edge::index_type>;
 
         constexpr static bool complementary_data_v{false};
       };
@@ -178,7 +178,7 @@ namespace sequoia
       struct edge_init_type_generator<Edge, GraphFlavour, edge_flavour::partial_embedded>
       {
         using weight_type = typename Edge::weight_type;        
-        using edge_init_type = embedded_partial_edge<weight_type, sharing_v_to_type<false>::template policy, utilities::protective_wrapper<weight_type>, typename Edge::index_type>;
+        using edge_init_type = embedded_partial_edge<weight_type, sharing_v_to_type<false>::template policy, utilities::uniform_wrapper<weight_type>, typename Edge::index_type>;
 
         constexpr static bool complementary_data_v{true};
       };      

@@ -10,7 +10,7 @@
 #include "EdgeTestingUtilities.hpp"
 #include "NodeStorageTestingUtilities.hpp"
 
-#include "ProtectiveWrapper.hpp"
+#include "UniformWrapper.hpp"
 #include "PartitionedData.hpp"
 #include "DataPool.hpp"
 #include "GraphImpl.hpp"
