@@ -22,7 +22,7 @@
 
 namespace sequoia::testing
 {
-  enum class output_mode { none=0, write_files=1, update_materials=2 };
+  enum class output_mode { none=0, write_files=1, update_materials=2, help=4, verbose=8 };
 
   [[nodiscard]]
   constexpr output_mode operator|(output_mode lhs, output_mode rhs) noexcept

@@ -166,33 +166,7 @@ namespace sequoia::testing
    */
 
   class test_runner
-  {
-  private:
-    using family_map = std::map<std::string, bool, std::less<>>;
-    using source_map = std::map<std::filesystem::path, bool>;
-
-    std::vector<test_family> m_Families{};
-    family_map m_SelectedFamilies{};
-    source_map m_SelectedSources{};
-    std::vector<nascent_test> m_NascentTests{};
-    std::string m_Copyright{};
-    search_tree m_SourceSearchTree;
-    std::filesystem::path
-      m_ProjectRoot{},
-      m_TestMain{},
-      m_HashIncludeTarget{},
-      m_TestRepo{},
-      m_TestMaterialsRepo{},
-      m_OutputDir{};
-    
-    std::ostream& m_Stream;
-    
-    bool m_Verbose{}, m_HelpMode{};
-    output_mode m_OutputMode{output_mode::write_files};
-    concurrency_mode m_ConcurrencyMode{concurrency_mode::serial};
-    
-    bool mark_family(std::string_view name);
-    
+  {    
   public:    
     test_runner(int argc, char** argv, std::string_view copyright, std::filesystem::path testMain, std::filesystem::path hashIncludeTarget, repositories repos, std::ostream& stream=std::cout);
 
@@ -237,7 +211,38 @@ namespace sequoia::testing
 
     [[nodiscard]]
     concurrency_mode concurrency() const noexcept { return m_ConcurrencyMode; }
+
   private:
+    
+    using family_map = std::map<std::string, bool, std::less<>>;
+    using source_map = std::map<std::filesystem::path, bool>;
+
+    struct init_data
+    {
+      std::string copyright;
+      std::filesystem::path location;
+    };
+
+    std::vector<test_family> m_Families{};
+    family_map m_SelectedFamilies{};
+    source_map m_SelectedSources{};
+    std::vector<nascent_test> m_NascentTests{};
+    std::string m_Copyright{};
+    search_tree m_SourceSearchTree;
+    std::filesystem::path
+      m_ProjectRoot{},
+      m_TestMain{},
+      m_HashIncludeTarget{},
+      m_TestRepo{},
+      m_TestMaterialsRepo{},
+      m_OutputDir{};
+    
+    std::ostream& m_Stream;
+
+    output_mode m_OutputMode{output_mode::write_files};
+    concurrency_mode m_ConcurrencyMode{concurrency_mode::serial};
+    
+    bool mark_family(std::string_view name);
 
     constexpr static std::array<std::string_view, 5> st_TestNameStubs {
       "TestingUtilities.hpp",
@@ -289,5 +294,13 @@ namespace sequoia::testing
     template<class Iter>
     [[nodiscard]]
     std::string create_files(Iter beginNascentTests, Iter endNascentTests, const std::filesystem::copy_options options) const;
+
+    void init_project(std::string_view copyright, const std::filesystem::path& path) const;
+
+    [[nodiscard]]
+    bool mode(output_mode m) const noexcept
+    {
+      return (m_OutputMode & m) == m;
+    }
   };
 }

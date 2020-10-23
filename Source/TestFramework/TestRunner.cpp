@@ -420,12 +420,10 @@ namespace sequoia::testing
     const auto help{
       parse_invoke_depth_first(argc, argv,
                 { {"test", {"t"}, {"test_family_name"},
-                   [this](const param_list& args) {
-                     m_SelectedFamilies.emplace(args.front(), false); }
+                    [this](const param_list& args) { m_SelectedFamilies.emplace(args.front(), false); }
                   },
                   {"source", {"s"}, {"source_file_name"},
-                   [this](const param_list& args) {
-                     m_SelectedSources.emplace(args.front(), false); }
+                    [this](const param_list& args) { m_SelectedSources.emplace(args.front(), false); }
                   },
                   {"create", {"c"}, {}, addTest,
                    { {"regular_test", {"regular"}, {"qualified::class_name<class T>", "equivalent_type"},
@@ -437,29 +435,40 @@ namespace sequoia::testing
                    }
                   },
                   {"--async", {"-a"}, {},
-                   [this](const param_list&) {
-                     if(m_ConcurrencyMode == concurrency_mode::serial)
-                       m_ConcurrencyMode = concurrency_mode::family; }
+                    [this](const param_list&) {
+                      if(m_ConcurrencyMode == concurrency_mode::serial)
+                        m_ConcurrencyMode = concurrency_mode::family;
+                    }
                   },
                   {"--async-depth", {"-ad"}, {"depth [0-2]"},
-                   [this](const param_list& args) {
-                     const int i{std::clamp(std::stoi(args.front()), 0, 2)};
-                     m_ConcurrencyMode = static_cast<concurrency_mode>(i); }
+                    [this](const param_list& args) {
+                      const int i{std::clamp(std::stoi(args.front()), 0, 2)};
+                      m_ConcurrencyMode = static_cast<concurrency_mode>(i);
+                    }
                   },
-                  {"--verbose",  {"-v"}, {}, [this](const param_list&) { m_Verbose    = true; }},          
+                  {"--verbose",  {"-v"}, {}, [this](const param_list&) { m_OutputMode |= output_mode::verbose; }},
                   {"--nofiles",  {"-n"}, {}, [this](const param_list&) { m_OutputMode &= ~output_mode::write_files; }},
-                  {"--correct-materials", {"-cm"}, {}, [this](const param_list&) { m_OutputMode |= output_mode::update_materials; }},
+                  {"--correct-materials", {"-cm"}, {},
+                    [this](const param_list&) { m_OutputMode |= output_mode::update_materials; }
+                  },
                   {"--recovery", {"-r"}, {},
-                   [recoveryDir{recovery_path(m_OutputDir)}] (const param_list&) {
-                     std::filesystem::create_directory(recoveryDir);
-                     output_manager::recovery_file(recoveryDir / "Recovery.txt"); }}
+                    [recoveryDir{recovery_path(m_OutputDir)}] (const param_list&) {
+                      std::filesystem::create_directory(recoveryDir);
+                      output_manager::recovery_file(recoveryDir / "Recovery.txt");
+                    }
+                  },
+                  {"--init", {"-i"}, {"copyright", "path"},
+                    [this](const param_list& args) {
+                      init_project(args[0], args[1]);
+                    }
+                  }
                 },
                 [](std::string_view){})
         };
 
     if(!help.empty())
     {
-      m_HelpMode = true;    
+      m_OutputMode |= output_mode::help;
       m_Stream << help;
     }
     else
@@ -514,11 +523,11 @@ namespace sequoia::testing
     const auto detail{summary_detail::failure_messages | summary_detail::timings};
     for(const auto& s : results.logs)
     {
-      if(m_Verbose) output += summarize(s, detail, tab, tab);
+      if(mode(output_mode::verbose)) output += summarize(s, detail, tab, tab);
       familySummary.log += s;
     }
           
-    if(m_Verbose)
+    if(mode(output_mode::verbose))
     {
       output.insert(0, report_time(familySummary));
     }
@@ -574,7 +583,7 @@ namespace sequoia::testing
   {
     namespace fs = std::filesystem;
 
-    if(!m_HelpMode)
+    if(!mode(output_mode::help))
     {
       report("Creating files...\n", create_files(m_NascentTests.cbegin(), m_NascentTests.cend(), fs::copy_options::skip_existing));
 
@@ -682,5 +691,9 @@ namespace sequoia::testing
     }
 
     check_for_missing_tests();
+  }
+
+  void test_runner::init_project(std::string_view copyright, const std::filesystem::path& path) const
+  {
   }
 }
