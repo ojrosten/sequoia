@@ -705,6 +705,7 @@ namespace sequoia::testing
 
     fs::create_directories(path);
     fs::copy(project_template_path(m_ProjectRoot), path, fs::copy_options::recursive | fs::copy_options::skip_existing);
+    fs::copy(aux_files_path(m_ProjectRoot), aux_files_path(path), fs::copy_options::recursive | fs::copy_options::skip_existing);
 
     const auto file{path/"TestMain"/"TestMain.cpp"}; 
     std::string text{};

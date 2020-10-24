@@ -29,6 +29,12 @@ namespace sequoia::testing
   std::filesystem::path project_root(int argc, char** argv, const std::filesystem::path& fallback=working_path().parent_path());
 
   [[nodiscard]]
+  inline std::filesystem::path aux_files_path(std::filesystem::path projectRoot)
+  {
+    return projectRoot/"aux_files";
+  }
+
+  [[nodiscard]]
   inline std::filesystem::path code_templates_path(std::filesystem::path projectRoot)
   {
     return projectRoot/"aux_files"/"TestTemplates";
