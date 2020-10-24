@@ -21,6 +21,7 @@ namespace sequoia::testing
   {
     test_template_data_generation();
     test_creation();
+    test_project_init();
   }
 
   void test_runner_test::test_template_data_generation()
@@ -59,8 +60,6 @@ namespace sequoia::testing
 
   void test_runner_test::test_creation()
   {
-    namespace fs = std::filesystem;
-
     auto working{
       [&mat{working_materials()}]() {
         return mat / "FakeProject";
@@ -84,5 +83,36 @@ namespace sequoia::testing
     tr.execute();
 
     check_equivalence(LINE(""), working(), predictive_materials() / "FakeProject");
+  }
+
+  void test_runner_test::test_project_init()
+  {
+    auto fake{
+      [&mat{working_materials()}]() {
+        return mat / "FakeProject";
+      }
+    };
+    
+    const auto testMain{fake().append("TestSandbox").append("TestSandbox.cpp")};
+    const auto includeTarget{fake().append("TestShared").append("SharedIncludes.hpp")};
+
+    const repositories repos{fake()};
+
+    auto generated{
+      [&mat{working_materials()}]() {
+        return mat / "GeneratedProject";
+      }
+    };
+
+    // The first argument is set to ensure that the project root is deduced as
+    // Sequoia, in order that the aux_files are correctly located
+    std::stringstream outputStream{};
+    commandline_arguments args{"../../build/foo/bar", "init", "Oliver Jacob Rosten", generated().string()};
+    
+    test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, repos, outputStream};
+
+    tr.execute();
+
+    check_equivalence(LINE(""), generated(), predictive_materials() / "GeneratedProject");
   }
 }

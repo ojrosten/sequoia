@@ -33,6 +33,12 @@ namespace sequoia::testing
   {
     return projectRoot/"aux_files"/"TestTemplates";
   }
+
+  [[nodiscard]]
+  inline std::filesystem::path project_template_path(std::filesystem::path projectRoot)
+  {
+    return projectRoot/"aux_files"/"ProjectTemplate";
+  }
   
 
   inline std::filesystem::path recovery_path(std::filesystem::path outputDir)

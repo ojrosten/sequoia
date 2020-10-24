@@ -434,6 +434,11 @@ namespace sequoia::testing
                      }
                    }
                   },
+                  {"init", {"-i"}, {"copyright", "path"},
+                    [this](const param_list& args) {
+                      init_project(args[0], args[1]);
+                    }
+                  },
                   {"--async", {"-a"}, {},
                     [this](const param_list&) {
                       if(m_ConcurrencyMode == concurrency_mode::serial)
@@ -455,11 +460,6 @@ namespace sequoia::testing
                     [recoveryDir{recovery_path(m_OutputDir)}] (const param_list&) {
                       std::filesystem::create_directory(recoveryDir);
                       output_manager::recovery_file(recoveryDir / "Recovery.txt");
-                    }
-                  },
-                  {"--init", {"-i"}, {"copyright", "path"},
-                    [this](const param_list& args) {
-                      init_project(args[0], args[1]);
                     }
                   }
                 },
@@ -695,5 +695,9 @@ namespace sequoia::testing
 
   void test_runner::init_project(std::string_view copyright, const std::filesystem::path& path) const
   {
+    namespace fs = std::filesystem;
+
+    fs::create_directories(path);
+    fs::copy(project_template_path(m_ProjectRoot), path, fs::copy_options::recursive | fs::copy_options::skip_existing);
   }
 }

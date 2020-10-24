@@ -22,5 +22,7 @@ namespace sequoia::testing
     void test_template_data_generation();
 
     void test_creation();
+
+    void test_project_init();
   };
 }
