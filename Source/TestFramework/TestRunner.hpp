@@ -304,5 +304,9 @@ namespace sequoia::testing
     {
       return (m_OutputMode & m) == m;
     }
+
+    void generate_test_main(std::string_view copyright, const std::filesystem::path& path) const;
+
+    void genarate_make_file(const std::filesystem::path& path) const;
   };
 }

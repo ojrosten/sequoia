@@ -1,2 +1,49 @@
 Unit Test
-Standard Top Level Checks:                15;  Failures:  0  [Deep checks: 308]
+Standard Top Level Checks:                15;  Failures:  1  [Deep checks: 310]
+
+	../Tests/TestFramework/TestRunnerTest.cpp, Line 116
+
+	Comparison performed using:
+	[sequoia::testing::equivalence_checker<std::filesystem::path>]
+	With equivalent types:
+	[std::filesystem::path]
+
+	  Contents of
+	  /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/GeneratedProject/TestMain/makefile
+	  vs
+	  /Users/Claire/Dropbox/Sequoia/TestMaterials/TestFramework/TestRunnerTest/Prediction/GeneratedProject/TestMain/makefile
+
+	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+	  operator== returned false
+
+	    First difference detected at character 79:
+	    [char]
+	    operator== returned false
+	    Obtained : /
+	    Predicted: ?
+
+	    Surrounding substring(s):
+	    Obtained : ...\nSEQUOIA_ROOT     := /Users/Claire/Dropbox/Sequoia...
+	    Predicted: ...\nSEQUOIA_ROOT     := ???...
+
+	  Contents of
+	  /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/TestRunnerTest/WorkingCopy/GeneratedProject/aux_files/ProjectTemplate/TestMain/makefile
+	  vs
+	  /Users/Claire/Dropbox/Sequoia/TestMaterials/TestFramework/TestRunnerTest/Prediction/GeneratedProject/aux_files/ProjectTemplate/TestMain/makefile
+
+	  [std::basic_string<char, std::char_traits<char>, std::allocator<char> >]
+	  operator== returned false
+
+	    First difference detected at character 2361:
+	    [char]
+	    operator== returned false
+	    Obtained : B
+	    Predicted: S
+
+	    Surrounding substring(s):
+	    Obtained : ...\n	-mkdir $(BUILD_SUB_DIRS)...
+	    Predicted: ...\n	-mkdir $(SEQ_BUILD_DIR)...
+
+	=======================================
+
+

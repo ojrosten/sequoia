@@ -185,7 +185,7 @@ namespace sequoia::testing
     }
     else
     {
-      throw std::runtime_error("Unable to locate Copyright information");
+      throw std::runtime_error{"Unable to locate Copyright information"};
     }
   }
 
@@ -707,6 +707,12 @@ namespace sequoia::testing
     fs::copy(project_template_path(m_ProjectRoot), path, fs::copy_options::recursive | fs::copy_options::skip_existing);
     fs::copy(aux_files_path(m_ProjectRoot), aux_files_path(path), fs::copy_options::recursive | fs::copy_options::skip_existing);
 
+    generate_test_main(copyright, path);
+    genarate_make_file(path);
+  }
+
+  void test_runner::generate_test_main(std::string_view copyright, const std::filesystem::path& path) const
+  {
     const auto file{path/"TestMain"/"TestMain.cpp"}; 
     std::string text{};
     if(std::ifstream ifile{file})
@@ -721,6 +727,42 @@ namespace sequoia::testing
     }
 
     set_copyright(text, copyright);
+
+    if(std::ofstream ofile{file})
+    {
+      ofile << text;
+    }
+    else
+    {
+      throw std::runtime_error{report_failed_write(file)};
+    }
+  }
+
+  void test_runner::genarate_make_file(const std::filesystem::path& path) const
+  {
+    const auto file{path/"TestMain"/"makefile"}; 
+    std::string text{};
+    if(std::ifstream ifile{file})
+    {
+      std::stringstream buffer{};
+      buffer << ifile.rdbuf();
+      text = buffer.str();
+    }
+    else
+    {
+      throw std::runtime_error{report_failed_read(file)};
+    }
+
+    constexpr auto npos{std::string::npos};
+    if(auto rootPos{text.find("???")}; rootPos != npos)
+    {
+      namespace fs = std::filesystem;
+      text.replace(rootPos, 3, m_ProjectRoot.string());
+    }
+    else
+    {
+      throw std::runtime_error{"Unable to locate makefile root definition"};
+    }
 
     if(std::ofstream ofile{file})
     {

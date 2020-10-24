@@ -69,7 +69,6 @@ subdirs :
 	-mkdir $(BUILD_DIR)
 	-mkdir $(SOURCE_BUILD_DIR)
 	-mkdir $(UT_BUILD_DIR)
-	-mkdir $(SEQ_BUILD_DIR)
 	-mkdir $(BUILD_SUB_DIRS)
 
 clean :
