@@ -43,7 +43,7 @@ UT_SRCS += $(shell find $(UT_DIR) -name '*.cpp')
 UT_OBJS := $(addprefix $(UT_BUILD_DIR)/, $(UT_SRCS:%.cpp=%.o))
 UT_DEPS := $(addprefix $(UT_BUILD_DIR)/, $(UT_SRCS:%.cpp=%.d))
 
-SRCS := $(shell find $(SOURCE) -name '*.cpp')
+SRCS := $(shell find $(SOURCE_DIR) -name '*.cpp')
 OBJS := $(addprefix $(UT_BUILD_DIR)/, $(SRCS:%.cpp=%.o))
 DEPS := $(addprefix $(UT_BUILD_DIR)/, $(SRCS:%.cpp=%.d))
 
