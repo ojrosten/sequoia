@@ -156,6 +156,39 @@ namespace sequoia::testing
     return {std::string{str.substr(pos, endOfLastTemplateSpec + 1 - pos)}, std::string{str.substr(beforeLastToken + 1, lastTokenSize)}};
   }
 
+  void set_copyright(std::string& text, std::string_view copyright)
+  {
+    constexpr auto npos{std::string::npos};
+    if(auto copyrightPos{text.find("Copyright")}; copyrightPos != npos)
+    {
+      auto left{text.rfind("//", copyrightPos)};
+      auto right{text.find("//", copyrightPos)};
+      if((left == npos) || (right == npos))
+      {
+        throw std::runtime_error("Unable to find boundaries of copyright message");
+      }
+
+      const auto now{std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())};
+      const auto year{std::to_string(1900 + std::localtime(&now)->tm_year)};
+
+      const auto newCopyright{std::string{"Copyright "}.append(copyright).append(" ").append(year).append(".")};
+
+      const auto reservedSpace{right - left - 2};
+      const auto requiredSpace{newCopyright.size()};
+      const auto remainingSpace{reservedSpace > requiredSpace ? reservedSpace - requiredSpace : std::string::size_type{}};
+      const auto rightSpace(remainingSpace / 2);
+      const auto leftSpace(remainingSpace - rightSpace);
+
+      const auto replacement{std::string(leftSpace, ' ').append(newCopyright).append(std::string(rightSpace, ' '))};
+
+      text.replace(left + 2, reservedSpace, replacement);        
+    }
+    else
+    {
+      throw std::runtime_error("Unable to locate Copyright information");
+    }
+  }
+
   //=========================================== nascent_test ===========================================//
 
   nascent_test::nascent_test(creation_data data)
@@ -260,35 +293,7 @@ namespace sequoia::testing
 
     if(!text.empty())
     {
-      constexpr auto npos{std::string::npos};
-      if(auto copyrightPos{text.find("Copyright")}; copyrightPos != npos)
-      {
-        auto left{text.rfind("//", copyrightPos)};
-        auto right{text.find("//", copyrightPos)};
-        if((left == npos) || (right == npos))
-        {
-          throw std::runtime_error("Unable to find boundaries of copyright message");
-        }
-
-        const auto now{std::chrono::system_clock::to_time_t(std::chrono::system_clock::now())};
-        const auto year{std::to_string(1900 + std::localtime(&now)->tm_year)};
-
-        const auto newCopyright{std::string{"Copyright "}.append(copyright).append(" ").append(year).append(".")};
-
-        const auto reservedSpace{right - left - 2};
-        const auto requiredSpace{newCopyright.size()};
-        const auto remainingSpace{reservedSpace > requiredSpace ? reservedSpace - requiredSpace : std::string::size_type{}};
-        const auto rightSpace(remainingSpace / 2);
-        const auto leftSpace(remainingSpace - rightSpace);
-
-        const auto replacement{std::string(leftSpace, ' ').append(newCopyright).append(std::string(rightSpace, ' '))};
-
-        text.replace(left + 2, reservedSpace, replacement);        
-      }
-      else
-      {
-        throw std::runtime_error("Unable to locate Copyright information");
-      }
+      set_copyright(text, copyright);
 
       if(!m_EquivalentTypes.empty())
       {
@@ -318,6 +323,7 @@ namespace sequoia::testing
       }
       else
       {
+        constexpr auto npos{std::string::npos};
         const auto start{text.rfind("template<?>")};
         const auto finish{text.rfind("};")};
         if((start != npos) && (finish != npos))
@@ -699,5 +705,29 @@ namespace sequoia::testing
 
     fs::create_directories(path);
     fs::copy(project_template_path(m_ProjectRoot), path, fs::copy_options::recursive | fs::copy_options::skip_existing);
+
+    const auto file{path/"TestMain"/"TestMain.cpp"}; 
+    std::string text{};
+    if(std::ifstream ifile{file})
+    {
+      std::stringstream buffer{};
+      buffer << ifile.rdbuf();
+      text = buffer.str();
+    }
+    else
+    {
+      throw std::runtime_error{report_failed_read(file)};
+    }
+
+    set_copyright(text, copyright);
+
+    if(std::ofstream ofile{file})
+    {
+      ofile << text;
+    }
+    else
+    {
+      throw std::runtime_error{report_failed_write(file)};
+    }
   }
 }

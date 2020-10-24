@@ -109,6 +109,8 @@ namespace sequoia::testing
 
   [[nodiscard]]
   template_spec generate_template_spec(std::string_view str);
+  
+  void set_copyright(std::string& text, std::string_view copyright);
 
   /*! \brief Holds data for the automated creation of new tests */
   class nascent_test
