@@ -43,9 +43,9 @@ UT_SRCS += $(shell find $(UT_DIR) -name '*.cpp')
 UT_OBJS := $(addprefix $(UT_BUILD_DIR)/, $(UT_SRCS:%.cpp=%.o))
 UT_DEPS := $(addprefix $(UT_BUILD_DIR)/, $(UT_SRCS:%.cpp=%.d))
 
-SRCS := $(shell find $(SOURCE_SUB_DIRS) -name '*.cpp')
-OBJS := $(addprefix $(UT_BUILD_DIR)/, $(LIB_SRCS:%.cpp=%.o))
-DEPS := $(addprefix $(UT_BUILD_DIR)/, $(LIB_SRCS:%.cpp=%.d))
+SRCS := $(shell find $(SOURCE) -name '*.cpp')
+OBJS := $(addprefix $(UT_BUILD_DIR)/, $(SRCS:%.cpp=%.o))
+DEPS := $(addprefix $(UT_BUILD_DIR)/, $(SRCS:%.cpp=%.d))
 
 SEQ_SRCS := $(shell find $(SEQ_SRC_SUB_DIRS) -name '*.cpp')
 SEQ_OBJS := $(addprefix $(UT_BUILD_DIR)/, $(SEQ_SRCS:%.cpp=%.o))
@@ -70,7 +70,7 @@ subdirs :
 	-mkdir $(SOURCE_BUILD_DIR)
 	-mkdir $(UT_BUILD_DIR)
 	-mkdir $(SEQ_BUILD_DIR)
-#	-mkdir $(BUILD_SUB_DIRS)
+	-mkdir $(BUILD_SUB_DIRS)
 
 clean :
 	rm -r $(BUILD_DIR)
