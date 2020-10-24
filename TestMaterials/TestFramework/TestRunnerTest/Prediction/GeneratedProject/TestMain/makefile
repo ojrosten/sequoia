@@ -1,11 +1,11 @@
 #BUILD_ROOT := ../build/native
 #BUILD_ROOT := ../build/gcc
-SEQUOIA_ROOT     := ???
+SEQUOIA_ROOT     := /Users/Claire/Dropbox/Sequoia
 BUILD_ROOT       := ../build/clang
 BUILD_DIR        := $(BUILD_ROOT)/TestMain
 SOURCE_BUILD_DIR := $(BUILD_DIR)/Source
 UT_BUILD_DIR     := $(BUILD_DIR)/Tests
-SEQ_BUILD_DIR    := $(BIULD_DIR)/Sequoia
+SEQ_BUILD_DIR    := $(BUILD_DIR)/Sequoia
 SOURCE_DIR       := ../Source
 UT_DIR           := ../Tests
 SEQ_SRC_DIR      := $(SEQUOIA_ROOT)/Source
@@ -70,7 +70,7 @@ subdirs :
 	-mkdir $(SOURCE_BUILD_DIR)
 	-mkdir $(UT_BUILD_DIR)
 	-mkdir $(SEQ_BUILD_DIR)
-	-mkdir $(BUILD_SUB_DIRS)
+#	-mkdir $(BUILD_SUB_DIRS)
 
 clean :
 	rm -r $(BUILD_DIR)
