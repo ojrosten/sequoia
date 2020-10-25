@@ -40,22 +40,25 @@ UT_SRCS += $(shell find $(UT_DIR)/Experimental -name '*.cpp')
 UT_OBJS := $(addprefix $(UT_BUILD_DIR)/, $(UT_SRCS:%.cpp=%.o))
 UT_DEPS := $(addprefix $(UT_BUILD_DIR)/, $(UT_SRCS:%.cpp=%.d))
 
-LIB_SRCS := $(shell find $(SOURCE_SUB_DIRS) -name '*.cpp')
-LIB_OBJS := $(addprefix $(UT_BUILD_DIR)/, $(LIB_SRCS:%.cpp=%.o))
-LIB_DEPS := $(addprefix $(UT_BUILD_DIR)/, $(LIB_SRCS:%.cpp=%.d))
+SEQ_SRCS := $(shell find $(SOURCE_SUB_DIRS) -name '*.cpp')
+SEQ_OBJS := $(addprefix $(UT_BUILD_DIR)/, $(SEQ_SRCS:%.cpp=%.o))
+SEQ_DEPS := $(addprefix $(UT_BUILD_DIR)/, $(SEQ_SRCS:%.cpp=%.d))
+SEQ_LIB := $(BUILD_DIR)/Sequoia.a
 
 LDFLAGS :=
 LDFLAGS += -L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib
 
-$(EXE) : $(UT_OBJS) $(LIB_OBJS)
+$(EXE) : $(UT_OBJS) $(SEQ_LIB)
 	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
 
+$(SEQ_LIB) : $(SEQ_OBJS)
+	ar -cq $(SEQ_LIB) $^
+
 -include $(UT_DEPS)
--include $(LIB_DEPS)
+-include $(SEQ_DEPS)
 
 $(UT_BUILD_DIR)/%.o : %.cpp
 	$(CC) $(CFLAGS) -MMD -c $< -o $@
-#	echo "$<"
 
 subdirs :
 	-mkdir $(BUILD_ROOT)
