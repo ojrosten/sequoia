@@ -25,7 +25,6 @@ PRJ_BUILD_SUB_DIRS  := $(addprefix $(PRJ_BUILD_DIR)/, $(PRJ_SUB_DIRS))
 CC := /usr/local/opt/llvm/bin/clang++ -ferror-limit=1
 
 PREPROP :=
-#PREPROP += -D MINIMAL_GRAPH_TESTS
 
 CFLAGS := -Wall -Wextra -Wpedantic -std=c++2a -O0 \
 	-ftemplate-backtrace-limit=0	       \
@@ -33,7 +32,6 @@ CFLAGS := -Wall -Wextra -Wpedantic -std=c++2a -O0 \
 	$(patsubst %,-I%, $(TEST_SUB_DIRS))    \
 	$(patsubst %,-I%, $(PRJ_SUB_DIRS))     \
 
-CFLAGS += -I../TestCommon
 CFLAGS += -I/usr/local/opt/llvm/include -I/usr/local/opt/llvm/include/c++/v1/
 
 EXE      := $(TEST_BUILD_ROOT)/TestAll.exe
