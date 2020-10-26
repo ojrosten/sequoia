@@ -57,7 +57,7 @@ LDFLAGS :=
 LDFLAGS += -L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib
 
 $(EXE) : $(APP_OBJ) $(TEST_OBJS) $(PRJ_OBJS)
-	$(CC) $(CFLAGS) $^ -o -o $(SEQ_LIB) $@ $(LDFLAGS)
+	$(CC) $(CFLAGS) $^ $(SEQ_LIB) -o $@ $(LDFLAGS)
 
 -include $(APP_DEP)
 -include $(TEST_DEPS)
