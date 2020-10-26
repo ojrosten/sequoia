@@ -46,7 +46,7 @@ TEST_SRCS += $(shell find $(TEST_DIR)/Experimental -name '*.cpp')
 TEST_OBJS := $(addprefix $(TEST_BUILD_DIR)/, $(TEST_SRCS:%.cpp=%.o))
 TEST_DEPS := $(addprefix $(TEST_BUILD_DIR)/, $(TEST_SRCS:%.cpp=%.d))
 
-SEQ_SRCS := $(shell find $(SEQ_SUB_DIRS) -name '*.cpp')
+SEQ_SRCS := $(shell find $(SEQ_DIR) -name '*.cpp')
 SEQ_OBJS := $(addprefix $(SEQ_BUILD_DIR)/, $(SEQ_SRCS:%.cpp=%.o))
 SEQ_DEPS := $(addprefix $(SEQ_BUILD_DIR)/, $(SEQ_SRCS:%.cpp=%.d))
 
