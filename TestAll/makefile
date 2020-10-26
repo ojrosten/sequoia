@@ -57,7 +57,7 @@ $(EXE) : $(APP_OBJ) $(TEST_OBJS) $(SEQ_LIB)
 	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
 
 $(SEQ_LIB) : $(SEQ_OBJS)
-	ar -cq $(SEQ_LIB) $^
+	ar -cr $(SEQ_LIB) $^
 
 -include $(APP_DEP)
 -include $(TEST_DEPS)
