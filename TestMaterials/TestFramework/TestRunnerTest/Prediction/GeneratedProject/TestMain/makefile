@@ -47,7 +47,7 @@ TEST_SRCS += $(shell find $(TEST_DIR) -name '*.cpp')
 TEST_OBJS := $(addprefix $(TEST_BUILD_DIR)/, $(TEST_SRCS:%.cpp=%.o))
 TEST_DEPS := $(addprefix $(TEST_BUILD_DIR)/, $(TEST_SRCS:%.cpp=%.d))
 
-PRJ_SRCS := $(shell find $(PRJ_SUB_DIRS) -name '*.cpp')
+PRJ_SRCS := $(shell find $(PRJ_DIR) -name '*.cpp')
 PRJ_OBJS := $(addprefix $(PRJ_BUILD_DIR)/, $(PRJ_SRCS:%.cpp=%.o))
 PRJ_DEPS := $(addprefix $(PRJ_BUILD_DIR)/, $(PRJ_SRCS:%.cpp=%.d))
 
@@ -85,3 +85,4 @@ subdirs :
 clean :
 	rm -r $(TEST_BUILD_ROOT)
 	rm -r $(PRJ_BUILD_ROOT)
+
