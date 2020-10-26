@@ -1,19 +1,23 @@
 #BUILD_ROOT   := ../build/native
 #BUILD_ROOT   := ../build/gcc
-BUILD_ROOT       := ../build/clang
-BUILD_DIR        := $(BUILD_ROOT)/TestMinimal
-SOURCE_BUILD_DIR := $(BUILD_DIR)/Source
-UT_BUILD_DIR     := $(BUILD_DIR)/Tests
-SOURCE_DIR       := ../Source
-UT_DIR           := ../Tests
+BUILD_ROOT     := ../build/clang
 
-UT_SUB_DIRS     := $(filter-out ../Tests,  $(shell find $(UT_DIR) -type d))
-SOURCE_SUB_DIRS := $(filter-out ../Source, $(shell find $(SOURCE_DIR) -type d))
+TEST_BUILD_ROOT := $(BUILD_ROOT)/TestMinimal
+SEQ_BUILD_ROOT  := $(BUILD_ROOT)/SequoiaLib
 
-BUILD_SUB_DIRS := $(addprefix $(UT_BUILD_DIR)/, $(UT_SUB_DIRS))
-BUILD_SUB_DIRS += $(addprefix $(SOURCE_BUILD_DIR)/, $(SOURCE_SUB_DIRS))
+TEST_BUILD_DIR  := $(BUILD_ROOT)/TestMinimal/Tests
+SEQ_BUILD_DIR   := $(BUILD_ROOT)/SequoiaLib/Source
 
-.PHONY: all clean subdirs
+TEST_DIR  := ../Tests
+SEQ_DIR   := ../Source
+
+TEST_SUB_DIRS := $(filter-out $(TEST_DIR), $(shell find $(TEST_DIR) -type d))
+SEQ_SUB_DIRS  := $(filter-out $(SEQ_DIR),  $(shell find $(SEQ_DIR) -type d))
+
+TEST_BUILD_SUB_DIRS := $(addprefix $(TEST_BUILD_DIR)/, $(TEST_SUB_DIRS))
+SEQ_BUILD_SUB_DIRS  := $(addprefix $(SEQ_BUILD_DIR)/, $(SEQ_SUB_DIRS))
+
+.PHONY: clean subdirs
 
 #CC := g++-9 -fmax-errors=1 -Wno-comment 
 #CC := clang++ -ferror-limit=1 -Wno-missing-braces
@@ -25,47 +29,58 @@ PREPROP :=
 CFLAGS := -Wall -Wextra -Wpedantic -std=c++2a -O0 \
 	-ftemplate-backtrace-limit=0	       \
 	$(PREPROP)						       \
-	$(patsubst %,-I%, $(UT_SUB_DIRS))      \
-	$(patsubst %,-I%, $(SOURCE_SUB_DIRS))  \
+	$(patsubst %,-I%, $(TEST_SUB_DIRS))    \
+	$(patsubst %,-I%, $(SEQ_SUB_DIRS))     \
 
 CFLAGS += -I../TestCommon
 CFLAGS += -I/usr/local/opt/llvm/include -I/usr/local/opt/llvm/include/c++/v1/
 
+EXE      := $(TEST_BUILD_ROOT)/TestMinimal.exe
+SEQ_LIB  := $(SEQ_BUILD_ROOT)/Sequoia.a
 
-EXE    := $(BUILD_DIR)/TestMinimal.exe
+APP_SRC := TestMinimalMain.cpp
+APP_OBJ := $(TEST_BUILD_ROOT)/TestMinimalMain.o
+APP_DEP := $(TEST_BUILD_ROOT)/TestMinimalMain.d
 
-UT_SRCS := TestMinimalMain.cpp
-UT_SRCS += $(shell find $(UT_DIR)/Experimental -name '*.cpp')
+TEST_SRCS += $(shell find $(TEST_DIR)/Experimental -name '*.cpp')
+TEST_OBJS := $(addprefix $(TEST_BUILD_DIR)/, $(TEST_SRCS:%.cpp=%.o))
+TEST_DEPS := $(addprefix $(TEST_BUILD_DIR)/, $(TEST_SRCS:%.cpp=%.d))
 
-UT_OBJS := $(addprefix $(UT_BUILD_DIR)/, $(UT_SRCS:%.cpp=%.o))
-UT_DEPS := $(addprefix $(UT_BUILD_DIR)/, $(UT_SRCS:%.cpp=%.d))
-
-SEQ_SRCS := $(shell find $(SOURCE_SUB_DIRS) -name '*.cpp')
-SEQ_OBJS := $(addprefix $(UT_BUILD_DIR)/, $(SEQ_SRCS:%.cpp=%.o))
-SEQ_DEPS := $(addprefix $(UT_BUILD_DIR)/, $(SEQ_SRCS:%.cpp=%.d))
-SEQ_LIB := $(BUILD_DIR)/Sequoia.a
+SEQ_SRCS := $(shell find $(SEQ_SUB_DIRS) -name '*.cpp')
+SEQ_OBJS := $(addprefix $(SEQ_BUILD_DIR)/, $(SEQ_SRCS:%.cpp=%.o))
+SEQ_DEPS := $(addprefix $(SEQ_BUILD_DIR)/, $(SEQ_SRCS:%.cpp=%.d))
 
 LDFLAGS :=
 LDFLAGS += -L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib
 
-$(EXE) : $(UT_OBJS) $(SEQ_LIB)
+$(EXE) : $(APP_OBJ) $(TEST_OBJS) $(SEQ_LIB)
 	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
 
 $(SEQ_LIB) : $(SEQ_OBJS)
 	ar -cq $(SEQ_LIB) $^
 
--include $(UT_DEPS)
+-include $(APP_DEP)
+-include $(TEST_DEPS)
 -include $(SEQ_DEPS)
 
-$(UT_BUILD_DIR)/%.o : %.cpp
+$(APP_OBJ) : $(APP_SRC)
+	$(CC) $(CFLAGS) -MMD -c $< -o $@
+
+$(TEST_BUILD_DIR)/%.o : %.cpp
+	$(CC) $(CFLAGS) -MMD -c $< -o $@
+
+$(SEQ_BUILD_DIR)/%.o : %.cpp
 	$(CC) $(CFLAGS) -MMD -c $< -o $@
 
 subdirs :
 	-mkdir $(BUILD_ROOT)
-	-mkdir $(BUILD_DIR)
-	-mkdir $(SOURCE_BUILD_DIR)
-	-mkdir $(UT_BUILD_DIR)
-	-mkdir $(BUILD_SUB_DIRS)
+	-mkdir $(TEST_BUILD_ROOT)
+	-mkdir $(SEQ_BUILD_ROOT)
+	-mkdir $(TEST_BUILD_DIR)
+	-mkdir $(SEQ_BUILD_DIR)
+	-mkdir $(TEST_BUILD_SUB_DIRS)
+	-mkdir $(SEQ_BUILD_SUB_DIRS)
 
 clean :
-	rm -r $(BUILD_DIR)
+	rm -r $(TEST_BUILD_ROOT)
+	rm -r $(SEQ_BUILD_ROOT)
