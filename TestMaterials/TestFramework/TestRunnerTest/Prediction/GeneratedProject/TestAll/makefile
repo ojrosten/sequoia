@@ -1,6 +1,6 @@
 #BUILD_ROOT   := ../build/native
 #BUILD_ROOT   := ../build/gcc
-SEQUOIA_ROOT := ???
+SEQUOIA_ROOT := /Users/Claire/Dropbox/Sequoia
 BUILD_ROOT   := ../build/clang
 
 TEST_BUILD_ROOT := $(BUILD_ROOT)/TestAll
@@ -11,9 +11,13 @@ PRJ_BUILD_DIR   := $(BUILD_ROOT)/ProjectLib/Source
 
 TEST_DIR  := ../Tests
 PRJ_DIR   := ../Source
+SEQ_DIR   := $(SEQUOIA_ROOT)/Source
+
+SEQ_LIB := $(SEQUOIA_ROOT)/build/$(BUILD_ROOT)/SequoiaLib/Sequoia.a
 
 TEST_SUB_DIRS := $(filter-out $(TEST_DIR), $(shell find $(TEST_DIR) -type d))
 PRJ_SUB_DIRS  := $(filter-out $(PRJ_DIR),  $(shell find $(PRJ_DIR) -type d))
+SEQ_SUB_DIRS  := $(filter-out $(SEQ_DIR),  $(shell find $(SEQ_DIR) -type d))
 
 TEST_BUILD_SUB_DIRS := $(addprefix $(TEST_BUILD_DIR)/, $(TEST_SUB_DIRS))
 PRJ_BUILD_SUB_DIRS  := $(addprefix $(PRJ_BUILD_DIR)/, $(PRJ_SUB_DIRS))
@@ -31,11 +35,11 @@ CFLAGS := -Wall -Wextra -Wpedantic -std=c++2a -O0 \
 	$(PREPROP)						       \
 	$(patsubst %,-I%, $(TEST_SUB_DIRS))    \
 	$(patsubst %,-I%, $(PRJ_SUB_DIRS))     \
+	$(patsubst %,-I%, $(SEQ_SUB_DIRS))     \
 
 CFLAGS += -I/usr/local/opt/llvm/include -I/usr/local/opt/llvm/include/c++/v1/
 
 EXE      := $(TEST_BUILD_ROOT)/TestAll.exe
-PRJ_LIB  := $(PRJ_BUILD_ROOT)/Project.a
 
 APP_SRC := TestMain.cpp
 APP_OBJ := $(TEST_BUILD_ROOT)/TestMain.o
@@ -52,11 +56,8 @@ PRJ_DEPS := $(addprefix $(PRJ_BUILD_DIR)/, $(PRJ_SRCS:%.cpp=%.d))
 LDFLAGS :=
 LDFLAGS += -L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib
 
-$(EXE) : $(APP_OBJ) $(TEST_OBJS) $(PRJ_LIB)
-	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
-
-$(PRJ_LIB) : $(PRJ_OBJS)
-	ar -cq $(PRJ_LIB) $^
+$(EXE) : $(APP_OBJ) $(TEST_OBJS) $(PRJ_OBJS)
+	$(CC) $(CFLAGS) $^ -o -o $(SEQ_LIB) $@ $(LDFLAGS)
 
 -include $(APP_DEP)
 -include $(TEST_DEPS)

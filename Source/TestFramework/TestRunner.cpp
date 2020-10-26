@@ -706,14 +706,17 @@ namespace sequoia::testing
     fs::create_directories(path);
     fs::copy(project_template_path(m_ProjectRoot), path, fs::copy_options::recursive | fs::copy_options::skip_existing);
     fs::copy(aux_files_path(m_ProjectRoot), aux_files_path(path), fs::copy_options::recursive | fs::copy_options::skip_existing);
+    // swap out ??? in nascent make file
+    
 
     generate_test_main(copyright, path);
     genarate_make_file(path);
+    
   }
 
   void test_runner::generate_test_main(std::string_view copyright, const std::filesystem::path& path) const
   {
-    const auto file{path/"TestMain"/"TestMain.cpp"}; 
+    const auto file{path/"TestAll"/"TestMain.cpp"}; 
     std::string text{};
     if(std::ifstream ifile{file})
     {
@@ -727,6 +730,7 @@ namespace sequoia::testing
     }
 
     set_copyright(text, copyright);
+    // TO DO: other copyright!
 
     if(std::ofstream ofile{file})
     {
@@ -740,7 +744,7 @@ namespace sequoia::testing
 
   void test_runner::genarate_make_file(const std::filesystem::path& path) const
   {
-    const auto file{path/"TestMain"/"makefile"}; 
+    const auto file{path/"TestAll"/"makefile"}; 
     std::string text{};
     if(std::ifstream ifile{file})
     {
