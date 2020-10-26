@@ -32,7 +32,7 @@ LDFLAGS :=
 LDFLAGS += -L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib
 
 $(SEQ_LIB) : $(SEQ_OBJS)
-	ar -cq $(SEQ_LIB) $^
+	ar -cr $(SEQ_LIB) $^
 
 -include $(SEQ_DEPS)
 
