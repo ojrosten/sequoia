@@ -156,10 +156,10 @@ namespace sequoia::testing
 
     struct paths
     {
-      explicit paths(const test& t, output_mode outputMode, const std::filesystem::path& outputDir);
+      paths(const test& t, output_mode outputMode, const std::filesystem::path& outputDir);
 
-      std::filesystem::path summary, workingMaterials, predictions;      
       output_mode mode;
+      std::filesystem::path summary, workingMaterials, predictions;
     };
   };  
 

@@ -97,9 +97,12 @@ namespace sequoia::testing
 
         if((files.mode & output_mode::update_materials) == output_mode::update_materials)
         {
-          if(fs::exists(files.workingMaterials) && fs::exists(files.predictions))
+          if(summary.soft_failures())
           {
-            updateables.insert(files);
+            if(fs::exists(files.workingMaterials) && fs::exists(files.predictions))
+            {
+              updateables.insert(files);
+            }
           }
         }
       }
@@ -154,7 +157,9 @@ namespace sequoia::testing
 
     for(const auto& update : updateables)
     {
-      fs::copy(update.workingMaterials, update.predictions, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
+      fs::remove_all(update.predictions);
+      
+      fs::copy(update.workingMaterials, update.predictions, fs::copy_options::recursive);
     }
 
     return {steady_clock::now() - time, std::move(summaries)};
@@ -219,10 +224,10 @@ namespace sequoia::testing
   }
 
   test_family::paths::paths(const test& t, output_mode outputMode, const std::filesystem::path& outputDir)
-    : summary{test_summary_filename(t, outputMode, outputDir)}
+    : mode{outputMode}
+    , summary{test_summary_filename(t, outputMode, outputDir)}
     , workingMaterials{t.working_materials()}
     , predictions{t.predictive_materials()}
-    , mode{outputMode}
   {}
 
   [[nodiscard]]

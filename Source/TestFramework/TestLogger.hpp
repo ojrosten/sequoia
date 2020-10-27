@@ -532,6 +532,17 @@ namespace sequoia::testing
     std::size_t critical_failures() const noexcept { return m_CriticalFailures; }
 
     [[nodiscard]]
+    std::size_t soft_failures() const noexcept
+    {
+      return    standard_top_level_failures()
+             || false_positive_failures()
+             || false_negative_failures()
+             || standard_performance_failures()
+             || false_positive_performance_failures()
+             || false_negative_performance_failures();
+    }
+
+    [[nodiscard]]
     std::string_view diagnostics_output() const noexcept { return m_DiagnosticsOutput; }
 
     [[nodiscard]]
