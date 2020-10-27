@@ -19,7 +19,7 @@ int main(int argc, char** argv)
     const auto root{project_root(argc, argv)};
     test_runner runner{argc,
                        argv,
-                       "Oliver J. Rosten",
+                       "Oliver Jacob Rosten",
                        root/"TestMain"/"TestMain.cpp",
                        root/"TestMain"/"TestMain.cpp",
                        repositories(root)

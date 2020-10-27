@@ -156,7 +156,7 @@ namespace sequoia::testing
     return {std::string{str.substr(pos, endOfLastTemplateSpec + 1 - pos)}, std::string{str.substr(beforeLastToken + 1, lastTokenSize)}};
   }
 
-  void set_copyright(std::string& text, std::string_view copyright)
+  void set_top_copyright(std::string& text, std::string_view copyright)
   {
     constexpr auto npos{std::string::npos};
     if(auto copyrightPos{text.find("Copyright")}; copyrightPos != npos)
@@ -293,7 +293,7 @@ namespace sequoia::testing
 
     if(!text.empty())
     {
-      set_copyright(text, copyright);
+      set_top_copyright(text, copyright);
 
       if(!m_EquivalentTypes.empty())
       {
@@ -706,12 +706,10 @@ namespace sequoia::testing
     fs::create_directories(path);
     fs::copy(project_template_path(m_ProjectRoot), path, fs::copy_options::recursive | fs::copy_options::skip_existing);
     fs::copy(aux_files_path(m_ProjectRoot), aux_files_path(path), fs::copy_options::recursive | fs::copy_options::skip_existing);
-    // swap out ??? in nascent make file
-    
 
     generate_test_main(copyright, path);
-    genarate_make_file(path);
-    
+    generate_make_file(path);
+    generate_make_file(project_template_path(path));
   }
 
   void test_runner::generate_test_main(std::string_view copyright, const std::filesystem::path& path) const
@@ -729,8 +727,13 @@ namespace sequoia::testing
       throw std::runtime_error{report_failed_read(file)};
     }
 
-    set_copyright(text, copyright);
-    // TO DO: other copyright!
+    set_top_copyright(text, copyright);
+
+    std::string_view myCopyright{"Oliver J. Rosten"};
+    if(auto pos{text.find(myCopyright)}; pos != std::string::npos)
+    {
+      text.replace(pos, myCopyright.size(), copyright);
+    }
 
     if(std::ofstream ofile{file})
     {
@@ -742,7 +745,7 @@ namespace sequoia::testing
     }
   }
 
-  void test_runner::genarate_make_file(const std::filesystem::path& path) const
+  void test_runner::generate_make_file(const std::filesystem::path& path) const
   {
     const auto file{path/"TestAll"/"makefile"}; 
     std::string text{};
