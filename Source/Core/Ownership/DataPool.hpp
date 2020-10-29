@@ -14,8 +14,8 @@
 
 #include "Handlers.hpp"
 
-#include "Utilities/UniformWrapper.hpp"
-#include "Utilities/Iterator.hpp"
+#include "UniformWrapper.hpp"
+#include "Iterator.hpp"
 
 #include <vector>
 #include <memory>
