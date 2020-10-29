@@ -16,7 +16,7 @@
 
 #include <filesystem>
 
-#ifndef _MSC_VER_
+#ifndef _MSC_VER
   #include <cxxabi.h>
 #endif
 
