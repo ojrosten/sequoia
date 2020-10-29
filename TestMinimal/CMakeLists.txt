@@ -42,3 +42,9 @@ target_link_libraries(SequoiaMinimal PUBLIC TestFramework)
 
 target_compile_features(SequoiaMinimal PUBLIC cxx_std_20)
 target_compile_features(TestFramework PUBLIC cxx_std_20)
+
+if (MSVC)
+    add_compile_options(/W4)
+else()
+    add_compile_options(-Wall -Wextra -pedantic)
+endif()
