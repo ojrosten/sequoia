@@ -330,7 +330,7 @@ namespace sequoia::testing
 
       const std::vector<fs::path> paths{generator(dir)}, predictedPaths{generator(prediction)};
 
-      check_equality(std::string{"Number of directory entries for "}.append(dir), logger, paths.size(), predictedPaths.size());
+      check_equality(std::string{"Number of directory entries for "}.append(dir.generic_string()), logger, paths.size(), predictedPaths.size());
 
       const auto iters{std::mismatch(paths.begin(), paths.end(), predictedPaths.begin(), predictedPaths.end(),
           [&dir,&prediction](const fs::path& lhs, const fs::path& rhs){

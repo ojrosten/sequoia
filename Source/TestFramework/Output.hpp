@@ -90,7 +90,7 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string demangle()
   {
-    #ifndef _MSC_VER_
+    #ifndef _MSC_VER
       int status;
       std::string name{abi::__cxa_demangle(typeid(T).name(), 0, 0, &status)};
 

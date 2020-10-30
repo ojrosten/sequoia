@@ -220,7 +220,6 @@ namespace sequoia
 
   template<template<class...> class T, class... Args>
   concept class_template_is_default_instantiable
-   =    default_initializable<T<Args...>>
-     && requires() { T<Args...>{}; };
+   = requires() { T<Args...>{}; };
              
 }

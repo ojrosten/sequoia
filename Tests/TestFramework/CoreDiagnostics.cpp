@@ -200,10 +200,7 @@ namespace sequoia::testing
         return "Ah, chars. So easy to get wrong.";
                                                                                                                                  }});
 
-    namespace fs = std::filesystem;
-
-    if(!fs::exists(working_materials()))
-      throw std::runtime_error{std::string{"Test materials \""}.append(working_materials()).append("\" not found")};    
+    namespace fs = std::filesystem;    
 
     check_equivalence(LINE(""), std::pair<const int&, double>{5, 7.8}, std::pair<int, const double&>{-5, 6.8});
     check_equivalence(LINE(""), std::tuple<const int&, double>{5, 7.8}, std::tuple<int, const double&>{-5, 6.8});
