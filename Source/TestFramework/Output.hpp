@@ -80,7 +80,7 @@ namespace sequoia::testing
   std::string& replace_all(std::string& text, std::string_view from, std::string_view to);
 
   [[nodiscard]]
-  std::string report_line(std::string_view file, const int line, const std::string_view message);
+  std::string report_line(const std::filesystem::path& file, int line, std::string_view message);
 
   #define LINE(message) report_line(__FILE__, __LINE__, message)
 

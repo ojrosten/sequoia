@@ -153,9 +153,9 @@ namespace sequoia::testing
   }
 
   [[nodiscard]]
-  std::string report_line(std::string_view file, const int line, const std::string_view message)
+  std::string report_line(const std::filesystem::path& file, const int line, std::string_view message)
   {
-    return append_lines(std::string{file}.append(", Line ").append(std::to_string(line)), message).append("\n");
+    return append_lines(file.generic_string().append(", Line ").append(std::to_string(line)), message).append("\n");
   }
 
   std::string& tidy_name(std::string& name)
