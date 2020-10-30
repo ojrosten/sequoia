@@ -48,7 +48,7 @@
 
 namespace sequoia::testing
 {
-  #ifdef _MSC_VER
+  #ifndef _MSC_VER
     #define SPECULATIVE_CONSTEVAL consteval
   #else
     #define SPECULATIVE_CONSTEVAL constexpr
