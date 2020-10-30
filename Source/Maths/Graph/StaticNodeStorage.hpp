@@ -40,6 +40,7 @@ namespace sequoia::maths::graph_impl
   >
   class static_node_storage : public node_storage<WeightMaker, static_node_storage_traits<WeightMaker, N>>
   {
+  public:
     using node_storage<WeightMaker, static_node_storage_traits<WeightMaker, N>>::node_storage;
   };
 

@@ -149,7 +149,7 @@ namespace sequoia::testing
           }
           else
           {
-            throw std::runtime_error{std::string{"Unable to open diagnostics output file "}.append(filename).append(" for writing\n")};
+            throw std::runtime_error{report_failed_write(filename)};
           }
         }
       }
@@ -219,7 +219,7 @@ namespace sequoia::testing
     }
     else
     {
-      throw std::runtime_error{std::string{"Unable to open summaries file "}.append(filename).append(" for writing\n")};
+      throw std::runtime_error{report_failed_write(filename)};
     }
   }
 

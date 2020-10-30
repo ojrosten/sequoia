@@ -10,6 +10,7 @@
  */
 
 #include "FileEditors.hpp"
+#include "FileSystem.hpp"
 #include "Output.hpp"
 
 #include <fstream>
@@ -99,7 +100,7 @@ namespace sequoia::testing
     }
     else
     {
-      throw std::runtime_error{std::string{"Unable to open "}.append(filePath).append(" for reading")};
+      throw std::runtime_error{report_failed_read(filePath)};
     }
 
     const auto tempPath{fs::path{filePath}.concat("x")};
@@ -109,7 +110,7 @@ namespace sequoia::testing
     }
     else
     {
-      throw std::runtime_error{std::string{"Unable to open "}.append(tempPath).append(" for writing")};
+      throw std::runtime_error{report_failed_write(tempPath)};
     }
 
     fs::copy_file(tempPath, filePath, fs::copy_options::overwrite_existing);

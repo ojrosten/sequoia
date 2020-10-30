@@ -8,6 +8,9 @@
 #include "CommandLineArguments.hpp"
 #include "Indent.hpp"
 
+#include <stdexcept>
+#include <iterator>
+
 namespace sequoia::parsing::commandline
 {
   [[nodiscard]]

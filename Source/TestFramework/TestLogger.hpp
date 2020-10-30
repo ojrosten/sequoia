@@ -41,7 +41,10 @@ namespace sequoia::testing
   {
     inline static std::filesystem::path st_RecoveryFile{};
   public:
-    static void recovery_file(const std::filesystem::path& recoveryFile) { st_RecoveryFile = std::string{recoveryFile}; }
+    static void recovery_file(const std::filesystem::path& recoveryFile)
+    {
+      st_RecoveryFile = recoveryFile;
+    }
 
     static const std::filesystem::path& recovery_file() noexcept { return st_RecoveryFile; }
   };

@@ -91,7 +91,7 @@ namespace sequoia
     requires (sizeof...(Ts) > 2)
   std::string& append_indented(std::string& s, Ts... strs)
   {
-    return impl::append_indented(s, std::tuple<Ts...>{strs...});
+    return sequoia::impl::append_indented(s, std::tuple<Ts...>{strs...});
   }
 
   template<class... Ts>
@@ -99,7 +99,7 @@ namespace sequoia
   [[nodiscard]]
   std::string indent(std::string_view sv, Ts&&... strs)
   {
-    return impl::indent(sv, std::tuple<Ts...>{std::forward<Ts>(strs)...});
+    return sequoia::impl::indent(sv, std::tuple<Ts...>{std::forward<Ts>(strs)...});
   }
 
   template<class... Ts>

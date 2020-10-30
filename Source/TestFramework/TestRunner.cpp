@@ -75,7 +75,10 @@ namespace sequoia::testing
           return dir;
         }
 
-        throw std::runtime_error{std::string{"Unable to locate file "}.append(filename).append(" in the source repository\n").append(data.sourceRepo.root())};
+        throw std::runtime_error{std::string{"Unable to locate file "}
+                                   .append(filename)
+                                   .append(" in the source repository\n")
+                                   .append(data.sourceRepo.root().generic_string())};
       }
     };
 
@@ -547,6 +550,12 @@ namespace sequoia::testing
     return familySummary;
   }
 
+  namespace
+  {
+    const std::string& convert(const std::string& s) { return s; }
+    std::string convert(const std::filesystem::path& p) { return p.generic_string(); }
+  }
+
   void test_runner::check_for_missing_tests()
   {
     auto check{
@@ -555,7 +564,10 @@ namespace sequoia::testing
         {
           if(!test.second)
           {
-            stream << warning(std::string{"Test "}.append(type).append(" '").append(test.first).append("' not found\n"));
+            stream << warning(std::string{"Test "}.append(type)
+                              .append(" '")
+                              .append(convert(test.first))
+                              .append("' not found\n"));
           }
         }
       }
@@ -640,7 +652,7 @@ namespace sequoia::testing
           add_include(target, filename.string());
         }
         
-        return std::string{"\""}.append(filePath).append("\"");
+        return std::string{"\""}.append(filePath.generic_string()).append("\"");
       }
     };
     

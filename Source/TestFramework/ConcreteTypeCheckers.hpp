@@ -376,7 +376,7 @@ namespace sequoia::testing
     [[nodiscard]]
     static std::string report_file_issue(const std::filesystem::path& file, std::string_view description)
     {
-      auto mess{std::string{"Unable to open file "}.append(file)};
+      auto mess{std::string{"Unable to open file "}.append(file.generic_string())};
       if(!description.empty()) mess.append(" ").append(description);
       mess.append("\n");
 

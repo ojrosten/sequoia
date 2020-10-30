@@ -48,6 +48,12 @@
 
 namespace sequoia::testing
 {
+  #ifdef _MSC_VER
+    #define SPECULATIVE_CONSTEVAL consteval
+  #else
+    #define SPECULATIVE_CONSTEVAL constexpr
+  #endif
+  
   enum class allocation_event { copy, mutation, para_copy, para_move, assign_prop, assign};
 
   /*! Type-safe wrapper for allocation predictions, to avoid mixing different allocation events */
@@ -74,42 +80,42 @@ namespace sequoia::testing
   using assign_prediction      = alloc_prediction<allocation_event::assign>;
 
   [[nodiscard]]
-  consteval copy_prediction
+  SPECULATIVE_CONSTEVAL copy_prediction
   operator "" _c(unsigned long long int n) noexcept
   {
     return copy_prediction{static_cast<int>(n)};
   }
 
   [[nodiscard]]
-  consteval mutation_prediction
+  SPECULATIVE_CONSTEVAL mutation_prediction
   operator "" _mu(unsigned long long int n) noexcept
   {
     return mutation_prediction{static_cast<int>(n)};
   }
 
   [[nodiscard]]
-  consteval para_copy_prediction
+  SPECULATIVE_CONSTEVAL para_copy_prediction
   operator "" _pc(unsigned long long int n) noexcept
   {
     return para_copy_prediction{static_cast<int>(n)};
   }
 
   [[nodiscard]]
-  consteval para_move_prediction
+  SPECULATIVE_CONSTEVAL para_move_prediction
   operator "" _pm(unsigned long long int n) noexcept
   {
     return para_move_prediction{static_cast<int>(n)};
   }
 
   [[nodiscard]]
-  consteval assign_prediction
+  SPECULATIVE_CONSTEVAL assign_prediction
   operator "" _anp(unsigned long long int n) noexcept
   {
     return assign_prediction{static_cast<int>(n)};
   }
 
   [[nodiscard]]
-  consteval assign_prop_prediction
+  SPECULATIVE_CONSTEVAL assign_prop_prediction
   operator "" _awp(unsigned long long int n) noexcept
   {
     return assign_prop_prediction{static_cast<int>(n)};
