@@ -95,6 +95,7 @@ namespace sequoia::testing
     if(c == '\r') return "'\\r'";
     if(c == '\t') return "'\\t'";
     if(c == '\v') return "'\\v'";
+    if(c == '\0') return "'\\0'";
     if(c == ' ')  return "' '";
 
     return std::string(1, c);

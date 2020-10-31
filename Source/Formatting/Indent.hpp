@@ -16,16 +16,17 @@
 namespace sequoia
 {
   /*! \brief Type-safe mechanism for indentations */
-  struct indentation
+  class indentation
   {
-    explicit indentation(std::string_view sv)
-      : data{sv}
+  public:
+    explicit indentation(std::string s)
+      : m_Data{std::move(s)}
     {}
 
     [[nodiscard]]
     operator std::string_view() const
     {
-      return data;
+      return m_Data;
     }
 
     [[nodiscard]]
@@ -33,8 +34,8 @@ namespace sequoia
 
     [[nodiscard]]
     friend bool operator!=(const indentation&, const indentation&) noexcept = default;
-
-    std::string data;
+  private:
+    std::string m_Data;
   };
   
   inline const indentation tab{"\t"};
