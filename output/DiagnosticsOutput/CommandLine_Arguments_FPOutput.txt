@@ -1,4 +1,4 @@
-	../Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 31
+	Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 31
 	Final argument missing
 
 	Expected Exception Type:
@@ -9,7 +9,7 @@
 
 	=======================================
 
-	../Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 40
+	Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 40
 	Unexpected argument
 
 	Expected Exception Type:
@@ -20,7 +20,7 @@
 
 	=======================================
 
-	../Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 48
+	Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 48
 	No bound function object
 
 	Expected Exception Type:
@@ -31,7 +31,7 @@
 
 	=======================================
 
-	../Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 56
+	Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 56
 	Unexpected argument
 
 	Expected Exception Type:
@@ -42,7 +42,7 @@
 
 	=======================================
 
-	../Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 62
+	Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 62
 	Mismatched zeroth argument
 
 	Comparison performed using:
@@ -68,7 +68,7 @@
 
 	=======================================
 
-	../Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 68
+	Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 68
 	Function object not generated
 
 	Comparison performed using:
@@ -91,7 +91,7 @@
 
 	=======================================
 
-	../Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 74
+	Tests/Parsing/CommandLineArgumentsDiagnostics.cpp, Line 74
 	Help not generated
 
 	Comparison performed using:

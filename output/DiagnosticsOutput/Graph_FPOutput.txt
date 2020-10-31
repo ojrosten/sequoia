@@ -1,4 +1,4 @@
-	../Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 49
+	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 49
 	Check false positive: empty graph versus single node
 
 	[sequoia::maths::graph<(sequoia::maths::directed_flavour)0, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
@@ -15,7 +15,7 @@
 
 	=======================================
 
-	../Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 58
+	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 58
 	Check false positive: empty graph versus single node with loop
 
 	[sequoia::maths::graph<(sequoia::maths::directed_flavour)0, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
@@ -38,7 +38,7 @@
 
 	=======================================
 
-	../Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 49
+	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 49
 	Check false positive: empty graph versus single node
 
 	[sequoia::maths::graph<(sequoia::maths::directed_flavour)0, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
@@ -55,7 +55,7 @@
 
 	=======================================
 
-	../Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 58
+	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 58
 	Check false positive: empty graph versus single node with loop
 
 	[sequoia::maths::graph<(sequoia::maths::directed_flavour)0, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
@@ -78,7 +78,7 @@
 
 	=======================================
 
-	../Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 49
+	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 49
 	Check false positive: empty graph versus single node
 
 	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)0, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
@@ -95,7 +95,7 @@
 
 	=======================================
 
-	../Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 66
+	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 66
 	Check false positive: empty graph versus single node with loop
 
 	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)0, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
@@ -118,7 +118,7 @@
 
 	=======================================
 
-	../Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 49
+	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 49
 	Check false positive: empty graph versus single node
 
 	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)0, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
@@ -135,7 +135,7 @@
 
 	=======================================
 
-	../Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 66
+	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 66
 	Check false positive: empty graph versus single node with loop
 
 	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)0, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
@@ -158,7 +158,7 @@
 
 	=======================================
 
-	../Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 49
+	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 49
 	Check false positive: empty graph versus single node
 
 	[sequoia::maths::graph<(sequoia::maths::directed_flavour)1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
@@ -175,7 +175,7 @@
 
 	=======================================
 
-	../Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 54
+	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 54
 	Check false positive: empty graph versus single node with loop
 
 	[sequoia::maths::graph<(sequoia::maths::directed_flavour)1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
@@ -198,7 +198,7 @@
 
 	=======================================
 
-	../Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 49
+	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 49
 	Check false positive: empty graph versus single node
 
 	[sequoia::maths::graph<(sequoia::maths::directed_flavour)1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
@@ -215,7 +215,7 @@
 
 	=======================================
 
-	../Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 54
+	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 54
 	Check false positive: empty graph versus single node with loop
 
 	[sequoia::maths::graph<(sequoia::maths::directed_flavour)1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
@@ -238,7 +238,7 @@
 
 	=======================================
 
-	../Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 49
+	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 49
 	Check false positive: empty graph versus single node
 
 	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
@@ -255,7 +255,7 @@
 
 	=======================================
 
-	../Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 62
+	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 62
 	Check false positive: empty graph versus single node with loop
 
 	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
@@ -278,7 +278,7 @@
 
 	=======================================
 
-	../Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 49
+	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 49
 	Check false positive: empty graph versus single node
 
 	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
@@ -295,7 +295,7 @@
 
 	=======================================
 
-	../Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 62
+	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 62
 	Check false positive: empty graph versus single node with loop
 
 	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::maths::bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
@@ -318,7 +318,7 @@
 
 	=======================================
 
-	../Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 49
+	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 49
 	Check false positive: empty graph versus single node
 
 	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::testing::independent_contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
@@ -335,7 +335,7 @@
 
 	=======================================
 
-	../Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 62
+	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 62
 	Check false positive: empty graph versus single node with loop
 
 	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::testing::independent_contiguous_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
@@ -358,7 +358,7 @@
 
 	=======================================
 
-	../Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 49
+	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 49
 	Check false positive: empty graph versus single node
 
 	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::testing::independent_bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]
@@ -375,7 +375,7 @@
 
 	=======================================
 
-	../Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 62
+	Tests/Maths/Graph/DynamicGraphTestingDiagnostics.cpp, Line 62
 	Check false positive: empty graph versus single node with loop
 
 	[sequoia::maths::embedded_graph<(sequoia::maths::directed_flavour)1, sequoia::testing::null_weight, sequoia::testing::null_weight, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::ownership::spawner<sequoia::testing::null_weight>, sequoia::testing::independent_bucketed_edge_storage_traits, sequoia::maths::node_weight_storage_traits<sequoia::testing::null_weight> >]

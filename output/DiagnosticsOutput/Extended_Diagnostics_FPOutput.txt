@@ -1,4 +1,4 @@
-	../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 26
+	Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 26
 	Broken equality
 
 	--Move-only Semantics--
@@ -10,7 +10,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 27
+	Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 27
 	Broken inequality
 
 	--Move-only Semantics--
@@ -22,7 +22,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 28
+	Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 28
 	Broken move
 
 	--Move-only Semantics--
@@ -36,7 +36,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 29
+	Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 29
 	Broken swap
 
 	--Move-only Semantics--
@@ -56,7 +56,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 30
+	Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 30
 	Broken move assignment
 
 	--Move-only Semantics--
@@ -70,7 +70,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 31
+	Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 31
 	Broken check invariant
 
 	--Move-only Semantics--
@@ -82,7 +82,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 32
+	Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 32
 	Broken check invariant
 
 	--Move-only Semantics--
@@ -94,7 +94,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 33
+	Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 33
 	Broken check invariant
 
 	--Move-only Semantics--
@@ -106,7 +106,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 29
+	Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 29
 	Broken check invariant
 
 	--Move-only Semantics--
@@ -118,7 +118,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 30
+	Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 30
 	Broken check invariant
 
 	--Move-only Semantics--
@@ -130,7 +130,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 31
+	Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 31
 	Broken check invariant
 
 	--Move-only Semantics--
@@ -142,7 +142,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 37
+	Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 37
 
 	--Move-only Semantics--
 	[sequoia::testing::move_only_broken_less<int, std::allocator<int> >]
@@ -161,7 +161,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 43
+	Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 43
 
 	--Move-only Semantics--
 	[sequoia::testing::move_only_broken_lesseq<int, std::allocator<int> >]
@@ -172,7 +172,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 49
+	Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 49
 
 	--Move-only Semantics--
 	[sequoia::testing::move_only_broken_greater<int, std::allocator<int> >]
@@ -183,7 +183,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 55
+	Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 55
 
 	--Move-only Semantics--
 	[sequoia::testing::move_only_broken_greatereq<int, std::allocator<int> >]
@@ -194,7 +194,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 61
+	Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 61
 
 	--Move-only Semantics--
 	[sequoia::testing::move_only_inverted_comparisons<int, std::allocator<int> >]
@@ -205,7 +205,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 67
+	Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 67
 
 	--Move-only Semantics--
 	[sequoia::testing::move_only_broken_spaceship<int, std::allocator<int> >]
@@ -216,7 +216,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 29
+	Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 29
 	Broken check invariant
 
 	--Regular Semantics--
@@ -228,7 +228,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 30
+	Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 30
 	Broken check invariant
 
 	--Regular Semantics--
@@ -240,7 +240,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 36
+	Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 36
 
 	--Regular Semantics--
 	[sequoia::testing::regular_broken_less<int, std::allocator<int> >]
@@ -259,7 +259,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 42
+	Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 42
 
 	--Regular Semantics--
 	[sequoia::testing::regular_broken_lesseq<int, std::allocator<int> >]
@@ -270,7 +270,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 48
+	Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 48
 
 	--Regular Semantics--
 	[sequoia::testing::regular_broken_greater<int, std::allocator<int> >]
@@ -281,7 +281,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 54
+	Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 54
 
 	--Regular Semantics--
 	[sequoia::testing::regular_broken_greatereq<int, std::allocator<int> >]
@@ -292,7 +292,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 60
+	Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 60
 
 	--Regular Semantics--
 	[sequoia::testing::regular_inverted_comparisons<int, std::allocator<int> >]
@@ -303,7 +303,7 @@
 
 	=======================================
 
-	../Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 66
+	Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 66
 
 	--Regular Semantics--
 	[sequoia::testing::regular_broken_spaceship<int, std::allocator<int> >]
@@ -315,7 +315,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 50
+	Tests/TestFramework/MoveOnlyTestDiagnostics.cpp, Line 50
 
 	--Move-only Semantics--
 	[sequoia::testing::move_only_beast<int, std::allocator<int> >]
@@ -324,7 +324,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 86
+	Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 86
 
 	--Move-only Semantics--
 	[sequoia::testing::orderable_move_only_beast<int, std::allocator<int> >]
@@ -333,7 +333,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 87
+	Tests/TestFramework/OrderableMoveOnlyTestDiagnostics.cpp, Line 87
 
 	--Move-only Semantics--
 	[sequoia::testing::orderable_move_only_beast<int, std::allocator<int> >]
@@ -342,7 +342,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 85
+	Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 85
 
 	--Regular Semantics--
 	[sequoia::testing::orderable_regular_beast<int, std::allocator<int> >]
@@ -351,7 +351,7 @@
 	=======================================
 
 	False Positive Failure:
-	../Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 86
+	Tests/TestFramework/OrderableRegularTestDiagnostics.cpp, Line 86
 
 	--Regular Semantics--
 	[sequoia::testing::orderable_regular_beast<int, std::allocator<int> >]
