@@ -71,7 +71,7 @@ namespace sequoia::testing
       : m_Args(args.begin(), args.end())
     {
       m_Ptrs.reserve(m_Args.size());
-      std::transform(m_Args.begin(), m_Args.end(), m_Ptrs.begin(), [](std::string& s){ return s.data(); });
+      std::transform(m_Args.begin(), m_Args.end(), std::back_inserter(m_Ptrs), [](std::string& s){ return s.data(); });
     }
 
     [[nodiscard]]
