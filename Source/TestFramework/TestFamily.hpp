@@ -102,6 +102,12 @@ namespace sequoia::testing
       }
     }
 
+    test_family(const test_family&)     = delete;
+    test_family(test_family&&) noexcept = default;
+
+    test_family& operator=(const test_family&)     = delete;
+    test_family& operator=(test_family&&) noexcept = delete;
+
     template<class concrete_test>
     void add_test(concrete_test&& test)
     {
@@ -121,7 +127,7 @@ namespace sequoia::testing
     std::vector<std::unique_ptr<test>> m_Tests{};
     std::string m_Name{};
     std::filesystem::path m_TestRepo{}, m_TestMaterialsRepo{}, m_OutputDir{};
-    std::set<std::filesystem::path> m_MaterialsPaths{};
+    std::vector<std::filesystem::path> m_MaterialsPaths{};
 
     [[nodiscard]]
     std::filesystem::path diagnostics_filename() const;

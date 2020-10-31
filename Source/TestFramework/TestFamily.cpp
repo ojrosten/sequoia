@@ -56,13 +56,13 @@ namespace sequoia::testing
 
       t.materials(workingCopy, prediction);
       
-      if(m_MaterialsPaths.find(workingCopy) == m_MaterialsPaths.end())
+      if(std::find(m_MaterialsPaths.cbegin(), m_MaterialsPaths.cend(), workingCopy) == m_MaterialsPaths.cend())
       {
         fs::remove_all(output);
         fs::create_directories(output);
         fs::copy(original, workingCopy, fs::copy_options::recursive | fs::copy_options::overwrite_existing);
 
-        m_MaterialsPaths.insert(workingCopy);
+        m_MaterialsPaths.emplace_back(workingCopy);
       }
     }
   }
