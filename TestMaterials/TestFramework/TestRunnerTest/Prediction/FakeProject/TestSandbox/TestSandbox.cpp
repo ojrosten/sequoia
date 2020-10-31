@@ -25,7 +25,7 @@ int main(int argc, char** argv)
                        sibling_path("Tests"),
                        sibling_path("Source")
     };
-      
+
 
     runner.add_test_family(
       "Maybe",

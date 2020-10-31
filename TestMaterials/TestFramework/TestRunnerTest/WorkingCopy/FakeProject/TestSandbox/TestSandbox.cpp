@@ -25,7 +25,7 @@ int main(int argc, char** argv)
                        sibling_path("Tests"),
                        sibling_path("Source")
     };
-      
+
     runner.execute();
   }
   catch(const std::exception& e)
