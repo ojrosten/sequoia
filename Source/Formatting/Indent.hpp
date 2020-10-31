@@ -18,33 +18,27 @@ namespace sequoia
   /*! \brief Type-safe mechanism for indentations */
   struct indentation
   {
-    constexpr explicit indentation(std::string_view sv)
+    explicit indentation(std::string_view sv)
       : data{sv}
     {}
 
     [[nodiscard]]
-    std::string string() const
+    operator std::string_view() const
     {
-      return std::string{data};
+      return data;
     }
 
     [[nodiscard]]
-    operator std::string() const
-    {
-      return string();
-    }
+    friend bool operator==(const indentation&, const indentation&) noexcept = default;
 
     [[nodiscard]]
-    friend constexpr bool operator==(const indentation&, const indentation&) noexcept = default;
+    friend bool operator!=(const indentation&, const indentation&) noexcept = default;
 
-    [[nodiscard]]
-    friend constexpr bool operator!=(const indentation&, const indentation&) noexcept = default;
-
-    std::string_view data;
+    std::string data;
   };
   
-  constexpr indentation tab{"\t"};
-  constexpr indentation no_indent{""};
+  inline const indentation tab{"\t"};
+  inline const indentation no_indent{""};
   
   /// For a non-empty string_view prepends with an indentation; otherwise returns an empty string
   [[nodiscard]]
