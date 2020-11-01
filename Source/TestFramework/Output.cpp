@@ -222,9 +222,9 @@ namespace sequoia::testing
     peel(name, "class ");
     peel(name, "enum ");
     
-    replace_all(name, "<struct ", "< ");
-    replace_all(name, "<class ", "< ");
-    replace_all(name, "<enum ", "< ");
+    replace_all(name, "<struct ", "<");
+    replace_all(name, "<class ", "<");
+    replace_all(name, "<enum ", "<");
 
     replace_all(name, ",", ", ");
 
