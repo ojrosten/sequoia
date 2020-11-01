@@ -392,7 +392,7 @@ namespace sequoia::testing
     [[nodiscard]]
     static std::string preamble(std::string_view prefix, const std::filesystem::path& path, const std::filesystem::path& prediction)
     {
-      return append_lines(prefix, path.string(), "vs", prediction.string()).append("\n");
+      return append_lines(prefix, path.generic_string(), "vs", prediction.generic_string()).append("\n");
     }
   };
   

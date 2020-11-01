@@ -1068,8 +1068,8 @@
 	  Final path token
 	  [std::filesystem::path]
 	  operator== returned false
-	  Obtained : "Blah"
-	  Predicted: "Blurg"
+	  Obtained : Blah
+	  Predicted: Blurg
 
 	=======================================
 
@@ -1172,8 +1172,8 @@
 	  Final path token
 	  [std::filesystem::path]
 	  operator== returned false
-	  Obtained : "A"
-	  Predicted: "C"
+	  Obtained : A
+	  Predicted: C
 
 	=======================================
 
@@ -1222,8 +1222,8 @@
 	  First directory entry mismatch
 	  [std::filesystem::path]
 	  operator== returned false
-	  Obtained : "/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/B/foo.txt"
-	  Predicted: "/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/CoreDiagnostics/MoreStuff/B/bar.txt"
+	  Obtained : /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/B/foo.txt
+	  Predicted: /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/CoreDiagnostics/MoreStuff/B/bar.txt
 
 	=======================================
 
@@ -1244,8 +1244,8 @@
 	  First directory entry mismatch
 	  [std::filesystem::path]
 	  operator== returned false
-	  Obtained : "/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/CoreDiagnostics/MoreStuff/B/bar.txt"
-	  Predicted: "/Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/B/foo.txt"
+	  Obtained : /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/CoreDiagnostics/MoreStuff/B/bar.txt
+	  Predicted: /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/B/foo.txt
 
 	=======================================
 

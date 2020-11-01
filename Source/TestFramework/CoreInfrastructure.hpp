@@ -16,6 +16,7 @@
 
 #include <string>
 #include <sstream>
+#include <filesystem>
 
 namespace sequoia::testing
 {
@@ -65,6 +66,16 @@ namespace sequoia::testing
       std::ostringstream os{};
       os << std::boolalpha << val;
       return os.str();
+    }
+  };
+
+  template<>
+  struct serializer<std::filesystem::path>
+  {
+    [[nodiscard]]
+    static std::string make(const std::filesystem::path& p)
+    {        
+      return p.generic_string();
     }
   };
 

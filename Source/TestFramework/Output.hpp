@@ -86,6 +86,8 @@ namespace sequoia::testing
 
   std::string& tidy_name(std::string& name);
 
+  std::string& tidy_msc_name(std::string& name);
+
   template<class T>
   [[nodiscard]]
   std::string demangle()
@@ -98,7 +100,11 @@ namespace sequoia::testing
 
       return name;
     #else
-      return typeid(T).name();
+      std::string name{typeid(T).name()};
+
+      tidy_msc_name(name);
+
+      return name;
     #endif
   }
 

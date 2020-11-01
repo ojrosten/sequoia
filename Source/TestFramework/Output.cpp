@@ -203,4 +203,37 @@ namespace sequoia::testing
 
     return name;
   }
+
+  std::string& tidy_msc_name(std::string& name)
+  {
+    auto peel{
+      [](std::string& s, std::string_view prefix){
+        if(s.size() >= prefix.size())
+        {
+          std::string_view sv{s};
+          auto start{sv.substr(0, prefix.size())};
+          if(start == prefix)
+            s.erase(0, prefix.size());
+        }
+      }
+    };
+
+    peel(name, "struct ");
+    peel(name, "class ");
+    peel(name, "enum ");
+    
+    replace_all(name, "<struct ", "< ");
+    replace_all(name, "<class ", "< ");
+    replace_all(name, "<enum ", "< ");
+
+    replace_all(name, ",", ", ");
+
+    replace_all(name, ", struct ", ", ");
+    replace_all(name, ", class ", ", ");
+    replace_all(name, ", enum ", ", ");
+
+    replace_all(name, " & __ptr64", "&");
+
+    return name;
+  }
 }
