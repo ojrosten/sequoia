@@ -16,7 +16,10 @@
 
 namespace sequoia::testing
 {
-  void add_include(const std::filesystem::path& filePath, std::string_view include);
+  [[nodiscard]]
+  std::string read_to_string(const std::filesystem::path& file);
+  
+  void add_include(const std::filesystem::path& file, std::string_view include);
 
-  void add_to_family(const std::filesystem::path& filePath, std::string_view familyName, const std::vector<std::string>& tests);
+  void add_to_family(const std::filesystem::path& file, std::string_view familyName, const std::vector<std::string>& tests);
 }

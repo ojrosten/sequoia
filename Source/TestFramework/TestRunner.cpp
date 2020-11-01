@@ -282,17 +282,7 @@ namespace sequoia::testing
 
   void nascent_test::transform_file(const std::filesystem::path& file, std::string_view copyright) const
   {
-    std::string text{};
-    if(std::ifstream ifile{file})
-    {
-      std::stringstream buffer{};
-      buffer << ifile.rdbuf();
-      text = buffer.str();
-    }
-    else
-    {
-      throw std::runtime_error{report_failed_read(file)};
-    }
+    std::string text{read_to_string(file)};
 
     if(!text.empty())
     {

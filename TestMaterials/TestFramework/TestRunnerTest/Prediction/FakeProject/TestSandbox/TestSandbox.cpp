@@ -36,9 +36,9 @@ int main(int argc, char** argv)
 
     runner.add_test_family(
       "Iterator",
-      iterator_false_positive_test("False Positive Test"),
       foo_false_positive_test("False Positive Test"),
       foo_test("Unit Test"),
+      iterator_false_positive_test("False Positive Test"),
       iterator_test("Unit Test")
     );
 

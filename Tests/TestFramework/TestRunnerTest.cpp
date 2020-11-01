@@ -74,7 +74,7 @@ namespace sequoia::testing
     std::stringstream outputStream{};
     commandline_arguments args{"", "create", "regular_test", "other::functional::maybe<class T>", "std::optional<T>"
                                  , "create", "regular_test", "utilities::iterator", "int*"
-                                 , "create", "move_only_test", "bar::baz::foo<maths::floating_point T>", "T", "--family", "iterator"
+                                 , "create", "move_only_test", "bar::baz::foo<maths::floating_point T>", "T", "--family", "Iterator"
                                  , "create", "regular_test", "other::couple<class S, class T>", "S", "-e", "T",
                                       "-h", (repos.tests / "Partners").string(), "-f", "partners", "-ch", "Couple.hpp"};
     
