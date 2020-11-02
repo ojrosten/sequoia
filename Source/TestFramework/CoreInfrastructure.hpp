@@ -97,19 +97,19 @@ namespace sequoia::testing
     requires std::is_integral_v<T>
   auto fixed_width_unsigned_cast(T x)
   {
-     using U = std::make_unsigned_t<decltype(x)>;
+    using U = std::make_unsigned_t<decltype(x)>;
         
-     if constexpr(sizeof(U) == sizeof(uint64_t))
-     {
-       return static_cast<uint64_t>(x);
-     }
-     else if constexpr(sizeof(U) == sizeof(uint32_t))
-     {
-       return static_cast<uint32_t>(x);
-     }
-     else
-     {
-       return x;
-     }
+    if constexpr(sizeof(U) == sizeof(uint64_t))
+    {
+      return static_cast<uint64_t>(x);
+    }
+    else if constexpr(sizeof(U) == sizeof(uint32_t))
+    {
+      return static_cast<uint32_t>(x);
+    }
+    else
+    {
+      return x;
+    }
   }
 }
