@@ -1214,7 +1214,7 @@
 	[std::filesystem::path]
 
 	  Number of directory entries for /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/CoreDiagnostics/Stuff/B
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
 	  Predicted: 2
@@ -1236,7 +1236,7 @@
 	[std::filesystem::path]
 
 	  Number of directory entries for /Users/Claire/Dropbox/Sequoia/output/TestsTemporaryData/TestFramework/CoreDiagnostics/MoreStuff/B
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 2
 	  Predicted: 1

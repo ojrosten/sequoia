@@ -36,7 +36,7 @@
 #include <filesystem>
 
 namespace sequoia::testing
-{
+{  
   /*! \brief Checks equality of std::basic_string */
   template<class Char, class Traits>
   struct detailed_equality_checker<std::basic_string_view<Char, Traits>>
@@ -135,26 +135,11 @@ namespace sequoia::testing
             auto adv{make_advisor(info, obtained, prediction, dist, advisor)};
 
             const auto mess{append_lines("Lengths differ", std::string{"Obtained string is too "}.append(adjective))};
-            auto converter{
-              [](auto x){
-                using T = decltype(x);
 
-                if constexpr(sizeof(T) == sizeof(uint64_t))
-                {
-                  return static_cast<uint64_t>(x);
-                }
-                else if constexpr(sizeof(T) == sizeof(uint32_t))
-                {
-                  return static_cast<uint32_t>(x);
-                }
-                else
-                {
-                  return x;
-                }
-              }
-            };
-
-            check_equality(mess, logger, converter(obtained.size()), converter(prediction.size()), adv);
+            check_equality(mess,
+                           logger,
+                           fixed_width_unsigned_cast(obtained.size()),
+                           fixed_width_unsigned_cast(prediction.size()), adv);
           }
         };
         
@@ -348,7 +333,10 @@ namespace sequoia::testing
 
       const std::vector<fs::path> paths{generator(dir)}, predictedPaths{generator(prediction)};
 
-      check_equality(std::string{"Number of directory entries for "}.append(dir.generic_string()), logger, paths.size(), predictedPaths.size());
+      check_equality(std::string{"Number of directory entries for "}.append(dir.generic_string()),
+                     logger,
+                     fixed_width_unsigned_cast(paths.size()),
+                     fixed_width_unsigned_cast(predictedPaths.size()));
 
       const auto iters{std::mismatch(paths.begin(), paths.end(), predictedPaths.begin(), predictedPaths.end(),
           [&dir,&prediction](const fs::path& lhs, const fs::path& rhs){
