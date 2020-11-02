@@ -13,9 +13,9 @@ namespace sequoia::testing
 {
   #ifdef _MSC_VER
     inline constexpr bool has_msvc_v{true};
-    #define SPECULATIVE_CONSTEVAL consteval
+    #define SPECULATIVE_CONSTEVAL constexpr
   #else
     inline constexpr bool has_msvc_v{false};
-    #define SPECULATIVE_CONSTEVAL constexpr
+    #define SPECULATIVE_CONSTEVAL consteval
   #endif
 }
