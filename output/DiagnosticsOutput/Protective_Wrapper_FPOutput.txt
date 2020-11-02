@@ -19,7 +19,7 @@
 	  operator== returned false
 
 	    Container size wrong
-	    [long]
+	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
 	    Predicted: 1

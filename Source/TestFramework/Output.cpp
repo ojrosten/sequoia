@@ -234,6 +234,17 @@ namespace sequoia::testing
 
     replace_all(name, " & __ptr64", "&");
 
+#ifdef _MSC_VER
+    if constexpr(sizeof(__int64) == sizeof(long long))
+    {
+      replace_all(name, "__int64", "long long");
+    }
+    else if constexpr(sizeof(__int64) == sizeof(long))
+    {
+      replace_all(name, "__int64", "long");
+    }
+#endif
+
     return name;
   }
 }

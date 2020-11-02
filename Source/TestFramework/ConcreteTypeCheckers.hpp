@@ -135,8 +135,26 @@ namespace sequoia::testing
             auto adv{make_advisor(info, obtained, prediction, dist, advisor)};
 
             const auto mess{append_lines("Lengths differ", std::string{"Obtained string is too "}.append(adjective))};
+            auto converter{
+              [](auto x){
+                using T = decltype(x);
 
-            check_equality(mess, logger, obtained.size(), prediction.size(), adv);
+                if constexpr(sizeof(T) == sizeof(uint64_t))
+                {
+                  return static_cast<uint64_t>(x);
+                }
+                else if constexpr(sizeof(T) == sizeof(uint32_t))
+                {
+                  return static_cast<uint32_t>(x);
+                }
+                else
+                {
+                  return x;
+                }
+              }
+            };
+
+            check_equality(mess, logger, converter(obtained.size()), converter(prediction.size()), adv);
           }
         };
         

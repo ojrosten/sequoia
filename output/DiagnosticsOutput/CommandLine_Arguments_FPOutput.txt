@@ -56,7 +56,7 @@
 
 	    Lengths differ
 	    Obtained string is too short
-	    [unsigned long]
+	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 0
 	    Predicted: 3
@@ -105,7 +105,7 @@
 
 	    Lengths differ
 	    Obtained string is too long
-	    [unsigned long]
+	    [unsigned long long]
 	    operator== returned false
 	    Obtained : 8
 	    Predicted: 0

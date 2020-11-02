@@ -299,8 +299,28 @@ namespace sequoia::testing
     using std::distance;
     using std::advance;
 
-    const auto predictedSize{distance(predictionFirst, predictionLast)};
-    if(check_equality("Container size wrong", logger, distance(first, last), predictedSize))
+    auto converter{
+      [](auto x){
+        using T = std::make_unsigned_t<decltype(x)>;
+        
+        if constexpr(sizeof(T) == sizeof(uint64_t))
+        {
+          return static_cast<uint64_t>(x);
+        }
+        else if constexpr(sizeof(T) == sizeof(uint32_t))
+        {
+          return static_cast<uint32_t>(x);
+        }
+        else
+        {
+          return x;
+        }
+      }
+    };
+
+    const auto actualSize{converter(distance(first, last))};
+    const auto predictedSize{converter(distance(predictionFirst, predictionLast))};    
+    if(check_equality("Container size wrong", logger, actualSize, predictedSize))
     {
       auto predictionIter{predictionFirst};
       auto iter{first};

@@ -163,7 +163,7 @@
 	operator== returned false
 
 	  Container size wrong
-	  [long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
@@ -192,7 +192,7 @@
 	operator== returned false
 
 	  Container size wrong
-	  [long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
 	  Predicted: 2
@@ -248,7 +248,7 @@
 	operator== returned false
 
 	  Container size wrong
-	  [long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 3
 	  Predicted: 2
@@ -259,7 +259,7 @@
 	Iterators demarcate differing numbers of elements
 
 	  Container size wrong
-	  [long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 4
 	  Predicted: 6
@@ -303,7 +303,7 @@
 
 	  Lengths differ
 	  Obtained string is too short
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 13
@@ -323,7 +323,7 @@
 
 	  Lengths differ
 	  Obtained string is too long
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 13
 	  Predicted: 0
@@ -379,7 +379,7 @@
 
 	  Lengths differ
 	  Obtained string is too short
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 110
@@ -399,7 +399,7 @@
 
 	  Lengths differ
 	  Obtained string is too long
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 110
 	  Predicted: 0
@@ -419,7 +419,7 @@
 
 	  Lengths differ
 	  Obtained string is too short
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 14
 	  Predicted: 110
@@ -439,7 +439,7 @@
 
 	  Lengths differ
 	  Obtained string is too long
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 110
 	  Predicted: 14
@@ -531,7 +531,7 @@
 
 	  Lengths differ
 	  Obtained string is too short
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 0
 	  Predicted: 1
@@ -551,7 +551,7 @@
 
 	  Lengths differ
 	  Obtained string is too long
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 1
 	  Predicted: 0
@@ -938,7 +938,7 @@
 
 	  Lengths differ
 	  Obtained string is too long
-	  [unsigned long]
+	  [unsigned long long]
 	  operator== returned false
 	  Obtained : 3
 	  Predicted: 2
