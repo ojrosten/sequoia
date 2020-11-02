@@ -766,7 +766,7 @@ namespace sequoia::testing
     if(auto rootPos{text.find("???")}; rootPos != npos)
     {
       namespace fs = std::filesystem;
-      text.replace(rootPos, 3, m_ProjectRoot.string());
+      text.replace(rootPos, 3, m_ProjectRoot.generic_string());
     }
     else
     {
