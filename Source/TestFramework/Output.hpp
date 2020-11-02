@@ -13,6 +13,7 @@
 
 #include "CoreInfrastructure.hpp"
 #include "Indent.hpp"
+#include "Preprocessor.hpp"
 
 #include <filesystem>
 
@@ -92,20 +93,23 @@ namespace sequoia::testing
   [[nodiscard]]
   std::string demangle()
   {
-    #ifndef _MSC_VER
+    if constexpr(has_msvc_v)
+    {      
+      std::string name{typeid(T).name()};
+
+      tidy_msc_name(name);
+
+      return name;
+    }
+    else
+    {     
       int status;
       std::string name{abi::__cxa_demangle(typeid(T).name(), 0, 0, &status)};
 
       tidy_name(name);
 
       return name;
-    #else
-      std::string name{typeid(T).name()};
-
-      tidy_msc_name(name);
-
-      return name;
-    #endif
+    }
   }
 
   /*! \brief Specialize this struct template to customize the way in which type info is generated for a given class.

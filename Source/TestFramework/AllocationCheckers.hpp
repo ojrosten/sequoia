@@ -47,13 +47,7 @@
 #include "Utilities.hpp"
 
 namespace sequoia::testing
-{
-  #ifndef _MSC_VER
-    #define SPECULATIVE_CONSTEVAL consteval
-  #else
-    #define SPECULATIVE_CONSTEVAL constexpr
-  #endif
-  
+{  
   enum class allocation_event { copy, mutation, para_copy, para_move, assign_prop, assign};
 
   /*! Type-safe wrapper for allocation predictions, to avoid mixing different allocation events */
