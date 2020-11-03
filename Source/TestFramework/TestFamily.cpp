@@ -189,9 +189,10 @@ namespace sequoia::testing
       throw std::logic_error("Source files should have a non-trivial name!");
 
     fs::path absolute{test_summaries_path(outputDir)};
-    for(auto i{std::next(name.begin())}; i != name.end(); ++i)
+    for(const auto& p : name)
     {
-      absolute /= *i;
+      if(p == "..") continue;
+      absolute /= p;
     }
 
     return absolute;
