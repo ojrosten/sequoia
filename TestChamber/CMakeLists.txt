@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.15)
 
-project(SequioaMinimal DESCRIPTION "The Sequoia Library plus executable"
+project(SequioaTestChamber DESCRIPTION "The Sequoia Library plus a subset of tests"
                        LANGUAGES CXX)
 
 

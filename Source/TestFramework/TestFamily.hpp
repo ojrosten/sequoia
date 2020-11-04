@@ -133,9 +133,7 @@ namespace sequoia::testing
     std::filesystem::path diagnostics_filename() const;
 
     [[nodiscard]]
-    static std::filesystem::path test_summary_filename(const test& t, output_mode outputMode, const std::filesystem::path& outputDir);
-
-    static void write_summary_to_file(const log_summary& summary, std::set<std::string>& record);
+    static std::filesystem::path test_summary_filename(const test& t, output_mode outputMode, const std::filesystem::path& outputDir, const std::filesystem::path& testRepo);
 
     template<class Test, class... Tests>
     void register_tests(Test&& t, Tests&&... tests)
@@ -165,7 +163,7 @@ namespace sequoia::testing
       paths() = default;
     #endif
       
-      paths(const test& t, output_mode outputMode, const std::filesystem::path& outputDir);
+      paths(const test& t, output_mode outputMode, const std::filesystem::path& outputDir, const std::filesystem::path& testRepo);
 
       output_mode mode;
       std::filesystem::path summary, workingMaterials, predictions;

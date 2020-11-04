@@ -18,24 +18,19 @@ namespace sequoia::testing
   {
     namespace fs = std::filesystem;
 
-    fs::path materials{}, rel{};
+    const auto rel{
+      [&t, &testRepo{m_TestRepo}, &materialsRepo{m_TestMaterialsRepo}](){
+        if(testRepo.empty()) return fs::path{};
 
-    const auto folderName{fs::path{t.source_filename()}.replace_extension()};
-    if(folderName.has_relative_path())
-    {
-      if(!m_TestRepo.empty())
-      {
-        materials = m_TestMaterialsRepo;
-        rel = rebase_from(folderName, m_TestRepo);
+        auto folderName{fs::path{t.source_filename()}.replace_extension()};
+        if(folderName.is_absolute())
+          folderName = fs::relative(folderName, materialsRepo);
 
-        materials /= rel;
-      } 
-    }    
-    else
-    {
-      rel = fs::relative(folderName, m_TestMaterialsRepo);
-    }
+        return rebase_from(folderName, testRepo);
+      }()
+    };
 
+    const auto materials{!rel.empty() ? m_TestMaterialsRepo / rel : fs::path{}};
     if(fs::exists(materials))
     {     
       const auto output{tests_temporary_data_path(m_OutputDir) /= rel};
@@ -113,7 +108,7 @@ namespace sequoia::testing
       for(auto& pTest : m_Tests)
       {
         const auto summary{pTest->execute()};
-        process(summary, paths{*pTest, outputMode, m_OutputDir});
+        process(summary, paths{*pTest, outputMode, m_OutputDir, m_TestRepo});
       }
     }
     else
@@ -123,8 +118,10 @@ namespace sequoia::testing
       results.reserve(m_Tests.size());
       for(auto& pTest : m_Tests)
       {
-        results.emplace_back(std::async([&test{*pTest}, outputMode, outputDir{m_OutputDir}](){
-          return std::make_pair(test.execute(), paths{test, outputMode, outputDir}); }));
+        results.emplace_back(
+          std::async([&test{*pTest}, outputMode, outputDir{m_OutputDir}, testRepo{m_TestRepo}](){
+            return std::make_pair(test.execute(), paths{test, outputMode, outputDir, testRepo}); })
+        );
       }
 
       for(auto& res : results)
@@ -178,7 +175,7 @@ namespace sequoia::testing
     return diagnostics_output_path(m_OutputDir) /= make_name(m_Name);
   }     
 
-  std::filesystem::path test_family::test_summary_filename(const test& t, const output_mode outputMode, const std::filesystem::path& outputDir)
+  std::filesystem::path test_family::test_summary_filename(const test& t, const output_mode outputMode, const std::filesystem::path& outputDir, const std::filesystem::path& testRepo)
   {
     namespace fs = std::filesystem;
     
@@ -188,14 +185,26 @@ namespace sequoia::testing
     if(name.empty())
       throw std::logic_error("Source files should have a non-trivial name!");
 
-    fs::path absolute{test_summaries_path(outputDir)};
-    for(const auto& p : name)
+    if(!name.is_absolute())
     {
-      if(p == "..") continue;
-      absolute /= p;
+      if(!testRepo.empty())
+      {
+        auto back{*(--testRepo.end())};
+        return test_summaries_path(outputDir) / back / rebase_from(name, testRepo);
+      }
+    }
+    else
+    {
+      auto summary{test_summaries_path(outputDir)};
+      auto iters{std::mismatch(name.begin(), name.end(), summary.begin(), summary.end())};
+
+      while(iters.first != name.end())
+        summary /= *iters.first++;
+
+      return summary;
     }
 
-    return absolute;
+    return name;
   }
 
   void test_family::summary_writer::to_file(const std::filesystem::path& filename, const log_summary& summary)
@@ -224,9 +233,9 @@ namespace sequoia::testing
     }
   }
 
-  test_family::paths::paths(const test& t, output_mode outputMode, const std::filesystem::path& outputDir)
+  test_family::paths::paths(const test& t, output_mode outputMode, const std::filesystem::path& outputDir, const std::filesystem::path& testRepo)
     : mode{outputMode}
-    , summary{test_summary_filename(t, outputMode, outputDir)}
+    , summary{test_summary_filename(t, outputMode, outputDir, testRepo)}
     , workingMaterials{t.working_materials()}
     , predictions{t.predictive_materials()}
   {}
