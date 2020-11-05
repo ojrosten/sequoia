@@ -51,6 +51,7 @@ target_compile_features(TestFramework PUBLIC cxx_std_20)
 
 if (MSVC)
     add_compile_options(/W4)
+    add_compile_options(/bigobj)
 else()
     add_compile_options(-Wall -Wextra -pedantic)
 endif()
