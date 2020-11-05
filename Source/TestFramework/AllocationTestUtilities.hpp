@@ -90,6 +90,29 @@ namespace sequoia::testing
       = default;
   private:
     std::shared_ptr<int> m_pAllocs{}, m_pDeallocs{};
+
+#ifdef _MSC_VER
+#if _ITERATOR_DEBUG_LEVEL != 0
+
+    // The MSVC implementation for std::vector's destructor has an interesting structure
+    // for debug builds. The following ensures successful compilation.
+
+    template<class, bool, bool, bool>
+    friend class shared_counting_allocator;
+
+    shared_counting_allocator(std::shared_ptr<int> pAllocs, std::shared_ptr<int>pDeallocs)
+        : m_pAllocs{ pAllocs }
+        , m_pDeallocs{ m_pDeallocs }
+    {}
+
+  public:
+    template<class U>
+    explicit operator shared_counting_allocator<U, PropagateCopy, PropagateMove, PropagateSwap>()
+    {
+        return {m_pAllocs, m_pDeallocs};
+    }
+#endif
+#endif
   };
 
   template<class T>
