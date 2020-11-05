@@ -100,14 +100,14 @@ namespace sequoia::testing
     template<class, bool, bool, bool>
     friend class shared_counting_allocator;
 
-    shared_counting_allocator(std::shared_ptr<int> pAllocs, std::shared_ptr<int>pDeallocs)
-        : m_pAllocs{ pAllocs }
-        , m_pDeallocs{ m_pDeallocs }
+    shared_counting_allocator(std::shared_ptr<int> pAllocs, std::shared_ptr<int> pDeallocs)
+      : m_pAllocs{ std::move(pAllocs) }
+      , m_pDeallocs{ std::move(pDeallocs) }
     {}
 
   public:
     template<class U>
-    explicit operator shared_counting_allocator<U, PropagateCopy, PropagateMove, PropagateSwap>()
+    explicit operator shared_counting_allocator<U, PropagateCopy, PropagateMove, PropagateSwap>() const
     {
         return {m_pAllocs, m_pDeallocs};
     }
