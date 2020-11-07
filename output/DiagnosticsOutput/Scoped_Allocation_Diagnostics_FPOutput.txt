@@ -1,4 +1,4 @@
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 92
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 90
 	Incorrect copy x outer allocs
 
 	--Regular Semantics--
@@ -12,7 +12,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 97
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 95
 	Incorrect copy y outer allocs
 
 	--Regular Semantics--
@@ -26,7 +26,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 102
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 100
 	Incorrect mutation outer allocs
 
 	--Regular Semantics--
@@ -40,7 +40,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 107
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 105
 	Incorrect assignment outer allocs
 
 	--Regular Semantics--
@@ -60,7 +60,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 112
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 110
 	Incorrect para copy x outer allocs
 
 	--Regular Semantics--
@@ -74,7 +74,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 117
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 115
 	Incorrect para move x outer allocs
 
 	--Regular Semantics--
@@ -88,7 +88,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 122
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 120
 	Incorrect copy x inner allocs
 
 	--Regular Semantics--
@@ -102,7 +102,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 127
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 125
 	Incorrect copy y inner allocs
 
 	--Regular Semantics--
@@ -116,7 +116,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 132
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 130
 	Incorrect mutation inner allocs
 
 	--Regular Semantics--
@@ -130,7 +130,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 137
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 135
 	Incorrect assignment inner allocs
 
 	--Regular Semantics--
@@ -150,7 +150,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 142
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 140
 	Incorrect para copy x inner allocs
 
 	--Regular Semantics--
@@ -164,7 +164,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 147
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 145
 	Incorrect para move x inener allocs
 
 	--Regular Semantics--
@@ -178,7 +178,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 92
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 90
 	Incorrect copy x outer allocs
 
 	--Regular Semantics--
@@ -192,7 +192,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 97
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 95
 	Incorrect copy y outer allocs
 
 	--Regular Semantics--
@@ -206,7 +206,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 102
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 100
 	Incorrect mutation outer allocs
 
 	--Regular Semantics--
@@ -226,7 +226,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 107
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 105
 	Incorrect assignment outer allocs
 
 	--Regular Semantics--
@@ -246,7 +246,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 112
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 110
 	Incorrect para copy x outer allocs
 
 	--Regular Semantics--
@@ -260,7 +260,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 117
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 115
 	Incorrect para move x outer allocs
 
 	--Regular Semantics--
@@ -274,7 +274,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 122
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 120
 	Incorrect copy x inner allocs
 
 	--Regular Semantics--
@@ -288,7 +288,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 127
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 125
 	Incorrect copy y inner allocs
 
 	--Regular Semantics--
@@ -302,7 +302,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 132
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 130
 	Incorrect mutation inner allocs
 
 	--Regular Semantics--
@@ -322,7 +322,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 137
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 135
 	Incorrect assignment inner allocs
 
 	--Regular Semantics--
@@ -342,7 +342,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 142
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 140
 	Incorrect para copy x inner allocs
 
 	--Regular Semantics--
@@ -356,7 +356,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 147
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 145
 	Incorrect para move x inener allocs
 
 	--Regular Semantics--
@@ -370,7 +370,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 92
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 90
 	Incorrect copy x outer allocs
 
 	--Regular Semantics--
@@ -384,7 +384,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 97
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 95
 	Incorrect copy y outer allocs
 
 	--Regular Semantics--
@@ -398,7 +398,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 102
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 100
 	Incorrect mutation outer allocs
 
 	--Regular Semantics--
@@ -412,7 +412,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 107
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 105
 	Incorrect assignment outer allocs
 
 	--Regular Semantics--
@@ -426,7 +426,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 112
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 110
 	Incorrect para copy x outer allocs
 
 	--Regular Semantics--
@@ -440,7 +440,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 117
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 115
 	Incorrect para move x outer allocs
 
 	--Regular Semantics--
@@ -454,7 +454,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 122
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 120
 	Incorrect copy x inner allocs
 
 	--Regular Semantics--
@@ -468,7 +468,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 127
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 125
 	Incorrect copy y inner allocs
 
 	--Regular Semantics--
@@ -482,7 +482,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 132
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 130
 	Incorrect mutation inner allocs
 
 	--Regular Semantics--
@@ -496,7 +496,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 137
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 135
 	Incorrect assignment inner allocs
 
 	--Regular Semantics--
@@ -510,7 +510,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 142
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 140
 	Incorrect para copy x inner allocs
 
 	--Regular Semantics--
@@ -524,7 +524,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 147
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 145
 	Incorrect para move x inener allocs
 
 	--Regular Semantics--
@@ -538,7 +538,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 92
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 90
 	Incorrect copy x outer allocs
 
 	--Regular Semantics--
@@ -552,7 +552,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 97
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 95
 	Incorrect copy y outer allocs
 
 	--Regular Semantics--
@@ -566,7 +566,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 102
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 100
 	Incorrect mutation outer allocs
 
 	--Regular Semantics--
@@ -586,7 +586,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 107
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 105
 	Incorrect assignment outer allocs
 
 	--Regular Semantics--
@@ -600,7 +600,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 112
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 110
 	Incorrect para copy x outer allocs
 
 	--Regular Semantics--
@@ -614,7 +614,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 117
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 115
 	Incorrect para move x outer allocs
 
 	--Regular Semantics--
@@ -628,7 +628,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 122
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 120
 	Incorrect copy x inner allocs
 
 	--Regular Semantics--
@@ -642,7 +642,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 127
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 125
 	Incorrect copy y inner allocs
 
 	--Regular Semantics--
@@ -656,7 +656,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 132
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 130
 	Incorrect mutation inner allocs
 
 	--Regular Semantics--
@@ -676,7 +676,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 137
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 135
 	Incorrect assignment inner allocs
 
 	--Regular Semantics--
@@ -690,7 +690,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 142
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 140
 	Incorrect para copy x inner allocs
 
 	--Regular Semantics--
@@ -704,7 +704,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 147
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 145
 	Incorrect para move x inener allocs
 
 	--Regular Semantics--
@@ -718,7 +718,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 92
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 90
 	Incorrect copy x outer allocs
 
 	--Regular Semantics--
@@ -732,7 +732,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 97
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 95
 	Incorrect copy y outer allocs
 
 	--Regular Semantics--
@@ -746,7 +746,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 102
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 100
 	Incorrect mutation outer allocs
 
 	--Regular Semantics--
@@ -760,209 +760,11 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 107
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 105
 	Incorrect assignment outer allocs
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, true, false, false> >]
-
-	  Unexpected allocation detected for copy assignment (x)
-	  [int]
-	  operator== returned false
-	  Obtained : 1
-	  Predicted: 2
-
-	  Unexpected allocation detected for copy assignment (y)
-	  [int]
-	  operator== returned false
-	  Obtained : 1
-	  Predicted: 2
-
-	  Unexpected allocation detected for move assignment (x)
-	  [int]
-	  operator== returned false
-	  Obtained : 1
-	  Predicted: 3
-
-	=======================================
-
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 112
-	Incorrect para copy x outer allocs
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, true, false, false> >]
-
-	  Unexpected allocation detected for para-copy construction (y)
-	  [int]
-	  operator== returned false
-	  Obtained : 1
-	  Predicted: 2
-
-	=======================================
-
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 117
-	Incorrect para move x outer allocs
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, true, false, false> >]
-
-	  Unexpected allocation detected for para-move construction (y)
-	  [int]
-	  operator== returned false
-	  Obtained : 1
-	  Predicted: 0
-
-	=======================================
-
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 122
-	Incorrect copy x inner allocs
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, true, false, false> >]
-
-	  Unexpected allocation detected for copy construction (x)
-	  [int]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 4
-
-	=======================================
-
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 127
-	Incorrect copy y inner allocs
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, true, false, false> >]
-
-	  Unexpected allocation detected for copy construction (y)
-	  [int]
-	  operator== returned false
-	  Obtained : 2
-	  Predicted: 0
-
-	=======================================
-
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 132
-	Incorrect mutation inner allocs
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, true, false, false> >]
-
-	  Unexpected allocation detected following mutation after assignment
-	  [int]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 3
-
-	=======================================
-
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 137
-	Incorrect assignment inner allocs
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, true, false, false> >]
-
-	  Unexpected allocation detected for copy assignment (x)
-	  [int]
-	  operator== returned false
-	  Obtained : 2
-	  Predicted: 1
-
-	  Unexpected allocation detected for copy assignment (y)
-	  [int]
-	  operator== returned false
-	  Obtained : 2
-	  Predicted: 1
-
-	  Unexpected allocation detected for move assignment (x)
-	  [int]
-	  operator== returned false
-	  Obtained : 2
-	  Predicted: 0
-
-	=======================================
-
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 142
-	Incorrect para copy x inner allocs
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, true, false, false> >]
-
-	  Unexpected allocation detected for para-copy construction (y)
-	  [int]
-	  operator== returned false
-	  Obtained : 2
-	  Predicted: 4
-
-	=======================================
-
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 147
-	Incorrect para move x inener allocs
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, true, false, false> >]
-
-	  Unexpected allocation detected for para-move construction (y)
-	  [int]
-	  operator== returned false
-	  Obtained : 2
-	  Predicted: 0
-
-	=======================================
-
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 92
-	Incorrect copy x outer allocs
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, true, false, true> >]
-
-	  Unexpected allocation detected for copy construction (x)
-	  [int]
-	  operator== returned false
-	  Obtained : 0
-	  Predicted: 1
-
-	=======================================
-
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 97
-	Incorrect copy y outer allocs
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, true, false, true> >]
-
-	  Unexpected allocation detected for copy construction (y)
-	  [int]
-	  operator== returned false
-	  Obtained : 1
-	  Predicted: 0
-
-	=======================================
-
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 102
-	Incorrect mutation outer allocs
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, true, false, true> >]
-
-	  Unexpected allocation detected following mutation after assignment
-	  [int]
-	  operator== returned false
-	  Obtained : 1
-	  Predicted: 2
-
-	  Unexpected allocation detected following mutation after swap (y)
-	  [int]
-	  operator== returned false
-	  Obtained : 1
-	  Predicted: 2
-
-	=======================================
-
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 107
-	Incorrect assignment outer allocs
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, true, false, true> >]
 
 	  Unexpected allocation detected for copy assignment (x)
 	  [int]
@@ -984,7 +786,205 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 112
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 110
+	Incorrect para copy x outer allocs
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, true, false, false> >]
+
+	  Unexpected allocation detected for para-copy construction (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 115
+	Incorrect para move x outer allocs
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, true, false, false> >]
+
+	  Unexpected allocation detected for para-move construction (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	=======================================
+
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 120
+	Incorrect copy x inner allocs
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, true, false, false> >]
+
+	  Unexpected allocation detected for copy construction (x)
+	  [int]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 4
+
+	=======================================
+
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 125
+	Incorrect copy y inner allocs
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, true, false, false> >]
+
+	  Unexpected allocation detected for copy construction (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 0
+
+	=======================================
+
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 130
+	Incorrect mutation inner allocs
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, true, false, false> >]
+
+	  Unexpected allocation detected following mutation after assignment
+	  [int]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 3
+
+	=======================================
+
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 135
+	Incorrect assignment inner allocs
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, true, false, false> >]
+
+	  Unexpected allocation detected for copy assignment (x)
+	  [int]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	  Unexpected allocation detected for copy assignment (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 1
+
+	  Unexpected allocation detected for move assignment (x)
+	  [int]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 0
+
+	=======================================
+
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 140
+	Incorrect para copy x inner allocs
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, true, false, false> >]
+
+	  Unexpected allocation detected for para-copy construction (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 4
+
+	=======================================
+
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 145
+	Incorrect para move x inener allocs
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, true, false, false> >]
+
+	  Unexpected allocation detected for para-move construction (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 2
+	  Predicted: 0
+
+	=======================================
+
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 90
+	Incorrect copy x outer allocs
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, true, false, true> >]
+
+	  Unexpected allocation detected for copy construction (x)
+	  [int]
+	  operator== returned false
+	  Obtained : 0
+	  Predicted: 1
+
+	=======================================
+
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 95
+	Incorrect copy y outer allocs
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, true, false, true> >]
+
+	  Unexpected allocation detected for copy construction (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 0
+
+	=======================================
+
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 100
+	Incorrect mutation outer allocs
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, true, false, true> >]
+
+	  Unexpected allocation detected following mutation after assignment
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	  Unexpected allocation detected following mutation after swap (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	=======================================
+
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 105
+	Incorrect assignment outer allocs
+
+	--Regular Semantics--
+	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, true, false, true> >]
+
+	  Unexpected allocation detected for copy assignment (x)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	  Unexpected allocation detected for copy assignment (y)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 2
+
+	  Unexpected allocation detected for move assignment (x)
+	  [int]
+	  operator== returned false
+	  Obtained : 1
+	  Predicted: 3
+
+	=======================================
+
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 110
 	Incorrect para copy x outer allocs
 
 	--Regular Semantics--
@@ -998,7 +998,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 117
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 115
 	Incorrect para move x outer allocs
 
 	--Regular Semantics--
@@ -1012,7 +1012,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 122
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 120
 	Incorrect copy x inner allocs
 
 	--Regular Semantics--
@@ -1026,7 +1026,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 127
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 125
 	Incorrect copy y inner allocs
 
 	--Regular Semantics--
@@ -1040,7 +1040,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 132
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 130
 	Incorrect mutation inner allocs
 
 	--Regular Semantics--
@@ -1060,7 +1060,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 137
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 135
 	Incorrect assignment inner allocs
 
 	--Regular Semantics--
@@ -1086,7 +1086,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 142
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 140
 	Incorrect para copy x inner allocs
 
 	--Regular Semantics--
@@ -1100,7 +1100,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 147
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 145
 	Incorrect para move x inener allocs
 
 	--Regular Semantics--
@@ -1114,7 +1114,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 92
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 90
 	Incorrect copy x outer allocs
 
 	--Regular Semantics--
@@ -1128,7 +1128,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 97
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 95
 	Incorrect copy y outer allocs
 
 	--Regular Semantics--
@@ -1142,7 +1142,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 102
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 100
 	Incorrect mutation outer allocs
 
 	--Regular Semantics--
@@ -1156,7 +1156,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 107
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 105
 	Incorrect assignment outer allocs
 
 	--Regular Semantics--
@@ -1176,7 +1176,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 112
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 110
 	Incorrect para copy x outer allocs
 
 	--Regular Semantics--
@@ -1190,7 +1190,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 117
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 115
 	Incorrect para move x outer allocs
 
 	--Regular Semantics--
@@ -1204,7 +1204,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 122
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 120
 	Incorrect copy x inner allocs
 
 	--Regular Semantics--
@@ -1218,7 +1218,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 127
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 125
 	Incorrect copy y inner allocs
 
 	--Regular Semantics--
@@ -1232,7 +1232,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 132
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 130
 	Incorrect mutation inner allocs
 
 	--Regular Semantics--
@@ -1246,7 +1246,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 137
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 135
 	Incorrect assignment inner allocs
 
 	--Regular Semantics--
@@ -1266,7 +1266,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 142
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 140
 	Incorrect para copy x inner allocs
 
 	--Regular Semantics--
@@ -1280,7 +1280,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 147
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 145
 	Incorrect para move x inener allocs
 
 	--Regular Semantics--
@@ -1294,7 +1294,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 92
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 90
 	Incorrect copy x outer allocs
 
 	--Regular Semantics--
@@ -1308,7 +1308,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 97
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 95
 	Incorrect copy y outer allocs
 
 	--Regular Semantics--
@@ -1322,7 +1322,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 102
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 100
 	Incorrect mutation outer allocs
 
 	--Regular Semantics--
@@ -1342,7 +1342,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 107
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 105
 	Incorrect assignment outer allocs
 
 	--Regular Semantics--
@@ -1362,7 +1362,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 112
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 110
 	Incorrect para copy x outer allocs
 
 	--Regular Semantics--
@@ -1376,7 +1376,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 117
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 115
 	Incorrect para move x outer allocs
 
 	--Regular Semantics--
@@ -1390,7 +1390,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 122
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 120
 	Incorrect copy x inner allocs
 
 	--Regular Semantics--
@@ -1404,7 +1404,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 127
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 125
 	Incorrect copy y inner allocs
 
 	--Regular Semantics--
@@ -1418,7 +1418,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 132
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 130
 	Incorrect mutation inner allocs
 
 	--Regular Semantics--
@@ -1438,7 +1438,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 137
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 135
 	Incorrect assignment inner allocs
 
 	--Regular Semantics--
@@ -1458,7 +1458,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 142
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 140
 	Incorrect para copy x inner allocs
 
 	--Regular Semantics--
@@ -1472,7 +1472,7 @@
 
 	=======================================
 
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 147
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 145
 	Incorrect para move x inener allocs
 
 	--Regular Semantics--
@@ -1767,7 +1767,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 42
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 48
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, false, false, false> >]
@@ -1776,16 +1776,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 50
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, false, false, false> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 42
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 48
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, false, false, true> >]
@@ -1794,16 +1785,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 50
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, false, false, true> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 42
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 48
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, false, true, false> >]
@@ -1812,16 +1794,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 50
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, false, true, false> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 42
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 48
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, false, true, true> >]
@@ -1830,16 +1803,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 50
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, false, true, true> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 42
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 48
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, true, false, false> >]
@@ -1848,16 +1812,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 50
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, true, false, false> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 42
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 48
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, true, false, true> >]
@@ -1866,16 +1821,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 50
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, true, false, true> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 42
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 48
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, true, true, false> >]
@@ -1884,25 +1830,7 @@
 	=======================================
 
 	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 50
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, true, true, false> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 42
-
-	--Regular Semantics--
-	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, true, true, true> >]
-
-
-	=======================================
-
-	False Positive Failure:
-	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 50
+	Tests/TestFramework/ScopedAllocationTestDiagnostics.cpp, Line 48
 
 	--Regular Semantics--
 	[sequoia::testing::perfectly_scoped_beast<sequoia::testing::shared_counting_allocator<char, true, true, true> >]

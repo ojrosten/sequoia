@@ -38,14 +38,14 @@ namespace sequoia::testing
     regular_allocation_extender& operator=(regular_allocation_extender&&)      = delete;
 
     template<pseudoregular T, invocable<T&> Mutator, alloc_getter<T>... Getters>
-      requires (!orderable<T>)
+      requires (!orderable<T> && (sizeof...(Getters) > 0))
     void check_semantics(std::string_view description, const T& x, const T& y, Mutator m, allocation_info<T, Getters>... info)
     {
       testing::check_semantics(append_lines(description, emphasise("Regular Semantics")), m_Logger, x, y, m, info...);
     }
 
     template<pseudoregular T, invocable<T&> Mutator, alloc_getter<T>... Getters>
-      requires orderable<T>
+    requires (orderable<T> && (sizeof...(Getters) > 0))
     void check_semantics(std::string_view description, const T& x, const T& y, std::weak_ordering order, Mutator m, allocation_info<T, Getters>... info)
     {
       testing::check_semantics(append_lines(description, emphasise("Ordered Semantics")), m_Logger, x, y, order, m, info...);

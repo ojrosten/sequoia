@@ -38,8 +38,6 @@ namespace sequoia::testing
         b.x.push_back("baz");
       }
     };
-    
-    check_semantics(LINE(""), beast{}, beast{{"foo"}, {"bar"}}, mutator);
 
     auto allocGetter{
       [](const beast& b) {
