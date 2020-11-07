@@ -3,6 +3,12 @@ cmake_minimum_required(VERSION 3.15)
 project(SequioaMinimal DESCRIPTION "The Sequoia Library plus executable"
                        LANGUAGES CXX)
 
+if (MSVC)
+    add_compile_options(/W4)
+    add_defini  tions(/bigobj)
+else()
+    add_compile_options(-Wall -Wextra -pedantic)
+endif()
 
 add_executable(SequoiaMinimal TestMinimalMain.cpp)
 target_include_directories(SequoiaMinimal PUBLIC ../TestCommon)
@@ -33,10 +39,3 @@ target_link_libraries(SequoiaMinimal PUBLIC TestFramework)
 
 target_compile_features(SequoiaMinimal PUBLIC cxx_std_20)
 target_compile_features(TestFramework PUBLIC cxx_std_20)
-
-if (MSVC)
-    add_compile_options(/W4)
-    add_compile_options(/bigobj)
-else()
-    add_compile_options(-Wall -Wextra -pedantic)
-endif()

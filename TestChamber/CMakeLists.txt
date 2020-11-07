@@ -3,6 +3,12 @@ cmake_minimum_required(VERSION 3.15)
 project(SequioaTestChamber DESCRIPTION "The Sequoia Library plus a subset of tests"
                        LANGUAGES CXX)
 
+if (MSVC)
+    add_compile_options(/W4)
+    add_definitions(/bigobj)
+else()
+    add_compile_options(-Wall -Wextra -pedantic)
+endif()
 
 add_executable(TestChamber TestChamberMain.cpp
                               ../Tests/TestFramework/CoreDiagnostics.cpp
@@ -48,10 +54,3 @@ target_link_libraries(TestChamber PUBLIC TestFramework)
 
 target_compile_features(TestChamber PUBLIC cxx_std_20)
 target_compile_features(TestFramework PUBLIC cxx_std_20)
-
-if (MSVC)
-    add_compile_options(/W4)
-    add_compile_options(/bigobj)
-else()
-    add_compile_options(-Wall -Wextra -pedantic)
-endif()
