@@ -327,7 +327,7 @@ namespace sequoia::testing::impl
   //================================ swap ================================//
 
   template<test_mode Mode, class Actions, movable_comparable T, class... Args>
-  bool do_check_swap(test_logger<Mode>& logger, [[maybe_unused]] const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, const Args&... args)
+  bool do_check_swap(test_logger<Mode>& logger, [[maybe_unused]] const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, [[maybe_unused]] const Args&... args)
   {
     using std::swap;
     swap(x, y);
@@ -384,7 +384,7 @@ namespace sequoia::testing::impl
 
   template<test_mode Mode, class Actions, movable_comparable T, class... Args>
     requires (serializable_to<T, std::stringstream> && deserializable_from<T, std::stringstream>)
-  bool do_check_serialization(test_logger<Mode>& logger, const Actions& actions, T&& u, const T& y, const Args&... args)
+  bool do_check_serialization(test_logger<Mode>& logger, const Actions& actions, T&& u, const T& y, [[maybe_unused]] const Args&... args)
   {
     std::stringstream s{};
     s << y;
