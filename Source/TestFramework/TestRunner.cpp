@@ -498,6 +498,8 @@ namespace sequoia::testing
     case concurrency_mode::deep:
       return "Deep";
     }
+
+    throw std::logic_error{"Unknown option for concurrency_mode"};
   }
 
   bool test_runner::mark_family(std::string_view name)
