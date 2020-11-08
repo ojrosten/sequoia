@@ -418,7 +418,7 @@ namespace sequoia::testing
     }
 
     void update_output(std::string_view message, std::size_t newLines, std::string_view foot,
-                       const critical isCritical)
+                       critical isCritical)
     {
       auto append{
         [message, newLines, foot](std::string& output) {
@@ -427,7 +427,20 @@ namespace sequoia::testing
         }
       };
 
-      if((Mode != test_mode::false_positive) || (isCritical == critical::yes))
+      auto toMessages{
+        []([[maybe_unused]] critical cr){
+          if constexpr(Mode != test_mode::false_positive)
+          {
+            return true;
+          }
+          else
+          {
+            return cr == critical::yes;
+          }
+        }
+      };
+
+      if(toMessages(isCritical))
       {
         append(m_FailureMessages);
       }

@@ -399,8 +399,10 @@ namespace sequoia::testing::impl
 
       return check_equality("Inconsistent (de)serialization", logger, u, y);
     }
-
-    return true;
+    else
+    {
+      return true;
+    }
   }
 
   template<test_mode Mode, class Actions, movable_comparable T>

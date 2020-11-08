@@ -118,9 +118,15 @@ namespace sequoia::testing
   {
     if(!text.empty())
     {
+      auto upper{
+        [](char c){
+          return static_cast<char>(std::toupper(static_cast<unsigned char>(c)));
+        }
+      };
+
       if(std::isalpha(text.front()))
       {
-        text.front() = std::toupper(text.front());
+        text.front() = upper(text.front());
       }
 
       using size_t = std::string::size_type;
@@ -131,7 +137,7 @@ namespace sequoia::testing
         text.erase(pos, 1);
         if((pos < text.length()) && std::isalpha(text[pos]))
         {
-          text[pos] = std::toupper(text[pos]);
+          text[pos] = upper(text[pos]);
         }
 
         pos += 1;

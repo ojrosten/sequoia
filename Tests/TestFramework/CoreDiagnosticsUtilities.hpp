@@ -448,7 +448,7 @@ namespace sequoia::testing
 
     broken_move(const broken_move& other, const allocator_type& a) : x(other.x, a) {}
 
-    broken_move(broken_move&&)      
+    broken_move(broken_move&&) noexcept 
     {
       // Do nothing
     }
@@ -608,7 +608,7 @@ namespace sequoia::testing
       
     broken_move_assignment& operator=(const broken_move_assignment&) = default;
       
-    broken_move_assignment& operator=(broken_move_assignment&&)
+    broken_move_assignment& operator=(broken_move_assignment&&) noexcept
     {
       return *this;
     }
