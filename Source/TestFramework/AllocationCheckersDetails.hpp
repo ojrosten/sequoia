@@ -307,7 +307,7 @@ namespace sequoia::testing::impl
   //================================ Variadic Allocation Checking ================================//
 
   template<test_mode Mode, class CheckFn, class Checker, class... Checkers>
-  void check_allocation(test_logger<Mode>& logger, CheckFn check, const Checker& checker, const Checkers&... moreCheckers)
+  void check_allocation(test_logger<Mode>& logger, CheckFn check, const Checker& checker, [[maybe_unused]] const Checkers&... moreCheckers)
   {
     check(checker);
 
@@ -501,6 +501,15 @@ namespace sequoia::testing::impl
   template<movable_comparable T>
   struct allocation_actions : precondition_actions<T>
   {
+  private:
+    template<alloc_getter<T>... Getters, class... Predictions>
+    constexpr static bool do_check_swap()
+    {
+      return ((   std::allocator_traits<typename dual_allocation_checker<T, Getters, Predictions>::allocator_type>::propagate_on_container_move_assignment::value
+                  && std::allocator_traits<typename dual_allocation_checker<T, Getters, Predictions>::allocator_type>::propagate_on_container_swap::value) && ... );
+    }
+
+  public:
     constexpr static bool has_post_comparison_action{true};
     constexpr static bool has_post_move_action{true};
     constexpr static bool has_post_move_assign_action{true};
@@ -533,14 +542,15 @@ namespace sequoia::testing::impl
     }
 
     template<test_mode Mode, alloc_getter<T>... Getters, class... Predictions>
+      requires (do_check_swap<Getters..., Predictions...>())
     static void post_swap_action(test_logger<Mode>& logger, const T& x, const T& y, const T&, const dual_allocation_checker<T, Getters, Predictions>&... checkers)
     {
-      if constexpr(((   std::allocator_traits<typename dual_allocation_checker<T, Getters, Predictions>::allocator_type>::propagate_on_container_move_assignment::value
-                     && std::allocator_traits<typename dual_allocation_checker<T, Getters, Predictions>::allocator_type>::propagate_on_container_swap::value) && ... ))
-      {
-        check_no_allocation("Unexpected allocation detected for swap", logger, y, x, checkers...);
-      }
+      check_no_allocation("Unexpected allocation detected for swap", logger, y, x, checkers...);
     }
+
+    template<test_mode Mode, alloc_getter<T>... Getters, class... Predictions>
+    static void post_swap_action(test_logger<Mode>&, const T&, const T&, const T&, const dual_allocation_checker<T, Getters, Predictions>&...)
+    {}
 
     template<test_mode Mode, alloc_getter<T>... Getters, class... Predictions>
     static void post_serialization_action(test_logger<Mode>& logger, const T& y, const allocation_checker<T, Getters, Predictions>&... checkers)

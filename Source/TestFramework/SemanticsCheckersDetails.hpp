@@ -84,7 +84,7 @@ namespace sequoia::testing::impl
   };
   
   template<test_mode Mode, class Actions, movable_comparable T, invocable_r<bool, T> Fn, class... Args>
-  bool check_operator_consistency(test_logger<Mode>& logger, std::string_view op, const Actions& actions, const T& x, const T& y, Fn fn, const Args&... args)
+  bool check_operator_consistency(test_logger<Mode>& logger, std::string_view op, [[maybe_unused]] const Actions& actions, const T& x, [[maybe_unused]]const T& y, Fn fn, [[maybe_unused]] const Args&... args)
   {
     if(!check(std::string{"operator"}.append(op).append(" is inconsistent"), logger, fn(x)))
       return false;
@@ -306,7 +306,7 @@ namespace sequoia::testing::impl
   //================================ move assign ================================//
 
   template<test_mode Mode, class Actions, movable_comparable T, invocable<T&> Mutator, class... Args>
-  void do_check_move_assign(test_logger<Mode>& logger, const Actions& actions, T& z, T&& y, const T& yClone, Mutator&& yMutator, const Args&... args)
+  void do_check_move_assign(test_logger<Mode>& logger, [[maybe_unused]] const Actions& actions, T& z, T&& y, const T& yClone, [[maybe_unused]] Mutator&& yMutator, const Args&... args)
   {
     z = std::move(y);
     if(!check_equality("Inconsistent move assignment (from y)", logger, z, yClone))
@@ -327,7 +327,7 @@ namespace sequoia::testing::impl
   //================================ swap ================================//
 
   template<test_mode Mode, class Actions, movable_comparable T, class... Args>
-  bool do_check_swap(test_logger<Mode>& logger, const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, const Args&... args)
+  bool do_check_swap(test_logger<Mode>& logger, [[maybe_unused]] const Actions& actions, T&& x, T&& y, const T& xClone, const T& yClone, const Args&... args)
   {
     using std::swap;
     swap(x, y);
@@ -360,7 +360,7 @@ namespace sequoia::testing::impl
   //================================  move construction ================================ //
 
   template<test_mode Mode, class Actions, movable_comparable T, class... Args>
-  std::optional<T> do_check_move_construction(test_logger<Mode>& logger, const Actions& actions, T&& z, const T& y, const Args&... args)
+  std::optional<T> do_check_move_construction(test_logger<Mode>& logger, [[maybe_unused]] const Actions& actions, T&& z, const T& y, const Args&... args)
   {
     T w{std::move(z)};
     if(!check_equality("Inconsistent move construction", logger, w, y))
@@ -383,26 +383,26 @@ namespace sequoia::testing::impl
   //================================  serialization  ================================ //
 
   template<test_mode Mode, class Actions, movable_comparable T, class... Args>
+    requires (serializable_to<T, std::stringstream> && deserializable_from<T, std::stringstream>)
   bool do_check_serialization(test_logger<Mode>& logger, const Actions& actions, T&& u, const T& y, const Args&... args)
   {
-    if constexpr(serializable_to<T, std::stringstream> && deserializable_from<T, std::stringstream>)
-    {
-      std::stringstream s{};
-      s << y;
+    std::stringstream s{};
+    s << y;
 
-      if constexpr(Actions::has_post_serialization_action)
-      {
-        actions.post_serialization_action(logger, y, args...);
-      }
-      
-      s >> u;
-
-      return check_equality("Inconsistent (de)serialization", logger, u, y);
-    }
-    else
+    if constexpr(Actions::has_post_serialization_action)
     {
-      return true;
+      actions.post_serialization_action(logger, y, args...);
     }
+  
+    s >> u;
+
+    return check_equality("Inconsistent (de)serialization", logger, u, y);
+  }
+
+  template<test_mode Mode, class Actions, movable_comparable T, class... Args>
+  bool do_check_serialization(test_logger<Mode>&, const Actions&, T&&, const T&, const Args&...)
+  {
+    return true;
   }
 
   template<test_mode Mode, class Actions, movable_comparable T>

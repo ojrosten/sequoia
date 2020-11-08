@@ -17,7 +17,7 @@
 namespace sequoia::testing::impl
 {
   template<test_mode Mode, class Actions, pseudoregular T, class... Args>
-  bool do_check_copy_assign(test_logger<Mode>& logger, const Actions& actions, T& z, const T& y, const Args&... args)
+  bool do_check_copy_assign(test_logger<Mode>& logger, [[maybe_unused]] const Actions& actions, T& z, const T& y, const Args&... args)
   {
     z = y;
     const bool consistent{

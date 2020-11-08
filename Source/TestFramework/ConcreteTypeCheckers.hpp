@@ -205,19 +205,21 @@ namespace sequoia::testing
   {
   private:
     template<test_mode Mode, std::size_t I = 0, class... U, class Advisor>
-    static void check_tuple_elements(test_logger<Mode>& logger, const std::tuple<T...>& value, const std::tuple<U...>& prediction, tutor<Advisor> advisor)
+      requires (I < sizeof...(T))
+    static void check_tuple_elements(test_logger<Mode>& logger, const std::tuple<T...>& value, const std::tuple<U...>& prediction, const tutor<Advisor>& advisor)
     {
-      if constexpr(I < sizeof...(T))
-      {
-        const std::string message{"Element " + std::to_string(I) + " of tuple incorrect"};
-        check_equality(message, logger, std::get<I>(value), std::get<I>(prediction), advisor);
-        check_tuple_elements<Mode, I+1>(logger, value, prediction, advisor);
-      }
+      const std::string message{"Element " + std::to_string(I) + " of tuple incorrect"};
+      check_equality(message, logger, std::get<I>(value), std::get<I>(prediction), advisor);
+      check_tuple_elements<Mode, I+1>(logger, value, prediction, advisor);
     }
+
+    template<test_mode Mode, std::size_t I = 0, class... U, class Advisor>
+    static void check_tuple_elements(test_logger<Mode>&, const std::tuple<T...>&, const std::tuple<U...>&, const tutor<Advisor>&)
+    {}
       
   public:
     template<test_mode Mode, class... U, class Advisor>
-    static void check(test_logger<Mode>& logger, const std::tuple<T...>& value, const std::tuple<U...>& prediction, tutor<Advisor> advisor)
+    static void check(test_logger<Mode>& logger, const std::tuple<T...>& value, const std::tuple<U...>& prediction, const tutor<Advisor>& advisor)
     {
       static_assert(sizeof...(T) == sizeof...(U));
       static_assert((std::is_same_v<std::remove_cvref_t<T>, std::remove_cvref_t<U>> && ...));      
