@@ -20,15 +20,15 @@ namespace sequoia::testing
 
     inefficient_equality(std::initializer_list<T> list) : x{list} {}
       
-    inefficient_equality(std::initializer_list<T> list, const allocator_type& alloc) : x{list, alloc} {}
+    inefficient_equality(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
     inefficient_equality(const inefficient_equality&) = default;
 
-    inefficient_equality(const inefficient_equality& other, const allocator_type& alloc) : x(other.x, alloc) {}
+    inefficient_equality(const inefficient_equality& other, const allocator_type& a) : x(other.x, a) {}
 
     inefficient_equality(inefficient_equality&&) noexcept = default;
 
-    inefficient_equality(inefficient_equality&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+    inefficient_equality(inefficient_equality&& other, const allocator_type& a) : x(std::move(other.x), a) {}
 
     inefficient_equality& operator=(const inefficient_equality&) = default;
 
@@ -68,15 +68,15 @@ namespace sequoia::testing
 
     inefficient_inequality(std::initializer_list<T> list) : x{list} {}
       
-    inefficient_inequality(std::initializer_list<T> list, const allocator_type& alloc) : x{list, alloc} {}
+    inefficient_inequality(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
     inefficient_inequality(const inefficient_inequality&) = default;
 
-    inefficient_inequality(const inefficient_inequality& other, const allocator_type& alloc) : x(other.x, alloc) {}
+    inefficient_inequality(const inefficient_inequality& other, const allocator_type& a) : x(other.x, a) {}
 
     inefficient_inequality(inefficient_inequality&&) noexcept = default;
 
-    inefficient_inequality(inefficient_inequality&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+    inefficient_inequality(inefficient_inequality&& other, const allocator_type& a) : x(std::move(other.x), a) {}
 
     inefficient_inequality& operator=(const inefficient_inequality&) = default;
 
@@ -116,7 +116,7 @@ namespace sequoia::testing
 
     inefficient_copy(std::initializer_list<T> list) : x{list} {}
       
-    inefficient_copy(std::initializer_list<T> list, const allocator_type& alloc) : x{list, alloc} {}
+    inefficient_copy(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
     inefficient_copy(const inefficient_copy& other) : x(other.x.get_allocator())
     {
@@ -126,13 +126,13 @@ namespace sequoia::testing
       std::copy(other.x.cbegin(), other.x.cend(), std::back_inserter(x));
     }
 
-    inefficient_copy(const inefficient_copy& other, const allocator_type& alloc)
-      : x(other.x, alloc)
+    inefficient_copy(const inefficient_copy& other, const allocator_type& a)
+      : x(other.x, a)
     {}
 
     inefficient_copy(inefficient_copy&&) noexcept = default;
 
-    inefficient_copy(inefficient_copy&& other, const allocator_type& alloc) : x(std::move(other.x), alloc)
+    inefficient_copy(inefficient_copy&& other, const allocator_type& a) : x(std::move(other.x), a)
     {}
 
     inefficient_copy& operator=(const inefficient_copy&) = default;
@@ -173,12 +173,12 @@ namespace sequoia::testing
 
     inefficient_para_copy(std::initializer_list<T> list) : x{list} {}
       
-    inefficient_para_copy(std::initializer_list<T> list, const allocator_type& alloc) : x{list, alloc} {}
+    inefficient_para_copy(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
     inefficient_para_copy(const inefficient_para_copy&) = default;
 
-    inefficient_para_copy(const inefficient_para_copy& other, const allocator_type& alloc)
-      : x(alloc)
+    inefficient_para_copy(const inefficient_para_copy& other, const allocator_type& a)
+      : x(a)
     {
       x.reserve(1);
       x.shrink_to_fit();
@@ -188,7 +188,7 @@ namespace sequoia::testing
 
     inefficient_para_copy(inefficient_para_copy&&) noexcept = default;
 
-    inefficient_para_copy(inefficient_para_copy&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+    inefficient_para_copy(inefficient_para_copy&& other, const allocator_type& a) : x(std::move(other.x), a) {}
 
     inefficient_para_copy& operator=(const inefficient_para_copy&) = default;
 
@@ -228,12 +228,12 @@ namespace sequoia::testing
 
     inefficient_move(std::initializer_list<T> list) : x{list} {}
       
-    inefficient_move(std::initializer_list<T> list, const allocator_type& alloc) : x{list, alloc} {}
+    inefficient_move(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
     inefficient_move(const inefficient_move& other) = default;
 
-    inefficient_move(const inefficient_move& other, const allocator_type& alloc)
-      : x(other.x, alloc)
+    inefficient_move(const inefficient_move& other, const allocator_type& a)
+      : x(other.x, a)
     {}
 
     inefficient_move(inefficient_move&& other) : x{std::move(other.x)}
@@ -241,7 +241,7 @@ namespace sequoia::testing
       x.reserve(x.capacity() + 1);
     }
 
-    inefficient_move(inefficient_move&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+    inefficient_move(inefficient_move&& other, const allocator_type& a) : x(std::move(other.x), a) {}
 
     inefficient_move& operator=(const inefficient_move&) = default;
 
@@ -281,17 +281,17 @@ namespace sequoia::testing
 
     inefficient_para_move(std::initializer_list<T> list) : x{list} {}
       
-    inefficient_para_move(std::initializer_list<T> list, const allocator_type& alloc) : x{list, alloc} {}
+    inefficient_para_move(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
     inefficient_para_move(const inefficient_para_move& other) = default;
 
-    inefficient_para_move(const inefficient_para_move& other, const allocator_type& alloc)
-      : x(other.x, alloc)
+    inefficient_para_move(const inefficient_para_move& other, const allocator_type& a)
+      : x(other.x, a)
     {}
 
     inefficient_para_move(inefficient_para_move&& other) = default;
 
-    inefficient_para_move(inefficient_para_move&& other, const allocator_type& alloc) : x(std::move(other.x), alloc)
+    inefficient_para_move(inefficient_para_move&& other, const allocator_type& a) : x(std::move(other.x), a)
     {
        x.reserve(x.capacity() + 1);
     }
@@ -340,11 +340,11 @@ namespace sequoia::testing
 
     inefficient_serialization(const inefficient_serialization&) = default;
 
-    inefficient_serialization(const inefficient_serialization& other, const allocator_type& alloc) : x(other.x, alloc) {}
+    inefficient_serialization(const inefficient_serialization& other, const allocator_type& a) : x(other.x, a) {}
 
     inefficient_serialization(inefficient_serialization&&) noexcept = default;
 
-    inefficient_serialization(inefficient_serialization&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+    inefficient_serialization(inefficient_serialization&& other, const allocator_type& a) : x(std::move(other.x), a) {}
 
     inefficient_serialization& operator=(const inefficient_serialization&) = default;
 

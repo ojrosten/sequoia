@@ -366,9 +366,9 @@ namespace sequoia::maths::graph_impl
 
     template<alloc Allocator>
     [[nodiscard]]
-    node_weight_container_type clone(const node_weight_container_type& from, const Allocator& alloc)
+    node_weight_container_type clone(const node_weight_container_type& from, const Allocator& a)
     {
-      node_weight_container_type nodeWeights(std::allocator_traits<Allocator>::select_on_container_copy_construction(alloc));
+      node_weight_container_type nodeWeights(std::allocator_traits<Allocator>::select_on_container_copy_construction(a));
       nodeWeights.reserve(from.size());
       for(const auto& weight : from)
       {

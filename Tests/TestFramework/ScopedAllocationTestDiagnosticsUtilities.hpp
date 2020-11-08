@@ -28,17 +28,17 @@ namespace sequoia::testing
 
     perfectly_scoped_beast(std::initializer_list<string> list) : x{list} {}
 
-    perfectly_scoped_beast(std::initializer_list<string> list, const allocator_type& a) : x{list, a} {}
+    perfectly_scoped_beast(std::initializer_list<string> list, const allocator_type& a) : x(list, a) {}
 
     perfectly_scoped_beast(const allocator_type& a) : x(a) {}
 
     perfectly_scoped_beast(const perfectly_scoped_beast&) = default;
 
-    perfectly_scoped_beast(const perfectly_scoped_beast& other, const allocator_type& alloc) : x(other.x, alloc) {}
+    perfectly_scoped_beast(const perfectly_scoped_beast& other, const allocator_type& a) : x(other.x, a) {}
 
     perfectly_scoped_beast(perfectly_scoped_beast&&) noexcept = default;
 
-    perfectly_scoped_beast(perfectly_scoped_beast&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+    perfectly_scoped_beast(perfectly_scoped_beast&& other, const allocator_type& a) : x(std::move(other.x), a) {}
 
     perfectly_scoped_beast& operator=(const perfectly_scoped_beast&) = default;
 

@@ -28,7 +28,7 @@ namespace sequoia::testing
 
     orderable_move_only_beast(orderable_move_only_beast&&) noexcept = default;
 
-    orderable_move_only_beast(orderable_move_only_beast&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+    orderable_move_only_beast(orderable_move_only_beast&& other, const allocator_type& a) : x(std::move(other.x), a) {}
 
     orderable_move_only_beast& operator=(const orderable_move_only_beast&) = delete;
 
@@ -110,7 +110,7 @@ namespace sequoia::testing
 
     move_only_broken_less(move_only_broken_less&&) noexcept = default;
 
-    move_only_broken_less(move_only_broken_less&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+    move_only_broken_less(move_only_broken_less&& other, const allocator_type& a) : x(std::move(other.x), a) {}
 
     move_only_broken_less& operator=(const move_only_broken_less&) = delete;
 
@@ -192,7 +192,7 @@ namespace sequoia::testing
 
     move_only_broken_lesseq(move_only_broken_lesseq&&) noexcept = default;
 
-    move_only_broken_lesseq(move_only_broken_lesseq&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+    move_only_broken_lesseq(move_only_broken_lesseq&& other, const allocator_type& a) : x(std::move(other.x), a) {}
 
     move_only_broken_lesseq& operator=(const move_only_broken_lesseq&) = delete;
 
@@ -274,7 +274,7 @@ namespace sequoia::testing
 
     move_only_broken_greater(move_only_broken_greater&&) noexcept = default;
 
-    move_only_broken_greater(move_only_broken_greater&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+    move_only_broken_greater(move_only_broken_greater&& other, const allocator_type& a) : x(std::move(other.x), a) {}
 
     move_only_broken_greater& operator=(const move_only_broken_greater&) = delete;
 
@@ -356,7 +356,7 @@ namespace sequoia::testing
 
     move_only_broken_greatereq(move_only_broken_greatereq&&) noexcept = default;
 
-    move_only_broken_greatereq(move_only_broken_greatereq&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+    move_only_broken_greatereq(move_only_broken_greatereq&& other, const allocator_type& a) : x(std::move(other.x), a) {}
 
     move_only_broken_greatereq& operator=(const move_only_broken_greatereq&) = delete;
 
@@ -438,7 +438,7 @@ namespace sequoia::testing
 
     move_only_inverted_comparisons(move_only_inverted_comparisons&&) noexcept = default;
 
-    move_only_inverted_comparisons(move_only_inverted_comparisons&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+    move_only_inverted_comparisons(move_only_inverted_comparisons&& other, const allocator_type& a) : x(std::move(other.x), a) {}
 
     move_only_inverted_comparisons& operator=(const move_only_inverted_comparisons&) = delete;
 
@@ -520,7 +520,7 @@ namespace sequoia::testing
 
     move_only_broken_spaceship(move_only_broken_spaceship&&) noexcept = default;
 
-    move_only_broken_spaceship(move_only_broken_spaceship&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+    move_only_broken_spaceship(move_only_broken_spaceship&& other, const allocator_type& a) : x(std::move(other.x), a) {}
 
     move_only_broken_spaceship& operator=(const move_only_broken_spaceship&) = delete;
 

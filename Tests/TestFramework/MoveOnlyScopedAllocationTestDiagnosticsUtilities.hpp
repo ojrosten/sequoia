@@ -36,7 +36,7 @@ namespace sequoia::testing
 
     move_only_scoped_beast(move_only_scoped_beast&&) noexcept = default;
 
-    move_only_scoped_beast(move_only_scoped_beast&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+    move_only_scoped_beast(move_only_scoped_beast&& other, const allocator_type& a) : x(std::move(other.x), a) {}
 
     move_only_scoped_beast& operator=(const move_only_scoped_beast&) = delete;
 

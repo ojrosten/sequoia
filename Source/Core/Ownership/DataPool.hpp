@@ -171,7 +171,7 @@ namespace sequoia::ownership
 
     data_pool() = default;
 
-    data_pool(const allocator_type& alloc) : m_Data(alloc)
+    data_pool(const allocator_type& a) : m_Data(a)
     {}
 
     data_pool(const data_pool&) = delete;
@@ -181,7 +181,7 @@ namespace sequoia::ownership
       swap(other);
     }
 
-    data_pool(data_pool&& other, const allocator_type& alloc) : m_Data(alloc)
+    data_pool(data_pool&& other, const allocator_type& a) : m_Data(a)
     {
       if constexpr(!std::allocator_traits<allocator_type>::propagate_on_container_move_assignment::value)
       {

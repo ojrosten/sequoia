@@ -28,7 +28,7 @@ namespace sequoia::testing
 
     orderable_regular_beast(orderable_regular_beast&&) noexcept = default;
 
-    orderable_regular_beast(orderable_regular_beast&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+    orderable_regular_beast(orderable_regular_beast&& other, const allocator_type& a) : x(std::move(other.x), a) {}
 
     orderable_regular_beast& operator=(const orderable_regular_beast&) = default;
 
@@ -110,7 +110,7 @@ namespace sequoia::testing
 
     regular_broken_less(regular_broken_less&&) noexcept = default;
 
-    regular_broken_less(regular_broken_less&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+    regular_broken_less(regular_broken_less&& other, const allocator_type& a) : x(std::move(other.x), a) {}
 
     regular_broken_less& operator=(const regular_broken_less&) = default;
 
@@ -192,7 +192,7 @@ namespace sequoia::testing
 
     regular_broken_lesseq(regular_broken_lesseq&&) noexcept = default;
 
-    regular_broken_lesseq(regular_broken_lesseq&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+    regular_broken_lesseq(regular_broken_lesseq&& other, const allocator_type& a) : x(std::move(other.x), a) {}
 
     regular_broken_lesseq& operator=(const regular_broken_lesseq&) = default;
 
@@ -274,7 +274,7 @@ namespace sequoia::testing
 
     regular_broken_greater(regular_broken_greater&&) noexcept = default;
 
-    regular_broken_greater(regular_broken_greater&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+    regular_broken_greater(regular_broken_greater&& other, const allocator_type& a) : x(std::move(other.x), a) {}
 
     regular_broken_greater& operator=(const regular_broken_greater&) = default;
 
@@ -356,7 +356,7 @@ namespace sequoia::testing
 
     regular_broken_greatereq(regular_broken_greatereq&&) noexcept = default;
 
-    regular_broken_greatereq(regular_broken_greatereq&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+    regular_broken_greatereq(regular_broken_greatereq&& other, const allocator_type& a) : x(std::move(other.x), a) {}
 
     regular_broken_greatereq& operator=(const regular_broken_greatereq&) = default;
 
@@ -438,7 +438,7 @@ namespace sequoia::testing
 
     regular_inverted_comparisons(regular_inverted_comparisons&&) noexcept = default;
 
-    regular_inverted_comparisons(regular_inverted_comparisons&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+    regular_inverted_comparisons(regular_inverted_comparisons&& other, const allocator_type& a) : x(std::move(other.x), a) {}
 
     regular_inverted_comparisons& operator=(const regular_inverted_comparisons&) = default;
 
@@ -520,7 +520,7 @@ namespace sequoia::testing
 
     regular_broken_spaceship(regular_broken_spaceship&&) noexcept = default;
 
-    regular_broken_spaceship(regular_broken_spaceship&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+    regular_broken_spaceship(regular_broken_spaceship&& other, const allocator_type& a) : x(std::move(other.x), a) {}
 
     regular_broken_spaceship& operator=(const regular_broken_spaceship&) = default;
 

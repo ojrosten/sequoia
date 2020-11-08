@@ -20,7 +20,7 @@ namespace sequoia::testing
 
     move_only_beast(std::initializer_list<T> list) : x{list} {}
 
-    move_only_beast(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {}
+    move_only_beast(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
     move_only_beast(const allocator_type& a) : x(a) {}
 
@@ -28,7 +28,7 @@ namespace sequoia::testing
 
     move_only_beast(move_only_beast&&) noexcept = default;
 
-    move_only_beast(move_only_beast&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+    move_only_beast(move_only_beast&& other, const allocator_type& a) : x(std::move(other.x), a) {}
 
     move_only_beast& operator=(const move_only_beast&) = delete;
 
@@ -68,13 +68,13 @@ namespace sequoia::testing
 
     move_only_broken_equality(std::initializer_list<T> list) : x{list} {}
       
-    move_only_broken_equality(std::initializer_list<T> list, const allocator_type& alloc) : x{list, alloc} {}
+    move_only_broken_equality(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
     move_only_broken_equality(const move_only_broken_equality&) = delete;
 
     move_only_broken_equality(move_only_broken_equality&&) noexcept = default;
 
-    move_only_broken_equality(move_only_broken_equality&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+    move_only_broken_equality(move_only_broken_equality&& other, const allocator_type& a) : x(std::move(other.x), a) {}
 
     move_only_broken_equality& operator=(const move_only_broken_equality&) = delete;
 
@@ -114,13 +114,13 @@ namespace sequoia::testing
 
     move_only_broken_inequality(std::initializer_list<T> list) : x{list} {}
 
-    move_only_broken_inequality(std::initializer_list<T> list, const allocator_type& alloc) : x{list, alloc} {}
+    move_only_broken_inequality(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
     move_only_broken_inequality(const move_only_broken_inequality&) = delete;
 
     move_only_broken_inequality(move_only_broken_inequality&&) noexcept = default;
 
-    move_only_broken_inequality(move_only_broken_inequality&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+    move_only_broken_inequality(move_only_broken_inequality&& other, const allocator_type& a) : x(std::move(other.x), a) {}
 
     move_only_broken_inequality& operator=(const move_only_broken_inequality&) = delete;
 
@@ -160,7 +160,7 @@ namespace sequoia::testing
 
     move_only_broken_move(std::initializer_list<T> list) : x{list} {}
 
-    move_only_broken_move(std::initializer_list<T> list, const allocator_type& alloc) : x{list, alloc} {}
+    move_only_broken_move(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
     move_only_broken_move(const move_only_broken_move&) = delete;
 
@@ -169,7 +169,7 @@ namespace sequoia::testing
       // Do nothing
     }
 
-    move_only_broken_move(move_only_broken_move&& other, const allocator_type& alloc) : x(std::move(other.x), alloc)
+    move_only_broken_move(move_only_broken_move&& other, const allocator_type& a) : x(std::move(other.x), a)
     {}
       
     move_only_broken_move& operator=(const move_only_broken_move&) = delete;
@@ -210,13 +210,13 @@ namespace sequoia::testing
 
     move_only_broken_move_assignment(std::initializer_list<T> list) : x{list} {}
 
-    move_only_broken_move_assignment(std::initializer_list<T> list, const allocator_type& alloc) : x{list, alloc} {}
+    move_only_broken_move_assignment(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
     move_only_broken_move_assignment(const move_only_broken_move_assignment&) = delete;
 
     move_only_broken_move_assignment(move_only_broken_move_assignment&&) = default;
 
-    move_only_broken_move_assignment(move_only_broken_move_assignment&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+    move_only_broken_move_assignment(move_only_broken_move_assignment&& other, const allocator_type& a) : x(std::move(other.x), a) {}
       
     move_only_broken_move_assignment& operator=(const move_only_broken_move_assignment&) = delete;
       
@@ -259,13 +259,13 @@ namespace sequoia::testing
 
     move_only_broken_swap(std::initializer_list<T> list) : x{list} {}
 
-    move_only_broken_swap(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {}
+    move_only_broken_swap(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
     move_only_broken_swap(const move_only_broken_swap&) = delete;
 
     move_only_broken_swap(move_only_broken_swap&&) noexcept = default;
 
-    move_only_broken_swap(move_only_broken_swap&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+    move_only_broken_swap(move_only_broken_swap&& other, const allocator_type& a) : x(std::move(other.x), a) {}
 
     move_only_broken_swap& operator=(const move_only_broken_swap&) = delete;
 
@@ -305,7 +305,7 @@ namespace sequoia::testing
 
     move_only_inefficient_move(std::initializer_list<T> list) : x{list} {}
 
-    move_only_inefficient_move(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {}
+    move_only_inefficient_move(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
     move_only_inefficient_move(const allocator_type& a) : x(a) {}
 
@@ -316,7 +316,7 @@ namespace sequoia::testing
       x.reserve(x.capacity() + 10);
     }
 
-    move_only_inefficient_move(move_only_inefficient_move&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+    move_only_inefficient_move(move_only_inefficient_move&& other, const allocator_type& a) : x(std::move(other.x), a) {}
 
     move_only_inefficient_move& operator=(const move_only_inefficient_move&) = delete;
 
@@ -362,7 +362,9 @@ namespace sequoia::testing
 
     move_only_inefficient_move_assignment(std::initializer_list<T> list) : x{list} {}
 
-    move_only_inefficient_move_assignment(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {}
+    move_only_inefficient_move_assignment(std::initializer_list<T> list, const allocator_type& a)
+      : x(list, a)
+    {}
 
     move_only_inefficient_move_assignment(const allocator_type& a) : x(a) {}
 
@@ -370,7 +372,7 @@ namespace sequoia::testing
 
     move_only_inefficient_move_assignment(move_only_inefficient_move_assignment&&) noexcept = default;
 
-    move_only_inefficient_move_assignment(move_only_inefficient_move_assignment&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+    move_only_inefficient_move_assignment(move_only_inefficient_move_assignment&& other, const allocator_type& a) : x(std::move(other.x), a) {}
 
     move_only_inefficient_move_assignment& operator=(const move_only_inefficient_move_assignment&) = delete;
 

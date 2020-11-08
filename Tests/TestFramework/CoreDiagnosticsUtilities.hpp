@@ -26,11 +26,11 @@ namespace sequoia::testing
 
     perfectly_normal_beast(const perfectly_normal_beast&) = default;
 
-    perfectly_normal_beast(const perfectly_normal_beast& other, const allocator_type& alloc) : x(other.x, alloc) {}
+    perfectly_normal_beast(const perfectly_normal_beast& other, const allocator_type& a) : x(other.x, a) {}
 
     perfectly_normal_beast(perfectly_normal_beast&&) noexcept = default;
 
-    perfectly_normal_beast(perfectly_normal_beast&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+    perfectly_normal_beast(perfectly_normal_beast&& other, const allocator_type& a) : x(std::move(other.x), a) {}
 
     perfectly_normal_beast& operator=(const perfectly_normal_beast&) = default;
 
@@ -83,11 +83,11 @@ namespace sequoia::testing
     using handle_type = Handle;      
     using allocator_type = Allocator;
 
-    explicit perfectly_sharing_beast(const allocator_type& alloc) : x(alloc)
+    explicit perfectly_sharing_beast(const allocator_type& a) : x(a)
     {}
 
-    perfectly_sharing_beast(std::initializer_list<T> list, const allocator_type& alloc = allocator_type{})
-      : x(alloc)
+    perfectly_sharing_beast(std::initializer_list<T> list, const allocator_type& a = allocator_type{})
+      : x(a)
     {
       x.reserve(list.size());
       for(auto e : list)
@@ -98,8 +98,8 @@ namespace sequoia::testing
       : perfectly_sharing_beast(other, other.x.get_allocator())
     {}
 
-    perfectly_sharing_beast(const perfectly_sharing_beast& other, const allocator_type& alloc)
-      : x(alloc)
+    perfectly_sharing_beast(const perfectly_sharing_beast& other, const allocator_type& a)
+      : x(a)
     {
       x.reserve(other.x.size());
       for(auto e : other.x)
@@ -110,8 +110,8 @@ namespace sequoia::testing
 
     perfectly_sharing_beast(perfectly_sharing_beast&&) noexcept = default;
 
-    perfectly_sharing_beast(perfectly_sharing_beast&& other, const allocator_type& alloc)
-      : x(std::move(other.x), alloc) {}
+    perfectly_sharing_beast(perfectly_sharing_beast&& other, const allocator_type& a)
+      : x(std::move(other.x), a) {}
 
     perfectly_sharing_beast& operator=(const perfectly_sharing_beast& other)
     {
@@ -166,9 +166,9 @@ namespace sequoia::testing
       return s;
     }
 
-    void reset(const allocator_type& alloc)
+    void reset(const allocator_type& a)
     {
-      const std::vector<handle_type, allocator_type> v(alloc);
+      const std::vector<handle_type, allocator_type> v(a);
       x = v;
     }
   };
@@ -246,15 +246,15 @@ namespace sequoia::testing
 
     broken_equality(std::initializer_list<T> list) : x{list} {}
       
-    broken_equality(std::initializer_list<T> list, const allocator_type& alloc) : x{list, alloc} {}
+    broken_equality(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
     broken_equality(const broken_equality&) = default;
 
-    broken_equality(const broken_equality& other, const allocator_type& alloc) : x(other.x, alloc) {}
+    broken_equality(const broken_equality& other, const allocator_type& a) : x(other.x, a) {}
 
     broken_equality(broken_equality&&) noexcept = default;
 
-    broken_equality(broken_equality&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+    broken_equality(broken_equality&& other, const allocator_type& a) : x(std::move(other.x), a) {}
 
     broken_equality& operator=(const broken_equality&) = default;
 
@@ -294,15 +294,15 @@ namespace sequoia::testing
 
     broken_inequality(std::initializer_list<T> list) : x{list} {}
 
-    broken_inequality(std::initializer_list<T> list, const allocator_type& alloc) : x{list, alloc} {}
+    broken_inequality(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
     broken_inequality(const broken_inequality&) = default;
 
-    broken_inequality(const broken_inequality& other, const allocator_type& alloc) : x(other.x, alloc) {}
+    broken_inequality(const broken_inequality& other, const allocator_type& a) : x(other.x, a) {}
 
     broken_inequality(broken_inequality&&) noexcept = default;
 
-    broken_inequality(broken_inequality&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+    broken_inequality(broken_inequality&& other, const allocator_type& a) : x(std::move(other.x), a) {}
 
     broken_inequality& operator=(const broken_inequality&) = default;
 
@@ -346,12 +346,12 @@ namespace sequoia::testing
       // Do nothing
     }
 
-    broken_copy(const broken_copy& other, const allocator_type& alloc) : x(other.x, alloc)
+    broken_copy(const broken_copy& other, const allocator_type& a) : x(other.x, a)
     {}
 
     broken_copy(broken_copy&&) = default;
 
-    broken_copy(broken_copy&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+    broken_copy(broken_copy&& other, const allocator_type& a) : x(std::move(other.x), a) {}
       
     broken_copy& operator=(const broken_copy&) = default;
 
@@ -391,7 +391,7 @@ namespace sequoia::testing
 
     broken_para_copy(std::initializer_list<T> list) : x{list} {}
 
-    broken_para_copy(std::initializer_list<T> list, const allocator_type& alloc) : x{list, alloc} {}
+    broken_para_copy(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
     broken_para_copy(const broken_para_copy&) = default;
 
@@ -402,7 +402,7 @@ namespace sequoia::testing
 
     broken_para_copy(broken_para_copy&&) = default;
 
-    broken_para_copy(broken_para_copy&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+    broken_para_copy(broken_para_copy&& other, const allocator_type& a) : x(std::move(other.x), a) {}
       
     broken_para_copy& operator=(const broken_para_copy&) = default;
 
@@ -442,18 +442,18 @@ namespace sequoia::testing
 
     broken_move(std::initializer_list<T> list) : x{list} {}
 
-    broken_move(std::initializer_list<T> list, const allocator_type& alloc) : x{list, alloc} {}
+    broken_move(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
     broken_move(const broken_move&) = default;
 
-    broken_move(const broken_move& other, const allocator_type& alloc) : x(other.x, alloc) {}
+    broken_move(const broken_move& other, const allocator_type& a) : x(other.x, a) {}
 
     broken_move(broken_move&&)      
     {
       // Do nothing
     }
 
-    broken_move(broken_move&& other, const allocator_type& alloc) : x(std::move(other.x), alloc)
+    broken_move(broken_move&& other, const allocator_type& a) : x(std::move(other.x), a)
     {}
       
     broken_move& operator=(const broken_move&) = default;
@@ -494,11 +494,11 @@ namespace sequoia::testing
 
     broken_para_move(std::initializer_list<T> list) : x{list} {}
 
-    broken_para_move(std::initializer_list<T> list, const allocator_type& alloc) : x{list, alloc} {}
+    broken_para_move(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
     broken_para_move(const broken_para_move&) = default;
 
-    broken_para_move(const broken_para_move& other, const allocator_type& alloc) : x(other.x, alloc) {}
+    broken_para_move(const broken_para_move& other, const allocator_type& a) : x(other.x, a) {}
 
     broken_para_move(broken_para_move&&) = default;
 
@@ -545,15 +545,15 @@ namespace sequoia::testing
 
     broken_copy_assignment(std::initializer_list<int> list) : x{list} {}
 
-    broken_copy_assignment(std::initializer_list<int> list, const allocator_type& alloc) : x{list, alloc} {}
+    broken_copy_assignment(std::initializer_list<int> list, const allocator_type& a) : x(list, a) {}
 
     broken_copy_assignment(const broken_copy_assignment&) = default;
 
-    broken_copy_assignment(const broken_copy_assignment& other, const allocator_type& alloc) : x(other.x, alloc) {}
+    broken_copy_assignment(const broken_copy_assignment& other, const allocator_type& a) : x(other.x, a) {}
 
     broken_copy_assignment(broken_copy_assignment&&) = default;
 
-    broken_copy_assignment(broken_copy_assignment&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+    broken_copy_assignment(broken_copy_assignment&& other, const allocator_type& a) : x(std::move(other.x), a) {}
       
     broken_copy_assignment& operator=(const broken_copy_assignment&)
     {
@@ -596,15 +596,15 @@ namespace sequoia::testing
 
     broken_move_assignment(std::initializer_list<T> list) : x{list} {}
 
-    broken_move_assignment(std::initializer_list<T> list, const allocator_type& alloc) : x{list, alloc} {}
+    broken_move_assignment(std::initializer_list<T> list, const allocator_type& a) : x(list, a) {}
 
     broken_move_assignment(const broken_move_assignment&) = default;
 
-    broken_move_assignment(const broken_move_assignment& other, const allocator_type& alloc) : x(other.x, alloc) {}
+    broken_move_assignment(const broken_move_assignment& other, const allocator_type& a) : x(other.x, a) {}
 
     broken_move_assignment(broken_move_assignment&&) = default;
 
-    broken_move_assignment(broken_move_assignment&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+    broken_move_assignment(broken_move_assignment&& other, const allocator_type& a) : x(std::move(other.x), a) {}
       
     broken_move_assignment& operator=(const broken_move_assignment&) = default;
       
@@ -651,11 +651,11 @@ namespace sequoia::testing
 
     broken_swap(const broken_swap&) = default;
 
-    broken_swap(const broken_swap& other, const allocator_type& alloc) : x(other.x, alloc) {}
+    broken_swap(const broken_swap& other, const allocator_type& a) : x(other.x, a) {}
 
     broken_swap(broken_swap&&) noexcept = default;
 
-    broken_swap(broken_swap&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+    broken_swap(broken_swap&& other, const allocator_type& a) : x(std::move(other.x), a) {}
 
     broken_swap& operator=(const broken_swap&) = default;
 
@@ -694,8 +694,8 @@ namespace sequoia::testing
     using handle_type = Handle;      
     using allocator_type = Allocator;
 
-    broken_copy_value_semantics(std::initializer_list<T> list, const allocator_type& alloc = allocator_type{})
-      : x(alloc)
+    broken_copy_value_semantics(std::initializer_list<T> list, const allocator_type& a = allocator_type{})
+      : x(a)
     {
       x.reserve(list.size());
       for(auto e : list)
@@ -704,8 +704,8 @@ namespace sequoia::testing
 
     broken_copy_value_semantics(const broken_copy_value_semantics&) = default; // Broken!
 
-    broken_copy_value_semantics(const broken_copy_value_semantics& other, const allocator_type& alloc)
-      : x(alloc)
+    broken_copy_value_semantics(const broken_copy_value_semantics& other, const allocator_type& a)
+      : x(a)
     {
       x.reserve(other.x.size());
       for(auto e : other.x)
@@ -716,8 +716,8 @@ namespace sequoia::testing
 
     broken_copy_value_semantics(broken_copy_value_semantics&&) noexcept = default;
 
-    broken_copy_value_semantics(broken_copy_value_semantics&& other, const allocator_type& alloc)
-      : x(std::move(other.x), alloc) {}
+    broken_copy_value_semantics(broken_copy_value_semantics&& other, const allocator_type& a)
+      : x(std::move(other.x), a) {}
 
     broken_copy_value_semantics& operator=(const broken_copy_value_semantics& other)
     {
@@ -764,8 +764,8 @@ namespace sequoia::testing
     using handle_type = Handle;      
     using allocator_type = Allocator;
 
-    broken_copy_assignment_value_semantics(std::initializer_list<T> list, const allocator_type& alloc = allocator_type{})
-      : x(alloc)
+    broken_copy_assignment_value_semantics(std::initializer_list<T> list, const allocator_type& a = allocator_type{})
+      : x(a)
     {
       x.reserve(list.size());
       for(auto e : list)
@@ -776,8 +776,8 @@ namespace sequoia::testing
       : broken_copy_assignment_value_semantics(other, other.x.get_allocator())
     {}
 
-    broken_copy_assignment_value_semantics(const broken_copy_assignment_value_semantics& other, const allocator_type& alloc)
-      : x(alloc)
+    broken_copy_assignment_value_semantics(const broken_copy_assignment_value_semantics& other, const allocator_type& a)
+      : x(a)
     {
       x.reserve(other.x.size());
       for(auto e : other.x)
@@ -788,8 +788,8 @@ namespace sequoia::testing
 
     broken_copy_assignment_value_semantics(broken_copy_assignment_value_semantics&&) noexcept = default;
 
-    broken_copy_assignment_value_semantics(broken_copy_assignment_value_semantics&& other, const allocator_type& alloc)
-      : x(std::move(other.x), alloc) {}
+    broken_copy_assignment_value_semantics(broken_copy_assignment_value_semantics&& other, const allocator_type& a)
+      : x(std::move(other.x), a) {}
 
     broken_copy_assignment_value_semantics& operator=(const broken_copy_assignment_value_semantics&) = default;
 
@@ -837,11 +837,11 @@ namespace sequoia::testing
 
     broken_serialization(const broken_serialization&) = default;
 
-    broken_serialization(const broken_serialization& other, const allocator_type& alloc) : x(other.x, alloc) {}
+    broken_serialization(const broken_serialization& other, const allocator_type& a) : x(other.x, a) {}
 
     broken_serialization(broken_serialization&&) noexcept = default;
 
-    broken_serialization(broken_serialization&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+    broken_serialization(broken_serialization&& other, const allocator_type& a) : x(std::move(other.x), a) {}
 
     broken_serialization& operator=(const broken_serialization&) = default;
 
@@ -900,11 +900,11 @@ namespace sequoia::testing
 
     broken_deserialization(const broken_deserialization&) = default;
 
-    broken_deserialization(const broken_deserialization& other, const allocator_type& alloc) : x(other.x, alloc) {}
+    broken_deserialization(const broken_deserialization& other, const allocator_type& a) : x(other.x, a) {}
 
     broken_deserialization(broken_deserialization&&) noexcept = default;
 
-    broken_deserialization(broken_deserialization&& other, const allocator_type& alloc) : x(std::move(other.x), alloc) {}
+    broken_deserialization(broken_deserialization&& other, const allocator_type& a) : x(std::move(other.x), a) {}
 
     broken_deserialization& operator=(const broken_deserialization&) = default;
 

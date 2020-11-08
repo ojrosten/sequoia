@@ -244,15 +244,15 @@ namespace sequoia::testing
   private:
     template<std::size_t I, counting_alloc... As>
     [[nodiscard]]
-    static auto get(const std::scoped_allocator_adaptor<As...>& alloc)
+    static auto get(const std::scoped_allocator_adaptor<As...>& a)
     {
       if constexpr(I==0)
       {
-        return alloc.outer_allocator();
+        return a.outer_allocator();
       }
       else
       {
-        return get<I-1>(alloc.inner_allocator());
+        return get<I-1>(a.inner_allocator());
       }
     }
       
