@@ -384,7 +384,11 @@ namespace sequoia::testing::impl
 
   template<test_mode Mode, class Actions, movable_comparable T, class... Args>
     requires (serializable_to<T, std::stringstream> && deserializable_from<T, std::stringstream>)
-  bool do_check_serialization(test_logger<Mode>& logger, const Actions& actions, T&& u, const T& y, [[maybe_unused]] const Args&... args)
+  bool do_check_serialization(test_logger<Mode>& logger,
+                              [[maybe_unused]] const Actions& actions,
+                              T&& u,
+                              const T& y,
+                              [[maybe_unused]] const Args&... args)
   {
     std::stringstream s{};
     s << y;
