@@ -16,6 +16,7 @@
 #include "Preprocessor.hpp"
 
 #include <filesystem>
+#include <iostream>
 
 #ifndef _MSC_VER
   #include <cxxabi.h>
@@ -102,13 +103,30 @@ namespace sequoia::testing
       return name;
     }
     else
-    {     
-      int status;
-      std::string name{abi::__cxa_demangle(typeid(T).name(), 0, 0, &status)};
+    {
+      struct cxa_demangler
+      {
+        cxa_demangler(const char* name)
+          : data{abi::__cxa_demangle(name, 0, 0, &status)}
+        {}
 
-      tidy_name(name);
+        ~cxa_demangler() { std::free(data); }
+        
+        int status{-1};
+        char* data;
+      };
 
-      return name;
+      const auto mangled{typeid(T).name()};
+      cxa_demangler c{mangled};
+
+      if(!c.status)
+      {
+        std::string name{c.data};
+        tidy_name(name);
+        return name;
+      }
+
+      return mangled;
     }
   }
 

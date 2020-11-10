@@ -166,15 +166,11 @@ namespace sequoia::testing
         m_Advice = advisor(value, prediction);
         m_Prefix = advisor.prefix();
       }
-      
-      m_AdviceTypeName = type_demangler<Advisor>::make();
     }
 
-    std::string& append_and_tidy(std::string& message) const;    
+    std::string& append_to(std::string& message) const;    
   private:
-    std::string m_Advice{}, m_AdviceTypeName{}, m_Prefix{};
-    
-    std::string& tidy(std::string& message) const;
+    std::string m_Advice{}, m_Prefix{};
   };
 
   std::string& append_advice(std::string& message, const advice_data& adviceData);
