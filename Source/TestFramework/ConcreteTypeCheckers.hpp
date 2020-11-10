@@ -45,7 +45,7 @@ namespace sequoia::testing
   private:
     using size_type = typename string_view_type::size_type;
 
-    template<class Advisor>
+    template<class T, class Advisor>
     static auto make_advisor(std::string_view info, string_view_type obtained, string_view_type prediction, size_type pos, const tutor<Advisor>& advisor)
     {
       constexpr size_type defaultOffset{30}, defaultCount{60}, npos{string_view_type::npos};
@@ -93,7 +93,6 @@ namespace sequoia::testing
 
         return tutor{
           [message, advisor] (Char a, Char b) {
-
             auto m{message};
             return append_advice(m, {advisor, a, b});            
           },
@@ -103,7 +102,7 @@ namespace sequoia::testing
       else
       {
         return tutor{
-          [message](Char, Char) { return message; },
+          [message](T, T) { return message; },
           "\n"
         };
       }
@@ -117,7 +116,7 @@ namespace sequoia::testing
       if((iters.first != obtained.end()) && (iters.second != prediction.end()))
       {
         const auto dist{std::distance(obtained.begin(), iters.first)};          
-        auto adv{make_advisor("", obtained, prediction, dist, advisor)};
+        auto adv{make_advisor<Char>("", obtained, prediction, dist, advisor)};
 
         const auto mess{
           std::string{"First difference detected at character "}
@@ -132,7 +131,7 @@ namespace sequoia::testing
           [&logger, obtained, prediction, &advisor](auto begin, auto iter, std::string_view state, std::string_view adjective){
             const auto dist{std::distance(begin, iter)};
             const auto info{std::string{"First "}.append(state).append(" character: ").append(display_character(*iter))};
-            auto adv{make_advisor(info, obtained, prediction, dist, advisor)};
+            auto adv{make_advisor<decltype(fixed_width_unsigned_cast(obtained.size()))>(info, obtained, prediction, dist, advisor)};
 
             const auto mess{append_lines("Lengths differ", std::string{"Obtained string is too "}.append(adjective))};
 

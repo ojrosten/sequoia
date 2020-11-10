@@ -18,7 +18,68 @@
 #include <string>
 
 namespace sequoia::testing
-{
+{  
+  template<class Advisor>
+  struct advisor_invoke_type;
+
+  template<class R, class Advisor, class T>
+  struct advisor_invoke_type<R (Advisor::*)(T, T)>
+  {
+    using return_type = R;
+    using type = T;
+  };
+
+  template<class R, class Advisor, class T>
+  struct advisor_invoke_type<R (Advisor::*)(T, T) const>
+  {
+    using return_type = R;
+    using type = T;
+  };
+
+  template<class R, class Advisor, class T>
+  struct advisor_invoke_type<R (Advisor::*)(T, T) const noexcept>
+  {
+    using return_type = R;
+    using type = T;
+  };
+
+  template<class R, class Advisor, class T>
+  struct advisor_invoke_type<R (Advisor::*)(T, T) noexcept>
+  {
+    using return_type = R;
+    using type = T;
+  };
+
+  template<class Advisor, class T>
+  struct advisor_analyser
+  {
+    constexpr static bool utilize{};
+  };
+
+  template<class Advisor, class T>
+    requires invocable<Advisor, T, T>
+  struct advisor_analyser<Advisor, T>
+  {
+    constexpr static bool utilize{true};
+  };
+
+  // For a Advisor with a single operator(), attempt to disallow bindings which involve
+  // a narrowing conversion
+  template<class Advisor, class T>
+    requires invocable<Advisor, T, T> && requires {
+      std::declval<decltype(&Advisor::operator())>();
+    }
+  struct advisor_analyser<Advisor, T>
+  {
+  private:
+    using type = std::remove_cvref_t<typename advisor_invoke_type<decltype(&Advisor::operator())>::type>;
+  public:
+    constexpr static bool utilize{std::is_same_v<std::common_type_t<type, std::remove_cvref_t<T>>, type>};
+  };
+
+  template<class Advisor, class T>
+  constexpr bool use_advisor_v{advisor_analyser<Advisor, T>::utilize};
+  
   /// \brief Represents the absence of advice
   struct null_advisor
   {};
@@ -51,7 +112,7 @@ namespace sequoia::testing
     {}
 
     template<class T>
-      requires invocable<Advisor, T, T>
+      requires use_advisor_v<Advisor, T>
     [[nodiscard]]
     std::string operator()(const T& value, const T& prediction) const
     {
