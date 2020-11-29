@@ -11,13 +11,8 @@
     \brief Classes implementing the concept of a linearly partitioned sequence of data.
  */
 
-#include "PartitionedDataDetails.hpp"
-#include "TypeTraits.hpp"
-#include "ArrayUtilities.hpp"
-#include "Iterator.hpp"
-#include "Algorithms.hpp"
+#include "PartitionedData.hpp"
 #include "LinearSequence.hpp"
-#include "AssignmentUtilities.hpp"
 
 namespace sequoia::data_structures
 {
@@ -29,11 +24,11 @@ namespace sequoia::data_structures
     constexpr static std::size_t num_partitions_v{Npartitions};
     constexpr static std::size_t num_elements_v{Npartitions * NelementsPerPartition};
       
-    using index_type = IndexType;
+    using index_type           = IndexType;
     using partition_index_type = std::make_unsigned_t<IndexType>;      
-    using partitions_type = maths::static_linear_sequence<partition_index_type, NelementsPerPartition, NelementsPerPart, partition_index_type>;
+    using partitions_type      = maths::static_linear_sequence<partition_index_type, NelementsPerPartition, NelementsPerPartition, partition_index_type>;
       
-    template<class S> using container_type = std::array<S, Nelements>;
+    template<class S> using container_type = std::array<S, num_elements_v>;
   };
 
   template<class T, std::size_t Npartitions, std::size_t NelementsPerPartition, class IndexType=std::size_t>

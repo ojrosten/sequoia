@@ -31,6 +31,8 @@
 #include "PartitionedDataTest.hpp"
 #include "PartitionedDataAllocationTest.hpp"
 #include "PartitionedDataTestingDiagnostics.hpp"
+#include "StaticLinearlyPartitionedSequenceTestingDiagnostics.hpp"
+#include "StaticLinearlyPartitionedSequenceTest.hpp"
 
 #include "StaticStackTest.hpp"
 #include "StaticQueueTest.hpp"
