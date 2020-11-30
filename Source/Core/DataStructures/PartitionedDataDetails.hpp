@@ -188,4 +188,7 @@ namespace sequoia::data_structures::partition_impl
   private:
     std::map<handle_type, handle_type> m_ProcessedPointers;
   };
+
+  template<class>
+  struct static_partitions_maker;
 }

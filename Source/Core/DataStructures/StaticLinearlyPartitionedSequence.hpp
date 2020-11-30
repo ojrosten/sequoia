@@ -26,9 +26,14 @@ namespace sequoia::data_structures
       
     using index_type           = IndexType;
     using partition_index_type = std::make_unsigned_t<IndexType>;      
-    using partitions_type      = maths::static_linear_sequence<partition_index_type, NelementsPerPartition, NelementsPerPartition, partition_index_type>;
+    using partitions_type      = maths::static_linear_sequence<partition_index_type, NelementsPerPartition, NelementsPerPartition, Npartitions, partition_index_type>;
       
     template<class S> using container_type = std::array<S, num_elements_v>;
+
+    constexpr static partitions_type make_partitions(std::initializer_list<std::initializer_list<T>>)
+    {
+      return {};
+    }
   };
 
   template<class T, std::size_t Npartitions, std::size_t NelementsPerPartition, class IndexType=std::size_t>

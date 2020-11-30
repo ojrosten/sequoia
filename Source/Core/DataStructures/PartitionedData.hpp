@@ -899,7 +899,7 @@ namespace sequoia
       container_type m_Storage;
 
       constexpr partitioned_sequence_base(static_init_type, std::initializer_list<std::initializer_list<T>> list)
-        : m_Partitions{make_partitions(list)}
+        : m_Partitions{Traits::make_partitions(list)}
         , m_Storage{fill(std::make_index_sequence<Traits::num_elements_v>{}, list)}
       {}
       
@@ -1004,21 +1004,6 @@ namespace sequoia
         {
           return container_type{};
         }
-      }
-
-      constexpr static auto make_partitions(std::initializer_list<std::initializer_list<T>> list)
-      {
-        constexpr auto N{Traits::num_partitions_v};
-        auto sizes{utilities::to_array<index_type, N>(list, [](const auto& l){ return l.size(); })};
-        if(!sizes.empty())
-        {
-          for(auto iter{sizes.begin()+1}; iter!=sizes.end(); ++iter)
-          {
-            *iter += *(iter - 1);
-          }
-        }
-
-        return sizes;
       }
 
       void increment_partition_indices(const size_type first) noexcept
@@ -1206,6 +1191,21 @@ namespace sequoia
       using partitions_type = maths::static_monotonic_sequence<partition_index_type, Npartitions, std::greater<partition_index_type>>;
       
       template<class S> using container_type = std::array<S, Nelements>;
+
+      constexpr static auto make_partitions(std::initializer_list<std::initializer_list<T>> list)
+      {
+        constexpr auto N{num_partitions_v};
+        auto sizes{utilities::to_array<index_type, N>(list, [](const auto& l){ return l.size(); })};
+        if(!sizes.empty())
+        {
+          for(auto iter{sizes.begin()+1}; iter!=sizes.end(); ++iter)
+          {
+            *iter += *(iter - 1);
+          }
+        }
+
+        return sizes;
+      }
     };
 
     template<class T, std::size_t Npartitions, std::size_t Nelements, class IndexType=std::size_t>

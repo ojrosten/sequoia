@@ -17,6 +17,16 @@ namespace sequoia::testing
 
   void static_linearly_partitioned_sequence_false_positive_test::run_tests()
   {
-    // TO DO
+    using namespace data_structures;
+
+    using sequence = static_linearly_partitioned_sequence<int, 1, 1>;
+    using prediction = std::array<std::array<int, 1>, 1>;
+
+    sequence a{};
+    check_equivalence("", a, prediction{{1}});
+
+    sequence b{{1}};
+    check_equivalence("", b, prediction{{2}});
+    
   }
 }
