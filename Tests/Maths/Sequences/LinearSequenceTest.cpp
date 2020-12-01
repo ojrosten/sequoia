@@ -46,7 +46,12 @@ namespace sequoia::testing
   {
     using namespace maths;
 
-    constexpr static_linear_sequence<std::size_t, 1, 3, std::size_t> s{};
+    constexpr static_linear_sequence<std::size_t, 1, 3, 2, std::size_t> s{};
+    static_assert(s.start() == 1);
+    static_assert(s.step() == 3);
+    static_assert(s.size() == 2);
+    
+    
     constexpr auto val{s[2]};
     check_equality(LINE(""), val, 7ul);
   }

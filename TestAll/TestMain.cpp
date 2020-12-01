@@ -149,6 +149,12 @@ int main(int argc, char** argv)
     );
 
     runner.add_test_family(
+      "StaticLinearlyPartitionedSequence",
+      static_linearly_partitioned_sequence_false_positive_test("False Positive Test"),
+      static_linearly_partitioned_sequence_test("Unit Test")
+    );
+
+    runner.add_test_family(
       "Static Stack",
       test_static_stack_false_positives{"False Positive Diagnostics"},
       test_static_stack{"Unit Test"}

@@ -24,9 +24,9 @@ PRJ_BUILD_SUB_DIRS  := $(addprefix $(PRJ_BUILD_DIR)/, $(PRJ_SUB_DIRS))
 
 .PHONY: clean subdirs
 
-#CC := g++-9 -fmax-errors=1 -Wno-comment 
-#CC := clang++ -ferror-limit=1 -Wno-missing-braces
-CC := /usr/local/opt/llvm/bin/clang++ -ferror-limit=1
+#CC := g++-9
+#CC := clang++
+CC := /usr/local/opt/llvm/bin/clang++
 
 PREPROP :=
 
@@ -38,6 +38,9 @@ CFLAGS := -Wall -Wextra -Wpedantic -std=c++2a -O0 \
 	$(patsubst %,-I%, $(SEQ_SUB_DIRS))     \
 
 CFLAGS += -I/usr/local/opt/llvm/include -I/usr/local/opt/llvm/include/c++/v1/
+
+CFLAGS +=  -ferror-limit=1 -Wno-missing-braces
+#CFLAGS += -fmax-errors=1 -Wno-comment
 
 EXE      := $(TEST_BUILD_ROOT)/TestAll.exe
 
