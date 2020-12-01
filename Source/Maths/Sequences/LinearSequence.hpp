@@ -43,7 +43,7 @@ namespace sequoia::maths
   };
 
   
-  template<class T, T Start, T Step, std::size_t nSteps, integral Index>
+  template<class T, T Start, T Step, std::size_t Size, integral Index>
   struct static_linear_sequence
   {
     using size_type = Index;
@@ -55,7 +55,7 @@ namespace sequoia::maths
     constexpr T step() const noexcept { return Step; }
     
     [[nodiscard]]
-    constexpr std::size_t size() const noexcept { return nSteps; }
+    constexpr std::size_t size() const noexcept { return Size; }
 
     [[nodiscard]]
     constexpr T operator[](const size_type i) const { return Start + i * Step; }
