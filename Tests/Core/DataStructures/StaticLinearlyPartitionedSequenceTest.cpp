@@ -19,9 +19,27 @@ namespace sequoia::testing
   {
     using namespace data_structures;
 
-    using sequence = static_linearly_partitioned_sequence<int, 1, 1>;
+    {
+      using sequence = static_linearly_partitioned_sequence<int, 1, 1>;
 
-    constexpr sequence a{}, b{{1}};
-    check_semantics("", a, b);    
+      constexpr sequence a{};
+      sequence b{{1}};
+      check_semantics(LINE(""), a, b);
+
+      b[0][0] = 2;
+      check_equality(LINE(""), b, sequence{{2}});
+    }
+
+    {
+      using sequence = static_linearly_partitioned_sequence<int, 2, 3>;
+
+      constexpr sequence a{{1,2,-1}, {3,-2,1}};
+      sequence b{};
+
+      check_semantics(LINE(""), a, b);
+
+      b[1][2] = 1;
+      check_equality(LINE(""), b, {{0, 0, 0}, {0, 0, 1}});
+    }
   }
 }
