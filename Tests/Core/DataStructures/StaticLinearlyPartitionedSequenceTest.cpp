@@ -17,6 +17,11 @@ namespace sequoia::testing
 
   void static_linearly_partitioned_sequence_test::run_tests()
   {
-    // TO DO
+    using namespace data_structures;
+
+    using sequence = static_linearly_partitioned_sequence<int, 1, 1>;
+
+    constexpr sequence a{}, b{{1}};
+    check_semantics("", a, b);    
   }
 }

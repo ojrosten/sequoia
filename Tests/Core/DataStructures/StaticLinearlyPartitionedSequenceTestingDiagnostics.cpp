@@ -27,6 +27,7 @@ namespace sequoia::testing
 
     sequence b{{1}};
     check_equivalence("", b, prediction{{2}});
-    
+
+    check_equality("", a, b);
   }
 }

@@ -44,3 +44,62 @@
 
 	=======================================
 
+	[sequoia::data_structures::static_linearly_partitioned_sequence<int, 1ul, 1ul, unsigned long>]
+	operator== returned false
+
+	  Partition 0
+	  iterator (const)
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
+
+	  Partition 0
+	  r_iterator (const)
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
+
+	  Partition 0
+	  c_iterator
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
+
+	  Partition 0
+	  cr_iterator
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
+
+	  Partition 0
+	  iterator
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
+
+	  Partition 0
+	  r_iterator
+
+	    Element 0 of range incorrect
+	    [int]
+	    operator== returned false
+	    Obtained : 0
+	    Predicted: 1
+
+	=======================================
+
