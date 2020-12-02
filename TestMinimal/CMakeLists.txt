@@ -5,7 +5,7 @@ project(SequioaMinimal DESCRIPTION "The Sequoia Library plus executable"
 
 if (MSVC)
     add_compile_options(/W4)
-    add_defini  tions(/bigobj)
+    add_definitions(/bigobj)
 else()
     add_compile_options(-Wall -Wextra -pedantic)
 endif()
