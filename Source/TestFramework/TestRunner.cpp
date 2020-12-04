@@ -59,26 +59,33 @@ namespace sequoia::testing
     return report_time(s.log, s.execution_time);
   }
 
-  std::filesystem::path host_directory::get([[maybe_unused]] std::string_view filename) const
+  std::filesystem::path host_directory::get([[maybe_unused]] const std::filesystem::path& filename) const
   {
     namespace fs = std::filesystem;
     
     variant_visitor visitor{
       [](const fs::path& p) { return p; },
-      [filename](const generator& data){
+      [&filename](const generator& data){
+        const auto sourcePath{
+          [&](){
+            if(const auto path{data.sourceRepo.find(filename)}; !path.empty())
+              return path;
 
-        if(auto sourcePath{data.sourceRepo.find(filename)}; !sourcePath.empty())
-        {
-          const auto dir{data.hostRepo / fs::relative(sourcePath, data.sourceRepo.root()).parent_path()};
-          fs::create_directories(dir);
-          
-          return dir;
-        }
+            const auto alternative{std::filesystem::path{filename}.replace_extension(".h")};
+            if(const auto path{data.sourceRepo.find(alternative)}; !path.empty())
+              return path;
 
-        throw std::runtime_error{std::string{"Unable to locate file "}
+            throw std::runtime_error{std::string{"Unable to locate file "}
                                    .append(filename)
-                                   .append(" in the source repository\n")
+                                   .append(" or .h in the source repository\n")
                                    .append(data.sourceRepo.root().generic_string())};
+          }()
+        };
+        
+        const auto dir{data.hostRepo / fs::relative(sourcePath, data.sourceRepo.root()).parent_path()};
+        fs::create_directories(dir);
+
+        return dir;        
       }
     };
 
@@ -244,7 +251,6 @@ namespace sequoia::testing
 
     const auto camelName{to_camel_case(m_RawClassName)};
 
-    m_ClassHeader = !data.classHeader.empty() ? std::move(data.classHeader) : camelName + ".hpp";
     if(!data.family.empty())
     {
       m_Family = std::move(data.family);
@@ -255,6 +261,7 @@ namespace sequoia::testing
       replace_all(m_Family, "_", " ");
     }
 
+    m_ClassHeader = !data.classHeader.empty() ? std::move(data.classHeader) : std::filesystem::path{camelName + ".hpp"};   
     m_HostDirectory = data.host.get(m_ClassHeader);
   }
 
@@ -349,7 +356,7 @@ namespace sequoia::testing
       replace_all(text, "?_class", m_RawClassName);
       replace_all(text, "?_", testTypeRelacement);
       replace_all(text, "?Test", to_camel_case(m_TestType).append("Test"));
-      replace_all(text, "?Class.hpp", m_ClassHeader);
+      replace_all(text, "?Class.hpp", m_ClassHeader.generic_string());
       replace_all(text, "?Class", to_camel_case(m_RawClassName));
 
       if(std::ofstream ofile{file})

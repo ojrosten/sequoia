@@ -49,7 +49,7 @@ namespace sequoia::testing
       fs::create_directories(std::get<generator>(m_Data).hostRepo);
     }
 
-    std::filesystem::path get([[maybe_unused]] std::string_view filename) const;
+    std::filesystem::path get([[maybe_unused]] const std::filesystem::path& filename) const;
   private:
     struct generator
     {
@@ -86,7 +86,8 @@ namespace sequoia::testing
       
     std::vector<std::string> equivalentTypes{};
     host_directory host, defaultHost;
-    std::string testType{}, qualifiedName{}, family{}, classHeader{};
+    std::string testType{}, qualifiedName{}, family{};
+    std::filesystem::path classHeader{};
   };
 
   
@@ -132,10 +133,11 @@ namespace sequoia::testing
       m_Family{},
       m_QualifiedClassName{},
       m_RawClassName{},
-      m_TestType{},
-      m_ClassHeader{};
+      m_TestType{};
     
-    std::filesystem::path m_HostDirectory{};
+    std::filesystem::path
+      m_ClassHeader{},
+      m_HostDirectory{};
 
     template_data m_TemplateData{};
 

@@ -113,13 +113,13 @@ namespace sequoia::testing
     }
 
     [[nodiscard]]
-    std::filesystem::path find(std::string_view filename) const
+    std::filesystem::path find(const std::filesystem::path& filename) const
     {
       using dir_iter = std::filesystem::recursive_directory_iterator;
 
       for(const auto& i : dir_iter{m_Root})
       {
-        if(auto p{i.path()}; p.filename().string() == filename)
+        if(auto p{i.path()}; p.filename() == filename)
           return p;
       }
 
