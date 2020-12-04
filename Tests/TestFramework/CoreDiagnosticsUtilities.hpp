@@ -115,16 +115,13 @@ namespace sequoia::testing
 
     perfectly_sharing_beast& operator=(const perfectly_sharing_beast& other)
     {
-      if(&other != this)
-      {
-        auto allocGetter{
-          [](const  perfectly_sharing_beast& psb){
-            return psb.x.get_allocator();
-          }
-        };
+      auto allocGetter{
+        [](const  perfectly_sharing_beast& psb){
+          return psb.x.get_allocator();
+        }
+      };
 
-        sequoia::impl::assignment_helper::assign(*this, other, allocGetter);
-      }
+      sequoia::impl::assignment_helper::assign(*this, other, allocGetter);
 
       return *this;
     }
@@ -590,6 +587,60 @@ namespace sequoia::testing
   };
 
   template<class T=int, class Allocator=std::allocator<int>>
+  struct broken_self_copy_assignment
+  {
+    using allocator_type = Allocator;
+
+    broken_self_copy_assignment(std::initializer_list<int> list) : x{list} {}
+
+    broken_self_copy_assignment(std::initializer_list<int> list, const allocator_type& a) : x(list, a) {}
+
+    broken_self_copy_assignment(const broken_self_copy_assignment&) = default;
+
+    broken_self_copy_assignment(const broken_self_copy_assignment& other, const allocator_type& a) : x(other.x, a) {}
+
+    broken_self_copy_assignment(broken_self_copy_assignment&&) = default;
+
+    broken_self_copy_assignment(broken_self_copy_assignment&& other, const allocator_type& a) : x(std::move(other.x), a) {}
+      
+    broken_self_copy_assignment& operator=(const broken_self_copy_assignment& other)
+    {
+      if(&other == this)
+      {
+        x.push_back(T{});
+      }
+      else
+      {
+        x = other.x;
+      }
+      
+      return *this;
+    }
+
+    broken_self_copy_assignment& operator=(broken_self_copy_assignment&&) = default;
+
+    friend void swap(broken_self_copy_assignment& lhs, broken_self_copy_assignment& rhs)
+    {
+      std::swap(lhs.x, rhs.x);
+    }
+      
+    std::vector<T, Allocator> x{};
+
+    [[nodiscard]]
+    friend bool operator==(const broken_self_copy_assignment& lhs, const broken_self_copy_assignment& rhs) = default;
+
+    [[nodiscard]]
+    friend bool operator!=(const broken_self_copy_assignment& lhs, const broken_self_copy_assignment& rhs) = default;
+
+    template<class Stream>
+    friend Stream& operator<<(Stream& s, const broken_self_copy_assignment& b)
+    {
+      for(auto i : b.x) s << i << ' ';
+      return s;
+    }
+  };
+
+  template<class T=int, class Allocator=std::allocator<int>>
   struct broken_move_assignment
   {
     using allocator_type = Allocator;
@@ -669,19 +720,68 @@ namespace sequoia::testing
     std::vector<T, Allocator> x{};
 
     [[nodiscard]]
-    friend bool operator==(const broken_swap& lhs, const broken_swap& rhs) noexcept
-    {
-      return lhs.x == rhs.x;
-    }
+    friend bool operator==(const broken_swap& lhs, const broken_swap& rhs) noexcept = default;
 
     [[nodiscard]]
-    friend bool operator!=(const broken_swap& lhs, const broken_swap& rhs) noexcept
-    {
-      return !(lhs == rhs);
-    }
+    friend bool operator!=(const broken_swap& lhs, const broken_swap& rhs) noexcept = default;
 
     template<class Stream>
     friend Stream& operator<<(Stream& s, const broken_swap& b)
+    {
+      for(auto i : b.x) s << i << ' ';
+      return s;
+    }
+  };
+
+  template<class T=int, class Allocator=std::allocator<int>>
+  struct broken_self_swap
+  {
+    using allocator_type = Allocator;
+
+    broken_self_swap(std::initializer_list<T> list) : x{list} {}
+
+    broken_self_swap(std::initializer_list<T> list, const allocator_type& a) : x{list, a} {}
+
+    broken_self_swap(const broken_self_swap&) = default;
+
+    broken_self_swap(const broken_self_swap& other, const allocator_type& a) : x(other.x, a) {}
+
+    broken_self_swap(broken_self_swap&&) noexcept = default;
+
+    broken_self_swap(broken_self_swap&& other, const allocator_type& a) : x(std::move(other.x), a) {}
+
+    broken_self_swap& operator=(const broken_self_swap&) = default;
+
+    broken_self_swap& operator=(broken_self_swap&&) noexcept = default;
+
+    void swap(broken_self_swap& other) noexcept(noexcept(std::swap(this->x, other.x)))
+    {
+      if(&other == this)
+      {
+        x.push_back(T{});
+      }
+      else
+      {
+        std::swap(this->x, other.x);
+      }
+    }
+
+    friend void swap(broken_self_swap& lhs, broken_self_swap& rhs)
+      noexcept(noexcept(lhs.swap(rhs)))
+    {
+      lhs.swap(rhs);
+    }
+
+    std::vector<T, Allocator> x{};
+
+    [[nodiscard]]
+    friend bool operator==(const broken_self_swap& lhs, const broken_self_swap& rhs) noexcept = default;
+
+    [[nodiscard]]
+    friend bool operator!=(const broken_self_swap& lhs, const broken_self_swap& rhs) noexcept = default;
+
+    template<class Stream>
+    friend Stream& operator<<(Stream& s, const broken_self_swap& b)
     {
       for(auto i : b.x) s << i << ' ';
       return s;

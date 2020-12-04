@@ -339,16 +339,19 @@ namespace sequoia::testing::impl
     const bool swapx{
       check_equality("Inconsistent Swap (x)", logger, x, yClone)
     };
-      
-    if constexpr(Actions::has_post_swap_action)
+
+    if(swapx && swapy)
     {
-      if(swapx && swapy)
-      {
+      if constexpr(Actions::has_post_swap_action)
+      {      
         actions.post_swap_action(logger, x, y, yClone, args...);
       }
+
+      swap(y,y);
+      return check_equality("Inconsistent Self Swap", logger, y, xClone);
     }
 
-    return swapx && swapy;
+    return false;
   }
 
   template<test_mode Mode, class Actions, movable_comparable T>

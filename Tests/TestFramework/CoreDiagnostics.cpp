@@ -179,7 +179,9 @@ namespace sequoia::testing
     check_semantics(LINE("Broken move"), broken_move{1}, broken_move{2});
     check_semantics(LINE("Broken copy assignment"), broken_copy_assignment{1}, broken_copy_assignment{2});
     check_semantics(LINE("Broken move assignment"), broken_move_assignment{1}, broken_move_assignment{2});
+    check_semantics(LINE("Broken self copy assignment"), broken_self_copy_assignment{1}, broken_self_copy_assignment{2});
     check_semantics(LINE("Broken swap"), broken_swap{1}, broken_swap{2});
+    check_semantics(LINE("Broken self swap"), broken_self_swap{1}, broken_self_swap{2});
     check_semantics(LINE("Broken copy value semantics"), broken_copy_value_semantics{1}, broken_copy_value_semantics{2}, [](auto& b){ *b.x.front() = 3; });
     check_semantics(LINE("Broken copy assignment value semantics"),
                             broken_copy_assignment_value_semantics{1}, broken_copy_assignment_value_semantics{2}, [](auto& b){ *b.x.front() = 3; });
@@ -295,7 +297,7 @@ namespace sequoia::testing
     check_equality(LINE("One element vector check which should pass"), std::vector<double>{2}, std::vector<double>{2});
     check_equality(LINE("Multi-element vector comparison which should pass"), std::vector<double>{1,5}, std::vector<double>{1,5});
 
-    std::vector<float> refs{-4.3f, 2.8f, 6.2f, 7.3f}, ans{1.1f, -4.3f, 2.8f, 6.2f, 8.4f, 7.3f};
+    std::vector<float> refs{-4.3f, 2.8f, 6.2f, 7.3f}, ans{1.1f, -4.3f, 2.8f, 6.2f, 8.4f, 7.3};
       
     check_range(LINE("Iterators demarcate identical elements"), refs.cbegin(), refs.cbegin()+3, ans.cbegin()+1, ans.cbegin()+4);
   }

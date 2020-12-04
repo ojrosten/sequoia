@@ -20,19 +20,19 @@ namespace sequoia::testing::impl
   bool do_check_copy_assign(test_logger<Mode>& logger, [[maybe_unused]] const Actions& actions, T& z, const T& y, const Args&... args)
   {
     z = y;
-    const bool consistent{
-       check_equality("Inconsistent copy assignment (from y)", logger, z, y)
-    };
-
-    if constexpr(Actions::has_post_copy_assign_action)
+    if(check_equality("Inconsistent copy assignment (from y)", logger, z, y))
     {
-      if(consistent)
+      if constexpr(Actions::has_post_copy_assign_action)
       {
         actions.post_copy_assign_action(logger, z, y, args...);
       }
+
+      auto& w{z};
+      z = w;
+      return check_equality("Inconsistent self copy assignment", logger, z, y);
     }
 
-    return consistent;
+    return false;
   }
   
   template<test_mode Mode, class Actions, pseudoregular T>
