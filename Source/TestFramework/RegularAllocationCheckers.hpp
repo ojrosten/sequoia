@@ -26,18 +26,25 @@ namespace sequoia::testing
       , para_move{copyPrediction}
     {}
 
-    constexpr individual_allocation_predictions(copy_prediction copyPrediction, mutation_prediction mutationPrediction, para_copy_prediction paraCopyPrediction)
+    constexpr individual_allocation_predictions(copy_prediction copyPrediction,
+                                                mutation_prediction mutationPrediction,
+                                                para_copy_prediction paraCopyPrediction)
       : copy{copyPrediction}          
       , mutation{mutationPrediction}
       , para_copy{paraCopyPrediction}
       , para_move{copyPrediction}
     {}
       
-    constexpr individual_allocation_predictions(copy_prediction copyPrediction, mutation_prediction mutationPrediction, para_copy_prediction paraCopyPrediction, para_move_prediction paraMovePrediction)
-      : copy{copyPrediction}          
+    constexpr individual_allocation_predictions(copy_prediction copyPrediction,
+                                                mutation_prediction mutationPrediction,
+                                                para_copy_prediction paraCopyPrediction,
+                                                para_move_prediction paraMovePrediction,
+                                                move_prediction m={})
+      : copy{copyPrediction}
       , mutation{mutationPrediction}
       , para_copy{paraCopyPrediction}
       , para_move{paraMovePrediction}
+      , move{m}
     {}
       
     copy_prediction copy{};

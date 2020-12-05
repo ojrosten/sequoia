@@ -18,10 +18,11 @@ namespace sequoia::testing
 {
   struct move_only_allocation_predictions
   {
-    constexpr move_only_allocation_predictions(assign_prediction assignWithoutPropagation, mutation_prediction yMutation, para_move_prediction paraMove)
+    constexpr move_only_allocation_predictions(assign_prediction assignWithoutPropagation, mutation_prediction yMutation, para_move_prediction paraMove, move_prediction m={})
       : assign_without_propagation{assignWithoutPropagation}
       , mutation{yMutation}
       , para_move{paraMove}
+      , move{m}
     {}
 
     [[nodiscard]]
@@ -48,7 +49,8 @@ namespace sequoia::testing
     using shifter = prediction_shifter<T>;
     return {shifter::shift(predictions.assign_without_propagation),
             shifter::shift(predictions.mutation),
-            shifter::shift(predictions.para_move)};
+            shifter::shift(predictions.para_move),
+            shifter::shift(predictions.move)};
   }
 
   // Done through inheritance rather than a using declaration

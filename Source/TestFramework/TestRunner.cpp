@@ -76,7 +76,7 @@ namespace sequoia::testing
               return path;
 
             throw std::runtime_error{std::string{"Unable to locate file "}
-                                   .append(filename)
+                                   .append(filename.generic_string())
                                    .append(" or .h in the source repository\n")
                                    .append(data.sourceRepo.root().generic_string())};
           }()

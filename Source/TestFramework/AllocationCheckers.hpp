@@ -55,7 +55,9 @@ namespace sequoia::testing
   class alloc_prediction
   {
   public:
-    constexpr explicit alloc_prediction(int n = 0) noexcept : m_Num{n} {}
+    constexpr alloc_prediction() = default;
+    
+    constexpr explicit alloc_prediction(int n) noexcept : m_Num{n} {}
 
     [[nodiscard]]
     constexpr operator int() const noexcept
@@ -109,7 +111,7 @@ namespace sequoia::testing
     {
       if constexpr(has_msvc_v)
       {
-        if(iterator_debug_level())
+        if(iterator_debug_level() > 0)
         {
           return alloc_prediction<AllocEvent>{static_cast<int>(p) + 1};
         }
@@ -235,9 +237,9 @@ namespace sequoia::testing
     using allocator_type   = typename base_t::allocator_type;
     using predictions_type = Predictions;
       
-    basic_allocation_info(Getter allocGetter, Predictions predictions)
+    basic_allocation_info(Getter allocGetter, const Predictions& predictions)
       : base_t{std::move(allocGetter)}
-      , m_Predictions{std::move(predictions)}
+      , m_Predictions{shift<T>(predictions)}
     {}
 
     [[nodiscard]]
