@@ -18,25 +18,34 @@ namespace sequoia::testing
 {
   struct move_only_allocation_predictions
   {
-    move_only_allocation_predictions(assign_prediction assignWithoutPropagation, mutation_prediction yMutation, para_move_prediction paraMove)
+    constexpr move_only_allocation_predictions(assign_prediction assignWithoutPropagation, mutation_prediction yMutation, para_move_prediction paraMove)
       : assign_without_propagation{assignWithoutPropagation}
       , mutation{yMutation}
       , para_move{paraMove}
     {}
 
     [[nodiscard]]
-    int para_move_allocs() const noexcept { return para_move; }
+    constexpr int para_move_allocs() const noexcept { return para_move; }
 
     [[nodiscard]]
-    int assign_without_propagation_allocs() const noexcept { return assign_without_propagation; }
+    constexpr int assign_without_propagation_allocs() const noexcept { return assign_without_propagation; }
 
     [[nodiscard]]
-    int mutation_allocs() const noexcept { return mutation; }
+    constexpr int mutation_allocs() const noexcept { return mutation; }
     
     assign_prediction assign_without_propagation{};
     mutation_prediction mutation{};
     para_move_prediction para_move{};
   };
+
+  template<class T>
+  constexpr move_only_allocation_predictions shift(const move_only_allocation_predictions& predictions)
+  {
+    using shifter = prediction_shifter<T>;
+    return {shifter::shift(predictions.assign_without_propagation),
+            shifter::shift(predictions.mutation),
+            shifter::shift(predictions.para_move)};
+  }
 
   // Done through inheritance rather than a using declaration
   // in order to make use of CTAD. Should be able to revert

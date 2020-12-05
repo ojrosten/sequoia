@@ -73,6 +73,55 @@ namespace sequoia::testing
   using assign_prop_prediction = alloc_prediction<allocation_event::assign_prop>;
   using assign_prediction      = alloc_prediction<allocation_event::assign>;
 
+  
+  template<class T>
+  struct prediction_shifter
+  {
+    constexpr static copy_prediction shift(copy_prediction p)
+    {
+      return increment_msvc_iterator_debug(p);
+    }
+
+    constexpr static mutation_prediction shift(mutation_prediction p)
+    {
+      return p;
+    }
+
+    constexpr static para_copy_prediction shift(para_copy_prediction p)
+    {
+      return increment_msvc_iterator_debug(p);
+    }
+
+    constexpr static para_move_prediction shift(para_move_prediction p)
+    {
+      return increment_msvc_iterator_debug(p);
+    }
+
+    constexpr static assign_prop_prediction shift(assign_prop_prediction p)
+    {
+      return p;
+    }
+
+    constexpr static assign_prediction shift(assign_prediction p)
+    {
+      return p;
+    }
+  private:
+    template<allocation_event AllocEvent>
+    constexpr static alloc_prediction<AllocEvent> increment_msvc_iterator_debug(alloc_prediction<AllocEvent> p)
+    {
+      if constexpr(has_msvc_v)
+      {
+        if(iterator_debug_level())
+        {
+          return alloc_prediction<AllocEvent>{static_cast<int>(p) + 1};
+        }
+      }
+      
+      return p;
+    }
+  };
+  
   [[nodiscard]]
   SPECULATIVE_CONSTEVAL copy_prediction
   operator "" _c(unsigned long long int n) noexcept
@@ -224,7 +273,7 @@ namespace sequoia::testing
     
     basic_allocation_info(Getter allocGetter, std::initializer_list<Predictions> predictions)
       : base_t{std::move(allocGetter)}
-      , m_Predictions{utilities::to_array<Predictions, size>(predictions)}
+      , m_Predictions{utilities::to_array<Predictions, size>(predictions, [](const Predictions& p){ return shift<T>(p); })}
     {}
 
     /// unpacks the scoped_allocator_adaptor, returning basic_allocation_info for the

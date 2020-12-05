@@ -19,21 +19,21 @@ namespace sequoia::testing
 {  
   struct individual_allocation_predictions
   {
-    individual_allocation_predictions(copy_prediction copyPrediction, mutation_prediction mutationPrediction)
+    constexpr individual_allocation_predictions(copy_prediction copyPrediction, mutation_prediction mutationPrediction)
       : copy{copyPrediction}          
       , mutation{mutationPrediction}
       , para_copy{copyPrediction}
       , para_move{copyPrediction}
     {}
 
-    individual_allocation_predictions(copy_prediction copyPrediction, mutation_prediction mutationPrediction, para_copy_prediction paraCopyPrediction)
+    constexpr individual_allocation_predictions(copy_prediction copyPrediction, mutation_prediction mutationPrediction, para_copy_prediction paraCopyPrediction)
       : copy{copyPrediction}          
       , mutation{mutationPrediction}
       , para_copy{paraCopyPrediction}
       , para_move{copyPrediction}
     {}
       
-    individual_allocation_predictions(copy_prediction copyPrediction, mutation_prediction mutationPrediction, para_copy_prediction paraCopyPrediction, para_move_prediction paraMovePrediction)
+    constexpr individual_allocation_predictions(copy_prediction copyPrediction, mutation_prediction mutationPrediction, para_copy_prediction paraCopyPrediction, para_move_prediction paraMovePrediction)
       : copy{copyPrediction}          
       , mutation{mutationPrediction}
       , para_copy{paraCopyPrediction}
@@ -48,7 +48,7 @@ namespace sequoia::testing
 
   struct assignment_allocation_predictions
   {
-    assignment_allocation_predictions(int withPropagation, int withoutPropagation)
+    constexpr assignment_allocation_predictions(int withPropagation, int withoutPropagation)
       : with_propagation{withPropagation}, without_propagation{withoutPropagation}
     {}
       
@@ -58,29 +58,56 @@ namespace sequoia::testing
  
   struct allocation_predictions
   {
-    allocation_predictions(copy_prediction copyX, individual_allocation_predictions yPredictions, assignment_allocation_predictions assignYtoX)
+    constexpr allocation_predictions(copy_prediction copyX, individual_allocation_predictions yPredictions, assignment_allocation_predictions assignYtoX)
       : copy_x{copyX}, y{yPredictions}, assign_y_to_x{assignYtoX}
     {}
 
     [[nodiscard]]
-    int para_move_allocs() const noexcept
+    constexpr int para_move_allocs() const noexcept
     {
       return y.para_move;
     }
 
     [[nodiscard]]
-    int assign_without_propagation_allocs() const noexcept
+    constexpr int assign_without_propagation_allocs() const noexcept
     {
       return assign_y_to_x.without_propagation;
     }
 
     [[nodiscard]]
-    int mutation_allocs() const noexcept { return y.mutation; }
+    constexpr int mutation_allocs() const noexcept { return y.mutation; }
 
-    int copy_x{};
+    copy_prediction copy_x{};
     individual_allocation_predictions y;
     assignment_allocation_predictions assign_y_to_x;
   };
+
+  template<class T>
+  constexpr individual_allocation_predictions shift(const individual_allocation_predictions& predictions)
+  {
+    using shifter = prediction_shifter<T>;
+    return {shifter::shift(predictions.copy),
+            shifter::shift(predictions.mutation),
+            shifter::shift(predictions.para_copy),
+            shifter::shift(predictions.para_move)};
+  }
+
+  template<class T>
+  constexpr assignment_allocation_predictions shift(const assignment_allocation_predictions& predictions)
+  {
+    using shifter = prediction_shifter<T>;
+    return {shifter::shift(predictions.with_propagation),
+            shifter::shift(predictions.without_propagation)};
+  }
+
+  template<class T>
+  constexpr allocation_predictions shift(const allocation_predictions& predictions)
+  {
+    using shifter = prediction_shifter<T>;
+    return {shifter::shift(predictions.copy_x),
+            shift<T>(predictions.y),
+            shift<T>(predictions.assign_y_to_x)};
+  }
 
   // Done through inheritance rather than a using declaration
   // in order to make use of CTAD. Should be able to revert
