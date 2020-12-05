@@ -18,18 +18,26 @@ namespace sequoia::testing
 {
   struct move_only_allocation_predictions
   {
-    constexpr move_only_allocation_predictions(assign_prediction assignWithoutPropagation, mutation_prediction yMutation, para_move_prediction paraMove, move_prediction m={})
-      : assign_without_propagation{assignWithoutPropagation}
+    constexpr move_only_allocation_predictions(copy_like_move_assign_prediction copyLikeMove,
+                                               mutation_prediction yMutation,
+                                               para_move_prediction paraMove,
+                                               move_prediction m={},
+                                               move_assign_prediction moveAssign={})
+      : copy_like_move_assign{copyLikeMove}
       , mutation{yMutation}
       , para_move{paraMove}
       , move{m}
+      , move_assign{moveAssign}
     {}
 
     [[nodiscard]]
     constexpr int para_move_allocs() const noexcept { return para_move; }
 
     [[nodiscard]]
-    constexpr int assign_without_propagation_allocs() const noexcept { return assign_without_propagation; }
+    constexpr int copy_like_move_assign_allocs() const noexcept { return copy_like_move_assign; }
+
+    [[nodiscard]]
+    constexpr int move_assign_allocs() const noexcept { return move_assign; }
 
     [[nodiscard]]
     constexpr int mutation_allocs() const noexcept { return mutation; }
@@ -37,20 +45,22 @@ namespace sequoia::testing
     [[nodiscard]]
     constexpr int move_allocs() const noexcept { return move; }
     
-    assign_prediction assign_without_propagation{};
+    copy_like_move_assign_prediction copy_like_move_assign{};
     mutation_prediction mutation{};
     para_move_prediction para_move{};
     move_prediction move{};
+    move_assign_prediction move_assign{};
   };
 
   template<class T>
   constexpr move_only_allocation_predictions shift(const move_only_allocation_predictions& predictions)
   {
     using shifter = prediction_shifter<T>;
-    return {shifter::shift(predictions.assign_without_propagation),
+    return {shifter::shift(predictions.copy_like_move_assign),
             shifter::shift(predictions.mutation),
             shifter::shift(predictions.para_move),
-            shifter::shift(predictions.move)};
+            shifter::shift(predictions.move),
+            shifter::shift(predictions.move_assign)};
   }
 
   // Done through inheritance rather than a using declaration

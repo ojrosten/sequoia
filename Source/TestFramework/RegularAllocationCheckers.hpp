@@ -57,11 +57,22 @@ namespace sequoia::testing
   struct assignment_allocation_predictions
   {
     constexpr assignment_allocation_predictions(int withPropagation, int withoutPropagation)
-      : with_propagation{withPropagation}, without_propagation{withoutPropagation}
+      : with_propagation{withPropagation}
+      , without_propagation{withoutPropagation}
+      , copy_like_move{without_propagation}
+    {}
+
+    constexpr assignment_allocation_predictions(int withPropagation, int withoutPropagation, int copyLikeMove, int pureMove)
+      : with_propagation{withPropagation}
+      , without_propagation{withoutPropagation}
+      , copy_like_move{copyLikeMove}
+      , move{pureMove}
     {}
       
     assign_prop_prediction with_propagation{};
     assign_prediction without_propagation{};
+    copy_like_move_assign_prediction copy_like_move{};
+    move_assign_prediction move{};
   };
  
   struct allocation_predictions
@@ -74,9 +85,15 @@ namespace sequoia::testing
     constexpr int para_move_allocs() const noexcept { return y.para_move; }
 
     [[nodiscard]]
-    constexpr int assign_without_propagation_allocs() const noexcept
+    constexpr int copy_like_move_assign_allocs() const noexcept
     {
-      return assign_y_to_x.without_propagation;
+      return assign_y_to_x.copy_like_move;
+    }
+
+    [[nodiscard]]
+    constexpr int move_assign_allocs() const noexcept
+    {
+      return assign_y_to_x.move;
     }
 
     [[nodiscard]]
@@ -106,7 +123,9 @@ namespace sequoia::testing
   {
     using shifter = prediction_shifter<T>;
     return {shifter::shift(predictions.with_propagation),
-            shifter::shift(predictions.without_propagation)};
+            shifter::shift(predictions.without_propagation),
+            shifter::shift(predictions.copy_like_move),
+            shifter::shift(predictions.move)};
   }
 
   template<class T>

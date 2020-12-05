@@ -48,7 +48,15 @@
 
 namespace sequoia::testing
 {  
-  enum class allocation_event { copy, move, mutation, para_copy, para_move, assign_prop, assign};
+  enum class allocation_event { copy,
+                                move,
+                                mutation,
+                                para_copy,
+                                para_move,
+                                assign_prop,
+                                assign,
+                                move_assign,
+                                copy_like_move_assign};
 
   /*! Type-safe wrapper for allocation predictions, to avoid mixing different allocation events */
   template<allocation_event Event>
@@ -68,15 +76,30 @@ namespace sequoia::testing
     int m_Num{};
   };
 
-  using copy_prediction        = alloc_prediction<allocation_event::copy>;
-  using move_prediction        = alloc_prediction<allocation_event::move>;
-  using mutation_prediction    = alloc_prediction<allocation_event::mutation>;
-  using para_copy_prediction   = alloc_prediction<allocation_event::para_copy>;
-  using para_move_prediction   = alloc_prediction<allocation_event::para_move>;
-  using assign_prop_prediction = alloc_prediction<allocation_event::assign_prop>;
-  using assign_prediction      = alloc_prediction<allocation_event::assign>;
+  using copy_prediction                  = alloc_prediction<allocation_event::copy>;
+  using move_prediction                  = alloc_prediction<allocation_event::move>;
+  using mutation_prediction              = alloc_prediction<allocation_event::mutation>;
+  using para_copy_prediction             = alloc_prediction<allocation_event::para_copy>;
+  using para_move_prediction             = alloc_prediction<allocation_event::para_move>;
+  using assign_prop_prediction           = alloc_prediction<allocation_event::assign_prop>;
+  using assign_prediction                = alloc_prediction<allocation_event::assign>;  
+  using move_assign_prediction           = alloc_prediction<allocation_event::move_assign>;
+  using copy_like_move_assign_prediction = alloc_prediction<allocation_event::copy_like_move_assign>;
 
-  
+  template<allocation_event AllocEvent>
+  constexpr static alloc_prediction<AllocEvent> increment_msvc_debug_count(alloc_prediction<AllocEvent> p)
+  {
+    if constexpr(has_msvc_v)
+    {
+      if(iterator_debug_level() > 0)
+      {
+        return alloc_prediction<AllocEvent>{static_cast<int>(p) + 1};
+      }
+    }
+
+    return p;
+  }
+
   template<class T>
   struct prediction_shifter
   {
@@ -104,20 +127,6 @@ namespace sequoia::testing
     constexpr static para_move_prediction shift(para_move_prediction p)
     {
       return increment_msvc_debug_count(p);
-    }
-  private:
-    template<allocation_event AllocEvent>
-    constexpr static alloc_prediction<AllocEvent> increment_msvc_debug_count(alloc_prediction<AllocEvent> p)
-    {
-      if constexpr(has_msvc_v)
-      {
-        if(iterator_debug_level() > 0)
-        {
-          return alloc_prediction<AllocEvent>{static_cast<int>(p) + 1};
-        }
-      }
-      
-      return p;
     }
   };
   
@@ -161,6 +170,13 @@ namespace sequoia::testing
   operator "" _awp(unsigned long long int n) noexcept
   {
     return assign_prop_prediction{static_cast<int>(n)};
+  }
+
+  [[nodiscard]]
+  SPECULATIVE_CONSTEVAL copy_like_move_assign_prediction
+  operator "" _clm(unsigned long long int n) noexcept
+  {
+    return copy_like_move_assign_prediction{static_cast<int>(n)};
   }
 
   /*! \brief Base class for use with both plain (shared counting) allocators and std::scoped_allocator_adaptor

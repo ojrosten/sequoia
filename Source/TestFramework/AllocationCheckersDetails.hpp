@@ -118,13 +118,12 @@ namespace sequoia::testing::impl
 
       const bool copyLike{!propagate && !m_AllocatorsEqual};
 
-      const int xPrediction{
-        copyLike ? info().get_predictions().assign_without_propagation_allocs() : 0        
-      };
+      const auto& predictions{info().get_predictions()};
+      const int xPrediction{copyLike ? predictions.copy_like_move_assign_allocs() : predictions.move_assign_allocs()};
       
       if constexpr(propagate)
       {
-        check_allocation("Unexpected allocation detected for move assignment (x)", logger, x, info(), second_count(), xPrediction);
+        check_allocation("Unexpected allocation detected for propagating move assignment (x)", logger, x, info(), second_count(), xPrediction);
       }
       else
       {

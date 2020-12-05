@@ -3514,7 +3514,7 @@
 	--Move-only Semantics--
 	[sequoia::testing::move_only_inefficient_move_assignment<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
 
-	  Unexpected allocation detected for move assignment (x)
+	  Unexpected allocation detected for propagating move assignment (x)
 	  [int]
 	  operator== returned false
 	  Obtained : 1
@@ -3654,7 +3654,7 @@
 	--Move-only Semantics--
 	[sequoia::testing::move_only_inefficient_move_assignment<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
 
-	  Unexpected allocation detected for move assignment (x)
+	  Unexpected allocation detected for propagating move assignment (x)
 	  [int]
 	  operator== returned false
 	  Obtained : 1
