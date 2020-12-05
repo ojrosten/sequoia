@@ -97,7 +97,8 @@ namespace sequoia::testing
     return {shifter::shift(predictions.copy),
             shifter::shift(predictions.mutation),
             shifter::shift(predictions.para_copy),
-            shifter::shift(predictions.para_move)};
+            shifter::shift(predictions.para_move),
+            shifter::shift(predictions.move)};
   }
 
   template<class T>
