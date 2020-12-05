@@ -412,7 +412,8 @@ namespace sequoia::testing::impl
   {
     auto checkFn{
       [&logger, &container](const auto& checker){
-        checker.check("Unexpected allocation detected for move construction (y)", logger, container, 0);
+        const auto prediction{checker.info().get_predictions().move_allocs()};
+        checker.check("Unexpected allocation detected for move construction (y)", logger, container, prediction);
       }
     };
 

@@ -32,10 +32,14 @@ namespace sequoia::testing
 
     [[nodiscard]]
     constexpr int mutation_allocs() const noexcept { return mutation; }
+
+    [[nodiscard]]
+    constexpr int move_allocs() const noexcept { return move; }
     
     assign_prediction assign_without_propagation{};
     mutation_prediction mutation{};
     para_move_prediction para_move{};
+    move_prediction move{};
   };
 
   template<class T>

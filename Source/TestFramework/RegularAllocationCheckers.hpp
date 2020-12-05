@@ -44,6 +44,7 @@ namespace sequoia::testing
     mutation_prediction mutation{};
     para_copy_prediction para_copy{};
     para_move_prediction para_move{};
+    move_prediction move{};
   };
 
   struct assignment_allocation_predictions
@@ -63,10 +64,7 @@ namespace sequoia::testing
     {}
 
     [[nodiscard]]
-    constexpr int para_move_allocs() const noexcept
-    {
-      return y.para_move;
-    }
+    constexpr int para_move_allocs() const noexcept { return y.para_move; }
 
     [[nodiscard]]
     constexpr int assign_without_propagation_allocs() const noexcept
@@ -76,6 +74,9 @@ namespace sequoia::testing
 
     [[nodiscard]]
     constexpr int mutation_allocs() const noexcept { return y.mutation; }
+
+    [[nodiscard]]
+    constexpr int move_allocs() const noexcept { return y.move; }
 
     copy_prediction copy_x{};
     individual_allocation_predictions y;

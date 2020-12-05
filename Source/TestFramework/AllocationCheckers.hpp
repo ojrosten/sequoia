@@ -48,7 +48,7 @@
 
 namespace sequoia::testing
 {  
-  enum class allocation_event { copy, mutation, para_copy, para_move, assign_prop, assign};
+  enum class allocation_event { copy, move, mutation, para_copy, para_move, assign_prop, assign};
 
   /*! Type-safe wrapper for allocation predictions, to avoid mixing different allocation events */
   template<allocation_event Event>
@@ -67,6 +67,7 @@ namespace sequoia::testing
   };
 
   using copy_prediction        = alloc_prediction<allocation_event::copy>;
+  using move_prediction        = alloc_prediction<allocation_event::move>;
   using mutation_prediction    = alloc_prediction<allocation_event::mutation>;
   using para_copy_prediction   = alloc_prediction<allocation_event::para_copy>;
   using para_move_prediction   = alloc_prediction<allocation_event::para_move>;
@@ -77,38 +78,34 @@ namespace sequoia::testing
   template<class T>
   struct prediction_shifter
   {
-    constexpr static copy_prediction shift(copy_prediction p)
-    {
-      return increment_msvc_iterator_debug(p);
-    }
-
-    constexpr static mutation_prediction shift(mutation_prediction p)
+    template<allocation_event AllocEvent>
+    constexpr static alloc_prediction<AllocEvent> shift(alloc_prediction<AllocEvent> p) noexcept
     {
       return p;
+    }
+    
+    constexpr static copy_prediction shift(copy_prediction p)
+    {
+      return increment_msvc_debug_count(p);
+    }
+
+    constexpr static move_prediction shift(move_prediction p)
+    {
+      return increment_msvc_debug_count(p);
     }
 
     constexpr static para_copy_prediction shift(para_copy_prediction p)
     {
-      return increment_msvc_iterator_debug(p);
+      return increment_msvc_debug_count(p);
     }
 
     constexpr static para_move_prediction shift(para_move_prediction p)
     {
-      return increment_msvc_iterator_debug(p);
-    }
-
-    constexpr static assign_prop_prediction shift(assign_prop_prediction p)
-    {
-      return p;
-    }
-
-    constexpr static assign_prediction shift(assign_prediction p)
-    {
-      return p;
+      return increment_msvc_debug_count(p);
     }
   private:
     template<allocation_event AllocEvent>
-    constexpr static alloc_prediction<AllocEvent> increment_msvc_iterator_debug(alloc_prediction<AllocEvent> p)
+    constexpr static alloc_prediction<AllocEvent> increment_msvc_debug_count(alloc_prediction<AllocEvent> p)
     {
       if constexpr(has_msvc_v)
       {
