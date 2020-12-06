@@ -8,6 +8,7 @@
 #pragma once
 
 #include "AssignmentUtilities.hpp"
+#include "AllocationCheckers.hpp"
 
 #include <vector>
 
@@ -80,8 +81,9 @@ namespace sequoia::testing
   template<class T=int, class Handle=std::shared_ptr<T>, class Allocator=std::allocator<Handle>>
   struct perfectly_sharing_beast
   {
-    using handle_type = Handle;      
+    using handle_type    = Handle;      
     using allocator_type = Allocator;
+    using container_type = std::vector<handle_type, allocator_type>;
 
     explicit perfectly_sharing_beast(const allocator_type& a) : x(a)
     {}
@@ -139,7 +141,7 @@ namespace sequoia::testing
       lhs.swap(rhs);
     }
       
-    std::vector<handle_type, allocator_type> x{};
+    container_type x{};
 
     [[nodiscard]]
     friend bool operator==(const perfectly_sharing_beast& lhs, const perfectly_sharing_beast& rhs) noexcept
@@ -167,6 +169,40 @@ namespace sequoia::testing
     {
       const std::vector<handle_type, allocator_type> v(a);
       x = v;
+    }
+  };
+
+  template<class T, class Handle, class Allocator>
+  struct alloc_prediction_shifter<perfectly_sharing_beast<T, Handle, Allocator>>
+    : alloc_prediction_shifter<typename perfectly_sharing_beast<T, Handle, Allocator>::container_type>
+  {
+    using base_t = alloc_prediction_shifter<typename perfectly_sharing_beast<T, Handle, Allocator>::container_type>;
+    using base_t::shift;
+
+    constexpr static assign_prediction shift(assign_prediction p)
+    {
+      return increment_msvc_debug_count(p);
+    }
+
+    constexpr static assign_prop_prediction shift(assign_prop_prediction p)
+    {
+      const auto num{
+        []() {
+          if constexpr (std::allocator_traits<Allocator>::propagate_on_container_copy_assignment::value)
+          {
+            constexpr bool moveProp{ std::allocator_traits<Allocator>::propagate_on_container_move_assignment::value };
+            constexpr bool swapProp{ std::allocator_traits<Allocator>::propagate_on_container_swap::value };
+            return moveProp ? 2 :
+                   swapProp ? 1 : 3;
+          }
+          else
+          {
+            return 1;
+          }
+        }()
+      };
+     
+      return increment_msvc_debug_count(p, num);
     }
   };
 

@@ -87,11 +87,11 @@ namespace sequoia::testing
   using copy_like_move_assign_prediction = alloc_prediction<allocation_event::copy_like_move_assign>;
 
   template<allocation_event AllocEvent>
-  constexpr static alloc_prediction<AllocEvent> increment_msvc_debug_count(alloc_prediction<AllocEvent> p)
+  constexpr static alloc_prediction<AllocEvent> increment_msvc_debug_count(alloc_prediction<AllocEvent> p, int i=1)
   {
     if constexpr(has_msvc_v && (iterator_debug_level() > 0))
     {
-      return alloc_prediction<AllocEvent>{static_cast<int>(p) + 1};
+      return alloc_prediction<AllocEvent>{static_cast<int>(p) + i};
     }
     else
     {
@@ -100,7 +100,7 @@ namespace sequoia::testing
   }
 
   template<class T>
-  struct prediction_shifter
+  struct alloc_prediction_shifter
   {
     template<allocation_event AllocEvent>
     constexpr static alloc_prediction<AllocEvent> shift(alloc_prediction<AllocEvent> p) noexcept

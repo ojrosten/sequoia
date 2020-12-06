@@ -55,7 +55,7 @@ namespace sequoia::testing
   template<class T>
   constexpr move_only_allocation_predictions shift(const move_only_allocation_predictions& predictions)
   {
-    using shifter = prediction_shifter<T>;
+    using shifter = alloc_prediction_shifter<T>;
     return {shifter::shift(predictions.copy_like_move_assign),
             shifter::shift(predictions.mutation),
             shifter::shift(predictions.para_move),
