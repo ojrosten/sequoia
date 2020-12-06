@@ -1870,13 +1870,13 @@
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, false> >]
 
-	  Unexpected allocation detected for copy assignment (x)
+	  Unexpected allocation detected for propagating copy assignment (x)
 	  [int]
 	  operator== returned false
 	  Obtained : 1
 	  Predicted: 0
 
-	  Unexpected allocation detected for copy assignment (y)
+	  Unexpected allocation detected for propagating copy assignment (y)
 	  [int]
 	  operator== returned false
 	  Obtained : 1
@@ -1932,13 +1932,13 @@
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, false, false> >]
 
-	  Unexpected allocation detected for copy assignment (x)
+	  Unexpected allocation detected for propagating copy assignment (x)
 	  [int]
 	  operator== returned false
 	  Obtained : 1
 	  Predicted: 0
 
-	  Unexpected allocation detected for copy assignment (y)
+	  Unexpected allocation detected for propagating copy assignment (y)
 	  [int]
 	  operator== returned false
 	  Obtained : 1
@@ -2266,13 +2266,13 @@
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, false, true> >]
 
-	  Unexpected allocation detected for copy assignment (x)
+	  Unexpected allocation detected for propagating copy assignment (x)
 	  [int]
 	  operator== returned false
 	  Obtained : 1
 	  Predicted: 0
 
-	  Unexpected allocation detected for copy assignment (y)
+	  Unexpected allocation detected for propagating copy assignment (y)
 	  [int]
 	  operator== returned false
 	  Obtained : 1
@@ -2334,13 +2334,13 @@
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, false, true> >]
 
-	  Unexpected allocation detected for copy assignment (x)
+	  Unexpected allocation detected for propagating copy assignment (x)
 	  [int]
 	  operator== returned false
 	  Obtained : 1
 	  Predicted: 0
 
-	  Unexpected allocation detected for copy assignment (y)
+	  Unexpected allocation detected for propagating copy assignment (y)
 	  [int]
 	  operator== returned false
 	  Obtained : 1
@@ -2658,13 +2658,13 @@
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, false> >]
 
-	  Unexpected allocation detected for copy assignment (x)
+	  Unexpected allocation detected for propagating copy assignment (x)
 	  [int]
 	  operator== returned false
 	  Obtained : 1
 	  Predicted: 0
 
-	  Unexpected allocation detected for copy assignment (y)
+	  Unexpected allocation detected for propagating copy assignment (y)
 	  [int]
 	  operator== returned false
 	  Obtained : 1
@@ -2720,13 +2720,13 @@
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, true, false> >]
 
-	  Unexpected allocation detected for copy assignment (x)
+	  Unexpected allocation detected for propagating copy assignment (x)
 	  [int]
 	  operator== returned false
 	  Obtained : 1
 	  Predicted: 0
 
-	  Unexpected allocation detected for copy assignment (y)
+	  Unexpected allocation detected for propagating copy assignment (y)
 	  [int]
 	  operator== returned false
 	  Obtained : 1
@@ -3054,13 +3054,13 @@
 	--Regular Semantics--
 	[sequoia::testing::perfectly_normal_beast<int, sequoia::testing::shared_counting_allocator<int, true, true, true> >]
 
-	  Unexpected allocation detected for copy assignment (x)
+	  Unexpected allocation detected for propagating copy assignment (x)
 	  [int]
 	  operator== returned false
 	  Obtained : 1
 	  Predicted: 0
 
-	  Unexpected allocation detected for copy assignment (y)
+	  Unexpected allocation detected for propagating copy assignment (y)
 	  [int]
 	  operator== returned false
 	  Obtained : 1
@@ -3122,13 +3122,13 @@
 	--Regular Semantics--
 	[sequoia::testing::perfectly_sharing_beast<int, std::shared_ptr<int>, sequoia::testing::shared_counting_allocator<std::shared_ptr<int>, true, true, true> >]
 
-	  Unexpected allocation detected for copy assignment (x)
+	  Unexpected allocation detected for propagating copy assignment (x)
 	  [int]
 	  operator== returned false
 	  Obtained : 1
 	  Predicted: 0
 
-	  Unexpected allocation detected for copy assignment (y)
+	  Unexpected allocation detected for propagating copy assignment (y)
 	  [int]
 	  operator== returned false
 	  Obtained : 1

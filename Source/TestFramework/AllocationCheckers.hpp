@@ -89,15 +89,14 @@ namespace sequoia::testing
   template<allocation_event AllocEvent>
   constexpr static alloc_prediction<AllocEvent> increment_msvc_debug_count(alloc_prediction<AllocEvent> p)
   {
-    if constexpr(has_msvc_v)
+    if constexpr(has_msvc_v && (iterator_debug_level() > 0))
     {
-      if(iterator_debug_level() > 0)
-      {
-        return alloc_prediction<AllocEvent>{static_cast<int>(p) + 1};
-      }
+      return alloc_prediction<AllocEvent>{static_cast<int>(p) + 1};
     }
-
-    return p;
+    else
+    {
+      return p;
+    }
   }
 
   template<class T>
@@ -115,6 +114,16 @@ namespace sequoia::testing
     }
 
     constexpr static move_prediction shift(move_prediction p)
+    {
+      return increment_msvc_debug_count(p);
+    }
+
+    constexpr static assign_prop_prediction shift(assign_prop_prediction p)
+    {
+      return increment_msvc_debug_count(p);
+    }
+
+    constexpr static move_assign_prediction shift(move_assign_prediction p)
     {
       return increment_msvc_debug_count(p);
     }
