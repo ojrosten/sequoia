@@ -324,6 +324,7 @@ namespace sequoia::testing
   void false_negative_diagnostics::test_regular_semantics()
   {
     check_semantics(LINE(""), perfectly_normal_beast{1}, perfectly_normal_beast{2});
+    check_semantics(LINE(""), perfectly_stringy_beast{}, perfectly_stringy_beast{"Hello, world"});
   }
 
   void false_negative_diagnostics::test_equivalence_checks()

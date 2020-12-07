@@ -78,6 +78,73 @@ namespace sequoia::testing
     }
   };
 
+  template<class CharT = char, class Allocator=std::allocator<CharT>>
+  struct perfectly_stringy_beast
+  {
+    using allocator_type = Allocator;
+    using string_type    = std::basic_string<CharT, std::char_traits<CharT>, Allocator>;
+
+    perfectly_stringy_beast() = default;
+
+    perfectly_stringy_beast(const CharT* s) : x{s} {}
+
+    perfectly_stringy_beast(const CharT* s, const allocator_type& a) : x{s, a} {}
+
+    perfectly_stringy_beast(const allocator_type& a) : x(a) {}
+
+    perfectly_stringy_beast(const perfectly_stringy_beast&) = default;
+
+    perfectly_stringy_beast(const perfectly_stringy_beast& other, const allocator_type& a) : x(other.x, a) {}
+
+    perfectly_stringy_beast(perfectly_stringy_beast&&) noexcept = default;
+
+    perfectly_stringy_beast(perfectly_stringy_beast&& other, const allocator_type& a) : x(std::move(other.x), a) {}
+
+    perfectly_stringy_beast& operator=(const perfectly_stringy_beast&) = default;
+
+    perfectly_stringy_beast& operator=(perfectly_stringy_beast&&) = default;
+
+    void swap(perfectly_stringy_beast& other) noexcept(noexcept(std::swap(this->x, other.x)))
+    {
+      std::swap(x, other.x);
+    }
+
+    friend void swap(perfectly_stringy_beast& lhs, perfectly_stringy_beast& rhs)
+      noexcept(noexcept(lhs.swap(rhs)))
+    {
+      lhs.swap(rhs);
+    }
+      
+    string_type x{};
+
+    [[nodiscard]]
+    friend bool operator==(const perfectly_stringy_beast&, const perfectly_stringy_beast&) noexcept = default;
+
+    [[nodiscard]]
+    friend bool operator!=(const perfectly_stringy_beast&, const perfectly_stringy_beast&) noexcept = default;
+
+    template<class Stream>
+    friend Stream& operator<<(Stream& s, const perfectly_stringy_beast& b)
+    {
+      s << b.x;
+      return s;
+    }
+
+    template<class Stream>
+    friend Stream& operator>>(Stream& s, perfectly_stringy_beast& b)
+    {      
+      string_type word{};
+      while(s >> word)
+      {
+        b.x.append(word).append(" ");
+      }
+
+      if(!b.x.empty()) b.x.pop_back();
+
+      return s;
+    }
+  };
+
   template<class T=int, class Handle=std::shared_ptr<T>, class Allocator=std::allocator<Handle>>
   struct perfectly_sharing_beast
   {
