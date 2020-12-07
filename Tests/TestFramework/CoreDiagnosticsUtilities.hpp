@@ -132,7 +132,9 @@ namespace sequoia::testing
 
     template<class Stream>
     friend Stream& operator>>(Stream& s, perfectly_stringy_beast& b)
-    {      
+    {
+      b.x.clear();
+
       string_type word{};
       while(s >> word)
       {

@@ -392,16 +392,35 @@ namespace sequoia::testing
         [](const beast& b){ return b.x.get_allocator(); }
       };
 
-      auto m{
+      auto mutator{
         [](beast& b) {
           *b.x.front() = 9;
         }
       };
         
       
-      check_semantics(LINE(""), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, m, allocation_info{allocGetter, {1_c, {1_c,0_mu}, {1_awp, 1_anp}}});
+      check_semantics(LINE(""), beast{{1}, allocator{}}, beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {1_c, {1_c,0_mu}, {1_awp, 1_anp}}});
 
-      check_semantics(LINE(""), beast(allocator{}), beast{{5,6}, allocator{}}, m, allocation_info{allocGetter, {0_c, {1_c,0_mu}, {1_awp, 1_anp}}});
+      check_semantics(LINE(""), beast(allocator{}), beast{{5,6}, allocator{}}, mutator, allocation_info{allocGetter, {0_c, {1_c,0_mu}, {1_awp, 1_anp}}});
+    }
+
+    {
+      using beast = perfectly_stringy_beast<char, shared_counting_allocator<char, PropagateCopy, PropagateMove, PropagateSwap>>;
+
+      auto allocGetter{
+        [](const beast& b){ return b.x.get_allocator(); }
+      };
+
+      auto mutator{
+        [](beast& b) {
+          b.x.append("\nSome profound addition to the already remarkable string");
+        }
+      };
+
+      check_semantics(LINE(""),
+                      beast{},
+                      beast{"A string which is clearly long enough to evade the small string optimisation"},
+                      mutator, allocation_info{allocGetter, {0_c, {1_c,1_mu}, {1_awp,1_anp}}});
     }
 
     {
