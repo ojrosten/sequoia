@@ -70,14 +70,15 @@ namespace sequoia::testing
     const auto includeTarget{working().append("TestShared").append("SharedIncludes.hpp")};
 
     const repositories repos{working()};
+    const auto hostDir{(repos.tests / "Partners").string()};
 
-    std::stringstream outputStream{};
     commandline_arguments args{"", "create", "regular_test", "other::functional::maybe<class T>", "std::optional<T>"
                                  , "create", "regular_test", "utilities::iterator", "int*"
                                  , "create", "move_only_test", "bar::baz::foo<maths::floating_point T>", "T", "--family", "Iterator"
                                  , "create", "regular_test", "other::couple<class S, class T>", "S", "-e", "T",
-                                      "-h", (repos.tests / "Partners").string(), "-f", "partners", "-ch", "Couple.hpp"};
-    
+                                      "-h", hostDir, "-f", "partners", "-ch", "Couple.hpp"};
+
+    std::stringstream outputStream{};
     test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, repos, outputStream};
 
     tr.execute();
@@ -106,9 +107,10 @@ namespace sequoia::testing
 
     // The first argument is set to ensure that the project root is deduced as
     // Sequoia, in order that the aux_files are correctly located
+    const auto proj{generated().string()};
+    commandline_arguments args{"../../build/foo/bar", "init", "Oliver Jacob Rosten", proj};
+
     std::stringstream outputStream{};
-    commandline_arguments args{"../../build/foo/bar", "init", "Oliver Jacob Rosten", generated().string()};
-    
     test_runner tr{args.size(), args.get(), "Oliver J. Rosten", testMain, includeTarget, repos, outputStream};
 
     tr.execute();

@@ -71,7 +71,7 @@ namespace sequoia::testing
   public:
     struct results
     {      
-      log_summary::duration execution_time;
+      log_summary::duration execution_time{};
       std::vector<log_summary> logs;
     };
 
@@ -157,15 +157,15 @@ namespace sequoia::testing
     struct paths
     {
     #ifdef _MSC_VER
-      // Workaround for msvc bug which manifests when a type lacking a default constructor
-      // is used in a std::future.
+      // TO DO: remove once there's a Workaround for msvc bug which manifests when
+      // a type lacking a default constructor is used in a std::future.
       // https://developercommunity.visualstudio.com/content/problem/60897/c-shared-state-futuresstate-default-constructs-the.html
       paths() = default;
     #endif
       
       paths(const test& t, output_mode outputMode, const std::filesystem::path& outputDir, const std::filesystem::path& testRepo);
 
-      output_mode mode;
+      output_mode mode{output_mode::write_files};
       std::filesystem::path summary, workingMaterials, predictions;
     };
   };  

@@ -102,7 +102,7 @@ namespace sequoia::testing
 
     perfectly_stringy_beast& operator=(const perfectly_stringy_beast&) = default;
 
-    perfectly_stringy_beast& operator=(perfectly_stringy_beast&&) = default;
+    perfectly_stringy_beast& operator=(perfectly_stringy_beast&&) noexcept = default;
 
     void swap(perfectly_stringy_beast& other) noexcept(noexcept(std::swap(this->x, other.x)))
     {

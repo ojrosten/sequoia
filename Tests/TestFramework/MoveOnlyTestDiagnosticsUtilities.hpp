@@ -164,7 +164,7 @@ namespace sequoia::testing
 
     move_only_broken_move(const move_only_broken_move&) = delete;
 
-    move_only_broken_move(move_only_broken_move&&)      
+    move_only_broken_move(move_only_broken_move&&) noexcept
     {
       // Do nothing
     }
@@ -220,7 +220,7 @@ namespace sequoia::testing
       
     move_only_broken_move_assignment& operator=(const move_only_broken_move_assignment&) = delete;
       
-    move_only_broken_move_assignment& operator=(move_only_broken_move_assignment&&)
+    move_only_broken_move_assignment& operator=(move_only_broken_move_assignment&&) noexcept
     {
       return *this;
     }

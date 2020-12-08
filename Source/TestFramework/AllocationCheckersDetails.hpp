@@ -31,11 +31,11 @@ namespace sequoia::testing::impl
   };
 
   template<test_mode Mode, movable_comparable T, alloc_getter<T> Getter, class Predictions>
-  static void check_allocation(std::string_view detail, test_logger<Mode>& logger, const T& container, const basic_allocation_info<T, Getter, Predictions>& info, const int previous, const int prediction)
+  static bool check_allocation(std::string_view detail, test_logger<Mode>& logger, const T& container, const basic_allocation_info<T, Getter, Predictions>& info, const int previous, const int prediction)
   {
     const auto current{info.count(container)};
 
-    check_equality(detail, logger, current - previous, prediction, tutor{allocation_advice{}});
+    return check_equality(detail, logger, current - previous, prediction, tutor{allocation_advice{}});
   }
 
   /*! \brief Wraps basic_allocation_info, together with two prior allocation counts.
