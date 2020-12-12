@@ -30,5 +30,7 @@ namespace sequoia::testing
     void test_is_const_pointer();
 
     void test_is_const_reference();
+
+    void test_is_tuple();
   };
 }

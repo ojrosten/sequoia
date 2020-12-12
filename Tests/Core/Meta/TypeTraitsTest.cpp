@@ -28,7 +28,8 @@ namespace sequoia::testing
     test_base_of_head();
     test_resolve_to_copy();
     test_is_const_pointer();
-    test_is_const_reference();    
+    test_is_const_reference();
+    test_is_tuple();
   }
 
   void type_traits_test::test_variadic_traits()
@@ -427,5 +428,29 @@ namespace sequoia::testing
         return true;
       }()
     );
-  }  
+  }
+
+  void type_traits_test::test_is_tuple()
+  {
+    check(LINE(""), []() {
+        static_assert(!is_tuple_v<int>);
+        static_assert(std::is_same_v<std::false_type, is_tuple_t<int>>);
+        return true;
+      }()
+    );
+
+    check(LINE(""), []() {
+        static_assert(is_tuple_v<std::tuple<>>);
+        static_assert(std::is_same_v<std::true_type, is_tuple_t<std::tuple<>>>);
+        return true;
+      }()
+    );
+
+    check(LINE(""), []() {
+        static_assert(is_tuple_v<std::tuple<int>>);
+        static_assert(std::is_same_v<std::true_type, is_tuple_t<std::tuple<int>>>);
+        return true;
+      }()
+    );
+  }
 }
