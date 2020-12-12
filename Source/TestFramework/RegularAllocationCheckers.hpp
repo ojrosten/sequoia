@@ -110,7 +110,7 @@ namespace sequoia::testing
   template<class T>
   constexpr individual_allocation_predictions shift(const individual_allocation_predictions& predictions)
   {
-    using shifter = alloc_prediction_shifter<T>;
+    using shifter = type_to_alloc_shifter_t<T>;
     return {shifter::shift(predictions.copy),
             shifter::shift(predictions.mutation),
             shifter::shift(predictions.para_copy),
@@ -121,7 +121,7 @@ namespace sequoia::testing
   template<class T>
   constexpr assignment_allocation_predictions shift(const assignment_allocation_predictions& predictions)
   {
-    using shifter = alloc_prediction_shifter<T>;
+    using shifter = type_to_alloc_shifter_t<T>;
     return {shifter::shift(predictions.with_propagation),
             shifter::shift(predictions.without_propagation),
             shifter::shift(predictions.copy_like_move),
@@ -131,7 +131,7 @@ namespace sequoia::testing
   template<class T>
   constexpr allocation_predictions shift(const allocation_predictions& predictions)
   {
-    using shifter = alloc_prediction_shifter<T>;
+    using shifter = type_to_alloc_shifter_t<T>;
     return {shifter::shift(predictions.copy_x),
             shift<T>(predictions.y),
             shift<T>(predictions.assign_y_to_x)};

@@ -242,37 +242,9 @@ namespace sequoia::testing
   };
 
   template<class T, class Handle, class Allocator>
-  struct alloc_prediction_shifter<perfectly_sharing_beast<T, Handle, Allocator>>
-    : alloc_prediction_shifter<typename perfectly_sharing_beast<T, Handle, Allocator>::container_type>
+  struct type_to_alloc_shifter<perfectly_sharing_beast<T, Handle, Allocator>>
   {
-    using base_t = alloc_prediction_shifter<typename perfectly_sharing_beast<T, Handle, Allocator>::container_type>;
-    using base_t::shift;
-
-    constexpr static assign_prediction shift(assign_prediction p)
-    {
-      return increment_msvc_debug_count(p);
-    }
-
-    constexpr static assign_prop_prediction shift(assign_prop_prediction p)
-    {
-      const auto num{
-        []() {
-          if constexpr (std::allocator_traits<Allocator>::propagate_on_container_copy_assignment::value)
-          {
-            constexpr bool moveProp{ std::allocator_traits<Allocator>::propagate_on_container_move_assignment::value };
-            constexpr bool swapProp{ std::allocator_traits<Allocator>::propagate_on_container_swap::value };
-            return moveProp ? 2 :
-                   swapProp ? 1 : 3;
-          }
-          else
-          {
-            return 1;
-          }
-        }()
-      };
-     
-      return increment_msvc_debug_count(p, num);
-    }
+    using shifter_type = alloc_prediction_shifter<std::vector<T, Allocator>>;
   };
 
   template<class T=int, class U=double, class xAllocator=std::allocator<T>, class yAllocator=std::allocator<U>>

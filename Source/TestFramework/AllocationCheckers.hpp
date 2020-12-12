@@ -99,8 +99,23 @@ namespace sequoia::testing
     }
   }
 
+  /*! \brief class template for shifting allocation predictions, especially for MSVC debug builds.
+
+      \anchor alloc_prediction_shifter_primary
+   */
+
   template<class T>
   struct alloc_prediction_shifter
+  {
+    template<allocation_event AllocEvent>
+    constexpr static alloc_prediction<AllocEvent> shift(alloc_prediction<AllocEvent> p) noexcept
+    {
+      return p;
+    }
+  };
+
+  template<class T, class Allocator>
+  struct alloc_prediction_shifter<std::vector<T, Allocator>>
   {
     template<allocation_event AllocEvent>
     constexpr static alloc_prediction<AllocEvent> shift(alloc_prediction<AllocEvent> p) noexcept
@@ -138,6 +153,49 @@ namespace sequoia::testing
       return increment_msvc_debug_count(p);
     }
   };
+
+  template<class T, class Allocator>
+    requires (std::is_pointer_v<T> || sequoia::is_const_pointer_v<T>)
+  struct alloc_prediction_shifter<std::vector<T, Allocator>>
+    : alloc_prediction_shifter<std::vector<std::decay_t<T>, Allocator>>
+  {
+    using alloc_prediction_shifter<std::vector<std::decay_t<T>, Allocator>>::shift;
+
+    constexpr static assign_prediction shift(assign_prediction p)
+    {
+      return increment_msvc_debug_count(p);
+    }
+
+    constexpr static assign_prop_prediction shift(assign_prop_prediction p)
+    {
+      const auto num{
+        []() {
+          if constexpr (std::allocator_traits<Allocator>::propagate_on_container_copy_assignment::value)
+          {
+            constexpr bool moveProp{ std::allocator_traits<Allocator>::propagate_on_container_move_assignment::value };
+            constexpr bool swapProp{ std::allocator_traits<Allocator>::propagate_on_container_swap::value };
+            return moveProp ? 2 :
+                   swapProp ? 1 : 3;
+          }
+          else
+          {
+            return 1;
+          }
+        }()
+      };
+
+      return increment_msvc_debug_count(p, num);
+    }
+  };
+
+  template<class T>
+  struct type_to_alloc_shifter
+  {
+    using shifter_type = alloc_prediction_shifter<std::vector<int, std::allocator<int>>>;
+  };
+
+  template<class T>
+  using type_to_alloc_shifter_t = typename type_to_alloc_shifter<T>::shifter_type;  
   
   [[nodiscard]]
   SPECULATIVE_CONSTEVAL copy_prediction
@@ -261,10 +319,20 @@ namespace sequoia::testing
     using value_type       = T;
     using allocator_type   = typename base_t::allocator_type;
     using predictions_type = Predictions;
-      
-    basic_allocation_info(Getter allocGetter, const Predictions& predictions)
+
+    struct vector_like_shifter
+    {
+      constexpr Predictions operator()(const Predictions& predictions) const
+      {
+        using ShiftType = type_to_alloc_shifter_t<T>;
+        return shift<ShiftType>(predictions);
+      }
+    };
+
+    template<class Shifter=vector_like_shifter>
+    basic_allocation_info(Getter allocGetter, const Predictions& predictions, Shifter shifter=Shifter{})
       : base_t{std::move(allocGetter)}
-      , m_Predictions{shift<T>(predictions)}
+      , m_Predictions{shifter(predictions)}
     {}
 
     [[nodiscard]]
@@ -275,6 +343,26 @@ namespace sequoia::testing
   private:
     Predictions m_Predictions;
   };
+
+  namespace impl
+  {
+    template<class T, std::size_t I>
+    struct shift_type_generator
+    {
+      using type = type_to_alloc_shifter_t<T>;
+    };
+
+    template<class T, std::size_t I>
+    requires (is_tuple<typename type_to_alloc_shifter<T>::shifter_type>::value)
+      struct shift_type_generator<T, I>
+      {
+        using shifter_type = typename type_to_alloc_shifter<T>::shifter_type;
+        using type = std::remove_cvref_t<decltype(std::get<I>(std::declval<shifter_type>()))>;
+      };
+
+    template<class T, std::size_t I>
+    using shift_type_generator_t = typename shift_type_generator<T, I>::type;
+  }
 
   /*! \brief A specialization of basic_allocation_info appropriate for std::scoped_allocator_adaptor
 
@@ -297,7 +385,7 @@ namespace sequoia::testing
     
     basic_allocation_info(Getter allocGetter, std::initializer_list<Predictions> predictions)
       : base_t{std::move(allocGetter)}
-      , m_Predictions{utilities::to_array<Predictions, size>(predictions, [](const Predictions& p){ return shift<T>(p); })}
+      , m_Predictions{utilities::to_array<Predictions, size>(predictions)}
     {}
 
     /// unpacks the scoped_allocator_adaptor, returning basic_allocation_info for the
@@ -306,12 +394,19 @@ namespace sequoia::testing
     [[nodiscard]]
     decltype(auto) unpack() const
     {
-      auto scopedGetter{[getter=this->make_getter()](const T& c){
+      auto scopedGetter{[getter{this->make_getter()}](const T& c){
           return get<I>(getter(c));
         }
       };
 
-      return basic_allocation_info<T, decltype(scopedGetter), Predictions>{scopedGetter, m_Predictions[I]};
+      auto shifter{
+        [](const Predictions& predictions) {          
+          using shift_type = impl::shift_type_generator_t<T, I>;
+          return shift<shift_type>(predictions);
+        }
+      };
+
+      return basic_allocation_info<T, decltype(scopedGetter), Predictions>{scopedGetter, m_Predictions[I], shifter};
     }
 
   private:

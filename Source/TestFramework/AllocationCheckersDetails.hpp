@@ -31,7 +31,12 @@ namespace sequoia::testing::impl
   };
 
   template<test_mode Mode, movable_comparable T, alloc_getter<T> Getter, class Predictions>
-  static bool check_allocation(std::string_view detail, test_logger<Mode>& logger, const T& container, const basic_allocation_info<T, Getter, Predictions>& info, const int previous, const int prediction)
+  static bool check_allocation(std::string_view detail,
+                               test_logger<Mode>& logger,
+                               const T& container,
+                               const basic_allocation_info<T, Getter, Predictions>& info,
+                               const int previous,
+                               const int prediction)
   {
     const auto current{info.count(container)};
 
@@ -106,7 +111,7 @@ namespace sequoia::testing::impl
         const auto xPrediction{info().get_predictions().assign_y_to_x.without_propagation};        
         check_allocation("Unexpected allocation detected for copy assignment (x)", logger, x, info(), first_count(), xPrediction);
         check_allocation("Unexpected allocation detected for copy assignment (y)", logger, y, info(), second_count(), 0);
-      }    
+      }
     }
 
     template<test_mode Mode>

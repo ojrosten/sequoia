@@ -76,4 +76,10 @@ namespace sequoia::testing
       return s;
     }
   };
+
+  template<class InnerAllocator>
+  struct type_to_alloc_shifter<perfectly_scoped_beast<InnerAllocator>>
+  {
+    using shifter_type = std::tuple<std::vector<int>, std::string>;
+  };
 }

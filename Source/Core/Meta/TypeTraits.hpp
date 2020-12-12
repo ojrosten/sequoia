@@ -9,6 +9,7 @@
 
 #include <type_traits>
 #include <iterator>
+#include <tuple>
 
 /*! \file TypeTraits.hpp
     \brief Traits added as required by other components of the library.
@@ -113,6 +114,20 @@ namespace sequoia
   
   template<class T>
   std::add_lvalue_reference_t<T> makelval() noexcept;
+
+  // is_tuple
+  
+  template<class T>
+  struct is_tuple : std::false_type{};
+
+  template<class... Ts>
+  struct is_tuple<std::tuple<Ts...>> : std::true_type{};
+
+  template<class... Ts>
+  using is_tuple_t = typename is_tuple<Ts...>::type;
+
+  template<class... Ts>
+  inline constexpr bool is_tuple_v{is_tuple<Ts...>::value};
 
   // dependent_false
   

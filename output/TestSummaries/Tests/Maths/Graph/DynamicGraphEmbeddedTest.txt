@@ -1,2 +1,2 @@
 Edge Insertions
-Standard Top Level Checks:               374;  Failures:  0  [Deep checks: 23710]
+Standard Top Level Checks:               374;  Failures:  0  [Deep checks: 27098]
