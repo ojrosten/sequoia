@@ -183,13 +183,13 @@ namespace sequoia::testing
   };
 
   template<class T>
-  struct type_to_alloc_shifter
+  struct alloc_equivalence_class
   {
-    using shifter_type = std::vector<int, std::allocator<int>>;
+    using type = std::vector<int, std::allocator<int>>;
   };
 
   template<class T>
-  using type_to_alloc_shifter_t = typename type_to_alloc_shifter<T>::shifter_type;  
+  using alloc_equivalence_class_t = typename alloc_equivalence_class<T>::type;  
   
   [[nodiscard]]
   SPECULATIVE_CONSTEVAL copy_prediction
@@ -314,16 +314,16 @@ namespace sequoia::testing
     using allocator_type   = typename base_t::allocator_type;
     using predictions_type = Predictions;
 
-    struct vector_like_shifter
+    struct prediction_shifter
     {
       constexpr Predictions operator()(const Predictions& predictions) const
       {
-        using ShifterType = type_to_alloc_shifter_t<T>;
-        return shift<ShifterType>(predictions);
+        using allocClass = alloc_equivalence_class_t<T>;
+        return shift<allocClass>(predictions);
       }
     };
 
-    template<class Shifter=vector_like_shifter>
+    template<class Shifter=prediction_shifter>
     basic_allocation_info(Getter allocGetter, const Predictions& predictions, Shifter shifter=Shifter{})
       : base_t{std::move(allocGetter)}
       , m_Predictions{shifter(predictions)}
@@ -341,21 +341,21 @@ namespace sequoia::testing
   namespace impl
   {
     template<class T, std::size_t I>
-    struct shift_type_generator
+    struct alloc_equivalence_class_generator
     {
-      using type = type_to_alloc_shifter_t<T>;
+      using type = alloc_equivalence_class_t<T>;
     };
 
     template<class T, std::size_t I>
-      requires (is_tuple<typename type_to_alloc_shifter<T>::shifter_type>::value)
-    struct shift_type_generator<T, I>
+      requires (is_tuple_v<alloc_equivalence_class_t<T>>)
+    struct alloc_equivalence_class_generator<T, I>
     {
-      using ShifterType = typename type_to_alloc_shifter<T>::shifter_type;
-      using type = std::remove_cvref_t<decltype(std::get<I>(std::declval<ShifterType>()))>;
+      using allocClass = alloc_equivalence_class_t<T>;
+      using type = std::remove_cvref_t<decltype(std::get<I>(std::declval<allocClass>()))>;
     };
 
     template<class T, std::size_t I>
-    using shift_type_generator_t = typename shift_type_generator<T, I>::type;
+    using alloc_equivalence_class_generator_t = typename alloc_equivalence_class_generator<T, I>::type;
   }
 
   /*! \brief A specialization of basic_allocation_info appropriate for std::scoped_allocator_adaptor
@@ -393,14 +393,14 @@ namespace sequoia::testing
         }
       };
 
-      auto shifter{
+      auto scopedShifter{
         [](const Predictions& predictions) {          
-          using ShifterType = impl::shift_type_generator_t<T, I>;
-          return shift<ShifterType>(predictions);
+          using allocClass = impl::alloc_equivalence_class_generator_t<T, I>;
+          return shift<allocClass>(predictions);
         }
       };
 
-      return basic_allocation_info<T, decltype(scopedGetter), Predictions>{scopedGetter, m_Predictions[I], shifter};
+      return basic_allocation_info<T, decltype(scopedGetter), Predictions>{scopedGetter, m_Predictions[I], scopedShifter};
     }
 
   private:
