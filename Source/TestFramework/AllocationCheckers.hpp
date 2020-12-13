@@ -87,7 +87,7 @@ namespace sequoia::testing
   using copy_like_move_assign_prediction = alloc_prediction<allocation_event::copy_like_move_assign>;
 
   template<allocation_event AllocEvent>
-  constexpr static alloc_prediction<AllocEvent> increment_msvc_debug_count(alloc_prediction<AllocEvent> p, int i=1)
+  constexpr static alloc_prediction<AllocEvent> increment_msvc_debug_count(alloc_prediction<AllocEvent> p, int i=1) noexcept
   {
     if constexpr(has_msvc_v && (iterator_debug_level() > 0))
     {
@@ -123,64 +123,58 @@ namespace sequoia::testing
       return p;
     }
     
-    constexpr static copy_prediction shift(copy_prediction p)
+    constexpr static copy_prediction shift(copy_prediction p) noexcept
     {
       return increment_msvc_debug_count(p);
     }
 
-    constexpr static move_prediction shift(move_prediction p)
+    constexpr static move_prediction shift(move_prediction p) noexcept
     {
       return increment_msvc_debug_count(p);
     }
 
-    constexpr static assign_prop_prediction shift(assign_prop_prediction p)
+    constexpr static assign_prop_prediction shift(assign_prop_prediction p) noexcept
     {
       return increment_msvc_debug_count(p);
     }
 
-    constexpr static move_assign_prediction shift(move_assign_prediction p)
+    constexpr static move_assign_prediction shift(move_assign_prediction p) noexcept
     {
       return increment_msvc_debug_count(p);
     }
 
-    constexpr static para_copy_prediction shift(para_copy_prediction p)
+    constexpr static para_copy_prediction shift(para_copy_prediction p) noexcept
     {
       return increment_msvc_debug_count(p);
     }
 
-    constexpr static para_move_prediction shift(para_move_prediction p)
+    constexpr static para_move_prediction shift(para_move_prediction p) noexcept
     {
       return increment_msvc_debug_count(p);
     }
   };
 
   template<class T, class Allocator>
-    requires (std::is_pointer_v<T> || sequoia::is_const_pointer_v<T>)
-  struct alloc_prediction_shifter<std::vector<T, Allocator>>
-    : alloc_prediction_shifter<std::vector<std::decay_t<T>, Allocator>>
+  struct alloc_prediction_shifter<std::vector<T*, Allocator>>
+    : alloc_prediction_shifter<std::vector<T, Allocator>>
   {
-    using alloc_prediction_shifter<std::vector<std::decay_t<T>, Allocator>>::shift;
+    using alloc_prediction_shifter<std::vector<T, Allocator>>::shift;
 
-    constexpr static assign_prediction shift(assign_prediction p)
+    constexpr static assign_prediction shift(assign_prediction p) noexcept
     {
       return increment_msvc_debug_count(p);
     }
 
-    constexpr static assign_prop_prediction shift(assign_prop_prediction p)
+    constexpr static assign_prop_prediction shift(assign_prop_prediction p) noexcept
     {
       const auto num{
         []() {
-          if constexpr (std::allocator_traits<Allocator>::propagate_on_container_copy_assignment::value)
-          {
-            constexpr bool moveProp{ std::allocator_traits<Allocator>::propagate_on_container_move_assignment::value };
-            constexpr bool swapProp{ std::allocator_traits<Allocator>::propagate_on_container_swap::value };
-            return moveProp ? 2 :
-                   swapProp ? 1 : 3;
-          }
-          else
-          {
-            return 1;
-          }
+          constexpr bool copyProp{std::allocator_traits<Allocator>::propagate_on_container_copy_assignment::value};
+          constexpr bool moveProp{ std::allocator_traits<Allocator>::propagate_on_container_move_assignment::value };
+          constexpr bool swapProp{ std::allocator_traits<Allocator>::propagate_on_container_swap::value };
+          return !copyProp ? 1 :
+                  moveProp ? 2 :
+                  swapProp ? 1 : 3;
         }()
       };
 
@@ -191,7 +185,7 @@ namespace sequoia::testing
   template<class T>
   struct type_to_alloc_shifter
   {
-    using shifter_type = alloc_prediction_shifter<std::vector<int, std::allocator<int>>>;
+    using shifter_type = std::vector<int, std::allocator<int>>;
   };
 
   template<class T>
@@ -324,8 +318,8 @@ namespace sequoia::testing
     {
       constexpr Predictions operator()(const Predictions& predictions) const
       {
-        using ShiftType = type_to_alloc_shifter_t<T>;
-        return shift<ShiftType>(predictions);
+        using ShifterType = type_to_alloc_shifter_t<T>;
+        return shift<ShifterType>(predictions);
       }
     };
 
@@ -353,12 +347,12 @@ namespace sequoia::testing
     };
 
     template<class T, std::size_t I>
-    requires (is_tuple<typename type_to_alloc_shifter<T>::shifter_type>::value)
-      struct shift_type_generator<T, I>
-      {
-        using shifter_type = typename type_to_alloc_shifter<T>::shifter_type;
-        using type = std::remove_cvref_t<decltype(std::get<I>(std::declval<shifter_type>()))>;
-      };
+      requires (is_tuple<typename type_to_alloc_shifter<T>::shifter_type>::value)
+    struct shift_type_generator<T, I>
+    {
+      using ShifterType = typename type_to_alloc_shifter<T>::shifter_type;
+      using type = std::remove_cvref_t<decltype(std::get<I>(std::declval<ShifterType>()))>;
+    };
 
     template<class T, std::size_t I>
     using shift_type_generator_t = typename shift_type_generator<T, I>::type;
@@ -401,8 +395,8 @@ namespace sequoia::testing
 
       auto shifter{
         [](const Predictions& predictions) {          
-          using shift_type = impl::shift_type_generator_t<T, I>;
-          return shift<shift_type>(predictions);
+          using ShifterType = impl::shift_type_generator_t<T, I>;
+          return shift<ShifterType>(predictions);
         }
       };
 

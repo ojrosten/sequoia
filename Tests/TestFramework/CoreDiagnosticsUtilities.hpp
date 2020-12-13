@@ -244,7 +244,7 @@ namespace sequoia::testing
   template<class T, class Handle, class Allocator>
   struct type_to_alloc_shifter<perfectly_sharing_beast<T, Handle, Allocator>>
   {
-    using shifter_type = alloc_prediction_shifter<std::vector<T, Allocator>>;
+    using shifter_type = std::vector<T*, Allocator>;
   };
 
   template<class T=int, class U=double, class xAllocator=std::allocator<T>, class yAllocator=std::allocator<U>>
