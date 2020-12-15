@@ -1,24 +1,24 @@
 	Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-	Fast Task duration: 0.0013593s +- 4 * 4.08807e-05
-	Slow Task duration: 0.00135469s +- 4 * 4.73731e-05 [0.996606; (2, 2)]
+	Fast Task duration: 0.00109348s +- 4 * 5.88718e-05
+	Slow Task duration: 0.00121454s +- 4 * 0.000124558 [1.11071; (2, 2)]
 
 	=======================================
 
 	Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-	Fast Task duration: 0.0013793s +- 4 * 1.06653e-05
-	Slow Task duration: 0.0013861s +- 4 * 5.19538e-06 [1.00493; (2, 3)]
+	Fast Task duration: 0.00118393s +- 4 * 0.000127438
+	Slow Task duration: 0.00115303s +- 4 * 0.00014072 [0.973903; (2, 3)]
 
 	=======================================
 
 	Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-	Fast Task duration: 0.00116694s +- 4 * 0.000122567
-	Slow Task duration: 0.00474544s +- 4 * 0.000679126 [4.06658; (2, 2.5)]
+	Fast Task duration: 0.00113661s +- 4 * 0.000101357
+	Slow Task duration: 0.0043101s +- 4 * 0.00025244 [3.79207; (2, 2.5)]
 
 	=======================================
 
@@ -26,8 +26,8 @@
 	Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67
 	Performance Test which should pass
 
-	Fast Task duration: 0.00119206s +- 4 * 3.99769e-05
-	Slow Task duration: 0.00217411s +- 4 * 6.65321e-05 [1.82383; (1.8, 2.1)]
+	Fast Task duration: 0.0010935s +- 4 * 3.3138e-05
+	Slow Task duration: 0.00214633s +- 4 * 0.000178678 [1.96281; (1.8, 2.1)]
 
 
 	=======================================
@@ -36,8 +36,8 @@
 	Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68
 	Performance Test which should pass
 
-	Fast Task duration: 0.00122224s +- 4 * 3.26199e-05
-	Slow Task duration: 0.00419657s +- 4 * 0.000165443 [3.43349; (3.6, 4.1)]
+	Fast Task duration: 0.00115849s +- 4 * 0.000125432
+	Slow Task duration: 0.00421425s +- 4 * 0.000186644 [3.63771; (3.6, 4.1)]
 
 
 	=======================================

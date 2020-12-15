@@ -86,7 +86,35 @@ namespace sequoia::testing
   using move_assign_prediction           = alloc_prediction<allocation_event::move_assign>;
   using copy_like_move_assign_prediction = alloc_prediction<allocation_event::copy_like_move_assign>;
 
+  class number_of_containers
+  {
+  public:
+    constexpr number_of_containers() = default;
+    
+    constexpr number_of_containers(std::size_t n) : m_Num{n} {}
+
+    [[nodiscard]]
+    constexpr bool valid() const noexcept
+    {
+      return m_Num < max();
+    }
+
+    [[nodiscard]]
+    constexpr operator std::size_t() const noexcept
+    {
+      return m_Num;
+    }
+  private:
+    constexpr static std::size_t max() noexcept
+    {
+      return std::numeric_limits<std::size_t>::max();
+    }
+
+    std::size_t m_Num{max()};
+  };
+  
   template<allocation_event AllocEvent>
+  [[nodiscard]]
   constexpr static alloc_prediction<AllocEvent> increment_msvc_debug_count(alloc_prediction<AllocEvent> p, int i=1) noexcept
   {
     if constexpr(has_msvc_v && (iterator_debug_level() > 0))
@@ -118,36 +146,43 @@ namespace sequoia::testing
   struct alloc_prediction_shifter<std::vector<T, Allocator>>
   {
     template<allocation_event AllocEvent>
+    [[nodiscard]]
     constexpr static alloc_prediction<AllocEvent> shift(alloc_prediction<AllocEvent> p) noexcept
     {
       return p;
     }
-    
+
+    [[nodiscard]]
     constexpr static copy_prediction shift(copy_prediction p) noexcept
     {
       return increment_msvc_debug_count(p);
     }
 
+    [[nodiscard]]
     constexpr static move_prediction shift(move_prediction p) noexcept
     {
       return increment_msvc_debug_count(p);
     }
 
+    [[nodiscard]]
     constexpr static assign_prop_prediction shift(assign_prop_prediction p) noexcept
     {
       return increment_msvc_debug_count(p);
     }
 
+    [[nodiscard]]
     constexpr static move_assign_prediction shift(move_assign_prediction p) noexcept
     {
       return increment_msvc_debug_count(p);
     }
 
+    [[nodiscard]]
     constexpr static para_copy_prediction shift(para_copy_prediction p) noexcept
     {
       return increment_msvc_debug_count(p);
     }
 
+    [[nodiscard]]
     constexpr static para_move_prediction shift(para_move_prediction p) noexcept
     {
       return increment_msvc_debug_count(p);
@@ -160,11 +195,13 @@ namespace sequoia::testing
   {
     using alloc_prediction_shifter<std::vector<T, Allocator>>::shift;
 
+    [[nodiscard]]
     constexpr static assign_prediction shift(assign_prediction p) noexcept
     {
       return increment_msvc_debug_count(p);
     }
 
+    [[nodiscard]]
     constexpr static assign_prop_prediction shift(assign_prop_prediction p) noexcept
     {
       const auto num{
@@ -238,6 +275,13 @@ namespace sequoia::testing
   operator "" _clm(unsigned long long int n) noexcept
   {
     return copy_like_move_assign_prediction{static_cast<int>(n)};
+  }
+
+  [[nodiscard]]
+  SPECULATIVE_CONSTEVAL number_of_containers
+  operator "" _containers(unsigned long long int n) noexcept
+  {
+    return number_of_containers{static_cast<std::size_t>(n)};
   }
 
   /*! \brief Base class for use with both plain (shared counting) allocators and std::scoped_allocator_adaptor

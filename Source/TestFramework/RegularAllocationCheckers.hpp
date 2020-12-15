@@ -77,8 +77,16 @@ namespace sequoia::testing
  
   struct allocation_predictions
   {
-    constexpr allocation_predictions(copy_prediction copyX, individual_allocation_predictions yPredictions, assignment_allocation_predictions assignYtoX)
-      : copy_x{copyX}, y{yPredictions}, assign_y_to_x{assignYtoX}
+    constexpr allocation_predictions(copy_prediction copyX,
+                                     individual_allocation_predictions yPredictions,
+                                     assignment_allocation_predictions assignYtoX,
+                                     number_of_containers numContainersX={},
+                                     number_of_containers numContainersY={})
+      : copy_x{copyX}
+      , y{yPredictions}
+      , assign_y_to_x{assignYtoX}
+      , num_containers_x{numContainersX}
+      , num_containers_y{numContainersY}
     {}
 
     [[nodiscard]]
@@ -105,6 +113,7 @@ namespace sequoia::testing
     copy_prediction copy_x{};
     individual_allocation_predictions y;
     assignment_allocation_predictions assign_y_to_x;
+    number_of_containers num_containers_x{}, num_containers_y{};
   };
 
   template<class T>
