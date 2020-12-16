@@ -80,6 +80,6 @@ namespace sequoia::testing
   template<class InnerAllocator>
   struct alloc_equivalence_class<perfectly_scoped_beast<InnerAllocator>>
   {
-    using type = std::tuple<std::vector<int>, std::string>;
+    using type = std::tuple<std::vector<int>, std::vector<int>>;
   };
 }

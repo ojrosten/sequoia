@@ -74,4 +74,10 @@ namespace sequoia::testing
       return s;
     }
   };
+
+  template<class InnerAllocator>
+  struct alloc_equivalence_class<move_only_scoped_beast<InnerAllocator>>
+  {
+    using type = std::tuple<std::vector<int>, std::vector<int>>;
+  };
 }
