@@ -1,24 +1,24 @@
 	Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 30
 	Performance Test for which fast task is too slow, [1, (2.0, 2.0)
 
-	Fast Task duration: 0.00109348s +- 4 * 5.88718e-05
-	Slow Task duration: 0.00121454s +- 4 * 0.000124558 [1.11071; (2, 2)]
+	Fast Task duration: 0.00110562s +- 4 * 6.89869e-05
+	Slow Task duration: 0.00117335s +- 4 * 6.82368e-05 [1.06126; (2, 2)]
 
 	=======================================
 
 	Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 34
 	Performance Test for which fast task is too slow [1, (2.0, 3.0)
 
-	Fast Task duration: 0.00118393s +- 4 * 0.000127438
-	Slow Task duration: 0.00115303s +- 4 * 0.00014072 [0.973903; (2, 3)]
+	Fast Task duration: 0.00112922s +- 4 * 0.000145884
+	Slow Task duration: 0.00106852s +- 4 * 1.63516e-05 [0.946243; (2, 3)]
 
 	=======================================
 
 	Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 38
 	Performance Test for which fast task is too fast [4, (2.0, 2.5)]
 
-	Fast Task duration: 0.00113661s +- 4 * 0.000101357
-	Slow Task duration: 0.0043101s +- 4 * 0.00025244 [3.79207; (2, 2.5)]
+	Fast Task duration: 0.00118102s +- 4 * 7.1548e-05
+	Slow Task duration: 0.00434961s +- 4 * 0.000359817 [3.68291; (2, 2.5)]
 
 	=======================================
 
@@ -26,8 +26,8 @@
 	Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 67
 	Performance Test which should pass
 
-	Fast Task duration: 0.0010935s +- 4 * 3.3138e-05
-	Slow Task duration: 0.00214633s +- 4 * 0.000178678 [1.96281; (1.8, 2.1)]
+	Fast Task duration: 0.00111936s +- 4 * 5.77251e-05
+	Slow Task duration: 0.00229845s +- 4 * 0.000155177 [2.05336; (1.8, 2.1)]
 
 
 	=======================================
@@ -36,8 +36,8 @@
 	Tests/TestFramework/PerformanceTestDiagnostics.cpp, Line 68
 	Performance Test which should pass
 
-	Fast Task duration: 0.00115849s +- 4 * 0.000125432
-	Slow Task duration: 0.00421425s +- 4 * 0.000186644 [3.63771; (3.6, 4.1)]
+	Fast Task duration: 0.00107221s +- 4 * 2.38825e-05
+	Slow Task duration: 0.00424511s +- 4 * 8.04193e-05 [3.9592; (3.6, 4.1)]
 
 
 	=======================================

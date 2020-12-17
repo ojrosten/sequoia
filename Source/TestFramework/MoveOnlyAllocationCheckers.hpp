@@ -83,9 +83,6 @@ namespace sequoia::testing
   constexpr move_only_allocation_predictions shift(const move_only_allocation_predictions& predictions)
   {
     using shifter = alloc_prediction_shifter<T>;
-    const auto mutationContainers{ predictions.num_containers_post_mutation > predictions.num_containers_y
-      ? predictions.num_containers_post_mutation : number_of_containers{} };
-
     return {shifter::shift(predictions.copy_like_move_assign, predictions.num_containers_x, predictions.num_containers_y),
             shifter::shift(predictions.mutation,    predictions.post_mutation_container_correction()),
             shifter::shift(predictions.para_move,   predictions.num_containers_y),
