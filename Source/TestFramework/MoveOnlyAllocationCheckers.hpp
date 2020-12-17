@@ -23,8 +23,9 @@ namespace sequoia::testing
                                                para_move_prediction paraMove,
                                                move_prediction m={},
                                                move_assign_prediction moveAssign={},
-                                               number_of_containers numContainersX = {},
-                                               number_of_containers numContainersY = {})
+                                               number_of_containers numContainersX={},
+                                               number_of_containers numContainersY={},
+                                               number_of_containers numContainersPostMutation = {})
       : copy_like_move_assign{copyLikeMove}
       , mutation{yMutation}
       , para_move{paraMove}
@@ -32,18 +33,21 @@ namespace sequoia::testing
       , move_assign{moveAssign}
       , num_containers_x{numContainersX}
       , num_containers_y{numContainersY}
+      , num_containers_post_mutation{numContainersPostMutation}
     {}
 
     constexpr move_only_allocation_predictions(copy_like_move_assign_prediction copyLikeMove,
                                                mutation_prediction yMutation,
                                                para_move_prediction paraMove,
                                                number_of_containers numContainersX,
-                                               number_of_containers numContainersY)
-      : copy_like_move_assign{ copyLikeMove }
-      , mutation{ yMutation }
-      , para_move{ paraMove }
-      , num_containers_x{ numContainersX }
-      , num_containers_y{ numContainersY }
+                                               number_of_containers numContainersY,
+                                               number_of_containers numContainersPostMutation={})
+      : copy_like_move_assign{copyLikeMove}
+      , mutation{yMutation}
+      , para_move{paraMove}
+      , num_containers_x{numContainersX}
+      , num_containers_y{numContainersY}
+      , num_containers_post_mutation{numContainersPostMutation}
     {}
 
     [[nodiscard]]
@@ -66,15 +70,18 @@ namespace sequoia::testing
     para_move_prediction para_move{};
     move_prediction move{};
     move_assign_prediction move_assign{};
-    number_of_containers num_containers_x{}, num_containers_y{};
+    number_of_containers num_containers_x{}, num_containers_y{}, num_containers_post_mutation{};
   };
 
   template<class T>
   constexpr move_only_allocation_predictions shift(const move_only_allocation_predictions& predictions)
   {
     using shifter = alloc_prediction_shifter<T>;
+    const auto mutationContainers{ predictions.num_containers_post_mutation > predictions.num_containers_y
+      ? predictions.num_containers_post_mutation : number_of_containers{} };
+
     return {shifter::shift(predictions.copy_like_move_assign, predictions.num_containers_x, predictions.num_containers_y),
-            shifter::shift(predictions.mutation,    predictions.num_containers_y),
+            shifter::shift(predictions.mutation,    mutationContainers),
             shifter::shift(predictions.para_move,   predictions.num_containers_y),
             shifter::shift(predictions.move,        predictions.num_containers_y),
             shifter::shift(predictions.move_assign, predictions.num_containers_y)};

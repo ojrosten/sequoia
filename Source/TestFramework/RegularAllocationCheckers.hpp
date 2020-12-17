@@ -81,12 +81,14 @@ namespace sequoia::testing
                                      individual_allocation_predictions yPredictions,
                                      assignment_allocation_predictions assignYtoX,
                                      number_of_containers numContainersX={},
-                                     number_of_containers numContainersY={})
+                                     number_of_containers numContainersY={},
+                                     number_of_containers numContainersPostMutation={})
       : copy_x{copyX}
       , y{yPredictions}
       , assign_y_to_x{assignYtoX}
-      , num_containers_x{ numContainersX }
-      , num_containers_y{ numContainersY }
+      , num_containers_x{numContainersX}
+      , num_containers_y{numContainersY}
+      , num_containers_post_mutation{numContainersPostMutation}
     {}
 
     [[nodiscard]]
@@ -113,15 +115,18 @@ namespace sequoia::testing
     copy_prediction copy_x{};
     individual_allocation_predictions y;
     assignment_allocation_predictions assign_y_to_x;
-    number_of_containers num_containers_x{}, num_containers_y{};
+    number_of_containers num_containers_x{}, num_containers_y{}, num_containers_post_mutation{};
   };
 
   template<class T>
-  constexpr individual_allocation_predictions shift(const individual_allocation_predictions& predictions, number_of_containers numContainers)
+  constexpr individual_allocation_predictions shift(const individual_allocation_predictions& predictions,
+                                                    number_of_containers numContainers,
+                                                    number_of_containers numContainersPostMutation)
   {
     using shifter = alloc_prediction_shifter<T>;
+    const auto mutationContainers{numContainersPostMutation > numContainers ? numContainersPostMutation : number_of_containers{}};
     return {shifter::shift(predictions.copy,      numContainers),
-            shifter::shift(predictions.mutation,  numContainers),
+            shifter::shift(predictions.mutation,  mutationContainers),
             shifter::shift(predictions.para_copy, numContainers),
             shifter::shift(predictions.para_move, numContainers),
             shifter::shift(predictions.move,      numContainers)};
@@ -144,7 +149,7 @@ namespace sequoia::testing
   {
     using shifter = alloc_prediction_shifter<T>;
     return {shifter::shift(predictions.copy_x, predictions.num_containers_x),
-            shift<T>(predictions.y, predictions.num_containers_y),
+            shift<T>(predictions.y, predictions.num_containers_y, predictions.num_containers_post_mutation),
             shift<T>(predictions.assign_y_to_x, predictions.num_containers_x, predictions.num_containers_y)};
   }
 

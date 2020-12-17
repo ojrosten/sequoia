@@ -130,7 +130,7 @@ namespace sequoia::testing
 
       info.append("\t\tPropagate on copy assignment = ").append(toString(PropagateCopy)).append(",\n");
       info.append("\t\tPropagate on move assignment = ").append(toString(PropagateMove)).append(",\n");
-      info.append("\t\tPropagate on swap = ").append(toString(PropagateSwap)).append("\n\t>");
+      info.append("\t\tPropagate on swap = ").append(toString(PropagateSwap)).append("\n >");
 
       return info;
     }

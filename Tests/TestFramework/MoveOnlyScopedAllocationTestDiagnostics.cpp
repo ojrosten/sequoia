@@ -50,7 +50,7 @@ namespace sequoia::testing
                     beast{{"something too long for small string optimization"}},
                     beast{},
                     beast{{"something too long for small string optimization"}},
-                    mutator, move_only_allocation_info{allocGetter, {{1_clm, 1_mu, 1_pm}, {1_clm, 1_mu, 1_pm, 0_containers, 1_containers}}}
+                    mutator, move_only_allocation_info{allocGetter, {{1_clm, 1_mu, 1_pm}, {1_clm, 1_mu, 1_pm, 0_containers, 1_containers, 2_containers}}}
     );
   }
 

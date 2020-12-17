@@ -173,7 +173,7 @@ namespace sequoia::testing
     [[nodiscard]]
     constexpr static mutation_prediction shift(mutation_prediction p, number_of_containers numContainers) noexcept
     {
-      return p;
+      return numContainers.valid() ? increment_msvc_debug_count(p, number_of_containers{}, numContainers) : p;
     }
 
     [[nodiscard]]

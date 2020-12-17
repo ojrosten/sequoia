@@ -40,7 +40,10 @@ namespace sequoia::testing::impl
   {
     const auto current{info.count(container)};
 
-    return check_equality(detail, logger, current - previous, prediction, tutor{allocation_advice{}});
+    using allocator = decltype(std::declval<Getter>()(container));
+    const auto message{ append_lines(make_type_info<allocator>(), detail) };
+
+    return check_equality(message, logger, current - previous, prediction, tutor{allocation_advice{}});
   }
 
   /*! \brief Wraps basic_allocation_info, together with two prior allocation counts.
